@@ -1,21 +1,28 @@
 package org.egov.tradelicense.domain.services.validator;
 
-import org.egov.models.AuditDetails;
-import org.egov.models.Category;
-import org.egov.models.CategoryDetail;
-import org.egov.models.CategoryRequest;
-import org.egov.models.RequestInfo;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.egov.tl.commons.web.contract.AuditDetails;
+import org.egov.tl.commons.web.contract.Category;
+import org.egov.tl.commons.web.contract.CategoryDetail;
+import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tl.commons.web.requests.CategoryRequest;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.exception.DuplicateIdException;
+import org.egov.tradelicense.domain.exception.DuplicateNameException;
 import org.egov.tradelicense.domain.exception.InvalidInputException;
 import org.egov.tradelicense.persistence.repository.builder.UtilityBuilder;
 import org.egov.tradelicense.persistence.repository.helper.UtilityHelper;
-import org.egov.tradelicense.utility.ConstantUtility;
+import org.egov.tradelicense.util.ConstantUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class CategoryValidator {
 
 	@Autowired
@@ -29,7 +36,9 @@ public class CategoryValidator {
 		RequestInfo requestInfo = categoryRequest.getRequestInfo();
 
 		for (Category category : categoryRequest.getCategories()) {
-
+			category.setName((category.getName() == null) ? null : category.getName().trim());
+			category.setCode((category.getCode() == null) ? null : category.getCode().trim());
+			category.setTenantId((category.getTenantId() == null) ? null : category.getTenantId().trim());
 			Long ParentId = category.getParentId();
 			Long categoryId = null;
 
@@ -42,20 +51,30 @@ public class CategoryValidator {
 				category.setAuditDetails(auditDetails);
 				categoryId = category.getId();
 				if (categoryId == null) {
-					throw new InvalidInputException(requestInfo);
+					throw new InvalidInputException(propertiesManager.getInvalidCategoryIdMsg(), requestInfo);
 				}
 			}
 
 			// checking for existence of duplicate record
 			Boolean isDuplicateRecordExists = utilityHelper.checkWhetherDuplicateRecordExits(category.getTenantId(),
-					category.getCode(), ConstantUtility.CATEGORY_TABLE_NAME, categoryId);
+					category.getCode(), null, ConstantUtility.CATEGORY_TABLE_NAME, categoryId);
 
 			if (isDuplicateRecordExists) {
 				throw new DuplicateIdException(propertiesManager.getCategoryCustomMsg(), requestInfo);
 			}
 
+			// checking for existence of duplicate record
+			isDuplicateRecordExists = utilityHelper.checkWhetherDuplicateRecordExits(category.getTenantId(), null,
+					category.getName(), ConstantUtility.CATEGORY_TABLE_NAME, categoryId);
+
+			if (isDuplicateRecordExists) {
+				throw new DuplicateNameException(propertiesManager.getCategoryNameDuplicate(), requestInfo);
+			}
+
 			if (ParentId != null) {
 				validateSubCategory(category, requestInfo, isNewCategory);
+			}else{
+				category.setValidityYears(0l);
 			}
 
 		}
@@ -68,11 +87,18 @@ public class CategoryValidator {
 
 		if (isParentExists) {
 
+			if( category.getValidityYears() == null || 
+					category.getValidityYears() < 1 || 
+					category.getValidityYears() > 10){
+				throw new InvalidInputException(propertiesManager.getInvalidValidityYears(), requestInfo);
+			}
+			Map<String, Integer> occurrences = new HashMap<String, Integer>();
+
 			for (CategoryDetail categoryDetail : category.getDetails()) {
 
 				Long categoryDetailId = null;
 				Boolean isCategoryDetailDuplicateExists = null;
-
+				Boolean duplicateFeeType = Boolean.FALSE;
 				if (isNewCategory) {
 
 					isCategoryDetailDuplicateExists = false;
@@ -82,21 +108,26 @@ public class CategoryValidator {
 					isCategoryDetailDuplicateExists = checkWhetherDuplicateCategoryDetailRecordExits(categoryDetail,
 							ConstantUtility.CATEGORY_DETAIL_TABLE_NAME, categoryDetailId);
 				}
-
-				if (isCategoryDetailDuplicateExists) {
-					throw new DuplicateIdException(propertiesManager.getCategoryCustomMsg(), requestInfo);
+				
+				occurrences.put(categoryDetail.getFeeType().toString(), occurrences.containsKey(categoryDetail.getFeeType().toString())
+					    ? occurrences.get(categoryDetail.getFeeType().toString()) + 1 : 1);
+				
+				duplicateFeeType = (occurrences.get( categoryDetail.getFeeType().toString()) >1);
+				if (isCategoryDetailDuplicateExists || duplicateFeeType) {
+					throw new DuplicateIdException(propertiesManager.getDuplicateSubCategoryDetail(), requestInfo);
 				}
 
 				Boolean isUomExists = checkWhetherUomExists(categoryDetail);
 
 				if (!isUomExists) {
 
-					throw new InvalidInputException(requestInfo);
+					throw new InvalidInputException(propertiesManager.getInvalidUomIdMsg(), requestInfo);
 				}
+				categoryDetail.setAuditDetails(category.getAuditDetails());
 			}
 
 		} else {
-			throw new InvalidInputException(requestInfo);
+			throw new InvalidInputException(propertiesManager.getInvalidParentIdMsg(), requestInfo);
 		}
 	}
 
@@ -120,7 +151,7 @@ public class CategoryValidator {
 		try {
 			count = (Integer) jdbcTemplate.queryForObject(query, Integer.class);
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			log.error("error while executing the query :"+ query + " , error message : " +  e.getMessage());
 		}
 
 		if (count == 0) {
@@ -151,7 +182,7 @@ public class CategoryValidator {
 		try {
 			count = (Integer) jdbcTemplate.queryForObject(query, Integer.class);
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			log.error("error while executing the query :"+ query + " , error message : " +  e.getMessage());
 		}
 
 		if (count == 0) {
@@ -178,7 +209,7 @@ public class CategoryValidator {
 		try {
 			count = (Integer) jdbcTemplate.queryForObject(query, Integer.class);
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			log.error("error while executing the query :"+ query + " , error message : " +  e.getMessage());
 		}
 
 		if (count > 0) {

@@ -1,12 +1,9 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import SimpleMap from '../../../../common/GoogleMaps.js';
-import Divider from 'material-ui/Divider';
 import {Grid, Row, Col, DropdownButton, ListGroup, ListGroupItem} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import {List, ListItem} from 'material-ui/List';
 import TextField from 'material-ui/TextField';
-import {brown500, red500,white,orange800} from 'material-ui/styles/colors';
 import Checkbox from 'material-ui/Checkbox';
 import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
@@ -51,11 +48,9 @@ class ViewServiceGroup extends Component {
             let {setForm} = this.props;
 
             Api.commonApiPost("/pgr-master/serviceGroup/v1/_search",{id:this.props.match.params.id},{}).then(function(response){
-                console.log(response);
                 current.setState({data:response.ServiceGroups})
                 setForm(response.ServiceGroups[0])
             }).catch((error)=>{
-                console.log(error);
             })
         }
 
@@ -88,7 +83,7 @@ class ViewServiceGroup extends Component {
         <Grid style={{width:'100%'}}>
           <Card style={{margin:'15px 0'}}>
             <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
-               View Category
+               {translate('pgr.lbl.view')} {translate('pgr.lbl.grievance.category') }
              < /div>}/>
              <CardText style={{padding:'8px 16px 0'}}>
                <Row style={styles.addBorderBottom}>

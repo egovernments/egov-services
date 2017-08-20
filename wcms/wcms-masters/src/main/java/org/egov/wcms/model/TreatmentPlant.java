@@ -44,6 +44,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -80,17 +82,16 @@ public class TreatmentPlant {
 
     @NotNull
     private String locationNum;
-    
-    private String locationName;
 
+    private String locationName;
 
     @NotNull
     private String wardNum;
-    
+
     private String wardName;
     @NotNull
     private String zoneNum;
-    
+
     private String zoneName;
 
     @NotNull
@@ -106,6 +107,7 @@ public class TreatmentPlant {
     @Size(max = 250)
     private String description;
 
+    @JsonIgnore
     private AuditDetails auditDeatils;
 
     @Size(max = 250)

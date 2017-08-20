@@ -117,7 +117,7 @@ public class ChartOfAccountServiceTest {
 
 	private ChartOfAccount getChartOfAccount() {
 		ChartOfAccount parent = ChartOfAccount.builder().id("parent").build();
-		ChartOfAccount chartOfAccount = ChartOfAccount.builder()
+		ChartOfAccount chartOfAccount = ChartOfAccount.builder().id("1")
 				.glcode("GLCode").name("AadharBank")
 				.description("DefaultDescription").isActiveForPosting(true)
 				.type('B').classification((long) 123456).functionRequired(true)

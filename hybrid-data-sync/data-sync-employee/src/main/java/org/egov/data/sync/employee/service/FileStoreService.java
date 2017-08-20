@@ -41,7 +41,7 @@
 package org.egov.data.sync.employee.service;
 
 import org.egov.data.sync.employee.repository.FileStoreRepository;
-import org.egov.data.sync.employee.web.contract.User;
+import org.egov.data.sync.employee.web.contract.EmployeeSync;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,8 +51,8 @@ public class FileStoreService {
     @Autowired
     private FileStoreRepository fileStoreRepository;
 
-    public byte[] getFile(User user) {
-        return fileStoreRepository.getFileInByteArray(user.getTenantId(), user.getSignature());
+    public byte[] getFile(EmployeeSync employeeSync) {
+        return fileStoreRepository.getFileInByteArray(employeeSync.getTenantId(), employeeSync.getSignature());
     }
 
 }

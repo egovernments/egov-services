@@ -73,7 +73,7 @@ class grievanceView extends Component{
 
       if(response.serviceRequests.length === 0){
         currentThis.props.setLoadingStatus('hide');
-        currentThis.handleError('Not a valid SRN.');
+        currentThis.handleError(translate('pgr.lbl.invalidcrn'));
         return false;
       }
 
@@ -449,6 +449,7 @@ class grievanceView extends Component{
     return(
       <div>
       <form autoComplete="off">
+        <h3 className="application-title">{translate('pgr.lbl.crnformat')} : {this.state.serviceRequestId}</h3>
         <ViewSRN srn={this.state} />
         <EmployeeDocs srn={this.state.srn}/>
         <WorkFlow workflowdetails={this.state.workflow} />
@@ -460,7 +461,7 @@ class grievanceView extends Component{
             < /div>}/>
             <CardText style={{padding:'8px 16px 0'}}>
               <Row>
-                <Col xs={12} md={3}>
+                <Col xs={12} sm={4} md={3} lg={3}>
                   <SelectField fullWidth={true} floatingLabelText={translate('pgr.lbl.change.status')+' *'} maxHeight={200} value={grievanceView.systemStatus ? grievanceView.systemStatus : this.state.systemStatus} onChange={(event, key, value) => {
                     handleStatusChange(value, "systemStatus", false, "")
                   }}>
@@ -471,7 +472,7 @@ class grievanceView extends Component{
                   </SelectField>
                 </Col>
                 { localStorage.getItem('type') === 'EMPLOYEE' ?
-                <Col xs={12} md={3}>
+                <Col xs={12} sm={4} md={3} lg={3}>
                   <SelectField fullWidth={true} floatingLabelText={translate('pgr.lbl.change.grievancetype')+' *'} maxHeight={200} value={grievanceView.serviceCode ? grievanceView.serviceCode : this.state.serviceCode} onChange={(event, key, value) => {
                     handleChange(value, "serviceCode", false, "")}}>
                     {this.state.complaintTypes !== undefined ?
@@ -481,8 +482,8 @@ class grievanceView extends Component{
                   </SelectField>
                 </Col> : "" }
                 { localStorage.getItem('type') === 'EMPLOYEE' ?
-                <Col xs={12} md={3}>
-                  <SelectField fullWidth={true} floatingLabelText="Ward *" maxHeight={200} value={grievanceView.systemLocationId ? grievanceView.systemLocationId : this.state.systemLocationId}  onChange={(event, key, value) => {
+                <Col xs={12} sm={4} md={3} lg={3}>
+                  <SelectField fullWidth={true} floatingLabelText={translate('Ward')+' *'} maxHeight={200} value={grievanceView.systemLocationId ? grievanceView.systemLocationId : this.state.systemLocationId}  onChange={(event, key, value) => {
                     handleWard(value, "systemLocationId", false, "")}}>
                     {this.state.ward !== undefined ?
                     this.state.ward.map((ward, index) => (
@@ -491,7 +492,7 @@ class grievanceView extends Component{
                   </SelectField>
                 </Col>: ""}
                 { localStorage.getItem('type') === 'EMPLOYEE' ?
-                <Col xs={12} md={3}>
+                <Col xs={12} sm={4} md={3} lg={3}>
                   <SelectField fullWidth={true} floatingLabelText={translate('core.lbl.location')+' *'} maxHeight={200} value={grievanceView.systemChildLocationId ? grievanceView.systemChildLocationId : this.state.systemChildLocationId}  onChange={(event, key, value) => {
                     handleLocality(value, "systemChildLocationId", true, "")}}>
                     {this.state.locality !== undefined ?
@@ -503,7 +504,7 @@ class grievanceView extends Component{
               </Row>
               { localStorage.getItem('type') === 'EMPLOYEE' && grievanceView.systemStatus === 'FORWARDED' ?
               <Row>
-                <Col xs={12} md={3}>
+                <Col xs={12} sm={4} md={3} lg={3}>
                   <SelectField fullWidth={true} floatingLabelText={translate('pgr.lbl.frwddept')} maxHeight={200} value={grievanceView.departmentId} onChange={(event, key, value) => {
                     handleDesignation(value, "departmentId", false, ""); }
                   }>
@@ -514,7 +515,7 @@ class grievanceView extends Component{
                     )) : ''}
                   </SelectField>
                 </Col>
-                <Col xs={12} md={3}>
+                <Col xs={12} sm={4} md={3} lg={3}>
                   <SelectField fullWidth={true} floatingLabelText={translate('pgr.lbl.frwddesgn')} maxHeight={200} value={grievanceView.designationId} onChange={(event, key, value) => {
                     handlePosition(grievanceView.departmentId, value, "designationId", true, "") }}>
                     <MenuItem value={0} primaryText="Select Designation" />
@@ -524,13 +525,13 @@ class grievanceView extends Component{
                     )) : ''}
                   </SelectField>
                 </Col>
-                <Col xs={12} md={3}>
+                <Col xs={12} sm={4} md={3} lg={3}>
                   <SelectField fullWidth={true} floatingLabelText={translate('pgr.lbl.frwdpos')} maxHeight={200} value={grievanceView.systemPositionId} onChange={(event, key, value) => {
                     handleChange(value, "systemPositionId", true, ""); }}>
                     <MenuItem value={0} primaryText="Select Position" />
                     {this.state.position !== undefined ?
                     this.state.position.map((position, index) => (
-                        <MenuItem value={position.assignments[0].position} key={index} primaryText={position.userName} />
+                        <MenuItem value={position.assignments[0].position} key={index} primaryText={position.name} />
                     )) : ''}
                   </SelectField>
                 </Col>
@@ -543,34 +544,32 @@ class grievanceView extends Component{
               </Row> : ''}
               { localStorage.getItem('type') === 'CITIZEN' && (this.state.systemStatus === 'COMPLETED' || currentThis.state.systemStatus === 'REJECTED') ?
               <Row>
-                <Col xs={12} md={3}>
+                <Col xs={12} sm={4} md={3} lg={3}>
                   <h4>Feedback</h4>
-                  <Rating initialRate={grievanceView.systemRating} onClick={(rate, event) => { handleChange(rate,"systemRating", true,"")}}/>
+                  <Rating className="rating" empty="glyphicon glyphicon-star-empty" full="glyphicon glyphicon-star" initialRate={grievanceView.systemRating} onClick={(rate, event) => { handleChange(rate,"systemRating", true,"")}}/>
                 </Col>
               </Row> : ''}
               <Row>
-                <Col xs={12} md={12}>
-                  <TextField floatingLabelText={translate('core.lbl.comments')+' *'} fullWidth={true} multiLine={true} rows={2} rowsMax={4} value={grievanceView.systemApprovalComments ? grievanceView.systemApprovalComments : ''} onChange={(event, newValue) => {
-                    handleChange(newValue, "systemApprovalComments", true, "") }} errorText={fieldErrors.systemApprovalComments ? fieldErrors.systemApprovalComments : ""}/>
+                <Col xs={12} sm={12} md={12} lg={12}>
+                  <TextField floatingLabelText={translate('core.lbl.comments')+' *'} fullWidth={true} multiLine={true} rows={2} rowsMax={4} value={grievanceView.systemApprovalComments ? grievanceView.systemApprovalComments : ''} maxLength="500" onChange={(event, newValue) => {
+                    handleChange(newValue, "systemApprovalComments", true, /^.[^]{0,500}$/) }} errorText={fieldErrors.systemApprovalComments ? fieldErrors.systemApprovalComments : ""}/>
                 </Col>
               </Row>
               { localStorage.getItem('type') === 'EMPLOYEE' ?
               <Row>
-                <Col xs={12} md={3}>
+                <Col xs={12} sm={4} md={3} lg={3}>
                   <h4>{translate('core.documents')}</h4>
                 </Col>
-                <Col xs={12} md={3}>
+                <Col xs={12} sm={4} md={3} lg={3}>
                   <div className="input-group">
                       <input type="file" className="form-control" ref="file" onChange={(e)=>handleUploadValidation(e, ['doc','docx','xls','xlsx','rtf','pdf','jpeg','jpg','png','txt','zip','dxf'])}/>
                       <span className="input-group-addon" onClick={() => {this.refs.file.value = ''; this.props.handleFileEmpty();}}><i className="glyphicon glyphicon-trash specific"></i></span>
                   </div>
                 </Col>
               </Row> : ""}
-                <Row>
-                  <div style={{textAlign: 'center'}}>
-                    <RaisedButton style={{margin:'15px 5px'}} onTouchTap={(e) => search(e)} disabled={!isFormValid} label="Submit" primary={true}/>
-                  </div>
-                </Row>
+              <div style={{textAlign: 'center'}}>
+                <RaisedButton style={{margin:'15px 5px'}} onTouchTap={(e) => search(e)} disabled={!isFormValid} label="Submit" primary={true}/>
+              </div>
             </CardText>
           </Card>
         </Grid>

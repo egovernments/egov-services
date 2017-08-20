@@ -6,9 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.models.Error;
-import org.egov.models.ErrorRes;
-import org.egov.models.ResponseInfo;
+import org.egov.tl.commons.web.contract.Error;
+import org.egov.tl.commons.web.contract.ErrorRes;
+import org.egov.tl.commons.web.contract.ResponseInfo;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,50 +34,49 @@ public class GlobalExceptionHandler {
 	private PropertiesManager propertiesManager;
 
 	/**
-     * Description : Null pointer exception handler
-     * 
-     * @param ex
-     * @return
-     */
+	 * Description : Null pointer exception handler
+	 * 
+	 * @param ex
+	 * @return
+	 */
 
-    @ExceptionHandler(NullPointerException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorRes nullPointerException(NullPointerException ex) {
-        ex.printStackTrace();
-        Map<String, String> errors = new HashMap<String, String>();
-        Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getInvalidInput(), null,
-                errors);
-        List<Error> errorList = new ArrayList<Error>();
-        errorList.add(error);
-        ResponseInfo responseInfo = new ResponseInfo();
-        responseInfo.setStatus(propertiesManager.getFailedStatus());
-        return new ErrorRes(responseInfo, errorList);
-    }
+	@ExceptionHandler(NullPointerException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ErrorRes nullPointerException(NullPointerException ex) {
+		ex.printStackTrace();
 
-    /**
-     * Description : MethodArgumentNotValidException type exception handler
-     * 
-     * @param ex
-     * @return
-     */
+		Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getInvalidInput(), null, null);
+		List<Error> errorList = new ArrayList<Error>();
+		errorList.add(error);
+		ResponseInfo responseInfo = new ResponseInfo();
+		responseInfo.setStatus(propertiesManager.getFailedStatus());
+		return new ErrorRes(responseInfo, errorList);
+	}
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorRes processValidationError(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<String, String>();
-        
-        for (final FieldError error : ex.getBindingResult().getFieldErrors()) {
-            errors.put(error.getField(), error.getDefaultMessage());
-        }
+	/**
+	 * Description : MethodArgumentNotValidException type exception handler
+	 * 
+	 * @param ex
+	 * @return
+	 */
 
-        Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getInvalidInput(), null,
-                errors);
-        List<Error> errorList = new ArrayList<Error>();
-        errorList.add(error);
-        ResponseInfo responseInfo = new ResponseInfo();
-        responseInfo.setStatus(propertiesManager.getFailedStatus());
-        return new ErrorRes(responseInfo, errorList);
-    }
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ErrorRes processValidationError(MethodArgumentNotValidException ex) {
+		Map<String, String> errors = new HashMap<String, String>();
+
+		for (final FieldError error : ex.getBindingResult().getFieldErrors()) {
+			errors.put(error.getField(), error.getDefaultMessage());
+		}
+
+		Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getInvalidInput(),
+				errors.toString(), null);
+		List<Error> errorList = new ArrayList<Error>();
+		errorList.add(error);
+		ResponseInfo responseInfo = new ResponseInfo();
+		responseInfo.setStatus(propertiesManager.getFailedStatus());
+		return new ErrorRes(responseInfo, errorList);
+	}
 
 	/**
 	 * Description : General exception handler method
@@ -88,11 +87,12 @@ public class GlobalExceptionHandler {
 	 */
 
 	@ExceptionHandler(value = { Exception.class })
-
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ErrorRes unknownException(Exception ex, WebRequest req) {
 		if (ex instanceof InvalidInputException) {
-			
-			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getInvalidInput(), null, null);
+
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getInvalidInput(),
+					((InvalidInputException) ex).getCustomMsg(), null);
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setApiId(((InvalidInputException) ex).getRequestInfo().getApiId());
 			responseInfo.setVer(((InvalidInputException) ex).getRequestInfo().getVer());
@@ -103,9 +103,9 @@ public class GlobalExceptionHandler {
 			errorList.add(error);
 			return new ErrorRes(responseInfo, errorList);
 		} else if (ex instanceof DuplicateIdException) {
-			
-			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getDuplicateCode(), null,
-					null);
+
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getDuplicateCode(),
+					((DuplicateIdException) ex).getCustomMsg(), null);
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setApiId(((DuplicateIdException) ex).getRequestInfo().getApiId());
 			responseInfo.setVer(((DuplicateIdException) ex).getRequestInfo().getVer());
@@ -115,21 +115,34 @@ public class GlobalExceptionHandler {
 			List<Error> errorList = new ArrayList<Error>();
 			errorList.add(error);
 			return new ErrorRes(responseInfo, errorList);
-		} else if (ex instanceof InvalidRangeException) {
-			
-			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getInvalidRangeCode(), null,
-					null);
+		} else if (ex instanceof DuplicateNameException) {
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getDuplicateName(),
+					((DuplicateNameException) ex).getCustomMsg(), null);
 			ResponseInfo responseInfo = new ResponseInfo();
-			responseInfo.setApiId(((DuplicateIdException) ex).getRequestInfo().getApiId());
-			responseInfo.setVer(((DuplicateIdException) ex).getRequestInfo().getVer());
-			responseInfo.setMsgId(((DuplicateIdException) ex).getRequestInfo().getMsgId());
+			responseInfo.setApiId(((DuplicateNameException) ex).getRequestInfo().getApiId());
+			responseInfo.setVer(((DuplicateNameException) ex).getRequestInfo().getVer());
+			responseInfo.setMsgId(((DuplicateNameException) ex).getRequestInfo().getMsgId());
+			responseInfo.setTs(new Date().getTime());
+			responseInfo.setStatus(propertiesManager.getFailedStatus());
+			List<Error> errorList = new ArrayList<Error>();
+			errorList.add(error);
+			return new ErrorRes(responseInfo, errorList);
+
+		} else if (ex instanceof InvalidRangeException) {
+
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getInvalidRangeCode(),
+					((InvalidRangeException) ex).getCustomMsg(), null);
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setApiId(((InvalidRangeException) ex).getRequestInfo().getApiId());
+			responseInfo.setVer(((InvalidRangeException) ex).getRequestInfo().getVer());
+			responseInfo.setMsgId(((InvalidRangeException) ex).getRequestInfo().getMsgId());
 			responseInfo.setTs(new Date().getTime());
 			responseInfo.setStatus(propertiesManager.getFailedStatus());
 			List<Error> errorList = new ArrayList<Error>();
 			errorList.add(error);
 			return new ErrorRes(responseInfo, errorList);
 		} else {
-			
+
 			Error error = new Error(HttpStatus.INTERNAL_SERVER_ERROR.toString(), ex.getMessage(), null,
 					new HashMap<String, String>());
 			ResponseInfo responseInfo = new ResponseInfo();

@@ -39,12 +39,15 @@
  */
 package org.egov.wcms.repository;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyMap;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -53,23 +56,26 @@ import org.egov.wcms.model.TreatmentPlant;
 import org.egov.wcms.repository.builder.TreatmentPlantQueryBuilder;
 import org.egov.wcms.repository.rowmapper.TreatmentPlantRowMapper;
 import org.egov.wcms.service.RestWaterExternalMasterService;
+import org.egov.wcms.web.contract.Boundary;
+import org.egov.wcms.web.contract.BoundaryResponse;
+import org.egov.wcms.web.contract.BoundaryResponseInfo;
+import org.egov.wcms.web.contract.BoundaryType;
 import org.egov.wcms.web.contract.TreatmentPlantGetRequest;
 import org.egov.wcms.web.contract.TreatmentPlantRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 @RunWith(MockitoJUnitRunner.class)
 @WebMvcTest(TreatmentPlantRepository.class)
 public class TreatmentPlantRepositoryTest {
 
     @Mock
-    private JdbcTemplate jdbcTemplate;
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Mock
     private TreatmentPlantRowMapper treatmentPlantRowMapper;
@@ -83,38 +89,39 @@ public class TreatmentPlantRepositoryTest {
     @Mock
     private RestWaterExternalMasterService restExternalMasterService;
 
+    @SuppressWarnings("unchecked")
     @Test
     public void test_Should_Search_TreatmentPlant() {
-        final List<Object> preparedStatementValues = new ArrayList<>();
         final List<TreatmentPlant> treatmentPlantList = new ArrayList<>();
         final TreatmentPlant treatmentPlant = getTreatmentPlant();
         treatmentPlantList.add(treatmentPlant);
-
-        final TreatmentPlantGetRequest treatmentPlantGetRequest = Mockito.mock(TreatmentPlantGetRequest.class);
-        when(jdbcTemplate.query("query", preparedStatementValues.toArray(), treatmentPlantRowMapper))
+        final String[] wardNum = { "23" };
+        final String[] zoneNum = { "3" };
+        final String[] localityNum = { "12" };
+        when(namedParameterJdbcTemplate.queryForObject(any(String.class), anyMap(), eq(Long.class))).thenReturn(2L);
+        when(namedParameterJdbcTemplate.query(any(String.class), anyMap(), any(TreatmentPlantRowMapper.class)))
                 .thenReturn(treatmentPlantList);
-
-        assertNotNull(
-                treatmentPlantRepository.findForCriteria(treatmentPlantGetRequest));
+        when(namedParameterJdbcTemplate.queryForObject(any(String.class), anyMap(), eq(String.class)))
+                .thenReturn("abcd");
+        when(restExternalMasterService.getBoundaryName("Ward", wardNum, "default")).thenReturn(getBoundaryWardRes());
+        when(restExternalMasterService.getBoundaryName("Zone", zoneNum, "default")).thenReturn(getBoundaryZoneRes());
+        when(restExternalMasterService.getBoundaryName("Locality", localityNum, "default"))
+                .thenReturn(getBoundaryLocalityRes());
+        assertTrue(treatmentPlantRepository.findForCriteria(getTreatmentPlantGetRequest()).get(0)
+                .getStorageReservoirName().equals("abcd"));
+        assertTrue(treatmentPlantRepository.findForCriteria(getTreatmentPlantGetRequest()).get(0).getLocationName()
+                .equals(getBoundaryLocalityRes().getBoundarys().get(0).getName()));
     }
 
-    @Test
-    public void test_Inavalid_Find_TreatmentPlant() throws Exception {
-        final List<Object> preparedStatementValues = new ArrayList<>();
-        final List<TreatmentPlant> treatmentPlantList = new ArrayList<>();
-        final TreatmentPlant treatmentPlant = getTreatmentPlant();
-        treatmentPlantList.add(treatmentPlant);
-        final TreatmentPlantGetRequest treatmentPlantGetRequest = Mockito.mock(TreatmentPlantGetRequest.class);
-        when(treatmentPlantQueryBuilder.getQuery(treatmentPlantGetRequest, preparedStatementValues)).thenReturn(null);
-        when(jdbcTemplate.query("query", preparedStatementValues.toArray(), treatmentPlantRowMapper))
-                .thenReturn(treatmentPlantList);
-
-        assertTrue(!treatmentPlantList.equals(treatmentPlantRepository.findForCriteria(treatmentPlantGetRequest)));
+    private TreatmentPlantGetRequest getTreatmentPlantGetRequest() {
+        // TODO Auto-generated method stub
+        return TreatmentPlantGetRequest.builder().tenantId("default").code("12").name("test").capacity(2d)
+                .plantType("abcd").zone("3").ward("23").location("12").build();
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void test_Should_Create_TreatmentPlant() {
-
         final TreatmentPlantRequest treatmentPlantRequest = new TreatmentPlantRequest();
         final RequestInfo requestInfo = new RequestInfo();
         final User user = new User();
@@ -124,14 +131,16 @@ public class TreatmentPlantRepositoryTest {
         final List<TreatmentPlant> treatmentPlantList = new ArrayList<>();
         final TreatmentPlant treatmentPlant = getTreatmentPlant();
         treatmentPlantList.add(treatmentPlant);
-        when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
-        assertTrue(treatmentPlantRequest
-                .equals(treatmentPlantRepository.persistCreateTreatmentPlant(treatmentPlantRequest)));
+        treatmentPlantRequest.setTreatmentPlants(treatmentPlantList);
+        final TreatmentPlantRequest treatmentPlantReq = treatmentPlantRepository
+                .persistCreateTreatmentPlant(treatmentPlantRequest);
+        when(namedParameterJdbcTemplate.queryForObject(any(String.class), anyMap(), eq(Long.class))).thenReturn(2L);
+        assertThat(treatmentPlantReq.getTreatmentPlants().size()).isEqualTo(1);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void test_Should_Update_TreatmentPlant() {
-
         final TreatmentPlantRequest treatmentPlantRequest = new TreatmentPlantRequest();
         final RequestInfo requestInfo = new RequestInfo();
         final User user = new User();
@@ -141,9 +150,37 @@ public class TreatmentPlantRepositoryTest {
         final List<TreatmentPlant> treatmentPlantList = new ArrayList<>();
         final TreatmentPlant treatmentPlant = getTreatmentPlant();
         treatmentPlantList.add(treatmentPlant);
-        when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
-        assertTrue(treatmentPlantRequest
-                .equals(treatmentPlantRepository.persistUpdateTreatmentPlant(treatmentPlantRequest)));
+        treatmentPlantRequest.setTreatmentPlants(treatmentPlantList);
+        final TreatmentPlantRequest treatmentPlantReq = treatmentPlantRepository
+                .persistUpdateTreatmentPlant(treatmentPlantRequest);
+        when(namedParameterJdbcTemplate.queryForObject(any(String.class), anyMap(), eq(Long.class))).thenReturn(2L);
+        assertThat(treatmentPlantReq.getTreatmentPlants().size()).isEqualTo(1);
+    }
+
+    private BoundaryResponse getBoundaryLocalityRes() {
+        final BoundaryType type = BoundaryType.builder().id("4").name("Locality").build();
+        final Boundary boundary = Boundary.builder().boundaryNum("12").boundaryType(type).id("4").name("kontapeta")
+                .tenantId("default").build();
+        return BoundaryResponse.builder().responseInfo(getResponseInfo()).boundarys(Arrays.asList(boundary)).build();
+    }
+
+    private BoundaryResponseInfo getResponseInfo() {
+        return BoundaryResponseInfo.builder().apiId("api345").msgId("mkede").resMsgId("res345").status("search")
+                .ver("2").build();
+    }
+
+    private BoundaryResponse getBoundaryZoneRes() {
+        final BoundaryType type = BoundaryType.builder().id("4").name("Zone").build();
+        final Boundary boundary = Boundary.builder().boundaryNum("21").boundaryType(type).id("4").name("Zone-1")
+                .tenantId("default").build();
+        return BoundaryResponse.builder().responseInfo(getResponseInfo()).boundarys(Arrays.asList(boundary)).build();
+    }
+
+    private BoundaryResponse getBoundaryWardRes() {
+        final BoundaryType type = BoundaryType.builder().id("3").name("Ward").build();
+        final Boundary boundary = Boundary.builder().boundaryNum("22").boundaryType(type).id("3").name("Revenue Ward")
+                .tenantId("default").build();
+        return BoundaryResponse.builder().responseInfo(getResponseInfo()).boundarys(Arrays.asList(boundary)).build();
     }
 
     private TreatmentPlant getTreatmentPlant() {
@@ -156,7 +193,7 @@ public class TreatmentPlantRepositoryTest {
         treatmentPlant.setZoneNum("3");
         treatmentPlant.setCapacity(2d);
         treatmentPlant.setPlantType("test");
-        treatmentPlant.setStorageReservoirId(2l);
+        treatmentPlant.setStorageReservoirId(2L);
         treatmentPlant.setPlantType("abcd");
         return treatmentPlant;
     }

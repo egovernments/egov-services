@@ -195,6 +195,8 @@ public class InstrumentTypeJdbcRepositoryTest {
 
 	private InstrumentTypeSearch getInstrumentTypeSearch() {
 		InstrumentTypeSearch instrumentTypeSearch = new InstrumentTypeSearch();
+		instrumentTypeSearch.setId("1");
+		instrumentTypeSearch.setIds("1");
 		instrumentTypeSearch.setName("name");
 		instrumentTypeSearch.setDescription("description");
 		instrumentTypeSearch.setActive(true);

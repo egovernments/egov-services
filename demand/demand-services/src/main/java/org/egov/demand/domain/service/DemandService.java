@@ -114,8 +114,10 @@ public class DemandService {
 				demandReason = demandReasonService.findByCodeInstModule(demandDetails.getTaxReason(),
 						demandDetails.getTaxPeriod(), demand.getModuleName(), demand.getTenantId());
 				
+				LOGGER.info("new demand reason :" + demandReason);
 				egDemandDetails = EgDemandDetails.fromReasonAndAmounts(demandDetails.getTaxAmount(), demandReason,
 						demandDetails.getCollectionAmount()!=null ? demandDetails.getCollectionAmount() : BigDecimal.ZERO);
+				LOGGER.info("new demand details :" + egDemandDetails);
 				egDemand.addEgDemandDetails(egDemandDetails);
 				egDemandDetails.setTenantId(demand.getTenantId());
 				egDemandDetails.setEgDemand(egDemand);

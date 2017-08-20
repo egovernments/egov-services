@@ -1,0 +1,291 @@
+---
+ReportDefinitions:
+- reportName: CashCollection
+  summary: Cash Collection Report
+  version: 1.0.0
+  moduleName : collection
+  sourceColumns:
+  - name: serialnumber
+    label: reports.collection.serialno
+    type: number
+    source: collection
+  - name: CHALLAN_NUMBER
+    label: reports.collection.challanno
+    type: number
+    source: seva
+  - name: RECEIPT_NUMBER
+    label: reports.collection.receiptno
+    type: number
+    source: completed
+  - name: DEPT_NAME
+    label: reports.collection.department
+    type: string
+    source: collection
+  - name: INSTRUMENT_AMOUNT
+    label: reports.collection.amount
+    type: number
+    source: seva
+  searchParams:
+  - name: fromDate
+    label: reports.collection.fromdate
+    type: epoch
+    source: collection
+    isMandatory: true
+  - name: toDate
+    label: reports.collection.todate
+    type: epoch
+    source: collection
+    isMandatory: true
+  - name: status
+    label: reports.collection.status
+    type: string
+    pattern: http://localhost:8095/collection-services/receipts/_status?tenantId=default|$.status|$.status
+    source: collection
+    isMandatory: true
+  - name: collectedby
+    label: reports.collection.collectedby
+    type: string
+    pattern: http://localhost:8095/collection-services/receipts/_getDistinctCollectedBy?tenantId=default|$..userName|$..name
+    source: collection
+    isMandatory: true
+  query: SELECT row_number() over (order by EGCL_RECEIPTHEADER.RECEIPTNUMBER) as serialnumber, '' AS CHALLAN_NUMBER, EGCL_RECEIPTHEADER.RECEIPTNUMBER AS 
+         RECEIPT_NUMBER, EG_DEPARTMENT.NAME AS DEPT_NAME, EGF_INSTRUMENT.AMOUNT AS INSTRUMENT_AMOUNT FROM egcl_receiptheader EGCL_RECEIPTHEADER INNER JOIN 
+         eg_businessdetails EGCL_SERVICEDETAILS ON EGCL_RECEIPTHEADER.businessdetails = EGCL_SERVICEDETAILS.name 
+         INNER JOIN egcl_receiptinstrument egcl_receiptinstrument ON EGCL_RECEIPTHEADER.ID = egcl_receiptinstrument.receiptheader INNER JOIN EGF_INSTRUMENT EGF_INSTRUMENT ON egcl_receiptinstrument.INSTRUMENTHEADER = EGF_INSTRUMENT.ID INNER JOIN EG_DEPARTMENT EG_DEPARTMENT ON EGCL_RECEIPTHEADER.DEPARTMENT = EG_DEPARTMENT.code INNER JOIN egeis_assignment ass on ass.positionid = EGCL_RECEIPTHEADER.createdby INNER JOIN eg_user eguser on eguser.id = ass.employeeid WHERE EGCL_RECEIPTHEADER.status != 'Cancelled' AND EGCL_RECEIPTHEADER.RECEIPTDATE >= '2017-06-01' AND EGCL_RECEIPTHEADER.RECEIPTDATE <= '2017-07-20'AND eguser.username = 'anonymous' AND EGCL_RECEIPTHEADER.tenantid='default' ORDER BY RECEIPT_NUMBER
+  
+  
+- reportName: ReceiptRegister
+  summary: Receipt Register Report
+  version: 1.0.0 
+  moduleName: collection
+  sourceColumns:
+  - name: RECEIPT_DATE
+    label: reports.collection.receipt.date
+    type: epoch
+    source: collection
+  - name: RECEIPT_NUMBER
+    label: reports.collection.receipt.number
+    type: string
+    source: collection
+  - name: DEPARTMENT_NAME
+    label: reports.collection.department.name
+    type: string
+    source: collection
+  - name: SERVICE_NAME
+    label: reports.collection.service.name
+    type: string
+    source: collection
+  - name: SOURCE
+    label: reports.collection.source
+    type: string
+    source: collection
+  - name: CASH_AMOUNT
+    label: reports.collection.cashamount
+    type: string
+    source: collection
+  - name: CHEQUEDD_AMOUNT
+    label: reports.collection.chequedd_amount
+    type: string
+    source: collection
+  - name: BANK_AMOUNT
+    label: reports.collection.bank.amount
+    type: string
+    source: collection   
+  - name: ONLINE_AMOUNT
+    label: reports.collection.online.amount
+    type: string
+    source: collection   
+  - name: CARD_AMOUNT
+    label: reports.collection.card.amount
+    type: string
+    source: collection   
+  - name: STATUS_DESCRIPTION
+    label: reports.collection.status.description
+    type: string
+    source: collection  
+  searchParams:
+  - name: fromDate
+    label: reports.collection.fromdate
+    type: epoch
+    source: collection
+    isMandatory: true
+  - name: toDate
+    label: reports.collection.todate
+    type: epoch
+    source: collection
+    isMandatory: true
+  - name: status
+    label: reports.collection.status
+    type: string
+    pattern: http://localhost:8095/collection-services/receipts/_status?tenantId=default|$.status|$.status
+    isMandatory: true
+  - name: department
+    label: reports.collection.department
+    type: string
+    source: collection 
+    isMandatory: true
+  - name: paymentmode
+    label: reports.collection.paymentmode
+    type: singlevaluelist
+    pattern: 'list://CARD:CARD,CASH:CASH,ONLINE:ONLINE' 
+  - name: businessservice
+    label: reports.collection.businessservice
+    type: string
+    pattern: http://localhost:8095/collection-services/receipts/_getDistinctBusinessDetails?tenantId=default|$..code|$..name
+    isMandatory: true  
+  query: SELECT RECEIPT_DATE,RECEIPT_NUMBER,DEPARTMENT_NAME,SERVICE_NAME,INSTRUMENT_TYPE,SOURCE,CASH_AMOUNT,sum(CHEQUEDD_AMOUNT) AS CHEQUEDD_AMOUNT ,BANK_AMOUNT, ONLINE_AMOUNT,CARD_AMOUNT,STATUS_DESCRIPTION from (SELECT EGCL_RECEIPTHEADER.RECEIPTDATE AS RECEIPT_DATE, EGCL_RECEIPTHEADER.RECEIPTNUMBER AS RECEIPT_NUMBER, EG_DEPARTMENT.NAME AS DEPARTMENT_NAME, EG_DEPARTMENT.NAME AS SERVICE_NAME, (CASE WHEN EGF_INSTRUMENTTYPE.NAME ='cash' THEN 'cash' WHEN EGF_INSTRUMENTTYPE.NAME='bankchallan' THEN 'bankchallan' WHEN  EGF_INSTRUMENTTYPE.NAME='card' THEN 'card' WHEN EGF_INSTRUMENTTYPE.NAME='online' THEN 'online' ELSE 'cheque/dd' END) AS INSTRUMENT_TYPE, EGCL_RECEIPTHEADER.CHANNEL AS SOURCE, (CASE WHEN EGF_INSTRUMENTTYPE.NAME='cash' THEN EGF_INSTRUMENT.AMOUNT END) AS CASH_AMOUNT, (CASE WHEN EGF_INSTRUMENTTYPE.NAME='cheque'THEN EGF_INSTRUMENT.AMOUNT WHEN EGF_INSTRUMENTTYPE.NAME='dd' THEN EGF_INSTRUMENT.AMOUNT END) AS CHEQUEDD_AMOUNT, (CASE WHEN EGF_INSTRUMENTTYPE.NAME= 'bankchallan' THEN EGF_INSTRUMENT.AMOUNT END) AS BANK_AMOUNT, (CASE WHEN EGF_INSTRUMENTTYPE.NAME= 'online' THEN EGF_INSTRUMENT.AMOUNT END) AS ONLINE_AMOUNT, (CASE WHEN EGF_INSTRUMENTTYPE.NAME= 'card' THEN EGF_INSTRUMENT.AMOUNT END) AS CARD_AMOUNT, EGCL_RECEIPTHEADER.STATUS AS STATUS_DESCRIPTION FROM EGCL_RECEIPTHEADER EGCL_RECEIPTHEADER INNER JOIN egcl_receiptinstrument egcl_receiptinstrument ON EGCL_RECEIPTHEADER.ID = egcl_receiptinstrument.receiptheader INNER JOIN EGF_INSTRUMENT EGF_INSTRUMENT ON egcl_receiptinstrument.INSTRUMENTHEADER = EGF_INSTRUMENT.ID INNER JOIN EGF_INSTRUMENTTYPE EGF_INSTRUMENTTYPE ON EGF_INSTRUMENT.INSTRUMENTTYPEID = EGF_INSTRUMENTTYPE.ID INNER JOIN EG_DEPARTMENT EG_DEPARTMENT ON EG_DEPARTMENT.code = EGCL_RECEIPTHEADER.DEPARTMENT INNER JOIN EG_BUSINESSDETAILS EGCL_SERVICEDETAILS ON EGCL_SERVICEDETAILS.code = EGCL_RECEIPTHEADER.businessdetails WHERE EGCL_RECEIPTHEADER.RECEIPTDATE >= '2017-06-01' AND EGCL_RECEIPTHEADER.RECEIPTDATE <= '2017-06-01' AND EGCL_RECEIPTHEADER.RECEIPTDATE < '2017-07-20' AND EGCL_RECEIPTHEADER.STATUS != 'CANCELLED'AND EGCL_RECEIPTHEADER.DEPARTMENT = 'ADMINISTRATION'AND EGF_INSTRUMENTTYPE.NAME= 'bankchallan' AND EGCL_SERVICEDETAILS.code = 'businesscode' AND EGCL_RECEIPTHEADER.tenantid = 'default' ORDER BY EGCL_RECEIPTHEADER.RECEIPTDATE, EGCL_RECEIPTHEADER.RECEIPTNUMBER, EG_DEPARTMENT.NAME) AS RESULT GROUP BY RESULT.RECEIPT_DATE, RESULT.RECEIPT_NUMBER, RESULT.DEPARTMENT_NAME, RESULT.SERVICE_NAME, RESULT.INSTRUMENT_TYPE, RESULT.SOURCE, RESULT.CASH_AMOUNT, RESULT.BANK_AMOUNT, RESULT.ONLINE_AMOUNT , RESULT.CARD_AMOUNT, RESULT.STATUS_DESCRIPTION ORDER BY RESULT.RECEIPT_NUMBER, RESULT.RECEIPT_DATE, RESULT.DEPARTMENT_NAME
+  
+
+- reportName: ChequeCollection
+  summary: Cheque Collection Report
+  version: 1.0.0
+  moduleName : collection
+  sourceColumns:
+  - name: serialnumber
+    label: reports.collection.serialno
+    type: number
+    source: collection
+  - name: CHALLAN_NUMBER
+    label: reports.collection.challanno
+    type: number
+    source: collection
+  - name: RECEIPT_NUMBER
+    label: reports.collection.receiptno
+    type: number
+    source: collection
+  - name: DEPT_NAME
+    label: reports.collection.department
+    type: string
+    source: collection
+  - name: CHEQUE_NUMBER
+    label: reports.collection.chequeno
+    type: number
+    source: collection
+  - name: BANK
+    label: reports.collection.bank
+    type: number
+    source: collection
+  - name: BRANCH
+    label: reports.collection.branch
+    type: number
+    source: seva
+  - name: CHEQUE_DATE
+    label: reports.collection.chequedate
+    type: number
+    source: collection
+  - name: AMOUNT
+    label: reports.collection.amount
+    type: number
+    source: collection
+  searchParams:
+  - name: fromDate
+    label: reports.collection.fromdate
+    type: epoch
+    source: collection
+    isMandatory: true
+  - name: toDate
+    label: reports.collection.todate
+    type: epoch
+    source: collection
+    isMandatory: true
+  - name: status
+    label: reports.collection.status
+    type: string
+    pattern: http://localhost:8095/collection-services/receipts/_status?tenantId=default|$.status|$.status
+    source: collection
+    isMandatory: true
+  - name: collectedby
+    label: reports.collection.collectedby
+    type: string
+    pattern: http://localhost:8095/collection-services/receipts/_getDistinctCollectedBy?tenantId=default|$..userName|$..name
+    source: collection
+    isMandatory: true
+  query: SELECT row_number() over (order by CH.RECEIPTNUMBER) as serialnumber, '' AS CHALLAN_NUMBER, CH.RECEIPTNUMBER AS RECEIPT_NUMBER, ED.NAME AS DEPT_NAME, IH.transactionnumber AS CHEQUE_NUMBER, BK.name AS BANK, IH.branchname AS BRANCH, IH.transactiondate AS CHEQUE_DATE, IH.amount AS AMOUNT FROM EGCL_RECEIPTHEADER CH, EG_DEPARTMENT ED, EGCL_RECEIPTINSTRUMENT CI, EGF_INSTRUMENT IH, egf_BANK BK,egeis_assignment ass, eg_user us WHERE ED.code=CH.DEPARTMENT AND CI.receiptheader=CH.ID AND IH.ID=CI.INSTRUMENTHEADER AND IH.BANKID=BK.code AND IH.INSTRUMENTTYPEID IN (SELECT ID FROM EGF_INSTRUMENTTYPE WHERE NAME IN ('cheque','dd')) AND CH.createdby = ass.positionid and ass.employeeid=us.id AND CH.status != 'Cancelled'AND CH.RECEIPTDATE >= '2017-06-01'AND CH.RECEIPTDATE < '2017-07-20'AND us.username ='anonymous' AND CH.tenantid='default' ORDER BY RECEIPT_NUMBER
+  
+  
+- reportName: CollectionSummary
+  summary: Collection Summary Report
+  version: 1.0.0
+  moduleName : collection
+  sourceColumns:
+  - name: serialnumber
+    label: reports.collection.serialno
+    type: number
+    source: collection
+  - name: source
+    label: reports.collection.source
+    type: number
+    source: collection
+  - name: glCode
+    label: reports.collection.revenue.name
+    type: number
+    source: collection
+  - name: cashCount
+    label: reports.collection.cash.count
+    type: string
+    source: collection
+    total : true
+  - name: cashAmount
+    label: reports.collection.cash.amount
+    type: number
+    source: collection
+  - name: chequeddCount
+    label: reports.collection.cheque.count
+    type: number
+    source: collection
+  - name: chequeddAmount
+    label: reports.collection.cheque.amount
+    type: number
+    source: seva
+  - name: onlineCount
+    label: reports.collection.online.count
+    type: number
+    source: collection
+  - name: onlineAmount
+    label: reports.collection.online.amount
+    type: number
+    source: collection
+  - name: cardCount
+    label: reports.collection.card.count
+    type: number
+    source: collection
+  - name: cardAmount
+    label: reports.collection.card.amount
+    type: number
+    source: collection
+  - name: totalReceiptCount
+    label: reports.collection.total.count
+    type: number
+    source: collection
+  searchParams:
+  - name: fromDate
+    label: reports.collection.fromdate
+    type: epoch
+    source: collection
+    isMandatory: true
+  - name: toDate
+    label: reports.collection.todate
+    type: epoch
+    source: collection
+    isMandatory: true
+  - name: status
+    label: reports.collection.status
+    type: string
+    pattern: http://localhost:8095/collection-services/receipts/_status?tenantId=default|$.status|$.status
+    source: collection
+    isMandatory: true
+  - name: paymentmode
+    label: reports.collection.paymentmode
+    type: string
+    pattern: 'list://CARD:CARD,CASH:CASH,ONLINE:ONLINE'
+    source: collection
+    isMandatory: true
+  - name: revenuehead
+    label: reports.collection.revenuehead
+    type: string
+    pattern: http://egov-micro-dev.egovernments.org/collection-services/receipts/_getChartOfAccounts|$..serviceCode|$..serviceName
+    source: collection
+    isMandatory: true
+  query: SELECT SOURCE,glCode,sum(cashCount) AS cashCount ,sum(cashAmount) AS cashAmount,sum(chequeddCount) AS chequeddCount,sum(chequeddAmount) AS chequeddAmount, sum(onlineCount) AS onlineCount, sum(onlineAmount) AS onlineAmount, sum(cardCount) AS cardCount, sum(cardAmount) AS cardAmount, cast(sum(totalReceiptCount) AS NUMERIC) as totalReceiptCount FROM (SELECT EGCL_RECEIPTHEADER.CHANNEL AS source,CAO.NAME || '-' || CAO.GLCODE AS GLCODE, (CASE WHEN EGF_INSTRUMENTTYPE.NAME='cash' THEN count(distinct(EGCL_RECEIPTHEADER.id)) END) AS cashCount, (CASE WHEN EGF_INSTRUMENTTYPE.NAME='cash' THEN SUM(EGCL_RECEIPTDETAILS.CRAMOUNT) END) AS cashAmount, (CASE WHEN EGF_INSTRUMENTTYPE.NAME='cheque'THEN count(distinct(EGCL_RECEIPTHEADER.id)) WHEN EGF_INSTRUMENTTYPE.NAME='dd' THEN count(distinct(EGCL_RECEIPTHEADER.id)) END) AS chequeddCount, (CASE WHEN EGF_INSTRUMENTTYPE.NAME='cheque' THEN SUM(EGCL_RECEIPTDETAILS.CRAMOUNT) WHEN EGF_INSTRUMENTTYPE.NAME='dd' THEN SUM(EGCL_RECEIPTDETAILS.CRAMOUNT) END) AS chequeddAmount, (CASE WHEN EGF_INSTRUMENTTYPE.NAME= 'online' THEN count(distinct(EGCL_RECEIPTHEADER.id)) END) AS onlineCount, (CASE WHEN EGF_INSTRUMENTTYPE.NAME= 'online'THEN SUM(EGCL_RECEIPTDETAILS.CRAMOUNT) END) AS onlineAmount, (CASE WHEN EGF_INSTRUMENTTYPE.NAME='card' THEN count(distinct(EGCL_RECEIPTHEADER.id)) END) AS cardCount, (CASE WHEN EGF_INSTRUMENTTYPE.NAME='card' THEN SUM(EGCL_RECEIPTDETAILS.CRAMOUNT) END) AS cardAmount, count(*) as totalReceiptCount FROM  EGCL_RECEIPTHEADER EGCL_RECEIPTHEADER INNER JOIN EGCL_RECEIPTINSTRUMENT EGCL_RECEIPTINSTRUMENT ON EGCL_RECEIPTHEADER.ID = EGCL_RECEIPTINSTRUMENT.RECEIPTHEADER INNER JOIN EGF_INSTRUMENT EGF_INSTRUMENT ON EGCL_RECEIPTINSTRUMENT.INSTRUMENTHEADER = EGF_INSTRUMENT.ID INNER JOIN EGF_INSTRUMENTTYPE EGF_INSTRUMENTTYPE ON EGF_INSTRUMENT.INSTRUMENTTYPEID = EGF_INSTRUMENTTYPE.ID INNER JOIN EGCL_RECEIPTDETAILS EGCL_RECEIPTDETAILS ON EGCL_RECEIPTHEADER.ID = EGCL_RECEIPTDETAILS.RECEIPTHEADER INNER JOIN egf_chartofaccount CAO ON CAO.glcode = EGCL_RECEIPTDETAILS.CHARTOFACCOUNT WHERE EGCL_RECEIPTHEADER.STATUS != 'Cancelled'AND EGCL_RECEIPTHEADER.RECEIPTDATE between to_timestamp('2017-07-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS') and  to_timestamp('2017-07-10 23:59:59', 'YYYY-MM-DD HH24:MI:SS') AND EGCL_RECEIPTDETAILS.CRAMOUNT>0  AND EGF_INSTRUMENTTYPE.NAME = 'cash' GROUP BY source,CAO.NAME,CAO.GLCODE,EGF_INSTRUMENTTYPE.NAME UNION SELECT EGCL_RECEIPTHEADER.CHANNEL AS source,CAO.NAME || '-' || CAO.GLCODE AS GLCODE, (CASE WHEN EGF_INSTRUMENTTYPE.NAME='cash' THEN count(distinct(EGCL_RECEIPTHEADER.id)) END) AS cashCount, (CASE WHEN EGF_INSTRUMENTTYPE.NAME='cash' THEN SUM(EGCL_RECEIPTDETAILS.DRAMOUNT) END) AS cashAmount, (CASE WHEN EGF_INSTRUMENTTYPE.NAME='cheque' THEN count(distinct(EGCL_RECEIPTHEADER.id)) WHEN EGF_INSTRUMENTTYPE.NAME='dd'THEN count(distinct(EGCL_RECEIPTHEADER.id)) END) AS chequeddCount, (CASE WHEN EGF_INSTRUMENTTYPE.NAME='cheque'THEN SUM(EGCL_RECEIPTDETAILS.DRAMOUNT) WHEN EGF_INSTRUMENTTYPE.NAME='dd' THEN SUM(EGCL_RECEIPTDETAILS.DRAMOUNT) END) AS chequeddAmount, (CASE WHEN EGF_INSTRUMENTTYPE.NAME= 'online' THEN count(distinct(EGCL_RECEIPTHEADER.id)) END) AS onlineCount, (CASE WHEN EGF_INSTRUMENTTYPE.NAME= 'online'THEN SUM(EGCL_RECEIPTDETAILS.DRAMOUNT) END) AS onlineAmount, (CASE WHEN EGF_INSTRUMENTTYPE.NAME='card' THEN count(distinct(EGCL_RECEIPTHEADER.id)) END) AS cardCount, (CASE WHEN EGF_INSTRUMENTTYPE.NAME='card' THEN SUM(EGCL_RECEIPTDETAILS.DRAMOUNT) END) AS cardAmount, count(*) as totalReceiptCount FROM  EGCL_RECEIPTHEADER EGCL_RECEIPTHEADER INNER JOIN EGCL_RECEIPTINSTRUMENT EGCL_RECEIPTINSTRUMENT ON EGCL_RECEIPTHEADER.ID = EGCL_RECEIPTINSTRUMENT.RECEIPTHEADER INNER JOIN EGF_INSTRUMENT EGF_INSTRUMENT ON EGCL_RECEIPTINSTRUMENT.INSTRUMENTHEADER = EGF_INSTRUMENT.ID INNER JOIN EGF_INSTRUMENTTYPE EGF_INSTRUMENTTYPE ON EGF_INSTRUMENT.INSTRUMENTTYPEID = EGF_INSTRUMENTTYPE.ID INNER JOIN EGCL_RECEIPTDETAILS EGCL_RECEIPTDETAILS ON EGCL_RECEIPTHEADER.ID = EGCL_RECEIPTDETAILS.RECEIPTHEADER INNER JOIN egf_chartofaccount CAO ON CAO.glcode = EGCL_RECEIPTDETAILS.CHARTOFACCOUNT WHERE EGCL_RECEIPTHEADER.STATUS != 'Cancelled'AND EGCL_RECEIPTHEADER.RECEIPTDATE between to_timestamp('2017-07-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS') and  to_timestamp('2017-07-10 23:59:59', 'YYYY-MM-DD HH24:MI:SS') AND EGCL_RECEIPTDETAILS.DRAMOUNT>0 AND CAO.purposeid in (select id from egf_chartofaccount where name ='REBATE') AND EGF_INSTRUMENTTYPE.NAME = 'cash' GROUP BY source,CAO.NAME,CAO.GLCODE,EGF_INSTRUMENTTYPE.NAME) AS RESULT GROUP BY RESULT.SOURCE,RESULT.glCode order by source, glCode
+  
+ 

@@ -40,34 +40,45 @@
 
 package org.egov.eis.web.validator;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.eis.model.Employee;
 import org.egov.eis.repository.EmployeeRepository;
+import org.egov.eis.service.HRMastersService;
+import org.egov.eis.web.contract.EmployeeRequest;
+import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import java.util.List;
+import java.util.Map;
+
 @Component
 public class DataIntegrityValidatorForCreateEmployee extends EmployeeCommonValidator implements Validator {
-	
+
 	@Autowired
 	private EmployeeRepository employeeRepository;
+
+	@Autowired
+	private HRMastersService hrMastersService;
 
 	/**
 	 * This Validator validates *just* Employee instances
 	 */
 	@Override
 	public boolean supports(Class<?> paramClass) {
-		return Employee.class.equals(paramClass);
+		return EmployeeRequest.class.equals(paramClass);
 	}
 
 	@Override
 	public void validate(Object targetObject, Errors errors) {
-		if (!(targetObject instanceof Employee))
+		if (!(targetObject instanceof EmployeeRequest))
 			return;
 
-		Employee employee = (Employee) targetObject;
-		validateEmployee(employee, errors);
+		EmployeeRequest employeeRequest = (EmployeeRequest) targetObject;
+		Employee employee = employeeRequest.getEmployee();
+		validateEmployee(employeeRequest, errors);
 		validatePrimaryPositions(employee.getAssignments(), employee.getId(), employee.getTenantId(), errors, "create");
 	}
 
@@ -75,11 +86,20 @@ public class DataIntegrityValidatorForCreateEmployee extends EmployeeCommonValid
 	private void validateExternalAPIData() {
 	}
 
-	protected void validateEmployee(Employee employee, Errors errors) {
-		super.validateEmployee(employee, errors);
+	protected void validateEmployee(EmployeeRequest employeeRequest, Errors errors) {
+		Employee employee = employeeRequest.getEmployee();
+		RequestInfo requestInfo = employeeRequest.getRequestInfo();
+		// FIXME : Setting ts as null in RequestInfo as hr is following common-contracts with ts as Date
+		// & ID Generation Service is following ts as epoch
+		requestInfo.setTs(null);
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper(requestInfo);
 
-		if ((employee.getCode() != null) && duplicateExists("egeis_employee", "code",
-				employee.getCode(), employee.getTenantId())) {
+		super.validateEmployee(employeeRequest, errors);
+
+		Map<String, List<String>> hrConfigurations = hrMastersService.getHRConfigurations(employee.getTenantId(), requestInfoWrapper);
+
+		if (hrConfigurations.get("Autogenerate_employeecode").get(0).equalsIgnoreCase("N") && (employee.getCode() != null)
+				&& duplicateExists("egeis_employee", "code", employee.getCode(), employee.getTenantId())) {
 			errors.rejectValue("employee.code", "invalid",
 					"Employee Code Already Exists In System. Please Enter Different Employee Code.");
 		}

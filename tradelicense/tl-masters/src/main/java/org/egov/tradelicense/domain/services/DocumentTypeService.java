@@ -1,8 +1,8 @@
 package org.egov.tradelicense.domain.services;
 
-import org.egov.models.DocumentTypeRequest;
-import org.egov.models.DocumentTypeResponse;
-import org.egov.models.RequestInfo;
+import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tl.commons.web.requests.DocumentTypeRequest;
+import org.egov.tl.commons.web.requests.DocumentTypeResponse;
 
 /**
  * Service class for DocumentType master
@@ -18,7 +18,7 @@ public interface DocumentTypeService {
 	 * @param DocumentTypeRequest
 	 * @return DocumentTypeResponse
 	 */
-	public DocumentTypeResponse createDocumentType(DocumentTypeRequest documentTypeRequest);
+	public DocumentTypeResponse createDocumentTypeMaster(DocumentTypeRequest documentTypeRequest);
 
 	/**
 	 * Description : service method for updating documentType
@@ -27,7 +27,7 @@ public interface DocumentTypeService {
 	 * @param DocumentTypeRequest
 	 * @return DocumentTypeResponse
 	 */
-	public DocumentTypeResponse updateDocumentType(DocumentTypeRequest documentTypeRequest);
+	public DocumentTypeResponse updateDocumentTypeMaster(DocumentTypeRequest documentTypeRequest);
 
 	/**
 	 * Description : service method for searching DocumentType master
@@ -42,6 +42,22 @@ public interface DocumentTypeService {
 	 * @param offSet
 	 * @return DocumentTypeResponse
 	 */
-	public DocumentTypeResponse getDocumentType(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
-			String enabled, String applicationType, Integer pageSize, Integer offSet);
+	public DocumentTypeResponse getDocumentTypeMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
+			String name, String enabled, String applicationType, Integer pageSize, Integer offSet);
+
+	/**
+	 * Description : service method for creating documentType
+	 * 
+	 * @param DocumentTypeRequest
+	 * @return DocumentTypeResponse
+	 */
+	public void createDocumentType(DocumentTypeRequest documentTypeRequest);
+
+	/**
+	 * Description : service method for updating documentType
+	 * 
+	 * @param DocumentTypeRequest
+	 * @return DocumentTypeResponse
+	 */
+	public void updateDocumentType(DocumentTypeRequest documentTypeRequest);
 }

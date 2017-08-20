@@ -59,7 +59,13 @@ public class AttributeDefinition {
             return Integer.parseInt(stringValue);
         } else if (dataType == AttributeDataType.DATE_TIME) {
             return LocalDateTime.parse(attributeEntry.getCode(), DateTimeFormat.forPattern(DATE_TIME_FORMAT));
+        } else if (dataType == AttributeDataType.LONG) {
+            return Long.parseLong(stringValue);
         }
+        /* else if (dataType == AttributeDataType.TEXTAREA)
+         {
+        	 return stringValue;
+         }*/
         return stringValue;
     }
 

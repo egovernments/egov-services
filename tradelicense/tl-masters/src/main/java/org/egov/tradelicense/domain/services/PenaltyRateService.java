@@ -1,8 +1,8 @@
 package org.egov.tradelicense.domain.services;
 
-import org.egov.models.PenaltyRateRequest;
-import org.egov.models.PenaltyRateResponse;
-import org.egov.models.RequestInfo;
+import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tl.commons.web.requests.PenaltyRateRequest;
+import org.egov.tl.commons.web.requests.PenaltyRateResponse;
 
 /**
  * Service class for PenaltyRate master
@@ -46,8 +46,23 @@ public interface PenaltyRateService {
 	public PenaltyRateResponse getPenaltyRateMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
 			String applicationType, Integer pageSize, Integer offSet);
 
-	public void createPenaltyRate(PenaltyRateRequest value);
+	/**
+	 * Description : service method for creating penaltyRate master
+	 * 
+	 * @param tenantId
+	 * @param PenaltyRateRequest
+	 * @return PenaltyRateResponse
+	 * @throws Exception
+	 */
+	public void createPenaltyRate(PenaltyRateRequest penaltyRateRequest);
 
-	public void updatePenaltyRate(PenaltyRateRequest convertValue);
+	/**
+	 * Description : service method for updating penaltyRate master
+	 * 
+	 * @param PenaltyRateRequest
+	 * @return PenaltyRateResponse
+	 * @throws Exception
+	 */
+	public void updatePenaltyRate(PenaltyRateRequest penaltyRateRequest);
 
 }

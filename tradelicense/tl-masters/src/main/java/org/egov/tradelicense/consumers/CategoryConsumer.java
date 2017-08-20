@@ -2,17 +2,18 @@ package org.egov.tradelicense.consumers;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.egov.models.CategoryRequest;
+import org.egov.tl.commons.web.requests.CategoryRequest;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
+import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
@@ -31,7 +32,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 @Service
 @Configuration
-@Profile("production")
+@EnableKafka
 public class CategoryConsumer {
 
 	@Autowired
@@ -43,9 +44,19 @@ public class CategoryConsumer {
 	@Autowired
 	CategoryService categoryService;
 
-	 @Autowired
-	 private ObjectMapper objectMapper;
-	 
+	@Autowired
+	private ObjectMapper objectMapper;
+
+	private CountDownLatch latch = new CountDownLatch(1);
+
+	public void resetCountDown() {
+		this.latch = new CountDownLatch(1);
+	}
+
+	public CountDownLatch getLatch() {
+		return latch;
+	}
+
 	/**
 	 * This method for getting consumer configuration bean
 	 */
@@ -65,9 +76,9 @@ public class CategoryConsumer {
 	 * configuration
 	 */
 	@Bean
-	public ConsumerFactory<String, CategoryRequest> consumerFactory() {
+	public ConsumerFactory<String, Object> consumerFactory() {
 		return new DefaultKafkaConsumerFactory<>(consumerConfig(), new StringDeserializer(),
-				new JsonDeserializer<>(CategoryRequest.class));
+				new JsonDeserializer<>(Object.class));
 
 	}
 
@@ -76,8 +87,8 @@ public class CategoryConsumer {
 	 */
 
 	@Bean
-	public ConcurrentKafkaListenerContainerFactory<String, CategoryRequest> kafkaListenerContainerFactory() {
-		ConcurrentKafkaListenerContainerFactory<String, CategoryRequest> factory = new ConcurrentKafkaListenerContainerFactory<String, CategoryRequest>();
+	public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory() {
+		ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<String, Object>();
 		factory.setConsumerFactory(consumerFactory());
 		return factory;
 	}
@@ -85,20 +96,23 @@ public class CategoryConsumer {
 	/**
 	 * receive method
 	 * 
-	 * @param CategoryRequest
+	 * @param Object
 	 *            This method is listened whenever category is created and
 	 *            updated
 	 */
 	@KafkaListener(topics = { "#{propertiesManager.getCreateCategoryValidated()}",
 			"#{propertiesManager.getUpdateCategoryValidated()}" })
-	public void receive(ConsumerRecord<String, CategoryRequest> consumerRecord) throws Exception {
+	public void receive(ConsumerRecord<String, Object> consumerRecord) throws Exception {
+
+		CategoryRequest objectReceived = objectMapper.convertValue(consumerRecord.value(), CategoryRequest.class);
 
 		if (consumerRecord.topic().equalsIgnoreCase(propertiesManager.getCreateCategoryValidated())) {
-			categoryService.createCategory(objectMapper.convertValue(consumerRecord.value(), CategoryRequest.class));
+			categoryService.createCategory(objectReceived);
 		}
 
 		else {
-			categoryService.updateCategory(objectMapper.convertValue(consumerRecord.value(), CategoryRequest.class));
+			categoryService.updateCategory(objectReceived);
 		}
+		latch.countDown();
 	}
 }

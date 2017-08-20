@@ -10,17 +10,13 @@ import areIntlLocalesSupported from 'intl-locales-supported';
 export default class ShowField extends Component
 {
   constructor(props) {
-       super(props);
-      //  this.state={
-      //    value:""
-      //  }
+     super(props);
    }
 
   renderFields = (obj) =>{
-    // console.log(obj);
+    // console.log(obj.type, obj.value);
     let des = translate(obj.label);
-
-    let mandatory = obj.hasOwnProperty("isMandatory")?(obj.isMandatory? " *" : ""):"*";
+    let mandatory = obj.isMandatory ? " *" : "";
     let description = des + mandatory;
 
     let dropDownData=[];
@@ -55,20 +51,20 @@ export default class ShowField extends Component
     switch(obj.type){
       case "string":
         return (
-          <Col xs={12} md={3}>
+          <Col xs={12} sm={4} md={3} lg={3}>
             <TextField fullWidth={true} floatingLabelText={description
-            } onChange={(e) => this.props.handler(e, obj.name, mandatory=="*"?true:false, '')} />
+            } onChange={(e) => this.props.handler(e, obj.name, obj.isMandatory ? true : false, '')} />
           </Col>
         );
       case "number":
         return(
-          <Col xs={12} md={3}>
-            <TextField fullWidth={true} floatingLabelText={description} onChange={(e) => this.props.handler(e, obj.name, mandatory=="*"?true:false, /^[+-]?\d+(\.\d+)?$/)}   />
+          <Col xs={12} sm={4} md={3} lg={3}>
+            <TextField fullWidth={true} floatingLabelText={description} onChange={(e) => this.props.handler(e, obj.name, obj.isMandatory ? true : false, /^[+-]?\d+(\.\d+)?$/)}   />
           </Col>
         );
       case "date" :
         return(
-          <Col xs={12} md={3}>
+          <Col xs={12} sm={4} md={3} lg={3}>
             <DatePicker fullWidth={true}  floatingLabelText={description} value={typeof(obj.value)=="object"?obj.value:{}} onChange={(first, object)=>{
 
               let e={
@@ -76,7 +72,7 @@ export default class ShowField extends Component
                   value:object
                 }
               }
-              this.props.handler(e, obj.name, mandatory=="*"?true:false, '')
+              this.props.handler(e, obj.name, obj.isMandatory ? true : false, '')
 
             }}/>
           {/*<DatePicker fullWidth={true} DateTimeFormat={DateTimeFormat} locale="fr" floatingLabelText={description}  />*/}
@@ -84,23 +80,33 @@ export default class ShowField extends Component
         );
         case "epoch" :
           return(
-            <Col xs={12} md={3}>
-              <DatePicker fullWidth={true}  floatingLabelText={description}  onChange={(first, object)=>{
-
+            <Col xs={12} sm={4} md={3} lg={3}>
+              <DatePicker fullWidth={true} floatingLabelText={description}
+              value={obj.value ? obj.value: ''}
+              errorText={this.props.dateField ? obj.name === this.props.dateField ? this.props.dateError : '' : ''}
+              formatDate={(date)=>{
+                let dateObj = new Date(date);
+                let year = dateObj.getFullYear();
+                let month = dateObj.getMonth()+1;
+                let dt = dateObj.getDate();
+                dt =  dt < 10 ? '0' + dt : dt;
+                month = month < 10 ? '0' + month : month;
+                return dt + '-' + month + '-' + year;
+              }}
+              onChange={(first, object)=>{
                 let e={
                   target:{
                     value:object
                   }
                 }
-                this.props.handler(e, obj.name, mandatory=="*"?true:false, '')
-
+                this.props.handler(e, obj.name, obj.isMandatory ? true : false, '')
               }}/>
             {/*<DatePicker fullWidth={true} DateTimeFormat={DateTimeFormat} locale="fr" floatingLabelText={description}  />*/}
             </Col>
           );
       case "singlevaluelist":
         return(
-          <Col xs={12} md={3}>
+          <Col xs={12} sm={4} md={3} lg={3}>
             <SelectField fullWidth={true} floatingLabelText={description} value={typeof(obj.value)=="undefined"?"":obj.value} onChange={(event, key, value) => {
               // this.setState({
               //   value
@@ -110,7 +116,7 @@ export default class ShowField extends Component
                   value
                 }
               }
-              this.props.handler(e, obj.name, mandatory=="*"?true:false, "")
+              this.props.handler(e, obj.name, obj.isMandatory ? true : false, "")
             }} maxHeight={200} >
             {dropDownData.map((dd, index) => (
                 <MenuItem value={translate(dd.key)} key={index} primaryText={translate(dd.value)} />
@@ -121,7 +127,7 @@ export default class ShowField extends Component
 
         case "url":
           return(
-            <Col xs={12} md={3}>
+            <Col xs={12} sm={4} md={3} lg={3}>
               <SelectField fullWidth={true} floatingLabelText={description} value={typeof(obj.value)=="undefined"?"":obj.value} onChange={(event, key, value) => {
                 // this.setState({
                 //   value
@@ -131,7 +137,7 @@ export default class ShowField extends Component
                     value
                   }
                 }
-                this.props.handler(e, obj.name, mandatory=="*"?true:false, "")
+                this.props.handler(e, obj.name, obj.isMandatory ? true : false, "")
               }} maxHeight={200} >
               {dropDownData.map((dd, index) => (
                   <MenuItem value={translate(dd.key)} key={index} primaryText={translate(dd.value)} />
@@ -148,10 +154,6 @@ export default class ShowField extends Component
     }
   }
   render(){
-    return (
-      <div>
-        {this.renderFields(this.props.obj)}
-      </div>
-    );
+    return this.renderFields(this.props.obj);
   }
 }

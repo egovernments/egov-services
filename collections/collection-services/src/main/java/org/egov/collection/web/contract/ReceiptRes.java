@@ -22,6 +22,5 @@ public class ReceiptRes   {
   
   @JsonProperty("Receipt")
   private List<Receipt> receipts;
-
-
+  
 }

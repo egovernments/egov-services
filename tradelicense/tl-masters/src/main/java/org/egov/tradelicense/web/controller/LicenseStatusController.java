@@ -2,9 +2,9 @@ package org.egov.tradelicense.web.controller;
 
 import javax.validation.Valid;
 
-import org.egov.models.LicenseStatusRequest;
-import org.egov.models.LicenseStatusResponse;
-import org.egov.models.RequestInfoWrapper;
+import org.egov.tl.commons.web.requests.LicenseStatusRequest;
+import org.egov.tl.commons.web.requests.LicenseStatusResponse;
+import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tradelicense.domain.services.LicenseStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  */
 @RestController
-@RequestMapping(path = "/status")
+@RequestMapping(path = "/status/v1")
 public class LicenseStatusController {
 
 	@Autowired

@@ -100,9 +100,6 @@ public class ApplicationProperties {
     @Value("${positionforuser.get.uri}")
     private String getPosition;
     
-    @Value("${positionforuser.get.append.uri}")
-    private String getPositionUriAppend;
-    
     @Value("${egov.instrument.hostname}")
     private String instrumentServiceHost;
     
@@ -118,4 +115,13 @@ public class ApplicationProperties {
     @Value("${egov.services.billing_service.apportion}")
     private String billingServiceApportion;
     
+    @Value("${search.accountcodes.uri}")
+    private String searchAccountCodes;
+    
+    @Value("${egov.services.billing_service.search}")
+    private String searchBill;
+    
+    @Value("${positionforuser.get.uri.append}")
+    private String getPositionAppend;
+            
 }

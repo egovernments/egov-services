@@ -176,7 +176,35 @@ public class ConfigurationManager {
     
     @Value("${egov.services.demandbill_service.taxheadperiod}")
     private String taxHeadMasterNameTopic;
+    
+    @Value("${egov.services.pt_property_subusagetype.searchpath}")
+    private String serachSubUsageType;
 
     @Value("${estimation.notice.placeholders}")
     private String estimationNoticePlaceHolders;
+    
+    @Value("${egov.services.boundary_service.hostname}")
+    private String locationServiceBasePathTopic;
+
+    @Value("${egov.services.boundary_service.searchpath}")
+    private String locationServiceBoundarySearchPathTopic;
+    
+    @Value("${egov.services.egov_user.hostname}")
+    private String userHostName;
+
+    @Value("${egov.services.egov_user.basepath}")
+    private String userBasePath;
+    
+    @Value("${egov.services.egov_user.searchpath}")
+    private String userSearchPath;
+    
+    @Value("${egov.services.egov_user.createpath}")
+    private String userCreatePath;
+    
+    @Value("${egov.services.egov_user.updatepath}")
+    private String userUpdatePath;
+    
+    @Value("${default.password}")
+    private String defaultPassword;
+    
 }

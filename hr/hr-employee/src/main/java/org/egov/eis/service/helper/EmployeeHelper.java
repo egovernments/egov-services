@@ -86,12 +86,6 @@ public class EmployeeHelper {
 		}
 	}
 
-/*
-	public String getEmployeeCode(Long id) {
-		return "EMP" + id;
-	}
-*/
-
 	public UserRequest getUserRequest(EmployeeRequest employeeRequest) {
 		UserRequest userRequest = new UserRequest();
 		RequestInfo requestInfo = employeeRequest.getRequestInfo();

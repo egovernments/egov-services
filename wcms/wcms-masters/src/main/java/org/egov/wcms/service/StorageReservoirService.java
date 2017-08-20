@@ -99,17 +99,13 @@ public class StorageReservoirService {
         return storageReservoirRequest.getStorageReservoir();
     }
 
-    public List<StorageReservoir> getStorageReservoir(
-            final StorageReservoirGetRequest storageReservoirGetRequest) {
+    public List<StorageReservoir> getStorageReservoir(final StorageReservoirGetRequest storageReservoirGetRequest) {
         return storageReservoirRepository.findForCriteria(storageReservoirGetRequest);
     }
 
-    public Boolean getBoundaryByZone(
-            final StorageReservoir storageReservoir) {
+    public Boolean getBoundaryByZone(final StorageReservoir storageReservoir) {
         BoundaryResponse boundaryRespose = null;
-        boundaryRespose = restExternalMasterService.getBoundaryNum(
-                WcmsConstants.ZONE,
-                storageReservoir.getZoneNum(),
+        boundaryRespose = restExternalMasterService.getBoundaryNum(WcmsConstants.ZONE, storageReservoir.getZoneNum(),
                 storageReservoir.getTenantId());
         return boundaryRespose != null && !boundaryRespose.getBoundarys().isEmpty();
 
@@ -117,22 +113,18 @@ public class StorageReservoirService {
 
     public Boolean getBoundaryByWard(final StorageReservoir storageReservoir) {
         BoundaryResponse boundaryRespose = null;
-        boundaryRespose = restExternalMasterService.getBoundaryNum(
-                WcmsConstants.WARD,
-                storageReservoir.getWardNum() ,
+        boundaryRespose = restExternalMasterService.getBoundaryNum(WcmsConstants.WARD, storageReservoir.getWardNum(),
                 storageReservoir.getTenantId());
-           
+
         return boundaryRespose != null && !boundaryRespose.getBoundarys().isEmpty();
 
     }
 
     public Boolean getBoundaryByLocation(final StorageReservoir storageReservoir) {
         BoundaryResponse boundaryRespose = null;
-        boundaryRespose = restExternalMasterService.getBoundaryNum(
-                WcmsConstants.LOCALITY,
-                storageReservoir.getLocationNum(),
-                storageReservoir.getTenantId());
-        
+        boundaryRespose = restExternalMasterService.getBoundaryNum(WcmsConstants.LOCALITY,
+                storageReservoir.getLocationNum(), storageReservoir.getTenantId());
+
         return boundaryRespose != null && !boundaryRespose.getBoundarys().isEmpty();
 
     }

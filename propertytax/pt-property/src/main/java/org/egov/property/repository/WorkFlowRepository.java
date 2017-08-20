@@ -9,9 +9,9 @@ import org.egov.models.Task;
 import org.egov.models.TaskRequest;
 import org.egov.models.TaskResponse;
 import org.egov.models.WorkFlowDetails;
+import org.egov.property.config.PropertiesManager;
 import org.egov.property.exception.ValidationUrlNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -32,7 +32,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class WorkFlowRepository {
 
 	@Autowired
-	Environment environment;
+	PropertiesManager propertiesManager;
 
 	@Autowired
 	RestTemplate restTemplate;
@@ -43,9 +43,9 @@ public class WorkFlowRepository {
 		TaskRequest taskRequest = getTaskRequest(workFlowDetails, requestInfo, tenantId);
 		TaskResponse taskResponse = null;
 		StringBuilder workFlowUpdateUrl = new StringBuilder();
-		workFlowUpdateUrl.append(environment.getProperty("egov.services.egov-common-workflows.hostname"));
-		workFlowUpdateUrl.append(environment.getProperty("egov.services.egov-common-workflows.basepath"));
-		workFlowUpdateUrl.append(environment.getProperty("egov.services.egov-common-workflows.updatepath"));
+		workFlowUpdateUrl.append(propertiesManager.getWorkflowHostname());
+		workFlowUpdateUrl.append(propertiesManager.getWorkflowBasepath());
+		workFlowUpdateUrl.append(propertiesManager.getWorkflowUpdatepath());
 		String url = workFlowUpdateUrl.toString();
 
 		Map<String, String> uriParams = new HashMap<String, String>();
@@ -63,7 +63,7 @@ public class WorkFlowRepository {
 					builder.buildAndExpand(uriParams).toUri(), HttpMethod.POST, requestEntity, TaskResponse.class);
 			taskResponse = responseEntity.getBody();
 		} catch (Exception exception) {
-			throw new ValidationUrlNotFoundException(environment.getProperty("invalid.update.workflow.validation"),
+			throw new ValidationUrlNotFoundException(propertiesManager.getWorkflowValidation(),
 					exception.getMessage(), requestInfo);
 		}
 		return taskResponse;
@@ -75,7 +75,7 @@ public class WorkFlowRepository {
 		Task task = new Task();
 		Position assignee = new Position();
 		taskRequest.setRequestInfo(requestInfo);
-		task.setBusinessKey(environment.getProperty("businessKey"));
+		task.setBusinessKey(propertiesManager.getWorkflowBusinessKey());
 		task.setAction(workflowDetails.getAction());
 		task.setStatus(workflowDetails.getStatus());
 		task.setTenantId(tenantId);

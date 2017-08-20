@@ -137,6 +137,8 @@ public class PaymentService {
 
 			billInfo.setCollModesNotAllowed("");
 			if (agreement.getAsset().getLocationDetails().getElectionWard() != null) {
+				LOGGER.info("setting boundary details with Election ward");
+				LOGGER.info("Election ward is: " +agreement.getAsset().getLocationDetails().getElectionWard());
 				BoundaryResponse boundaryResponse = getBoundariesById(
 						agreement.getAsset().getLocationDetails().getElectionWard(),agreement.getTenantId());
 				billInfo.setBoundaryNumber(boundaryResponse.getBoundarys().get(0).getBoundaryNum());
@@ -321,8 +323,8 @@ public class PaymentService {
 		paymentInfo.setReceiptDate(billReceiptInfo.getReceiptDate());
 		paymentInfo.setReceiptNumber(billReceiptInfo.getReceiptNum());
 		paymentInfo.setStatus(billReceiptInfo.getReceiptStatus());
-		LOGGER.info("paymengtinfo"+ paymentInfos);
 		paymentInfos.add(paymentInfo);
+		LOGGER.info("paymengtinfo"+ paymentInfos);
 		return paymentInfos;
 	}
 

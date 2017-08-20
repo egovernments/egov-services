@@ -20,9 +20,7 @@ public class BusinessDetailsQueryBuilder {
 			+ "bd.functionary as bd_functionary,bd.department as bd_department,bd.callbackforapportioning as bd_callback,"
 			+ "bd.vouchercreation as bd_vouc_creation,bd.businesscategory as bd_category,"
 			+ "bd.isvoucherapproved as bd_is_Vou_approved,bd.vouchercutoffdate as bd_vou_cutoffdate,"
-			+ "bd.ordernumber as bd_ordernumber,bd.tenantid as bd_tenant,bd.createdby as bd_createdby,"
-			+ "bd.createddate as bd_createddate,bd.lastmodifiedby as bd_lastmodifiedby,bd.lastmodifieddate"
-			+ " as bd_lastmodifieddate,bad.id as bad_id,bad.businessdetails as bd_id,bad.chartofaccount"
+			+ "bd.ordernumber as bd_ordernumber,bd.tenantid as bd_tenant,bad.id as bad_id,bad.businessdetails as bd_id,bad.chartofaccount"
 			+ " as bad_chartofacc,bad.amount as bad_amount,bad.tenantid as bad_tenant,basd.id  as basd_id,"
 			+ "basd.accountdetailtype as basd_detailtype,basd.accountdetailkey as basd_detailkey,basd.amount"
 			+ " as basd_amount,basd.businessaccountdetail"
@@ -30,6 +28,52 @@ public class BusinessDetailsQueryBuilder {
 			+ " bd ON bc.id=bd.businesscategory FULL JOIN"
 			+ " eg_business_accountdetails bad ON bd.id=bad.businessdetails"
 			+ " FULL JOIN eg_business_subledgerinfo basd ON bad.id=basd.businessaccountdetail";
+
+
+    public String insertBusinessDetailsQuery() {
+        return "Insert into eg_businessdetails"
+                + " (id,name,isEnabled,code,businessType,businessUrl,voucherCutOffDate,"
+                + "ordernumber,voucherCreation,isVoucherApproved,fund,department,"
+                + "fundSource,functionary,businessCategory,function,callBackForApportioning,tenantId,"
+                + "createdBy,createdDate,lastModifiedBy,lastModifiedDate)" + " values (:id,:name,:enabled,:code,:businesstype,:businessurl,:vouchercutoffdate,"
+                + ":ordernumber,:vouchercreation,:isVoucherApproved,:fund,:department,:fundSource,:functionary,:businessCategory,:function,:callBackForApportioning,"
+                + ":tenantId,:createdBy,:createdDate,:lastModifiedBy,:lastModifiedDate)";
+    }
+
+    public String updateBusinessDetailsQuery() {
+        return "Update eg_businessdetails"
+                + " set name=:name,isEnabled=:enabled,code=:code,businessType=:businesstype,businessUrl=:businessurl,voucherCutOffDate=:vouchercutoffdate,"
+                + "ordernumber=:ordernumber,voucherCreation=:vouchercreation,isVoucherApproved=:isVoucherApproved,fund=:fund,department=:department,"
+                + "fundSource=:fundSource,functionary=:functionary,businessCategory=:businessCategory,function=:function,callBackForApportioning=:callBackForApportioning,"
+                + "tenantId=:tenantId,lastModifiedBy=:lastModifiedBy,lastModifiedDate=:lastModifiedDate where id=:id";
+    }
+
+    public String deleteBusinessAccountDetails() {
+        return "Delete from eg_business_accountdetails where businessDetails=:businessDetails";
+    }
+
+    public String insertBusinessAccountDetailsQuery() {
+        return "Insert into eg_business_accountdetails"
+                + " (id,businessDetails,chartOfAccount,amount,tenantId)" + " values (nextval('seq_eg_business_accountdetails'),:businessDetails,:chartOfAccount,:amount,:tenantId)";
+    }
+
+    public String updateBusinessAccountDetailsQuery() {
+        return "Update eg_business_accountdetails"
+                + " set businessDetails=:businessDetails,chartOfAccount=:chartOfAccount,amount=:amount,tenantId=:tenantId" + " where id=:id";
+    }
+
+    public String insertAccountSubLedgerDetails() {
+        return "insert into eg_business_subledgerinfo"
+                + " (id,amount,businessAccountDetail,accountDetailKey,accountDetailType,tenantId)"
+                + " values (nextval('seq_eg_business_subledgerinfo'),:amount,:businessAccountDetail,:accountDetailKey,:accountDetailType,:tenantId)";
+    }
+
+    public String UpdateAccountSubLedgerDetails() {
+        return "Update eg_business_subledgerinfo"
+                + " set amount=?,businessAccountDetail=?,accountDetailKey=?,accountDetailType=?,"
+                + " tenantId=? where id=?";
+    }
+
 
 	@SuppressWarnings("rawtypes")
 	public String getQuery(BusinessDetailsCriteria detailsCriteria, List preparedStatementValues) {

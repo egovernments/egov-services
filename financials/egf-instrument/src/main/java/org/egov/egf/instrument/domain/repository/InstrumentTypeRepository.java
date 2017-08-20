@@ -10,8 +10,10 @@ import org.egov.egf.instrument.domain.model.InstrumentTypeSearch;
 import org.egov.egf.instrument.persistence.entity.InstrumentTypeEntity;
 import org.egov.egf.instrument.persistence.queue.repository.InstrumentTypeQueueRepository;
 import org.egov.egf.instrument.persistence.repository.InstrumentTypeJdbcRepository;
+import org.egov.egf.instrument.web.contract.InstrumentTypeSearchContract;
 import org.egov.egf.instrument.web.mapper.InstrumentTypeMapper;
 import org.egov.egf.instrument.web.requests.InstrumentTypeRequest;
+import org.egov.egf.master.web.repository.FinancialConfigurationContractRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -26,13 +28,21 @@ public class InstrumentTypeRepository {
 
 	private String persistThroughKafka;
 
+	private FinancialConfigurationContractRepository financialConfigurationContractRepository;
+
+	private InstrumentTypeESRepository instrumentTypeESRepository;
+
 	@Autowired
 	public InstrumentTypeRepository(InstrumentTypeJdbcRepository instrumentTypeJdbcRepository,
 			InstrumentTypeQueueRepository instrumentTypeQueueRepository,
-			@Value("${persist.through.kafka}") String persistThroughKafka) {
+			@Value("${persist.through.kafka}") String persistThroughKafka,
+			FinancialConfigurationContractRepository financialConfigurationContractRepository,
+			InstrumentTypeESRepository instrumentTypeESRepository) {
 		this.instrumentTypeJdbcRepository = instrumentTypeJdbcRepository;
 		this.instrumentTypeQueueRepository = instrumentTypeQueueRepository;
 		this.persistThroughKafka = persistThroughKafka;
+		this.financialConfigurationContractRepository = financialConfigurationContractRepository;
+		this.instrumentTypeESRepository = instrumentTypeESRepository;
 
 	}
 
@@ -141,6 +151,53 @@ public class InstrumentTypeRepository {
 	}
 
 	@Transactional
+	public List<InstrumentType> delete(List<InstrumentType> instrumentTypes, RequestInfo requestInfo) {
+
+		InstrumentTypeMapper mapper = new InstrumentTypeMapper();
+
+		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+				&& persistThroughKafka.equalsIgnoreCase("yes")) {
+
+			InstrumentTypeRequest request = new InstrumentTypeRequest();
+			request.setRequestInfo(requestInfo);
+			request.setInstrumentTypes(new ArrayList<>());
+
+			for (InstrumentType iac : instrumentTypes) {
+
+				request.getInstrumentTypes().add(mapper.toContract(iac));
+
+			}
+
+			instrumentTypeQueueRepository.addToQue(request);
+
+			return instrumentTypes;
+		} else {
+
+			List<InstrumentType> resultList = new ArrayList<InstrumentType>();
+
+			for (InstrumentType iac : instrumentTypes) {
+
+				resultList.add(delete(iac));
+			}
+
+			InstrumentTypeRequest request = new InstrumentTypeRequest();
+			request.setRequestInfo(requestInfo);
+			request.setInstrumentTypes(new ArrayList<>());
+
+			for (InstrumentType iac : resultList) {
+
+				request.getInstrumentTypes().add(mapper.toContract(iac));
+
+			}
+
+			instrumentTypeQueueRepository.addToSearchQue(request);
+
+			return resultList;
+		}
+
+	}
+	
+	@Transactional
 	public InstrumentType save(InstrumentType instrumentType) {
 		InstrumentTypeEntity entity = instrumentTypeJdbcRepository
 				.create(new InstrumentTypeEntity().toEntity(instrumentType));
@@ -154,19 +211,28 @@ public class InstrumentTypeRepository {
 		return entity.toDomain();
 	}
 
+	@Transactional
+	public InstrumentType delete(InstrumentType instrumentType) {
+		InstrumentTypeEntity entity = instrumentTypeJdbcRepository.delete(new InstrumentTypeEntity().toEntity(instrumentType));
+		return entity.toDomain();
+	}
+	
 	public Pagination<InstrumentType> search(InstrumentTypeSearch domain) {
 
-		// if() {
-		// InstrumentTypeSearchContract instrumentTypeSearchContract = new
-		// InstrumentTypeSearchContract();
-		// ModelMapper mapper = new ModelMapper();
-		// mapper.map(domain,instrumentTypeSearchContract );
-		// Pagination<InstrumentType> instrumenttypes =
-		// instrumentTypeESRepository.search(instrumentTypeSearchContract);
-		// return instrumenttypes;
-		// }
+		if (financialConfigurationContractRepository.fetchDataFrom() != null
+				&& financialConfigurationContractRepository.fetchDataFrom().equalsIgnoreCase("es")) {
 
-		return instrumentTypeJdbcRepository.search(domain);
+			InstrumentTypeSearchContract instrumentTypeSearchContract = new InstrumentTypeSearchContract();
+			InstrumentTypeMapper mapper = new InstrumentTypeMapper();
+			instrumentTypeSearchContract = mapper.toSearchContract(domain);
+			Pagination<InstrumentType> instrumenttypes = instrumentTypeESRepository
+					.search(instrumentTypeSearchContract);
+
+			return instrumenttypes;
+
+		} else {
+			return instrumentTypeJdbcRepository.search(domain);
+		}
 
 	}
 

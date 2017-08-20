@@ -75,15 +75,15 @@ public class DocumentService {
         final List<Bill> bills = receipt.getBill();
         List<BillDetail> billDetails = bills.get(0).getBillDetails();
         RequestInfo requestInfo = receiptRequest.getRequestInfo();
-        List<User> users = userRepository.getUsersById(Arrays.asList(requestInfo.getUserInfo().getId()), requestInfo,receiptRequest.getTenantId());
+        List<User> users = userRepository.getUsersById(Arrays.asList(requestInfo.getUserInfo().getId()), requestInfo, receipt.getTenantId());
 
         for(BillDetail billDetail: billDetails) {
             BusinessDetailsResponse businessDetailsResponse = businessDetailsRepository.getBusinessDetails(Arrays.asList( billDetail.getBusinessService()),
-                    receiptRequest.getTenantId(),requestInfo);
+                    receipt.getTenantId(),requestInfo);
             List<BusinessDetailsRequestInfo> businessDetails =  businessDetailsResponse.getBusinessDetails();
             ReceiptRequestDocument document = new ReceiptRequestDocument();
-            document.setTenantId(receiptRequest.getTenantId());
-            document.setPaymentMode(receipt.getInstrumentType());
+            document.setTenantId(receipt.getTenantId());
+            document.setPaymentMode(receipt.getInstrument() != null ? receipt.getInstrument().getInstrumentType().getName() : null);
             document.setConsumerName(bills.get(0).getPayeeName());
             document.setConsumerType(billDetail.getConsumerType());
             document.setConsumerCode(billDetail.getConsumerCode());

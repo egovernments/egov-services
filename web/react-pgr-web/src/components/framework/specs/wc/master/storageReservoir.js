@@ -3,6 +3,7 @@ var dat = {
 		"numCols": 12/3,
 		"url": "/wcms/masters/storagereservoir/_create",
 		"tenantIdRequired": true,
+		"idJsonPath": "StorageReservoirs[0].code",
 		"useTimestamp": true,
 		"objectName": "StorageReservoir",
 		"groups": [
@@ -28,7 +29,7 @@ var dat = {
 							"pattern": "",
 							"type": "singleValueList",
 							"url": "/wcms/masters/master/_getreservoirtypes?|$..key|$..object",
-							"isRequired": false,
+							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
@@ -40,7 +41,7 @@ var dat = {
 							"pattern": "",
 							"type": "singleValueList",
 							"url": "/egov-location/boundarys/_search?&boundaryType=Locality|$.Boundary.*.boundaryNum|$.Boundary.*.name",
-							"isRequired": false,
+							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
@@ -52,7 +53,7 @@ var dat = {
 							"pattern": "",
 							"type": "singleValueList",
 							"url": "/egov-location/boundarys/_search?&boundaryType=Ward|$.Boundary.*.boundaryNum|$.Boundary.*.name",
-							"isRequired": false,
+							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
@@ -64,7 +65,7 @@ var dat = {
 							"pattern": "",
 							"type": "singleValueList",
 							"url": "/egov-location/boundarys/_search?&boundaryType=Zone|$.Boundary.*.boundaryNum|$.Boundary.*.name",
-							"isRequired": false,
+							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
@@ -108,7 +109,7 @@ var dat = {
 							"label": "wc.create.groups.fields.storageCapacityofReservoir(in MLD)",
 							"pattern": "^.{1,8}$",
 							"type": "number",
-							"isRequired": false,
+							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": "Maximum length of capacity is 8"
@@ -127,7 +128,7 @@ var dat = {
 		"objectName": "StorageReservoir",
 		"groups": [
 			{
-				"label": "wc.create.storageReservoir.title",
+				"label": "wc.search.storageReservoir.title",
 				"name": "searchStorageReservoir",
 				"fields": [
 						{
@@ -173,7 +174,7 @@ var dat = {
 		"objectName": "StorageReservoirs",
 		"groups": [
 			{
-				"label": "wc.create.storageReservoir.title",
+				"label": "wc.view.storageReservoir.title",
 				"name": "viewStorageReservoir",
 				"fields": [
 						{
@@ -289,13 +290,12 @@ var dat = {
 		"searchUrl": "/wcms/masters/storagereservoir/_search?id={id}",
 		"url":"/wcms/masters/storagereservoir/_update",
 		"tenantIdRequired": true,
-		"idJsonPath": "StorageReservoirs[0].id",
 		"useTimestamp": true,
 		"isResponseArray" : true,
 		"objectName": "StorageReservoir[0]",
 		"groups": [
 			{
-				"label": "wc.create.storageReservoir.title",
+				"label": "wc.update.storageReservoir.title",
 				"name": "updateStorageReservoir",
 				"fields": [
 						{
@@ -331,7 +331,8 @@ var dat = {
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"convertToString":true
 						},
 						{
 							"name": "wardName",
@@ -343,7 +344,8 @@ var dat = {
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"convertToString":true
 						},
 						{
 							"name": "zoneName",
@@ -355,7 +357,8 @@ var dat = {
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"convertToString":true
 						},
 						{
 							"name": "noOfMainDistributionLines",

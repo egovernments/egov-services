@@ -2,9 +2,9 @@ package org.egov.tradelicense.web.controller;
 
 import javax.validation.Valid;
 
-import org.egov.models.FeeMatrixRequest;
-import org.egov.models.FeeMatrixResponse;
-import org.egov.models.RequestInfoWrapper;
+import org.egov.tl.commons.web.requests.FeeMatrixRequest;
+import org.egov.tl.commons.web.requests.FeeMatrixResponse;
+import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tradelicense.domain.services.FeeMatrixService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  */
 @RestController
-@RequestMapping(path = "/feematrix")
+@RequestMapping(path = "/feematrix/v1")
 public class FeeMatrixController {
 
 	@Autowired
@@ -35,10 +35,10 @@ public class FeeMatrixController {
 	 * @throws Exception
 	 */
 	@RequestMapping(path = "/_create", method = RequestMethod.POST)
-	public FeeMatrixResponse createFeeMatrixMaster(@RequestParam(required = true) String tenantId,
-			@Valid @RequestBody FeeMatrixRequest feeMatrixRequest) throws Exception {
+	public FeeMatrixResponse createFeeMatrixMaster(@Valid @RequestBody FeeMatrixRequest feeMatrixRequest)
+			throws Exception {
 
-		return feeMatrixService.createFeeMatrixMaster( feeMatrixRequest);
+		return feeMatrixService.createFeeMatrixMaster(feeMatrixRequest);
 	}
 
 	/**

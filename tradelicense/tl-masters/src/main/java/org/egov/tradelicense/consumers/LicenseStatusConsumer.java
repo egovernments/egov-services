@@ -2,17 +2,18 @@ package org.egov.tradelicense.consumers;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.egov.models.LicenseStatusRequest;
+import org.egov.tl.commons.web.requests.LicenseStatusRequest;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.services.LicenseStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
+import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
@@ -20,6 +21,8 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Consumer class will use for listening lecenseStatus object from kafka server
@@ -29,7 +32,7 @@ import org.springframework.web.client.RestTemplate;
  */
 @Service
 @Configuration
-@Profile("production")
+@EnableKafka
 public class LicenseStatusConsumer {
 
 	@Autowired
@@ -40,6 +43,19 @@ public class LicenseStatusConsumer {
 
 	@Autowired
 	LicenseStatusService licenseStatusService;
+
+	@Autowired
+	private ObjectMapper objectMapper;
+
+	private CountDownLatch latch = new CountDownLatch(1);
+
+	public void resetCountDown() {
+		this.latch = new CountDownLatch(1);
+	}
+
+	public CountDownLatch getLatch() {
+		return latch;
+	}
 
 	/**
 	 * This method for getting consumer configuration bean
@@ -60,9 +76,9 @@ public class LicenseStatusConsumer {
 	 * configuration
 	 */
 	@Bean
-	public ConsumerFactory<String, LicenseStatusRequest> consumerFactory() {
+	public ConsumerFactory<String, Object> consumerFactory() {
 		return new DefaultKafkaConsumerFactory<>(consumerConfig(), new StringDeserializer(),
-				new JsonDeserializer<>(LicenseStatusRequest.class));
+				new JsonDeserializer<>(Object.class));
 
 	}
 
@@ -71,8 +87,8 @@ public class LicenseStatusConsumer {
 	 */
 
 	@Bean
-	public ConcurrentKafkaListenerContainerFactory<String, LicenseStatusRequest> kafkaListenerContainerFactory() {
-		ConcurrentKafkaListenerContainerFactory<String, LicenseStatusRequest> factory = new ConcurrentKafkaListenerContainerFactory<String, LicenseStatusRequest>();
+	public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory() {
+		ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<String, Object>();
 		factory.setConsumerFactory(consumerFactory());
 		return factory;
 	}
@@ -86,14 +102,18 @@ public class LicenseStatusConsumer {
 	 */
 	@KafkaListener(topics = { "#{propertiesManager.getCreateLicenseStatusValidated()}",
 			"#{propertiesManager.getUpdateLicenseStatusValidated()}" })
-	public void receive(ConsumerRecord<String, LicenseStatusRequest> consumerRecord) throws Exception {
+	public void receive(ConsumerRecord<String, Object> consumerRecord) throws Exception {
+
+		LicenseStatusRequest objectReceived = objectMapper.convertValue(consumerRecord.value(),
+				LicenseStatusRequest.class);
 
 		if (consumerRecord.topic().equalsIgnoreCase(propertiesManager.getCreateLicenseStatusValidated())) {
-			// licenseStatusService.createLicenseStatus(consumerRecord.value());
+			licenseStatusService.createLicenseStatus(objectReceived);
 		}
 
 		else {
-			// licenseStatusService.updateLicenseStatus(consumerRecord.value());
+			licenseStatusService.updateLicenseStatus(objectReceived);
 		}
+		latch.countDown();
 	}
 }

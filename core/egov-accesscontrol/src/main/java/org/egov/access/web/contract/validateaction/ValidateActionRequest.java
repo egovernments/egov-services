@@ -14,16 +14,17 @@ import java.util.stream.Collectors;
 @Builder
 @AllArgsConstructor
 public class ValidateActionRequest {
-    @NonNull
-    private RequestInfo requestInfo;
+	@NonNull
+	private RequestInfo requestInfo;
 
-    @NonNull
-    private ValidateActionContract validateAction;
+	@NonNull
+	private ValidateActionContract validateAction;
 
-    public ValidateActionCriteria toDomain() {
-        return ValidateActionCriteria.builder().
-                roleNames(validateAction.getTenantRole().getRoles().stream().map(RoleContract::getName).collect(Collectors.toList())).
-                actionUrl(validateAction.getActionUrl()).
-                tenantId(validateAction.getTenantRole().getTenantId()).build();
-    }
+	public ValidateActionCriteria toDomain() {
+		return ValidateActionCriteria.builder()
+				.roleNames(validateAction.getTenantRole().getRoles().stream().map(RoleContract::getName)
+						.collect(Collectors.toList()))
+				.actionUrl(validateAction.getActionUrl()).tenantId(validateAction.getTenantRole().getTenantId())
+				.build();
+	}
 }

@@ -9,6 +9,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class VoucherSearch extends Voucher{ private Integer pageSize; 
+public class VoucherSearch extends Voucher{ private String ids; 
+private String  sortBy; 
+private Integer pageSize; 
 private Integer offset; 
 } 

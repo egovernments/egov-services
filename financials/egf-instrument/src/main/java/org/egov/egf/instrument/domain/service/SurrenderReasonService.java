@@ -22,6 +22,7 @@ public class SurrenderReasonService {
 
 	public static final String ACTION_CREATE = "create";
 	public static final String ACTION_UPDATE = "update";
+	public static final String ACTION_DELETE = "delete";
 	public static final String ACTION_VIEW = "view";
 	public static final String ACTION_EDIT = "edit";
 	public static final String ACTION_SEARCH = "search";
@@ -84,6 +85,28 @@ public class SurrenderReasonService {
 
 	}
 
+	@Transactional
+	public List<SurrenderReason> delete(List<SurrenderReason> surrenderReasons, BindingResult errors,
+			RequestInfo requestInfo) {
+
+		try {
+
+			validate(surrenderReasons, ACTION_DELETE, errors);
+
+			if (errors.hasErrors()) {
+				throw new CustomBindException(errors);
+			}
+
+		} catch (CustomBindException e) {
+
+			throw new CustomBindException(errors);
+
+		}
+
+		return surrenderReasonRepository.delete(surrenderReasons, requestInfo);
+
+	}
+
 	private BindingResult validate(List<SurrenderReason> surrenderreasons, String method, BindingResult errors) {
 
 		try {
@@ -101,7 +124,13 @@ public class SurrenderReasonService {
 			case ACTION_UPDATE:
 				Assert.notNull(surrenderreasons, "SurrenderReasons to update must not be null");
 				for (SurrenderReason surrenderReason : surrenderreasons) {
+					Assert.notNull(surrenderReason.getId(), "SurrenderReason ID to update must not be null");
 					validator.validate(surrenderReason, errors);
+				}
+			case ACTION_DELETE:
+				Assert.notNull(surrenderreasons, "SurrenderReasons to delete must not be null");
+				for (SurrenderReason surrenderreason : surrenderreasons) {
+					Assert.notNull(surrenderreason.getId(), "SurrenderReason ID to delete must not be null");
 				}
 				break;
 			default:
@@ -112,6 +141,11 @@ public class SurrenderReasonService {
 		}
 		return errors;
 
+	}
+
+	@Transactional
+	public SurrenderReason delete(SurrenderReason surrenderReason) {
+		return surrenderReasonRepository.delete(surrenderReason);
 	}
 
 	public List<SurrenderReason> fetchRelated(List<SurrenderReason> surrenderreasons) {

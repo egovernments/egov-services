@@ -11,7 +11,7 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 @Getter
 @EqualsAndHashCode
 public class AttributeEntry {
-    private static final int MAX_LENGTH = 50;
+    private static final int MAX_LENGTH = 256;
     private static final String KEY_FIELD_NAME = "key";
     private static final String CODE_FIELD_NAME = "code";
     private String key;

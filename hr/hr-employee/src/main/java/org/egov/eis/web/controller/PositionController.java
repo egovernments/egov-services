@@ -47,7 +47,7 @@ import javax.validation.Valid;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.model.Position;
-import org.egov.eis.service.PositionService;
+import org.egov.eis.service.HRMastersService;
 import org.egov.eis.web.contract.PositionGetRequest;
 import org.egov.eis.web.contract.PositionResponse;
 import org.egov.eis.web.contract.RequestInfoWrapper;
@@ -75,7 +75,7 @@ public class PositionController {
 	private static final Logger logger = LoggerFactory.getLogger(PositionController.class);
 
 	@Autowired
-	private PositionService positionService;
+	private HRMastersService hrMastersService;
 
 	@Autowired
 	private ErrorHandler errHandler;
@@ -89,7 +89,7 @@ public class PositionController {
 	/**
 	 * Maps Post Requests for _search & returns ResponseEntity of either
 	 * PositionResponse type or ErrorResponse type
-	 * 
+	 *
 	 * @param positionGetRequest,
 	 * @param modelAttributeBindingResult
 	 * @param requestInfoWrapper
@@ -113,7 +113,7 @@ public class PositionController {
 		// Call service
 		List<Position> positionsList = null;
 		try {
-			positionsList = positionService.getPositions(employeeId, positionGetRequest, requestInfoWrapper);
+			positionsList = hrMastersService.getPositions(employeeId, positionGetRequest, requestInfoWrapper);
 		} catch (Exception exception) {
 			logger.error("Error while processing request " + positionGetRequest, exception);
 			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
@@ -125,7 +125,7 @@ public class PositionController {
 	/**
 	 * Populate PositionResponse object & returns ResponseEntity of type
 	 * PositionResponse containing ResponseInfo & List of Positions
-	 * 
+	 *
 	 * @param positionsList
 	 * @param requestInfo
 	 * @return ResponseEntity<?>
@@ -137,7 +137,6 @@ public class PositionController {
 		responseInfo.setStatus(HttpStatus.OK.toString());
 		positionRes.setResponseInfo(responseInfo);
 		return new ResponseEntity<PositionResponse>(positionRes, HttpStatus.OK);
-
 	}
 
 }

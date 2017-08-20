@@ -1,12 +1,5 @@
 package org.egov.egf.master.persistence.repository;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.persistence.repository.JdbcRepository;
 import org.egov.egf.master.domain.model.FinancialConfiguration;
@@ -18,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 @Service
 public class FinancialConfigurationJdbcRepository extends JdbcRepository {
@@ -72,6 +67,13 @@ public class FinancialConfigurationJdbcRepository extends JdbcRepository {
         searchQuery = searchQuery.replace(":selectfields", " * ");
 
         // implement jdbc specfic search
+        if (financialConfigurationSearchEntity.getTenantId() != null) {
+            if (params.length() > 0) {
+                params.append(" and ");
+            }
+            params.append("tenantId =:tenantId");
+            paramValues.put("tenantId", financialConfigurationSearchEntity.getTenantId());
+        }
         if (financialConfigurationSearchEntity.getId() != null) {
             if (params.length() > 0) {
                 params.append(" and ");

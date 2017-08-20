@@ -1,3 +1,42 @@
+/*
+ * eGov suite of products aim to improve the internal efficiency,transparency,
+ *      accountability and the service delivery of the government  organizations.
+ *  
+ *       Copyright (C) <2015>  eGovernments Foundation
+ *  
+ *       The updated version of eGov suite of products as by eGovernments Foundation
+ *       is available at http://www.egovernments.org
+ *  
+ *       This program is free software: you can redistribute it and/or modify
+ *       it under the terms of the GNU General Public License as published by
+ *       the Free Software Foundation, either version 3 of the License, or
+ *       any later version.
+ *  
+ *       This program is distributed in the hope that it will be useful,
+ *       but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *       GNU General Public License for more details.
+ *  
+ *       You should have received a copy of the GNU General Public License
+ *       along with this program. If not, see http://www.gnu.org/licenses/ or
+ *       http://www.gnu.org/licenses/gpl.html .
+ *  
+ *       In addition to the terms of the GPL license to be adhered to in using this
+ *       program, the following additional terms are to be complied with:
+ *  
+ *           1) All versions of this program, verbatim or modified must carry this
+ *              Legal Notice.
+ *  
+ *           2) Any misrepresentation of the origin of the material is prohibited. It
+ *              is required that all modified versions of this material be marked in
+ *              reasonable ways as different from the original version.
+ *  
+ *           3) This license does not grant any rights to any user of the program
+ *              with regards to rights under trademark law for use of the trade names
+ *              or trademarks of eGovernments Foundation.
+ *  
+ *     In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
+ */
 package org.egov.egf.budget.domain.repository;
 
 import static org.junit.Assert.assertEquals;
@@ -18,6 +57,7 @@ import org.egov.egf.budget.persistence.queue.repository.BudgetQueueRepository;
 import org.egov.egf.budget.persistence.repository.BudgetJdbcRepository;
 import org.egov.egf.budget.web.contract.BudgetRequest;
 import org.egov.egf.master.web.contract.FinancialYearContract;
+import org.egov.egf.master.web.repository.FinancialConfigurationContractRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,211 +69,277 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class BudgetRepositoryTest {
 
-	@Mock
-	private BudgetJdbcRepository budgetJdbcRepository;
+    @Mock
+    private BudgetJdbcRepository budgetJdbcRepository;
 
-	private BudgetRepository budgetRepositoryWithKafka;
+    private BudgetRepository budgetRepositoryWithKafka;
 
-	private BudgetRepository budgetRepositoryWithOutKafka;
+    private BudgetRepository budgetRepositoryWithOutKafka;
 
-	@Mock
-	private BudgetQueueRepository budgetQueueRepository;
+    @Mock
+    private BudgetQueueRepository budgetQueueRepository;
 
-	@Captor
-	private ArgumentCaptor<BudgetRequest> captor;
+    @Captor
+    private ArgumentCaptor<BudgetRequest> captor;
 
-	private RequestInfo requestInfo = new RequestInfo();
+    private final RequestInfo requestInfo = new RequestInfo();
 
-	@Before
-	public void setup() {
-		budgetRepositoryWithKafka = new BudgetRepository(budgetJdbcRepository, budgetQueueRepository, "yes");
+    @Mock
+    private FinancialConfigurationContractRepository financialConfigurationContractRepository;
 
-		budgetRepositoryWithOutKafka = new BudgetRepository(budgetJdbcRepository, budgetQueueRepository, "no");
-	}
+    @Mock
+    private BudgetESRepository budgetESRepository;
 
-	@Test
-	public void test_find_by_id() {
-		BudgetEntity entity = getBudgetEntity();
-		Budget expectedResult = entity.toDomain();
+    @Before
+    public void setup() {
+        budgetRepositoryWithKafka = new BudgetRepository(budgetJdbcRepository, budgetQueueRepository, "yes",
+                financialConfigurationContractRepository,budgetESRepository);
 
-		when(budgetJdbcRepository.findById(any(BudgetEntity.class))).thenReturn(entity);
+        budgetRepositoryWithOutKafka = new BudgetRepository(budgetJdbcRepository, budgetQueueRepository, "no",
+                financialConfigurationContractRepository,budgetESRepository);
+    }
 
-		Budget actualResult = budgetRepositoryWithKafka.findById(getBudgetDomin());
+    @Test
+    public void test_find_by_id() {
+        final BudgetEntity entity = getBudgetEntity();
+        final Budget expectedResult = entity.toDomain();
 
-		assertEquals(expectedResult, actualResult);
-	}
+        when(budgetJdbcRepository.findById(any(BudgetEntity.class))).thenReturn(entity);
 
-	@Test
-	public void test_find_by_id_return_null() {
-		BudgetEntity entity = getBudgetEntity();
+        final Budget actualResult = budgetRepositoryWithKafka.findById(getBudgetDomin());
 
-		when(budgetJdbcRepository.findById(null)).thenReturn(entity);
+        assertEquals(expectedResult, actualResult);
+    }
 
-		Budget actualResult = budgetRepositoryWithKafka.findById(getBudgetDomin());
+    @Test
+    public void test_find_by_id_return_null() {
+        final BudgetEntity entity = getBudgetEntity();
 
-		assertEquals(null, actualResult);
-	}
+        when(budgetJdbcRepository.findById(null)).thenReturn(entity);
 
-	@Test
-	public void test_save_with_kafka() {
+        final Budget actualResult = budgetRepositoryWithKafka.findById(getBudgetDomin());
 
-		List<Budget> expectedResult = getBudgets();
+        assertEquals(null, actualResult);
+    }
 
-		budgetRepositoryWithKafka.save(expectedResult, requestInfo);
+    @Test
+    public void test_save_with_kafka() {
 
-		verify(budgetQueueRepository).addToQue(captor.capture());
+        final List<Budget> expectedResult = getBudgets();
 
-		final BudgetRequest actualRequest = captor.getValue();
+        budgetRepositoryWithKafka.save(expectedResult, requestInfo);
 
-		assertEquals(expectedResult.get(0).getName(), actualRequest.getBudgets().get(0).getName());
-		assertEquals(expectedResult.get(0).getFinancialYear().getId(),
-				actualRequest.getBudgets().get(0).getFinancialYear().getId());
-		assertEquals(expectedResult.get(0).getPrimaryBudget(), actualRequest.getBudgets().get(0).getPrimaryBudget());
-		assertEquals(expectedResult.get(0).getEstimationType().name(),
-				actualRequest.getBudgets().get(0).getEstimationType().name());
-		assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getBudgets().get(0).getTenantId());
-	}
+        verify(budgetQueueRepository).addToQue(captor.capture());
 
-	@Test
-	public void test_save_with_out_kafka() {
+        final BudgetRequest actualRequest = captor.getValue();
 
-		List<Budget> expectedResult = getBudgets();
+        assertEquals(expectedResult.get(0).getName(), actualRequest.getBudgets().get(0).getName());
+        assertEquals(expectedResult.get(0).getFinancialYear().getId(),
+                actualRequest.getBudgets().get(0).getFinancialYear().getId());
+        assertEquals(expectedResult.get(0).getPrimaryBudget(), actualRequest.getBudgets().get(0).getPrimaryBudget());
+        assertEquals(expectedResult.get(0).getEstimationType().name(),
+                actualRequest.getBudgets().get(0).getEstimationType().name());
+        assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getBudgets().get(0).getTenantId());
+    }
 
-		BudgetEntity entity = new BudgetEntity().toEntity(expectedResult.get(0));
+    @Test
+    public void test_save_with_out_kafka() {
 
-		when(budgetJdbcRepository.create(any(BudgetEntity.class))).thenReturn(entity);
+        final List<Budget> expectedResult = getBudgets();
 
-		budgetRepositoryWithOutKafka.save(expectedResult, requestInfo);
+        final BudgetEntity entity = new BudgetEntity().toEntity(expectedResult.get(0));
 
-		verify(budgetQueueRepository).addToSearchQue(captor.capture());
+        when(budgetJdbcRepository.create(any(BudgetEntity.class))).thenReturn(entity);
 
-		final BudgetRequest actualRequest = captor.getValue();
+        budgetRepositoryWithOutKafka.save(expectedResult, requestInfo);
 
-		assertEquals(expectedResult.get(0).getName(), actualRequest.getBudgets().get(0).getName());
-		assertEquals(expectedResult.get(0).getFinancialYear().getId(),
-				actualRequest.getBudgets().get(0).getFinancialYear().getId());
-		assertEquals(expectedResult.get(0).getPrimaryBudget(), actualRequest.getBudgets().get(0).getPrimaryBudget());
-		assertEquals(expectedResult.get(0).getEstimationType().name(),
-				actualRequest.getBudgets().get(0).getEstimationType().name());
-		assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getBudgets().get(0).getTenantId());
-	}
+        verify(budgetQueueRepository).addToSearchQue(captor.capture());
 
-	@Test
-	public void test_update_with_kafka() {
+        final BudgetRequest actualRequest = captor.getValue();
 
-		List<Budget> expectedResult = getBudgets();
+        assertEquals(expectedResult.get(0).getName(), actualRequest.getBudgets().get(0).getName());
+        assertEquals(expectedResult.get(0).getFinancialYear().getId(),
+                actualRequest.getBudgets().get(0).getFinancialYear().getId());
+        assertEquals(expectedResult.get(0).getPrimaryBudget(), actualRequest.getBudgets().get(0).getPrimaryBudget());
+        assertEquals(expectedResult.get(0).getEstimationType().name(),
+                actualRequest.getBudgets().get(0).getEstimationType().name());
+        assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getBudgets().get(0).getTenantId());
+    }
 
-		budgetRepositoryWithKafka.update(expectedResult, requestInfo);
+    @Test
+    public void test_update_with_kafka() {
 
-		verify(budgetQueueRepository).addToQue(captor.capture());
+        final List<Budget> expectedResult = getBudgets();
 
-		final BudgetRequest actualRequest = captor.getValue();
+        budgetRepositoryWithKafka.update(expectedResult, requestInfo);
 
-		assertEquals(expectedResult.get(0).getName(), actualRequest.getBudgets().get(0).getName());
-		assertEquals(expectedResult.get(0).getFinancialYear().getId(),
-				actualRequest.getBudgets().get(0).getFinancialYear().getId());
-		assertEquals(expectedResult.get(0).getPrimaryBudget(), actualRequest.getBudgets().get(0).getPrimaryBudget());
-		assertEquals(expectedResult.get(0).getEstimationType().name(),
-				actualRequest.getBudgets().get(0).getEstimationType().name());
-		assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getBudgets().get(0).getTenantId());
-	}
+        verify(budgetQueueRepository).addToQue(captor.capture());
 
-	@Test
-	public void test_update_with_out_kafka() {
+        final BudgetRequest actualRequest = captor.getValue();
 
-		List<Budget> expectedResult = getBudgets();
+        assertEquals(expectedResult.get(0).getName(), actualRequest.getBudgets().get(0).getName());
+        assertEquals(expectedResult.get(0).getFinancialYear().getId(),
+                actualRequest.getBudgets().get(0).getFinancialYear().getId());
+        assertEquals(expectedResult.get(0).getPrimaryBudget(), actualRequest.getBudgets().get(0).getPrimaryBudget());
+        assertEquals(expectedResult.get(0).getEstimationType().name(),
+                actualRequest.getBudgets().get(0).getEstimationType().name());
+        assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getBudgets().get(0).getTenantId());
+    }
+    
+    @Test
+    public void test_delete_with_kafka() {
 
-		BudgetEntity entity = new BudgetEntity().toEntity(expectedResult.get(0));
+        final List<Budget> expectedResult = getBudgets();
 
-		when(budgetJdbcRepository.update(any(BudgetEntity.class))).thenReturn(entity);
+        budgetRepositoryWithKafka.delete(expectedResult, requestInfo);
 
-		budgetRepositoryWithOutKafka.update(expectedResult, requestInfo);
+        verify(budgetQueueRepository).addToQue(captor.capture());
 
-		verify(budgetQueueRepository).addToSearchQue(captor.capture());
+        final BudgetRequest actualRequest = captor.getValue();
 
-		final BudgetRequest actualRequest = captor.getValue();
+        assertEquals(expectedResult.get(0).getName(), actualRequest.getBudgets().get(0).getName());
+        assertEquals(expectedResult.get(0).getFinancialYear().getId(),
+                actualRequest.getBudgets().get(0).getFinancialYear().getId());
+        assertEquals(expectedResult.get(0).getPrimaryBudget(), actualRequest.getBudgets().get(0).getPrimaryBudget());
+        assertEquals(expectedResult.get(0).getEstimationType().name(),
+                actualRequest.getBudgets().get(0).getEstimationType().name());
+        assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getBudgets().get(0).getTenantId());
+    }
 
-		assertEquals(expectedResult.get(0).getName(), actualRequest.getBudgets().get(0).getName());
-		assertEquals(expectedResult.get(0).getFinancialYear().getId(),
-				actualRequest.getBudgets().get(0).getFinancialYear().getId());
-		assertEquals(expectedResult.get(0).getPrimaryBudget(), actualRequest.getBudgets().get(0).getPrimaryBudget());
-		assertEquals(expectedResult.get(0).getEstimationType().name(),
-				actualRequest.getBudgets().get(0).getEstimationType().name());
-		assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getBudgets().get(0).getTenantId());
-	}
+    @Test
+    public void test_update_with_out_kafka() {
 
-	@Test
-	public void test_save() {
+        final List<Budget> expectedResult = getBudgets();
 
-		BudgetEntity entity = getBudgetEntity();
-		Budget expectedResult = entity.toDomain();
+        final BudgetEntity entity = new BudgetEntity().toEntity(expectedResult.get(0));
 
-		when(budgetJdbcRepository.create(any(BudgetEntity.class))).thenReturn(entity);
+        when(budgetJdbcRepository.update(any(BudgetEntity.class))).thenReturn(entity);
 
-		Budget actualResult = budgetRepositoryWithKafka.save(getBudgetDomin());
+        budgetRepositoryWithOutKafka.update(expectedResult, requestInfo);
 
-		assertEquals(expectedResult, actualResult);
+        verify(budgetQueueRepository).addToSearchQue(captor.capture());
 
-	}
+        final BudgetRequest actualRequest = captor.getValue();
 
-	@Test
-	public void test_update() {
+        assertEquals(expectedResult.get(0).getName(), actualRequest.getBudgets().get(0).getName());
+        assertEquals(expectedResult.get(0).getFinancialYear().getId(),
+                actualRequest.getBudgets().get(0).getFinancialYear().getId());
+        assertEquals(expectedResult.get(0).getPrimaryBudget(), actualRequest.getBudgets().get(0).getPrimaryBudget());
+        assertEquals(expectedResult.get(0).getEstimationType().name(),
+                actualRequest.getBudgets().get(0).getEstimationType().name());
+        assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getBudgets().get(0).getTenantId());
+    }
+    
+    @Test
+    public void test_delete_with_out_kafka() {
 
-		BudgetEntity entity = getBudgetEntity();
-		Budget expectedResult = entity.toDomain();
+        final List<Budget> expectedResult = getBudgets();
 
-		when(budgetJdbcRepository.update(any(BudgetEntity.class))).thenReturn(entity);
+        final BudgetEntity entity = new BudgetEntity().toEntity(expectedResult.get(0));
 
-		Budget actualResult = budgetRepositoryWithKafka.update(getBudgetDomin());
+        when(budgetJdbcRepository.delete(any(BudgetEntity.class))).thenReturn(entity);
 
-		assertEquals(expectedResult, actualResult);
+        budgetRepositoryWithOutKafka.delete(expectedResult, requestInfo);
 
-	}
+        verify(budgetQueueRepository).addToSearchQue(captor.capture());
 
-	@Test
-	public void test_search() {
+        final BudgetRequest actualRequest = captor.getValue();
 
-		Pagination<Budget> expectedResult = new Pagination<>();
-		expectedResult.setPageSize(500);
-		expectedResult.setOffset(0);
-		when(budgetJdbcRepository.search(any(BudgetSearch.class))).thenReturn(expectedResult);
-		Pagination<Budget> actualResult = budgetRepositoryWithKafka.search(getBudgetSearch());
-		assertEquals(expectedResult, actualResult);
+        assertEquals(expectedResult.get(0).getName(), actualRequest.getBudgets().get(0).getName());
+        assertEquals(expectedResult.get(0).getFinancialYear().getId(),
+                actualRequest.getBudgets().get(0).getFinancialYear().getId());
+        assertEquals(expectedResult.get(0).getPrimaryBudget(), actualRequest.getBudgets().get(0).getPrimaryBudget());
+        assertEquals(expectedResult.get(0).getEstimationType().name(),
+                actualRequest.getBudgets().get(0).getEstimationType().name());
+        assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getBudgets().get(0).getTenantId());
+    }
 
-	}
+    @Test
+    public void test_save() {
 
-	private Budget getBudgetDomin() {
-		Budget budget = new Budget();
-		budget.setName("name");
-		budget.setActive(true);
-		budget.setEstimationType(EstimationType.BE);
-		budget.setTenantId("default");
-		return budget;
-	}
+        final BudgetEntity entity = getBudgetEntity();
+        final Budget expectedResult = entity.toDomain();
 
-	private BudgetEntity getBudgetEntity() {
-		BudgetEntity entity = new BudgetEntity();
-		entity.setName("name");
-		entity.setActive(true);
-		entity.setEstimationType(EstimationType.BE.name());
-		entity.setTenantId("default");
-		return entity;
-	}
+        when(budgetJdbcRepository.create(any(BudgetEntity.class))).thenReturn(entity);
 
-	private BudgetSearch getBudgetSearch() {
-		BudgetSearch budgetSearch = new BudgetSearch();
-		budgetSearch.setPageSize(500);
-		budgetSearch.setOffset(0);
-		return budgetSearch;
+        final Budget actualResult = budgetRepositoryWithKafka.save(getBudgetDomin());
 
-	}
+        assertEquals(expectedResult, actualResult);
 
-	private List<Budget> getBudgets() {
-		List<Budget> budgets = new ArrayList<Budget>();
-		Budget budget = Budget.builder().name("test").financialYear(FinancialYearContract.builder().id("id").build())
-				.estimationType(EstimationType.BE).primaryBudget(false).build();
-		budget.setTenantId("default");
-		budgets.add(budget);
-		return budgets;
-	}
+    }
+
+    @Test
+    public void test_update() {
+
+        final BudgetEntity entity = getBudgetEntity();
+        final Budget expectedResult = entity.toDomain();
+
+        when(budgetJdbcRepository.update(any(BudgetEntity.class))).thenReturn(entity);
+
+        final Budget actualResult = budgetRepositoryWithKafka.update(getBudgetDomin());
+
+        assertEquals(expectedResult, actualResult);
+
+    }
+    
+    @Test
+    public void test_delete() {
+
+        final BudgetEntity entity = getBudgetEntity();
+        final Budget expectedResult = entity.toDomain();
+
+        when(budgetJdbcRepository.delete(any(BudgetEntity.class))).thenReturn(entity);
+
+        final Budget actualResult = budgetRepositoryWithKafka.delete(getBudgetDomin());
+
+        assertEquals(expectedResult, actualResult);
+
+    }
+
+    @Test
+    public void test_search() {
+
+        final Pagination<Budget> expectedResult = new Pagination<>();
+        expectedResult.setPageSize(500);
+        expectedResult.setOffset(0);
+        when(budgetJdbcRepository.search(any(BudgetSearch.class))).thenReturn(expectedResult);
+        final Pagination<Budget> actualResult = budgetRepositoryWithKafka.search(getBudgetSearch());
+        assertEquals(expectedResult, actualResult);
+
+    }
+
+    private Budget getBudgetDomin() {
+        final Budget budget = new Budget();
+        budget.setName("name");
+        budget.setActive(true);
+        budget.setEstimationType(EstimationType.BE);
+        budget.setTenantId("default");
+        return budget;
+    }
+
+    private BudgetEntity getBudgetEntity() {
+        final BudgetEntity entity = new BudgetEntity();
+        entity.setName("name");
+        entity.setActive(true);
+        entity.setEstimationType(EstimationType.BE.name());
+        entity.setTenantId("default");
+        return entity;
+    }
+
+    private BudgetSearch getBudgetSearch() {
+        final BudgetSearch budgetSearch = new BudgetSearch();
+        budgetSearch.setPageSize(500);
+        budgetSearch.setOffset(0);
+        return budgetSearch;
+
+    }
+
+    private List<Budget> getBudgets() {
+        final List<Budget> budgets = new ArrayList<Budget>();
+        final Budget budget = Budget.builder().name("test").financialYear(FinancialYearContract.builder().id("id").build())
+                .estimationType(EstimationType.BE).primaryBudget(false).build();
+        budget.setTenantId("default");
+        budgets.add(budget);
+        return budgets;
+    }
 }

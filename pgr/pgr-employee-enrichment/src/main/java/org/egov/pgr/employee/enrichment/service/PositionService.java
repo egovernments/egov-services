@@ -15,7 +15,7 @@ public class PositionService {
 
     public void enrichRequestWithPosition(SevaRequest sevaRequest) {
         final Position position = positionRepository
-            .getDesignationIdForAssignee(sevaRequest.getTenantId(), sevaRequest.getPositionId());
+            .getDesignationIdForAssignee(sevaRequest.getTenantId(), sevaRequest.getCurrentPositionId());
         sevaRequest.update(position);
     }
 }

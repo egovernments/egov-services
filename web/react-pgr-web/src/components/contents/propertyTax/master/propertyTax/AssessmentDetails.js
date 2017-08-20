@@ -16,6 +16,7 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import Checkbox from 'material-ui/Checkbox';
 import RaisedButton from 'material-ui/RaisedButton';
+import {translate} from '../../../../common/common';
 import Api from '../../../../../api/api';
 
 
@@ -123,6 +124,7 @@ class AssessmentDetails extends Component {
         propertytypes: [],
         reasonForCreation:[],
         departments:[],
+		usages:[]
     }
   } 
 
@@ -144,6 +146,15 @@ class AssessmentDetails extends Component {
 		toggleSnackbarAndSetText(true, err.message);
         console.log(err)
       })
+	  
+	  
+        Api.commonApiPost('pt-property/property/usages/_search').then((res)=>{
+          console.log(res);
+          currentThis.setState({usages : res.usageMasters})
+        }).catch((err)=> {
+          console.log(err)
+        })
+		
   } 
 
 handleDepartment = (e) => {
@@ -178,6 +189,28 @@ handleDepartment = (e) => {
 		})
 
 } 
+
+formatDate(date){
+	
+	var day = (date.getDate() < 10) ? ('0'+date.getDate()) : date.getDate();
+	var month = ((date.getMonth() + 1)<10) ? ('0'+(date.getMonth() + 1)) : (date.getMonth() + 1)
+	
+	return day + "/" + month + "/" + date.getFullYear();
+}
+
+handleAge = (year) => {
+/*	var query = {
+		fromYear : year,
+		toYear: year
+	}
+	var currentThis = this;
+	Api.commonApiPost('/property/depreciations/_search',query).then((res)=>{
+	  console.log(res);
+	  currentThis.setState({structureclasses: res.structureClasses})
+	}).catch((err)=> {
+	  console.log(err)
+	})*/
+}
   
   render() {
 
@@ -220,8 +253,8 @@ handleDepartment = (e) => {
                                       <Row>
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText="Reason for Creation *"
-                                                  errorText={fieldErrors.reasonForCreation ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.reasonForCreation}</span> : ""}
+                                                  floatingLabelText={translate('pt.create.groups.assessmentDetails.fields.creationReason')+' *'}
+                                                  errorText={fieldErrors.reasonForCreation ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.reasonForCreation}</span> : ""}
                                                   value={assessmentDetails.reasonForCreation ? assessmentDetails.reasonForCreation : ""}
                                                   onChange={(event, index, value) => {
 													    (value == -1) ? value = '' : '';
@@ -251,7 +284,7 @@ handleDepartment = (e) => {
 
                                           {(assessmentDetails.reasonForCreation == 'SUBDIVISION') && <Col xs={12} md={3} sm={6}>
                                               <TextField  className="fullWidth"
-                                                  floatingLabelText="Parent UPIC No. *"
+                                                  floatingLabelText={translate('pt.create.groups.assessmentDetails.fields.parentUpicNo')+' *'}
                                                   errorText={fieldErrors.parentUpicNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.parentUpicNo}</span> : ""}
                                                   value={assessmentDetails.parentUpicNo ? assessmentDetails.parentUpicNo : ""}
                                                   onChange={(e) => {handleChange(e, "parentUpicNo", true, "")}}
@@ -265,8 +298,8 @@ handleDepartment = (e) => {
                                           </Col>}
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText="Property Type *"
-                                                  errorText={fieldErrors.propertyType ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.propertyType}</span> : ""}
+                                                  floatingLabelText={translate('pt.create.groups.assessmentDetails.fields.propertyType')+' *'}
+                                                  errorText={fieldErrors.propertyType ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.propertyType}</span> : ""}
                                                   value={assessmentDetails.propertyType ? assessmentDetails.propertyType : ""}
                                                   onChange={(event, index, value) => {
 													    (value == -1) ? value = '' : '';
@@ -312,8 +345,8 @@ handleDepartment = (e) => {
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText="Property Sub-type"
-                                                  errorText={fieldErrors.propertySubType ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.propertySubType}</span> : ""}
+                                                  floatingLabelText={translate('pt.create.groups.assessmentDetails.fields.propertySubType')}
+                                                  errorText={fieldErrors.propertySubType ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.propertySubType}</span> : ""}
                                                   value={assessmentDetails.propertySubType ? assessmentDetails.propertySubType : ""}
                                                   onChange={(event, index, value) => {
 													    (value == -1) ? value = '' : '';
@@ -333,12 +366,57 @@ handleDepartment = (e) => {
                                                   <MenuItem value={1} primaryText="Options"/>
                                               </SelectField>
                                           </Col>
+										  <Col xs={12} md={3} sm={6}>
+														<SelectField  className="fullWidth selectOption"
+														  floatingLabelText={translate('pt.create.groups.assessmentDetails.fields.usageType')+' *'}
+														  errorText={fieldErrors.usage ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.usage}</span> : ""}
+														  value={assessmentDetails.usage ? assessmentDetails.usage : ""}
+														  onChange={(event, index, value) => {
+															  (value == -1) ?  value = '' : '';
+															  var e = {
+																target: {
+																  value: value
+																}
+															  };
+															  handleChange(e,"usage", true, "")}
+														  }
+														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+														  underlineStyle={styles.underlineStyle}
+														  underlineFocusStyle={styles.underlineFocusStyle}
+														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+														><MenuItem value={-1} primaryText="None"/>
+															  {renderOption(this.state.usages)}
+
+														</SelectField>
+													</Col>
+													<Col xs={12} md={3} sm={6}>
+														<SelectField  className="fullWidth selectOption"
+														  floatingLabelText={translate('pt.create.groups.assessmentDetails.fields.usageSubType')}
+														  errorText={fieldErrors.usageSubType ?<span style={{position:"absolute", bottom:-41}}>{fieldErrors.usageSubType}</span> : ""}
+														  value={assessmentDetails.usageSubType ? assessmentDetails.usageSubType : ""}
+														  onChange={(event, index, value) => {
+															  (value == -1) ?  value = '' : '';
+															  var e = {
+																target: {
+																  value: value
+																}
+															  };
+															  handleChange(e,"usageSubType", false, "")}
+														  }
+														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+														  underlineStyle={styles.underlineStyle}
+														  underlineFocusStyle={styles.underlineFocusStyle}
+														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+														><MenuItem value={-1} primaryText="None"/>
+															{renderOption(this.state.usages)}
+														</SelectField>
+													</Col>
 										  {(getNameByCode(this.state.propertytypes ,assessmentDetails.propertyType).match('Central Government') ||
 											getNameByCode(this.state.propertytypes ,assessmentDetails.propertyType).match('State Government')) 
 											&& <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText="Department"
-                                                  errorText={fieldErrors.department ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.department}</span> : ""}
+                                                  floatingLabelText={translate('pt.create.groups.assessmentDetails.fields.department')}
+                                                  errorText={fieldErrors.department ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.department}</span> : ""}
                                                   value={assessmentDetails.department ? assessmentDetails.department : ""}
                                                   onChange={(event, index, value) => {
 													    (value == -1) ? value = '' : '';
@@ -360,7 +438,7 @@ handleDepartment = (e) => {
                                           }
                                           <Col xs={12} md={3} sm={6}>
                                               <TextField  className="fullWidth"
-                                                  floatingLabelText="Extent of Site (Sq. Mtrs) *"
+                                                  floatingLabelText={translate('pt.create.groups.assessmentDetails.fields.extentOfSite')+' *'}
 												  hintText="14"
                                                   errorText={fieldErrors.extentOfSite ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.extentOfSite}</span> : ""}
                                                   value={assessmentDetails.extentOfSite ? assessmentDetails.extentOfSite : ""}
@@ -372,7 +450,56 @@ handleDepartment = (e) => {
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               />
                                           </Col>
-
+										   <Col xs={12} md={3} sm={6}>
+                                              <TextField  className="fullWidth"
+                                                  floatingLabelText={translate('pt.create.groups.assessmentDetails.fields.sequenceNo')+' *'}
+												  hintText="14"
+                                                  errorText={fieldErrors.sequenceNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.sequenceNo}</span> : ""}
+                                                  value={assessmentDetails.sequenceNo ? assessmentDetails.sequenceNo : ""}
+                                                  onChange={(e) => {handleChange(e, "sequenceNo", true, /^\d+$/g)}}
+                                                  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineFocusStyle={styles.underlineFocusStyle}
+                                                  maxLength={4}
+                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+                                              />
+                                          </Col>
+										  
+										  <Col xs={12} md={3} sm={6}>
+												<TextField  className="fullWidth"
+												  floatingLabelText="Building Permission number"
+												  errorText={fieldErrors.bpaNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.bpaNo}</span> : ""}
+												  value={assessmentDetails.bpaNo ? assessmentDetails.bpaNo : ""}
+												  onChange={(e) => {handleChange(e, "bpaNo", false, /^[a-z0-9]+$/i)}}
+												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+												  underlineStyle={styles.underlineStyle}
+												  underlineFocusStyle={styles.underlineFocusStyle}
+												  maxLength={15}
+												  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+												/>
+										 </Col>
+										 <Col xs={12} md={3} sm={6}>
+												<DatePicker  className="fullWidth datepicker"
+												  formatDate={(date)=> this.formatDate(date)}
+												  floatingLabelText="Building Permission Date"
+												  errorText={fieldErrors.bpaDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.bpaDate}</span> : ""}
+												  onChange={(event,date) => {
+														var day = (date.getDate() < 10) ? ('0'+date.getDate()) : date.getDate();
+														var month = ((date.getMonth() + 1)<10) ? ('0'+(date.getMonth() + 1)) : (date.getMonth() + 1)
+													  var e = {
+														target:{
+															value: day + "/" + month + "/" + date.getFullYear()
+														}
+													  }
+													this.handleAge(date.getFullYear());
+													handleChange(e,"bpaDate", false, "")}}
+												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+												  underlineStyle={styles.underlineStyle}
+												  underlineFocusStyle={styles.underlineFocusStyle}
+												  textFieldStyle={{width: '100%'}}
+												  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+												/>		
+										 </Col>
                                       </Row>
                                   </Grid>
                       </CardText>

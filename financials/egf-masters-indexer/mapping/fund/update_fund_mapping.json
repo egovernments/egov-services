@@ -21,9 +21,6 @@
         "parent": {
             "type": "object"
         },
-        "isParent": {
-            "type": "boolean"
-        },
         "active": {
             "type": "boolean"
         },

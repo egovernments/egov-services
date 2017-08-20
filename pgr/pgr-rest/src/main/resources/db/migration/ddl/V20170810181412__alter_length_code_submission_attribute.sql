@@ -1,0 +1,1 @@
+alter table submission_attribute alter COLUMN code type character varying(256);

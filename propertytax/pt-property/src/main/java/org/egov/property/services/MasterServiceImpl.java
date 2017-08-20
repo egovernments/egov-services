@@ -3,6 +3,9 @@ package org.egov.property.services;
 import java.util.Date;
 import java.util.List;
 
+import org.egov.models.Apartment;
+import org.egov.models.ApartmentRequest;
+import org.egov.models.ApartmentResponse;
 import org.egov.models.AuditDetails;
 import org.egov.models.Department;
 import org.egov.models.DepartmentRequest;
@@ -13,6 +16,7 @@ import org.egov.models.DepreciationResponse;
 import org.egov.models.DocumentType;
 import org.egov.models.DocumentTypeRequest;
 import org.egov.models.DocumentTypeResponse;
+import org.egov.models.Floor;
 import org.egov.models.FloorType;
 import org.egov.models.FloorTypeRequest;
 import org.egov.models.FloorTypeResponse;
@@ -34,6 +38,7 @@ import org.egov.models.RoofTypeResponse;
 import org.egov.models.StructureClass;
 import org.egov.models.StructureClassRequest;
 import org.egov.models.StructureClassResponse;
+import org.egov.models.Unit;
 import org.egov.models.UsageMaster;
 import org.egov.models.UsageMasterRequest;
 import org.egov.models.UsageMasterResponse;
@@ -43,7 +48,9 @@ import org.egov.models.WallTypeResponse;
 import org.egov.models.WoodType;
 import org.egov.models.WoodTypeRequest;
 import org.egov.models.WoodTypeResponse;
+import org.egov.property.config.PropertiesManager;
 import org.egov.property.exception.DuplicateIdException;
+import org.egov.property.exception.InvalidCodeException;
 import org.egov.property.exception.InvalidInputException;
 import org.egov.property.exception.PropertySearchException;
 import org.egov.property.model.ExcludeFileds;
@@ -71,6 +78,9 @@ public class MasterServiceImpl implements Masterservice {
 
 	@Autowired
 	private PropertyMasterRepository propertyMasterRepository;
+
+	@Autowired
+	private PropertiesManager propertiesManager;
 
 	@Override
 	public FloorTypeResponse getFloorTypeMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
@@ -129,32 +139,33 @@ public class MasterServiceImpl implements Masterservice {
 
 		for (FloorType floorType : floorTypeRequest.getFloorTypes()) {
 
-			AuditDetails auditDetails = getAuditDetail(floorTypeRequest.getRequestInfo());
-
+			AuditDetails auditDetails = getUpdatedAuditDetails(floorTypeRequest.getRequestInfo(),
+					ConstantUtility.FLOOR_TYPE_TABLE_NAME, floorType.getId());
+			floorType.setAuditDetails(auditDetails);
 			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(floorType.getTenantId(),
 					floorType.getCode(), ConstantUtility.FLOOR_TYPE_TABLE_NAME, floorType.getId());
 
 			if (isExists)
 				throw new DuplicateIdException(floorTypeRequest.getRequestInfo());
 
+			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
+			String data = gson.toJson(floorType);
+
 			try {
-				Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
-				String data = gson.toJson(floorType);
-				floorType.getAuditDetails().setLastModifiedBy(auditDetails.getLastModifiedBy());
-				floorType.getAuditDetails().setLastModifiedTime(auditDetails.getLastModifiedTime());
-				floorType = propertyMasterRepository.updateFloorType(floorType, data);
+
+				propertyMasterRepository.updateFloorType(floorType, data);
 			} catch (Exception e) {
+
 				throw new InvalidInputException(floorTypeRequest.getRequestInfo());
 			}
 		}
-
 		FloorTypeResponse floorTypeResponse = new FloorTypeResponse();
 		floorTypeResponse.setFloorTypes(floorTypeRequest.getFloorTypes());
 		ResponseInfo responseInfo = responseInfoFactory
 				.createResponseInfoFromRequestInfo(floorTypeRequest.getRequestInfo(), true);
 		floorTypeResponse.setResponseInfo(responseInfo);
-		return floorTypeResponse;
 
+		return floorTypeResponse;
 	}
 
 	@Override
@@ -214,29 +225,30 @@ public class MasterServiceImpl implements Masterservice {
 
 		for (WoodType woodType : woodTypeRequest.getWoodTypes()) {
 
-			AuditDetails auditDetails = getAuditDetail(woodTypeRequest.getRequestInfo());
-
+			AuditDetails auditDetails = getUpdatedAuditDetails(woodTypeRequest.getRequestInfo(),
+					ConstantUtility.WOOD_TYPE_TABLE_NAME, woodType.getId());
+			woodType.setAuditDetails(auditDetails);
 			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(woodType.getTenantId(),
 					woodType.getCode(), ConstantUtility.WOOD_TYPE_TABLE_NAME, woodType.getId());
 			if (isExists)
 				throw new DuplicateIdException(woodTypeRequest.getRequestInfo());
+			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
+			String data = gson.toJson(woodType);
 
 			try {
-				Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
-				String data = gson.toJson(woodType);
-				woodType.getAuditDetails().setLastModifiedBy(auditDetails.getLastModifiedBy());
-				woodType.getAuditDetails().setLastModifiedTime(auditDetails.getLastModifiedTime());
-				woodType = propertyMasterRepository.updateWoodType(woodType, data);
+
+				propertyMasterRepository.updateWoodType(woodType, data);
 			} catch (Exception e) {
+
 				throw new InvalidInputException(woodTypeRequest.getRequestInfo());
 			}
-
 		}
 		WoodTypeResponse woodTypeResponse = new WoodTypeResponse();
 		ResponseInfo responseInfo = responseInfoFactory
 				.createResponseInfoFromRequestInfo(woodTypeRequest.getRequestInfo(), true);
 		woodTypeResponse.setWoodTypes(woodTypeRequest.getWoodTypes());
 		woodTypeResponse.setResponseInfo(responseInfo);
+
 		return woodTypeResponse;
 	}
 
@@ -295,31 +307,34 @@ public class MasterServiceImpl implements Masterservice {
 	@Override
 	@Transactional
 	public RoofTypeResponse updateRoofType(RoofTypeRequest roofTypeRequest) throws Exception {
+
 		for (RoofType roofType : roofTypeRequest.getRoofTypes()) {
-			AuditDetails auditDetails = getAuditDetail(roofTypeRequest.getRequestInfo());
+
+			AuditDetails auditDetails = getUpdatedAuditDetails(roofTypeRequest.getRequestInfo(),
+					ConstantUtility.ROOF_TYPE_TABLE_NAME, roofType.getId());
+			roofType.setAuditDetails(auditDetails);
 			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(roofType.getTenantId(),
 					roofType.getCode(), ConstantUtility.ROOF_TYPE_TABLE_NAME, roofType.getId());
 
 			if (isExists)
 				throw new DuplicateIdException(roofTypeRequest.getRequestInfo());
+			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
+			String data = gson.toJson(roofType);
 
 			try {
 
-				Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
-				String data = gson.toJson(roofType);
-				roofType.getAuditDetails().setLastModifiedBy(auditDetails.getLastModifiedBy());
-				roofType.getAuditDetails().setLastModifiedTime(auditDetails.getLastModifiedTime());
-				roofType = propertyMasterRepository.updateRoofType(roofType, data);
+				propertyMasterRepository.updateRoofType(roofType, data);
 			} catch (Exception e) {
+
 				throw new InvalidInputException(roofTypeRequest.getRequestInfo());
 			}
 		}
-
 		RoofTypeResponse roofTypeResponse = new RoofTypeResponse();
 		ResponseInfo responseInfo = responseInfoFactory
 				.createResponseInfoFromRequestInfo(roofTypeRequest.getRequestInfo(), true);
 		roofTypeResponse.setRoofTypes(roofTypeRequest.getRoofTypes());
 		roofTypeResponse.setResponseInfo(responseInfo);
+
 		return roofTypeResponse;
 	}
 
@@ -363,26 +378,25 @@ public class MasterServiceImpl implements Masterservice {
 	public DepartmentResponseInfo updateDepartmentMaster(DepartmentRequest departmentRequest) {
 
 		for (Department department : departmentRequest.getDepartments()) {
-			AuditDetails auditDetails = getAuditDetail(departmentRequest.getRequestInfo());
+
+			AuditDetails auditDetails = getUpdatedAuditDetails(departmentRequest.getRequestInfo(),
+					ConstantUtility.DEPARTMENT_TABLE_NAME, department.getId());
+			department.setAuditDetails(auditDetails);
 			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
-
 			String data = gson.toJson(department);
-
 			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(department.getTenantId(),
 					department.getCode(), ConstantUtility.DEPARTMENT_TABLE_NAME, department.getId());
 
 			if (isExists)
 				throw new DuplicateIdException(departmentRequest.getRequestInfo());
-			department.getAuditDetails().setLastModifiedBy(auditDetails.getLastModifiedBy());
-			department.getAuditDetails().setLastModifiedTime(auditDetails.getLastModifiedTime());
-			department = propertyMasterRepository.updateDepartment(department, data, department.getId());
+			propertyMasterRepository.updateDepartment(department, data);
 		}
 		ResponseInfo responseInfo = responseInfoFactory
 				.createResponseInfoFromRequestInfo(departmentRequest.getRequestInfo(), true);
-
 		DepartmentResponseInfo departmentResponse = new DepartmentResponseInfo();
 		departmentResponse.setDepartments(departmentRequest.getDepartments());
 		departmentResponse.setResponseInfo(responseInfo);
+
 		return departmentResponse;
 	}
 
@@ -447,25 +461,26 @@ public class MasterServiceImpl implements Masterservice {
 	public OccuapancyMasterResponse updateOccuapancyMaster(OccuapancyMasterRequest occuapancyRequest) {
 
 		for (OccuapancyMaster occuapancyMaster : occuapancyRequest.getOccuapancyMasters()) {
-			AuditDetails auditDetails = getAuditDetail(occuapancyRequest.getRequestInfo());
+
+			AuditDetails auditDetails = getUpdatedAuditDetails(occuapancyRequest.getRequestInfo(),
+					ConstantUtility.OCCUPANCY_TABLE_NAME, occuapancyMaster.getId());
+			occuapancyMaster.setAuditDetails(auditDetails);
+
 			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(occuapancyMaster.getTenantId(),
 					occuapancyMaster.getCode(), ConstantUtility.OCCUPANCY_TABLE_NAME, occuapancyMaster.getId());
+
 			if (isExists)
 				throw new DuplicateIdException(occuapancyRequest.getRequestInfo());
-
 			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
-
 			String data = gson.toJson(occuapancyMaster);
-			occuapancyMaster.getAuditDetails().setLastModifiedBy(auditDetails.getLastModifiedBy());
-			occuapancyMaster.getAuditDetails().setLastModifiedTime(auditDetails.getLastModifiedTime());
-			occuapancyMaster = propertyMasterRepository.updateOccuapancy(occuapancyMaster, data);
+			propertyMasterRepository.updateOccuapancy(occuapancyMaster, data);
 		}
 		ResponseInfo responseInfo = responseInfoFactory
 				.createResponseInfoFromRequestInfo(occuapancyRequest.getRequestInfo(), true);
-
 		OccuapancyMasterResponse occuapancyResponse = new OccuapancyMasterResponse();
 		occuapancyResponse.setOccuapancyMasters(occuapancyRequest.getOccuapancyMasters());
 		occuapancyResponse.setResponseInfo(responseInfo);
+
 		return occuapancyResponse;
 	}
 
@@ -505,6 +520,18 @@ public class MasterServiceImpl implements Masterservice {
 			if (isExists)
 				throw new DuplicateIdException(propertyTypeRequest.getRequestInfo());
 
+			if (propertyType.getParent() != null) {
+				if (!propertyType.getParent().isEmpty()) {
+					Boolean isParentCodeExists = propertyMasterRepository.checkWhetherRecordExits(
+							propertyType.getTenantId(), propertyType.getParent(),
+							ConstantUtility.PROPERTY_TYPE_TABLE_NAME, null);
+
+					if (!isParentCodeExists)
+						throw new InvalidCodeException(propertiesManager.getInvalidParentMsg(),
+								propertyTypeRequest.getRequestInfo());
+				}
+			}
+
 			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 			String data = gson.toJson(propertyType);
 			propertyType.setAuditDetails(auditDetails);
@@ -529,39 +556,51 @@ public class MasterServiceImpl implements Masterservice {
 	public PropertyTypeResponse updatePropertyTypeMaster(PropertyTypeRequest propertyTypeRequest) {
 
 		for (PropertyType propertyType : propertyTypeRequest.getPropertyTypes()) {
-			AuditDetails auditDetails = getAuditDetail(propertyTypeRequest.getRequestInfo());
+
+			AuditDetails auditDetails = getUpdatedAuditDetails(propertyTypeRequest.getRequestInfo(),
+					ConstantUtility.PROPERTY_TYPE_TABLE_NAME, propertyType.getId());
+			propertyType.setAuditDetails(auditDetails);
 			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(propertyType.getTenantId(),
 					propertyType.getCode(), ConstantUtility.PROPERTY_TYPE_TABLE_NAME, propertyType.getId());
 
 			if (isExists)
 				throw new DuplicateIdException(propertyTypeRequest.getRequestInfo());
+			
+			if (propertyType.getParent() != null) {
+				if (!propertyType.getParent().isEmpty()) {
+					Boolean isParentCodeExists = propertyMasterRepository.checkWhetherRecordExits(
+							propertyType.getTenantId(), propertyType.getParent(),
+							ConstantUtility.PROPERTY_TYPE_TABLE_NAME, null);
+
+					if (!isParentCodeExists)
+						throw new InvalidCodeException(propertiesManager.getInvalidParentMsg(),
+								propertyTypeRequest.getRequestInfo());
+				}
+			}
 
 			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
-
 			String data = gson.toJson(propertyType);
-			propertyType.getAuditDetails().setLastModifiedBy(auditDetails.getLastModifiedBy());
-			propertyType.getAuditDetails().setLastModifiedTime(auditDetails.getLastModifiedTime());
-			propertyType = propertyMasterRepository.updatePropertyType(propertyType, data);
+			propertyMasterRepository.updatePropertyType(propertyType, data);
 		}
 		ResponseInfo responseInfo = responseInfoFactory
 				.createResponseInfoFromRequestInfo(propertyTypeRequest.getRequestInfo(), true);
-
 		PropertyTypeResponse propertyTypeResponse = new PropertyTypeResponse();
 		propertyTypeResponse.setPropertyTypes(propertyTypeRequest.getPropertyTypes());
 		propertyTypeResponse.setResponseInfo(responseInfo);
+
 		return propertyTypeResponse;
 	}
 
 	@Override
 	public PropertyTypeResponse getPropertyTypeMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
 			String name, String code, String nameLocal, Boolean active, Integer orderNumber, Integer pageSize,
-			Integer offSet) {
+			Integer offSet, String parent) {
 		PropertyTypeResponse propertyTypeResponse = new PropertyTypeResponse();
 		List<PropertyType> propertyTypes = null;
 		try {
 
 			propertyTypes = propertyMasterRepository.searchPropertyType(requestInfo, tenantId, ids, name, code,
-					nameLocal, active, orderNumber, pageSize, offSet);
+					nameLocal, active, orderNumber, pageSize, offSet, parent);
 		} catch (Exception e) {
 			throw new PropertySearchException("invalid input", requestInfo);
 		}
@@ -585,16 +624,27 @@ public class MasterServiceImpl implements Masterservice {
 			if (isExists)
 				throw new DuplicateIdException(usageMasterRequest.getRequestInfo());
 
+			if (usageMaster.getParent() != null) {
+				if (!usageMaster.getParent().isEmpty()) {
+					Boolean isParentCodeExists = propertyMasterRepository.checkWhetherRecordExits(
+							usageMaster.getTenantId(), usageMaster.getParent(), ConstantUtility.USAGE_TYPE_TABLE_NAME,
+							null);
+
+					if (!isParentCodeExists)
+						throw new InvalidCodeException(propertiesManager.getInvalidParentMsg(),
+								usageMasterRequest.getRequestInfo());
+				}
+			}
+
 			try {
+				usageMaster.setAuditDetails(auditDetails);
 				Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 				String data = gson.toJson(usageMaster);
-				usageMaster.setAuditDetails(auditDetails);
 				Long id = propertyMasterRepository.saveUsageMaster(usageMaster, data);
 				usageMaster.setId(id);
 			} catch (Exception e) {
 				throw new InvalidInputException(usageMasterRequest.getRequestInfo());
 			}
-
 		}
 		UsageMasterResponse usageMasterResponse = new UsageMasterResponse();
 
@@ -613,44 +663,57 @@ public class MasterServiceImpl implements Masterservice {
 	public UsageMasterResponse updateUsageMaster(UsageMasterRequest usageMasterRequest) {
 
 		for (UsageMaster usageMaster : usageMasterRequest.getUsageMasters()) {
-			AuditDetails auditDetails = getAuditDetail(usageMasterRequest.getRequestInfo());
+
+			AuditDetails auditDetails = getUpdatedAuditDetails(usageMasterRequest.getRequestInfo(),
+					ConstantUtility.USAGE_TYPE_TABLE_NAME, usageMaster.getId());
+			usageMaster.setAuditDetails(auditDetails);
 			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(usageMaster.getTenantId(),
 					usageMaster.getCode(), ConstantUtility.USAGE_TYPE_TABLE_NAME, usageMaster.getId());
 
 			if (isExists)
 				throw new DuplicateIdException(usageMasterRequest.getRequestInfo());
 
+			if (usageMaster.getParent() != null) {
+				if (!usageMaster.getParent().isEmpty()) {
+					Boolean isParentCodeExists = propertyMasterRepository.checkWhetherRecordExits(
+							usageMaster.getTenantId(), usageMaster.getParent(), ConstantUtility.USAGE_TYPE_TABLE_NAME,
+							null);
+
+					if (!isParentCodeExists)
+						throw new InvalidCodeException(propertiesManager.getInvalidParentMsg(),
+								usageMasterRequest.getRequestInfo());
+				}
+			}
+
 			try {
 				Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 				String data = gson.toJson(usageMaster);
-				usageMaster.getAuditDetails().setLastModifiedBy(auditDetails.getLastModifiedBy());
-				usageMaster.getAuditDetails().setLastModifiedTime(auditDetails.getLastModifiedTime());
 
-				usageMaster = propertyMasterRepository.updateUsageMaster(usageMaster, data);
+				propertyMasterRepository.updateUsageMaster(usageMaster, data);
 
 			} catch (Exception e) {
 				throw new InvalidInputException(usageMasterRequest.getRequestInfo());
 			}
 		}
-
 		UsageMasterResponse usageMasterResponse = new UsageMasterResponse();
 		usageMasterResponse.setUsageMasters(usageMasterRequest.getUsageMasters());
 		ResponseInfo responseInfo = responseInfoFactory
 				.createResponseInfoFromRequestInfo(usageMasterRequest.getRequestInfo(), true);
 		usageMasterResponse.setResponseInfo(responseInfo);
+
 		return usageMasterResponse;
 	}
 
 	@Override
 	public UsageMasterResponse getUsageMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
 			String code, String nameLocal, Boolean active, Boolean isResidential, Integer orderNumber, Integer pageSize,
-			Integer offSet) throws Exception {
+			Integer offSet, String parent) throws Exception {
 
 		UsageMasterResponse usageMasterResponse = new UsageMasterResponse();
 
 		try {
 			List<UsageMaster> usageList = propertyMasterRepository.searchUsage(tenantId, ids, name, code, nameLocal,
-					active, isResidential, orderNumber, pageSize, offSet);
+					active, isResidential, orderNumber, pageSize, offSet, parent);
 			usageMasterResponse.setUsageMasters(usageList);
 			ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 			usageMasterResponse.setResponseInfo(responseInfo);
@@ -676,9 +739,9 @@ public class MasterServiceImpl implements Masterservice {
 				throw new DuplicateIdException(wallTypeRequest.getRequestInfo());
 
 			try {
+				wallType.setAuditDetails(auditDetails);
 				Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 				String data = gson.toJson(wallType);
-				wallType.setAuditDetails(auditDetails);
 				Long id = propertyMasterRepository.saveWallTypes(wallType, data);
 				wallType.setId(id);
 			} catch (Exception e) {
@@ -702,7 +765,10 @@ public class MasterServiceImpl implements Masterservice {
 	public WallTypeResponse updateWallTypeMaster(WallTypeRequest wallTypeRequest) throws Exception {
 
 		for (WallType wallType : wallTypeRequest.getWallTypes()) {
-			AuditDetails auditDetails = getAuditDetail(wallTypeRequest.getRequestInfo());
+
+			AuditDetails auditDetails = getUpdatedAuditDetails(wallTypeRequest.getRequestInfo(),
+					ConstantUtility.WALL_TYPE_TABLE_NAME, wallType.getId());
+			wallType.setAuditDetails(auditDetails);
 			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(wallType.getTenantId(),
 					wallType.getCode(), ConstantUtility.WALL_TYPE_TABLE_NAME, wallType.getId());
 
@@ -710,23 +776,21 @@ public class MasterServiceImpl implements Masterservice {
 				throw new DuplicateIdException(wallTypeRequest.getRequestInfo());
 
 			try {
+
 				Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 				String data = gson.toJson(wallType);
-				wallType.getAuditDetails().setLastModifiedBy(auditDetails.getLastModifiedBy());
-				wallType.getAuditDetails().setLastModifiedTime(auditDetails.getLastModifiedTime());
-				wallType = propertyMasterRepository.updateWallTypes(wallType, data);
+				propertyMasterRepository.updateWallTypes(wallType, data);
 
 			} catch (Exception e) {
 				throw new InvalidInputException(wallTypeRequest.getRequestInfo());
 			}
 		}
-
 		WallTypeResponse wallTypeResponse = new WallTypeResponse();
-
 		wallTypeResponse.setWallTypes(wallTypeRequest.getWallTypes());
 		ResponseInfo responseInfo = responseInfoFactory
 				.createResponseInfoFromRequestInfo(wallTypeRequest.getRequestInfo(), true);
 		wallTypeResponse.setResponseInfo(responseInfo);
+
 		return wallTypeResponse;
 	}
 
@@ -793,7 +857,10 @@ public class MasterServiceImpl implements Masterservice {
 	public StructureClassResponse updateStructureClassMaster(StructureClassRequest structureClassRequest) {
 
 		for (StructureClass structureClass : structureClassRequest.getStructureClasses()) {
-			AuditDetails auditDetails = getAuditDetail(structureClassRequest.getRequestInfo());
+
+			AuditDetails auditDetails = getUpdatedAuditDetails(structureClassRequest.getRequestInfo(),
+					ConstantUtility.STRUCTURE_CLASS_TABLE_NAME, structureClass.getId());
+			structureClass.setAuditDetails(auditDetails);
 			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(structureClass.getTenantId(),
 					structureClass.getCode(), ConstantUtility.STRUCTURE_CLASS_TABLE_NAME, structureClass.getId());
 
@@ -803,20 +870,18 @@ public class MasterServiceImpl implements Masterservice {
 			try {
 				Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 				String data = gson.toJson(structureClass);
-				structureClass.getAuditDetails().setLastModifiedBy(auditDetails.getLastModifiedBy());
-				structureClass.getAuditDetails().setLastModifiedTime(auditDetails.getLastModifiedTime());
-				structureClass = propertyMasterRepository.updateStructureClsses(structureClass, data);
+				propertyMasterRepository.updateStructureClsses(structureClass, data);
 			} catch (Exception e) {
 				throw new InvalidInputException(structureClassRequest.getRequestInfo());
 			}
 		}
 
 		StructureClassResponse structureClassResponse = new StructureClassResponse();
-
 		structureClassResponse.setStructureClasses(structureClassRequest.getStructureClasses());
 		ResponseInfo responseInfo = responseInfoFactory
 				.createResponseInfoFromRequestInfo(structureClassRequest.getRequestInfo(), true);
 		structureClassResponse.setResponseInfo(responseInfo);
+
 		return structureClassResponse;
 	}
 
@@ -883,7 +948,10 @@ public class MasterServiceImpl implements Masterservice {
 	public DepreciationResponse updateDepreciation(DepreciationRequest depreciationRequest) throws Exception {
 
 		for (Depreciation depreciation : depreciationRequest.getDepreciations()) {
-			AuditDetails auditDetails = getAuditDetail(depreciationRequest.getRequestInfo());
+
+			AuditDetails auditDetails = getUpdatedAuditDetails(depreciationRequest.getRequestInfo(),
+					ConstantUtility.DEPRECIATION_TABLE_NAME, depreciation.getId());
+			depreciation.setAuditDetails(auditDetails);
 			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(depreciation.getTenantId(),
 					depreciation.getCode(), ConstantUtility.DEPRECIATION_TABLE_NAME, depreciation.getId());
 
@@ -894,8 +962,6 @@ public class MasterServiceImpl implements Masterservice {
 
 				Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 				String data = gson.toJson(depreciation);
-				depreciation.getAuditDetails().setLastModifiedBy(auditDetails.getLastModifiedBy());
-				depreciation.getAuditDetails().setLastModifiedTime(auditDetails.getLastModifiedTime());
 				propertyMasterRepository.updateDepreciation(depreciation, data);
 
 			} catch (Exception e) {
@@ -913,8 +979,8 @@ public class MasterServiceImpl implements Masterservice {
 
 	@Override
 	public DepreciationResponse searchDepreciation(RequestInfo requestInfo, String tenantId, Integer[] ids,
-			Integer fromYear, Integer toYear, String code, String nameLocal, Integer pageSize, Integer offset, Integer year)
-			throws Exception {
+			Integer fromYear, Integer toYear, String code, String nameLocal, Integer pageSize, Integer offset,
+			Integer year) throws Exception {
 
 		List<Depreciation> depreciations = propertyMasterRepository.searchDepreciations(tenantId, ids, fromYear, toYear,
 				code, nameLocal, pageSize, offset, year);
@@ -969,17 +1035,19 @@ public class MasterServiceImpl implements Masterservice {
 	public MutationMasterResponse updateMutationMaster(MutationMasterRequest mutationMasterRequest) throws Exception {
 
 		mutationMasterRequest.getMutationMasters().forEach(mutation -> {
-			AuditDetails auditDetails = getAuditDetail(mutationMasterRequest.getRequestInfo());
+
+			AuditDetails auditDetails = getUpdatedAuditDetails(mutationMasterRequest.getRequestInfo(),
+					ConstantUtility.MUTATION_MASTER_TABLE_NAME, mutation.getId());
+			mutation.setAuditDetails(auditDetails);
 			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(mutation.getTenantId(),
-					mutation.getCode(), ConstantUtility.DEPRECIATION_TABLE_NAME, mutation.getId());
+					mutation.getCode(), ConstantUtility.MUTATION_MASTER_TABLE_NAME, mutation.getId());
 
 			if (isExists)
 				throw new DuplicateIdException(mutationMasterRequest.getRequestInfo());
 
 			Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 			String data = gson.toJson(mutation);
-			mutation.getAuditDetails().setLastModifiedBy(auditDetails.getLastModifiedBy());
-			mutation.getAuditDetails().setLastModifiedTime(auditDetails.getLastModifiedTime());
+
 			try {
 				propertyMasterRepository.updateMutationMaster(mutation, data);
 			} catch (Exception e) {
@@ -1022,7 +1090,7 @@ public class MasterServiceImpl implements Masterservice {
 	public DocumentTypeResponse createDocumentTypeMaster(String tenantId, DocumentTypeRequest documentTypeRequest)
 			throws Exception {
 		for (DocumentType documentType : documentTypeRequest.getDocumentType()) {
-			AuditDetails auditDetails=getAuditDetail(documentTypeRequest.getRequestInfo());
+			AuditDetails auditDetails = getAuditDetail(documentTypeRequest.getRequestInfo());
 			Boolean isExists = propertyMasterRepository.checkWhetherRecordWithTenantIdAndNameExits(
 					documentType.getTenantId(), documentType.getCode(), documentType.getApplication().toString(),
 					ConstantUtility.DOCUMENT_TYPE_TABLE_NAME, null);
@@ -1050,16 +1118,18 @@ public class MasterServiceImpl implements Masterservice {
 	@Override
 	@Transactional
 	public DocumentTypeResponse updateDocumentTypeMaster(DocumentTypeRequest documentTypeRequest) throws Exception {
+
 		for (DocumentType documentType : documentTypeRequest.getDocumentType()) {
-			AuditDetails auditDetails = getAuditDetail(documentTypeRequest.getRequestInfo());
+
+			AuditDetails auditDetails = getUpdatedAuditDetails(documentTypeRequest.getRequestInfo(),
+					ConstantUtility.DOCUMENT_TYPE_TABLE_NAME, documentType.getId());
+			documentType.setAuditDetails(auditDetails);
 			Boolean isExists = propertyMasterRepository.checkWhetherRecordWithTenantIdAndNameExits(
 					documentType.getTenantId(), documentType.getCode(), documentType.getApplication().toString(),
 					ConstantUtility.DOCUMENT_TYPE_TABLE_NAME, documentType.getId());
 
 			if (isExists)
 				throw new DuplicateIdException(documentTypeRequest.getRequestInfo());
-			documentType.getAuditDetails().setLastModifiedBy(auditDetails.getLastModifiedBy());
-			documentType.getAuditDetails().setLastModifiedTime(auditDetails.getLastModifiedTime());
 			try {
 				propertyMasterRepository.updateDocumentTypeMaster(documentType);
 			} catch (Exception e) {
@@ -1095,6 +1165,123 @@ public class MasterServiceImpl implements Masterservice {
 		return documentTypeResponse;
 	}
 
+	@Override
+	@Transactional
+	public ApartmentResponse createApartment(String tenantId, ApartmentRequest apartmentRequest) throws Exception {
+
+		for (Apartment apartment : apartmentRequest.getApartments()) {
+
+			AuditDetails auditDetails = getAuditDetail(apartmentRequest.getRequestInfo());
+			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(apartment.getTenantId(),
+					apartment.getCode(), ConstantUtility.APARTMENT_TABLE_NAME, apartment.getId());
+			validateApartmentData(apartment.getFloor(), apartment.getTenantId(), apartmentRequest.getRequestInfo());
+
+			if (isExists)
+				throw new DuplicateIdException(apartmentRequest.getRequestInfo());
+			apartment.setAuditDetails(auditDetails);
+			apartment.getFloor().setAuditDetails(auditDetails);
+
+			for (Unit unit : apartment.getFloor().getUnits()) {
+
+				if (unit.getUnits() != null) {
+					if (unit.getUnits().size() > 0) {
+						for (Unit room : unit.getUnits()) {
+							room.setAuditDetails(auditDetails);
+						}
+					}
+				}
+				unit.setAuditDetails(auditDetails);
+			}
+
+			try {
+				Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
+				String data = gson.toJson(apartment);
+				Long id = propertyMasterRepository.createApartment(apartment, data);
+				apartment.setId(id);
+			} catch (Exception e) {
+
+				throw new InvalidInputException(apartmentRequest.getRequestInfo());
+			}
+		}
+
+		ApartmentResponse apartmentResponse = new ApartmentResponse();
+		ResponseInfo responseInfo = responseInfoFactory
+				.createResponseInfoFromRequestInfo(apartmentRequest.getRequestInfo(), true);
+		apartmentResponse.setResponseInfo(responseInfo);
+		apartmentResponse.setApartments(apartmentRequest.getApartments());
+
+		return apartmentResponse;
+	}
+
+	@Override
+	@Transactional
+	public ApartmentResponse updateApartment(ApartmentRequest apartmentRequest) throws Exception {
+
+		for (Apartment apartment : apartmentRequest.getApartments()) {
+
+			AuditDetails auditDetails = getUpdatedAuditDetails(apartmentRequest.getRequestInfo(),
+					ConstantUtility.APARTMENT_TABLE_NAME, apartment.getId());
+			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(apartment.getTenantId(),
+					apartment.getCode(), ConstantUtility.APARTMENT_TABLE_NAME, apartment.getId());
+			validateApartmentData(apartment.getFloor(), apartment.getTenantId(), apartmentRequest.getRequestInfo());
+			apartment.setAuditDetails(auditDetails);
+			apartment.getFloor().setAuditDetails(auditDetails);
+
+			for (Unit unit : apartment.getFloor().getUnits()) {
+
+				if (unit.getUnits() != null) {
+					if (unit.getUnits().size() > 0) {
+						for (Unit room : unit.getUnits()) {
+							room.setAuditDetails(auditDetails);
+						}
+					}
+				}
+				unit.setAuditDetails(auditDetails);
+			}
+			if (isExists)
+				throw new DuplicateIdException(apartmentRequest.getRequestInfo());
+
+			try {
+				Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
+				String data = gson.toJson(apartment);
+				propertyMasterRepository.updateApartment(apartment, data);
+
+			} catch (Exception e) {
+
+				throw new InvalidInputException(apartmentRequest.getRequestInfo());
+			}
+		}
+
+		ApartmentResponse apartmentResponse = new ApartmentResponse();
+		ResponseInfo responseInfo = responseInfoFactory
+				.createResponseInfoFromRequestInfo(apartmentRequest.getRequestInfo(), true);
+		apartmentResponse.setResponseInfo(responseInfo);
+		apartmentResponse.setApartments(apartmentRequest.getApartments());
+
+		return apartmentResponse;
+	}
+
+	@Override
+	public ApartmentResponse searchApartment(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
+			String code, Boolean liftFacility, Boolean powerBackUp, Boolean parkingFacility, Integer pageSize,
+			Integer offSet) throws Exception {
+
+		List<Apartment> apartments = null;
+		try {
+			apartments = propertyMasterRepository.searchApartment(tenantId, code, name, ids, liftFacility, powerBackUp,
+					parkingFacility, pageSize, offSet);
+		} catch (Exception e) {
+			throw new InvalidInputException(requestInfo);
+		}
+
+		ApartmentResponse apartmentComplexResponse = new ApartmentResponse();
+		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		apartmentComplexResponse.setResponseInfo(responseInfo);
+		apartmentComplexResponse.setApartments(apartments);
+
+		return apartmentComplexResponse;
+	}
+
 	private AuditDetails getAuditDetail(RequestInfo requestInfo) {
 
 		String userId = requestInfo.getUserInfo().getId().toString();
@@ -1106,5 +1293,89 @@ public class MasterServiceImpl implements Masterservice {
 		auditDetail.setLastModifiedBy(userId);
 		auditDetail.setLastModifiedTime(currEpochDate);
 		return auditDetail;
+	}
+
+	private AuditDetails getUpdatedAuditDetails(RequestInfo requestInfo, String tableName, Long id) {
+
+		String userId = requestInfo.getUserInfo().getId().toString();
+		Long currEpochDate = new Date().getTime();
+
+		AuditDetails auditDetails = new AuditDetails();
+		auditDetails.setLastModifiedBy(userId);
+		auditDetails.setLastModifiedTime(currEpochDate);
+
+		propertyMasterRepository.getCreatedAuditDetails(auditDetails, tableName, id);
+		return auditDetails;
+	}
+
+	private void validateApartmentData(Floor floor, String tenantId, RequestInfo requestInfo) {
+
+		if (floor.getFloorNo() != null) {
+
+			Boolean floorNoExists = propertyMasterRepository.checkWhetherRecordExits(tenantId, floor.getFloorNo(),
+					ConstantUtility.FLOOR_TYPE_TABLE_NAME, null);
+			if (!floorNoExists) {
+				throw new InvalidCodeException(propertiesManager.getInvalidPropertyFloor(), requestInfo);
+			}
+
+			for (Unit unit : floor.getUnits()) {
+
+				if (unit.getUnits() != null || unit.getUnits().isEmpty()) {
+					for (Unit unitData : unit.getUnits()) {
+						validateUnitData(tenantId, unitData, requestInfo);
+					}
+				}
+				validateUnitData(tenantId, unit, requestInfo);
+
+			}
+		} else {
+			throw new InvalidCodeException(propertiesManager.getInvalidFloorNo(), requestInfo);
+		}
+	}
+
+	private void validateUnitData(String tenantId, Unit unit, RequestInfo requestInfo) {
+
+		if (unit.getUsage() != null) {
+			Boolean usageExists = propertyMasterRepository.checkWhetherRecordExits(tenantId, unit.getUsage(),
+					ConstantUtility.USAGE_TYPE_TABLE_NAME, null);
+			if (!usageExists) {
+				throw new InvalidCodeException(propertiesManager.getInvalidPropertyUsageCode(), requestInfo);
+			}
+		} else {
+			throw new InvalidCodeException(propertiesManager.getInvalidUsage(), requestInfo);
+		}
+
+		if (unit.getOccupancyType() != null) {
+			Boolean occupancyTypeExists = propertyMasterRepository.checkWhetherRecordExits(tenantId,
+					unit.getOccupancyType(), ConstantUtility.OCCUPANCY_TABLE_NAME, null);
+
+			if (!occupancyTypeExists) {
+				throw new InvalidCodeException(propertiesManager.getInvalidPropertyOccupancyCode(), requestInfo);
+			}
+		} else {
+			throw new InvalidCodeException(propertiesManager.getInvalidOccupancytype(), requestInfo);
+		}
+
+		if (unit.getStructure() != null) {
+			Boolean structureExists = propertyMasterRepository.checkWhetherRecordExits(tenantId, unit.getStructure(),
+					ConstantUtility.STRUCTURE_CLASS_TABLE_NAME, null);
+
+			if (!structureExists) {
+				throw new InvalidCodeException(propertiesManager.getInvalidPropertyStructureCode(), requestInfo);
+			}
+		} else {
+			throw new InvalidCodeException(propertiesManager.getInvalidStructure(), requestInfo);
+		}
+
+		if (unit.getAge() != null) {
+			Boolean ageExists = propertyMasterRepository.checkWhetherRecordExits(tenantId, unit.getAge(),
+					ConstantUtility.DEPRECIATION_TABLE_NAME, null);
+
+			if (!ageExists) {
+				throw new InvalidCodeException(propertiesManager.getInvalidPropertyAgeCode(), requestInfo);
+			}
+		} else {
+			throw new InvalidCodeException(propertiesManager.getInvalidAge(), requestInfo);
+		}
 	}
 }

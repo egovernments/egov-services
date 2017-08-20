@@ -66,13 +66,14 @@ public class WorkflowRepository {
 	public Object getPositionForUser(PositionSearchCriteriaWrapper positionSearchCriteriaWrapper){
 		StringBuilder builder = new StringBuilder();
 		String hostname = applicationProperties.getHremployeeServiceHost();
-		String baseUri = applicationProperties.getGetPosition();
-		String uriAppend = applicationProperties.getGetPositionUriAppend();
+		String uri = applicationProperties.getGetPosition();
+		String id = positionSearchCriteriaWrapper.getPositionSearchCriteria().getEmployeeId().toString();
+		String uriAppend = applicationProperties.getGetPositionAppend();
 		String searchCriteria="?tenantId="+positionSearchCriteriaWrapper.getPositionSearchCriteria().getTenantId();
 		
 		builder.append(hostname)
-			   .append(baseUri)
-			   .append(positionSearchCriteriaWrapper.getPositionSearchCriteria().getEmployeeId())
+			   .append(uri)
+		       .append(id)
 			   .append(uriAppend)
 			   .append(searchCriteria);
 				

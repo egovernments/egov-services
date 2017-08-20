@@ -3,6 +3,7 @@ var dat = {
 		"numCols": 12/3,
 		"url": "/wcms/masters/treatmentplant/_create",
 		"tenantIdRequired": true,
+		"idJsonPath": "TreatmentPlants[0].code",
 		"useTimestamp": true,
 		"objectName": "TreatmentPlants",
 		"groups": [
@@ -28,7 +29,7 @@ var dat = {
 							"pattern": "",
 							"type": "singleValueList",
 							"url": "/wcms/masters/master/_getplanttypes?|$..key|$..object",
-							"isRequired": false,
+							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
@@ -40,7 +41,7 @@ var dat = {
 							"pattern": "",
 							"type": "singleValueList",
 							"url": "/egov-location/boundarys/_search?&boundaryType=Locality|$.Boundary.*.boundaryNum|$.Boundary.*.name",
-							"isRequired": false,
+							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
@@ -52,7 +53,7 @@ var dat = {
 							"pattern": "",
 							"type": "singleValueList",
 							"url": "/egov-location/boundarys/_search?&boundaryType=Ward|$.Boundary.*.boundaryNum|$.Boundary.*.name",
-							"isRequired": false,
+							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
@@ -64,7 +65,7 @@ var dat = {
 							"pattern": "",
 							"type": "singleValueList",
 							"url": "/egov-location/boundarys/_search?&boundaryType=Zone|$.Boundary.*.boundaryNum|$.Boundary.*.name",
-							"isRequired": false,
+							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
@@ -76,7 +77,7 @@ var dat = {
 							"pattern": "",
 							"type": "singleValueList",
 							"url": "/wcms/masters/storagereservoir/_search?|$..name|$..name",
-							"isRequired": false,
+							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
@@ -87,7 +88,7 @@ var dat = {
 							"label": "wc.create.groups.fields.storageCapacityofReservoir(in MLD)",
 							"pattern": "^.{1,8}$",
 							"type": "number",
-							"isRequired": false,
+							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": "Maximum length of capacity is 8"
@@ -115,7 +116,7 @@ var dat = {
 		"objectName": "treatmentplant",
 		"groups": [
 			{
-				"label": "wc.create.groups.treatmentplant.title",
+				"label": "wc.search.groups.treatmentplant.title",
 				"name": "searchTreatmentPlant",
 				"fields": [
 					{
@@ -161,7 +162,7 @@ var dat = {
 		"objectName": "TreatmentPlants",
 		"groups": [
 			{
-				"label": "wc.create.groups.treatmentplant.title",
+				"label": "wc.view.groups.treatmentplant.title",
 				"name": "viewTreatmentPlant",
 				"fields": [
 						{
@@ -270,7 +271,7 @@ var dat = {
 		"objectName": "TreatmentPlants",
 		"groups": [
 			{
-				"label": "wc.create.groups.treatmentplant.title",
+				"label": "wc.update.groups.treatmentplant.title",
 				"name": "updateTreatmentPlant",
 				"fields": [
 						{
@@ -306,7 +307,8 @@ var dat = {
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"convertToString":true
 						},
 						{
 							"name": "wardName",
@@ -318,7 +320,8 @@ var dat = {
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"convertToString":true
 						},
 						{
 							"name": "zoneName",
@@ -330,7 +333,8 @@ var dat = {
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"convertToString":true
 						},
 						{
 							"name": "storageReservoirName",

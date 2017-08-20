@@ -59,12 +59,14 @@ public class VoucherServiceTest {
     public void test_shuould_create_VoucherRequest_For_Reevalaution() {
 
         final RevaluationRequest revaluationRequest = getRevaluationRequest();
-        revaluationRequest.getRevaluation().setFund(Long.valueOf("3"));
+        final RequestInfo requestInfo = revaluationRequest.getRequestInfo();
+        final Revaluation revaluation = revaluationRequest.getRevaluation();
+        revaluation.setFund(Long.valueOf("3"));
 
         final Asset asset = get_Asset();
         final List<VouchercreateAccountCodeDetails> accountCodeDetails = getVouchercreateAccountCodeDetails();
 
-        final String tenantId = revaluationRequest.getRevaluation().getTenantId();
+        final String tenantId = revaluation.getTenantId();
 
         when(assetConfigurationService
                 .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.REVALUATIONVOUCHERNAME, tenantId))
@@ -72,9 +74,10 @@ public class VoucherServiceTest {
         when(assetConfigurationService
                 .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.REVALUATIONVOUCHERDESCRIPTION, tenantId))
                         .thenReturn("Creating Voucher for Asset Revaluation");
-
-        final VoucherRequest generatedVoucherRequest = voucherService
-                .createVoucherRequestForRevalaution(revaluationRequest, asset, accountCodeDetails);
+        final Fund revFund = new Fund();
+        revFund.setId(Long.valueOf("3"));
+        final VoucherRequest generatedVoucherRequest = voucherService.createVoucherRequest(revaluation, revFund,
+                asset.getDepartment().getId(), accountCodeDetails, requestInfo, tenantId);
 
         final Fund fund = get_Fund(revaluationRequest);
         final Voucher voucher = getVoucher(asset, fund, tenantId);

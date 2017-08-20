@@ -1,7 +1,43 @@
+/*
+ * eGov suite of products aim to improve the internal efficiency,transparency,
+ *      accountability and the service delivery of the government  organizations.
+ *  
+ *       Copyright (C) <2015>  eGovernments Foundation
+ *  
+ *       The updated version of eGov suite of products as by eGovernments Foundation
+ *       is available at http://www.egovernments.org
+ *  
+ *       This program is free software: you can redistribute it and/or modify
+ *       it under the terms of the GNU General Public License as published by
+ *       the Free Software Foundation, either version 3 of the License, or
+ *       any later version.
+ *  
+ *       This program is distributed in the hope that it will be useful,
+ *       but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *       GNU General Public License for more details.
+ *  
+ *       You should have received a copy of the GNU General Public License
+ *       along with this program. If not, see http://www.gnu.org/licenses/ or
+ *       http://www.gnu.org/licenses/gpl.html .
+ *  
+ *       In addition to the terms of the GPL license to be adhered to in using this
+ *       program, the following additional terms are to be complied with:
+ *  
+ *           1) All versions of this program, verbatim or modified must carry this
+ *              Legal Notice.
+ *  
+ *           2) Any misrepresentation of the origin of the material is prohibited. It
+ *              is required that all modified versions of this material be marked in
+ *              reasonable ways as different from the original version.
+ *  
+ *           3) This license does not grant any rights to any user of the program
+ *              with regards to rights under trademark law for use of the trade names
+ *              or trademarks of eGovernments Foundation.
+ *  
+ *     In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
+ */
 package org.egov.egf.budget.domain.repository;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.model.Pagination;
@@ -11,151 +47,204 @@ import org.egov.egf.budget.persistence.entity.BudgetDetailEntity;
 import org.egov.egf.budget.persistence.queue.repository.BudgetDetailQueueRepository;
 import org.egov.egf.budget.persistence.repository.BudgetDetailJdbcRepository;
 import org.egov.egf.budget.web.contract.BudgetDetailRequest;
+import org.egov.egf.budget.web.contract.BudgetDetailSearchContract;
 import org.egov.egf.budget.web.mapper.BudgetDetailMapper;
+import org.egov.egf.master.web.repository.FinancialConfigurationContractRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class BudgetDetailRepository {
 
-	private BudgetDetailJdbcRepository budgetDetailJdbcRepository;
+    private final BudgetDetailJdbcRepository budgetDetailJdbcRepository;
 
-	private BudgetDetailQueueRepository budgetDetailQueueRepository;
+    private final BudgetDetailQueueRepository budgetDetailQueueRepository;
 
-	private String persistThroughKafka;
+    private final String persistThroughKafka;
 
-	@Autowired
-	public BudgetDetailRepository(BudgetDetailJdbcRepository budgetDetailJdbcRepository,
-			BudgetDetailQueueRepository budgetDetailQueueRepository,
-			@Value("${persist.through.kafka}") String persistThroughKafka) {
-		this.budgetDetailJdbcRepository = budgetDetailJdbcRepository;
-		this.budgetDetailQueueRepository = budgetDetailQueueRepository;
-		this.persistThroughKafka = persistThroughKafka;
+    private FinancialConfigurationContractRepository financialConfigurationContractRepository;
 
-	}
+    private BudgetDetailESRepository budgetDetailESRepository;
 
-	public BudgetDetail findById(BudgetDetail budgetDetail) {
+    @Autowired
+    public BudgetDetailRepository(final BudgetDetailJdbcRepository budgetDetailJdbcRepository,
+                                  final BudgetDetailQueueRepository budgetDetailQueueRepository,
+                                  @Value("${persist.through.kafka}") final String persistThroughKafka,
+                                  FinancialConfigurationContractRepository financialConfigurationContractRepository,
+                                  BudgetDetailESRepository budgetDetailESRepository
+    ) {
+        this.budgetDetailJdbcRepository = budgetDetailJdbcRepository;
+        this.budgetDetailQueueRepository = budgetDetailQueueRepository;
+        this.persistThroughKafka = persistThroughKafka;
+        this.financialConfigurationContractRepository = financialConfigurationContractRepository;
+        this.budgetDetailESRepository = budgetDetailESRepository;
 
-		BudgetDetailEntity entity = budgetDetailJdbcRepository
-				.findById(new BudgetDetailEntity().toEntity(budgetDetail));
+    }
 
-		if (entity != null)
-			return entity.toDomain();
+    public BudgetDetail findById(final BudgetDetail budgetDetail) {
 
-		return null;
+        final BudgetDetailEntity entity = budgetDetailJdbcRepository
+                .findById(new BudgetDetailEntity().toEntity(budgetDetail));
 
-	}
+        if (entity != null)
+            return entity.toDomain();
 
-	@Transactional
-	public List<BudgetDetail> save(List<BudgetDetail> budgetDetails, RequestInfo requestInfo) {
+        return null;
 
-		BudgetDetailMapper mapper = new BudgetDetailMapper();
+    }
 
-		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
-				&& persistThroughKafka.equalsIgnoreCase("yes")) {
+    @Transactional
+    public List<BudgetDetail> save(final List<BudgetDetail> budgetDetails, final RequestInfo requestInfo) {
 
-			BudgetDetailRequest request = new BudgetDetailRequest();
-			request.setRequestInfo(requestInfo);
-			request.setBudgetDetails(new ArrayList<>());
+        final BudgetDetailMapper mapper = new BudgetDetailMapper();
 
-			for (BudgetDetail iac : budgetDetails) {
+        if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+                && persistThroughKafka.equalsIgnoreCase("yes")) {
 
-				request.getBudgetDetails().add(mapper.toContract(iac));
+            final BudgetDetailRequest request = new BudgetDetailRequest();
+            request.setRequestInfo(requestInfo);
+            request.setBudgetDetails(new ArrayList<>());
 
-			}
+            for (final BudgetDetail iac : budgetDetails)
+                request.getBudgetDetails().add(mapper.toContract(iac));
 
-			budgetDetailQueueRepository.addToQue(request);
+            budgetDetailQueueRepository.addToQue(request);
 
-			return budgetDetails;
-		} else {
+            return budgetDetails;
+        } else {
 
-			List<BudgetDetail> resultList = new ArrayList<BudgetDetail>();
+            final List<BudgetDetail> resultList = new ArrayList<BudgetDetail>();
 
-			for (BudgetDetail iac : budgetDetails) {
+            for (final BudgetDetail iac : budgetDetails)
+                resultList.add(save(iac));
 
-				resultList.add(save(iac));
-			}
+            final BudgetDetailRequest request = new BudgetDetailRequest();
+            request.setRequestInfo(requestInfo);
+            request.setBudgetDetails(new ArrayList<>());
 
-			BudgetDetailRequest request = new BudgetDetailRequest();
-			request.setRequestInfo(requestInfo);
-			request.setBudgetDetails(new ArrayList<>());
+            for (final BudgetDetail iac : resultList)
+                request.getBudgetDetails().add(mapper.toContract(iac));
 
-			for (BudgetDetail iac : resultList) {
+            budgetDetailQueueRepository.addToSearchQue(request);
 
-				request.getBudgetDetails().add(mapper.toContract(iac));
+            return resultList;
+        }
 
-			}
+    }
 
-			budgetDetailQueueRepository.addToSearchQue(request);
+    @Transactional
+    public List<BudgetDetail> update(final List<BudgetDetail> budgetDetails, final RequestInfo requestInfo) {
 
-			return resultList;
-		}
+        final BudgetDetailMapper mapper = new BudgetDetailMapper();
 
-	}
+        if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+                && persistThroughKafka.equalsIgnoreCase("yes")) {
 
-	@Transactional
-	public List<BudgetDetail> update(List<BudgetDetail> budgetDetails, RequestInfo requestInfo) {
+            final BudgetDetailRequest request = new BudgetDetailRequest();
+            request.setRequestInfo(requestInfo);
+            request.setBudgetDetails(new ArrayList<>());
 
-		BudgetDetailMapper mapper = new BudgetDetailMapper();
+            for (final BudgetDetail iac : budgetDetails)
+                request.getBudgetDetails().add(mapper.toContract(iac));
 
-		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
-				&& persistThroughKafka.equalsIgnoreCase("yes")) {
+            budgetDetailQueueRepository.addToQue(request);
 
-			BudgetDetailRequest request = new BudgetDetailRequest();
-			request.setRequestInfo(requestInfo);
-			request.setBudgetDetails(new ArrayList<>());
+            return budgetDetails;
+        } else {
 
-			for (BudgetDetail iac : budgetDetails) {
+            final List<BudgetDetail> resultList = new ArrayList<BudgetDetail>();
 
-				request.getBudgetDetails().add(mapper.toContract(iac));
+            for (final BudgetDetail iac : budgetDetails)
+                resultList.add(update(iac));
 
-			}
+            final BudgetDetailRequest request = new BudgetDetailRequest();
+            request.setRequestInfo(requestInfo);
+            request.setBudgetDetails(new ArrayList<>());
 
-			budgetDetailQueueRepository.addToQue(request);
+            for (final BudgetDetail iac : resultList)
+                request.getBudgetDetails().add(mapper.toContract(iac));
 
-			return budgetDetails;
-		} else {
+            budgetDetailQueueRepository.addToSearchQue(request);
 
-			List<BudgetDetail> resultList = new ArrayList<BudgetDetail>();
+            return resultList;
+        }
 
-			for (BudgetDetail iac : budgetDetails) {
+    }
+    
+    @Transactional
+    public List<BudgetDetail> delete(final List<BudgetDetail> budgetDetails, final RequestInfo requestInfo) {
 
-				resultList.add(update(iac));
-			}
+        final BudgetDetailMapper mapper = new BudgetDetailMapper();
 
-			BudgetDetailRequest request = new BudgetDetailRequest();
-			request.setRequestInfo(requestInfo);
-			request.setBudgetDetails(new ArrayList<>());
+        if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+                && persistThroughKafka.equalsIgnoreCase("yes")) {
 
-			for (BudgetDetail iac : resultList) {
+            final BudgetDetailRequest request = new BudgetDetailRequest();
+            request.setRequestInfo(requestInfo);
+            request.setBudgetDetails(new ArrayList<>());
 
-				request.getBudgetDetails().add(mapper.toContract(iac));
+            for (final BudgetDetail iac : budgetDetails)
+                request.getBudgetDetails().add(mapper.toContract(iac));
 
-			}
+            budgetDetailQueueRepository.addToQue(request);
 
-			budgetDetailQueueRepository.addToSearchQue(request);
+            return budgetDetails;
+        } else {
 
-			return resultList;
-		}
+            final List<BudgetDetail> resultList = new ArrayList<BudgetDetail>();
 
-	}
+            for (final BudgetDetail iac : budgetDetails)
+                resultList.add(delete(iac));
 
-	@Transactional
-	public BudgetDetail save(BudgetDetail budgetDetail) {
-		return budgetDetailJdbcRepository.create(new BudgetDetailEntity().toEntity(budgetDetail)).toDomain();
-	}
+            final BudgetDetailRequest request = new BudgetDetailRequest();
+            request.setRequestInfo(requestInfo);
+            request.setBudgetDetails(new ArrayList<>());
 
-	@Transactional
-	public BudgetDetail update(BudgetDetail entity) {
-		return budgetDetailJdbcRepository.update(new BudgetDetailEntity().toEntity(entity)).toDomain();
-	}
+            for (final BudgetDetail iac : resultList)
+                request.getBudgetDetails().add(mapper.toContract(iac));
 
-	public Pagination<BudgetDetail> search(BudgetDetailSearch domain) {
+            budgetDetailQueueRepository.addToSearchQue(request);
 
-		return budgetDetailJdbcRepository.search(domain);
+            return resultList;
+        }
 
-	}
+    }
+
+    @Transactional
+    public BudgetDetail save(final BudgetDetail budgetDetail) {
+        return budgetDetailJdbcRepository.create(new BudgetDetailEntity().toEntity(budgetDetail)).toDomain();
+    }
+
+    @Transactional
+    public BudgetDetail update(final BudgetDetail entity) {
+        return budgetDetailJdbcRepository.update(new BudgetDetailEntity().toEntity(entity)).toDomain();
+    }
+    
+    @Transactional
+    public BudgetDetail delete(final BudgetDetail entity) {
+        return budgetDetailJdbcRepository.delete(new BudgetDetailEntity().toEntity(entity)).toDomain();
+    }
+
+    public Pagination<BudgetDetail> search(final BudgetDetailSearch domain) {
+
+        if (financialConfigurationContractRepository.fetchDataFrom() != null
+                && financialConfigurationContractRepository.fetchDataFrom().equalsIgnoreCase("es")) {
+
+            BudgetDetailMapper mapper = new BudgetDetailMapper();
+            BudgetDetailSearchContract budgetDetailSearchContract = new BudgetDetailSearchContract();
+            budgetDetailSearchContract = mapper.toSearchContract(domain);
+            Pagination<BudgetDetail> budgetDetails = budgetDetailESRepository.search(budgetDetailSearchContract);
+            return budgetDetails;
+        } else {
+
+            return budgetDetailJdbcRepository.search(domain);
+        }
+
+    }
 
 }

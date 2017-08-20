@@ -2,19 +2,24 @@ package org.egov.tradelicense.persistence.repository.helper;
 
 import java.util.Date;
 
-import org.egov.models.AuditDetails;
-import org.egov.models.RequestInfo;
-import org.egov.models.UserInfo;
+import org.egov.tl.commons.web.contract.AuditDetails;
+import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tl.commons.web.contract.UserInfo;
 import org.egov.tradelicense.persistence.repository.builder.UtilityBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class UtilityHelper {
 
+
 	@Autowired
-	private JdbcTemplate jdbcTemplate;
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	/**
 	 * This will check whether any record exists with the given tenantId & code
@@ -24,20 +29,46 @@ public class UtilityHelper {
 	 * @param code
 	 * @return True / false if record exists / record does n't exists
 	 */
-	public Boolean checkWhetherDuplicateRecordExits(String tenantId, String code, String tableName, Long id) {
+	public Boolean checkWhetherDuplicateRecordExits(String tenantId, String code, String name, String tableName,
+			Long id) {
 
 		Boolean isExists = Boolean.TRUE;
-		String query = UtilityBuilder.getUniqueTenantCodeQuery(tableName, code, tenantId, id);
+		String query;
 		int count = 0;
 
-		try {
-			count = (Integer) jdbcTemplate.queryForObject(query, Integer.class);
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
+		if (code != null) {
+			query = UtilityBuilder.getUniqueTenantCodeQuery(tableName, code, tenantId, id);
 
-		if (count == 0) {
-			isExists = Boolean.FALSE;
+			try {
+
+				MapSqlParameterSource parameters = new MapSqlParameterSource();
+				count = (Integer) namedParameterJdbcTemplate.queryForObject(query,
+						parameters, Integer.class);
+
+			} catch (Exception e) {
+				log.error("error while executing the query :"+ query + " , error message : " +  e.getMessage());
+			}
+
+			if (count == 0) {
+				isExists = Boolean.FALSE;
+			}
+		}
+		if (name != null) {
+
+			query = UtilityBuilder.getUniqueTenantNameQuery(tableName, name, tenantId, id);
+			isExists = Boolean.TRUE;
+			try {
+
+				MapSqlParameterSource parameters = new MapSqlParameterSource();
+				count = (Integer) namedParameterJdbcTemplate.queryForObject(query, parameters, Integer.class);
+
+			} catch (Exception e) {
+				log.error("error while executing the query :"+ query + " , error message : " +  e.getMessage());
+			}
+
+			if (count == 0) {
+				isExists = Boolean.FALSE;
+			}
 		}
 
 		return isExists;
@@ -75,6 +106,9 @@ public class UtilityHelper {
 	public AuditDetails getUpdateMasterAuditDetails(AuditDetails auditDetails, RequestInfo requestInfo) {
 
 		Long updatedTime = new Date().getTime();
+		if(auditDetails == null){
+			auditDetails = new AuditDetails();
+		}
 		auditDetails.setLastModifiedTime(updatedTime);
 		UserInfo userInfo = requestInfo.getUserInfo();
 
@@ -83,6 +117,43 @@ public class UtilityHelper {
 		}
 
 		return auditDetails;
+	}
+
+	/**
+	 * This will check whether any record exists with the given tenantId , name
+	 * & applicationName in database or not
+	 * 
+	 * @param tenantId
+	 * @param name
+	 * @param tableName
+	 * @param id
+	 * @param applicationName
+	 * @return True / false if record exists / record does n't exists
+	 */
+	public Boolean checkDocumentTypeDuplicate(String tenantId, String name, String tableName, Long id,
+			String applicationName) {
+
+		Boolean isExists = Boolean.TRUE;
+
+		String query = UtilityBuilder.getUniqueTenantCodeQuerywithName(tableName, name, tenantId, applicationName, id);
+
+		int count = 0;
+
+		try {
+			MapSqlParameterSource parameters = new MapSqlParameterSource();
+			count = (Integer) namedParameterJdbcTemplate.queryForObject(query, parameters, Integer.class);
+
+		} catch (Exception e) {
+
+			log.error("error while executing the query :"+ query + " , error message : " +  e.getMessage());
+
+		}
+
+		if (count == 0)
+			isExists = Boolean.FALSE;
+
+		return isExists;
+
 	}
 
 	/**
@@ -106,9 +177,12 @@ public class UtilityHelper {
 		int count = 0;
 
 		try {
-			count = (Integer) jdbcTemplate.queryForObject(query, Integer.class);
+
+			MapSqlParameterSource parameters = new MapSqlParameterSource();
+			count = (Integer)namedParameterJdbcTemplate.queryForObject(query, parameters, Integer.class);
+
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			log.error("error while executing the query :"+ query + " , error message : " +  e.getMessage());
 		}
 
 		if (count == 0) {
@@ -117,7 +191,7 @@ public class UtilityHelper {
 
 		return isExists;
 	}
-	
+
 	/**
 	 * This will check whether any record exists with the given tenantId & name
 	 * in database or not
@@ -126,7 +200,8 @@ public class UtilityHelper {
 	 * @param name
 	 * @return True / false if record exists / record does n't exists
 	 */
-	public Boolean checkWhetherLicenseStatusExists(String tenantId, String name, String code, Long id, String tableName) {
+	public Boolean checkWhetherLicenseStatusExists(String tenantId, String name, String code, Long id,
+			String tableName) {
 
 		Boolean isExists = Boolean.TRUE;
 
@@ -136,11 +211,13 @@ public class UtilityHelper {
 
 		try {
 
-			count = (Integer) jdbcTemplate.queryForObject(query, Integer.class);
+			MapSqlParameterSource parameters = new MapSqlParameterSource();
+			count = (Integer) namedParameterJdbcTemplate.queryForObject(query, parameters, Integer.class);
+
 
 		} catch (Exception e) {
 
-			System.out.println(e.getMessage());
+			log.error("error while executing the query :"+ query + " , error message : " +  e.getMessage());
 
 		}
 
@@ -149,5 +226,38 @@ public class UtilityHelper {
 
 		return isExists;
 
+	}
+
+	/**
+	 * This will check whether any record exists with the given tenantId ,code &
+	 * name exists in database or not
+	 * 
+	 * @param tenantId
+	 * @param code
+	 * @return True / false if record exists / record does n't exists
+	 */
+	public Boolean checkWhetherDuplicateUomRecordExits(String tenantId, String code, String name, String tableName,
+			Long id) {
+
+		Boolean isExists = Boolean.TRUE;
+		String query;
+		int count = 0;
+
+		query = UtilityBuilder.getUniqueTenantNameCodeQuery(tableName, code, name, tenantId, id);
+
+		try {
+
+			MapSqlParameterSource parameters = new MapSqlParameterSource();
+			count = (Integer) namedParameterJdbcTemplate.queryForObject(query, parameters, Integer.class);
+
+		} catch (Exception e) {
+			log.error("error while executing the query :"+ query + " , error message : " +  e.getMessage());
+		}
+
+		if (count == 0) {
+			isExists = Boolean.FALSE;
+		}
+
+		return isExists;
 	}
 }

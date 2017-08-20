@@ -11,6 +11,9 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
+
 @Builder
 @EqualsAndHashCode
 @Getter
@@ -21,8 +24,8 @@ public class BusinessDetailsRequest {
 	@JsonProperty("RequestInfo")
 	private RequestInfo requestInfo;
 
-	@JsonProperty("BusinessDetailsInfo")
-	private BusinessDetailsRequestInfo businessDetails;
+	@JsonProperty("BusinessDetails")
+	private List<BusinessDetails> businessDetails;
 
 	public AuthenticatedUser toDomain() {
 		User userInfo = requestInfo.getUserInfo();

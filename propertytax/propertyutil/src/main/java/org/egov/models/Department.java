@@ -39,13 +39,13 @@ public class Department {
 	private String name;
 
 	@NotNull
-	@Size(min = 4, max = 64)
+	@Size(min = 2, max = 64)
 	private String code;
 
-	@Size(min = 8, max = 256)
+	@Size(min = 1, max = 256)
 	private String nameLocal;
 
-	@Size(min = 8, max = 512)
+	@Size(min = 4, max = 512)
 	private String description;
 
 	@JsonProperty("data")

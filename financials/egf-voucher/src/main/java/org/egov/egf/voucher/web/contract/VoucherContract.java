@@ -38,6 +38,7 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 package org.egov.egf.voucher.web.contract;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Set;
@@ -45,10 +46,14 @@ import java.util.Set;
 import javax.validation.constraints.NotNull;
 
 import org.egov.common.web.contract.AuditableContract;
-import org.egov.egf.master.web.contract.EgfStatusContract;
+import org.egov.egf.master.web.contract.FinancialStatusContract;
+import org.egov.egf.master.web.contract.FunctionContract;
+import org.egov.egf.master.web.contract.FunctionaryContract;
 import org.egov.egf.master.web.contract.FundContract;
+import org.egov.egf.master.web.contract.FundsourceContract;
+import org.egov.egf.master.web.contract.SchemeContract;
+import org.egov.egf.master.web.contract.SubSchemeContract;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -57,45 +62,77 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 
-@JsonPropertyOrder({ "id","type","name","description","voucherNumber","voucherDate","fund","status","originalVoucherNumber","refVoucherNumber","moduleName","ledgers","vouchermis"})
+@JsonPropertyOrder({ "id", "type", "name", "description", "voucherNumber", "voucherDate", "originalVoucherNumber",
+		"refVoucherNumber", "moduleName", "billNumber", "status", "fund", "function", "fundsource", "scheme",
+		"subScheme", "functionary", "division", "department", "sourcePath", "budgetCheckRequired",
+		"budgetAppropriationNo", "ledgers" })
+
 public class VoucherContract extends AuditableContract {
 
-	@Length(max = 32)
+	@Length(max = 256)
 	private String id;
 
-	@NotEmpty
-	@NotNull
-	@Length(max = 16)
+	@Length(max = 50)
 	private String type;
 
-	@NotEmpty
-	@NotNull
-	@Length(max = 16)
+	@Length(max = 50)
 	private String name;
 
 	@Length(max = 256)
 	private String description;
-	@Length(max = 32)
+
+	@Length(max = 50)
 	private String voucherNumber;
 
 	@NotNull
 	private Date voucherDate;
 
-	private FundContract fund;
-	private EgfStatusContract status;
-	private String originalVoucherContractNumber;
-	private String refVoucherContractNumber;
+	@Length(max = 50)
+	private String originalVoucherNumber;
+
+	@Length(max = 50)
+	private String refVoucherNumber;
+
+	@Length(max = 50)
 	private String moduleName;
-	//@DrillDownTable
-	private Set<LedgerContract> ledgers;    
-	//@DrillDown
-	private VouchermisContract vouchermis;   
+
+	@Length(max = 50)
+	private String billNumber;
+
+	private FinancialStatusContract status;
+
+	private FundContract fund;
+
+	private FunctionContract function;
+
+	private FundsourceContract fundsource;
+
+	private SchemeContract scheme;
+
+	private SubSchemeContract subScheme;
+
+	private FunctionaryContract functionary;
+
+	private Boundary division;
+
+	private Department department;
+
+	@Length(max = 256)
+	private String sourcePath;
+
+	private Boolean budgetCheckRequired = true;
+
+	@Length(max = 50)
+	private String budgetAppropriationNo;
+
+	private Set<LedgerContract> ledgers;
 
 	public BigDecimal getTotalAmount() {
 		BigDecimal amount = BigDecimal.ZERO;

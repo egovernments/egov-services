@@ -1,5 +1,6 @@
 package org.egov.egf.master.web.advice;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.contract.response.Error;
@@ -49,6 +50,7 @@ public class CustomControllerAdvice {
 			List<org.springframework.validation.FieldError> fieldErrors = errors.getFieldErrors();
 			for (org.springframework.validation.FieldError errs : fieldErrors) {
 				ErrorField f = new ErrorField(errs.getCode(), errs.getDefaultMessage(), errs.getField());
+				error.setFields(new ArrayList<>());
 				error.getFields().add(f);
 
 			}

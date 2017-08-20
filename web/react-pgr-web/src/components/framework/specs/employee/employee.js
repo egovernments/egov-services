@@ -1183,7 +1183,6 @@ var dat = {
   ]
 }
 }
-export default dat;
 // var assignments=  {
 //     "label": "employee.Assignment.title",
 //     "name": "Assignment",

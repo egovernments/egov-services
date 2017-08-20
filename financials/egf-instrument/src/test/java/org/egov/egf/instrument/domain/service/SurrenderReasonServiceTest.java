@@ -83,6 +83,19 @@ public class SurrenderReasonServiceTest {
 		assertEquals(expextedResult, actualResult);
 
 	}
+	
+	@Test
+	public final void test_delete_with_out_kafka() {
+
+		List<SurrenderReason> expextedResult = getSurrenderReasons();
+
+		when(surrenderReasonRepository.delete(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+
+		List<SurrenderReason> actualResult = surrenderReasonService.delete(expextedResult, errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
 
 	@Test(expected = CustomBindException.class)
 	public final void test_update_with_out_kafka_and_with_null_req() {
@@ -136,10 +149,22 @@ public class SurrenderReasonServiceTest {
 
 		assertEquals(expextedResult, actualResult);
 	}
+	
+	@Test
+	public final void test_delete() {
+
+		SurrenderReason expextedResult = getSurrenderReasons().get(0);
+
+		when(surrenderReasonRepository.delete(any(SurrenderReason.class))).thenReturn(expextedResult);
+
+		SurrenderReason actualResult = surrenderReasonService.delete(expextedResult);
+
+		assertEquals(expextedResult, actualResult);
+	}
 
 	private List<SurrenderReason> getSurrenderReasons() {
 		List<SurrenderReason> surrenderReasons = new ArrayList<SurrenderReason>();
-		SurrenderReason surrenderReason = SurrenderReason.builder().build();
+		SurrenderReason surrenderReason = SurrenderReason.builder().id("1").build();
 		surrenderReason.setTenantId("default");
 		surrenderReasons.add(surrenderReason);
 		return surrenderReasons;

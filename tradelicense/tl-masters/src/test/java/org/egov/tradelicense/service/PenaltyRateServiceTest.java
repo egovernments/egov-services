@@ -6,25 +6,34 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.egov.enums.ApplicationTypeEnum;
-import org.egov.models.AuditDetails;
-import org.egov.models.PenaltyRate;
-import org.egov.models.PenaltyRateRequest;
-import org.egov.models.PenaltyRateResponse;
-import org.egov.models.RequestInfo;
-import org.egov.models.RequestInfoWrapper;
-import org.egov.models.UserInfo;
+import org.egov.tl.commons.web.contract.AuditDetails;
+import org.egov.tl.commons.web.contract.PenaltyRate;
+import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tl.commons.web.contract.UserInfo;
+import org.egov.tl.commons.web.contract.enums.ApplicationTypeEnum;
+import org.egov.tl.commons.web.requests.PenaltyRateRequest;
+import org.egov.tl.commons.web.requests.PenaltyRateResponse;
+import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tradelicense.TradeLicenseApplication;
 import org.egov.tradelicense.config.PropertiesManager;
+import org.egov.tradelicense.consumers.PenaltyRateConsumer;
 import org.egov.tradelicense.domain.exception.DuplicateIdException;
+import org.egov.tradelicense.domain.exception.InvalidRangeException;
 import org.egov.tradelicense.domain.services.PenaltyRateService;
 import org.egov.tradelicense.persistence.repository.PenaltyRateRepository;
+import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
+import org.springframework.kafka.listener.MessageListenerContainer;
+import org.springframework.kafka.test.rule.KafkaEmbedded;
+import org.springframework.kafka.test.utils.ContainerTestUtils;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -32,6 +41,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 @ContextConfiguration(classes = { TradeLicenseApplication.class })
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@DirtiesContext
+@SuppressWarnings("rawtypes")
 public class PenaltyRateServiceTest {
 
 	@Autowired
@@ -43,14 +54,35 @@ public class PenaltyRateServiceTest {
 	@Autowired
 	PenaltyRateRepository penaltyRateRepository;
 
-	public Long penaltyRateId = 1l;
+	@Autowired
+	PenaltyRateConsumer penaltyRateConsumer;
+
+	@Autowired
+	private KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
+
+	@ClassRule
+	public static KafkaEmbedded embeddedKafka = new KafkaEmbedded(1, true, "penaltyrate-create-validated",
+			"penaltyrate-update-validated");
+
+	public static Long penaltyRateId = 1l;
 	public String tenantId = "default";
 	public String applicationType = "New";
 	public Long fromRange = -9999l;
 	public Long toRange = 10l;
+	public Long InvalidFromRange = 50l;
+	public Long InvalidToRange = 100l;
 	public Double rate = 50d;
 	public Long updatedFromRange = 50l;
 	public Long updatedToRange = 100l;
+
+	@Before
+	public void setUp() throws Exception {
+		// wait until the partitions are assigned
+		for (MessageListenerContainer messageListenerContainer : kafkaListenerEndpointRegistry
+				.getListenerContainers()) {
+			ContainerTestUtils.waitForAssignment(messageListenerContainer, 0);
+		}
+	}
 
 	/**
 	 * Description : test method to create PenaltyRate
@@ -89,12 +121,72 @@ public class PenaltyRateServiceTest {
 				assertTrue(false);
 			}
 
-			penaltyRateRepository.craeatePenaltyRate(tenantId, penaltyRateResponse.getPenaltyRates().get(0));
+			penaltyRateConsumer.getLatch().await();
+			if (penaltyRateConsumer.getLatch().getCount() != 0) {
+				assertTrue(false);
+			} else {
+				Integer pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize());
+				Integer offset = Integer.valueOf(propertiesManager.getDefaultOffset());
+				penaltyRateResponse = penaltyRateService.getPenaltyRateMaster(requestInfo, tenantId, null,
+						applicationType, pageSize, offset);
 
-			assertTrue(true);
+				if (penaltyRateResponse.getPenaltyRates().size() == 0) {
+					assertTrue(false);
+				} else {
+					penaltyRateId = penaltyRateResponse.getPenaltyRates().get(0).getId();
+					assertTrue(true);
+				}
+			}
 
 		} catch (Exception e) {
 			assertTrue(false);
+		}
+
+	}
+
+	/**
+	 * Description : test method to check invalid range of PenaltyRate
+	 */
+	@Test
+	public void testAcreatePenaltyRateInvalidSequence() {
+		RequestInfo requestInfo = getRequestInfoObject();
+
+		List<PenaltyRate> penaltyRates = new ArrayList<>();
+
+		PenaltyRate penaltyRate = new PenaltyRate();
+		penaltyRate.setTenantId(tenantId);
+		penaltyRate.setApplicationType(ApplicationTypeEnum.fromValue(applicationType));
+		penaltyRate.setFromRange(InvalidFromRange);
+		penaltyRate.setToRange(InvalidToRange);
+		penaltyRate.setRate(rate);
+		long createdTime = new Date().getTime();
+
+		AuditDetails auditDetails = new AuditDetails();
+		auditDetails.setCreatedBy("1");
+		auditDetails.setLastModifiedBy("1");
+		auditDetails.setCreatedTime(createdTime);
+		auditDetails.setLastModifiedTime(createdTime);
+
+		penaltyRate.setAuditDetails(auditDetails);
+		penaltyRates.add(penaltyRate);
+
+		PenaltyRateRequest penaltyRateRequest = new PenaltyRateRequest();
+		penaltyRateRequest.setPenaltyRates(penaltyRates);
+		penaltyRateRequest.setRequestInfo(requestInfo);
+
+		try {
+			PenaltyRateResponse penaltyRateResponse = penaltyRateService.createPenaltyRateMaster(tenantId,
+					penaltyRateRequest);
+			if (penaltyRateResponse.getPenaltyRates().size() == 0) {
+				assertTrue(false);
+			}
+
+		} catch (Exception e) {
+			if (e.getClass().isInstance(new InvalidRangeException())) {
+				assertTrue(true);
+			} else {
+				assertTrue(false);
+			}
 		}
 
 	}
@@ -161,7 +253,12 @@ public class PenaltyRateServiceTest {
 		penaltyRateRequest.setRequestInfo(requestInfo);
 
 		try {
+
+			penaltyRateConsumer.resetCountDown();
+
 			PenaltyRateResponse penaltyRateResponse = penaltyRateService.updatePenaltyRateMaster(penaltyRateRequest);
+
+			penaltyRateConsumer.getLatch().await();
 
 			if (penaltyRateResponse.getPenaltyRates().size() == 0) {
 				assertTrue(false);

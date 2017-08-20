@@ -14,14 +14,26 @@ public class PropertiesManager {
 	@Value("${spring.kafka.bootstrap.servers}")
 	private String kafkaServerConfig;
 
+	@Value("${spring.embedded.kafka.brokers}")
+	private String kafkaEmbededBootServer;
+
 	@Value("${auto.offset.reset.config}")
 	private String kafkaOffsetConfig;
+
+	@Value("${app.timezone}")
+	private String appTimeZone;
 
 	@Value("${invalid.input}")
 	private String invalidInput;
 
+	@Value("${invalid.category.validityYears.msg}")
+	private String invalidValidityYears;
+	
 	@Value("${duplicate.code}")
 	private String duplicateCode;
+
+	@Value("${duplicate.name}")
+	private String duplicateName;
 
 	@Value("${invalid.range.code}")
 	private String invalidRangeCode;
@@ -50,8 +62,41 @@ public class PropertiesManager {
 	@Value("${duplicate.category.code}")
 	private String categoryCustomMsg;
 
+	@Value("${duplicate.category.name}")
+	private String categoryNameDuplicate;
+	
+	@Value("${duplicate.feematrix.code}")
+	private String feeMatrixCustomMsg;
+
+	@Value("${invalid.category.id.msg}")
+	private String invalidCategoryIdMsg;
+	
+	@Value("${invalid.documenttype.id.msg}")
+	private String invalidDocumentTypeIdMsg;
+	
+	@Value("${invalid.license.status.id.msg}")
+	private String invalidLicenseStatusIdMsg;
+
+	@Value("${invalid.uom.id.msg}")
+	private String invalidUomIdMsg;
+
+	@Value("${invalid.parent.id.msg}")
+	private String invalidParentIdMsg;
+
+	@Value("${invalid.sequence.range.msg}")
+	private String InvalidSequenceRangeMsg;
+
+	@Value("${invalid.applicationtype.msg}")
+	private String InvalidApplicationTypeMsg;
+
+	@Value("${invalid.financialyear.msg}")
+	private String InvalidFinancialYearMsg;
+
 	@Value("${duplicate.subcategory.code}")
 	private String subCategoryCustomMsg;
+	
+	@Value("${duplicate.subcategory.detail}")
+	private String duplicateSubCategoryDetail;
 
 	@Value("${duplicate.businessnature.code}")
 	private String businessNatureCustomMsg;

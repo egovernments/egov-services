@@ -9,13 +9,13 @@ import static org.junit.Assert.assertEquals;
 
 public class ValidateActionCriteriaTest {
 
-    @Test
-    public void testActionValidationCriteriaHasRolesToBeValidatedFor() {
-        ValidateActionCriteria validateActionCriteria = ValidateActionCriteria.builder().
-                roleNames(Arrays.asList("role1, role2")).tenantId("tenant").actionUrl("url").build();
+	@Test
+	public void testActionValidationCriteriaHasRolesToBeValidatedFor() {
+		ValidateActionCriteria validateActionCriteria = ValidateActionCriteria.builder()
+				.roleNames(Arrays.asList("role1, role2")).tenantId("tenant").actionUrl("url").build();
 
-        assertEquals(Arrays.asList("role1, role2"), validateActionCriteria.getRoleNames());
-        assertEquals("tenant", validateActionCriteria.getTenantId());
-        assertEquals("url", validateActionCriteria.getActionUrl());
-    }
+		assertEquals(Arrays.asList("role1, role2"), validateActionCriteria.getRoleNames());
+		assertEquals("tenant", validateActionCriteria.getTenantId());
+		assertEquals("url", validateActionCriteria.getActionUrl());
+	}
 }

@@ -64,4 +64,26 @@ public class RoleActionServiceTest {
 
 	}
 
+	@Test
+	public void testcheckActionNamesAreExistOrNot() {
+
+		when(roleActionRepository.checkActionNamesAreExistOrNot(any(RoleActionsRequest.class))).thenReturn(false);
+
+		boolean exist = roleActionService.checkActionNamesAreExistOrNot(any(RoleActionsRequest.class));
+
+		assertThat(exist == false);
+	}
+
+	@Test
+	public void TestAddUniqueValidationForTenantAndRoleAndAction() {
+
+		when(roleActionRepository.addUniqueValidationForTenantAndRoleAndAction(any(RoleActionsRequest.class)))
+				.thenReturn(false);
+
+		boolean exist = roleActionService.addUniqueValidationForTenantAndRoleAndAction(any(RoleActionsRequest.class));
+
+		assertThat(exist == false);
+
+	}
+
 }

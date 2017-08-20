@@ -2,9 +2,9 @@ package org.egov.tradelicense.web.controller;
 
 import javax.validation.Valid;
 
-import org.egov.models.DocumentTypeRequest;
-import org.egov.models.DocumentTypeResponse;
-import org.egov.models.RequestInfoWrapper;
+import org.egov.tl.commons.web.requests.DocumentTypeRequest;
+import org.egov.tl.commons.web.requests.DocumentTypeResponse;
+import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tradelicense.domain.services.DocumentTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  */
 @RestController
-@RequestMapping(path = "/documenttype")
+@RequestMapping(path = "/documenttype/v1")
 public class DocumentTypeController {
 
 	@Autowired
@@ -39,7 +39,7 @@ public class DocumentTypeController {
 	public DocumentTypeResponse createDocumentTypeMaster(@Valid @RequestBody DocumentTypeRequest documentTypeRequest)
 			throws Exception {
 
-		return documentTypeService.createDocumentType(documentTypeRequest);
+		return documentTypeService.createDocumentTypeMaster(documentTypeRequest);
 	}
 
 	/**
@@ -53,7 +53,7 @@ public class DocumentTypeController {
 	public DocumentTypeResponse updateDocumentTypeMaster(@Valid @RequestBody DocumentTypeRequest documentTypeRequest)
 			throws Exception {
 
-		return documentTypeService.updateDocumentType(documentTypeRequest);
+		return documentTypeService.updateDocumentTypeMaster(documentTypeRequest);
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class DocumentTypeController {
 			@RequestParam(required = false) String applicationType, @RequestParam(required = false) Integer pageSize,
 			@RequestParam(required = false) Integer offSet) throws Exception {
 
-		return documentTypeService.getDocumentType(requestInfo.getRequestInfo(), tenantId, ids, name, enabled,
+		return documentTypeService.getDocumentTypeMaster(requestInfo.getRequestInfo(), tenantId, ids, name, enabled,
 				applicationType, pageSize, offSet);
 	}
 }

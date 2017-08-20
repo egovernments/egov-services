@@ -83,6 +83,19 @@ public class InstrumentTypeServiceTest {
 		assertEquals(expextedResult, actualResult);
 
 	}
+	
+	@Test
+	public final void test_delete_with_out_kafka() {
+
+		List<InstrumentType> expextedResult = getInstrumentTypes();
+
+		when(instrumentTypeRepository.delete(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+
+		List<InstrumentType> actualResult = instrumentTypeService.delete(expextedResult, errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
 
 	@Test(expected = CustomBindException.class)
 	public final void test_update_with_out_kafka_and_with_null_req() {
@@ -136,10 +149,22 @@ public class InstrumentTypeServiceTest {
 
 		assertEquals(expextedResult, actualResult);
 	}
+	
+	@Test
+	public final void test_delete() {
+
+		InstrumentType expextedResult = getInstrumentTypes().get(0);
+
+		when(instrumentTypeRepository.delete(any(InstrumentType.class))).thenReturn(expextedResult);
+
+		InstrumentType actualResult = instrumentTypeService.delete(expextedResult);
+
+		assertEquals(expextedResult, actualResult);
+	}
 
 	private List<InstrumentType> getInstrumentTypes() {
 		List<InstrumentType> instrumentTypes = new ArrayList<InstrumentType>();
-		InstrumentType instrumentType = InstrumentType.builder().build();
+		InstrumentType instrumentType = InstrumentType.builder().id("1").build();
 		instrumentType.setTenantId("default");
 		instrumentTypes.add(instrumentType);
 		return instrumentTypes;

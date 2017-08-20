@@ -14,12 +14,20 @@
         }
     
        },
-    "BusinessCategoryInfo":{
-        "id":1,
+    "BusinessCategory":[{
+        "id":"",
         "name":"Trade Licence",
         "code":"TL",
         "active":true,
         "tenantId":"default"
         
-    }
+    },
+      {
+        "id":"",
+        "name":"Property Tax",
+        "code":"PT",
+        "active":true,
+        "tenantId":"default"
+
+      }]
 }

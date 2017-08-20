@@ -69,6 +69,13 @@ public class AccountCodePurposeJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
+	        if (accountCodePurposeSearchEntity.getTenantId() != null) {
+	              if (params.length() > 0) {
+	                  params.append(" and ");
+	              }
+	              params.append("tenantId =:tenantId");
+	              paramValues.put("tenantId", accountCodePurposeSearchEntity.getTenantId());
+	        }
 		if (accountCodePurposeSearchEntity.getId() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
@@ -90,7 +97,6 @@ public class AccountCodePurposeJdbcRepository extends JdbcRepository {
 			params.append("name =:name");
 			paramValues.put("name", accountCodePurposeSearchEntity.getName());
 		}
-
 		Pagination<AccountCodePurpose> page = new Pagination<>();
 		if (accountCodePurposeSearchEntity.getOffset() != null) {
 			page.setOffset(accountCodePurposeSearchEntity.getOffset());

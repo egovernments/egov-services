@@ -5,18 +5,17 @@ import java.util.List;
 import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.model.RevaluationCriteria;
 import org.egov.asset.model.enums.Status;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Component
 public class RevaluationQueryBuilder {
-
-    private static final Logger logger = LoggerFactory.getLogger(RevaluationQueryBuilder.class);
-
-    @Autowired
-    private ApplicationProperties applicationProperties;
+	
+	@Autowired
+	private ApplicationProperties applicationProperties;
 
     public static final String INSERT_QUERY = "INSERT into egasset_revalution "
             + "(id,tenantid,assetid,currentcapitalizedvalue,typeofchange,revaluationamount,valueafterrevaluation,"
@@ -33,10 +32,10 @@ public class RevaluationQueryBuilder {
     @SuppressWarnings("rawtypes")
     public String getQuery(final RevaluationCriteria revaluationCriteria, final List preparedStatementValues) {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
-        logger.info("get query");
+        log.info("get query");
         addWhereClause(selectQuery, preparedStatementValues, revaluationCriteria);
         addPagingClause(selectQuery, preparedStatementValues, revaluationCriteria);
-        logger.info("Query from asset revaluation search : " + selectQuery);
+        log.info("Query from asset revaluation search : " + selectQuery);
         return selectQuery.toString();
     }
 
@@ -67,12 +66,12 @@ public class RevaluationQueryBuilder {
             preparedStatementValues.add(revaluationCriteria.getTenantId());
         }
 
-        if (revaluationCriteria.getId() != null) {
+        if (revaluationCriteria.getId() != null && !revaluationCriteria.getId().isEmpty()) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" revalution.id IN (" + getIdQuery(revaluationCriteria.getId()));
         }
 
-        if (revaluationCriteria.getAssetId() != null) {
+        if (revaluationCriteria.getAssetId() != null && !revaluationCriteria.getAssetId().isEmpty()) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" revalution.assetid IN (" + getIdQuery(revaluationCriteria.getAssetId()));
         }
@@ -91,7 +90,8 @@ public class RevaluationQueryBuilder {
         // handle limit(also called pageSize) here
 
         selectQuery.append(" LIMIT ?");
-        long pageSize = Integer.parseInt(applicationProperties.commonsSearchPageSizeDefault());
+        long pageSize = Integer.parseInt(applicationProperties.getSearchPageSizeDefault());
+
         if (revaluationCriteria.getSize() != null)
             pageSize = revaluationCriteria.getSize();
         preparedStatementValues.add(pageSize); // Set limit to pageSize
@@ -120,8 +120,8 @@ public class RevaluationQueryBuilder {
     }
 
     private static String getIdQuery(final List<Long> idList) {
-        StringBuilder query = null;
-        if (idList.size() >= 1) {
+        StringBuilder query = new StringBuilder();
+        if (!idList.isEmpty()) {
             query = new StringBuilder(idList.get(0).toString());
             for (int i = 1; i < idList.size(); i++)
                 query.append("," + idList.get(i));

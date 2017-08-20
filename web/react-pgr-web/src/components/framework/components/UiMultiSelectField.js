@@ -19,7 +19,7 @@ class UiMultiSelectField extends Component {
    			this.initDat(nextProps);
    		}
    	}
-   	
+
    	initDat(props) {
    		let {item, setDropDownData, useTimestamp}=props;
 		if(item.hasOwnProperty("url") && item.url.search("\\|")>-1)
@@ -32,17 +32,19 @@ class UiMultiSelectField extends Component {
 			}
 
 			Api.commonApiPost(context, id, {}, "", useTimestamp || false).then(function(response) {
-				let keys=jp.query(response, splitArray[1].split("|")[1]);
-				let values=jp.query(response, splitArray[1].split("|")[2]);
-				let dropDownData=[];
-				for (var k = 0; k < keys.length; k++) {
-						let obj={};
-						obj["key"]=keys[k];
-						obj["value"]=values[k];
-						dropDownData.push(obj);
-				}
+				if(response) {
+					let keys=jp.query(response, splitArray[1].split("|")[1]);
+					let values=jp.query(response, splitArray[1].split("|")[2]);
+					let dropDownData=[];
+					for (var k = 0; k < keys.length; k++) {
+							let obj={};
+							obj["key"]= item.convertToString ? keys[k].toString() : keys[k];
+							obj["value"]=values[k];
+							dropDownData.push(obj);
+					}
 
-				setDropDownData(item.jsonPath, dropDownData);
+					setDropDownData(item.jsonPath, dropDownData);
+				}
 			},function(err) {
 				console.log(err);
 			});
@@ -58,22 +60,27 @@ class UiMultiSelectField extends Component {
 		switch (this.props.ui) {
 			case 'google':
 				return (
-					<SelectField
-						style={{"display": (item.hide ? 'none' : 'block')}}
-						fullWidth={true}
-						multiple={true}
-						floatingLabelText={item.label + (item.isRequired ? " *" : "")}
-						value={this.props.getVal(item.jsonPath)}
-						disabled={item.isDisabled}
-						onChange={(ev, key, val) => {
-							this.props.handler({target: {value: val}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)}
-						}
-						errorText={this.props.fieldErrors[item.jsonPath]}
-						maxHeight={200}>
-				            {dropDownData.hasOwnProperty(item.jsonPath) && dropDownData[item.jsonPath].map((dd, index) => (
-				                <MenuItem value={dd.key} key={index} primaryText={dd.value} />
-				            ))}
-		            </SelectField>
+					<div style={{"display": "flex", "flex-direction": "column-reverse"}}>
+						<SelectField
+						 	dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
+							style={{"display": (item.hide ? 'none' : 'block')}}
+							errorStyle={{"float":"left"}}
+							fullWidth={true}
+							multiple={true}
+							floatingLabelText={item.label + (item.isRequired ? " *" : "")}
+							value={this.props.getVal(item.jsonPath)}
+							disabled={item.isDisabled}
+							onChange={(ev, key, val) => {
+								this.props.handler({target: {value: val}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)}
+							}
+							errorText={this.props.fieldErrors[item.jsonPath]}
+							maxHeight={200}>
+								
+					            {dropDownData.hasOwnProperty(item.jsonPath) && dropDownData[item.jsonPath].map((dd, index) => (
+					                <MenuItem value={dd.key} key={index} primaryText={dd.value} />
+					            ))}
+			            </SelectField>
+		            </div>
 				);
 		}
 	}

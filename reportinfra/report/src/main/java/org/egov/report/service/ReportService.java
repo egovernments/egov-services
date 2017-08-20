@@ -41,15 +41,17 @@ public class ReportService {
 	
 	@Autowired
 	private IntegrationService integrationService;
+	
+	
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(ReportService.class);
 
-	public MetadataResponse getMetaData(MetaDataRequest metaDataRequest) {
+	public MetadataResponse getMetaData(MetaDataRequest metaDataRequest, String moduleName) {
 		MetadataResponse metadataResponse = new MetadataResponse();
 		ReportDefinitions rds = ReportApp.getReportDefs();
 		ReportDefinition reportDefinition = new ReportDefinition();
-		LOGGER.info("updated repot defs " + ReportApp.getReportDefs() + "\n\n\n");
-		reportDefinition = rds.getReportDefinition(metaDataRequest.getReportName());
+		//LOGGER.info("updated repot defs " + ReportApp.getReportDefs() + "\n\n\n");
+		reportDefinition = rds.getReportDefinition(moduleName+" "+metaDataRequest.getReportName());
 		ReportMetadata rmt = new ReportMetadata();
 		rmt.setReportName(reportDefinition.getReportName());
         rmt.setSummary(reportDefinition.getSummary());
@@ -73,7 +75,10 @@ public class ReportService {
 			sc.setType(te);
 			sc.setLabel(cd.getLabel());
 			sc.setName(cd.getName());
-			sc.setDefaultValue(cd.getDefaultValue());
+            sc.setShowColumn(cd.getShowColumn());
+			sc.setDefaultValue(cd.getPattern());
+			sc.setIsMandatory(cd.getIsMandatory());
+
 			searchParams.add(sc);
 
 		}
@@ -122,17 +127,19 @@ public class ReportService {
 
 	}
 
-	public ReportResponse getReportData(ReportRequest reportRequest) {
+	public ReportResponse getReportData(ReportRequest reportRequest,String moduleName) {
 		
 		List<ReportDefinition> listReportDefinitions  = ReportApp.getReportDefs().getReportDefinitions();
-		 
-		ReportDefinition reportDefinition = listReportDefinitions.stream()
-				.filter(t -> t.getReportName().equals(reportRequest.getReportName())).findFirst().orElse(null);
-		LOGGER.info("reportYamlMetaData::" + reportDefinition);
+		ReportDefinitions rds = ReportApp.getReportDefs();
+		/*ReportDefinition reportDefinition = listReportDefinitions.stream()
+				.filter(t -> (t.getReportName()+" "+t.getModuleName()).equals(reportRequest.getReportName())).findFirst().orElse(null);*/
+		ReportDefinition reportDefinition = rds.getReportDefinition(moduleName+ " "+reportRequest.getReportName());
+		//LOGGER.info("reportYamlMetaData::" + reportDefinition);
+		LOGGER.info("Incoming Report Name is "+reportDefinition.getReportName());
 		List<Map<String, Object>> maps = reportRepository.getData(reportRequest, reportDefinition);
 		List<SourceColumn> columns = reportDefinition.getSourceColumns();
-		LOGGER.info("columns::" + columns);
-		LOGGER.info("maps::" + maps);
+		//LOGGER.info("columns::" + columns);
+		//LOGGER.info("maps::" + maps);
 
 		ReportResponse reportResponse = new ReportResponse();
 		populateData(columns, maps, reportResponse);
@@ -178,7 +185,7 @@ public class ReportService {
 					}
 				}
 				List<ColumnDetail> columnDetails = columns.stream()
-						.map(p -> new ColumnDetail(p.getLabel(), p.getType(),p.getDefaultValue(),p.getTotal(),p.getName()))
+						.map(p -> new ColumnDetail(p.getShowColumn(),p.getLabel(), p.getType(),p.getDefaultValue(),p.getTotal(),p.getName(),p.getIsMandatory()))
 						.collect(Collectors.toList());
 				
 

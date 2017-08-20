@@ -97,7 +97,7 @@ class App extends Component {
   }
 
   componentWillMount() {
-    let {setTenantInfo}=this.props;
+    let {setTenantInfo,setActionList}=this.props;
     // let commonState=JSON.parse(window.localStorage.getItem("reduxPersist:common"));
     // console.log(commonState);
     //if (!window.localStorage.getItem("token")) {
@@ -146,6 +146,7 @@ class App extends Component {
         this.props.onLoad({UserRequest: JSON.parse(localStorage.getItem("userRequest"))}, localStorage.getItem("token"));
         Api.commonApiPost("tenant/v1/tenant/_search", {code:localStorage.getItem("tenantId")?localStorage.getItem("tenantId"):'default'}).then(function(res){
           // console.log(res);
+          setActionList(JSON.parse(localStorage.getItem("actions")))
           setTenantInfo(res.tenant);
         }, function(err){
             console.log(err);
@@ -153,7 +154,7 @@ class App extends Component {
       }
       else {
         var hash = window.location.hash.split("/");
-        Api.commonApiPost("tenant/v1/tenant/_search", {code:hash[1]?hash[1]:"default"}).then(function(res){
+        Api.commonApiPost("tenant/v1/tenant/_search", {code:hash[1]?hash[1]:"default", tenantId: hash[1]?hash[1]:"default"}, {}, true).then(function(res){
           // console.log(res);
           setTenantInfo(res.tenant);
         }, function(err){
@@ -196,7 +197,8 @@ class App extends Component {
           {toastMsg && <Snackbar
               open={isSnackBarOpen}
               message={toastMsg}
-              bodyStyle={{"backgroundColor": isSuccess ? "#3ca23c" : (isError ? "#e83e36" : "rgb(95, 92, 98)"), "textAlign": "center"}}
+              style={{ pointerEvents: 'none', whiteSpace: 'nowrap' }}
+              bodyStyle={{pointerEvents: 'initial', maxWidth: 'none', "backgroundColor": isSuccess ? "#3ca23c" : (isError ? "#e83e36" : "rgb(95, 92, 98)"), "textAlign": "center"}}
               autoHideDuration={6000}
               onRequestClose={()=>toggleSnackbarAndSetText(false, "", false, false)}
             />}
@@ -261,6 +263,9 @@ const mapDispatchToProps = dispatch => ({
     setTenantInfo:(tenantInfo)=>
     {
       dispatch({type:"SET_TENANT_INFO",tenantInfo});
+    },
+    setActionList:(actionList)=>{
+      dispatch({type:"SET_ACTION_LIST",actionList});
     }
 });
 

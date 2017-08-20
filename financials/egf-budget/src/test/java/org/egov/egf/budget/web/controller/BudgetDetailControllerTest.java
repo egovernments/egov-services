@@ -1,3 +1,42 @@
+/*
+ * eGov suite of products aim to improve the internal efficiency,transparency,
+ *      accountability and the service delivery of the government  organizations.
+ *  
+ *       Copyright (C) <2015>  eGovernments Foundation
+ *  
+ *       The updated version of eGov suite of products as by eGovernments Foundation
+ *       is available at http://www.egovernments.org
+ *  
+ *       This program is free software: you can redistribute it and/or modify
+ *       it under the terms of the GNU General Public License as published by
+ *       the Free Software Foundation, either version 3 of the License, or
+ *       any later version.
+ *  
+ *       This program is distributed in the hope that it will be useful,
+ *       but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *       GNU General Public License for more details.
+ *  
+ *       You should have received a copy of the GNU General Public License
+ *       along with this program. If not, see http://www.gnu.org/licenses/ or
+ *       http://www.gnu.org/licenses/gpl.html .
+ *  
+ *       In addition to the terms of the GPL license to be adhered to in using this
+ *       program, the following additional terms are to be complied with:
+ *  
+ *           1) All versions of this program, verbatim or modified must carry this
+ *              Legal Notice.
+ *  
+ *           2) Any misrepresentation of the origin of the material is prohibited. It
+ *              is required that all modified versions of this material be marked in
+ *              reasonable ways as different from the original version.
+ *  
+ *           3) This license does not grant any rights to any user of the program
+ *              with regards to rights under trademark law for use of the trade names
+ *              or trademarks of eGovernments Foundation.
+ *  
+ *     In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
+ */
 package org.egov.egf.budget.web.controller;
 
 import static org.mockito.Matchers.any;
@@ -39,104 +78,133 @@ import org.springframework.validation.BindingResult;
 @Import(TestConfiguration.class)
 public class BudgetDetailControllerTest {
 
-	@Autowired
-	private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-	@MockBean
-	private BudgetDetailService budgetDetailService;
+    @MockBean
+    private BudgetDetailService budgetDetailService;
 
-	@Captor
-	private ArgumentCaptor<BudgetDetailRequest> captor;
+    @Captor
+    private ArgumentCaptor<BudgetDetailRequest> captor;
 
-	private RequestJsonReader resources = new RequestJsonReader();
+    private final RequestJsonReader resources = new RequestJsonReader();
 
-	@Test
-	public void test_create() throws IOException, Exception {
+    @Test
+    public void test_create() throws IOException, Exception {
 
-		when(budgetDetailService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
-				.thenReturn(getBudgetDetails());
+        when(budgetDetailService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+                .thenReturn(getBudgetDetails());
 
-		mockMvc.perform(post("/budgetdetails/_create")
-				.content(resources.readRequest("budgetdetail/budgetdetail_create_valid_request.json"))
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(
-						content().json(resources.readResponse("budgetdetail/budgetdetail_create_valid_response.json")));
+        mockMvc.perform(post("/budgetdetails/_create")
+                .content(resources.readRequest("budgetdetail/budgetdetail_create_valid_request.json"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(
+                        content().json(resources.readResponse("budgetdetail/budgetdetail_create_valid_response.json")));
 
-	}
+    }
 
-	@Test
-	public void test_create_error() throws IOException, Exception {
+    @Test
+    public void test_create_error() throws IOException, Exception {
 
-		when(budgetDetailService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
-				.thenReturn((getBudgetDetails()));
+        when(budgetDetailService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+                .thenReturn(getBudgetDetails());
 
-		mockMvc.perform(post("/budgetdetails/_create")
-				.content(resources.readRequest("budgetdetail/budgetdetail_create_invalid_field_value.json"))
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
+        mockMvc.perform(post("/budgetdetails/_create")
+                .content(resources.readRequest("budgetdetail/budgetdetail_create_invalid_field_value.json"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
 
-	}
+    }
 
-	@Test
-	public void test_update() throws IOException, Exception {
+    @Test
+    public void test_update() throws IOException, Exception {
 
-		List<BudgetDetail> budgetDetails = getBudgetDetails();
-		budgetDetails.get(0).setId("1");
+        final List<BudgetDetail> budgetDetails = getBudgetDetails();
+        budgetDetails.get(0).setId("1");
 
-		when(budgetDetailService.update(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
-				.thenReturn(budgetDetails);
+        when(budgetDetailService.update(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+                .thenReturn(budgetDetails);
 
-		mockMvc.perform(post("/budgetdetails/_update")
-				.content(resources.readRequest("budgetdetail/budgetdetail_update_valid_request.json"))
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(
-						content().json(resources.readResponse("budgetdetail/budgetdetail_update_valid_response.json")));
+        mockMvc.perform(post("/budgetdetails/_update")
+                .content(resources.readRequest("budgetdetail/budgetdetail_update_valid_request.json"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(
+                        content().json(resources.readResponse("budgetdetail/budgetdetail_update_valid_response.json")));
 
-	}
+    }
+    
+    @Test
+    public void test_delete() throws IOException, Exception {
 
-	@Test
-	public void test_update_error() throws IOException, Exception {
+        final List<BudgetDetail> budgetDetails = getBudgetDetails();
+        budgetDetails.get(0).setId("1");
 
-		when(budgetDetailService.update(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
-				.thenReturn((getBudgetDetails()));
+        when(budgetDetailService.delete(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+                .thenReturn(budgetDetails);
 
-		mockMvc.perform(post("/budgetdetails/_update")
-				.content(resources.readRequest("budgetdetail/budgetdetail_create_invalid_field_value.json"))
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
+        mockMvc.perform(post("/budgetdetails/_delete")
+                .content(resources.readRequest("budgetdetail/budgetdetail_delete_valid_request.json"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(
+                        content().json(resources.readResponse("budgetdetail/budgetdetail_delete_valid_response.json")));
 
-	}
+    }
 
-	@Test
-	public void test_search() throws IOException, Exception {
+    @Test
+    public void test_update_error() throws IOException, Exception {
 
-		Pagination<BudgetDetail> page = new Pagination<>();
-		page.setTotalPages(1);
-		page.setTotalResults(1);
-		page.setCurrentPage(0);
-		page.setPagedData(getBudgetDetails());
-		page.getPagedData().get(0).setId("1");
+        when(budgetDetailService.update(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+                .thenReturn(getBudgetDetails());
 
-		when(budgetDetailService.search(any(BudgetDetailSearch.class))).thenReturn(page);
+        mockMvc.perform(post("/budgetdetails/_update")
+                .content(resources.readRequest("budgetdetail/budgetdetail_create_invalid_field_value.json"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
 
-		mockMvc.perform(post("/budgetdetails/_search").content(resources.getRequestInfo())
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(200))
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(
-						content().json(resources.readResponse("budgetdetail/budgetdetail_search_valid_response.json")));
+    }
+    
+    @Test
+    public void test_delete_error() throws IOException, Exception {
 
-	}
+        when(budgetDetailService.delete(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+                .thenReturn(getBudgetDetails());
 
-	private List<BudgetDetail> getBudgetDetails() {
+        mockMvc.perform(post("/budgetdetails/_delete")
+                .content(resources.readRequest("budgetdetail/budgetdetail_create_invalid_field_value.json"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
 
-		List<BudgetDetail> budgetDetails = new ArrayList<BudgetDetail>();
+    }
 
-		BudgetDetail budgetDetail = BudgetDetail.builder().budget(Budget.builder().id("1").build())
-				.budgetGroup(BudgetGroupContract.builder().id("1").build()).anticipatoryAmount(BigDecimal.TEN)
-				.originalAmount(BigDecimal.TEN).approvedAmount(BigDecimal.TEN).budgetAvailable(BigDecimal.TEN)
-				.planningPercent(BigDecimal.valueOf(1500)).build();
+    @Test
+    public void test_search() throws IOException, Exception {
 
-		budgetDetail.setTenantId("default");
-		budgetDetails.add(budgetDetail);
+        final Pagination<BudgetDetail> page = new Pagination<>();
+        page.setTotalPages(1);
+        page.setTotalResults(1);
+        page.setCurrentPage(0);
+        page.setPagedData(getBudgetDetails());
+        page.getPagedData().get(0).setId("1");
 
-		return budgetDetails;
-	}
+        when(budgetDetailService.search(any(BudgetDetailSearch.class))).thenReturn(page);
+
+        mockMvc.perform(post("/budgetdetails/_search").content(resources.getRequestInfo())
+                .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(200))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(
+                        content().json(resources.readResponse("budgetdetail/budgetdetail_search_valid_response.json")));
+
+    }
+
+    private List<BudgetDetail> getBudgetDetails() {
+
+        final List<BudgetDetail> budgetDetails = new ArrayList<BudgetDetail>();
+
+        final BudgetDetail budgetDetail = BudgetDetail.builder().budget(Budget.builder().id("1").build())
+                .budgetGroup(BudgetGroupContract.builder().id("1").build()).anticipatoryAmount(BigDecimal.TEN)
+                .originalAmount(BigDecimal.TEN).approvedAmount(BigDecimal.TEN).budgetAvailable(BigDecimal.TEN)
+                .planningPercent(BigDecimal.valueOf(1500)).build();
+
+        budgetDetail.setTenantId("default");
+        budgetDetails.add(budgetDetail);
+
+        return budgetDetails;
+    }
 
 }

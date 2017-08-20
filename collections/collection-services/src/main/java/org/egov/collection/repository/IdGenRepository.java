@@ -72,6 +72,9 @@ public class IdGenRepository {
 		idRequestWrapper.setIdGenRequestInfo(idGenReq);
 		idRequestWrapper.setIdRequests(idRequests);
 		Object response = null;
+		
+		LOGGER.info("Request for idgen rcptno: " + idRequestWrapper.toString());
+
 
 		try {
 			response = restTemplate.postForObject(builder.toString(),
@@ -85,4 +88,61 @@ public class IdGenRepository {
 
 		return JsonPath.read(response, "$.idResponses[0].id");
 	}
+
+    public String generateTransactionNumber(RequestInfo requestInfo, String tenantId) {
+        LOGGER.info("Generating transaction number for the receipt.");
+
+        StringBuilder builder = new StringBuilder();
+        String hostname = applicationProperties.getIdGenServiceHost();
+        String baseUri = applicationProperties.getIdGeneration();
+        builder.append(hostname).append(baseUri);
+
+        LOGGER.info("URI being hit: " + builder.toString());
+
+        IdRequestWrapper idRequestWrapper = new IdRequestWrapper();
+
+        IdGenRequestInfo idGenReq = new IdGenRequestInfo();
+
+        // Because idGen Svc uses a slightly different form of requestInfo
+
+        idGenReq.setAction(requestInfo.getAction());
+        idGenReq.setApiId(requestInfo.getApiId());
+        idGenReq.setAuthToken(requestInfo.getAuthToken());
+        idGenReq.setCorrelationId(requestInfo.getCorrelationId());
+        idGenReq.setDid(requestInfo.getDid());
+        idGenReq.setKey(requestInfo.getKey());
+        idGenReq.setMsgId(requestInfo.getMsgId());
+        idGenReq.setRequesterId(requestInfo.getRequesterId());
+        idGenReq.setTs(requestInfo.getTs().getTime()); // this
+        // is
+        // the
+        // difference.
+        idGenReq.setUserInfo(requestInfo.getUserInfo());
+        idGenReq.setVer(requestInfo.getVer());
+        IdRequest idRequest = new IdRequest();
+        idRequest.setIdName(CollectionServiceConstants.COLL_TRANSACTION_ID_NAME);
+        idRequest.setTenantId(tenantId);
+        idRequest.setFormat(CollectionServiceConstants.COLL_TRANSACTION_FORMAT);
+
+        List<IdRequest> idRequests = new ArrayList<>();
+        idRequests.add(idRequest);
+
+        idRequestWrapper.setIdGenRequestInfo(idGenReq);
+        idRequestWrapper.setIdRequests(idRequests);
+        Object response = null;
+        
+		LOGGER.info("Request for idgen transactionId: " + idRequestWrapper.toString());
+
+        try {
+            response = restTemplate.postForObject(builder.toString(),
+                    idRequestWrapper, Object.class);
+        } catch (Exception e) {
+            throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
+                    CollectionServiceConstants.RCPTNO_EXCEPTION_MSG, CollectionServiceConstants.RCPTNO_EXCEPTION_DESC);
+
+        }
+        LOGGER.info("Response from id gen service: " + response.toString());
+
+        return JsonPath.read(response, "$.idResponses[0].id");
+    }
 }

@@ -37,7 +37,7 @@ public class SevaRequestTest {
     public void test_should_return_assignee_id() {
         final SevaRequest sevaRequest = createSevaRequest();
 
-        assertEquals(Long.valueOf(23), sevaRequest.getPositionId());
+        assertEquals(Long.valueOf(23), sevaRequest.getCurrentPositionId());
     }
 
     @Test

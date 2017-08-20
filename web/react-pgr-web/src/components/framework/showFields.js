@@ -21,7 +21,16 @@ import UiLabel from './components/UiLabel'
 import UiRadioButton from './components/UiRadioButton'
 import UiTextSearch from './components/UiTextSearch'
 import UiDocumentList from './components/UiDocumentList'
+import UiAutoComplete from './components/UiAutoComplete'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
+import UiDate from './components/UiDate';
+
+let styles={
+  reducePadding: {
+    paddingTop:4,
+    paddingBottom:0
+  }
+}
 
 export default class ShowFields extends Component {
   constructor(props) {
@@ -35,118 +44,164 @@ export default class ShowFields extends Component {
     })
   }
 
-  renderGroups=(groups, noCols, uiFramework="google", jsonPath) => {
-    let {renderField}=this;
+  renderCard = (group, groupIndex, noCols, jsonPath, uiFramework, groups, isMultiple) => {
+    let self = this;
     let {addNewCard, removeCard} = this.props;
+    let {renderField}=this;
+    return (
+      <Card  style={{"display": group.hide ? "none" : "block", "marginBottom": isMultiple ? '0px' : '', "marginTop": isMultiple ? '0px' : ''}} className={"uiCard "+group.name} key={groupIndex} expanded={self.state[group.name] ? false : true} onExpandChange={() => {self.changeExpanded(group.name)}}>
+          {!isMultiple && <CardHeader style={{paddingTop:4,paddingBottom:0}} title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{group.label}</div>} showExpandableButton={true} actAsExpander={true}/>}
+          <CardText style={{paddingTop:0,paddingBottom:0}} expandable={true}>
+          <Grid style={{paddingTop:0}}>
+            <Row>
+              {group.fields.map((field, fieldIndex)=>{
+                  if(!field.isHidden) {
+                    return (
+                      <Col key={fieldIndex} xs={12} md={noCols}>
+                          {renderField(field, self.props.screen,fieldIndex)}
+                      </Col>
+                    )
+                  }
+              })}
+            </Row>
+            {self.props.screen!= "view" && group.multiple && (!groups[groupIndex+1] || (groups[groupIndex+1] && groups[groupIndex+1].name != group.name)) && <Row>
+              <Col xsOffset={8} mdOffset={10} xs={4} md={2} style={{"textAlign": "right"}}>
+                <FloatingActionButton mini={true} onClick={() => {addNewCard(group, jsonPath, group.name)}}>
+                  <span className="glyphicon glyphicon-plus"></span>
+                </FloatingActionButton>
+              </Col>
+            </Row>}
+            {self.props.screen!= "view" && group.multiple && (groups[groupIndex+1] && groups[groupIndex+1].name == group.name) && <Row>
+              <Col xsOffset={8} mdOffset={10} xs={4} md={2} style={{"textAlign": "right"}}>
+                <FloatingActionButton mini={true} secondary={true} onClick={() => {removeCard(jsonPath, groupIndex, group.name)}}>
+                  <span className="glyphicon glyphicon-minus"></span>
+                </FloatingActionButton>
+              </Col>
+            </Row>}
+          </Grid>
+          <div style={{"marginLeft": "15px", "marginRight": "15px"}}>
+            {
+              group.children &&
+              group.children.length ?
+              group.children.map(function(child) {
+                return self.renderGroups(child.groups, noCols, uiFramework, child.jsonPath);
+              }) : ""
+            }
+          </div>
+          </CardText>
+      </Card>
+    )
+  }
+
+  renderGroups=(groups, noCols, uiFramework="google", jsonPath) => {
     let self = this;
     switch (uiFramework) {
       case "google":
-        return groups.map((group, groupIndex)=>{
-          return (<Card style={{"display": group.hide ? "none" : "block"}} className="uiCard" key={groupIndex} expanded={self.state[group.name] ? false : true} onExpandChange={() => {self.changeExpanded(group.name)}}>
-                    <CardHeader title={group.label} showExpandableButton={true} actAsExpander={true}/>
-                    <CardText style={{padding:0}} expandable={true}>
-                    <Grid>
-                      <Row>
-                        {group.fields.map((field, fieldIndex)=>{
-                            if(!field.isHidden) {
-                              return (
-                                <Col key={fieldIndex} xs={12} md={noCols}>
-                                    {renderField(field, self.props.screen)}
-                                </Col>
-                              )
-                            }
-                        })}
-                      </Row>
-                      {group.multiple && <Row style={{"visibility": (groupIndex == (groups.length-1)) ? "initial" : "hidden" }}>
-                        <Col xsOffset={8} mdOffset={10} xs={4} md={2}>
-                          <FloatingActionButton mini={true} onClick={() => {addNewCard(group, jsonPath)}}>
-                            <span className="glyphicon glyphicon-plus"></span>
-                          </FloatingActionButton>
-                        </Col>
-                      </Row>}
-                      {group.multiple && <Row style={{"visibility": (groupIndex < (groups.length-1)) ? "initial" : "hidden" }}>
-                        <Col xsOffset={8} mdOffset={10} xs={4} md={2}>
-                          <FloatingActionButton mini={true} secondary={true} onClick={() => {removeCard(jsonPath, groupIndex)}}>
-                            <span className="glyphicon glyphicon-minus"></span>
-                          </FloatingActionButton>
-                        </Col>
-                      </Row>}
-                    </Grid>
-                    <div style={{"marginLeft": "15px"}}>
-                      {
-                        group.children &&
-                        group.children.length ?
-                        group.children.map(function(child) {
-                          return self.renderGroups(child.groups, noCols, uiFramework, child.jsonPath);
-                        }) : ""
-                      }
-                    </div>
-                    </CardText>
-                </Card>)
+        let listArr = {};
+        for(var i=0; i<groups.length; i++) {
+          if(groups[i].multiple) {
+            if(!listArr[groups[i].name]) listArr[groups[i].name] = {
+              objects: []
+            };
+            listArr[groups[i].name].objects.push({
+              object: groups[i],
+              index: i
+            });
+          } else {
+            listArr[groups[i].name] =  {
+              object: groups[i],
+              index: i
+            }
+          }
+        }
+
+        return Object.keys(listArr).map((key, groupIndex) => {
+          if(listArr[key].objects) {
+            return (
+              <Card className={"uiCard "} expanded={true}>
+                <CardHeader style={{paddingTop:4,paddingBottom:0}} title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{listArr[key].objects[0].object.label}</div>} showExpandableButton={true} actAsExpander={true}/>
+                  <CardText style={{paddingTop:0,paddingBottom:0}} style={{padding:0}} expandable={true}>
+                    {
+                      listArr[key].objects.map((grp, grpIndex) => {
+                        return self.renderCard(grp.object, grp.index, noCols, jsonPath, uiFramework, groups, true);
+                      })
+                    }
+                  </CardText>
+              </Card>
+            );
+          } else {
+            return self.renderCard(listArr[key].object, listArr[key].index, noCols, jsonPath, uiFramework, groups);
+          }
         })
         break;
     }
   }
 
 
-  renderField=(item, screen)=> {
+  renderField=(item, screen,index)=> {
     if(screen == "view") {
       item.type = "label";
     }
   	switch(item.type) {
   		case 'text':
-  			 return <UiTextField ui={this.props.ui} getVal={this.props.getVal} item={item}  fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+  			 return <UiTextField tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item}  fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
   			break;
   		case 'singleValueList':
-  			return <UiSelectField ui={this.props.ui} useTimestamp={this.props.useTimestamp} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+  			return <UiSelectField tabIndex={index} ui={this.props.ui} useTimestamp={this.props.useTimestamp} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
   			break;
   		case 'multiValueList':
-      return <UiSingleFileUpload ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+      return <UiSingleFileUpload tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
   			break;
+      case 'autoCompelete':
+        return <UiAutoComplete tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} autoComHandler={this.props.autoComHandler || ""}/>
+    			break;
   		case 'number':
-  			return <UiNumberField ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+  			return <UiNumberField tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
   			break;
   		case 'textarea':
-  			return <UiTextArea ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+  			return <UiTextArea tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
   			break;
   		case 'mobileNumber':
-  			return <UiMobileNumber ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+  			return <UiMobileNumber tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
   			break;
   		case 'checkbox':
-  			return <UiCheckBox ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+  			return <UiCheckBox tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
   			break;
   		case 'email':
-  			return <UiEmailField ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+  			return <UiEmailField tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
   			break;
   		case 'button':
-  			return <UiButton ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+  			return <UiButton tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
   			break;
   		case 'datePicker':
-  			return <UiDatePicker ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+  			return <UiDatePicker tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
         break;
+    case 'date':
+    			return <UiDate tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+          break;
       case 'singleFileUpload':
-  			return <UiSingleFileUpload ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+  			return <UiSingleFileUpload tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
         break;
 
       case 'multiFileUpload':
-    		return <UiMultiSelectField ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+    		return <UiMultiSelectField tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
   	  case 'pan':
-        return <UiPanCard ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+        return <UiPanCard tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
       case 'aadhar':
-        return <UiAadharCard ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+        return <UiAadharCard tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
       case 'label':
-        return <UiLabel getVal={this.props.getVal} item={item}/>
+        return <UiLabel tabIndex={index} getVal={this.props.getVal} item={item}/>
       case 'radio':
-        return <UiRadioButton ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+        return <UiRadioButton tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
       case 'textSearch':
-        return <UiTextSearch ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} autoComHandler={this.props.autoComHandler}/>
+        return <UiTextSearch tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} autoComHandler={this.props.autoComHandler}/>
       case 'documentList':
-        return <UiDocumentList ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+        return <UiDocumentList tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
     }
   }
 
   render() {
-    let  {groups,noCols,uiFramework}=this.props;
+    let  {groups, noCols, uiFramework}=this.props;
   	return ( <div>
   	 	{this.renderGroups(groups, noCols, uiFramework)}
   	 </div>)

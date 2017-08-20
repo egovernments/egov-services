@@ -3,10 +3,10 @@ package org.egov.tradelicense.domain.services.validator;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.models.AuditDetails;
-import org.egov.models.PenaltyRate;
-import org.egov.models.PenaltyRateRequest;
-import org.egov.models.RequestInfo;
+import org.egov.tl.commons.web.contract.AuditDetails;
+import org.egov.tl.commons.web.contract.PenaltyRate;
+import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tl.commons.web.requests.PenaltyRateRequest;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.exception.InvalidInputException;
 import org.egov.tradelicense.domain.exception.InvalidRangeException;
@@ -40,7 +40,7 @@ public class PenaltyRateValidator {
 		try {
 			penaltyRates = penaltyRateRepository.searchPenaltyRate(tenantId, null, applicationType, null, null);
 		} catch (Exception e) {
-			throw new InvalidInputException(requestInfo);
+			throw new InvalidInputException(e.getLocalizedMessage(), requestInfo);
 		}
 
 		if (validateNew) {
@@ -74,10 +74,10 @@ public class PenaltyRateValidator {
 				fromRange = penaltyRate.getFromRange();
 				if (applicationType.equalsIgnoreCase(oldApplicationType)) {
 					if (!fromRange.equals(oldToRange)) {
-						throw new InvalidRangeException(requestInfo);
+						throw new InvalidRangeException(propertiesManager.getInvalidSequenceRangeMsg(), requestInfo);
 					}
 				} else {
-					throw new InvalidInputException(requestInfo);
+					throw new InvalidInputException(propertiesManager.getInvalidApplicationTypeMsg(), requestInfo);
 				}
 			}
 			oldApplicationType = penaltyRate.getApplicationType().toString();

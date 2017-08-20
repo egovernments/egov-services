@@ -1,0 +1,38 @@
+
+{
+	"responseInfo": 
+	{
+	    "apiId": null,
+	    "status": "200",
+		"ver": null,
+		"ts": null,
+		"key": null
+	},
+
+	"marriageDocTypes": 
+	[
+		{
+			"id": 1,
+			"name": "ADDRESSPROOF",
+			"code": "00015",
+			"proof": "ADDRESS_PROOF",
+			"applicationType": "REGISTRATION",
+			"isActive": true,
+			"isIndividual": true,
+			"isRequired": true,
+			"tenantId": "ap.kurnool"
+		},
+
+		{
+			"id": 2,
+			"name": "ADDRESSPROOF",
+			"code": "00015",
+			"proof": "ADDRESS_PROOF",
+			"applicationType": "REISSUE",
+			"isActive": true,
+			"isIndividual": true,
+			"isRequired": true,
+			"tenantId": "ap.kurnool"
+		}
+	]
+}

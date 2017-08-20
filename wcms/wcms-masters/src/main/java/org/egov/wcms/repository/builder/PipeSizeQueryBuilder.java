@@ -56,7 +56,8 @@ public class PipeSizeQueryBuilder {
     private ApplicationProperties applicationProperties;
 
     private static final String BASE_QUERY = "SELECT pipesize.id as pipesize_id, pipesize.code as pipesize_code,"
-            + " pipesize.sizeinmilimeter as pipesize_sizeinmilimeter, pipesize.sizeininch as pipesize_sizeininch,pipesize.active as pipesize_active, pipesize.tenantId as pipesize_tenantId "
+            + " pipesize.sizeinmilimeter as pipesize_sizeinmilimeter, pipesize.sizeininch as pipesize_sizeininch,pipesize.active as pipesize_active, "
+            + " pipesize.description as pipesize_description,pipesize.tenantId as pipesize_tenantId "
             + " FROM egwtr_pipesize pipesize ";
 
     @SuppressWarnings("rawtypes")
@@ -163,12 +164,12 @@ public class PipeSizeQueryBuilder {
 
     public static String insertPipeSizeQuery() {
         return "INSERT INTO egwtr_pipesize(id,code,sizeinmilimeter,sizeininch,description,active,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
-                + "(?,?,?,?,?,?,?,?,?,?,?)";
+                + "(:id,:code,:sizeinmilimeter,:sizeininch,:description,:active,:createdby,:lastmodifiedby,:createddate,:lastmodifieddate,:tenantid)";
     }
 
     public static String updatePipeSizeQuery() {
-        return "UPDATE egwtr_pipesize SET sizeinmilimeter = ?,sizeininch = ?,description = ? ,"
-                + "active = ?,lastmodifiedby = ?,lastmodifieddate = ? where code = ?";
+        return "UPDATE egwtr_pipesize SET sizeinmilimeter = :sizeinmilimeter,sizeininch = :sizeininch,description = :description ,"
+                + "active = :active,lastmodifiedby = :lastmodifiedby,lastmodifieddate = :lastmodifieddate where code = :code ";
     }
 
     public static String selectPipeSizeInmmAndCodeQuery() {

@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.ValidationException;
 
 import org.egov.collection.config.CollectionServiceConstants;
 import org.egov.collection.exception.CustomException;
@@ -55,6 +56,7 @@ import org.egov.collection.web.contract.Receipt;
 import org.egov.collection.web.contract.ReceiptReq;
 import org.egov.collection.web.contract.ReceiptRes;
 import org.egov.collection.web.contract.ReceiptSearchGetRequest;
+import org.egov.collection.web.contract.ReceiptUpdateRequest;
 import org.egov.collection.web.contract.WorkFlowDetailsResponse;
 import org.egov.collection.web.contract.WorkflowDetailsRequest;
 import org.egov.collection.web.contract.factory.RequestInfoWrapper;
@@ -105,13 +107,16 @@ public class ReceiptController {
 			@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
 			final BindingResult requestBodyBindingResult) {
 
+		LOGGER.info("Request: "+receiptGetRequest.toString());
+		LOGGER.info("RequestInfo: "+requestInfoWrapper.toString());
+		
 		ReceiptSearchCriteria searchCriteria = ReceiptSearchCriteria.builder()
 				.businessCode(receiptGetRequest.getBusinessCode()).classification(receiptGetRequest.getClassification())
 				.collectedBy(receiptGetRequest.getCollectedBy()).consumerCode(receiptGetRequest.getConsumerCode())
 				.fromDate(receiptGetRequest.getFromDate()).toDate(receiptGetRequest.getToDate())
 				.paymentType(receiptGetRequest.getPaymentType()).receiptNumbers(receiptGetRequest.getReceiptNumbers())
 				.status(receiptGetRequest.getStatus()).tenantId(receiptGetRequest.getTenantId())
-				.sortBy(receiptGetRequest.getSortBy()).sortOrder(receiptGetRequest.getSortOrder()).build();
+				.sortBy(receiptGetRequest.getSortBy()).sortOrder(receiptGetRequest.getSortOrder()).transactionId(receiptGetRequest.getTransactionId()).build();
 
 		final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
@@ -120,8 +125,24 @@ public class ReceiptController {
 		if (requestBodyBindingResult.hasErrors())
 			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
 		List<Receipt> receipts = new ArrayList<>();
+		
 		try {
-			receipts = receiptService.getReceipts(searchCriteria).toDomainContract();
+				if(null != receiptGetRequest.getFromDate() && null != receiptGetRequest.getToDate()){
+					receiptReqValidator.validateSearchReceiptRequest(receiptGetRequest);
+				}
+			receipts = receiptService.getReceipts(searchCriteria,requestInfo).toDomainContract();
+		}catch(ValidationException e){
+			LOGGER.info("Exception Message: "+e.getMessage());
+			Error error = new Error();
+			final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+			error.setCode(Integer.valueOf(HttpStatus.BAD_REQUEST.toString()));
+			error.setMessage(e.getMessage());
+			error.setDescription("Validation Exception");
+			ErrorResponse errorResponse = new ErrorResponse();
+			errorResponse.setError(error);
+			errorResponse.setResponseInfo(responseInfo);
+
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);	
 		} catch (final Exception exception) {
 			LOGGER.error("Error while processing request " + receiptGetRequest, exception);
 			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
@@ -143,7 +164,7 @@ public class ReceiptController {
 
 		List<Receipt> receipts = new ArrayList<>();
 		try {
-			receipts = receiptService.getReceipts(searchCriteria).toDomainContract();
+			receipts = receiptService.getReceipts(searchCriteria,null).toDomainContract();
 		} catch (final Exception exception) {
 			LOGGER.error("Error while processing request " + receiptGetRequest, exception);
 		}
@@ -193,23 +214,43 @@ public class ReceiptController {
 			errorResponse.setResponseInfo(responseInfo);
 
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);	
+		}catch(ValidationException e){
+			LOGGER.info("Exception Message: "+e.getMessage());
+			Error error = new Error();
+			final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(receiptRequest.getRequestInfo(), true);
+			error.setCode(Integer.valueOf(HttpStatus.BAD_REQUEST.toString()));
+			error.setMessage(e.getMessage());
+			error.setDescription("Validation Exception");
+			ErrorResponse errorResponse = new ErrorResponse();
+			errorResponse.setError(error);
+			errorResponse.setResponseInfo(responseInfo);
+
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);	
 		}
 
 		List<Receipt> receipts = new ArrayList<>();
 		receipts.add(receiptInfo);
 
-		return getSuccessResponse(receipts, receiptRequest.getRequestInfo());
+		return getSuccessResponse(receipts,  receiptRequest.getRequestInfo());
 	}
 
 	@PostMapping("/_update")
 	@ResponseBody
-	public ResponseEntity<?> update(@RequestBody @Valid ReceiptReq receiptReq, BindingResult errors) {
+	public ResponseEntity<?> update(@ModelAttribute @Valid ReceiptUpdateRequest receiptUpdateRequest,
+			final BindingResult modelAttributeBindingResult,
+			@RequestBody @Valid ReceiptReq receiptReq, BindingResult errors) {
 
+		if (modelAttributeBindingResult.hasErrors()){
+			return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, receiptReq.getRequestInfo());
+		}
 		if (errors.hasFieldErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
-		WorkflowDetailsRequest workFlowRequest = receiptReq.getWorkflowDetails();
+		WorkflowDetailsRequest workFlowRequest = receiptReq.getReceipt().get(0).getWorkflowDetails();
+		workFlowRequest.setReceiptHeaderId(receiptUpdateRequest.getId());
+		workFlowRequest.setTenantId(receiptUpdateRequest.getTenantId());
+		workFlowRequest.setRequestInfo(receiptReq.getRequestInfo());
 		if (!validator(workFlowRequest.getTenantId(), workFlowRequest.getReceiptHeaderId())) {
 			LOGGER.info("Invalid TenantId");
 			Error error = new Error();

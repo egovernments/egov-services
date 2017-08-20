@@ -43,6 +43,7 @@ import java.util.List;
 
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.wcms.model.MeterWaterRates;
+import org.egov.wcms.model.enums.BillingType;
 import org.egov.wcms.repository.MeterWaterRatesRepository;
 import org.egov.wcms.web.contract.MeterWaterRatesGetRequest;
 import org.egov.wcms.web.contract.MeterWaterRatesRequest;
@@ -78,8 +79,11 @@ public class MeterWaterRatesService {
 
     public List<MeterWaterRates> createMeterWaterRates(final String topic, final String key,
             final MeterWaterRatesRequest meterWaterRatesRequest) {
-        for (final MeterWaterRates meterWaterRates : meterWaterRatesRequest.getMeterWaterRates())
+        for (final MeterWaterRates meterWaterRates : meterWaterRatesRequest.getMeterWaterRates()) {
+            meterWaterRates.setBillingType(BillingType.METERED.toString());
             meterWaterRates.setCode(codeGeneratorService.generate(MeterWaterRates.SEQ_METERWATERRATES));
+        }
+
         try {
             kafkaTemplate.send(topic, key, meterWaterRatesRequest);
         } catch (final Exception ex) {
@@ -90,6 +94,8 @@ public class MeterWaterRatesService {
 
     public List<MeterWaterRates> updateMeterWaterRates(final String topic, final String key,
             final MeterWaterRatesRequest meterWaterRatesRequest) {
+        for (final MeterWaterRates meterWaterRates : meterWaterRatesRequest.getMeterWaterRates()) 
+            meterWaterRates.setBillingType(BillingType.METERED.toString());
         try {
             kafkaTemplate.send(topic, key, meterWaterRatesRequest);
         } catch (final Exception ex) {

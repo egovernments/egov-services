@@ -96,7 +96,7 @@ public class MovementRowMapper implements RowMapper<Movement> {
             throw new SQLException("Parse exception while parsing Date");
         }
 
-        movement.setTransferedLocation(rs.getLong("m_transferedLocation"));
+        movement.setTransferedLocation(rs.getString("m_transferedLocation"));
         movement.setDepartmentAssigned(rs.getLong("m_departmentAssigned"));
         movement.setDesignationAssigned(rs.getLong("m_designationAssigned"));
         movement.setPositionAssigned(rs.getLong("m_positionAssigned"));

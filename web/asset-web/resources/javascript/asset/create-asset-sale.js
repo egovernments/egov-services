@@ -151,7 +151,7 @@ class Sale extends React.Component {
       getCommonMasterById("asset-services", "assets", id, function(err, res) {
           if(res && res["Assets"] && res["Assets"][0]) {
             checkCountAndCall("assetSet", res["Assets"] && res["Assets"][0] ? res["Assets"][0] : {});
-            commonApiPost("asset-services", "assets", "currentvalue/_search", {tenantId, assetId: res["Assets"][0].id}, function(er, res) {
+            commonApiPost("asset-services", "assets", "currentvalue/_search", {tenantId, assetIds: res["Assets"][0].id}, function(er, res) {
               if(res && res.AssetCurrentValue) {
                 _this.setState({
                   disposal: {

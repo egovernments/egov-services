@@ -1,13 +1,5 @@
 package org.egov.egf.instrument.domain.repository;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.instrument.domain.model.InstrumentType;
@@ -16,6 +8,7 @@ import org.egov.egf.instrument.persistence.entity.InstrumentTypeEntity;
 import org.egov.egf.instrument.persistence.queue.repository.InstrumentTypeQueueRepository;
 import org.egov.egf.instrument.persistence.repository.InstrumentTypeJdbcRepository;
 import org.egov.egf.instrument.web.requests.InstrumentTypeRequest;
+import org.egov.egf.master.web.repository.FinancialConfigurationContractRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,6 +16,14 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class InstrumentTypeRepositoryTest {
@@ -37,18 +38,24 @@ public class InstrumentTypeRepositoryTest {
 	@Mock
 	private InstrumentTypeQueueRepository instrumentTypeQueueRepository;
 
+	@Mock
+	private FinancialConfigurationContractRepository financialConfigurationContractRepository;
+
 	@Captor
 	private ArgumentCaptor<InstrumentTypeRequest> captor;
 
 	private RequestInfo requestInfo = new RequestInfo();
 
+	@Mock
+	private InstrumentTypeESRepository instrumentTypeESRepository;
+
 	@Before
 	public void setup() {
 		instrumentTypeRepositoryWithKafka = new InstrumentTypeRepository(instrumentTypeJdbcRepository,
-				instrumentTypeQueueRepository, "yes");
+				instrumentTypeQueueRepository, "yes",financialConfigurationContractRepository,instrumentTypeESRepository);
 
 		instrumentTypeRepositoryWithOutKafka = new InstrumentTypeRepository(instrumentTypeJdbcRepository,
-				instrumentTypeQueueRepository, "no");
+				instrumentTypeQueueRepository, "no",financialConfigurationContractRepository,instrumentTypeESRepository);
 	}
 
 	@Test
@@ -135,6 +142,24 @@ public class InstrumentTypeRepositoryTest {
 				actualRequest.getInstrumentTypes().get(0).getDescription());
 		assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getInstrumentTypes().get(0).getTenantId());
 	}
+	
+	@Test
+	public void test_delete_with_kafka() {
+
+		List<InstrumentType> expectedResult = getInstrumentTypes();
+
+		instrumentTypeRepositoryWithKafka.delete(expectedResult, requestInfo);
+
+		verify(instrumentTypeQueueRepository).addToQue(captor.capture());
+
+		final InstrumentTypeRequest actualRequest = captor.getValue();
+
+		assertEquals(expectedResult.get(0).getActive(), actualRequest.getInstrumentTypes().get(0).getActive());
+		assertEquals(expectedResult.get(0).getName(), actualRequest.getInstrumentTypes().get(0).getName());
+		assertEquals(expectedResult.get(0).getDescription(),
+				actualRequest.getInstrumentTypes().get(0).getDescription());
+		assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getInstrumentTypes().get(0).getTenantId());
+	}
 
 	@Test
 	public void test_update_with_out_kafka() {
@@ -146,6 +171,28 @@ public class InstrumentTypeRepositoryTest {
 		when(instrumentTypeJdbcRepository.update(any(InstrumentTypeEntity.class))).thenReturn(entity);
 
 		instrumentTypeRepositoryWithOutKafka.update(expectedResult, requestInfo);
+
+		verify(instrumentTypeQueueRepository).addToSearchQue(captor.capture());
+
+		final InstrumentTypeRequest actualRequest = captor.getValue();
+
+		assertEquals(expectedResult.get(0).getActive(), actualRequest.getInstrumentTypes().get(0).getActive());
+		assertEquals(expectedResult.get(0).getName(), actualRequest.getInstrumentTypes().get(0).getName());
+		assertEquals(expectedResult.get(0).getDescription(),
+				actualRequest.getInstrumentTypes().get(0).getDescription());
+		assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getInstrumentTypes().get(0).getTenantId());
+	}
+	
+	@Test
+	public void test_delete_with_out_kafka() {
+
+		List<InstrumentType> expectedResult = getInstrumentTypes();
+
+		InstrumentTypeEntity entity = new InstrumentTypeEntity().toEntity(expectedResult.get(0));
+
+		when(instrumentTypeJdbcRepository.delete(any(InstrumentTypeEntity.class))).thenReturn(entity);
+
+		instrumentTypeRepositoryWithOutKafka.delete(expectedResult, requestInfo);
 
 		verify(instrumentTypeQueueRepository).addToSearchQue(captor.capture());
 
@@ -198,6 +245,8 @@ public class InstrumentTypeRepositoryTest {
 		expectedResult.setPageSize(500);
 		expectedResult.setOffset(0);
 
+
+		when(financialConfigurationContractRepository.fetchDataFrom()).thenReturn("db");
 		when(instrumentTypeJdbcRepository.search(any(InstrumentTypeSearch.class))).thenReturn(expectedResult);
 
 		Pagination<InstrumentType> actualResult = instrumentTypeRepositoryWithKafka.search(getInstrumentTypeSearch());

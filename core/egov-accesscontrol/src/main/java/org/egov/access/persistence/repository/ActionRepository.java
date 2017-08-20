@@ -423,8 +423,8 @@ public class ActionRepository {
 			for (Action action : actions) {
 
 				String path = "";
-				if(allServiceList !=null){
-				path = getPath(action.getServiceCode(), allServiceList);
+				if (allServiceList != null) {
+					path = getPath(action.getServiceCode(), allServiceList);
 				}
 
 				if (path != "") {

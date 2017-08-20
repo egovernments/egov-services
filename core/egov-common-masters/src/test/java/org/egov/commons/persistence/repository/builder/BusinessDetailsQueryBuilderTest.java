@@ -7,11 +7,13 @@ import java.util.Arrays;
 
 import org.egov.commons.model.BusinessDetailsCriteria;
 import org.egov.commons.repository.builder.BusinessDetailsQueryBuilder;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class BusinessDetailsQueryBuilderTest {
 
 	@Test
+    @Ignore
 	public void no_input_test() {
 		BusinessDetailsCriteria detailsCriteria = new BusinessDetailsCriteria();
 
@@ -36,6 +38,7 @@ public class BusinessDetailsQueryBuilderTest {
 	}
 
 	@Test
+    @Ignore
 	public void all_input_test() {
 		BusinessDetailsCriteria detailsCriteria = new BusinessDetailsCriteria();
 		BusinessDetailsQueryBuilder builder = new BusinessDetailsQueryBuilder();

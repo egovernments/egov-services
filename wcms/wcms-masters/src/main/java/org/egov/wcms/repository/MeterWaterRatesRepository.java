@@ -46,7 +46,6 @@ import java.util.Map;
 
 import org.egov.wcms.model.MeterWaterRates;
 import org.egov.wcms.model.Slab;
-import org.egov.wcms.model.enums.BillingType;
 import org.egov.wcms.repository.builder.MeterWaterRatesQueryBuilder;
 import org.egov.wcms.repository.builder.PropertyPipeSizeQueryBuilder;
 import org.egov.wcms.repository.rowmapper.MeterWaterRatesRowMapper;
@@ -56,9 +55,10 @@ import org.egov.wcms.web.contract.MeterWaterRatesRequest;
 import org.egov.wcms.web.contract.PropertyTaxResponseInfo;
 import org.egov.wcms.web.contract.UsageTypeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -79,12 +79,17 @@ public class MeterWaterRatesRepository {
     @Autowired
     private RestWaterExternalMasterService restExternalMasterService;
 
+    @Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
     public MeterWaterRatesRequest persistCreateMeterWaterRates(final MeterWaterRatesRequest meterWaterRatesRequest) {
         log.info("MeterWaterRatesRequest::" + meterWaterRatesRequest);
         final String meterWaterRatesInsertQuery = MeterWaterRatesQueryBuilder.insertMeterWaterRatesQuery();
         final String pipesizeQuery = PropertyPipeSizeQueryBuilder.getPipeSizeIdQuery();
         final String sourcetypeQuery = MeterWaterRatesQueryBuilder.getSourceTypeIdQuery();
-        for (final MeterWaterRates meterWaterRates : meterWaterRatesRequest.getMeterWaterRates()) {
+        final List<MeterWaterRates> meterWaterRatesList = meterWaterRatesRequest.getMeterWaterRates();
+        final List<Map<String, Object>> batchValues = new ArrayList<>(meterWaterRatesList.size());
+        for (final MeterWaterRates meterWaterRates : meterWaterRatesList) {
             Long pipesizeId = 0L;
             try {
                 pipesizeId = jdbcTemplate.queryForObject(pipesizeQuery,
@@ -105,37 +110,40 @@ public class MeterWaterRatesRepository {
             }
             if (sourcetypeId == null)
                 log.info("Invalid input.");
-            meterWaterRates.setBillingtype(BillingType.METERED.toString());
-            final Object[] obj = new Object[] { Long.valueOf(meterWaterRates.getCode()), meterWaterRates.getCode(),
-                    meterWaterRates.getBillingtype(), meterWaterRates.getUsageTypeId(),
-                    sourcetypeId, pipesizeId, meterWaterRates.getFromDate(),
-                    meterWaterRates.getToDate(),
-                    meterWaterRates.getActive(),
-                    Long.valueOf(meterWaterRatesRequest.getRequestInfo().getUserInfo().getId()),
-                    Long.valueOf(meterWaterRatesRequest.getRequestInfo().getUserInfo().getId()),
-                    new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
-                    meterWaterRates.getTenantId() };
-            jdbcTemplate.update(meterWaterRatesInsertQuery, obj);
+            batchValues.add(
+                    new MapSqlParameterSource("id", Long.valueOf(meterWaterRates.getCode()))
+                            .addValue("code", meterWaterRates.getCode())
+                            .addValue("billingtype", meterWaterRates.getBillingType())
+                            .addValue("usagetypeid", meterWaterRates.getUsageTypeId())
+                            .addValue("sourcetypeid", sourcetypeId).addValue("pipesizeid", pipesizeId)
+                            .addValue("fromdate", meterWaterRates.getFromDate())
+                            .addValue("todate", meterWaterRates.getToDate()).addValue("active", meterWaterRates.getActive())
+                            .addValue("createdby", Long.valueOf(meterWaterRatesRequest.getRequestInfo().getUserInfo().getId()))
+                            .addValue("lastmodifiedby",
+                                    Long.valueOf(meterWaterRatesRequest.getRequestInfo().getUserInfo().getId()))
+                            .addValue("createddate", new Date(new java.util.Date().getTime()))
+                            .addValue("lastmodifieddate", new Date(new java.util.Date().getTime()))
+                            .addValue("tenantid", meterWaterRates.getTenantId())
+                            .getValues());
 
+            namedParameterJdbcTemplate.batchUpdate(meterWaterRatesInsertQuery,
+                    batchValues.toArray(new Map[meterWaterRatesList.size()]));
+
+            final String slabInsertQuery = MeterWaterRatesQueryBuilder.insertSlabQuery();
             final List<Slab> slabList = meterWaterRates.getSlab();
+            final List<Map<String, Object>> batchValuesSlab = new ArrayList<>(slabList.size());
             if (slabList != null && !slabList.isEmpty()) {
-                final String slabInsertQuery = MeterWaterRatesQueryBuilder.insertSlabQuery();
+
                 log.info("the insert query for slab : " + slabInsertQuery);
-                final List<Object[]> slabBatchArgs = new ArrayList<>();
 
-                for (final Slab slab : slabList) {
-                    final Object[] slabRecord = { Long.valueOf(meterWaterRates.getCode()), slab.getFromUnit(), slab.getToUnit(),
-                            slab.getUnitRate(),
-                            meterWaterRates.getTenantId() };
-                    slabBatchArgs.add(slabRecord);
-                }
+                for (final Slab slab : slabList)
+                    batchValuesSlab.add(
+                            new MapSqlParameterSource("meterwaterratesid", Long.valueOf(meterWaterRates.getCode()))
+                                    .addValue("fromunit", slab.getFromUnit()).addValue("tounit", slab.getToUnit())
+                                    .addValue("unitrate", slab.getUnitRate()).addValue("tenantid", meterWaterRates.getTenantId())
+                                    .getValues());
+                namedParameterJdbcTemplate.batchUpdate(slabInsertQuery, batchValuesSlab.toArray(new Map[slabList.size()]));
 
-                try {
-                    jdbcTemplate.batchUpdate(slabInsertQuery, slabBatchArgs);
-                } catch (final DataAccessException ex) {
-                    ex.printStackTrace();
-                    throw new RuntimeException(ex.getMessage());
-                }
             }
         }
 
@@ -147,7 +155,9 @@ public class MeterWaterRatesRepository {
         final String meterWaterRatesUpdateQuery = MeterWaterRatesQueryBuilder.updateMeterWaterRatesQuery();
         final String pipesizeQuery = PropertyPipeSizeQueryBuilder.getPipeSizeIdQuery();
         final String sourcetypeQuery = MeterWaterRatesQueryBuilder.getSourceTypeIdQuery();
-        for (final MeterWaterRates meterWaterRates : meterWaterRatesRequest.getMeterWaterRates()) {
+        final List<MeterWaterRates> meterWaterRatesList = meterWaterRatesRequest.getMeterWaterRates();
+        final List<Map<String, Object>> batchValues = new ArrayList<>(meterWaterRatesList.size());
+        for (final MeterWaterRates meterWaterRates : meterWaterRatesList) {
             Long pipesizeId = 0L;
             try {
                 pipesizeId = jdbcTemplate.queryForObject(pipesizeQuery,
@@ -168,35 +178,37 @@ public class MeterWaterRatesRepository {
             }
             if (sourcetypeId == null)
                 log.info("Invalid input.");
-            meterWaterRates.setBillingtype(BillingType.METERED.toString());
-            final Object[] obj = new Object[] {
-                    meterWaterRates.getBillingtype(), meterWaterRates.getUsageTypeId(),
-                    sourcetypeId, pipesizeId, meterWaterRates.getFromDate(),
-                    meterWaterRates.getToDate(),
-                    meterWaterRates.getActive(),
-                    Long.valueOf(meterWaterRatesRequest.getRequestInfo().getUserInfo().getId()),
-                    new Date(new java.util.Date().getTime()), meterWaterRates.getCode(),
-                    meterWaterRates.getTenantId() };
-            jdbcTemplate.update(meterWaterRatesUpdateQuery, obj);
+            batchValues.add(
+                    new MapSqlParameterSource("billingtype", meterWaterRates.getBillingType())
+                            .addValue("usagetypeid", meterWaterRates.getUsageTypeId())
+                            .addValue("sourcetypeid", sourcetypeId).addValue("pipesizeid", pipesizeId)
+                            .addValue("fromdate", meterWaterRates.getFromDate())
+                            .addValue("todate", meterWaterRates.getToDate()).addValue("active", meterWaterRates.getActive())
+                            .addValue("lastmodifiedby",
+                                    Long.valueOf(meterWaterRatesRequest.getRequestInfo().getUserInfo().getId()))
+                            .addValue("lastmodifieddate", new Date(new java.util.Date().getTime()))
+                            .addValue("code", meterWaterRates.getCode())
+                            .addValue("tenantid", meterWaterRates.getTenantId())
+                            .getValues());
 
+            namedParameterJdbcTemplate.batchUpdate(meterWaterRatesUpdateQuery,
+                    batchValues.toArray(new Map[meterWaterRatesList.size()]));
+
+            final String slabInsertQuery = MeterWaterRatesQueryBuilder.insertSlabQuery();
             final List<Slab> slabList = meterWaterRates.getSlab();
+            final List<Map<String, Object>> batchValuesSlab = new ArrayList<>(slabList.size());
             if (slabList != null && !slabList.isEmpty()) {
-                final String slabInsertQuery = MeterWaterRatesQueryBuilder.insertSlabQuery();
-                log.info("the insert query for slab : " + slabInsertQuery);
-                final List<Object[]> slabBatchArgs = new ArrayList<>();
 
-                for (final Slab slab : slabList) {
-                    final Object[] slabRecord = { Long.valueOf(meterWaterRates.getCode()), slab.getFromUnit(), slab.getToUnit(),
-                            slab.getUnitRate(),
-                            meterWaterRates.getTenantId() };
-                    slabBatchArgs.add(slabRecord);
-                }
-                try {
-                    jdbcTemplate.batchUpdate(slabInsertQuery, slabBatchArgs);
-                } catch (final DataAccessException ex) {
-                    ex.printStackTrace();
-                    throw new RuntimeException(ex.getMessage());
-                }
+                log.info("the insert query for slab : " + slabInsertQuery);
+
+                for (final Slab slab : slabList)
+                    batchValuesSlab.add(
+                            new MapSqlParameterSource("meterwaterratesid", Long.valueOf(meterWaterRates.getCode()))
+                                    .addValue("fromunit", slab.getFromUnit()).addValue("tounit", slab.getToUnit())
+                                    .addValue("unitrate", slab.getUnitRate()).addValue("tenantid", meterWaterRates.getTenantId())
+                                    .getValues());
+                namedParameterJdbcTemplate.batchUpdate(slabInsertQuery, batchValuesSlab.toArray(new Map[slabList.size()]));
+
             }
         }
 

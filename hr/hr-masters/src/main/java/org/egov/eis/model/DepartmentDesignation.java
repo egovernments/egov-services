@@ -45,6 +45,7 @@ import lombok.*;
 
 import javax.validation.constraints.NotNull;
 
+@Builder
 @AllArgsConstructor
 @EqualsAndHashCode
 @Getter

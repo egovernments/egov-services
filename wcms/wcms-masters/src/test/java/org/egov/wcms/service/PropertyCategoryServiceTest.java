@@ -52,7 +52,6 @@ import org.egov.wcms.model.PropertyTypeCategoryType;
 import org.egov.wcms.repository.PropertyTypeCategoryTypeRepository;
 import org.egov.wcms.web.contract.PropertyCategoryGetRequest;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
-import org.egov.wcms.web.contract.PropertyTypeCategoryTypesRes;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -79,6 +78,9 @@ public class PropertyCategoryServiceTest {
     @InjectMocks
     private PropertyCategoryService propertyCategoryService;
 
+    @Mock
+    private CodeGeneratorService codeGeneratorService;
+
     @Test
     public void test_Should_Find_PropertyCategory() throws Exception {
 
@@ -98,11 +100,11 @@ public class PropertyCategoryServiceTest {
         assertTrue(propertyCategoryRequest.equals(propertyCategoryService.create(propertyCategoryRequest)));
     }
 
-    @Test
+    @SuppressWarnings("unchecked")
+    @Test(expected = Exception.class)
     public void test_Should_Get_PropertyCategories() throws Exception {
 
         final PropertyTypeCategoryType propertyCategory = new PropertyTypeCategoryType();
-        final PropertyTypeCategoryTypesRes propertyCategoryResponse = new PropertyTypeCategoryTypesRes();
         propertyCategory.setPropertyTypeName("propertyType");
         propertyCategory.setCategoryTypeName("categoryType");
         propertyCategory.setActive(true);
@@ -112,9 +114,10 @@ public class PropertyCategoryServiceTest {
         propertyCategories.add(propertyCategory);
 
         final PropertyCategoryGetRequest propertyCategoryGetRequest = Mockito.mock(PropertyCategoryGetRequest.class);
-        doReturn(propertyCategoryResponse).when(propertyCategoryRepository).findForCriteria(propertyCategoryGetRequest);
+        when(propertyCategoryRepository.findForCriteria(propertyCategoryGetRequest)).thenThrow(Exception.class);
 
         assertNotNull(propertyCategoryService.getPropertyCategories(propertyCategoryGetRequest));
+
     }
 
     @SuppressWarnings("unchecked")

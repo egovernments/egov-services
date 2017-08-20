@@ -50,8 +50,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class PropertyPipeSizeQueryBuilder {
 
-    private static final String BASE_QUERY = "SELECT propertypipesize.id as propertypipesize_id, propertypipesize.propertytypeid "
-            + "as propertypipesize_propertytypeId, pipesize.sizeinmilimeter as pipesize_sizeinmm,"
+    private static final String BASE_QUERY = "SELECT propertypipesize.id as propertypipesize_id,propertypipesize.code as propertypipesize_code, propertypipesize.propertytypeid "
+            + "as propertypipesize_propertytypeId, pipesize.sizeinmilimeter as pipesize_sizeinmm,pipesize.sizeininch as pipesize_sizeininch ,"
             + "propertypipesize.pipesizeid as propertypipesize_pipesizeId,propertypipesize.active as propertypipesize_active, "
             + "propertypipesize.tenantId as propertypipesize_tenantId "
             + " FROM egwtr_property_pipe_size propertypipesize LEFT JOIN egwtr_pipesize pipesize ON propertypipesize.pipesizeid = pipesize.id";
@@ -135,25 +135,25 @@ public class PropertyPipeSizeQueryBuilder {
     }
 
     public static String insertPropertyPipeSizeQuery() {
-        return "INSERT INTO egwtr_property_pipe_size(id,pipesizeid,propertytypeid,active,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
-                + "(nextval('SEQ_EGWTR_PROPERTY_PIPESIZE'),?,?,?,?,?,?,?,?)";
+        return "INSERT INTO egwtr_property_pipe_size(id,code,pipesizeid,propertytypeid,active,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
+                + "(:id,:code,:pipesizeid,:propertytypeid,:active,:createdby,:lastmodifiedby,:createddate,:lastmodifieddate,:tenantid)";
     }
 
     public static String updatePropertyPipeSizeQuery() {
-        return "UPDATE egwtr_property_pipe_size SET pipesizeid = ?,propertytypeid = ?,"
-                + "active = ?,lastmodifiedby = ?,lastmodifieddate = ? where id = ?";
+        return "UPDATE egwtr_property_pipe_size SET pipesizeid = :pipesizeid,propertytypeid = :propertytypeid,"
+                + "active = :active,lastmodifiedby = :lastmodifiedby,lastmodifieddate = :lastmodifieddate where code = :code ";
     }
 
     public static String selectPropertyByPipeSizeQuery() {
-        return " select id FROM egwtr_property_pipe_size where propertytypeid = ? and pipesizeid = ? and tenantId = ?";
+        return " select code FROM egwtr_property_pipe_size where propertytypeid = ? and pipesizeid = ? and tenantId = ?";
     }
 
     public static String selectPropertyByPipeSizeNotInQuery() {
-        return " select id from egwtr_property_pipe_size where propertytypeid = ? and pipesizeid = ? and tenantId = ? and id != ? ";
+        return " select code from egwtr_property_pipe_size where propertytypeid = ? and pipesizeid = ? and tenantId = ? and code != ? ";
     }
 
     public static String getPipeSizeIdQuery() {
-        return " select id FROM egwtr_pipesize where sizeinmilimeter= ? and tenantId = ? ";
+        return " select id FROM egwtr_pipesize where sizeinmilimeter= :sizeinmilimeter and tenantId = :tenantId ";
     }
 
     public static String getPipeSizeInmm() {

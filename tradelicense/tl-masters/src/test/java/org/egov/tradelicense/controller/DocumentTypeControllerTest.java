@@ -13,12 +13,12 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.models.AuditDetails;
-import org.egov.models.DocumentType;
-import org.egov.models.DocumentTypeRequest;
-import org.egov.models.DocumentTypeResponse;
-import org.egov.models.RequestInfo;
-import org.egov.models.ResponseInfo;
+import org.egov.tl.commons.web.contract.AuditDetails;
+import org.egov.tl.commons.web.contract.DocumentType;
+import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tl.commons.web.contract.ResponseInfo;
+import org.egov.tl.commons.web.requests.DocumentTypeRequest;
+import org.egov.tl.commons.web.requests.DocumentTypeResponse;
 import org.egov.tradelicense.TradeLicenseApplication;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.services.DocumentTypeService;
@@ -47,7 +47,7 @@ public class DocumentTypeControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
-	
+
 	@MockBean
 	KafkaTemplate kafkaTemplate;
 
@@ -72,10 +72,10 @@ public class DocumentTypeControllerTest {
 
 		try {
 
-			when(documentTypeService.createDocumentType(any(DocumentTypeRequest.class)))
+			when(documentTypeService.createDocumentTypeMaster(any(DocumentTypeRequest.class)))
 					.thenReturn(documentTypeResponse);
 
-			mockMvc.perform(post("/documenttype/_create").param("tenantId", "default")
+			mockMvc.perform(post("/documenttype/v1/_create")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("documentTypeCreateRequest.json")))
 					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -94,7 +94,7 @@ public class DocumentTypeControllerTest {
 	 * Description : Test method for updateDocumentType() method
 	 */
 	@Test
-	public void testUpdateDocumentType() throws Exception {
+	public void testUpdateDocumentTypeMaster() throws Exception {
 
 		DocumentTypeResponse documenttypeResponse = new DocumentTypeResponse();
 		List<DocumentType> documentTypes = new ArrayList<DocumentType>();
@@ -111,17 +111,18 @@ public class DocumentTypeControllerTest {
 
 		try {
 
-			when(documentTypeService.updateDocumentType(any(DocumentTypeRequest.class)))
+			when(documentTypeService.updateDocumentTypeMaster(any(DocumentTypeRequest.class)))
 					.thenReturn(documenttypeResponse);
-			mockMvc.perform(post("/documenttype/_update").contentType(MediaType.APPLICATION_JSON)
-					.content(getFileContents("documenttypeUpdateRequest.json"))).andExpect(status().isOk())
+			mockMvc.perform(post("/documenttype/v1/_update")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("documenttypeUpdateRequest.json")))
+					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("documenttypeUpdateResponse.json")));
 
 		} catch (Exception e) {
 
 			assertTrue(Boolean.FALSE);
-			e.printStackTrace();
 		}
 
 		assertTrue(Boolean.TRUE);
@@ -149,11 +150,11 @@ public class DocumentTypeControllerTest {
 
 		try {
 
-			when(documentTypeService.getDocumentType(any(RequestInfo.class), any(String.class), any(Integer[].class),
-					any(String.class), any(String.class), any(String.class), any(Integer.class), any(Integer.class)))
-							.thenReturn(documentTypeResponse);
+			when(documentTypeService.getDocumentTypeMaster(any(RequestInfo.class), any(String.class),
+					any(Integer[].class), any(String.class), any(String.class), any(String.class), any(Integer.class),
+					any(Integer.class))).thenReturn(documentTypeResponse);
 
-			mockMvc.perform(post("/documenttype/_search").param("tenantId", "default")
+			mockMvc.perform(post("/documenttype/v1/_search").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("documentTypeSearchRequest.json")))
 					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))

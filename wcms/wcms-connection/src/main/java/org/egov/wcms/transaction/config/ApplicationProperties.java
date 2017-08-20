@@ -66,6 +66,21 @@ public class ApplicationProperties {
 
     @Value("${kafka.topics.legacyconnection.create.name}")
     private String createLegacyConnectionTopicName;
+    
+    @Value("${kafka.topics.estimationnotice.persist.name}")
+    private String estimationNoticePersistTopicName; 
+    
+    @Value("${kafka.topics.demandBill.update.name}")
+    private String updateDemandBillTopicName;
+    
+    @Value("${kafka.topics.workorder.persist.name}")
+    private String workOrderNoticePersistTopicName; 
+    
+    @Value("${kafka.topics.estimationnotice.persist.key}")
+    private String estimationNoticePersistTopicKey; 
+    
+    @Value("${kafka.topics.workorder.persist.key}")
+    private String workOrderPersistTopicKey; 
 
     @Autowired
     private Environment environment;
@@ -86,6 +101,10 @@ public class ApplicationProperties {
     public String getCreateNewConnectionTopicName() {
         return createNewConnectionTopicName;
     }
+    
+    public String getUpdateDemandBillTopicName() {
+        return updateDemandBillTopicName;
+    }
 
     public String getCreateLegacyConnectionTopicName() {
         return createLegacyConnectionTopicName;
@@ -94,5 +113,21 @@ public class ApplicationProperties {
     public String getUpdateNewConnectionTopicName() {
         return updateNewConnectionTopicName;
     }
-
+    
+    public String getEstimationNoticeTopicName() {
+    	return estimationNoticePersistTopicName; 
+    }
+    
+    public String getWorkOrderTopicName() { 
+    	return workOrderNoticePersistTopicName;
+    }
+    
+    public String getEstimationNoticeTopicKey() { 
+    	return estimationNoticePersistTopicKey;
+    }
+    
+    public String getWorkOrderTopicKey() {
+    	return workOrderPersistTopicKey;
+    }
+    
 }

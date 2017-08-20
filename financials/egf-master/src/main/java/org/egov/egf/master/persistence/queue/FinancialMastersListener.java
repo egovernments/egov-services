@@ -2,90 +2,10 @@ package org.egov.egf.master.persistence.queue;
 
 import java.util.Map;
 
-import org.egov.egf.master.domain.model.AccountCodePurpose;
-import org.egov.egf.master.domain.model.AccountDetailKey;
-import org.egov.egf.master.domain.model.AccountDetailType;
-import org.egov.egf.master.domain.model.AccountEntity;
-import org.egov.egf.master.domain.model.Bank;
-import org.egov.egf.master.domain.model.BankAccount;
-import org.egov.egf.master.domain.model.BankBranch;
-import org.egov.egf.master.domain.model.BudgetGroup;
-import org.egov.egf.master.domain.model.ChartOfAccount;
-import org.egov.egf.master.domain.model.ChartOfAccountDetail;
-import org.egov.egf.master.domain.model.FinancialConfiguration;
-import org.egov.egf.master.domain.model.FinancialStatus;
-import org.egov.egf.master.domain.model.FinancialYear;
-import org.egov.egf.master.domain.model.FiscalPeriod;
-import org.egov.egf.master.domain.model.Function;
-import org.egov.egf.master.domain.model.Functionary;
-import org.egov.egf.master.domain.model.Fund;
-import org.egov.egf.master.domain.model.Fundsource;
-import org.egov.egf.master.domain.model.Scheme;
-import org.egov.egf.master.domain.model.SubScheme;
-import org.egov.egf.master.domain.model.Supplier;
-import org.egov.egf.master.domain.service.AccountCodePurposeService;
-import org.egov.egf.master.domain.service.AccountDetailKeyService;
-import org.egov.egf.master.domain.service.AccountDetailTypeService;
-import org.egov.egf.master.domain.service.AccountEntityService;
-import org.egov.egf.master.domain.service.BankAccountService;
-import org.egov.egf.master.domain.service.BankBranchService;
-import org.egov.egf.master.domain.service.BankService;
-import org.egov.egf.master.domain.service.BudgetGroupService;
-import org.egov.egf.master.domain.service.ChartOfAccountDetailService;
-import org.egov.egf.master.domain.service.ChartOfAccountService;
-import org.egov.egf.master.domain.service.FinancialConfigurationService;
-import org.egov.egf.master.domain.service.FinancialStatusService;
-import org.egov.egf.master.domain.service.FinancialYearService;
-import org.egov.egf.master.domain.service.FiscalPeriodService;
-import org.egov.egf.master.domain.service.FunctionService;
-import org.egov.egf.master.domain.service.FunctionaryService;
-import org.egov.egf.master.domain.service.FundService;
-import org.egov.egf.master.domain.service.FundsourceService;
-import org.egov.egf.master.domain.service.SchemeService;
-import org.egov.egf.master.domain.service.SubSchemeService;
-import org.egov.egf.master.domain.service.SupplierService;
-import org.egov.egf.master.web.contract.AccountCodePurposeContract;
-import org.egov.egf.master.web.contract.AccountDetailKeyContract;
-import org.egov.egf.master.web.contract.AccountDetailTypeContract;
-import org.egov.egf.master.web.contract.AccountEntityContract;
-import org.egov.egf.master.web.contract.BankAccountContract;
-import org.egov.egf.master.web.contract.BankBranchContract;
-import org.egov.egf.master.web.contract.BankContract;
-import org.egov.egf.master.web.contract.BudgetGroupContract;
-import org.egov.egf.master.web.contract.ChartOfAccountContract;
-import org.egov.egf.master.web.contract.ChartOfAccountDetailContract;
-import org.egov.egf.master.web.contract.FinancialConfigurationContract;
-import org.egov.egf.master.web.contract.FinancialStatusContract;
-import org.egov.egf.master.web.contract.FinancialYearContract;
-import org.egov.egf.master.web.contract.FiscalPeriodContract;
-import org.egov.egf.master.web.contract.FunctionContract;
-import org.egov.egf.master.web.contract.FunctionaryContract;
-import org.egov.egf.master.web.contract.FundContract;
-import org.egov.egf.master.web.contract.FundsourceContract;
-import org.egov.egf.master.web.contract.SchemeContract;
-import org.egov.egf.master.web.contract.SubSchemeContract;
-import org.egov.egf.master.web.contract.SupplierContract;
-import org.egov.egf.master.web.requests.AccountCodePurposeRequest;
-import org.egov.egf.master.web.requests.AccountDetailKeyRequest;
-import org.egov.egf.master.web.requests.AccountDetailTypeRequest;
-import org.egov.egf.master.web.requests.AccountEntityRequest;
-import org.egov.egf.master.web.requests.BankAccountRequest;
-import org.egov.egf.master.web.requests.BankBranchRequest;
-import org.egov.egf.master.web.requests.BankRequest;
-import org.egov.egf.master.web.requests.BudgetGroupRequest;
-import org.egov.egf.master.web.requests.ChartOfAccountDetailRequest;
-import org.egov.egf.master.web.requests.ChartOfAccountRequest;
-import org.egov.egf.master.web.requests.FinancialConfigurationRequest;
-import org.egov.egf.master.web.requests.FinancialStatusRequest;
-import org.egov.egf.master.web.requests.FinancialYearRequest;
-import org.egov.egf.master.web.requests.FiscalPeriodRequest;
-import org.egov.egf.master.web.requests.FunctionRequest;
-import org.egov.egf.master.web.requests.FunctionaryRequest;
-import org.egov.egf.master.web.requests.FundRequest;
-import org.egov.egf.master.web.requests.FundsourceRequest;
-import org.egov.egf.master.web.requests.SchemeRequest;
-import org.egov.egf.master.web.requests.SubSchemeRequest;
-import org.egov.egf.master.web.requests.SupplierRequest;
+import org.egov.egf.master.domain.model.*;
+import org.egov.egf.master.domain.service.*;
+import org.egov.egf.master.web.contract.*;
+import org.egov.egf.master.web.requests.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -164,6 +84,9 @@ public class FinancialMastersListener {
 	@Value("${kafka.topics.egf.masters.financialconfiguration.completed.key}")
 	private String financialConfigurationCompletedKey;
 
+	@Value("${kafka.topics.egf.masters.recovery.completed.key}")
+	private String recoveryCompletedKey;
+
 	@Autowired
 	ApplicationContext applicationContext;
 
@@ -235,6 +158,9 @@ public class FinancialMastersListener {
 
 	@Autowired
 	private FinancialConfigurationService financialConfigurationService;
+
+	@Autowired
+	private RecoveryService recoveryService;
 
 	@KafkaListener(id = "${kafka.topics.egf.masters.validated.id}", topics = "${kafka.topics.egf.masters.validated.topic}", group = "${kafka.topics.egf.masters.validated.group}")
 	public void process(Map<String, Object> mastersMap) {
@@ -990,6 +916,35 @@ public class FinancialMastersListener {
 	            financialProducer.sendMessage(completedTopic, bankBranchCompletedKey,
 	                    mastersMap);
 	        }
+		if (mastersMap.get("recovery_create") != null) {
+			RecoveryRequest request = objectMapper.convertValue(
+					mastersMap.get("recovery_create"), RecoveryRequest.class);
+			ModelMapper mapper = new ModelMapper();
+			for (RecoveryContract recoveryContract : request.getRecoverys()) {
+				Recovery domain = mapper.map(recoveryContract, Recovery.class);
+				recoveryService.save(domain);
+			}
+
+			mastersMap.clear();
+			mastersMap.put("recovery_persisted", request);
+			financialProducer.sendMessage(completedTopic, bankCompletedKey,
+					mastersMap);
+		}
+		if (mastersMap.get("recovery_update") != null) {
+
+			RecoveryRequest request = objectMapper.convertValue(
+					mastersMap.get("recovery_update"), RecoveryRequest.class);
+
+			ModelMapper mapper = new ModelMapper();
+			for (RecoveryContract recoveryContract : request.getRecoverys()) {
+				Recovery domain = mapper.map(recoveryContract, Recovery.class);
+				recoveryService.update(domain);
+			}
+			mastersMap.clear();
+			mastersMap.put("recovery_persisted", request);
+			financialProducer.sendMessage(completedTopic, bankCompletedKey,
+					mastersMap);
+		}
 
 
 	}

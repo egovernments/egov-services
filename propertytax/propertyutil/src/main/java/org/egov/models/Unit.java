@@ -71,7 +71,7 @@ public class Unit {
 	private String occupancyType = null;
 
 	@JsonProperty("occupierName")
-	@Size(min = 1, max = 128)
+	@Size(min = 1, max = 4000)
 	private String occupierName = null;
 
 	@JsonProperty("firmName")
@@ -119,11 +119,21 @@ public class Unit {
 
 	@JsonProperty("parentid")
 	private Long parentId = null;
-	
+
 	@JsonProperty("isAuthorised")
 	private Boolean isAuthorised = true;
 
+	@JsonProperty("constructionStartDate")
+	private String constructionStartDate = null;
+
+	@JsonProperty("landCost")
+	private Double landCost = null;
+
+	@JsonProperty("buildingCost")
+	private Double buildingCost = null;
+
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
+
 
 }

@@ -99,17 +99,13 @@ public class TreatmentPlantService {
         return treatmentPlantRequest.getTreatmentPlants();
     }
 
-    public List<TreatmentPlant> getTreatmentPlant(
-            final TreatmentPlantGetRequest treatmentPlantGetRequest) {
+    public List<TreatmentPlant> getTreatmentPlant(final TreatmentPlantGetRequest treatmentPlantGetRequest) {
         return treatmentPlantRepository.findForCriteria(treatmentPlantGetRequest);
     }
 
-    public Boolean getBoundaryByZone(
-            final TreatmentPlant treatmentPlant) {
+    public Boolean getBoundaryByZone(final TreatmentPlant treatmentPlant) {
         BoundaryResponse boundaryRespose = null;
-        boundaryRespose = restExternalMasterService.getBoundaryNum(
-                WcmsConstants.ZONE,
-                treatmentPlant.getZoneNum(),
+        boundaryRespose = restExternalMasterService.getBoundaryNum(WcmsConstants.ZONE, treatmentPlant.getZoneNum(),
                 treatmentPlant.getTenantId());
         return boundaryRespose != null && !boundaryRespose.getBoundarys().isEmpty();
 
@@ -117,9 +113,7 @@ public class TreatmentPlantService {
 
     public Boolean getBoundaryByWard(final TreatmentPlant treatmentPlant) {
         BoundaryResponse boundaryRespose = null;
-        boundaryRespose = restExternalMasterService.getBoundaryNum(
-                WcmsConstants.WARD,
-                treatmentPlant.getWardNum(),
+        boundaryRespose = restExternalMasterService.getBoundaryNum(WcmsConstants.WARD, treatmentPlant.getWardNum(),
                 treatmentPlant.getTenantId());
         return boundaryRespose != null && !boundaryRespose.getBoundarys().isEmpty();
 
@@ -127,10 +121,8 @@ public class TreatmentPlantService {
 
     public Boolean getBoundaryByLocation(final TreatmentPlant treatmentPlant) {
         BoundaryResponse boundaryRespose = null;
-        boundaryRespose = restExternalMasterService.getBoundaryNum(
-                WcmsConstants.LOCALITY,
-                treatmentPlant.getLocationNum(),
-                treatmentPlant.getTenantId());
+        boundaryRespose = restExternalMasterService.getBoundaryNum(WcmsConstants.LOCALITY,
+                treatmentPlant.getLocationNum(), treatmentPlant.getTenantId());
         return boundaryRespose != null && !boundaryRespose.getBoundarys().isEmpty();
 
     }

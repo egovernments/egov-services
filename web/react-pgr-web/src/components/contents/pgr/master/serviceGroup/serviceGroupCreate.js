@@ -1,12 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import SimpleMap from '../../../../common/GoogleMaps.js';
-
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
-import {brown500, red500,white,orange800} from 'material-ui/styles/colors';
-import Checkbox from 'material-ui/Checkbox';
 import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
 import AutoComplete from 'material-ui/AutoComplete';
@@ -17,38 +13,12 @@ import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../../api/api';
 import {translate} from '../../../../common/common';
 
-
-var flag = 0;
 const styles = {
   headerStyle : {
     fontSize : 19
   },
   marginStyle:{
     margin: '15px'
-  },
-  paddingStyle:{
-    padding: '15px'
-  },
-  errorStyle: {
-    color: red500
-  },
-  underlineStyle: {
-    borderColor: brown500
-  },
-  underlineFocusStyle: {
-    borderColor: brown500
-  },
-  floatingLabelStyle: {
-    color: brown500
-  },
-  floatingLabelFocusStyle: {
-    color: brown500
-  },
-  customWidth: {
-    width:100
-  },
-  checkbox: {
-    marginTop: 37
   }
 };
 
@@ -77,15 +47,12 @@ class ServiceGroupCreate extends Component {
     componentWillMount() {
 
         if(this.props.match.params.id) {
-          console.log();
             this.setState({id:this.props.match.params.id});
             var body = {}
             let  current = this;
             let {setForm} = this.props;
 
             Api.commonApiPost("/pgr-master/serviceGroup/v1/_search",{id:this.props.match.params.id},body).then(function(response){
-                console.log("response",response);
-                  console.log("response object",response.ServiceGroups[0]);
                 current.setState({data:response.ServiceGroups})
                 setForm(response.ServiceGroups[0])
             }, function(err) {
@@ -136,7 +103,7 @@ class ServiceGroupCreate extends Component {
            "name" :this.props.createServiceGroup.name,
            "code" :this.props.createServiceGroup.code,
            "description" :this.props.createServiceGroup.description,
-           "tenantId":"default",
+           "tenantId": localStorage.getItem("tenantId"),
            "keyword": "complaint"
           }
       }
@@ -154,7 +121,6 @@ class ServiceGroupCreate extends Component {
         	})
       } else {
           Api.commonApiPost("/pgr-master/serviceGroup/v1/_create",{},body).then(function(response){
-              console.log(response);
               current.setState({
                 open: true
               });
@@ -190,44 +156,45 @@ class ServiceGroupCreate extends Component {
 
       let {submitForm,handleOpenNClose} = this;
 
-      console.log(isFormValid);
-
       return(
         <div className="createServiceGroup">
           <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
               <Card style={styles.marginStyle}>
-                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {this.state.id != '' ? 'Update Category' : 'Create Category'} < /div>} />
+                  <CardHeader  style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {this.state.id != '' ? translate('pgr.lbl.update') : translate('pgr.lbl.create')} {translate('pgr.lbl.grievance.category') }< /div>} />
                   <CardText style={{padding:0}}>
                       <Grid>
                           <Row>
-                              <Col xs={12} md={3} sm={6}>
+                              <Col xs={12} sm={4} md={3} lg={3}>
                                   <TextField
                                       fullWidth={true}
                                       floatingLabelText={translate("core.lbl.add.name")+"*"}
                                       value={createServiceGroup.name? createServiceGroup.name : ""}
                                       errorText={fieldErrors.name ? fieldErrors.name : ""}
-                                        onChange={(e) => handleChange(e, "name", true, '')}
+                                      maxLength="100"
+                                      onChange={(e) => handleChange(e, "name", true, /^[a-zA-Z\s'_.]{0,100}$/, 'Please use only alphabets, space and special characters')}
                                       id="name"
                                   />
                               </Col>
-                              <Col xs={12} md={3} sm={6}>
+                              <Col xs={12} sm={4} md={3} lg={3}>
                                   <TextField
                                       fullWidth={true}
                                       floatingLabelText={translate("core.lbl.code")+"*"}
                                       value={createServiceGroup.code? createServiceGroup.code : ""}
                                       errorText={fieldErrors.code ? fieldErrors.code : ""}
-                                      onChange={(e) => handleChange(e, "code", true, '')}
+                                      maxLength="20"
+                                      onChange={(e) => handleChange(e, "code", true, /^[A-Z0-9]{0,20}$/,'Please use only upper case alphabets and numbers')}
                                       id="code"
                                       disabled={this.state.id ? true : false }
                                   />
                               </Col>
-                              <Col xs={12} md={3} sm={6}>
+                              <Col xs={12} sm={4} md={3} lg={3}>
                                   <TextField
                                       fullWidth={true}
                                       floatingLabelText={translate("core.lbl.description")}
                                       value={createServiceGroup.description? createServiceGroup.description : ""}
                                       errorText={fieldErrors.description ? fieldErrors.description : ""}
-                                      onChange={(e) => handleChange(e, "description", false, '')}
+                                      maxLength="250"
+                                      onChange={(e) => handleChange(e, "description", false, /^.[^]{0,250}$/, translate('pgr.lbl.max')+' 250 '+translate('pgr.lbl.characters'))}
                                       multiLine={true}
                                       id="description"
                                   />
@@ -237,13 +204,11 @@ class ServiceGroupCreate extends Component {
                   </CardText>
               </Card>
               <div style={{textAlign:'center'}}>
-
                 <RaisedButton primary={true} style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={this.state.id ? translate("pgr.lbl.update") : translate("pgr.lbl.create")}/>
-
               </div>
           </form>
           <Dialog
-               title={this.state.id != '' ? "Grievance Category Updated Successfully" : "Grievance Category Created Successfully"}
+               title={translate("pgr.lbl.success")}
                actions={<FlatButton
    				        label={translate("core.lbl.close")}
    				        primary={true}
@@ -253,6 +218,7 @@ class ServiceGroupCreate extends Component {
                open={this.state.open}
               onRequestClose={this.state.id != '' ? this.handleClose : handleOpenNClose}
              >
+             {translate('pgr.lbl.grievance.category') } {this.state.id != '' ? translate('core.lbl.updatedsuccessful') : translate('core.lbl.createdsuccessful')}
          </Dialog>
         </div>)
     }
@@ -300,21 +266,20 @@ const mapDispatchToProps = dispatch => ({
   },
 
   resetObject: (object) => {
-    console.log(object);
    dispatch({
      type: "RESET_OBJECT",
      object
    })
   },
 
-  handleChange: (e, property, isRequired, pattern) => {
-    console.log("handlechange"+e+property+isRequired+pattern);
+  handleChange: (e, property, isRequired, pattern, errorMsg) => {
     dispatch({
       type: "HANDLE_CHANGE",
       property,
       value: e.target.value,
       isRequired,
-      pattern
+      pattern,
+      errorMsg
     });
   },
   setLoadingStatus: (loadingStatus) => {

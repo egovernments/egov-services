@@ -49,7 +49,9 @@ import org.egov.wcms.service.DocumentTypeApplicationTypeService;
 import org.egov.wcms.service.DocumentTypeService;
 import org.egov.wcms.service.DonationService;
 import org.egov.wcms.service.MeterCostService;
+import org.egov.wcms.service.MeterStatusService;
 import org.egov.wcms.service.MeterWaterRatesService;
+import org.egov.wcms.service.NonMeterWaterRatesService;
 import org.egov.wcms.service.PipeSizeService;
 import org.egov.wcms.service.PropertyCategoryService;
 import org.egov.wcms.service.PropertyTypePipeSizeService;
@@ -62,8 +64,10 @@ import org.egov.wcms.web.contract.CategoryTypeRequest;
 import org.egov.wcms.web.contract.DocumentTypeApplicationTypeReq;
 import org.egov.wcms.web.contract.DocumentTypeReq;
 import org.egov.wcms.web.contract.DonationRequest;
-import org.egov.wcms.web.contract.MeterCostRequest;
+import org.egov.wcms.web.contract.MeterCostReq;
+import org.egov.wcms.web.contract.MeterStatusReq;
 import org.egov.wcms.web.contract.MeterWaterRatesRequest;
+import org.egov.wcms.web.contract.NonMeterWaterRatesReq;
 import org.egov.wcms.web.contract.PipeSizeRequest;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
 import org.egov.wcms.web.contract.PropertyTypePipeSizeRequest;
@@ -130,9 +134,15 @@ public class WaterMasterConsumer {
 
     @Autowired
     private TreatmentPlantService treatmentPlantService;
-    
+
     @Autowired
     private MeterWaterRatesService meterWaterRatesService;
+
+    @Autowired
+    private MeterStatusService meterStatusService;
+
+    @Autowired
+    private NonMeterWaterRatesService nonMeterWaterRatesService;
 
     @KafkaListener(topics = { "${kafka.topics.usagetype.create.name}", "${kafka.topics.usagetype.update.name}",
             "${kafka.topics.category.create.name}", "${kafka.topics.category.update.name}",
@@ -147,7 +157,11 @@ public class WaterMasterConsumer {
             "${kafka.topics.sourcetype.update.name}", "${kafka.topics.supplytype.create.name}",
             "${kafka.topics.supplytype.update.name}", "${kafka.topics.storagereservoir.create.name}",
             "${kafka.topics.storagereservoir.update.name}", "${kafka.topics.treatmentplant.create.name}",
-            "${kafka.topics.treatmentplant.update.name}" ,"${kafka.topics.meterwaterrates.create.name}","${kafka.topics.meterwaterrates.update.name}"})
+            "${kafka.topics.treatmentplant.update.name}", "${kafka.topics.meterwaterrates.create.name}",
+            "${kafka.topics.meterwaterrates.update.name}", "${kafka.topics.metercost.create.name}",
+            "${kafka.topics.metercost.update.name}", "${kafka.topics.meterstatus.create.name}",
+            "${kafka.topics.meterstatus.update.name}", "${kafka.topics.nonmeterwaterrates.create.name}",
+            "${kafka.topics.nonmeterwaterrates.update.name}" })
 
     public void processMessage(final Map<String, Object> consumerRecord,
             @Header(KafkaHeaders.RECEIVED_TOPIC) final String topic) {
@@ -192,9 +206,19 @@ public class WaterMasterConsumer {
             else if (applicationProperties.getUpdateDocumentTypeApplicationTypeTopicName().equals(topic))
                 docTypeApplTypeService
                         .update(objectMapper.convertValue(consumerRecord, DocumentTypeApplicationTypeReq.class));
-            else if (applicationProperties.getCreateMeterCostTopicName().equals(topic))
-                meterCostService.create(objectMapper.convertValue(consumerRecord, MeterCostRequest.class));
-            else if (applicationProperties.getCreateSourceTypeTopicName().equals(topic))
+            else if (applicationProperties.getCreateMeterCostTopicName().equals(topic)) {
+                log.info("Consuming MeterCostCreate Request");
+                meterCostService.createMeterCost(objectMapper.convertValue(consumerRecord, MeterCostReq.class));
+            } else if (applicationProperties.getUpdateMeterCostTopicName().equals(topic)) {
+                log.info("Consuming MeterCostUpdate Request");
+                meterCostService.updateMeterCost(objectMapper.convertValue(consumerRecord, MeterCostReq.class));
+            } else if (applicationProperties.getCreateMeterStatusTopicName().equals(topic)) {
+                log.info("Consuming MeterStatusCreate Request");
+                meterStatusService.createMeterStatus(objectMapper.convertValue(consumerRecord, MeterStatusReq.class));
+            } else if (applicationProperties.getUpdateMeterStatusTopicName().equals(topic)) {
+                log.info("Consuming MeterStatusUpdate Request");
+                meterStatusService.updateMeterStatus(objectMapper.convertValue(consumerRecord, MeterStatusReq.class));
+            } else if (applicationProperties.getCreateSourceTypeTopicName().equals(topic))
                 waterSourceTypeService.create(objectMapper.convertValue(consumerRecord, SourceTypeRequest.class));
             else if (applicationProperties.getUpdateSourceTypeTopicName().equals(topic))
                 waterSourceTypeService.update(objectMapper.convertValue(consumerRecord, SourceTypeRequest.class));
@@ -203,9 +227,11 @@ public class WaterMasterConsumer {
             else if (applicationProperties.getUpdateSupplyTypeTopicName().equals(topic))
                 supplyTypeService.updateSupplyType(objectMapper.convertValue(consumerRecord, SupplyTypeRequest.class));
             else if (applicationProperties.getCreateStorageReservoirTopicName().equals(topic))
-                storageReservoirService.create(objectMapper.convertValue(consumerRecord, StorageReservoirRequest.class));
+                storageReservoirService
+                        .create(objectMapper.convertValue(consumerRecord, StorageReservoirRequest.class));
             else if (applicationProperties.getUpdateStorageReservoirTopicName().equals(topic))
-                storageReservoirService.update(objectMapper.convertValue(consumerRecord, StorageReservoirRequest.class));
+                storageReservoirService
+                        .update(objectMapper.convertValue(consumerRecord, StorageReservoirRequest.class));
             else if (applicationProperties.getCreateTreatmentPlantTopicName().equals(topic))
                 treatmentPlantService.create(objectMapper.convertValue(consumerRecord, TreatmentPlantRequest.class));
             else if (applicationProperties.getUpdateTreatmentPlantTopicName().equals(topic))
@@ -214,6 +240,10 @@ public class WaterMasterConsumer {
                 meterWaterRatesService.create(objectMapper.convertValue(consumerRecord, MeterWaterRatesRequest.class));
             else if (applicationProperties.getUpdateMeterWaterRatesTopicName().equals(topic))
                 meterWaterRatesService.update(objectMapper.convertValue(consumerRecord, MeterWaterRatesRequest.class));
+            else if (applicationProperties.getCreateNonMeterWaterRatesTopicName().equals(topic))
+                nonMeterWaterRatesService.create(objectMapper.convertValue(consumerRecord, NonMeterWaterRatesReq.class));
+            else if (applicationProperties.getUpdateNonMeterWaterRatesTopicName().equals(topic))
+                nonMeterWaterRatesService.update(objectMapper.convertValue(consumerRecord, NonMeterWaterRatesReq.class));
         } catch (final Exception exception) {
             log.debug("processMessage:" + exception);
             throw exception;

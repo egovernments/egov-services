@@ -45,15 +45,14 @@ import java.util.List;
 
 import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.model.AssetCriteria;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component
-public class AssetQueryBuilder {
+import lombok.extern.slf4j.Slf4j;
 
-    private static final Logger logger = LoggerFactory.getLogger(AssetQueryBuilder.class);
+@Component
+@Slf4j
+public class AssetQueryBuilder {
 
     @Autowired
     private ApplicationProperties applicationProperties;
@@ -68,10 +67,10 @@ public class AssetQueryBuilder {
     @SuppressWarnings("rawtypes")
     public String getQuery(final AssetCriteria searchAsset, final List preparedStatementValues) {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
-        logger.info("get query");
+        log.info("get query");
         addWhereClause(selectQuery, preparedStatementValues, searchAsset);
         addPagingClause(selectQuery, preparedStatementValues, searchAsset);
-        logger.info("Query from asset querybuilde for search : " + selectQuery);
+        log.info("Query from asset querybuilde for search : " + selectQuery);
         return selectQuery.toString();
     }
 
@@ -95,7 +94,7 @@ public class AssetQueryBuilder {
             preparedStatementValues.add(searchAsset.getTenantId());
         }
 
-        if (searchAsset.getId() != null) {
+        if (searchAsset.getId() != null && !searchAsset.getId().isEmpty()) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" ASSET.id IN (" + getIdQuery(searchAsset.getId()));
         }
@@ -218,7 +217,8 @@ public class AssetQueryBuilder {
         selectQuery.append(" ORDER BY asset.name");
 
         selectQuery.append(" LIMIT ?");
-        long pageSize = Integer.parseInt(applicationProperties.commonsSearchPageSizeDefault());
+        long pageSize = Integer.parseInt(applicationProperties.getSearchPageSizeDefault());
+
         if (searchAsset.getSize() != null)
             pageSize = searchAsset.getSize();
         preparedStatementValues.add(pageSize); // Set limit to pageSize
@@ -248,7 +248,7 @@ public class AssetQueryBuilder {
 
     private static String getIdQuery(final List<Long> idList) {
         StringBuilder query = null;
-        if (idList.size() >= 1) {
+        if (!idList.isEmpty()) {
             query = new StringBuilder(idList.get(0).toString());
             for (int i = 1; i < idList.size(); i++)
                 query.append("," + idList.get(i));
@@ -260,7 +260,8 @@ public class AssetQueryBuilder {
         return "INSERT into egasset_asset " + "(id,assetcategory,name,code,department,assetdetails,description,"
                 + "dateofcreation,remarks,length,width,totalarea,modeofacquisition,status,tenantid,"
                 + "zone,revenueward,street,electionward,doorno,pincode,locality,block,properties,createdby,"
-                + "createddate,lastmodifiedby,lastmodifieddate,grossvalue,accumulateddepreciation,assetreference,version,enableyearwisedepreciation,depreciationrate)"
+                + "createddate,lastmodifiedby,lastmodifieddate,grossvalue,accumulateddepreciation,assetreference,version,"
+                + "enableyearwisedepreciation,depreciationrate)"
                 + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     }
 

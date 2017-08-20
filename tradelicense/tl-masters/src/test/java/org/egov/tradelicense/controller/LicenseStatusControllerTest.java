@@ -13,12 +13,12 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.models.AuditDetails;
-import org.egov.models.LicenseStatus;
-import org.egov.models.LicenseStatusRequest;
-import org.egov.models.LicenseStatusResponse;
-import org.egov.models.RequestInfo;
-import org.egov.models.ResponseInfo;
+import org.egov.tl.commons.web.contract.AuditDetails;
+import org.egov.tl.commons.web.contract.LicenseStatus;
+import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tl.commons.web.contract.ResponseInfo;
+import org.egov.tl.commons.web.requests.LicenseStatusRequest;
+import org.egov.tl.commons.web.requests.LicenseStatusResponse;
 import org.egov.tradelicense.TradeLicenseApplication;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.services.LicenseStatusService;
@@ -47,7 +47,7 @@ public class LicenseStatusControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
-	
+
 	@MockBean
 	KafkaTemplate kafkaTemplate;
 
@@ -79,8 +79,7 @@ public class LicenseStatusControllerTest {
 			when(licenseStatusService.createLicenseStatusMaster(any(LicenseStatusRequest.class)))
 					.thenReturn(licenseStatusResponse);
 
-			mockMvc.perform(post("/status/_create").param("tenantId", "default")
-					.contentType(MediaType.APPLICATION_JSON)
+			mockMvc.perform(post("/status/v1/_create").param("tenantId", "default").contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("LicenseStatusCreateRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("LicenseStatusCreateResponse.json")));
@@ -121,8 +120,7 @@ public class LicenseStatusControllerTest {
 			when(licenseStatusService.updateLicenseStatusMaster(any(LicenseStatusRequest.class)))
 					.thenReturn(licenseStatusResponse);
 
-			mockMvc.perform(post("/status/_update").param("tenantId", "default")
-					.contentType(MediaType.APPLICATION_JSON)
+			mockMvc.perform(post("/status/v1/_update").param("tenantId", "default").contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("LicenseStatusUpdateRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("LicenseStatusUpdateResponse.json")));
@@ -164,8 +162,7 @@ public class LicenseStatusControllerTest {
 					any(Integer[].class), any(String.class), any(String.class), any(String.class), any(Integer.class),
 					any(Integer.class))).thenReturn(licenseStatusResponse);
 
-			mockMvc.perform(post("/status/_search").param("tenantId", "default")
-					.contentType(MediaType.APPLICATION_JSON)
+			mockMvc.perform(post("/status/v1/_search").param("tenantId", "default").contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("LicenseStatusSearchRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("LicenseStatusSearchResponse.json")));

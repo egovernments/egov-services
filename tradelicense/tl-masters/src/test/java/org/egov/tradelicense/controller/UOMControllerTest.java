@@ -13,12 +13,12 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.models.AuditDetails;
-import org.egov.models.RequestInfo;
-import org.egov.models.ResponseInfo;
-import org.egov.models.UOM;
-import org.egov.models.UOMRequest;
-import org.egov.models.UOMResponse;
+import org.egov.tl.commons.web.contract.AuditDetails;
+import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tl.commons.web.contract.ResponseInfo;
+import org.egov.tl.commons.web.contract.UOM;
+import org.egov.tl.commons.web.requests.UOMRequest;
+import org.egov.tl.commons.web.requests.UOMResponse;
 import org.egov.tradelicense.TradeLicenseApplication;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.services.UOMService;
@@ -47,7 +47,7 @@ public class UOMControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
-	
+
 	@MockBean
 	KafkaTemplate kafkaTemplate;
 
@@ -74,9 +74,8 @@ public class UOMControllerTest {
 
 			when(uomService.createUomMaster(any(UOMRequest.class))).thenReturn(uomResponse);
 
-			mockMvc.perform(post("/uom/_create").param("tenantId", "default")
-					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("uomCreateRequest.json")))
-					.andExpect(status().isOk())
+			mockMvc.perform(post("/uom/v1/_create").param("tenantId", "default").contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("uomCreateRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("uomCreateResponse.json")));
 
@@ -111,9 +110,8 @@ public class UOMControllerTest {
 		try {
 
 			when(uomService.updateUomMaster(any(UOMRequest.class))).thenReturn(uomResponse);
-			mockMvc.perform(post("/uom/_update").param("tenantId", "default")
-					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("uomUpdateRequest.json")))
-					.andExpect(status().isOk())
+			mockMvc.perform(post("/uom/v1/_update").param("tenantId", "default").contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("uomUpdateRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("uomUpdateResponse.json")));
 
@@ -152,9 +150,8 @@ public class UOMControllerTest {
 					any(String.class), any(String.class), any(String.class), any(Integer.class), any(Integer.class)))
 							.thenReturn(uomResponse);
 
-			mockMvc.perform(post("/uom/_search").param("tenantId", "default")
-					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("uomSearchRequest.json")))
-					.andExpect(status().isOk())
+			mockMvc.perform(post("/uom/v1/_search").param("tenantId", "default").contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("uomSearchRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("uomSearchResponse.json")));
 

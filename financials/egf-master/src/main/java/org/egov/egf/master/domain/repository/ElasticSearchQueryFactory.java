@@ -6,25 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.egov.egf.master.web.contract.AccountCodePurposeSearchContract;
-import org.egov.egf.master.web.contract.AccountDetailKeySearchContract;
-import org.egov.egf.master.web.contract.AccountDetailTypeSearchContract;
-import org.egov.egf.master.web.contract.AccountEntitySearchContract;
-import org.egov.egf.master.web.contract.BankAccountSearchContract;
-import org.egov.egf.master.web.contract.BankBranchSearchContract;
-import org.egov.egf.master.web.contract.BankSearchContract;
-import org.egov.egf.master.web.contract.BudgetGroupSearchContract;
-import org.egov.egf.master.web.contract.ChartOfAccountDetailSearchContract;
-import org.egov.egf.master.web.contract.ChartOfAccountSearchContract;
-import org.egov.egf.master.web.contract.FinancialYearSearchContract;
-import org.egov.egf.master.web.contract.FiscalPeriodSearchContract;
-import org.egov.egf.master.web.contract.FunctionSearchContract;
-import org.egov.egf.master.web.contract.FunctionarySearchContract;
-import org.egov.egf.master.web.contract.FundSearchContract;
-import org.egov.egf.master.web.contract.FundsourceSearchContract;
-import org.egov.egf.master.web.contract.SchemeSearchContract;
-import org.egov.egf.master.web.contract.SubSchemeSearchContract;
-import org.egov.egf.master.web.contract.SupplierSearchContract;
+import org.egov.egf.master.web.contract.*;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -324,6 +306,28 @@ public class ElasticSearchQueryFactory {
         elasticSearchUtils.add(fundsourceSearchContract.getLlevel(), "llevel", boolQueryBuilder);
         elasticSearchUtils.add(fundsourceSearchContract.getType(), "type", boolQueryBuilder);
         
+        return boolQueryBuilder;
+    }
+
+    public BoolQueryBuilder searchRecovery(RecoverySearchContract recoverySearchContract) {
+        BoolQueryBuilder boolQueryBuilder = boolQuery();
+        if (recoverySearchContract.getIds() != null && !recoverySearchContract.getIds().isEmpty())
+            elasticSearchUtils.add(recoverySearchContract.getIds(), "id", boolQueryBuilder);
+        elasticSearchUtils.add(recoverySearchContract.getName(), "name", boolQueryBuilder);
+        elasticSearchUtils.add(recoverySearchContract.getCode(), "code", boolQueryBuilder);
+        elasticSearchUtils.add(recoverySearchContract.getActive(), "active", boolQueryBuilder);
+        if(recoverySearchContract.getChartOfAccount() != null)
+            elasticSearchUtils.add(recoverySearchContract.getChartOfAccount(), "chartOfAccount", boolQueryBuilder);
+        elasticSearchUtils.add(recoverySearchContract.getType(), "type", boolQueryBuilder);
+        elasticSearchUtils.add(recoverySearchContract.getFlat(), "flat", boolQueryBuilder);
+        elasticSearchUtils.add(recoverySearchContract.getPercentage(), "percentage", boolQueryBuilder);
+        elasticSearchUtils.add(recoverySearchContract.getRemitted(), "remitted", boolQueryBuilder);
+        elasticSearchUtils.add(recoverySearchContract.getIfscCode(), "ifscCode", boolQueryBuilder);
+        elasticSearchUtils.add(recoverySearchContract.getMode(), "mode", boolQueryBuilder);
+        elasticSearchUtils.add(recoverySearchContract.getRemittanceMode(), "remittanceMode", boolQueryBuilder);
+        elasticSearchUtils.add(recoverySearchContract.getAccountNumber(), "accountNumber", boolQueryBuilder);
+
+
         return boolQueryBuilder;
     }
     

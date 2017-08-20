@@ -31,12 +31,12 @@ var requestInfo = {
 var tenantId = localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default';
 
 module.exports = {
-    commonApiPost: (context, queryObject = {}, body = {}, doNotOverride = false, isTimeLong = false) => {
+    commonApiPost: (context, queryObject = {}, body = {}, doNotOverride = false, isTimeLong = false, noPageSize = false) => {
         var url = context;
         if(url && url[url.length-1] === "/")
             url = url.substring(0, url.length-1);
         if (!doNotOverride)
-            url += "?tenantId=" + tenantId;
+            url += "?tenantId=" + (localStorage.getItem("tenantId") || 'default');
         else
             url += "?"
         for (var variable in queryObject) {
@@ -45,7 +45,7 @@ module.exports = {
             }
         }
 
-        if(/_search/.test(context)) {
+        if(/_search/.test(context) && !noPageSize) {
             url += "&pageSize=500";
         }
 
@@ -61,7 +61,6 @@ module.exports = {
             return response.data;
         }).catch(function(response) {
 
-			console.log(response);
             try {
                 if (response && response.response && response.response.data && response.response.data[0] && response.response.data[0].error) {
                     var _err = response.response.data[0].error.message || "";
@@ -79,6 +78,7 @@ module.exports = {
                     var locale = localStorage.getItem('locale');
                     localStorage.clear();
                     localStorage.setItem('locale', locale);
+                    localStorage.reload = true;
                     window.location.hash = "#/";
                 } else if(response){
                     throw new Error(response);
@@ -86,14 +86,17 @@ module.exports = {
                     throw new Error("Server returned unexpected error. Please contact system administrator.");
                 }
             } catch(e) {
-                throw new Error("Oops! Something isn't right. Please try again later.");
+                if(e.message) {
+                    throw new Error(e.message);
+                } else
+                    throw new Error("Oops! Something isn't right. Please try again later.");
             }
         });
     },
-    commonApiGet: (context, queryObject = {}, doNotOverride = false) => {
+    commonApiGet: (context, queryObject = {}, doNotOverride = false, noPageSize = false) => {
         var url = context;
         if (!doNotOverride)
-            url += "?tenantId=" + tenantId;
+            url += "?tenantId=" + (localStorage.getItem("tenantId") || 'default');
         else
             url += "?"
         for (var variable in queryObject) {
@@ -102,7 +105,7 @@ module.exports = {
             }
         }
 
-        if(/_search/.test(context)) {
+        if(/_search/.test(context) && !noPageSize) {
             url += "&pageSize=500";
         }
         return instance.get(url).then(function(response) {

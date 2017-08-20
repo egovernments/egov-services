@@ -59,8 +59,8 @@ public class TaxPeriodRespository {
 				ps.setString(6, taxperiod.getFinancialYear());
 				ps.setString(7, taxperiod.getAuditDetails().getCreatedBy());
 				ps.setString(8, taxperiod.getAuditDetails().getLastModifiedBy());
-				ps.setLong(9, taxperiod.getAuditDetails().getCreatedTime());
-				ps.setLong(10, taxperiod.getAuditDetails().getLastModifiedTime());
+				ps.setLong(9, getLong(taxperiod.getAuditDetails().getCreatedTime()));
+				ps.setLong(10, getLong(taxperiod.getAuditDetails().getLastModifiedTime()));
 				return ps;
 			}
 
@@ -96,8 +96,8 @@ public class TaxPeriodRespository {
 				ps.setString(6, taxperiod.getFinancialYear());
 				ps.setString(7, taxperiod.getAuditDetails().getCreatedBy());
 				ps.setString(8, taxperiod.getAuditDetails().getLastModifiedBy());
-				ps.setLong(9, taxperiod.getAuditDetails().getCreatedTime());
-				ps.setLong(10, taxperiod.getAuditDetails().getLastModifiedTime());
+				ps.setLong(9, getLong(taxperiod.getAuditDetails().getCreatedTime()));
+				ps.setLong(10, getLong(taxperiod.getAuditDetails().getLastModifiedTime()));
 				ps.setString(11, tenantId);
 				return ps;
 			}
@@ -115,10 +115,12 @@ public class TaxPeriodRespository {
 	 * @param code
 	 * @return {@link TaxPeriod} List of taxPeriods
 	 */
-	public List<TaxPeriod> searchTaxPeriod(String tenantId, String validDate, String code) {
+	public List<TaxPeriod> searchTaxPeriod(String tenantId, String validDate, String code, String fromDate,
+			String toDate, String sortTaxPeriod) {
 
 		List<Object> preparedStatementValues = new ArrayList<Object>();
-		String searchQuery = TaxPeriodBuilder.getSearchQuery(tenantId, validDate, code, preparedStatementValues);
+		String searchQuery = TaxPeriodBuilder.getSearchQuery(tenantId, validDate, code, fromDate, toDate, sortTaxPeriod,
+				preparedStatementValues);
 
 		List<TaxPeriod> taxPeriods = null;
 		try {
@@ -173,7 +175,7 @@ public class TaxPeriodRespository {
 	 * @return {@link String}
 	 */
 	private String getString(Object object) {
-		return object == null ? "" : object.toString();
+		return object == null ? null : object.toString();
 	}
 
 	/**

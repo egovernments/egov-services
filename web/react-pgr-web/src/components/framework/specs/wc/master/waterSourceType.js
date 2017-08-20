@@ -3,6 +3,7 @@ var dat = {
 		"numCols": 12/3,
 		"url": "/wcms/masters/sourcetype/_create",
 		"tenantIdRequired": true,
+		"idJsonPath": "SourceTypes[0].code",
 		"objectName": "SourceType",
 		"groups": [
 			{
@@ -11,7 +12,7 @@ var dat = {
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "SourceType.name",
+							"jsonPath": "SourceType[0].name",
 							"label": "wc.create.sourceType",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
@@ -22,7 +23,7 @@ var dat = {
 						},
 						{
 							"name": "description",
-							"jsonPath": "SourceType.description",
+							"jsonPath": "SourceType[0].description",
 							"label": "wc.create.description",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
 							"type": "text",
@@ -33,12 +34,13 @@ var dat = {
 						},
 						{
 							"name": "Active",
-							"jsonPath": "SourceType.active",
+							"jsonPath": "SourceType[0].active",
 							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",
 							"isRequired": false,
 							"isDisabled": false,
+							"defaultValue":true,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						}
@@ -75,7 +77,6 @@ var dat = {
 							"pattern": "",
 							"type": "checkbox",
 							"isRequired": false,
-							"defaultValue":true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
@@ -154,7 +155,7 @@ var dat = {
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "SourceType.name",
+							"jsonPath": "SourceType[0].name",
 							"label": "wc.create.sourceType",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
@@ -165,7 +166,7 @@ var dat = {
 						},
 						{
 							"name": "description",
-							"jsonPath": "SourceType.description",
+							"jsonPath": "SourceType[0].description",
 							"label": "wc.create.description",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
 							"type": "text",
@@ -176,7 +177,7 @@ var dat = {
 						},
 						{
 							"name": "Active",
-							"jsonPath": "SourceType.active",
+							"jsonPath": "SourceType[0].active",
 							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",

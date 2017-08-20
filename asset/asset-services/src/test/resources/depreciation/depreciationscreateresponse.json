@@ -1,0 +1,36 @@
+{
+    "responseInfo": {
+        "apiId": null,
+        "ver": "v1",
+        "ts": "Sat Aug 19 16:50:40 IST 2017",
+        "resMsgId": null,
+        "msgId": null,
+        "status": null
+    },
+    "depreciation": {
+        "auditDetails": {
+            "createdBy": "5",
+            "createdDate": 1495978422356,
+            "lastModifiedBy": "5",
+            "lastModifiedDate": 1495978422356
+        },
+        "depreciationDetails": [
+            {
+                "id": 6,
+                "assetId": 576,
+                "status": "SUCCESS",
+                "depreciationRate": 14,
+                "valueBeforeDepreciation": 5000,
+                "depreciationValue": 700,
+                "valueAfterDepreciation": 4300,
+                "voucherReference": "1/GJV/00000214/08/2017-18",
+                "reasonForFailure": null
+            }
+        ],
+        "tenantId": "ap.kurnool",
+        "financialYear": "2017-18",
+        "fromDate": 1490985000000,
+        "toDate": 1522434600000,
+        "assetIds": null
+    }
+}

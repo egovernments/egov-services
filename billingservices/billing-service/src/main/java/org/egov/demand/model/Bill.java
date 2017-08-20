@@ -31,6 +31,8 @@ public class Bill {
 	private String payeeName;
 
 	private String payeeAddress;
+	
+	private String mobileNumber;
 
 	private String payeeEmail;
 

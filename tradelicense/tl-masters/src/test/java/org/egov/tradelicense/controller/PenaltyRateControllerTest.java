@@ -13,12 +13,12 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.models.AuditDetails;
-import org.egov.models.PenaltyRate;
-import org.egov.models.PenaltyRateRequest;
-import org.egov.models.PenaltyRateResponse;
-import org.egov.models.RequestInfo;
-import org.egov.models.ResponseInfo;
+import org.egov.tl.commons.web.contract.AuditDetails;
+import org.egov.tl.commons.web.contract.PenaltyRate;
+import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tl.commons.web.contract.ResponseInfo;
+import org.egov.tl.commons.web.requests.PenaltyRateRequest;
+import org.egov.tl.commons.web.requests.PenaltyRateResponse;
 import org.egov.tradelicense.TradeLicenseApplication;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.services.PenaltyRateService;
@@ -47,7 +47,7 @@ public class PenaltyRateControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
-	
+
 	@MockBean
 	KafkaTemplate kafkaTemplate;
 
@@ -75,7 +75,7 @@ public class PenaltyRateControllerTest {
 			when(penaltyRateService.createPenaltyRateMaster(any(String.class), any(PenaltyRateRequest.class)))
 					.thenReturn(penaltyRateResponse);
 
-			mockMvc.perform(post("/penaltyrate/_create").param("tenantId", "default")
+			mockMvc.perform(post("/penaltyrate/v1/_create").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("penaltyRateCreateRequest.json")))
 					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -112,7 +112,7 @@ public class PenaltyRateControllerTest {
 
 			when(penaltyRateService.updatePenaltyRateMaster(any(PenaltyRateRequest.class)))
 					.thenReturn(penaltyRateResponse);
-			mockMvc.perform(post("/penaltyrate/_update").param("tenantId", "default")
+			mockMvc.perform(post("/penaltyrate/v1/_update").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("penaltyRateUpdateRequest.json")))
 					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -153,9 +153,9 @@ public class PenaltyRateControllerTest {
 					any(Integer[].class), any(String.class), any(Integer.class), any(Integer.class)))
 							.thenReturn(penaltyRateResponse);
 
-			mockMvc.perform(post("/penaltyrate/_search").param("tenantId", "default")
-					.param("applicationType", "New").contentType(MediaType.APPLICATION_JSON)
-					.content(getFileContents("penaltyRateSearchRequest.json"))).andExpect(status().isOk())
+			mockMvc.perform(post("/penaltyrate/v1/_search").param("tenantId", "default").param("applicationType", "New")
+					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("penaltyRateSearchRequest.json")))
+					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("penaltyRateSearchResponse.json")));
 

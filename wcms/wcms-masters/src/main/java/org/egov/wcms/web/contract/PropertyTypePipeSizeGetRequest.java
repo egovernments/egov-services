@@ -59,10 +59,13 @@ import lombok.ToString;
 public class PropertyTypePipeSizeGetRequest {
 
     private List<Long> id;
+    private String code;
 
     private String propertyTypeName;
 
     private Double pipeSize;
+    
+    private double pipeSizeInInch;
 
     private String propertyTypeId;
 

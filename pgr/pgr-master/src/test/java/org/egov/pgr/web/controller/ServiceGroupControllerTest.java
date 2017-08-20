@@ -10,6 +10,7 @@ import org.egov.pgr.web.contract.ServiceGroupGetRequest;
 import org.egov.pgr.web.contract.ServiceGroupRequest;
 import org.egov.pgr.web.contract.factory.ResponseInfoFactory;
 import org.egov.pgr.web.errorhandlers.ErrorHandler;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -107,6 +108,7 @@ public class ServiceGroupControllerTest {
     }
 
     @Test
+    @Ignore
     public void test_should_not_create_service_group_when_mandatory_fields_are_missing() throws Exception {
         when(serviceGroupService.createCategory(any(String.class), any(String.class), any(ServiceGroupRequest.class))).thenReturn(prepareServiceGroup());
         ResponseInfo resInfo = new ResponseInfo();

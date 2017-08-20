@@ -50,7 +50,6 @@ import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
-import org.egov.wcms.model.AuditDetails;
 import org.egov.wcms.model.DocumentType;
 import org.egov.wcms.repository.builder.DocumentTypeQueryBuilder;
 import org.egov.wcms.repository.rowmapper.DocumentTypeRowMapper;
@@ -63,6 +62,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DocumentTypeRepositoryTest {
@@ -78,6 +78,9 @@ public class DocumentTypeRepositoryTest {
 
     @InjectMocks
     private DocumentTypeRepository docTypeRepository;
+    
+    @Mock
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Test
     public void test_Should_Create_DocumentType_Valid() {
@@ -89,9 +92,10 @@ public class DocumentTypeRepositoryTest {
     @Test
     public void test_Should_Create_DocumentType_Invalid() {
         final DocumentTypeReq docTypeRequest = getDocumentTypeRequest();
-        final DocumentType docType = docTypeRequest.getDocumentType();
+        final List<DocumentType> documentTypeList = new ArrayList<>();
+        documentTypeList.add(getDocumentType());
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
-        assertTrue(!docType.equals(docTypeRepository.persistCreateDocumentType(docTypeRequest)));
+        assertTrue(!documentTypeList.equals(docTypeRepository.persistCreateDocumentType(docTypeRequest)));
     }
 
     @Test
@@ -110,17 +114,14 @@ public class DocumentTypeRepositoryTest {
 
     private DocumentTypeReq getDocumentTypeRequest() {
         final DocumentTypeReq docTypeRequest = new DocumentTypeReq();
-        final DocumentType docType = new DocumentType();
-        docType.setCode("23");
-        docType.setName("New Document Name");
-        docType.setDescription("Document Name Description");
-        docType.setActive(true);
+        final List<DocumentType> docTypeList = new ArrayList<>();
+        docTypeList.add(getDocumentType());
         final RequestInfo requestInfo = new RequestInfo();
         final User newUser = new User();
         newUser.setId(2L);
         requestInfo.setUserInfo(newUser);
         docTypeRequest.setRequestInfo(requestInfo);
-        docTypeRequest.setDocumentType(docType);
+        docTypeRequest.setDocumentType(docTypeList);
         return docTypeRequest;
     }
 
@@ -143,16 +144,10 @@ public class DocumentTypeRepositoryTest {
         final User user = new User();
         user.setId(1L);
         requestInfo.setUserInfo(user);
-        final DocumentType docType = new DocumentType();
-        final AuditDetails auditDetails = new AuditDetails();
-        docType.setAuditDetails(auditDetails);
-        docType.setCode("10");
-        docType.setActive(true);
-        docType.getAuditDetails().setCreatedBy(1L);
-        docType.setName("test name");
-        docType.setDescription("test description");
+        final List<DocumentType> docTypeList = new ArrayList<>();
+        docTypeList.add(getDocumentType());
         docTypeRequest.setRequestInfo(requestInfo);
-        docTypeRequest.setDocumentType(docType);
+        docTypeRequest.setDocumentType(docTypeList);
 
         assertNotNull(docTypeRepository.persistModifyDocumentType(docTypeRequest));
 
@@ -162,18 +157,22 @@ public class DocumentTypeRepositoryTest {
     public void test_throwException_Modify_DocumentType() throws Exception {
         final DocumentTypeReq docTypeRequest = new DocumentTypeReq();
         final RequestInfo requestInfo = new RequestInfo();
-        final DocumentType docType = new DocumentType();
-        docType.setCode("10");
-        docType.setActive(true);
-        docType.getAuditDetails().setCreatedBy(1L);
-        docType.setName("test name");
-        docType.setDescription("test description");
-
+        final List<DocumentType> docTypeList = new ArrayList<>();
+        docTypeList.add(getDocumentType());
         docTypeRequest.setRequestInfo(requestInfo);
-        docTypeRequest.setDocumentType(docType);
+        docTypeRequest.setDocumentType(docTypeList);
 
         assertNotNull(docTypeRepository.persistModifyDocumentType(docTypeRequest));
 
+    }
+
+    private DocumentType getDocumentType() {
+        final DocumentType docType = new DocumentType();
+        docType.setCode("23");
+        docType.setName("New Document Name");
+        docType.setDescription("Document Name Description");
+        docType.setActive(true);
+        return docType;
     }
 
 }

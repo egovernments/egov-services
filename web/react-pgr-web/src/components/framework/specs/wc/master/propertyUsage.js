@@ -3,6 +3,7 @@ var dat = {
 		"numCols": 12/3,
 		"url": "/wcms/masters/propertytype-usagetype/_create",
 		"tenantIdRequired": true,
+		"idJsonPath": "PropertyTypeUsageTypes[0].id",
 		"useTimestamp": true,
 		"objectName": "PropertyTypeUsageType",
 		"groups": [
@@ -12,11 +13,11 @@ var dat = {
 				"fields": [
 					{
 						"name": "propertyType",
-						"jsonPath": "PropertyTypeUsageType.propertyType",
+						"jsonPath": "PropertyTypeUsageType[0].propertyType",
 						"label": "wc.create.propertyType",
 						"pattern": "",
 						"type": "singleValueList",
-						"url": "/pt-property/property/propertytypes/_search?|$..name|$..name",
+						"url": "/pt-property/property/propertytypes/_search?&active=true|$..name|$..name",
 						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
@@ -24,11 +25,11 @@ var dat = {
 					},
 					{
 						"name": "usageType",
-						"jsonPath": "PropertyTypeUsageType.usageType",
+						"jsonPath": "PropertyTypeUsageType[0].usageType",
 						"label": "wc.create.usageType",
 						"pattern": "",
 						"type": "singleValueList",
-						"url": "/pt-property/property/usages/_search?|$..name|$..name",
+						"url": "/pt-property/property/usages/_search?&active=true|$..name|$..name",
 						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
@@ -36,13 +37,13 @@ var dat = {
 					},
 						{
 							"name": "Active",
-							"jsonPath": "PropertyTypeUsageType.active",
+							"jsonPath": "PropertyTypeUsageType[0].active",
 							"label": "Active",
 							"pattern": "",
 							"type": "checkbox",
 							"isRequired": false,
 							"isDisabled": false,
-							"default": true,
+							"defaultValue":true,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						}
@@ -67,7 +68,7 @@ var dat = {
 						"label": "wc.create.propertyType",
 						"pattern": "",
 						"type": "singleValueList",
-						"url": "/pt-property/property/propertytypes/_search?|$..name|$..name",
+						"url": "/pt-property/property/propertytypes/_search?&active=true|$..name|$..name",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
@@ -79,7 +80,7 @@ var dat = {
 						"label": "wc.create.usageType",
 						"pattern": "",
 						"type": "singleValueList",
-						"url": "/pt-property/property/usages/_search?|$..name|$..name",
+						"url": "/pt-property/property/usages/_search?&active=true|$..name|$..name",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
@@ -93,7 +94,6 @@ var dat = {
 							"type": "checkbox",
 							"isRequired": false,
 							"isDisabled": false,
-							"defaultValue": true,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						}
@@ -161,7 +161,6 @@ var dat = {
 		"searchUrl": "/wcms/masters/propertytype-usagetype/_search?id={id}",
 		"url":"/wcms/masters/propertytype-usagetype/{PropertyTypeUsageType.id}/_update",
 		"tenantIdRequired": true,
-		"isResponseArray":true,
 		"useTimestamp": true,
 		"objectName": "PropertyTypeUsageType",
 		"groups": [
@@ -171,11 +170,11 @@ var dat = {
 				"fields": [
 					{
 						"name": "propertyType",
-						"jsonPath": "PropertyTypeUsageType.propertyType",
+						"jsonPath": "PropertyTypeUsageType[0].propertyType",
 						"label": "wc.create.propertyType",
 						"pattern": "",
 						"type": "singleValueList",
-						"url": "/pt-property/property/propertytypes/_search?|$..name|$..name",
+						"url": "/pt-property/property/propertytypes/_search?&active=true|$..name|$..name",
 						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
@@ -183,11 +182,11 @@ var dat = {
 					},
 					{
 						"name": "usageType",
-						"jsonPath": "PropertyTypeUsageType.usageType",
+						"jsonPath": "PropertyTypeUsageType[0].usageType",
 						"label": "wc.create.usageType",
 						"pattern": "",
 						"type": "singleValueList",
-						"url": "/pt-property/property/usages/_search?|$..name|$..name",
+						"url": "/pt-property/property/usages/_search?&active=true|$..name|$..name",
 						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
@@ -195,7 +194,7 @@ var dat = {
 					},
 						{
 							"name": "Active",
-							"jsonPath": "PropertyTypeUsageType.active",
+							"jsonPath": "PropertyTypeUsageType[0].active",
 							"label": "Active",
 							"pattern": "",
 							"type": "checkbox",

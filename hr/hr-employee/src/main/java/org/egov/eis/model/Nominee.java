@@ -69,6 +69,7 @@ public class Nominee {
 	private Long id;
 
 	@Valid
+	@NotNull
 	private NominatingEmployee employee;
 
 	@NotNull

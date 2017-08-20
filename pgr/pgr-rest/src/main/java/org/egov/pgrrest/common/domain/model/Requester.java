@@ -44,6 +44,13 @@ public class Requester {
         return m.matches();
     }
 
+    public boolean isMobileNumberValid(){
+        String mobileNumberPattern = "^[0-9]{10}$";
+        Pattern p = Pattern.compile(mobileNumberPattern);
+        Matcher m = p.matcher(mobile);
+        return m.matches();
+    }
+
     public void maskMobileAndEmailDetails() {
         this.mobile = null;
         this.email = null;

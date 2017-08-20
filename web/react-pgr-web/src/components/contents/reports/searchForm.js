@@ -10,9 +10,9 @@ import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 import Api from '../../../api/api';
 import ShowField from './showField';
+import {translate} from '../../common/common';
 import jp from "jsonpath";
 import _ from 'lodash';
-
 
 const styles = {
   errorStyle: {
@@ -49,7 +49,12 @@ class ShowForm extends Component {
 
     // console.log(e);
     let {metaData,setMetaData}=this.props;
-    this.props.handleChange(e, property, isRequired, pattern);
+    // console.log(e, property, isRequired, pattern);
+    if(property === 'fromDate' || property === 'toDate'){
+      this.checkDate(e.target.value, property, isRequired, pattern);
+    }else{
+      this.props.handleChange(e, property, isRequired, pattern);
+    }
 
     // console.log(metaData);
     if(metaData.hasOwnProperty("reportDetails") && metaData.reportDetails.searchParams.length > 0)
@@ -97,6 +102,48 @@ class ShowForm extends Component {
 
   }
 
+  checkDate = (value, name, required, pattern) => {
+    let e={
+      target:{
+        value:value
+      }
+    }
+    if(name == 'fromDate'){
+      let startDate = value;
+      let endDate = this.props.searchForm.toDate;
+      this.props.handleChange(e, name, required, pattern);
+      this.validateDate(startDate, endDate, 'fromDate');//3rd param to denote whether field fails
+    }else{
+      let endDate = value;
+      let startDate = this.props.searchForm.fromDate;
+      this.props.handleChange(e, name, required, pattern);
+      this.validateDate(startDate, endDate, 'toDate');//3rd param to denote whether field fails
+    }
+  }
+
+  validateDate = (startDate, endDate, field) => {
+    if(startDate && endDate){
+      let sD = new Date(startDate);
+      sD.setHours(0, 0, 0, 0);
+      let eD = new Date(endDate);
+      eD.setHours(0, 0, 0, 0);
+      if(eD >= sD){
+          this.setState({datefield : ''})
+          this.setState({dateError : ''})
+      }else{
+        let e={
+          target:{
+            value:''
+          }
+        }
+        this.props.handleChange(e, field, false, '');
+        this.setState({datefield : field});
+        this.setState({dateError :
+          field === 'toDate' ? translate('pgr.lbl.dategreater') : translate('pgr.lbl.datelesser')
+        })
+      }
+    }
+  }
 
   handleFormFields = () => {
     let {currentThis}=this;
@@ -108,9 +155,26 @@ class ShowForm extends Component {
       {
         item["value"]=_.isEmpty(searchForm)?"":searchForm[item.name];
         return (
-          <ShowField key={index} obj={item} handler={this.handleChange}/>
+          <ShowField key={index} obj={item} dateField={this.state.datefield} dateError={this.state.dateError} handler={this.handleChange}/>
         );
       })
+    }
+  }
+
+  componentWillReceiveProps(nextProps){
+    if((this.props.metaData.reportDetails && nextProps.metaData.reportDetails) && (nextProps.metaData.reportDetails !== this.props.metaData.reportDetails)){
+      // console.log(nextProps.metaData.reportDetails.reportName, this.props.match.params.moduleName);
+      this.setState({reportName : nextProps.metaData.reportDetails.reportName});
+      this.setState({moduleName : this.props.match.params.moduleName});
+      let {initForm,setForm} = this.props;
+      let {searchParams}=!_.isEmpty(nextProps.metaData)?nextProps.metaData.reportDetails:{searchParams:[]};
+      let required=[];
+      for (var i = 0; i < searchParams.length; i++) {
+        if (searchParams.isMandatory || searchParams.hasOwnProperty("isMandatory")?false:true) {
+          required.push(searchParams.name)
+        }
+      }
+      initForm(required);
     }
   }
 
@@ -119,32 +183,34 @@ class ShowForm extends Component {
     let {initForm,metaData,setForm} = this.props;
     let {searchParams}=!_.isEmpty(metaData)?metaData.reportDetails:{searchParams:[]};
     let required=[];
+    //console.log(this.props.match.params.reportName, this.props.match.params.moduleName);
+    this.setState({reportName : this.props.match.params.reportName});
+    this.setState({moduleName : this.props.match.params.moduleName});
     for (var i = 0; i < searchParams.length; i++) {
       if (searchParams.isMandatory || searchParams.hasOwnProperty("isMandatory")?false:true) {
         required.push(searchParams.name)
       }
     }
-    initForm();
-    setForm(required);
+    initForm(required);
+    //setForm(required);
   }
-
-
 
   search(e)
   {
     e.preventDefault();
-
       let {showTable,changeButtonText,setReportResult,searchForm,metaData,setFlag,setSearchParams}=this.props;
       let searchParams=[]
 
+      // (variable=="fromDate"?new Date(Date(searchForm[variable]).getFullYear()+"-"+Date(searchForm[variable]).getMonth()+"-"+Date(searchForm[variable]).getDate()+" "+"00:00:00").getTime():new Date(Date(searchForm[variable]).getFullYear()+"-"+Date(searchForm[variable]).getMonth()+"-"+Date(searchForm[variable]).getDate()+" "+"23:59:00").getTime())
 
       for (var variable in searchForm) {
         // console.log(variable);
-
+        let input=this.state.moduleName=="pgr"?
+              (typeof(searchForm[variable])=="object"?variable=="fromDate"?(new Date(searchForm[variable]).getFullYear() + "-" + (new Date(searchForm[variable]).getMonth()>9?(new Date(searchForm[variable]).getMonth()+1):("0"+(new Date(searchForm[variable]).getMonth()+1))) + "-" +(new Date(searchForm[variable]).getDate()>9?new Date(searchForm[variable]).getDate():"0"+new Date(searchForm[variable]).getDate())+" "+"00:00:00"):(new Date(searchForm[variable]).getFullYear() + "-" + (new Date(searchForm[variable]).getMonth()>9?(new Date(searchForm[variable]).getMonth()+1):("0"+(new Date(searchForm[variable]).getMonth()+1))) + "-" +(new Date(searchForm[variable]).getDate()>9?new Date(searchForm[variable]).getDate():"0"+new Date(searchForm[variable]).getDate())+" "+"23:59:59"):searchForm[variable]):(typeof(searchForm[variable])=="object"?new Date().getTime():searchForm[variable])
         searchParams.push({
           name:variable,
           // value:typeof(searchForm[variable])=="object"?new Date(searchForm[variable]).getTime():searchForm[variable]
-          input:typeof(searchForm[variable])=="object"?variable=="fromDate"?(new Date(searchForm[variable]).getFullYear() + "-" + (new Date(searchForm[variable]).getMonth()>9?(new Date(searchForm[variable]).getMonth()+1):("0"+(new Date(searchForm[variable]).getMonth()+1))) + "-" +(new Date(searchForm[variable]).getDate()>9?new Date(searchForm[variable]).getDate():"0"+new Date(searchForm[variable]).getDate())+" "+"00:00:00"):(new Date(searchForm[variable]).getFullYear() + "-" + (new Date(searchForm[variable]).getMonth()>9?(new Date(searchForm[variable]).getMonth()+1):("0"+(new Date(searchForm[variable]).getMonth()+1))) + "-" +(new Date(searchForm[variable]).getDate()>9?new Date(searchForm[variable]).getDate():"0"+new Date(searchForm[variable]).getDate())+" "+"23:59:59"):searchForm[variable]
+          input
 
         })
       }
@@ -158,25 +224,26 @@ class ShowForm extends Component {
       setSearchParams(searchParams);
 
 
-      let response=Api.commonApiPost("pgr-master/report/_get",{},{tenantId:"default",reportName:metaData.reportDetails.reportName,searchParams}).then(function(response)
+      let response=Api.commonApiPost("/report/"+this.state.moduleName+"/_get",{},{tenantId:"default",reportName:this.state.reportName,searchParams}).then(function(response)
       {
         // console.log(response)
-        setReportResult(response)
+        setReportResult(response);
+        // console.log("Show Table");
+        showTable(true);
         setFlag(1);
       },function(err) {
           // console.log(err);
+          showTable(false);
           alert("Select all mandatory fields or try again later");
 
       });
-
-      // console.log("Show Table");
 
       changeButtonText("Search Again");
       // this.setState({searchBtnText:'Search Again'})
 
       //call api
       // setReportResult(resForm);
-      showTable(true);
+
   }
 
   render() {
@@ -192,10 +259,10 @@ class ShowForm extends Component {
       metaData
     } = this.props;
     let {search} = this;
-    console.log(metaData);
+    //console.log(metaData);
     // console.log(searchForm);
     return (
-      <div className="searchForm">
+      <div className="">
         <form onSubmit={(e) => {
           search(e)
         }}>
@@ -224,11 +291,12 @@ class ShowForm extends Component {
   }
 }
 
-const mapStateToProps = state => ({searchForm: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText,metaData:state.report.metaData});
+const mapStateToProps = state => {
+  return ({searchForm: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText,metaData:state.report.metaData});
+}
 
 const mapDispatchToProps = dispatch => ({
   setForm: (required=[],pattern=[]) => {
-    console.log(required);
     dispatch({
       type: "SET_FORM",
       form:{},
@@ -246,23 +314,23 @@ const mapDispatchToProps = dispatch => ({
       }
     });
   },
-  initForm: () => {
+  initForm: (required=[]) => {
     dispatch({
       type: "RESET_STATE",
       validationData: {
         required: {
           current: [],
-          required: [ ]
+          required: required
         },
         pattern: {
           current: [],
-          required: ["assessmentNo", "oldAssessmentNo", "mobileNo", "aadharNo", "doorNo"]
+          required: []
         }
       }
     });
   },
   handleChange: (e, property, isRequired, pattern) => {
-    dispatch({type: "HANDLE_CHANGE", property, value: e.target.value, isRequired, pattern});
+      dispatch({type: "HANDLE_CHANGE", property, value: e.target.value, isRequired, pattern});
   },
   handleChangeNextOne: (e, property, propertyOne, isRequired, pattern) => {
     dispatch({

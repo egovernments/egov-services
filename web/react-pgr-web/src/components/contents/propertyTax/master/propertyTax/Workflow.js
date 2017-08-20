@@ -178,7 +178,7 @@ class Workflow extends Component {
 
     if(hasData){
         Api.commonApiPost( '/hr-employee/employees/_search', query).then((res)=>{
-		  res.Employee.unshift({id:-1, name:'None'});
+		  res.Employee.unshift({id:-1,assignments:[{position:-1}], name:'None'});
           currentThis.setState({approver: res.Employee})
       }).catch((err)=> {
         currentThis.setState({
@@ -206,6 +206,17 @@ class Workflow extends Component {
             return list.map((item)=>
             {
                 return (<MenuItem key={item.id} value={item.id} primaryText={item.name}/>)
+            })
+        }
+    }
+	
+		
+    const renderApprover = function(list,listName="") {
+        if(list)
+        {	
+            return list.map((item)=>
+            {console.log(item);
+                return (<MenuItem key={item.id} value={item.assignments[0].position} primaryText={item.name}/>)
             })
         }
     }
@@ -238,7 +249,7 @@ class Workflow extends Component {
                                         <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
                                                   floatingLabelText="Department Name *"
-                                                  errorText={fieldErrors.workflowDepartment ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.workflowDepartment}</span>: ""}
+                                                  errorText={fieldErrors.workflowDepartment ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.workflowDepartment}</span>: ""}
                                                   value={workflow.workflowDepartment ? workflow.workflowDepartment :""}
                                                   onChange={(event, index, value) => {
 													(value == -1) ? value = '' : '';  
@@ -260,7 +271,7 @@ class Workflow extends Component {
                                         <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
                                                   floatingLabelText="Designation Name *"
-                                                  errorText={fieldErrors.workflowDesignation ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.workflowDesignation}</span>: ""}
+                                                  errorText={fieldErrors.workflowDesignation ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.workflowDesignation}</span>: ""}
                                                   value={workflow.workflowDesignation ? workflow.workflowDesignation :""}
                                                   onChange={(event, index, value) => {
 													  (value == -1) ? value = '' : '';
@@ -282,13 +293,13 @@ class Workflow extends Component {
                                         <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
                                                   floatingLabelText="Approver Name *"
-                                                  errorText={fieldErrors.approver ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.approver}</span>: ""}
+                                                  errorText={fieldErrors.approver ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.approver}</span>: ""}
                                                   value={workflow.approver ? workflow.approver : ""}
                                                   onChange={(event, index, value) => {
 													  (value == -1) ? value = '' : '';
                                                     var e = {
                                                       target: {
-                                                        value: value
+                                                        value: value 
                                                       }
                                                     };
                                                     handleChange(e, "approver", true, "")}}
@@ -297,7 +308,7 @@ class Workflow extends Component {
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                                   >
-                                                    {renderOption(this.state.approver)}
+                                                    {renderApprover(this.state.approver)}
                                               </SelectField>
                                         </Col>
 										<Col xs={12} md={3} sm={6}>

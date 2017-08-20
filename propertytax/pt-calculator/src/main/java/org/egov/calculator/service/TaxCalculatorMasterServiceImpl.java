@@ -7,10 +7,12 @@ import java.util.Map;
 
 import org.egov.calculator.config.PropertiesManager;
 import org.egov.calculator.exception.InvalidInputException;
+import org.egov.calculator.exception.InvalidPenaltyDataException;
 import org.egov.calculator.repository.FactorRepository;
 import org.egov.calculator.repository.GuidanceValueRepostory;
 import org.egov.calculator.repository.TaxPeriodRespository;
 import org.egov.calculator.repository.TaxRatesRepository;
+import org.egov.calculator.utility.ConstantUtility;
 import org.egov.models.AuditDetails;
 import org.egov.models.CalculationFactor;
 import org.egov.models.CalculationFactorRequest;
@@ -38,7 +40,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import lombok.extern.slf4j.Slf4j;
-
 
 /**
  * Description : CalculatorService interface implementation class
@@ -127,10 +128,12 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 			case OCCUPANCY:
 
 				params.put("factorType", "occuapancies");
-				log.info("TaxCalculatorMasterServiceImpl occuapancies uri is:" +uri+ "\n TaxCalculatorMasterServiceImpl occuapancies is:" +requestInfoWrapper+ "occuapancies params :" +params);
+				log.info("TaxCalculatorMasterServiceImpl occuapancies uri is:" + uri
+						+ "\n TaxCalculatorMasterServiceImpl occuapancies is:" + requestInfoWrapper
+						+ "occuapancies params :" + params);
 				OccuapancyMasterResponse occuapancyMasterResponse = restTemplate.postForObject(uri.toString(),
 						requestInfoWrapper, OccuapancyMasterResponse.class, params);
-				log.info("TaxCalculatorMasterServiceImpl OccupancyMasterResponse is:" +occuapancyMasterResponse);
+				log.info("TaxCalculatorMasterServiceImpl OccupancyMasterResponse is:" + occuapancyMasterResponse);
 				if (occuapancyMasterResponse.getOccuapancyMasters().size() == 0) {
 					throw new InvalidInputException(calculationFactorRequest.getRequestInfo());
 				}
@@ -138,10 +141,12 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 			case USAGE:
 
 				params.put("factorType", "usages");
-				log.info("TaxCalculatorMasterServiceImpl USAGE uri is:" +uri+ "\n TaxCalculatorMasterServiceImpl USAGE is:" +requestInfoWrapper+ "USAGE params :" +params);
+				log.info("TaxCalculatorMasterServiceImpl USAGE uri is:" + uri
+						+ "\n TaxCalculatorMasterServiceImpl USAGE is:" + requestInfoWrapper + "USAGE params :"
+						+ params);
 				UsageMasterResponse usageMasterResponse = restTemplate.postForObject(uri.toString(), requestInfoWrapper,
 						UsageMasterResponse.class, params);
-				log.info("TaxCalculatorMasterServiceImpl UsageMasterResponse is:" +usageMasterResponse);
+				log.info("TaxCalculatorMasterServiceImpl UsageMasterResponse is:" + usageMasterResponse);
 				if (usageMasterResponse.getUsageMasters().size() == 0) {
 					throw new InvalidInputException(calculationFactorRequest.getRequestInfo());
 				}
@@ -149,22 +154,26 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 			case STRUCTURE:
 
 				params.put("factorType", "structureclasses");
-				log.info("TaxCalculatorMasterServiceImpl structureclasses uri is:" +uri+ "\n TaxCalculatorMasterServiceImpl structureclasses is:" +requestInfoWrapper+ "structureclasses params :" +params);
-			    StructureClassResponse structureClassResponse = restTemplate.postForObject(uri.toString(),
+				log.info("TaxCalculatorMasterServiceImpl structureclasses uri is:" + uri
+						+ "\n TaxCalculatorMasterServiceImpl structureclasses is:" + requestInfoWrapper
+						+ "structureclasses params :" + params);
+				StructureClassResponse structureClassResponse = restTemplate.postForObject(uri.toString(),
 						requestInfoWrapper, StructureClassResponse.class, params);
-			    log.info("TaxCalculatorMasterServiceImpl StructureClassResponse is:" +structureClassResponse);
-	            if (structureClassResponse.getStructureClasses().size() == 0) {
+				log.info("TaxCalculatorMasterServiceImpl StructureClassResponse is:" + structureClassResponse);
+				if (structureClassResponse.getStructureClasses().size() == 0) {
 					throw new InvalidInputException(calculationFactorRequest.getRequestInfo());
 				}
 				break;
 			case PROPERTYTYPE:
 
 				params.put("factorType", "propertytypes");
-				log.info("TaxCalculatorMasterServiceImpl propertytypes uri is:" +uri+ "\n TaxCalculatorMasterServiceImpl propertytypes is:" +requestInfoWrapper+ "propertytypes params :" +params);
-			    PropertyTypeResponse propertyTypeResponse = restTemplate.postForObject(uri.toString(),
+				log.info("TaxCalculatorMasterServiceImpl propertytypes uri is:" + uri
+						+ "\n TaxCalculatorMasterServiceImpl propertytypes is:" + requestInfoWrapper
+						+ "propertytypes params :" + params);
+				PropertyTypeResponse propertyTypeResponse = restTemplate.postForObject(uri.toString(),
 						requestInfoWrapper, PropertyTypeResponse.class, params);
-			    log.info("TaxCalculatorMasterServiceImpl PropertyTypeResponse is:" +propertyTypeResponse);
-	            if (propertyTypeResponse.getPropertyTypes().size() == 0) {
+				log.info("TaxCalculatorMasterServiceImpl PropertyTypeResponse is:" + propertyTypeResponse);
+				if (propertyTypeResponse.getPropertyTypes().size() == 0) {
 					throw new InvalidInputException(calculationFactorRequest.getRequestInfo());
 				}
 				break;
@@ -180,17 +189,16 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 	public CalculationFactorResponse updateFactor(String tenantId, CalculationFactorRequest calculationFactorRequest) {
 
 		for (CalculationFactor calculationFactor : calculationFactorRequest.getCalculationFactors()) {
-			AuditDetails auditDetails = getAuditDetail(calculationFactorRequest.getRequestInfo());
+			AuditDetails auditDetails = getUpdatedAuditDetails(calculationFactorRequest.getRequestInfo(),
+					ConstantUtility.FACTOR_TABLE_NAME, calculationFactor.getId());
 			try {
 				long id = calculationFactor.getId();
-				calculationFactor.getAuditDetails().setLastModifiedBy(auditDetails.getLastModifiedBy());
-				calculationFactor.getAuditDetails().setLastModifiedTime(auditDetails.getLastModifiedTime());
+				calculationFactor.setAuditDetails(auditDetails);
 				factorRepository.updateFactor(tenantId, id, calculationFactor);
 
 			} catch (Exception e) {
 
 				throw new InvalidInputException(calculationFactorRequest.getRequestInfo());
-
 			}
 		}
 
@@ -252,7 +260,8 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 			throws Exception {
 		// TODO Auto-generated method stub
 		for (GuidanceValue guidanceValue : guidanceValueRequest.getGuidanceValues()) {
-			AuditDetails auditDetails = getAuditDetail(guidanceValueRequest.getRequestInfo());
+			AuditDetails auditDetails = getUpdatedAuditDetails(guidanceValueRequest.getRequestInfo(),
+					ConstantUtility.GUIDANCEVALUE_TABLE_NAME, guidanceValue.getId());
 			guidanceValue.setAuditDetails(auditDetails);
 			guidanceValueRepostory.udpateGuidanceValue(tenantId, guidanceValue);
 		}
@@ -314,10 +323,10 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 	public TaxRatesResponse updateTaxRate(String tenantId, TaxRatesRequest taxRatesRequest) throws Exception {
 
 		for (TaxRates taxRates : taxRatesRequest.getTaxRates()) {
-			AuditDetails auditDetails = getAuditDetail(taxRatesRequest.getRequestInfo());
+			AuditDetails auditDetails = getUpdatedAuditDetails(taxRatesRequest.getRequestInfo(),
+					ConstantUtility.TAXRATE_TABLE_NAME, taxRates.getId());
 			try {
-				taxRates.getAuditDetails().setLastModifiedBy(auditDetails.getLastModifiedBy());
-				taxRates.getAuditDetails().setLastModifiedTime(auditDetails.getLastModifiedTime());
+				taxRates.setAuditDetails(auditDetails);
 				taxRatesRepository.updateTaxRates(tenantId, taxRates);
 
 			} catch (Exception e) {
@@ -337,14 +346,14 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 
 	@Override
 	public TaxRatesResponse getTaxRate(RequestInfo requestInfo, String tenantId, String taxHead, String validDate,
-			Double validARVAmount, String parentTaxHead) throws Exception {
+			Double validARVAmount, String parentTaxHead, String usage, String propertyType) throws Exception {
 
 		TaxRatesResponse taxRatesResponse = new TaxRatesResponse();
 
 		try {
 
 			List<TaxRates> listOfTaxRates = taxRatesRepository.searchTaxRates(tenantId, taxHead, validDate,
-					validARVAmount, parentTaxHead);
+					validARVAmount, parentTaxHead, usage, propertyType);
 			ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 			taxRatesResponse.setTaxRates(listOfTaxRates);
 			taxRatesResponse.setResponseInfo(responseInfo);
@@ -388,7 +397,8 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 	public TaxPeriodResponse updateTaxPeriod(String tenantId, TaxPeriodRequest taxPeriodRequest) throws Exception {
 
 		for (TaxPeriod taxPeriod : taxPeriodRequest.getTaxPeriods()) {
-			AuditDetails auditDetails = getAuditDetail(taxPeriodRequest.getRequestInfo());
+			AuditDetails auditDetails = getUpdatedAuditDetails(taxPeriodRequest.getRequestInfo(),
+					ConstantUtility.TAXPERIODS_TABLE_NAME, taxPeriod.getId());
 			try {
 				taxPeriod.setAuditDetails(auditDetails);
 				taxPeriodRespository.updateTaxPeriod(taxPeriod, tenantId);
@@ -408,12 +418,21 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 	};
 
 	@Override
-	public TaxPeriodResponse getTaxPeriod(RequestInfo requestInfo, String tenantId, String validDate, String code)
-			throws Exception {
+	public TaxPeriodResponse getTaxPeriod(RequestInfo requestInfo, String tenantId, String validDate, String code,
+			String fromDate, String toDate, String sortTaxPeriod) throws Exception {
 
 		List<TaxPeriod> taxPeriods = null;
+		if (fromDate != null || toDate != null) {
+			if (fromDate != null && toDate == null)
+				throw new InvalidPenaltyDataException(propertiesManager.getInvalidToDate(), requestInfo,
+						propertiesManager.getInvalidToDate());
+			if (toDate != null && fromDate == null)
+				throw new InvalidPenaltyDataException(propertiesManager.getInvalidFormDate(), requestInfo,
+						propertiesManager.getInvalidToDate());
+		}
 		try {
-			taxPeriods = taxPeriodRespository.searchTaxPeriod(tenantId, validDate, code);
+			taxPeriods = taxPeriodRespository.searchTaxPeriod(tenantId, validDate, code, fromDate, toDate,
+					sortTaxPeriod);
 		} catch (Exception e) {
 			throw new InvalidInputException(requestInfo);
 		}
@@ -439,4 +458,16 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 		return auditDetail;
 	}
 
+	private AuditDetails getUpdatedAuditDetails(RequestInfo requestInfo, String tableName, Long id) {
+
+		String userId = requestInfo.getUserInfo().getId().toString();
+		Long currEpochDate = new Date().getTime();
+
+		AuditDetails auditDetails = new AuditDetails();
+		auditDetails.setLastModifiedBy(userId);
+		auditDetails.setLastModifiedTime(currEpochDate);
+
+		factorRepository.getCreatedAuditDetails(auditDetails, tableName, id);
+		return auditDetails;
+	}
 }

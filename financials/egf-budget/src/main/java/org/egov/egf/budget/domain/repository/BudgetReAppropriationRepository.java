@@ -1,7 +1,43 @@
+/*
+ * eGov suite of products aim to improve the internal efficiency,transparency,
+ *      accountability and the service delivery of the government  organizations.
+ *  
+ *       Copyright (C) <2015>  eGovernments Foundation
+ *  
+ *       The updated version of eGov suite of products as by eGovernments Foundation
+ *       is available at http://www.egovernments.org
+ *  
+ *       This program is free software: you can redistribute it and/or modify
+ *       it under the terms of the GNU General Public License as published by
+ *       the Free Software Foundation, either version 3 of the License, or
+ *       any later version.
+ *  
+ *       This program is distributed in the hope that it will be useful,
+ *       but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *       GNU General Public License for more details.
+ *  
+ *       You should have received a copy of the GNU General Public License
+ *       along with this program. If not, see http://www.gnu.org/licenses/ or
+ *       http://www.gnu.org/licenses/gpl.html .
+ *  
+ *       In addition to the terms of the GPL license to be adhered to in using this
+ *       program, the following additional terms are to be complied with:
+ *  
+ *           1) All versions of this program, verbatim or modified must carry this
+ *              Legal Notice.
+ *  
+ *           2) Any misrepresentation of the origin of the material is prohibited. It
+ *              is required that all modified versions of this material be marked in
+ *              reasonable ways as different from the original version.
+ *  
+ *           3) This license does not grant any rights to any user of the program
+ *              with regards to rights under trademark law for use of the trade names
+ *              or trademarks of eGovernments Foundation.
+ *  
+ *     In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
+ */
 package org.egov.egf.budget.domain.repository;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.model.Pagination;
@@ -11,155 +47,210 @@ import org.egov.egf.budget.persistence.entity.BudgetReAppropriationEntity;
 import org.egov.egf.budget.persistence.queue.repository.BudgetReAppropriationQueueRepository;
 import org.egov.egf.budget.persistence.repository.BudgetReAppropriationJdbcRepository;
 import org.egov.egf.budget.web.contract.BudgetReAppropriationRequest;
+import org.egov.egf.budget.web.contract.BudgetReAppropriationSearchContract;
 import org.egov.egf.budget.web.mapper.BudgetReAppropriationMapper;
+import org.egov.egf.master.web.repository.FinancialConfigurationContractRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class BudgetReAppropriationRepository {
 
-	private BudgetReAppropriationJdbcRepository budgetReAppropriationJdbcRepository;
+    private final BudgetReAppropriationJdbcRepository budgetReAppropriationJdbcRepository;
 
-	private BudgetReAppropriationQueueRepository budgetReAppropriationQueueRepository;
+    private final BudgetReAppropriationQueueRepository budgetReAppropriationQueueRepository;
 
-	private String persistThroughKafka;
+    private final String persistThroughKafka;
 
-	@Autowired
-	public BudgetReAppropriationRepository(BudgetReAppropriationJdbcRepository budgetReAppropriationJdbcRepository,
-			BudgetReAppropriationQueueRepository budgetReAppropriationQueueRepository,
-			@Value("${persist.through.kafka}") String persistThroughKafka) {
-		this.budgetReAppropriationJdbcRepository = budgetReAppropriationJdbcRepository;
-		this.budgetReAppropriationQueueRepository = budgetReAppropriationQueueRepository;
-		this.persistThroughKafka = persistThroughKafka;
+    private FinancialConfigurationContractRepository financialConfigurationContractRepository;
 
-	}
+    private BudgetReAppropriationESRepository budgetReAppropriationESRepository;
 
-	public BudgetReAppropriation findById(BudgetReAppropriation budgetReAppropriation) {
 
-		BudgetReAppropriationEntity entity = budgetReAppropriationJdbcRepository
-				.findById(new BudgetReAppropriationEntity().toEntity(budgetReAppropriation));
+    @Autowired
+    public BudgetReAppropriationRepository(final BudgetReAppropriationJdbcRepository budgetReAppropriationJdbcRepository,
+                                           final BudgetReAppropriationQueueRepository budgetReAppropriationQueueRepository,
+                                           @Value("${persist.through.kafka}") final String persistThroughKafka,
+                                           FinancialConfigurationContractRepository financialConfigurationContractRepository,
+                                           BudgetReAppropriationESRepository budgetReAppropriationESRepository
+    ) {
+        this.budgetReAppropriationJdbcRepository = budgetReAppropriationJdbcRepository;
+        this.budgetReAppropriationQueueRepository = budgetReAppropriationQueueRepository;
+        this.persistThroughKafka = persistThroughKafka;
+        this.financialConfigurationContractRepository = financialConfigurationContractRepository;
+        this.budgetReAppropriationESRepository = budgetReAppropriationESRepository;
 
-		if (entity != null)
-			return entity.toDomain();
+    }
 
-		return null;
+    public BudgetReAppropriation findById(final BudgetReAppropriation budgetReAppropriation) {
 
-	}
+        final BudgetReAppropriationEntity entity = budgetReAppropriationJdbcRepository
+                .findById(new BudgetReAppropriationEntity().toEntity(budgetReAppropriation));
 
-	@Transactional
-	public List<BudgetReAppropriation> save(List<BudgetReAppropriation> budgetReAppropriations,
-			RequestInfo requestInfo) {
+        if (entity != null)
+            return entity.toDomain();
 
-		BudgetReAppropriationMapper mapper = new BudgetReAppropriationMapper();
+        return null;
 
-		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
-				&& persistThroughKafka.equalsIgnoreCase("yes")) {
+    }
 
-			BudgetReAppropriationRequest request = new BudgetReAppropriationRequest();
-			request.setRequestInfo(requestInfo);
-			request.setBudgetReAppropriations(new ArrayList<>());
+    @Transactional
+    public List<BudgetReAppropriation> save(final List<BudgetReAppropriation> budgetReAppropriations,
+                                            final RequestInfo requestInfo) {
 
-			for (BudgetReAppropriation iac : budgetReAppropriations) {
+        final BudgetReAppropriationMapper mapper = new BudgetReAppropriationMapper();
 
-				request.getBudgetReAppropriations().add(mapper.toContract(iac));
+        if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+                && persistThroughKafka.equalsIgnoreCase("yes")) {
 
-			}
+            final BudgetReAppropriationRequest request = new BudgetReAppropriationRequest();
+            request.setRequestInfo(requestInfo);
+            request.setBudgetReAppropriations(new ArrayList<>());
 
-			budgetReAppropriationQueueRepository.addToQue(request);
+            for (final BudgetReAppropriation iac : budgetReAppropriations)
+                request.getBudgetReAppropriations().add(mapper.toContract(iac));
 
-			return budgetReAppropriations;
-		} else {
+            budgetReAppropriationQueueRepository.addToQue(request);
 
-			List<BudgetReAppropriation> resultList = new ArrayList<BudgetReAppropriation>();
+            return budgetReAppropriations;
+        } else {
 
-			for (BudgetReAppropriation iac : budgetReAppropriations) {
+            final List<BudgetReAppropriation> resultList = new ArrayList<BudgetReAppropriation>();
 
-				resultList.add(save(iac));
-			}
+            for (final BudgetReAppropriation iac : budgetReAppropriations)
+                resultList.add(save(iac));
 
-			BudgetReAppropriationRequest request = new BudgetReAppropriationRequest();
-			request.setRequestInfo(requestInfo);
-			request.setBudgetReAppropriations(new ArrayList<>());
+            final BudgetReAppropriationRequest request = new BudgetReAppropriationRequest();
+            request.setRequestInfo(requestInfo);
+            request.setBudgetReAppropriations(new ArrayList<>());
 
-			for (BudgetReAppropriation iac : resultList) {
+            for (final BudgetReAppropriation iac : resultList)
+                request.getBudgetReAppropriations().add(mapper.toContract(iac));
 
-				request.getBudgetReAppropriations().add(mapper.toContract(iac));
+            budgetReAppropriationQueueRepository.addToSearchQue(request);
 
-			}
+            return resultList;
+        }
 
-			budgetReAppropriationQueueRepository.addToSearchQue(request);
+    }
 
-			return resultList;
-		}
+    @Transactional
+    public List<BudgetReAppropriation> update(final List<BudgetReAppropriation> budgetReAppropriations,
+                                              final RequestInfo requestInfo) {
 
-	}
+        final BudgetReAppropriationMapper mapper = new BudgetReAppropriationMapper();
 
-	@Transactional
-	public List<BudgetReAppropriation> update(List<BudgetReAppropriation> budgetReAppropriations,
-			RequestInfo requestInfo) {
+        if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+                && persistThroughKafka.equalsIgnoreCase("yes")) {
 
-		BudgetReAppropriationMapper mapper = new BudgetReAppropriationMapper();
+            final BudgetReAppropriationRequest request = new BudgetReAppropriationRequest();
+            request.setRequestInfo(requestInfo);
+            request.setBudgetReAppropriations(new ArrayList<>());
 
-		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
-				&& persistThroughKafka.equalsIgnoreCase("yes")) {
+            for (final BudgetReAppropriation iac : budgetReAppropriations)
+                request.getBudgetReAppropriations().add(mapper.toContract(iac));
 
-			BudgetReAppropriationRequest request = new BudgetReAppropriationRequest();
-			request.setRequestInfo(requestInfo);
-			request.setBudgetReAppropriations(new ArrayList<>());
+            budgetReAppropriationQueueRepository.addToQue(request);
 
-			for (BudgetReAppropriation iac : budgetReAppropriations) {
+            return budgetReAppropriations;
+        } else {
 
-				request.getBudgetReAppropriations().add(mapper.toContract(iac));
+            final List<BudgetReAppropriation> resultList = new ArrayList<BudgetReAppropriation>();
 
-			}
+            for (final BudgetReAppropriation iac : budgetReAppropriations)
+                resultList.add(update(iac));
 
-			budgetReAppropriationQueueRepository.addToQue(request);
+            final BudgetReAppropriationRequest request = new BudgetReAppropriationRequest();
+            request.setRequestInfo(requestInfo);
+            request.setBudgetReAppropriations(new ArrayList<>());
 
-			return budgetReAppropriations;
-		} else {
+            for (final BudgetReAppropriation iac : resultList)
+                request.getBudgetReAppropriations().add(mapper.toContract(iac));
 
-			List<BudgetReAppropriation> resultList = new ArrayList<BudgetReAppropriation>();
+            budgetReAppropriationQueueRepository.addToSearchQue(request);
 
-			for (BudgetReAppropriation iac : budgetReAppropriations) {
+            return resultList;
+        }
 
-				resultList.add(update(iac));
-			}
+    }
+    
+    @Transactional
+    public List<BudgetReAppropriation> delete(final List<BudgetReAppropriation> budgetReAppropriations,
+                                              final RequestInfo requestInfo) {
 
-			BudgetReAppropriationRequest request = new BudgetReAppropriationRequest();
-			request.setRequestInfo(requestInfo);
-			request.setBudgetReAppropriations(new ArrayList<>());
+        final BudgetReAppropriationMapper mapper = new BudgetReAppropriationMapper();
 
-			for (BudgetReAppropriation iac : resultList) {
+        if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+                && persistThroughKafka.equalsIgnoreCase("yes")) {
 
-				request.getBudgetReAppropriations().add(mapper.toContract(iac));
+            final BudgetReAppropriationRequest request = new BudgetReAppropriationRequest();
+            request.setRequestInfo(requestInfo);
+            request.setBudgetReAppropriations(new ArrayList<>());
 
-			}
+            for (final BudgetReAppropriation iac : budgetReAppropriations)
+                request.getBudgetReAppropriations().add(mapper.toContract(iac));
 
-			budgetReAppropriationQueueRepository.addToSearchQue(request);
+            budgetReAppropriationQueueRepository.addToQue(request);
 
-			return resultList;
-		}
+            return budgetReAppropriations;
+        } else {
 
-	}
+            final List<BudgetReAppropriation> resultList = new ArrayList<BudgetReAppropriation>();
 
-	@Transactional
-	public BudgetReAppropriation save(BudgetReAppropriation budgetReAppropriation) {
-		return budgetReAppropriationJdbcRepository
-				.create(new BudgetReAppropriationEntity().toEntity(budgetReAppropriation)).toDomain();
-	}
+            for (final BudgetReAppropriation iac : budgetReAppropriations)
+                resultList.add(delete(iac));
 
-	@Transactional
-	public BudgetReAppropriation update(BudgetReAppropriation entity) {
-		return budgetReAppropriationJdbcRepository.update(new BudgetReAppropriationEntity().toEntity(entity))
-				.toDomain();
-	}
+            final BudgetReAppropriationRequest request = new BudgetReAppropriationRequest();
+            request.setRequestInfo(requestInfo);
+            request.setBudgetReAppropriations(new ArrayList<>());
 
-	public Pagination<BudgetReAppropriation> search(BudgetReAppropriationSearch domain) {
+            for (final BudgetReAppropriation iac : resultList)
+                request.getBudgetReAppropriations().add(mapper.toContract(iac));
 
-		return budgetReAppropriationJdbcRepository.search(domain);
+            budgetReAppropriationQueueRepository.addToSearchQue(request);
 
-	}
+            return resultList;
+        }
+
+    }
+
+    @Transactional
+    public BudgetReAppropriation save(final BudgetReAppropriation budgetReAppropriation) {
+        return budgetReAppropriationJdbcRepository
+                .create(new BudgetReAppropriationEntity().toEntity(budgetReAppropriation)).toDomain();
+    }
+
+    @Transactional
+    public BudgetReAppropriation update(final BudgetReAppropriation entity) {
+        return budgetReAppropriationJdbcRepository.update(new BudgetReAppropriationEntity().toEntity(entity))
+                .toDomain();
+    }
+    
+    @Transactional
+    public BudgetReAppropriation delete(final BudgetReAppropriation entity) {
+        return budgetReAppropriationJdbcRepository.delete(new BudgetReAppropriationEntity().toEntity(entity))
+                .toDomain();
+    }
+
+    public Pagination<BudgetReAppropriation> search(final BudgetReAppropriationSearch domain) {
+
+        if (financialConfigurationContractRepository.fetchDataFrom() != null
+                && financialConfigurationContractRepository.fetchDataFrom().equalsIgnoreCase("es")) {
+
+            BudgetReAppropriationMapper mapper = new BudgetReAppropriationMapper();
+            BudgetReAppropriationSearchContract budgetReAppropriationSearchContract = new BudgetReAppropriationSearchContract();
+            budgetReAppropriationSearchContract = mapper.toSearchContract(domain);
+            Pagination<BudgetReAppropriation> budgetReAppropriations = budgetReAppropriationESRepository.search(budgetReAppropriationSearchContract);
+            return budgetReAppropriations;
+        } else {
+            return budgetReAppropriationJdbcRepository.search(domain);
+        }
+
+    }
 
 }

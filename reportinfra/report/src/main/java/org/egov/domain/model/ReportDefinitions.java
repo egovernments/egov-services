@@ -22,8 +22,15 @@ public class ReportDefinitions {
 
 	private HashMap<String, ReportDefinition> definitionMap = new HashMap<>();
 	
+	private HashMap<String, ReportDefinition> duplicateReportKeys = new HashMap<>();
+	
+	
 	public ReportDefinition getReportDefinition(String name){
 		return definitionMap.get(name);
+	}
+	public List<ReportDefinition> getDuplicateReportDefinition(){
+		List<ReportDefinition> localreportDefinitions = new ArrayList<>(duplicateReportKeys.values());
+		return localreportDefinitions;
 	}
 	
 	public List<ReportDefinition> getReportDefinitions() {
@@ -32,8 +39,22 @@ public class ReportDefinitions {
 
 	public void setReportDefinitions(List<ReportDefinition> reportDefinitions) {
 		this.reportDefinitions = reportDefinitions;
+		
 		for(ReportDefinition rd : reportDefinitions){
-			definitionMap.put(rd.getReportName(), rd);
+			String reportKey = "";
+			if(rd.getModuleName() != null){
+				reportKey = rd.getModuleName()+" " +rd.getReportName();
+				}
+				else {
+					reportKey = rd.getReportName();
+				}
+			if(definitionMap.get(rd.getReportName()) == null) {
+				definitionMap.put(reportKey, rd);
+					}
+			else{
+				duplicateReportKeys.put(reportKey, rd);
+			}
+			
 		}
 	}
 

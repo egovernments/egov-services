@@ -1,10 +1,10 @@
 package org.egov.property.services;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.egov.enums.StatusEnum;
 import org.egov.models.AuditDetails;
 import org.egov.models.Document;
 import org.egov.models.Floor;
@@ -18,11 +18,12 @@ import org.egov.models.TitleTransfer;
 import org.egov.models.TitleTransferRequest;
 import org.egov.models.Unit;
 import org.egov.models.User;
-import org.egov.property.consumer.Producer;
+import org.egov.property.config.PropertiesManager;
 import org.egov.property.exception.PropertySearchException;
+import org.egov.property.repository.PropertyMasterRepository;
 import org.egov.property.repository.PropertyRepository;
+import org.egov.property.utility.ConstantUtility;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -37,7 +38,7 @@ import org.springframework.web.client.RestTemplate;
 public class PersisterService {
 
 	@Autowired
-	Environment environment;
+	PropertiesManager propertiesManager;
 
 	@Autowired
 	ResponseInfoFactory responseInfoFactory;
@@ -46,10 +47,10 @@ public class PersisterService {
 	PropertyRepository propertyRepository;
 
 	@Autowired
-	RestTemplate restTemplate;
+	PropertyMasterRepository propertyMasterRepository;
 
 	@Autowired
-	Producer producer;
+	RestTemplate restTemplate;
 
 	@Autowired
 	PropertyServiceImpl propertyServiceImpl;
@@ -101,9 +102,18 @@ public class PersisterService {
 			property.getAddress().setAuditDetails(auditDetails);
 			propertyRepository.saveAddress(property, propertyId);
 			propertyDetail.setAuditDetails(auditDetails);
+			if (!property.getPropertyDetail().getPropertyType().equalsIgnoreCase(propertiesManager.getVacantLand())) {
+				if (property.getPropertyDetail().getNoOfFloors() == null) {
+					if (property.getPropertyDetail().getFloors() != null) {
+						int floorCount = property.getPropertyDetail().getFloors().size();
+						property.getPropertyDetail().setNoOfFloors((long) floorCount);
+					}
+
+				}
+			}
 			Long propertyDetailsId = propertyRepository.savePropertyDetails(property, propertyId);
-			if (!property.getPropertyDetail().getPropertyType()
-					.equalsIgnoreCase(environment.getProperty("vacantLand"))) {
+			if (!property.getPropertyDetail().getPropertyType().equalsIgnoreCase(propertiesManager.getVacantLand())) {
+
 				for (Floor floor : property.getPropertyDetail().getFloors()) {
 					floor.setAuditDetails(auditDetails);
 					Long floorId = propertyRepository.saveFloor(floor, propertyDetailsId);
@@ -116,7 +126,7 @@ public class PersisterService {
 						}
 						unit.setAuditDetails(auditDetails);
 						Long unitId = propertyRepository.saveUnit(unit, floorId);
-						if (unit.getUnitType().toString().equalsIgnoreCase(environment.getProperty("unit.type"))
+						if (unit.getUnitType().toString().equalsIgnoreCase(propertiesManager.getUnitType())
 								&& unit.getUnits() != null) {
 
 							for (Unit room : unit.getUnits()) {
@@ -168,8 +178,9 @@ public class PersisterService {
 	@Transactional
 	public void updateProperty(PropertyRequest propertyRequest) throws Exception {
 		List<Property> properties = propertyRequest.getProperties();
-		AuditDetails auditDetails = getAuditDetail(propertyRequest.getRequestInfo());
 		for (Property property : properties) {
+			AuditDetails auditDetails = getUpdatedAuditDetails(propertyRequest.getRequestInfo(),
+					ConstantUtility.PROPERTY_TABLE_NAME, property.getId());
 			if (property.getIsUnderWorkflow() == null) {
 				property.setIsUnderWorkflow(false);
 			}
@@ -189,30 +200,32 @@ public class PersisterService {
 			if (propertyDetail.getIsSuperStructure() == null) {
 				propertyDetail.setIsSuperStructure(false);
 			}
-			property.getAuditDetails().setLastModifiedBy(auditDetails.getLastModifiedBy());
-			property.getAuditDetails().setLastModifiedTime(auditDetails.getLastModifiedTime());
+			property.setAuditDetails(auditDetails);
 			propertyRepository.updateProperty(property);
-			property.getAddress().getAuditDetails().setLastModifiedBy(auditDetails.getLastModifiedBy());
-			property.getAddress().getAuditDetails().setLastModifiedTime(auditDetails.getLastModifiedTime());
+			property.getAddress().setAuditDetails(auditDetails);
 			propertyRepository.updateAddress(property.getAddress(), property.getAddress().getId(), property.getId());
-			propertyDetail.getAuditDetails().setLastModifiedBy(auditDetails.getLastModifiedBy());
-			propertyDetail.getAuditDetails().setLastModifiedTime(auditDetails.getLastModifiedTime());
+			propertyDetail.setAuditDetails(auditDetails);
+			if (!property.getPropertyDetail().getPropertyType().equalsIgnoreCase(propertiesManager.getVacantLand())) {
+				if (property.getPropertyDetail().getNoOfFloors() == null) {
+					if (property.getPropertyDetail().getFloors() != null) {
+						int floorCount = property.getPropertyDetail().getFloors().size();
+						property.getPropertyDetail().setNoOfFloors((long) floorCount);
+					}
+
+				}
+			}
 			propertyRepository.updatePropertyDetail(property.getPropertyDetail(), property.getId());
 			if (property.getVacantLand() != null) {
-				property.getVacantLand().getAuditDetails().setLastModifiedBy(auditDetails.getLastModifiedBy());
-				property.getVacantLand().getAuditDetails().setLastModifiedTime(auditDetails.getLastModifiedTime());
+				property.getVacantLand().setAuditDetails(auditDetails);
 				propertyRepository.updateVacantLandDetail(property.getVacantLand(), property.getVacantLand().getId(),
 						property.getId());
 			}
-			if (!property.getPropertyDetail().getPropertyType()
-					.equalsIgnoreCase(environment.getProperty("vacantLand"))) {
+			if (!property.getPropertyDetail().getPropertyType().equalsIgnoreCase(propertiesManager.getVacantLand())) {
 				for (Floor floor : property.getPropertyDetail().getFloors()) {
-					floor.getAuditDetails().setLastModifiedBy(auditDetails.getLastModifiedBy());
-					floor.getAuditDetails().setLastModifiedTime(auditDetails.getLastModifiedTime());
+					floor.setAuditDetails(auditDetails);
 					propertyRepository.updateFloor(floor, property.getPropertyDetail().getId());
 					for (Unit unit : floor.getUnits()) {
-						unit.getAuditDetails().setLastModifiedBy(auditDetails.getLastModifiedBy());
-						unit.getAuditDetails().setLastModifiedTime(auditDetails.getLastModifiedTime());
+						unit.setAuditDetails(auditDetails);
 						if (unit.getIsAuthorised() == null) {
 							unit.setIsAuthorised(true);
 						}
@@ -220,9 +233,10 @@ public class PersisterService {
 							unit.setIsStructured(true);
 						}
 						propertyRepository.updateUnit(unit);
-						if (unit.getUnitType().toString().equalsIgnoreCase(environment.getProperty("unit.type"))
+						if (unit.getUnitType().toString().equalsIgnoreCase(propertiesManager.getUnitType())
 								&& unit.getUnits() != null) {
 							for (Unit room : unit.getUnits()) {
+								room.setAuditDetails(auditDetails);
 								propertyRepository.updateRoom(room);
 							}
 						}
@@ -230,8 +244,7 @@ public class PersisterService {
 				}
 				if (property.getPropertyDetail().getDocuments() != null) {
 					for (Document document : property.getPropertyDetail().getDocuments()) {
-						document.getAuditDetails().setLastModifiedBy(auditDetails.getLastModifiedBy());
-						document.getAuditDetails().setLastModifiedTime(auditDetails.getLastModifiedTime());
+						document.setAuditDetails(auditDetails);
 						propertyRepository.updateDocument(document, property.getPropertyDetail().getId());
 					}
 				}
@@ -246,10 +259,10 @@ public class PersisterService {
 				if (owner.getAccountLocked() == null) {
 					owner.setAccountLocked(false);
 				}
-				owner.getAuditDetails().setLastModifiedBy(auditDetails.getLastModifiedBy());
-				owner.getAuditDetails().setLastModifiedTime(auditDetails.getLastModifiedTime());
+				owner.setAuditDetails(auditDetails);
 				propertyRepository.updateUser(owner, property.getId());
 			}
+			property.getBoundary().setAuditDetails(auditDetails);
 			propertyRepository.updateBoundary(property.getBoundary(), property.getId());
 		}
 	}
@@ -276,18 +289,20 @@ public class PersisterService {
 	 */
 	private void saveTitleTransfer(TitleTransferRequest titleTransferRequest) throws Exception {
 
-		if (titleTransferRequest != null) {
-			AuditDetails auditDetails = getAuditDetail(titleTransferRequest.getRequestInfo());
-			titleTransferRequest.getTitleTransfer().setAuditDetails(auditDetails);
-			Long titleTransferId = propertyRepository.saveTitleTransfer(titleTransferRequest.getTitleTransfer());
-			for (User owner : titleTransferRequest.getTitleTransfer().getNewOwners()) {
-				owner.setAuditDetails(auditDetails);
-				propertyRepository.saveTitleTransferUser(owner, titleTransferId);
-			}
+		AuditDetails auditDetails = getAuditDetail(titleTransferRequest.getRequestInfo());
+		titleTransferRequest.getTitleTransfer().setAuditDetails(auditDetails);
+		Long titleTransferId = propertyRepository.saveTitleTransfer(titleTransferRequest.getTitleTransfer());
+		for (User owner : titleTransferRequest.getTitleTransfer().getNewOwners()) {
+			owner.setAuditDetails(auditDetails);
+			propertyRepository.saveTitleTransferUser(owner, titleTransferId);
+		}
+		if (titleTransferRequest.getTitleTransfer().getDocuments() != null) {
 			for (Document document : titleTransferRequest.getTitleTransfer().getDocuments()) {
 				document.setAuditDetails(auditDetails);
 				propertyRepository.saveTitleTransferDocument(document, titleTransferId);
 			}
+		}
+		if (titleTransferRequest.getTitleTransfer().getCorrespondenceAddress() != null) {
 			titleTransferRequest.getTitleTransfer().getCorrespondenceAddress().setAuditDetails(auditDetails);
 			propertyRepository.saveTitleTransferAddress(titleTransferRequest.getTitleTransfer(), titleTransferId);
 		}
@@ -313,7 +328,7 @@ public class PersisterService {
 				property = propertyResponse.getProperties().get(0);
 			}
 		} catch (Exception e) {
-			throw new PropertySearchException(environment.getProperty("invalid.input"), requestInfo);
+			throw new PropertySearchException(propertiesManager.getInvalidInput(), requestInfo);
 		}
 		return property;
 	}
@@ -327,11 +342,10 @@ public class PersisterService {
 	@Transactional
 	public void updateTitleTransfer(TitleTransferRequest titleTransferRequest) throws Exception {
 
-		if (titleTransferRequest != null) {
-			AuditDetails auditDetails = getAuditDetail(titleTransferRequest.getRequestInfo());
-			titleTransferRequest.getTitleTransfer().setAuditDetails(auditDetails);
-			propertyRepository.updateTitleTransfer(titleTransferRequest.getTitleTransfer());
-		}
+		AuditDetails auditDetails = getUpdatedAuditDetails(titleTransferRequest.getRequestInfo(),
+				ConstantUtility.TITLETRANSFER_TABLE_NAME, titleTransferRequest.getTitleTransfer().getId());
+		titleTransferRequest.getTitleTransfer().setAuditDetails(auditDetails);
+		propertyRepository.updateTitleTransfer(titleTransferRequest.getTitleTransfer());
 	}
 
 	/**
@@ -341,33 +355,41 @@ public class PersisterService {
 	 * @param Property
 	 */
 
-	public void updateTitleTransferProperty(TitleTransferRequest titleTransferRequest) throws Exception {
-
-		Property property = getPropertyUsingUpicNo(titleTransferRequest);
+	public Property updateTitleTransferProperty(TitleTransferRequest titleTransferRequest, Property property)
+			throws Exception {
 		TitleTransfer titleTransfer = titleTransferRequest.getTitleTransfer();
-		AuditDetails auditDetails = getAuditDetail(titleTransferRequest.getRequestInfo());
+		AuditDetails auditDetails = getUpdatedAuditDetails(titleTransferRequest.getRequestInfo(),
+				ConstantUtility.PROPERTY_TABLE_NAME, property.getId());
 		property.getPropertyDetail().setStateId(titleTransfer.getStateId());
-		property.getPropertyDetail().getAuditDetails().setLastModifiedBy(auditDetails.getLastModifiedBy());
-		property.getPropertyDetail().getAuditDetails().setLastModifiedTime(auditDetails.getLastModifiedTime());
+		property.getPropertyDetail().setAuditDetails(auditDetails);
+
 		Long propertyId = property.getId();
 		updateTitleTransfer(titleTransferRequest);
-		property.getAuditDetails().setLastModifiedBy(auditDetails.getLastModifiedBy());
-		property.getAuditDetails().setLastModifiedTime(auditDetails.getLastModifiedTime());
+		property.setAuditDetails(auditDetails);
+
 		propertyRepository.updateTitleTransferProperty(property);
-		titleTransfer.getCorrespondenceAddress().getAuditDetails().setLastModifiedBy(auditDetails.getLastModifiedBy());
-		titleTransfer.getCorrespondenceAddress().getAuditDetails()
-				.setLastModifiedTime(auditDetails.getLastModifiedTime());
-		propertyRepository.updateAddress(titleTransfer.getCorrespondenceAddress(), property.getAddress().getId(),
-				propertyId);
-		property.getPropertyDetail().getAuditDetails().setLastModifiedBy(auditDetails.getLastModifiedBy());
-		property.getPropertyDetail().getAuditDetails().setLastModifiedTime(auditDetails.getLastModifiedTime());
-		propertyRepository.updateTitleTransferPropertyDetail(property.getPropertyDetail());
-		for (User owner : titleTransfer.getNewOwners()) {
-			owner.getAuditDetails().setLastModifiedBy(auditDetails.getLastModifiedBy());
-			owner.getAuditDetails().setLastModifiedTime(auditDetails.getLastModifiedTime());
-			propertyRepository.updateUser(owner, propertyId);
+		if (titleTransfer.getCorrespondenceAddress() != null) {
+
+			AuditDetails titletransferAuditDetails = getUpdatedAuditDetails(titleTransferRequest.getRequestInfo(),
+					ConstantUtility.TITLETRANSFER_TABLE_NAME, titleTransferRequest.getTitleTransfer().getId());
+			titleTransfer.getCorrespondenceAddress().setAuditDetails(titletransferAuditDetails);
+			propertyRepository.updateAddress(titleTransfer.getCorrespondenceAddress(), property.getAddress().getId(),
+					propertyId);
 		}
 
+		propertyRepository.updateTitleTransferPropertyDetail(property.getPropertyDetail());
+		for (User owner : property.getOwners()) {
+			propertyRepository.deleteUser(owner.getId(), propertyId);
+
+		}
+
+		for (User owner : titleTransfer.getNewOwners()) {
+			AuditDetails ownerAuditDetails = getAuditDetail(titleTransferRequest.getRequestInfo());
+			owner.setAuditDetails(ownerAuditDetails);
+			propertyRepository.saveUser(owner, propertyId);
+
+		}
+		return property;
 	}
 
 	/**
@@ -377,8 +399,7 @@ public class PersisterService {
 	 * @throws SQLException
 	 */
 
-	public void addPropertyHistory(TitleTransferRequest titleTransferRequest) throws Exception {
-		Property property = getPropertyUsingUpicNo(titleTransferRequest);
+	public void addPropertyHistory(TitleTransferRequest titleTransferRequest, Property property) throws Exception {
 		savePropertyHistory(property);
 	}
 
@@ -389,54 +410,48 @@ public class PersisterService {
 	 * @param properties
 	 */
 	private Property savePropertyHistory(Property property) throws Exception {
-		Long propertyId = property.getId();
-		propertyRepository.savePropertyHistory(property);
-		propertyRepository.saveAddressHistory(property, propertyId);
-		propertyRepository.savePropertyDetailsHistory(property, propertyId);
-		Long propertyDetailsId = property.getPropertyDetail().getId();
-		for (Floor floor : property.getPropertyDetail().getFloors()) {
-			propertyRepository.saveFloorHistory(floor, propertyDetailsId);
-			Long floorId = floor.getId();
-			for (Unit unit : floor.getUnits()) {
-				propertyRepository.saveUnitHistory(unit, floorId);
-				Long unitId = unit.getId();
-				if (unit.getUnitType().toString().equalsIgnoreCase(environment.getProperty("unit.type"))
-						&& unit.getUnits() != null) {
-					for (Unit room : unit.getUnits()) {
-						propertyRepository.saveRoomHistory(room, floorId, unitId);
+		propertyRepository.getPropertyForHistory(property.getId());
+		if (property.getAddress() != null) {
+			propertyRepository.getAddressForHistory(property.getAddress().getId());
+		}
+		if (property.getPropertyDetail() != null) {
+			propertyRepository.getPropertyDetailsForHistory(property.getPropertyDetail().getId());
+			property.getPropertyDetail().setStatus(StatusEnum.HISTORY);
+			propertyRepository.updatePropertyHistoryStatus(property.getPropertyDetail());
+
+		}
+
+		if (!property.getPropertyDetail().getPropertyType().equalsIgnoreCase(propertiesManager.getVacantLand())) {
+			for (Floor floor : property.getPropertyDetail().getFloors()) {
+				propertyRepository.getFloorForHistory(floor.getId());
+				for (Unit unit : floor.getUnits()) {
+					propertyRepository.getUnitForHistory(unit.getId());
+					if (unit.getUnitType().toString().equalsIgnoreCase(propertiesManager.getUnitType())
+							&& unit.getUnits() != null) {
+						for (Unit room : unit.getUnits()) {
+							propertyRepository.getUnitForHistory(room.getId());
+						}
+					}
+				}
+				if (property.getPropertyDetail().getDocuments() != null) {
+					for (Document document : property.getPropertyDetail().getDocuments()) {
+						propertyRepository.getDocumentForHistory(document.getId());
 					}
 				}
 			}
-			for (Document document : property.getPropertyDetail().getDocuments()) {
-				propertyRepository.saveDocumentHistory(document, propertyDetailsId);
-			}
 		}
-		propertyRepository.saveVacantLandDetailHistory(property, propertyId);
-		propertyRepository.saveBoundaryHistory(property, propertyId);
+
+		if (property.getVacantLand() != null) {
+			propertyRepository.getVacantLandForHistory(property.getVacantLand().getId());
+		}
+
+		if (property.getBoundary() != null) {
+			propertyRepository.getPropertyLocationForHistory(property.getBoundary().getId());
+		}
 		for (User owner : property.getOwners()) {
-			propertyRepository.saveUserHistory(owner, propertyId);
+			propertyRepository.getOwnerForHistory(owner, property.getId());
 		}
 		return property;
-	}
-
-	/**
-	 * Save property history and update property
-	 * 
-	 * @param titleTransferRequest
-	 * @throws Exception
-	 */
-	@Transactional
-	public PropertyRequest savePropertyHistoryandUpdateProperty(TitleTransferRequest titleTransferRequest)
-			throws Exception {
-		addPropertyHistory(titleTransferRequest);
-		updateTitleTransferProperty(titleTransferRequest);
-		Property property = getPropertyUsingUpicNo(titleTransferRequest);
-		PropertyRequest propertyRequest = new PropertyRequest();
-		propertyRequest.setRequestInfo(titleTransferRequest.getRequestInfo());
-		List<Property> properties = new ArrayList<Property>();
-		properties.add(property);
-		propertyRequest.setProperties(properties);
-		return propertyRequest;
 	}
 
 	private AuditDetails getAuditDetail(RequestInfo requestInfo) {
@@ -450,4 +465,16 @@ public class PersisterService {
 		return auditDetail;
 	}
 
+	private AuditDetails getUpdatedAuditDetails(RequestInfo requestInfo, String tableName, Long id) {
+
+		String userId = requestInfo.getUserInfo().getId().toString();
+		Long currEpochDate = new Date().getTime();
+
+		AuditDetails auditDetails = new AuditDetails();
+		auditDetails.setLastModifiedBy(userId);
+		auditDetails.setLastModifiedTime(currEpochDate);
+
+		propertyMasterRepository.getCreatedAuditDetails(auditDetails, tableName, id);
+		return auditDetails;
+	}
 }

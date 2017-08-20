@@ -44,6 +44,8 @@ import javax.validation.Valid;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.model.DemandCriteria;
 import org.egov.demand.model.DemandDetailCriteria;
+import org.egov.demand.model.DemandDueCriteria;
+import org.egov.demand.model.DemandUpdateMisRequest;
 import org.egov.demand.service.DemandService;
 import org.egov.demand.web.contract.DemandRequest;
 import org.egov.demand.web.contract.DemandResponse;
@@ -118,7 +120,7 @@ public class DemandController {
 		}
 		return new ResponseEntity<>(demandService.updateAsync(demandRequest), HttpStatus.CREATED);
 	}
-
+	
 	@PostMapping("collection/_update")
 	public ResponseEntity<?> updateCollection(@RequestBody @Valid DemandRequest demandRequest, BindingResult bindingResult) {
 
@@ -151,5 +153,29 @@ public class DemandController {
 			return new ResponseEntity<>(responseFactory.getErrorResponse(bindingResult, requestInfo), HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<>(demandService.getDemandDetails(demandDetailCriteria, requestInfo), HttpStatus.OK);
+	}
+	
+	@PostMapping("_updatemis")
+	public ResponseEntity<?> updateMIS(@RequestBody RequestInfoWrapper requestInfoWrapper,
+			@ModelAttribute @Valid DemandUpdateMisRequest demandRequest, BindingResult bindingResult) {
+		//Validating Request
+		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+		demandRequest.setRequestInfo(requestInfo);
+		if (bindingResult.hasErrors()) {
+			return new ResponseEntity<>(responseFactory.getErrorResponse(bindingResult, requestInfo),
+					HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(demandService.updateMISAsync(demandRequest), HttpStatus.CREATED);
+	}
+	
+	@PostMapping("/_dues")
+	public ResponseEntity<?> getDemandDues(@RequestBody RequestInfoWrapper requestInfoWrapper,
+												@ModelAttribute @Valid DemandDueCriteria demandDueCriteria, BindingResult bindingResult) {
+
+		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+		if (bindingResult.hasErrors()) {
+			return new ResponseEntity<>(responseFactory.getErrorResponse(bindingResult, requestInfo), HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(demandService.getDues(demandDueCriteria, requestInfo), HttpStatus.OK);
 	}
 }

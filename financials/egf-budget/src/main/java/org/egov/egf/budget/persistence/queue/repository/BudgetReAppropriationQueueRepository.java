@@ -1,3 +1,42 @@
+/*
+ * eGov suite of products aim to improve the internal efficiency,transparency,
+ *      accountability and the service delivery of the government  organizations.
+ *  
+ *       Copyright (C) <2015>  eGovernments Foundation
+ *  
+ *       The updated version of eGov suite of products as by eGovernments Foundation
+ *       is available at http://www.egovernments.org
+ *  
+ *       This program is free software: you can redistribute it and/or modify
+ *       it under the terms of the GNU General Public License as published by
+ *       the Free Software Foundation, either version 3 of the License, or
+ *       any later version.
+ *  
+ *       This program is distributed in the hope that it will be useful,
+ *       but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *       GNU General Public License for more details.
+ *  
+ *       You should have received a copy of the GNU General Public License
+ *       along with this program. If not, see http://www.gnu.org/licenses/ or
+ *       http://www.gnu.org/licenses/gpl.html .
+ *  
+ *       In addition to the terms of the GPL license to be adhered to in using this
+ *       program, the following additional terms are to be complied with:
+ *  
+ *           1) All versions of this program, verbatim or modified must carry this
+ *              Legal Notice.
+ *  
+ *           2) Any misrepresentation of the origin of the material is prohibited. It
+ *              is required that all modified versions of this material be marked in
+ *              reasonable ways as different from the original version.
+ *  
+ *           3) This license does not grant any rights to any user of the program
+ *              with regards to rights under trademark law for use of the trade names
+ *              or trademarks of eGovernments Foundation.
+ *  
+ *     In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
+ */
 package org.egov.egf.budget.persistence.queue.repository;
 
 import java.util.HashMap;
@@ -11,60 +50,63 @@ import org.springframework.stereotype.Service;
 @Service
 public class BudgetReAppropriationQueueRepository {
 
-	private FinancialProducer financialProducer;
+    private final FinancialProducer financialProducer;
 
-	private String validatedTopic;
+    private final String validatedTopic;
 
-	private String budgetReAppValidatedKey;
+    private final String budgetReAppValidatedKey;
 
-	private String completedTopic;
+    private final String completedTopic;
 
-	private String budgetReAppCompletedKey;
+    private final String budgetReAppCompletedKey;
 
-	@Autowired
-	public BudgetReAppropriationQueueRepository(FinancialProducer financialProducer,
-			@Value("${kafka.topics.egf.budget.service.validated.topic}") String validatedTopic,
-			@Value("${kafka.topics.egf.budget.budgetreapp.validated.key}") String budgetReAppValidatedKey,
-			@Value("${kafka.topics.egf.budget.service.completed.topic}") String completedTopic,
-			@Value("${kafka.topics.egf.budget.budgetreapp.completed.key}") String budgetReAppCompletedKey) {
+    @Autowired
+    public BudgetReAppropriationQueueRepository(final FinancialProducer financialProducer,
+            @Value("${kafka.topics.egf.budget.service.validated.topic}") final String validatedTopic,
+            @Value("${kafka.topics.egf.budget.budgetreapp.validated.key}") final String budgetReAppValidatedKey,
+            @Value("${kafka.topics.egf.budget.service.completed.topic}") final String completedTopic,
+            @Value("${kafka.topics.egf.budget.budgetreapp.completed.key}") final String budgetReAppCompletedKey) {
 
-		this.financialProducer = financialProducer;
-		this.validatedTopic = validatedTopic;
-		this.budgetReAppValidatedKey = budgetReAppValidatedKey;
-		this.completedTopic = completedTopic;
-		this.budgetReAppCompletedKey = budgetReAppCompletedKey;
-	}
+        this.financialProducer = financialProducer;
+        this.validatedTopic = validatedTopic;
+        this.budgetReAppValidatedKey = budgetReAppValidatedKey;
+        this.completedTopic = completedTopic;
+        this.budgetReAppCompletedKey = budgetReAppCompletedKey;
+    }
 
-	public void addToQue(BudgetReAppropriationRequest request) {
-		HashMap<String, Object> topicMap = new HashMap<String, Object>();
+    public void addToQue(final BudgetReAppropriationRequest request) {
+        final HashMap<String, Object> topicMap = new HashMap<String, Object>();
 
-		switch (request.getRequestInfo().getAction().toLowerCase()) {
+        switch (request.getRequestInfo().getAction().toLowerCase()) {
 
-		case "create":
-			topicMap.put("budgetreappropriation_create", request);
-			System.out.println("push create topic" + request);
-			break;
-		case "update":
-			topicMap.put("budgetreappropriation_update", request);
-			break;
+        case "create":
+            topicMap.put("budgetreappropriation_create", request);
+            System.out.println("push create topic" + request);
+            break;
+        case "update":
+            topicMap.put("budgetreappropriation_update", request);
+            break;
+        case "delete":
+            topicMap.put("budgetreappropriation_delete", request);
+            break;
 
-		}
-		financialProducer.sendMessage(validatedTopic, budgetReAppValidatedKey, topicMap);
-	}
+        }
+        financialProducer.sendMessage(validatedTopic, budgetReAppValidatedKey, topicMap);
+    }
 
-	public void addToSearchQue(BudgetReAppropriationRequest request) {
+    public void addToSearchQue(final BudgetReAppropriationRequest request) {
 
-		HashMap<String, Object> topicMap = new HashMap<String, Object>();
+        final HashMap<String, Object> topicMap = new HashMap<String, Object>();
 
-		if (!request.getBudgetReAppropriations().isEmpty()) {
+        if (!request.getBudgetReAppropriations().isEmpty()) {
 
-			topicMap.put("budgetreappropriation_persisted", request);
+            topicMap.put("budgetreappropriation_persisted", request);
 
-			System.out.println("push search topic" + request);
+            System.out.println("push search topic" + request);
 
-		}
+        }
 
-		financialProducer.sendMessage(completedTopic, budgetReAppCompletedKey, topicMap);
+        financialProducer.sendMessage(completedTopic, budgetReAppCompletedKey, topicMap);
 
-	}
+    }
 }

@@ -3,13 +3,10 @@ package org.egov.propertyWorkflow.consumer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.common.serialization.StringDeserializer;
+import org.egov.enums.StatusEnum;
 import org.egov.models.ErrorRes;
 import org.egov.models.IdGenerationRequest;
 import org.egov.models.IdGenerationResponse;
@@ -17,26 +14,23 @@ import org.egov.models.IdRequest;
 import org.egov.models.Property;
 import org.egov.models.PropertyRequest;
 import org.egov.models.WorkFlowDetails;
+import org.egov.propertyWorkflow.config.PropertiesManager;
 import org.egov.propertyWorkflow.models.City;
 import org.egov.propertyWorkflow.models.ProcessInstance;
 import org.egov.propertyWorkflow.models.RequestInfo;
 import org.egov.propertyWorkflow.models.SearchTenantResponse;
 import org.egov.propertyWorkflow.models.TaskResponse;
 import org.egov.propertyWorkflow.models.WorkflowDetailsRequestInfo;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.core.env.Environment;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
-import org.springframework.kafka.core.ConsumerFactory;
-import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
-import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -55,49 +49,13 @@ public class WorkflowConsumer {
 	private WorkFlowUtil workflowUtil;
 
 	@Autowired
-	Environment environment;
-
-	@Autowired
-	WorkflowProducer workflowProducer;
+	PropertiesManager propertiesManager;
 
 	@Autowired
 	RestTemplate restTemplate;
 
-	/**
-	 * This method for getting consumer configuration bean
-	 */
-	@Bean
-	public Map<String, Object> consumerConfig() {
-		Map<String, Object> consumerProperties = new HashMap<String, Object>();
-		consumerProperties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, environment.getProperty("auto.offset.reset"));
-		consumerProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
-				environment.getProperty("kafka.config.bootstrap_server_config"));
-		consumerProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-		consumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-		consumerProperties.put(ConsumerConfig.GROUP_ID_CONFIG, environment.getProperty("consumer.groupId"));
-		return consumerProperties;
-	}
-
-	/**
-	 * This method will return the consumer factory bean based on consumer
-	 * configuration
-	 */
-	@Bean
-	public ConsumerFactory<String, PropertyRequest> consumerFactory() {
-		return new DefaultKafkaConsumerFactory<>(consumerConfig(), new StringDeserializer(),
-				new JsonDeserializer<>(PropertyRequest.class));
-
-	}
-
-	/**
-	 * This bean will return kafka listner object based on consumer factory
-	 */
-	@Bean
-	public ConcurrentKafkaListenerContainerFactory<String, PropertyRequest> kafkaListenerContainerFactory() {
-		ConcurrentKafkaListenerContainerFactory<String, PropertyRequest> factory = new ConcurrentKafkaListenerContainerFactory<String, PropertyRequest>();
-		factory.setConsumerFactory(consumerFactory());
-		return factory;
-	}
+	@Autowired
+	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
 	/**
 	 * This method will listen property object from producer and will process
@@ -106,45 +64,48 @@ public class WorkflowConsumer {
 	 * start workflow, update workflow
 	 */
 
-	@KafkaListener(topics = { "#{environment.getProperty('egov.propertytax.create.demand')}",
-			"#{environment.getProperty('egov.propertytax.property.update.workflow')}" })
-	public void listen(ConsumerRecord<String, PropertyRequest> record) throws Exception {
+	@KafkaListener(topics = { "#{propertiesManager.getTaxGenerated()}",
+			"#{propertiesManager.getUpdatePropertTaxCalculated()}" })
+	public void listen(ConsumerRecord<String, Object> record) throws Exception {
+		ObjectMapper objectMapper = new ObjectMapper();
 
-		PropertyRequest propertyRequest = record.value();
-		logger.info("WorkflowConsumer  listen() propertyRequest ---->>  "+propertyRequest);
+		PropertyRequest propertyRequest = objectMapper.convertValue(record.value(), PropertyRequest.class);
+		logger.info("WorkflowConsumer  listen() propertyRequest ---->>  " + propertyRequest);
 
-		if (record.topic().equalsIgnoreCase(environment.getProperty("egov.propertytax.create.demand"))) {
+		if (record.topic().equalsIgnoreCase(propertiesManager.getTaxGenerated())) {
 
 			for (Property property : propertyRequest.getProperties()) {
 				WorkflowDetailsRequestInfo workflowDetailsRequestInfo = getPropertyWorkflowDetailsRequestInfo(property,
 						propertyRequest);
-				logger.info("WorkflowConsumer  listen() WorkflowDetailsRequestInfo ---->>  "+workflowDetailsRequestInfo);
+				logger.info(
+						"WorkflowConsumer  listen() WorkflowDetailsRequestInfo ---->>  " + workflowDetailsRequestInfo);
 				ProcessInstance processInstance = workflowUtil.startWorkflow(workflowDetailsRequestInfo,
-						environment.getProperty("businessKey"), environment.getProperty("type"),
-						environment.getProperty("create.property.comments"));
+						propertiesManager.getBusinessKey(), propertiesManager.getType(),
+						propertiesManager.getComment());
+				logger.info("WorkflowConsumer  listen() after processing workflow ---------- ");
 				property.getPropertyDetail().setStateId(processInstance.getId());
-				workflowProducer.send(environment.getProperty("egov.propertytax.property.create.workflow.started"),
-						propertyRequest);
+				logger.info("WorkflowConsumer  listen() propertyRequest after workflow ---->>  " + propertyRequest);
+				kafkaTemplate.send(propertiesManager.getCreateWorkflow(), propertyRequest);
 			}
 
-		} else if (record.topic().equals(environment.getProperty("egov.propertytax.property.update.workflow"))) {
+		} else if (record.topic().equals(propertiesManager.getUpdatePropertTaxCalculated())) {
 
 			for (Property property : propertyRequest.getProperties()) {
 				WorkflowDetailsRequestInfo workflowDetailsRequestInfo = getPropertyWorkflowDetailsRequestInfo(property,
 						propertyRequest);
-				logger.info("WorkflowConsumer  listen() WorkflowDetailsRequestInfo ---->>  "+workflowDetailsRequestInfo);
+				logger.info(
+						"WorkflowConsumer  listen() WorkflowDetailsRequestInfo ---->>  " + workflowDetailsRequestInfo);
 				TaskResponse taskResponse = workflowUtil.updateWorkflow(workflowDetailsRequestInfo,
-						property.getPropertyDetail().getStateId());
+						property.getPropertyDetail().getStateId(), propertiesManager.getBusinessKey());
 				property.getPropertyDetail().setStateId(taskResponse.getTask().getId());
 				String action = workflowDetailsRequestInfo.getWorkflowDetails().getAction();
-				if (action.equalsIgnoreCase(environment.getProperty("property.approved"))) {
+				if (action.equalsIgnoreCase(propertiesManager.getApproveProperty())) {
 					String upicNumber = generateUpicNo(property, propertyRequest);
 					property.setUpicNumber(upicNumber);
-					workflowProducer.send(environment.getProperty("egov.propertytax.property.update.workflow.approved"),
-							propertyRequest);
+					property.getPropertyDetail().setStatus(StatusEnum.ACTIVE);
+					kafkaTemplate.send(propertiesManager.getApproveWorkflow(), propertyRequest);
 				} else {
-					workflowProducer.send(environment.getProperty("egov.propertytax.property.update.workflow.started"),
-							propertyRequest);
+					kafkaTemplate.send(propertiesManager.getUpdateWorkflow(), propertyRequest);
 				}
 			}
 		}
@@ -210,28 +171,28 @@ public class WorkflowConsumer {
 
 		String upicNumber = null;
 		StringBuilder tenantCodeUrl = new StringBuilder();
-		tenantCodeUrl.append(environment.getProperty("egov.services.tenant.hostname"));
-		tenantCodeUrl.append(environment.getProperty("egov.services.tenant.basepath"));
-		tenantCodeUrl.append(environment.getProperty("egov.services.tenant.searchpath"));
+		tenantCodeUrl.append(propertiesManager.getTenantHostName());
+		tenantCodeUrl.append(propertiesManager.getTenantBasepath());
+		tenantCodeUrl.append(propertiesManager.getTenantSearchpath());
 		String url = tenantCodeUrl.toString();
 		// Query parameters
 		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
 				// Add query parameter
 				.queryParam("code", property.getTenantId());
-		logger.info("WorkflowConsumer builderuri :" +builder.buildAndExpand().toUri()+ 
-				"\n WorkflowConsumer PropertyRequest :" +propertyRequest.getRequestInfo());
+		logger.info("WorkflowConsumer builderuri :" + builder.buildAndExpand().toUri()
+				+ "\n WorkflowConsumer PropertyRequest :" + propertyRequest.getRequestInfo());
 		try {
 			SearchTenantResponse searchTenantResponse = restTemplate.postForObject(builder.buildAndExpand().toUri(),
 					propertyRequest.getRequestInfo(), SearchTenantResponse.class);
-			logger.info("WorkflowConsumer SearchTenantResponse  ---->>  "+searchTenantResponse);
+			logger.info("WorkflowConsumer SearchTenantResponse  ---->>  " + searchTenantResponse);
 			if (searchTenantResponse.getTenant().size() > 0) {
 				City city = searchTenantResponse.getTenant().get(0).getCity();
 				String cityCode = city.getCode();
-				String upicFormat = environment.getProperty("upic.number.format");
+				String upicFormat = propertiesManager.getUpicNumberFormat();
 				upicNumber = getUpicNumber(property.getTenantId(), propertyRequest, upicFormat);
 				upicNumber = String.format("%08d", Integer.parseInt(upicNumber));
 				if (cityCode != null) {
-					upicNumber = cityCode + "-" + upicNumber;
+					upicNumber = cityCode+upicNumber;
 				}
 			}
 		} catch (Exception e) {
@@ -251,27 +212,27 @@ public class WorkflowConsumer {
 	public String getUpicNumber(String tenantId, PropertyRequest propertyRequest, String upicFormat) {
 
 		StringBuffer idGenerationUrl = new StringBuffer();
-		idGenerationUrl.append(environment.getProperty("egov.services.egov_idgen.hostname"));
-		idGenerationUrl.append(environment.getProperty("egov.services.egov_idgen.basepath"));
-		idGenerationUrl.append(environment.getProperty("egov.services.egov_idgen.createpath"));
+		idGenerationUrl.append(propertiesManager.getIdHostName());
+		idGenerationUrl.append(propertiesManager.getIdBasepath());
+		idGenerationUrl.append(propertiesManager.getIdCreatepath());
 
 		// generating acknowledgement number for all properties
 		String UpicNumber = null;
 		List<IdRequest> idRequests = new ArrayList<>();
 		IdRequest idrequest = new IdRequest();
 		idrequest.setFormat(upicFormat);
-		idrequest.setIdName(environment.getProperty("id.idName"));
+		idrequest.setIdName(propertiesManager.getIdName());
 		idrequest.setTenantId(tenantId);
 		IdGenerationRequest idGeneration = new IdGenerationRequest();
 		idRequests.add(idrequest);
 		idGeneration.setIdRequests(idRequests);
 		idGeneration.setRequestInfo(propertyRequest.getRequestInfo());
 		String response = null;
-		logger.info("WorkflowConsumer idGenerationUrl :" +idGenerationUrl.toString()+ 
-				"\n WorkflowConsumer idGenerationRequest :" +idGeneration);
-	    try {
+		logger.info("WorkflowConsumer idGenerationUrl :" + idGenerationUrl.toString()
+				+ "\n WorkflowConsumer idGenerationRequest :" + idGeneration);
+		try {
 			response = restTemplate.postForObject(idGenerationUrl.toString(), idGeneration, String.class);
-			logger.info("WorkflowConsumer getupicnumber response  ---->>  "+response);
+			logger.info("WorkflowConsumer getupicnumber response  ---->>  " + response);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -283,8 +244,7 @@ public class WorkflowConsumer {
 			// TODO throw error exception
 			// Error error = errorResponse.getErrors().get(0);
 		} else if (idResponse.getResponseInfo() != null) {
-			if (idResponse.getResponseInfo().getStatus().toString()
-					.equalsIgnoreCase(environment.getProperty("success"))) {
+			if (idResponse.getResponseInfo().getStatus().toString().equalsIgnoreCase(propertiesManager.getSuccess())) {
 				if (idResponse.getIdResponses() != null && idResponse.getIdResponses().size() > 0)
 					UpicNumber = idResponse.getIdResponses().get(0).getId();
 			}

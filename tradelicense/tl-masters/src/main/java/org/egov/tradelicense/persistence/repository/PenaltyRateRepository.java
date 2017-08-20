@@ -1,20 +1,17 @@
 package org.egov.tradelicense.persistence.repository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.enums.ApplicationTypeEnum;
-import org.egov.models.AuditDetails;
-import org.egov.models.PenaltyRate;
+import org.egov.tl.commons.web.contract.AuditDetails;
+import org.egov.tl.commons.web.contract.PenaltyRate;
+import org.egov.tl.commons.web.contract.enums.ApplicationTypeEnum;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.persistence.repository.builder.PenaltyRateQueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -30,7 +27,7 @@ import org.springframework.stereotype.Repository;
 public class PenaltyRateRepository {
 
 	@Autowired
-	private JdbcTemplate jdbcTemplate;
+	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Autowired
 	private PropertiesManager propertiesManager;
@@ -46,27 +43,21 @@ public class PenaltyRateRepository {
 
 		AuditDetails auditDetails = penaltyRate.getAuditDetails();
 		String penaltyRateInsertQuery = PenaltyRateQueryBuilder.INSERT_PENALTY_RATE_QUERY;
-		final PreparedStatementCreator psc = new PreparedStatementCreator() {
-			@Override
-			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
-				final PreparedStatement ps = connection.prepareStatement(penaltyRateInsertQuery, new String[] { "id" });
 
-				ps.setString(1, penaltyRate.getTenantId());
-				ps.setString(2, penaltyRate.getApplicationType().toString());
-				ps.setLong(3, penaltyRate.getFromRange());
-				ps.setLong(4, penaltyRate.getToRange());
-				ps.setDouble(5, penaltyRate.getRate());
-				ps.setString(6, auditDetails.getCreatedBy());
-				ps.setString(7, auditDetails.getLastModifiedBy());
-				ps.setLong(8, auditDetails.getCreatedTime());
-				ps.setLong(9, auditDetails.getLastModifiedTime());
-				return ps;
-			}
-		};
-
-		// The newly generated key will be saved in this object
 		final KeyHolder holder = new GeneratedKeyHolder();
-		jdbcTemplate.update(psc, holder);
+		MapSqlParameterSource parameters = new MapSqlParameterSource();
+		parameters.addValue("tenantId", penaltyRate.getTenantId());
+		parameters.addValue("applicationType",
+				penaltyRate.getApplicationType() == null ? null : penaltyRate.getApplicationType().toString());
+		parameters.addValue("fromRange", penaltyRate.getFromRange());
+		parameters.addValue("toRange", penaltyRate.getToRange());
+		parameters.addValue("rate", penaltyRate.getRate());
+		parameters.addValue("createdBy", auditDetails.getCreatedBy());
+		parameters.addValue("lastModifiedBy", auditDetails.getLastModifiedBy());
+		parameters.addValue("createdTime", auditDetails.getCreatedTime());
+		parameters.addValue("lastModifiedTime", auditDetails.getLastModifiedTime());
+		// executing the insert query
+		namedParameterJdbcTemplate.update(penaltyRateInsertQuery, parameters, holder, new String[] { "id" });
 
 		return Long.valueOf(holder.getKey().intValue());
 	}
@@ -81,25 +72,20 @@ public class PenaltyRateRepository {
 
 		AuditDetails auditDetails = penaltyRate.getAuditDetails();
 		String penaltyRateUpdateQuery = PenaltyRateQueryBuilder.UPDATE_PENALTY_RATE_QUERY;
-		final PreparedStatementCreator psc = new PreparedStatementCreator() {
-			@Override
-			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
-				final PreparedStatement ps = connection.prepareStatement(penaltyRateUpdateQuery);
 
-				ps.setString(1, penaltyRate.getTenantId());
-				ps.setString(2, penaltyRate.getApplicationType().toString());
-				ps.setLong(3, penaltyRate.getFromRange());
-				ps.setLong(4, penaltyRate.getToRange());
-				ps.setDouble(5, penaltyRate.getToRange());
-				ps.setString(6, auditDetails.getLastModifiedBy());
-				ps.setLong(7, auditDetails.getLastModifiedTime());
-				ps.setLong(8, penaltyRate.getId());
+		MapSqlParameterSource parameters = new MapSqlParameterSource();
+		parameters.addValue("tenantId", penaltyRate.getTenantId());
+		parameters.addValue("applicationType",
+				penaltyRate.getApplicationType() == null ? null : penaltyRate.getApplicationType().toString());
+		parameters.addValue("fromRange", penaltyRate.getFromRange());
+		parameters.addValue("toRange", penaltyRate.getToRange());
+		parameters.addValue("rate", penaltyRate.getRate());
+		parameters.addValue("lastModifiedBy", auditDetails.getLastModifiedBy());
+		parameters.addValue("lastModifiedTime", auditDetails.getLastModifiedTime());
+		parameters.addValue("id", penaltyRate.getId());
+		// executing the insert query
+		namedParameterJdbcTemplate.update(penaltyRateUpdateQuery, parameters);
 
-				return ps;
-			}
-		};
-
-		jdbcTemplate.update(psc);
 		return penaltyRate;
 	}
 
@@ -114,10 +100,10 @@ public class PenaltyRateRepository {
 	 * @return List<PenaltyRate>
 	 * @throws Exception
 	 */
-	public List<PenaltyRate> searchPenaltyRate(String tenantId, Integer[] ids, String applicationType,
-			Integer pageSize, Integer offSet) {
+	public List<PenaltyRate> searchPenaltyRate(String tenantId, Integer[] ids, String applicationType, Integer pageSize,
+			Integer offSet) {
 
-		List<Object> preparedStatementValues = new ArrayList<>();
+		MapSqlParameterSource parameters = new MapSqlParameterSource();
 		if (pageSize == null) {
 			pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize());
 		}
@@ -125,13 +111,12 @@ public class PenaltyRateRepository {
 			offSet = Integer.valueOf(propertiesManager.getDefaultOffset());
 		}
 		String penaltyRateSearchQuery = PenaltyRateQueryBuilder.buildSearchQuery(tenantId, ids, applicationType,
-				pageSize, offSet, preparedStatementValues);
-		List<PenaltyRate> penaltyRates = getPenaltyRates(penaltyRateSearchQuery.toString(),
-				preparedStatementValues);
+				pageSize, offSet, parameters);
+		List<PenaltyRate> penaltyRates = getPenaltyRates(penaltyRateSearchQuery.toString(), parameters);
 
 		return penaltyRates;
 	}
-	
+
 	/**
 	 * This method will execute the given query & will build the PenaltyRate
 	 * object
@@ -139,16 +124,16 @@ public class PenaltyRateRepository {
 	 * @param query
 	 * @return {@link PenaltyRate} List of Category
 	 */
-	public List<PenaltyRate> getPenaltyRates(String query, List<Object> preparedStatementValues) {
+	public List<PenaltyRate> getPenaltyRates(String query, MapSqlParameterSource parameters) {
 
 		List<PenaltyRate> penaltyRates = new ArrayList<>();
-		List<Map<String, Object>> rows = jdbcTemplate.queryForList(query, preparedStatementValues.toArray());
+		List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(query, parameters);
 
 		for (Map<String, Object> row : rows) {
 			PenaltyRate penaltyRate = new PenaltyRate();
 			penaltyRate.setId(getLong(row.get("id")));
 			penaltyRate.setTenantId(getString(row.get("tenantid")));
-			penaltyRate.setApplicationType(ApplicationTypeEnum.fromValue(getString(row.get("applicationTypeId"))));
+			penaltyRate.setApplicationType(ApplicationTypeEnum.fromValue(getString(row.get("applicationType"))));
 			penaltyRate.setFromRange(getLong(row.get("fromRange")));
 			penaltyRate.setToRange(getLong(row.get("toRange")));
 			penaltyRate.setRate(getDouble(row.get("rate")));

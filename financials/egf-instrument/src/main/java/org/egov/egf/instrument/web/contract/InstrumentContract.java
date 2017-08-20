@@ -39,29 +39,22 @@
  */
 package org.egov.egf.instrument.web.contract;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import lombok.*;
 import org.egov.common.web.contract.AuditableContract;
 import org.egov.egf.master.web.contract.BankAccountContract;
 import org.egov.egf.master.web.contract.BankContract;
 import org.egov.egf.master.web.contract.FinancialStatusContract;
 import org.hibernate.validator.constraints.NotBlank;
 
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Builder
 @Getter
@@ -70,7 +63,7 @@ import lombok.Setter;
 @NoArgsConstructor
 
 @JsonPropertyOrder({ "id", "transactionNumber", "transactionDate", "amount", "instrumentType", "bank", "branchName",
-		"bankAccount", "financialStatus", "transactionType", "payee", "drawer", "surrendarReason", "serialNo",
+		"bankAccount", "financialStatus", "remittanceVoucherId", "transactionType", "payee", "drawer", "surrendarReason", "serialNo",
 		"instrumentVouchers" })
 public class InstrumentContract extends AuditableContract {
 
@@ -133,6 +126,8 @@ public class InstrumentContract extends AuditableContract {
 	 * instrumentStatus gives the current status of the instrument.
 	 */
 	private FinancialStatusContract financialStatus;
+	
+	private String remittanceVoucherId;
 
 	/*
 	 * transactionType are of two kinds -Debit and Credit. When its a receipt
@@ -173,6 +168,6 @@ public class InstrumentContract extends AuditableContract {
 	 * instrumentVouchers is the reference to the payment vouchers for which the
 	 * instrument is attached.
 	 */
-	private Set<InstrumentVoucherContract> instrumentVouchers = new HashSet<InstrumentVoucherContract>(0);
+	private List<InstrumentVoucherContract> instrumentVouchers = new ArrayList<>();
 
 }

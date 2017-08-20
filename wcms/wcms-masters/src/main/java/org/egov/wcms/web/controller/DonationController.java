@@ -39,7 +39,6 @@
  */
 package org.egov.wcms.web.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -63,7 +62,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -102,40 +100,37 @@ public class DonationController {
         }
         log.info("Donation Create Request::" + donationRequest);
 
-        final List<ErrorResponse> errorResponses = validatorUtils.validateDonationRequest(donationRequest);
+        final List<ErrorResponse> errorResponses = validatorUtils.validateDonationRequest(donationRequest,false);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final Donation donation = donationService.sendMessage(applicationProperties.getCreateDonationTopicName(),
+        final List<Donation> donationList = donationService.createDonation(applicationProperties.getCreateDonationTopicName(),
                 "donation-create", donationRequest);
-        final List<Donation> donationList = new ArrayList<>();
-        donationList.add(donation);
+
         return getSuccessResponse(donationList, "Created", donationRequest.getRequestInfo());
     }
 
-    @PostMapping(value = "/{donationId}/_update")
+    @PostMapping(value = "/_update")
     @ResponseBody
     public ResponseEntity<?> update(@RequestBody @Valid final DonationRequest donationRequest,
-            final BindingResult errors, @PathVariable("donationId") final Long donationId) {
+            final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = validatorUtils.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         log.info("Donation Update Request::" + donationRequest);
-        donationRequest.getDonation().setId(donationId);
 
-        final List<ErrorResponse> errorResponses = validatorUtils.validateDonationRequest(donationRequest);
+        final List<ErrorResponse> errorResponses = validatorUtils.validateDonationRequest(donationRequest, true);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final Donation donation = donationService.sendMessage(applicationProperties.getCreateDonationTopicName(),
+        final List<Donation> donationList = donationService.updateDonation(applicationProperties.getUpdateDonationTopicName(),
                 "donation-update", donationRequest);
-        final List<Donation> donationList = new ArrayList<>();
-        donationList.add(donation);
+
         return getSuccessResponse(donationList, null, donationRequest.getRequestInfo());
     }
 
-    @PostMapping("_search")
+    @PostMapping("/_search")
     @ResponseBody
     public ResponseEntity<?> search(@ModelAttribute @Valid final DonationGetRequest donationGetRequest,
             final BindingResult modelAttributeBindingResult,

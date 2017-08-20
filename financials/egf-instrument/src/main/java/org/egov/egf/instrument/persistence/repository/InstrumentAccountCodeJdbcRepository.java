@@ -44,6 +44,11 @@ public class InstrumentAccountCodeJdbcRepository extends JdbcRepository {
 		return entity;
 
 	}
+	
+	public InstrumentAccountCodeEntity delete(InstrumentAccountCodeEntity entity) {
+		super.delete(entity.TABLE_NAME, entity.getId());
+		return entity;
+	}
 
 	public Pagination<InstrumentAccountCode> search(InstrumentAccountCodeSearch domain) {
 		InstrumentAccountCodeSearchEntity instrumentAccountCodeSearchEntity = new InstrumentAccountCodeSearchEntity();
@@ -71,6 +76,13 @@ public class InstrumentAccountCodeJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
+		if (instrumentAccountCodeSearchEntity.getTenantId() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("tenantId =:tenantId");
+			paramValues.put("tenantId", instrumentAccountCodeSearchEntity.getTenantId());
+		}
 		if (instrumentAccountCodeSearchEntity.getId() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
@@ -96,7 +108,7 @@ public class InstrumentAccountCodeJdbcRepository extends JdbcRepository {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("ids =:ids");
+			params.append("id in (:ids)");
 			paramValues.put("ids", instrumentAccountCodeSearchEntity.getIds());
 		}
 

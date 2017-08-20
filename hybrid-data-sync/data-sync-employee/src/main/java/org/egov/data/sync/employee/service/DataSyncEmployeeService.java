@@ -43,13 +43,14 @@ package org.egov.data.sync.employee.service;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.data.sync.employee.config.PropertiesManager;
 import org.egov.data.sync.employee.repository.DataSyncEmployeeRepository;
-import org.egov.data.sync.employee.web.contract.User;
-import org.egov.data.sync.employee.web.contract.UserRequest;
+import org.egov.data.sync.employee.web.contract.EmployeeSync;
+import org.egov.data.sync.employee.web.contract.EmployeeSyncRequest;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 @Slf4j
 @Service
@@ -70,20 +71,21 @@ public class DataSyncEmployeeService {
     @Autowired
     private DataSyncEmployeeRepository dataSyncEmployeeRepository;
 
-    public void createAsync(UserRequest userRequest) {
-        log.info("UserRequest before sending to kafka :: " + userRequest);
-        kafkaTemplate.send(propertiesManager.getSaveSignatureTopic(), userRequest);
+    public void createAsync(EmployeeSyncRequest employeeSyncRequest) {
+        log.info("EmployeeSyncRequest before sending to kafka :: " + employeeSyncRequest);
+        kafkaTemplate.send(propertiesManager.getSaveSignatureTopic(), employeeSyncRequest);
     }
 
     @Transactional
-    public void create(UserRequest userRequest) {
-        dataSyncEmployeeRepository.executeProcedure();
-        User user = userRequest.getUser();
-        if (user.getSignature() != null) {
-            byte[] fileData = fileStorageService.getFile(user);
-            String[] tenant = user.getTenantId().split("\\.");
+    public void create(EmployeeSyncRequest employeeSyncRequest) {
+        EmployeeSync employeeSync = employeeSyncRequest.getEmployeeSync();
+        dataSyncEmployeeRepository.executeProcedure(employeeSync.getCode(), employeeSync.getTenantId());
+
+        if (!StringUtils.isEmpty(employeeSync.getSignature())) {
+            byte[] fileData = fileStorageService.getFile(employeeSync);
+            String[] tenant = employeeSync.getTenantId().split("\\.");
             String tenantId = tenant.length > 1 ? tenant[tenant.length - 1] : tenant[0];
-            dataSyncEmployeeRepository.updateEmployeeSignature(fileData, user.getUserName(), tenantId);
+            dataSyncEmployeeRepository.updateEmployeeSignature(fileData, employeeSync.getUserName(), tenantId);
         }
     }
 }

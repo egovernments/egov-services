@@ -28,8 +28,9 @@ import FloorDetails from './propertyTax/FloorDetails';
 import DocumentUpload from './propertyTax/DocumentUpload';
 import Workflow from './propertyTax/Workflow';
 import VacantLand from './propertyTax/vacantLand';
-
-
+import PropertyFactors from './propertyTax/PropertyFactors';
+import UpicNumber from './propertyTax/UpicNumber';
+import ConstructionDetails from './propertyTax/ConstructionDetails';
 
 var flag = 0;
 const styles = {
@@ -232,7 +233,7 @@ class DataEntry extends Component {
           console.log(err)
         })
 		
-		 Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:"REVENUE"}).then((res)=>{
+		Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:"REVENUE"}).then((res)=>{
           console.log(res);
           currentThis.setState({zone : res.Boundary})
         }).catch((err)=> {
@@ -241,21 +242,6 @@ class DataEntry extends Component {
           })
           console.log(err)
         })
-		
-		var query = {
-			tenantId: 'default'
-		}
-		
-		Api.commonApiPost('egov-common-workflows/process/_search',query, {}).then((res)=>{
-          console.log(res);
-          currentThis.setState({zone : res.Boundary})
-        }).catch((err)=> {
-           currentThis.setState({
-            zone : []
-          })
-          console.log(err)
-        })
-		
 		
   }
 
@@ -299,10 +285,10 @@ dataEntryTax = () => {
 	
 	if(dataEntry && dataEntry.hasOwnProperty('owners')) {		
 		for(var i=0;i<dataEntry.owners.length;i++){
-			dataEntry.owners[i].locale = userRequest.locale;
+			dataEntry.owners[i].locale = userRequest.locale || 'en_IN';
 			dataEntry.owners[i].type = 'CITIZEN';
 			dataEntry.owners[i].active = true;
-			dataEntry.owners[i].tenantId = 'default';
+			dataEntry.owners[i].tenantId = userRequest.tenantId;
 			dataEntry.owners[i].salutation = null;
 			dataEntry.owners[i].pan = null;
 			dataEntry.owners[i].roles =[  
@@ -371,20 +357,20 @@ dataEntryTax = () => {
 	var currentThis = this;
       var body = {
 			"properties": [{
-				"occupancyDate":"02/12/2016",
-				"tenantId": "default",
-				"oldUpicNumber": null,
+				"occupancyDate":dataEntry.occupancyDate,
+				"tenantId": userRequest.tenantId,
+				"oldUpicNumber": dataEntry.oldUpicNumber,
 				"vltUpicNumber": null,
+				"sequenceNo": dataEntry.sequenceNo || null,
 				"creationReason": dataEntry.reasonForCreation || null,
 				"address": {
-					"tenantId": "default",
-					 "latitude": null,
+					"tenantId": userRequest.tenantId,
 					"longitude": null,
 					"addressNumber": dataEntry.doorNo || null,
 					"addressLine1": dataEntry.locality || null,
 					"addressLine2": null,
 					"landmark": null,
-					"city": "secundrabad",
+					"city": "Roha",
 					"pincode": dataEntry.pin || null,
 					"detail": null,
 					"auditDetails": {
@@ -406,7 +392,7 @@ dataEntryTax = () => {
 					"isExempted": false,
 					"propertyType": dataEntry.propertyType || null,
 					"category": dataEntry.propertySubType || null,
-					"usage": null,
+					"usage": dataEntry.usage || null,
 					"department": dataEntry.department || null,
 					"apartment":null,
 					"siteLength": 12,
@@ -416,14 +402,45 @@ dataEntryTax = () => {
 					"undividedShare": null,
 					"noOfFloors": numberOfFloors, 
 					"isSuperStructure": null,
+					"bpaNo": dataEntry.bpaNo || null,
+					"bpaDate": dataEntry.bpaDate || null,
 					"landOwner": null,
 					"floorType":(dataEntry.propertyType != 'VACANT_LAND' ? (dataEntry.floorType || null) : null),
 					"woodType": (dataEntry.propertyType != 'VACANT_LAND' ? (dataEntry.woodType || null) : null),
 					"roofType": (dataEntry.propertyType != 'VACANT_LAND' ? (dataEntry.roofType || null) : null),
 					"wallType": (dataEntry.propertyType != 'VACANT_LAND' ? (dataEntry.wallType || null) : null),
 					"floors":dataEntry.floorsArr || null,
+					"factors": [{
+								"name": "TOILET",
+								"value": dataEntry.toiletFactor || null
+								},
+								{
+								"name": "ROAD",
+								"value": dataEntry.roadFactor || null
+								},
+								{
+								"name": "LIFT",
+								"value": dataEntry.liftFactor || null
+								},
+								{
+								"name": "PARKING",
+								"value": dataEntry.parkingFactor || null
+								}
+					],
 					"documents": [],
 					"stateId": null,
+					"assessmentDates": {
+						"name": "FIRSTASSESSMENT",
+						"date": "10/06/2017"
+					},
+					"builderDetails": {
+						"certificateNumber": dataEntry.certificateNumber || null,
+						"certificateCompletionDate": dataEntry.certificateCompletionDate || null,
+						"certificateReceiveDate": dataEntry.certificateReceivedDate || null,
+						"agencyName": dataEntry.agencyName || null,
+						"licenseType": dataEntry.licenseType || null,
+						"licenseNumber":dataEntry.licenseNumber || null,
+					},
 					"workFlowDetails": {
 						"department": dataEntry.workflowDepartment || null,
 						"designation":dataEntry.workflowDesignation || null,
@@ -521,8 +538,8 @@ dataEntryTax = () => {
 							currentThis.setState({
 								ack: res.properties.applicationNo
 							});
-							localStorage.setItem('ack', res.properties[0].propertyDetail.applicationNo);
-							this.props.history.push('acknowledgement');
+							localStorage.setItem('upicNumber', res.properties[0].upicNumber);
+							this.props.history.push('dataEntry-acknowledgement');
 							setLoadingStatus('hide');
 						  }).catch((err)=> {
 							console.log(err)
@@ -541,20 +558,15 @@ dataEntryTax = () => {
 				currentThis.setState({
 					ack: res.properties.applicationNo
 				});
-				localStorage.setItem('ack', res.properties[0].propertyDetail.applicationNo);
-				this.props.history.push('acknowledgement');
+				localStorage.setItem('upicNumber', res.properties[0].upicNumber);
+				this.props.history.push('dataEntry-acknowledgement');
 				setLoadingStatus('hide');
 			  }).catch((err)=> {
 				console.log(err)
 				setLoadingStatus('hide');
 				toggleSnackbarAndSetText(true, err.message);
 			  })
-		  }
-		  
-	 
-			  
-		
-		
+		  }	
 	}	  
 		  
 	
@@ -625,31 +637,29 @@ createActivate = () => {
 
 	  return(
 		  <div className="dataEntry">
-				<h3 style={{padding:15}}>Create New Property</h3>
+			  <h3 style={{padding:15}}>Create DataEntry</h3>
 			  <form onSubmit={(e) => {search(e)}}>
+			  	  <UpicNumber/>
 				  <OwnerDetails />
 				  <PropertyAddress/>  
 				  <AssessmentDetails />				  
-				
-				  {(getNameByCode(this.state.propertytypes, dataEntry.propertyType) == "Vacant Land") ? <VacantLand/> :
-					<div>
-						<Amenities />                  
-						<ConstructionTypes/>				  
-						<FloorDetails/>
-					</div>}
-				  <DocumentUpload />
-				  			   
+					<PropertyFactors/>
+				  {(getNameByCode(this.state.propertytypes, dataEntry.propertyType) == "Vacant Land") ?                  
+						<div>
+							<VacantLand/> 
+						</div>:
+						<div>                 
+							<FloorDetails/>
+						</div>}
+						<ConstructionDetails />
 				  <div style={{textAlign:'center'}} >
-				
 						<br/>
-						<RaisedButton type="button" label="Create Property" disabled={this.createActivate()}  primary={true} onClick={()=> {
+						<RaisedButton type="button" label="Create" disabled={this.createActivate()}  primary={true} onClick={()=> {
 							dataEntryTax();
 							}
 						}/>
 						<div className="clearfix"></div>
-				
 				  </div>
-			
 			  </form>
 		  </div>
       )
@@ -672,7 +682,7 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: ['reasonForCreation', 'approver','propertyType', 'extentOfSite','doorNo', 'locality', 'electionWard', 'zoneNo', 'wardNo', 'floorType', 'roofType', 'workflowDepartment', 'workflowDesignation']
+          required: ['reasonForCreation','propertyType','pin' ,'usage','extentOfSite','doorNo', 'zoneNo', 'wardNo', 'sequenceNo', 'oldUpicNumber', 'totalFloors', 'currentAssessmentDate', 'firstAssessmentDate', 'lastAssessmentDate']
         },
         pattern: {
           current: [],
@@ -682,7 +692,7 @@ const mapDispatchToProps = dispatch => ({
 	   validatePropertyOwner: {
         required: {
           current: [],
-          required: ['aadhaarNumber', 'mobileNumber', 'name', 'gaurdianRelation', 'gaurdian', 'gender' ]
+          required: ['mobileNumber', 'name', 'gender' ]
         },
         pattern: {
           current: [],
@@ -692,7 +702,7 @@ const mapDispatchToProps = dispatch => ({
 	   validatePropertyFloor: {
         required: {
           current: [],
-          required: ['floorNo', 'unitType','unitNo', 'structure', 'usage', 'occupancyType', 'constCompletionDate', 'occupancyDate', 'isStructured', 'builtupArea' ]
+          required: ['floorNo', 'unitType','unitNo', 'structure', 'usage', 'occupancyType', 'constCompletionDate', 'occupancyDate', 'isStructured', 'builtupArea','carpetArea']
         },
         pattern: {
           current: [],
@@ -761,7 +771,27 @@ const mapDispatchToProps = dispatch => ({
   resetObject: (object) => {
     dispatch({
       type: "RESET_OBJECT",
-      object
+      object,
+	    validatePropertyOwner: {
+        required: {
+          current: [],
+          required: ['mobileNumber', 'name', 'gender' ]
+        },
+        pattern: {
+          current: [],
+          required: []
+        }
+      },
+	   validatePropertyFloor: {
+        required: {
+          current: [],
+          required: ['floorNo', 'unitType','unitNo', 'structure', 'usage', 'occupancyType', 'constCompletionDate', 'occupancyDate', 'isStructured', 'builtupArea','carpetArea']
+        },
+        pattern: {
+          current: [],
+          required: []
+        }
+      }
     })
   },
 

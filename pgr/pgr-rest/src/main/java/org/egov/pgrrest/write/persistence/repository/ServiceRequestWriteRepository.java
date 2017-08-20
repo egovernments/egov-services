@@ -1,5 +1,6 @@
 package org.egov.pgrrest.write.persistence.repository;
 
+import org.egov.pgrrest.common.domain.model.AttributeEntry;
 import org.egov.pgrrest.common.persistence.entity.Submission;
 import org.egov.pgrrest.common.persistence.entity.SubmissionAttribute;
 import org.egov.pgrrest.common.persistence.entity.SubmissionAttributeKey;
@@ -42,6 +43,12 @@ public class ServiceRequestWriteRepository {
     }
 
     private void saveOrUpdateSubmissionAttributes(ServiceRequestRecord record) {
+        //to remove attributes which are null
+        List<AttributeEntry> notNullAttributes = record.getAttributeEntries().stream()
+            .filter(attributeEntry -> attributeEntry.getCode() != null)
+            .collect(Collectors.toList());
+        record.getAttributeEntries().clear();
+        record.getAttributeEntries().addAll(notNullAttributes);
         final Map<String, List<SubmissionAttribute>> keyToAttributeListMap = getSubmissionAttributes(record);
         createOrUpdateAttributes(record, keyToAttributeListMap);
         deleteAttributes(keyToAttributeListMap);

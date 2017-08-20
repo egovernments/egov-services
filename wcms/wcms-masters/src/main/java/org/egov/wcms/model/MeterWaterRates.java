@@ -39,11 +39,12 @@
  */
 package org.egov.wcms.model;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -70,7 +71,7 @@ public class MeterWaterRates {
     private String code;
 
     @NotNull
-    private String billingtype;
+    private String billingType;
 
     @NotNull
     private String usageTypeName;
@@ -94,12 +95,12 @@ public class MeterWaterRates {
     private Boolean active;
 
     @NotNull
-    private Date fromDate;
+    private Long fromDate;
 
-    private Date toDate;
+    private Long toDate;
 
     private List<Slab> slab;
-
+    @JsonIgnore
     private AuditDetails auditDetails;
 
     @Size(max = 250)

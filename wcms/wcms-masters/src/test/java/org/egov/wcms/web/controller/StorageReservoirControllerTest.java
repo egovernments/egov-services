@@ -118,18 +118,14 @@ public class StorageReservoirControllerTest {
 
         storageReservoirList.add(storageReservoir);
 
-        final StorageReservoirGetRequest storageReservoirGetRequest = Mockito
-                .mock(StorageReservoirGetRequest.class);
+        final StorageReservoirGetRequest storageReservoirGetRequest = Mockito.mock(StorageReservoirGetRequest.class);
 
         when(storageReservoirService.getStorageReservoir(storageReservoirGetRequest)).thenReturn(storageReservoirList);
         when(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true)).thenReturn(responseInfo);
 
-        mockMvc.perform(post("/storagereservoir/_search")
-                .param("tenantId", "default")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(getFileContents("requestinfowrapper.json")))
-                .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+        mockMvc.perform(post("/storagereservoir/_search").param("tenantId", "default")
+                .contentType(MediaType.APPLICATION_JSON).content(getFileContents("requestinfowrapper.json")))
+                .andExpect(status().isOk()).andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(getFileContents("storageresponse.json")));
     }
 

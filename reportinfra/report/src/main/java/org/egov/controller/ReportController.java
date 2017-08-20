@@ -14,6 +14,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -35,31 +36,32 @@ public class ReportController {
 	@Autowired
     public static ResourceLoader resourceLoader;
 
-	@PostMapping("/report/metadata/_get")
+	@PostMapping("/{moduleName}/metadata/_get")
 	@ResponseBody
-	public ResponseEntity<?> create(@RequestBody @Valid final MetaDataRequest metaDataRequest,
+	public ResponseEntity<?> create(@PathVariable("moduleName") String moduleName,@RequestBody @Valid final MetaDataRequest metaDataRequest,
 			final BindingResult errors) {
 		try{
-		MetadataResponse mdr = reportService.getMetaData(metaDataRequest);
+		System.out.println("The Module Name from the URI is :"+moduleName);
+		MetadataResponse mdr = reportService.getMetaData(metaDataRequest,moduleName);
 		return reportService.getSuccessResponse(mdr, metaDataRequest.getRequestInfo(),metaDataRequest.getTenantId());
 		} catch(NullPointerException e){
 			return reportService.getFailureResponse(metaDataRequest.getRequestInfo(),metaDataRequest.getTenantId());
 		}
 	}
 	
-	@PostMapping("/report/_get")
+	@PostMapping("/{moduleName}/_get")
 	@ResponseBody
-	public ResponseEntity<?> getReportData(@RequestBody @Valid final ReportRequest reportRequest,
+	public ResponseEntity<?> getReportData(@PathVariable("moduleName") String moduleName,@RequestBody @Valid final ReportRequest reportRequest,
 			final BindingResult errors) {
 		try {
-		ReportResponse reportResponse = reportService.getReportData(reportRequest);
+		ReportResponse reportResponse = reportService.getReportData(reportRequest,moduleName);
 		return new ResponseEntity<>(reportResponse, HttpStatus.OK);
 		} catch(NullPointerException e){
 			return reportService.getFailureResponse(reportRequest.getRequestInfo(),reportRequest.getTenantId());
 		}
 	}
 	
-	@PostMapping("/report/_reload")
+	@PostMapping("/_reload")
 	@ResponseBody
 	public ResponseEntity<?> reloadYamlData(@RequestBody @Valid final MetaDataRequest reportRequest,
 			final BindingResult errors) {

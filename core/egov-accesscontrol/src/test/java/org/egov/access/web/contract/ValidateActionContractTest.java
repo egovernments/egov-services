@@ -11,14 +11,16 @@ import static org.junit.Assert.assertEquals;
 
 public class ValidateActionContractTest {
 
-    @Test
-    public void testThatValidateActionContractContainsInfoAboutTenantRoleAndActionUrl() {
-        RoleContract role = RoleContract.builder().name("role name").build();
-        TenantRoleContract tenantRole = TenantRoleContract.builder().tenantId("ap.public").roles(Arrays.asList(role)).build();
-        ValidateActionContract validateAction = ValidateActionContract.builder().tenantRole(tenantRole).actionUrl("url").build();
+	@Test
+	public void testThatValidateActionContractContainsInfoAboutTenantRoleAndActionUrl() {
+		RoleContract role = RoleContract.builder().name("role name").build();
+		TenantRoleContract tenantRole = TenantRoleContract.builder().tenantId("ap.public").roles(Arrays.asList(role))
+				.build();
+		ValidateActionContract validateAction = ValidateActionContract.builder().tenantRole(tenantRole).actionUrl("url")
+				.build();
 
-        assertEquals(tenantRole, validateAction.getTenantRole());
-        assertEquals("url", validateAction.getActionUrl());
+		assertEquals(tenantRole, validateAction.getTenantRole());
+		assertEquals("url", validateAction.getActionUrl());
 
-    }
+	}
 }

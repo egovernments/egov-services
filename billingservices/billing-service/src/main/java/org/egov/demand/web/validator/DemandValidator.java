@@ -228,13 +228,14 @@ public class DemandValidator implements Validator {
 	private void validateDemandDetails(List<DemandDetail> demandDetails, Errors errors) {
 
 		for (DemandDetail demandDetail : demandDetails) {
-
-			BigDecimal tax = demandDetail.getTaxAmount();
-			BigDecimal collection = demandDetail.getCollectionAmount();
-			int i = tax.compareTo(collection);
-			if (i < 0)
-				errors.rejectValue("Demands", "", "collectionAmount : " + collection
-						+ " should not be greater than taxAmount : " + tax + " for demandDetail");
+			if(!"ADVANCE".equalsIgnoreCase(demandDetail.getTaxHeadMasterCode())){
+				BigDecimal tax = demandDetail.getTaxAmount();
+				BigDecimal collection = demandDetail.getCollectionAmount();
+				int i = tax.compareTo(collection);
+				if (i < 0)
+					errors.rejectValue("Demands", "", "collectionAmount : " + collection
+							+ " should not be greater than taxAmount : " + tax + " for demandDetail");
+			}
 		}
 	}
 
@@ -330,8 +331,9 @@ public class DemandValidator implements Validator {
 									&& demand.getTaxPeriodTo().compareTo(t.getValidTill()) <= 0)
 							.findAny().orElse(null);
 					if (taxHeadMaster == null)
-						errors.rejectValue("Demands", "", "the given code value '" + code
-								+ "'of teaxheadmaster in DemandDetail.code is invalid, please give a valid code");
+						errors.rejectValue("Demands", "", " No TaxHeadMaster found for given code value '" + code
+								+ "' and from date'"+demand.getTaxPeriodFrom()
+								+ "' and To date '"+demand.getTaxPeriodTo()+"', please give valid code and period");
 				}
 			}
 		}

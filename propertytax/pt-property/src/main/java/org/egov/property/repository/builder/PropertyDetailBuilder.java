@@ -8,8 +8,8 @@ public class PropertyDetailBuilder {
 			+ "department, apartment, siteLength, siteBreadth, sitalArea,"
 			+ "totalBuiltupArea, undividedShare, noOfFloors, isSuperStructure, landOwner, floorType,"
 			+ "woodType, roofType, wallType, stateId, applicationNo, createdBy, lastModifiedBy, "
-			+ "createdTime, lastModifiedTime, property, taxCalculations)"
-			+ "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			+ "createdTime, lastModifiedTime, property, taxCalculations,factors,assessmentDates,builderDetails,bpaNo,bpaDate)"
+			+ "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 	public static final String PROPERTY_DETAIL_BY_PROPERTY_QUERY = " select * from egpt_propertydetails where property = ?";
 
@@ -24,8 +24,8 @@ public class PropertyDetailBuilder {
 				.append(" apartment = ?, siteLength = ?, siteBreadth = ?, sitalArea = ?, totalBuiltupArea = ?,")
 				.append(" undividedShare = ?, noOfFloors = ?, isSuperStructure = ?, landOwner = ?,")
 				.append(" floorType = ?, woodType = ?, roofType = ?, wallType = ?, stateId = ?,")
-				.append(" applicationNo = ?, lastModifiedBy = ?, lastmodifiedtime = ?, property= ?, taxCalculations = ?")
-				.append(" WHERE id = ?");
+				.append(" applicationNo = ?, lastModifiedBy = ?, lastmodifiedtime = ?, property= ?, taxCalculations = ?,")
+				.append(" factors = ?, assessmentDates = ?,builderDetails = ?,bpaNo= ?,bpaDate= ? WHERE id = ?");
 
 		return propertyDetailUpdateSQL.toString();
 	}
@@ -34,14 +34,5 @@ public class PropertyDetailBuilder {
 
 	public static final String UPDATE_TITLETRANSFERPROPERTYDETAIL_QUERY = "UPDATE egpt_propertydetails"
 			+ " SET stateId=?, lastModifiedBy = ?, lastmodifiedtime = ? WHERE id=?";
-
-	public static final String INSERT_PROPERTYDETAILSHISTORY_QUERY = "INSERT INTO egpt_propertydetails_history ("
-			+ "source, regdDocNo, regdDocDate,reason, status, isVerified,"
-			+ "verificationDate, isExempted, exemptionReason, propertyType, category, usage,"
-			+ "department, apartment, siteLength, siteBreadth, sitalArea,"
-			+ "totalBuiltupArea, undividedShare, noOfFloors, isSuperStructure, landOwner, floorType,"
-			+ "woodType, roofType, wallType, stateId, applicationNo, createdBy, lastModifiedBy, "
-			+ "createdTime, lastModifiedTime, property,taxCalculations,id)"
-			+ "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 }

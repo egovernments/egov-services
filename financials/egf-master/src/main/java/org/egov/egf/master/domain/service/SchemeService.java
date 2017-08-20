@@ -50,6 +50,7 @@ public class SchemeService {
 			case Constants.ACTION_UPDATE:
 				Assert.notNull(schemes, "Schemes to update must not be null");
 				for (Scheme scheme : schemes) {
+				        Assert.notNull(scheme.getId(), "Scheme ID to update must not be null");
 					validator.validate(scheme, errors);
 				}
 				break;

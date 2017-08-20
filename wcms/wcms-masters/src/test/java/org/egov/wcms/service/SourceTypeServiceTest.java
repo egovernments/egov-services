@@ -90,18 +90,20 @@ public class SourceTypeServiceTest {
     @Test
     public void test_throwException_Push_To_Producer_WaterSource() {
 
-        final SourceType waterSource = getWaterSourceType();
+        final List<SourceType> waterSourceList = new ArrayList<>();
+        waterSourceList.add(getWaterSourceType());
         final SourceTypeRequest waterSourceRequest = new SourceTypeRequest();
-        waterSourceRequest.setSourceType(waterSource);
-        assertTrue(waterSource.equals(waterSourceTypeService.createWaterSource("topic", "key", waterSourceRequest)));
+        waterSourceRequest.setSourceType(waterSourceList);
+        assertTrue(waterSourceList.equals(waterSourceTypeService.createWaterSource("topic", "key", waterSourceRequest)));
     }
 
     @Test
     public void test_throwException_Create_WaterSource() {
 
-        final SourceType waterSourceType = getWaterSourceType();
+        final List<SourceType> waterSourceTypeList = new ArrayList<>();
+        waterSourceTypeList.add(getWaterSourceType());
         final SourceTypeRequest waterSourceRequest = new SourceTypeRequest();
-        waterSourceRequest.setSourceType(waterSourceType);
+        waterSourceRequest.setSourceType(waterSourceTypeList);
         when(waterSourceTypeRepository.persistCreateWaterSourceType(any(SourceTypeRequest.class)))
                 .thenReturn(waterSourceRequest);
         assertTrue(waterSourceRequest.equals(waterSourceTypeService.create(waterSourceRequest)));

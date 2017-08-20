@@ -1,11 +1,16 @@
-
 import React from 'react';
 import {Switch,Route} from 'react-router-dom';
-
 
 import Login from './components/contents/Login';
 import Dashboard from './components/contents/Dashboard';
 import ProfileEdit from './components/contents/settings/profileEdit';
+
+//ADMINISTRATION
+import searchUserRole from './components/contents/administration/userManagement/searchUserRole';
+import updateUserRole from './components/contents/administration/userManagement/updateUserRole';
+
+//CITIZEN SERVICES
+import VisibleNewServiceRequest from './components/contents/citizenServices/VisibleNewServiceRequest';
 
 //PGR
 import grievanceCreate from './components/contents/pgr/grievanceCreate';
@@ -59,6 +64,10 @@ import DocumentTypeApplicationTypeCreate from './components/contents/wc/master/d
 import ViewEditDocumentTypeApplicationType from './components/contents/wc/master/documentTypeApplicationType/viewEditDocumentTypeApplicationType';
 import ViewDocumentTypeApplicationType from './components/contents/wc/master/documentTypeApplicationType/viewDocumentTypeApplicationType';
 
+import AddDemandWc from './components/contents/wc/master/addDemand';
+import ViewLegacy from './components/non-framework/wc/viewLegacy';
+import AddDemand from './components/contents/propertyTax/master/addDemand';
+
 //Property tax
 import PropertyTaxSearch from './components/contents/propertyTax/master/PropertyTaxSearch';
 import Test from './components/contents/propertyTax/master/Test';
@@ -68,19 +77,38 @@ import WallType from './components/contents/propertyTax/master/WallType';
 import WoodType from './components/contents/propertyTax/master/WoodType';
 import UsageType from './components/contents/propertyTax/master/UsageType';
 import PropertyType from './components/contents/propertyTax/master/PropertyType';
+import EditDemands from './components/non-framework/wc/editDemands';
+
 // import Occupancy from './components/contents/propertyTax/master/Occupancy';
 import MutationReason from './components/contents/propertyTax/master/MutationReason';
 import BuildingClassification from './components/contents/propertyTax/master/BuildingClassification';
 import CreateProperty from './components/contents/propertyTax/master/CreateProperty';
+import DataEntry from './components/contents/propertyTax/master/DataEntry';
 import ViewProperty from './components/contents/propertyTax/master/viewProperty';
 import Acknowledgement from './components/contents/propertyTax/master/Acknowledgement';
+import DataEntryAcknowledgement from './components/contents/propertyTax/master/Acknowledgement_dataEntry';
+import DemandAcknowledgement from './components/contents/propertyTax/master/Acknowledgement_demand';
+import InboxAcknowledgement from './components/contents/propertyTax/master/Acknowledgement_inbox';
 
 
 import CreateVacantLand from'./components/contents/propertyTax/master/CreateVacantLand';
 import Create from './components/framework/create';
+// import CreateTwo from './components/framework/createTwo';
+
+import PayTaxCreate from './components/non-framework/collection/master/paytax/PayTaxCreate';
 import View from './components/framework/view';
 import Search from './components/framework/search';
 import Transaction from './components/framework/transaction';
+import Inbox from './components/framework/inbox';
+
+import LegacyLicenseCreate from './components/non-framework/tl/transaction/LegacyLicenseCreate';
+
+
+import ReceiptView from './components/non-framework/collection/master/receipt/view';
+import Employee from './components/non-framework/employee/create';
+import EmployeeSearch from './components/non-framework/employee/search';
+import SearchLegacyWc from './components/non-framework/wc/search';
+import updateConnection from './components/non-framework/wc/connection-workflow';
 
 const base = "";
 
@@ -89,10 +117,14 @@ const Main = () => {
     <main style={{"marginBottom": "50px"}}>
     <Switch>
         <Route exact path= {base + '/:tenantId?'} component={Login}/>
-	    <Route exact path= {base + '/view/:moduleName/:master?/:id'} component={View}/>
+	     <Route exact path= {base + '/view/:moduleName/:master?/:id'} component={View}/>
         <Route exact path= {base + '/search/:moduleName/:master?/:action'} component={Search}/>
+        <Route exact path={base + '/employee/:action/:id?'} component={Employee}/>
         <Route exact path={base + '/prd/profileEdit'} component={ProfileEdit}/>
         <Route exact path={base+'/prd/dashboard'} component={Dashboard}/>
+        <Route exact path={base+'/administration/searchUserRole'} component={searchUserRole}/>
+        <Route exact path={base+'/administration/updateUserRole/:userId'} component={updateUserRole}/>
+        <Route exact path={base+'/services/apply/:serviceCode/:serviceName'} component={VisibleNewServiceRequest}/>
         <Route exact path={base+'/pgr/createGrievance'} component={grievanceCreate}/>
         <Route exact path={base+'/pgr/viewGrievance/:srn'} component={grievanceView}/>
         <Route exact path={base+'/pgr/searchGrievance'} component={grievanceSearch}/>
@@ -124,7 +156,8 @@ const Main = () => {
         <Route exact path={base+'/pgr/searchEscalationTime'} component={SearchEscalation}/>
         <Route exact path={base+'/pgr/defineEscalationTime'} component={DefineEscalationTime}/>
         <Route exact path={base+'/pgr/createServiceType'} component={ServiceTypeCreate}/>
-        <Route exact path={base+'/report/:reportName'} component={Report}/>
+        <Route exact path={base+'/report/:moduleName/:reportName'} component={Report}/>
+
 
 
         <Route exact path={base+'/wc/createCategoryType'} component={CategoryTypeCreate}/>
@@ -158,6 +191,8 @@ const Main = () => {
         <Route exact path={base+'/wc/documentType/edit'} component={ViewEditDocumentType}/>
         <Route exact path={base+'/wc/documentType/:id'} component={ViewDocumentType}/>
 
+        <Route exact path={base+'/wc/addDemand'} component={AddDemandWc}/>
+
         <Route exact path={base+'/wc/createDocumentTypeApplicationType'} component={DocumentTypeApplicationTypeCreate}/>
        <Route exact name="createDocumentTypeApplicationType" path={base+'/wc/createDocumentTypeApplicationType/:id?'} component={DocumentTypeApplicationTypeCreate}/>
        <Route exact path={base+'/wc/documentTypeApplicationType/view'} component={ViewEditDocumentTypeApplicationType}/>
@@ -177,11 +212,28 @@ const Main = () => {
           <Route exact path={base+'/propertyTax/mutation-reason'} component={MutationReason}/>
           <Route exact path={base+'/propertyTax/building-classification'} component={BuildingClassification}/>
           <Route exact path={base+'/propertyTax/create-property'} component={CreateProperty}/>
+		  <Route exact path={base+'/propertyTax/addDemand/:upicNumber'} component={AddDemand}/>
+		  <Route exact path={base+'/propertyTax/create-dataEntry'} component={DataEntry}/>
 		  <Route exact path={base+'/propertyTax/view-property/:searchParam/:type?'} component={ViewProperty}/>
 		  <Route exact path={base+'/propertyTax/acknowledgement'} component={Acknowledgement}/>
-          <Route exact path= {base + '/create/:moduleName/:master?/:id?'} component={Create}/>
+		  <Route exact path={base+'/propertyTax/dataEntry-acknowledgement'} component={DataEntryAcknowledgement}/>
+		  <Route exact path={base+'/propertyTax/demand-acknowledgement'} component={DemandAcknowledgement}/>
+		  <Route exact path={base+'/propertyTax/inbox-acknowledgement'} component={InboxAcknowledgement}/>
+		  <Route exact path= {base + '/create/:moduleName/:master?/:id?'} component={Create}/>
+        {/*<Route exact path= {base + '/create/:moduleName/:master?/:id?'} component={Create}/>*/}
           <Route exact path= {base + '/update/:moduleName/:master?/:id?'} component={Create}/>
           <Route exact path= {base + '/transaction/:moduleName/:page'} component={Transaction}/>
+		  <Route exact path= {base + '/views/:moduleName/:master?/:id'} component={Inbox}/>
+
+      <Route exact path= {base + '/non-framework/tl/transaction/LegacyLicenseCreate'} component={LegacyLicenseCreate}/>
+
+      <Route exact path= {base + '/non-framework/collection/master/paytax/PayTaxCreate'} component={PayTaxCreate}/>
+      <Route exact path= {base + '/non-framework/collection/receipt/view/:id'} component={ReceiptView}/>
+      <Route exact path={base + '/empsearch/:actionName'} component={EmployeeSearch}/>
+      <Route exact path={base+'/legacy/view/:id'} component={ViewLegacy}/>
+      <Route exact path={base+'/wc/addDemand/:upicNumber'} component={EditDemands}/>
+      <Route exact path={base+'/searchconnection/wc'} component={SearchLegacyWc}/>
+      <Route exact path={base+'/wc/application/update/:stateId'} component={updateConnection}/>
 
     </Switch>
   </main>

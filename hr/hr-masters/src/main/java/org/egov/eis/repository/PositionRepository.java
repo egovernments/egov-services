@@ -40,9 +40,9 @@
 
 package org.egov.eis.repository;
 
-import org.egov.eis.model.DepartmentDesignation;
 import org.egov.eis.model.Position;
 import org.egov.eis.repository.builder.PositionQueryBuilder;
+import org.egov.eis.repository.rowmapper.IdsRowMapper;
 import org.egov.eis.repository.rowmapper.PositionRowMapper;
 import org.egov.eis.service.DepartmentDesignationService;
 import org.egov.eis.web.contract.PositionGetRequest;
@@ -58,18 +58,22 @@ import java.util.List;
 @Repository
 public class PositionRepository {
 
-	public static final String INSERT_POSITION_QUERY = "INSERT INTO egeis_position"
-			+ " (id, name, deptdesigId, isPostOutsourced, active,tenantId)"
-			+ " VALUES (nextval('seq_egeis_position'),?,?,?,?,?)";
+	public static final String INSERT_POSITION_QUERY = "INSERT INTO egeis_position" +
+			" (id, name, deptDesigId, isPostOutsourced, active, tenantId)" +
+			" VALUES (?, (SELECT ?::TEXT || LPAD((count(id) + 1)::TEXT, 3, '0') FROM egeis_position" +
+			" WHERE deptDesigId = ? AND tenantId = ?), ?, ?, ?, ?)";
 
-	public static final String UPDATE_POSITION_QUERY = "UPDATE egeis_position"
-			+ " SET  name=?, deptdesigId=?, isPostOutsourced=?, active=? where id=? and tenantid=? ";
+	public static final String UPDATE_POSITION_QUERY = "UPDATE egeis_position SET active = ?, isPostOutsourced = ?" +
+			" WHERE id = ? AND tenantId = ?";
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
 	@Autowired
 	private PositionRowMapper positionRowMapper;
+
+	@Autowired
+	private IdsRowMapper idsRowMapper;
 
 	@Autowired
 	private PositionQueryBuilder positionQueryBuilder;
@@ -84,26 +88,18 @@ public class PositionRepository {
 		return positions;
 	}
 
-	public void create(PositionRequest positionRequest) {
+	public List<Long> generateSequences(Integer noOfPositions) {
+		return jdbcTemplate.query("SELECT nextval('seq_egeis_position') AS id FROM generate_series(1, ?)",
+				new Object[] { noOfPositions }, idsRowMapper);
+	}
 
+	public void create(PositionRequest positionRequest) {
 		List<Object[]> batchArgs = new ArrayList<>();
 
 		for (Position position : positionRequest.getPosition()) {
-			DepartmentDesignation deptDesg = null;
-			if (position.getDeptdesig() != null && position.getDeptdesig().getDepartmentId() != null
-					&& position.getDeptdesig().getDesignation() != null
-					&& position.getDeptdesig().getDesignation().getId() != null) {
-				deptDesg = departmentDesignationService.getByDepartmentAndDesignation(
-						position.getDeptdesig().getDepartmentId(), position.getDeptdesig().getDesignation().getId());
-			}
-			if (deptDesg == null) {
-				position.getDeptdesig().setTenantId(position.getTenantId());
-				departmentDesignationService.create(position.getDeptdesig());
-				deptDesg = departmentDesignationService.getByDepartmentAndDesignation(
-						position.getDeptdesig().getDepartmentId(), position.getDeptdesig().getDesignation().getId());
-			}
-			Object[] positionRecord = { position.getName(), deptDesg.getId(), position.getIsPostOutsourced(),
-					position.getActive(), position.getTenantId() };
+			Long deptDesigId = position.getDeptdesig().getId();
+			Object[] positionRecord = { position.getId(), position.getName(), deptDesigId, position.getTenantId(),
+					deptDesigId, position.getIsPostOutsourced(), position.getActive(), position.getTenantId() };
 			batchArgs.add(positionRecord);
 		}
 
@@ -113,28 +109,13 @@ public class PositionRepository {
 			ex.printStackTrace();
 			throw new RuntimeException(ex.getMessage());
 		}
-
 	}
 
 	public void update(PositionRequest positionRequest) {
-
 		List<Object[]> batchArgs = new ArrayList<>();
 
 		for (Position position : positionRequest.getPosition()) {
-			DepartmentDesignation deptDesg = null;
-			if (position.getDeptdesig() != null && position.getDeptdesig().getDepartmentId() != null
-					&& position.getDeptdesig().getDesignation() != null
-					&& position.getDeptdesig().getDesignation().getId() != null) {
-				deptDesg = departmentDesignationService.getByDepartmentAndDesignation(
-						position.getDeptdesig().getDepartmentId(), position.getDeptdesig().getDesignation().getId());
-			}
-			if (deptDesg == null) {
-				departmentDesignationService.create(position.getDeptdesig());
-				deptDesg = departmentDesignationService.getByDepartmentAndDesignation(
-						position.getDeptdesig().getDepartmentId(), position.getDeptdesig().getDesignation().getId());
-			}
-			Object[] positionRecord = { position.getName(), deptDesg.getId(), position.getIsPostOutsourced(),
-					position.getActive(), position.getId(), position.getTenantId() };
+			Object[] positionRecord = { position.getActive(), position.getIsPostOutsourced(), position.getId(), position.getTenantId() };
 			batchArgs.add(positionRecord);
 		}
 
@@ -145,4 +126,5 @@ public class PositionRepository {
 			throw new RuntimeException(ex.getMessage());
 		}
 	}
+
 }

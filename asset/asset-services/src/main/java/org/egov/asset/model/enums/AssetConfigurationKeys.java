@@ -8,7 +8,14 @@ public enum AssetConfigurationKeys {
     ENABLEVOUCHERGENERATION("EnableVoucherGeneration"), REVALUATIONVOUCHERNAME(
             "AssetRevaluationVoucherName"), REVALUATIONVOUCHERDESCRIPTION(
                     "AssetRevaluationVoucherDescription"), DISPOSALVOUCHERNAME(
-                            "AssetDisposalVoucherName"), DISPOSALVOUCHERDESCRIPTION("AssetDisposalVoucherDescription");
+                            "AssetDisposalVoucherName"), DISPOSALVOUCHERDESCRIPTION(
+                                    "AssetDisposalVoucherDescription"), ASSETDEFAULTCAPITALIZEDVALUE(
+                                            "AssetDefaultCapitalizedValue"), ASSETMINIMUMVALUE(
+                                                    "AssetMinimumValue"), DEPRECIATIONSEPARATIONDATE(
+                                                            "DepreciationSeparationDate"), DEPRECIATIONVOUCHERNAME(
+                                                                    "AssetDepreciationVoucherName"), DEPRECIATIONVOUCHERDESCRIPTION(
+                                                                            "AssetDepreciationVoucherDescription"), VOUCHERPARAMS(
+                                                                                    "VoucherParams");
 
     private String value;
 

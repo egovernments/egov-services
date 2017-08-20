@@ -40,7 +40,6 @@
 
 package org.egov.wcms.web.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -64,7 +63,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -103,45 +101,41 @@ public class DocumentTypeApplicationTypeController {
         }
         log.info("documentNameRequest::" + documentNameRequest);
 
-        final List<ErrorResponse> errorResponses = validatorUtils.validateDocumentNameRequest(documentNameRequest);
+        final List<ErrorResponse> errorResponses = validatorUtils.validateDocumentApplicationRequest(documentNameRequest,false);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final DocumentTypeApplicationType docTypeAppType = docTypeAppTypeService.sendMessage(
+        final List<DocumentTypeApplicationType> docTypesAppTypes = docTypeAppTypeService.createDocumentApplication(
                 applicationProperties.getCreateDocumentTypeApplicationTypeTopicName(),
                 "documenttypeapplicationtype-create", documentNameRequest);
-        final List<DocumentTypeApplicationType> docTypesAppTypes = new ArrayList<>();
-        docTypesAppTypes.add(docTypeAppType);
+
         return getSuccessResponse(docTypesAppTypes, "Created", documentNameRequest.getRequestInfo());
 
     }
 
-    @PostMapping(value = "/{docTypeAppliTypeId}/_update")
+    @PostMapping(value = "/_update")
     @ResponseBody
     public ResponseEntity<?> update(
             @RequestBody @Valid final DocumentTypeApplicationTypeReq documentTypeApplicationTypeReq,
-            final BindingResult errors, @PathVariable("docTypeAppliTypeId") final Long docTypeAppliTypeId) {
+            final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = validatorUtils.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         log.info("documentTypeApplicationTypeRequest::" + documentTypeApplicationTypeReq);
-        documentTypeApplicationTypeReq.getDocumentTypeApplicationType().setId(docTypeAppliTypeId);
-
         final List<ErrorResponse> errorResponses = validatorUtils
-                .validateDocumentNameRequest(documentTypeApplicationTypeReq);
+                .validateDocumentApplicationRequest(documentTypeApplicationTypeReq, true);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final DocumentTypeApplicationType documentTypeAppliType = docTypeAppTypeService.sendMessage(
+        final List<DocumentTypeApplicationType> documentTypeApplicaTypes = docTypeAppTypeService.updateDocumentApplication(
                 applicationProperties.getUpdateDocumentTypeApplicationTypeTopicName(),
                 "documenttypeapplicationtype-update", documentTypeApplicationTypeReq);
-        final List<DocumentTypeApplicationType> documentTypeApplicaTypes = new ArrayList<>();
-        documentTypeApplicaTypes.add(documentTypeAppliType);
+
         return getSuccessResponse(documentTypeApplicaTypes, null, documentTypeApplicationTypeReq.getRequestInfo());
     }
 
-    @PostMapping("_search")
+    @PostMapping("/_search")
     @ResponseBody
     public ResponseEntity<?> search(
             @ModelAttribute @Valid final DocumentTypeApplicationTypeGetRequest docTypeAppTypeGetRequest,

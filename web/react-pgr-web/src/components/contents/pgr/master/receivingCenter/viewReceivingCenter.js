@@ -1,13 +1,9 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import SimpleMap from '../../../../common/GoogleMaps.js';
-import Divider from 'material-ui/Divider';
 import {Grid, Row, Col, DropdownButton, ListGroup, ListGroupItem} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import {List, ListItem} from 'material-ui/List';
 import TextField from 'material-ui/TextField';
-import {brown500, red500,white,orange800} from 'material-ui/styles/colors';
-import Checkbox from 'material-ui/Checkbox';
 import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
 import AutoComplete from 'material-ui/AutoComplete';
@@ -51,11 +47,9 @@ class ViewReceivingCenter extends Component {
             let {setForm} = this.props;
 
             Api.commonApiPost("/pgr-master/receivingcenter/v1/_search",{id:this.props.match.params.id},{}).then(function(response){
-                console.log(response);
                 current.setState({data:response.ReceivingCenterType})
                 setForm(response.ReceivingCenterType[0])
             }).catch((error)=>{
-                console.log(error);
             })
         }
 
@@ -86,7 +80,7 @@ class ViewReceivingCenter extends Component {
           <Grid style={{width:'100%'}}>
             <Card style={{margin:'15px 0'}}>
               <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
-                 Receiving Center
+                 {translate('pgr.lbl.receivingcenter')}
                < /div>}/>
                <CardText style={{padding:'8px 16px 0'}}>
                  <Row style={styles.addBorderBottom}>
@@ -114,7 +108,7 @@ class ViewReceivingCenter extends Component {
                      {translate("pgr.lbl.active")}
                    </Col>
                    <Col xs={6} md={3}>
-                    {viewReceivingCenter.active? "true": 'false'}
+                    {viewReceivingCenter.active? "Yes": 'No'}
                    </Col>
                  </Row>
                  <Row style={styles.addBorderBottom}>
@@ -128,7 +122,7 @@ class ViewReceivingCenter extends Component {
                      {translate("pgr.lbl.crn")}
                    </Col>
                    <Col xs={6} md={3}>
-                    {viewReceivingCenter.iscrnrequired? "true": 'false'}
+                    {viewReceivingCenter.iscrnrequired? "Yes": 'No'}
                    </Col>
                  </Row>
                  <Row style={styles.addBorderBottom}>

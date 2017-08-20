@@ -3,7 +3,6 @@ import {connect} from 'react-redux';
 import {Grid, Row, Col, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
-import {brown500, red500,white,orange800} from 'material-ui/styles/colors';
 import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
 import AutoComplete from 'material-ui/AutoComplete';
@@ -132,12 +131,10 @@ class createRouter extends Component {
           searchTextPos = getNameById(self.state.positionSource, response.RouterTypRes[0].position) || "";
           setForm(routerType);
           if(type == "view"){
-            console.log('view page');
             self.setState({
               readonly: true
             });
           }else {
-            console.log('edit page');
             self.setState({
               updateonly: true
             });
@@ -278,7 +275,6 @@ class createRouter extends Component {
       var data = this.state.complaintSource.find( function( ele ) {
           return ele.id == id;
       } );
-      console.log(id, data);
       if(data){
         return (
           <div>
@@ -298,7 +294,6 @@ class createRouter extends Component {
       var data = this.state.boundaryTypeList.find( function( ele ) {
           return ele.id == id;
       } );
-      console.log(id, data);
       if(data){
         return (
           <div>
@@ -318,7 +313,6 @@ class createRouter extends Component {
       var data = this.state.boundarySource.find( function( ele ) {
           return ele.id == id;
       } );
-      console.log(id, data);
       if(data){
         return (
           <div>
@@ -338,7 +332,6 @@ class createRouter extends Component {
       var data = this.state.positionSource.find( function( ele ) {
           return ele.id == id;
       } );
-      console.log(id, data);
       if(data){
         return (
           <div>
@@ -380,8 +373,6 @@ class createRouter extends Component {
        	readonly,
         updateonly
   	} = this.state;
-
-    console.log(readonly, updateonly);
 
   	const showBtn = function() {
   		if(!readonly) {
@@ -442,11 +433,10 @@ class createRouter extends Component {
                 <CardText style={{padding:0}}>
                    <Grid>
                      <Row>
-                     <Col xs={12} md={8}>
+                     <Col xs={12} sm={6} md={6} lg={6}>
                       <AutoComplete
-                          hintText=""
-                          floatingLabelText={translate("pgr.lbl.grievance.type") + " *"}
                           fullWidth={true}
+                          floatingLabelText={translate("pgr.lbl.grievance.type") + " *"}
                           filter={AutoComplete.caseInsensitiveFilter}
                           dataSource={this.state.complaintSource}
                           dataSourceConfig={this.state.complaintSourceConfig}
@@ -455,18 +445,23 @@ class createRouter extends Component {
                           searchText={searchTextCom}
                           value={routerCreateSet.complaintType || ""}
                           onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "complaintType")}}
+                          ref="complaintType"
                           onNewRequest={(chosenRequest, index) => {
-                            searchTextCom = chosenRequest.serviceName
-                            var e = {
-                              target: {
-                                value: chosenRequest.id
-                              }
-                            };
-                            handleChange(e, "complaintType", true, "");
+                            if(index === -1){
+                              this.refs['complaintType'].setState({searchText:''});
+                            }else{
+                              searchTextCom = chosenRequest.serviceName;
+                              var e = {
+                                target: {
+                                  value: chosenRequest.id
+                                }
+                              };
+                              handleChange(e, "complaintType", true, "");
+                            }
                            }}
                           />
                      </Col>
-                     <Col xs={12} md={8}>
+                     <Col xs={12} sm={6} md={6} lg={6}>
                       <SelectField
                         fullWidth={true}
                         floatingLabelText={translate("pgr.lbl.boundarytype") + " *"}
@@ -482,7 +477,7 @@ class createRouter extends Component {
                                     ))}
                        </SelectField>
                      </Col>
-                     <Col xs={12} md={8}>
+                     <Col xs={12} sm={6} md={6} lg={6}>
                       <AutoComplete
                           hintText=""
                           floatingLabelText={translate("pgr.lbl.boundary") + " *"}
@@ -495,22 +490,26 @@ class createRouter extends Component {
                           value={routerCreateSet.boundary || ""}
                           onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "boundary")}}
                           searchText={searchTextBoun}
+                          ref="boundary"
                           onNewRequest={(chosenRequest, index) => {
-                            searchTextBoun = chosenRequest.name;
-                            var e = {
-                              target: {
-                                value: chosenRequest.id
-                              }
-                            };
-                            handleChange(e, "boundary", true, "");
+                            if(index === -1){
+                              this.refs['boundary'].setState({searchText:''});
+                            }else{
+                              searchTextBoun = chosenRequest.name;
+                              var e = {
+                                target: {
+                                  value: chosenRequest.id
+                                }
+                              };
+                              handleChange(e, "boundary", true, "");
+                            }
                            }}
                           />
                      </Col>
-                     <Col xs={12} md={8}>
+                     <Col xs={12} sm={6} md={6} lg={6}>
                       <AutoComplete
-                          hintText=""
-                          floatingLabelText={translate("pgr.lbl.position") + " *"}
                           fullWidth={true}
+                          floatingLabelText={translate("pgr.lbl.position") + " *"}
                           filter={AutoComplete.caseInsensitiveFilter}
                           dataSource={this.state.positionSource}
                           dataSourceConfig={this.state.allSourceConfig}
@@ -519,15 +518,20 @@ class createRouter extends Component {
                           value={routerCreateSet.position || ""}
                           onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "position")}}
                           searchText={searchTextPos}
+                          ref="position"
                           onNewRequest={(chosenRequest, index) => {
-                            searchTextPos = chosenRequest.name;
-                            var e = {
-                              target: {
-                                value: chosenRequest.id
-                              }
-                            };
-                            handleChange(e, "position", true, "");
-                           }}
+                            if(index === -1){
+                              this.refs['position'].setState({searchText:''});
+                            }else{
+                              searchTextPos = chosenRequest.name;
+                              var e = {
+                                target: {
+                                  value: chosenRequest.id
+                                }
+                              };
+                              handleChange(e, "position", true, "");
+                            }}
+                            }
                           />
                      </Col>
                     </Row>
@@ -539,7 +543,7 @@ class createRouter extends Component {
              </div>
            </form>
            <Dialog
-            title="Success"
+            title={translate('pgr.lbl.success')}
             actions={[<FlatButton
                   label={translate("core.lbl.close")}
                   primary={true}

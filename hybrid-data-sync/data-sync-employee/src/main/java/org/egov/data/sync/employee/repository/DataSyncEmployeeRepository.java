@@ -43,27 +43,41 @@ package org.egov.data.sync.employee.repository;
 import org.egov.data.sync.employee.config.PropertiesManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Repository
 public class DataSyncEmployeeRepository {
 
+    private static final String UPDATE_SIGNATURE_QUERY = "UPDATE $schema.eg_user SET signature = ? WHERE username = ?";
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
     @Autowired
     private PropertiesManager propertiesManager;
-
-    private static final String UPDATE_SIGNATURE_QUERY = "UPDATE $schema.eg_user SET signature = ? WHERE username = ?";
 
     public void updateEmployeeSignature(byte[] signature, String userName, String tenantId) {
         jdbcTemplate.update(UPDATE_SIGNATURE_QUERY.replace("$schema", tenantId), new Object[]{signature, userName});
     }
 
-    public void executeProcedure() {
+    public void executeProcedure(String code, String tenantId) {
         SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate).withSchemaName("microservice")
                 .withProcedureName("ms_to_ml_load_employees");
-        simpleJdbcCall.execute();
+
+        Map<String, Object> inParamMap = new HashMap<String, Object>();
+        inParamMap.put("empcode", code);
+        inParamMap.put("tenant", tenantId);
+        SqlParameterSource in = new MapSqlParameterSource(inParamMap);
+
+
+        Map<String, Object> simpleJdbcCallResult = simpleJdbcCall.execute(in);
+        System.out.println(simpleJdbcCallResult);
+        //simpleJdbcCall.execute(in);
+
+        //simpleJdbcCall.execute();
     }
 }

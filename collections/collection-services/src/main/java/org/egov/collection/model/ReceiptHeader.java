@@ -40,21 +40,12 @@
 
 package org.egov.collection.model;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
-
-
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.Set;
 @ToString
 @Data
 @Builder
@@ -86,8 +77,8 @@ public class ReceiptHeader {
 	
 	private Set<ReceiptDetail> receiptDetails = new LinkedHashSet<>(0);
 	
-    private Set receiptInstrument = new HashSet<>(0);
-	
+    private Instrument receiptInstrument;
+
 	private Date receiptDate;
 	
 	private String referenceDesc;
@@ -151,6 +142,8 @@ public class ReceiptHeader {
     private Date lastModifiedDate;
     
     private String cancellationRemarks;
+
+    private String transactionId;
     
     
     
@@ -165,6 +158,6 @@ public class ReceiptHeader {
     			.cancellationRemarks(cancellationRemarks).reference_ch_id(reference_ch_id).receiptDate(receiptDate).
     			department(department).depositedBranch(depositedBranch).tenantId(tenantId).displayMsg(displayMsg).
     			voucherheader(voucherheader).version(version).createdBy(createdBy).createdDate(createdDate).
-    			lastModifiedBy(lastModifiedBy).lastModifiedDate(lastModifiedDate).build();
+    			lastModifiedBy(lastModifiedBy).lastModifiedDate(lastModifiedDate).transactionId(transactionId).build();
     }
 }

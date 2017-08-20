@@ -49,6 +49,8 @@ import org.apache.log4j.Logger;
 import org.egov.collection.web.contract.BillAccountDetail;
 import org.springframework.stereotype.Service;
 
+import lombok.ToString;
+
 @Service
 public class CollectionApportionerService {
 	private static final Logger LOGGER = Logger
@@ -89,6 +91,7 @@ public class CollectionApportionerService {
 				balance = balance.minus(crAmountToBePaid);
 			}
 		}
+		LOGGER.info("balance: "+balance);
 		if (balance.isGreaterThanZero()) {
 			LOGGER.error("Apportioning failed: excess payment!");
 			throw new ValidationException(
@@ -99,6 +102,7 @@ public class CollectionApportionerService {
 		return billAccountDetails;
 	}
 
+	@ToString
 	private static class Amount {
 		BigDecimal crAmount;
 		static Amount ZERO = new Amount(BigDecimal.ZERO);

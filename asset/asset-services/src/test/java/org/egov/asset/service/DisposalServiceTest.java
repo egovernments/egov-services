@@ -17,6 +17,7 @@ import org.egov.asset.contract.DisposalRequest;
 import org.egov.asset.contract.DisposalResponse;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCategory;
+import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.AuditDetails;
 import org.egov.asset.model.ChartOfAccountDetailContract;
 import org.egov.asset.model.Disposal;
@@ -25,7 +26,9 @@ import org.egov.asset.model.Location;
 import org.egov.asset.model.enums.AssetCategoryType;
 import org.egov.asset.model.enums.DepreciationMethod;
 import org.egov.asset.model.enums.ModeOfAcquisition;
+import org.egov.asset.model.enums.Status;
 import org.egov.asset.model.enums.TransactionType;
+import org.egov.asset.repository.AssetRepository;
 import org.egov.asset.repository.DisposalRepository;
 import org.egov.asset.util.FileUtils;
 import org.egov.common.contract.request.RequestInfo;
@@ -53,6 +56,9 @@ public class DisposalServiceTest {
     private DisposalRepository disposalRepository;
 
     @Mock
+    private AssetRepository assetRepository;
+
+    @Mock
     private LogAwareKafkaTemplate<String, Object> logAwareKafkaTemplate;
 
     @Mock
@@ -63,9 +69,6 @@ public class DisposalServiceTest {
 
     @Mock
     private ApplicationProperties applicationProperties;
-
-    @Mock
-    private AssetCurrentAmountService assetCurrentAmountService;
 
     @Mock
     private RestTemplate restTemplate;
@@ -107,12 +110,12 @@ public class DisposalServiceTest {
     public void testCreateAsync() throws NumberFormatException, Exception {
 
         final DisposalService mock = PowerMockito.mock(DisposalService.class);
-        PowerMockito.doReturn(Long.valueOf("6")).when(mock, "createVoucherForDisposal", any(DisposalRequest.class),
+        PowerMockito.doReturn("6").when(mock, "createVoucherForDisposal", any(DisposalRequest.class),
                 any(HttpHeaders.class));
 
         final DisposalRequest disposalRequest = new DisposalRequest();
         disposalRequest.setDisposal(getDisposalForCreateAsync());
-        disposalRequest.getDisposal().setVoucherReference(Long.valueOf("6"));
+        disposalRequest.getDisposal().setProfitLossVoucherReference("6");
 
         final List<DisposalRequest> insertedDisposalRequest = new ArrayList<>();
         insertedDisposalRequest.add(disposalRequest);
@@ -124,18 +127,17 @@ public class DisposalServiceTest {
             fail();
         }
 
-        when(assetCurrentAmountService.getAsset(any(Long.class), any(String.class), any(RequestInfo.class)))
-                .thenReturn(get_Asset());
+        final List<Asset> assets = new ArrayList<>();
+        assets.add(get_Asset());
+        when(assetRepository.findForCriteria(any(AssetCriteria.class))).thenReturn(assets);
         when(applicationProperties.getCreateAssetDisposalTopicName()).thenReturn("kafka.topics.save.disposal");
         when(disposalRepository.getNextDisposalId()).thenReturn(15);
 
         assertTrue(disposalResponse.getDisposals().get(0).getId().equals(Long.valueOf("15")));
-        // doNothing().when(logAwareKafkaTemplate).send(Matchers.anyString(),
-        // Matchers.anyString(), Matchers.anyObject());
         mock.createAsync(disposalRequest, new HttpHeaders());
 
-        assertEquals(disposalResponse.getDisposals().get(0).getVoucherReference(),
-                disposalRequest.getDisposal().getVoucherReference());
+        assertEquals(disposalResponse.getDisposals().get(0).getProfitLossVoucherReference(),
+                disposalRequest.getDisposal().getProfitLossVoucherReference());
     }
 
     @Test
@@ -151,7 +153,7 @@ public class DisposalServiceTest {
         final DisposalRequest disposalRequest = new DisposalRequest();
         disposalRequest.setDisposal(getDisposalForCreateAsync());
         disposalRequest.getDisposal().setId(Long.valueOf("15"));
-        disposalRequest.getDisposal().setVoucherReference(Long.valueOf("6"));
+        disposalRequest.getDisposal().setProfitLossVoucherReference("6");
 
         doNothing().when(disposalRepository).create(disposalRequest);
         mock.create(disposalRequest);
@@ -203,7 +205,7 @@ public class DisposalServiceTest {
         disposal.setSaleValue(new BigDecimal("200.0"));
         disposal.setTransactionType(TransactionType.SALE);
         disposal.setAssetSaleAccount(Long.valueOf("15"));
-        disposal.setVoucherReference(Long.valueOf("6"));
+        disposal.setProfitLossVoucherReference("6");
         disposal.setAuditDetails(getAuditDetails());
 
         return disposal;
@@ -214,7 +216,7 @@ public class DisposalServiceTest {
         asset.setTenantId("ap.kurnool");
         asset.setId(Long.valueOf("31"));
         asset.setName("asset name");
-        asset.setStatus("CREATED");
+        asset.setStatus(Status.CREATED.toString());
         asset.setModeOfAcquisition(ModeOfAcquisition.ACQUIRED);
 
         final Location location = new Location();

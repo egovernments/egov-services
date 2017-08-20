@@ -4,6 +4,8 @@ import lombok.*;
 
 import static org.springframework.util.StringUtils.isEmpty;
 
+import javax.validation.constraints.NotNull;
+
 
 @Builder
 @AllArgsConstructor
@@ -12,15 +14,26 @@ import static org.springframework.util.StringUtils.isEmpty;
 @Getter
 public class ServiceTypeConfiguration {
 
+	@NotNull
     private String tenantId;
 
+    @NotNull
     private String serviceCode;
 
-    private boolean isApplicationFeesEnabled;
+    private boolean applicationFeesEnabled;
 
-    private boolean isNotificationEnabled;
+    private boolean notificationEnabled;
 
-    private boolean isSlaEnabled;
+    private boolean slaEnabled;
+    
+    private String glCode;
+    
+    private boolean online;
+    
+    private String source;
+    
+    private String url;
+    
 
     public boolean isTenantIdAbsent(){
         return isEmpty(tenantId);
@@ -30,13 +43,34 @@ public class ServiceTypeConfiguration {
         return isEmpty(serviceCode);
     }
 
+    public boolean isGlCodeEnabled(){
+        return isEmpty(glCode);
+    }
+    
+    public boolean isOnlineEnabled(){
+        return isEmpty(online);
+    }
+    
+    public boolean isSourceEnabled(){
+        return isEmpty(source);
+    }
+    
+    public boolean isurl(){
+        return isEmpty(url);
+    }
+    
+
     public org.egov.pgr.persistence.dto.ServiceTypeConfiguration toDto(){
         return org.egov.pgr.persistence.dto.ServiceTypeConfiguration.builder()
                 .serviceCode(serviceCode)
                 .tenantId(tenantId)
-                .isApplicationFeesEnabled(isApplicationFeesEnabled)
-                .isNotificationEnabled(isNotificationEnabled)
-                .isSlaEnabled(isSlaEnabled)
+                .applicationFeesEnabled(applicationFeesEnabled)
+                .notificationEnabled(notificationEnabled)
+                .slaEnabled(slaEnabled)
+                .glCode(glCode)
+                .online(online)
+                .source(source)
+                .url(url)
                 .build();
     }
 }

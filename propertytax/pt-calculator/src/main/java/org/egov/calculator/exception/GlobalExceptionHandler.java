@@ -95,7 +95,18 @@ public class GlobalExceptionHandler {
             errorList.add(error);
             return new ErrorRes(responseInfo, errorList);
         }
-
+        else  if (ex instanceof InvalidPenaltyDataException) {
+            Error error = new Error(HttpStatus.BAD_REQUEST.toString(),((InvalidPenaltyDataException) ex).getCustomMessage(),((InvalidPenaltyDataException) ex).getDescription(), null);
+            ResponseInfo responseInfo = new ResponseInfo();
+            responseInfo.setApiId(((InvalidPenaltyDataException) ex).getRequestInfo().getApiId());
+            responseInfo.setVer(((InvalidPenaltyDataException) ex).getRequestInfo().getVer());
+            responseInfo.setMsgId(((InvalidPenaltyDataException) ex).getRequestInfo().getMsgId());
+            responseInfo.setTs(new Date().getTime());
+            responseInfo.setStatus(propertiesManager.getFailed());
+            List<Error> errorList = new ArrayList<Error>();
+            errorList.add(error);
+            return new ErrorRes(responseInfo, errorList);
+        }
         else {
             Error error = new Error(HttpStatus.BAD_REQUEST.toString(), ex.getMessage(), null,
                     new HashMap<String, String>());

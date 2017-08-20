@@ -18,6 +18,7 @@ import org.egov.asset.contract.RevaluationRequest;
 import org.egov.asset.contract.RevaluationResponse;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCategory;
+import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.AuditDetails;
 import org.egov.asset.model.ChartOfAccountDetailContract;
 import org.egov.asset.model.Location;
@@ -28,16 +29,15 @@ import org.egov.asset.model.enums.DepreciationMethod;
 import org.egov.asset.model.enums.ModeOfAcquisition;
 import org.egov.asset.model.enums.Status;
 import org.egov.asset.model.enums.TypeOfChangeEnum;
+import org.egov.asset.repository.AssetRepository;
 import org.egov.asset.repository.RevaluationRepository;
 import org.egov.asset.util.FileUtils;
-import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -67,10 +67,10 @@ public class RevaluationServiceTest {
     private RevaluationCriteria revaluationCriteria;
 
     @Mock
-    private AssetCurrentAmountService assetCurrentAmountService;
+    private RestTemplate restTemplate;
 
     @Mock
-    private RestTemplate restTemplate;
+    private AssetRepository assetRepository;
 
     @Mock
     private RevaluationRequest revaluationRequest;
@@ -83,6 +83,9 @@ public class RevaluationServiceTest {
 
     @Mock
     private ChartOfAccountDetailContract chartOfAccountDetailContract;
+
+    @Mock
+    private CurrentValueService currentValueService;
 
     @Before
     public void setUp() throws Exception {
@@ -106,7 +109,8 @@ public class RevaluationServiceTest {
         revaluationRequest.getRevaluation().setId(Long.valueOf("15"));
 
         doNothing().when(revaluationRepository).create(revaluationRequest);
-        revaluationService.create(Matchers.any(RevaluationRequest.class));
+        revaluationService.create(revaluationRequest);
+        revaluationService.saveRevaluationAmountToCurrentAmount(revaluationRequest);
         assertEquals(revaluationResponse.getRevaluations().get(0).toString(),
                 revaluationRequest.getRevaluation().toString());
     }
@@ -114,11 +118,12 @@ public class RevaluationServiceTest {
     @Test
     public void testCreateAsync() throws NumberFormatException, Exception {
 
-        when(assetCurrentAmountService.getAsset(any(Long.class), any(String.class), any(RequestInfo.class)))
-                .thenReturn(get_Asset());
+        final List<Asset> assets = new ArrayList<>();
+        assets.add(get_Asset());
+        when(assetRepository.findForCriteria(any(AssetCriteria.class))).thenReturn(assets);
         final RevaluationService mock = PowerMockito.mock(RevaluationService.class);
-        PowerMockito.doReturn(Long.valueOf("6")).when(mock, "createVoucherForRevaluation",
-                any(RevaluationRequest.class), any(HttpHeaders.class));
+        PowerMockito.doReturn("6").when(mock, "createVoucherForRevaluation", any(RevaluationRequest.class),
+                any(HttpHeaders.class));
 
         final RevaluationRequest revaluationRequest = new RevaluationRequest();
         revaluationRequest.setRevaluation(getRevaluationForCreateAsync());
@@ -138,8 +143,6 @@ public class RevaluationServiceTest {
         when(applicationProperties.getCreateAssetDisposalTopicName()).thenReturn("kafka.topics.save.disposal");
 
         assertTrue(revaluationResponse.getRevaluations().get(0).getId().equals(Long.valueOf("15")));
-        // doNothing().when(logAwareKafkaTemplate).send(Matchers.anyString(),
-        // Matchers.anyString(), Matchers.anyObject());
         mock.createAsync(revaluationRequest, new HttpHeaders());
         assertEquals(revaluationResponse.getRevaluations().get(0).toString(),
                 revaluationRequest.getRevaluation().toString());
@@ -180,7 +183,7 @@ public class RevaluationServiceTest {
         revaluation.setComments("coments");
         revaluation.setStatus(Status.APPROVED.toString());
         revaluation.setAuditDetails(getAuditDetails());
-        revaluation.setVoucherReference(Long.valueOf("42"));
+        revaluation.setVoucherReference("42");
         return revaluation;
     }
 

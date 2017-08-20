@@ -1,0 +1,1 @@
+delete from egtl_license;

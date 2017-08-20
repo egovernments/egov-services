@@ -42,7 +42,7 @@ package org.egov.data.sync.employee.web.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.egov.data.sync.employee.service.DataSyncEmployeeService;
-import org.egov.data.sync.employee.web.contract.UserRequest;
+import org.egov.data.sync.employee.web.contract.EmployeeSyncRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -56,9 +56,9 @@ public class DataSyncEmployeeController {
     private DataSyncEmployeeService dataSyncEmployeeService;
 
     @PostMapping("/datasync/_create")
-    public void createUser(@RequestBody UserRequest userRequest) {
-        log.debug("Received UserRequest :: " + userRequest);
-        dataSyncEmployeeService.createAsync(userRequest);
+    public void createUser(@RequestBody EmployeeSyncRequest employeeSyncRequest) {
+        log.debug("Received EmployeeSyncRequest :: " + employeeSyncRequest);
+        dataSyncEmployeeService.createAsync(employeeSyncRequest);
     }
 
 }

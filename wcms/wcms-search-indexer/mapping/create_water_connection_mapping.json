@@ -1,0 +1,117 @@
+{
+    "_all": {
+        "enabled": true
+    },
+    "properties": {
+    	"id": {
+            "type": "long"
+        },
+        "connectionType": {
+            "type": "keyword"
+        },
+        "applicationType": {
+            "type": "keyword"
+        },
+        "billingType": {
+            "type": "keyword"
+        },
+        "categoryType": {
+            "type": "keyword"
+        },
+        "categoryId": {
+            "type": "long"
+        },
+        "hscPipeSizeType": {
+            "type": "keyword"
+        },
+        "pipesizeId": {
+            "type": "keyword"
+        },
+        "executionDate": {
+            "type": "date",
+            "format": "strict_date_optional_time||epoch_millis"
+        },
+        "supplyType": {
+            "type": "keyword"
+        },
+        "supplyTypeId": {
+            "type": "keyword"
+        },
+        "noOfFlats": {
+            "type": "integer"
+        },
+        "propertyIdentifier": {
+            "type": "keyword"
+        },
+        "assetIdentifier": {
+            "type": "keyword"
+        },
+        "sourceType": {
+            "type": "keyword"
+        },
+        "sourceTypeId": {
+            "type": "keyword"
+        },
+        "waterTreatment": {
+            "type": "keyword"
+        },
+        "waterTreatmentId": {
+            "type": "keyword"
+        },
+        "connectionStatus": {
+            "type": "keyword"
+        },
+        "status": {
+            "type": "keyword"
+        },
+        "stateId": {
+            "type": "keyword"
+        },
+        "demandid": {
+            "type": "keyword"
+        },
+        "sumpCapacity": {
+            "type": "double"
+        },
+        "donationCharge": {
+            "type": "double"
+        },
+        "numberOfTaps": {
+            "type": "integer"
+        },
+        "numberOfPersons": {
+            "type": "integer"
+        },
+        "legacyConsumerNumber": {
+            "type": "keyword"
+        },
+        "estimationNumber": {
+            "type": "keyword"
+        },
+        "workOrderNumber": {
+            "type": "keyword"
+        },
+        "isLegacy": {
+            "type": "keyword"
+        },
+        "acknowledgementNumber": {
+            "type": "keyword"
+        },
+        "consumerNumber": {
+            "type": "keyword"
+        },
+        "bplCardHolderName": {
+            "type": "keyword"
+        },
+        "parentConnectionId": {
+            "type": "long"
+        },
+        "tenantId" : {
+            "type" : "keyword"
+        },
+        "createdDate": {
+            "type": "date",
+            "format": "strict_date_optional_time||epoch_millis"
+        }
+    }
+}

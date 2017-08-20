@@ -1,5 +1,6 @@
 package org.egov.egf.instrument.domain.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -10,10 +11,12 @@ import org.egov.common.domain.model.Pagination;
 import org.egov.egf.instrument.domain.model.Instrument;
 import org.egov.egf.instrument.domain.model.InstrumentSearch;
 import org.egov.egf.instrument.domain.model.InstrumentType;
+import org.egov.egf.instrument.domain.model.InstrumentTypeSearch;
 import org.egov.egf.instrument.domain.model.SurrenderReason;
 import org.egov.egf.instrument.domain.repository.InstrumentRepository;
 import org.egov.egf.instrument.domain.repository.InstrumentTypeRepository;
 import org.egov.egf.instrument.domain.repository.SurrenderReasonRepository;
+import org.egov.egf.instrument.web.requests.InstrumentRequest;
 import org.egov.egf.master.web.contract.BankAccountContract;
 import org.egov.egf.master.web.contract.BankContract;
 import org.egov.egf.master.web.contract.FinancialStatusContract;
@@ -34,6 +37,7 @@ public class InstrumentService {
 
 	public static final String ACTION_CREATE = "create";
 	public static final String ACTION_UPDATE = "update";
+	public static final String ACTION_DELETE = "delete";
 	public static final String ACTION_VIEW = "view";
 	public static final String ACTION_EDIT = "edit";
 	public static final String ACTION_SEARCH = "search";
@@ -111,6 +115,26 @@ public class InstrumentService {
 
 	}
 
+	@Transactional
+	public List<Instrument> delete(List<Instrument> instruments, BindingResult errors, RequestInfo requestInfo) {
+
+		try {
+
+			validate(instruments, ACTION_DELETE, errors);
+
+			if (errors.hasErrors()) {
+				throw new CustomBindException(errors);
+			}
+
+		} catch (CustomBindException e) {
+
+			throw new CustomBindException(errors);
+		}
+
+		return instrumentRepository.delete(instruments, requestInfo);
+
+	}
+
 	private BindingResult validate(List<Instrument> instruments, String method, BindingResult errors) {
 
 		try {
@@ -128,7 +152,14 @@ public class InstrumentService {
 			case ACTION_UPDATE:
 				Assert.notNull(instruments, "Instruments to update must not be null");
 				for (Instrument instrument : instruments) {
+					Assert.notNull(instrument.getId(), "Instrument ID to update must not be null");
 					validator.validate(instrument, errors);
+				}
+				break;
+			case ACTION_DELETE:
+				Assert.notNull(instruments, "Instruments to delete must not be null");
+				for (Instrument instrument : instruments) {
+					Assert.notNull(instrument.getId(), "Instrument ID to delete must not be null");
 				}
 				break;
 			default:
@@ -143,31 +174,34 @@ public class InstrumentService {
 
 	public List<Instrument> fetchRelated(List<Instrument> instruments) {
 
-		// entity.setId(UUID.randomUUID().toString().replace("-", ""));
 		if (instruments != null)
 			for (Instrument instrument : instruments) {
 
 				instrument.setId(UUID.randomUUID().toString().replace("-", ""));
+
 				// fetch related items
 
-				if (instrument.getInstrumentType() != null) {
-					InstrumentType instrumentType = instrumentTypeRepository.findById(instrument.getInstrumentType());
-					if (instrumentType == null) {
+				if (instrument.getInstrumentType() != null && instrument.getInstrumentType().getName() != null) {
+					InstrumentTypeSearch instrumentTypeSearch = new InstrumentTypeSearch();
+					instrumentTypeSearch.setName(instrument.getInstrumentType().getName());
+					instrumentTypeSearch.setTenantId(instrument.getInstrumentType().getTenantId());
+					Pagination<InstrumentType> response = instrumentTypeRepository.search(instrumentTypeSearch);
+					if (response == null || response.getPagedData() == null || response.getPagedData().isEmpty()) {
 						throw new InvalidDataException("instrumentType", "instrumentType.invalid",
 								" Invalid instrumentType");
 					}
-					instrument.setInstrumentType(instrumentType);
+					instrument.setInstrumentType(response.getPagedData().get(0));
 				}
-				if (instrument.getBank() != null) {
-					BankContract bank = bankContractRepository.findById(instrument.getBank());
+				if (instrument.getBank() != null && instrument.getBank().getCode() != null) {
+					BankContract bank = bankContractRepository.findByCode(instrument.getBank());
 					if (bank == null) {
 						throw new InvalidDataException("bank", "bank.invalid", " Invalid bank");
 					}
 					instrument.setBank(bank);
 				}
-				if (instrument.getBankAccount() != null) {
+				if (instrument.getBankAccount() != null && instrument.getBankAccount().getAccountNumber() != null) {
 					BankAccountContract bankAccount = bankAccountContractRepository
-							.findById(instrument.getBankAccount());
+							.findByAccountNumber(instrument.getBankAccount());
 					if (bankAccount == null) {
 						throw new InvalidDataException("bankAccount", "bankAccount.invalid", " Invalid bankAccount");
 					}
@@ -209,6 +243,50 @@ public class InstrumentService {
 	@Transactional
 	public Instrument update(Instrument instrument) {
 		return instrumentRepository.update(instrument);
+	}
+
+	@Transactional
+	public Instrument delete(Instrument instrument) {
+		return instrumentRepository.delete(instrument);
+	}
+
+	public List<Instrument> deposit(InstrumentRequest instrumentDepositRequest, BindingResult errors,
+			RequestInfo requestInfo) {
+		Instrument instrument = new Instrument();
+		instrument.setId(instrumentDepositRequest.getInstruments().get(0).getId());
+		instrument.setTenantId(instrumentDepositRequest.getInstruments().get(0).getTenantId());
+
+		FinancialStatusContract financialStatusContract = new FinancialStatusContract();
+		financialStatusContract.setCode("Deposited");
+		financialStatusContract.setModuleType("Instrument");
+
+		instrument = instrumentRepository.findById(instrument);
+		FinancialStatusContract financialStatusContract1 = new FinancialStatusContract();
+		financialStatusContract1 = financialStatusContractRepository.findByModuleCode(financialStatusContract);
+		instrument.setFinancialStatus(financialStatusContract1);
+		instrument.setRemittanceVoucherId(instrumentDepositRequest.getInstruments().get(0).getRemittanceVoucherId());
+		List<Instrument> instrumentsToUpdate = new ArrayList<>();
+		instrumentsToUpdate.add(instrument);
+		return instrumentRepository.update(instrumentsToUpdate, requestInfo);
+	}
+
+	public List<Instrument> dishonor(InstrumentRequest instrumentDepositRequest, BindingResult errors,
+			RequestInfo requestInfo) {
+		Instrument instrument = new Instrument();
+		instrument.setId(instrumentDepositRequest.getInstruments().get(0).getId());
+		instrument.setTenantId(instrumentDepositRequest.getInstruments().get(0).getTenantId());
+
+		FinancialStatusContract financialStatusContract = new FinancialStatusContract();
+		financialStatusContract.setCode("Deposited");
+		financialStatusContract.setModuleType("Instrument");
+
+		instrument = instrumentRepository.findById(instrument);
+		FinancialStatusContract financialStatusContract1 = new FinancialStatusContract();
+		financialStatusContract1 = financialStatusContractRepository.findByModuleCode(financialStatusContract);
+		instrument.setFinancialStatus(financialStatusContract1);
+		List<Instrument> instrumentsToUpdate = new ArrayList<>();
+		instrumentsToUpdate.add(instrument);
+		return instrumentRepository.update(instrumentsToUpdate, requestInfo);
 	}
 
 }

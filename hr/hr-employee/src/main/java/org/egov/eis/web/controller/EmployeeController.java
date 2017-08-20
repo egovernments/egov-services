@@ -41,6 +41,7 @@
 package org.egov.eis.web.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -51,6 +52,7 @@ import org.egov.eis.model.Employee;
 import org.egov.eis.model.EmployeeInfo;
 import org.egov.eis.service.EmployeeService;
 import org.egov.eis.service.exception.EmployeeIdNotFoundException;
+import org.egov.eis.service.exception.IdGenerationException;
 import org.egov.eis.service.exception.UserException;
 import org.egov.eis.web.contract.EmployeeCriteria;
 import org.egov.eis.web.contract.EmployeeGetRequest;
@@ -58,12 +60,10 @@ import org.egov.eis.web.contract.EmployeeInfoResponse;
 import org.egov.eis.web.contract.EmployeeRequest;
 import org.egov.eis.web.contract.EmployeeResponse;
 import org.egov.eis.web.contract.RequestInfoWrapper;
+import org.egov.eis.web.contract.factory.ResponseEntityFactory;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.eis.web.errorhandler.ErrorHandler;
-import org.egov.eis.web.validator.DataIntegrityValidatorForCreateEmployee;
-import org.egov.eis.web.validator.DataIntegrityValidatorForUpdateEmployee;
-import org.egov.eis.web.validator.EmployeeAssignmentValidator;
-import org.egov.eis.web.validator.RequestValidator;
+import org.egov.eis.web.validator.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,6 +94,9 @@ public class EmployeeController {
 
     @Autowired
     private ResponseInfoFactory responseInfoFactory;
+
+    @Autowired
+    private ResponseEntityFactory responseEntityFactory;
 
     @Autowired
     private EmployeeAssignmentValidator employeeAssignmentValidator;
@@ -128,15 +131,15 @@ public class EmployeeController {
             return errorResponseEntity;
 
         // Call service
-        List<EmployeeInfo> employeesList = null;
+        Map<String, Object> employeeMap = null;
         try {
-            employeesList = employeeService.getEmployees(employeeCriteria, requestInfo);
+            employeeMap = employeeService.getPaginatedEmployees(employeeCriteria, requestInfo);
         } catch (Exception exception) {
             log.error("Error while processing request " + employeeCriteria, exception);
             return errorHandler.getResponseEntityForUnexpectedErrors(requestInfo);
         }
 
-        return getSuccessResponseForSearch(employeesList, requestInfo);
+        return responseEntityFactory.getSuccessResponse(employeeMap, requestInfo);
     }
 
     /**
@@ -233,6 +236,9 @@ public class EmployeeController {
         } catch (UserException ue) {
             log.error("Error while processing request ", ue);
             return errorHandler.getResponseEntityForUserErrors(ue);
+        } catch (IdGenerationException ie) {
+            log.error("Error while processing request ", ie);
+            return errorHandler.getResponseEntityForIdGenerationErrors(ie);
         } catch (Exception exception) {
             log.error("Error while processing request ", exception);
             return errorHandler.getResponseEntityForUnexpectedErrors(employeeRequest.getRequestInfo());
@@ -289,11 +295,9 @@ public class EmployeeController {
         // validate input params that can't be handled by annotations
         ValidationUtils.invokeValidator(employeeAssignmentValidator, employeeRequest.getEmployee(), bindingResult);
         if (isUpdate)
-            ValidationUtils.invokeValidator(dataIntegrityValidatorForUpdate, employeeRequest.getEmployee(),
-                    bindingResult);
+            ValidationUtils.invokeValidator(dataIntegrityValidatorForUpdate, employeeRequest, bindingResult);
         else
-            ValidationUtils.invokeValidator(dataIntegrityValidatorForCreate, employeeRequest.getEmployee(),
-                    bindingResult);
+            ValidationUtils.invokeValidator(dataIntegrityValidatorForCreate, employeeRequest, bindingResult);
 
         if (bindingResult.hasErrors()) {
             return errorHandler.getErrorResponseEntityForInvalidRequest(bindingResult, employeeRequest.getRequestInfo());
@@ -315,7 +319,7 @@ public class EmployeeController {
         ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
         employeeInfoResponse.setResponseInfo(responseInfo);
-        return new ResponseEntity<EmployeeInfoResponse>(employeeInfoResponse, HttpStatus.OK);
+        return new ResponseEntity<>(employeeInfoResponse, HttpStatus.OK);
     }
 
     /**

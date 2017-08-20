@@ -86,6 +86,12 @@ public class ApplicationProperties {
     @Value("${kafka.topics.propertyCategory.update.name}")
     private String updatePropertyCategoryTopicName;
 
+    @Value("${kafka.topics.meterstatus.create.name}")
+    private String createMeterStatusTopicName;
+
+    @Value("${kafka.topics.meterstatus.update.name}")
+    private String updateMeterStatusTopicName;
+
     @Value("${kafka.topics.propertyusage.create.name}")
     private String createPropertyUsageTopicName;
 
@@ -100,6 +106,9 @@ public class ApplicationProperties {
 
     @Value("${kafka.topics.metercost.create.name}")
     private String createMeterCostTopicName;
+
+    @Value("${kafka.topics.metercost.update.name}")
+    private String updateMeterCostTopicName;
 
     @Value("${kafka.topics.documenttype.applicationtype.create.name}")
     private String createDocTypeAppTypeTopicName;
@@ -136,12 +145,18 @@ public class ApplicationProperties {
 
     @Value("${kafka.topics.treatmentplant.update.name}")
     private String updateTreatmentPlantTopicName;
-    
+
     @Value("${kafka.topics.meterwaterrates.create.name}")
     private String createMeterWaterRatesTopicName;
 
     @Value("${kafka.topics.meterwaterrates.update.name}")
     private String updateMeterWaterRatesTopicName;
+
+    @Value("${kafka.topics.nonmeterwaterrates.create.name}")
+    private String createNonMeterWaterRatesTopicName;
+
+    @Value("${kafka.topics.nonmeterwaterrates.update.name}")
+    private String updateNonMeterWaterRatesTopicName;
 
     @Autowired
     private Environment environment;
@@ -188,6 +203,14 @@ public class ApplicationProperties {
 
     public String getUpdatePropertyCategoryTopicName() {
         return updatePropertyCategoryTopicName;
+    }
+
+    public String getCreateMeterStatusTopicName() {
+        return createMeterStatusTopicName;
+    }
+
+    public String getUpdateMeterStatusTopicName() {
+        return updateMeterStatusTopicName;
     }
 
     public String getCreatePropertyUsageTopicName() {
@@ -265,12 +288,24 @@ public class ApplicationProperties {
     public String getUpdateTreatmentPlantTopicName() {
         return updateTreatmentPlantTopicName;
     }
-    
+
     public String getCreateMeterWaterRatesTopicName() {
         return createMeterWaterRatesTopicName;
     }
 
     public String getUpdateMeterWaterRatesTopicName() {
         return updateMeterWaterRatesTopicName;
+    }
+
+    public String getUpdateMeterCostTopicName() {
+        return updateMeterCostTopicName;
+    }
+
+    public String getCreateNonMeterWaterRatesTopicName() {
+        return createNonMeterWaterRatesTopicName;
+    }
+
+    public String getUpdateNonMeterWaterRatesTopicName() {
+        return updateNonMeterWaterRatesTopicName;
     }
 }

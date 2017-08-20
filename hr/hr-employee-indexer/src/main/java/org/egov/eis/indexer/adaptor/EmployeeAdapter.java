@@ -69,7 +69,7 @@ public class EmployeeAdapter {
         EmployeeIndex employeeIndex = new EmployeeIndex();
         Long userId = employeeRequest.getRequestInfo().getUserInfo().getId();
 
-		UserRequest user = userService.getUser(userId, employeeRequest.getRequestInfo());
+		UserRequest user = userService.getUser(userId, employeeRequest);
 
         employeeIndex.setEmployeeDetails(getEmployeeDetails(employeeRequest, user));
         employeeIndex.setEmployeeAssignment(getEmployeeAssignments(employeeRequest, user));

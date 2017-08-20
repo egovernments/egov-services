@@ -52,7 +52,6 @@ import java.util.List;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.egov.wcms.model.AuditDetails;
 import org.egov.wcms.model.DocumentType;
 import org.egov.wcms.repository.DocumentTypeRepository;
 import org.egov.wcms.web.contract.DocumentTypeGetReq;
@@ -92,11 +91,10 @@ public class DocumentTypeServiceTest {
 
     @Test
     public void test_Should_DocumentType_Create() {
-        final DocumentType docType = getDocumentType();
         final List<DocumentType> docTypes = new ArrayList<>();
-        docTypes.add(docType);
+        docTypes.add(getDocumentType());
         final DocumentTypeReq docTypeReq = new DocumentTypeReq();
-        docTypeReq.setDocumentType(docType);
+        docTypeReq.setDocumentType(docTypes);
         final DocumentTypeRes propUsageTypeResponse = new DocumentTypeRes();
         propUsageTypeResponse.setResponseInfo(null);
         propUsageTypeResponse.setDocumentTypes(docTypes);
@@ -146,34 +144,26 @@ public class DocumentTypeServiceTest {
         final User user = new User();
         user.setId(1L);
         requestInfo.setUserInfo(user);
-        final DocumentType docType = new DocumentType();
-        final AuditDetails auditDetails = new AuditDetails();
-
-        docType.setAuditDetails(auditDetails);
-        docType.setCode("10");
-        docType.setActive(true);
-        docType.getAuditDetails().setCreatedBy(1L);
-        docType.setName("test name");
-        docType.setDescription("test description");
+        final List<DocumentType> docTypeList = new ArrayList<>();
+        docTypeList.add(getDocumentType());
 
         docTypeRequest.setRequestInfo(requestInfo);
-        docTypeRequest.setDocumentType(docType);
+        docTypeRequest.setDocumentType(docTypeList);
 
-        final DocumentType docTypeResult = docTypeService.sendMessage("topic", "key", docTypeRequest);
+        final List<DocumentType> docTypeResult = docTypeService.createDocumentType("topic", "key", docTypeRequest);
 
         assertNotNull(docTypeResult);
     }
 
     @Test
     public void test_Should_Update_DocumentType() {
-        final DocumentType docType = getDocumentType();
-        final List<DocumentType> docTypes = new ArrayList<>();
-        docTypes.add(docType);
+        final List<DocumentType> docTypesList = new ArrayList<>();
+        docTypesList.add(getDocumentType());
         final DocumentTypeReq docTypeRequest = new DocumentTypeReq();
-        docTypeRequest.setDocumentType(docType);
+        docTypeRequest.setDocumentType(docTypesList);
         final DocumentTypeRes docTypeResponse = new DocumentTypeRes();
         docTypeResponse.setResponseInfo(null);
-        docTypeResponse.setDocumentTypes(docTypes);
+        docTypeResponse.setDocumentTypes(docTypesList);
 
         when(docTypeService.update(any(DocumentTypeReq.class))).thenReturn(docTypeRequest);
         assertTrue(docTypeRequest.equals(docTypeService.update(docTypeRequest)));

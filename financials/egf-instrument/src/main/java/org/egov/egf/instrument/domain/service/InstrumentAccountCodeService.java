@@ -27,6 +27,7 @@ public class InstrumentAccountCodeService {
 
 	public static final String ACTION_CREATE = "create";
 	public static final String ACTION_UPDATE = "update";
+	public static final String ACTION_DELETE = "delete";
 	public static final String ACTION_VIEW = "view";
 	public static final String ACTION_EDIT = "edit";
 	public static final String ACTION_SEARCH = "search";
@@ -96,6 +97,27 @@ public class InstrumentAccountCodeService {
 
 	}
 
+	@Transactional
+	public List<InstrumentAccountCode> delete(List<InstrumentAccountCode> instrumentAccountCodes, BindingResult errors,
+			RequestInfo requestInfo) {
+
+		try {
+
+			validate(instrumentAccountCodes, ACTION_DELETE, errors);
+
+			if (errors.hasErrors()) {
+				throw new CustomBindException(errors);
+			}
+
+		} catch (CustomBindException e) {
+
+			throw new CustomBindException(errors);
+
+		}
+
+		return instrumentAccountCodeRepository.delete(instrumentAccountCodes, requestInfo);
+	}
+
 	private BindingResult validate(List<InstrumentAccountCode> instrumentaccountcodes, String method,
 			BindingResult errors) {
 
@@ -114,9 +136,17 @@ public class InstrumentAccountCodeService {
 			case ACTION_UPDATE:
 				Assert.notNull(instrumentaccountcodes, "InstrumentAccountCodes to update must not be null");
 				for (InstrumentAccountCode instrumentAccountCode : instrumentaccountcodes) {
+					Assert.notNull(instrumentAccountCode.getId(),
+							"InstrumentAccountCode ID to update must not be null");
 					validator.validate(instrumentAccountCode, errors);
 				}
 				break;
+			case ACTION_DELETE:
+				Assert.notNull(instrumentaccountcodes, "InstrumentAccountCodes to delete must not be null");
+				for (InstrumentAccountCode instrumentaccountcode : instrumentaccountcodes) {
+					Assert.notNull(instrumentaccountcode.getId(),
+							"InstrumentAccountCode ID to delete must not be null");
+				}
 			default:
 
 			}
@@ -128,30 +158,46 @@ public class InstrumentAccountCodeService {
 	}
 
 	public List<InstrumentAccountCode> fetchRelated(List<InstrumentAccountCode> instrumentaccountcodes) {
+
 		if (instrumentaccountcodes != null)
 			for (InstrumentAccountCode instrumentAccountCode : instrumentaccountcodes) {
+
 				// fetch related items
-				if (instrumentAccountCode.getInstrumentType() != null) {
+				if (instrumentAccountCode.getInstrumentType() != null
+						&& instrumentAccountCode.getInstrumentType().getName() != null) {
+
 					InstrumentType instrumentType = instrumentTypeRepository
 							.findById(instrumentAccountCode.getInstrumentType());
+
 					if (instrumentType == null) {
 						throw new InvalidDataException("instrumentType", "instrumentType.invalid",
 								" Invalid instrumentType");
 					}
+
 					instrumentAccountCode.setInstrumentType(instrumentType);
+
 				}
-				if (instrumentAccountCode.getAccountCode() != null) {
+				if (instrumentAccountCode.getAccountCode() != null
+						&& instrumentAccountCode.getAccountCode().getGlcode() != null) {
+
 					ChartOfAccountContract accountCode = chartOfAccountContractRepository
-							.findById(instrumentAccountCode.getAccountCode());
+							.findByGlcode(instrumentAccountCode.getAccountCode());
+
 					if (accountCode == null) {
 						throw new InvalidDataException("accountCode", "accountCode.invalid", " Invalid accountCode");
 					}
+
 					instrumentAccountCode.setAccountCode(accountCode);
 				}
 
 			}
 
 		return instrumentaccountcodes;
+	}
+
+	@Transactional
+	public InstrumentAccountCode delete(InstrumentAccountCode instrumentAccountCode) {
+		return instrumentAccountCodeRepository.delete(instrumentAccountCode);
 	}
 
 	public Pagination<InstrumentAccountCode> search(InstrumentAccountCodeSearch instrumentAccountCodeSearch) {

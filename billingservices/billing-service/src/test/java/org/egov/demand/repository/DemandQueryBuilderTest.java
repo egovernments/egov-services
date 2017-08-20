@@ -2,15 +2,16 @@ package org.egov.demand.repository;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.egov.demand.TestConfiguration;
 import org.egov.demand.model.DemandCriteria;
 import org.egov.demand.model.DemandDetailCriteria;
+import org.egov.demand.model.DemandUpdateMisRequest;
 import org.egov.demand.repository.querybuilder.DemandQueryBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -80,6 +81,16 @@ public class DemandQueryBuilderTest {
 		expectedPreparedStatementValues.add(500);
 		expectedPreparedStatementValues.add(0);
 		assertTrue(preparedStatementValues.equals(expectedPreparedStatementValues));
+	}
+	
+	@Test
+	public void testShoudgetDemandUpdateMisQuery(){
+		Set<String> ids=new HashSet<>();
+		ids.add("121");
+		DemandUpdateMisRequest demandRequest=DemandUpdateMisRequest.builder().tenantId("default").consumerCode("consumerCode").id(ids).build();
+		String query="UPDATE egbs_demand SET consumercode=?, lastmodifiedby=?, lastmodifiedtime=?  WHERE tenantid=? AND id IN ('121')";
+		
+		assertEquals(query,demandQueryBuilder.getDemandUpdateMisQuery(demandRequest));
 	}
 
 }

@@ -3,72 +3,93 @@ package org.egov.mr.repository.querybuilder;
 import java.util.List;
 
 import org.egov.mr.web.contract.ServiceConfigurationSearchCriteria;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class ServiceConfigurationQueryBuilder {
 
-	public static final Logger LOGGER = LoggerFactory.getLogger(ServiceConfigurationQueryBuilder.class);
-
 	public final String BASEQUERY = "SELECT ck.keyName as keyName, cv.value as value"
-			+ " FROM egmr_serviceConfigurationkeys ck JOIN egmr_serviceConfigurationValues cv ON ck.id = cv.keyId ";
+			+ " FROM egmr_serviceconfiguration ck JOIN egmr_serviceconfigurationvalues cv ON ck.id = cv.keyId ";
 
 	private StringBuilder selectQuery;
 
-	// Query for _search
+	/**
+	 * @Query for Search
+	 * 
+	 * @param serviceConfigurationSearchCriteria
+	 * @param preparedStatementValues
+	 * @return
+	 */
 	public String getSelectQuery(ServiceConfigurationSearchCriteria serviceConfigurationSearchCriteria,
 			List<Object> preparedStatementValues) {
 		selectQuery = new StringBuilder(BASEQUERY);
 		addWhereCluase(serviceConfigurationSearchCriteria, preparedStatementValues);
+		log.debug("QueryForSearch: " + selectQuery.toString());
 		return selectQuery.toString();
 	}
 
-	// Helper method
+	/**
+	 * @HelperMethod
+	 * 
+	 * @param serviceConfigurationSearchCriteria
+	 * @param preparedStatementValues
+	 */
 	@SuppressWarnings("unchecked")
 	private void addWhereCluase(ServiceConfigurationSearchCriteria serviceConfigurationSearchCriteria,
 			@SuppressWarnings("rawtypes") List preparedStatementValues) {
 		if (serviceConfigurationSearchCriteria.getTenantId() == null
-				&& serviceConfigurationSearchCriteria.getName() == null
-				&& serviceConfigurationSearchCriteria.getId() == null
+				&& serviceConfigurationSearchCriteria.getNames() == null
+				&& serviceConfigurationSearchCriteria.getIds() == null
 				&& serviceConfigurationSearchCriteria.getEffectiveFrom() == null) {
 			return;
 		}
-		selectQuery.append("WHERE ");
-		boolean addappendAndClauseFlag = false;
-
-		addappendAndClauseFlag = addAndClauseIfRequired(addappendAndClauseFlag, selectQuery);
-		selectQuery.append("ck.tenantId=? ");
+		selectQuery.append("WHERE ck.tenantId=? ");
 		preparedStatementValues.add(serviceConfigurationSearchCriteria.getTenantId());
-		if (serviceConfigurationSearchCriteria.getName() != null
-				&& serviceConfigurationSearchCriteria.getName() != "") {
-			addappendAndClauseFlag = addAndClauseIfRequired(addappendAndClauseFlag, selectQuery);
-			selectQuery.append("keyName=? ");
-			preparedStatementValues.add(serviceConfigurationSearchCriteria.getName());
+
+		if (serviceConfigurationSearchCriteria.getNames() != null
+				&& !serviceConfigurationSearchCriteria.getNames().isEmpty()) {
+			selectQuery.append("AND keyName IN ('" + getNames(serviceConfigurationSearchCriteria.getNames()) + "') ");
 		}
-		if (serviceConfigurationSearchCriteria.getId() != null && serviceConfigurationSearchCriteria.getId() != 0) {
-			addappendAndClauseFlag = addAndClauseIfRequired(addappendAndClauseFlag, selectQuery);
-			selectQuery.append("ck.id=? ");
-			preparedStatementValues.add(serviceConfigurationSearchCriteria.getId());
+		if (serviceConfigurationSearchCriteria.getIds() != null
+				&& !serviceConfigurationSearchCriteria.getIds().isEmpty()) {
+			selectQuery.append("AND ck.id IN (" + getIds(serviceConfigurationSearchCriteria.getIds()) + ") ");
 		}
 		if (serviceConfigurationSearchCriteria.getEffectiveFrom() != null) {
-			addappendAndClauseFlag = addAndClauseIfRequired(addappendAndClauseFlag, selectQuery);
-			selectQuery.append("cv.effectivefrom=? ");
+			selectQuery.append("AND cv.effectivefrom=? ");
 			preparedStatementValues.add(serviceConfigurationSearchCriteria.getEffectiveFrom());
 		}
-
-		selectQuery.append("ORDER BY ck.createdTime ASC ");
-		selectQuery.append(";");
-		LOGGER.info(selectQuery.toString());
+		selectQuery.append("ORDER BY ck.keyName ASC,cv.effectivefrom DESC;");
 	}
 
-	// Helper method
-	private boolean addAndClauseIfRequired(boolean appendAndClauseFlag, StringBuilder queryString) {
-		if (appendAndClauseFlag) {
-			queryString.append("AND ");
+	/**
+	 * @HelperMethods
+	 * 
+	 * @param idsList
+	 * @return
+	 */
+	private String getIds(List<Integer> idsList) {
+		StringBuilder ids = new StringBuilder();
+		ids.append(idsList.get(0));
+		for (int i = 1; i <= idsList.size() - 1; i++) {
+			ids.append("," + idsList.get(i));
 		}
-		return true;
+		return ids.toString();
 	}
 
+	/**
+	 * 
+	 * @param namesList
+	 * @return
+	 */
+	private String getNames(List<String> namesList) {
+		StringBuilder names = new StringBuilder();
+		names.append(namesList.get(0));
+		for (int i = 1; i <= namesList.size() - 1; i++) {
+			names.append("','" + namesList.get(i));
+		}
+		return names.toString();
+	}
 }

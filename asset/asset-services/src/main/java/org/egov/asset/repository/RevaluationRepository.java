@@ -14,13 +14,14 @@ import org.egov.asset.repository.builder.RevaluationQueryBuilder;
 import org.egov.asset.repository.rowmapper.RevaluationRowMapper;
 import org.egov.asset.service.AssetMasterService;
 import org.egov.common.contract.request.RequestInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Repository
+@Slf4j
 public class RevaluationRepository {
 
     @Autowired
@@ -35,11 +36,9 @@ public class RevaluationRepository {
     @Autowired
     private AssetMasterService assetMasterService;
 
-    private static final Logger logger = LoggerFactory.getLogger(RevaluationRepository.class);
-
     public void create(final RevaluationRequest revaluationRequest) {
 
-        logger.info("RevaluationRepository create revaluationRequest:" + revaluationRequest);
+        log.info("RevaluationRepository create revaluationRequest:" + revaluationRequest);
         final Revaluation revaluation = revaluationRequest.getRevaluation();
         final RequestInfo requestInfo = revaluationRequest.getRequestInfo();
 
@@ -60,7 +59,7 @@ public class RevaluationRepository {
             jdbcTemplate.update(sql, obj);
         } catch (final Exception ex) {
             ex.printStackTrace();
-            logger.info("RevaluationRepository create:" + ex.getMessage());
+            log.info("RevaluationRepository create:" + ex.getMessage());
         }
     }
 
@@ -76,11 +75,11 @@ public class RevaluationRepository {
         final String queryStr = revaluationQueryBuilder.getQuery(revaluationCriteria, preparedStatementValues);
         List<Revaluation> revaluations = null;
         try {
-            logger.info("queryStr::" + queryStr + "preparedStatementValues::" + preparedStatementValues.toString());
+            log.info("queryStr::" + queryStr + "preparedStatementValues::" + preparedStatementValues.toString());
             revaluations = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), revaluationRowMapper);
-            logger.info("RevaluationRepository::" + revaluations);
+            log.info("RevaluationRepository::" + revaluations);
         } catch (final Exception ex) {
-            logger.info("the exception from findforcriteria : " + ex);
+            log.info("the exception from findforcriteria : " + ex);
         }
         return revaluations;
     }
@@ -93,11 +92,11 @@ public class RevaluationRepository {
             result = jdbcTemplate.queryForObject(query, Integer.class);
         } catch (final Exception ex) {
             ex.printStackTrace();
-            logger.info("getNextRevaluationId::" + ex.getMessage());
+            log.info("getNextRevaluationId::" + ex.getMessage());
             throw new RuntimeException("Can not fatch next RevaluationId");
 
         }
-        logger.info("result:" + result);
+        log.info("result:" + result);
 
         return result;
     }

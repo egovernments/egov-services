@@ -52,7 +52,6 @@ import org.springframework.stereotype.Component;
 @ToString
 public class PropertiesManager {
 
-
     @Value("${kafka.topics.employee.savedb.name}")
     private String saveEmployeeTopic;
 
@@ -92,11 +91,14 @@ public class PropertiesManager {
     @Value("${egov.services.hr_masters_service.hostname}")
     private String hrMastersServiceHostName;
 
-    @Value("${egov.services.hr_masters_service.positions.basepath}")
-    private String hrMastersServicePositionsBasePath;
+    @Value("${egov.services.hr_masters_service.basepath}")
+    private String hrMastersServiceBasePath;
 
     @Value("${egov.services.hr_masters_service.positions.searchpath}")
     private String hrMastersServicePositionsSearchPath;
+
+    @Value("${egov.services.hr_masters_service.hr_configurations.searchpath}")
+    private String hrMastersServiceHRConfigurationsSearchPath;
 
     @Value("${kafka.topics.assignment.update.name}")
     private String updateAssignmentTopic;
@@ -115,5 +117,17 @@ public class PropertiesManager {
 
     @Value("${egov.services.data_sync_employee.required}")
     private Boolean dataSyncEmployeeRequired;
+
+    @Value("${egov.services.egov_idgen.hostname}")
+    private String idGenServiceHostName;
+
+    @Value("${egov.services.egov_idgen.createpath}")
+    private String idGenServiceCreatePath;
+
+    @Value("${egov.services.egov_idgen.emp.code.name}")
+    private String idGenServiceEmpCodeName;
+
+    @Value("${egov.services.egov_idgen.emp.code.format}")
+    private String idGenServiceEmpCodeFormat;
 
 }

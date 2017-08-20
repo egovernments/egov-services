@@ -3,8 +3,6 @@ import {connect} from 'react-redux';
 import {Grid, Row, Col, DropdownButton, Table ,ListGroup, ListGroupItem} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
-import {brown500, red500,white,orange800} from 'material-ui/styles/colors';
-import Checkbox from 'material-ui/Checkbox';
 import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
@@ -16,17 +14,13 @@ import DataTable from '../../../../common/Table';
 import Api from '../../../../../api/api';
 import {translate} from '../../../../common/common';
 
-
-const $ = require('jquery');
-$.DataTable = require('datatables.net');
-const dt = require('datatables.net-bs');
-
-const buttons = require('datatables.net-buttons-bs');
-
-require('datatables.net-buttons/js/buttons.colVis.js'); // Column visibility
-require('datatables.net-buttons/js/buttons.html5.js'); // HTML 5 file export
-require('datatables.net-buttons/js/buttons.flash.js'); // Flash file export
-require('datatables.net-buttons/js/buttons.print.js'); // Print view button
+import $ from 'jquery';
+import 'datatables.net-buttons/js/buttons.html5.js';// HTML 5 file export
+import 'datatables.net-buttons/js/buttons.flash.js';// Flash file export
+import jszip from 'jszip/dist/jszip';
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 var flag = 0;
 const styles = {
@@ -36,30 +30,6 @@ const styles = {
   },
   marginStyle:{
     margin: '15px'
-  },
-  paddingStyle:{
-    padding: '15px'
-  },
-  errorStyle: {
-    color: red500
-  },
-  underlineStyle: {
-    borderColor: brown500
-  },
-  underlineFocusStyle: {
-    borderColor: brown500
-  },
-  floatingLabelStyle: {
-    color: brown500
-  },
-  floatingLabelFocusStyle: {
-    color: brown500
-  },
-  customWidth: {
-    width:100
-  },
-  checkbox: {
-    marginTop: 37
   }
 };
 
@@ -128,10 +98,7 @@ class BulkEscalationGeneration extends Component {
        $('#searchTable').DataTable({
          dom: 'lBfrtip',
          buttons: [],
-          bDestroy: true,
-          language: {
-             "emptyTable": "No Records"
-          }
+          bDestroy: true
         });
     }
 
@@ -168,36 +135,36 @@ class BulkEscalationGeneration extends Component {
 	componentWillUpdate() {
 	  $('#searchTable').dataTable().fnDestroy();
 	}
-	
+
   componentDidUpdate() {
        $('#searchTable').DataTable({
-         dom: 'lBfrtip',
-         buttons: [],
+          dom:'<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
+          buttons: ['excel', 'pdf'],
           bDestroy: true,
           language: {
              "emptyTable": "No Records"
           }
      });
   }
-  
+
   updateToPosition = () => {
-	  
-	let {setLoadingStatus, toggleSnackbarAndSetText, toggleDailogAndSetText, bulkEscalationGeneration} = this.props;  
-	
+
+	let {setLoadingStatus, toggleSnackbarAndSetText, toggleDailogAndSetText, bulkEscalationGeneration} = this.props;
+
 	var current = this;
-    
+
 	var body = {
       escalationHierarchy: []
     }
-	
+
 			setLoadingStatus("loading");
-	  
+
 	  if(bulkEscalationGeneration.serviceCode) {
-		  
+
 		for(let i = 0;i<bulkEscalationGeneration.serviceCode.length;i++) {
 			var Data = {
 				serviceCode : bulkEscalationGeneration.serviceCode[i],
-				tenantId : "default",
+				tenantId : localStorage.getItem("tenantId"),
 				fromPosition : bulkEscalationGeneration.fromPosition,
 				toPosition : bulkEscalationGeneration.toPosition,
 			}
@@ -207,12 +174,12 @@ class BulkEscalationGeneration extends Component {
 
     Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_update/",{},body).then(function(response){
 		setLoadingStatus("hide");
-		toggleDailogAndSetText(true, "To Position Updated Successfully");
+		toggleDailogAndSetText(true, translate('core.lbl.bulkcreated'));
           let query = {
 			fromPosition:bulkEscalationGeneration.fromPosition,
 			serviceCode : bulkEscalationGeneration.serviceCode
 		}
-    
+
                 Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_search",query,{}).then(function(response){
                     setLoadingStatus('hide');
                     if (response.escalationHierarchies[0] != null) {
@@ -254,18 +221,18 @@ class BulkEscalationGeneration extends Component {
 		  fromPosition : this.props.bulkEscalationGeneration.fromPosition,
 		  serviceCode: this.props.bulkEscalationGeneration.serviceCode
 	  }
-      
+
         Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_search", searchSet).then(function(response) {
             setLoadingStatus("hide");
            flag = 1;
           self.setState({
             searchResult: response.escalationHierarchies,
             isSearchClicked: true
-          }); 
+          });
         }, function(err) {
             setLoadingStatus('hide');
 			toggleSnackbarAndSetText(true, err.message)
-        }); 
+        });
   }
 
     render() {
@@ -284,8 +251,6 @@ class BulkEscalationGeneration extends Component {
 
       let {isSearchClicked, searchResult} = this.state;
 
-      console.log(bulkEscalationGeneration);
-
       const renderBody = function() {
       	  if(searchResult && searchResult.length)
       		return searchResult.map(function(val, i) {
@@ -302,7 +267,7 @@ class BulkEscalationGeneration extends Component {
       const viewTable = function() {
       	  if(isSearchClicked)
       		return (
-   	        <Card>
+   	        <Card style={styles.marginStyle}>
    	          <CardHeader title={<strong style = {{color:"#5a3e1b"}} >{translate('pgr.lbl.result')}</strong>}/>
    	          <CardText>
    		        <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
@@ -310,7 +275,7 @@ class BulkEscalationGeneration extends Component {
    		            <tr>
    		              <th>{translate('pgr.lbl.grievance.type')}</th>
    		              <th>{translate('pgr.lbl.fromposition')}</th>
-   		              <th>{translate('pgr.lbl.toposition')}</th>
+   		              <th>{translate('core.position.to')}</th>
    		            </tr>
    		          </thead>
    		          <tbody>
@@ -330,91 +295,98 @@ class BulkEscalationGeneration extends Component {
 
       return(<div className="bulkEscalationGeneration">
       <form autoComplete="off" onSubmit={(e) => {submitForm(e)}}>
-          <Card  style={styles.marginStyle}>
+          <Card style={styles.marginStyle}>
               <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {translate('pgr.lbl.bueg')} < /div>} />
               <CardText>
-                  <Card>
-                      <CardText>
-                          <Grid>
-                              <Row>
-                                  <Col xs={12} md={4}>
-                                        <AutoComplete
-                                          floatingLabelText={translate('pgr.lbl.fromposition')+" *"}
-                                          fullWidth={true}
-                                          filter={function filter(searchText, key) {
-                                                    return key.toLowerCase().includes(searchText.toLowerCase());
-                                                 }}
-                                          dataSource={this.state.positionSource}
-                                          dataSourceConfig={this.state.dataSourceConfig}
-                                          onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "fromPosition")}}
-                                          value={bulkEscalationGeneration.fromPosition ? bulkEscalationGeneration.fromPosition : ""}
-                                          onNewRequest={(chosenRequest, index) => {
-                  	                        var e = {
-                  	                          target: {
-                  	                            value: chosenRequest.id
-                  	                          }
-                  	                        };
-                  	                        handleChange(e, "fromPosition", true, "");
-                  	                       }}
-                                        />
-                                  </Col>
-                                  <Col xs={12} md={4}>
-                                        <SelectField
-                                           multiple={true}
-                                           floatingLabelText={translate('pgr.lbl.grievance.type')+" *"}
-                                           fullWidth={true}
-                                           value={bulkEscalationGeneration.serviceCode ? bulkEscalationGeneration.serviceCode : ""}
-                                           onChange= {(e, index ,values) => {
-                                             var e = {
-                                               target: {
-                                                 value: values
-                                               }
-                                             };
-                                             handleChange(e, "serviceCode", true, "");
-                                            }}
-                                         >
-                                         {this.state.serviceCode && this.state.serviceCode.map((item, index) => (
-                                                   <MenuItem
-                                                     value={item.serviceCode}
-                                                     key={index}
-                                                     insetChildren={true}
-                                                     primaryText={item.serviceName}
-                                                     checked={bulkEscalationGeneration.serviceCode && bulkEscalationGeneration.serviceCode.indexOf(item.serviceCode) > -1}
-                                                   />
-                                          ))}
-                                          </SelectField>
-                                  </Col>
-                                  <Col xs={12} md={4}>
-                                      <AutoComplete
-                                          floatingLabelText={translate('pgr.lbl.toposition')+" *"}
-                                          fullWidth={true}
-                                          filter={function filter(searchText, key) {
-                                                    return key.toLowerCase().includes(searchText.toLowerCase());
-                                                 }}
-                                          dataSource={this.state.positionSource}
-                                          dataSourceConfig={this.state.dataSourceConfig}
-                                          onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "toPosition")}}
-                                          value={bulkEscalationGeneration.toPosition ? bulkEscalationGeneration.toPosition : ""}
-                                          onNewRequest={(chosenRequest, index) => {
-                                            var e = {
-                                              target: {
-                                                value: chosenRequest.id
-                                              }
-                                            };
-                                            handleChange(e, "toPosition", true, "");
-                                           }}
-                                        />
-                                  </Col>
-                              </Row>
-                          </Grid>
-                      </CardText>
-                  </Card>
-                  <div style={{textAlign:'center'}}>
-                      <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={translate('core.lbl.search')} primary={true}/>
-                  </div>
-                  {viewTable()}
+                  <Grid>
+                      <Row>
+                          <Col xs={12} sm={4} md={3} lg={3}>
+                                <AutoComplete
+                                  floatingLabelText={translate('pgr.lbl.fromposition')+" *"}
+                                  fullWidth={true}
+                                  filter={function filter(searchText, key) {
+                                            return key.toLowerCase().includes(searchText.toLowerCase());
+                                         }}
+                                  dataSource={this.state.positionSource}
+                                  dataSourceConfig={this.state.dataSourceConfig}
+                                  onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "fromPosition")}}
+                                  value={bulkEscalationGeneration.fromPosition ? bulkEscalationGeneration.fromPosition : ""}
+                                  ref="fromPosition"
+                                  onNewRequest={(chosenRequest, index) => {
+                                    if(index === -1){
+                                      this.refs['fromPosition'].setState({searchText:''});
+                                    }else{
+                                      var e = {
+                                        target: {
+                                          value: chosenRequest.id
+                                        }
+                                      };
+                                      handleChange(e, "fromPosition", true, "");
+                                    }
+          	                       }}
+                                />
+                          </Col>
+                          <Col xs={12} sm={4} md={3} lg={3}>
+                                <SelectField
+                                   multiple={true}
+                                   floatingLabelText={translate('pgr.lbl.grievance.type')+" *"}
+                                   fullWidth={true}
+                                   maxHeight={200}
+                                   value={bulkEscalationGeneration.serviceCode ? bulkEscalationGeneration.serviceCode : ""}
+                                   onChange= {(e, index ,values) => {
+                                     var e = {
+                                       target: {
+                                         value: values
+                                       }
+                                     };
+                                     handleChange(e, "serviceCode", true, "");
+                                    }}
+                                 >
+                                 {this.state.serviceCode && this.state.serviceCode.map((item, index) => (
+                                           <MenuItem
+                                             value={item.serviceCode}
+                                             key={index}
+                                             insetChildren={true}
+                                             primaryText={item.serviceName}
+                                             checked={bulkEscalationGeneration.serviceCode && bulkEscalationGeneration.serviceCode.indexOf(item.serviceCode) > -1}
+                                           />
+                                  ))}
+                                  </SelectField>
+                          </Col>
+                          <Col xs={12} sm={4} md={3} lg={3}>
+                              <AutoComplete
+                                  floatingLabelText={translate('core.position.to')+" *"}
+                                  fullWidth={true}
+                                  filter={function filter(searchText, key) {
+                                            return key.toLowerCase().includes(searchText.toLowerCase());
+                                         }}
+                                  dataSource={this.state.positionSource}
+                                  dataSourceConfig={this.state.dataSourceConfig}
+                                  onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "toPosition")}}
+                                  value={bulkEscalationGeneration.toPosition ? bulkEscalationGeneration.toPosition : ""}
+                                  ref="toPosition"
+                                  onNewRequest={(chosenRequest, index) => {
+                                    if(index === -1){
+                                      this.refs['toPosition'].setState({searchText:''});
+                                    }else{
+                                      var e = {
+                                        target: {
+                                          value: chosenRequest.id
+                                        }
+                                      };
+                                      handleChange(e, "toPosition", true, "");
+                                    }
+                                   }}
+                                />
+                          </Col>
+                      </Row>
+                  </Grid>
               </CardText>
           </Card>
+          <div style={{textAlign:'center'}}>
+              <RaisedButton style={{margin:'15px 5px'}} type="submit" disabled={!isFormValid} label={translate('core.lbl.search')} primary={true}/>
+          </div>
+          {viewTable()}
           </form>
       </div>)
     }
@@ -442,32 +414,14 @@ const mapDispatchToProps = dispatch => ({
     });
   },
 
-  setForm: (data) => {
-    dispatch({
-      type: "SET_FORM",
-      data,
-      isFormValid:true,
-      fieldErrors: {},
-      validationData: {
-        required: {
-          current: [],
-          required: []
-        },
-        pattern: {
-          current: [],
-          required: []
-        }
-      }
-    });
-  },
-
-  handleChange: (e, property, isRequired, pattern) => {
+  handleChange: (e, property, isRequired, pattern, errorMsg) => {
     dispatch({
       type: "HANDLE_CHANGE",
       property,
       value: e.target.value,
       isRequired,
-      pattern
+      pattern,
+      errorMsg
     });
   },
 
@@ -475,7 +429,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch({
       type: "HANDLE_CHANGE",
       property: type,
-      value: e.target.value,
+      value: '',
       isRequired : true,
       pattern: ''
     });
@@ -489,7 +443,7 @@ const mapDispatchToProps = dispatch => ({
     },
     toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
       dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
-    }, 
+    },
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(BulkEscalationGeneration);

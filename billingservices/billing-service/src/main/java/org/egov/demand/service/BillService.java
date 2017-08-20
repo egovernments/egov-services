@@ -64,6 +64,7 @@ import org.egov.demand.model.DemandDetail;
 import org.egov.demand.model.GenerateBillCriteria;
 import org.egov.demand.model.GlCodeMaster;
 import org.egov.demand.model.GlCodeMasterCriteria;
+import org.egov.demand.model.Owner;
 import org.egov.demand.model.TaxHeadMaster;
 import org.egov.demand.model.TaxHeadMasterCriteria;
 import org.egov.demand.model.enums.Category;
@@ -158,9 +159,12 @@ public class BillService {
 		if(!demands.isEmpty())
 			bills = prepareBill(demands, billCriteria.getTenantId(), requestInfo);
 		else
-			throw new RuntimeException("Invalid demand criteria");
+			throw new RuntimeException("No Demands Found for the given criteria");
 
-		return createAsync(BillRequest.builder().bills(bills).requestInfo(requestInfo).build());
+		if (bills.get(0).getBillDetails() == null) {
+			return new BillResponse(responseFactory.getResponseInfo(requestInfo, HttpStatus.OK), null);
+		} else
+			return createAsync(BillRequest.builder().bills(bills).requestInfo(requestInfo).build());
 	}
 
 	private List<Bill> prepareBill(List<Demand> demands,String tenantId,RequestInfo requestInfo){
@@ -174,10 +178,12 @@ public class BillService {
 		Map<String, List<Demand>> map = demands.stream().collect(Collectors.groupingBy(Demand::getBusinessService, Collectors.toList()));
 		Set<String> businessServices = map.keySet();
 		Map<String,BusinessServiceDetail> businessServiceMap = getBusinessService(businessServices,tenantId,requestInfo);
-		log.debug("prepareBill map:" +map);
+		log.info("prepareBill map:" +map);
 		Demand demand = demands.get(0);
-		Bill bill = Bill.builder().isActive(true).isCancelled(false).payeeAddress(null).
-				payeeEmail(demand.getOwner().getEmailId()).payeeName(demand.getOwner().getName()).tenantId(tenantId).build();
+		Owner owner = demand.getOwner();
+		Bill bill = Bill.builder().isActive(true).isCancelled(false).payeeAddress(owner.getPermanentAddress()).
+				payeeEmail(owner.getEmailId()).payeeName(owner.getName()).mobileNumber(owner.getMobileNumber())
+				.tenantId(tenantId).build();
 
 		List<BillDetail> billDetails = new ArrayList<>();
 
@@ -198,7 +204,7 @@ public class BillService {
 
 			for(Demand demand2 : demands2){
 				List<DemandDetail> demandDetails = demand2.getDemandDetails();
-				log.debug("prepareBill demandDetails:" +demandDetails);
+				log.info("prepareBill demandDetails:" +demandDetails);
 				log.info("prepareBill demand2:" +demand2);
 
 				totalMinAmount = totalMinAmount.add(demand2.getMinimumAmountPayable());
@@ -210,12 +216,13 @@ public class BillService {
 
 					List<TaxHeadMaster> taxHeadMasters = taxHeadCodes.get(demandDetail.getTaxHeadMasterCode());
 					TaxHeadMaster taxHeadMaster = taxHeadMasters.stream().filter(t -> 
-					demand.getTaxPeriodFrom().compareTo(t.getValidFrom()) >= 0 && demand.getTaxPeriodTo().
+					demand2.getTaxPeriodFrom().compareTo(t.getValidFrom()) >= 0 && demand2.getTaxPeriodTo().
 					compareTo(t.getValidTill()) <= 0).findAny().orElse(null);
 					
 					if(taxHeadMaster == null) 
 						throw new RuntimeException(
-								"No TaxHead Found for demandDetail with taxcode :"+demandDetail.getTaxHeadMasterCode());
+								"No TaxHead Found for demandDetail with taxcode :"+demandDetail.getTaxHeadMasterCode()
+								+"  and fromdate : --"+demand2.getTaxPeriodFrom() + "  and todate-----"+demand2.getTaxPeriodTo());
 
 					List<GlCodeMaster> glCodeMasters = glCodesMap.get(demandDetail.getTaxHeadMasterCode());
 
@@ -257,10 +264,12 @@ public class BillService {
 					partPaymentAllowed(businessServiceDetail.getPartPaymentAllowed()).
 					totalAmount(totalTaxAmount.subtract(totalCollectedAmount)).tenantId(tenantId).build();
 
+			if(billDetail.getTotalAmount().compareTo(BigDecimal.ZERO) > 0)
 			billDetails.add(billDetail);
 
 		}
-		bill.setBillDetails(billDetails);
+		if (!billDetails.isEmpty())
+			bill.setBillDetails(billDetails);
 		bills.add(bill);
 
 		return bills;
@@ -302,6 +311,8 @@ public class BillService {
 		log.debug("getTaxHeadMaster taxHeadMasterCode:"+taxHeadMasterCode);
 		List<TaxHeadMaster> taxHeadMasters = taxHeadMasterService.getTaxHeads(
 				TaxHeadMasterCriteria.builder().tenantId(tenantId).code(taxHeadMasterCode).build(),requestInfo).getTaxHeadMasters();
+		if(taxHeadMasters.isEmpty())
+			throw new RuntimeException("No TaxHead masters found for the given criteria");
 		log.debug("getTaxHeadMaster taxHeadMasters:"+taxHeadMasters);
 		Map<String, List<TaxHeadMaster>> map = taxHeadMasters.stream().collect(Collectors.groupingBy(TaxHeadMaster::getCode, Collectors.toList()));
 
@@ -326,6 +337,8 @@ public class BillService {
 				GlCodeMasterCriteria.builder().taxHead(taxHeadMasterCode).service(
 				service).tenantId(tenantId).build(), requestInfo).getGlCodeMasters();
 		log.debug("getGlCodes glCodeMasters:"+glCodeMasters);
+		if(glCodeMasters.isEmpty())
+			throw new RuntimeException("No GlcodeMasters found for the given criteria");
 		Map<String, List<GlCodeMaster>> map = glCodeMasters.stream().collect(
 				Collectors.groupingBy(GlCodeMaster::getTaxHead, Collectors.toList()));
 

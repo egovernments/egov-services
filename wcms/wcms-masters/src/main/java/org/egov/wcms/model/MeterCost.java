@@ -39,13 +39,8 @@
  */
 package org.egov.wcms.model;
 
-import java.util.Date;
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -70,36 +65,35 @@ public class MeterCost {
     private Long id;
 
     @NotNull
-    @Size(min = 3, max = 20)
-    private int pipeSize;
+    private String code;
+
+    @NotNull
+    private Double pipeSizeInMM;
+
+    private Long pipeSizeId;
 
     @NotNull
     @Size(min = 3, max = 100)
     private String meterMake;
 
     @NotNull
-    @Size(min = 3, max = 100)
-    private double amount;
+    private Double amount;
 
     @NotNull
     private Boolean active;
 
-    @JsonIgnore
+    @NotNull
     private Long createdBy;
 
-    @JsonIgnore
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date createdDate;
+    private Long createdDate;
 
-    @JsonIgnore
+    @NotNull
     private Long lastModifiedBy;
 
-    @JsonIgnore
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date lastModifiedDate;
+    private Long lastModifiedDate;
 
-    @Size(max = 250)
     @NotNull
+    @Size(max = 250)
     private String tenantId;
 
 }

@@ -1,13 +1,13 @@
 package org.egov.demand.service;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -17,17 +17,21 @@ import org.egov.common.contract.response.ResponseInfo;
 import org.egov.demand.config.ApplicationProperties;
 import org.egov.demand.model.AuditDetail;
 import org.egov.demand.model.Bill;
+import org.egov.demand.model.ConsolidatedTax;
 import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandCriteria;
 import org.egov.demand.model.DemandDetail;
 import org.egov.demand.model.DemandDetailCriteria;
+import org.egov.demand.model.DemandDue;
+import org.egov.demand.model.DemandDueCriteria;
+import org.egov.demand.model.DemandUpdateMisRequest;
 import org.egov.demand.model.Owner;
 import org.egov.demand.repository.DemandRepository;
 import org.egov.demand.repository.OwnerRepository;
 import org.egov.demand.util.DemandEnrichmentUtil;
 import org.egov.demand.util.SequenceGenService;
-import org.egov.demand.web.contract.BillRequest;
 import org.egov.demand.web.contract.DemandDetailResponse;
+import org.egov.demand.web.contract.DemandDueResponse;
 import org.egov.demand.web.contract.DemandRequest;
 import org.egov.demand.web.contract.DemandResponse;
 import org.egov.demand.web.contract.UserSearchRequest;
@@ -203,6 +207,62 @@ public class DemandServiceTest {
 		when(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK)).thenReturn(getResponseInfo(requestInfo));
 		
 		assertEquals(demandService.getDemandDetails(any(DemandDetailCriteria.class),any(RequestInfo.class)), demandDetailResponse);
+	}
+	
+	@Test
+	public void testShouldUpdateMISAsync(){
+		
+		DemandUpdateMisRequest demandRequest=DemandUpdateMisRequest.builder().tenantId("default").consumerCode("ConsumerCode").build();
+		DemandResponse demandResponse=new DemandResponse();
+		demandResponse.setDemands(null);
+		when(applicationProperties.getUpdateMISTopicName()).thenReturn("someTopicName");
+		
+		assertEquals(demandService.updateMISAsync(demandRequest), demandResponse);
+	}
+	
+	@Test
+	public void testShouldUpdateMIS(){
+		doNothing().when(demandRepository).updateMIS(any(DemandUpdateMisRequest.class));
+		DemandUpdateMisRequest request=DemandUpdateMisRequest.builder().tenantId("default").build();
+		demandService.updateMIS(request);
+	}
+	
+	@Test
+	public void testShouldGetDues(){
+		List<Demand> demand=new ArrayList<Demand>();
+		Set<String> consumerCode=new HashSet<>();
+		consumerCode.add("consumer");
+		demand.add(getDemand());
+		DemandDueResponse demandDueResponse=new DemandDueResponse();
+		DemandDue due=new DemandDue();
+		ConsolidatedTax consolidatedTax=ConsolidatedTax.builder().arrearsBalance(300d).arrearsCollection(0.0).arrearsDemand(300d).
+				currentBalance(0d).currentCollection(0d).currentDemand(0.0).build();
+		due.setConsolidatedTax(consolidatedTax);
+		due.setDemands(demand);
+		demandDueResponse.setDemandDue(due);
+		demandDueResponse.setResponseInfo(null);
+		DemandResponse demandResponse=DemandResponse.builder().demands(demand).build();
+		DemandDueCriteria demandDueCriteria=DemandDueCriteria.builder().
+				consumerCode(consumerCode).businessService("PT").tenantId("ap.kurnool").build();
+		
+		RequestInfo requestInfo=new RequestInfo();
+		User user=new User();
+		user.setId(1l);
+		requestInfo.setUserInfo(user);
+		
+		Owner owner=getOwner();
+		List<Owner> owners=new ArrayList<Owner>();
+		owners.add(owner);
+		
+		DemandCriteria demandCriteria=DemandCriteria.builder().tenantId("ap.kurnool").mobileNumber("1234").email("xyz@abc.com").build();
+		when(ownerRepository.getOwners(any(UserSearchRequest.class))).thenReturn(owners);
+		when(demandRepository.getDemands(any(DemandCriteria.class),any())).thenReturn(demand);
+		when(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK)).thenReturn(getResponseInfo(requestInfo));
+		when(demandEnrichmentUtil.enrichOwners(any(List.class),any(List.class))).thenReturn(demand);
+		
+		
+		assertEquals(demandService.getDues(demandDueCriteria, new RequestInfo()).toString(), demandDueResponse.toString());
+		
 	}
 	
 	public static ResponseInfo getResponseInfo(RequestInfo requestInfo) {

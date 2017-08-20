@@ -166,13 +166,13 @@ public class DocumentTypeQueryBuilder {
     }
 
     public static String insertDocumentTypeQuery() {
-        return "INSERT INTO egwtr_document_type(code,name,description,active,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
-                + "(?,?,?,?,?,?,?,?,?)";
+        return "INSERT INTO egwtr_document_type(id,code,name,description,active,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
+                + "(:id,:code,:name,:description,:active,:createdby,:lastmodifiedby,:createddate,:lastmodifieddate,:tenantid)";
     }
 
     public static String updateDocumentTypeQuery() {
-        return "UPDATE egwtr_document_type SET name = ?,description = ?,"
-                + "active = ?,lastmodifiedby = ?,lastmodifieddate = ? where code = ?";
+        return "UPDATE egwtr_document_type SET name = :name,description = :description,"
+                + "active = :active,lastmodifiedby = :lastmodifiedby,lastmodifieddate = :lastmodifieddate where code = :code";
     }
 
     public static String selectDocumentTypeByNameAndCodeQuery() {

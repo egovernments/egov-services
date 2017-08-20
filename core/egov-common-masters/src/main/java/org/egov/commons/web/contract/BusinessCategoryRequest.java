@@ -52,6 +52,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -62,8 +65,8 @@ public class BusinessCategoryRequest {
 	@JsonProperty("RequestInfo")
 	private RequestInfo requestInfo;
 
-	@JsonProperty("BusinessCategoryInfo")
-	private BusinessCategory businessCategoryInfo;
+	@JsonProperty("BusinessCategory")
+	private List<BusinessCategory> businessCategory;
 
 	public AuthenticatedUser toDomain() {
 		User userInfo = requestInfo.getUserInfo();

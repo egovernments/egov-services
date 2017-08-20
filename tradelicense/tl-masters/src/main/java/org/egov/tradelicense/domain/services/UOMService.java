@@ -1,8 +1,8 @@
 package org.egov.tradelicense.domain.services;
 
-import org.egov.models.RequestInfo;
-import org.egov.models.UOMRequest;
-import org.egov.models.UOMResponse;
+import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tl.commons.web.requests.UOMRequest;
+import org.egov.tl.commons.web.requests.UOMResponse;
 
 /**
  * Service class for UOM master
@@ -19,11 +19,10 @@ public interface UOMService {
 	 * @param UOMRequest
 	 * @return UOMResponse
 	 */
-	public UOMResponse createUomMaster( UOMRequest uomRequest);
+	public UOMResponse createUomMaster(UOMRequest uomRequest);
 
 	/**
 	 * Description : service method for updating UOM master
-	 * 
 	 * 
 	 * @param UOMRequest
 	 * @return UOMResponse
@@ -46,5 +45,22 @@ public interface UOMService {
 	 */
 	public UOMResponse getUomMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name, String code,
 			String active, Integer pageSize, Integer offSet);
+
+	/**
+	 * Description : service method for creating UOM master
+	 * 
+	 * @param tenantId
+	 * @param UOMRequest
+	 * @return UOMResponse
+	 */
+	public void createUom(UOMRequest uomRequest);
+
+	/**
+	 * Description : service method for updating UOM master
+	 * 
+	 * @param UOMRequest
+	 * @return UOMResponse
+	 */
+	public void updateUom(UOMRequest uomRequest);
 
 }

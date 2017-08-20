@@ -72,18 +72,20 @@ public class SupplyTypeService {
         return supplyTypeRepository.upateSupplyType(supplyTypeRequest);
     }
 
-    public SupplyType createSupplyType(final String topic, final String key,
+    public List<SupplyType> createSupplyType(final String topic, final String key,
             final SupplyTypeRequest supplyTypeRequest) {
-        supplyTypeRequest.getSupplyType().setCode(codeGeneratorService.generate(SupplyType.SEQ_SUPPLYTYPE));
+        for (final SupplyType supplyType : supplyTypeRequest.getSupplyType()){
+            supplyType.setCode(codeGeneratorService.generate(SupplyType.SEQ_SUPPLYTYPE));
+        }
         return mapRequestObjectToWaterProducer(topic, key, supplyTypeRequest);
     }
 
-    public SupplyType updateSupplyType(final String topic, final String key,
+    public List<SupplyType> updateSupplyType(final String topic, final String key,
             final SupplyTypeRequest supplyTypeRequest) {
         return mapRequestObjectToWaterProducer(topic, key, supplyTypeRequest);
     }
 
-    private SupplyType mapRequestObjectToWaterProducer(final String topic, final String key,
+    private List<SupplyType> mapRequestObjectToWaterProducer(final String topic, final String key,
             final SupplyTypeRequest supplyTypeRequest) {
         try {
             kafkaTemplate.send(topic, key, supplyTypeRequest);

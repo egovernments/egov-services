@@ -32,8 +32,49 @@ export default (state = defaultState, action) => {
               fieldErrors: {},
               isFormValid: action.requiredFields.length == 0 ? true : false
             }
+
+        case "DEL_REQUIRED_FIELDS":
+            var _rFields = [...state.requiredFields];
+            var newRFields = [];
+            _rFields.map(function(val, i) {
+                if(action.requiredFields.indexOf(val) == -1) {
+                    newRFields.push(val);
+                }
+            })
+            var _isFormValid = reValidate(state.form, state.fieldErrors, newRFields);
+            return {
+                ...state,
+                requiredFields: newRFields,
+                isFormValid: _isFormValid
+            }
+
+        case "ADD_REQUIRED_FIELDS":
+            var _rFields = [...state.requiredFields];
+            for(var i=0; i<action.requiredFields.length; i++) {
+                if(_rFields.indexOf(action.requiredFields[i]) == -1) {
+                    _rFields.push(action.requiredFields[i]);
+                }
+            }
+            var _isFormValid = reValidate(state.form, state.fieldErrors, _rFields);
+            return {
+                ...state,
+                requiredFields: _rFields,
+                isFormValid: _isFormValid
+            }
+
+        case "REMOVE_FROM_FIELD_ERRORS":
+            var _fieldErrors = {...state.fieldErrors};
+            delete _fieldErrors[action.key];
+            var _isFormValid = reValidate(state.form, _fieldErrors, state.requiredFields);
+            return {
+                ...state,
+                fieldErrors: _fieldErrors,
+                isFormValid: _isFormValid
+            }
+
         case "HANDLE_CHANGE_FRAMEWORK":
             var currentState = { ...state };
+            action.value = (typeof action.value == "undefined" || action.value == null) ? "" : action.value;
             _.set(currentState.form, action.property, action.value);
             var validationDat = validate(currentState.fieldErrors, action.property, action.value, action.isRequired, currentState.form, currentState.requiredFields, action.pattern, action.patternErrMsg);
             //Set field errors
@@ -42,6 +83,7 @@ export default (state = defaultState, action) => {
               [action.property]: validationDat.errorText
             };
             //Set form valid or not
+            
             currentState.isFormValid = validationDat.isFormValid;
             return currentState;
 
@@ -91,7 +133,7 @@ function validate(fieldErrors, property, value, isRequired, form, requiredFields
   let errorText = isRequired && !value ? translate('ui.framework.required') : '';
   let isFormValid = true;
   for(var i=0; i<requiredFields.length; i++) {
-    if(!_.get(form, requiredFields[i])) {
+    if(typeof _.get(form, requiredFields[i]) == 'undefined') {
       isFormValid = false;
       break;
     }
@@ -103,13 +145,12 @@ function validate(fieldErrors, property, value, isRequired, form, requiredFields
   }
 
   for(let key in fieldErrors) {
-    if(fieldErrors[key]) {
+    if(fieldErrors[key] && key != property) {
         isFormValid = false;
         break;
     }
   }
-
-
+  
   return {
     isFormValid,
     errorText
@@ -119,6 +160,22 @@ function validate(fieldErrors, property, value, isRequired, form, requiredFields
 function checkIfHasAllReqFields(reqFields, form) {
     for(var i=0; i<reqFields.length; i++) {
         if(!_.get(form, reqFields[i])) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+function reValidate(form, fieldErrors, requiredFields) {
+    for(var key in fieldErrors) {
+        if(fieldErrors[key]) {
+            return false;
+        }
+    }
+
+    for(var i=0; i<requiredFields.length; i++) {
+        if(!_.get(form, requiredFields[i])) {
             return false;
         }
     }

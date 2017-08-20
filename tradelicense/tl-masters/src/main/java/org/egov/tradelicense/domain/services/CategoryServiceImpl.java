@@ -2,13 +2,16 @@ package org.egov.tradelicense.domain.services;
 
 import java.util.List;
 
-import org.egov.models.Category;
-import org.egov.models.CategoryDetail;
-import org.egov.models.CategoryRequest;
-import org.egov.models.CategoryResponse;
-import org.egov.models.RequestInfo;
-import org.egov.models.ResponseInfo;
-import org.egov.models.ResponseInfoFactory;
+import org.egov.tl.commons.web.contract.Category;
+import org.egov.tl.commons.web.contract.CategoryDetail;
+import org.egov.tl.commons.web.contract.CategoryDetailSearch;
+import org.egov.tl.commons.web.contract.CategorySearch;
+import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tl.commons.web.contract.ResponseInfo;
+import org.egov.tl.commons.web.requests.CategoryRequest;
+import org.egov.tl.commons.web.requests.CategoryResponse;
+import org.egov.tl.commons.web.requests.CategorySearchResponse;
+import org.egov.tl.commons.web.requests.ResponseInfoFactory;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.exception.InvalidInputException;
 import org.egov.tradelicense.domain.services.validator.CategoryValidator;
@@ -85,7 +88,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 			} catch (Exception e) {
 
-				throw new InvalidInputException(requestInfo);
+				throw new InvalidInputException(e.getLocalizedMessage(), requestInfo);
 			}
 		}
 	}
@@ -127,35 +130,33 @@ public class CategoryServiceImpl implements CategoryService {
 
 			} catch (Exception e) {
 
-				throw new InvalidInputException(requestInfo);
+				throw new InvalidInputException(e.getLocalizedMessage(), requestInfo);
 			}
 		}
 	}
 
 	@Override
-	public CategoryResponse getCategoryMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
-			String code, String active, String type, Integer categoryId, Integer pageSize, Integer offSet) {
+	public CategorySearchResponse getCategoryMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
+			String code, String active, String type, String businessNature, Integer categoryId, String rateType, String feeType,
+			Integer uomId, Integer pageSize,Integer offSet) {
 
-		CategoryResponse categoryResponse = new CategoryResponse();
+		CategorySearchResponse categoryResponse = new CategorySearchResponse();
 		try {
 
-			List<Category> categories = categoryRepository.searchCategory(tenantId, ids, name, code, active, type,
-					categoryId, pageSize, offSet);
+			List<CategorySearch> categories = categoryRepository.searchCategory(tenantId, ids, name, code, active, type,
+					businessNature, categoryId,rateType, feeType, uomId, pageSize, offSet);
 
-			if (type != null && !type.isEmpty() && type.equalsIgnoreCase("SUBCATEGORY") || (categoryId != null)) {
+			for (int i = 0; i < categories.size(); i++) {
 
-				for (int i = 0; i < categories.size(); i++) {
+				CategorySearch category = categories.get(i);
+				Long ParentId = category.getParentId();
 
-					Category category = categories.get(i);
-					Long ParentId = category.getParentId();
+				if (ParentId != null) {
 
-					if (ParentId != null) {
+					List<CategoryDetailSearch> categoryDetails = categoryRepository
+							.getCategoryDetailsByCategoryId(category.getId(), pageSize, offSet);
 
-						List<CategoryDetail> categoryDetails = categoryRepository
-								.getCategoryDetailsByCategoryId(category.getId(), pageSize, offSet);
-
-						category.setDetails(categoryDetails);
-					}
+					category.setDetails(categoryDetails);
 				}
 			}
 
@@ -164,7 +165,7 @@ public class CategoryServiceImpl implements CategoryService {
 			categoryResponse.setResponseInfo(responseInfo);
 
 		} catch (Exception e) {
-			throw new InvalidInputException(requestInfo);
+			throw new InvalidInputException(e.getLocalizedMessage(), requestInfo);
 		}
 
 		return categoryResponse;

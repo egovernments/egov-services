@@ -106,7 +106,7 @@
 			<version>0.0.1-SNAPSHOT</version>
 			<classifier>common</classifier>
 			<scope>system</scope>
-			<systemPath>${basedir}/lib/egf-master-0.0.1-SNAPSHOT-client.jar</systemPath>
+			<systemPath>${basedir}/lib/egf-master-0.0.1-SNAPSHOT-common.jar</systemPath>
 		</dependency>
 
 		<dependency>
@@ -115,7 +115,7 @@
 			<version>0.0.1-SNAPSHOT</version>
 			<classifier>client</classifier>
 			<scope>system</scope>
-			<systemPath>${basedir}/lib/egf-master-0.0.1-SNAPSHOT-common.jar</systemPath>
+			<systemPath>${basedir}/lib/egf-master-0.0.1-SNAPSHOT-client.jar</systemPath>
 		</dependency>
 
 		<dependency>
@@ -123,7 +123,7 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-
+		
 	</dependencies>
 
 	<repositories>
@@ -222,6 +222,13 @@
 										<exclude>org.egov.egf.instrument.web.contract.*</exclude>
 										<exclude>org.egov.egf.instrument.persistence.entity.*</exclude>
 										<exclude>org.egov.egf.instrument.domain.model.*</exclude>
+										<exclude>org.egov.egf.instrument.web.requests.*</exclude>
+										<exclude>org.egov.egf.instrument.domain.repository.InstrumentTypeESRepository</exclude>
+										<exclude>org.egov.egf.instrument.domain.repository.InstrumentAccountCodeESRepository</exclude>
+										<exclude>org.egov.egf.instrument.domain.repository.InstrumentESRepository</exclude>
+										<exclude>org.egov.egf.instrument.domain.repository.SurrenderReasonESRepository</exclude>
+										<exclude>org.egov.egf.instrument.domain.repository.ElasticSearchQueryFactory</exclude>
+										<exclude>org.egov.egf.instrument.domain.repository.ElasticSearchUtils</exclude>
 									</excludes>
 									<limits>
 										<limit>
@@ -238,7 +245,7 @@
 										<limit>
 											<counter>COMPLEXITY</counter>
 											<value>COVEREDRATIO</value>
-											<minimum>0.3</minimum>
+											<minimum>0.6</minimum>
 										</limit>
 									</limits>
 								</rule>

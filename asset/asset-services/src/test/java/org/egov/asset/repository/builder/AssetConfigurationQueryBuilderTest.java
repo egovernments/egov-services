@@ -21,7 +21,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(AssetConfigurationQueryBuilderTest.class)
+@WebMvcTest(AssetConfigurationQueryBuilder.class)
 @Import(TestConfiguration.class)
 public class AssetConfigurationQueryBuilderTest {
 
@@ -39,7 +39,8 @@ public class AssetConfigurationQueryBuilderTest {
     @Test
     public void getQueryWithTenantIdTest() {
         final List<Object> preparedStatementValues = new ArrayList<>();
-        Mockito.doReturn("500").when(applicationProperties).commonsSearchPageSizeDefault();
+        Mockito.doReturn("500").when(applicationProperties).getSearchPageSizeDefault();
+
         final String expectedQueryWithTenantId = "SELECT ck.keyName as key, cv.value as value FROM egasset_assetconfiguration ck JOIN "
                 + "egasset_assetconfigurationvalues cv ON ck.id = cv.keyId AND ck.tenantId = cv.tenantId WHERE ck.tenantId = ?";
         final AssetConfigurationCriteria assetConfigurationCriteria = AssetConfigurationCriteria.builder()
@@ -56,7 +57,8 @@ public class AssetConfigurationQueryBuilderTest {
         final List<Object> preparedStatementValues = new ArrayList<>();
         final List<Long> id = new ArrayList<Long>();
         id.add(Long.valueOf("1"));
-        Mockito.doReturn("500").when(applicationProperties).commonsSearchPageSizeDefault();
+        id.add(Long.valueOf("2"));
+        Mockito.doReturn("500").when(applicationProperties).getSearchPageSizeDefault();
         final String expectedQueryWithTenantId = "SELECT ck.keyName as key, cv.value as value FROM egasset_assetconfiguration ck JOIN "
                 + "egasset_assetconfigurationvalues cv ON ck.id = cv.keyId AND ck.tenantId = cv.tenantId WHERE ck.id IN "
                 + getIdQuery(id);
@@ -71,7 +73,7 @@ public class AssetConfigurationQueryBuilderTest {
     @Test
     public void getQueryWithNameTest() {
         final List<Object> preparedStatementValues = new ArrayList<>();
-        Mockito.doReturn("500").when(applicationProperties).commonsSearchPageSizeDefault();
+        Mockito.doReturn("500").when(applicationProperties).getSearchPageSizeDefault();
         final AssetConfigurationCriteria assetConfigurationCriteria = AssetConfigurationCriteria.builder()
                 .name("EnableVoucherGeneration").build();
         final String expectedQueryWithId = "SELECT ck.keyName as key, cv.value as value FROM egasset_assetconfiguration ck JOIN "
@@ -84,18 +86,35 @@ public class AssetConfigurationQueryBuilderTest {
     }
 
     @Test
-    public void getQueryWithEffectiveFromTest() {
-        final List<Object> preparedStatementValues = new ArrayList<>();
-        Mockito.doReturn("500").when(applicationProperties).commonsSearchPageSizeDefault();
-        final AssetConfigurationCriteria assetConfigurationCriteria = AssetConfigurationCriteria.builder()
-                .effectiveFrom(Long.valueOf("1500381058598")).build();
-        final String expectedQueryWithId = "SELECT ck.keyName as key, cv.value as value FROM egasset_assetconfiguration ck JOIN "
-                + "egasset_assetconfigurationvalues cv ON ck.id = cv.keyId AND ck.tenantId = cv.tenantId WHERE cv.effectiveFrom = ?";
-        assertEquals(expectedQueryWithId,
-                assetConfigurationQueryBuilder.getQuery(assetConfigurationCriteria, preparedStatementValues));
-        final List<Object> expectedPreparedStatementValues = new ArrayList<>();
-        expectedPreparedStatementValues.add(Long.valueOf("1500381058598"));
-        assertTrue(preparedStatementValues.equals(expectedPreparedStatementValues));
+	public void getQueryWithEffectiveFromTest() {
+		final List<Object> preparedStatementValues = new ArrayList<>();
+		Mockito.doReturn("500").when(applicationProperties).getSearchPageSizeDefault();
+		final AssetConfigurationCriteria assetConfigurationCriteria = AssetConfigurationCriteria.builder()
+				.effectiveFrom(Long.valueOf("1500381058598")).build();
+		final String expectedQueryWithId = "SELECT ck.keyName as key, cv.value as value FROM egasset_assetconfiguration ck JOIN "
+				+ "egasset_assetconfigurationvalues cv ON ck.id = cv.keyId AND ck.tenantId = cv.tenantId WHERE cv.effectiveFrom = ?";
+		assertEquals(expectedQueryWithId,
+				assetConfigurationQueryBuilder.getQuery(assetConfigurationCriteria, preparedStatementValues));
+		final List<Object> expectedPreparedStatementValues = new ArrayList<>();
+		expectedPreparedStatementValues.add(Long.valueOf("1500381058598"));
+		assertTrue(preparedStatementValues.equals(expectedPreparedStatementValues));
+	}
+    
+    @Test
+    public void getQueryWithTenantIdAndKeyNameTest() {
+            final List<Object> preparedStatementValues = new ArrayList<>();
+            Mockito.doReturn("500").when(applicationProperties).getSearchPageSizeDefault();
+            final AssetConfigurationCriteria assetConfigurationCriteria = AssetConfigurationCriteria.builder()
+                            .tenantId("ap.kurnool").name("EnableVoucherGeneration").build();
+            final String expectedQueryWithId = "SELECT ck.keyName as key, cv.value as value FROM egasset_assetconfiguration ck JOIN "
+                            + "egasset_assetconfigurationvalues cv ON ck.id = cv.keyId AND ck.tenantId = cv.tenantId WHERE ck.tenantId = ? "
+                            + "AND ck.keyName = ?";
+            assertEquals(expectedQueryWithId,
+                            assetConfigurationQueryBuilder.getQuery(assetConfigurationCriteria, preparedStatementValues));
+            final List<Object> expectedPreparedStatementValues = new ArrayList<>();
+            expectedPreparedStatementValues.add("ap.kurnool");
+            expectedPreparedStatementValues.add("EnableVoucherGeneration");
+            assertTrue(preparedStatementValues.equals(expectedPreparedStatementValues));
     }
 
     private static String getIdQuery(final List<Long> idList) {

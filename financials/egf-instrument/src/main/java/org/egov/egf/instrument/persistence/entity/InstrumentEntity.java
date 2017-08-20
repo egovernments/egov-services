@@ -35,6 +35,7 @@ public class InstrumentEntity extends AuditableEntity {
 	private String branchName;
 	private String bankAccountId;
 	private String financialStatusId;
+	private String remittanceVoucherId;
 	private String transactionType;
 	private String payee;
 	private String drawer;
@@ -48,11 +49,12 @@ public class InstrumentEntity extends AuditableEntity {
 		instrument.setTransactionNumber(this.transactionNumber);
 		instrument.setTransactionDate(this.transactionDate);
 		instrument.setAmount(this.amount);
-		instrument.setInstrumentType(InstrumentType.builder().id(this.instrumentTypeId).build());
-		instrument.setBank(BankContract.builder().id(bankId).build());
+		instrument.setInstrumentType(InstrumentType.builder().name(this.instrumentTypeId).build());
+		instrument.setBank(BankContract.builder().code(bankId).build());
 		instrument.setBranchName(this.branchName);
-		instrument.setBankAccount(BankAccountContract.builder().id(bankAccountId).build());
+		instrument.setBankAccount(BankAccountContract.builder().accountNumber(bankAccountId).build());
 		instrument.setFinancialStatus(FinancialStatusContract.builder().id(financialStatusId).build());
+		instrument.setRemittanceVoucherId(this.remittanceVoucherId);
 		instrument.setTransactionType(TransactionType.valueOf(this.transactionType));
 		instrument.setPayee(this.payee);
 		instrument.setDrawer(this.drawer);
@@ -67,12 +69,15 @@ public class InstrumentEntity extends AuditableEntity {
 		this.transactionNumber = instrument.getTransactionNumber();
 		this.transactionDate = instrument.getTransactionDate();
 		this.amount = instrument.getAmount();
-		this.instrumentTypeId = instrument.getInstrumentType() != null ? instrument.getInstrumentType().getId() : null;
-		this.bankId = instrument.getBank() != null ? instrument.getBank().getId() : null;
+		this.instrumentTypeId = instrument.getInstrumentType() != null ? instrument.getInstrumentType().getName()
+				: null;
+		this.bankId = instrument.getBank() != null ? instrument.getBank().getCode() : null;
 		this.branchName = instrument.getBranchName();
-		this.bankAccountId = instrument.getBankAccount() != null ? instrument.getBankAccount().getId() : null;
+		this.bankAccountId = instrument.getBankAccount() != null ? instrument.getBankAccount().getAccountNumber()
+				: null;
 		this.financialStatusId = instrument.getFinancialStatus() != null ? instrument.getFinancialStatus().getId()
 				: null;
+		this.remittanceVoucherId = instrument.getRemittanceVoucherId();
 		this.transactionType = instrument.getTransactionType() != null ? instrument.getTransactionType().toString()
 				: null;
 		this.payee = instrument.getPayee();

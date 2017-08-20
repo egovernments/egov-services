@@ -270,10 +270,39 @@ paths:
           schema:
             $ref: '#/definitions/SpecialNoticeResponse'
         '400':
-          description: Title Tranfer failed
+          description: Notice Generation failed
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-            
+      tags:
+       - Property
+  
+  /properties/_preparedcb:
+    post:
+      summary: Prepares the DCB details for a property.
+      description: Prepares the DCB details for a property.
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - name: upicNumber
+          in: query
+          required: true
+          description: The unique reference number for a property.
+          type: string
+          minLength: 4
+          maxLength: 128
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/billingservice/contracts/v1-0-0.yml#/definitions/DemandResponse'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - Property          
   
 
 definitions:
@@ -358,6 +387,18 @@ definitions:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/billingservice/contracts/v1-0-0.yml#/definitions/Demand'
       boundary:
         $ref: "#/definitions/PropertyLocation"
+      sequenceNo:
+        type: integer
+        description: This number used to generate bills or some other activities on a property in the order.
+      bpaNo:
+        type: string
+        description: Buidling plan approval no for the Property
+        maxLength: 16
+        minLength: 1
+      bpaDate:
+        type: string
+        format: date
+        description: Buidling plan approval date for the Property
       active:
         type: boolean
         description: True if the property is active and False if the property is inactive.
@@ -584,10 +625,17 @@ definitions:
       taxCalculations:
         type: string
         description: The json (array of 'https://github.com/egovernments/egov-services/blob/master/docs/propertytax/contracts/pt-calculator/v1.0.0.yml#/definitions/TaxCalculation' )returned by tax calculator API
+      factors:
+        type: string
+        description: The json (array of '#/definitions/Factor')
+      assessmentDates:
+        $ref: '#/definitions/AssessmentDate'
+        description: when data entry happens for existing properties, all the assessemnt and reassessment dates will come here.
+      builderDetails:
+        $ref: '#/definitions/BuilderDetail'
       workFlowDetails:
         $ref: '#/definitions/WorkFlowDetails'
     required:
-    - sitalArea
     - propertyType
 
   PropertyLocation:
@@ -747,7 +795,7 @@ definitions:
       occupierName:
         type: string
         description: Name of the occupier in a Unit
-        maxLength: 128
+        maxLength: 4000
         minLength: 1
       firmName:
         type: string
@@ -781,6 +829,10 @@ definitions:
         type: string
         format: date
         description: occupancy date of the Unit
+      constructionStartDate:
+        type: string
+        format: date
+        description: construction Start date of the Unit
       constCompletionDate:
         type: string
         format: date
@@ -789,6 +841,10 @@ definitions:
         type: number
         format: double
         description: manual arv for the Unit
+      rv:
+        type: number
+        format: double
+        description: The system calculated rv for the Unit
       arv:
         type: number
         format: double
@@ -803,9 +859,17 @@ definitions:
         description: water meter no for the Unit
         maxLength: 64
         minLength: 1
+      landCost:
+        type: number
+        format: double
+        description: Cost of the Land.
+      buildingCost:
+        type: number
+        format: double
+        description: Cost of the Land.
       isAuthorised:
         type: boolean
-        description: this would indicate the Unit is an autorised or unauthorised construction, if true then penalty to be calculated 100% (https://issues.egovernments.org/browse/EGSVC-480 )
+        description: this would indicate the Unit is an autorised or unauthorised construction, if true then penalty to be calculated depends on ULB requirements.
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -836,7 +900,6 @@ definitions:
         type: string
         description: current status.
 
-  
   Document:
     type: object
     description: This object holds list of documents attached during the transaciton for a agreement
@@ -863,6 +926,66 @@ definitions:
       name:
         type: string
         description: Name of the boundary.
+        
+  Factor:
+    type: object
+    description: This object the boundary info
+    properties:
+      name:
+        type: string
+        description: Name of the factor. Mostly these will be on amenities and other things like road etc.
+        enum:
+         - toilet
+         - road
+         - lift
+         - parking
+      value:
+        type: integer
+        format: int32
+        description: Factor value.
+        
+  AssessmentDate:
+    type: object
+    description: This object the boundary info
+    properties:
+      name:
+        type: string
+        description: Name of the assessment date
+        enum:
+         - firstassessment
+         - currentassessment
+         - revisedassessment
+         - lastassessment
+      date:
+        type: string
+        format: date
+        description: assessment date. date format is dd/MM/yyyy
+        
+  BuilderDetail:
+    type: object
+    description: This object the boundary info
+    properties:
+      certifiCatenumber:
+        type: string
+        description: certificate number
+      certificateCompletionDate:
+        type: string
+        format: date
+        description: Certificate completion date. date format is dd/MM/yyyy
+      certificateReceiveDate:
+        type: string
+        format: date
+        description: Certificate receive date. date format is dd/MM/yyyy
+      agencyName:
+        type: string
+        description: Agency Name
+      licenseType:
+        type: string
+        description: License Type
+      licenseNumber:
+        type: string
+        description: License Number
+
   
   TitalTranferRequest:
     type: object
@@ -1067,46 +1190,6 @@ definitions:
       notice:
         $ref: '#/definitions/Notice'
         
-  LatePaymentPenaltyRequest:
-    type: object
-    description: This object holds the information for the property for which penalty to be calculated
-    properties:
-      requestInfo:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-      upicNo:
-       type: string
-      tenantId:
-        type: string
-        description: tenant id of the Property
-        maxLength: 128
-        minLength: 4
-    required:
-       - upicNo
-       - tenantId 
-              
-  
-  LatePaymentPenaltyResponse:
-    type: object
-    description: This object holds the information for the property for which penalty to be calculated
-    properties:
-      responseInfo:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-      upicNo:
-       type: string
-      tenantId:
-        type: string
-        description: tenant id of the Property
-        maxLength: 128
-        minLength: 4
-      penalty:
-       type: number
-       format: double
-    required:
-       - upicNo
-       - tenantId
-       - penalty
-     
-      
 parameters:
 ##########################################################
 #Parameter name must start with small case followed by camel case.
@@ -1146,4 +1229,6 @@ parameters:
 tags:
   - name: Property
     description: APIs required for property.
+  - name: Transfer
+    description: APIs required for title transfer.
 

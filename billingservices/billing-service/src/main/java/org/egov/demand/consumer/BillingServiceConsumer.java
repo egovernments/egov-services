@@ -1,8 +1,13 @@
 package org.egov.demand.consumer;
 
+import java.util.List;
 import java.util.Map;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.config.ApplicationProperties;
+import org.egov.demand.helper.CollectionReceiptRequest;
+import org.egov.demand.helper.JsonIgnoreHelper;
+import org.egov.demand.model.DemandUpdateMisRequest;
 import org.egov.demand.repository.BillRepository;
 import org.egov.demand.service.BusinessServDetailService;
 import org.egov.demand.service.DemandService;
@@ -49,7 +54,7 @@ public class BillingServiceConsumer {
 	@Autowired
 	private BusinessServDetailService businessServDetailService;
 
-	@KafkaListener(topics = { "${kafka.topics.save.bill}", "${kafka.topics.update.bill}", "${kafka.topics.save.demand}",
+	@KafkaListener(topics = { "${kafka.topics.updateMIS.demand}","${kafka.topics.save.bill}", "${kafka.topics.update.bill}", "${kafka.topics.save.demand}",
 			"${kafka.topics.update.demand}" , "${kafka.topics.save.taxHeadMaster}","${kafka.topics.update.taxHeadMaster}",
 			"${kafka.topics.create.taxperiod.name}", "${kafka.topics.update.taxperiod.name}","${kafka.topics.save.glCodeMaster}",
 			"${kafka.topics.update.glCodeMaster}","${kafka.topics.receipt.update.demand}",
@@ -62,9 +67,9 @@ public class BillingServiceConsumer {
 				demandService.save(objectMapper.convertValue(consumerRecord, DemandRequest.class));
 			else if (applicationProperties.getUpdateDemandTopic().equals(topic))
 				demandService.update(objectMapper.convertValue(consumerRecord, DemandRequest.class));
-			else if(applicationProperties.getUpdateDemandFromReceipt().equals(topic))
+			/*else if(applicationProperties.getUpdateDemandFromReceipt().equals(topic))
 				demandService.updateDemandFromBill(objectMapper.convertValue(consumerRecord, BillRequest.class));
-			else if (topic.equals(applicationProperties.getCreateBillTopic()))
+			*/else if (topic.equals(applicationProperties.getCreateBillTopic()))
 				billRepository.saveBill(objectMapper.convertValue(consumerRecord, BillRequest.class));
 			else if (applicationProperties.getCreateTaxHeadMasterTopicName().equals(topic))
 				taxheadMasterService.create(objectMapper.convertValue(consumerRecord, TaxHeadMasterRequest.class));
@@ -82,6 +87,21 @@ public class BillingServiceConsumer {
 				businessServDetailService.update(objectMapper.convertValue(consumerRecord, BusinessServiceDetailRequest.class));
 			else if(applicationProperties.getUpdateGlCodeMasterTopicName().equals(topic))
 				glCodeMasterService.update(objectMapper.convertValue(consumerRecord, GlCodeMasterRequest.class));
+			else if(applicationProperties.getUpdateMISTopicName().equals(topic))
+				demandService.updateMIS(objectMapper.convertValue(consumerRecord, DemandUpdateMisRequest.class));
+			else if(applicationProperties.getUpdateDemandFromReceipt().equals(topic)){
+				objectMapper.addMixIn(RequestInfo.class, JsonIgnoreHelper.class);
+				CollectionReceiptRequest collectionReceiptRequest = objectMapper.convertValue(consumerRecord, CollectionReceiptRequest.class);
+				RequestInfo requestInfo = collectionReceiptRequest.getRequestInfo().toRequestInfo();
+				List<Receipt> receipts = collectionReceiptRequest.getReceipt();
+				
+				ReceiptRequest receiptRequest = ReceiptRequest.builder()
+						.receipt(receipts).requestInfo(requestInfo)
+						.tenantId(collectionReceiptRequest.getTenantId()).build();
+				log.debug("the receipt request is -------------------"+receiptRequest);
+				demandService.updateDemandFromReceipt(receiptRequest);
+			}
+			
 		} catch (Exception exception) {
 			log.debug("processMessage:" + exception);
 			throw exception;

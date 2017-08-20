@@ -48,14 +48,29 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 
+import lombok.Getter;
+
 @Configuration
 @PropertySource(value = { "classpath:config/application-config.properties" }, ignoreResourceNotFound = true)
 @Order(0)
+@Getter
 public class ApplicationProperties {
 
-    private static final String SEARCH_PAGESIZE_DEFAULT = "search.pagesize.default";
-    public static final String SEARCH_PAGENO_MAX = "search.pageno.max";
-    public static final String SEARCH_PAGESIZE_MAX = "search.pagesize.max";
+    private final String searchPageSizeDefault = "search.pagesize.default";
+    private final String searchPagenoMax = "search.pageno.max";
+    private final String searchPageSizeMax = "search.pagesize.max";
+
+    public String getSearchPageSizeDefault() {
+        return environment.getProperty(searchPageSizeDefault);
+    }
+
+    public String getSearchPagenoMax() {
+        return environment.getProperty(searchPagenoMax);
+    }
+
+    public String getSearchPageSizeMax() {
+        return environment.getProperty(searchPageSizeMax);
+    }
 
     @Value("${egov.assetcategory.async}")
     private Boolean assetCategoryAsync;
@@ -90,71 +105,35 @@ public class ApplicationProperties {
     @Value("${egov.services.egf_service.voucher.createpath}")
     private String egfServiceVoucherCreatePath;
 
-    @Value("${egov.municipality.host}")
-    private String municipalityHostName;
+    @Value("${egov.services.asset.batchsize}")
+    private String batchSize;
 
+    @Value("${egov.services.egf_service.financialyear.searchpath}")
+    private String egfFinancialYearSearchPath;
+
+    @Value("${kafka.topics.save.depreciation}")
+    private String saveDepreciationTopic;
+
+    @Value("${kafka.topics.save.currentvalue}")
+    private String saveCurrentvalueTopic;
+    
+    @Value("${egov.services.asset.depreciaition.capitalizedvalue}")
+    private String depreciaitionCapitalizedValue;
+    
+    @Value("${egov.services.asset.depreciaition.minvalue}")
+    private String depreciaitionMinimumValue;
+    
+    @Value("${egov.services.asset.depreciaition.c.factor}")
+    private String depreciaitionFactorForC;
+    
+    @Value("${egov.services.egf_service.functions.searchpath}")
+    private String egfServiceFunctionsSearchPath;
+
+    @Value("${egov.services.egf_service.funds.searchpath}")
+    private String egfServiceFundsSearchPath;
+
+    
     @Autowired
     private Environment environment;
-
-    public String commonsSearchPageSizeDefault() {
-        return environment.getProperty(SEARCH_PAGESIZE_DEFAULT);
-    }
-
-    public String commonsSearchPageNumberMax() {
-        return environment.getProperty(SEARCH_PAGENO_MAX);
-    }
-
-    public String commonsSearchPageSizeMax() {
-        return environment.getProperty(SEARCH_PAGESIZE_MAX);
-    }
-
-    public Boolean getAssetCategoryAsync() {
-        return assetCategoryAsync;
-    }
-
-    public String getCreateAssetCategoryTopicName() {
-        return createAssetCategoryTopicName;
-    }
-
-    public String getCreateAssetTopicName() {
-        return createAssetTopicName;
-    }
-
-    public String getUpdateAssetTopicName() {
-        return updateAssetTopicName;
-    }
-
-    public String getUpdateAssetCategoryTopicName() {
-        return updateAssetCategoryTopicName;
-    }
-
-    public String getCreateAssetRevaluationTopicName() {
-        return createAssetRevaluationTopicName;
-    }
-
-    public String getCreateAssetDisposalTopicName() {
-        return createAssetDisposalTopicName;
-    }
-
-    public String getEgfServiceHostName() {
-        return egfServiceHostName;
-    }
-
-    public String getEgfServiceVoucherCreatePath() {
-        return egfServiceVoucherCreatePath;
-    }
-
-    public String getEgfServiceChartOfAccountsSearchPath() {
-        return egfServiceChartOfAccountsSearchPath;
-    }
-
-    public String getEgfServiceChartOfAccountsDetailsSearchPath() {
-        return egfServiceChartOfAccountsDetailsSearchPath;
-    }
-
-    public String getMunicipalityHostName() {
-        return municipalityHostName;
-    }
-
 
 }

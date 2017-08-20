@@ -1,3 +1,42 @@
+/*
+ * eGov suite of products aim to improve the internal efficiency,transparency,
+ *      accountability and the service delivery of the government  organizations.
+ *  
+ *       Copyright (C) <2015>  eGovernments Foundation
+ *  
+ *       The updated version of eGov suite of products as by eGovernments Foundation
+ *       is available at http://www.egovernments.org
+ *  
+ *       This program is free software: you can redistribute it and/or modify
+ *       it under the terms of the GNU General Public License as published by
+ *       the Free Software Foundation, either version 3 of the License, or
+ *       any later version.
+ *  
+ *       This program is distributed in the hope that it will be useful,
+ *       but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *       GNU General Public License for more details.
+ *  
+ *       You should have received a copy of the GNU General Public License
+ *       along with this program. If not, see http://www.gnu.org/licenses/ or
+ *       http://www.gnu.org/licenses/gpl.html .
+ *  
+ *       In addition to the terms of the GPL license to be adhered to in using this
+ *       program, the following additional terms are to be complied with:
+ *  
+ *           1) All versions of this program, verbatim or modified must carry this
+ *              Legal Notice.
+ *  
+ *           2) Any misrepresentation of the origin of the material is prohibited. It
+ *              is required that all modified versions of this material be marked in
+ *              reasonable ways as different from the original version.
+ *  
+ *           3) This license does not grant any rights to any user of the program
+ *              with regards to rights under trademark law for use of the trade names
+ *              or trademarks of eGovernments Foundation.
+ *  
+ *     In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
+ */
 package org.egov.egf.budget.persistence.queue;
 
 import java.util.HashMap;
@@ -27,136 +66,183 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class FinancialBudgetServiceListener {
 
-	@Value("${kafka.topics.egf.budget.service.completed.topic}")
-	private String completedTopic;
+    @Value("${kafka.topics.egf.budget.service.completed.topic}")
+    private String completedTopic;
 
-	@Value("${kafka.topics.egf.budget.budget.completed.key}")
-	private String budgetCompletedKey;
-	
-	@Value("${kafka.topics.egf.budget.budgetdetail.completed.key}")
-	private String budgetDetailCompletedKey;
-	
-	@Value("${kafka.topics.egf.budget.budgetreapp.completed.key}")
-	private String budgetReAppropriationCompletedKey;
+    @Value("${kafka.topics.egf.budget.budget.completed.key}")
+    private String budgetCompletedKey;
 
-	@Autowired
-	private ObjectMapper objectMapper;
+    @Value("${kafka.topics.egf.budget.budgetdetail.completed.key}")
+    private String budgetDetailCompletedKey;
 
-	private ObjectMapperFactory objectMapperFactory;
+    @Value("${kafka.topics.egf.budget.budgetreapp.completed.key}")
+    private String budgetReAppropriationCompletedKey;
 
-	@Autowired
-	private FinancialProducer financialProducer;
+    @Autowired
+    private ObjectMapper objectMapper;
 
-	@Autowired
-	private BudgetService budgetService;
+    private ObjectMapperFactory objectMapperFactory;
 
-	@Autowired
-	private BudgetDetailService budgetDetailService;
+    @Autowired
+    private FinancialProducer financialProducer;
 
-	@Autowired
-	private BudgetReAppropriationService budgetReAppropriationService;
+    @Autowired
+    private BudgetService budgetService;
 
-	@KafkaListener(id = "${kafka.topics.egf.budget.service.validated.id}", topics = "${kafka.topics.egf.budget.service.validated.topic}", group = "${kafka.topics.egf.budget.service.validated.group}")
-	public void process(HashMap<String, Object> mastersMap) {
+    @Autowired
+    private BudgetDetailService budgetDetailService;
 
-		objectMapperFactory = new ObjectMapperFactory(objectMapper);
+    @Autowired
+    private BudgetReAppropriationService budgetReAppropriationService;
 
-		BudgetMapper budgetMapper = new BudgetMapper();
-		BudgetDetailMapper budgetDetailMapper = new BudgetDetailMapper();
-		BudgetReAppropriationMapper budgetReAppropriationMapper = new BudgetReAppropriationMapper();
+    @KafkaListener(id = "${kafka.topics.egf.budget.service.validated.id}", topics = "${kafka.topics.egf.budget.service.validated.topic}", group = "${kafka.topics.egf.budget.service.validated.group}")
+    public void process(final HashMap<String, Object> mastersMap) {
 
-		if (mastersMap.get("budget_create") != null) {
+        objectMapperFactory = new ObjectMapperFactory(objectMapper);
 
-			BudgetRequest request = objectMapperFactory.create().convertValue(mastersMap.get("budget_create"),
-					BudgetRequest.class);
+        final BudgetMapper budgetMapper = new BudgetMapper();
+        final BudgetDetailMapper budgetDetailMapper = new BudgetDetailMapper();
+        final BudgetReAppropriationMapper budgetReAppropriationMapper = new BudgetReAppropriationMapper();
 
-			for (BudgetContract budgetContract : request.getBudgets()) {
-				Budget domain = budgetMapper.toDomain(budgetContract);
-				budgetService.save(domain);
-			}
+        if (mastersMap.get("budget_create") != null) {
 
-			mastersMap.clear();
-			mastersMap.put("budget_persisted", request);
-			financialProducer.sendMessage(completedTopic, budgetCompletedKey, mastersMap);
-		}
+            final BudgetRequest request = objectMapperFactory.create().convertValue(mastersMap.get("budget_create"),
+                    BudgetRequest.class);
 
-		if (mastersMap.get("budget_update") != null) {
+            for (final BudgetContract budgetContract : request.getBudgets()) {
+                final Budget domain = budgetMapper.toDomain(budgetContract);
+                budgetService.save(domain);
+            }
 
-			BudgetRequest request = objectMapperFactory.create().convertValue(mastersMap.get("budget_update"),
-					BudgetRequest.class);
+            mastersMap.clear();
+            mastersMap.put("budget_persisted", request);
+            financialProducer.sendMessage(completedTopic, budgetCompletedKey, mastersMap);
+        }
 
-			for (BudgetContract budgetContract : request.getBudgets()) {
-				Budget domain = budgetMapper.toDomain(budgetContract);
-				budgetService.update(domain);
-			}
+        if (mastersMap.get("budget_update") != null) {
 
-			mastersMap.clear();
-			mastersMap.put("budget_persisted", request);
-			financialProducer.sendMessage(completedTopic, budgetCompletedKey, mastersMap);
-		}
+            final BudgetRequest request = objectMapperFactory.create().convertValue(mastersMap.get("budget_update"),
+                    BudgetRequest.class);
 
-		if (mastersMap.get("budgetdetail_create") != null) {
+            for (final BudgetContract budgetContract : request.getBudgets()) {
+                final Budget domain = budgetMapper.toDomain(budgetContract);
+                budgetService.update(domain);
+            }
 
-			BudgetDetailRequest request = objectMapperFactory.create()
-					.convertValue(mastersMap.get("budgetdetail_create"), BudgetDetailRequest.class);
+            mastersMap.clear();
+            mastersMap.put("budget_persisted", request);
+            financialProducer.sendMessage(completedTopic, budgetCompletedKey, mastersMap);
+        }
+        
+        if (mastersMap.get("budget_delete") != null) {
+        	
+        	final BudgetRequest request = objectMapperFactory.create().convertValue(mastersMap.get("budget_delete"),
+        			BudgetRequest.class);
+        	
+        	for (final BudgetContract budgetContract : request.getBudgets()) {
+        		final Budget domain = budgetMapper.toDomain(budgetContract);
+        		budgetService.delete(domain);
+        	}
+        	
+        	mastersMap.clear();
+        	mastersMap.put("budget_deleted", request);
+        	financialProducer.sendMessage(completedTopic, budgetCompletedKey, mastersMap);
+        }
 
-			for (BudgetDetailContract budgetDetailContract : request.getBudgetDetails()) {
-				BudgetDetail domain = budgetDetailMapper.toDomain(budgetDetailContract);
-				budgetDetailService.save(domain);
-			}
+        if (mastersMap.get("budgetdetail_create") != null) {
 
-			mastersMap.clear();
-			mastersMap.put("budgetdetail_persisted", request);
-			financialProducer.sendMessage(completedTopic, budgetDetailCompletedKey, mastersMap);
-		}
+            final BudgetDetailRequest request = objectMapperFactory.create()
+                    .convertValue(mastersMap.get("budgetdetail_create"), BudgetDetailRequest.class);
 
-		if (mastersMap.get("budgetdetail_update") != null)
+            for (final BudgetDetailContract budgetDetailContract : request.getBudgetDetails()) {
+                final BudgetDetail domain = budgetDetailMapper.toDomain(budgetDetailContract);
+                budgetDetailService.save(domain);
+            }
 
-		{
+            mastersMap.clear();
+            mastersMap.put("budgetdetail_persisted", request);
+            financialProducer.sendMessage(completedTopic, budgetDetailCompletedKey, mastersMap);
+        }
 
-			BudgetDetailRequest request = objectMapperFactory.create()
-					.convertValue(mastersMap.get("budgetdetail_update"), BudgetDetailRequest.class);
+        if (mastersMap.get("budgetdetail_update") != null)
 
-			for (BudgetDetailContract budgetDetailContract : request.getBudgetDetails()) {
-				BudgetDetail domain = budgetDetailMapper.toDomain(budgetDetailContract);
-				budgetDetailService.update(domain);
-			}
+        {
 
-			mastersMap.clear();
-			mastersMap.put("budgetdetail_persisted", request);
-			financialProducer.sendMessage(completedTopic, budgetDetailCompletedKey, mastersMap);
-		}
+            final BudgetDetailRequest request = objectMapperFactory.create()
+                    .convertValue(mastersMap.get("budgetdetail_update"), BudgetDetailRequest.class);
 
-		if (mastersMap.get("budgetreappropriation_create") != null) {
+            for (final BudgetDetailContract budgetDetailContract : request.getBudgetDetails()) {
+                final BudgetDetail domain = budgetDetailMapper.toDomain(budgetDetailContract);
+                budgetDetailService.update(domain);
+            }
 
-			BudgetReAppropriationRequest request = objectMapperFactory.create().convertValue(
-					mastersMap.get("budgetreappropriation_create"), BudgetReAppropriationRequest.class);
+            mastersMap.clear();
+            mastersMap.put("budgetdetail_persisted", request);
+            financialProducer.sendMessage(completedTopic, budgetDetailCompletedKey, mastersMap);
+        }
+        
+        if (mastersMap.get("budgetdetail_delete") != null)
+        	
+        {
+        	
+        	final BudgetDetailRequest request = objectMapperFactory.create()
+        			.convertValue(mastersMap.get("budgetdetail_delete"), BudgetDetailRequest.class);
+        	
+        	for (final BudgetDetailContract budgetDetailContract : request.getBudgetDetails()) {
+        		final BudgetDetail domain = budgetDetailMapper.toDomain(budgetDetailContract);
+        		budgetDetailService.delete(domain);
+        	}
+        	
+        	mastersMap.clear();
+        	mastersMap.put("budgetdetail_deleted", request);
+        	financialProducer.sendMessage(completedTopic, budgetDetailCompletedKey, mastersMap);
+        }
 
-			for (BudgetReAppropriationContract budgetReAppropriationContract : request.getBudgetReAppropriations()) {
-				BudgetReAppropriation domain = budgetReAppropriationMapper.toDomain(budgetReAppropriationContract);
-				budgetReAppropriationService.save(domain);
-			}
+        if (mastersMap.get("budgetreappropriation_create") != null) {
 
-			mastersMap.clear();
-			mastersMap.put("budgetreappropriation_persisted", request);
-			financialProducer.sendMessage(completedTopic, budgetReAppropriationCompletedKey, mastersMap);
-		}
-		if (mastersMap.get("budgetreappropriation_update") != null)
+            final BudgetReAppropriationRequest request = objectMapperFactory.create().convertValue(
+                    mastersMap.get("budgetreappropriation_create"), BudgetReAppropriationRequest.class);
 
-		{
-			BudgetReAppropriationRequest request = objectMapperFactory.create().convertValue(
-					mastersMap.get("budgetreappropriation_update"), BudgetReAppropriationRequest.class);
+            for (final BudgetReAppropriationContract budgetReAppropriationContract : request.getBudgetReAppropriations()) {
+                final BudgetReAppropriation domain = budgetReAppropriationMapper.toDomain(budgetReAppropriationContract);
+                budgetReAppropriationService.save(domain);
+            }
 
-			for (BudgetReAppropriationContract budgetReAppropriationContract : request.getBudgetReAppropriations()) {
-				BudgetReAppropriation domain = budgetReAppropriationMapper.toDomain(budgetReAppropriationContract);
-				budgetReAppropriationService.update(domain);
-			}
+            mastersMap.clear();
+            mastersMap.put("budgetreappropriation_persisted", request);
+            financialProducer.sendMessage(completedTopic, budgetReAppropriationCompletedKey, mastersMap);
+        }
+        if (mastersMap.get("budgetreappropriation_update") != null)
 
-			mastersMap.clear();
-			mastersMap.put("budgetreappropriation_persisted", request);
-			financialProducer.sendMessage(completedTopic, budgetReAppropriationCompletedKey, mastersMap);
-		}
+        {
+            final BudgetReAppropriationRequest request = objectMapperFactory.create().convertValue(
+                    mastersMap.get("budgetreappropriation_update"), BudgetReAppropriationRequest.class);
 
-	}
+            for (final BudgetReAppropriationContract budgetReAppropriationContract : request.getBudgetReAppropriations()) {
+                final BudgetReAppropriation domain = budgetReAppropriationMapper.toDomain(budgetReAppropriationContract);
+                budgetReAppropriationService.update(domain);
+            }
+
+            mastersMap.clear();
+            mastersMap.put("budgetreappropriation_persisted", request);
+            financialProducer.sendMessage(completedTopic, budgetReAppropriationCompletedKey, mastersMap);
+        }
+        if (mastersMap.get("budgetreappropriation_delete") != null)
+        	
+        {
+        	final BudgetReAppropriationRequest request = objectMapperFactory.create().convertValue(
+        			mastersMap.get("budgetreappropriation_delete"), BudgetReAppropriationRequest.class);
+        	
+        	for (final BudgetReAppropriationContract budgetReAppropriationContract : request.getBudgetReAppropriations()) {
+        		final BudgetReAppropriation domain = budgetReAppropriationMapper.toDomain(budgetReAppropriationContract);
+        		budgetReAppropriationService.delete(domain);
+        	}
+        	
+        	mastersMap.clear();
+        	mastersMap.put("budgetreappropriation_deleted", request);
+        	financialProducer.sendMessage(completedTopic, budgetReAppropriationCompletedKey, mastersMap);
+        }
+
+    }
 
 }

@@ -50,14 +50,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Builder
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-
+@AllArgsConstructor
+@Builder
 @JsonPropertyOrder({ "id", "chartOfAccount", "accountDetailType" })
-public class ChartOfAccountDetailContract extends AuditDetails {
+public class ChartOfAccountDetailContract {
 
 	private Long id;
 
@@ -66,5 +65,6 @@ public class ChartOfAccountDetailContract extends AuditDetails {
 
 	@NotNull
 	private AccountDetailType accountDetailType;
-
+	
+	private AuditDetails auditDetails;
 }

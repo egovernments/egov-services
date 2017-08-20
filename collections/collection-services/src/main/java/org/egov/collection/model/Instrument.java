@@ -53,6 +53,8 @@ import org.egov.collection.web.contract.BankAccountContract;
 import org.egov.collection.web.contract.BankContract;
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -87,7 +89,13 @@ public class Instrument{
 	 * date. for DD it is DD date
 	 */
 	@NotNull
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
 	private Date transactionDate;
+
+    /**
+     * Transaction date as long comes from UI in case of cheque and DD
+     */
+    private Long transactionDateInput;
 
 	/*
 	 * amount is the instrument amount. For cheque type it is cheque amount.
@@ -165,5 +173,7 @@ public class Instrument{
 	 */
 	// @DrillDownTable
 	private Set<InstrumentVoucher> instrumentVouchers = new HashSet<InstrumentVoucher>(0);
+
+    private String tenantId;
 
 }

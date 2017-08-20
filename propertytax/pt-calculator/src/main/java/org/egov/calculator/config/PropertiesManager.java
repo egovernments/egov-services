@@ -59,6 +59,24 @@ public class PropertiesManager {
 
 	private String serverContextpath;
 
+	private String demandUrl;
+
+	private String demandSearchPath;
+
+	private Integer nonPenaltyMonths;
+
+	private Double penalityPercentage;
+
+	private String vacantland;
+
+	private String businessService;
+
+	private String usage;
+
+	private String invalidFormDate;
+
+	private String invalidToDate;
+
 	public String getInvalidInput() {
 		return environment.getProperty("invalid.input");
 	}
@@ -129,5 +147,41 @@ public class PropertiesManager {
 
 	public String getServerContextpath() {
 		return environment.getProperty("server.contextPath");
+	}
+
+	public String getDemandUrl() {
+		return environment.getProperty("egov.services.billing_service.hostname");
+	}
+
+	public String getDemandSearchPath() {
+		return environment.getProperty("egov.services.billing_service.searchdemand");
+	}
+
+	public Integer getNonPenaltyMonths() {
+		return Integer.valueOf(environment.getProperty("nonpenalty.months"));
+	}
+
+	public Double getPenalityPercentage() {
+		return Double.valueOf(environment.getProperty("penality.percentage"));
+	}
+
+	public String getVacantland() {
+		return environment.getProperty("egov.propertytype.vacantland");
+	}
+
+	public String getBusinessService() {
+		return environment.getProperty("business.service");
+	}
+
+	public String getUsage() {
+		return environment.getProperty("usage");
+	}
+
+	public String getInvalidFormDate() {
+		return environment.getProperty("invalid.fromDate");
+	}
+
+	public String getInvalidToDate() {
+		return environment.getProperty("invalid.todate");
 	}
 }

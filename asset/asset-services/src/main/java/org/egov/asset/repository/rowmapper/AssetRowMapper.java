@@ -58,8 +58,6 @@ import org.egov.asset.model.YearWiseDepreciation;
 import org.egov.asset.model.enums.AssetCategoryType;
 import org.egov.asset.model.enums.DepreciationMethod;
 import org.egov.asset.model.enums.ModeOfAcquisition;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -69,10 +67,11 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@Component
-public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
+import lombok.extern.slf4j.Slf4j;
 
-    private static final Logger logger = LoggerFactory.getLogger(AssetRowMapper.class);
+@Component
+@Slf4j
+public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -82,9 +81,9 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
         final Map<Long, Asset> map = new HashMap<Long, Asset>();
 
         while (rs.next()) {
-            final Long assetId = rs.getLong("id");
+            final Long assetId = (Long) rs.getObject("id");
 
-            logger.info("agreementid in row mapper" + assetId);
+            log.info("agreementid in row mapper" + assetId);
 
             Asset asset = map.get(assetId);
             if (asset == null) {
@@ -135,38 +134,38 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                 asset.setAssetAttributes(asset2.getAssetAttributes());
 
                 final Department department = new Department();
-                department.setId(rs.getLong("department"));
+                department.setId((Long) rs.getObject("department"));
                 asset.setDepartment(department);
 
                 final Location location = new Location();
-                location.setBlock(rs.getLong("block"));
-                location.setLocality(rs.getLong("locality"));
+                location.setBlock((Long) rs.getObject("block"));
+                location.setLocality((Long) rs.getObject("locality"));
                 location.setDoorNo(rs.getString("doorNo"));
-                location.setElectionWard(rs.getLong("electionWard"));
-                location.setRevenueWard(rs.getLong("revenueWard"));
-                location.setPinCode(rs.getLong("pincode"));
-                location.setZone(rs.getLong("zone"));
-                location.setStreet(rs.getLong("street"));
+                location.setElectionWard((Long) rs.getObject("electionWard"));
+                location.setRevenueWard((Long) rs.getObject("revenueWard"));
+                location.setPinCode((Long) rs.getObject("pincode"));
+                location.setZone((Long) rs.getObject("zone"));
+                location.setStreet((Long) rs.getObject("street"));
                 asset.setLocationDetails(location);
 
                 final AssetCategory assetCategory = new AssetCategory();
-                assetCategory.setId(rs.getLong("assetcategoryId"));
-                assetCategory.setAccumulatedDepreciationAccount(rs.getLong("accumulatedDepreciationAccount"));
+                assetCategory.setId((Long) rs.getObject("assetcategoryId"));
+                assetCategory.setAccumulatedDepreciationAccount((Long) rs.getObject("accumulatedDepreciationAccount"));
                 assetCategory.setAssetCategoryType(AssetCategoryType.fromValue(rs.getString("assetcategorytype")));
-                assetCategory.setAssetAccount(rs.getLong("assetAccount"));
+                assetCategory.setAssetAccount((Long) rs.getObject("assetAccount"));
                 assetCategory.setName(rs.getString("assetCategoryName"));
                 assetCategory.setCode(rs.getString("assetcategorycode"));
-                assetCategory.setParent(rs.getLong("parentId"));
+                assetCategory.setParent((Long) rs.getObject("parentId"));
                 assetCategory.setDepreciationRate(rs.getDouble("depreciationrate"));
-                assetCategory.setDepreciationExpenseAccount(rs.getLong("depreciationExpenseAccount"));
+                assetCategory.setDepreciationExpenseAccount((Long) rs.getObject("depreciationExpenseAccount"));
                 assetCategory.setDepreciationMethod(DepreciationMethod.fromValue(rs.getString("depreciationMethod")));
-                assetCategory.setAccumulatedDepreciationAccount(rs.getLong("accumulatedDepreciationAccount"));
-                assetCategory.setRevaluationReserveAccount(rs.getLong("revaluationReserveAccount"));
-                assetCategory.setUnitOfMeasurement(rs.getLong("unitOfMeasurement"));
+                assetCategory.setAccumulatedDepreciationAccount((Long) rs.getObject("accumulatedDepreciationAccount"));
+                assetCategory.setRevaluationReserveAccount((Long) rs.getObject("revaluationReserveAccount"));
+                assetCategory.setUnitOfMeasurement((Long) rs.getObject("unitOfMeasurement"));
 
                 asset.setAssetCategory(assetCategory);
 
-                logger.info("AssetRowMapper asset:: " + asset);
+                log.info("AssetRowMapper asset:: " + asset);
                 map.put(assetId, asset);
             }
             List<YearWiseDepreciation> ywd = asset.getYearWiseDepreciation();
@@ -175,11 +174,11 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                 asset.setYearWiseDepreciation(ywd);
             }
             final YearWiseDepreciation ywdObject = new YearWiseDepreciation();
-            ywdObject.setId(rs.getLong("ywd_id"));
-            ywdObject.setAssetId(rs.getLong("assetid"));
+            ywdObject.setId((Long) rs.getObject("ywd_id"));
+            ywdObject.setAssetId((Long) rs.getObject("assetid"));
             ywdObject.setDepreciationRate(rs.getDouble("ywd_depreciationrate"));
             ywdObject.setFinancialYear(rs.getString("financialyear"));
-            ywdObject.setUsefulLifeInYears(rs.getLong("usefullifeinyears"));
+            ywdObject.setUsefulLifeInYears((Long) rs.getObject("usefullifeinyears"));
             ywd.add(ywdObject);
 
             asset.setYearWiseDepreciation(ywd);

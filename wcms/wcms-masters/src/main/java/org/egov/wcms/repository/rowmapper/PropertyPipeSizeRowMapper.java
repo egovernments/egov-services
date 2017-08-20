@@ -54,6 +54,7 @@ public class PropertyPipeSizeRowMapper implements RowMapper<PropertyTypePipeSize
         propertyPipeSize.setId(rs.getLong("propertypipesize_id"));
         propertyPipeSize.setPipeSizeId((Long) rs.getObject("propertypipesize_pipesizeId"));
         propertyPipeSize.setPipeSize(rs.getDouble("pipesize_sizeinmm"));
+        propertyPipeSize.setPipeSizeInInch(rs.getDouble("pipesize_sizeininch"));
         propertyPipeSize.setPropertyTypeId(rs.getString("propertypipesize_propertytypeId"));
         propertyPipeSize.setActive(rs.getBoolean("propertypipesize_active"));
         propertyPipeSize.setTenantId(rs.getString("propertypipesize_tenantId"));

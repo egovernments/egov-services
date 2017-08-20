@@ -17,8 +17,7 @@ public class BusinessCategoryQueryBuilderTest {
 
 		BusinessCategoryQueryBuilder builder = new BusinessCategoryQueryBuilder();
 		assertEquals(
-				"select id,name,code,active,tenantId,createdBy,"
-						+ "createdDate,lastModifiedBy,lastModifiedDate FROM eg_businesscategory" + " ORDER BY name ASC",
+				"select id,name,code,active,tenantId FROM eg_businesscategory" + " ORDER BY name ASC",
 				builder.getQuery(categoryCriteria, new ArrayList<>()));
 	}
 
@@ -34,8 +33,7 @@ public class BusinessCategoryQueryBuilderTest {
 		categoryCriteria.setSortOrder("DESC");
 
 		assertEquals(
-				"select id,name,code,active,tenantId,createdBy,"
-						+ "createdDate,lastModifiedBy,lastModifiedDate FROM eg_businesscategory"
+				"select id,name,code,active,tenantId FROM eg_businesscategory"
 						+ " WHERE tenantId = ? AND id IN (1) AND name = ? AND active = ? ORDER BY code DESC",
 				builder.getQuery(categoryCriteria, new ArrayList<>()));
 	}

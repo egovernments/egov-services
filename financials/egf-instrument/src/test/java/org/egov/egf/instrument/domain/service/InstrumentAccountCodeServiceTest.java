@@ -98,6 +98,21 @@ public class InstrumentAccountCodeServiceTest {
 		assertEquals(expextedResult, actualResult);
 
 	}
+	
+	@Test
+	public final void test_delete_() {
+
+		List<InstrumentAccountCode> expextedResult = getInstrumentAccountCodes();
+
+		when(instrumentAccountCodeRepository.delete(any(List.class), any(RequestInfo.class)))
+				.thenReturn(expextedResult);
+
+		List<InstrumentAccountCode> actualResult = instrumentAccountCodeService.delete(expextedResult, errors,
+				requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
 
 	@Test(expected = CustomBindException.class)
 	public final void test_update_with_null_req() {
@@ -112,7 +127,7 @@ public class InstrumentAccountCodeServiceTest {
 		assertEquals(expextedResult, actualResult);
 
 	}
-
+	
 	@Test
 	public final void test_search() {
 
@@ -153,6 +168,18 @@ public class InstrumentAccountCodeServiceTest {
 
 		assertEquals(expextedResult, actualResult);
 	}
+	
+	@Test
+	public final void test_delete() {
+
+		InstrumentAccountCode expextedResult = getInstrumentAccountCodes().get(0);
+
+		when(instrumentAccountCodeRepository.delete(any(InstrumentAccountCode.class))).thenReturn(expextedResult);
+
+		InstrumentAccountCode actualResult = instrumentAccountCodeService.delete(expextedResult);
+
+		assertEquals(expextedResult, actualResult);
+	}
 
 	@Test
 	public final void test_fetch_instrumenttype() {
@@ -180,7 +207,7 @@ public class InstrumentAccountCodeServiceTest {
 
 		instrumentAccountCodes.get(0).setAccountCode(expextedResult);
 
-		when(chartOfAccountContractRepository.findById(any(ChartOfAccountContract.class))).thenReturn(expextedResult);
+		when(chartOfAccountContractRepository.findByGlcode(any(ChartOfAccountContract.class))).thenReturn(expextedResult);
 
 		List<InstrumentAccountCode> actualResult = instrumentAccountCodeService.fetchRelated(instrumentAccountCodes);
 
@@ -213,7 +240,7 @@ public class InstrumentAccountCodeServiceTest {
 
 		instrumentAccountCodes.get(0).setAccountCode(expextedResult);
 
-		when(chartOfAccountContractRepository.findById(null)).thenReturn(expextedResult);
+		when(chartOfAccountContractRepository.findByGlcode(null)).thenReturn(expextedResult);
 
 		List<InstrumentAccountCode> actualResult = instrumentAccountCodeService.fetchRelated(instrumentAccountCodes);
 
@@ -222,7 +249,7 @@ public class InstrumentAccountCodeServiceTest {
 
 	private List<InstrumentAccountCode> getInstrumentAccountCodes() {
 		List<InstrumentAccountCode> instrumentAccountCodes = new ArrayList<InstrumentAccountCode>();
-		InstrumentAccountCode instrumentAccountCode = InstrumentAccountCode.builder().build();
+		InstrumentAccountCode instrumentAccountCode = InstrumentAccountCode.builder().id("1").build();
 		instrumentAccountCode.setTenantId("default");
 		instrumentAccountCodes.add(instrumentAccountCode);
 		return instrumentAccountCodes;

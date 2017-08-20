@@ -34,7 +34,10 @@ export default class UiDocumentList extends Component {
 							  fullWidth={true} 
 							  value={self.props.getVal(item.jsonPath + "[" + i + "].fileStoreId")}
 							  label={doc["displayName"]}>
-							    <input type="file" style={{ display: 'none' }} onChange={(e) => self.props.handler({target:{value: e.target.files[0]}}, (item.jsonPath + "[" + i + "].fileStoreId"), true, '', item.requiredErrMsg, item.patternErrMsg)}/>
+							    <input type="file" style={{ display: 'none' }} onChange={(e) => {
+							    	self.props.handler({target:{value: e.target.files[0]}}, (item.jsonPath + "[" + i + "].fileStoreId"), true, '', item.requiredErrMsg, item.patternErrMsg)
+							    	self.props.handler({target:{value: e.target.files[0].name}}, (item.jsonPath + "[" + i + "].name"), true, '', item.requiredErrMsg, item.patternErrMsg)
+							    }}/>
 							</RaisedButton>
 						</Col>
 					)
@@ -58,22 +61,24 @@ export default class UiDocumentList extends Component {
 			Api.commonApiPost(context, query, {}, "", useTimestamp).then(function(res) {
 				var documents = [];
 				var arr = _.get(res, item.pathToArray);
-				for(var k=0; k<arr.length; k++) {
-					var temp = {
-						"fileStoreId": "",
-						"displayName": arr[k][item.displayNameJsonPath],
-						"name": ""
-					};
-					for(var i=0; i<item.autoFillFields.length; i++) {
-						temp[item.autoFillFields[i].name] = arr[k][item.autoFillFields[i].jsonPath];
+				if(arr && arr.length) {
+					for(var k=0; k<arr.length; k++) {
+						var temp = {
+							"fileStoreId": "",
+							"displayName": arr[k][item.displayNameJsonPath],
+							"name": ""
+						};
+						for(var i=0; i<item.autoFillFields.length; i++) {
+							temp[item.autoFillFields[i].name] = arr[k][item.autoFillFields[i].jsonPath];
+						}
+
+						documents.push(temp);
 					}
 
-					documents.push(temp);
+					self.setState({documents}, function() {
+						self.props.handler({target: {value: documents}}, item.jsonPath, false, '');
+					});
 				}
-
-				self.setState({documents}, function() {
-					self.props.handler({target: {value: documents}}, item.jsonPath, false, '');
-				});
 
 			}, function(err) {
 				console.log(err);

@@ -73,9 +73,10 @@ public class GrievanceType {
     
     @NotNull
     private String serviceName;
-    
+
+    @Length(max = 250)
     private String description;
-    
+
     private boolean metadata;
     
     private Boolean active;

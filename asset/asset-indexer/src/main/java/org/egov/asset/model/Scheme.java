@@ -41,6 +41,8 @@ package org.egov.asset.model;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -54,7 +56,7 @@ public class Scheme {
 
 	private Long id;
 
-	private Long fund;
+	private Fund fund;
 
 	private String code;
 
@@ -65,7 +67,20 @@ public class Scheme {
 	private Date validTo;
 
 	private Boolean active;
+	
+	private String description;
 
 	private Long boundary;
+	
+	private Long createdBy;
+
+        private Date createdDate;
+
+        private Long lastModifiedBy;
+
+        private Date lastModifiedDate;
+
+        @NotNull
+        private String tenantId;
 
 }

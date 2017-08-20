@@ -75,6 +75,11 @@ public class MarriageRegnRepository {
 	}
 
 	public void save(MarriageRegn marriageRegn) {
+		System.err.println("marriageRegn.getStatus().toString()" + marriageRegn.getStatus().toString());
+		System.err.println("marriageRegn.getSource().toString()" + marriageRegn.getSource().toString());
+		System.err.println("marriageRegn.getApprovalDetails().getDepartment()"
+				+ marriageRegn.getApprovalDetails().getDepartment());
+
 		Object[] obj = new Object[] { marriageRegn.getRegnUnit().getId(), marriageRegn.getMarriageDate(),
 				marriageRegn.getVenue().toString(), marriageRegn.getStreet(), marriageRegn.getPlaceOfMarriage(),
 				marriageRegn.getLocality(), marriageRegn.getCity(), marriageRegn.getMarriagePhoto(),
@@ -83,15 +88,18 @@ public class MarriageRegnRepository {
 				marriageRegn.getPriest().getAddress(), marriageRegn.getPriest().getAadhaar(),
 				marriageRegn.getPriest().getMobileNo(), marriageRegn.getPriest().getEmail(), marriageRegn.getSerialNo(),
 				marriageRegn.getVolumeNo(), marriageRegn.getApplicationNumber(), marriageRegn.getRegnNumber(),
-				marriageRegn.getRegnDate(), "Approved", marriageRegn.getSource().toString(),
-				marriageRegn.getStateId(), marriageRegn.getIsActive(),marriageRegn.getApprovalDetails().getComments(),
+				marriageRegn.getRegnDate(), marriageRegn.getStatus().toString(), marriageRegn.getSource().toString(),
+				marriageRegn.getStateId(), marriageRegn.getIsActive(),
 				marriageRegn.getApprovalDetails().getDepartment(), marriageRegn.getApprovalDetails().getDesignation(),
 				marriageRegn.getApprovalDetails().getAssignee(), marriageRegn.getApprovalDetails().getAction(),
-				marriageRegn.getApprovalDetails().getStatus(),marriageRegn.getAuditDetails().getCreatedBy(),
-				marriageRegn.getAuditDetails().getCreatedTime(),marriageRegn.getAuditDetails().getLastModifiedBy(),
+				marriageRegn.getApprovalDetails().getStatus(), marriageRegn.getApprovalDetails().getComments(),
+				marriageRegn.getAuditDetails().getCreatedBy(), marriageRegn.getAuditDetails().getCreatedTime(),
+				marriageRegn.getAuditDetails().getLastModifiedBy(),
 				marriageRegn.getAuditDetails().getLastModifiedTime(), marriageRegn.getTenantId() };
+		System.err.println("INSERT_MARRIAGE_REGN_QUERY" + INSERT_MARRIAGE_REGN_QUERY);
 		jdbcTemplate.update(INSERT_MARRIAGE_REGN_QUERY, obj);
 
+		System.out.println("marriageRegn.getWitnesses()-------------------->" + marriageRegn.getWitnesses());
 		if (marriageRegn.getWitnesses() != null)
 			marriageRegn.getWitnesses().forEach(witness -> {
 				witnessRepository.save(marriageRegn.getApplicationNumber(), marriageRegn.getTenantId(), witness);
@@ -99,9 +107,10 @@ public class MarriageRegnRepository {
 	}
 
 	public String generateApplicationNumber() {
-		String applicationnumber = jdbcTemplate.queryForObject("SELECT nextval('seq_egmr_marriageregn_application_number')",String.class);
-		
-		System.out.println("applicationnumber-------------------->"+applicationnumber);
+		String applicationnumber = jdbcTemplate
+				.queryForObject("SELECT nextval('seq_egmr_marriageregn_application_number')", String.class);
+
+		System.out.println("applicationnumber-------------------->" + applicationnumber);
 		return applicationnumber;
 	}
 

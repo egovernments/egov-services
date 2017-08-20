@@ -19,7 +19,6 @@ import org.egov.access.persistence.repository.querybuilder.ValidateActionQueryBu
 import org.egov.access.persistence.repository.rowmapper.ActionRowMapper;
 import org.egov.access.persistence.repository.rowmapper.ActionValidationRowMapper;
 import org.egov.access.web.contract.action.ActionRequest;
-import org.egov.access.web.contract.action.Module;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.junit.Before;
@@ -44,7 +43,7 @@ public class ActionServiceTest {
 
 	@Mock
 	private JdbcTemplate jdbcTemplate;
-	
+
 	@Mock
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplat;
 
@@ -106,6 +105,26 @@ public class ActionServiceTest {
 	}
 
 	@Test
+	public void testCheckActionNameExit() {
+
+		when(actionRepository.checkActionNameExit("test")).thenReturn(false);
+
+		Boolean exist = actionService.checkActionNameExit("test");
+
+		assertThat(exist == false);
+	}
+
+	@Test
+	public void testCheckCombinationOfUrlAndqueryparamsExist() {
+
+		when(actionRepository.checkCombinationOfUrlAndqueryparamsExist("/test", "tenant")).thenReturn(false);
+
+		Boolean exist = actionService.checkCombinationOfUrlAndqueryparamsExist("/test", "tenant");
+
+		assertThat(exist == false);
+	}
+
+	@Test
 	public void testShouldUpdateActions() {
 
 		ActionRequest actionRequest = new ActionRequest();
@@ -129,34 +148,18 @@ public class ActionServiceTest {
 
 		actionRequest.setRequestInfo(getRequestInfo());
 
-		org.egov.access.web.contract.action.ActionService servcie = new org.egov.access.web.contract.action.ActionService();
+		when(actionRepository.getAllActions(actionRequest)).thenReturn(getActionList());
 
-		servcie.setModules(getModuleList());
+		List<Action> actions = actionService.getAllActions(actionRequest);
 
-		when(actionRepository.getAllActionsBasedOnRoles(actionRequest)).thenReturn(servcie);
-
-		List<Module> modules = actionService.getAllActionsBasedOnRoles(actionRequest);
-
-		assertThat(servcie.getModules()).isEqualTo(modules);
+		assertThat(getActionList().size() == actions.size());
+		assertThat(actions.equals(getActionList()));
 
 	}
 
-	private List<Module> getModuleList() {
-
-		List<Module> moduleList = new ArrayList<Module>();
+	private List<Action> getActionList() {
 
 		List<Action> actionList = new ArrayList<Action>();
-
-		List<Module> subModule = new ArrayList<Module>();
-
-		Module module = new Module();
-
-		module.setId(74l);
-		module.setName("ess");
-		module.setSubModules(subModule);
-		module.setCode("ESS");
-		module.setDisplayName("Employee Self Service");
-		module.setEnabled(false);
 
 		Action action1 = new Action();
 
@@ -167,6 +170,7 @@ public class ActionServiceTest {
 		action1.setDisplayName("Apply Leave");
 		action1.setEnabled(false);
 		action1.setServiceCode("ESS");
+		action1.setPath("/ess");
 
 		Action action2 = new Action();
 
@@ -176,15 +180,11 @@ public class ActionServiceTest {
 		action2.setDisplayName("My Details");
 		action2.setEnabled(false);
 		action2.setServiceCode("ESS");
-
+		action1.setPath("/ess");
 		actionList.add(action1);
 		actionList.add(action2);
 
-		module.setActionList(actionList);
-
-		moduleList.add(module);
-
-		return moduleList;
+		return actionList;
 	}
 
 	private List<Action> getListOfActions() {

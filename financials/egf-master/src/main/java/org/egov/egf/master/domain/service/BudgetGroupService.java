@@ -50,6 +50,7 @@ public class BudgetGroupService {
 			case Constants.ACTION_UPDATE:
 				Assert.notNull(budgetgroups, "BudgetGroups to update must not be null");
 				for (BudgetGroup budgetGroup : budgetgroups) {
+				        Assert.notNull(budgetGroup.getId(), "Budget Group ID to update must not be null");
 					validator.validate(budgetGroup, errors);
 				}
 				break;

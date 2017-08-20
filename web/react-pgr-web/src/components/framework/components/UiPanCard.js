@@ -12,12 +12,13 @@ export default class UiPanCard extends Component {
 				return (
 					<TextField 
 						style={{"display": (item.hide ? 'none' : 'inline-block')}}
+						errorStyle={{"float":"left"}}
 						fullWidth={true} 
 						floatingLabelText={item.label + (item.isRequired ? " *" : "")} 
 						value={this.props.getVal(item.jsonPath)}
 						disabled={item.isDisabled}
 						errorText={this.props.fieldErrors[item.jsonPath]}
-						onChange={(e) => this.props.handler(e, item.jsonPath, item.isRequired ? true : false, '^[a-zA-z]{5}\\d{4}[a-zA-Z]{1}$', item.requiredErrMsg, item.patternErrMsg)} />
+						onChange={(e) => this.props.handler(e, item.jsonPath, item.isRequired ? true : false, '^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$', item.requiredErrMsg, item.patternErrMsg)} />
 				);
 		}
 	}

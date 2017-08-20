@@ -2,17 +2,17 @@ package org.egov.tradelicense.consumers;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.egov.models.UOMRequest;
+import org.egov.tl.commons.web.requests.UOMRequest;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.services.UOMService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
+import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
@@ -21,6 +21,8 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 /**
  * Consumer class will use for listening uom object from kafka server to insert
  * data in postgres database
@@ -28,8 +30,7 @@ import org.springframework.web.client.RestTemplate;
  * @author: Pavan Kumar Kamma
  */
 @Service
-@Configuration
-@Profile("production")
+@EnableKafka
 public class UOMConsumer {
 
 	@Autowired
@@ -40,6 +41,19 @@ public class UOMConsumer {
 
 	@Autowired
 	UOMService uomService;
+
+	@Autowired
+	private ObjectMapper objectMapper;
+
+	private CountDownLatch latch = new CountDownLatch(1);
+
+	public void resetCountDown() {
+		this.latch = new CountDownLatch(1);
+	}
+
+	public CountDownLatch getLatch() {
+		return latch;
+	}
 
 	/**
 	 * This method for getting consumer configuration bean
@@ -60,9 +74,9 @@ public class UOMConsumer {
 	 * configuration
 	 */
 	@Bean
-	public ConsumerFactory<String, UOMRequest> consumerFactory() {
+	public ConsumerFactory<String, Object> consumerFactory() {
 		return new DefaultKafkaConsumerFactory<>(consumerConfig(), new StringDeserializer(),
-				new JsonDeserializer<>(UOMRequest.class));
+				new JsonDeserializer<>(Object.class));
 
 	}
 
@@ -71,8 +85,8 @@ public class UOMConsumer {
 	 */
 
 	@Bean
-	public ConcurrentKafkaListenerContainerFactory<String, UOMRequest> kafkaListenerContainerFactory() {
-		ConcurrentKafkaListenerContainerFactory<String, UOMRequest> factory = new ConcurrentKafkaListenerContainerFactory<String, UOMRequest>();
+	public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory() {
+		ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<String, Object>();
 		factory.setConsumerFactory(consumerFactory());
 		return factory;
 	}
@@ -86,14 +100,17 @@ public class UOMConsumer {
 	 */
 	@KafkaListener(topics = { "#{propertiesManager.getCreateUomValidated()}",
 			"#{propertiesManager.getUpdateUomValidated()}" })
-	public void receive(ConsumerRecord<String, UOMRequest> consumerRecord) throws Exception {
+	public void receive(ConsumerRecord<String, Object> consumerRecord) throws Exception {
+
+		UOMRequest objectReceived = objectMapper.convertValue(consumerRecord.value(), UOMRequest.class);
 
 		if (consumerRecord.topic().equalsIgnoreCase(propertiesManager.getCreateUomValidated())) {
-			//uomService.createUom(consumerRecord.value());
+			uomService.createUom(objectReceived);
 		}
 
 		else {
-			//uomService.updateUom(consumerRecord.value());
+			uomService.updateUom(objectReceived);
 		}
+		latch.countDown();
 	}
 }

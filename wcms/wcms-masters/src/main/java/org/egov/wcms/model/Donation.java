@@ -64,10 +64,14 @@ import lombok.ToString;
 @Builder
 public class Donation {
 
-    public static final String SEQ_CATEGORY = "SEQ_EGWTR_DONATION";
+    public static final String SEQ_DONATION = "seq_egwtr_donation";
 
     @NotNull
     private Long id;
+
+    @NotNull
+    @Size(min = 3, max = 20)
+    private String code;
 
     @NotNull
     @Size(min = 1, max = 100)
@@ -104,12 +108,10 @@ public class Donation {
     private Double donationAmount;
 
     @NotNull
-    @JsonIgnore
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date fromDate;
 
     @NotNull
-    @JsonIgnore
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date toDate;
 
@@ -119,6 +121,6 @@ public class Donation {
 
     @NotNull
     private Boolean active;
-
+    @JsonIgnore
     private AuditDetails auditDetails;
 }

@@ -315,6 +315,12 @@ public abstract class JdbcRepository {
 				batchValues.toArray(new Map[batchValues.size()]));
 		return ob;
 	}
+	
+	@Transactional
+	public void delete(String tableName, String id) {
+	    String delQuery = "delete from " + tableName + " where id = '" + id + "'";
+	    jdbcTemplate.execute(delQuery);
+	}
 
 	public String getSequence(String seqName) {
 	    String seqQuery = "select nextval('" + seqName + "')";

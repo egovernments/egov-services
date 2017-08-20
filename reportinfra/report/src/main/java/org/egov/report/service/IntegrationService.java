@@ -55,7 +55,8 @@ public class IntegrationService {
 					String[] pairs = url.split(",");
 					for(String str: pairs){
 						String[] keyValue = str.split(":");
-						map.put(keyValue[0], keyValue[1]);
+						map.put(keyValue[0].replace('_', ','), keyValue[1]);
+						//map.put(keyValue[0],keyValue[1]);
 					}
 					columnDetail.setDefaultValue(map);
 				}else{

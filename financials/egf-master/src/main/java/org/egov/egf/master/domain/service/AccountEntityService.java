@@ -50,6 +50,7 @@ public class AccountEntityService {
 			case Constants.ACTION_UPDATE:
 				Assert.notNull(accountentities, "AccountEntities to update must not be null");
 				for (AccountEntity accountEntity : accountentities) {
+				        Assert.notNull(accountEntity.getId(), "Account Entity ID to update must not be null");
 					validator.validate(accountEntity, errors);
 				}
 				break;

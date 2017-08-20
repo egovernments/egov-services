@@ -2,6 +2,7 @@ package org.egov.property.api;
 
 import javax.validation.Valid;
 
+import org.egov.models.DemandResponse;
 import org.egov.models.PropertyRequest;
 import org.egov.models.PropertyResponse;
 import org.egov.models.RequestInfoWrapper;
@@ -103,26 +104,6 @@ public class PropertyController {
 			@RequestParam(value = "demandTo", required = false) Integer demandTo,
 			@RequestParam(value = "propertyId", required = false) String propertyId,
 			@RequestParam(value = "applicationNo", required = false) String applicationNo) throws Exception {
-		if (pageSize == null)
-			pageSize = -1;
-
-		if (pageNumber == null)
-			pageNumber = -1;
-
-		if (revenueZone == null)
-			revenueZone = -1;
-
-		if (revenueWard == null)
-			revenueWard = -1;
-
-		if (locality == null)
-			locality = -1;
-
-		if (demandFrom == null)
-			demandFrom = -1;
-
-		if (demandTo == null)
-			demandTo = -1;
 
 		return propertyService.searchProperty(requestInfo.getRequestInfo(), tenantId, active, upicNumber, pageSize,
 				pageNumber, sort, oldUpicNo, mobileNumber, aadhaarNumber, houseNoBldgApt, revenueZone, revenueWard,
@@ -167,6 +148,23 @@ public class PropertyController {
 			throws Exception {
 
 		return propertyService.generateSpecialNotice(specialNoticeRequest);
+	}
+
+	/**
+	 * API is for Add/Edit DCB feature
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param upicNumber
+	 * @return demandResponse
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "_preparedcb", method = RequestMethod.POST)
+	public DemandResponse prepareDCB(@RequestBody RequestInfoWrapper requestInfo,
+									 @RequestParam(value = "tenantId", required = true) String tenantId,
+									 @RequestParam(value = "upicNumber", required = true) String upicNumber)
+			throws Exception {
+
+		return propertyService.getDemandsForProperty(requestInfo, tenantId, upicNumber);
 	}
 
 }

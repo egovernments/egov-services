@@ -69,7 +69,20 @@ Feature: Property Tax
       | types  | sequenceno             |             | This field is required |
 
 
+    And user on createnewproperty screen performs following actions
 
+    # Floor Details block on Create New Property Screen
+
+      | select | floorno  | None |  This field is required |
+      | select | unittype | None |  This field is required |
+      | select | unitno   | None | This field is required  |
+      | select | usagetype| None | This field is required  |
+      | select | occupancy| None | This field is required  |
+      | type   | constructionenddate|   | This field is required |
+      | type   | effectivefromdate  |   | This field is required |
+      | select | unstructuredland   | None  | This field is required |
+      | type   | builduparea        | abc   | Invalid field data     |
+      | type   | builduparea        | @@@   | Invalid field data     |
 
 
 

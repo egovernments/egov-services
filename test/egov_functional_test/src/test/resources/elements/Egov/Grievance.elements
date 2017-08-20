@@ -169,6 +169,12 @@
         "waitFor":"visibility"
         },
         {
+        "elementName":"createCategory",
+        "identifier":"css",
+        "value":"button[type='submit']",
+        "waitFor":"visibility"
+        },
+        {
         "elementName":"text",
         "identifier":"xpath",
         "value":"//*[text()='%s']",
@@ -226,6 +232,7 @@
         "elementName":"grievanceTypeCategorySelect",
         "identifier":"css",
         "value":"[id^='undefined-undefined-Category']",
+        "value":"//*[text()='Success']",
         "waitFor":"visibility"
         }
     ]

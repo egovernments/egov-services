@@ -12,6 +12,7 @@ Feature: Create Receiving Mode
     And grievanceAdmin on createReceivingMode screen types on receivingModeCode value RM1
     And grievanceAdmin on createReceivingMode screen types on receivingModeDescription value ReceivingMode1
     And grievanceAdmin on createReceivingMode screen selects channel with value as WEB
+    And grievanceAdmin on createReceivingMode screen clicks on activeCheckBox
     And grievanceAdmin on createReceivingMode screen clicks on create
     And grievanceAdmin on home screen clicks on menu
     And grievanceAdmin on home screen types on applicationSearchBox value View Receiving Mode
@@ -37,7 +38,6 @@ Feature: Create Receiving Mode
       And grievanceAdmin on createReceivingMode screen types on receivingModeCode value RM2
       And grievanceAdmin on createReceivingMode screen types on receivingModeDescription value ReceivingMode2
       And grievanceAdmin on createReceivingMode screen selects channel with value as WEB
-      And grievanceAdmin on createReceivingMode screen clicks on activeCheckBox
       And grievanceAdmin on createReceivingMode screen clicks on create
       And grievanceAdmin on home screen clicks on menu
       And grievanceAdmin on home screen types on applicationSearchBox value View Receiving Mode
@@ -99,6 +99,7 @@ Feature: Create Receiving Mode
      And grievanceAdmin on home screen clicks on menu
      And grievanceAdmin on home screen types on applicationSearchBox value Modify Receiving Mode
      And grievanceAdmin on home screen clicks on applicationLink
+#     Uncheck the active checkbox
      And grievanceAdmin on ModifyReceivingMode screen clicks on active
      And grievanceAdmin on ModifyReceivingMode screen clicks on Update
      And grievanceAdmin on home screen clicks on menu
@@ -110,4 +111,28 @@ Feature: Create Receiving Mode
      And grievanceAdmin on home screen types on applicationSearchBox value Officials Register Grievance
      And grievanceAdmin on home screen clicks on applicationLink
      And grievanceAdmin on Grievance screen verifies receivingMode has notvisible value ReceivingMode2
+     And Intent:LogoutIntentTest
+
+
+   Scenario:  Modify receving mode to make it active
+     Given grievanceAdmin on Login screen types on username value narasappa
+     And grievanceAdmin on Login screen types on password value demo
+     And grievanceAdmin on Login screen clicks on signIn
+     And grievanceAdmin on home screen clicks on menu
+     And grievanceAdmin on home screen types on applicationSearchBox value Modify Receiving Mode
+     And grievanceAdmin on home screen clicks on applicationLink
+#     Check the active checkbox
+     And grievanceAdmin on ModifyReceivingMode screen clicks on active
+     And grievanceAdmin on ModifyReceivingMode screen clicks on Update
+     And grievanceAdmin on ModifyReceivingMode screen clicks on active
+     And grievanceAdmin on ModifyReceivingMode screen clicks on Update
+     And grievanceAdmin on home screen clicks on menu
+     And grievanceAdmin on home screen types on applicationSearchBox value View Receiving Mode
+     And grievanceAdmin on home screen clicks on applicationLink
+     And grievanceAdmin on viewReceivingMode screen types on searchReceivingMode value ReceivingModes
+     And grievanceAdmin on viewReceivingMode screen verifies activeColumn has visible value Yes
+     And grievanceAdmin on home screen clicks on menu
+     And grievanceAdmin on home screen types on applicationSearchBox value Officials Register Grievance
+     And grievanceAdmin on home screen clicks on applicationLink
+     And grievanceAdmin on Grievance screen verifies receivingMode has visible value ReceivingMode2
      And Intent:LogoutIntentTest

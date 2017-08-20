@@ -5,9 +5,9 @@ Feature: Negative scenarios for receiving mode master
     Given grievanceAdmin on Login screen types on username value narasappa
     And grievanceAdmin on Login screen types on password value demo
     And grievanceAdmin on Login screen clicks on signIn
-    And grievanceAdmin on home screen clicks on menu
-    And grievanceAdmin on home screen types on applicationSearchBox value Create Receiving Mode
-    And grievanceAdmin on home screen clicks on applicationLink
+    And grievanceAdmin on Home screen clicks on menu
+    And grievanceAdmin on Home screen types on applicationSearchBox value Create Receiving Mode
+    And grievanceAdmin on Home screen clicks on applicationLink
   #      Enter already existing name
     And grievanceAdmin on createReceivingMode screen types on receivingModeName value ReceivingMode1
     And grievanceAdmin on createReceivingMode screen types on receivingModeCode value RM12
@@ -72,4 +72,3 @@ Feature: Negative scenarios for receiving mode master
     And Intent:LogoutIntentTest
 
 
-  Scenario:

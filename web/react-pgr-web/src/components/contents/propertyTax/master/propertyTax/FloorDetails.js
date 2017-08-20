@@ -1093,24 +1093,32 @@ deleteOccupantName = (index) =>{
 														  value={floorDetails.floor ? floorDetails.floor.isStructured : ""}
 														  onChange={(event, index, value) => {
 															  (value == -1) ?  value = '' : '';
-															  
-															  floorDetails.floor.length = '';
-															  floorDetails.floor.width = '';
-															  floorDetails.floor.builtupArea = '';
-															  
+															  				  
 															  var e = {
 																target: {
 																  value: value
 																}
 															  };
-															  handleChangeFloor(e, "floor" ,"isStructured", true, "")}
+															  handleChangeFloor(e, "floor" ,"isStructured", true, "")
+															  
+															    
+															  var f = {
+																  target: {
+																	  value: ''
+																  }
+															  }
+															  handleChangeFloor(f,"floor" ,"width", false, /^[0-9.]+$/);
+															  handleChangeFloor(f,"floor" ,"length", false, /^[0-9.]+$/);
+															  handleChangeFloor(f, "floor","builtupArea", true, /^[0-9.]+$/)
+															  
+															  }
 														  }
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														>
-																<MenuItem value={-1} primaryText="None" />
+															  <MenuItem value={-1} primaryText="None" />
 															  <MenuItem value='YES' primaryText="Yes" />
 															  <MenuItem value='NO' primaryText="No" />
 														</SelectField>
@@ -1148,7 +1156,7 @@ deleteOccupantName = (index) =>{
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  maxLength={6}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-														  disabled={(floorDetails.hasOwnProperty('floor') && floorDetails.floor!=null )? (floorDetails.floor.isStructured == 'YES' ? true : false) : false}
+														  disabled={(floorDetails.hasOwnProperty('floor') && floorDetails.floor!=null) ? (floorDetails.floor.isStructured == 'YES' ? true : false) : false}
 														/>
 													</Col>
 													

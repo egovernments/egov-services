@@ -535,14 +535,14 @@ class PropertyTaxSearch extends Component {
                     <Row>
 						<br/>
                       <Card>
-                        <CardHeader title={<span style = {{ color: 'rgb(53, 79, 87)',fontSize: 18, margin: '8px 0px', fontWeight: 500,}} > Search Property by Demand < /span>}/>
+                        <CardHeader title={<span style = {{ color: 'rgb(53, 79, 87)',fontSize: 18, margin: '8px 0px', fontWeight: 500,}} > {translate('pt.search.searchProperty.fields.searchByDemand')} < /span>}/>
                         <CardText>
                           <Grid>
                             <Row>
                               <Col xs={12} md={6}>
                               <TextField errorText={fieldErrors.demandFrom
                                 ? fieldErrors.demandFrom
-                                : ""} value={propertyTaxSearch.demandFrom?propertyTaxSearch.demandFrom:""} onChange={(e) => handleChange(e, "demandFrom", false, /^\d$/g)} hintText="Demand From" floatingLabelText="Demand From" />
+                                : ""} value={propertyTaxSearch.demandFrom?propertyTaxSearch.demandFrom:""} onChange={(e) => handleChange(e, "demandFrom", false, /^\d$/g)} hintText={translate('pt.search.searchProperty.fields.demandFrom')} floatingLabelText={translate('pt.search.searchProperty.fields.demandFrom')} />
 
 
                               </Col>
@@ -550,7 +550,7 @@ class PropertyTaxSearch extends Component {
                               <Col xs={12} md={6}>
                               <TextField errorText={fieldErrors.demandTo
                                 ? fieldErrors.demandTo
-                                : ""} value={propertyTaxSearch.demandTo?propertyTaxSearch.demandTo:""} onChange={(e) => handleChange(e, "demandTo", false, /^\d$/g)} hintText="Demand To" floatingLabelText="Demand To" />
+                                : ""} value={propertyTaxSearch.demandTo?propertyTaxSearch.demandTo:""} onChange={(e) => handleChange(e, "demandTo", false, /^\d$/g)} hintText={translate('pt.search.searchProperty.fields.demandTo')} floatingLabelText={translate('pt.search.searchProperty.fields.demandTo')} />
 
 
                               </Col>
@@ -572,7 +572,7 @@ class PropertyTaxSearch extends Component {
 				margin:'15px',
 				textAlign:'right'
               }}>
-                <RaisedButton type="submit" disabled={!isFormValid} primary={true} label={buttonText} />
+                <RaisedButton type={translate('ui.framework.submit')} disabled={!isFormValid} primary={true} label={buttonText} />
                 
               </div>
 

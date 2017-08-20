@@ -479,6 +479,10 @@ var localization_EN_Data = {
 	"pt.search.searchProperty.fields.location":"Location",
 	"pt.search.searchProperty.fields.searchByDemand":"Search Property by Demand",
 	"pt.search.searchProperty.fields.demandFrom":"Demand From",
+	"pt.search.searchProperty.fields.demandTo":"Demand To",
+	"pt.search.searchProperty.fields.na": "NA",
+	"pt.create.groups.annualRentalValue": "Annual Rental Value",
+	"pt.create.groups.propertyAddress.taxDetails": "Tax Details",
 
     //employee Object
     "employee.Employee.fields.code": "Code",

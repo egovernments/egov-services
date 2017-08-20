@@ -408,13 +408,13 @@ class ViewProperty extends Component {
 											<Row>
 											  <Col xs={12} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyDetails.oldAssessmentNumber')}</div>
-												   {item.oldUpicNumber || 'NA'}
+												   {item.oldUpicNumber || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											
 											
 											  <Col xs={12} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyDetails.assessmentNumber')}</div>
-												   {item.upicNumber || 'NA'}
+												   {item.upicNumber || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 										
 											
@@ -425,7 +425,7 @@ class ViewProperty extends Component {
 											
 											  <Col xs={12} md={3} style={styles.bold}>
 												  <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.propertyType')}</div>
-												   {getNameByCode(this.state.propertytypes ,item.propertyDetail.propertyType) || 'NA'}
+												   {getNameByCode(this.state.propertytypes ,item.propertyDetail.propertyType) || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											</Row>
 										 
@@ -433,15 +433,15 @@ class ViewProperty extends Component {
 											<Row>
 											  <Col xs={4} md={3} style={styles.bold}>
 												 <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.extentOfSite')}</div>
-												  {item.propertyDetail.sitalArea || 'NA'}
+												  {item.propertyDetail.sitalArea || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.registrationDocNo')}</div>
-												  {item.propertyDetail.regdDocNo || 'NA'}
+												  {item.propertyDetail.regdDocNo || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												  <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.creationReason')}</div>
-												  {getNameByCode(this.state.creationReason, item.creationReason) || 'NA'}
+												  {getNameByCode(this.state.creationReason, item.creationReason) || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.AssessmentNumberOfParentProperty')}</div>
@@ -451,20 +451,20 @@ class ViewProperty extends Component {
 											<Row>											
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.exemptionCategory')}</div>
-												   {item.propertyDetail.exemptionReason || 'NA'}
+												   {item.propertyDetail.exemptionReason || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												    <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.effectiveDate')}</div>
-												   {item.occupancyDate ? new Date(item.occupancyDate).getDate()+'/'+(new Date(item.occupancyDate).getMonth()+1)+'/'+new Date(item.occupancyDate).getFullYear() : 'NA'}
+												   {item.occupancyDate ? new Date(item.occupancyDate).getDate()+'/'+(new Date(item.occupancyDate).getMonth()+1)+'/'+new Date(item.occupancyDate).getFullYear() : translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.appartment')}</div>
-												  {item.propertyDetail.apartment || 'NA'}
+												  {item.propertyDetail.apartment || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 										
 											  <Col xs={4} md={3} style={styles.bold}>
 												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.propertyDepartment')}</div>
-												  {item.propertyDetail.department || 'NA'}
+												  {item.propertyDetail.department || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											</Row>
 										 
@@ -472,13 +472,13 @@ class ViewProperty extends Component {
 											<Row>
 											  <Col xs={4} md={3} style={styles.bold}>
 												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.registrationDocDate')}</div>
-												  {item.propertyDetail.regdDocDate ? new Date(item.propertyDetail.regdDocDate).getDate()+'/'+(new Date(item.propertyDetail.regdDocDate).getMonth()+1)+'/'+new Date(item.propertyDetail.regdDocDate).getFullYear() : 'NA'}
+												  {item.propertyDetail.regdDocDate ? new Date(item.propertyDetail.regdDocDate).getDate()+'/'+(new Date(item.propertyDetail.regdDocDate).getMonth()+1)+'/'+new Date(item.propertyDetail.regdDocDate).getFullYear() : translate('pt.search.searchProperty.fields.na')}
 
 											  </Col>
 											
 											  <Col xs={4} md={3} style={styles.bold}>
 												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.assessmentDate')}</div>
-												  {item.assessmentDate ? new Date(item.propertyDetail.regdDocDate).getDate()+'/'+new Date(item.propertyDetail.regdDocDate).getMonth()+'/'+new Date(item.propertyDetail.regdDocDate).getFullYear() : 'NA'}
+												  {item.assessmentDate ? new Date(item.propertyDetail.regdDocDate).getDate()+'/'+new Date(item.propertyDetail.regdDocDate).getMonth()+'/'+new Date(item.propertyDetail.regdDocDate).getFullYear() : translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											</Row>
 										
@@ -512,7 +512,7 @@ class ViewProperty extends Component {
 											
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.zoneNo')}</div>
-												   {getNameById(this.state.zone, item.boundary.revenueBoundary.id) || 'NA'}
+												   {getNameById(this.state.zone, item.boundary.revenueBoundary.id) || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 										
 											
@@ -525,7 +525,7 @@ class ViewProperty extends Component {
 											<Row>
 											  <Col xs={4} md={3} style={styles.bold}>
 												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.electionWard')}</div>
-												  {getNameById(this.state.election,item.boundary.adminBoundary.id) || 'NA'}
+												  {getNameById(this.state.election,item.boundary.adminBoundary.id) || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												  <div style={{fontWeight:500}}>{translate('employee.Employee.fields.correspondenceAddress')}</div>
@@ -537,7 +537,7 @@ class ViewProperty extends Component {
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.locality')}</div>
-												    {getNameById(this.state.locality,item.address.addressLine1) || 'NA'}
+												    {getNameById(this.state.locality,item.address.addressLine1) || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											</Row>
 									
@@ -566,34 +566,34 @@ class ViewProperty extends Component {
 															<Row>
 															  <Col xs={4} md={3} style={styles.bold}>
 																  <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.aadhaarNumber')}</div>
-																  {owner.aadhaarNumber ? owner.aadhaarNumber : 'NA'}
+																  {owner.aadhaarNumber ? owner.aadhaarNumber : translate('pt.search.searchProperty.fields.na')}
 															  </Col>	
 															  <Col xs={4} md={3} style={styles.bold}>
 																   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.mobileNumber')}</div>
-																   {owner.mobileNumber ? owner.mobileNumber : 'NA'}
+																   {owner.mobileNumber ? owner.mobileNumber : translate('pt.search.searchProperty.fields.na')}
 															  </Col>
 															  <Col xs={4} md={3} style={styles.bold}>
 																  <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.ownerName')}</div>
-																   {owner.name ? owner.name : 'NA'}
+																   {owner.name ? owner.name : translate('pt.search.searchProperty.fields.na')}
 															  </Col>
 															  <Col xs={4} md={3} style={styles.bold}>
 																  <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.gender')}</div>
-																  {owner.gender ? getNameByCode(currentThis.state.gender, owner.gender) : 'NA'}
+																  {owner.gender ? getNameByCode(currentThis.state.gender, owner.gender) : translate('pt.search.searchProperty.fields.na')}
 															  </Col>
 															</Row>
 												
 															<Row>
 															  <Col xs={4} md={3} style={styles.bold}>
 																   <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.email')}</div>
-																   {owner.emailId ? owner.emailId : 'NA'}
+																   {owner.emailId ? owner.emailId : translate('pt.search.searchProperty.fields.na')}
 															  </Col>	
 															  <Col xs={4} md={3} style={styles.bold}>
 																   <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.guardianRelation')}</div>
-																   {owner.gaurdianRelation ? getNameByCode(currentThis.state.gaurdianRelation, owner.gaurdianRelation) : 'NA'}
+																   {owner.gaurdianRelation ? getNameByCode(currentThis.state.gaurdianRelation, owner.gaurdianRelation) : translate('pt.search.searchProperty.fields.na')}
 															  </Col>				
 															  <Col xs={4} md={3} style={styles.bold}>
 																   <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.guardian')}</div>
-																   {owner.fatherOrHusbandName ? owner.fatherOrHusbandName : 'NA'}
+																   {owner.fatherOrHusbandName ? owner.fatherOrHusbandName : translate('pt.search.searchProperty.fields.na')}
 															  </Col>
 															</Row>
 														
@@ -612,39 +612,39 @@ class ViewProperty extends Component {
 											<Row>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.creationReason')}</div>
-												   {item.creationReason || 'NA'}
+												   {item.creationReason || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.propertyType')}</div>
-												   {item.propertyDetail.propertyType || 'NA'}
+												   {item.propertyDetail.propertyType || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.propertySubType')}</div>
-												   {item.propertyDetail.category || 'NA'}
+												   {item.propertyDetail.category || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.usageType')}</div>
-												   'NA'
+												   {translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											   <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.usageSubType')}</div>
-												   
+												    {translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.extentOfSite')}</div>
-												   'NA'
+													{translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.sequenceNo')}</div>
-												   {item.sequenceNo || 'NA'}
+												   {item.sequenceNo || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.floorDetails.fields.buildingPermissionNumber')}</div>
-												   'NA'
+													   {translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.floorDetails.fields.buildingPermissionDate')}</div>
-												   'NA'
+													   {translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											</Row>
 										 
@@ -661,19 +661,19 @@ class ViewProperty extends Component {
 											<Row>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyFactors.fields.totalFactor')}</div>
-													{item.propertyDetail.hasOwnProperty('factors') ? (item.propertyDetail.factors !=null && item.propertyDetail.factors.length !=0 ? item.propertyDetail.factors[0].value : 'NA' ) : 'NA'}
+													{item.propertyDetail.hasOwnProperty('factors') ? (item.propertyDetail.factors !=null && item.propertyDetail.factors.length !=0 ? item.propertyDetail.factors[0].value : translate('pt.search.searchProperty.fields.na') ) : translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyFactors.fields.roadFactor')}</div>
-													{item.propertyDetail.hasOwnProperty('factors') ? (item.propertyDetail.factors !=null && item.propertyDetail.factors.length !=0 ? item.propertyDetail.factors[1].value : 'NA' ) : 'NA'}
+													{item.propertyDetail.hasOwnProperty('factors') ? (item.propertyDetail.factors !=null && item.propertyDetail.factors.length !=0 ? item.propertyDetail.factors[1].value : translate('pt.search.searchProperty.fields.na') ) : translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyFactors.fields.liftFactor')}</div>
-													{item.propertyDetail.hasOwnProperty('factors') ? (item.propertyDetail.factors !=null && item.propertyDetail.factors.length !=0 ? item.propertyDetail.factors[2].value : 'NA' ) : 'NA'}
+													{item.propertyDetail.hasOwnProperty('factors') ? (item.propertyDetail.factors !=null && item.propertyDetail.factors.length !=0 ? item.propertyDetail.factors[2].value : translate('pt.search.searchProperty.fields.na') ) : translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyFactors.fields.parkingFactor')}</div>
-													{item.propertyDetail.hasOwnProperty('factors') ? (item.propertyDetail.factors !=null && item.propertyDetail.factors.length !=0 ? item.propertyDetail.factors[3].value : 'NA' ) : 'NA'}
+													{item.propertyDetail.hasOwnProperty('factors') ? (item.propertyDetail.factors !=null && item.propertyDetail.factors.length !=0 ? item.propertyDetail.factors[3].value : translate('pt.search.searchProperty.fields.na') ) : translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											</Row>
 										 
@@ -721,28 +721,28 @@ class ViewProperty extends Component {
                                               if(i){
                                                 return (<tr key={index}>
                                                     <td>{index+1}</td>
-                                                    <td>{getNameByCode(currentThis.state.floorNumber, (parseInt(i.floorNo)+1)) || 'NA'}</td>
-													<td>{getNameByCode(currentThis.state.unitType, i.unitType) || 'NA'}</td>
-                                                    <td>{i.unitNo || 'NA'}</td>
-                                                    <td>{getNameByCode(currentThis.state.structureclasses, i.structure) || 'NA'}</td>
-                                                    <td>{getNameByCode(currentThis.state.usages ,i.usage) || 'NA'}</td>
-                                                    <td>{getNameByCode(currentThis.state.usages, i.usageSubType) || 'NA'}</td>
-                                                    <td>{i.firmName || 'NA'}</td>
-                                                    <td>{getNameByCode(currentThis.state.occupancies,i.occupancyType) || 'NA'}</td>
-                                                    <td>{i.occupierName || 'NA'}</td>
-                                                    <td>{i.annualRent || 'NA'}</td>
-                                                    <td>{parseFloat(i.manualArv) || 'NA'}</td>
-													<td>{i.constStartDate ? new Date(i.constStartDate).getDate()+'/'+(new Date(i.constStartDate).getMonth()+1)+'/'+new Date(i.constStartDate).getFullYear() : 'NA' }</td>
-                                                    <td>{i.constCompletionDate ? new Date(i.constCompletionDate).getDate()+'/'+(new Date(i.constCompletionDate).getMonth()+1)+'/'+new Date(i.constCompletionDate).getFullYear() : 'NA' }</td>
-                                                    <td>{i.occupancyDate ? new Date(i.occupancyDate).getDate()+'/'+(new Date(i.occupancyDate).getMonth()+1)+'/'+new Date(i.occupancyDate).getFullYear() : 'NA' }</td>
-                                                    <td>{(i.isStructured == true ? 'Yes' : i.isStructured)|| 'NA'}</td>
-                                                    <td>{parseFloat(i.length) || 'NA'}</td>
-                                                    <td>{parseFloat(i.width) || 'NA'}</td>
-                                                    <td>{i.builtupArea || 'NA'}</td>
-													<td>{i.occupancyCertiNumber || 'NA'}</td>
-													<td>{i.buildingCost || 'NA'}</td>
-													<td>{i.landCost || 'NA'}</td>
-                                                    <td>{i.bpaNo || 'NA'}</td>  
+                                                    <td>{getNameByCode(currentThis.state.floorNumber, (parseInt(i.floorNo)+1)) || translate('pt.search.searchProperty.fields.na')}</td>
+													<td>{getNameByCode(currentThis.state.unitType, i.unitType) || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{i.unitNo || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{getNameByCode(currentThis.state.structureclasses, i.structure) || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{getNameByCode(currentThis.state.usages ,i.usage) || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{getNameByCode(currentThis.state.usages, i.usageSubType) || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{i.firmName || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{getNameByCode(currentThis.state.occupancies,i.occupancyType) || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{i.occupierName || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{i.annualRent || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{parseFloat(i.manualArv) || translate('pt.search.searchProperty.fields.na')}</td>
+													<td>{i.constStartDate ? new Date(i.constStartDate).getDate()+'/'+(new Date(i.constStartDate).getMonth()+1)+'/'+new Date(i.constStartDate).getFullYear() : translate('pt.search.searchProperty.fields.na') }</td>
+                                                    <td>{i.constCompletionDate ? new Date(i.constCompletionDate).getDate()+'/'+(new Date(i.constCompletionDate).getMonth()+1)+'/'+new Date(i.constCompletionDate).getFullYear() : translate('pt.search.searchProperty.fields.na') }</td>
+                                                    <td>{i.occupancyDate ? new Date(i.occupancyDate).getDate()+'/'+(new Date(i.occupancyDate).getMonth()+1)+'/'+new Date(i.occupancyDate).getFullYear() : translate('pt.search.searchProperty.fields.na') }</td>
+                                                    <td>{(i.isStructured == true ? 'Yes' : i.isStructured)|| translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{parseFloat(i.length) || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{parseFloat(i.width) || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{i.builtupArea || translate('pt.search.searchProperty.fields.na')}</td>
+													<td>{i.occupancyCertiNumber || translate('pt.search.searchProperty.fields.na')}</td>
+													<td>{i.buildingCost || translate('pt.search.searchProperty.fields.na')}</td>
+													<td>{i.landCost || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{i.bpaNo || translate('pt.search.searchProperty.fields.na')}</td>  
                                                   </tr>)
 												  
                                               }
@@ -827,7 +827,7 @@ class ViewProperty extends Component {
 							</Card>
 							<div style={{textAlign:'center', paddingTop:10}}> 
 								
-									<RaisedButton type="button" primary={true} label="Search Property" style={{margin:'0 5px'}}  onClick={()=>{
+									<RaisedButton type="button" primary={true} label={translate('pt.search.searchProperty')} style={{margin:'0 5px'}}  onClick={()=>{
 										this.props.history.push('/propertyTax/search/')
 									}}/>
 								

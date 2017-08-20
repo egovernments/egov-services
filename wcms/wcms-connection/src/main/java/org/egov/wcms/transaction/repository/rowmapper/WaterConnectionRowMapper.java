@@ -46,7 +46,6 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.wcms.transaction.model.Connection;
 import org.egov.wcms.transaction.model.ConnectionOwner;
 import org.egov.wcms.transaction.model.Property;
-import org.egov.wcms.transaction.validator.RestConnectionService;
 import org.egov.wcms.transaction.web.contract.Address;
 import org.egov.wcms.transaction.web.contract.Boundary;
 import org.egov.wcms.transaction.web.contract.ConnectionLocation;
@@ -56,7 +55,6 @@ import org.egov.wcms.transaction.web.contract.RequestInfoWrapper;
 import org.egov.wcms.transaction.web.contract.UsageTypeResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
@@ -71,10 +69,6 @@ public class WaterConnectionRowMapper {
 	public static final String propertyTypeSearch = "/pt-property/property/propertytypes/_search?ids={ids}&tenantId={tenantId}"; 
 	
 	public class WaterConnectionPropertyRowMapper implements RowMapper<Connection> {
-
-		@Autowired
-		private RestConnectionService restConnectionService;
-		
 		@Override
 		public Connection mapRow(final ResultSet rs, final int rowNum) throws SQLException {
 			final Connection connection = prepareConnectionObject(rs);
@@ -91,62 +85,6 @@ public class WaterConnectionRowMapper {
 			connection.setWithProperty(true);
 			return connection;
 		}
-		
-		private void resolvePropertyUsageTypeNames(ResultSet rs, Property prop) { 
-			try { 
-				Integer[] propertyIdList = { Integer.parseInt(rs.getString("conn_proptype")) } ; 
-				String tenantId = rs.getString("conn_tenant"); 
-				final PropertyTypeResponse propertyTypes = getPropertyNameFromPTModule(propertyIdList, tenantId); 
-				if(null != propertyTypes && null != propertyTypes.getPropertyTypes()) { 
-					for (final PropertyTaxResponseInfo propertyResponse : propertyTypes.getPropertyTypes()){
-						if(propertyResponse.getName()!=null && !propertyResponse.getName().isEmpty()) { 
-							prop.setPropertyType(propertyResponse.getName());
-						}
-					}
-				}
-			} catch(Exception e) {
-				LOGGER.error("Exception Encountered while fetching the name for Property Type ID" + e);
-			}
-			
-			try { 
-				Integer[] usageIdList = { Integer.parseInt(rs.getString("conn_usgtype")) } ; 
-				String tenantId = rs.getString("conn_tenant"); 
-				final UsageTypeResponse usageTypes = getUsageNameFromPTModule(usageIdList, tenantId); 
-				if(null != usageTypes && null != usageTypes.getUsageMasters()) { 
-					for (final PropertyTaxResponseInfo usageResponse : usageTypes.getUsageMasters()){
-						if(usageResponse.getName()!=null && !usageResponse.getName().isEmpty()) { 
-							prop.setUsageType(usageResponse.getName());
-						}
-					}
-				}
-			} catch(Exception e) {
-				LOGGER.error("Exception Encountered while fetching the name for Usage Type ID" + e);
-			}
-		}
-		
-		public PropertyTypeResponse getPropertyNameFromPTModule(
-				final Integer[] propertyTypeId, final String tenantId) {
-			String url = baseUrl + propertyTypeSearch;
-			LOGGER.info("URL for Property Types : "+ url);
-			final RequestInfo requestInfo = RequestInfo.builder().ts(123456789L).build();
-			final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
-			final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
-			final PropertyTypeResponse propertyTypes = new RestTemplate().postForObject(url.toString(), request,
-					PropertyTypeResponse.class, propertyTypeId, tenantId);
-			return propertyTypes;
-		}
-
-		public UsageTypeResponse getUsageNameFromPTModule(
-				final Integer[] usageTypeId, final String tenantId) {
-			String url = baseUrl + usageTypeSearch;
-			LOGGER.info("URL for Usage Types : "+ url);
-			final RequestInfo requestInfo = RequestInfo.builder().ts(123456789L).build();
-			final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
-			final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
-			final UsageTypeResponse usageTypes = new RestTemplate().postForObject(url.toString(), request,
-					UsageTypeResponse.class, usageTypeId, tenantId);
-			return usageTypes;
-		}
 	}
 	
 	public class WaterConnectionWithoutPropertyRowMapper implements RowMapper<Connection> {
@@ -158,6 +96,7 @@ public class WaterConnectionRowMapper {
 			prop.setPropertyTypeId(rs.getString("conn_proptype"));
 			prop.setAddress(rs.getString("conn_propaddress"));
 			prop.setPropertyidentifier(rs.getString("conn_propid"));
+			resolvePropertyUsageTypeNames(rs, prop);
 			connection.setProperty(prop);
 			ConnectionOwner connOwner = ConnectionOwner.builder()
 					.name(rs.getString("name"))
@@ -228,5 +167,61 @@ public class WaterConnectionRowMapper {
 			LOGGER.error("Exception encountered while mapping the Result Set in Mapper : " + ex);
 		}
 		return connection;
+	}
+	
+	private void resolvePropertyUsageTypeNames(ResultSet rs, Property prop) { 
+		try { 
+			Integer[] propertyIdList = { Integer.parseInt(rs.getString("conn_proptype")) } ; 
+			String tenantId = rs.getString("conn_tenant"); 
+			final PropertyTypeResponse propertyTypes = getPropertyNameFromPTModule(propertyIdList, tenantId); 
+			if(null != propertyTypes && null != propertyTypes.getPropertyTypes()) { 
+				for (final PropertyTaxResponseInfo propertyResponse : propertyTypes.getPropertyTypes()){
+					if(propertyResponse.getName()!=null && !propertyResponse.getName().isEmpty()) { 
+						prop.setPropertyType(propertyResponse.getName());
+					}
+				}
+			}
+		} catch(Exception e) {
+			LOGGER.error("Exception Encountered while fetching the name for Property Type ID" + e);
+		}
+		
+		try { 
+			Integer[] usageIdList = { Integer.parseInt(rs.getString("conn_usgtype")) } ; 
+			String tenantId = rs.getString("conn_tenant"); 
+			final UsageTypeResponse usageTypes = getUsageNameFromPTModule(usageIdList, tenantId); 
+			if(null != usageTypes && null != usageTypes.getUsageMasters()) { 
+				for (final PropertyTaxResponseInfo usageResponse : usageTypes.getUsageMasters()){
+					if(usageResponse.getName()!=null && !usageResponse.getName().isEmpty()) { 
+						prop.setUsageType(usageResponse.getName());
+					}
+				}
+			}
+		} catch(Exception e) {
+			LOGGER.error("Exception Encountered while fetching the name for Usage Type ID" + e);
+		}
+	}
+	
+	public PropertyTypeResponse getPropertyNameFromPTModule(
+			final Integer[] propertyTypeId, final String tenantId) {
+		String url = baseUrl + propertyTypeSearch;
+		LOGGER.info("URL for Property Types : "+ url);
+		final RequestInfo requestInfo = RequestInfo.builder().ts(123456789L).build();
+		final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+		final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
+		final PropertyTypeResponse propertyTypes = new RestTemplate().postForObject(url.toString(), request,
+				PropertyTypeResponse.class, propertyTypeId, tenantId);
+		return propertyTypes;
+	}
+
+	public UsageTypeResponse getUsageNameFromPTModule(
+			final Integer[] usageTypeId, final String tenantId) {
+		String url = baseUrl + usageTypeSearch;
+		LOGGER.info("URL for Usage Types : "+ url);
+		final RequestInfo requestInfo = RequestInfo.builder().ts(123456789L).build();
+		final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+		final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
+		final UsageTypeResponse usageTypes = new RestTemplate().postForObject(url.toString(), request,
+				UsageTypeResponse.class, usageTypeId, tenantId);
+		return usageTypes;
 	}
 }

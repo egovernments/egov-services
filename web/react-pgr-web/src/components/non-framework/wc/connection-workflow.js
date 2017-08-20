@@ -311,7 +311,7 @@ class Report extends Component {
 				    		}, function(err) {
 				    			
 				    		})
-    						break;
+    						break;9
     					}
     				}
     			}
@@ -1070,6 +1070,7 @@ class Report extends Component {
   				sum += Number(this.props.formData.Connection[0].estimationCharge[0].materials[j].amountDetails);
   		}
 
+  		this.handleChange({target: {value: sum}}, "Connection[0].estimationCharge[0].estimationCharges", false, "");
   		this.handleChange({target:{value: parseInt(sum*(15/100))}}, "Connection[0].estimationCharge[0].supervisionCharges", false, "");
   	}
   }

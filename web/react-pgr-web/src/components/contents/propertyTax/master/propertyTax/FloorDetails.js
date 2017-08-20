@@ -645,7 +645,7 @@ deleteOccupantName = (index) =>{
 									  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}/>
 								  </Col>
 								  <Col xs={12} md={6}>
-									<RaisedButton type="button" label="Add Name" disabled={(floorDetails.occupantName && floorDetails.occupantName!='') ? false : true} primary={true} onClick={()=>{
+									<RaisedButton type="button" label={translate('pt.create.groups.propertyAddress.addName')} disabled={(floorDetails.occupantName && floorDetails.occupantName!='') ? false : true} primary={true} onClick={()=>{
 										this.setOccupantName(floorDetails.occupantName)
 										var e = {
 											target: {
@@ -1196,8 +1196,8 @@ deleteOccupantName = (index) =>{
 													
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
-														  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.exemptedArea')+' *'}
-														  errorText={fieldErrors.floor ? (fieldErrors.floor.exemptedArea ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.exemptedArea}</span> :(this.state.negativeValue ? <span style={{position:"absolute", bottom:-13}}>Invalid value</span>: "" )): (this.state.negativeValue ? <span style={{position:"absolute", bottom:-13}}>Invalid value</span>: "" )}
+														  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.exemptedArea')}
+														  errorText={fieldErrors.floor ? (fieldErrors.floor.exemptedArea ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.exemptedArea}</span> :(this.state.negativeValue ? <span style={{position:"absolute", bottom:-13}}>{translate('pt.create.groups.propertyAddress.invalidValue')}</span>: "" )): (this.state.negativeValue ? <span style={{position:"absolute", bottom:-13}}>{translate('pt.create.groups.propertyAddress.invalidValue')}</span>: "" )}
 														  value={floorDetails.floor ? floorDetails.floor.exemptedArea : ""}
 														  onChange={(e) => {	  
 															  calcAssessableArea(e,'exempted');
@@ -1270,15 +1270,15 @@ deleteOccupantName = (index) =>{
 													  </Col>
 													<Col xs={12} md={12} >
 												
-														{this.state.negativeValue && <p style={{marginTop:15, color:'red'}}>Exempted area should not be greater than Carpet area</p>}
-														{this.state.newFloorError && <p style={{marginTop:15, color:'red'}}>You cannot select more than {this.props.noOfFloors} Floors</p>}
+														{this.state.negativeValue && <p style={{marginTop:15, color:'red'}}>{translate('pt.create.groups.propertyAddress.exemptedAreaError')}</p>}
+														{this.state.newFloorError && <p style={{marginTop:15, color:'red'}}>{translate('pt.create.groups.propertyAddress.totalFloorsError')}</p>}
 
 													</Col>
 												
 													
 													<Col xs={12} md={12} style={{textAlign:"right", float:'right'}}>
 														<br/>
-														{(editIndex == -1 || editIndex == undefined) && <RaisedButton type="button" label="Add Room" disabled={!isFloorValid || this.state.newFloorError || this.state.negativeValue}  primary={true} onClick={()=>{
+														{(editIndex == -1 || editIndex == undefined) && <RaisedButton type="button" label={translate('pt.create.groups.propertyAddress.addRoom')} disabled={!isFloorValid || this.state.newFloorError || this.state.negativeValue}  primary={true} onClick={()=>{
 															 this.props.addNestedFormData("floors","floor");
 															
 															 this.props.resetObject("floor", false);
@@ -1291,7 +1291,7 @@ deleteOccupantName = (index) =>{
 															}	
 														}/>}
 														{ (editIndex > -1) &&
-															<RaisedButton type="button" label="Update Room" disabled={!isFloorValid || this.state.newFloorError || this.state.negativeValue} primary={true}  onClick={()=> {
+															<RaisedButton type="button" label={translate('pt.create.groups.propertyAddress.updateRoom')} disabled={!isFloorValid || this.state.newFloorError || this.state.negativeValue} primary={true}  onClick={()=> {
 																  this.props.updateObject("floors","floor",  editIndex);
 																  this.props.resetObject("floor", false);
 																  this.props.resetObject("owner", false);
@@ -1313,30 +1313,29 @@ deleteOccupantName = (index) =>{
                                           <thead style={{backgroundColor:"#607b84",color:"white"}}>
                                             <tr>
                                               <th>#</th>
-											  <th>Floor No.</th>
-                                              <th>Unit Type</th>
-											  <th>Flat No.</th>
-                                              <th>Unit No.</th>
-                                              <th>Construction Class</th>
-                                              <th>Usage Type</th>
-                                              <th>Usage Sub Type</th>
-                                              <th>Firm Name</th>
-                                              <th>Occupancy</th>
-                                              <th>Occupant Name</th>
-                                              <th>Annual Rent</th>
-                                              <th>Manual ARV</th>
-                                              <th>Construction End Date</th>
-                                              <th>Effective From Date</th>
-                                              <th>Unstructured land</th>
-                                              <th>Length</th>
-                                              <th>Breadth</th>
-											  <th>Carpet Area</th>
-											  <th>Exempted Area</th>
-											  <th>Building Cost</th>
-											  <th>Land Cost</th>
-                                              <th>Builtup Area</th>
-                                              <th>Occupancy Certificate Number</th>
-                                              <th>Building Permission Number</th>
+											  <th>{translate('pt.create.groups.floorDetails.fields.floorNumber')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.unitType')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.unitType')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.constructionClass')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.usageType')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.usageSubType')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.firmName')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.occupancy')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.occupantName')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.annualRent')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.manualArv')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.constructionEndDate')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.effectiveFromDate')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.unstructuredLand')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.length')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.breadth')}</th>
+											  <th>{translate('pt.create.groups.propertyAddress.fields.carpetArea')}</th>
+											  <th>{translate('pt.create.groups.propertyAddress.fields.exemptedArea')}</th>
+											  <th>{translate('pt.create.groups.propertyAddress.fields.buildingCost')}</th>
+											  <th>{translate('pt.create.groups.propertyAddress.fields.landCost')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.plinthArea')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.occupancyCertificateNumber')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.buildingPermissionNumber')}</th>
                                               <th style={{minWidth:70}}></th>
                                             </tr>
                                           </thead>
@@ -1345,30 +1344,29 @@ deleteOccupantName = (index) =>{
                                               if(i){
                                                 return (<tr key={index}>
                                                     <td>{index+1}</td>
-                                                    <td>{getNameById(_this.state.floorNumber ,i.floorNo) || 'NA'}</td>
-													<td>{getNameById(_this.state.unitType ,i.unitType)  || 'NA'}</td>
-													<td>{i.flatNo ? i.flatNo : 'NA'}</td>
-                                                    <td>{i.unitNo || 'NA'}</td>
-                                                    <td>{i.structure || 'NA'}</td>
-                                                    <td>{i.usage || 'NA'}</td>
-                                                    <td>{i.usageSubType || 'NA'}</td>
-                                                    <td>{i.firmName || 'NA'}</td>
-                                                    <td>{i.occupancyType || 'NA'}</td>
-                                                    <td>{i.occupierName || 'NA'}</td>
-                                                    <td>{i.annualRent || 'NA'}</td>
-                                                    <td>{i.manualArv || 'NA'}</td>
-                                                    <td>{i.constCompletionDate || 'NA'}</td>
-                                                    <td>{i.occupancyDate || 'NA'}</td>
-                                                    <td>{i.isStructured || 'NA'}</td>
-                                                    <td>{i.length || 'NA'}</td>
-                                                    <td>{i.width || 'NA'}</td>
-													<td>{i.carpetArea || 'NA'}</td>
-													<td>{i.exemptedArea || 'NA'}</td>
-													<td>{i.buildingCost || 'NA'}</td>
-													<td>{i.landCost || 'NA'}</td>
-                                                    <td>{i.builtupArea || 'NA'}</td>
-                                                    <td>{i.occupancyCertiNumber || 'NA'}</td>
-                                                    <td>{i.bpaNo || 'NA'}</td>
+                                                    <td>{getNameById(_this.state.floorNumber ,i.floorNo) || translate('pt.search.searchProperty.fields.na')}</td>
+													<td>{getNameById(_this.state.unitType ,i.unitType)  || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{i.unitNo || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{i.structure || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{i.usage || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{i.usageSubType || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{i.firmName || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{i.occupancyType || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{i.occupierName || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{i.annualRent || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{i.manualArv || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{i.constCompletionDate || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{i.occupancyDate || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{i.isStructured || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{i.length || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{i.width || translate('pt.search.searchProperty.fields.na')}</td>
+													<td>{i.carpetArea || translate('pt.search.searchProperty.fields.na')}</td>
+													<td>{i.exemptedArea || translate('pt.search.searchProperty.fields.na')}</td>
+													<td>{i.buildingCost || translate('pt.search.searchProperty.fields.na')}</td>
+													<td>{i.landCost || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{i.builtupArea || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{i.occupancyCertiNumber || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{i.bpaNo || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>
 														<i className="material-icons" style={styles.iconFont} onClick={ () => {
 															if(i.isStructured){

@@ -229,7 +229,7 @@ constructor(props) {
                         <Col xs={12} md={3} sm={6}>
                           <TextField  className="fullWidth"
 						  tabIndex ={5}
-                            hintText="example@example.com"
+                            hintText={translate('pt.create.groups.propertyAddress.emailExample')}
                             floatingLabelText={translate('pt.create.groups.ownerDetails.fields.email')}
                             errorText={fieldErrors.owner ? (fieldErrors.owner.emailId? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.emailId}</span>:""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.emailId:""}
@@ -286,7 +286,7 @@ constructor(props) {
                         </Col>
                         <Col xs={12} md={3} sm={6}>
                           <TextField  className="fullWidth"
-                            hintText="Guardian name"
+                            hintText={translate('pt.create.groups.propertyAddress.guardianName')}
                             floatingLabelText={translate('pt.create.groups.ownerDetails.fields.guardian')}
                             errorText={fieldErrors.owner ?(fieldErrors.owner.fatherOrHusbandName? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.fatherOrHusbandName}</span>:""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.fatherOrHusbandName:""}
@@ -414,16 +414,16 @@ constructor(props) {
                                 if(i){
                                   return (<tr key={index}>
                                     <td>{index+1}</td>
-                                    <td>{i.aadhaarNumber || 'NA'}</td>
-                                    <td>{i.mobileNumber || 'NA'}</td>
-                                    <td>{i.name || 'NA'}</td>
-                                    <td>{i.gender || 'NA'}</td>
-                                    <td>{i.emailId || 'NA'}</td>
-									<td>{i.pan || 'NA'}</td>
-                                    <td>{i.gaurdianRelation || 'NA'}</td>
-                                    <td>{(i.isPrimaryOwner == 'PrimaryOwner' ? "True" : "False") || 'NA'}</td>
-                                    <td>{i.fatherOrHusbandName || 'NA'}</td>
-                                    <td>{i.ownerShipPercentage || 'NA'}</td>
+                                    <td>{i.aadhaarNumber || translate('pt.search.searchProperty.fields.na')}</td>
+                                    <td>{i.mobileNumber || translate('pt.search.searchProperty.fields.na')}</td>
+                                    <td>{i.name || translate('pt.search.searchProperty.fields.na')}</td>
+                                    <td>{i.gender || translate('pt.search.searchProperty.fields.na')}</td>
+                                    <td>{i.emailId || translate('pt.search.searchProperty.fields.na')}</td>
+									<td>{i.pan || translate('pt.search.searchProperty.fields.na')}</td>
+                                    <td>{i.gaurdianRelation || translate('pt.search.searchProperty.fields.na')}</td>
+                                    <td>{(i.isPrimaryOwner == 'PrimaryOwner' ? "True" : "False") || translate('pt.search.searchProperty.fields.na')}</td>
+                                    <td>{i.fatherOrHusbandName || translate('pt.search.searchProperty.fields.na')}</td>
+                                    <td>{i.ownerShipPercentage || translate('pt.search.searchProperty.fields.na')}</td>
                                     <td>
 										<i className="material-icons" style={styles.iconFont} onClick={ () => {
 											editObject("owner",i, true);

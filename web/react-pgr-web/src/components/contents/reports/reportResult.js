@@ -110,7 +110,10 @@ class ShowField extends Component {
               searchParams.push({"name":key,"input":value});
         }
 
-        let response=Api.commonApiPost("/report/"+match.params.moduleName+"/_get",{},{tenantId:"default",reportName:splitArray[0].split("=")[1],searchParams}).then(function(response)
+            var tenantId = localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : '';
+
+
+        let response=Api.commonApiPost("/report/"+match.params.moduleName+"/_get",{},{tenantId:tenantId,reportName:splitArray[0].split("=")[1],searchParams}).then(function(response)
         {
           // console.log(response)
           setReportResult(response)

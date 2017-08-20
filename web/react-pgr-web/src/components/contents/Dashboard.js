@@ -474,10 +474,10 @@ class Dashboard extends Component {
                                   })}
                                 {serviceTypeMenus.map((serviceType, index)=>{
                                   return (<ServiceTypeItem key={index} serviceType={serviceType} onClick={()=>{
-                                      if(!serviceType.url)
+                                      if(serviceType.serviceName !== 'New Water Connection')
                                         this.props.setRoute(`/services/apply/${serviceType.serviceCode}/${serviceType.serviceName.replace(/\//g, "~")}`);
                                       else
-                                        this.props.setRoute(serviceType.url);
+                                        this.props.setRoute('/create/wc');
                                     }}></ServiceTypeItem>)
                                 })}
 

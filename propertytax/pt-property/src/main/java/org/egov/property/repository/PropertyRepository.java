@@ -731,7 +731,7 @@ public class PropertyRepository {
 							AssessmentDate.class);
 
 					if (assessmentDate.getDate() != null) {
-						assessmentDate.setDate(TimeStampUtil.getDateFormat(assessmentDate.getDate()));
+						assessmentDate.setDate(getString(assessmentDate.getDate()));
 					}
 
 					propertyDetail.setAssessmentDates(assessmentDate);
@@ -758,11 +758,11 @@ public class PropertyRepository {
 							BuilderDetail.class);
 					if (builderDetail.getCertificateCompletionDate() != null) {
 						builderDetail.setCertificateCompletionDate(
-								TimeStampUtil.getDateFormat(builderDetail.getCertificateCompletionDate()));
+								getString(builderDetail.getCertificateCompletionDate()));
 					}
 					if (builderDetail.getCertificateReceiveDate() != null) {
 						builderDetail.setCertificateReceiveDate(
-								TimeStampUtil.getDateFormat(builderDetail.getCertificateReceiveDate()));
+								getString(builderDetail.getCertificateReceiveDate()));
 					}
 					propertyDetail.setBuilderDetails(builderDetail);
 

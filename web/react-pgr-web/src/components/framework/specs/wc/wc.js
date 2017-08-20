@@ -654,7 +654,7 @@ var dat = {
             "label": "wc.create.groups.approvalDetails.fields.Assignee",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/hr-employee/employees/_search?tenantId=default&departmentId={Connection.workflowDetails.department}&designationId={Connection.workflowDetails.designation}|$.Employee.*.assignments.*.position|$.Employee.*.name",
+            "url": "/hr-employee/employees/_search?tenantId=default&departmentId={Connection.workflowDetails.department}&designationId={Connection.workflowDetails.designation}|$.Employee[:1].assignments[:0].position|$.Employee.*.name",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",

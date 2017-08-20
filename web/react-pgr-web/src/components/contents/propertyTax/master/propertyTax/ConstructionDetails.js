@@ -373,7 +373,7 @@ formatDate(date){
 															value: day + "/" + month + "/" + date.getFullYear()
 														}
 													  }
-													handleChange(e,"certificateCompletionDate", false, "")}}
+												  handleChange(e,"certificateCompletionDate", false, "")}}
 												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 												  underlineStyle={styles.underlineStyle}
 												  underlineFocusStyle={styles.underlineFocusStyle}

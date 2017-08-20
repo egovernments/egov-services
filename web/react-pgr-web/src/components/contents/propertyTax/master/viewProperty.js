@@ -573,26 +573,26 @@ class ViewProperty extends Component {
 																   {owner.mobileNumber ? owner.mobileNumber : 'NA'}
 															  </Col>
 															  <Col xs={4} md={3} style={styles.bold}>
-																  <div style={{fontWeight:500}}> Owner Name</div>
+																  <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.ownerName')}</div>
 																   {owner.name ? owner.name : 'NA'}
 															  </Col>
 															  <Col xs={4} md={3} style={styles.bold}>
-																  <div style={{fontWeight:500}}>Gender</div>
+																  <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.gender')}</div>
 																  {owner.gender ? getNameByCode(currentThis.state.gender, owner.gender) : 'NA'}
 															  </Col>
 															</Row>
 												
 															<Row>
 															  <Col xs={4} md={3} style={styles.bold}>
-																   <div style={{fontWeight:500}}>Email Address</div>
+																   <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.email')}</div>
 																   {owner.emailId ? owner.emailId : 'NA'}
 															  </Col>	
 															  <Col xs={4} md={3} style={styles.bold}>
-																   <div style={{fontWeight:500}}>Guardian Relation</div>
+																   <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.guardianRelation')}</div>
 																   {owner.gaurdianRelation ? getNameByCode(currentThis.state.gaurdianRelation, owner.gaurdianRelation) : 'NA'}
 															  </Col>				
 															  <Col xs={4} md={3} style={styles.bold}>
-																   <div style={{fontWeight:500}}>Guardian</div>
+																   <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.guardian')}</div>
 																   {owner.fatherOrHusbandName ? owner.fatherOrHusbandName : 'NA'}
 															  </Col>
 															</Row>
@@ -606,44 +606,44 @@ class ViewProperty extends Component {
                           </Card>
 						  
 						  <Card className="uiCard">
-							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>Assessment details</div>} />
+							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>{translate('pt.create.groups.assessmentDetails')}</div>} />
                               <CardText>
 									<Col md={12} xs={12}>
 											<Row>
 											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Reason For Creation</div>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.creationReason')}</div>
 												   {item.creationReason || 'NA'}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Property Type</div>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.propertyType')}</div>
 												   {item.propertyDetail.propertyType || 'NA'}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Property Sub Type</div>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.propertySubType')}</div>
 												   {item.propertyDetail.category || 'NA'}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Usage Type</div>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.usageType')}</div>
 												   'NA'
 											  </Col>
 											   <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Usage Sub Type</div>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.usageSubType')}</div>
 												   
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Total Area</div>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.extentOfSite')}</div>
 												   'NA'
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Sequence No.</div>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.sequenceNo')}</div>
 												   {item.sequenceNo || 'NA'}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Building Permission Number</div>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.floorDetails.fields.buildingPermissionNumber')}</div>
 												   'NA'
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Building Permission Date</div>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.floorDetails.fields.buildingPermissionDate')}</div>
 												   'NA'
 											  </Col>
 											</Row>
@@ -654,25 +654,25 @@ class ViewProperty extends Component {
                           </Card>
 					
 						  <Card className="uiCard">
-							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>Property Factors</div>} />
+							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>{translate('pt.create.groups.propertyFactors')}</div>} />
                               <CardText>
 									<Col md={12} xs={12}>
 										
 											<Row>
 											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Toilet Factor</div>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyFactors.fields.totalFactor')}</div>
 													{item.propertyDetail.hasOwnProperty('factors') ? (item.propertyDetail.factors !=null && item.propertyDetail.factors.length !=0 ? item.propertyDetail.factors[0].value : 'NA' ) : 'NA'}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Road Factor</div>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyFactors.fields.roadFactor')}</div>
 													{item.propertyDetail.hasOwnProperty('factors') ? (item.propertyDetail.factors !=null && item.propertyDetail.factors.length !=0 ? item.propertyDetail.factors[1].value : 'NA' ) : 'NA'}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Lift Factor</div>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyFactors.fields.liftFactor')}</div>
 													{item.propertyDetail.hasOwnProperty('factors') ? (item.propertyDetail.factors !=null && item.propertyDetail.factors.length !=0 ? item.propertyDetail.factors[2].value : 'NA' ) : 'NA'}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Parking Factor</div>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyFactors.fields.parkingFactor')}</div>
 													{item.propertyDetail.hasOwnProperty('factors') ? (item.propertyDetail.factors !=null && item.propertyDetail.factors.length !=0 ? item.propertyDetail.factors[3].value : 'NA' ) : 'NA'}
 											  </Col>
 											</Row>
@@ -683,36 +683,35 @@ class ViewProperty extends Component {
                           </Card>
 				
 						  <Card className="uiCard">
-							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>Floor Details</div>} />
+							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>{translate('pt.create.groups.floorDetails')}</div>} />
 								<CardText>
 									<Col xs={12} md={12}>
 									 <Table id="floorDetailsTable" style={{color:"black",fontWeight: "normal", marginBottom:0}} bordered responsive>
                                           <thead style={{backgroundColor:"#607b84",color:"white"}}>
                                             <tr>
                                               <th>#</th>
-											  <th>Floor No.</th>
-                                              <th>Unit Type</th>
-											  <th>Flat No.</th>
-                                              <th>Unit No.</th>
-                                              <th>Construction Class</th>
-                                              <th>Usage Type</th>
-                                              <th>Usage Sub Type</th>
-                                              <th>Firm Name</th>
-                                              <th>Occupancy</th>
-                                              <th>Occupant Name</th>
-                                              <th>Annual Rent</th>
-                                              <th>Manual ARV</th>
-											  <th>Construction Start Date</th>
-                                              <th>Construction End Date</th>
-                                              <th>Effective From Date</th>
-                                              <th>Unstructured land</th>
-                                              <th>Length</th>
-                                              <th>Breadth</th>
-                                              <th>Buildup Area</th>
-											  <th>Occupancy Certificate Number</th>
-											  <td>Building Cost</td>
-											  <td>Land Cost</td>
-                                              <th>Building Permission Number</th>
+											  <th>{translate('pt.create.groups.floorDetails.fields.floorNumber')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.unitType')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.unitNumber')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.constructionClass')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.usageType')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.usageSubType')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.firmName')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.occupancy')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.occupantName')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.annualRent')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.manualArv')}</th>
+											  <th>{translate('pt.create.groups.floorDetails.fields.constructionStartDate')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.constructionEndDate')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.effectiveFromDate')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.unstructuredLand')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.length')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.breadth')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.plinthArea')}</th>
+											  <th>{translate('pt.create.groups.floorDetails.fields.occupancyCertificateNumber')}</th>
+											  <th>{translate('pt.create.groups.propertyAddress.fields.buildingCost')}</th>
+											  <th>{translate('pt.create.groups.propertyAddress.fields.landCost')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.buildingPermissionNumber')}</th>
                                              
                                            
                                             </tr>
@@ -720,12 +719,10 @@ class ViewProperty extends Component {
                                           <tbody>
                                             {item.propertyDetail.floors.length !=0  && item.propertyDetail.floors.map(function(i, index){
                                               if(i){
-												  console.log(i)
                                                 return (<tr key={index}>
                                                     <td>{index+1}</td>
                                                     <td>{getNameByCode(currentThis.state.floorNumber, (parseInt(i.floorNo)+1)) || 'NA'}</td>
 													<td>{getNameByCode(currentThis.state.unitType, i.unitType) || 'NA'}</td>
-													<td>{i.flatNo ? i.flatNo : ''}</td>
                                                     <td>{i.unitNo || 'NA'}</td>
                                                     <td>{getNameByCode(currentThis.state.structureclasses, i.structure) || 'NA'}</td>
                                                     <td>{getNameByCode(currentThis.state.usages ,i.usage) || 'NA'}</td>
@@ -758,18 +755,18 @@ class ViewProperty extends Component {
                               </CardText>
                           </Card>
 						    <Card className="uiCard">
-							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>Tax Details</div>} />
+							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>{translate('pt.create.groups.propertyAddress.taxDetails')}</div>} />
                               <CardText>
 									<Col  xs={4} md={12}>
 										<Table id="TaxCalculationTable" style={{color:"black",fontWeight: "normal", marginBottom:0}} bordered responsive>
 											<thead>
 												<tr>
 												  <th>#</th>
-												  <th>Property Tax</th>
-												  <th>Education Cess</th>
-												  <th>Library Cess</th>
-												  <th>Total Tax</th>
-												  <th>Total Tax Due</th>
+												  <th>{translate('pt.create.groups.propertyAddress.propertyTax')}</th>
+												  <th>{translate('pt.create.groups.propertyAddress.educationCess')}</th>
+												  <th>{translate('pt.create.groups.propertyAddress.libraryCess')}</th>
+												  <th>{translate('pt.create.groups.propertyAddress.totalTax')}</th>
+												  <th>{translate('pt.create.groups.propertyAddress.totalTaxDue')}</th>
 												</tr>
 											</thead>
 											<tbody>

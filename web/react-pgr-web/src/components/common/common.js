@@ -467,6 +467,7 @@ var localization_EN_Data = {
 	"pt.create.groups.propertyAddress.fields.propertyAddress":"Property Address",
 	"pt.create.groups.propertyAddress.fields.ebBlock":"EB Block",
 	"pt.create.groups.propertyAddress.mobileNumber":"Mobile Number (without +91)",
+	
 
 
 

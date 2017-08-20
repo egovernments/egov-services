@@ -5,7 +5,7 @@ var dat = {
     "useTimestamp": true,
     "tenantIdRequired": false,
 		"objectName": "licenses",
-		"idJsonPath": "licenses[0].licenseNumber",
+		"idJsonPath": "licenses[0].id",
 		"groups": [
 			{
 				"label": "tl.create.licenses.groups.TradeDetailsTab",
@@ -15,12 +15,12 @@ var dat = {
 							"name": "OldLicenseNumber",
 							"jsonPath": "licenses[0].oldLicenseNumber",
 							"label": "tl.create.licenses.groups.TradeDetails.OldLicenseNumber",
-							"pattern": "",
+							"pattern": "^.{4,20}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "It should be min 4 and max 20"
 						},
 						{
 							"name": "applicationType",
@@ -140,12 +140,12 @@ var dat = {
 							"name": "TradeOwnerAddress",
 							"jsonPath": "licenses[0].ownerAddress",
 							"label": "tl.create.licenses.groups.TradeOwnerDetails.TradeOwnerAddress",
-							"pattern": "",
+							"pattern": "^.{4,250}$",
 							"type": "textarea",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Min 4 and Max 250"
 						}
 				]
 			},
@@ -158,12 +158,12 @@ var dat = {
 							"name": "PropertyAssessmentNo",
 							"jsonPath": "licenses[0].propertyAssesmentNo",
 							"label": "tl.create.licenses.groups.TradeLocationDetails.PropertyAssessmentNo",
-							"pattern": "^[0-9]{1,10}$",
+							"pattern": "^[0-9]{4,20}$",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": "Property Assessment Number should be 1 to 10"
+							"patternErrMsg": "Property Assessment Number should be 4 to 20"
 						},
             {
 							"name": "Locality",
@@ -227,7 +227,7 @@ var dat = {
               "name": "TradeAddress",
               "jsonPath": "licenses[0].tradeAddress",
               "label": "tl.create.licenses.groups.TradeLocationDetails.TradeAddress",
-              "pattern": "",
+              "pattern": "^.{4,250}$",
               "type": "textarea",
               "isRequired": true,
               "isDisabled": false,
@@ -244,7 +244,7 @@ var dat = {
               "name": "TradeTitle",
               "jsonPath": "licenses[0].tradeTitle",
               "label": "tl.create.licenses.groups.TradeDetails.TradeTitle",
-              "pattern": "",
+              "pattern": "^[a-zA-Z0-9\s\.,]{4,100}$",
               "type": "text",
               "isRequired": true,
               "isDisabled": false,
@@ -341,8 +341,8 @@ var dat = {
               "name": "Remarks",
               "jsonPath": "licenses[0].remarks",
               "label": "tl.create.licenses.groups.TradeDetails.Remarks",
-              "pattern": "",
-              "type": "text",
+              "pattern": "^.{0,1000}$",
+              "type": "textarea",
               "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",
@@ -426,7 +426,7 @@ var dat = {
 							"name": "agreementNo",
 							"jsonPath": "licenses[0].agreementNo",
 							"label": "tl.create.licenses.groups.agreementDetails.agreementNo",
-							"pattern": "^[a-zA-Z]{0,29}$",
+							"pattern": "^[a-zA-Z]{4,128}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
@@ -630,8 +630,8 @@ var dat = {
 			}
 	},
 	"tl.view": {
-		"numCols": 12/2,
-		"url": "/tl-services/license/v1/_search?id={id}",
+		"numCols": 12/3,
+		"url": "/tl-services/license/v1/_search?ids={id}",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "licenses",
@@ -726,7 +726,7 @@ var dat = {
             },
             {
               "name": "Locality",
-              "jsonPath": "licenses[0].localityId",
+              "jsonPath": "licenses[0].localityName",
               "label": "tl.licenses.view.groups.Locality",
               "pattern": "",
               "type": "singleValueList",
@@ -738,7 +738,7 @@ var dat = {
             },
             {
               "name": "adminWardId",
-              "jsonPath": "licenses[0].adminWardId",
+              "jsonPath": "licenses[0].adminWardName",
               "label": "tl.licenses.view.groups.adminWardId",
               "pattern": "",
               "type": "singleValueList",
@@ -750,7 +750,7 @@ var dat = {
             },
             {
               "name": "revenueWardId",
-              "jsonPath": "licenses[0].revenueWardId",
+              "jsonPath": "licenses[0].revenueWardName",
               "label": "tl.licenses.view.groups.revenueWardId",
               "pattern": "",
               "type": "singleValueList",
@@ -848,7 +848,7 @@ var dat = {
 						},
             {
 							"name": "TradeSubCategory",
-							"jsonPath": "licenses[0].subCategoryId",
+							"jsonPath": "licenses[0].subCategory",
 							"label": "tl.view.licenses.groups.TradeSubCategory",
 							"pattern": "",
 							"type": "singleValueList",
@@ -860,7 +860,7 @@ var dat = {
 						},
             {
               "name": "UOM",
-              "jsonPath": "licenses[0].uomId",
+              "jsonPath": "licenses[0].uom",
               "label": "tl.view.licenses.groups.UOM",
               "pattern": "",
               "type": "text",

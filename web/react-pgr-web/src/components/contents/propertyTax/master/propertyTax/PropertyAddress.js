@@ -279,7 +279,7 @@ class PropertyAddress extends Component {
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.locality')+' *'}
+                                                  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.locality')}
                                                   errorText={fieldErrors.locality ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.locality}</span>: ""}
                                                   value={propertyAddress.locality ? propertyAddress.locality:""}
                                                   onChange={(event, index, value) => {
@@ -301,7 +301,7 @@ class PropertyAddress extends Component {
                                           </Col>
 										   <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.electionWard')+' *'}
+                                                  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.electionWard')}
                                                   errorText={fieldErrors.electionWard ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.electionWard}</span> : ""}
                                                   value={propertyAddress.electionWard ? propertyAddress.electionWard : ""}
                                                   onChange={(event, index, value) => {

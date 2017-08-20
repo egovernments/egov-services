@@ -54,7 +54,7 @@ public class FinancialYearContractRepository {
 					FinancialYearContractResponse.class);
 
 		} catch (Exception e) {
-			throw new InvalidInputException("Error connecting to Location end point " + url);
+			throw new InvalidInputException("Error connecting to Location end point " + url, requestInfoWrapper.getRequestInfo());
 		}
 
 		if (financialYearContractResponse != null && financialYearContractResponse.getFinancialYears() != null
@@ -92,7 +92,7 @@ public class FinancialYearContractRepository {
 					FinancialYearContractResponse.class);
 
 		} catch (Exception e) {
-			throw new InvalidInputException("Error connecting to Location end point " + url);
+			throw new InvalidInputException("Error connecting to Location end point " + url, requestInfoWrapper.getRequestInfo());
 		}
 
 		if (financialYearContractResponse != null && financialYearContractResponse.getFinancialYears() != null

@@ -163,6 +163,9 @@ public class PropertiesManager {
 	
 	@Value("${error.license.feeDetailYearNotFound}")
 	private String feeDetailYearNotFound;
+	
+	@Value("${legacy.trade.create.success.status.message}")
+    private String legacyCreateSuccessMessage;
 
 	
 }

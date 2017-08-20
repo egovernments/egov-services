@@ -9,8 +9,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.TimeZone;
 
-import org.egov.tradelicense.common.domain.exception.InvalidInputException;
-
 public class TimeStampUtil {
 
 	/**
@@ -62,7 +60,7 @@ public class TimeStampUtil {
 
 		} catch (Exception e) {
 
-			throw new InvalidInputException("date parsing error");
+			throw new RuntimeException();
 
 		}
 
@@ -81,7 +79,7 @@ public class TimeStampUtil {
 
 		} catch (Exception e) {
 
-			throw new InvalidInputException("date parsing error");
+			throw new RuntimeException();
 
 		}
 
@@ -104,7 +102,7 @@ public class TimeStampUtil {
 
 		} catch (Exception e) {
 
-			throw new InvalidInputException("date parsing error");
+			throw new RuntimeException();
 
 		}
 	}

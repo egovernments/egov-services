@@ -215,7 +215,12 @@ var dat = {
                 "Connection.asset.nameOfApplicant": "properties[0].owners[0].name",
                 "Connection.asset.email": "properties[0].owners[0].emailId",
                 "Connection.asset.aadhaarNumber": "properties[0].owners[0].aadhaarNumber",
-                "Connection.asset.noOfFloors": "properties[0].propertyDetail.noOfFloors"
+                "Connection.asset.noOfFloors": "properties[0].propertyDetail.noOfFloors",
+                "Connection.asset.locality":"properties[0].boundary.locationBoundary.id",
+                "Connection.asset.zone":"properties[0].boundary.revenueBoundary.id",
+                "Connection.asset.ward":"properties[0].boundary.adminBoundary.id",
+                "Connection.asset.address":"properties[0].address.addressNumber",
+                "Connection.asset.property":"properties[0].propertyDetail.propertyType"
 
               }
             },
@@ -351,7 +356,7 @@ var dat = {
               {
                 "jsonPath": "Connection.hscPipeSizeType",
                 "type": "dropDown",
-                "pattern": "/wcms/masters/propertytype-pipesize/_search?tenantId=default&propertyTypeName={Connection.property.propertyType}|$..pipeSize|$..pipeSize"
+                "pattern": "/wcms/masters/propertytype-pipesize/_search?tenantId=default&propertyTypeName={Connection.property.propertyType}|$..pipeSize|$..pipeSizeInInch"
               }
             ],
             "requiredErrMsg": "",
@@ -528,7 +533,7 @@ var dat = {
             "jsonPath": "Connection.plumberName",
             "label": "wc.create.groups.connectionDetails.fields.plumberName",
             "pattern": "",
-            "type": "textarea",
+            "type": "text",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -748,6 +753,17 @@ var dat = {
               "type": "text",
               "isRequired": false,
               "isDisabled": false,
+              "requiredErrMsg": "",
+              "patternErrMsg": ""
+            },
+            {
+              "name": "acknowledgementNumber",
+              "jsonPath": "Connection[0].acknowledgementNumber",
+              "label": "wc.create.groups.applicantDetails.acknowledgementNumber",
+              "pattern": "",
+              "type": "text",
+              "isRequired": false,
+              "isDisabled": true,
               "requiredErrMsg": "",
               "patternErrMsg": ""
             },
@@ -1335,86 +1351,86 @@ var dat = {
       //     }
       //   ]
       // },
-      {
-        "label": "wc.create.groups.approvalDetails.title",
-        "name": "ApprovalDetails",
-        "multiple": false,
-        "fields": [{
-            "name": "department",
-            "jsonPath": "Connection.workflowDetails.department",
-            "label": "wc.create.groups.approvalDetails.fields.department",
-            "pattern": "",
-            "type": "singleValueList",
-            "isRequired": false,
-            "isDisabled": false,
-            "url": "/egov-common-masters/departments/_search?tenantId=default|$..id|$..name",
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-            "depedants": [{
-              "name": "Connection.workflowDetails.approver",
-              "type": "dropDown",
-              "pattern": "/hr-employee/employees/_search?tenantId=default&departmentId={connection.workflowDetails.department}&designationId={connection.workflowDetails.designation}|$..id|$..name"
-            }]
-          },
-          {
-            "name": "designation",
-            "jsonPath": "Connection.workflowDetails.designation",
-            "label": "wc.create.groups.approvalDetails.fields.designation",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "/egov-common-workflows/designations/_search?tenantId=default&businessKey=WaterConnection&approvalDepartmentName=&departmentRule=&currentStatus=&additionalRule=&pendingAction=&designation=&amountRule=|$..id|$..name",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-            "depedants": [{
-              "jsonPath": "Connection.workflowDetails.approver",
-              "type": "dropDown",
-              "pattern": "/hr-employee/employees/_search?tenantId=default&departmentId={connection.workflowDetails.department}&designationId={connection.workflowDetails.designation}|$..id|$..name"
-            }]
-          },
-          {
-            "name": "assignee",
-            "jsonPath": "Connection.workflowDetails.assignee",
-            "label": "wc.create.groups.approvalDetails.fields.Assignee",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "/hr-employee/employees/_search?tenantId=default&departmentId={connection.workflowDetails.department}&designationId={connection.workflowDetails.designation}|$..id|$..name",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "comments",
-            "jsonPath": "Connection.workflowDetails.comments",
-            "label": "wc.create.groups.approvalDetails.fields.comments",
-            "pattern": "",
-            "type": "textarea",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "initiatorPosition",
-            "jsonPath": "Connection.workflowDetails.initiatorPosition",
-            "label": "wc.create.groups.approvalDetails.fields.comments",
-            "pattern": "",
-            "type": "number",
-            "isRequired": false,
-            "isDisabled": false,
-            "isHidden": true,
-            "defaultValue": "2",
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          }
-
-
-
-
-        ]
-      }
+      // {
+      //   "label": "wc.create.groups.approvalDetails.title",
+      //   "name": "ApprovalDetails",
+      //   "multiple": false,
+      //   "fields": [{
+      //       "name": "department",
+      //       "jsonPath": "Connection.workflowDetails.department",
+      //       "label": "wc.create.groups.approvalDetails.fields.department",
+      //       "pattern": "",
+      //       "type": "singleValueList",
+      //       "isRequired": false,
+      //       "isDisabled": false,
+      //       "url": "/egov-common-masters/departments/_search?tenantId=default|$..id|$..name",
+      //       "requiredErrMsg": "",
+      //       "patternErrMsg": "",
+      //       "depedants": [{
+      //         "name": "Connection.workflowDetails.approver",
+      //         "type": "dropDown",
+      //         "pattern": "/hr-employee/employees/_search?tenantId=default&departmentId={connection.workflowDetails.department}&designationId={connection.workflowDetails.designation}|$..id|$..name"
+      //       }]
+      //     },
+      //     {
+      //       "name": "designation",
+      //       "jsonPath": "Connection.workflowDetails.designation",
+      //       "label": "wc.create.groups.approvalDetails.fields.designation",
+      //       "pattern": "",
+      //       "type": "singleValueList",
+      //       "url": "/egov-common-workflows/designations/_search?tenantId=default&businessKey=WaterConnection&approvalDepartmentName=&departmentRule=&currentStatus=&additionalRule=&pendingAction=&designation=&amountRule=|$..id|$..name",
+      //       "isRequired": false,
+      //       "isDisabled": false,
+      //       "requiredErrMsg": "",
+      //       "patternErrMsg": "",
+      //       "depedants": [{
+      //         "jsonPath": "Connection.workflowDetails.approver",
+      //         "type": "dropDown",
+      //         "pattern": "/hr-employee/employees/_search?tenantId=default&departmentId={connection.workflowDetails.department}&designationId={connection.workflowDetails.designation}|$..id|$..name"
+      //       }]
+      //     },
+      //     {
+      //       "name": "assignee",
+      //       "jsonPath": "Connection.workflowDetails.assignee",
+      //       "label": "wc.create.groups.approvalDetails.fields.Assignee",
+      //       "pattern": "",
+      //       "type": "singleValueList",
+      //       "url": "/hr-employee/employees/_search?tenantId=default&departmentId={connection.workflowDetails.department}&designationId={connection.workflowDetails.designation}|$..id|$..name",
+      //       "isRequired": false,
+      //       "isDisabled": false,
+      //       "requiredErrMsg": "",
+      //       "patternErrMsg": ""
+      //     },
+      //     {
+      //       "name": "comments",
+      //       "jsonPath": "Connection.workflowDetails.comments",
+      //       "label": "wc.create.groups.approvalDetails.fields.comments",
+      //       "pattern": "",
+      //       "type": "textarea",
+      //       "isRequired": false,
+      //       "isDisabled": false,
+      //       "requiredErrMsg": "",
+      //       "patternErrMsg": ""
+      //     },
+      //     {
+      //       "name": "initiatorPosition",
+      //       "jsonPath": "Connection.workflowDetails.initiatorPosition",
+      //       "label": "wc.create.groups.approvalDetails.fields.comments",
+      //       "pattern": "",
+      //       "type": "number",
+      //       "isRequired": false,
+      //       "isDisabled": false,
+      //       "isHidden": true,
+      //       "defaultValue": "2",
+      //       "requiredErrMsg": "",
+      //       "patternErrMsg": ""
+      //     }
+      //
+      //
+      //
+      //
+      //   ]
+      // }
     ]
   }
 

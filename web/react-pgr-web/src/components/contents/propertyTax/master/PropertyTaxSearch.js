@@ -9,6 +9,7 @@ import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
+import {translate} from '../../../common/common';
 import Api from '../../../../api/api';
 
 
@@ -380,7 +381,7 @@ class PropertyTaxSearch extends Component {
           search(e)
         }}>
           <Card className="uiCard">
-            <CardHeader title={< span style = {{ color: 'rgb(53, 79, 87)',fontSize: 18, margin: '8px 0px', fontWeight: 500,}} >  Search Property < /span>}/>
+            <CardHeader title={< span style = {{ color: 'rgb(53, 79, 87)',fontSize: 18, margin: '8px 0px', fontWeight: 500,}} >{translate('pt.search.searchProperty')}< /span>}/>
             <CardText>
              
                   <Grid>
@@ -388,20 +389,20 @@ class PropertyTaxSearch extends Component {
 						<Col xs={12} md={6}>
                           <TextField errorText={fieldErrors.applicationNo
                           ? fieldErrors.applicationNo
-                          : ""} id="applicationNo" value={propertyTaxSearch.applicationNo?propertyTaxSearch.applicationNo:""} onChange={(e) => handleChange(e, "applicationNo", false, '')} hintText="AP-PT-2017/07/29-004679-17" floatingLabelText="Application number" />
+                          : ""} id="applicationNo" value={propertyTaxSearch.applicationNo?propertyTaxSearch.applicationNo:""} onChange={(e) => handleChange(e, "applicationNo", false, '')} hintText="AP-PT-2017/07/29-004679-17" floatingLabelText={translate('pt.search.searchProperty.fields.applicationNumber')} />
                       </Col>
 					</Row>
                     <Row>
                       <Col xs={12} md={6}>
                         <TextField errorText={fieldErrors.houseNoBldgApt
                           ? fieldErrors.houseNoBldgApt
-                          : ""} id="houseNoBldgApt" value={propertyTaxSearch.houseNoBldgApt?propertyTaxSearch.houseNoBldgApt:""} onChange={(e) => handleChange(e, "houseNoBldgApt", false, /^\d{1,10}$/g)} hintText="654654" floatingLabelText="Door number" />
+                          : ""} id="houseNoBldgApt" value={propertyTaxSearch.houseNoBldgApt?propertyTaxSearch.houseNoBldgApt:""} onChange={(e) => handleChange(e, "houseNoBldgApt", false, /^\d{1,10}$/g)} hintText="654654" floatingLabelText={translate('pt.create.groups.propertyAddress.fields.doorNo')}/>
                       </Col>
 
                       <Col xs={12} md={6}>
                         <TextField errorText={fieldErrors.upicNumber
                           ? fieldErrors.upicNumber
-                          : ""} value={propertyTaxSearch.upicNumber?propertyTaxSearch.upicNumber:""} onChange={(e) => handleChange(e, "upicNumber", false, /^\d{3,15}$/g)} hintText="1000120015" floatingLabelText="Assessment number"/>
+                          : ""} maxLength={12} value={propertyTaxSearch.upicNumber?propertyTaxSearch.upicNumber:""} onChange={(e) => handleChange(e, "upicNumber", false, /^[a-zA-Z0-9]+$/g)} hintText="1000120015" floatingLabelText={translate('pt.create.groups.propertyDetails.assessmentNumber')}/>
                       </Col>
                     </Row>
 
@@ -409,13 +410,13 @@ class PropertyTaxSearch extends Component {
                       <Col xs={12} md={6}>
                         <TextField errorText={fieldErrors.mobileNumber
                           ? fieldErrors.mobileNumber
-                          : ""} value={propertyTaxSearch.mobileNumber?propertyTaxSearch.mobileNumber:""} onChange={(e) => handleChange(e, "mobileNumber", false, /^\d{10}$/g)} hintText="Mobile number" floatingLabelText="Mobile number" />
+                          : ""} value={propertyTaxSearch.mobileNumber?propertyTaxSearch.mobileNumber:""} onChange={(e) => handleChange(e, "mobileNumber", false, /^\d{10}$/g)} hintText="9584323454" floatingLabelText={translate('pt.create.groups.propertyAddress.mobileNumber')} />
                       </Col>
 
                       <Col xs={12} md={6}>
                         <TextField errorText={fieldErrors.aadhaarNumber
                           ? fieldErrors.aadhaarNumber
-                          : ""} value={propertyTaxSearch.aadhaarNumber?propertyTaxSearch.aadhaarNumber:""} onChange={(e) => handleChange(e, "aadhaarNumber", false, /^\d{12}$/g)} hintText="Aadhaar number " floatingLabelText="Aadhaar number " />
+                          : ""} value={propertyTaxSearch.aadhaarNumber?propertyTaxSearch.aadhaarNumber:""} onChange={(e) => handleChange(e, "aadhaarNumber", false, /^\d{12}$/g)} hintText={translate('pt.create.groups.ownerDetails.fields.aadhaarNumber')} floatingLabelText={translate('pt.create.groups.ownerDetails.fields.aadhaarNumber')} />
                       </Col>
                     </Row>
                   </Grid>
@@ -431,13 +432,13 @@ class PropertyTaxSearch extends Component {
                       <Col xs={12} md={6}>
                         <TextField errorText={fieldErrors.ownerName
                           ? fieldErrors.ownerName
-                          : ""} value={propertyTaxSearch.ownerName?propertyTaxSearch.ownerName:""} onChange={(e) => handleChange(e, "ownerName", false, "")} hintText="Owner Name" floatingLabelText="Owner Name" />
+                          : ""} value={propertyTaxSearch.ownerName?propertyTaxSearch.ownerName:""} onChange={(e) => handleChange(e, "ownerName", false, "")} hintText={translate('pt.create.groups.ownerDetails.fields.ownerName')} floatingLabelText={translate('pt.create.groups.ownerDetails.fields.ownerName')} />
                       </Col>
 
                       <Col xs={12} md={6}>
                         <TextField errorText={fieldErrors.oldUpicNo
                           ? fieldErrors.oldUpicNo
-                          : ""} value={propertyTaxSearch.oldUpicNo?propertyTaxSearch.oldUpicNo:""} onChange={(e) => handleChange(e, "oldUpicNo", false, /^\d{3,15}$/g)} hintText="Old Assessment Number" floatingLabelText="Old Assessment Number" />
+                          : ""} value={propertyTaxSearch.oldUpicNo?propertyTaxSearch.oldUpicNo:""} onChange={(e) => handleChange(e, "oldUpicNo", false, /^\d{3,15}$/g)} hintText={translate('pt.create.groups.propertyDetails.oldAssessmentNumber')} floatingLabelText={translate('pt.create.groups.propertyDetails.oldAssessmentNumber')} />
                       </Col>
 					  <Col xs={12} md={6}>
 							<SelectField errorText={fieldErrors.usage
@@ -448,7 +449,7 @@ class PropertyTaxSearch extends Component {
 									value: value
 								  }
 								};
-								handleChange(e, "usage", false, "")}} floatingLabelText="Usage Type" >
+								handleChange(e, "usage", false, "")}} floatingLabelText={translate('pt.create.groups.assessmentDetails.fields.usageType')} >
 								{renderOption(this.state.usage)}
 							</SelectField>
                       </Col>
@@ -457,7 +458,7 @@ class PropertyTaxSearch extends Component {
                     <Row>
 						<br/>
                       <Card>
-                        <CardHeader title={<span style = {{ color: 'rgb(53, 79, 87)',fontSize: 18, margin: '8px 0px', fontWeight: 500,}}> Boundary < /span>}/>
+                        <CardHeader title={<span style = {{ color: 'rgb(53, 79, 87)',fontSize: 18, margin: '8px 0px', fontWeight: 500,}}> {translate('pt.search.searchProperty.fields.boundary')} < /span>}/>
 
                         <CardText>
                           <Grid>
@@ -472,7 +473,7 @@ class PropertyTaxSearch extends Component {
                                         value: value
                                       }
                                     };
-                                    handleChange(e, "revenueZone", false, "")}} floatingLabelText="Zone " >
+                                    handleChange(e, "revenueZone", false, "")}} floatingLabelText={translate('wc.create.groups.fields.zone')} >
 									{renderOption(this.state.zone)}
                                 </SelectField>
 
@@ -488,7 +489,7 @@ class PropertyTaxSearch extends Component {
                                       }
                                     };
                                     handleChange(e, "revenueWard", false, "")}
-                                  } floatingLabelText="Ward" >
+                                  } floatingLabelText={translate('wc.create.groups.fields.ward')} >
                                   {renderOption(this.state.ward)}
                                 </SelectField>
                               </Col>
@@ -504,7 +505,7 @@ class PropertyTaxSearch extends Component {
                                         value: value
                                       }
                                     };
-                                    handleChange(e, "locality", false, "")}} floatingLabelText="Location" >
+                                    handleChange(e, "locality", false, "")}} floatingLabelText={translate('pt.search.searchProperty.fields.location')}>
 									{renderOption(this.state.location)}
                                 </SelectField>
                               </Col>
@@ -518,7 +519,7 @@ class PropertyTaxSearch extends Component {
                                         value: value
                                       }
                                     };
-                                    handleChange(e, "revenueCircle", false, "")}} floatingLabelText="Revenue Circle" >
+                                    handleChange(e, "revenueCircle", false, "")}} floatingLabelText={translate('pt.create.groups.propertyAddress.fields.revenueCircle')} >
 									{renderOption(this.state.revenueCircle)}
                                 </SelectField>
                               </Col>
@@ -534,14 +535,14 @@ class PropertyTaxSearch extends Component {
                     <Row>
 						<br/>
                       <Card>
-                        <CardHeader title={<span style = {{ color: 'rgb(53, 79, 87)',fontSize: 18, margin: '8px 0px', fontWeight: 500,}} > Search Property by Demand < /span>}/>
+                        <CardHeader title={<span style = {{ color: 'rgb(53, 79, 87)',fontSize: 18, margin: '8px 0px', fontWeight: 500,}} > {translate('pt.search.searchProperty.fields.searchByDemand')} < /span>}/>
                         <CardText>
                           <Grid>
                             <Row>
                               <Col xs={12} md={6}>
                               <TextField errorText={fieldErrors.demandFrom
                                 ? fieldErrors.demandFrom
-                                : ""} value={propertyTaxSearch.demandFrom?propertyTaxSearch.demandFrom:""} onChange={(e) => handleChange(e, "demandFrom", false, /^\d$/g)} hintText="Demand From" floatingLabelText="Demand From" />
+                                : ""} value={propertyTaxSearch.demandFrom?propertyTaxSearch.demandFrom:""} onChange={(e) => handleChange(e, "demandFrom", false, /^\d$/g)} hintText={translate('pt.search.searchProperty.fields.demandFrom')} floatingLabelText={translate('pt.search.searchProperty.fields.demandFrom')} />
 
 
                               </Col>
@@ -549,7 +550,7 @@ class PropertyTaxSearch extends Component {
                               <Col xs={12} md={6}>
                               <TextField errorText={fieldErrors.demandTo
                                 ? fieldErrors.demandTo
-                                : ""} value={propertyTaxSearch.demandTo?propertyTaxSearch.demandTo:""} onChange={(e) => handleChange(e, "demandTo", false, /^\d$/g)} hintText="Demand To" floatingLabelText="Demand To" />
+                                : ""} value={propertyTaxSearch.demandTo?propertyTaxSearch.demandTo:""} onChange={(e) => handleChange(e, "demandTo", false, /^\d$/g)} hintText={translate('pt.search.searchProperty.fields.demandTo')} floatingLabelText={translate('pt.search.searchProperty.fields.demandTo')} />
 
 
                               </Col>
@@ -571,7 +572,7 @@ class PropertyTaxSearch extends Component {
 				margin:'15px',
 				textAlign:'right'
               }}>
-                <RaisedButton type="submit" disabled={!isFormValid} primary={true} label={buttonText} />
+                <RaisedButton type={translate('ui.framework.submit')} disabled={!isFormValid} primary={true} label={buttonText} />
                 
               </div>
 

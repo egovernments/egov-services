@@ -64,6 +64,8 @@ public class PropertyTypePipeSizeGetRequest {
     private String propertyTypeName;
 
     private Double pipeSize;
+    
+    private double pipeSizeInInch;
 
     private String propertyTypeId;
 

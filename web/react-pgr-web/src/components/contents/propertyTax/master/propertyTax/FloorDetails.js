@@ -692,10 +692,9 @@ deleteOccupantName = (index) =>{
 				  open={this.state.dialogOpen}
 				  onRequestClose={this.handleDialogClose}
 				  style={{height:'auto'}}
+				  autoScrollBodyContent={true}
 				>
-				  
 					{occupantNames()}
-				
 				</Dialog>
 			)
 		}
@@ -753,7 +752,7 @@ deleteOccupantName = (index) =>{
 																	floorDetails.floor.waterMeterNo = null;
 																	floorDetails.floor.exemptionReason = null;
 																	floorDetails.floor.rentCollected = null;
-																	floorDetails.floor.age = '0TO25';
+																	floorDetails.floor.age = '0TO20';
 																}
 																
 																handleChangeFloor(e,"floor" ,"unitType", true, "");
@@ -1094,24 +1093,32 @@ deleteOccupantName = (index) =>{
 														  value={floorDetails.floor ? floorDetails.floor.isStructured : ""}
 														  onChange={(event, index, value) => {
 															  (value == -1) ?  value = '' : '';
-															  
-															  floorDetails.floor.length = '';
-															  floorDetails.floor.width = '';
-															  floorDetails.floor.builtupArea = '';
-															  
+															  				  
 															  var e = {
 																target: {
 																  value: value
 																}
 															  };
-															  handleChangeFloor(e, "floor" ,"isStructured", true, "")}
+															  handleChangeFloor(e, "floor" ,"isStructured", true, "")
+															  
+															    
+															  var f = {
+																  target: {
+																	  value: ''
+																  }
+															  }
+															  handleChangeFloor(f,"floor" ,"width", false, /^[0-9.]+$/);
+															  handleChangeFloor(f,"floor" ,"length", false, /^[0-9.]+$/);
+															  handleChangeFloor(f, "floor","builtupArea", true, /^[0-9.]+$/)
+															  
+															  }
 														  }
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														>
-																<MenuItem value={-1} primaryText="None" />
+															  <MenuItem value={-1} primaryText="None" />
 															  <MenuItem value='YES' primaryText="Yes" />
 															  <MenuItem value='NO' primaryText="No" />
 														</SelectField>
@@ -1149,13 +1156,13 @@ deleteOccupantName = (index) =>{
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  maxLength={6}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-														  disabled={(floorDetails.hasOwnProperty('floor') && floorDetails.floor!=null )? (floorDetails.floor.isStructured == 'YES' ? true : false) : false}
+														  disabled={(floorDetails.hasOwnProperty('floor') && floorDetails.floor!=null) ? (floorDetails.floor.isStructured == 'YES' ? true : false) : false}
 														/>
 													</Col>
 													
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
-														  floatingLabelText="Builtup Area *"
+														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.plinthArea')+' *'}
 														  hintText="27.75"
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.builtupArea? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.builtupArea}</span>:"" ): ""}
 														  value={floorDetails.floor ? floorDetails.floor.builtupArea : ""}
@@ -1173,7 +1180,7 @@ deleteOccupantName = (index) =>{
 													
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
-														  floatingLabelText="Carpet Area *"
+														  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.carpetArea')+' *'}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.carpetArea? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.carpetArea}</span> :""): ""}
 														  value={floorDetails.floor ? floorDetails.floor.carpetArea : ""}
 														  onChange={(e) => {
@@ -1189,7 +1196,7 @@ deleteOccupantName = (index) =>{
 													
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
-														  floatingLabelText="Exempted Area "
+														  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.exemptedArea')+' *'}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.exemptedArea ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.exemptedArea}</span> :(this.state.negativeValue ? <span style={{position:"absolute", bottom:-13}}>Invalid value</span>: "" )): (this.state.negativeValue ? <span style={{position:"absolute", bottom:-13}}>Invalid value</span>: "" )}
 														  value={floorDetails.floor ? floorDetails.floor.exemptedArea : ""}
 														  onChange={(e) => {	  
@@ -1205,7 +1212,7 @@ deleteOccupantName = (index) =>{
 
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
-														  floatingLabelText="Occupancy Certificate Number"
+														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.occupancyCertificateNumber')}
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.occupancyCertiNumber? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.occupancyCertiNumber}</span>:"" ): ""}
 														  value={floorDetails.floor ? floorDetails.floor.occupancyCertiNumber : ""}
 														  onChange={(e) => {handleChangeFloor(e,"floor" ,"occupancyCertiNumber", false, /^[a-z0-9]+$/i)}}
@@ -1219,7 +1226,7 @@ deleteOccupantName = (index) =>{
 															
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
-														  floatingLabelText="Building cost"
+														  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.buildingCost')}
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.buildingCost? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.buildingCost}</span>: "" ): "" }
 														  value={floorDetails.floor ? floorDetails.floor.buildingCost : ""}
 														  onChange={(e) => {handleChangeFloor(e,"floor" ,"buildingCost", false, /^[0-9]+$/i)}}
@@ -1233,7 +1240,7 @@ deleteOccupantName = (index) =>{
 													
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
-														  floatingLabelText="Land cost"
+														  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.landCost')}
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.landCost? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.landCost}</span>:"" ): ""}
 														  value={floorDetails.floor ? floorDetails.floor.landCost : ""}
 														  onChange={(e) => {handleChangeFloor(e,"floor" ,"landCost", false, /^[0-9]+$/i)}}
@@ -1262,8 +1269,9 @@ deleteOccupantName = (index) =>{
 														  />
 													  </Col>
 													<Col xs={12} md={12} >
-														{this.state.negativeValue && <p>Exempted area should not be greater than Carpet area</p>}
-														{this.state.newFloorError && <p>You cannot select more than {this.props.noOfFloors} Floors</p>}
+												
+														{this.state.negativeValue && <p style={{marginTop:15, color:'red'}}>Exempted area should not be greater than Carpet area</p>}
+														{this.state.newFloorError && <p style={{marginTop:15, color:'red'}}>You cannot select more than {this.props.noOfFloors} Floors</p>}
 
 													</Col>
 												

@@ -198,7 +198,7 @@ class Dashboard extends Component {
               current.props.setLoadingStatus('hide');
               current.setState({
                 workflowResult: {},
-                hasData: true
+                hasData: false
               });
             })
         } else {
@@ -212,9 +212,9 @@ class Dashboard extends Component {
 
 
  componentWillUnmount(){
-     $('#searchTable')
+     /*$('#searchTable')
      .DataTable()
-     .destroy(true);
+     .destroy(true);*/
  };
 
 

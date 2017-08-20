@@ -285,10 +285,10 @@ dataEntryTax = () => {
 	
 	if(dataEntry && dataEntry.hasOwnProperty('owners')) {		
 		for(var i=0;i<dataEntry.owners.length;i++){
-			dataEntry.owners[i].locale = userRequest.locale;
+			dataEntry.owners[i].locale = userRequest.locale || 'en_IN';
 			dataEntry.owners[i].type = 'CITIZEN';
 			dataEntry.owners[i].active = true;
-			dataEntry.owners[i].tenantId = 'default';
+			dataEntry.owners[i].tenantId = userRequest.tenantId;
 			dataEntry.owners[i].salutation = null;
 			dataEntry.owners[i].pan = null;
 			dataEntry.owners[i].roles =[  
@@ -358,13 +358,13 @@ dataEntryTax = () => {
       var body = {
 			"properties": [{
 				"occupancyDate":dataEntry.occupancyDate,
-				"tenantId": "default",
+				"tenantId": userRequest.tenantId,
 				"oldUpicNumber": dataEntry.oldUpicNumber,
 				"vltUpicNumber": null,
 				"sequenceNo": dataEntry.sequenceNo || null,
 				"creationReason": dataEntry.reasonForCreation || null,
 				"address": {
-					"tenantId": "default",
+					"tenantId": userRequest.tenantId,
 					"longitude": null,
 					"addressNumber": dataEntry.doorNo || null,
 					"addressLine1": dataEntry.locality || null,
@@ -682,7 +682,7 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: ['reasonForCreation','propertyType', 'usage','extentOfSite','doorNo', 'locality', 'electionWard', 'zoneNo', 'wardNo', 'sequenceNo', 'oldUpicNumber', 'totalFloors']
+          required: ['reasonForCreation','propertyType','pin' ,'usage','extentOfSite','doorNo', 'zoneNo', 'wardNo', 'sequenceNo', 'oldUpicNumber', 'totalFloors', 'currentAssessmentDate', 'firstAssessmentDate', 'lastAssessmentDate']
         },
         pattern: {
           current: [],

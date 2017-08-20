@@ -284,10 +284,10 @@ createPropertyTax = () => {
 	
 	if(createProperty && createProperty.hasOwnProperty('owners')) {		
 		for(var i=0;i<createProperty.owners.length;i++){
-			createProperty.owners[i].locale = userRequest.locale;
+			createProperty.owners[i].locale = userRequest.locale || 'en_IN';
 			createProperty.owners[i].type = 'CITIZEN';
 			createProperty.owners[i].active = true;
-			createProperty.owners[i].tenantId = 'default';
+			createProperty.owners[i].tenantId = userRequest.tenantId;
 			createProperty.owners[i].salutation = null;
 			createProperty.owners[i].pan = null;
 			createProperty.owners[i].roles =[  
@@ -357,13 +357,13 @@ createPropertyTax = () => {
       var body = {
 			"properties": [{
 				"occupancyDate":createProperty.occupancyDate || null,
-				"tenantId": "default",
+				"tenantId": userRequest.tenantId,
 				"oldUpicNumber": null,
 				"vltUpicNumber": null,
 				"sequenceNo": createProperty.sequenceNo || null,
 				"creationReason": createProperty.reasonForCreation || null,
 				"address": {
-					"tenantId": "default",
+					"tenantId": userRequest.tenantId,
 					"longitude": null,
 					"addressNumber": createProperty.doorNo || null,
 					"addressLine1": createProperty.locality || null,

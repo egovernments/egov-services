@@ -127,7 +127,7 @@ class Inbox extends Component {
 		designation:[],
 		workflowDepartment: [],
 		process: [],
-		approve: false
+		forward: false
 		
 	}
   }
@@ -416,9 +416,9 @@ class Inbox extends Component {
 					})
 					
 		res.processInstance.attributes.validActions.values.map((item)=>{
-				if(item.name == 'Approve'){
+				if(item.name == 'Forward'){
 					current.setState({
-						approve: true
+						forward: true
 					});
 				}
 			})
@@ -484,6 +484,7 @@ class Inbox extends Component {
 	  } else if(actionName == 'Approve') {
 		  
 		  workFlowDetails.assignee = this.state.process.initiatorPosition || null
+		  workFlowDetails.initiatorPosition = this.state.process.initiatorPosition || null;
 		  localStorage.setItem('inboxStatus', 'Approved')
 		  
 	  } else if(actionName == 'Reject') {
@@ -570,7 +571,7 @@ class Inbox extends Component {
         {!_.isEmpty(mockData) && <ShowFields groups={mockData[`${moduleName}.${actionName}`].groups} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={""} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""} screen="view"/>}
           <br/>
           {renderTable()}
-			  {(this.state.buttons.hasOwnProperty('attributes') && (this.state.buttons.attributes.validActions.values.length > 0) && !this.state.approve) &&	<Card className="uiCard">
+			  {(this.state.buttons.hasOwnProperty('attributes') && (this.state.buttons.attributes.validActions.values.length > 0) && this.state.forward) &&	<Card className="uiCard">
                     <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Workflow</div>} />
                     <CardText style={styles.reducePadding}>
                                 <Grid fluid>

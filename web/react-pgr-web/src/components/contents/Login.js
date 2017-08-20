@@ -148,7 +148,9 @@ class Login extends Component {
      //console.log(value);
      let {setLoadingStatus} = this.props;
      var self = this;
-     Api.commonApiGet("/localization/messages", {locale : value}).then(function(response)
+     var tenantId = this.props.match.params.tenantId || "default";
+     localStorage.setItem("tenantId", tenantId);
+     Api.commonApiGet("/localization/messages", {locale : value, tenantId: tenantId}, {}, true).then(function(response)
      {
        self.setState({'locale':value});
        self.setState({'localeready':true});
@@ -694,7 +696,7 @@ class Login extends Component {
                         </IconButton>
                         <div style={{"float": "left", "cursor": "pointer"}}>
                           <h4>{translate('pgr.title.create.account')}</h4>
-                          <p>{translate('pgr.msg.creategrievance.avail.onlineservices')}</p>
+                          <p>{translate('pgr.msg.createaccount.avail.onlineservices')}</p>
                         </div>
                       </Col>
 

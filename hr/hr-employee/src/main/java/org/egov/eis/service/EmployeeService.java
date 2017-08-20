@@ -43,7 +43,6 @@ package org.egov.eis.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.SerializationUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.eis.config.PropertiesManager;
 import org.egov.eis.model.*;
@@ -288,7 +287,7 @@ public class EmployeeService {
         requestInfo.setTs(null);
         RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper(requestInfo);
 
-        Map<String, List<String>> hrConfigurations = hrMastersService.getHRConfigurations(requestInfoWrapper);
+        Map<String, List<String>> hrConfigurations = hrMastersService.getHRConfigurations(employee.getTenantId(), requestInfoWrapper);
 
         if (hrConfigurations.get("Autogenerate_employeecode").get(0).equalsIgnoreCase("Y")) {
             employee.setCode(getEmployeeCode(employee.getTenantId(), requestInfo));

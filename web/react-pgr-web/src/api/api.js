@@ -36,7 +36,7 @@ module.exports = {
         if(url && url[url.length-1] === "/")
             url = url.substring(0, url.length-1);
         if (!doNotOverride)
-            url += "?tenantId=" + tenantId;
+            url += "?tenantId=" + (localStorage.getItem("tenantId") || 'default');
         else
             url += "?"
         for (var variable in queryObject) {
@@ -83,10 +83,11 @@ module.exports = {
                 }else if(response && response.response && !response.response.data && response.response.status === 400) {
                     document.title = "eGovernments";
                     var locale = localStorage.getItem('locale');
+                    var _tntId = localStorage.getItem("tenantId");
                     localStorage.clear();
                     localStorage.setItem('locale', locale);
                     localStorage.reload = true;
-                    window.location.hash = "#/";
+                    window.location.hash = "#/" + _tntId;
                 } else if(response){
                     throw new Error(response);
                 }else {
@@ -103,7 +104,7 @@ module.exports = {
     commonApiGet: (context, queryObject = {}, doNotOverride = false, noPageSize = false) => {
         var url = context;
         if (!doNotOverride)
-            url += "?tenantId=" + tenantId;
+            url += "?tenantId=" + (localStorage.getItem("tenantId") || 'default');
         else
             url += "?"
         for (var variable in queryObject) {

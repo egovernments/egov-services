@@ -144,7 +144,7 @@ class AddDemand extends Component {
     };
 
     self.props.setLoadingStatus('loading');
-	  Api.commonApiPost('wcms-connection/connection/_leacydemand', {consumerNumber: decodeURIComponent(self.props.match.params.upicNumber), executionDate: "1301616000"}, body, false, true).then((res)=>{
+	  Api.commonApiPost('wcms-connection/connection/_leacydemand', {consumerNumber: decodeURIComponent(self.props.match.params.upicNumber), executionDate: self.state.searchData && self.state.searchData.Connection && self.state.searchData.Connection[0] && self.state.searchData.Connection[0].executionDate}, body, false, true).then((res)=>{
       self.props.setLoadingStatus('hide');
        self.props.toggleSnackbarAndSetText(true,translate("wc.update.message.success"), true, false);
       self.props.setRoute("/searchconnection/wc");
@@ -216,7 +216,7 @@ class AddDemand extends Component {
 
 
     return (<div><Card className="uiCard">
-				<CardTitle style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate('Applicant Particulars')}</div>} subtitle={<div style={{color:"#354f57", fontSize:15,margin:'8px 0'}}>{translate('Basic Details')}</div>} />
+				<CardTitle style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate("wc.create.demand.applicantParticular")}</div>} subtitle={<div style={{color:"#354f57", fontSize:15,margin:'8px 0'}}>{translate("wc.create.demand.basicDetails")}</div>} />
         <br/>
         <CardText style={styles.reducePadding}>
 					<Grid fluid>
@@ -289,10 +289,10 @@ class AddDemand extends Component {
 								<Table style={{color:"black",fontWeight: "normal", marginBottom:0, minWidth:'100%', width:'auto'}}  bordered responsive>
 									<thead>
 										<tr>
-											<th style={{textAlign:'center'}}>Installment</th>
-											<th  style={{textAlign:'center'}}>Tax</th>
-											<th style={{textAlign:'center'}}>Demand</th>
-                      <th style={{textAlign:'center'}}>Collection</th>
+											<th style={{textAlign:'center'}}>{translate("pt.create.groups.addDemand.fields.installment")}</th>
+											<th  style={{textAlign:'center'}}>{translate("wc.create.demand.tax")}</th>
+											<th style={{textAlign:'center'}}>{translate("wc.create.demands")}</th>
+                      <th style={{textAlign:'center'}}>{translate("pt.create.groups.addDemand.fields.collection")}</th>
 										</tr>
 									</thead>
 									<tbody>

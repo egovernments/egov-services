@@ -72,6 +72,8 @@ public class PropertyTypePipeSize {
     
     @NotNull
     private Long pipeSizeId;
+    
+    private double pipeSizeInInch;
 
     @NotNull
     private Double pipeSize;

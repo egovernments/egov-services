@@ -142,10 +142,10 @@ public class BudgetDetailControllerTest {
                 .thenReturn(budgetDetails);
 
         mockMvc.perform(post("/budgetdetails/_delete")
-                .content(resources.readRequest("budgetdetail/budgetdetail_update_valid_request.json"))
+                .content(resources.readRequest("budgetdetail/budgetdetail_delete_valid_request.json"))
                 .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(
-                        content().json(resources.readResponse("budgetdetail/budgetdetail_update_valid_response.json")));
+                        content().json(resources.readResponse("budgetdetail/budgetdetail_delete_valid_response.json")));
 
     }
 

@@ -228,7 +228,7 @@ var dat = {
             "jsonPath": "Connection.address.city",
             "label": "employee.Employee.fields.city",
             "pattern": "^[\s.]*([^\s.][\s.]*){0,55}$",
-            "type": "textarea",
+            "type": "text",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -402,7 +402,7 @@ var dat = {
             "label": "wc.create.groups.applicantDetails.locality",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$..id|$..name",
+            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$.Boundary.*.boundaryNum|$.Boundary.*.name",
             "isRequired": false,
             "isDisabled": true,
             "requiredErrMsg": "",
@@ -504,7 +504,7 @@ var dat = {
               {
                 "jsonPath": "Connection.hscPipeSizeType",
                 "type": "dropDown",
-                "pattern": "/wcms/masters/propertytype-pipesize/_search?tenantId=default&propertyTypeName={Connection.property.propertyType}|$..pipeSize|$..pipeSize"
+                "pattern": "/wcms/masters/propertytype-pipesize/_search?tenantId=default&propertyTypeName={Connection.property.propertyType}|$..pipeSize|$..pipeSizeInInch"
               }
             ],
             "requiredErrMsg": "",
@@ -697,7 +697,7 @@ var dat = {
             "jsonPath": "Connection.plumberName",
             "label": "wc.create.groups.connectionDetails.fields.plumberName",
             "pattern": "",
-            "type": "textarea",
+            "type": "text",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -779,19 +779,7 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
-          },
-          {
-                "name": "NoOfFlats",
-                "jsonPath": "Connection.NoOfFlats",
-                "label": "wc.create.groups.connectionDetails.fields.flat",
-                "pattern": "^(0|[1-9][0-9]*)$",
-                "type": "number",
-                "hide":true,
-                "isRequired": false,
-                "isDisabled": false,
-                "requiredErrMsg": "",
-                "patternErrMsg": ""
-              }
+          }
         ]
       },
 	  {
@@ -987,6 +975,17 @@ var dat = {
               "patternErrMsg": ""
             },
             {
+                "name": "acknowledgementNumber",
+                "jsonPath": "Connection[0].acknowledgementNumber",
+                "label": "wc.create.groups.applicantDetails.acknowledgementNumber",
+                "pattern": "",
+                "type": "text",
+                "isRequired": false,
+                "isDisabled": true,
+                "requiredErrMsg": "",
+                "patternErrMsg": ""
+              },
+            {
               "name": "MobileNumber",
               "jsonPath": "Connection[0].connectionOwner.mobileNumber",
               "label": "wc.create.groups.applicantDetails.mobileNumber",
@@ -1049,7 +1048,7 @@ var dat = {
               "jsonPath": "Connection[0].address.city",
               "label": "employee.Employee.fields.city",
               "pattern": "",
-              "type": "textarea",
+              "type": "text",
               "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",
@@ -1573,82 +1572,82 @@ var dat = {
       //     }
       //   ]
       // },
-      {
-        "label": "wc.create.groups.approvalDetails.title",
-        "name": "ApprovalDetails",
-        "multiple": false,
-        "fields": [{
-            "name": "department",
-            "jsonPath": "Connection.workflowDetails.department",
-            "label": "wc.create.groups.approvalDetails.fields.department",
-            "pattern": "",
-            "type": "singleValueList",
-            "isRequired": false,
-            "isDisabled": false,
-            "url": "/egov-common-masters/departments/_search?tenantId=default|$..id|$..name",
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-            "depedants": [{
-              "name": "Connection.workflowDetails.approver",
-              "type": "dropDown",
-              "pattern": "/hr-employee/employees/_search?tenantId=default&departmentId={connection.workflowDetails.department}&designationId={connection.workflowDetails.designation}|$..id|$..name"
-            }]
-          },
-          {
-            "name": "designation",
-            "jsonPath": "Connection.workflowDetails.designation",
-            "label": "wc.create.groups.approvalDetails.fields.designation",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "/egov-common-workflows/designations/_search?tenantId=default&businessKey=WaterConnection&approvalDepartmentName=&departmentRule=&currentStatus=&additionalRule=&pendingAction=&designation=&amountRule=|$..id|$..name",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-            "depedants": [{
-              "jsonPath": "Connection.workflowDetails.approver",
-              "type": "dropDown",
-              "pattern": "/hr-employee/employees/_search?tenantId=default&departmentId={connection.workflowDetails.department}&designationId={connection.workflowDetails.designation}|$..id|$..name"
-            }]
-          },
-          {
-            "name": "assignee",
-            "jsonPath": "Connection.workflowDetails.assignee",
-            "label": "wc.create.groups.approvalDetails.fields.Assignee",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "/hr-employee/employees/_search?tenantId=default&departmentId={connection.workflowDetails.department}&designationId={connection.workflowDetails.designation}|$..id|$..name",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "comments",
-            "jsonPath": "Connection.workflowDetails.comments",
-            "label": "wc.create.groups.approvalDetails.fields.comments",
-            "pattern": "",
-            "type": "textarea",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "initiatorPosition",
-            "jsonPath": "Connection.workflowDetails.initiatorPosition",
-            "label": "wc.create.groups.approvalDetails.fields.comments",
-            "pattern": "",
-            "type": "number",
-            "isRequired": false,
-            "isDisabled": false,
-            "isHidden": true,
-            "defaultValue": "2",
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          }
-        ]
-      }
+      // {
+      //   "label": "wc.create.groups.approvalDetails.title",
+      //   "name": "ApprovalDetails",
+      //   "multiple": false,
+      //   "fields": [{
+      //       "name": "department",
+      //       "jsonPath": "Connection.workflowDetails.department",
+      //       "label": "wc.create.groups.approvalDetails.fields.department",
+      //       "pattern": "",
+      //       "type": "singleValueList",
+      //       "isRequired": false,
+      //       "isDisabled": false,
+      //       "url": "/egov-common-masters/departments/_search?tenantId=default|$..id|$..name",
+      //       "requiredErrMsg": "",
+      //       "patternErrMsg": "",
+      //       "depedants": [{
+      //         "name": "Connection.workflowDetails.approver",
+      //         "type": "dropDown",
+      //         "pattern": "/hr-employee/employees/_search?tenantId=default&departmentId={connection.workflowDetails.department}&designationId={connection.workflowDetails.designation}|$..id|$..name"
+      //       }]
+      //     },
+      //     {
+      //       "name": "designation",
+      //       "jsonPath": "Connection.workflowDetails.designation",
+      //       "label": "wc.create.groups.approvalDetails.fields.designation",
+      //       "pattern": "",
+      //       "type": "singleValueList",
+      //       "url": "/egov-common-workflows/designations/_search?tenantId=default&businessKey=WaterConnection&approvalDepartmentName=&departmentRule=&currentStatus=&additionalRule=&pendingAction=&designation=&amountRule=|$..id|$..name",
+      //       "isRequired": false,
+      //       "isDisabled": false,
+      //       "requiredErrMsg": "",
+      //       "patternErrMsg": "",
+      //       "depedants": [{
+      //         "jsonPath": "Connection.workflowDetails.approver",
+      //         "type": "dropDown",
+      //         "pattern": "/hr-employee/employees/_search?tenantId=default&departmentId={connection.workflowDetails.department}&designationId={connection.workflowDetails.designation}|$..id|$..name"
+      //       }]
+      //     },
+      //     {
+      //       "name": "assignee",
+      //       "jsonPath": "Connection.workflowDetails.assignee",
+      //       "label": "wc.create.groups.approvalDetails.fields.Assignee",
+      //       "pattern": "",
+      //       "type": "singleValueList",
+      //       "url": "/hr-employee/employees/_search?tenantId=default&departmentId={connection.workflowDetails.department}&designationId={connection.workflowDetails.designation}|$..id|$..name",
+      //       "isRequired": false,
+      //       "isDisabled": false,
+      //       "requiredErrMsg": "",
+      //       "patternErrMsg": ""
+      //     },
+      //     {
+      //       "name": "comments",
+      //       "jsonPath": "Connection.workflowDetails.comments",
+      //       "label": "wc.create.groups.approvalDetails.fields.comments",
+      //       "pattern": "",
+      //       "type": "textarea",
+      //       "isRequired": false,
+      //       "isDisabled": false,
+      //       "requiredErrMsg": "",
+      //       "patternErrMsg": ""
+      //     },
+      //     {
+      //       "name": "initiatorPosition",
+      //       "jsonPath": "Connection.workflowDetails.initiatorPosition",
+      //       "label": "wc.create.groups.approvalDetails.fields.comments",
+      //       "pattern": "",
+      //       "type": "number",
+      //       "isRequired": false,
+      //       "isDisabled": false,
+      //       "isHidden": true,
+      //       "defaultValue": "2",
+      //       "requiredErrMsg": "",
+      //       "patternErrMsg": ""
+      //     }
+      //   ]
+      // }
     ]
   }
 }

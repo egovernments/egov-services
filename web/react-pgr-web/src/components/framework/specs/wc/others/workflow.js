@@ -117,7 +117,7 @@ var dat = {
                     {
                         "name": "adharNumber",
                         "jsonPath": "Connection[0].property.adharNumber",
-                        "label": "No of floors",
+                        "label": "wc.create.groups.applicantDetails.noOfFloors",
                         "pattern": "",
                         "type": "label",
                         "isRequired": false,
@@ -328,7 +328,7 @@ var dat = {
                     {
                         "name": "Sequence No",
                         "jsonPath": "Connection[0].waterTreatment",
-                        "label": "Sequence No",
+                        "label": "wc.create.groups.connectionDetails.fields.billingNumber",
                         "pattern": "",
                         "type": "number",
                         "isRequired": true,
@@ -339,10 +339,21 @@ var dat = {
                     {
                         "name": "PlumberName",
                         "jsonPath": "Connection[0].plumberName",
-                        "label": "PlumberName",
+                        "label": "wc.create.groups.connectionDetails.fields.plumberName",
                         "pattern": "",
-                        "type": "textarea",
+                        "type": "text",
                         "isRequired": true,
+                        "isDisabled": false,
+                        "requiredErrMsg": "",
+                        "patternErrMsg": ""
+                    },
+                    {
+                        "name": "NoOfTaps",
+                        "jsonPath": "Connection.numberOfTaps",
+                        "label": "wc.create.groups.connectionDetails.fields.noOfTaps",
+                        "pattern": "^(0|[1-9][0-9]*)$",
+                        "type": "number",
+                        "isRequired": false,
                         "isDisabled": false,
                         "requiredErrMsg": "",
                         "patternErrMsg": ""
@@ -380,7 +391,7 @@ var dat = {
                     {
                         "name": "Outside ULB",
                         "jsonPath": "Connection[0].outsideUlb",
-                        "label": "Outside ULB",
+                        "label": "wc.create.groups.connectionDetails.fields.outSide",
                         "pattern": "",
                         "type": "checkbox",
                         "isRequired": false,

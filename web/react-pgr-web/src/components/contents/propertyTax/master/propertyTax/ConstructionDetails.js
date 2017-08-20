@@ -251,7 +251,7 @@ formatDate(date){
 															}
 														  }
 										
-													handleChange(e,"currentAssessmentDate", false, "")}}
+													handleChange(e,"currentAssessmentDate", true, "")}}
 												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 												  underlineStyle={styles.underlineStyle}
 												  underlineFocusStyle={styles.underlineFocusStyle}
@@ -273,7 +273,7 @@ formatDate(date){
 															}
 														  }
 									
-													handleChange(e,"firstAssessmentDate", false, "")}}
+													handleChange(e,"firstAssessmentDate", true, "")}}
 												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 												  underlineStyle={styles.underlineStyle}
 												  underlineFocusStyle={styles.underlineFocusStyle}
@@ -317,7 +317,7 @@ formatDate(date){
 															}
 														  }
 									
-													handleChange(e,"lastAssessmentDate", false, "")}}
+													handleChange(e,"lastAssessmentDate", true, "")}}
 												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 												  underlineStyle={styles.underlineStyle}
 												  underlineFocusStyle={styles.underlineFocusStyle}
@@ -360,31 +360,48 @@ formatDate(date){
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               />
                                           </Col>
-										  <Col xs={12} md={3} sm={6}>
-											  <TextField  className="fullWidth"
-                                                  floatingLabelText={translate('pt.create.groups.constructionDetails.fields.certificateCompletionDate')}
-                                                  errorText={fieldErrors.certificateCompletionDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.certificateCompletionDate}</span> : ""}
-                                                  value={constructionDetails.certificateCompletionDate ? constructionDetails.certificateCompletionDate : ""}
-                                                  onChange={(e) => {handleChange(e, "certificateCompletionDate", false, "")}}
-                                                  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
-                                                  underlineFocusStyle={styles.underlineFocusStyle}
-                                                  maxLength={16}
-                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-                                              />
+										  <Col xs={12} md={3} sm={6}>                                             
+											  <DatePicker  className="fullWidth datepicker"
+												  formatDate={(date)=> this.formatDate(date)}
+												  floatingLabelText={translate('pt.create.groups.constructionDetails.fields.certificateCompletionDate')}
+												  errorText={fieldErrors.certificateCompletionDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.certificateCompletionDate}</span> : ""}
+												  onChange={(event,date) => {
+														var day = (date.getDate() < 10) ? ('0'+date.getDate()) : date.getDate();
+														var month = ((date.getMonth() + 1)<10) ? ('0'+(date.getMonth() + 1)) : (date.getMonth() + 1)
+													  var e = {
+														target:{
+															value: day + "/" + month + "/" + date.getFullYear()
+														}
+													  }
+												  handleChange(e,"certificateCompletionDate", false, "")}}
+												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+												  underlineStyle={styles.underlineStyle}
+												  underlineFocusStyle={styles.underlineFocusStyle}
+												  textFieldStyle={{width: '100%'}}
+												  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+												/>		
+											  
                                           </Col>
-										  <Col xs={12} md={3} sm={6}>
-											  <TextField  className="fullWidth"
-                                                  floatingLabelText={translate('pt.create.groups.constructionDetails.fields.certificateReceivedDate')}
-                                                  errorText={fieldErrors.certificateReceivedDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.certificateReceivedDate}</span> : ""}
-                                                  value={constructionDetails.certificateReceivedDate ? constructionDetails.certificateReceivedDate : ""}
-                                                  onChange={(e) => {handleChange(e, "certificateReceivedDate", false, "")}}
-                                                  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
-                                                  underlineFocusStyle={styles.underlineFocusStyle}
-                                                  maxLength={16}
-                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-                                              />
+										  <Col xs={12} md={3} sm={6}> 
+											  <DatePicker  className="fullWidth datepicker"
+												  formatDate={(date)=> this.formatDate(date)}
+												  floatingLabelText={translate('pt.create.groups.constructionDetails.fields.certificateReceivedDate')}
+												  errorText={fieldErrors.certificateReceivedDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.certificateReceivedDate}</span> : ""}
+												  onChange={(event,date) => {
+														var day = (date.getDate() < 10) ? ('0'+date.getDate()) : date.getDate();
+														var month = ((date.getMonth() + 1)<10) ? ('0'+(date.getMonth() + 1)) : (date.getMonth() + 1)
+													  var e = {
+														target:{
+															value: day + "/" + month + "/" + date.getFullYear()
+														}
+													  }
+													handleChange(e,"certificateReceivedDate", false, "")}}
+												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+												  underlineStyle={styles.underlineStyle}
+												  underlineFocusStyle={styles.underlineFocusStyle}
+												  textFieldStyle={{width: '100%'}}
+												  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+												/>	
                                           </Col>
 										  <Col xs={12} md={3} sm={6}>
 											  <TextField  className="fullWidth"

@@ -5,7 +5,7 @@ var rooms = {
  "jsonPath": "rooms",
  "groups": [
   {
-   "label": "Room",
+   "label": "pt.create.groups.room",
    "name": "Room",
    "multiple": true,
    "jsonPath":"properties[0].propertyDetail.floors[0].units[0]",
@@ -379,7 +379,7 @@ var dat = {
 		"level": 0,
 		"groups": [
 			{
-				"label": "UPIC Details",
+				"label": "pt.create.groups.upicDetails",
 				"name": "UpicNumber",
 				"fields": [
 						{
@@ -396,7 +396,7 @@ var dat = {
 				]
 			},
 			{
-				"label": "Owner Details",
+				"label": "pt.create.groups.ownerDetails",
 				"name": "OwnerDetails",
 				"jsonPath": "properties[0].owners",
 				"multiple":true,
@@ -759,7 +759,7 @@ var dat = {
 				]
 			},
 			{
-				"label": "Assessment details",
+				"label": "pt.create.groups.assessmentDetails.fields.creationReason",
 				"name": "AssessmentDetails",
 				"fields": [
 						{
@@ -898,7 +898,7 @@ var dat = {
 				]
 			},
 			{
-				"label":"Property Factors",
+				"label":"pt.create.groups.propertyFactors",
 				"name": "PropertyFactors",
 				"fields": [
 						{
@@ -958,7 +958,7 @@ var dat = {
 			},
 			
 			{
-				"label": "Vacant Land",
+				"label": "pt.create.groups.propertyAddress.vacantLand",
 				"name": "VacantLand",
 				"hide":true,
 				"fields": [
@@ -1077,7 +1077,7 @@ var dat = {
 				]
 			},
 			{
-				"label": "Details of surrounding Boundaries of the property",
+				"label": "pt.create.groups.surroundingBoundaries",
 				"name": "SurroundingBoundaries",
 				"hide":true,
 				"fields": [
@@ -1128,7 +1128,7 @@ var dat = {
 				]
 			},
 			{
-				"label": "Floor Details",
+				"label": "pt.create.groups.floorDetails",
 				"name": "FloorDetails",
 				"jsonPath": "properties[0].propertyDetail.floors",
 				"multiple":true,

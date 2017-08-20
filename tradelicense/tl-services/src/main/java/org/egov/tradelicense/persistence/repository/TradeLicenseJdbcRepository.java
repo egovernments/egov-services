@@ -10,6 +10,7 @@ import org.egov.tl.commons.web.contract.LicenseStatus;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.UOM;
 import org.egov.tl.commons.web.requests.CategorySearchResponse;
+import org.egov.tl.commons.web.requests.DocumentTypeResponse;
 import org.egov.tl.commons.web.requests.LicenseStatusResponse;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tl.commons.web.requests.UOMResponse;
@@ -17,12 +18,17 @@ import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.common.persistense.repository.JdbcRepository;
 import org.egov.tradelicense.common.util.TimeStampUtil;
 import org.egov.tradelicense.persistence.entity.LicenseFeeDetailEntity;
+import org.egov.tradelicense.persistence.entity.LicenseFeeDetailSearchEntity;
 import org.egov.tradelicense.persistence.entity.SupportDocumentEntity;
+import org.egov.tradelicense.persistence.entity.SupportDocumentSearchEntity;
 import org.egov.tradelicense.persistence.entity.TradeLicenseEntity;
 import org.egov.tradelicense.persistence.entity.TradeLicenseSearchEntity;
 import org.egov.tradelicense.web.contract.Boundary;
+import org.egov.tradelicense.web.contract.FinancialYearContract;
 import org.egov.tradelicense.web.repository.BoundaryContractRepository;
 import org.egov.tradelicense.web.repository.CategoryContractRepository;
+import org.egov.tradelicense.web.repository.DocumentTypeContractRepository;
+import org.egov.tradelicense.web.repository.FinancialYearContractRepository;
 import org.egov.tradelicense.web.requests.BoundaryResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +51,12 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 
 	@Autowired
 	BoundaryContractRepository boundaryContractRepository;
+	
+	@Autowired
+	FinancialYearContractRepository financialYearRepository;
+	
+	@Autowired
+	DocumentTypeContractRepository documentTypeRepository;
 
 	private static final Logger LOG = LoggerFactory.getLogger(TradeLicenseJdbcRepository.class);
 	static {
@@ -60,14 +72,14 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 	}
 
 	public List<TradeLicenseSearchEntity> search(RequestInfo requestInfo, String tenantId, Integer pageSize,
-			Integer pageNumber, String sort, String active, String tradeLicenseId, String applicationNumber,
+			Integer pageNumber, String sort, String active, Integer[] ids, String applicationNumber,
 			String licenseNumber, String oldLicenseNumber, String mobileNumber, String aadhaarNumber, String emailId,
 			String propertyAssesmentNo, Integer adminWard, Integer locality, String ownerName, String tradeTitle,
 			String tradeType, Integer tradeCategory, Integer tradeSubCategory, String legacy, Integer status) {
 
 		MapSqlParameterSource parameter = new MapSqlParameterSource();
 
-		String query = buildSearchQuery(tenantId, pageSize, pageNumber, sort, active, tradeLicenseId, applicationNumber,
+		String query = buildSearchQuery(tenantId, pageSize, pageNumber, sort, active, ids, applicationNumber,
 				licenseNumber, oldLicenseNumber, mobileNumber, aadhaarNumber, emailId, propertyAssesmentNo, adminWard,
 				locality, ownerName, tradeTitle, tradeType, tradeCategory, tradeSubCategory, legacy, status,
 				parameter);
@@ -163,7 +175,8 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 				license.setLastModifiedBy(getString(row.get("lastModifiedBy")));
 				license.setLastModifiedTime(getLong(row.get("lastModifiedTime")));
 				license.setCreatedTime(getLong(row.get("createdTime")));
-
+				license.setFeeDetailEntitys(getFeeDetails(license, requestInfo));
+				license.setSupportDocumentEntitys(getSupportDocuments(license, requestInfo));
 				tradeLicenses.add(license);
 			}
 		} catch (Exception e) {
@@ -172,20 +185,104 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 		return tradeLicenses;
 	}
 
-	public List<LicenseFeeDetailEntity> getFeeDetails(){
-		//TODO Query for LicenseFeeDetail for a given license
-		// financialYear should return as financialYearRange instead of id
-		return null;
+	public List<LicenseFeeDetailSearchEntity> getFeeDetails(TradeLicenseSearchEntity license,RequestInfo requestInfo){
+		
+		String query = buildFeeDetailsSearchQuery(license.getId().intValue());
+		List<LicenseFeeDetailSearchEntity> licenses = executeFeeDetailsQuery(query,license,requestInfo);
+	
+		return licenses;
 	}
 	
-	public List<SupportDocumentEntity> getSupportDocuments(){
-		//TODO Query for SupportDocument for a given license
-		// 
-		return null;
+	private List<LicenseFeeDetailSearchEntity> executeFeeDetailsQuery(String query,TradeLicenseSearchEntity license,RequestInfo requestInfo) {
+	
+		//preparing request info wrapper for the rest api calls
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		FinancialYearContract finYearContract ;
+		MapSqlParameterSource parameter = new MapSqlParameterSource();
+		List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(query, parameter);
+		List<LicenseFeeDetailSearchEntity> feeDetails = new ArrayList<LicenseFeeDetailSearchEntity>();
+		for (Map<String, Object> row : rows) {
+			LicenseFeeDetailSearchEntity feeDetail = new LicenseFeeDetailSearchEntity();
+			feeDetail.setId(getLong(row.get("id")));
+			feeDetail.setAmount(getDouble(row.get("amount")));
+			feeDetail.setPaid(getBoolean(row.get("paid")));
+			feeDetail.setLicenseId(getLong(row.get("licenseid")));
+			feeDetail.setFinancialYear(getString(row.get("financialyear")));
+			feeDetail.setCreatedBy(getString(row.get("createdby")));
+			feeDetail.setCreatedTime(getLong(row.get("createdtime")));
+			feeDetail.setLastModifiedBy(getString(row.get("lastmodifiedby")));
+			feeDetail.setLastModifiedTime(getLong(row.get("lastmodifiedtime")));
+			
+			 finYearContract = financialYearRepository.findFinancialYearById(license.getTenantId(), getString(row.get("financialyear")) , requestInfoWrapper);
+			 if( finYearContract != null){
+				 feeDetail.setFinancialYear(finYearContract.getFinYearRange());
+			 }
+			 
+			feeDetails.add(feeDetail);
+			
+		}
+		return feeDetails;
+	}
+
+	private String buildFeeDetailsSearchQuery(Integer licenseId){
+		StringBuilder builder = new StringBuilder("select * from egtl_fee_details where ");
+		builder.append("licenseid = ");
+		builder.append(licenseId);
+		return builder.toString();
+	}
+
+	public List<SupportDocumentSearchEntity> getSupportDocuments(TradeLicenseSearchEntity license,RequestInfo requestInfo){
+	
+		String query = buildSupportedSearchQuery(license.getId().intValue());
+		List<SupportDocumentSearchEntity> supportedDocs = executeSupportedDocumentQuery(query,license,requestInfo);
+		
+		return supportedDocs;
+	}
+	
+	
+	private List<SupportDocumentSearchEntity> executeSupportedDocumentQuery(String query,TradeLicenseSearchEntity license,RequestInfo requestInfo){
+		
+		//preparing request info wrapper for the rest api calls
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		DocumentTypeResponse documentTypeResponse;
+		MapSqlParameterSource parameter = new MapSqlParameterSource();
+		List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(query, parameter);
+		List<SupportDocumentSearchEntity> supportedDocuments = new ArrayList<SupportDocumentSearchEntity>();
+		for (Map<String, Object> row : rows) {
+			SupportDocumentSearchEntity supportedDocument = new SupportDocumentSearchEntity();
+			supportedDocument.setId(getLong(row.get("id")));
+			supportedDocument.setDocumentTypeId(getLong(row.get("documenttypeid")));
+			supportedDocument.setFileStoreId(getString(row.get("filestoreid")));
+			supportedDocument.setComments(getString(row.get("comments")));
+			supportedDocument.setLicenseId(getLong(row.get("licenseid")));
+			supportedDocument.setCreatedBy(getString(row.get("createdby")));
+			supportedDocument.setCreatedTime(getLong(row.get("createdtime")));
+			supportedDocument.setLastModifiedBy(getString(row.get("lastmodifiedby")));
+			supportedDocument.setLastModifiedTime(getLong(row.get("lastmodifiedtime")));
+		
+			documentTypeResponse = documentTypeRepository.findById( requestInfoWrapper,license.getTenantId(),supportedDocument.getDocumentTypeId());
+			if( documentTypeResponse != null & documentTypeResponse.getDocumentTypes().size() >0 ){
+				supportedDocument.setDocumentTypeName(documentTypeResponse.getDocumentTypes().get(0).getName());
+			}
+			supportedDocuments.add(supportedDocument);
+			
+		}
+		return supportedDocuments;
+	}
+	
+	private String buildSupportedSearchQuery(Integer licenseId) {
+	
+		StringBuilder builder = new StringBuilder("select * from egtl_support_document where ");
+		builder.append("licenseid = ");
+		builder.append(licenseId);
+		
+		return builder.toString();
 	}
 	
 	public String buildSearchQuery(String tenantId, Integer pageSize, Integer pageNumber, String sort, String active,
-			String tradeLicenseId, String applicationNumber, String licenseNumber, String oldLicenseNumber,
+			Integer[] ids, String applicationNumber, String licenseNumber, String oldLicenseNumber,
 			String mobileNumber, String aadhaarNumber, String emailId, String propertyAssesmentNo, Integer adminWard,
 			Integer locality, String ownerName, String tradeTitle, String tradeType, Integer tradeCategory,
 			Integer tradeSubCategory,String legacy, Integer status, MapSqlParameterSource parameter) {
@@ -209,9 +306,20 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 
 		}
 		
-		if (tradeLicenseId != null && !tradeLicenseId.isEmpty()) {
-			searchSql.append(" AND id = :id ");
-			parameter.addValue("id",tradeLicenseId);
+		if (ids != null && ids.length > 0) {
+
+			String searchIds = "";
+			int count = 1;
+			for (Integer id : ids) {
+
+				if (count < ids.length)
+					searchIds = searchIds + id + ",";
+				else
+					searchIds = searchIds + id;
+
+				count++;
+			}
+			searchSql.append(" AND id IN (" + searchIds + ") ");
 		}
 		
 		if (applicationNumber != null && !applicationNumber.isEmpty()) {

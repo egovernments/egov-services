@@ -192,7 +192,7 @@ constructor(props) {
                             errorText={fieldErrors.owner ? (fieldErrors.owner.name ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.name}</span>:""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.name:""}
                             onChange={(e) => {
-								handleChangeOwner(e,"owner" ,"name", true, "");
+								handleChangeOwner(e,"owner" ,"name", true, /^[a-zA-Z ]*$/g);
                                 //handleChangeNextOne(e,"owner" ,"name", false, "");
                               }
                             }
@@ -330,7 +330,7 @@ constructor(props) {
                             floatingLabelText={translate('pt.create.groups.ownerDetails.fields.percentageOfOwnerShip')}
                             errorText={fieldErrors.owner ? (fieldErrors.owner.ownerShipPercentage ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.ownerShipPercentage}</span>:""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.ownerShipPercentage:""}
-                            onChange={(e) => handleChangeNextOne(e,"owner", "ownerShipPercentage", false, /^[1-9][0-9]?$|^100$/g)}
+                            onChange={(e) => handleChangeOwner(e,"owner", "ownerShipPercentage", false, /^[1-9][0-9]?$|^100$/g)}
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                             underlineStyle={styles.underlineStyle}
                             underlineFocusStyle={styles.underlineFocusStyle}
@@ -405,7 +405,7 @@ constructor(props) {
                                 <th>{translate('pt.create.groups.ownerDetails.fields.guardianRelation')}</th>
                                 <th>{translate('pt.create.groups.ownerDetails.fields.isPrimaryOwner')}</th>
                                 <th>{translate('pt.create.groups.ownerDetails.fields.guardian')}</th>
-]                                <th>{translate('pt.create.groups.ownerDetails.fields.percentageOfOwnerShip')}</th>
+                               <th>{translate('pt.create.groups.ownerDetails.fields.percentageOfOwnerShip')}</th>
                                 <th></th>               
                               </tr>
                             </thead>

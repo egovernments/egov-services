@@ -24,7 +24,7 @@ var dat = {
           "isDisabled": false,
           "requiredErrMsg": "",
           "patternErrMsg": "",
-  			"values": [{"label":"With Property", "value":true},{"label":"Without Property", "value":false}],
+  			"values": [{"label":"wc.group.withProperty", "value":true},{"label":"wc.group.withoutProperty", "value":false}],
   			"defaultValue":true,
         "showHideFields": [{
                "ifValue": false,
@@ -182,7 +182,7 @@ var dat = {
           {
             "name": "Is Primary?",
             "jsonPath": "Connection.connectionOwner.isPrimaryOwner",
-            "label": "",
+            "label": "employee.Assignment.fields.primary",
             "pattern": "",
             "type": "radio",
             "isRequired": false,
@@ -304,7 +304,7 @@ var dat = {
           {
             "name": "noOfFloors",
             "jsonPath": "Connection.asset.noOfFloors",
-            "label": "No of floors",
+            "label": "wc.create.groups.applicantDetails.noOfFloors",
             "pattern": "",
             "type": "number",
             "isRequired": false,
@@ -515,7 +515,7 @@ var dat = {
           {
             "name": "Sequence No",
             "jsonPath": "Connection.billSequenceNumber",
-            "label": "Sequence No",
+            "label": "wc.create.groups.connectionDetails.fields.billingNumber",
             "pattern": "^(0|[1-9][0-9]*)$",
             "type": "number",
             "isRequired": true,
@@ -526,7 +526,7 @@ var dat = {
           {
             "name": "PlumberName",
             "jsonPath": "Connection.plumberName",
-            "label": "PlumberName",
+            "label": "wc.create.groups.connectionDetails.fields.plumberName",
             "pattern": "",
             "type": "textarea",
             "isRequired": false,
@@ -537,7 +537,7 @@ var dat = {
           {
             "name": "NoOfTaps",
             "jsonPath": "Connection.numberOfTaps",
-            "label": "No of Taps",
+            "label": "wc.create.groups.connectionDetails.fields.noOfTaps",
             "pattern": "^(0|[1-9][0-9]*)$",
             "type": "number",
             "isRequired": false,
@@ -579,7 +579,7 @@ var dat = {
           {
             "name": "Outside ULB",
             "jsonPath": "Connection.outsideULB",
-            "label": "Outside ULB",
+            "label": "wc.create.groups.connectionDetails.fields.outSide",
             "pattern": "",
             "type": "checkbox",
             "isRequired": false,
@@ -589,22 +589,22 @@ var dat = {
           }
         ]
       },
-      {
-        "label": "wc.create.groups.fileDetails.title",
-        "name": "Documents",
-        "fields": [{
-          "name": "File",
-          "jsonPath": "Connection.documents",
-          "type": "documentList",
-          "pathToArray": "DocumentTypeApplicationTypes",
-          "displayNameJsonPath": "documentType",
-          "url": "/wcms/masters/documenttype-applicationtype/_search?applicationType=NEWCONNECTION",
-          "autoFillFields": [{
-            "name": "document",
-            "jsonPath": "documentTypeId"
-          }]
-        }]
-      },
+      // {
+      //   "label": "wc.create.groups.fileDetails.title",
+      //   "name": "Documents",
+      //   "fields": [{
+      //     "name": "File",
+      //     "jsonPath": "Connection.documents",
+      //     "type": "documentList",
+      //     "pathToArray": "DocumentTypeApplicationTypes",
+      //     "displayNameJsonPath": "documentType",
+      //     "url": "/wcms/masters/documenttype-applicationtype/_search?applicationType=NEWCONNECTION",
+      //     "autoFillFields": [{
+      //       "name": "document",
+      //       "jsonPath": "documentTypeId"
+      //     }]
+      //   }]
+      // },
       {
         "label": "wc.create.groups.approvalDetails.title",
         "name": "ApprovalDetails",
@@ -704,14 +704,14 @@ var dat = {
             {
               "name": "With Property",
               "jsonPath": "Connection[0].withProperty",
-              "label": "With Property",
+              "label": "wc.group.withProperty",
               "pattern": "",
               "type": "radio",
               "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": "",
-  			"values": [{"label":"With Property", "value":true},{"label":"Without Property", "value":false}],
+  			"values": [{"label":"wc.group.withProperty", "value":true},{"label":"wc.group.withoutProperty", "value":false}],
   			"defaultValue":true,
         "showHideFields": [{
                "ifValue": false,
@@ -742,7 +742,7 @@ var dat = {
           "fields": [
             {
               "name": "NameOfApplicant",
-              "jsonPath": "Connection.connectionOwner.name",
+              "jsonPath": "Connection[0].connectionOwner.name",
               "label": "wc.create.groups.applicantDetails.nameOfApplicant",
               "pattern": "",
               "type": "text",
@@ -870,7 +870,7 @@ var dat = {
             {
               "name": "Is Primary?",
               "jsonPath": "Connection[0].connectionOwner.isPrimaryOwner",
-              "label": "",
+              "label": "employee.Assignment.fields.primary",
               "pattern": "",
               "type": "radio",
               "isRequired": false,
@@ -1001,17 +1001,6 @@ var dat = {
             "label": "wc.create.groups.applicantDetails.zone",
             "pattern": "",
             "type": "textarea",
-            "isRequired": false,
-            "isDisabled": true,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "adharNumber",
-            "jsonPath": "Connection[0].property.adharNumber",
-            "label": "No of floors",
-            "pattern": "",
-            "type": "aadhar",
             "isRequired": false,
             "isDisabled": true,
             "requiredErrMsg": "",
@@ -1212,7 +1201,7 @@ var dat = {
           {
             "name": "Sequence No",
             "jsonPath": "Connection[0].billSequenceNumber",
-            "label": "Sequence No",
+            "label": "wc.create.groups.connectionDetails.fields.billingNumber",
             "pattern": "^(0|[1-9][0-9]*)$",
             "type": "number",
             "isRequired": true,
@@ -1223,7 +1212,7 @@ var dat = {
           {
             "name": "PlumberName",
             "jsonPath": "Connection[0].plumberName",
-            "label": "PlumberName",
+            "label": "wc.create.groups.connectionDetails.fields.plumberName",
             "pattern": "",
             "type": "textarea",
             "isRequired": false,
@@ -1234,7 +1223,7 @@ var dat = {
           {
             "name": "NoOfTaps",
             "jsonPath": "Connection[0].numberOfTaps",
-            "label": "No of Taps",
+            "label": "wc.create.groups.connectionDetails.fields.noOfTaps",
             "pattern": "^(0|[1-9][0-9]*)$",
             "type": "number",
             "isRequired": false,
@@ -1245,7 +1234,7 @@ var dat = {
           {
             "name": "Outside ULB",
             "jsonPath": "Connection[0].outsideULB",
-            "label": "Outside ULB",
+            "label": "wc.create.groups.connectionDetails.fields.outSide",
             "pattern": "",
             "type": "checkbox",
             "isRequired": false,
@@ -1255,97 +1244,97 @@ var dat = {
           }
         ]
       },
-      {
-        "label": "wc.create.groups.fileDetails.title",
-        "name": "Documents",
-        "multiple": false,
-        "fields": [
-          // {
-          // 	"name": " ",
-          // 	"jsonPath": "Connection.documents[0].fileStoreId",
-          // 	"label": "wc.create.groups.fileDetails.fields.PTaxReciept",
-          // 	"pattern": "",
-          // 	"type": "singleFileUpload",
-          // 	"isRequired": true,
-          // 	"isDisabled": false,
-          // 	"requiredErrMsg": "",
-          // 	"patternErrMsg": "",
-          // 	"defaultValue": "4567"
-          // },
-          {
-            "name": " ",
-            "jsonPath": "Connection[0].documents[0].fileStoreId",
-            "label": "wc.create.groups.fileDetails.fields.PTaxReciept",
-            "pattern": "",
-            "type": "text",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-            "defaultValue": "4567",
-            "isHidden": true
-          },
-          {
-            "name": " ",
-            "jsonPath": "Connection[0].documents[0].document",
-            "label": "wc.create.groups.fileDetails.fields.PTaxReciept",
-            "pattern": "",
-            "isHidden": true,
-            "type": "singleFileUpload",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-            "defaultValue": "1"
-          },
-          {
-            "name": " ",
-            "jsonPath": "Connection[0].documents[0].name",
-            "label": "wc.create.groups.fileDetails.fields.PTaxReciept",
-            "pattern": "",
-            "type": "singleFileUpload",
-            "isRequired": true,
-            "isHidden": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-            "defaultValue": "Test"
-          },
-          {
-            "name": " ",
-            "jsonPath": "Connection[0].documents[1]",
-            "label": "wc.create.groups.fileDetails.fields.DistributionLineLocationMap",
-            "pattern": "",
-            "type": "singleFileUpload",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": " ",
-            "jsonPath": "Connection[0].documents[2]",
-            "label": "wc.create.groups.fileDetails.fields.WhiteRationCard",
-            "pattern": "",
-            "type": "singleFileUpload",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": " ",
-            "jsonPath": "Connection[0].documents[3]",
-            "label": "wc.create.groups.fileDetails.fields.CourtFeeStamp",
-            "pattern": "",
-            "type": "singleFileUpload",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          }
-        ]
-      },
+      // {
+      //   "label": "wc.create.groups.fileDetails.title",
+      //   "name": "Documents",
+      //   "multiple": false,
+      //   "fields": [
+      //     // {
+      //     // 	"name": " ",
+      //     // 	"jsonPath": "Connection.documents[0].fileStoreId",
+      //     // 	"label": "wc.create.groups.fileDetails.fields.PTaxReciept",
+      //     // 	"pattern": "",
+      //     // 	"type": "singleFileUpload",
+      //     // 	"isRequired": true,
+      //     // 	"isDisabled": false,
+      //     // 	"requiredErrMsg": "",
+      //     // 	"patternErrMsg": "",
+      //     // 	"defaultValue": "4567"
+      //     // },
+      //     {
+      //       "name": " ",
+      //       "jsonPath": "Connection[0].documents[0].fileStoreId",
+      //       "label": "wc.create.groups.fileDetails.fields.PTaxReciept",
+      //       "pattern": "",
+      //       "type": "text",
+      //       "isRequired": true,
+      //       "isDisabled": false,
+      //       "requiredErrMsg": "",
+      //       "patternErrMsg": "",
+      //       "defaultValue": "4567",
+      //       "isHidden": true
+      //     },
+      //     {
+      //       "name": " ",
+      //       "jsonPath": "Connection[0].documents[0].document",
+      //       "label": "wc.create.groups.fileDetails.fields.PTaxReciept",
+      //       "pattern": "",
+      //       "isHidden": true,
+      //       "type": "singleFileUpload",
+      //       "isRequired": true,
+      //       "isDisabled": false,
+      //       "requiredErrMsg": "",
+      //       "patternErrMsg": "",
+      //       "defaultValue": "1"
+      //     },
+      //     {
+      //       "name": " ",
+      //       "jsonPath": "Connection[0].documents[0].name",
+      //       "label": "wc.create.groups.fileDetails.fields.PTaxReciept",
+      //       "pattern": "",
+      //       "type": "singleFileUpload",
+      //       "isRequired": true,
+      //       "isHidden": true,
+      //       "isDisabled": false,
+      //       "requiredErrMsg": "",
+      //       "patternErrMsg": "",
+      //       "defaultValue": "Test"
+      //     },
+      //     {
+      //       "name": " ",
+      //       "jsonPath": "Connection[0].documents[1]",
+      //       "label": "wc.create.groups.fileDetails.fields.DistributionLineLocationMap",
+      //       "pattern": "",
+      //       "type": "singleFileUpload",
+      //       "isRequired": true,
+      //       "isDisabled": false,
+      //       "requiredErrMsg": "",
+      //       "patternErrMsg": ""
+      //     },
+      //     {
+      //       "name": " ",
+      //       "jsonPath": "Connection[0].documents[2]",
+      //       "label": "wc.create.groups.fileDetails.fields.WhiteRationCard",
+      //       "pattern": "",
+      //       "type": "singleFileUpload",
+      //       "isRequired": true,
+      //       "isDisabled": false,
+      //       "requiredErrMsg": "",
+      //       "patternErrMsg": ""
+      //     },
+      //     {
+      //       "name": " ",
+      //       "jsonPath": "Connection[0].documents[3]",
+      //       "label": "wc.create.groups.fileDetails.fields.CourtFeeStamp",
+      //       "pattern": "",
+      //       "type": "singleFileUpload",
+      //       "isRequired": true,
+      //       "isDisabled": false,
+      //       "requiredErrMsg": "",
+      //       "patternErrMsg": ""
+      //     }
+      //   ]
+      // },
       {
         "label": "wc.create.groups.approvalDetails.title",
         "name": "ApprovalDetails",

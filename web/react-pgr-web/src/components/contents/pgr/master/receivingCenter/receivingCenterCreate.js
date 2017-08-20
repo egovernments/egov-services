@@ -83,7 +83,7 @@ class CreateReceivingCenter extends Component {
            "active" : !this.props.createReceivingCenter.active ? false : this.props.createReceivingCenter.active,
            "iscrnrequired" : !this.props.createReceivingCenter.iscrnrequired ? false : this.props.createReceivingCenter.iscrnrequired,
            "orderno" :this.props.createReceivingCenter.orderno,
-           "tenantId":"default"
+           "tenantId":localStorage.getItem("tenantId")
           }
       }
 

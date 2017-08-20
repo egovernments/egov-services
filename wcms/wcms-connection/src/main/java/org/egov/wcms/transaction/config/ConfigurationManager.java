@@ -207,21 +207,4 @@ public class ConfigurationManager {
     @Value("${default.password}")
     private String defaultPassword;
     
-    @Value("${egov.services.pt_property.hostname}")
-    private String propertTaxServiceBasePathTopic;
-
-    @Value("${egov.services.pt_property_propertytype.searchpath.name}")
-    private String propertyTaxServicePropertyTypeSearchByNamePathTopic;
-
-    @Value("${egov.services.pt_property_propertytype.searchpath.id}")
-    private String propertyTaxServicePropertyTypeSearchByIdPathTopic;
-
-    @Value("${egov.services.pt_property_usagetype.searchpath.code}")
-    private String propertyTaxServiceUsageTypeSearchByCodePathTopic;
-
-    @Value("${egov.services.pt_property_usagetype.searchpath.name}")
-    private String propertyTaxServiceUsageTypeSearchByNamePathTopic;
-
-    @Value("${egov.services.pt_property_usagetype.searchpath.id}")
-    private String propertyTaxServiceUsageTypeSearchByIdPathTopic;
 }

@@ -866,7 +866,7 @@ public class PropertyServiceImpl implements PropertyService {
 		if (propertyResponse != null) {
 			Property property = propertyResponse.getProperties().get(0);
 
-			SimpleDateFormat dbDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+			SimpleDateFormat dbDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 			Date occupancyDate = dbDateFormat.parse(property.getOccupancyDate());
 			String occupancyDateStr = new SimpleDateFormat(propertiesManager.getSimpleDateFormat())
 					.format(occupancyDate);

@@ -165,7 +165,7 @@ class grievanceCreate extends Component {
 
   getCityDetails = () => {
     //Get City details for tenant
-    Api.commonApiPost("/tenant/v1/tenant/_search",{code : localStorage.getItem('tenant') || 'default'}).then(function(response)
+    Api.commonApiPost("/tenant/v1/tenant/_search",{code : localStorage.getItem('tenantId') || 'default'}).then(function(response)
     {
       _this.setState({
         citylat:response.tenant[0].city.latitude,

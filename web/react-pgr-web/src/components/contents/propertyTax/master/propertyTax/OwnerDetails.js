@@ -405,7 +405,7 @@ constructor(props) {
                                 <th>{translate('pt.create.groups.ownerDetails.fields.guardianRelation')}</th>
                                 <th>{translate('pt.create.groups.ownerDetails.fields.isPrimaryOwner')}</th>
                                 <th>{translate('pt.create.groups.ownerDetails.fields.guardian')}</th>
-]                                <th>{translate('pt.create.groups.ownerDetails.fields.percentageOfOwnerShip')}</th>
+                               <th>{translate('pt.create.groups.ownerDetails.fields.percentageOfOwnerShip')}</th>
                                 <th></th>               
                               </tr>
                             </thead>

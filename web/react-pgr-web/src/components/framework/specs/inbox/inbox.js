@@ -5,7 +5,7 @@ var rooms = {
  "jsonPath": "rooms",
  "groups": [
   {
-   "label": "Room",
+   "label": "pt.create.groups.room",
    "name": "Room",
    "multiple": true,
    "jsonPath":"properties[0].propertyDetail.floors[0].units[0]",

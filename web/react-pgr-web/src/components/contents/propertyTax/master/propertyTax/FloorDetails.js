@@ -692,10 +692,9 @@ deleteOccupantName = (index) =>{
 				  open={this.state.dialogOpen}
 				  onRequestClose={this.handleDialogClose}
 				  style={{height:'auto'}}
+				  autoScrollBodyContent={true}
 				>
-				  
 					{occupantNames()}
-				
 				</Dialog>
 			)
 		}

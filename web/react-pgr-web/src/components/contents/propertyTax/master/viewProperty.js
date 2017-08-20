@@ -603,6 +603,54 @@ class ViewProperty extends Component {
 								  })}
                               
                           </Card>
+						  
+						  <Card className="uiCard">
+							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>Assessment details</div>} />
+                              <CardText>
+									<Col md={12} xs={12}>
+											<Row>
+											  <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>Reason For Creation</div>
+												   {item.creationReason || 'NA'}
+											  </Col>
+											  <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>Property Type</div>
+												   {item.propertyDetail.propertyType || 'NA'}
+											  </Col>
+											  <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>Property Sub Type</div>
+												   {item.propertyDetail.category || 'NA'}
+											  </Col>
+											  <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>Usage Type</div>
+												   'NA'
+											  </Col>
+											   <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>Usage Sub Type</div>
+												   
+											  </Col>
+											  <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>Total Area</div>
+												   'NA'
+											  </Col>
+											  <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>Sequence No.</div>
+												   {item.sequenceNo || 'NA'}
+											  </Col>
+											  <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>Building Permission Number</div>
+												   'NA'
+											  </Col>
+											  <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>Building Permission Date</div>
+												   'NA'
+											  </Col>
+											</Row>
+										 
+									</Col>
+									<div className="clearfix"></div>
+                              </CardText>
+                          </Card>
 					
 						  <Card className="uiCard">
 							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>Property Factors</div>} />

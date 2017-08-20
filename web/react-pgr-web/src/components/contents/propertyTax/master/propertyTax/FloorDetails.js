@@ -197,9 +197,7 @@ class FloorDetails extends Component {
 		let {floorDetails} = this.props;
 		
 		floorDetails.floorsArr = [];
-		
-		var allFloors = this.state.floorNumber;
-	  
+			  
 	    var allRooms = floorDetails.floors;		
 		
 		if(!allRooms){
@@ -1160,7 +1158,7 @@ deleteOccupantName = (index) =>{
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.builtupArea? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.builtupArea}</span>:"" ): ""}
 														  value={floorDetails.floor ? floorDetails.floor.builtupArea : ""}
 														  onChange={(e) => {
-															  handleChangeFloor(e, "floor","builtupArea", true, "")
+															  handleChangeFloor(e, "floor","builtupArea", true, /^[0-9.]+$/)
 															}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
@@ -1194,7 +1192,7 @@ deleteOccupantName = (index) =>{
 														  value={floorDetails.floor ? floorDetails.floor.exemptedArea : ""}
 														  onChange={(e) => {	  
 															  calcAssessableArea(e,'exempted');
-															  handleChangeNextOne(e,"floor" , "exemptedArea", false, "")}}
+															  handleChangeNextOne(e,"floor" , "exemptedArea", false, /^[0-9]+$/i)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}

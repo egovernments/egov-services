@@ -289,7 +289,7 @@ class PropertyAddress extends Component {
                                                           value: value
                                                         }
                                                       };
-                                                      handleChange(e, "locality", true, "")}
+                                                      handleChange(e, "locality", false, "")}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
@@ -311,7 +311,7 @@ class PropertyAddress extends Component {
                                                           value: value
                                                         }
                                                       };
-                                                      handleChange(e, "electionWard", true, "")}
+                                                      handleChange(e, "electionWard", false, "")}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
@@ -437,7 +437,7 @@ class PropertyAddress extends Component {
 												  hintText="201301"
                                                   errorText={fieldErrors.pin ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.pin}</span> : ""}
                                                   value={propertyAddress.pin ? propertyAddress.pin : ""}
-                                                  onChange={(e) => handleChange(e, "pin", false, /^\d{6}$/g)}
+                                                  onChange={(e) => handleChange(e, "pin", true, /^\d{6}$/g)}
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}

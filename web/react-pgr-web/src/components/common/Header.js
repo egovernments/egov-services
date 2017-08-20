@@ -66,7 +66,7 @@ const getTenantId = () => {
 
 const getThemefile = function(tenantId, cb) {
     $.ajax({
-        url: "https://raw.githubusercontent.com/abhiegov/test/master/tenantDetails.json",
+        url: "https://raw.githubusercontent.com/abhiegov/test/master/tenantDetails.json?timestamp="+new Date().getTime(),
         success: function(res) {
             var tenantContext = JSON.parse(res)["details"][tenantId];
             cb(tenantContext);

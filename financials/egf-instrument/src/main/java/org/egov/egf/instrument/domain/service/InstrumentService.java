@@ -114,7 +114,7 @@ public class InstrumentService {
 		return instrumentRepository.update(instruments, requestInfo);
 
 	}
-	
+
 	@Transactional
 	public List<Instrument> delete(List<Instrument> instruments, BindingResult errors, RequestInfo requestInfo) {
 
@@ -152,14 +152,14 @@ public class InstrumentService {
 			case ACTION_UPDATE:
 				Assert.notNull(instruments, "Instruments to update must not be null");
 				for (Instrument instrument : instruments) {
-					Assert.notNull(instrument.getId(), "Bank ID to update must not be null");
+					Assert.notNull(instrument.getId(), "Instrument ID to update must not be null");
 					validator.validate(instrument, errors);
 				}
 				break;
 			case ACTION_DELETE:
 				Assert.notNull(instruments, "Instruments to delete must not be null");
 				for (Instrument instrument : instruments) {
-					validator.validate(instrument, errors);
+					Assert.notNull(instrument.getId(), "Instrument ID to delete must not be null");
 				}
 				break;
 			default:
@@ -244,7 +244,7 @@ public class InstrumentService {
 	public Instrument update(Instrument instrument) {
 		return instrumentRepository.update(instrument);
 	}
-	
+
 	@Transactional
 	public Instrument delete(Instrument instrument) {
 		return instrumentRepository.delete(instrument);
@@ -269,7 +269,7 @@ public class InstrumentService {
 		instrumentsToUpdate.add(instrument);
 		return instrumentRepository.update(instrumentsToUpdate, requestInfo);
 	}
-	
+
 	public List<Instrument> dishonor(InstrumentRequest instrumentDepositRequest, BindingResult errors,
 			RequestInfo requestInfo) {
 		Instrument instrument = new Instrument();

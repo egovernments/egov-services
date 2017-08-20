@@ -490,6 +490,11 @@ var localization_EN_Data = {
 	"pt.create.groups.propertyAddress.invalidValue": "Invalid value",
 	"pt.create.groups.propertyAddress.addName": "Add Name",
 	
+	"pt.create.groups.acknowledgement.forwarded": "Forwarded Successfully",
+	"pt.create.groups.acknowledgement.approved": "Approved Successfully",
+	"pt.create.groups.acknowledgement.success":"Your new property application has been submitted",
+	"pt.create.groups.acknowledgement.demandSuccess": "Tax and Collection added/updated Successfully",
+	"pt.create.groups.acknowledgement.dataEntrySuccess": "Property details saved and property number generated as",
 	
 
     //employee Object
@@ -1656,6 +1661,12 @@ var localization_MR_Data = {
 	"pt.create.groups.propertyAddress.taxDetails": "Tax Details-Marathi",
 	"pt.create.groups.propertyAddress.invalidValue": "Invalid value-Marathi",
 	"pt.create.groups.propertyAddress.addName": "Add Name-Marathi",
+	
+	"pt.create.groups.acknowledgement.forwarded": "Forwarded Successfully",
+	"pt.create.groups.acknowledgement.approved": "Approved Successfully",
+	"pt.create.groups.acknowledgement.success":"Your new property application has been submitted",
+	"pt.create.groups.acknowledgement.demandSuccess": "Tax and Collection added/updated Successfully",
+	"pt.create.groups.acknowledgement.dataEntrySuccess": "Property details saved and property number generated as",
 	
     "pt.create.groups.propertyAddress.fields.lift": "लिफ्ट",
     "pt.create.groups.propertyAddress.fields.toilet": " शौचालय",

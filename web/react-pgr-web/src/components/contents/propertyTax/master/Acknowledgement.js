@@ -15,7 +15,7 @@ import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import Checkbox from 'material-ui/Checkbox';
-
+import {translate} from '../../../common/common';
 
 var flag = 0;
 const styles = {
@@ -130,7 +130,7 @@ class Acknowledgement extends Component {
 									<Col xs={12} md={12}>
 									  <Row>
 										<Col xs={12} md={12} style={{textAlign:'center',paddingTop:15,fontSize: 16}}>
-											Your new property application has been submitted : <span style={{fontWeight:500}}>{this.state.ack}</span>
+											{translate('pt.create.groups.acknowledgement.success')} : <span style={{fontWeight:500}}>{this.state.ack}</span>
 										</Col>
 									  </Row>
 									</Col>

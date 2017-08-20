@@ -15,6 +15,7 @@ import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import Checkbox from 'material-ui/Checkbox';
+import {translate} from '../../../common/common';
 
 
 var flag = 0;
@@ -130,7 +131,7 @@ class DataEntryAcknowledgement extends Component {
 									<Col xs={12} md={12}>
 									  <Row>
 										<Col xs={12} md={12} style={{textAlign:'center',paddingTop:15,fontSize: 16}}>
-											Property details saved and property number generated as : <span style={{fontWeight:500}}>{this.state.upicNumber}</span>
+											{translate('pt.create.groups.acknowledgement.dataEntrySuccess')} : <span style={{fontWeight:500}}>{this.state.upicNumber}</span>
 										</Col>
 									  </Row>
 									</Col>

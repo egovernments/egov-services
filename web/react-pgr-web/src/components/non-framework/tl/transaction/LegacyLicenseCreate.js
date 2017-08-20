@@ -257,59 +257,78 @@ class LegacyLicenseCreate extends Component {
   }
 
   create=(e) => {
+      e.preventDefault();
+    let isFormValid=true;
     let self = this, _url;
-    e.preventDefault();
-    self.props.setLoadingStatus('loading');
     var formData = {...this.props.formData};
-    formData.licenses[0]["tenantId"]  = localStorage.getItem("tenantId") || "default";
 
-    if(self.props.moduleName && self.props.actionName && self.props.metaData && self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].tenantIdRequired) {
-      if(!formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName])
-        formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName] = {};
-
-      if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName].constructor == Array) {
-        for(var i=0; i< formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName].length; i++) {
-          formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][i]["tenantId"] = localStorage.getItem("tenantId") || "default";
+    if(formData.licenses[0].isPropertyOwner)
+    {
+        if (!formData.licenses[0].agreementDate || !formData.licenses[0].agreementNo) {
+          isFormValid=false;
         }
-      } else
-        formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["tenantId"] = localStorage.getItem("tenantId") || "default";
     }
 
-    if(/\{.*\}/.test(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url)) {
-      _url = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url;
-      var match = _url.match(/\{.*\}/)[0];
-      var jPath = match.replace(/\{|}/g,"");
-      _url = _url.replace(match, _.get(formData, jPath));
-    }
+    if (isFormValid) {
 
-    //Check if documents, upload and get fileStoreId
-    if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"] && formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"].length) {
-      let documents = [...formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"]];
-      let _docs = [];
-      let counter = documents.length, breakOut = 0;
-      for(let i=0; i<documents.length; i++) {
-        fileUpload(documents[i].fileStoreId, self.props.moduleName, function(err, res) {
-          if(breakOut == 1) return;
-          if(err) {
-            breakOut = 1;
-            self.props.setLoadingStatus('hide');
-            self.props.toggleSnackbarAndSetText(true, err, false, true);
-          } else {
-            _docs.push({
-              ...documents[i],
-              fileStoreId: res.files[0].fileStoreId
-            })
-            counter--;
-            if(counter == 0 && breakOut == 0) {
-              formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"] = _docs;
-              self.makeAjaxCall(formData, _url);
-            }
+
+      self.props.setLoadingStatus('loading');
+
+      formData.licenses[0]["tenantId"]  = localStorage.getItem("tenantId") || "default";
+
+      if(self.props.moduleName && self.props.actionName && self.props.metaData && self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].tenantIdRequired) {
+        if(!formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName])
+          formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName] = {};
+
+        if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName].constructor == Array) {
+          for(var i=0; i< formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName].length; i++) {
+            formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][i]["tenantId"] = localStorage.getItem("tenantId") || "default";
           }
-        })
+        } else
+          formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["tenantId"] = localStorage.getItem("tenantId") || "default";
       }
-    } else {
-      self.makeAjaxCall(formData, _url);
+
+      if(/\{.*\}/.test(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url)) {
+        _url = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url;
+        var match = _url.match(/\{.*\}/)[0];
+        var jPath = match.replace(/\{|}/g,"");
+        _url = _url.replace(match, _.get(formData, jPath));
+      }
+
+      //Check if documents, upload and get fileStoreId
+      if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"] && formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"].length) {
+        let documents = [...formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"]];
+        let _docs = [];
+        let counter = documents.length, breakOut = 0;
+        for(let i=0; i<documents.length; i++) {
+          fileUpload(documents[i].fileStoreId, self.props.moduleName, function(err, res) {
+            if(breakOut == 1) return;
+            if(err) {
+              breakOut = 1;
+              self.props.setLoadingStatus('hide');
+              self.props.toggleSnackbarAndSetText(true, err, false, true);
+            } else {
+              _docs.push({
+                ...documents[i],
+                fileStoreId: res.files[0].fileStoreId
+              })
+              counter--;
+              if(counter == 0 && breakOut == 0) {
+                formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"] = _docs;
+                self.makeAjaxCall(formData, _url);
+              }
+            }
+          })
+        }
+      } else {
+        self.makeAjaxCall(formData, _url);
+      }
     }
+    else {
+      self.props.toggleSnackbarAndSetText(true, "Please enter required field", false, true);
+    }
+
+
 
   }
 

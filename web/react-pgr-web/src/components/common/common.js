@@ -777,7 +777,7 @@ var localization_EN_Data = {
   "tl.search.result.groups.mobileNumber": "Mobile Number",
   "tl.search.result.groups.propertyAssessmentNumber": "Property Assessment Number",
   "tl.search.result.groups.financialYear": "Financial Year",
-  "tl.search.result.groups.applicationStatus": "Application Status",
+  "tl.search.result.groups.applicationStatus": "Application Type",
   "tl.search.result.groups.licenseActive": "License Active",
 
   "tl.view.groups.tradeOwnerDetails": "Trade Owner Details",

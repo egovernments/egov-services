@@ -375,6 +375,7 @@ class Inbox extends Component {
 			workflow.workflowDepartment = workflowDetails.department || null;
 			workflow.workflowDesignation = workflowDetails.designation || null;
 			workflow.approver =workflowDetails.assignee || null;
+			workflow.initiatorPosition =workflowDetails.initiatorPosition || null;
 		}
 		
 		var query = {
@@ -465,9 +466,10 @@ class Inbox extends Component {
 	 
 	  var data = this.state.searchResult;
 	  
-	  	var workFlowDetails = {
-				"department": workflow.workflowDepartment || null,
-				"designation":workflow.workflowDesignation || null,
+		var workFlowDetails = {
+				"department": workflow.workflowDepartment || 'department',
+				"designation":workflow.workflowDesignation || 'designation',
+				"initiatorPosition": workflow.initiatorPosition || null,
 				"assignee": null,
 				"action": actionName,
 				"status": status
@@ -476,6 +478,7 @@ class Inbox extends Component {
 	  if(actionName == 'Forward') {
 		 
 			workFlowDetails.assignee = getPosition(this.state.approver, workflow.approver) || null;
+			workFlowDetails.initiatorPosition = this.state.process.initiatorPosition || null;
 		    localStorage.setItem('inboxStatus', 'Forwarded')
 		  
 	  } else if(actionName == 'Approve') {

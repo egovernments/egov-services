@@ -96,7 +96,7 @@ public class DataIntegrityValidatorForCreateEmployee extends EmployeeCommonValid
 
 		super.validateEmployee(employeeRequest, errors);
 
-		Map<String, List<String>> hrConfigurations = hrMastersService.getHRConfigurations(requestInfoWrapper);
+		Map<String, List<String>> hrConfigurations = hrMastersService.getHRConfigurations(employee.getTenantId(), requestInfoWrapper);
 
 		if (hrConfigurations.get("Autogenerate_employeecode").get(0).equalsIgnoreCase("N") && (employee.getCode() != null)
 				&& duplicateExists("egeis_employee", "code", employee.getCode(), employee.getTenantId())) {

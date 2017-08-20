@@ -79,8 +79,8 @@ public class HRMastersService {
 		return restTemplate.postForObject(url, requestInfoWrapper, PositionResponse.class).getPosition();
 	}
 
-	public Map<String, List<String>> getHRConfigurations(RequestInfoWrapper requestInfoWrapper) {
-		String url = hrMastersURLHelper.hrConfigurationsSearchURL();
+	public Map<String, List<String>> getHRConfigurations(String tenantId, RequestInfoWrapper requestInfoWrapper) {
+		String url = hrMastersURLHelper.hrConfigurationsSearchURL(tenantId);
 		return restTemplate.postForObject(url, requestInfoWrapper, HRConfigurationResponse.class).getHrConfiguration();
 	}
 }

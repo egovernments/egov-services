@@ -206,4 +206,5 @@ public class ConfigurationManager {
     
     @Value("${default.password}")
     private String defaultPassword;
+    
 }

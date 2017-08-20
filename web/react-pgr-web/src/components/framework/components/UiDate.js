@@ -13,7 +13,7 @@ export default class UiNumberField extends Component {
 			m=new Date(this.props.getVal(item.jsonPath)).getMonth()<10?"0"+new Date(this.props.getVal(item.jsonPath)).getMonth():new Date(this.props.getVal(item.jsonPath)).getMonth();
 			d=new Date(this.props.getVal(item.jsonPath)).getDate()<10?"0"+new Date(this.props.getVal(item.jsonPath)).getDate():new Date(this.props.getVal(item.jsonPath)).getDate();
 			// date=y+"-"+("0"+(m-1).toString())+"-"+d;
-			date=y+"-"+m+"-"+d;
+			date=y+"-"+((parseInt(m)+1)>10?(parseInt(m)+1):"0"+(parseInt(m)+1))+"-"+d;
 		}
 		switch (this.props.ui) {
 			case 'google':

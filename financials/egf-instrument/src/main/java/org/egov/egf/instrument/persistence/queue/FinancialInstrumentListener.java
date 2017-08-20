@@ -104,6 +104,23 @@ public class FinancialInstrumentListener {
 			mastersMap.put("instrumentaccountcode_persisted", request);
 			financialProducer.sendMessage(completedTopic, instrumentAccountCodeCompletedKey, mastersMap);
 		}
+		
+		if (mastersMap.get("instrumentaccountcode_delete") != null)
+
+		{
+
+			InstrumentAccountCodeRequest request = objectMapper
+					.convertValue(mastersMap.get("instrumentaccountcode_delete"), InstrumentAccountCodeRequest.class);
+
+			for (InstrumentAccountCodeContract instrumentAccountCodeContract : request.getInstrumentAccountCodes()) {
+				InstrumentAccountCode domain = accountCodeMapper.toDomain(instrumentAccountCodeContract);
+				instrumentAccountCodeService.delete(domain);
+			}
+
+			mastersMap.clear();
+			mastersMap.put("instrumentaccountcode_deleted", request);
+			financialProducer.sendMessage(completedTopic, instrumentAccountCodeCompletedKey, mastersMap);
+		}
 
 		if (mastersMap.get("instrument_create") != null) {
 

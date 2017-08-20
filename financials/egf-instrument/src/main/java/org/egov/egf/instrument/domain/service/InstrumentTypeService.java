@@ -82,7 +82,7 @@ public class InstrumentTypeService {
 		return instrumentTypeRepository.update(instrumentTypes, requestInfo);
 
 	}
-	
+
 	@Transactional
 	public List<InstrumentType> delete(List<InstrumentType> instrumentTypes, BindingResult errors,
 			RequestInfo requestInfo) {
@@ -126,9 +126,9 @@ public class InstrumentTypeService {
 				}
 				break;
 			case ACTION_DELETE:
-				Assert.notNull(instrumenttypes, "Instruments to delete must not be null");
+				Assert.notNull(instrumenttypes, "InstrumentType to delete must not be null");
 				for (InstrumentType instrumenttype : instrumenttypes) {
-					validator.validate(instrumenttype, errors);
+					Assert.notNull(instrumenttype.getId(), "InstrumentType ID to delete must not be null");
 				}
 			default:
 
@@ -139,7 +139,7 @@ public class InstrumentTypeService {
 		return errors;
 
 	}
-	
+
 	@Transactional
 	public InstrumentType delete(InstrumentType instrumentType) {
 		return instrumentTypeRepository.delete(instrumentType);

@@ -8,14 +8,15 @@ export default class UiTextArea extends Component {
 
 	renderTextArea = (item) => {
 		switch (this.props.ui) {
-			case 'google': 
+			case 'google':
 				return (
-					<TextField 
+					<TextField
 						style={{"display": (item.hide ? 'none' : 'inline-block')}}
 						errorStyle={{"float":"left"}}
-						fullWidth={true} 
+						fullWidth={true}
 						multiLine={true}
-						floatingLabelText={item.label + (item.isRequired ? " *" : "")} 
+						rows={2}
+						floatingLabelText={item.label + (item.isRequired ? " *" : "")}
 						value={this.props.getVal(item.jsonPath)}
 						disabled={item.isDisabled}
 						errorText={this.props.fieldErrors[item.jsonPath]}

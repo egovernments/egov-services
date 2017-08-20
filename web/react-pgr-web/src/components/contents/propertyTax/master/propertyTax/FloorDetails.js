@@ -1180,7 +1180,7 @@ deleteOccupantName = (index) =>{
 													
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
-														  floatingLabelText="Carpet Area *"
+														  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.carpetArea')+' *'}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.carpetArea? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.carpetArea}</span> :""): ""}
 														  value={floorDetails.floor ? floorDetails.floor.carpetArea : ""}
 														  onChange={(e) => {
@@ -1196,7 +1196,7 @@ deleteOccupantName = (index) =>{
 													
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
-														  floatingLabelText="Exempted Area "
+														  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.exemptedArea')+' *'}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.exemptedArea ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.exemptedArea}</span> :(this.state.negativeValue ? <span style={{position:"absolute", bottom:-13}}>Invalid value</span>: "" )): (this.state.negativeValue ? <span style={{position:"absolute", bottom:-13}}>Invalid value</span>: "" )}
 														  value={floorDetails.floor ? floorDetails.floor.exemptedArea : ""}
 														  onChange={(e) => {	  
@@ -1212,7 +1212,7 @@ deleteOccupantName = (index) =>{
 
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
-														  floatingLabelText="Occupancy Certificate Number"
+														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.occupancyCertificateNumber')}
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.occupancyCertiNumber? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.occupancyCertiNumber}</span>:"" ): ""}
 														  value={floorDetails.floor ? floorDetails.floor.occupancyCertiNumber : ""}
 														  onChange={(e) => {handleChangeFloor(e,"floor" ,"occupancyCertiNumber", false, /^[a-z0-9]+$/i)}}
@@ -1226,7 +1226,7 @@ deleteOccupantName = (index) =>{
 															
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
-														  floatingLabelText="Building cost"
+														  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.buildingCost')}
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.buildingCost? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.buildingCost}</span>: "" ): "" }
 														  value={floorDetails.floor ? floorDetails.floor.buildingCost : ""}
 														  onChange={(e) => {handleChangeFloor(e,"floor" ,"buildingCost", false, /^[0-9]+$/i)}}
@@ -1240,7 +1240,7 @@ deleteOccupantName = (index) =>{
 													
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
-														  floatingLabelText="Land cost"
+														  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.landCost')}
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.landCost? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.landCost}</span>:"" ): ""}
 														  value={floorDetails.floor ? floorDetails.floor.landCost : ""}
 														  onChange={(e) => {handleChangeFloor(e,"floor" ,"landCost", false, /^[0-9]+$/i)}}
@@ -1269,8 +1269,9 @@ deleteOccupantName = (index) =>{
 														  />
 													  </Col>
 													<Col xs={12} md={12} >
-														{this.state.negativeValue && <p>Exempted area should not be greater than Carpet area</p>}
-														{this.state.newFloorError && <p>You cannot select more than {this.props.noOfFloors} Floors</p>}
+												
+														{this.state.negativeValue && <p style={{marginTop:15, color:'red'}}>Exempted area should not be greater than Carpet area</p>}
+														{this.state.newFloorError && <p style={{marginTop:15, color:'red'}}>You cannot select more than {this.props.noOfFloors} Floors</p>}
 
 													</Col>
 												

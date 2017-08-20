@@ -402,7 +402,7 @@ class PropertyTaxSearch extends Component {
                       <Col xs={12} md={6}>
                         <TextField errorText={fieldErrors.upicNumber
                           ? fieldErrors.upicNumber
-                          : ""} value={propertyTaxSearch.upicNumber?propertyTaxSearch.upicNumber:""} onChange={(e) => handleChange(e, "upicNumber", false, /^\d{3,15}$/g)} hintText="1000120015" floatingLabelText={translate('pt.create.groups.propertyDetails.assessmentNumber')}/>
+                          : ""} maxLength={12} value={propertyTaxSearch.upicNumber?propertyTaxSearch.upicNumber:""} onChange={(e) => handleChange(e, "upicNumber", false, /^[a-zA-Z0-9]+$/g)} hintText="1000120015" floatingLabelText={translate('pt.create.groups.propertyDetails.assessmentNumber')}/>
                       </Col>
                     </Row>
 

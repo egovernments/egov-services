@@ -96,14 +96,14 @@
 
 			<script id="district-option-template" type="text/x-handlebars-template">
 				 {{#each .}}
-						<option value="{{@key}}">{{@key}}</option>
+						<option value="{{@key}}" {{#if (eq @key "Raigad")}}selected="selected"{{/if}}>{{@key}}</option>
 				 {{/each}}
 			</script>
 
 			<script id="ulb-option-template" type="text/x-handlebars-template">
 				 <option value="">Select ULB</option>
 				 {{#each this}}
-						<option value="{{ulbName}}">{{ulbName}}</option>
+						<option value="{{ulbName}}" {{#if (eq ulbName "Roha Municipal Council")}}selected="selected"{{/if}}>{{ulbName}}</option>
 				 {{/each}}
 			</script>
 

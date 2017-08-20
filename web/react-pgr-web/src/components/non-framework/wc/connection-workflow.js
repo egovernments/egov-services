@@ -98,7 +98,7 @@ const generateWO = function(connection, tenantInfo) {
 	doc.text(35, 98, connection.property.nameOfApplicant + " has applied for New <Service name> has been approved.")
 	doc.text(10, 106, connection.plumberName + " assigned for the work.");
 	doc.text(10, 114, "Allotted Water Connection No. " + connection.consumerNumber)
-	       
+
 	doc.setFontType("normal");
 	doc.text(200, 190, 'Signing Authority', null, null, 'right');
 	doc.setFontType("bold");
@@ -264,7 +264,7 @@ class Report extends Component {
 				                  }
 				                  self.props.setDropDownData("Connection[0].property.usageType", dropDownData);
 				    		}, function(err) {
-				    			
+
 				    		})
 
 				    		Api.commonApiPost("/wcms/masters/propertytype-pipesize/_search", {propertyTypeName: res.Connection[0].property.propertyType}, {}, null, true).then(function(res){
@@ -279,7 +279,7 @@ class Report extends Component {
 				                  }
 				                  self.props.setDropDownData("Connection[0].hscPipeSizeType", dropDownData);
 				    		}, function(err) {
-				    			
+
 				    		})
     						break;
     					}
@@ -309,9 +309,9 @@ class Report extends Component {
 				                  }
 				                  self.props.setDropDownData("Connection[0].subUsageType", dropDownData);
 				    		}, function(err) {
-				    			
+
 				    		})
-    						break;
+    						break;9
     					}
     				}
     			}
@@ -405,7 +405,7 @@ class Report extends Component {
     				}
     			}
 		    }, function(err) {
-		    	
+
 		    })
     	}
 
@@ -426,7 +426,7 @@ class Report extends Component {
   	let self = this;
   	if(this.props.formData.Connection[0].workflowDetails.department && this.props.formData.Connection[0].workflowDetails.designation) {
   		Api.commonApiPost("hr-employee/employees/_search", {
-  			departmentId: this.props.formData.Connection[0].workflowDetails.department, 
+  			departmentId: this.props.formData.Connection[0].workflowDetails.department,
   			designationId: this.props.formData.Connection[0].workflowDetails.designation
   		}, {}, null, false).then(function(res) {
   			self.setState({
@@ -1033,9 +1033,13 @@ class Report extends Component {
   initiateWF = (action) => {
   	let self = this;
   	var formData = {...this.props.formData};
+    if(!self.state.disable && (!formData.Connection[0].estimationCharge[0].materials[0].name || !formData.Connection[0].estimationCharge[0].roadCutCharges || !formData.Connection[0].estimationCharges[0].specialSecurityCharges)) {
+      return self.props.toggleSnackbarAndSetText(true, translate("Please enter all mandatory fields."));
+    }
+    
   	if(action.key.toLowerCase() == "reject" && !formData.Connection[0].workflowDetails.comments) {
-  		return self.props.toggleSnackbarAndSetText(true, "Comments are mandatory on Reject.");
-  	} 
+  		return self.props.toggleSnackbarAndSetText(true, translate("wc.create.workflow.comment"));
+  	}
 
   	formData.Connection[0].workflowDetails.assignee = this.getPosition(formData.Connection[0].workflowDetails.assignee);
   	formData.Connection[0].workflowDetails.action = action.key;
@@ -1053,7 +1057,7 @@ class Report extends Component {
   		setTimeout(function(){
   			self.props.setRoute("/view/wc/" + res.Connection[0].acknowledgementnumber);
   		}, 5000);
-  		
+
   	}, function(err){
   		self.props.setLoadingStatus('hide');
   		self.props.toggleSnackbarAndSetText(true, err.message, false, true);
@@ -1070,6 +1074,7 @@ class Report extends Component {
   				sum += Number(this.props.formData.Connection[0].estimationCharge[0].materials[j].amountDetails);
   		}
 
+  		this.handleChange({target: {value: sum}}, "Connection[0].estimationCharge[0].estimationCharges", false, "");
   		this.handleChange({target:{value: parseInt(sum*(15/100))}}, "Connection[0].estimationCharge[0].supervisionCharges", false, "");
   	}
   }
@@ -1086,7 +1091,7 @@ class Report extends Component {
     					{i+1}
     				</td>
     				<td>
-    					<TextField 
+    					<TextField
     						disabled = {self.state.disable}
     						value={formData.Connection[0].estimationCharge[0].materials[i].name}
     						onChange={(e) => {
@@ -1135,7 +1140,7 @@ class Report extends Component {
     				</td>
     			</tr>
     		)
-    	})} 
+    	})}
     }
 
     const renderWorkflowHistory = function() {
@@ -1178,14 +1183,14 @@ class Report extends Component {
                                     removeCard={removeCard}
                                     autoComHandler={autoComHandler}/>}
          <Card className="uiCard">
-         	<CardHeader title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Documents</div>}/>
+         	<CardHeader title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate("employee.Employee.fields.documents")}</div>}/>
               <CardText>
               	<Table bordered responsive className="table-striped">
               		<thead>
               			<tr>
               				<th>#</th>
-              				<th>Name</th>
-              				<th>Action</th>
+              				<th>{translate("employee.Employee.fields.User.name")}</th>
+              				<th>{translate("employee.Assignment.fields.action")}</th>
               			</tr>
               		</thead>
               		<tbody>
@@ -1202,12 +1207,12 @@ class Report extends Component {
               		<thead>
               			<tr>
               				<th>#</th>
-              				<th>Material *</th>
-              				<th>Quantity</th>
-              				<th>Unit Of Measurement</th>
-              				<th>Rate</th>
-              				<th>Amount</th>
-              				<th>Action</th>
+              				<th>{translate("wc.create.workflow.material")+"*"} </th>
+              				<th>{translate("wc.create.workflow.quantity")}</th>
+              				<th>{translate("tl.create.groups.feematrixtype.unitofmeasurement")}</th>
+              				<th>{translate("wc.create.workflow.rate")}</th>
+              				<th>{translate("tl.create.license.table.amount")}</th>
+              				<th>{translate("employee.Assignment.fields.action")}</th>
               			</tr>
               		</thead>
               		<tbody>
@@ -1218,55 +1223,55 @@ class Report extends Component {
               	<Grid>
               		<Row>
               			<Col xs="12" md="3">
-              				<TextField 
-              					floatingLabelText={"Existing Distribution Pipeline(in) *"} 
+              				<TextField
+              					floatingLabelText={translate("wc.create.workflow.distributionPipeline") +"*"}
               					disabled = {self.state.disable}
               					type="number"
-              					value={formData.Connection && formData.Connection[0] && formData.Connection[0].estimationCharge && formData.Connection[0].estimationCharge[0] ? formData.Connection[0].estimationCharge[0].existingDistributionPipeline : ""} 
+              					value={formData.Connection && formData.Connection[0] && formData.Connection[0].estimationCharge && formData.Connection[0].estimationCharge[0] ? formData.Connection[0].estimationCharge[0].existingDistributionPipeline : ""}
               					onChange={(e) => {
-			                    	
+
 			                	}}/>
               			</Col>
               			<Col xs="12" md="3">
-              				<TextField 
-              					floatingLabelText={"Pipeline to Home Distance(mtrs) *"} 
+              				<TextField
+              					floatingLabelText={translate("wc.create.workflow.homeDistance")+"*"}
               					disabled = {self.state.disable}
               					type="number"
-              					value={formData.Connection && formData.Connection[0] && formData.Connection[0].estimationCharge && formData.Connection[0].estimationCharge[0] ? formData.Connection[0].estimationCharge[0].pipelineToHomeDistance : ""} 
+              					value={formData.Connection && formData.Connection[0] && formData.Connection[0].estimationCharge && formData.Connection[0].estimationCharge[0] ? formData.Connection[0].estimationCharge[0].pipelineToHomeDistance : ""}
               					onChange={(e) => {
-			                    	
+
 			                	}}/>
               			</Col>
               			<Col xs="12" md="3">
-              				<TextField 
-              					floatingLabelText={"Supervision Charges"}
+              				<TextField
+              					floatingLabelText={translate("wc.create.workflow.supervisionCharge")}
               					disabled = {true}
-              					type="number" 
-              					value={formData.Connection && formData.Connection[0] && formData.Connection[0].estimationCharge && formData.Connection[0].estimationCharge[0] ? formData.Connection[0].estimationCharge[0].supervisionCharges : ""} 
+              					type="number"
+              					value={formData.Connection && formData.Connection[0] && formData.Connection[0].estimationCharge && formData.Connection[0].estimationCharge[0] ? formData.Connection[0].estimationCharge[0].supervisionCharges : ""}
               					onChange={(e) => {
-			                    	
+
 			                	}}/>
               			</Col>
               			<Col xs="12" md="3">
-              				<TextField 
-              					floatingLabelText={"Security Deposit"} 
+              				<TextField
+              					floatingLabelText={translate("wc.create.donation.subtitle")}
               					disabled = {self.state.disable}
               					type="number"
-              					value={formData.Connection && formData.Connection[0] && formData.Connection[0].estimationCharge && formData.Connection[0].estimationCharge[0] ? formData.Connection[0].estimationCharge[0].specialSecurityCharges : ""} 
+              					value={formData.Connection && formData.Connection[0] && formData.Connection[0].estimationCharge && formData.Connection[0].estimationCharge[0] ? formData.Connection[0].estimationCharge[0].specialSecurityCharges : ""}
               					onChange={(e) => {
-			                    	
+
 			                	}}/>
               			</Col>
               		</Row>
               		<Row>
               			<Col xs="12" md="3">
-              				<TextField 
+              				<TextField
               					type="number"
-              					floatingLabelText={"Road Cutting Charges"} 
+              					floatingLabelText={translate("wc.create.workflow.roadCutCharges")}
               					disabled = {self.state.disable}
-              					value={formData.Connection && formData.Connection[0] && formData.Connection[0].estimationCharge && formData.Connection[0].estimationCharge[0] ? formData.Connection[0].estimationCharge[0].roadCutCharges : ""} 
+              					value={formData.Connection && formData.Connection[0] && formData.Connection[0].estimationCharge && formData.Connection[0].estimationCharge[0] ? formData.Connection[0].estimationCharge[0].roadCutCharges : ""}
               					onChange={(e) => {
-			                    	
+
 			                	}}/>
               			</Col>
               		</Row>
@@ -1274,16 +1279,16 @@ class Report extends Component {
          	</CardText>
          </Card>
          <Card className="uiCard">
-         	<CardHeader title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Application History</div>}/>
+         	<CardHeader title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate("wc.create.workflow.applicationHistory")}</div>}/>
          	<CardText>
          		<Table bordered responsive className="table-striped">
               		<thead>
                 		<tr>
-                			<th>Date</th>
-                			<th>Updated By</th>
-                			<th>Status</th>
-                			<th>Current Owner</th>
-                			<th>Comments</th>
+                			<th>{translate("employee.ServiceHistory.fields.date")}</th>
+                			<th>{translate("wc.create.workflow.UpdatedBy")}</th>
+                			<th>{translate("collection.create.status")}</th>
+                			<th>{translate("wc.create.workflow.currentOwner")}</th>
+                			<th>{translate("reports.common.comments")}</th>
                 		</tr>
                		</thead>
                		<tbody>
@@ -1298,8 +1303,8 @@ class Report extends Component {
          		<Row>
          			<Col xs={12} md={3}>
          				<SelectField dropDownMenuProps={{animated: true, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
-		                  floatingLabelText={"Department *"} 
-		                  value={formData.Connection && formData.Connection[0] && formData.Connection[0].workflowDetails ? formData.Connection[0].workflowDetails.department : ""} 
+		                  floatingLabelText={translate("employee.Assignment.fields.department")+" *"}
+		                  value={formData.Connection && formData.Connection[0] && formData.Connection[0].workflowDetails ? formData.Connection[0].workflowDetails.department : ""}
 		                  onChange={(event, key, value) => {
 		                  		handleChange({target: {value}}, "Connection[0].workflowDetails.department", true, "")
 		                  }}>
@@ -1312,8 +1317,8 @@ class Report extends Component {
          			</Col>
          			<Col xs={12} md={3}>
          				<SelectField dropDownMenuProps={{animated: true, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
-		                  floatingLabelText={"Designation *"} 
-		                  value={formData.Connection && formData.Connection[0] && formData.Connection[0].workflowDetails ? formData.Connection[0].workflowDetails.designation : ""} 
+		                  floatingLabelText={translate("employee.Assignment.fields.designation")+"*"}
+		                  value={formData.Connection && formData.Connection[0] && formData.Connection[0].workflowDetails ? formData.Connection[0].workflowDetails.designation : ""}
 		                  onChange={(event, key, value) => {
 		                  	handleChange({target: {value}}, "Connection[0].workflowDetails.designation", true, "")
 		                  }}>
@@ -1326,8 +1331,8 @@ class Report extends Component {
          			</Col>
          			<Col xs={12} md={3}>
          				<SelectField dropDownMenuProps={{animated: true, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
-		                  floatingLabelText={"Approver Name *"} 
-		                  value={formData.Connection && formData.Connection[0] && formData.Connection[0].workflowDetails ? formData.Connection[0].workflowDetails.assignee : ""} 
+		                  floatingLabelText={translate("wc.create.groups.approvalDetails.fields.approver")+"*"}
+		                  value={formData.Connection && formData.Connection[0] && formData.Connection[0].workflowDetails ? formData.Connection[0].workflowDetails.assignee : ""}
 		                  onChange={(event, key, value) => {
 		                  	handleChange({target: {value}}, "Connection[0].workflowDetails.assignee", true, "")
 		                  }}>
@@ -1341,15 +1346,15 @@ class Report extends Component {
          		</Row>
          		<Row>
          			<Col xs={12} md={12}>
-         				<TextField 
+         				<TextField
           					type="text"
           					multiple={true}
           					fullWidth={true}
           					rows={3}
-          					floatingLabelText={"Comments"} 
-          					value={formData.Connection && formData.Connection[0] && formData.Connection[0].workflowDetails ? formData.Connection[0].workflowDetails.comments : ""} 
+          					floatingLabelText={translate("wc.create.groups.approvalDetails.fields.comments")}
+          					value={formData.Connection && formData.Connection[0] && formData.Connection[0].workflowDetails ? formData.Connection[0].workflowDetails.comments : ""}
           					onChange={(e) => {
-		                    	
+
 		                	}}/>
          			</Col>
          		</Row>

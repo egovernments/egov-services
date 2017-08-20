@@ -589,22 +589,22 @@ var dat = {
           }
         ]
       },
-      // {
-      //   "label": "wc.create.groups.fileDetails.title",
-      //   "name": "Documents",
-      //   "fields": [{
-      //     "name": "File",
-      //     "jsonPath": "Connection.documents",
-      //     "type": "documentList",
-      //     "pathToArray": "DocumentTypeApplicationTypes",
-      //     "displayNameJsonPath": "documentType",
-      //     "url": "/wcms/masters/documenttype-applicationtype/_search?applicationType=NEWCONNECTION",
-      //     "autoFillFields": [{
-      //       "name": "document",
-      //       "jsonPath": "documentTypeId"
-      //     }]
-      //   }]
-      // },
+      {
+        "label": "wc.create.groups.fileDetails.title",
+        "name": "Documents",
+        "fields": [{
+          "name": "File",
+          "jsonPath": "Connection.documents",
+          "type": "documentList",
+          "pathToArray": "DocumentTypeApplicationTypes",
+          "displayNameJsonPath": "documentType",
+          "url": "/wcms/masters/documenttype-applicationtype/_search?applicationType=NEWCONNECTION",
+          "autoFillFields": [{
+            "name": "document",
+            "jsonPath": "documentTypeId"
+          }]
+        }]
+      },
       {
         "label": "wc.create.groups.approvalDetails.title",
         "name": "ApprovalDetails",

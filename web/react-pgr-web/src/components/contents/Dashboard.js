@@ -198,7 +198,7 @@ class Dashboard extends Component {
               current.props.setLoadingStatus('hide');
               current.setState({
                 workflowResult: {},
-                hasData: true
+                hasData: false
               });
             })
         } else {

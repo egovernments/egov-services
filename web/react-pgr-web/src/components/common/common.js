@@ -467,10 +467,18 @@ var localization_EN_Data = {
 	"pt.create.groups.propertyAddress.fields.propertyAddress":"Property Address",
 	"pt.create.groups.propertyAddress.fields.ebBlock":"EB Block",
 	"pt.create.groups.propertyAddress.mobileNumber":"Mobile Number (without +91)",
+	"pt.create.groups.propertyAddress.propertyTax":  "Property Tax",
+	"pt.create.groups.propertyAddress.educationCess": "Education Cess",
+	"pt.create.groups.propertyAddress.libraryCess": "Library Cess",
+	"pt.create.groups.propertyAddress.totalTax":"Total Tax",	
+	"pt.create.groups.propertyAddress.totalTaxDue": "Total Tax Due",
 	
-
-
-
+	"pt.search.searchProperty":"Search Property",
+	"pt.search.searchProperty.fields.applicationNumber":"Application number",
+	"pt.search.searchProperty.fields.boundary":"Boundary",
+	"pt.search.searchProperty.fields.location":"Location",
+	"pt.search.searchProperty.fields.searchByDemand":"Search Property by Demand",
+	"pt.search.searchProperty.fields.demandFrom":"Demand From",
 
     //employee Object
     "employee.Employee.fields.code": "Code",

@@ -215,7 +215,12 @@ var dat = {
                 "Connection.asset.nameOfApplicant": "properties[0].owners[0].name",
                 "Connection.asset.email": "properties[0].owners[0].emailId",
                 "Connection.asset.aadhaarNumber": "properties[0].owners[0].aadhaarNumber",
-                "Connection.asset.noOfFloors": "properties[0].propertyDetail.noOfFloors"
+                "Connection.asset.noOfFloors": "properties[0].propertyDetail.noOfFloors",
+                "Connection.asset.locality":"properties[0].boundary.locationBoundary.id",
+                "Connection.asset.zone":"properties[0].boundary.revenueBoundary.id",
+                "Connection.asset.ward":"properties[0].boundary.adminBoundary.id",
+                "Connection.asset.address":"properties[0].address.addressNumber",
+                "Connection.asset.property":"properties[0].propertyDetail.propertyType"
 
               }
             },
@@ -351,7 +356,7 @@ var dat = {
               {
                 "jsonPath": "Connection.hscPipeSizeType",
                 "type": "dropDown",
-                "pattern": "/wcms/masters/propertytype-pipesize/_search?tenantId=default&propertyTypeName={Connection.property.propertyType}|$..pipeSize|$..pipeSize"
+                "pattern": "/wcms/masters/propertytype-pipesize/_search?tenantId=default&propertyTypeName={Connection.property.propertyType}|$..pipeSize|$..pipeSizeInInch"
               }
             ],
             "requiredErrMsg": "",

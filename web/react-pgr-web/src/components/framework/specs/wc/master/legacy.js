@@ -402,7 +402,7 @@ var dat = {
             "label": "wc.create.groups.applicantDetails.locality",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$..id|$..name",
+            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$.Boundary.*.boundaryNum|$.Boundary.*.name",
             "isRequired": false,
             "isDisabled": true,
             "requiredErrMsg": "",
@@ -504,7 +504,7 @@ var dat = {
               {
                 "jsonPath": "Connection.hscPipeSizeType",
                 "type": "dropDown",
-                "pattern": "/wcms/masters/propertytype-pipesize/_search?tenantId=default&propertyTypeName={Connection.property.propertyType}|$..pipeSize|$..pipeSize"
+                "pattern": "/wcms/masters/propertytype-pipesize/_search?tenantId=default&propertyTypeName={Connection.property.propertyType}|$..pipeSize|$..pipeSizeInInch"
               }
             ],
             "requiredErrMsg": "",

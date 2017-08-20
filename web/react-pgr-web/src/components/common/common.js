@@ -1830,6 +1830,7 @@ var localization_MR_Data = {
     "wc.create.workflow.material": "Material",
     "wc.create.workflow.comment": "Comments are mandatory on Reject.",
     "wc.create.workflow.fields": "Please enter all mandatory fields.",
+    
     ﻿"pgr.0001": "अक्षांश / रेखांश किंवा क्रॉस हायरारकी संकेतांक आवश्यक आहे",
     "pgr.0002": "अक्षांश / रेखांश किंवा क्रॉस हायरारकी संकेतांक आवश्यक आहे",
     "pgr.0003": "अक्षांश / रेखांश किंवा क्रॉस हायरारकी संकेतांक आवश्यक आहे",

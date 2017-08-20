@@ -752,7 +752,7 @@ deleteOccupantName = (index) =>{
 																	floorDetails.floor.waterMeterNo = null;
 																	floorDetails.floor.exemptionReason = null;
 																	floorDetails.floor.rentCollected = null;
-																	floorDetails.floor.age = '0TO25';
+																	floorDetails.floor.age = '0TO20';
 																}
 																
 																handleChangeFloor(e,"floor" ,"unitType", true, "");

@@ -358,8 +358,8 @@ public class WaterConnectionQueryBuilder {
 				||  (null != waterConnectionGetReq.getMobileNumber() && !waterConnectionGetReq.getMobileNumber().isEmpty()) 
 				||  (null != waterConnectionGetReq.getLocality() && !waterConnectionGetReq.getLocality().isEmpty())
 				||  (null != waterConnectionGetReq.getDoorNumber() && !waterConnectionGetReq.getDoorNumber().isEmpty()) 
-				||  (null != waterConnectionGetReq.getRevenueWard() && !waterConnectionGetReq.getRevenueWard().isEmpty())
-				&& waterConnectionGetReq.getPropertyIdentifierList().size() <= 0)) {
+				||  (null != waterConnectionGetReq.getRevenueWard() && !waterConnectionGetReq.getRevenueWard().isEmpty()))
+				&& (waterConnectionGetReq.getPropertyIdentifierList().size() <= 0)) { 
         	isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
         	selectQuery.append(" connection.propertyidentifier IN ('') ");
         }

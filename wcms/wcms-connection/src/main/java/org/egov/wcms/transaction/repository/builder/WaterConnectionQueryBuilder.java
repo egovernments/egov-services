@@ -97,7 +97,7 @@ public class WaterConnectionQueryBuilder {
 			+ " supplytype.code as supplytype_code, supplytype.name as supplytype_name, supplytype.description as supplytype_description,supplytype.active as supplytype_active,  "
 			+ " supplytype.tenantId as supplytype_tenantId, pipesize.id as pipesize_id, pipesize.code as pipesize_code, pipesize.sizeinmilimeter as pipesize_sizeinmilimeter, "
 			+ " pipesize.sizeininch as pipesize_sizeininch,pipesize.active as pipesize_active, pipesize.tenantId as pipesize_tenantId , "
-			+ " plant.name as watertreatmentname, addr.addressline1 as addressline1 , connloc.revenueboundary as revenueboundary, connloc.locationboundary as locationboundary, " 
+			+ " plant.name as watertreatmentname, addr.addressline1 as addressline1 ,addr.pincode as pincode, addr.city as city, connloc.revenueboundary as revenueboundary, connloc.locationboundary as locationboundary, " 
 			+ " connloc.adminboundary as adminboundary, eguser.name as name, eguser.username as username, eguser.mobilenumber as mobilenumber, eguser.emailid as emailid, eguser.gender as gender, " 
 			+ " eguser.aadhaarnumber as aadhaarnumber from  egwtr_waterconnection conndetails left join egwtr_address addr on conndetails.addressid = addr.id "
 			+ " left join egwtr_connectionlocation connloc on conndetails.locationid = connloc.id left join eg_user eguser on conndetails.userid = eguser.id left join egwtr_category category on  NULLIF(conndetails.categorytype, '')::int = category.id " 

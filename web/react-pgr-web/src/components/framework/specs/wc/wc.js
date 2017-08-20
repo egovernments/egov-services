@@ -528,7 +528,7 @@ var dat = {
             "jsonPath": "Connection.plumberName",
             "label": "wc.create.groups.connectionDetails.fields.plumberName",
             "pattern": "",
-            "type": "textarea",
+            "type": "text",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",

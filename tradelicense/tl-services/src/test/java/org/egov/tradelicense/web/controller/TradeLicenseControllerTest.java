@@ -152,7 +152,7 @@ public class TradeLicenseControllerTest {
 			tradeLicenseSearchResponse.setLicenses(tradeLicenseSearchContracts);
 
 			when(tradeLicenseService.getTradeLicense(any(RequestInfo.class), any(String.class), any(Integer.class),
-					any(Integer.class), any(String.class), any(String.class), any(String.class), any(String.class),
+					any(Integer.class), any(String.class), any(String.class), any(Integer[].class), any(String.class),
 					any(String.class), any(String.class), any(String.class), any(String.class), any(String.class),
 					any(String.class), any(Integer.class), any(Integer.class), any(String.class), any(String.class),
 					any(String.class), any(Integer.class), any(Integer.class), any(String.class), any(Integer.class)))

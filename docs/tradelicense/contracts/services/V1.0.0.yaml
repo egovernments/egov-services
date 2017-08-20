@@ -55,12 +55,14 @@ paths:
           required: false
           type: boolean
           allowEmptyValue: true
-        - name: tradeLicenseId
+        - name: ids
+          type: array
+          items:
+            type: integer
+            format: int64
           in: query
-          description: Primary key of Trade License Object.
-          required: false
-          type: string
-          format: varchar
+          maxItems: 50
+          description: comma seperated list of Ids of Category/SubCategory to get the Category/SubCategory, If array contains Ids of Category and SubCategoryId data will not be returned, As API will consider either one of them based on the Type parameter
         - name: applicationNumber
           in: query
           required: false

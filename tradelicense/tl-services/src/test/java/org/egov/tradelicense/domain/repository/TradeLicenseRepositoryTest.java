@@ -14,6 +14,7 @@ import org.egov.tl.commons.web.contract.AuditDetails;
 import org.egov.tl.commons.web.contract.LicenseFeeDetailContract;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.SupportDocumentContract;
+import org.egov.tl.commons.web.contract.SupportDocumentSearchContract;
 import org.egov.tl.commons.web.contract.TradeLicenseContract;
 import org.egov.tl.commons.web.contract.UserInfo;
 import org.egov.tl.commons.web.contract.enums.ApplicationTypeEnum;

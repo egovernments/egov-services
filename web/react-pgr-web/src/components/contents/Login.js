@@ -148,7 +148,8 @@ class Login extends Component {
      //console.log(value);
      let {setLoadingStatus} = this.props;
      var self = this;
-     Api.commonApiGet("/localization/messages", {locale : value}).then(function(response)
+     var tenantId = this.props.match.params.tenantId || "default";
+     Api.commonApiGet("/localization/messages", {locale : value, tenantId: tenantId}, {}, true).then(function(response)
      {
        self.setState({'locale':value});
        self.setState({'localeready':true});

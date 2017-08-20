@@ -129,8 +129,7 @@ class InboxAcknowledgement extends Component {
 								<Row style={{paddingTop:8, paddingBottom:15}}>
 									<Col xs={12} md={12}>
 									  <Row>
-										<Col xs={12} md={12} style={{textAlign:'center'}}>
-											<h3>Application Submitted</h3>
+										<Col xs={12} md={12} style={{textAlign:'center',paddingTop:15,fontSize: 16}}>
 											{this.state.status} Successfully
 										</Col>
 									  </Row>

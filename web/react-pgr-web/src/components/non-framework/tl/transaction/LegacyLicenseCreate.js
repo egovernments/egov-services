@@ -624,7 +624,7 @@ class LegacyLicenseCreate extends Component {
     // }
 
 
-     if (property == "licenses[0].licenseValidFromDate" && validityYear) {
+     if (property == "licenses[0].licenseValidFromDate" || property=="licenses[0].subCategoryId" && getVal("licenses[0].licenseValidFromDate") && validityYear) {
          var getStartYear = new Date(e.target.value).getFullYear();
          var curDate = new Date();
          var currentDate = curDate.getFullYear();

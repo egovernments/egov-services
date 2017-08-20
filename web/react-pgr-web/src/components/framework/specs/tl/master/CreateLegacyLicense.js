@@ -5,7 +5,7 @@ var dat = {
     "useTimestamp": true,
     "tenantIdRequired": false,
 		"objectName": "licenses",
-		"idJsonPath": "licenses[0].id",
+		"idJsonPath": "licenses[0].licenseNumber",
 		"groups": [
 			{
 				"label": "tl.create.licenses.groups.TradeDetailsTab",
@@ -158,12 +158,12 @@ var dat = {
 							"name": "PropertyAssessmentNo",
 							"jsonPath": "licenses[0].propertyAssesmentNo",
 							"label": "tl.create.licenses.groups.TradeLocationDetails.PropertyAssessmentNo",
-							"pattern": "",
+							"pattern": "^[0-9]{1,10}$",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Property Assessment Number should be 1 to 10"
 						},
             {
 							"name": "Locality",

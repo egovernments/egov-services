@@ -155,6 +155,9 @@ public class PropertiesManager {
 	@Value("${error.license.validityyears}")
 	private String validtyYearsErrorMsg;
 	
+	@Value("${error.license.validityyearsMatch}")
+	private String validatiyYearsMatch;
+	
 	@Value("${error.license.feedetails}")
 	private String feeDetailsErrorMsg;
 	

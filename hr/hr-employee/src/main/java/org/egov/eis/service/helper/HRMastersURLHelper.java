@@ -84,12 +84,11 @@ public class HRMastersURLHelper {
 		return searchURL.toString();
 	}
 
-	// FIXME : Hard-coded tenantId as default for seed data
-	public String hrConfigurationsSearchURL() {
+	public String hrConfigurationsSearchURL(String tenantId) {
 		return propertiesManager.getHrMastersServiceHostName()
 				+ propertiesManager.getHrMastersServiceBasePath()
 				+ propertiesManager.getHrMastersServiceHRConfigurationsSearchPath()
-				+ "?tenantId=default";
+				+ "?tenantId=" + tenantId;
 	}
 
 	/**

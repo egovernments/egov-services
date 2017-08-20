@@ -95,7 +95,6 @@ public class TradeLicenseContract {
 	private String ownerAddress;
 
 	@JsonProperty("propertyAssesmentNo")
-	@Length( min = 4, max = 20, message = "{error.license.propertyassesmentNo}")
 	private String propertyAssesmentNo;
 
 	@NotNull(message = "{error.license.locality}")
@@ -169,7 +168,6 @@ public class TradeLicenseContract {
 	private Long agreementDate;
 
 	@JsonProperty("agreementNo")
-	@Length( min = 4, max = 128, message="{error.icense.agreementno}")
 	private String agreementNo;
 
 	@JsonProperty("isLegacy")

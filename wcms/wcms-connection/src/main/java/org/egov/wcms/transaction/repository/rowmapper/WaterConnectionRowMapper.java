@@ -103,7 +103,7 @@ public class WaterConnectionRowMapper {
 					.userName(rs.getString("username"))
 					.mobileNumber(rs.getString("mobilenumber"))
 					.emailId(rs.getString("emailid"))
-					.gender(rs.getString("gender"))
+					.gender((rs.getString("gender").equals("1"))?"Male" : "Female")
 					.aadhaarNumber(rs.getString("aadhaarnumber")).build();
 			connection.setConnectionOwner(connOwner);
 			ConnectionLocation connLoc = ConnectionLocation.builder()
@@ -112,6 +112,8 @@ public class WaterConnectionRowMapper {
 					.adminBoundary(new Boundary(rs.getLong("adminboundary"), null)).build();
 			connection.setConnectionLocation(connLoc);
 			Address addr = new Address();
+			addr.setCity(rs.getString("city"));
+			addr.setPinCode(rs.getString("pincode"));
 			addr.setAddressLine1(rs.getString("addressline1"));
 			connection.setAddress(addr);
 			connection.setWithProperty(false);

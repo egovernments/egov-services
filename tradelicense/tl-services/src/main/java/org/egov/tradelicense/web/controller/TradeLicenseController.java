@@ -119,7 +119,7 @@ public class TradeLicenseController {
 	public TradeLicenseSearchResponse searchTradelicense(@RequestBody RequestInfoWrapper requestInfo,
 			@RequestParam(required = true) String tenantId, @RequestParam(required = false) Integer pageSize,
 			@RequestParam(required = false) Integer pageNumber, @RequestParam(required = false) String sort,
-			@RequestParam(required = false) String active, @RequestParam(required = false) String tradeLicenseId,
+			@RequestParam(required = false) String active, @RequestParam(required = false) Integer[] ids,
 			@RequestParam(required = false) String applicationNumber,
 			@RequestParam(required = false) String licenseNumber,
 			@RequestParam(required = false) String oldLicenseNumber,
@@ -132,7 +132,7 @@ public class TradeLicenseController {
 			@RequestParam(required = false) Integer status) throws Exception {
 
 		return tradeLicenseService.getTradeLicense(requestInfo.getRequestInfo(), tenantId, pageSize, pageNumber, sort,
-				active, tradeLicenseId, applicationNumber, licenseNumber, oldLicenseNumber, mobileNumber, aadhaarNumber,
+				active, ids, applicationNumber, licenseNumber, oldLicenseNumber, mobileNumber, aadhaarNumber,
 				emailId, propertyAssesmentNo, adminWard, locality, ownerName, tradeTitle, tradeType, tradeCategory,
 				tradeSubCategory, legacy, status);
 	}

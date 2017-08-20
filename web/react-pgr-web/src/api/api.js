@@ -36,7 +36,7 @@ module.exports = {
         if(url && url[url.length-1] === "/")
             url = url.substring(0, url.length-1);
         if (!doNotOverride)
-            url += "?tenantId=" + tenantId;
+            url += "?tenantId=" + (localStorage.getItem("tenantId") || 'default');
         else
             url += "?"
         for (var variable in queryObject) {
@@ -96,7 +96,7 @@ module.exports = {
     commonApiGet: (context, queryObject = {}, doNotOverride = false, noPageSize = false) => {
         var url = context;
         if (!doNotOverride)
-            url += "?tenantId=" + tenantId;
+            url += "?tenantId=" + (localStorage.getItem("tenantId") || 'default');
         else
             url += "?"
         for (var variable in queryObject) {

@@ -29,6 +29,43 @@ public class DocumentTypeContractRepository {
 		this.restTemplate = restTemplate;
 	}
 
+	public DocumentTypeResponse findById(RequestInfoWrapper requestInfoWrapper, String tenatId, Long documentTypeId) {
+
+		String hostUrl = propertiesManger.getTradeLicenseMasterServiceHostName() + propertiesManger.getTradeLicenseMasterServiceBasePath();
+		String searchUrl = propertiesManger.getDocumentServiceSearchPath();
+		String url = String.format("%s%s", hostUrl, searchUrl);
+		StringBuffer content = new StringBuffer();
+		
+		 if(documentTypeId != null){
+			if (documentTypeId != null) {
+				content.append("ids=" + documentTypeId);
+			}
+		}
+		
+		if( tenatId != null ){
+			
+				content.append("&tenantId=" + tenatId);
+			
+		}
+		
+		TlMasterRequestInfoWrapper tlMasterRequestInfoWrapper = getTlMasterRequestInfoWrapper(requestInfoWrapper);
+		url = url + content.toString();
+		DocumentTypeResponse documentTypeResponse = null;
+		try {
+			documentTypeResponse = restTemplate.postForObject(url, tlMasterRequestInfoWrapper,
+					DocumentTypeResponse.class);
+		} catch (Exception e) {
+			log.error(propertiesManger.getDocumentEndPointErrormsg());
+		}
+		if (documentTypeResponse != null && documentTypeResponse.getDocumentTypes() != null
+				&& documentTypeResponse.getDocumentTypes().size() > 0) {
+			return documentTypeResponse;
+		} else {
+			return null;
+		}
+
+	}
+	
 	public DocumentTypeResponse findById(TradeLicense tradeLicense, SupportDocument supportDocument,
 			RequestInfoWrapper requestInfoWrapper) {
 

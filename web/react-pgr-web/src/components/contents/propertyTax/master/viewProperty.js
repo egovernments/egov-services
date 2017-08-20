@@ -444,26 +444,26 @@ class ViewProperty extends Component {
 												  {getNameByCode(this.state.creationReason, item.creationReason) || 'NA'}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Assessment number of parent property</div>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.AssessmentNumberOfParentProperty')}</div>
 												   NA
 											  </Col>
 											</Row> 
 											<Row>											
 											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Exemption Category</div>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.exemptionCategory')}</div>
 												   {item.propertyDetail.exemptionReason || 'NA'}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
-												    <div style={{fontWeight:500}}>Effective Date</div>
+												    <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.effectiveDate')}</div>
 												   {item.occupancyDate ? new Date(item.occupancyDate).getDate()+'/'+(new Date(item.occupancyDate).getMonth()+1)+'/'+new Date(item.occupancyDate).getFullYear() : 'NA'}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
-												  <div style={{fontWeight:500}}>Apartment/Complex Name</div>
+												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.appartment')}</div>
 												  {item.propertyDetail.apartment || 'NA'}
 											  </Col>
 										
 											  <Col xs={4} md={3} style={styles.bold}>
-												  <div style={{fontWeight:500}}>Property Department</div>
+												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.propertyDepartment')}</div>
 												  {item.propertyDetail.department || 'NA'}
 											  </Col>
 											</Row>
@@ -471,13 +471,13 @@ class ViewProperty extends Component {
 										 
 											<Row>
 											  <Col xs={4} md={3} style={styles.bold}>
-												  <div style={{fontWeight:500}}>Registration Doc Date</div>
+												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.registrationDocDate')}</div>
 												  {item.propertyDetail.regdDocDate ? new Date(item.propertyDetail.regdDocDate).getDate()+'/'+(new Date(item.propertyDetail.regdDocDate).getMonth()+1)+'/'+new Date(item.propertyDetail.regdDocDate).getFullYear() : 'NA'}
 
 											  </Col>
 											
 											  <Col xs={4} md={3} style={styles.bold}>
-												  <div style={{fontWeight:500}}>Assessment Date</div>
+												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.assessmentDate')}</div>
 												  {item.assessmentDate ? new Date(item.propertyDetail.regdDocDate).getDate()+'/'+new Date(item.propertyDetail.regdDocDate).getMonth()+'/'+new Date(item.propertyDetail.regdDocDate).getFullYear() : 'NA'}
 											  </Col>
 											</Row>
@@ -488,20 +488,20 @@ class ViewProperty extends Component {
                           </Card>
 				
 						  <Card className="uiCard">
-							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>Address Details</div>} />
+							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>{translate('pt.create.groups.propertyAddress.fields.addressDetails')}</div>} />
                               <CardText>
 								
 									<Col md={12} xs={12}>
 										
 											<Row>
 											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Door No</div>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.doorNo')}</div>
 												   {item.address.addressNumber}
 											  </Col>
 										
 											
 											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Property Address</div>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.propertyAddress')}</div>
 												    {item.address.addressNumber ? item.address.addressNumber+', ' : '' }
 												 {item.address.addressLine1 ? item.address.addressLine1+', ' : '' }
 												 {item.address.addressLine2 ? item.address.addressLine2+', ':''}
@@ -511,43 +511,43 @@ class ViewProperty extends Component {
 											
 											
 											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Zone</div>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.zoneNo')}</div>
 												   {getNameById(this.state.zone, item.boundary.revenueBoundary.id) || 'NA'}
 											  </Col>
 										
 											
 											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Block</div>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.blockNo')}</div>
 												   NA
 											  </Col>
 											 
 											</Row>
 											<Row>
 											  <Col xs={4} md={3} style={styles.bold}>
-												  <div style={{fontWeight:500}}>Election Ward</div>
+												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.electionWard')}</div>
 												  {getNameById(this.state.election,item.boundary.adminBoundary.id) || 'NA'}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
-												  <div style={{fontWeight:500}}> Correspondence Address</div>
+												  <div style={{fontWeight:500}}>{translate('employee.Employee.fields.correspondenceAddress')}</div>
 												   NA
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Ward</div>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.wardNo')}</div>
 												   NA
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Locality</div>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.locality')}</div>
 												    {getNameById(this.state.locality,item.address.addressLine1) || 'NA'}
 											  </Col>
 											</Row>
 									
 											<Row>
 											  <Col xs={4} md={3} style={styles.bold}>
-												  <div style={{fontWeight:500}}>EB Block</div>
+												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.ebBlock')}</div>
 												  NA
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
-												  <div style={{fontWeight:500}}>Pin</div>
+												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.pin')}</div>
 													  {item.address.pincode}
 											  </Col>
 											</Row>
@@ -557,7 +557,7 @@ class ViewProperty extends Component {
                           </Card>
 				
 						  <Card className="uiCard">
-							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>Owner Details</div>} />
+							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>{translate('pt.create.groups.ownerDetails')}</div>} />
 								  {item.owners.length !=0 && item.owners.map((owner, index)=> {
 									  return(
 												<CardText key={index}>
@@ -565,11 +565,11 @@ class ViewProperty extends Component {
 														
 															<Row>
 															  <Col xs={4} md={3} style={styles.bold}>
-																  <div style={{fontWeight:500}}> Aadhaar No</div>
+																  <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.aadhaarNumber')}</div>
 																  {owner.aadhaarNumber ? owner.aadhaarNumber : 'NA'}
 															  </Col>	
 															  <Col xs={4} md={3} style={styles.bold}>
-																   <div style={{fontWeight:500}}>Mobile Number (without +91)</div>
+																   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.mobileNumber')}</div>
 																   {owner.mobileNumber ? owner.mobileNumber : 'NA'}
 															  </Col>
 															  <Col xs={4} md={3} style={styles.bold}>

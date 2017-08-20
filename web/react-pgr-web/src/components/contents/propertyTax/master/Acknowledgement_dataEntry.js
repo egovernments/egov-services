@@ -131,7 +131,7 @@ class DataEntryAcknowledgement extends Component {
 									  <Row>
 										<Col xs={12} md={12} style={{textAlign:'center'}}>
 											<h3>Application Submitted</h3>
-											Your property has been submitted : <span style={{fontWeight:500}}>{this.state.upicNumber}</span>
+											Property details saved and property number generated as : <span style={{fontWeight:500}}>{this.state.upicNumber}</span>
 										</Col>
 									  </Row>
 									</Col>

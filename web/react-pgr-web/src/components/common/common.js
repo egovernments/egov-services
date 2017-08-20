@@ -166,7 +166,7 @@ var localization_EN_Data = {
   "wc.view.PropertyTypePipeSize.title": "View Tariff Category Connection size",
   "wc.update.PropertyTypePipeSize.title": "Update Tariff Category Connection size",
   "wc.create.groups.applicantDetails.consumerNo": "Old Consumer Number",
-  "wc.create.groups.applicantDetails.connectionDate": "Connection Date",
+  "wc.create.groups.applicantDetails.connectionDate": " Physical Connection Date",
   "wc.create.pipeSize.title": "Create Connection size",
   "wc.search.PipeSize.title": "Search Connection size",
   "wc.create.sizeInInch": "Size In Inch",
@@ -246,7 +246,15 @@ var localization_EN_Data = {
   "wc.create.SpecialDonationCharges": "Security Deposit",
   "wc.create.receiptDate": "Receipt Date",
   "wc.create.receiptNumber": "Receipt Number",
-
+  //water chareges label for new screen
+  "wc.group.withProperty":" With Property",
+  "wc.group.withoutProperty":" Without Property",
+  "wc.group.meterNumber":"Meter Number",
+  "wc.group.meterOwner":" Meter Owner",
+  "wc.group.meterModal": "Meter Modal",
+  "wc.group.meterMake":"Meter Make",
+  "wc.group.meterCost":"Meter Cost",
+  "wc.group.initialMeterReading":" Initial Meter Reading",
 
 
 

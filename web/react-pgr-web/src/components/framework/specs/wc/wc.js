@@ -24,7 +24,7 @@ var dat = {
           "isDisabled": false,
           "requiredErrMsg": "",
           "patternErrMsg": "",
-  			"values": [{"label":"With Property", "value":true},{"label":"Without Property", "value":false}],
+  			"values": [{"label":{translate("wc.group.withProperty")}, "value":true},{"label":{translate("wc.group.withoutProperty")}, "value":false}],
   			"defaultValue":true,
         "showHideFields": [{
                "ifValue": false,

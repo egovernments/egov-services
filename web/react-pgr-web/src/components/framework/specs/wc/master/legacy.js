@@ -404,7 +404,7 @@ var dat = {
             "type": "singleValueList",
             "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$..id|$..name",
             "isRequired": false,
-            "isDisabled": false,
+            "isDisabled": true,
             "requiredErrMsg": "",
             "patternErrMsg": "",
           },
@@ -427,7 +427,7 @@ var dat = {
             "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE|$.Boundary.*.boundaryNum|$.Boundary.*.name",
             "type": "singleValueList",
             "isRequired": true,
-            "isDisabled": false,
+            "isDisabled": true,
             "requiredErrMsg": "",
             "patternErrMsg": "",
             "convertToString":true
@@ -726,7 +726,7 @@ var dat = {
             "patternErrMsg": "",
             "depedants":[{
                 "jsonPath":"Connection.numberOfFamily",
-                "type":"number",
+                "type":"textField",
                 "pattern":"getVal('Connection.numberOfPersons')!=''? (Math.ceil(getVal('Connection.numberOfPersons')/4)):0",
                 "rg":"",
                 "isRequired": false,
@@ -802,7 +802,7 @@ var dat = {
                 "fields": [{
                     "name": "meterOwner",
                     "jsonPath": "Connection.meter[0].meterOwner",
-                    "label": "Meter Owner",
+                    "label": "wc.group.meterOwner",
                     "pattern": "^[\s.]*([^\s.][\s.]*){0,50}$",
                     "type": "text",
                     "isRequired": false,
@@ -813,7 +813,7 @@ var dat = {
                   {
                       "name": "meterModel",
                       "jsonPath": "Connection.meter[0].meterModel",
-                      "label": "Meter Model",
+                      "label": "wc.group.meterModal",
                       "pattern": "^[\s.]*([^\s.][\s.]*){0,50}$",
                       "type": "text",
                       "isRequired": false,
@@ -824,7 +824,7 @@ var dat = {
                     {
                     "name": "meterMake",
                     "jsonPath": "Connection.meter[0].meterMake",
-                    "label": "Meter Make",
+                    "label": "wc.group.meterMake",
                     "pattern": "",
                     "type": "text",
                     "isRequired": false,
@@ -835,7 +835,7 @@ var dat = {
                   {
                       "name": "meterSlNo",
                       "jsonPath": "Connection.meter[0].meterSlNo",
-                      "label": "Meter SlNo",
+                      "label": "wc.group.meterNumber",
                       "pattern": "",
                       "type": "text",
                       "isRequired": false,
@@ -846,7 +846,7 @@ var dat = {
         		  {
                     "name": "meterCost",
                     "jsonPath": "Connection.meter[0].meterCost",
-                    "label": "Meter Cost",
+                    "label": "wc.group.meterCost",
                     "pattern": "",
                     "type": "text",
                     "isRequired": false,
@@ -857,7 +857,7 @@ var dat = {
         		  {
                     "name": "initialMeterReading",
                     "jsonPath": "Connection.meter[0].initialMeterReading",
-                    "label": "Initial Meter Reading",
+                    "label": "wc.group.initialMeterReading",
                     "pattern": "",
                     "type": "text",
                     "isRequired": false,

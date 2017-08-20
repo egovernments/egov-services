@@ -419,7 +419,7 @@ public class RestConnectionService {
             // String finYear = getFinancialYear(tenantId);
             String finYear = getFiscalYear();
             if(null!=finYear && !finYear.isEmpty()) { 
-            	return ackNumber=tenantId.substring(0,4).concat(ackNumber).concat("/"+finYear);
+            	return ackNumber=tenantId.substring(0,4).concat(ackNumber);
             }	
         }
 

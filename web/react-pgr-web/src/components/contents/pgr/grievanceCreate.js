@@ -352,7 +352,7 @@ class grievanceCreate extends Component {
     data['serviceName']='';
     data['requestedDatetime']="";
     data['mediaUrl']="";
-    data['tenantId']='default';
+    data['tenantId']= localStorage.getItem("tenantId");
     data['isAttribValuesPopulated']=true;
     data['attribValues'] = [];
 

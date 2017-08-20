@@ -1033,6 +1033,10 @@ class Report extends Component {
   initiateWF = (action) => {
   	let self = this;
   	var formData = {...this.props.formData};
+    if(!self.state.disable && (!formData.Connection[0].estimationCharge[0].materials[0].name || !formData.Connection[0].estimationCharge[0].roadCutCharges || !formData.Connection[0].estimationCharges[0].specialSecurityCharges)) {
+      return self.props.toggleSnackbarAndSetText(true, translate("Please enter all mandatory fields."));
+    }
+    
   	if(action.key.toLowerCase() == "reject" && !formData.Connection[0].workflowDetails.comments) {
   		return self.props.toggleSnackbarAndSetText(true, translate("wc.create.workflow.comment"));
   	}
@@ -1281,7 +1285,7 @@ class Report extends Component {
               		<thead>
                 		<tr>
                 			<th>{translate("employee.ServiceHistory.fields.date")}</th>
-                			<th>{translate("wc.create.workflow.UpdatedBy")}/th>
+                			<th>{translate("wc.create.workflow.UpdatedBy")}</th>
                 			<th>{translate("collection.create.status")}</th>
                 			<th>{translate("wc.create.workflow.currentOwner")}</th>
                 			<th>{translate("reports.common.comments")}</th>

@@ -10,7 +10,18 @@ import Api from '../../../api/api';
 import UiButton from '../../framework/components/UiButton';
 import UiDynamicTable from '../../framework/components/UiDynamicTable';
 import {fileUpload} from '../../framework/utility/utility';
-import ReactPaginate from 'react-paginate';
+
+import $ from 'jquery';
+import 'datatables.net-buttons/js/buttons.html5.js';// HTML 5 file export
+import 'datatables.net-buttons/js/buttons.flash.js';// Flash file export
+import jszip from 'jszip/dist/jszip';
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+import 'datatables.net-buttons/js/buttons.flash.js';
+import 'datatables.net-buttons-bs';
+
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
 var specifications={};
 
 let reqRequired = [];
@@ -67,6 +78,41 @@ class Report extends Component {
     return typeof _.get(this.props.formData, path) != "undefined" ? _.get(this.props.formData, path) : "";
   }
 
+  componentWillMount() {
+      $('#searchTable').DataTable({
+         dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
+         buttons: [ 'excel', 'pdf','copy', 'csv',  'print'],
+         bDestroy: true,
+         language: {
+             "emptyTable": "No Records"
+         }
+      });
+  }
+
+  componentWillUnmount() {
+    $('#searchTable').DataTable().destroy(true);
+  }
+
+  componentWillUpdate() {
+      let {flag} = this.props;
+      if(flag == 1) {
+        flag = 0;
+        $('#searchTable').dataTable().fnDestroy();
+      }
+  }
+
+  componentDidUpdate() {
+      $('#searchTable').DataTable({
+           dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
+           buttons: [ 'excel', 'pdf','copy', 'csv',  'print'],
+            ordering: false,
+            bDestroy: true,
+            language: {
+               "emptyTable": "No Records"
+            }
+      });
+    }
+
   initData() {
 
     specifications = require(`../../framework/specs/wc/master/searchConnection`).default;
@@ -110,10 +156,10 @@ class Report extends Component {
 
     Api.commonApiPost(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, formData, {}, null, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].useTimestamp).then(function(res){
       self.props.setLoadingStatus('hide');
+      self.props.setFlag(1);
       self.setState({
         resultList: res.Connection,
         showResult: true
-
       }, function() {
 
       });
@@ -172,7 +218,7 @@ class Report extends Component {
         <Card className="uiCard">
           <CardHeader title={<strong> {translate("ui.table.title")} </strong>}/>
           <CardText>
-            <Table bordered responsive className="table-striped">
+            <Table id="searchTable" bordered responsive className="table-striped">
               <thead>
                 <tr>
                   <th>#</th>

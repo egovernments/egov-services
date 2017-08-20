@@ -403,9 +403,8 @@ public class WaterConnectionService {
 				logger.error("Encountered an Exception while getting the property identifier from Property Module :" + e.getMessage());
 			}
 		}
-		
-		if(propertyIdentifierList.size() > 0){
-			waterConnectionGetReq.setPropertyIdentifierList(propertyIdentifierList);			
+		if(null != propertyIdentifierList) { 
+			waterConnectionGetReq.setPropertyIdentifierList(propertyIdentifierList);
 		}
 		List<Connection> connectionList = waterConnectionRepository.getConnectionDetails(waterConnectionGetReq);
 		if(connectionList.size() == 1) { 

@@ -350,7 +350,7 @@
 
 								var stateLevelReports ={
 									PT:"http://a99a3c7ac04ac11e78bfd068c35e8c77-1062737105.us-east-1.elb.amazonaws.com:5601/goto/e53af3d8070f1860e41bcb1bd7a14b9a?embed=true",
-									PGR:"",
+									PGR:"http://a99a3c7ac04ac11e78bfd068c35e8c77-1062737105.us-east-1.elb.amazonaws.com:5601/goto/5b56c06810eaf95917d1a2596b809b78?embed=true",
 									WC:"",
 									COLLECTION:"",
 									TL:""
@@ -453,7 +453,7 @@
 											console.log('ulb', ulb);
 											var reportUrl = ulb[$(this).data('url-key')];
 											if(reportUrl){
-												openReport(reportUrl, $(this).data('report-title'));
+												openReport(reportUrl, $(this).data('report-title')+" - "+ulb.ulbName);
 												//window.open('open-report.html?url='+encodeURIComponent(reportUrl)+"&back="+encodeURIComponent(window.location.href)+'&title='+$(this).data('report-title'));
 											}
 											else{

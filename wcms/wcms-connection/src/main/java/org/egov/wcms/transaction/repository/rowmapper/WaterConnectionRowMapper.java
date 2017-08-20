@@ -140,6 +140,11 @@ public class WaterConnectionRowMapper {
 			connection.setConsumerNumber(rs.getString("conn_consumerNum"));
 			connection.setPropertyIdentifier(rs.getString("conn_propid"));
 			connection.setCreatedDate(rs.getString("createdtime"));
+			connection.setPlumberName(rs.getString("plumbername"));
+			connection.setBillSequenceNumber(rs.getLong("sequencenumber"));
+			connection.setOutsideULB(rs.getBoolean("outsideulb"));
+			connection.setMeterOwner(rs.getString("meterowner"));
+			connection.setMeterModel(rs.getString("metermodel"));
 			Long execDate = rs.getLong("execdate");
 			if (null != execDate) {
 				connection.setExecutionDate(execDate);

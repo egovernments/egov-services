@@ -108,6 +108,7 @@ import ReceiptView from './components/non-framework/collection/master/receipt/vi
 import Employee from './components/non-framework/employee/create';
 import EmployeeSearch from './components/non-framework/employee/search';
 import SearchLegacyWc from './components/non-framework/wc/search';
+import updateConnection from './components/non-framework/wc/connection-workflow';
 
 const base = "";
 
@@ -232,7 +233,7 @@ const Main = () => {
       <Route exact path={base+'/legacy/view/:id'} component={ViewLegacy}/>
       <Route exact path={base+'/wc/addDemand/:upicNumber'} component={EditDemands}/>
       <Route exact path={base+'/searchconnection/wc'} component={SearchLegacyWc}/>
-
+      <Route exact path={base+'/wc/application/update/:stateId'} component={updateConnection}/>
 
     </Switch>
   </main>

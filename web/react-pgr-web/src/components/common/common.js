@@ -1113,7 +1113,7 @@ var localization_EN_Data = {
     "pgr.msg.complaint.resolved": " Complaint resolved",
     "pgr.msg.complaintstatus.anytime": " Know the status of your complaint anytime!",
     "pgr.msg.complaint.tellus": " Have a complaint tell us.",
-    "pgr.msg.createaccount.avail.onlineservices": " Create an Account to avail online services",
+    "pgr.msg.createaccount.avail.onlineservices": " Create an account to avail online services",
     "pgr.msg.finalgrievance.submit": " Finally, Click here to submit your grievance!",
     "pgr.msg.future.reference": " Please use this for all your future references",
     "pgr.msg.new.mseva": " New to mSeva ?",

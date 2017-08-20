@@ -98,7 +98,7 @@ public class WaterConnectionRepository {
 
         final String query = insertQuery;
         LOGGER.info("Insert Query is : " + insertQuery);
-        LOGGER.info("Water Treatment ID Obtained is : " + waterConnectionRequest.getConnection().getWaterTreatmentId());
+        LOGGER.info("Created By and Updated By : " + waterConnectionRequest.getRequestInfo().getUserInfo().getId());
         
         Long connectionId = 0L;
         try {
@@ -120,8 +120,8 @@ public class WaterConnectionRepository {
                 statement.setInt(11, waterConnectionRequest.getConnection().getNumberOfTaps());
                 statement.setInt(12, waterConnectionRequest.getConnection().getNumberOfPersons());
                 statement.setString(13, waterConnectionRequest.getConnection().getAcknowledgementNumber());
-                statement.setLong(14, waterConnectionRequest.getRequestInfo().getUserInfo().getId());
-                statement.setLong(15, waterConnectionRequest.getRequestInfo().getUserInfo().getId());
+                statement.setLong(14, (null!=waterConnectionRequest.getRequestInfo().getUserInfo().getId())? waterConnectionRequest.getRequestInfo().getUserInfo().getId() : 1L);
+                statement.setLong(15, (null!=waterConnectionRequest.getRequestInfo().getUserInfo().getId())? waterConnectionRequest.getRequestInfo().getUserInfo().getId() : 1L);
                 statement.setDate(16, new Date(new java.util.Date().getTime()));
                 statement.setDate(17, new Date(new java.util.Date().getTime()));
                 statement.setString(18, waterConnectionRequest.getConnection().getPropertyIdentifier());

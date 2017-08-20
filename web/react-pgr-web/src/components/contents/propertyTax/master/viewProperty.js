@@ -407,13 +407,13 @@ class ViewProperty extends Component {
 										 
 											<Row>
 											  <Col xs={12} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyDetails:oldAssessmentNumber')}</div>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyDetails.oldAssessmentNumber')}</div>
 												   {item.oldUpicNumber || 'NA'}
 											  </Col>
 											
 											
 											  <Col xs={12} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyDetails:assessmentNumber')}</div>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyDetails.assessmentNumber')}</div>
 												   {item.upicNumber || 'NA'}
 											  </Col>
 										

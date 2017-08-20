@@ -192,7 +192,7 @@ constructor(props) {
                             errorText={fieldErrors.owner ? (fieldErrors.owner.name ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.name}</span>:""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.name:""}
                             onChange={(e) => {
-								handleChangeOwner(e,"owner" ,"name", true, /^[a-zA-Z]+$/g);
+								handleChangeOwner(e,"owner" ,"name", true, /^[a-zA-Z ]*$/g);
                                 //handleChangeNextOne(e,"owner" ,"name", false, "");
                               }
                             }

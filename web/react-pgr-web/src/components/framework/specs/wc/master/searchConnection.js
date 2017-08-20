@@ -9,9 +9,9 @@ var dat = {
       "label": "wc.search.searchnewconnection.title",
       "name": "createCategoryType",
       "fields": [{
-          "name": "acknowledgementNumber",
+          "name": "AcknowledgementNumber",
           "jsonPath": "acknowledgementNumber",
-          "label": "Acknowledgement Number",
+          "label": "wc.create.groups.applicantDetails.acknowledgementNumber",
           "pattern": "",
           "type": "text",
           "isRequired": false,
@@ -20,9 +20,9 @@ var dat = {
           "patternErrMsg": ""
         },
         {
-          "name": "consumerNumber",
+          "name": "ConsumerNumber",
           "jsonPath": "consumerNumber",
-          "label": "Consumer Number",
+          "label": "wc.create.groups.applicantDetails.consumerNumber",
           "pattern": "",
           "type": "text",
           "isRequired": false,
@@ -31,9 +31,9 @@ var dat = {
           "patternErrMsg": ""
         },
         {
-          "name": "name",
+          "name": "Name",
           "jsonPath": "name",
-          "label": "Name",
+          "label": "wc.create.name",
           "pattern": "",
           "type": "text",
           "isRequired": false,
@@ -42,9 +42,9 @@ var dat = {
           "patternErrMsg": ""
         },
         {
-          "name": "mobileNumber",
+          "name": "MobileNumber",
           "jsonPath": "mobileNumber",
-          "label": "Mobile Number",
+          "label": "wc.create.groups.applicantDetails.mobileNumber",
           "pattern": "",
           "type": "text",
           "isRequired": false,
@@ -53,9 +53,9 @@ var dat = {
           "patternErrMsg": ""
         },
         {
-          "name": "locality",
+          "name": "Locality",
           "jsonPath": "locality",
-          "label": "Locality",
+          "label": "wc.create.groups.applicantDetails.locality",
           "pattern": "",
           "type": "text",
           "isRequired": false,
@@ -64,9 +64,9 @@ var dat = {
           "patternErrMsg": ""
         },
         {
-          "name": "legacyConsumerNumber",
+          "name": "RevenueWard",
           "jsonPath": "revenueWard",
-          "label": "Revenue Ward",
+          "label": "tl.licenses.view.groups.revenueWardId",
           "pattern": "",
           "type": "text",
           "isRequired": false,
@@ -75,9 +75,9 @@ var dat = {
           "patternErrMsg": ""
         },
         {
-          "name": "doorNumber",
+          "name": "DoorNumber",
           "jsonPath": "doorNumber",
-          "label": "Door Number",
+          "label": "pt.create.groups.propertyAddress.fields.doorNo",
           "pattern": "",
           "type": "text",
           "isRequired": false,

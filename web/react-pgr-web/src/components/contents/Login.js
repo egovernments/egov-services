@@ -149,6 +149,7 @@ class Login extends Component {
      let {setLoadingStatus} = this.props;
      var self = this;
      var tenantId = this.props.match.params.tenantId || "default";
+     localStorage.setItem("tenantId", tenantId);
      Api.commonApiGet("/localization/messages", {locale : value, tenantId: tenantId}, {}, true).then(function(response)
      {
        self.setState({'locale':value});

@@ -26,8 +26,8 @@ public class GenericSteps extends BaseSteps {
     @Given("^(\\w+)\\s+on\\s+(\\w+)\\s+screen\\s+(\\w+)\\s+on\\s+(\\w+)\\s+value\\s+(.*)$")
     public void consumerOnScreenPerformsActionOnElementWithValue(String consumer, String screen, String action, String element, String value) throws NoSuchEventException, IOException, InterruptedException {
 
-        value = findDataIsComingFromDataTable(value);
         TimeUnit.SECONDS.sleep(1);
+        value = findDataIsComingFromDataTable(value);
         if (copyValues.containsKey(value))
             value = copyValues.get(value);
         else
@@ -160,7 +160,10 @@ public class GenericSteps extends BaseSteps {
                 copyValues.put(placeHolder, webElement.getText().split("::")[0]);
                 break;
             default:
-                copyValues.put(placeHolder, webElement.getText());
+                if (!webElement.getText().equals(""))
+                    copyValues.put(placeHolder, webElement.getText());
+                else
+                    copyValues.put(placeHolder, webElement.getAttribute("value"));
                 break;
         }
     }
@@ -196,6 +199,8 @@ public class GenericSteps extends BaseSteps {
     @And("^(\\w+)\\s+on (\\w+) screen selects (\\w+) with value as (.*)$")
     public void selectsDropdownWithValue(String consumer, String screen, String element, String value) throws Throwable {
         TimeUnit.SECONDS.sleep(1);
+        if (copyValues.containsKey(value))
+            value = copyValues.get(value);
         WebElement webElement = pageStore.get(GenericPage.class).buildElement(screen, element, value);
         pageStore.get(GenericPage.class).clickOnDropdown(webElement, value);
     }

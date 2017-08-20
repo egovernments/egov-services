@@ -54,14 +54,14 @@ public class GenericPage extends BasePage {
         String required = "";
 
         for (int i = 0; i < noOfCharacters; i++) {
-            required = required + alphabet[random.nextInt(27 - 0) + 0];
+            required = required + alphabet[random.nextInt(27 - 0)];
         }
 
         return required;
     }
 
     private String getRandomEmail() {
-        return "email" + String.valueOf(100 + (RandomUtils.nextInt(9999))) + "@gmail.com";
+        return "email" + String.valueOf(100 + (RandomUtils.nextInt(9999))) + "@xyz.com";
     }
 
     public WebElement buildElement(String screen, String element, String value) throws IOException {
@@ -137,21 +137,22 @@ public class GenericPage extends BasePage {
 
     public void clickOnDropdown(WebElement webElement, String value) {
 
-        do {
-            clickOnButton(webElement, driver);
-            try {
-                TimeUnit.SECONDS.sleep(1);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+//        do {
+        clickOnButton(webElement, driver);
+        await().atMost(10, TimeUnit.SECONDS).until(() -> driver.findElements(By.cssSelector("div[role=\"presentation\"]:nth-child(1) div div span div div div")).size() >= 1);
+        List<WebElement> dropdown = driver.findElements(By.cssSelector("div[role=\"presentation\"]:nth-child(1) div div span div div div"));
+        for (WebElement w : dropdown) {
+            if (w.getText().equals(value)) {
+                clickOnButton(w, driver);
+                break;
             }
-//            waitForElementToBeVisible(driver.findElement(By.cssSelector("div[role=presentation]:nth-child(1)")), driver);
-//            WebElement scroll = driver.findElement(By.cssSelector("div[role=presentation]:nth-child(1)"));
-//            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", scroll);
 
-            String element = "//*[text()='" + value + "']";
-            WebElement element1 = driver.findElement(By.xpath(element));
-            clickOnButton(element1, driver);
-        } while (!(value.equals(driver.findElement(By.xpath("//*[text()='" + value + "']")).getText())));
+        }
+
+//            String element = "//*[text()='" + value + "']";
+//            WebElement element1 = driver.findElement(By.xpath(element));
+//            clickOnButton(element1, driver);
+//        } while (!(value.equals(driver.findElement(By.xpath("//*[text()='" + value + "']")).getText())));
     }
 
     public void actionOnSuggestionBox(WebElement webElement, String value) {
@@ -170,11 +171,13 @@ public class GenericPage extends BasePage {
                     return applicationRow;
                 }
             }
-        }catch (Exception e){}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         throw new RuntimeException("No application row found in Inbox -- " + number);
     }
 
-    public void waitForTheElementToBePresent(By by) throws IOException {
+    private void waitForTheElementToBePresent(By by) throws IOException {
         await().atMost(20, TimeUnit.SECONDS).until(() -> driver.findElements(by).size() > 0);
     }
 }

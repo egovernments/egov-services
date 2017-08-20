@@ -10,6 +10,6 @@ Feature: Login Intent Feature
   @Intent
   Scenario: LoginIntent
     Given user on Login screen verifies signInText has visible value Sign In
-    And user on Login screen types on username value ramana
-    And user on Login screen types on password value demo
+    And user on Login screen types on username value <username>
+    And user on Login screen types on password value <password>
     And user on Login screen clicks on signIn

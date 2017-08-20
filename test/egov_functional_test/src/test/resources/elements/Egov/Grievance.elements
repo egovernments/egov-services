@@ -171,7 +171,7 @@
         {
         "elementName":"text",
         "identifier":"xpath",
-        "value":"[//*[text()='%s']",
+        "value":"//*[text()='%s']",
         "waitFor":"visibility"
         },
         {
@@ -187,9 +187,45 @@
         "waitFor":"visibility"
         },
         {
-        "elementName":"createCategoryButton",
+        "elementName":"createButton",
         "identifier":"xpath",
         "value":"(//*[text()='Create'])[2]",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"close",
+        "identifier":"xpath",
+        "value":"//*[text()='Close']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"grievanceSearch",
+        "identifier":"css",
+        "value":"input[type=search]",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"grievanceTypeName",
+        "identifier":"id",
+        "value":"serviceName",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"grievanceTypeCode",
+        "identifier":"id",
+        "value":"serviceCode",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"slaHours",
+        "identifier":"id",
+        "value":"slaHours",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"grievanceTypeCategorySelect",
+        "identifier":"css",
+        "value":"[id^='undefined-undefined-Category']",
         "waitFor":"visibility"
         }
     ]

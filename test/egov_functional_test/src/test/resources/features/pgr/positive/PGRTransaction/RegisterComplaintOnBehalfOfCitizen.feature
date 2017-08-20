@@ -23,10 +23,11 @@ Feature: Registering a Complaint
     And user on Grievance screen types on email value --email
 
     ### On Create Complaint Grievance Screen Entering Grievance Information ###
-    And user on Grievance screen clicks on text value Spilling of Garbage from lorry
-    And user on Grievance screen types on grievanceDetails value Grievance Details
+    And user on Grievance screen selects grievanceCategory with value as Revenue
+    And user on Grievance screen selects grievanceType with value as Unauthorised Advt. Boards
 
     ### On Create Complaint Grievance Screen Entering More Details ###
+    And user on Grievance screen types on grievanceDetails value Grievance Details
     And user on Grievance screen types on grievanceLocation suggestion box with value Bank Road
     And user on Grievance screen uploads on selectPhoto value pgrDocument.jpg
     And user on Grievance screen clicks on create
@@ -41,9 +42,9 @@ Feature: Registering a Complaint
     And Intent:LogoutIntentTest
 
     ### Login ###
-    Given user on Login screen types on username value user
-    And user on Login screen types on password value demo
-    And user on Login screen clicks on signIn
+    And DataIntent:LoginIntent
+      | user |
+      | demo |
 
     ### On HomePage Screen ###
     And user on Home screen types on dashBoardSearch with above applicationNumber
@@ -100,10 +101,11 @@ Feature: Registering a Complaint
     And user on Grievance screen types on email value --email
 
     ### On Create Complaint Grievance Screen Entering Grievance Information ###
-    And user on Grievance screen clicks on text value Spilling of Garbage from lorry
-    And user on Grievance screen types on grievanceDetails value Grievance Details
+    And user on Grievance screen selects grievanceCategory with value as Revenue
+    And user on Grievance screen selects grievanceType with value as Unauthorised Advt. Boards
 
     ### On Create Complaint Grievance Screen Entering More Details ###
+    And user on Grievance screen types on grievanceDetails value Grievance Details
     And user on Grievance screen types on grievanceLocation suggestion box with value Bank Road
     And user on Grievance screen uploads on selectPhoto value pgrDocument.jpg
     And user on Grievance screen clicks on create
@@ -118,9 +120,9 @@ Feature: Registering a Complaint
     And Intent:LogoutIntentTest
 
     ### Login ###
-    Given user on Login screen types on username value user
-    And user on Login screen types on password value demo
-    And user on Login screen clicks on signIn
+    And DataIntent:LoginIntent
+      | user |
+      | demo |
 
     ### On HomePage Screen ###
     And user on Home screen types on dashBoardSearch with above applicationNumber

@@ -696,7 +696,7 @@ class Login extends Component {
                         </IconButton>
                         <div style={{"float": "left", "cursor": "pointer"}}>
                           <h4>{translate('pgr.title.create.account')}</h4>
-                          <p>{translate('pgr.msg.creategrievance.avail.onlineservices')}</p>
+                          <p>{translate('pgr.msg.createaccount.avail.onlineservices')}</p>
                         </div>
                       </Col>
 

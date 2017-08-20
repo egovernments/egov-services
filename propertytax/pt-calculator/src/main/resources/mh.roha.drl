@@ -1,0 +1,127 @@
+    package org.egov.calculator
+   	import org.egov.calculator.service.TaxCalculatorServiceImpl;
+	import org.egov.models.*;
+   	import org.egov.calculator.models.*;
+   	import org.springframework.beans.factory.annotation.Autowired;
+   	import java.util.*;
+   	
+    dialect"mvel";
+    dialect"java";
+
+ function UnitTax calculateUnitTax(UnitWrapper unitWrapper,TaxPeriod taxPeriod,Property property){
+ 
+ 
+ TaxCalculatorServiceImpl taxService=new TaxCalculatorServiceImpl();
+   Map<String, Double> factorsList = unitWrapper.getFactors();
+   System.out.println(factorsList+"factorsList");
+   String occupancy="occupancy"+unitWrapper.getUnit().getOccupancyType();
+   String usage="usage"+unitWrapper.getUnit().getUsage();
+   String propertytype="propertytype"+property.getPropertyDetail().getPropertyType();
+   String structure="structure"+unitWrapper.getUnit().getStructure();
+   String age="age"+unitWrapper.getUnit().getAge();
+   System.out.println("GuidanceValue"+unitWrapper.getGuidanceValue()+" area"+unitWrapper.getUnit().getAssessableArea()+" usage"+factorsList.get(usage)+" propertytype"+factorsList.get(propertytype)+"str "+factorsList.get(structure)+" occ"+factorsList.get(occupancy));
+         Unit unit = unitWrapper.getUnit();
+         Double builtArea = unit.getAssessableArea();
+         Double rentForMonth = unitWrapper.getGuidanceValue() * builtArea * factorsList.get(usage)
+                * factorsList.get(propertytype)
+                * factorsList.get(structure) * factorsList.get(occupancy);
+                rentForMonth = Math.round(rentForMonth * 100.0) / 100.0;
+                System.out.println(rentForMonth+"rent for month");
+       UnitTax unitTax=taxService.calculateUnitTax(unitWrapper,taxPeriod,rentForMonth,factorsList.get(age),0.1,property);  
+       try{
+       if(!property.getPropertyDetail().getCategory().equalsIgnoreCase("Non-Residential")){
+      List<HeadWiseTax> headWiseTaxList=unitTax.getUnitTaxes().getHeadWiseTaxes().stream().
+      filter(HeadWiseTax->HeadWiseTax.getTaxName().equalsIgnoreCase("EMP_GUA_CESS")).collect(java.util.stream.Collectors.toList());
+      if(headWiseTaxList!=null){
+     int index=unitTax.getUnitTaxes().getHeadWiseTaxes().indexOf(headWiseTaxList.get(0));
+     unitTax.getUnitTaxes().getHeadWiseTaxes().remove(index);
+     }
+      }
+      }catch(Exception ex){
+       System.out.println("error occured while checking category");
+      }
+      try{
+      Optional<HeadWiseTax> uacPenality=unitTax.getUnitTaxes().getHeadWiseTaxes().stream().
+      filter(HeadWiseTax->HeadWiseTax.getTaxName().equalsIgnoreCase("UAC_PENALTY")).findFirst();
+           
+      HeadWiseTax uacpenalityHeadWise= uacPenality.orElse(null);
+      if(uacpenalityHeadWise!=null){
+      if(unit.getIsAuthorised()){
+      int index=unitTax.getUnitTaxes().getHeadWiseTaxes().indexOf(uacpenalityHeadWise);
+      unitTax.getUnitTaxes().getHeadWiseTaxes().remove(index);
+      }  
+      }
+      }catch(Exception ex){
+     System.out.println("error occured while checking uac penality tax");
+      }
+      System.out.println("unit tax"+unitTax);
+       return  unitTax;   
+}
+
+
+function void calculateTax(TaxCalculationWrapper taxwrapper)  {
+System.out.println("in calculate tax"+taxwrapper.getTaxPeriods());
+ TaxCalculatorServiceImpl taxService=new TaxCalculatorServiceImpl();
+      try{
+        List<TaxperiodWrapper> taxPeriodsWrapper = taxwrapper.getTaxPeriods();
+        CalculationResponse calculationResponse=new CalculationResponse();
+        List<TaxCalculation> taxCalculationList=new ArrayList<TaxCalculation>();
+        for (TaxperiodWrapper taxPeriodWapper : taxPeriodsWrapper) {
+        System.out.println("taxWrapper"+taxPeriodWapper);
+            List<UnitTax> unitTaxes = new ArrayList<UnitTax>();
+            TaxPeriod taxPeriod = taxPeriodWapper.getTaxPeriod();
+            System.out.println("taxPeriod"+taxPeriod);
+            System.out.println("units"+taxPeriodWapper.getUnits());
+            for (UnitWrapper unitWrapper : taxPeriodWapper.getUnits()) {
+                UnitTax unitTax = calculateUnitTax(unitWrapper, taxPeriod,taxwrapper.getProperty());
+                 System.out.println(unitTax+"unitTaxes ************8");
+                unitTaxes.add(unitTax);
+            }
+            System.out.println(unitTaxes+"unitTaxes ************8");
+            TaxCalculation taxCalculation= taxService.getTaxCalculation(unitTaxes,taxPeriodWapper.getTaxPeriod());
+            taxCalculationList.add(taxCalculation);
+        }
+        calculationResponse.setTaxes(taxCalculationList);
+        taxwrapper.setCalculationResponse(calculationResponse);
+        }catch(Exception ex){
+       System.out.println("Error occured in calculate tax function");
+        }
+       
+    }
+    
+    function calculateVacantLandTax(TaxCalculationWrapper taxwrapper){
+    System.out.println("in calculate tax"+taxwrapper.getTaxPeriods());
+    try{
+    TaxCalculatorServiceImpl taxService=new TaxCalculatorServiceImpl();
+    List<TaxCalculation> taxCalculationList=new ArrayList<TaxCalculation>();
+    Property property=taxwrapper.getProperty();
+    CalculationResponse calculationResponse=new CalculationResponse();
+    List<TaxperiodWrapper> taxPeriodsWrapper = taxwrapper.getTaxPeriods();
+    
+      for(TaxperiodWrapper taxPeriod:taxPeriodsWrapper){
+      TaxCalculation taxCalculation= taxService.getTaxCalculationForVacantLand(property,taxPeriod,property.getVacantLand().getCapitalValue());
+      System.out.println("tax calculation object: "+taxCalculation + "for taxperiod: "+taxPeriod.getTaxPeriod());
+      taxCalculationList.add(taxCalculation);
+      }
+      
+       calculationResponse.setTaxes(taxCalculationList);
+        taxwrapper.setCalculationResponse(calculationResponse);
+        System.out.println("calculation response is"+calculationResponse);
+        }catch(Exception ex){
+        System.out.println("Error occured in calculate tax for vacantland");
+        }
+     }
+ 
+    rule"Tax calculation in maharashtra mvel"
+
+    when $taxCalculation:TaxCalculationWrapper( property!=null )
+     then   
+     $propertyType=$taxCalculation.getProperty().getPropertyDetail().getPropertyType();
+    System.out.println("property type is"+ $propertyType);
+     if(!$propertyType.equalsIgnoreCase("VACANT_LAND")){
+     calculateTax($taxCalculation) ;
+     }else{
+     calculateVacantLandTax($taxCalculation);
+     }
+  
+      end

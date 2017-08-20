@@ -58,6 +58,7 @@ public class BillingServiceApplication {
 	public ObjectMapper getObjectMapper(){
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+		objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
 		return objectMapper;
 	}
 

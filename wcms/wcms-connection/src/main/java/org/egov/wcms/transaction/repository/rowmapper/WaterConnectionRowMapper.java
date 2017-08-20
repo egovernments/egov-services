@@ -139,7 +139,7 @@ public class WaterConnectionRowMapper {
 			connection.setSupplyType(rs.getString("supplytype_name"));
 			connection.setCategoryId(rs.getString("category_id"));
 			connection.setCategoryType(rs.getString("category_name"));
-			connection.setHscPipeSizeType(rs.getString("pipesize_sizeinmilimeter"));
+			connection.setHscPipeSizeType(rs.getString("pipesize_sizeininch"));
 			connection.setPipesizeId(rs.getString("pipesize_id"));
 			connection.setSourceTypeId(rs.getString("watersource_id"));
 			connection.setSourceType(rs.getString("watersource_name"));

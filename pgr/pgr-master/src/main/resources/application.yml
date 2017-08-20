@@ -77,7 +77,7 @@ ReportDefinitions:
   - name: complainttype
     label: reports.pgr.complainttype
     type: singlevaluelist
-    pattern: http://pgr-master:8080/pgr-master/service/v1/_search?tenantId=default&keywords=complaint|$..serviceCode|$..serviceName
+    pattern: http://pgr-master:8080/pgr-master/service/v1/_search?tenantId=$tenantid&keywords=complaint|$..serviceCode|$..serviceName
     source: seva
     isMandatory: true
   query: SELECT ctype.name,
@@ -1548,28 +1548,28 @@ ReportDefinitions:
   - name: complaintcategorytype
     label: reports.pgr.complaintcategorytype
     type: singlevaluelist
-    pattern: http://pgr-master:8080/pgr-master/serviceGroup/v1/_search?tenantId=default&keyword=complaint|$..id|$..name
+    pattern: http://pgr-master:8080/pgr-master/serviceGroup/v1/_search?tenantId=$tenantid&keyword=complaint|$..id|$..name
     source: seva
     isMandatory: false
     searchClause: and cc.id=$complaintcategorytype 
   - name: complainttype
     label: reports.pgr.complainttype
     type: url
-    pattern: /pgr-master/service/v1/_search?tenantId=default&categoryId={complaintcategorytype}&keywords=complaint|$..serviceCode|$..serviceName
+    pattern: /pgr-master/service/v1/_search?tenantId=$tenantid&categoryId={complaintcategorytype}&keywords=complaint|$..serviceCode|$..serviceName
     source: seva
     isMandatory: false
     searchClause: and ct.code=$complainttype 
   - name: positiontype
     label: reports.pgr.positiontype
     type: singlevaluelist
-    pattern: http://hr-masters:8080/hr-masters/positions/_search?tenantId=default&pageSize=500|$.Position[*].id|$.Position[*].name
+    pattern: http://hr-masters:8080/hr-masters/positions/_search?tenantId=$tenantid&pageSize=500|$.Position[*].id|$.Position[*].name
     source: seva
     isMandatory: false
     searchClause: and p.id=$positiontype
   - name: wardtype
     label: reports.pgr.wardtype
     type: singlevaluelist
-    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?boundaryTypeName=Ward&hierarchyTypeName=Administration&tenantId=default|$..id|$..name
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?boundaryTypeName=Ward&hierarchyTypeName=Administration&tenantId=$tenantid|$..id|$..name
     source: seva
     isMandatory: false
     searchClause: and b.id=$wardtype

@@ -10,9 +10,13 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum OwnerShipTypeEnum {
 
-	STATE_GOVERNMENT("STATE_GOVERNMENT"),
+	STATE_GOVERNMENT_OWNED("STATE_GOVERNMENT_OWNED"),
 
-	RENTED("RENTED");
+	RENTED("RENTED"),
+	
+	CENTRAL_GOVERNMENT_OWNED("CENTRAL_GOVERNMENT_OWNED"),
+	
+	ULB("ULB");
 
 	private String value;
 

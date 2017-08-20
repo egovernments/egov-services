@@ -14,6 +14,7 @@ import org.egov.tl.commons.web.requests.ResponseInfoFactory;
 import org.egov.tl.commons.web.requests.TradeLicenseRequest;
 import org.egov.tl.commons.web.requests.TradeLicenseResponse;
 import org.egov.tl.commons.web.requests.TradeLicenseSearchResponse;
+import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.common.domain.exception.CustomBindException;
 import org.egov.tradelicense.domain.model.AuditDetails;
 import org.egov.tradelicense.domain.model.TradeLicense;
@@ -41,6 +42,9 @@ public class TradeLicenseController {
 	
 	@Autowired
 	private SmartValidator validator;
+	
+	@Autowired
+	PropertiesManager propertiesManager;
 
 	private BindingResult validate(List<TradeLicenseContract> tradeLicenses, BindingResult errors) {
 
@@ -63,16 +67,19 @@ public class TradeLicenseController {
 
 //		validate(tradeLicenseRequest.getLicenses(), errors);
 		if (errors.hasErrors()) {
-			throw new CustomBindException(errors);
+			throw new CustomBindException(errors, tradeLicenseRequest.getRequestInfo());
 		}
-
+		
+		RequestInfo requestInfo = tradeLicenseRequest.getRequestInfo();
 		ModelMapper model = new ModelMapper();
 		TradeLicenseResponse tradeLicenseResponse = new TradeLicenseResponse();
-		tradeLicenseResponse.setResponseInfo(getResponseInfo(tradeLicenseRequest.getRequestInfo()));
+		tradeLicenseResponse.setResponseInfo(getResponseInfo(requestInfo));
+		if(tradeLicenseResponse.getResponseInfo() != null){
+			tradeLicenseResponse.getResponseInfo().setStatus(propertiesManager.getLegacyCreateSuccessMessage());
+		}
 		List<TradeLicense> tradeLicenses = new ArrayList<>();
 		TradeLicense tradeLicense;
-
-		RequestInfo requestInfo = tradeLicenseRequest.getRequestInfo();
+		
 		for (TradeLicenseContract tradeLicenseContract : tradeLicenseRequest.getLicenses()) {
 
 			tradeLicense = new TradeLicense();

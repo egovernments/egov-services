@@ -389,7 +389,6 @@ var localization_EN_Data = {
 
     "pt.create.demands.addDemand": "Add Demand",
 
-
     "pt.create.groups.propertyAddress.fields.surveyNumber": "Survey Number",
     "pt.create.groups.propertyAddress.fields.pattaNumber": "Patta Number",
     "pt.create.groups.propertyAddress.fields.vacantLandArea": "Vacant Land Area",
@@ -406,7 +405,7 @@ var localization_EN_Data = {
     "pt.create.groups.propertyAddress.fields.eastBoundedBy": "East",
     "pt.create.groups.propertyAddress.fields.westBoundedBy": "West",
     "pt.create.groups.propertyAddress.fields.addRoom": "Add Room",
-    "pt.create.groups.propertyAddress.fields.pan": "Pan Number",
+    "pt.create.groups.propertyAddress.fields.pan": "PAN",
     "pt.create.groups.propertyAddress.fields.parkingFactor": "Parking Factor",
     "pt.create.groups.propertyAddress.fields.liftFactor": "Lift Factor",
     "pt.create.groups.propertyAddress.fields.roadFactor": "Road Factor",
@@ -417,7 +416,7 @@ var localization_EN_Data = {
     "pt.create.groups.propertyAddress.fields.buildingCost": "Building Cost",
     "pt.create.groups.propertyAddress.fields.landCost": "Land Cost",
     "pt.create.groups.propertyAddress.fields.assessableArea": "Assessable Area",
-    "pt.create.groups.floorDetails.fields.Arv": "Arv",
+    "pt.create.groups.floorDetails.fields.Arv": "Annual Retable Value",
 
     "pt.create.groups.propertyAddress.fields.totalArea": "Total Area",
     "pt.create.groups.propertyAddress.fields.propertyAge": "Property Age",
@@ -425,8 +424,6 @@ var localization_EN_Data = {
     "pt.create.groups.propertyAddress.fields.firstAssessmentDate": "First Assessment Date",
     "pt.create.groups.propertyAddress.fields.revisedAssessmentDate": "Revised Assessment Date",
     "pt.create.groups.propertyAddress.fields.lastAssessmentDate": "Last Assessment Date",
-
-
 
     //Add Demand
     "pt.create.groups.addDemand.fields.installment": "Installment",

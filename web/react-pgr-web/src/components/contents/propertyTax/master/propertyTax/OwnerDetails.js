@@ -330,7 +330,7 @@ constructor(props) {
                             floatingLabelText={translate('pt.create.groups.ownerDetails.fields.percentageOfOwnerShip')}
                             errorText={fieldErrors.owner ? (fieldErrors.owner.ownerShipPercentage ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.ownerShipPercentage}</span>:""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.ownerShipPercentage:""}
-                            onChange={(e) => handleChangeNextOne(e,"owner", "ownerShipPercentage", false, /^[1-9][0-9]?$|^100$/g)}
+                            onChange={(e) => handleChangeOwner(e,"owner", "ownerShipPercentage", false, /^[1-9][0-9]?$|^100$/g)}
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                             underlineStyle={styles.underlineStyle}
                             underlineFocusStyle={styles.underlineFocusStyle}

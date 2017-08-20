@@ -10,6 +10,7 @@ import {List, ListItem} from 'material-ui/List';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
+import {translate} from '../../../common/common';
 import Api from '../../../../api/api';
 
 const $ = require('jquery');
@@ -398,7 +399,7 @@ class ViewProperty extends Component {
                     <Grid fluid key={index}>
                           <br/>
                           <Card className="uiCard">
-							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>Property Details</div>} />
+							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>{translate('pt.create.groups.propertyDetails')}</div>} />
                               <CardText>
 								
 									<Col md={12} xs={12}>
@@ -406,24 +407,24 @@ class ViewProperty extends Component {
 										 
 											<Row>
 											  <Col xs={12} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Old Assessment Number</div>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyDetails:oldAssessmentNumber')}</div>
 												   {item.oldUpicNumber || 'NA'}
 											  </Col>
 											
 											
 											  <Col xs={12} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Assessment Number</div>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyDetails:assessmentNumber')}</div>
 												   {item.upicNumber || 'NA'}
 											  </Col>
 										
 											
 											  <Col xs={12} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Annual Rental Value</div>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.annualRentalValue')}</div>
 												   NA
 											  </Col>
 											
 											  <Col xs={12} md={3} style={styles.bold}>
-												  <div style={{fontWeight:500}}>Property Type</div>
+												  <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.propertyType')}</div>
 												   {getNameByCode(this.state.propertytypes ,item.propertyDetail.propertyType) || 'NA'}
 											  </Col>
 											</Row>
@@ -431,15 +432,15 @@ class ViewProperty extends Component {
 										
 											<Row>
 											  <Col xs={4} md={3} style={styles.bold}>
-												 <div style={{fontWeight:500}}> Extent of Site (Sq.Mtrs)</div>
+												 <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.extentOfSite')}</div>
 												  {item.propertyDetail.sitalArea || 'NA'}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
-												  <div style={{fontWeight:500}}>Registration Doc No</div>
+												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.registrationDocNo')}</div>
 												  {item.propertyDetail.regdDocNo || 'NA'}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
-												  <div style={{fontWeight:500}}>Reason for Creation</div>
+												  <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.creationReason')}</div>
 												  {getNameByCode(this.state.creationReason, item.creationReason) || 'NA'}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>

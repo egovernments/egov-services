@@ -385,7 +385,6 @@ var localization_EN_Data = {
 
     "pt.create.demands.addDemand": "Add Demand",
 
-
     "pt.create.groups.propertyAddress.fields.surveyNumber": "Survey Number",
     "pt.create.groups.propertyAddress.fields.pattaNumber": "Patta Number",
     "pt.create.groups.propertyAddress.fields.vacantLandArea": "Vacant Land Area",
@@ -413,7 +412,7 @@ var localization_EN_Data = {
     "pt.create.groups.propertyAddress.fields.buildingCost": "Building Cost",
     "pt.create.groups.propertyAddress.fields.landCost": "Land Cost",
     "pt.create.groups.propertyAddress.fields.assessableArea": "Assessable Area",
-    "pt.create.groups.floorDetails.fields.Arv": "Arv",
+    "pt.create.groups.floorDetails.fields.Arv": "Annual Retable Value",
 
     "pt.create.groups.propertyAddress.fields.totalArea": "Total Area",
     "pt.create.groups.propertyAddress.fields.propertyAge": "Property Age",
@@ -442,6 +441,25 @@ var localization_EN_Data = {
     "pt.create.groups.constructionDetails.fields.licenseType": "License Type",
     "pt.create.groups.constructionDetails.fields.licenseNumber": "License Number",
     "pt.create.groups.propertyAddress.fields.totalFloors": "Total Floors",
+	
+	"pt.create.demands.addDemand": "Add Demand",
+    "pt.create.groups.surroundingBoundaries": "Details of surrounding Boundaries of the property",
+    "pt.create.groups.propertyAddress.vacantLand" : "Vacant Land",
+	"pt.create.groups.room" : "Room",
+	"pt.create.groups.upicDetails" : "UPIC Details",
+	"pt.create.groups.ownerDetails" : "Owner Details",
+	"pt.create.groups.propertyDetails": "Property Details",
+	"pt.create.groups.propertyDetails.oldAssessmentNumber": "Old Assessment Number",
+	"pt.create.groups.propertyDetails.assessmentNumber": "Assessment Number",
+	"pt.create.groups.propertyAddress.fields.annualRentalValue": "Annual Rental Value",
+	"pt.create.groups.propertyAddress.fields.registrationDocNo": "Registration Doc No",
+	"pt.create.groups.propertyAddress.fields.AssessmentNumberOfParentProperty" : "Assessment number of parent property",
+	"pt.create.groups.propertyAddress.fields.exemptionCategory": "Exemption Category",
+	"pt.create.groups.propertyAddress.fields.propertyDepartment": "Property Department",
+	"pt.create.groups.propertyAddress.fields.registrationDocDate": "Registration Doc Date",
+	"pt.create.groups.propertyAddress.fields.assessmentDate": "Assessment Date",
+	"pt.create.groups.propertyAddress.fields.addressDetails": "Address Details",
+	"pt.create.groups.propertyAddress.fields.propertyAddress":"Property Address",
 
 
 

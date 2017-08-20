@@ -189,6 +189,28 @@ handleDepartment = (e) => {
 		})
 
 } 
+
+formatDate(date){
+	
+	var day = (date.getDate() < 10) ? ('0'+date.getDate()) : date.getDate();
+	var month = ((date.getMonth() + 1)<10) ? ('0'+(date.getMonth() + 1)) : (date.getMonth() + 1)
+	
+	return day + "/" + month + "/" + date.getFullYear();
+}
+
+handleAge = (year) => {
+/*	var query = {
+		fromYear : year,
+		toYear: year
+	}
+	var currentThis = this;
+	Api.commonApiPost('/property/depreciations/_search',query).then((res)=>{
+	  console.log(res);
+	  currentThis.setState({structureclasses: res.structureClasses})
+	}).catch((err)=> {
+	  console.log(err)
+	})*/
+}
   
   render() {
 
@@ -457,17 +479,26 @@ handleDepartment = (e) => {
 												/>
 										 </Col>
 										 <Col xs={12} md={3} sm={6}>
-												<TextField  className="fullWidth"
+												<DatePicker  className="fullWidth datepicker"
+												  formatDate={(date)=> this.formatDate(date)}
 												  floatingLabelText="Building Permission Date"
-												  errorText={fieldErrors.bpaDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.bpaDate}</span> : ""}
-												  value={assessmentDetails.bpaDate ? assessmentDetails.bpaDate : ""}
-												  onChange={(e) => {handleChange(e, "bpaDate", false, /^[a-z0-9]+$/i)}}
+												  errorText={fieldErrors.bpaDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.bpaDate}</span> : ""}
+												  onChange={(event,date) => {
+														var day = (date.getDate() < 10) ? ('0'+date.getDate()) : date.getDate();
+														var month = ((date.getMonth() + 1)<10) ? ('0'+(date.getMonth() + 1)) : (date.getMonth() + 1)
+													  var e = {
+														target:{
+															value: day + "/" + month + "/" + date.getFullYear()
+														}
+													  }
+													this.handleAge(date.getFullYear());
+													handleChange(e,"bpaDate", false, "")}}
 												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 												  underlineStyle={styles.underlineStyle}
 												  underlineFocusStyle={styles.underlineFocusStyle}
-												  maxLength={15}
+												  textFieldStyle={{width: '100%'}}
 												  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-												/>
+												/>		
 										 </Col>
                                       </Row>
                                   </Grid>

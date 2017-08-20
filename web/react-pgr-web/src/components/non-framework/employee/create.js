@@ -686,7 +686,7 @@ class Employee extends Component {
         if(dat.hod && dat.hod.length) {
             dat.mainDepartments = [];
             for(var i=0; i<dat.hod.length; i++) {
-                dat.mainDepartments.push(dat.hod[i]);
+                dat.mainDepartments.push(dat.hod[i]["department"]);
             }
             dat.hod = true;
         }
@@ -864,7 +864,7 @@ class Employee extends Component {
         if(asst.hod == "true" || asst.hod == true) {
             asst.hod = [];
             for(let i=0; i<asst.mainDepartments.length; i++) {
-                asst.hod.push(asst.mainDepartments[i]);
+                asst.hod.push({"department": asst.mainDepartments[i]});
             }
         }
 
@@ -2735,7 +2735,7 @@ class Employee extends Component {
               <td>{getNameById(self.state.grades, val.grade)}</td>
               <td><ol>{val.hod && val.hod.length ? val.hod.map(function(v, i) {
                 return (
-                    <li>{getNameById(self.state.departments, v)}</li>
+                    <li>{getNameById(self.state.departments, v.department)}</li>
                 )
               }) : ""}</ol></td>
               <td>{val.govtOrderNumber}</td>

@@ -218,11 +218,12 @@ public class WaterConnectionQueryBuilder {
 
     public static String updateConnectionQuery() {
 
-        return "UPDATE egwtr_waterconnection SET connectiontype = ?, applicationType = ?,billingtype = ?,"
+    	return "UPDATE egwtr_waterconnection SET stateid = ? where acknowledgmentnumber = ?"; 
+        /*return "UPDATE egwtr_waterconnection SET connectiontype = ?, applicationType = ?,billingtype = ?,"
                 + "categorytype = ?,hscpipesizetype = ?,sourcetype = ?,connectionstatus =?,"
                 + " sumpcapacity=?,numberofftaps=?,numberofpersons=?,lastmodifiedby =?,lastmodifiedtime =?,stateid=? ,numberOfFamily=?,"
                 + " status=?, estimationnumber=?, workordernumber=?, consumernumber=?"
-                + " where acknowledgmentnumber = ?";
+                + " where acknowledgmentnumber = ?";*/
     }
 
     public static String updateConnectionAfterWorkFlowQuery() {

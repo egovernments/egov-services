@@ -173,10 +173,9 @@ public class DemandConnectionService {
         }
         else
         {
-            if(connection.getPropertyIdentifier() ==null && 
-                    connection.getConnectionOwner()!=null && connection.getConnectionOwner().getId()!=null){
+            if(connection.getPropertyIdentifier() ==null &&  connection.getUserid()!=null){
                 ownerobj=new Owner();
-            ownerobj.setId(connection. getConnectionOwner().getId());
+            ownerobj.setId(connection.getUserid());
             ownerobj.setTenantId(tenantId);
             System.out.println("user Object WIthout Prop="+ownerobj);
 

@@ -30,12 +30,83 @@ const defaultMat = {
 };
 
 const generateEstNotice = function(connection, tenantInfo) {
-	let x=5, y=5, w=200, h=90, rectGap=10, originalX=5, originalY=10, dublicateX=5, dublicateY=5, triplicateX=5, triplicateY=5;
 	var doc = new jsPDF();
 
+	doc.setFont("courier");
+	doc.setFontType("bold");
+	doc.setFontSize(20);
+	doc.text(105, 10, (tenantInfo && tenantInfo.city && tenantInfo.city.name ? tenantInfo.city.name : "Roha Municipal Council") , null, null, 'center');
+	doc.setFontSize(15);
+	doc.setFontType("normal");
+	doc.text(105, 20, 'Water Department', null, null, 'center');
+	doc.text(105, 30, 'Letter Of Intimation', null, null, 'center');
+	doc.setFontType("bold");
+	doc.text(200, 40, 'Date: ________', null, null, 'right');
+	doc.text(200, 50, 'No.: ________', null, null, 'right');
+	doc.setFontType("bold");
+	doc.setFontSize(20);
+	doc.text(10, 60, "To,");
+	doc.text(10, 70, "Applicant");
+	doc.setFont("times");
+	doc.setFontType("normal");
+	doc.setFontSize(15);
+	doc.text(10, 82, "Subject: Letter of Intimation for New Water Connection");
+	doc.text(10, 90, "Reference: Application No: " + connection.consumerNumber + " and Application Date " + (connection.executionDate ? new Date(connection.executionDate) : ""));
+	doc.text(10, 98, "Sir/Madam");
+	doc.setFontType("bold");
+	doc.text(35, 98, connection.property.nameOfApplicant + "  has applied for New Water Connection for Water No. ")
+	doc.text(10, 106, "Water No. " + connection.consumerNumber + ". Requested to New Water Connection has been approved. Kindly pay the");
+	doc.text(10, 114, "charges which are mentioned below within __ days.")
+	doc.text(10, 122, "If not paid Application will be rejected or Penalty will be levied.");
+	doc.text(10, 140, "Road Cutting Charges:    " + connection.estimationCharge[0].roadCutCharges);
+	doc.text(10, 148, "Security Charges:             " + connection.estimationCharge[0].specialSecurityCharges);
+	doc.text(10, 156, "Supervision Charges:       " + connection.estimationCharge[0].supervisionCharges);
+	doc.setFontType("normal");
+	doc.text(200, 190, 'Signing Authority', null, null, 'right');
+	//doc.text(182, 198, 'अधिक्', null, null, 'right');
+	doc.setFontType("bold");
+	doc.setFontSize(20);
+	doc.text(163, 210, (tenantInfo && tenantInfo.city && tenantInfo.city.name ? tenantInfo.city.name : "Roha Municipal Council"), null, null, 'center');
+	doc.save("SN" + connection.consumerNumber + ".pdf");
 }
 
-const generateWO = function(connection) {}
+const generateWO = function(connection, tenantInfo) {
+	var doc = new jsPDF();
+
+	doc.setFont("courier");
+	doc.setFontType("bold");
+	doc.setFontSize(20);
+	doc.text(105, 10, (tenantInfo && tenantInfo.city && tenantInfo.city.name ? tenantInfo.city.name : "Roha Municipal Council"), null, null, 'center');
+	doc.setFontSize(15);
+	doc.setFontType("normal");
+	doc.text(105, 20, 'Water Department', null, null, 'center');
+	doc.text(105, 30, 'Letter Of Intimation', null, null, 'center');
+	doc.setFontType("bold");
+	doc.text(200, 40, 'Date: ________', null, null, 'right');
+	doc.text(200, 50, 'No.: ________', null, null, 'right');
+	doc.setFontType("bold");
+	doc.setFontSize(20);
+	doc.text(10, 60, "To,");
+	doc.text(10, 70, "Applicant");
+	doc.setFont("times");
+	doc.setFontType("normal");
+	doc.setFontSize(15);
+	doc.text(10, 82, "Subject: Approval Order");
+	doc.text(10, 90, "Reference: Application No: " + connection.consumerNumber + " and Application Date " + (connection.executionDate ? new Date(connection.executionDate) : ""));
+	doc.text(10, 98, "Sir/Madam");
+	doc.setFontType("bold");
+	doc.text(35, 98, connection.property.nameOfApplicant + " has applied for New <Service name> has been approved.")
+	doc.text(10, 106, connection.plumberName + " assigned for the work.");
+	doc.text(10, 114, "Allotted Water Connection No. " + connection.consumerNumber)
+	       
+	doc.setFontType("normal");
+	doc.text(200, 190, 'Signing Authority', null, null, 'right');
+	doc.setFontType("bold");
+	doc.setFontSize(20);
+	doc.text(163, 210, ' Roha Muncipal Council', null, null, 'center');
+	doc.save("SN" + connection.consumerNumber + ".pdf");
+}
+
 class Report extends Component {
   state={
     pathname:""
@@ -951,12 +1022,15 @@ class Report extends Component {
   	Api.commonApiPost("/wcms-connection/connection/_update", {}, formData, null, true).then(function(res){
   		self.props.setLoadingStatus('hide');
   		if(action.key.toLowerCase() == "generate estimation notice") {
-  			generateEstNotice(res.Connection[0]);
+  			generateEstNotice(res.Connection[0], self.props.tenantInfo ? self.props.tenantInfo[0] : "");
   		} else if(action.key.toLowerCase() == "generate work order") {
-  			generateWO(res.Connection[0]);
+  			generateWO(res.Connection[0], self.props.tenantInfo ? self.props.tenantInfo[0] : "");
   		}
 
-  		self.props.setRoute("/view/wc/" + res.Connection[0].acknowledgementnumber);
+  		setTimeout(function(){
+  			self.props.setRoute("/view/wc/" + res.Connection[0].acknowledgementnumber);
+  		}, 5000);
+  		
   	}, function(err){
   		self.props.setLoadingStatus('hide');
   		self.props.toggleSnackbarAndSetText(true, err.message, false, true);
@@ -1278,7 +1352,8 @@ const mapStateToProps = state => ({
   formData:state.frameworkForm.form,
   fieldErrors: state.frameworkForm.fieldErrors,
   isFormValid: state.frameworkForm.isFormValid,
-  requiredFields: state.frameworkForm.requiredFields
+  requiredFields: state.frameworkForm.requiredFields,
+  tenantInfo: state.common.tenantInfo
 });
 
 const mapDispatchToProps = dispatch => ({

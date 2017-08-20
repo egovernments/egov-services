@@ -86,8 +86,6 @@ function validate(isRequired, pattern, name, value, validationData, fielderrorMs
 
 function validate2(isRequired, pattern, name, value, validatePropertyOwner) {
 
-console.log('Here', validatePropertyOwner);
-
   let errorText = "";
   if (isRequired) {
     if (value.length || value) {
@@ -152,11 +150,11 @@ console.log('Here', validatePropertyOwner);
   // console.log(validationData.required.current)
   // var isFormValid=false;
   // (validationData.required.required.length == validationData.required.current.length) && (validationData.pattern.required.length == validationData.pattern.current.length)
-  console.log(validatePropertyOwner.required.required.length, validatePropertyOwner.required.current.length);
+  console.log(validatePropertyOwner.required.required.length, validatePropertyOwner.required.current.length, errorText);
   return {
     errorText: errorText,
     validatePropertyOwner: validatePropertyOwner,
-    isOwnerValid: (validatePropertyOwner.required.required.length == validatePropertyOwner.required.current.length)
+    isOwnerValid: (validatePropertyOwner.required.required.length == validatePropertyOwner.required.current.length && errorText =="")
   };
 }
 
@@ -217,7 +215,7 @@ console.log('Here', validatePropertyFloor);
   return {
     errorText: errorText,
     validatePropertyFloor: validatePropertyFloor,
-    isFloorValid: (validatePropertyFloor.required.required.length === validatePropertyFloor.required.current.length)
+    isFloorValid: (validatePropertyFloor.required.required.length === validatePropertyFloor.required.current.length && errorText =="")
   };
 }
 

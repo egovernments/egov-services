@@ -158,7 +158,6 @@ constructor(props) {
                             value={ownerDetails.owner ? ownerDetails.owner.aadhaarNumber:""}
                             onChange={(e) => {
 								handleChangeOwner(e,"owner", "aadhaarNumber", false, /^\d{12}$/g);
-                               // handleChangeNextOne(e,"owner", "aadhaarNumber", false, /^\d{12}$/g);
                               }
                             }
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -235,7 +234,7 @@ constructor(props) {
                             errorText={fieldErrors.owner ? (fieldErrors.owner.emailId? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.emailId}</span>:""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.emailId:""}
                             onChange={(e) => {
-                                handleChangeNextOne(e, "owner", "emailId", false, /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+                                handleChangeOwner(e, "owner", "emailId", false, /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
                               }
                             }
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -252,7 +251,7 @@ constructor(props) {
                             errorText={fieldErrors.owner ? (fieldErrors.owner.pan? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.pan}</span>:""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.pan:""}
                             onChange={(e) => {
-                                handleChangeNextOne(e, "owner", "pan", false, /^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$/);
+                                handleChangeOwner(e, "owner", "pan", false, /^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$/);
                               }
                             }
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -402,11 +401,11 @@ constructor(props) {
                                 <th>{translate('pt.create.groups.ownerDetails.fields.ownerName')}</th>
                                 <th>{translate('pt.create.groups.ownerDetails.fields.gender')}</th>
                                 <th>{translate('pt.create.groups.ownerDetails.fields.email')}</th>
+								<th>{translate('pt.create.groups.ownerDetails.fields.pan')}</th>
                                 <th>{translate('pt.create.groups.ownerDetails.fields.guardianRelation')}</th>
                                 <th>{translate('pt.create.groups.ownerDetails.fields.isPrimaryOwner')}</th>
                                 <th>{translate('pt.create.groups.ownerDetails.fields.guardian')}</th>
-                                <th>{translate('pt.create.groups.ownerDetails.fields.ownerType')}</th>
-                                <th>{translate('pt.create.groups.ownerDetails.fields.percentageOfOwnerShip')}</th>
+]                                <th>{translate('pt.create.groups.ownerDetails.fields.percentageOfOwnerShip')}</th>
                                 <th></th>               
                               </tr>
                             </thead>
@@ -420,10 +419,10 @@ constructor(props) {
                                     <td>{i.name || 'NA'}</td>
                                     <td>{i.gender || 'NA'}</td>
                                     <td>{i.emailId || 'NA'}</td>
+									<td>{i.pan || 'NA'}</td>
                                     <td>{i.gaurdianRelation || 'NA'}</td>
                                     <td>{(i.isPrimaryOwner == 'PrimaryOwner' ? "True" : "False") || 'NA'}</td>
                                     <td>{i.fatherOrHusbandName || 'NA'}</td>
-                                    <td>{i.ownerType || 'NA'}</td>
                                     <td>{i.ownerShipPercentage || 'NA'}</td>
                                     <td>
 										<i className="material-icons" style={styles.iconFont} onClick={ () => {

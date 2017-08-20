@@ -197,9 +197,7 @@ class FloorDetails extends Component {
 		let {floorDetails} = this.props;
 		
 		floorDetails.floorsArr = [];
-		
-		var allFloors = this.state.floorNumber;
-	  
+			  
 	    var allRooms = floorDetails.floors;		
 		
 		if(!allRooms){
@@ -897,7 +895,7 @@ deleteOccupantName = (index) =>{
 																  value: value
 																}
 															  };
-															  handleChangeNextOne(e,"floor" ,"usageSubType", false, "")}
+															  handleChangeFloor(e,"floor" ,"usageSubType", false, "")}
 														  }
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
@@ -912,7 +910,7 @@ deleteOccupantName = (index) =>{
 														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.firmName')}
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.firmName? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.firmName}</span>:"") : ""}
 														  value={floorDetails.floor ? floorDetails.floor.firmName : ""}
-														  onChange={(e) => {handleChangeNextOne(e,"floor" ,"firmName", false, "")}}
+														  onChange={(e) => {handleChangeFloor(e,"floor" ,"firmName", false, "")}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -949,7 +947,7 @@ deleteOccupantName = (index) =>{
 																  floatingLabelText={translate('pt.create.groups.floorDetails.fields.occupantName')}
 																  errorText={fieldErrors.floor ? (fieldErrors.floor.occupierName? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.occupierName}</span> :""): ""}
 																  value={floorDetails.floor ? floorDetails.floor.occupierName : ""}
-																  onChange={(e) => {handleChangeNextOne(e,"floor" , "occupierName", false, /^[a-zA-Z,\s]+$/g)}}
+																  onChange={(e) => {handleChangeFloor(e,"floor" , "occupierName", false, /^[a-zA-Z,\s]+$/g)}}
 																  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 																  underlineStyle={styles.underlineStyle}
 																  underlineFocusStyle={styles.underlineFocusStyle}
@@ -982,7 +980,7 @@ deleteOccupantName = (index) =>{
 														  hintText="15000"
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.annualRent ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.annualRent}</span>:""): ""}
 														  value={floorDetails.floor ? floorDetails.floor.annualRent : ""}
-														  onChange={(e) => {handleChangeNextOne(e,"floor" , "annualRent", false, /^\d{3,64}$/g)}}
+														  onChange={(e) => {handleChangeFloor(e,"floor" , "annualRent", false, /^\d{3,64}$/g)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -995,7 +993,8 @@ deleteOccupantName = (index) =>{
 														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.Arv')}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.arv?<span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.arv}</span>:"") : ""}
 														  value={floorDetails.floor ? floorDetails.floor.arv : ""}
-														  onChange={(e) => {handleChangeNextOne(e,"floor" , "arv", false, /^\d{9}$/g)}}
+														  onChange={(e) => {handleChangeFloor(e,"floor" , "arv", false,'')}}
+														  type="number"
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -1008,11 +1007,12 @@ deleteOccupantName = (index) =>{
 														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.manualArv')}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.manualArv?<span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.manualArv}</span>:"") : ""}
 														  value={floorDetails.floor ? floorDetails.floor.manualArv : ""}
-														  onChange={(e) => {handleChangeNextOne(e,"floor" , "manualArv", false, /^\d{9}$/g)}}
+														  onChange={(e) => {handleChangeFloor(e,"floor" , "manualArv", false, '')}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  maxLength={9}
+														  type="number"
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														/>
 													</Col>
@@ -1123,7 +1123,7 @@ deleteOccupantName = (index) =>{
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.length ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.length}</span>:"") : ""}
 														  value={floorDetails.floor ? floorDetails.floor.length : ""}
 														  onChange={(e) => {
-															  handleChangeNextOne(e,"floor" ,"length", false, /^[0-9.]+$/);
+															  handleChangeFloor(e,"floor" ,"length", false, /^[0-9.]+$/);
 															  cThis.calcArea(e, 'length');
 														  }}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -1141,7 +1141,7 @@ deleteOccupantName = (index) =>{
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.width ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.width}</span> :""): ""}
 														  value={floorDetails.floor ? floorDetails.floor.width : ""}
 														  onChange={(e) => {
-															  handleChangeNextOne(e,"floor" ,"width", false, /^[0-9.]+$/);
+															  handleChangeFloor(e,"floor" ,"width", false, /^[0-9.]+$/);
 															  cThis.calcArea(e, 'width');
 															}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -1160,7 +1160,7 @@ deleteOccupantName = (index) =>{
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.builtupArea? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.builtupArea}</span>:"" ): ""}
 														  value={floorDetails.floor ? floorDetails.floor.builtupArea : ""}
 														  onChange={(e) => {
-															  handleChangeFloor(e, "floor","builtupArea", true, "")
+															  handleChangeFloor(e, "floor","builtupArea", true, /^[0-9.]+$/)
 															}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
@@ -1194,7 +1194,7 @@ deleteOccupantName = (index) =>{
 														  value={floorDetails.floor ? floorDetails.floor.exemptedArea : ""}
 														  onChange={(e) => {	  
 															  calcAssessableArea(e,'exempted');
-															  handleChangeNextOne(e,"floor" , "exemptedArea", false, "")}}
+															  handleChangeFloor(e,"floor" , "exemptedArea", false, /^[0-9]+$/i)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -1208,7 +1208,7 @@ deleteOccupantName = (index) =>{
 														  floatingLabelText="Occupancy Certificate Number"
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.occupancyCertiNumber? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.occupancyCertiNumber}</span>:"" ): ""}
 														  value={floorDetails.floor ? floorDetails.floor.occupancyCertiNumber : ""}
-														  onChange={(e) => {handleChangeNextOne(e,"floor" ,"occupancyCertiNumber", false, /^[a-z0-9]+$/i)}}
+														  onChange={(e) => {handleChangeFloor(e,"floor" ,"occupancyCertiNumber", false, /^[a-z0-9]+$/i)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -1222,7 +1222,7 @@ deleteOccupantName = (index) =>{
 														  floatingLabelText="Building cost"
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.buildingCost? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.buildingCost}</span>: "" ): "" }
 														  value={floorDetails.floor ? floorDetails.floor.buildingCost : ""}
-														  onChange={(e) => {handleChangeNextOne(e,"floor" ,"buildingCost", false, /^[0-9]+$/i)}}
+														  onChange={(e) => {handleChangeFloor(e,"floor" ,"buildingCost", false, /^[0-9]+$/i)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -1236,7 +1236,7 @@ deleteOccupantName = (index) =>{
 														  floatingLabelText="Land cost"
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.landCost? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.landCost}</span>:"" ): ""}
 														  value={floorDetails.floor ? floorDetails.floor.landCost : ""}
-														  onChange={(e) => {handleChangeNextOne(e,"floor" ,"landCost", false, /^[0-9]+$/i)}}
+														  onChange={(e) => {handleChangeFloor(e,"floor" ,"landCost", false, /^[0-9]+$/i)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -1256,7 +1256,7 @@ deleteOccupantName = (index) =>{
 																  value:i
 																}
 															  }
-															  handleChangeNextOne(e, "floor","isAuthorised", false, '')
+															  handleChangeFloor(e, "floor","isAuthorised", false, '')
 															}}
 
 														  />

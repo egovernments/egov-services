@@ -288,7 +288,10 @@ class Dashboard extends Component {
     this.setState({servicesFilter:"", selectedServiceCode:code, selectedServiceName:name});
     var service = this.state.citizenServices.find((service) => service.code === code);
     if(service && !service.hasOwnProperty("types")){
+        if(name.toLowerCase() !== 'water connection') //water connection hardcoded values
           this.loadServiceTypes(service);
+        else
+          service['types'] = [ {"id": 170, "serviceName": "Apply New Water Connection", "serviceCode": "CWCW", "description": "Apply New Water Connection", "url": "/create/wc" } ];
     }
   }
 
@@ -471,7 +474,10 @@ class Dashboard extends Component {
                                   })}
                                 {serviceTypeMenus.map((serviceType, index)=>{
                                   return (<ServiceTypeItem key={index} serviceType={serviceType} onClick={()=>{
-                                      this.props.setRoute(`/services/apply/${serviceType.serviceCode}/${serviceType.serviceName.replace(/\//g, "~")}`);
+                                      if(!serviceType.url)
+                                        this.props.setRoute(`/services/apply/${serviceType.serviceCode}/${serviceType.serviceName.replace(/\//g, "~")}`);
+                                      else
+                                        this.props.setRoute(serviceType.url);
                                     }}></ServiceTypeItem>)
                                 })}
 

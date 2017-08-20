@@ -612,19 +612,19 @@ class ViewProperty extends Component {
 											<Row>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>Toilet Factor</div>
-													{item.propertyDetail.hasOwnProperty('factors') ? (item.propertyDetail.factors.length !=0 ? item.propertyDetail.factors[0].value : 'NA' ) : 'NA'}
+													{item.propertyDetail.hasOwnProperty('factors') ? (item.propertyDetail.factors !=null && item.propertyDetail.factors.length !=0 ? item.propertyDetail.factors[0].value : 'NA' ) : 'NA'}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>Road Factor</div>
-													{item.propertyDetail.hasOwnProperty('factors') ? (item.propertyDetail.factors.length !=0 ? item.propertyDetail.factors[1].value : 'NA' ) : 'NA'}
+													{item.propertyDetail.hasOwnProperty('factors') ? (item.propertyDetail.factors !=null && item.propertyDetail.factors.length !=0 ? item.propertyDetail.factors[1].value : 'NA' ) : 'NA'}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>Lift Factor</div>
-													{item.propertyDetail.hasOwnProperty('factors') ? (item.propertyDetail.factors.length !=0 ? item.propertyDetail.factors[2].value : 'NA' ) : 'NA'}
+													{item.propertyDetail.hasOwnProperty('factors') ? (item.propertyDetail.factors !=null && item.propertyDetail.factors.length !=0 ? item.propertyDetail.factors[2].value : 'NA' ) : 'NA'}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>Parking Factor</div>
-													{item.propertyDetail.hasOwnProperty('factors') ? (item.propertyDetail.factors.length !=0 ? item.propertyDetail.factors[3].value : 'NA' ) : 'NA'}
+													{item.propertyDetail.hasOwnProperty('factors') ? (item.propertyDetail.factors !=null && item.propertyDetail.factors.length !=0 ? item.propertyDetail.factors[3].value : 'NA' ) : 'NA'}
 											  </Col>
 											</Row>
 										 

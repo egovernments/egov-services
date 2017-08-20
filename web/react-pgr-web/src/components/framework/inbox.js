@@ -126,7 +126,8 @@ class Inbox extends Component {
 		employee : [],
 		designation:[],
 		workflowDepartment: [],
-		process: []
+		process: [],
+		approve: false
 		
 	}
   }
@@ -374,6 +375,7 @@ class Inbox extends Component {
 			workflow.workflowDepartment = workflowDetails.department || null;
 			workflow.workflowDesignation = workflowDetails.designation || null;
 			workflow.approver =workflowDetails.assignee || null;
+			workflow.initiatorPosition =workflowDetails.initiatorPosition || null;
 		}
 		
 		var query = {
@@ -412,6 +414,15 @@ class Inbox extends Component {
 					  })
 					  console.log(err)
 					})
+					
+		res.processInstance.attributes.validActions.values.map((item)=>{
+				if(item.name == 'Approve'){
+					current.setState({
+						approve: true
+					});
+				}
+			})
+			
 			current.setState({
 				buttons: res.processInstance
 			});
@@ -455,9 +466,10 @@ class Inbox extends Component {
 	 
 	  var data = this.state.searchResult;
 	  
-	  	var workFlowDetails = {
-				"department": workflow.workflowDepartment || null,
-				"designation":workflow.workflowDesignation || null,
+		var workFlowDetails = {
+				"department": workflow.workflowDepartment || 'department',
+				"designation":workflow.workflowDesignation || 'designation',
+				"initiatorPosition": workflow.initiatorPosition || null,
 				"assignee": null,
 				"action": actionName,
 				"status": status
@@ -466,6 +478,7 @@ class Inbox extends Component {
 	  if(actionName == 'Forward') {
 		 
 			workFlowDetails.assignee = getPosition(this.state.approver, workflow.approver) || null;
+			workFlowDetails.initiatorPosition = this.state.process.initiatorPosition || null;
 		    localStorage.setItem('inboxStatus', 'Forwarded')
 		  
 	  } else if(actionName == 'Approve') {
@@ -557,13 +570,7 @@ class Inbox extends Component {
         {!_.isEmpty(mockData) && <ShowFields groups={mockData[`${moduleName}.${actionName}`].groups} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={""} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""} screen="view"/>}
           <br/>
           {renderTable()}
-			  {(this.state.buttons.hasOwnProperty('attributes') && (this.state.buttons.attributes.validActions.values.length > 0) && (this.state.buttons.attributes.validActions.values.map((item)=>{
-				  if(item.name != 'Approve') {
-					  return true;
-				  } else {
-					  false
-				  }
-			  })) ) &&	<Card className="uiCard">
+			  {(this.state.buttons.hasOwnProperty('attributes') && (this.state.buttons.attributes.validActions.values.length > 0) && !this.state.approve) &&	<Card className="uiCard">
                     <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Workflow</div>} />
                     <CardText style={styles.reducePadding}>
                                 <Grid fluid>

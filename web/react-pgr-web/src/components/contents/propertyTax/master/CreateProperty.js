@@ -677,11 +677,11 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: ['reasonForCreation', 'approver','propertyType', 'usage','extentOfSite','doorNo', 'locality', 'electionWard', 'zoneNo', 'wardNo', 'workflowDepartment', 'workflowDesignation', 'sequenceNo', 'totalFloors']
+          required: ['reasonForCreation', 'approver','propertyType', 'usage','extentOfSite','doorNo', 'zoneNo', 'wardNo', 'workflowDepartment', 'workflowDesignation', 'sequenceNo', 'totalFloors','pin']
         },
         pattern: {
           current: [],
-          required: []
+          required: ['bpaNo', 'bpaDate', 'refPropertyNumber','pinTwo']
         }
       },
 	   validatePropertyOwner: {
@@ -691,7 +691,7 @@ const mapDispatchToProps = dispatch => ({
         },
         pattern: {
           current: [],
-          required: []
+          required: ['aadhaarNumber','emailId','pan','ownerShipPercentage']
         }
       },
 	   validatePropertyFloor: {
@@ -701,7 +701,7 @@ const mapDispatchToProps = dispatch => ({
         },
         pattern: {
           current: [],
-          required: []
+          required: ['occupierName','annualRent', 'manualArv', 'length', 'width', 'occupancyCertiNumber', 'buildingCost', 'landCost',]
         }
       }
     });

@@ -168,6 +168,8 @@ public class DemandConnectionService {
                ownerobj=new Owner();
                ownerobj.setId(prop.getId());
                ownerobj.setTenantId(prop.getTenantId());
+               System.out.println("user Object With Pr= ="+ownerobj);
+
         }
         else
         {
@@ -176,21 +178,15 @@ public class DemandConnectionService {
                 ownerobj=new Owner();
             ownerobj.setId(connection. getConnectionOwner().getId());
             ownerobj.setTenantId(tenantId);
+            System.out.println("user Object WIthout Prop="+ownerobj);
+
             
-            }else  
-            {
-                ownerobj=new Owner();
-                ownerobj.setTenantId(tenantId);
-                ownerobj.setId(requestInfo.getUserInfo().getId());
             }
             
         }
-        if(ownerobj==null ){
-            ownerobj=new Owner();
-            ownerobj.setTenantId(tenantId);
-            ownerobj.setId(requestInfo.getUserInfo().getId());
-        }
-       
+        
+       if(ownerobj !=null){
+           System.out.println("user Object="+ownerobj);
         final Demand demand = new Demand();
         final TaxPeriodResponse taxperiodres = getTaxPeriodByTaxCodeAndService(demandReason.getTaxPeriodCode(), tenantId);
         demand.setTenantId(tenantId);
@@ -210,7 +206,9 @@ public class DemandConnectionService {
             demand.setTaxPeriodTo(taxperiodres.getTaxPeriods().get(0).getToDate());
         }
         demandList.add(demand);
-        return demandList;
+        
+    }
+       return demandList;
     }
 
     private DemandDetail createDemandDeatils(final String tenantId, final String demandReason, final double amount,

@@ -144,7 +144,7 @@ class AddDemand extends Component {
     };
 
     self.props.setLoadingStatus('loading');
-	  Api.commonApiPost('wcms-connection/connection/_leacydemand', {consumerNumber: decodeURIComponent(self.props.match.params.upicNumber), executionDate: "1301616000"}, body, false, true).then((res)=>{
+	  Api.commonApiPost('wcms-connection/connection/_leacydemand', {consumerNumber: decodeURIComponent(self.props.match.params.upicNumber), executionDate: self.state.searchData && self.state.searchData.Connection && self.state.searchData.Connection[0] && self.state.searchData.Connection[0].executionDate}, body, false, true).then((res)=>{
       self.props.setLoadingStatus('hide');
        self.props.toggleSnackbarAndSetText(true,translate("wc.update.message.success"), true, false);
       self.props.setRoute("/searchconnection/wc");

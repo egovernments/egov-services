@@ -186,9 +186,6 @@ class LegacyLicenseCreate extends Component {
 
   componentDidMount() {
       this.initData();
-
-
-
   }
 
   componentWillReceiveProps(nextProps) {
@@ -931,7 +928,7 @@ class LegacyLicenseCreate extends Component {
                   return (
                     <tr key={index}>
                       <td>{item.financialYear}</td>
-                      <td><TextField  onChange= {(e) => this.handleChange (e, "licenses[0].feeDetails["+index+"].amount", true, "")}/></td>
+                      <td><TextField  onChange= {(e) => this.handleChange (e, "licenses[0].feeDetails["+index+"].amount", true, "^.{1,10}$")}/></td>
                       <td><Checkbox   onCheck = {(obj, bol) => this.handleChange ({target:{value:bol}}, "licenses[0].feeDetails["+index+"].paid", true, "") }/></td>
                     </tr>
                   )

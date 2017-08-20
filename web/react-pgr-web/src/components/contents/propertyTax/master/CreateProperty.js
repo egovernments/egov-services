@@ -456,10 +456,10 @@ createPropertyTax = () => {
 						"id": createProperty.street || createProperty.locality || null ,
 						"name": getNameById(currentThis.state.street, createProperty.street)  || getNameById(currentThis.state.locality, createProperty.locality) || null
 					},
-					"adminBoundary": { 
-						"id": createProperty.electionWard || null,
-						"name": getNameById(currentThis.state.election, createProperty.electionWard)  || null
-					},
+					"adminBoundary": createProperty.electionWard ? { 
+						"id": createProperty.electionWard,
+						"name": getNameById(currentThis.state.election, createProperty.electionWard)
+					} : null,
 					"northBoundedBy": createProperty.north || null,
 					"eastBoundedBy": createProperty.east || null,
 					"westBoundedBy": createProperty.west || null,

@@ -11,7 +11,7 @@ var localization_EN_Data = {
     "wc.create.name": "Name",
     "wc.create.groups.applicantDetails.title": "Applicant Details",
     "wc.create.groups.applicantDetails.propertyIdentifier": "PT Assessment Number",
-    "wc.create.groups.applicantDetails.nameOfApplicant": "Name of Applicant",
+    "wc.create.groups.applicantDetails.nameOfApplicant": "Owner Name",
     "wc.create.groups.applicantDetails.mobileNumber": "Mobile Number",
     "wc.create.groups.applicantDetails.email": "Email",
     "wc.create.groups.applicantDetails.adharNumber": "Aadhaar Number",
@@ -293,6 +293,8 @@ var localization_EN_Data = {
     "wc.create.workflow.fields": "Please enter all mandatory fields.",
     "wc.create.demand.tax": "Tax",
     "wc.create.demands":"Demand",
+    "wc.create.demand.basicDetails":"Basic Details",
+    "wc.create.demand.applicantParticular":"Applicant Particulars",
 
 
 

@@ -212,9 +212,9 @@ class Dashboard extends Component {
 
 
  componentWillUnmount(){
-     $('#searchTable')
+     /*$('#searchTable')
      .DataTable()
-     .destroy(true);
+     .destroy(true);*/
  };
 
 

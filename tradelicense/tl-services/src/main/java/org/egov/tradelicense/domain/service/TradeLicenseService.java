@@ -130,10 +130,10 @@ public class TradeLicenseService {
 				if ((tradeLicense.getAgreementNo() == null || tradeLicense.getAgreementNo().trim().isEmpty()
 						|| tradeLicense.getAgreementNo().trim().length() < 4
 						|| tradeLicense.getAgreementNo().trim().length() > 20)) {
-					throw new InvalidInputException(propertiesManager.getPropertyassesmentNoErrorMsg());
+					throw new InvalidInputException(propertiesManager.getAgreementNoErrorMsg());
 				}
 				if (tradeLicense.getAgreementDate() == null) {
-					throw new InvalidInputException(propertiesManager.getPropertyassesmentNoErrorMsg());
+					throw new InvalidInputException(propertiesManager.getAgreementDateErrorMsg());
 				}
 
 			}

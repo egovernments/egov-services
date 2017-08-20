@@ -417,10 +417,11 @@ public class RestConnectionService {
         if(nameServiceTopic.equals(configurationManager.getHscGenNameServiceTopic())) {
         	//Enable the below method call to get financial year from the Finance Service
             // String finYear = getFinancialYear(tenantId);
-            String finYear = getFiscalYear();
+            /*String finYear = getFiscalYear();
             if(null!=finYear && !finYear.isEmpty()) { 
             	return ackNumber=tenantId.substring(0,4).concat(ackNumber);
-            }	
+            }	*/
+            return ackNumber=tenantId.substring(0,4).concat(ackNumber);
         }
 
         return ackNumber;

@@ -81,8 +81,9 @@ public class CategoryContollerTest {
 
 			when(categoryService.createCategoryMaster(any(CategoryRequest.class))).thenReturn(categoryResponse);
 
-			mockMvc.perform(post("/category/v1/_create").param("tenantId", "default")
-					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("categoryCreateRequest.json")))
+			mockMvc.perform(post("/category/v1/_create")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("categoryCreateRequest.json")))
 					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("categoryCreateResponse.json")));
@@ -126,8 +127,9 @@ public class CategoryContollerTest {
 			when(categoryService.createCategoryMaster(any(CategoryRequest.class))).thenReturn(categoryResponse);
 
 			mockMvc.perform(
-					post("/category/v1/_create").param("tenantId", "default").contentType(MediaType.APPLICATION_JSON)
-							.content(getFileContents("categoryDetailsCreateRequest.json")))
+					post("/category/v1/_create")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("categoryDetailsCreateRequest.json")))
 					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("categoryDetailsCreateResponse.json")));
@@ -165,8 +167,9 @@ public class CategoryContollerTest {
 		try {
 
 			when(categoryService.updateCategoryMaster(any(CategoryRequest.class))).thenReturn(categoryResponse);
-			mockMvc.perform(post("/category/v1/_update").param("tenantId", "default")
-					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("categoryUpdateRequest.json")))
+			mockMvc.perform(post("/category/v1/_update")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("categoryUpdateRequest.json")))
 					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("categoryUpdateResponse.json")));

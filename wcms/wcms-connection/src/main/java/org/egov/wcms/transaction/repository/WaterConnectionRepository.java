@@ -98,7 +98,7 @@ public class WaterConnectionRepository {
 
         final String query = insertQuery;
         LOGGER.info("Insert Query is : " + insertQuery);
-        LOGGER.info("Created By and Updated By : " + waterConnectionRequest.getRequestInfo().getUserInfo().getId());
+        LOGGER.info("Created By and Updated By : " + waterConnectionRequest.getRequestInfo());
         
         Long connectionId = 0L;
         try {

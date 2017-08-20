@@ -636,7 +636,7 @@ class LegacyLicenseCreate extends Component {
 
          for(var i = startYear; i <= fixedDate; i = (i + validityYear)) {
          //  for(var i = startYear; i <= fixedDate; i = (i + Validity)) {
-               if(i > (fixedDate - 4)){
+               if(i > (fixedDate - 6)){
                let feeDetails = {"financialYear": i + "-" + (i+1).toString().slice(-2), "amount": "", "paid": false};
                FeeDetails.push(feeDetails)
                console.log(i);
@@ -911,7 +911,7 @@ class LegacyLicenseCreate extends Component {
           <div style={{"textAlign": "center"}}>
 
 
-          {formData && formData.hasOwnProperty("licenses") && formData.licenses[0].hasOwnProperty("feeDetails") && <Card className="uiCard">
+          <Card className="uiCard">
 		          <CardHeader title={<strong>Fee Details</strong>}/>
 		          <CardText>
 		          <Table id={(showDataTable==undefined)?"searchTable":(showDataTable?"searchTable":"")} bordered responsive className="table-striped">
@@ -928,15 +928,15 @@ class LegacyLicenseCreate extends Component {
                   return (
                     <tr key={index}>
                       <td>{item.financialYear}</td>
-                      <td><TextField  onChange= {(e) => this.handleChange (e, "licenses[0].feeDetails["+index+"].amount", true, "^.{1,10}$")}/></td>
-                      <td><Checkbox   onCheck = {(obj, bol) => this.handleChange ({target:{value:bol}}, "licenses[0].feeDetails["+index+"].paid", true, "") }/></td>
+                      <td><TextField errorText={fieldErrors["licenses[0].feeDetails["+index+"].amount"]} onChange= {(e) => handleChange (e, "licenses[0].feeDetails["+index+"].amount", true, "^[0-9]{1,10}$","","NUmber should be 10 degits with 2 decimal")}/></td>
+                      <td><Checkbox   onCheck = {(obj, bol) => handleChange ({target:{value:bol}}, "licenses[0].feeDetails["+index+"].paid", true, "") }/></td>
                     </tr>
                   )
                 })}
               </tbody>
               </Table>
   		      </CardText>
-  		      </Card>}
+  		      </Card>
 
 
 

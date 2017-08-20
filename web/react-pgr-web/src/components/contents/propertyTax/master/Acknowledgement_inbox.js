@@ -130,7 +130,7 @@ class InboxAcknowledgement extends Component {
 									<Col xs={12} md={12}>
 									  <Row>
 										<Col xs={12} md={12} style={{textAlign:'center',paddingTop:15,fontSize: 16}}>
-											{this.state.status} Successfully
+											{this.state.status} Forwarded Successfully
 										</Col>
 									  </Row>
 									</Col>

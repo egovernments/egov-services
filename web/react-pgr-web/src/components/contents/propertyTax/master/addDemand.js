@@ -169,6 +169,7 @@ class AddDemand extends Component {
 			}
 						
 			Api.commonApiPost('/billing-service/taxperiods/_search', periodQuery, {}, false, true).then((res)=>{
+				    setLoadingStatus('hide');
 					console.log('periods', res);
 					setLoadingStatus('hide');
 					currentThis.setState({
@@ -178,6 +179,8 @@ class AddDemand extends Component {
 					 ]
 				 })
 			}).catch((err)=> {
+					setLoadingStatus('hide');
+					toggleSnackbarAndSetText(true, err.message);
 				console.log(err)
 			})	
 		})
@@ -199,11 +202,15 @@ class AddDemand extends Component {
 				 })
 			}).catch((err)=> {
 				console.log(err)
+				setLoadingStatus('hide');
+				toggleSnackbarAndSetText(true, err.message);
 			})
 		})
 
 	}).catch((err)=> {
 		console.log(err)
+		setLoadingStatus('hide');
+		toggleSnackbarAndSetText(true, err.message);
 	})
   }
 

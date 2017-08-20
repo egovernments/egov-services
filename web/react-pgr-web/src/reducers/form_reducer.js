@@ -71,8 +71,8 @@ function validate(isRequired, pattern, name, value, validationData, fielderrorMs
   if (!isRequired && value === "") {
     errorText = "";
   }
-  // console.log(validationData.required.required)
-  // console.log(validationData.required.current)
+  console.log(validationData.required.required)
+  console.log(validationData.required.current)
   // console.log(validationData.pattern.required);
   // console.log(validationData.pattern.current);
   console.log(validationData.required.required.length, validationData.required.current.length);
@@ -335,7 +335,17 @@ export default(state = defaultState, action) => {
       case "RESET_FORM":
           return {
             ...state,
-            form: {}
+            form: {},
+            validationData: {
+                required: {
+                    current: [],
+                    required: []
+                },
+                pattern: {
+                    current: [],
+                    required: []
+                }
+            }
           }
 
       case "RESET_OBJECT":

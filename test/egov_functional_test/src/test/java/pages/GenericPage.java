@@ -1,14 +1,12 @@
 package pages;
 
-import com.testvagrant.intents.utils.FileFinder;
-import com.testvagrant.stepdefs.utils.FileExtension;
 import org.apache.commons.lang.math.RandomUtils;
 import org.json.JSONObject;
-import org.openqa.selenium.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -17,7 +15,6 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import static com.jayway.awaitility.Awaitility.await;
-import static com.testvagrant.stepdefs.utils.FileFinder.fileFinder;
 
 public class GenericPage extends BasePage {
 
@@ -167,10 +164,9 @@ public class GenericPage extends BasePage {
 
         List<WebElement> totalRows;
         totalRows = buildElement("Home","dashBoardApplications","").findElements(By.tagName("tr"));
-
         try {
             for (WebElement applicationRow : totalRows) {
-                if (applicationRow.findElements(By.tagName("td")).get(4).getText().contains("No."+number)) {
+                if (applicationRow.findElements(By.tagName("td")).get(4).getText().contains(number)) {
                     return applicationRow;
                 }
             }

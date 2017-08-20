@@ -41,14 +41,13 @@ Feature: Registering a Complaint
     And Intent:LogoutIntentTest
 
     ### Login ###
-    Given user on Login screen types on username value aboveUser
+    Given user on Login screen types on username value user
     And user on Login screen types on password value demo
     And user on Login screen clicks on signIn
 
     ### On HomePage Screen ###
     And user on Home screen types on dashBoardSearch with above applicationNumber
-    And user on Home screen verifies applicationBox has visible value aboveApplicationNumber
-    And user on Home screen clicks on applicationBox value aboveApplicationNumber
+    And user on Home screen opens on dashBoardSearch with above applicationNumber
 
     ### On Grievance Screen ###
     And user on Grievance screen will see the complaintDetails
@@ -88,7 +87,7 @@ Feature: Registering a Complaint
     And user on Login screen clicks on signIn
 
     ### On Homepage Screen ###
-    And user on Home screen will see the menu
+    And user on Home screen verifies myTasks has visible value My Tasks
     And user on Home screen clicks on menu
     And user on Home screen types on menuSearch value Officials Register Grievance
     And user on Home screen clicks on firstMenuItem
@@ -119,14 +118,13 @@ Feature: Registering a Complaint
     And Intent:LogoutIntentTest
 
     ### Login ###
-    Given user on Login screen types on username value aboveUser
+    Given user on Login screen types on username value user
     And user on Login screen types on password value demo
     And user on Login screen clicks on signIn
 
     ### On HomePage Screen ###
     And user on Home screen types on dashBoardSearch with above applicationNumber
-    And user on Home screen verifies applicationBox has visible value aboveApplicationNumber
-    And user on Home screen clicks on applicationBox value aboveApplicationNumber
+    And user on Home screen opens on dashBoardSearch with above applicationNumber
 
     ### On Grievance Screen ###
     And user on Grievance screen will see the complaintDetails
@@ -152,7 +150,8 @@ Feature: Registering a Complaint
       | demo   |
 
     And user on Home screen types on dashBoardSearch with above applicationNumber
-    And user on Home screen verifies applicationBox has visible value aboveApplicationNumber
+    And user on Home screen verifies applicationBox has visible value applicationNumber
+
 
     ### Logout ###
     And Intent:LogoutIntentTest

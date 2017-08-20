@@ -179,6 +179,30 @@
         "value":"//*[text()='Success']",
 >>>>>>> PGR Test cases for Receiving Mode
         "waitFor":"visibility"
+        },
+        {
+        "elementName":"text",
+        "identifier":"xpath",
+        "value":"[//*[text()='%s']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"categoryName",
+        "identifier":"id",
+        "value":"name",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"categoryCode",
+        "identifier":"id",
+        "value":"code",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"createCategoryButton",
+        "identifier":"xpath",
+        "value":"(//*[text()='Create'])[2]",
+        "waitFor":"visibility"
         }
     ]
 }

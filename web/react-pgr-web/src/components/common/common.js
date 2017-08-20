@@ -1829,6 +1829,10 @@ var localization_MR_Data = {
     "wc.create.workflow.material": "Material",
     "wc.create.workflow.comment": "Comments are mandatory on Reject.",
     "wc.create.workflow.fields": "Please enter all mandatory fields.",
+    "employee.Employee.fields.city":"city",
+    "wc.create.groups.connectionDetails.subUsageType":"Usage Sub Type",
+    "pt.create.groups.ownerDetails.fields.primaryOwner": "Primary Owner",
+    "pt.create.groups.ownerDetails.fields.secondaryOwner": "Secondary Owner",
 
     ﻿﻿"pgr.0001":"अक्षांश / रेखांश किंवा क्रॉस हायरारकी संकेतांक आवश्यक आहे",
 "pgr.0002":"अक्षांश / रेखांश किंवा क्रॉस हायरारकी संकेतांक आवश्यक आहे",
@@ -2088,6 +2092,7 @@ var localization_MR_Data = {
 "reports.pgr.status.withinsla":" एसएलए अंतर्गत स्थिती",
 "pgr.0060":"अर्जदार तपशील",
 "pgr.0061":"तक्रारदार तपशील"
+
 }
 
 export function translate(locale_text) {

@@ -228,7 +228,7 @@ var dat = {
             "jsonPath": "Connection.address.city",
             "label": "employee.Employee.fields.city",
             "pattern": "^[\s.]*([^\s.][\s.]*){0,55}$",
-            "type": "textarea",
+            "type": "text",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -779,19 +779,7 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
-          },
-          {
-                "name": "NoOfFlats",
-                "jsonPath": "Connection.NoOfFlats",
-                "label": "wc.create.groups.connectionDetails.fields.flat",
-                "pattern": "^(0|[1-9][0-9]*)$",
-                "type": "number",
-                "hide":true,
-                "isRequired": false,
-                "isDisabled": false,
-                "requiredErrMsg": "",
-                "patternErrMsg": ""
-              }
+          }
         ]
       },
 	  {
@@ -1060,7 +1048,7 @@ var dat = {
               "jsonPath": "Connection[0].address.city",
               "label": "employee.Employee.fields.city",
               "pattern": "",
-              "type": "textarea",
+              "type": "text",
               "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",

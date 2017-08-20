@@ -352,12 +352,7 @@ public class WaterConnectionRepository {
         if(waterConnectionReq!=null){
             Connection connection=waterConnectionReq.getConnection();
         insertQuery = WaterConnectionQueryBuilder.updateConnectionQuery();
-       obj = new Object[] { connection.getConnectionType(), connection.getApplicationType(),
-                connection.getBillingType(), connection.getCategoryId(),
-                connection.getPipesizeId(), connection.getSourceTypeId(), connection.getConnectionStatus(),
-                connection.getSumpCapacity(), connection.getNumberOfTaps(),
-                connection.getNumberOfPersons(), Long.valueOf(waterConnectionReq.getRequestInfo().getUserInfo().getId()),
-                new Date(new java.util.Date().getTime()), connection.getStateId(),connection.getNumberOfFamily(),
+       obj = new Object[] { connection.getStateId(),
                 connection.getAcknowledgementNumber() };
        
         }

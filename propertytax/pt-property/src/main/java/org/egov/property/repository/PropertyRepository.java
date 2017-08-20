@@ -730,7 +730,7 @@ public class PropertyRepository {
 					AssessmentDate assessmentDate = mapper.readValue(row.get("assessmentdates").toString(),
 							AssessmentDate.class);
 
-					if (assessmentDate.getDate() != null) {
+					if (assessmentDate!=null && assessmentDate.getDate() != null) {
 						assessmentDate.setDate(getString(assessmentDate.getDate()));
 					}
 

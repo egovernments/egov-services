@@ -66,7 +66,8 @@ import org.egov.wcms.transaction.model.DemandDetailBean;
 import org.egov.wcms.transaction.model.EstimationCharge;
 import org.egov.wcms.transaction.util.WcmsConnectionConstants;
 import org.egov.wcms.transaction.web.contract.DemandBeanGetRequest;
-import org.egov.wcms.transaction.web.contract.DemandDetailBeanReq;
+import org.egov.wcms.transaction.web.contract.PropertyOwnerInfo;
+import org.egov.wcms.transaction.web.contract.PropertyResponse;
 import org.egov.wcms.transaction.web.contract.RequestInfoWrapper;
 import org.egov.wcms.transaction.web.contract.WaterConnectionReq;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,15 +127,70 @@ public class DemandConnectionService {
 
         return demandList;
     }
+    
+    public PropertyResponse getPropertyDetailsByUpicNo(String propertyIdentifer,String tenantid, RequestInfo requestInfo) {
+        StringBuilder url = new StringBuilder();
+        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+        url.append(configurationManager.getPropertyServiceHostNameTopic())
+                .append(configurationManager.getPropertyServiceSearchPathTopic()).append("?upicNo=")
+                .append(propertyIdentifer)
+                .append("&tenantId=").append(tenantid);
+        PropertyResponse propResp = null;
+        try {
+           propResp = new RestTemplate().postForObject(url.toString(), wrapper,
+                    PropertyResponse.class);
+            System.out.println(propResp!=null ?( propResp.toString() +""+propResp.getProperties().size()):"iisue while binding pt to watertax");
+        } catch (Exception e) {
+            
+            System.out.println(propResp!=null? propResp.toString():"issue with propResp in exception block in WT");
+            
+            throw new WaterConnectionException("Error while Fetching Data from PropertyTax",
+                    "Error while Fetching Data from PropertyTax", requestInfo);
+        }
+
+        
+        
+        return propResp;
+    }
 
     public List<Demand> prepareDemandForLegacy(final DemandDetailBean demandReason, final Connection connection,
             final RequestInfo requestInfo, final DemandBeanGetRequest demandBeanGetRequest) {
 
         final List<Demand> demandList = new ArrayList<>();
         final String tenantId = connection.getTenantId();
-        final Owner ownerobj = new Owner();
-        ownerobj.setTenantId(tenantId);
-        ownerobj.setId(requestInfo.getUserInfo().getId());
+         Owner ownerobj =null;
+        PropertyOwnerInfo prop=new PropertyOwnerInfo();
+        if(connection.getPropertyIdentifier()!=null){
+            PropertyResponse propResp=getPropertyDetailsByUpicNo(connection.getPropertyIdentifier(),tenantId,requestInfo);
+           if(propResp!=null && propResp.getProperties().isEmpty() &&
+                   propResp.getProperties().get(0)!=null)
+               prop=propResp.getProperties().get(0).getOwners().get(0);;
+               ownerobj=new Owner();
+               ownerobj.setId(prop.getId());
+               ownerobj.setTenantId(prop.getTenantId());
+        }
+        else
+        {
+            if(connection.getPropertyIdentifier() ==null && 
+                    connection.getConnectionOwner()!=null && connection.getConnectionOwner().getId()!=null){
+                ownerobj=new Owner();
+            ownerobj.setId(connection. getConnectionOwner().getId());
+            ownerobj.setTenantId(tenantId);
+            
+            }else  
+            {
+                ownerobj=new Owner();
+                ownerobj.setTenantId(tenantId);
+                ownerobj.setId(requestInfo.getUserInfo().getId());
+            }
+            
+        }
+        if(ownerobj==null ){
+            ownerobj=new Owner();
+            ownerobj.setTenantId(tenantId);
+            ownerobj.setId(requestInfo.getUserInfo().getId());
+        }
+       
         final Demand demand = new Demand();
         final TaxPeriodResponse taxperiodres = getTaxPeriodByTaxCodeAndService(demandReason.getTaxPeriodCode(), tenantId);
         demand.setTenantId(tenantId);

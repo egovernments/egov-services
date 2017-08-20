@@ -908,7 +908,7 @@ public class PropertyServiceImpl implements PropertyService {
 								finalDemandList.add(demand);
 							else {
 								newDemandList = prepareDemands(tenantId, upicNumber, property, taxHeadResponse,
-										taxPeriod, dbDateFormat);
+										taxPeriod);
 								finalDemandList.addAll(newDemandList);
 							}
 						}
@@ -927,8 +927,7 @@ public class PropertyServiceImpl implements PropertyService {
 				demandResponse.setResponseInfo(responseInfoFactory
 						.createResponseInfoFromRequestInfo(requestInfoWrapper.getRequestInfo(), true));
 				for (TaxPeriod taxPeriod : taxPeriodResponse.getTaxPeriods()) {
-					newDemandList = prepareDemands(tenantId, upicNumber, property, taxHeadResponse, taxPeriod,
-							dbDateFormat);
+					newDemandList = prepareDemands(tenantId, upicNumber, property, taxHeadResponse, taxPeriod);
 					finalDemandList.addAll(newDemandList);
 				}
 				demandResponse.setDemands(finalDemandList);
@@ -1012,7 +1011,8 @@ public class PropertyServiceImpl implements PropertyService {
 	 * @return List of demands
 	 */
 	private List<Demand> prepareDemands(String tenantId, String upicNumber, Property property,
-			TaxHeadMasterResponse taxHeadResponse, TaxPeriod taxPeriod, SimpleDateFormat dateFormat) {
+			TaxHeadMasterResponse taxHeadResponse, TaxPeriod taxPeriod) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		dateFormat.setTimeZone(TimeZone.getTimeZone("GMT+5:30"));
 		List<Demand> newDemandList = new ArrayList<>();
 		Demand newDemand;

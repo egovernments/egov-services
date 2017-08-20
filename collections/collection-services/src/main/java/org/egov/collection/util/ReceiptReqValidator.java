@@ -56,12 +56,12 @@ public class ReceiptReqValidator {
 			errorFields.add(errorField);
 		}
 		
-		if(null == receipt.getBill().get(0).getPayeeName() || receipt.getBill().get(0).getPayeeName().isEmpty()){
+		/*TODO: commenting because payee name is coming as null from billing service if(null == receipt.getBill().get(0).getPayeeName() || receipt.getBill().get(0).getPayeeName().isEmpty()){
 			final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.PAYEE_NAME_MISSING_CODE)
 					.message(CollectionServiceConstants.PAYEE_NAME_MISSING_MESSAGE)
 					.field(CollectionServiceConstants.PAYEE_NAME_MISSING_FIELD).build();
 			errorFields.add(errorField);
-		}
+		}*/
 		
 		if(null == receipt.getBill().get(0).getPaidBy() || receipt.getBill().get(0).getPaidBy().isEmpty()){
 			final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.PAID_BY_MISSING_CODE)

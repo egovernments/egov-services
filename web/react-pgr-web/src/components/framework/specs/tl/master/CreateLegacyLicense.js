@@ -426,7 +426,7 @@ var dat = {
             "name": "agreementNo",
             "jsonPath": "licenses[0].agreementNo",
             "label": "tl.create.licenses.groups.agreementDetails.agreementNo",
-            "pattern": "^[a-zA-Z]{4,128}$",
+            "pattern": "^[a-zA-Z0-9]{4,128}$",
             "type": "text",
             "isRequired": true,
             "isDisabled": false,

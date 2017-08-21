@@ -648,20 +648,39 @@ class LegacyLicenseCreate extends Component {
          var curDate = new Date();
          var currentDate = curDate.getFullYear();
          var fixedDate = curDate.getFullYear();
+         var currentMonth=curDate.getMonth();
          var FeeDetails = [];
          var startYear = getStartYear;
          var Validity = validityYear;
 
+         handleChange({target:{value:[]}},"licenses[0].feeDetails");
 
-         for(var i = startYear; i <= fixedDate; i = (i + validityYear))
-         {
-               if(i > (fixedDate - 6))
+
+            if(new Date(e.target.value).getMonth()>3)
                {
-                 let feeDetails = {"financialYear": i + "-" + (i+1).toString().slice(-2), "amount": "", "paid": false};
-                 FeeDetails.push(feeDetails)
-                 console.log(i);
+
+                   for(var i = startYear; i <= fixedDate; i = (i + validityYear))
+                    {
+                       if (i > (fixedDate - 6) ) {
+                       let feeDetails = {"financialYear": i + "-" + (i+1).toString().slice(-2), "amount": "", "paid": false};
+                       FeeDetails.push(feeDetails)
+                       console.log(i);
+                     }
+                 }
+
                }
-          }
+               else {
+
+                 for(var i = startYear; i <= (fixedDate+1); i = (i + validityYear))
+                 {
+                    if (i > (fixedDate - 6) ) {
+                   let feeDetails = {"financialYear": (i-1) + "-" + (i).toString().slice(-2), "amount": "", "paid": false};
+                   FeeDetails.push(feeDetails)
+                   console.log(i);
+                  }
+                }
+               }
+
 
           handleChange({target:{value:FeeDetails}},"licenses[0].feeDetails");
 
@@ -948,8 +967,8 @@ class LegacyLicenseCreate extends Component {
                   return (
                     <tr key={index}>
                       <td>{item.financialYear}</td>
-                      <td><TextField errorText={fieldErrors["licenses[0].feeDetails["+index+"].amount"]} onChange= {(e) => handleChange (e, "licenses[0].feeDetails["+index+"].amount", true, "^[0-9]{1,10}$","","NUmber should be 10 degits with 2 decimal")}/></td>
-                      <td><Checkbox   onCheck = {(obj, bol) => handleChange ({target:{value:bol}}, "licenses[0].feeDetails["+index+"].paid", true, "") }/></td>
+                      <td><TextField value={getVal("licenses[0].feeDetails["+index+"].amount")} errorText={fieldErrors["licenses[0].feeDetails["+index+"].amount"]} onChange= {(e) => handleChange (e, "licenses[0].feeDetails["+index+"].amount", true, "^[0-9]{1,10}(\\.[0-9]{0,2})?$","","Number max 10 degits with 2 decimal")}/></td>
+                      <td><Checkbox checked={getVal("licenses[0].feeDetails["+index+"].paid")}   onCheck = {(obj, bol) => handleChange ({target:{value:bol}}, "licenses[0].feeDetails["+index+"].paid", true, "") }/></td>
                     </tr>
                   )
                 })}

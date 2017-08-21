@@ -10,7 +10,7 @@ Feature: Creating a Grievance Type
     And user on Login screen clicks on signIn
 
     ### On Homepage Screen ###
-    And user on Home screen will see the menu
+    And user on Home screen verifies myTasks has visible value My Tasks
     And user on Home screen clicks on menu
     And user on Home screen types on menuSearch value Create Category
     And user on Home screen clicks on firstMenuItem

@@ -1,0 +1,40 @@
+{
+    "elements":[
+        {
+        "elementName":"dataEntryText",
+        "identifier":"xpath",
+        "value":"//*[text()='Create DataEntry']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"oldPropertyId",
+        "identifier":"css",
+        "value":"[id^='undefined-undefined-OldPropertyNo']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"phoneNumber",
+        "identifier":"css",
+        "value":"[id^='undefined-9999888877-PhoneNumber']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"gender",
+        "identifier":"css",
+        "value":"[id^='undefined-undefined-Gender']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"ownerName",
+        "identifier":"css",
+        "value":"[id^='undefined-JoeDoe-OwnerName']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"primaryOwner",
+        "identifier":"css",
+        "value":"[name=ownerRadio][value=PrimaryOwner]",
+        "waitFor":"visibility"
+        }
+    ]
+}

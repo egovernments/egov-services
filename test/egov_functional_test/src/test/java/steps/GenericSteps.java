@@ -2,9 +2,12 @@ package steps;
 
 import com.testvagrant.stepdefs.exceptions.NoSuchEventException;
 import cucumber.api.DataTable;
+import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
+import org.omg.CORBA.TIMEOUT;
 import org.openqa.selenium.WebElement;
+import pages.BasePage;
 import pages.GenericPage;
 import utils.StringExtract;
 
@@ -214,5 +217,12 @@ public class GenericSteps extends BaseSteps {
     @And("^(\\w+) on (\\w+) screen will see the (.*)$")
     public void userWillSeeElement(String consumer, String screen, String element) throws Throwable {
         pageStore.get(GenericPage.class).buildElement(screen, element, "");
+    }
+
+    @And("^user on (\\w+) screen clicks on (\\w+) with radio$")
+    public void userOnPropertyTaxScreenClicksOnPrimaryOwnerWithRadio(String screen, String element) throws Throwable {
+        TimeUnit.SECONDS.sleep(1);
+        WebElement webElement = pageStore.get(GenericPage.class).buildElement(screen, element, "");
+        webElement.click();
     }
 }

@@ -64,7 +64,7 @@ public class BasePage {
         }
     }
 
-    protected void jsClick(WebElement webElement, WebDriver driver) {
+    public void jsClick(WebElement webElement, WebDriver driver) {
         waitForElementToBeVisible(webElement, driver);
         waitForElementToBeClickable(webElement, driver);
         ((JavascriptExecutor) driver).executeScript("arguments[0].click();", webElement);

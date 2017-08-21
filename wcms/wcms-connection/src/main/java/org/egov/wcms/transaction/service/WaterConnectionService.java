@@ -106,7 +106,6 @@ public class WaterConnectionService {
     
     public static final String roleCode = "CITIZEN"; 
     public static final String roleName = "Citizen"; 
-    public static final Long roleId = 1L; 
     
 
     public Connection createWaterConnection(final String topic, final String key,
@@ -221,7 +220,7 @@ public class WaterConnectionService {
     
     private User buildUserObjectFromConnection(WaterConnectionReq waterConnReq) { 
     	Connection conn= waterConnReq.getConnection(); 
-    	Role role = Role.builder().id(roleId).code(roleCode).name(roleName).build();
+    	Role role = Role.builder().code(roleCode).name(roleName).build();
     	List<Role> roleList = new ArrayList<>();
     	roleList.add(role);
     	return User.builder().aadhaarNumber(conn.getConnectionOwner().getAadhaarNumber())
@@ -472,8 +471,7 @@ public class WaterConnectionService {
 		return new EstimationNotice();
 	}
     
-    @SuppressWarnings("static-access")
-	public WorkOrderFormat getWorkOrder(String topic, String key, WaterConnectionGetReq waterConnectionGetReq) {
+    public WorkOrderFormat getWorkOrder(String topic, String key, WaterConnectionGetReq waterConnectionGetReq) {
     	// Fetch Connection Details using the Ack Number 
 		List<Connection> connectionList = waterConnectionRepository.getConnectionDetails(waterConnectionGetReq);
 		logger.info("Fetched the List of Connection Objects for the Ack Number : " + connectionList.size());

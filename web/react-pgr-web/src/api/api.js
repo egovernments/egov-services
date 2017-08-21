@@ -89,7 +89,7 @@ module.exports = {
                     localStorage.reload = true;
                     window.location.hash = "#/" + _tntId;
                 } else if(response){
-                    throw new Error(response);
+                    throw new Error("Oops! Something isn't right. Please try again later.");
                 }else {
                     throw new Error("Server returned unexpected error. Please contact system administrator.");
                 }

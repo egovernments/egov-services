@@ -5,8 +5,6 @@ import java.util.List;
 import org.egov.mr.web.contract.RegistrationUnitSearchCriteria;
 import org.springframework.stereotype.Component;
 
-import lombok.Data;
-
 @Component
 public class RegistrationUnitQueryBuilder {
 

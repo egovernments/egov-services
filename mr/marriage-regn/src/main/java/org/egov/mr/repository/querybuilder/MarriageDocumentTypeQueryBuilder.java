@@ -3,8 +3,6 @@ package org.egov.mr.repository.querybuilder;
 import java.util.List;
 
 import org.egov.mr.web.contract.MarriageDocumentTypeSearchCriteria;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;

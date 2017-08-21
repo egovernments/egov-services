@@ -54,6 +54,7 @@ import org.egov.egf.budget.persistence.entity.BudgetSearchEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -68,8 +69,9 @@ public class BudgetJdbcRepository extends JdbcRepository {
         LOG.debug("end init budget");
     }
 
-    public BudgetJdbcRepository(final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    public BudgetJdbcRepository(final NamedParameterJdbcTemplate namedParameterJdbcTemplate, final JdbcTemplate jdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public BudgetEntity create(final BudgetEntity entity) {

@@ -628,7 +628,7 @@ var dat = {
             "depedants": [{
               "name": "Connection.workflowDetails.assignee",
               "type": "dropDown",
-              "pattern": "/hr-employee/employees/_search?tenantId=default&departmentId={Connection.workflowDetails.department}&designationId={Connection.workflowDetails.designation}|$..id|$..name"
+              "pattern": "/hr-employee/employees/_search?tenantId=default&departmentId={Connection.workflowDetails.department}&designationId={Connection.workflowDetails.designation}|$..position|$..name"
             }]
           },
           {
@@ -645,7 +645,7 @@ var dat = {
             "depedants": [{
               "jsonPath": "Connection.workflowDetails.assignee",
               "type": "dropDown",
-              "pattern": "/hr-employee/employees/_search?tenantId=default&departmentId={Connection.workflowDetails.department}&designationId={Connection.workflowDetails.designation}|$..id|$..name"
+              "pattern": "/hr-employee/employees/_search?tenantId=default&departmentId={Connection.workflowDetails.department}&designationId={Connection.workflowDetails.designation}|$..position|$..name"
             }]
           },
           {
@@ -654,7 +654,7 @@ var dat = {
             "label": "wc.create.groups.approvalDetails.fields.Assignee",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/hr-employee/employees/_search?tenantId=default&departmentId={Connection.workflowDetails.department}&designationId={Connection.workflowDetails.designation}|$..id|$.Employee.*.name",
+            "url": "/hr-employee/employees/_search?tenantId=default&departmentId={Connection.workflowDetails.department}&designationId={Connection.workflowDetails.designation}|$..position|$.Employee.*.name",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",

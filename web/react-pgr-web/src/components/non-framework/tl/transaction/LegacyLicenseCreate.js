@@ -653,14 +653,15 @@ class LegacyLicenseCreate extends Component {
          var Validity = validityYear;
 
 
-         for(var i = startYear; i <= fixedDate; i = (i + validityYear)) {
-         //  for(var i = startYear; i <= fixedDate; i = (i + Validity)) {
-               if(i > (fixedDate - 6)){
-               let feeDetails = {"financialYear": i + "-" + (i+1).toString().slice(-2), "amount": "", "paid": false};
-               FeeDetails.push(feeDetails)
-               console.log(i);
+         for(var i = startYear; i <= fixedDate; i = (i + validityYear))
+         {
+               if(i > (fixedDate - 6))
+               {
+                 let feeDetails = {"financialYear": i + "-" + (i+1).toString().slice(-2), "amount": "", "paid": false};
+                 FeeDetails.push(feeDetails)
+                 console.log(i);
                }
-           }
+          }
 
           handleChange({target:{value:FeeDetails}},"licenses[0].feeDetails");
 

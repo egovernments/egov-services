@@ -2,7 +2,9 @@ Feature: Sample Test From PGR
 
 #  @Custom
   Scenario: Create Complaint
-    Given Intent:LoginIntentTest
+    Given DataIntent:LoginIntent
+    |narasappa|
+    |     demo|
     And user on home screen clicks on menu
     And user on home screen types on applicationSearchBox value official
     And user on home screen clicks on applicationLink
@@ -15,10 +17,10 @@ Feature: Sample Test From PGR
     #Citizen Registers Complaint with his login#
 
     #Login as Citizen and create Grievance#
-    Given citizen on Login screen verifies SignInText has visible value Sign In
-    And citizen on Login screen types on username value 7777777777
-    And citizen on Login screen types on password value eGov@123
-    And citizen on Login screen clicks on signIn
+    Given citizen on Login screen verifies signInText has visible value Sign In
+    Given DataIntent:LoginIntent
+    |7777777777|
+    |eGov@123  |
     And citizen on CitizenPortalHome screen verifies profileName has visible value eGov
     And citizen on CitizenPortalHome screen clicks on createGrievance
     And citizen on CitizenGrievance screen verifies createGrievancePage has visible value Grievance Information
@@ -37,32 +39,34 @@ Feature: Sample Test From PGR
 
     #View Applicaion On Home Page#
     And citizen on CitizenPortalHome screen types on homePageSearch with above applicationNumber
-    And citizen on CitizenPortalHome screen verifies applicationBox has visible value aboveApplicationNumber
+    And citizen on CitizenPortalHome screen verifies applicationBox has visible value applicationNumber
     And Intent:LogoutIntentTest
 
     #Login as Employee to change status as Processing#
-    Given employee on Login screen verifies SignInText has visible value Sign In
-    And employee on Login screen types on username value narasappa
-    And employee on Login screen types on password value demo
-    And employee on Login screen clicks on signIn
+    Given employee on Login screen verifies signInText has visible value Sign In
+    Given DataIntent:LoginIntent
+      |narasappa|
+      |demo     |
     And employee on Home screen verifies profileName has visible value narasappa
     And employee on Home screen opens on dashBoardSearch with above applicationNumber
+    And employee on CitizenGrievance screen will see the grievanceStatus
     And employee on CitizenGrievance screen verifies grievanceStatus is enabled
     And employee on CitizenGrievance screen selects grievanceStatus with value as PROCESSING
     And employee on CitizenGrievance screen types on commentBox value Processing
     And employee on CitizenGrievance screen clicks on submitButton
-    And employee on CitizenGrievance screen verifies successBox has visible value Grievance updated succesfully
+    And employee on CitizenGrievance screen verifies successBox has visible value succesfully
     And employee on CitizenGrievance screen clicks on Ok
+    And employee on CitizenGrievance screen will see the homeButton
     And employee on CitizenGrievance screen verifies homeButton is enabled
     And employee on CitizenGrievance screen clicks on homeButton
     And employee on Home screen verifies profileName has visible value narasappa
     And Intent:LogoutIntentTest
 
     #Login as Citizen to verify the status of Complaint#
-    Given citizen on Login screen verifies SignInText has visible value Sign In
-    And citizen on Login screen types on username value 7777777777
-    And citizen on Login screen types on password value eGov@123
-    And citizen on Login screen clicks on signIn
+    Given citizen on Login screen verifies signInText has visible value Sign In
+    Given DataIntent:LoginIntent
+      |7777777777|
+      |eGov@123  |
     And citizen on CitizenPortalHome screen verifies profileName has visible value eGov
     And citizen on CitizenPortalHome screen types on homePageSearch with above applicationNumber
     And citizen on CitizenPortalHome screen verifies applicationBox has visible value aboveApplicationNumber
@@ -70,10 +74,10 @@ Feature: Sample Test From PGR
     And Intent:LogoutIntentTest
 
     #Login as Employee to verify the application and change status to forwarded#
-    Given employee on Login screen verifies SignInText has visible value Sign In
-    And employee on Login screen types on username value narasappa
-    And employee on Login screen types on password value demo
-    And employee on Login screen clicks on signIn
+    Given employee on Login screen verifies signInText has visible value Sign In
+    Given DataIntent:LoginIntent
+      |narasappa|
+      |demo     |
     And employee on Home screen verifies profileName has visible value narasappa
     And employee on Home screen opens on dashBoardSearch with above applicationNumber
     And employee on CitizenGrievance screen verifies grievanceStatus is enabled
@@ -86,8 +90,9 @@ Feature: Sample Test From PGR
     And employee on CitizenGrievance screen selects selectPosition with value as Ramana
     And employee on CitizenGrievance screen types on commentBox value Forwarded
     And employee on CitizenGrievance screen clicks on submitButton
-    And employee on CitizenGrievance screen verifies successBox has visible value Grievance updated succesfully
+    And employee on CitizenGrievance screen verifies successBox has visible value succesfully
     And employee on CitizenGrievance screen clicks on Ok
+    And employee on CitizenGrievance screen will see the homeButton
     And employee on CitizenGrievance screen verifies homeButton is enabled
     And employee on CitizenGrievance screen will see the homeButton
     And employee on CitizenGrievance screen clicks on homeButton
@@ -97,10 +102,10 @@ Feature: Sample Test From PGR
     And Intent:LogoutIntentTest
 
     #Login as Citizen to verify the status of Complaint#
-    Given citizen on Login screen verifies SignInText has visible value Sign In
-    And citizen on Login screen types on username value 7777777777
-    And citizen on Login screen types on password value eGov@123
-    And citizen on Login screen clicks on signIn
+    Given citizen on Login screen verifies signInText has visible value Sign In
+    Given DataIntent:LoginIntent
+      |7777777777|
+      |eGov@123  |
     And citizen on CitizenPortalHome screen verifies profileName has visible value eGov
     And citizen on CitizenPortalHome screen types on homePageSearch with above applicationNumber
     And citizen on CitizenPortalHome screen verifies applicationBox has visible value aboveApplicationNumber
@@ -108,17 +113,18 @@ Feature: Sample Test From PGR
     And Intent:LogoutIntentTest
 
     #Login as Account officer to verify the application and Reject the application#
-    Given accountOfficer on Login screen verifies SignInText has visible value Sign In
-    And accountOfficer on Login screen types on username value ramana
-    And accountOfficer on Login screen types on password value demo
-    And accountOfficer on Login screen clicks on signIn
+    Given accountOfficer on Login screen verifies signInText has visible value Sign In
+    Given DataIntent:LoginIntent
+      |ramana   |
+      |demo     |
     And accountOfficer on Home screen opens on dashBoardSearch with above applicationNumber
     And accountOfficer on CitizenGrievance screen verifies grievanceStatus is enabled
     And accountOfficer on CitizenGrievance screen selects grievanceStatus with value as REJECTED
     And accountOfficer on CitizenGrievance screen types on commentBox value Rejected
     And accountOfficer on CitizenGrievance screen clicks on submitButton
-    And accountOfficer on CitizenGrievance screen verifies successBox has visible value Grievance updated succesfully
+    And accountOfficer on CitizenGrievance screen verifies successBox has visible value succesfully
     And accountOfficer on CitizenGrievance screen clicks on Ok
+    And accountOfficer on CitizenGrievance screen will see the homeButton
     And accountOfficer on CitizenGrievance screen verifies homeButton is enabled
     And accountOfficer on CitizenGrievance screen clicks on homeButton
 
@@ -127,10 +133,10 @@ Feature: Sample Test From PGR
     And Intent:LogoutIntentTest
 
     #Login As Citizen to verify the application and reopen the application#
-    Given citizen on Login screen verifies SignInText has visible value Sign In
-    And citizen on Login screen types on username value 7777777777
-    And citizen on Login screen types on password value eGov@123
-    And citizen on Login screen clicks on signIn
+    Given citizen on Login screen verifies signInText has visible value Sign In
+    Given DataIntent:LoginIntent
+      |7777777777|
+      |eGov@123  |
     And citizen on CitizenPortalHome screen verifies profileName has visible value eGov
     And citizen on CitizenPortalHome screen types on homePageSearch with above applicationNumber
     And citizen on CitizenPortalHome screen verifies applicationBox has visible value aboveApplicationNumber
@@ -140,25 +146,27 @@ Feature: Sample Test From PGR
     And citizen on CitizenGrievance screen clicks on Feedback
     And citizen on CitizenGrievance screen types on commentBox value Reopened
     And citizen on CitizenGrievance screen clicks on submitButton
-    And citizen on CitizenGrievance screen verifies successBox has visible value Grievance updated succesfully
+    And citizen on CitizenGrievance screen verifies successBox has visible value succesfully
     And citizen on CitizenGrievance screen clicks on Ok
+    And citizen on CitizenGrievance screen will see the homeButton
     And citizen on CitizenGrievance screen verifies homeButton is enabled
     And citizen on CitizenGrievance screen clicks on homeButton
     And Intent:LogoutIntentTest
 
     #Login as Employee to change status as Completed#
-    Given accountOfficer on Login screen verifies SignInText has visible value Sign In
-    And accountOfficer on Login screen types on username value ramana
-    And accountOfficer on Login screen types on password value demo
-    And accountOfficer on Login screen clicks on signIn
+    Given accountOfficer on Login screen verifies signInText has visible value Sign In
+    Given DataIntent:LoginIntent
+      |ramana  |
+      |demo    |
     And accountOfficer on Home screen verifies profileName has visible value ramana
     And accountOfficer on Home screen opens on dashBoardSearch with above applicationNumber
     And accountOfficer on CitizenGrievance screen verifies grievanceStatus is enabled
     And accountOfficer on CitizenGrievance screen selects grievanceStatus with value as COMPLETED
     And accountOfficer on CitizenGrievance screen types on commentBox value Completed
     And accountOfficer on CitizenGrievance screen clicks on submitButton
-    And accountOfficer on CitizenGrievance screen verifies successBox has visible value Grievance updated succesfully
+    And accountOfficer on CitizenGrievance screen verifies successBox has visible value succesfully
     And accountOfficer on CitizenGrievance screen clicks on Ok
+    And accountOfficer on CitizenGrievance screen will see the homeButton
     And accountOfficer on CitizenGrievance screen verifies homeButton is enabled
     And accountOfficer on CitizenGrievance screen clicks on homeButton
     And accountOfficer on Home screen verifies profileName has visible value narasappa

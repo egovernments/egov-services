@@ -1,0 +1,26 @@
+{
+	"variables": [],
+	"info": {
+		"name": "eGov_TradeLicence",
+		"_postman_id": "32fb2048-a4e0-cff8-dae9-7b3b12b20399",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Commons",
+			"description": "",
+			"item": []
+		},
+		{
+			"name": "Format Tests",
+			"description": "",
+			"item": []
+		},
+		{
+			"name": "Functional Tests",
+			"description": "",
+			"item": []
+		}
+	]
+}

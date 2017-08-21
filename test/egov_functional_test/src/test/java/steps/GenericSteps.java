@@ -198,7 +198,7 @@ public class GenericSteps extends BaseSteps {
 
     @And("^(\\w+)\\s+on (\\w+) screen selects (\\w+) with value as (.*)$")
     public void selectsDropdownWithValue(String consumer, String screen, String element, String value) throws Throwable {
-        TimeUnit.SECONDS.sleep(1);
+        TimeUnit.SECONDS.sleep(5);
         if (copyValues.containsKey(value))
             value = copyValues.get(value);
         WebElement webElement = pageStore.get(GenericPage.class).buildElement(screen, element, value);

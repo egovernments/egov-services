@@ -232,7 +232,6 @@
         "elementName":"grievanceTypeCategorySelect",
         "identifier":"css",
         "value":"[id^='undefined-undefined-Category']",
-        "value":"//*[text()='Success']",
         "waitFor":"visibility"
         }
     ]

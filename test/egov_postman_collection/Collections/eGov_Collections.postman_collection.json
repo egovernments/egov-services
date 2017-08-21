@@ -1,0 +1,26 @@
+{
+	"variables": [],
+	"info": {
+		"name": "eGov_Collections",
+		"_postman_id": "e1c4b3a4-51a8-cedb-6adf-4651de07dc0d",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Commons",
+			"description": "",
+			"item": []
+		},
+		{
+			"name": "Format Tests",
+			"description": "",
+			"item": []
+		},
+		{
+			"name": "Functional Tests",
+			"description": "",
+			"item": []
+		}
+	]
+}

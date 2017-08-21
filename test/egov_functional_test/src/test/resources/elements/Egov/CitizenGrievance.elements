@@ -116,8 +116,8 @@
         },
         {
         "elementName":"Feedback",
-        "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[4]/div/div/div[2]/div[2]/div/span/span[1]/span[2]/span",
+        "identifier":"css",
+        "value":"div[class='col-lg-3 col-md-3 col-sm-4 col-xs-12'] span span:nth-child(1)",
         "waitFor":"visibility"
         },
         {
@@ -137,7 +137,32 @@
          "identifier":"xpath",
          "value":"//*[text()='File size exceeds 5MB']",
          "waitFor":"visibility"
+         },
+         {
+         "elementName":"fileAttachment",
+         "identifier":"xpath",
+         "value":"//*[text()='File 1']",
+         "waitFor":"visibility"
+         },
+         {
+         "elementName":"text",
+         "identifier":"xpath",
+         "value":"//*[text()='%s']",
+         "waitFor":"visibility"
+         },
+         {
+         "elementName":"topOneComplaint",
+         "identifier":"css",
+         "value":"[class='col-lg-12 col-md-12 col-sm-12 col-xs-12'] div div button",
+         "waitFor":"visibility"
+         },
+         {
+         "elementName":"changeStatus",
+         "identifier":"css",
+         "value":"[id^='undefined-undefined-ChangeStatus']",
+         "waitFor":"visibility"
          }
+
 
     ]
 }

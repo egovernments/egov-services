@@ -227,12 +227,6 @@
         "identifier":"id",
         "value":"slaHours",
         "waitFor":"visibility"
-        },
-        {
-        "elementName":"grievanceTypeCategorySelect",
-        "identifier":"css",
-        "value":"[id^='undefined-undefined-Category']",
-        "waitFor":"visibility"
         }
     ]
 }

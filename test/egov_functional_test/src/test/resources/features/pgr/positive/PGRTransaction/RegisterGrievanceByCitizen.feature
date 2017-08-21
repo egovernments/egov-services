@@ -3,61 +3,65 @@ Feature: PGR Full Flow
 
   Scenario: Register grievance with photo upload by selecting grievance category and Grievance Type from dropdown
 
+         ### On Login Screen ###
 #    Given citizen on Login screen verifies SignInText has visible value Sign In
-    Given citizen on Login screen types on username value 7777777777
+    And citizen on Login screen types on username value 7777777777
     And citizen on Login screen types on password value eGov@123
     And citizen on Login screen clicks on signIn
+
+    ### On Homepage Screen ###
     And citizen on CitizenPortalHome screen verifies profileName has visible value eGov
     And citizen on CitizenPortalHome screen clicks on createGrievance
     And citizen on CitizenGrievance screen verifies createGrievancePage has visible value Grievance Information
+
+    ### On Create Complaint Grievance Screen Entering Grievance Information ###
     And citizen on CitizenGrievance screen selects grievanceCategory with value as Town Planning
     And citizen on CitizenGrievance screen will see the grievanceType
     And citizen on CitizenGrievance screen selects grievanceType with value as Obstruction of Trees
+
+    ### On Create Complaint Grievance Screen Entering More Details ###
     And citizen on CitizenGrievance screen types on grievanceDetails value TestingTheGrievance
     And citizen on CitizenGrievance screen types on grievanceLocation suggestion box with value Bank Road
     And citizen on CitizenGrievance screen uploads on selectPhoto value pgrDocument.jpg
     And citizen on CitizenGrievance screen clicks on create
+
+    ### On View Complaint Grievance Screen verifying the details ###
     And citizen on CitizenGrievance screen copies the complaintNum to applicationNumber
     And citizen on CitizenGrievance screen clicks on view
     And citizen on CitizenGrievance screen will see the commentBox
-    And citizen on CitizenGrievance screen verifies fileAttachment is visible
+    And citizen on CitizenGrievance screen verifies fileAttachment is enabled
+
+    ### Logout ###
     And Intent:LogoutIntentTest
 
   Scenario: Register grievance by selecting location from autopopulation list
 
-    ### On Login Screen ###
-    Given user on Login screen verifies signInText has visible value Sign In
-    And user on Login screen types on username value ramana
-    And user on Login screen types on password value demo
-    And user on Login screen clicks on signIn
+     ### On Login Screen ###
+#    Given citizen on Login screen verifies SignInText has visible value Sign In
+    And citizen on Login screen types on username value 7777777777
+    And citizen on Login screen types on password value eGov@123
+    And citizen on Login screen clicks on signIn
 
     ### On Homepage Screen ###
-    And user on Home screen will see the menu
-    And user on Home screen clicks on menu
-    And user on Home screen types on menuSearch value Officials Register Grievance
-    And user on Home screen clicks on firstMenuItem
-
-    ### On Create Complaint Grievance Screen Entering Contact Information ###
-#    And user on Grievance screen verifies contactInfo has visible value Contact Information
-    And user on Grievance screen selects receivingMode with value as Call
-    And user on Grievance screen types on name value --"User ", 4 random characters
-    And user on Grievance screen types on mobileNumber value --"1",9 Digit Number
-    And user on Grievance screen types on email value --email
+    And citizen on CitizenPortalHome screen verifies profileName has visible value eGov
+    And citizen on CitizenPortalHome screen clicks on createGrievance
+    And citizen on CitizenGrievance screen verifies createGrievancePage has visible value Grievance Information
 
     ### On Create Complaint Grievance Screen Entering Grievance Information ###
-    And user on Grievance screen selects grievanceCategory with value as Revenue
-    And user on Grievance screen selects grievanceType with value as Unauthorised Advt. Boards
+    And citizen on CitizenGrievance screen selects grievanceCategory with value as Town Planning
+    And citizen on CitizenGrievance screen will see the grievanceType
+    And citizen on CitizenGrievance screen selects grievanceType with value as Obstruction of Trees
 
     ### On Create Complaint Grievance Screen Entering More Details ###
-    And user on Grievance screen types on grievanceDetails value Grievance Details
-    And user on Grievance screen types on grievanceLocation suggestion box with value Bank Road
-    And user on Grievance screen clicks on create
+    And citizen on CitizenGrievance screen types on grievanceDetails value TestingTheGrievance
+    And citizen on CitizenGrievance screen types on grievanceLocation suggestion box with value Bank Road
+    And citizen on CitizenGrievance screen clicks on create
 
-    ### On Create Complaint Grievance Screen verifying the details ###
-    And user on Grievance screen copies the complaintNum to applicationNumber
-    And user on Grievance screen clicks on view
-    And user on Grievance screen will see the complaintDetails
-    And user on Grievance screen copies the userName to user
+    ### On View Complaint Grievance Screen verifying the details ###
+    And citizen on CitizenGrievance screen copies the complaintNum to applicationNumber
+    And citizen on CitizenGrievance screen clicks on view
+    And citizen on CitizenGrievance screen will see the commentBox
+    And citizen on CitizenGrievance screen verifies text has visible value Bank Road - Election Ward No 31
 
     ### Logout ###
     And Intent:LogoutIntentTest
@@ -68,19 +72,29 @@ Feature: PGR Full Flow
      Given citizen on Login screen types on username value 7777777777
      And citizen on Login screen types on password value eGov@123
      And citizen on Login screen clicks on signIn
+
+     ### On Homepage Screen ###
      And citizen on CitizenPortalHome screen verifies profileName has visible value eGov
      And citizen on CitizenPortalHome screen clicks on createGrievance
+
+     ### On Create Complaint Grievance Screen Entering Grievance Information ###
      And citizen on CitizenGrievance screen verifies createGrievancePage has visible value Grievance Information
      And citizen on CitizenGrievance screen selects grievanceCategory with value as Town Planning
      And citizen on CitizenGrievance screen will see the grievanceType
      And citizen on CitizenGrievance screen selects grievanceType with value as Obstruction of Trees
+
+     ### On Create Complaint Grievance Screen Entering More Details ###
      And citizen on CitizenGrievance screen types on grievanceDetails value TestingTheGrievance
      And citizen on CitizenGrievance screen types on grievanceLocation suggestion box with value Bank Road
      And citizen on CitizenGrievance screen clicks on create
+
+     ### On View Complaint Grievance Screen verifying the details ###
      And citizen on CitizenGrievance screen copies the complaintNum to applicationNumber
      And citizen on CitizenGrievance screen clicks on view
      And citizen on CitizenGrievance screen will see the commentBox
-     And citizen on CitizenGrievance screen verifies CRN is visible
+     And citizen on CitizenGrievance screen verifies text has visible value applicationNumber
+
+     ### Logout ###
      And Intent:LogoutIntentTest
 
 
@@ -89,17 +103,27 @@ Feature: PGR Full Flow
     Given citizen on Login screen types on username value 7777777777
     And citizen on Login screen types on password value eGov@123
     And citizen on Login screen clicks on signIn
+
+    ### On Homepage Screen ###
     And citizen on CitizenPortalHome screen verifies profileName has visible value eGov
     And citizen on CitizenPortalHome screen clicks on createGrievance
+
+    ### On Create Complaint Grievance Screen Entering Grievance Information ###
     And citizen on CitizenGrievance screen verifies createGrievancePage has visible value Grievance Information
-    And citizen on CitizenGrievance screen clicks on topOne
+    And citizen on CitizenGrievance screen clicks on topOneComplaint
+
+    ### On Create Complaint Grievance Screen Entering More Details ###
     And citizen on CitizenGrievance screen types on grievanceDetails value TestingTheGrievance
     And citizen on CitizenGrievance screen types on grievanceLocation suggestion box with value Bank Road
     And citizen on CitizenGrievance screen clicks on create
     And citizen on CitizenGrievance screen copies the complaintNum to applicationNumber
+
+    ### On View Complaint Grievance Screen verifying the details ###
     And citizen on CitizenGrievance screen clicks on view
     And citizen on CitizenGrievance screen will see the commentBox
-    And citizen on CitizenGrievance screen verifies CRN is visible
+    And citizen on CitizenGrievance screen verifies text has visible value applicationNumber
+
+    ### Logout ###
     And Intent:LogoutIntentTest
 
   Scenario: To verify file upload accepts the length upto 30 character
@@ -119,7 +143,7 @@ Feature: PGR Full Flow
     And citizen on CitizenGrievance screen verifies photoValidationMSG has visible value File name length should not exceed 30 characters
     And Intent:LogoutIntentTest
 
-  Scenario: To verify file upload donot accepts above 5MB
+  Scenario: To verify file upload do not accepts above 5MB
 
     Given citizen on Login screen types on username value 7777777777
     And citizen on Login screen types on password value eGov@123
@@ -134,4 +158,323 @@ Feature: PGR Full Flow
     And citizen on CitizenGrievance screen types on grievanceLocation suggestion box with value Bank Road
     And citizen on CitizenGrievance screen uploads on selectPhoto value Myphone 166.JPG
     And citizen on CitizenGrievance screen verifies photoMoreThan5MBValidationMSG has visible value File name length should not exceed 30 characters
+    And Intent:LogoutIntentTest
+
+
+
+#  @Custom
+  Scenario: Create Complaint
+    Given DataIntent:LoginIntent
+      |narasappa|
+      |     demo|
+    And user on home screen clicks on menu
+    And user on home screen types on applicationSearchBox value official
+    And user on home screen clicks on applicationLink
+    And user on grievance screen select on receivingMode value Letters
+    And Intent:LogoutIntentTest
+
+  @Custom
+  Scenario: Create Complaint using Citizen portal
+
+    #Citizen Registers Complaint with his login#
+
+    #Login as Citizen and create Grievance#
+    Given citizen on Login screen verifies signInText has visible value Sign In
+    Given DataIntent:LoginIntent
+      |7777777777|
+      |eGov@123  |
+    And citizen on CitizenPortalHome screen verifies profileName has visible value eGov
+    And citizen on CitizenPortalHome screen clicks on createGrievance
+    And citizen on CitizenGrievance screen verifies createGrievancePage has visible value Grievance Information
+    And citizen on CitizenGrievance screen selects grievanceCategory with value as Town Planning
+    And citizen on CitizenGrievance screen will see the grievanceType
+    And citizen on CitizenGrievance screen selects grievanceType with value as Obstruction of Trees
+    And citizen on CitizenGrievance screen types on grievanceDetails value TestingTheGrievance
+    And citizen on CitizenGrievance screen types on grievanceLocation suggestion box with value Bank Road
+    And citizen on CitizenGrievance screen clicks on create
+    And citizen on CitizenGrievance screen copies the complaintNum to applicationNumber
+    And citizen on CitizenGrievance screen clicks on view
+    And citizen on CitizenGrievance screen will see the commentBox
+    And citizen on CitizenGrievance screen verifies commentBox is enabled
+    And citizen on CitizenGrievance screen clicks on homeButton
+    And citizen on CitizenPortalHome screen verifies profileName has visible value eGov
+
+    #View Applicaion On Home Page#
+    And citizen on CitizenPortalHome screen types on homePageSearch with above applicationNumber
+    And citizen on CitizenPortalHome screen verifies applicationBox has visible value applicationNumber
+    And Intent:LogoutIntentTest
+
+    #Login as Employee to change status as Processing#
+    Given employee on Login screen verifies signInText has visible value Sign In
+    Given DataIntent:LoginIntent
+      |narasappa|
+      |demo     |
+    And employee on Home screen verifies profileName has visible value narasappa
+    And employee on Home screen opens on dashBoardSearch with above applicationNumber
+    And employee on CitizenGrievance screen will see the grievanceStatus
+    And employee on CitizenGrievance screen verifies grievanceStatus is enabled
+    And employee on CitizenGrievance screen selects grievanceStatus with value as PROCESSING
+    And employee on CitizenGrievance screen types on commentBox value Processing
+    And employee on CitizenGrievance screen clicks on submitButton
+    And employee on CitizenGrievance screen verifies successBox has visible value succesfully
+    And employee on CitizenGrievance screen clicks on Ok
+    And employee on CitizenGrievance screen will see the homeButton
+    And employee on CitizenGrievance screen verifies homeButton is enabled
+    And employee on CitizenGrievance screen clicks on homeButton
+    And employee on Home screen verifies profileName has visible value narasappa
+    And Intent:LogoutIntentTest
+
+    #Login as Citizen to verify the status of Complaint#
+    Given citizen on Login screen verifies signInText has visible value Sign In
+    Given DataIntent:LoginIntent
+      |7777777777|
+      |eGov@123  |
+    And citizen on CitizenPortalHome screen verifies profileName has visible value eGov
+    And citizen on CitizenPortalHome screen types on homePageSearch with above applicationNumber
+    And citizen on CitizenPortalHome screen verifies applicationBox has visible value aboveApplicationNumber
+    And citizen on CitizenPortalHome screen verifies applicationBox has visible value PROCESSING
+    And Intent:LogoutIntentTest
+
+    #Login as Employee to verify the application and change status to forwarded#
+    Given employee on Login screen verifies signInText has visible value Sign In
+    Given DataIntent:LoginIntent
+      |narasappa|
+      |demo     |
+    And employee on Home screen verifies profileName has visible value narasappa
+    And employee on Home screen opens on dashBoardSearch with above applicationNumber
+    And employee on CitizenGrievance screen verifies grievanceStatus is enabled
+    And employee on CitizenGrievance screen selects grievanceStatus with value as FORWARDED
+    And employee on CitizenGrievance screen verifies selectDepartment is enabled
+    And employee on CitizenGrievance screen selects selectDepartment with value as ACCOUNTS
+    And employee on CitizenGrievance screen verifies selectDesignation is enabled
+    And employee on CitizenGrievance screen selects selectDesignation with value as Accounts Officer
+    And employee on CitizenGrievance screen verifies selectPosition is enabled
+    And employee on CitizenGrievance screen selects selectPosition with value as Ramana
+    And employee on CitizenGrievance screen types on commentBox value Forwarded
+    And employee on CitizenGrievance screen clicks on submitButton
+    And employee on CitizenGrievance screen verifies successBox has visible value succesfully
+    And employee on CitizenGrievance screen clicks on Ok
+    And employee on CitizenGrievance screen will see the homeButton
+    And employee on CitizenGrievance screen verifies homeButton is enabled
+    And employee on CitizenGrievance screen will see the homeButton
+    And employee on CitizenGrievance screen clicks on homeButton
+
+    And employee on Home screen types on dashBoardSearch with above applicationNumber
+    And employee on Home screen verifies dashBoardApplications has notvisible value aboveApplicationNumber
+    And Intent:LogoutIntentTest
+
+    #Login as Citizen to verify the status of Complaint#
+    Given citizen on Login screen verifies signInText has visible value Sign In
+    Given DataIntent:LoginIntent
+      |7777777777|
+      |eGov@123  |
+    And citizen on CitizenPortalHome screen verifies profileName has visible value eGov
+    And citizen on CitizenPortalHome screen types on homePageSearch with above applicationNumber
+    And citizen on CitizenPortalHome screen verifies applicationBox has visible value aboveApplicationNumber
+    And citizen on CitizenPortalHome screen verifies applicationBox has visible value FORWARDED
+    And Intent:LogoutIntentTest
+
+    #Login as Account officer to verify the application and Reject the application#
+    Given accountOfficer on Login screen verifies signInText has visible value Sign In
+    Given DataIntent:LoginIntent
+      |ramana   |
+      |demo     |
+    And accountOfficer on Home screen opens on dashBoardSearch with above applicationNumber
+    And accountOfficer on CitizenGrievance screen verifies grievanceStatus is enabled
+    And accountOfficer on CitizenGrievance screen selects grievanceStatus with value as REJECTED
+    And accountOfficer on CitizenGrievance screen types on commentBox value Rejected
+    And accountOfficer on CitizenGrievance screen clicks on submitButton
+    And accountOfficer on CitizenGrievance screen verifies successBox has visible value succesfully
+    And accountOfficer on CitizenGrievance screen clicks on Ok
+    And accountOfficer on CitizenGrievance screen will see the homeButton
+    And accountOfficer on CitizenGrievance screen verifies homeButton is enabled
+    And accountOfficer on CitizenGrievance screen clicks on homeButton
+
+    And employee on Home screen types on dashBoardSearch with above applicationNumber
+    And employee on Home screen verifies dashBoardApplications has notvisible value aboveApplicationNumber
+    And Intent:LogoutIntentTest
+
+    #Login As Citizen to verify the application and reopen the application#
+    Given citizen on Login screen verifies signInText has visible value Sign In
+    Given DataIntent:LoginIntent
+      |7777777777|
+      |eGov@123  |
+    And citizen on CitizenPortalHome screen verifies profileName has visible value eGov
+    And citizen on CitizenPortalHome screen types on homePageSearch with above applicationNumber
+    And citizen on CitizenPortalHome screen verifies applicationBox has visible value aboveApplicationNumber
+    And citizen on CitizenPortalHome screen verifies applicationBox has visible value REJECTED
+    And citizen on CitizenPortalHome screen clicks on applicationBox value aboveApplicationNumber
+    And citizen on CitizenGrievance screen selects grievanceStatus with value as REOPENED
+    And citizen on CitizenGrievance screen clicks on Feedback
+    And citizen on CitizenGrievance screen types on commentBox value Reopened
+    And citizen on CitizenGrievance screen clicks on submitButton
+    And citizen on CitizenGrievance screen verifies successBox has visible value succesfully
+    And citizen on CitizenGrievance screen clicks on Ok
+    And citizen on CitizenGrievance screen will see the homeButton
+    And citizen on CitizenGrievance screen verifies homeButton is enabled
+    And citizen on CitizenGrievance screen clicks on homeButton
+    And Intent:LogoutIntentTest
+
+    #Login as Employee to change status as Completed#
+    Given accountOfficer on Login screen verifies signInText has visible value Sign In
+    Given DataIntent:LoginIntent
+      |ramana  |
+      |demo    |
+    And accountOfficer on Home screen verifies profileName has visible value ramana
+    And accountOfficer on Home screen opens on dashBoardSearch with above applicationNumber
+    And accountOfficer on CitizenGrievance screen verifies grievanceStatus is enabled
+    And accountOfficer on CitizenGrievance screen selects grievanceStatus with value as COMPLETED
+    And accountOfficer on CitizenGrievance screen types on commentBox value Completed
+    And accountOfficer on CitizenGrievance screen clicks on submitButton
+    And accountOfficer on CitizenGrievance screen verifies successBox has visible value succesfully
+    And accountOfficer on CitizenGrievance screen clicks on Ok
+    And accountOfficer on CitizenGrievance screen will see the homeButton
+    And accountOfficer on CitizenGrievance screen verifies homeButton is enabled
+    And accountOfficer on CitizenGrievance screen clicks on homeButton
+    And accountOfficer on Home screen verifies profileName has visible value narasappa
+    And Intent:LogoutIntentTest
+
+
+
+  Scenario: Citizen withdraw the complaint which is registered by himself
+
+    ### On Login Screen ###
+#    Given citizen on Login screen verifies SignInText has visible value Sign In
+    And citizen on Login screen types on username value 7777777777
+    And citizen on Login screen types on password value eGov@123
+    And citizen on Login screen clicks on signIn
+
+    ### On Homepage Screen ###
+    And citizen on CitizenPortalHome screen verifies profileName has visible value eGov
+    And citizen on CitizenPortalHome screen clicks on createGrievance
+    And citizen on CitizenGrievance screen verifies createGrievancePage has visible value Grievance Information
+
+    ### On Create Complaint Grievance Screen Entering Grievance Information ###
+    And citizen on CitizenGrievance screen selects grievanceCategory with value as Town Planning
+    And citizen on CitizenGrievance screen will see the grievanceType
+    And citizen on CitizenGrievance screen selects grievanceType with value as Obstruction of Trees
+
+    ### On Create Complaint Grievance Screen Entering More Details ###
+    And citizen on CitizenGrievance screen types on grievanceDetails value TestingTheGrievance
+    And citizen on CitizenGrievance screen types on grievanceLocation suggestion box with value Bank Road
+    And citizen on CitizenGrievance screen clicks on create
+
+    ### On View Complaint Grievance Screen verifying the details ###
+    And citizen on CitizenGrievance screen copies the complaintNum to applicationNumber
+    And citizen on CitizenGrievance screen clicks on view
+
+    ### On View Complaint Grievace Screen Withdraw the complaint ###
+    And citizen on CitizenGrievance screen verifies text has visible value applicationNumber
+    And citizen on CitizenGrievance screen selects grievanceStatus with value as WITHDRAWN
+    And citizen on CitizenGrievance screen types on commentBox value Withdrawing the complaint
+    And citizen on CitizenGrievance screen clicks on submitButton
+    And citizen on CitizenGrievance screen verifies successBox has visible value succesfully
+    And citizen on CitizenGrievance screen clicks on Ok
+    And citizen on CitizenPortalHome screen verifies profileName has visible value eGov
+
+    ### Citizen Verifies complaint is withdrawn ###
+    And citizen on CitizenGrievance screen clicks on homeButton
+    And citizen on CitizenPortalHome screen types on homePageSearch with above applicationNumber
+    And citizen on CitizenPortalHome screen verifies applicationBox has visible value WITHDRAWN
+
+    ### Logout ###
+    And Intent:LogoutIntentTest
+
+
+  Scenario: Citizen withdraw the complaint which is reopened by himself
+### On Login Screen ###
+#    Given citizen on Login screen verifies SignInText has visible value Sign In
+    And citizen on Login screen types on username value 7777777777
+    And citizen on Login screen types on password value eGov@123
+    And citizen on Login screen clicks on signIn
+
+    ### On Homepage Screen ###
+    And citizen on CitizenPortalHome screen verifies profileName has visible value eGov
+    And citizen on CitizenPortalHome screen clicks on createGrievance
+    And citizen on CitizenGrievance screen verifies createGrievancePage has visible value Grievance Information
+
+    ### On Create Complaint Grievance Screen Entering Grievance Information ###
+    And citizen on CitizenGrievance screen selects grievanceCategory with value as Town Planning
+    And citizen on CitizenGrievance screen will see the grievanceType
+    And citizen on CitizenGrievance screen selects grievanceType with value as Obstruction of Trees
+
+    ### On Create Complaint Grievance Screen Entering More Details ###
+    And citizen on CitizenGrievance screen types on grievanceDetails value TestingTheGrievance
+    And citizen on CitizenGrievance screen types on grievanceLocation suggestion box with value Bank Road
+    And citizen on CitizenGrievance screen clicks on create
+
+    ### On View Complaint Grievance Screen verifying the details ###
+    And citizen on CitizenGrievance screen copies the complaintNum to applicationNumber
+    And citizen on CitizenGrievance screen clicks on view
+    And citizen on Grievance screen will see the complaintDetails
+    And citizen on CitizenGrievance screen clicks on homeButton
+    And citizen on CitizenPortalHome screen types on homePageSearch with above applicationNumber
+    And citizen on CitizenPortalHome screen verifies applicationBox has visible value applicationNumber
+
+    ### Logout ###
+    And Intent:LogoutIntentTest
+
+    #######Login as Account officer to verify the application and Reject the application#######
+
+    ### Employee logsin ###
+    Given accountOfficer on Login screen verifies signInText has visible value Sign In
+    Given DataIntent:LoginIntent
+      |narasappa   |
+      |demo        |
+
+    ### Employee opens the application from his inbox and reject it###
+    And accountOfficer on Home screen opens on dashBoardSearch with above applicationNumber
+    And accountOfficer on CitizenGrievance screen verifies grievanceStatus is enabled
+    And accountOfficer on CitizenGrievance screen selects grievanceStatus with value as REJECTED
+    And accountOfficer on CitizenGrievance screen types on commentBox value Rejected
+    And accountOfficer on CitizenGrievance screen clicks on submitButton
+    And accountOfficer on CitizenGrievance screen verifies successBox has visible value succesfully
+    And accountOfficer on CitizenGrievance screen clicks on Ok
+    And citizen on Grievance screen will see the complaintDetails
+    And accountOfficer on CitizenGrievance screen clicks on homeButton
+
+
+    ### Employee verifies complaint not there in his inbox ###
+    And employee on Home screen types on dashBoardSearch with above applicationNumber
+    And employee on Home screen verifies dashBoardApplications has notvisible value aboveApplicationNumber
+    And Intent:LogoutIntentTest
+
+    #######Login As Citizen to verify the application and reopen the complaint#######
+
+    ### Citizen login ###
+    Given citizen on Login screen verifies signInText has visible value Sign In
+    Given DataIntent:LoginIntent
+      |7777777777|
+      |eGov@123  |
+    And citizen on CitizenPortalHome screen verifies profileName has visible value eGov
+
+    ### Citizen checks the status of the complaint ###
+    And citizen on CitizenPortalHome screen types on homePageSearch with above applicationNumber
+    And citizen on CitizenPortalHome screen verifies applicationBox has visible value REJECTED
+
+    ### Citizen opens the complaint and reopen the same ###
+    And citizen on CitizenPortalHome screen clicks on applicationBox value applicationNumber
+    And citizen on CitizenGrievance screen verifies text has visible value applicationNumber
+    And citizen on CitizenGrievance screen selects grievanceStatus with value as REOPENED
+    And citizen on CitizenGrievance screen clicks on Feedback
+    And citizen on CitizenGrievance screen types on commentBox value Reopened
+    And citizen on CitizenGrievance screen clicks on submitButton
+    And citizen on CitizenGrievance screen verifies successBox has visible value succesfully
+    And citizen on CitizenGrievance screen clicks on Ok
+
+    ### On View Complaint Grievace Screen Withdraw the complaint ###
+    And citizen on CitizenGrievance screen verifies text has visible value applicationNumber
+    And citizen on CitizenGrievance screen selects grievanceStatus with value as WITHDRAWN
+    And citizen on CitizenGrievance screen types on commentBox value Withdrawing the complaint
+    And citizen on CitizenGrievance screen clicks on submitButton
+    And citizen on CitizenGrievance screen verifies successBox has visible value succesfully
+    And citizen on CitizenGrievance screen clicks on Ok
+    And citizen on CitizenPortalHome screen verifies profileName has visible value eGov
+
+    ### Citizen Verifies complaint is withdrawn ###
+    And citizen on CitizenGrievance screen clicks on homeButton
+    And citizen on CitizenPortalHome screen types on homePageSearch with above applicationNumber
+    And citizen on CitizenPortalHome screen verifies applicationBox has visible value WITHDRAWN
+
+    ### Logout ###
     And Intent:LogoutIntentTest

@@ -13,7 +13,13 @@ public class RegistrationUnitQueryBuilder {
 	public final String BASEQUERY = "SELECT * FROM egmr_registration_unit ";
 	StringBuilder selectQuery;
 
-	// Query for _search
+	/**
+	 * @Query for _search
+	 * 
+	 * @param regnUnitSearchCriteria
+	 * @param preparedStatementValues
+	 * @return
+	 */
 	public String getSelectQuery(RegistrationUnitSearchCriteria regnUnitSearchCriteria,
 			List<Object> preparedStatementValues) {
 		selectQuery = new StringBuilder(BASEQUERY);
@@ -21,7 +27,11 @@ public class RegistrationUnitQueryBuilder {
 		return selectQuery.toString();
 	}
 
-	// Helper method
+	/**
+	 * @Helper_method
+	 * @param regnUnitSearchCriteria
+	 * @param preparedStatementValues
+	 */
 	@SuppressWarnings("unchecked")
 	private void addWhereCluase(RegistrationUnitSearchCriteria regnUnitSearchCriteria,
 			@SuppressWarnings("rawtypes") List preparedStatementValues) {
@@ -61,11 +71,16 @@ public class RegistrationUnitQueryBuilder {
 		addappendAndClauseFlag = addAndClauseIfRequired(addappendAndClauseFlag, selectQuery);
 		selectQuery.append("tenantId=? ");
 		preparedStatementValues.add(regnUnitSearchCriteria.getTenantId());
-		selectQuery.append("ORDER BY createdTime ASC ");
-		selectQuery.append(";");// Should be Added OR Not ORDER BY id ASC
+		selectQuery.append("ORDER BY createdTime ASC ;");
+		// Should be Added OR Not ORDER BY id ASC
 	}
 
-	// Helper method
+	/**
+	 * @Helper_method
+	 * @param appendAndClauseFlag
+	 * @param queryString
+	 * @return
+	 */
 	private boolean addAndClauseIfRequired(boolean appendAndClauseFlag, StringBuilder queryString) {
 		if (appendAndClauseFlag) {
 			queryString.append("AND ");
@@ -73,19 +88,28 @@ public class RegistrationUnitQueryBuilder {
 		return true;
 	}
 
-	// Query to generate Unique Id
+	/**
+	 * @Query to generate Unique Id
+	 * @return
+	 */
 	public String getIdNextValForRegnUnit() {
 		return "SELECT NEXTVAL('seq_registartion_unit') ;";
 	}
 
-	// Query for _create
+	/**
+	 * @Query for _create
+	 * @return
+	 */
 	public String getCreateQuery() {
 		return "INSERT INTO egmr_registration_unit" + "(id,code,name,isactive,tenantid,locality,zone,revenueWard,block"
 				+ ",street,electionWard,doorNo,pinCode,createdBy,lastModifiedBy,createdTime,lastModifiedTime) "
 				+ "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ;";
 	}
 
-	// Query for _update
+	/**
+	 * @Query for _update
+	 * @return
+	 */
 	public String getUpdateQuery() {
 		return "UPDATE egmr_registration_unit SET code=?, name=?,isactive=?,locality=?,zone=?,revenueWard=?,block=?"
 				+ ",street=?,electionWard=?,doorNo=?,pinCode=?,createdBy=?,lastModifiedBy=?,createdTime=?,lastModifiedTime=?"

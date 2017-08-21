@@ -37,15 +37,19 @@ public class RegistrationUnitRepository {
 
 		Location location = registrationUnit.getAddress();
 		AuditDetails auditDetails = registrationUnit.getAuditDetails();
-		// Object created according to the registration_unit table structure
+		/**
+		 * @Object created according to the registration_unit table structure
+		 */
 		Object[] obj = new Object[] { registrationUnit.getId(), registrationUnit.getCode(), registrationUnit.getName(),
 				registrationUnit.getIsActive(), registrationUnit.getTenantId(), location.getLocality(),
 				location.getZone(), location.getRevenueWard(), location.getBlock(), location.getStreet(),
 				location.getElectionWard(), location.getDoorNo(), location.getPinCode(), auditDetails.getCreatedBy(),
 				auditDetails.getLastModifiedBy(), auditDetails.getCreatedTime(), auditDetails.getLastModifiedTime() };
 		try {
-			// RegistrationUnit & Location are saved into SingleTable with
-			// No address column
+			/**
+			 * @RegistrationUnit & Location are saved into SingleTable with No
+			 *                   address column
+			 */
 			jdbcTemplate.update(registrationUnitQueryBuilder.getCreateQuery(), obj);
 		} catch (DataAccessException e) {
 			jdbcTemplate.execute("ROLLBACK");
@@ -55,7 +59,9 @@ public class RegistrationUnitRepository {
 
 	public List<RegistrationUnit> search(RegistrationUnitSearchCriteria regnUnitSearchCriteria) {
 		LOGGER.info(regnUnitSearchCriteria.toString());
-		// for search method
+		/**
+		 * @search method
+		 */
 		List<Object> preparedStatementValues = new ArrayList<Object>();
 		String selectQuery = registrationUnitQueryBuilder.getSelectQuery(regnUnitSearchCriteria,
 				preparedStatementValues);
@@ -69,7 +75,9 @@ public class RegistrationUnitRepository {
 
 		Location location = registrationUnit.getAddress();
 		AuditDetails auditDetails = registrationUnit.getAuditDetails();
-		// Object created according to the registration_unit table structure
+		/**
+		 * @Object created according to the registration_unit table structure
+		 */
 		Object[] obj = new Object[] { registrationUnit.getCode(), registrationUnit.getName(),
 				registrationUnit.getIsActive(), location.getLocality(), location.getZone(), location.getRevenueWard(),
 				location.getBlock(), location.getStreet(), location.getElectionWard(), location.getDoorNo(),
@@ -84,7 +92,11 @@ public class RegistrationUnitRepository {
 		}
 	}
 
-	// ***************** new Id *************************
+	/**
+	 * ****** @new_Id ******
+	 * 
+	 * @return
+	 */
 	public Long getIdNextVal() {
 		return jdbcTemplate.queryForObject(registrationUnitQueryBuilder.getIdNextValForRegnUnit(), Long.class);
 	}

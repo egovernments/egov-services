@@ -121,7 +121,8 @@ class Report extends Component {
     	employees: [],
     	initiatorPosition: "",
     	hide: false,
-    	disable: false
+    	disable: false,
+      pipeSize: {}
     };
   }
 
@@ -213,7 +214,14 @@ class Report extends Component {
     let { setMetaData, setModuleName, setActionName, initForm, setMockData, setFormData } = this.props;
     let hashLocation = window.location.hash;
     let self = this;
+    let count = 4;
+    const stopLoader = function() {
+      count--;
+      if(count == 0)
+        self.props.setLoadingStatus('hide');
+    }
 
+    self.props.setLoadingStatus('loading');
     specifications =typeof(results)=="string" ? JSON.parse(results) : results;
     let obj = specifications["wc.create"];
     reqRequired = [];
@@ -230,118 +238,114 @@ class Report extends Component {
 
     //Get connection and set form data
     Api.commonApiPost("/wcms-connection/connection/_search", {"stateId": self.props.match.params.stateId}, {}, null, true).then(function(res){
-    	if(res.Connection[0].property.propertyTypeId) {
-    		Api.commonApiPost("/pt-property/property/propertytypes/_search", {"id": res.Connection[0].property.propertyTypeId}, {}, null, true).then(function(res4){
-    			if(res4 && res4.propertyTypes && res4.propertyTypes.length) {
-    				for(var i=0; i<res4.propertyTypes.length; i++) {
-    					if(res4.propertyTypes[i].id == res.Connection[0].property.propertyTypeId) {
-    						res.Connection[0].property.propertyType = res4.propertyTypes[i].name;
-    						//Fetch category type
-				    		Api.commonApiPost("/wcms/masters/propertytype-categorytype/_search", {propertyTypeName: res.Connection[0].property.propertyType}, {}, null, true).then(function(res){
-				    			  let keys=jp.query(res, "$..categoryTypeName");
-				                  let values=jp.query(res, "$..categoryTypeName");
-				                  let dropDownData=[];
-				                  for (var k = 0; k < keys.length; k++) {
-				                      let obj={};
-				                      obj["key"]=keys[k];
-				                      obj["value"]=values[k];
-				                      dropDownData.push(obj);
-				                  }
-				                  self.props.setDropDownData("Connection[0].categoryType", dropDownData);
-				    		}, function(err) {
+    	if(res && res.Connection && res.Connection[0]) {
+        if(res.Connection[0].property.propertyType) {
+            //Fetch category type
+            Api.commonApiPost("/wcms/masters/propertytype-categorytype/_search", {propertyTypeName: res.Connection[0].property.propertyType}, {}, null, true).then(function(res22){
+              if(res22) {
+                let keys=jp.query(res22, "$..categoryTypeName");
+                let values=jp.query(res22, "$..categoryTypeName");
+                let dropDownData=[];
+                for (var k = 0; k < keys.length; k++) {
+                    let obj={};
+                    obj["key"]=keys[k];
+                    obj["value"]=values[k];
+                    dropDownData.push(obj);
+                }
+                self.props.setDropDownData("Connection[0].categoryType", dropDownData);
+              }
+            }, function(err) {
 
-				    		})
+            })
 
-				    		Api.commonApiPost("/wcms/masters/propertytype-usagetype/_search", {propertyTypeName: res.Connection[0].property.propertyType}, {}, null, true).then(function(res){
-				    			  let keys=jp.query(res, "$..usageCode");
-				                  let values=jp.query(res, "$..usageType");
-				                  let dropDownData=[];
-				                  for (var k = 0; k < keys.length; k++) {
-				                      let obj={};
-				                      obj["key"]=keys[k];
-				                      obj["value"]=values[k];
-				                      dropDownData.push(obj);
-				                  }
-				                  self.props.setDropDownData("Connection[0].property.usageType", dropDownData);
-				    		}, function(err) {
+            Api.commonApiPost("/wcms/masters/propertytype-usagetype/_search", {propertyTypeName: res.Connection[0].property.propertyType}, {}, null, true).then(function(res23){
+                if(res23) {
+                  let keys=jp.query(res23, "$..usageType");
+                  let values=jp.query(res23, "$..usageType");
+                  let dropDownData=[];
+                  for (var k = 0; k < keys.length; k++) {
+                      let obj={};
+                      obj["key"]=keys[k];
+                      obj["value"]=values[k];
+                      dropDownData.push(obj);
+                  }
+                  self.props.setDropDownData("Connection[0].property.usageType", dropDownData);
+                }
+            }, function(err) {
 
-				    		})
+            })
 
-				    		Api.commonApiPost("/wcms/masters/propertytype-pipesize/_search", {propertyTypeName: res.Connection[0].property.propertyType}, {}, null, true).then(function(res){
-				    			let keys=jp.query(res, "$..pipeSize");
-				                  let values=jp.query(res, "$..pipeSize");
-				                  let dropDownData=[];
-				                  for (var k = 0; k < keys.length; k++) {
-				                      let obj={};
-				                      obj["key"]=keys[k];
-				                      obj["value"]=values[k];
-				                      dropDownData.push(obj);
-				                  }
-				                  self.props.setDropDownData("Connection[0].hscPipeSizeType", dropDownData);
-				    		}, function(err) {
+            Api.commonApiPost("/wcms/masters/propertytype-pipesize/_search", {propertyTypeName: res.Connection[0].property.propertyType}, {}, null, true).then(function(res24){
+              if(res24) {
+                let keys = jp.query(res24, "$..pipeSizeInInch");
+                let values = jp.query(res24, "$..pipeSizeInInch");
+                let actkeys = jp.query(res24, "$..pipeSize");
+                let pipeSize = {};
+                let dropDownData=[];
+                for (var k = 0; k < keys.length; k++) {
+                    let obj={};
+                    obj["key"]=keys[k].toString();
+                    obj["value"]=values[k];
+                    pipeSize[keys[k]] = pipeSize[actkeys[k]];
+                    dropDownData.push(obj);
+                }
 
-				    		})
-    						break;
-    					}
-    				}
-    			}
-    		}, function(err) {
+                self.setState({
+                  pipeSize
+                })
 
-    		})
-    	}
+                self.props.setDropDownData("Connection[0].hscPipeSizeType", dropDownData);
+              }
+            }, function(err) {
+
+            })
+        }
 
 
-    	if(res.Connection[0].property.usageTypeId) {
-    		Api.commonApiPost("/wcms/masters/propertytype-usagetype/_search", {id: res.Connection[0].property.usageTypeId}, {}, null, true).then(function(res5){
-    			if(res5 && res5.propertyTypeUsageTypes && res5.propertyTypeUsageTypes.length) {
-    				for(var i=0; i<res5.propertyTypeUsageTypes.length; i++) {
-    					if(res5.propertyTypeUsageTypes[i].id == res.Connection[0].property.usageTypeId) {
-    						res.Connection[0].property.usageType = res5.propertyTypeUsageTypes[i].usageType;
-    						Api.commonApiPost("/pt-property/property/usages/_search", {parent: res.Connection[0].property.usageType}, {}, null, true).then(function(res){
-				    			let keys=jp.query(res, "$..code");
-				                  let values=jp.query(res, "$..name");
-				                  let dropDownData=[];
-				                  for (var k = 0; k < keys.length; k++) {
-				                      let obj={};
-				                      obj["key"]=keys[k];
-				                      obj["value"]=values[k];
-				                      dropDownData.push(obj);
-				                  }
-				                  self.props.setDropDownData("Connection[0].subUsageType", dropDownData);
-				    		}, function(err) {
+        if(res.Connection[0].property.usageType) {
+          Api.commonApiPost("/pt-property/property/usages/_search", {parent: res.Connection[0].property.usageType}, {}, null, true).then(function(res25){
+            if(res25) {
+              let keys=jp.query(res25, "$..code");
+              let values=jp.query(res25, "$..name");
+              let dropDownData=[];
+              for (var k = 0; k < keys.length; k++) {
+                  let obj={};
+                  obj["key"]=keys[k];
+                  obj["value"]=values[k];
+                  dropDownData.push(obj);
+              }
+              self.props.setDropDownData("Connection[0].subUsageType", dropDownData);
+            }
+          }, function(err) {
 
-				    		})
-    						break;9
-    					}
-    				}
-    			}
-    		}, function(err) {
+          })
+        }
 
-    		})
-    	}
-
-    	res.Connection[0].estimationCharge = [{
-	    		"estimationCharges": 0,
-		        "supervisionCharges": 0,
-		        "roadCutCharges": 0,
-		        "specialSecurityCharges": 0,
-		        "existingDistributionPipeline": 0,
-		        "pipelineToHomeDistance": 0,
-		        "materials":[{...defaultMat}]
-    		}
-    	];
-    	self.props.setFormData(res);
+        res.Connection[0].estimationCharge = [{
+            "estimationCharges": 0,
+              "supervisionCharges": 0,
+              "roadCutCharges": 0,
+              "specialSecurityCharges": 0,
+              "existingDistributionPipeline": 0,
+              "pipelineToHomeDistance": 0,
+              "materials":[{...defaultMat}]
+          }
+        ];
+        self.props.setFormData(res);
+        stopLoader();
+      } 
     }, function(err) {
-
+      stopLoader();
     })
 
     //Fetch workflow
     Api.commonApiPost("egov-common-workflows/history", {workflowId: self.props.match.params.stateId}, {}, null, true).then(function(res) {
     	self.setState({
     		workflow: res.tasks
-    	})
+    	});
+      stopLoader();
     }, function(err) {
-
+      stopLoader();
     })
 
     //Fetch buttons
@@ -408,17 +412,18 @@ class Report extends Component {
 
 		    })
     	}
-
+      stopLoader();
     }, function(err) {
-
+      stopLoader();
     })
 
     Api.commonApiPost("egov-common-masters/departments/_search", {}, {}, null, false).then(function(res){
     	self.setState({
     		departments: res.Department
     	})
+      stopLoader();
     }, function(err) {
-
+      stopLoader();
     })
   }
 
@@ -503,7 +508,7 @@ class Report extends Component {
       }, 1500);
     }, function(err) {
       self.props.setLoadingStatus('hide');
-      self.props.toggleSnackbarAndSetText(true, err.message);
+      self.props.toggleSnackbarAndSetText(true, err.message, false, true);
     })
   }
 
@@ -514,7 +519,7 @@ class Report extends Component {
       var jPath = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].customFields.initiatorPosition;
       getInitiatorPosition(function(err, pos) {
         if(err) {
-          self.toggleSnackbarAndSetText(true, err.message);
+          self.toggleSnackbarAndSetText(true, err.message, false, true);
         } else {
           _.set(formData, jPath, pos);
           cb(formData);
@@ -812,6 +817,7 @@ class Report extends Component {
       let depedants=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
       this.checkIfHasShowHideFields(property, e.target.value);
       this.checkIfHasEnDisFields(property, e.target.value);
+
       handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
 
       if(property == "Connection[0].workflowDetails.department" || property == "Connection[0].workflowDetails.designation") {
@@ -1033,19 +1039,31 @@ class Report extends Component {
   initiateWF = (action) => {
   	let self = this;
   	var formData = {...this.props.formData};
-    if(!self.state.disable && (!formData.Connection[0].estimationCharge[0].materials[0].name || !formData.Connection[0].estimationCharge[0].roadCutCharges || !formData.Connection[0].estimationCharges[0].specialSecurityCharges)) {
-      return self.props.toggleSnackbarAndSetText(true, translate("Please enter all mandatory fields."));
-    }
     
+    if(formData.Connection[0].hscPipeSizeType) {
+      formData.Connection[0].hscPipeSizeType = self.state.pipeSize[formData.Connection[0].hscPipeSizeType] || formData.Connection[0].hscPipeSizeType;
+    }
+
+    if(!self.state.disable && (!formData.Connection[0].estimationCharge[0].materials[0].name || !formData.Connection[0].estimationCharge[0].roadCutCharges || !formData.Connection[0].estimationCharge[0].specialSecurityCharges)) {
+      return self.props.toggleSnackbarAndSetText(true, translate("wc.create.workflow.fields"), false, true);
+    }
+
+    if(!formData.Connection[0].workflowDetails)
+      formData.Connection[0].workflowDetails = {};
+
+    if(!self.state.hide && !formData.Connection[0].workflowDetails.assignee) {
+      return self.props.toggleSnackbarAndSetText(true, translate("wc.create.workflow.fields"), false, true);
+    }
+
   	if(action.key.toLowerCase() == "reject" && !formData.Connection[0].workflowDetails.comments) {
-  		return self.props.toggleSnackbarAndSetText(true, translate("wc.create.workflow.comment"));
+  		return self.props.toggleSnackbarAndSetText(true, translate("wc.create.workflow.comment"), false ,true);
   	}
 
-  	formData.Connection[0].workflowDetails.assignee = this.getPosition(formData.Connection[0].workflowDetails.assignee);
+  	if(!self.state.hide) formData.Connection[0].workflowDetails.assignee = this.getPosition(formData.Connection[0].workflowDetails.assignee);
   	formData.Connection[0].workflowDetails.action = action.key;
   	formData.Connection[0].workflowDetails.status = this.state.status;
 
-  	self.props.setLoadingStatus('loading');
+    self.props.setLoadingStatus('loading');
   	Api.commonApiPost("/wcms-connection/connection/_update", {}, formData, null, true).then(function(res){
   		self.props.setLoadingStatus('hide');
   		if(action.key.toLowerCase() == "generate estimation notice") {
@@ -1189,7 +1207,7 @@ class Report extends Component {
               		<thead>
               			<tr>
               				<th>#</th>
-              				<th>{translate("employee.Employee.fields.User.name")}</th>
+              				<th>{translate("wc.create.name")}</th>
               				<th>{translate("employee.Assignment.fields.action")}</th>
               			</tr>
               		</thead>
@@ -1207,7 +1225,7 @@ class Report extends Component {
               		<thead>
               			<tr>
               				<th>#</th>
-              				<th>{translate("wc.create.workflow.material")+"*"} </th>
+              				<th>{translate("wc.create.workflow.material")+" *"} </th>
               				<th>{translate("wc.create.workflow.quantity")}</th>
               				<th>{translate("tl.create.groups.feematrixtype.unitofmeasurement")}</th>
               				<th>{translate("wc.create.workflow.rate")}</th>
@@ -1224,54 +1242,54 @@ class Report extends Component {
               		<Row>
               			<Col xs="12" md="3">
               				<TextField
-              					floatingLabelText={translate("wc.create.workflow.distributionPipeline") +"*"}
+              					floatingLabelText={translate("wc.create.workflow.distributionPipeline")}
               					disabled = {self.state.disable}
               					type="number"
               					value={formData.Connection && formData.Connection[0] && formData.Connection[0].estimationCharge && formData.Connection[0].estimationCharge[0] ? formData.Connection[0].estimationCharge[0].existingDistributionPipeline : ""}
               					onChange={(e) => {
-
+                          handleChange(e, "Connection[0].estimationCharge[0].existingDistributionPipeline", false, '');
 			                	}}/>
               			</Col>
               			<Col xs="12" md="3">
               				<TextField
-              					floatingLabelText={translate("wc.create.workflow.homeDistance")+"*"}
+              					floatingLabelText={translate("wc.create.workflow.homeDistance")}
               					disabled = {self.state.disable}
               					type="number"
               					value={formData.Connection && formData.Connection[0] && formData.Connection[0].estimationCharge && formData.Connection[0].estimationCharge[0] ? formData.Connection[0].estimationCharge[0].pipelineToHomeDistance : ""}
               					onChange={(e) => {
-
+                          handleChange(e, "Connection[0].estimationCharge[0].pipelineToHomeDistance", false, '');
 			                	}}/>
               			</Col>
               			<Col xs="12" md="3">
               				<TextField
-              					floatingLabelText={translate("wc.create.workflow.supervisionCharge")}
+                        floatingLabelText={translate("wc.create.workflow.supervisionCharge")}
               					disabled = {true}
               					type="number"
               					value={formData.Connection && formData.Connection[0] && formData.Connection[0].estimationCharge && formData.Connection[0].estimationCharge[0] ? formData.Connection[0].estimationCharge[0].supervisionCharges : ""}
               					onChange={(e) => {
-
+                          handleChange(e, "Connection[0].estimationCharge[0].supervisionCharges", false, '');
 			                	}}/>
               			</Col>
               			<Col xs="12" md="3">
               				<TextField
-              					floatingLabelText={translate("wc.create.donation.subtitle")}
+                        floatingLabelText={translate("wc.create.donation.subtitle") + " *"}
               					disabled = {self.state.disable}
               					type="number"
               					value={formData.Connection && formData.Connection[0] && formData.Connection[0].estimationCharge && formData.Connection[0].estimationCharge[0] ? formData.Connection[0].estimationCharge[0].specialSecurityCharges : ""}
               					onChange={(e) => {
-
+                          handleChange(e, "Connection[0].estimationCharge[0].specialSecurityCharges", false, '');
 			                	}}/>
               			</Col>
               		</Row>
               		<Row>
               			<Col xs="12" md="3">
               				<TextField
-              					type="number"
-              					floatingLabelText={translate("wc.create.workflow.roadCutCharges")}
+                        type="number"
+              					floatingLabelText={translate("wc.create.workflow.roadCutCharges") + " *"}
               					disabled = {self.state.disable}
               					value={formData.Connection && formData.Connection[0] && formData.Connection[0].estimationCharge && formData.Connection[0].estimationCharge[0] ? formData.Connection[0].estimationCharge[0].roadCutCharges : ""}
               					onChange={(e) => {
-
+                          handleChange(e, "Connection[0].estimationCharge[0].roadCutCharges", false, '');
 			                	}}/>
               			</Col>
               		</Row>
@@ -1298,12 +1316,12 @@ class Report extends Component {
          	</CardText>
          </Card>
          <Card className="uiCard">
-         	<CardHeader title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Workflow Details</div>}/>
+         	<CardHeader title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate("wc.create.workflow.workflowDetails")}</div>}/>
          	<CardText>
-         		<Row>
+         		{!self.state.hide && <Row>
          			<Col xs={12} md={3}>
          				<SelectField dropDownMenuProps={{animated: true, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
-		                  floatingLabelText={translate("employee.Assignment.fields.department")+" *"}
+                      floatingLabelText={translate("employee.Assignment.fields.department")+" *"}
 		                  value={formData.Connection && formData.Connection[0] && formData.Connection[0].workflowDetails ? formData.Connection[0].workflowDetails.department : ""}
 		                  onChange={(event, key, value) => {
 		                  		handleChange({target: {value}}, "Connection[0].workflowDetails.department", true, "")
@@ -1316,8 +1334,9 @@ class Report extends Component {
 		                </SelectField>
          			</Col>
          			<Col xs={12} md={3}>
-         				<SelectField dropDownMenuProps={{animated: true, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
-		                  floatingLabelText={translate("employee.Assignment.fields.designation")+"*"}
+         				<SelectField 
+                      dropDownMenuProps={{animated: true, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
+                      floatingLabelText={translate("employee.Assignment.fields.designation")+" *"}
 		                  value={formData.Connection && formData.Connection[0] && formData.Connection[0].workflowDetails ? formData.Connection[0].workflowDetails.designation : ""}
 		                  onChange={(event, key, value) => {
 		                  	handleChange({target: {value}}, "Connection[0].workflowDetails.designation", true, "")
@@ -1330,8 +1349,9 @@ class Report extends Component {
 		                </SelectField>
          			</Col>
          			<Col xs={12} md={3}>
-         				<SelectField dropDownMenuProps={{animated: true, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
-		                  floatingLabelText={translate("wc.create.groups.approvalDetails.fields.approver")+"*"}
+         				<SelectField 
+                      dropDownMenuProps={{animated: true, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
+		                  floatingLabelText={translate("wc.create.groups.approvalDetails.fields.approver")+" *"}
 		                  value={formData.Connection && formData.Connection[0] && formData.Connection[0].workflowDetails ? formData.Connection[0].workflowDetails.assignee : ""}
 		                  onChange={(event, key, value) => {
 		                  	handleChange({target: {value}}, "Connection[0].workflowDetails.assignee", true, "")
@@ -1343,7 +1363,7 @@ class Report extends Component {
 		                  	}
 		                </SelectField>
          			</Col>
-         		</Row>
+         		</Row>}
          		<Row>
          			<Col xs={12} md={12}>
          				<TextField

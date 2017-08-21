@@ -71,6 +71,10 @@ public class ApplicationProperties {
     public String getSearchPageSizeMax() {
         return environment.getProperty(searchPageSizeMax);
     }
+    
+    public String getBootstrapServer() {
+        return environment.getProperty("spring.kafka.bootstrap.servers");
+    }
 
     @Value("${egov.assetcategory.async}")
     private Boolean assetCategoryAsync;

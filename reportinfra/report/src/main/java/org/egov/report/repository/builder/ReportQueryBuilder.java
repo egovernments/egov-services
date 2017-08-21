@@ -21,12 +21,13 @@ public class ReportQueryBuilder {
 		String baseQuery;
 		
 		LOGGER.info("searchParams:" + searchParams);
-		/*if(reportDefinition.getQuery().contains("UNION")){
+		if(reportDefinition.getQuery().contains("UNION")){
 			baseQuery = generateUnionQuery(searchParams, tenantId, reportDefinition);
-		} else {*/
+		} else {
 			
 			baseQuery = generateQuery(searchParams, tenantId, reportDefinition);
-		/*}*/
+			
+		}
 		
 		baseQuery = baseQuery.replaceAll("\\$tenantid","'"+tenantId+"'");
 		
@@ -81,7 +82,7 @@ public String generateQuery(List<SearchParam> searchParams, String tenantId, Rep
     return baseQuery.toString();
 }
 
-/*public String generateUnionQuery(List<SearchParam> searchParams, String tenantId, ReportDefinition reportDefinition){
+public String generateUnionQuery(List<SearchParam> searchParams, String tenantId, ReportDefinition reportDefinition){
 	
 	LOGGER.info("searchParams:" + searchParams);
 	
@@ -116,7 +117,7 @@ public String generateQuery(List<SearchParam> searchParams, String tenantId, Rep
 			query.append(" "+ groupByQuery);
 	    }
 		if(i > 0) {
-		finalQuery.append("UNION "+query.toString()+ " ");
+		finalQuery.append(" UNION "+query.toString()+ " ");
 		} else {
 			finalQuery.append(query.toString());
 		}
@@ -126,8 +127,8 @@ public String generateQuery(List<SearchParam> searchParams, String tenantId, Rep
 		finalQuery.append(" "+ orderByQuery);
     }
 	
-	finalQuery.append(query.toString());
+	finalQuery.toString();
 LOGGER.info("generate baseUnionQuery :"+finalQuery);
 return finalQuery.toString();
-}*/
+}
 }

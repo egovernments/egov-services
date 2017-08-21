@@ -70,10 +70,10 @@ public class VoucherServiceTest {
 
         when(assetConfigurationService
                 .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.REVALUATIONVOUCHERNAME, tenantId))
-                        .thenReturn("Asset Revaluation Voucher");
+                        .thenReturn("Asset Revaluation");
         when(assetConfigurationService
                 .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.REVALUATIONVOUCHERDESCRIPTION, tenantId))
-                        .thenReturn("Creating Voucher for Asset Revaluation");
+                        .thenReturn("Asset Revaluation Journal Voucher");
         final Fund revFund = new Fund();
         revFund.setId(Long.valueOf("3"));
         final VoucherRequest generatedVoucherRequest = voucherService.createVoucherRequest(revaluation, revFund,

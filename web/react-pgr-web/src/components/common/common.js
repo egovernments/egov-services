@@ -75,8 +75,8 @@ var localization_EN_Data = {
     "employee.createPosition.groups.fields.accumulative.value2": "No",
     "employee.createPosition.groups.fields.noOfPositions": "No of Position",
     "employee.createPosition.groups.fields.positionName": "Position Name",
-	
-	"wc.crete.Slabs": "Slabs", 
+
+	"wc.crete.Slabs": "Slabs",
     "wc.create.documenttype.title": "Create Document Type",
     "wc.create.applicationtype": "Application Type",
     "wc.create.documenttype": "Document Type",
@@ -292,6 +292,7 @@ var localization_EN_Data = {
     "wc.create.workflow.material": "Material",
     "wc.create.workflow.comment": "Comments are mandatory on Reject.",
     "wc.create.workflow.fields": "Please enter all mandatory fields.",
+    "wc.create.workflow.workflowDetails": "Workflow Details",
     "wc.create.demand.tax": "Tax",
     "wc.create.demands":"Demand",
     "wc.create.demand.basicDetails":"Basic Details",
@@ -412,7 +413,7 @@ var localization_EN_Data = {
     "pt.create.groups.propertyAddress.fields.roadFactor": "Road Factor",
     "pt.create.groups.propertyAddress.fields.toiletFactor": "Toilet Factor",
     "pt.create.groups.propertyAddress.fields.readyReckoner": "Ready Reckoner",
-	
+
     "pt.create.groups.propertyAddress.fields.carpetArea": "Carpet Area",
     "pt.create.groups.propertyAddress.fields.exemptedArea": "Exempted Area",
     "pt.create.groups.propertyAddress.fields.buildingCost": "Building Cost",
@@ -489,13 +490,13 @@ var localization_EN_Data = {
 	"pt.create.groups.propertyAddress.taxDetails": "Tax Details",
 	"pt.create.groups.propertyAddress.invalidValue": "Invalid value",
 	"pt.create.groups.propertyAddress.addName": "Add Name",
-	
+
 	"pt.create.groups.acknowledgement.forwarded": "Forwarded Successfully",
 	"pt.create.groups.acknowledgement.approved": "Approved Successfully",
 	"pt.create.groups.acknowledgement.success":"Your new property application has been submitted",
 	"pt.create.groups.acknowledgement.demandSuccess": "Tax and Collection added/updated Successfully",
 	"pt.create.groups.acknowledgement.dataEntrySuccess": "Property details saved and property number generated as",
-	
+
 
     //employee Object
     "employee.Employee.fields.code": "Code",
@@ -1412,7 +1413,7 @@ var localization_MR_Data = {
     "wc.create.groups.connectionDetails.supplyType": "पुरवठा प्रकार",
     "wc.create.groups.applicantDetails.acknowledgementNumber": "पोच क्र",
     "wc.create.groups.connectionDetails.supplyType": "पुरवठा प्रकार",
-	"wc.crete.Slabs": "Slabs-Marathi", 
+	"wc.crete.Slabs": "Slabs-Marathi",
     "reports.pgr.locality.name": "परिसराचे नाव",
     "reports.pgr.complaint.crn": "CRN",
     "reports.pgr.complaint.createddate": "नोंदणी दिनांक",
@@ -1589,14 +1590,14 @@ var localization_MR_Data = {
     "pt.create.groups.propertyAddress.fields.pin": "पिन ",
     "pt.create.groups.propertyAddress.fields.isCorrespondanceAddressDifferentFromAddress ": " पत्रव्यवाहाराचा पता व मालमत्तेचा पत्ता वेगळा आहे का ? ",
     "pt.create.groups.propertyAddress.fields.address1": "पत्ता 1",
-	
+
     "pt.create.groups.assessmentDetails.fields.creationReason": " निर्मितीसाठी कारण",
 	"pt.create.groups.assessmentDetails.fields.parentUpicNo": "Parent UPIC No.-Marathi",
     "pt.create.groups.assessmentDetails.fields.propertyType": "दर सूची",
     "pt.create.groups.assessmentDetails.fields.department": "विभाग",
     "pt.create.groups.assessmentDetails.fields.extentOfSite": "साइटची व्याप्ती",
     "pt.create.groups.assessmentDetails.fields.propertySubType": "मालमत्ता उप प्रकार",
-	
+
 	"pt.create.button": "Forward-Marathi",
 	"pt.create.groups.ownerDetails.fields.isPrimaryOwner": "Is Primary Owner-Marathi",
 	"pt.create.groups.assessmentDetails.fields.usageType": "Usage Type-Marathi",
@@ -1607,7 +1608,7 @@ var localization_MR_Data = {
     "pt.create.groups.assessmentDetails.fields.isLegal": "Is Legal?-Marathi",
 	"pt.create.groups.ownerDetails.fields.save": "Save-Marathi",
 	"pt.create.groups.ownerDetails.fields.add": "Add-Marathi",
-	
+
 	"pt.create.groups.floorDetails": "Floor Details-Marathi",
 	//pt construction details
     "pt.create.groups.constructionDetails.fields.orderDate": "Commencement Date-Marathi",
@@ -1661,13 +1662,13 @@ var localization_MR_Data = {
 	"pt.create.groups.propertyAddress.taxDetails": "Tax Details-Marathi",
 	"pt.create.groups.propertyAddress.invalidValue": "Invalid value-Marathi",
 	"pt.create.groups.propertyAddress.addName": "Add Name-Marathi",
-	
+
 	"pt.create.groups.acknowledgement.forwarded": "Forwarded Successfully",
 	"pt.create.groups.acknowledgement.approved": "Approved Successfully",
 	"pt.create.groups.acknowledgement.success":"Your new property application has been submitted",
 	"pt.create.groups.acknowledgement.demandSuccess": "Tax and Collection added/updated Successfully",
 	"pt.create.groups.acknowledgement.dataEntrySuccess": "Property details saved and property number generated as",
-	
+
     "pt.create.groups.propertyAddress.fields.lift": "लिफ्ट",
     "pt.create.groups.propertyAddress.fields.toilet": " शौचालय",
     "pt.create.groups.propertyAddress.fields.waterTap": "पाण्याचा नळ",
@@ -1679,7 +1680,7 @@ var localization_MR_Data = {
     "pt.create.groups.propertyAddress.fields.roofType": " छत प्रकार",
     "pt.create.groups.propertyAddress.fields.wallType": " वॉल प्रकार",
     "pt.create.groups.propertyAddress.fields.woodType": " लाकडी प्रकार",
-	
+
     "pt.create.groups.floorDetails.fields.floorNumber": "मजला क्रमांक",
     "pt.create.groups.floorDetails.fields.unitType": "युनिट प्रकार",
     "pt.create.groups.floorDetails.fields.unitNumber": "युनिट क्रमांक",
@@ -1703,7 +1704,7 @@ var localization_MR_Data = {
     "pt.create.groups.floorDetails.fields.buildingPermissionNumber": " बांधकाम परवानगी क्रमांक",
     "pt.create.groups.floorDetails.fields.buildingPermissionDate": " बांधकाम परवान्याची तारीख",
     "pt.create.groups.floorDetails.fields.plinthAreaInBuildingPlan": " इमारत प्लॅनमध्ये चौथा क्षेत्र",
-	
+
     "pt.create.groups.propertyAddress.fields.surveyNumber": "सर्वे नंबर",
     "pt.create.groups.propertyAddress.fields.pattaNumber": "पट्टा क्रमांक",
     "pt.create.groups.propertyAddress.fields.vacantLandArea": "रिक्त जमीन क्षेत्र",
@@ -1721,18 +1722,18 @@ var localization_MR_Data = {
     "pt.create.groups.propertyAddress.fields.westBoundedBy": "पश्चिम",
     "pt.create.groups.propertyAddress.fields.addRoom": "खोली जोडा",
     "pt.create.groups.propertyAddress.fields.pan": " पॅन नंबर",
-	
+
 	"pt.create.groups.propertyFactors": "Property Factors-Marathi",
     "pt.create.groups.propertyFactors.fields.parkingFactor": " पार्किंग  फॅक्टर",
     "pt.create.groups.propertyFactors.fields.liftFactor": " लिफ्ट फॅक्टर ",
     "pt.create.groups.propertyFactors.fields.roadFactor": " रोड फॅक्टर",
     "pt.create.groups.propertyFactors.fields.toiletFactor": " शौचालय घटक",
-	
+
 	"pt.create.groups.propertyAddress.fields.parkingFactor": " पार्किंग  फॅक्टर",
     "pt.create.groups.propertyAddress.fields.liftFactor":  " लिफ्ट फॅक्टर ",
     "pt.create.groups.propertyAddress.fields.roadFactor": " रोड फॅक्टर",
     "pt.create.groups.propertyAddress.fields.toiletFactor": " शौचालय घटक",
-	
+
     "pt.create.groups.propertyAddress.fields.readyReckoner": " रेडी रेकनर",
     "pt.create.groups.propertyAddress.fields.carpetArea": " चटई क्षेत्र",
     "pt.create.groups.propertyAddress.fields.exemptedArea": " सुटलेला क्षेत्र",
@@ -2007,7 +2008,7 @@ var localization_MR_Data = {
 "wc.create.workflow.material":"साहित्य,",
 "wc.create.workflow.comment":"नकार करण्याकरिता शेरा अनिवार्य आहेत.",
 "wc.create.workflow.fields":"कृपया सर्व आवश्यक माहिती नोंदवा",
-
+"wc.create.workflow.workflowDetails" : "Workflow Details - Marathi",
     "employee.Employee.fields.city":"city",
     "wc.create.groups.connectionDetails.subUsageType":"Usage Sub Type",
     "pt.create.groups.ownerDetails.fields.primaryOwner": "Primary Owner",
@@ -2022,6 +2023,8 @@ var localization_MR_Data = {
     "wc.create.demands":"Demand-Marathi",
     "wc.create.demand.basicDetails":"Basic Details-Marathi",
     "wc.create.demand.applicantParticular":"Applicant Particulars-Marathi",
+    "employee.createPosition.groups.fields.outsourcepost.value1": "Yes-Marathi",
+    "employee.createPosition.groups.fields.outsourcepost.value2": "No-Marathi",
 
     ﻿﻿"pgr.0001":"अक्षांश / रेखांश किंवा क्रॉस हायरारकी संकेतांक आवश्यक आहे",
 "pgr.0002":"अक्षांश / रेखांश किंवा क्रॉस हायरारकी संकेतांक आवश्यक आहे",

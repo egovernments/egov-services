@@ -174,7 +174,6 @@ public class BudgetReAppropriationService {
                 Assert.notNull(budgetreappropriations, "BudgetReAppropriations to delete must not be null");
                 for (final BudgetReAppropriation budgetReAppropriation : budgetreappropriations){
                  	Assert.notNull(budgetReAppropriation.getId(), "BudgetReAppropriation ID to delete must not be null");
-                    validator.validate(budgetReAppropriation, errors);
                 }
                 break;
             default:

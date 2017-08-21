@@ -119,6 +119,8 @@ public class InstrumentServiceTest {
 	public final void test_delete_() {
 
 		List<Instrument> expextedResult = getInstruments();
+		
+		expextedResult.get(0).setId("1");
 
 		when(instrumentRepository.delete(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 

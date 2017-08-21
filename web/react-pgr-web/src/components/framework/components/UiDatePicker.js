@@ -6,13 +6,34 @@ export default class UiEmailField extends Component {
        super(props);
    	}
 
+   	calcMinMaxDate = (dateStr) => {
+   		if(dateStr) {
+   			if(dateStr == "today") {
+   				return new Date();
+   			} else if(dateStr.indexOf("+") > -1) {
+   				var oneDay = 24 * 60 * 60 * 1000;
+   				dateStr = dateStr.split("+")[1];
+   				return new Date(new Date().getTime() + (Number(dateStr) * oneDay)); 
+   			} else {
+   				var oneDay = 24 * 60 * 60 * 1000;
+   				dateStr = dateStr.split("-")[1];
+   				return new Date(new Date().getTime() - (Number(dateStr) * oneDay)); 
+   			}
+   		} else {
+   			return "";
+   		}
+   	}
+
 	renderDatePicker = (item) => {
 		switch (this.props.ui) {
 			case 'google':
 				return (
 					<DatePicker
 						style={{"display": (item.hide ? 'none' : 'block'), "marginTop": "24px"}}
+						autoOk={true}
 						hintText={item.label + (item.isRequired ? " *" : "")}
+						minDate={this.calcMinMaxDate(item.minDate)}
+						maxDate={this.calcMinMaxDate(item.maxDate)}
 						disabled={item.isDisabled}
 						formatDate={function(date) {
 							date =new Date(date);

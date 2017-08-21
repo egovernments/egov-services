@@ -309,6 +309,7 @@ var dat = {
             "name": "executionDate",
             "jsonPath": "Connection.executionDate",
             "label": "wc.create.groups.applicantDetails.connectionDate",
+            "maxDate": "today-2",
             "pattern": "",
             "type": "datePicker",
             "isRequired": true,
@@ -429,8 +430,7 @@ var dat = {
             "isRequired": true,
             "isDisabled": true,
             "requiredErrMsg": "",
-            "patternErrMsg": "",
-            "convertToString":true
+            "patternErrMsg": ""
           },
           {
             "name": "noOfFloors",
@@ -469,6 +469,7 @@ var dat = {
             "name": "executionDate",
             "jsonPath": "Connection.executionDate",
             "label": "wc.create.groups.applicantDetails.connectionDate",
+            "maxDate": "today-2",
             "pattern": "",
             "type": "datePicker",
             "isRequired": true,
@@ -882,6 +883,7 @@ var dat = {
             {
              "name": "receiptDate",
              "jsonPath": "Connection.receiptDate",
+             "maxDate": "today",
              "label": "wc.create.receiptDate",
              "pattern": "",
              "type": "datePicker",

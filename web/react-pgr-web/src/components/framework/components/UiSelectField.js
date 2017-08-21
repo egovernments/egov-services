@@ -49,13 +49,14 @@ class UiSelectField extends Component {
 					let dropDownData=[];
 					for (var k = 0; k < keys.length; k++) {
 							let obj={};
-							obj["key"]= item.convertToString ? keys[k].toString() : keys[k];
+							obj["key"]= item.convertToString ? keys[k].toString() : (item.convertToNumber ? Number(keys[k]) : keys[k]);
 							obj["value"]= values[k];
 							if (item.hasOwnProperty("isKeyValuePair") && item.isKeyValuePair) {
 								obj["value"]=keys[k]+"-"+values[k]
 							}
 							dropDownData.push(obj);
 					}
+
 					setDropDownData(item.jsonPath, dropDownData);
 				}
 			},function(err) {
@@ -67,27 +68,14 @@ class UiSelectField extends Component {
 		}
    }
 
-  // componentWillReceiveProps(nextProps, nextState) {
-  //  		if(!_.isEqual(nextProps, this.props)) {
-  //  			this.initData(nextProps);
-  //  		}
-  //  	}
-
 	componentDidMount() {
 		this.initData(this.props);
 	}
 
-
-
-	 renderSelect =(item) => {
+	renderSelect =(item) => {
 		let {dropDownData}=this.props;
-		// console.log(dropDownData.hasOwnProperty(item.jsonpath) && dropDownData[item.jsonpath].replace(".", "\."));
-		// console.log(dropDownData);
-		// console.log(dropDownData[item.jsonPath] );
-		// console.log(dropDownData.hasOwnProperty(item.jsonPath));
 		switch (this.props.ui) {
 			case 'google':
-				// let {dropDownData}=this.state;
 				return (
 
 						<SelectField
@@ -121,7 +109,7 @@ class UiSelectField extends Component {
 	}
 }
 
-const mapStateToProps = state => ({dropDownData:state.framework.dropDownData});
+const mapStateToProps = state => ({dropDownData:state.framework.dropDownData, formData: state.frameworkForm.form});
 
 const mapDispatchToProps = dispatch => ({
   setDropDownData:(fieldName,dropDownData)=>{

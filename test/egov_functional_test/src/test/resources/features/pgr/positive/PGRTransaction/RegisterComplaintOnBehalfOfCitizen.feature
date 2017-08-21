@@ -76,7 +76,7 @@ Feature: Registering a Complaint
     Examples:
       | status    |
       | COMPLETED |
-#      | REJECTED  |
+      | REJECTED  |
 
   @PGR
   Scenario Outline: Creating a complaint on behalf of Citizen With Status as Forwarded

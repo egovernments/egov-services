@@ -6,6 +6,7 @@ import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import org.omg.CORBA.TIMEOUT;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import pages.BasePage;
 import pages.GenericPage;
@@ -201,7 +202,7 @@ public class GenericSteps extends BaseSteps {
 
     @And("^(\\w+)\\s+on (\\w+) screen selects (\\w+) with value as (.*)$")
     public void selectsDropdownWithValue(String consumer, String screen, String element, String value) throws Throwable {
-        TimeUnit.SECONDS.sleep(5);
+        TimeUnit.SECONDS.sleep(1);
         if (copyValues.containsKey(value))
             value = copyValues.get(value);
         WebElement webElement = pageStore.get(GenericPage.class).buildElement(screen, element, value);
@@ -210,6 +211,9 @@ public class GenericSteps extends BaseSteps {
 
     @And("^(\\w+)\\s+on (\\w+) screen types on (\\w+) suggestion box with value (.*)$")
     public void selectsSuggestionBoxWithValue(String consumer,String screen, String element, String value) throws Throwable {
+        TimeUnit.SECONDS.sleep(1);
+        if (copyValues.containsKey(value))
+            value = copyValues.get(value);
         WebElement webElement = pageStore.get(GenericPage.class).buildElement(screen, element, "");
         pageStore.get(GenericPage.class).actionOnSuggestionBox(webElement, value);
     }
@@ -219,8 +223,15 @@ public class GenericSteps extends BaseSteps {
         pageStore.get(GenericPage.class).buildElement(screen, element, "");
     }
 
-    @And("^user on (\\w+) screen clicks on (\\w+) with radio$")
-    public void userOnPropertyTaxScreenClicksOnPrimaryOwnerWithRadio(String screen, String element) throws Throwable {
+    @And("^user on (\\w+) screen force clicks on (\\w+)$")
+    public void userPerformsForceClicks(String screen, String element) throws Throwable {
+        TimeUnit.SECONDS.sleep(1);
+        WebElement webElement = pageStore.get(GenericPage.class).buildElement(screen, element, "");
+        ((JavascriptExecutor) pageStore.getDriver()).executeScript("arguments[0].click();", webElement);
+    }
+
+    @And("^user on (\\w+) screen clicks radio button or checkbox on (\\w+)")
+    public void userClicksOnRadioButtonOrCheckBox(String screen, String element) throws Throwable {
         TimeUnit.SECONDS.sleep(1);
         WebElement webElement = pageStore.get(GenericPage.class).buildElement(screen, element, "");
         webElement.click();

@@ -19,4 +19,4 @@ Feature: Creating a Property Tax with Data Entry Screen
     And user on PropertyTax screen types on ownerName value --"PTOwner ",4 random characters
     And user on PropertyTax screen types on phoneNumber value --"1",9 digit random numbers
     And user on PropertyTax screen selects gender with value as Male
-    And user on PropertyTax screen clicks on primaryOwner with radio
+    And user on PropertyTax screen clicks radio button or checkbox on primaryOwner

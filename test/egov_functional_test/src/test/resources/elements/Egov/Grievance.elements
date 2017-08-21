@@ -227,6 +227,60 @@
         "identifier":"id",
         "value":"slaHours",
         "waitFor":"visibility"
-        }
+        },
+        {
+        "elementName":"grievanceTypeCategorySelect",
+        "identifier":"css",
+        "value":"[id^='undefined-undefined-Category']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"boundaryType",
+        "identifier":"css",
+        "value":"[id^='undefined-undefined-BoundaryType']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"routerBoundary",
+        "identifier":"css",
+        "value":"[id^='undefined--Boundary']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"routerPosition",
+        "identifier":"css",
+        "value":"[id^='undefined-undefined-Position']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"receivingModeActive",
+        "identifier":"css",
+        "value":"input[id='active'][value='on']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"receicingModeName",
+        "identifier":"id",
+        "value":"name",
+        "waitFor":"visibility"
+        },
+        {
+         "elementName":"receicingModeCode",
+         "identifier":"id",
+         "value":"code",
+         "waitFor":"visibility"
+         },
+         {
+         "elementName":"receivingModeChannel",
+         "identifier":"css",
+         "value":"[id^='undefined-undefined-Channel']",
+         "waitFor":"visibility"
+         },
+         {
+         "elementName":"screen",
+         "identifier":"css",
+         "value":"[style='position: fixed; top: 0px; bottom: 0px; left: 0px; right: 0px; z-index: 2000;']",
+         "waitFor":"visibility"
+         }
     ]
 }

@@ -60,6 +60,21 @@ Feature: Creating a Grievance Type
     And user on Grievance screen types on grievanceSearch value grievanceTypeName
     And user on Grievance screen verifies text has visible value grievanceTypeName
 
+    ####### Creating a Router with Above Created GrievanceType #######
+    ### On Homepage Screen ###
+    And user on Home screen will see the menu
+    And user on Home screen clicks on menu
+    And user on Home screen types on menuSearch value Create Router
+    And user on Home screen clicks on firstMenuItem
+
+    ### On Create Router Screen ###
+    And user on Grievance screen types on grievanceType suggestion box with value grievanceTypeName
+    And user on Grievance screen selects boundaryType with value as Ward
+    And user on Grievance screen types on routerBoundary suggestion box with value Election Ward No 31
+    And user on Grievance screen types on routerPosition suggestion box with value Acc_Senior Account_1
+    And user on Grievance screen clicks on create
+    And user on Grievance screen clicks on close
+
     ####### Register A Complaint with Above Created GrievanceType & Grievance Category #######
     ### On Homepage Screen ###
     And user on Home screen will see the menu

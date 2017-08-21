@@ -12,9 +12,28 @@
 			"description": "",
 			"item": [
 				{
-					"name": "Get OAuth key (Login)",
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);",
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"tests[\"Status has String\"] = jsonData.ResponseInfo.status.has(\"Access Token generated successfully\");",
+									"",
+									"tests[\"Username is valid\"] = jsonData.UserRequest.userName.has(request.data[\"username\"]);"
+								]
+							}
+						}
+					],
 					"request": {
-						"url": "egov-micro-qa.egovernments.org/user/oauth/token",
+						"url": "{{url}}/user/oauth/token",
 						"method": "POST",
 						"header": [
 							{
@@ -33,7 +52,7 @@
 							"urlencoded": [
 								{
 									"key": "username",
-									"value": "manas",
+									"value": "narasappa",
 									"type": "text"
 								},
 								{
@@ -1061,13 +1080,24 @@
 									"script": {
 										"type": "text/javascript",
 										"exec": [
-											"tests[\"Status code is 201\"] = responseCode.code === 201;",
-											"",
 											"var jsonData = JSON.parse(responseBody);",
 											"",
-											"postman.setEnvironmentVariable(\"id\", jsonData.serviceRequests[0].serviceRequestId);",
+											"tests[\"Status code is 201\"] = responseCode.code === 201;",
 											"",
-											""
+											"postman.setEnvironmentVariable(\"id\", jsonData.serviceRequests[0].serviceRequestId);"
+										]
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"var msgs = [\"PGR.INVALID_SERVICE_TYPE_CODE\", \"Errors2\"];",
+											"",
+											"postman.setEnvironmentVariable(\"msgs\", msgs);",
+											"",
+											"console.log(msgs.length);"
 										]
 									}
 								}
@@ -1091,42 +1121,7 @@
 							"response": []
 						},
 						{
-							"name": "UPDATE",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"type": "text/javascript",
-										"exec": [
-											"tests[\"Status code is 200\"] = responseCode.code === 200;",
-											"",
-											"var jsonData = JSON.parse(responseBody);",
-											"",
-											"tests[\"Body matches string\"] = jsonData.serviceRequests[0].serviceRequestId.has(environment.id);"
-										]
-									}
-								}
-							],
-							"request": {
-								"url": "{{url}}/pgr/seva/v1/_update",
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json",
-										"description": ""
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{  \n  \"serviceRequest\":{  \n     \"tenantId\":\"default\",\n     \"serviceRequestId\":\"{{id}}\",\n     \"status\":false,\n     \"serviceName\":\"Broken Bin\",\n     \"serviceCode\":\"BRKNB\",\n     \"description\":\"GRIEVANCE DETAILS   \",\n     \"agencyResponsible\":null,\n     \"serviceNotice\":null,\n     \"requestedDatetime\":\"14-08-2017 15:51:09\",\n     \"updatedDatetime\":\"2017-8-14 15:54:02\",\n     \"expectedDatetime\":\"15-08-2017 15:51:09\",\n     \"address\":null,\n     \"addressId\":null,\n     \"zipcode\":null,\n     \"lat\":0,\n     \"lng\":0,\n     \"mediaUrls\":null,\n     \"firstName\":\"NAME\",\n     \"lastName\":null,\n     \"phone\":\"9036623763\",\n     \"email\":\"sanjeev@gmail.com\",\n     \"deviceId\":null,\n     \"accountId\":null,\n     \"attribValues\":[  \n        {  \n           \"key\":\"systemLocationId\",\n           \"name\":\"173\"\n        },\n        {  \n           \"key\":\"systemDepartmentId\",\n           \"name\":\"2\"\n        },\n        {  \n           \"key\":\"systemDesignationId\",\n           \"name\":\"2\"\n        },\n        {  \n           \"key\":\"systemPositionId\",\n           \"name\":2\n        },\n        {  \n           \"key\":\"systemEscalationHours\",\n           \"name\":\"24\"\n        },\n        {  \n           \"key\":\"systemStateId\",\n           \"name\":\"327\"\n        },\n       \n        {  \n           \"key\":\"systemRequesterAddress\",\n           \"name\":\"ADDRESS\"\n        },\n        {  \n           \"key\":\"keyword\",\n           \"name\":\"Complaint\"\n        },\n        {  \n           \"key\":\"systemLocationName\",\n           \"name\":\"Election Ward No 1\"\n        },\n        {  \n           \"key\":\"systemReceivingMode\",\n           \"name\":\"POST\"\n        },\n        {  \n           \"key\":\"systemStatus\",\n           \"name\":\"FORWARDED\"\n        },\n        {  \n           \"key\":\"systemApprovalComments\",\n           \"name\":\"APPROVAL COMMENTS\"\n        }\n     ]\n  },\n  \"RequestInfo\":{  \n     \"apiId\":\"org.egov.pt\",\n     \"ver\":\"1.0\",\n     \"ts\":\"27-06-2017 10:30:12\",\n     \"action\":\"asd\",\n     \"did\":\"4354648646\",\n     \"key\":\"xyz\",\n     \"msgId\":\"654654\",\n     \"requesterId\":\"61\",\n     \"authToken\":\"{{access_token}}\"\n  }\n}"
-								},
-								"description": ""
-							},
-							"response": []
-						},
-						{
-							"name": "Search Complaint",
+							"name": "SEARCH",
 							"event": [
 								{
 									"listen": "test",
@@ -1183,6 +1178,41 @@
 									"raw": "{  \n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pgr\",\n      \"ver\":\"1.0\",\n      \"ts\":\"21-04-2017 16:20:57\",\n      \"action\":\"POST\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\": \"{{access_token}}\"\n   }\n}"
 								},
 								"description": "to search/get a complaint"
+							},
+							"response": []
+						},
+						{
+							"name": "UPDATE",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"tests[\"Status code is 200\"] = responseCode.code === 200;",
+											"",
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"tests[\"Body matches string\"] = jsonData.serviceRequests[0].serviceRequestId.has(environment.id);"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": "{{url}}/pgr/seva/v1/_update",
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{  \n  \"serviceRequest\":{  \n     \"tenantId\":\"default\",\n     \"serviceRequestId\":\"{{id}}\",\n     \"status\":false,\n     \"serviceName\":\"Broken Bin\",\n     \"serviceCode\":\"BRKNB\",\n     \"description\":\"GRIEVANCE DETAILS   \",\n     \"agencyResponsible\":null,\n     \"serviceNotice\":null,\n     \"requestedDatetime\":\"14-08-2017 15:51:09\",\n     \"updatedDatetime\":\"2017-8-14 15:54:02\",\n     \"expectedDatetime\":\"15-08-2017 15:51:09\",\n     \"address\":null,\n     \"addressId\":null,\n     \"zipcode\":null,\n     \"lat\":0,\n     \"lng\":0,\n     \"mediaUrls\":null,\n     \"firstName\":\"NAME\",\n     \"lastName\":null,\n     \"phone\":\"9036623763\",\n     \"email\":\"sanjeev@gmail.com\",\n     \"deviceId\":null,\n     \"accountId\":null,\n     \"attribValues\":[  \n        {  \n           \"key\":\"systemLocationId\",\n           \"name\":\"173\"\n        },\n        {  \n           \"key\":\"systemDepartmentId\",\n           \"name\":\"2\"\n        },\n        {  \n           \"key\":\"systemDesignationId\",\n           \"name\":\"2\"\n        },\n        {  \n           \"key\":\"systemPositionId\",\n           \"name\":2\n        },\n        {  \n           \"key\":\"systemEscalationHours\",\n           \"name\":\"24\"\n        },\n        {\n        \t\"key\" : \"systemChildLocationId\",\n        \t\"name\" : \"73\"\n        },\n        {  \n           \"key\":\"systemStateId\",\n           \"name\":\"327\"\n        },\n       \n        {  \n           \"key\":\"systemRequesterAddress\",\n           \"name\":\"ADDRESS\"\n        },\n        {  \n           \"key\":\"keyword\",\n           \"name\":\"Complaint\"\n        },\n        {  \n           \"key\":\"systemLocationName\",\n           \"name\":\"Election Ward No 1\"\n        },\n        {  \n           \"key\":\"systemReceivingMode\",\n           \"name\":\"POST\"\n        },\n        {  \n           \"key\":\"systemStatus\",\n           \"name\":\"FORWARDED\"\n        },\n        {  \n           \"key\":\"systemApprovalComments\",\n           \"name\":\"APPROVAL COMMENTS\"\n        }\n     ]\n  },\n  \"RequestInfo\":{  \n     \"apiId\":\"org.egov.pt\",\n     \"ver\":\"1.0\",\n     \"ts\":\"27-06-2017 10:30:12\",\n     \"action\":\"asd\",\n     \"did\":\"4354648646\",\n     \"key\":\"xyz\",\n     \"msgId\":\"654654\",\n     \"requesterId\":\"61\",\n     \"authToken\":\"{{access_token}}\"\n  }\n}"
+								},
+								"description": ""
 							},
 							"response": []
 						}

@@ -19,6 +19,18 @@
         "waitFor":"presence"
         },
         {
+        "elementName":"receivingCenter",
+        "identifier":"css",
+        "value":"[id^='undefined-undefined-ReceivingCenter']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"receivingCRN",
+        "identifier":"css",
+        "value":"[id^='undefined-undefined-CRN']",
+        "waitFor":"visibility"
+        },
+        {
         "elementName":"name",
         "identifier":"css",
         "value":"input[id^=undefined-undefined-Name]",
@@ -280,6 +292,36 @@
          "elementName":"screen",
          "identifier":"css",
          "value":"[style='position: fixed; top: 0px; bottom: 0px; left: 0px; right: 0px; z-index: 2000;']",
+         "waitFor":"visibility"
+         },
+         {
+         "elementName":"receivingCenterName",
+         "identifier":"id",
+         "value":"name",
+         "waitFor":"visibility"
+         },
+         {
+         "elementName":"receivingCenterCode",
+         "identifier":"id",
+         "value":"code",
+         "waitFor":"visibility"
+         },
+         {
+         "elementName":"receivingCenterOrderNo",
+         "identifier":"id",
+         "value":"orderno",
+         "waitFor":"visibility"
+         },
+         {
+         "elementName":"receivingCenterCRN",
+         "identifier":"css",
+         "value":"input[id='iscrnrequired'][value='on']",
+         "waitFor":"visibility"
+         },
+         {
+         "elementName":"receivingCenterActive",
+         "identifier":"css",
+         "value":"input[id='active'][value='on']",
          "waitFor":"visibility"
          }
     ]

@@ -1,0 +1,33 @@
+services:
+ - service_code: PT_NODUES
+   service_name: No Dues certificate for Property
+   description: Searches the property system for any dues on the given assessment number and provides a way to print No Dues certificate 
+   metadata: true
+   type: batch
+   keywords: Property, Tax, Service, No Dues, Certificate
+   group: Property
+   attributes:
+     - name: AssessmentNumber
+       variable: true
+       code: upicNumber
+       datatype: string
+       required: false
+       datatype_description: property.upicnumber
+       description: label.property.upicnumber
+       order: 1
+     - name: MobileNumber
+       variable: true
+       code: mobile
+       datatype: string
+       required: false
+       datatype_description: property.mobile
+       description: label.property.mobile
+       order: 2
+     - name: email
+       variable: true
+       code: email
+       datatype: string
+       required: false
+       datatype_description: property.email
+       description: label.property.email
+       order: 3

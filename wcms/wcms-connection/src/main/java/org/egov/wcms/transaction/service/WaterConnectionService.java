@@ -60,6 +60,7 @@ import org.egov.wcms.transaction.model.WorkOrderFormat;
 import org.egov.wcms.transaction.model.enums.NewConnectionStatus;
 import org.egov.wcms.transaction.repository.WaterConnectionRepository;
 import org.egov.wcms.transaction.util.WcmsConnectionConstants;
+import org.egov.wcms.transaction.validator.ConnectionValidator;
 import org.egov.wcms.transaction.validator.RestConnectionService;
 import org.egov.wcms.transaction.web.contract.BoundaryResponse;
 import org.egov.wcms.transaction.web.contract.ProcessInstance;
@@ -99,6 +100,9 @@ public class WaterConnectionService {
 
     @Autowired
     private ConfigurationManager configurationManager;
+    
+    @Autowired
+    private ConnectionValidator connectionValidator;
     
     public static final String roleCode = "CITIZEN"; 
     public static final String roleName = "Citizen"; 
@@ -160,7 +164,7 @@ public class WaterConnectionService {
 		UserResponseInfo userResponse = null;
         Map<String, Object> userSearchRequestInfo = new HashMap<String, Object>();
         userSearchRequestInfo.put("userName", waterConnReq.getConnection().getConnectionOwner().getMobileNumber());
-        userSearchRequestInfo.put("type", roleName);
+        userSearchRequestInfo.put("type", roleCode);
         userSearchRequestInfo.put("tenantId", waterConnReq.getConnection().getTenantId());
         userSearchRequestInfo.put("RequestInfo", waterConnReq.getRequestInfo());
         
@@ -169,7 +173,7 @@ public class WaterConnectionService {
         userResponse = new RestTemplate().postForObject(searchUrl.toString(), userSearchRequestInfo, UserResponseInfo.class);
         logger.info("User Service Search Response :: " + userResponse);
         
-		if (null == userResponse || null == userResponse.getUsers()) {
+		if (null == userResponse || userResponse.getUser().size() == 0) {
 			userSearchRequestInfo.put("name", waterConnReq.getConnection().getConnectionOwner().getName());
 			userSearchRequestInfo.put("mobileNumber",
 					waterConnReq.getConnection().getConnectionOwner().getMobileNumber());
@@ -189,7 +193,7 @@ public class WaterConnectionService {
             userResponse = new RestTemplate().postForObject(searchUrl.toString(), userSearchRequestInfo,
                     UserResponseInfo.class);
             logger.info("User Service Search Response :: " + userResponse);
-            if (null == userResponse || null == userResponse.getUsers()) { 
+            if (null == userResponse || userResponse.getUser().size() == 0) { 
                 UserRequestInfo userRequestInfo = new UserRequestInfo();
                 userRequestInfo.setRequestInfo(waterConnReq.getRequestInfo());
                 User user = buildUserObjectFromConnection(waterConnReq);
@@ -201,9 +205,16 @@ public class WaterConnectionService {
                 UserResponseInfo userCreateResponse = new RestTemplate().postForObject(createUrl.toString(), userRequestInfo,
                         UserResponseInfo.class);
                 logger.info("User Service Create User Response :: " + userCreateResponse);
-                user.setId(userCreateResponse.getUsers().get(0).getId());
-                waterConnReq.getConnection().getConnectionOwner().setId(userCreateResponse.getUsers().get(0).getId());
+                user.setId(userCreateResponse.getUser().get(0).getId());
+                waterConnReq.getConnection().getConnectionOwner().setId(userCreateResponse.getUser().get(0).getId());
             }
+		}
+		
+		if(userResponse != null){
+			logger.info("User Response after Create and Search :: " + userResponse);
+			if(null != userResponse.getUser() && userResponse.getUser().size() > 0) { 
+				waterConnReq.getConnection().getConnectionOwner().setId(userResponse.getUser().get(0).getId());
+			}
 		}
     }
     
@@ -222,7 +233,8 @@ public class WaterConnectionService {
     			.gender(conn.getConnectionOwner().getGender())
     			.isPrimaryOwner(conn.getConnectionOwner().getIsPrimaryOwner())
     			.isSecondaryOwner(conn.getConnectionOwner().getIsSecondaryOwner())
-    			.type(roleName)
+    			.tenantId(conn.getTenantId())
+    			.type(roleCode)
     			.roles(roleList)
     			.active(true)
     			.build();
@@ -269,7 +281,7 @@ public class WaterConnectionService {
 		} else {
 			try {
 				Connection connection = waterConnectionRequest.getConnection();
-				if (connection.getStatus() != null
+				/*if (connection.getStatus() != null
 						&& connection.getStatus().equalsIgnoreCase(NewConnectionStatus.CREATED.name())
 						&& (waterConnectionRequest.getConnection().getEstimationCharge() != null
 								&& !waterConnectionRequest.getConnection().getEstimationCharge().isEmpty())) {
@@ -284,8 +296,45 @@ public class WaterConnectionService {
 						connection.setStatus(NewConnectionStatus.APPROVED.name());
 				if (connection.getStatus() != null
 						&& connection.getStatus().equalsIgnoreCase(NewConnectionStatus.APPROVED.name()))
-					connection.setStatus(NewConnectionStatus.SANCTIONED.name());
+					connection.setStatus(NewConnectionStatus.SANCTIONED.name());*/
+				
+				String status = connection.getStatus();
+				if (status != null
+						&& status.equalsIgnoreCase(NewConnectionStatus.CREATED.name())
+						&& (waterConnectionRequest.getConnection().getEstimationCharge() != null
+						&& !waterConnectionRequest.getConnection().getEstimationCharge().isEmpty())) {
+					createDemand(waterConnectionRequest);
+				}
+				if (status != null
+						&& status.equalsIgnoreCase(NewConnectionStatus.CREATED.name()))
+					connection.setStatus(NewConnectionStatus.VERIFIED.name());
 
+
+				if (status != null
+						&& status.equalsIgnoreCase(NewConnectionStatus.VERIFIED.name())){
+					waterConnectionRequest.getConnection().setEstimationNumber(
+							restConnectionService.generateRequestedDocumentNumber("default", 
+									configurationManager.getEstimateGenNameServiceTopic(), 
+									configurationManager.getEstimateGenFormatServiceTopic(),
+									waterConnectionRequest.getRequestInfo()));
+					connection.setStatus(NewConnectionStatus.ESTIMATIONNOTICEGENERATED.name());
+				}
+				if (status != null
+						&& (status.equalsIgnoreCase(NewConnectionStatus.ESTIMATIONNOTICEGENERATED.name())||
+								status.equalsIgnoreCase(NewConnectionStatus.ESTIMATIONAMOUNTCOLLECTED.name()))){
+					connection.setStatus(NewConnectionStatus.APPROVED.name());
+					waterConnectionRequest.getConnection().setConsumerNumber(connectionValidator.generateConsumerNumber(waterConnectionRequest));
+
+				}
+				if (status != null
+						&& status.equalsIgnoreCase(NewConnectionStatus.APPROVED.name())){
+					waterConnectionRequest.getConnection().setWorkOrderNumber(
+							restConnectionService.generateRequestedDocumentNumber("default", 
+									configurationManager.getWorkOrderGenNameServiceTopic(),
+									configurationManager.getWorkOrderGenFormatServiceTopic(),
+									waterConnectionRequest.getRequestInfo()));
+					connection.setStatus(NewConnectionStatus.SANCTIONED.name());
+				}
 				waterConnectionRequest.setConnection(connection);
 
 				updateWorkFlow(waterConnectionRequest);
@@ -354,9 +403,8 @@ public class WaterConnectionService {
 				logger.error("Encountered an Exception while getting the property identifier from Property Module :" + e.getMessage());
 			}
 		}
-		
-		if(propertyIdentifierList.size() > 0){
-			waterConnectionGetReq.setPropertyIdentifierList(propertyIdentifierList);			
+		if(null != propertyIdentifierList) { 
+			waterConnectionGetReq.setPropertyIdentifierList(propertyIdentifierList);
 		}
 		List<Connection> connectionList = waterConnectionRepository.getConnectionDetails(waterConnectionGetReq);
 		if(connectionList.size() == 1) { 

@@ -71,7 +71,7 @@ public class Unit {
 	private String occupancyType = null;
 
 	@JsonProperty("occupierName")
-	@Size(min = 1, max = 128)
+	@Size(min = 1, max = 4000)
 	private String occupierName = null;
 
 	@JsonProperty("firmName")

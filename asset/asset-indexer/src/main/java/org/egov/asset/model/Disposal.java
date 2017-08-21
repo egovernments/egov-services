@@ -63,7 +63,7 @@ public class Disposal {
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
 	
-	@JsonProperty("voucherReference")
-	private Long voucherReference = null;
+	@JsonProperty("profitLossVoucherReference")
+	private String profitLossVoucherReference = null;
 
 }

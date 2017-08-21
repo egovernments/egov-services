@@ -199,8 +199,6 @@ public class AssetValidator {
             if (disposal.getAssetSaleAccount() == null)
                 throw new RuntimeException(
                         "Asset sale account should be present for asset disposal voucher generation");
-
-            validateFund(disposal.getFund());
         }
     }
 

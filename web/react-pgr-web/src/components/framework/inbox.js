@@ -104,6 +104,19 @@ chip: {
 };
 
 
+function getPosition(objArray, id){
+	
+	if(id == '' || id == null) {
+		return false;
+	}
+
+	for(var i = 0; i<objArray.length;i++){
+		if(objArray[i].id == id){
+			return objArray[i].assignments[0].position;
+		}
+	}
+}
+
 class Inbox extends Component {
   constructor(props) {
     super(props);
@@ -112,7 +125,9 @@ class Inbox extends Component {
 		buttons : [],
 		employee : [],
 		designation:[],
-		workflowDepartment: []
+		workflowDepartment: [],
+		process: [],
+		forward: false
 		
 	}
   }
@@ -360,6 +375,7 @@ class Inbox extends Component {
 			workflow.workflowDepartment = workflowDetails.department || null;
 			workflow.workflowDesignation = workflowDetails.designation || null;
 			workflow.approver =workflowDetails.assignee || null;
+			workflow.initiatorPosition =workflowDetails.initiatorPosition || null;
 		}
 		
 		var query = {
@@ -368,6 +384,11 @@ class Inbox extends Component {
 		
 		Api.commonApiPost('egov-common-workflows/process/_search', query,{}, false, true).then((res)=>{
 			console.log(res);
+			
+						current.setState({
+							process: res.processInstance
+						})														
+			
 			 Api.commonApiPost( 'egov-common-workflows/designations/_search?businessKey=Create Property&departmentRule=&currentStatus='+res.processInstance.status+'&amountRule=&additionalRule=&pendingAction=&approvalDepartmentName=&designation&',{}, {},false, false).then((res)=>{
 			    
 				for(var i=0; i<res.length;i++){
@@ -393,6 +414,15 @@ class Inbox extends Component {
 					  })
 					  console.log(err)
 					})
+					
+		res.processInstance.attributes.validActions.values.map((item)=>{
+				if(item.name == 'Forward'){
+					current.setState({
+						forward: true
+					});
+				}
+			})
+			
 			current.setState({
 				buttons: res.processInstance
 			});
@@ -429,19 +459,38 @@ class Inbox extends Component {
   }
   
   updateInbox = (actionName, status) => {
-	  
+	  	  
 	  var currentThis = this;
 	  
 	  let {workflow, setLoadingStatus, toggleSnackbarAndSetText} = this.props;
 	 
 	  var data = this.state.searchResult;
-	 
-	  var workFlowDetails = {
-		"department": workflow.workflowDepartment || null,
-		"designation":workflow.workflowDesignation || null,
-		"assignee": workflow.approver || null,
-		"action": actionName,
-		"status": status
+	  
+		var workFlowDetails = {
+				"department": workflow.workflowDepartment || 'department',
+				"designation":workflow.workflowDesignation || 'designation',
+				"initiatorPosition": workflow.initiatorPosition || null,
+				"assignee": null,
+				"action": actionName,
+				"status": status
+			  }
+			  
+	  if(actionName == 'Forward') {
+		 
+			workFlowDetails.assignee = getPosition(this.state.approver, workflow.approver) || null;
+			workFlowDetails.initiatorPosition = this.state.process.initiatorPosition || null;
+		    localStorage.setItem('inboxStatus', 'Forwarded')
+		  
+	  } else if(actionName == 'Approve') {
+		  
+		  workFlowDetails.assignee = this.state.process.initiatorPosition || null
+		  workFlowDetails.initiatorPosition = this.state.process.initiatorPosition || null;
+		  localStorage.setItem('inboxStatus', 'Approved')
+		  
+	  } else if(actionName == 'Reject') {
+		  
+		  workFlowDetails.assignee = this.state.process.initiatorPosition || null
+		  localStorage.setItem('inboxStatus', 'Rejected') 
 	  }
 	  
 		data[0].owners[0].tenantId = "default";
@@ -460,6 +509,7 @@ class Inbox extends Component {
 	  
 	     Api.commonApiPost('pt-property/properties/_update', {},body, false, true).then((res)=>{
 			setLoadingStatus('hide');
+			currentThis.props.history.push('/propertyTax/inbox-acknowledgement')
 		  }).catch((err)=> {
 			console.log(err)
 			setLoadingStatus('hide');
@@ -484,17 +534,6 @@ class Inbox extends Component {
             return list.map((item)=>
             {
                 return (<MenuItem key={item.id} value={item.id} primaryText={item.name}/>)
-            })
-        }
-    }
-	
-	
-    const renderApprover = function(list,listName="") {
-        if(list)
-        {	
-            return list.map((item)=>
-            {console.log(item);
-                return (<MenuItem key={item.id} value={item.assignments[0].position} primaryText={item.name}/>)
             })
         }
     }
@@ -532,7 +571,7 @@ class Inbox extends Component {
         {!_.isEmpty(mockData) && <ShowFields groups={mockData[`${moduleName}.${actionName}`].groups} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={""} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""} screen="view"/>}
           <br/>
           {renderTable()}
-			<Card className="uiCard">
+			  {(this.state.buttons.hasOwnProperty('attributes') && (this.state.buttons.attributes.validActions.values.length > 0) && this.state.forward) &&	<Card className="uiCard">
                     <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Workflow</div>} />
                     <CardText style={styles.reducePadding}>
                                 <Grid fluid>
@@ -599,7 +638,7 @@ class Inbox extends Component {
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                                   >
-                                                    {renderApprover(this.state.approver)}
+                                                    {renderOption(this.state.approver)}
                                               </SelectField>
                                         </Col>
 										<Col xs={12} md={3} sm={6}>
@@ -619,7 +658,7 @@ class Inbox extends Component {
                                     </Row>
                                 </Grid>
                     </CardText>
-                  </Card>
+			  </Card> }
 		  <br/>
         </form>
         <div style={{"textAlign": "center"}}>

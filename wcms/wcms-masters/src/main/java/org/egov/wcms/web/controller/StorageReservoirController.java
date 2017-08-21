@@ -75,106 +75,106 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/storagereservoir")
 public class StorageReservoirController {
 
-	@Autowired
-	private StorageReservoirService storageReservoirService;
+    @Autowired
+    private StorageReservoirService storageReservoirService;
 
-	@Autowired
-	private ResponseInfoFactory responseInfoFactory;
+    @Autowired
+    private ResponseInfoFactory responseInfoFactory;
 
-	@Autowired
-	private ApplicationProperties applicationProperties;
+    @Autowired
+    private ApplicationProperties applicationProperties;
 
-	@Autowired
-	private ValidatorUtils validatorUtils;
+    @Autowired
+    private ValidatorUtils validatorUtils;
 
-	@Autowired
-	private ErrorHandler errHandler;
+    @Autowired
+    private ErrorHandler errHandler;
 
-	@PostMapping(value = "/_create")
-	@ResponseBody
-	public ResponseEntity<?> create(@RequestBody @Valid final StorageReservoirRequest storageReservoirRequest,
-			final BindingResult errors) {
-		if (errors.hasErrors()) {
-			final ErrorResponse errRes = validatorUtils.populateErrors(errors);
-			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
-		}
-		log.info("Storage Reservoir Request::" + storageReservoirRequest);
+    @PostMapping(value = "/_create")
+    @ResponseBody
+    public ResponseEntity<?> create(@RequestBody @Valid final StorageReservoirRequest storageReservoirRequest,
+            final BindingResult errors) {
+        if (errors.hasErrors()) {
+            final ErrorResponse errRes = validatorUtils.populateErrors(errors);
+            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+        }
+        log.info("Storage Reservoir Request::" + storageReservoirRequest);
 
-		final List<ErrorResponse> errorResponses = validatorUtils
-				.validateStorageReservoirRequest(storageReservoirRequest, false);
-		if (!errorResponses.isEmpty())
-			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+        final List<ErrorResponse> errorResponses = validatorUtils
+                .validateStorageReservoirRequest(storageReservoirRequest, false);
+        if (!errorResponses.isEmpty())
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-		final List<StorageReservoir> storageReservoir = storageReservoirService.createStorageReservoir(
-				applicationProperties.getCreateStorageReservoirTopicName(), "storagereservoir-create",
-				storageReservoirRequest);
+        final List<StorageReservoir> storageReservoir = storageReservoirService.createStorageReservoir(
+                applicationProperties.getCreateStorageReservoirTopicName(), "storagereservoir-create",
+                storageReservoirRequest);
 
-		return getSuccessResponse(storageReservoir, "Created", storageReservoirRequest.getRequestInfo());
-	}
+        return getSuccessResponse(storageReservoir, "Created", storageReservoirRequest.getRequestInfo());
+    }
 
-	@PostMapping(value = "/_update")
-	@ResponseBody
-	public ResponseEntity<?> update(@RequestBody @Valid final StorageReservoirRequest storageReservoirRequest,
-			final BindingResult errors) {
-		if (errors.hasErrors()) {
-			final ErrorResponse errRes = validatorUtils.populateErrors(errors);
-			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
-		}
-		log.info("storageReservoirRequest::" + storageReservoirRequest);
+    @PostMapping(value = "/_update")
+    @ResponseBody
+    public ResponseEntity<?> update(@RequestBody @Valid final StorageReservoirRequest storageReservoirRequest,
+            final BindingResult errors) {
+        if (errors.hasErrors()) {
+            final ErrorResponse errRes = validatorUtils.populateErrors(errors);
+            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+        }
+        log.info("storageReservoirRequest::" + storageReservoirRequest);
 
-		final List<ErrorResponse> errorResponses = validatorUtils
-				.validateStorageReservoirRequest(storageReservoirRequest, true);
-		if (!errorResponses.isEmpty())
-			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+        final List<ErrorResponse> errorResponses = validatorUtils
+                .validateStorageReservoirRequest(storageReservoirRequest, true);
+        if (!errorResponses.isEmpty())
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-		final List<StorageReservoir> storageReservoir = storageReservoirService.updateStorageReservoir(
-				applicationProperties.getUpdateStorageReservoirTopicName(), "storagereservoir-update",
-				storageReservoirRequest);
+        final List<StorageReservoir> storageReservoir = storageReservoirService.updateStorageReservoir(
+                applicationProperties.getUpdateStorageReservoirTopicName(), "storagereservoir-update",
+                storageReservoirRequest);
 
-		return getSuccessResponse(storageReservoir, null, storageReservoirRequest.getRequestInfo());
-	}
+        return getSuccessResponse(storageReservoir, null, storageReservoirRequest.getRequestInfo());
+    }
 
-	@PostMapping("_search")
-	@ResponseBody
-	public ResponseEntity<?> search(@ModelAttribute @Valid final StorageReservoirGetRequest storageReservoirGetRequest,
-			final BindingResult modelAttributeBindingResult,
-			@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
-			final BindingResult requestBodyBindingResult) {
-		final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+    @PostMapping("_search")
+    @ResponseBody
+    public ResponseEntity<?> search(@ModelAttribute @Valid final StorageReservoirGetRequest storageReservoirGetRequest,
+            final BindingResult modelAttributeBindingResult,
+            @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            final BindingResult requestBodyBindingResult) {
+        final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
-		// validate input params
-		if (modelAttributeBindingResult.hasErrors())
-			return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
+        // validate input params
+        if (modelAttributeBindingResult.hasErrors())
+            return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
 
-		// validate input params
-		if (requestBodyBindingResult.hasErrors())
-			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
+        // validate input params
+        if (requestBodyBindingResult.hasErrors())
+            return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
 
-		// Call service
-		List<StorageReservoir> storageReservoirList = null;
-		try {
-			storageReservoirList = storageReservoirService.getStorageReservoir(storageReservoirGetRequest);
-		} catch (final Exception exception) {
-			log.error("Error while processing request " + storageReservoirGetRequest, exception);
-			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
-		}
+        // Call service
+        List<StorageReservoir> storageReservoirList = null;
+        try {
+            storageReservoirList = storageReservoirService.getStorageReservoir(storageReservoirGetRequest);
+        } catch (final Exception exception) {
+            log.error("Error while processing request " + storageReservoirGetRequest, exception);
+            return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
+        }
 
-		return getSuccessResponse(storageReservoirList, null, requestInfo);
+        return getSuccessResponse(storageReservoirList, null, requestInfo);
 
-	}
+    }
 
-	private ResponseEntity<?> getSuccessResponse(final List<StorageReservoir> storageReservoirs, final String mode,
-			final RequestInfo requestInfo) {
-		final StorageReservoirResponse storageReservoirResponse = new StorageReservoirResponse();
-		storageReservoirResponse.setStorageReservoirs(storageReservoirs);
-		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-		if (StringUtils.isNotBlank(mode))
-			responseInfo.setStatus(HttpStatus.CREATED.toString());
-		else
-			responseInfo.setStatus(HttpStatus.OK.toString());
-		storageReservoirResponse.setResponseInfo(responseInfo);
-		return new ResponseEntity<>(storageReservoirResponse, HttpStatus.OK);
+    private ResponseEntity<?> getSuccessResponse(final List<StorageReservoir> storageReservoirs, final String mode,
+            final RequestInfo requestInfo) {
+        final StorageReservoirResponse storageReservoirResponse = new StorageReservoirResponse();
+        storageReservoirResponse.setStorageReservoirs(storageReservoirs);
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        if (StringUtils.isNotBlank(mode))
+            responseInfo.setStatus(HttpStatus.CREATED.toString());
+        else
+            responseInfo.setStatus(HttpStatus.OK.toString());
+        storageReservoirResponse.setResponseInfo(responseInfo);
+        return new ResponseEntity<>(storageReservoirResponse, HttpStatus.OK);
 
-	}
+    }
 
 }

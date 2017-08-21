@@ -189,6 +189,28 @@ handleDepartment = (e) => {
 		})
 
 } 
+
+formatDate(date){
+	
+	var day = (date.getDate() < 10) ? ('0'+date.getDate()) : date.getDate();
+	var month = ((date.getMonth() + 1)<10) ? ('0'+(date.getMonth() + 1)) : (date.getMonth() + 1)
+	
+	return day + "/" + month + "/" + date.getFullYear();
+}
+
+handleAge = (year) => {
+/*	var query = {
+		fromYear : year,
+		toYear: year
+	}
+	var currentThis = this;
+	Api.commonApiPost('/property/depreciations/_search',query).then((res)=>{
+	  console.log(res);
+	  currentThis.setState({structureclasses: res.structureClasses})
+	}).catch((err)=> {
+	  console.log(err)
+	})*/
+}
   
   render() {
 
@@ -442,22 +464,42 @@ handleDepartment = (e) => {
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               />
                                           </Col>
+										  
 										  <Col xs={12} md={3} sm={6}>
-                                              <Checkbox
-                                                label={translate('pt.create.groups.assessmentDetails.fields.isLegal')+' *'}
-                                                style={styles.checkbox}
-                                                defaultChecked ={true}
-                                                onCheck = {(e, i, v) => {
-                                                  var e = {
-                                                    target: {
-                                                      value:i
-                                                    }
-                                                  }
-                                                  handleChange(e, "isAuthorized", false, '')
-                                                }}
-
-                                              />
-                                          </Col>
+												<TextField  className="fullWidth"
+												  floatingLabelText="Building Permission number"
+												  errorText={fieldErrors.bpaNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.bpaNo}</span> : ""}
+												  value={assessmentDetails.bpaNo ? assessmentDetails.bpaNo : ""}
+												  onChange={(e) => {handleChange(e, "bpaNo", false, /^[a-z0-9]+$/i)}}
+												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+												  underlineStyle={styles.underlineStyle}
+												  underlineFocusStyle={styles.underlineFocusStyle}
+												  maxLength={15}
+												  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+												/>
+										 </Col>
+										 <Col xs={12} md={3} sm={6}>
+												<DatePicker  className="fullWidth datepicker"
+												  formatDate={(date)=> this.formatDate(date)}
+												  floatingLabelText="Building Permission Date"
+												  errorText={fieldErrors.bpaDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.bpaDate}</span> : ""}
+												  onChange={(event,date) => {
+														var day = (date.getDate() < 10) ? ('0'+date.getDate()) : date.getDate();
+														var month = ((date.getMonth() + 1)<10) ? ('0'+(date.getMonth() + 1)) : (date.getMonth() + 1)
+													  var e = {
+														target:{
+															value: day + "/" + month + "/" + date.getFullYear()
+														}
+													  }
+													this.handleAge(date.getFullYear());
+													handleChange(e,"bpaDate", false, "")}}
+												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+												  underlineStyle={styles.underlineStyle}
+												  underlineFocusStyle={styles.underlineFocusStyle}
+												  textFieldStyle={{width: '100%'}}
+												  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+												/>		
+										 </Col>
                                       </Row>
                                   </Grid>
                       </CardText>

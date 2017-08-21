@@ -25,6 +25,13 @@ import UiAutoComplete from './components/UiAutoComplete'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
 import UiDate from './components/UiDate';
 
+let styles={
+  reducePadding: {
+    paddingTop:4,
+    paddingBottom:0
+  }
+}
+
 export default class ShowFields extends Component {
   constructor(props) {
        super(props);
@@ -42,10 +49,10 @@ export default class ShowFields extends Component {
     let {addNewCard, removeCard} = this.props;
     let {renderField}=this;
     return (
-      <Card style={{"display": group.hide ? "none" : "block", "marginBottom": isMultiple ? '0px' : '', "marginTop": isMultiple ? '0px' : ''}} className={"uiCard "+group.name} key={groupIndex} expanded={self.state[group.name] ? false : true} onExpandChange={() => {self.changeExpanded(group.name)}}>
-          {!isMultiple && <CardHeader title={group.label} showExpandableButton={true} actAsExpander={true}/>}
-          <CardText style={{padding:30}} expandable={true}>
-          <Grid>
+      <Card  style={{"display": group.hide ? "none" : "block", "marginBottom": isMultiple ? '0px' : '', "marginTop": isMultiple ? '0px' : ''}} className={"uiCard "+group.name} key={groupIndex} expanded={self.state[group.name] ? false : true} onExpandChange={() => {self.changeExpanded(group.name)}}>
+          {!isMultiple && <CardHeader style={{paddingTop:4,paddingBottom:0}} title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{group.label}</div>} showExpandableButton={true} actAsExpander={true}/>}
+          <CardText style={{paddingTop:0,paddingBottom:0}} expandable={true}>
+          <Grid style={{paddingTop:0}}>
             <Row>
               {group.fields.map((field, fieldIndex)=>{
                   if(!field.isHidden) {
@@ -112,8 +119,8 @@ export default class ShowFields extends Component {
           if(listArr[key].objects) {
             return (
               <Card className={"uiCard "} expanded={true}>
-                <CardHeader title={listArr[key].objects[0].object.label} showExpandableButton={true} actAsExpander={true}/>
-                  <CardText style={{padding:0}} expandable={true}>
+                <CardHeader style={{paddingTop:4,paddingBottom:0}} title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{listArr[key].objects[0].object.label}</div>} showExpandableButton={true} actAsExpander={true}/>
+                  <CardText style={{paddingTop:0,paddingBottom:0}} style={{padding:0}} expandable={true}>
                     {
                       listArr[key].objects.map((grp, grpIndex) => {
                         return self.renderCard(grp.object, grp.index, noCols, jsonPath, uiFramework, groups, true);

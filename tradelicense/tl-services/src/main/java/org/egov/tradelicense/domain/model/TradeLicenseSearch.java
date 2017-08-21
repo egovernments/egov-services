@@ -173,13 +173,13 @@ public class TradeLicenseSearch {
 	private Long expiryDate;
 
 	@JsonProperty("feeDetails")
-	private List<LicenseFeeDetail> feeDetails;
+	private List<LicenseFeeDetailSearch> feeDetails;
 
 	@JsonProperty("isPropertyOwner")
 	private Boolean isPropertyOwner = false;
 	
 	@JsonProperty("supportDocuments")
-	private List<SupportDocument> supportDocuments;
+	private List<SupportDocumentSearch> supportDocuments;
 
 	@JsonProperty("status")
 	private Long status;

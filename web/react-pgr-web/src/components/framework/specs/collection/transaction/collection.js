@@ -48,8 +48,8 @@ var chequeOrDD = {
         "name": "chequeOrDDDate",
         "jsonPath": "Receipt[0].instrument.transactionDateInput",
         "label": "Cheque/DD Date",
-        "pattern": "",
-        "type": "date",
+        "pattern": "/^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/",
+        "type": "datePicker",
         "isRequired": true,
         "isDisabled": false,
         "requiredErrMsg": "",
@@ -164,7 +164,8 @@ var dat = {
     "groups": [{
       "label": "Pay tax",
       "name": "createDocumentType",
-      "fields": [{
+      "fields": [
+        {
           "name": "mobile",
           "jsonPath": "mobileNumber",
           "label": "Mobile",
@@ -183,7 +184,7 @@ var dat = {
           "type": "text",
           "isRequired": false,
           "isDisabled": false,
-          "requiredErrMsg": "", 
+          "requiredErrMsg": "",
           "patternErrMsg": "Enter Valid EmailID"
         },
         {
@@ -192,9 +193,9 @@ var dat = {
           "label": "Billing service name",
           "pattern": "",
           "type": "singleValueList",
-          "isRequired": true,
+          "isRequired": false,
           "isDisabled": false,
-          "url": "egov-common-masters/businessDetails/_search?tenantId=default|$..code|$..name",
+          "url": "/egov-common-masters/businessDetails/_search?tenantId=default|$..code|$..name",
           "requiredErrMsg": "",
           "patternErrMsg": ""
         },
@@ -202,12 +203,12 @@ var dat = {
           "name": "consumerCode",
           "jsonPath": "consumerCode",
           "label": "Consumer Code",
-          "pattern": "",
+          "pattern": "^.{0,30}$",
           "type": "text",
-          "isRequired": true,
+          "isRequired": false,
           "isDisabled": false,
           "requiredErrMsg": "",
-          "patternErrMsg": ""
+          "patternErrMsg": "Enter valid Consumer Code"
         }
       ]
     }],

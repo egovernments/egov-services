@@ -189,7 +189,7 @@ class Dashboard extends Component {
                 }
               ]
             };
-            Api.commonApiPost("/pgr-master/report/_get", {}, bodyReq).then(function(res) {
+            Api.commonApiPost("/report/pgr/_get", {}, bodyReq, null, true).then(function(res) {
               current.setState({
                 workflowResult: res,
                 hasData: true
@@ -198,7 +198,7 @@ class Dashboard extends Component {
               current.props.setLoadingStatus('hide');
               current.setState({
                 workflowResult: {},
-                hasData: true
+                hasData: false
               });
             })
         } else {
@@ -212,9 +212,9 @@ class Dashboard extends Component {
 
 
  componentWillUnmount(){
-     $('#searchTable')
+     /*$('#searchTable')
      .DataTable()
-     .destroy(true);
+     .destroy(true);*/
  };
 
 
@@ -288,7 +288,10 @@ class Dashboard extends Component {
     this.setState({servicesFilter:"", selectedServiceCode:code, selectedServiceName:name});
     var service = this.state.citizenServices.find((service) => service.code === code);
     if(service && !service.hasOwnProperty("types")){
+        if(name.toLowerCase() !== 'water connection') //water connection hardcoded values
           this.loadServiceTypes(service);
+        else
+          service['types'] = [ {"id": 170, "serviceName": "Apply New Water Connection", "serviceCode": "CWCW", "description": "Apply New Water Connection", "url": "/create/wc" } ];
     }
   }
 
@@ -471,7 +474,10 @@ class Dashboard extends Component {
                                   })}
                                 {serviceTypeMenus.map((serviceType, index)=>{
                                   return (<ServiceTypeItem key={index} serviceType={serviceType} onClick={()=>{
-                                      this.props.setRoute(`/services/apply/${serviceType.serviceCode}/${serviceType.serviceName.replace(/\//g, "~")}`);
+                                      if(serviceType.serviceName !== 'New Water Connection')
+                                        this.props.setRoute(`/services/apply/${serviceType.serviceCode}/${serviceType.serviceName.replace(/\//g, "~")}`);
+                                      else
+                                        this.props.setRoute('/create/wc');
                                     }}></ServiceTypeItem>)
                                 })}
 

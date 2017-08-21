@@ -28,7 +28,7 @@ public class UserInfo {
 	@JsonProperty("id")
 	private Integer id = null;
 
-	@JsonProperty("username")
+	@JsonProperty("userName")
 	@NotNull
 	private String username = null;
 

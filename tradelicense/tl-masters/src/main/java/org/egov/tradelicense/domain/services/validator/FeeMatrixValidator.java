@@ -29,7 +29,8 @@ import org.egov.tradelicense.persistence.repository.builder.UtilityBuilder;
 import org.egov.tradelicense.persistence.repository.helper.UtilityHelper;
 import org.egov.tradelicense.util.ConstantUtility;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -48,7 +49,7 @@ public class FeeMatrixValidator {
 	UtilityHelper utilityHelper;
 
 	@Autowired
-	JdbcTemplate jdbcTemplate;
+	NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Autowired
 	RestTemplate restTemplate;
@@ -74,9 +75,12 @@ public class FeeMatrixValidator {
 			String financialYear = feeMatrix.getFinancialYear();
 
 			// validating financial year
+
+			
 			Date[] dates = validateFinancialYear(financialYear, requestInfoWrapper);
-			feeMatrix.setEffectiveFrom(dates[0].getTime()/1000);
-			feeMatrix.setEffectiveTo(dates[1].getTime()/1000);
+			feeMatrix.setEffectiveFrom(dates[0].getTime());
+			feeMatrix.setEffectiveTo(dates[1].getTime());
+
 			// validating category
 			validateCategory(categoryId, requestInfo);
 			// validating sub category
@@ -161,7 +165,8 @@ public class FeeMatrixValidator {
 		int count = 0;
 
 		try {
-			count = (Integer) jdbcTemplate.queryForObject(query, Integer.class);
+			MapSqlParameterSource parameters = new MapSqlParameterSource();
+			count = (Integer) namedParameterJdbcTemplate.queryForObject(query,parameters, Integer.class);
 		} catch (Exception e) {
 			log.error("error while executing the query :" + query + " , error message : " + e.getMessage());
 		}
@@ -236,11 +241,11 @@ public class FeeMatrixValidator {
 	 */
 	public List<FeeMatrixDetail> getFeeMatrixDetailsByFeeMatrixId(Long feeMatrixId) {
 
-		List<Object> preparedStatementValues = new ArrayList<>();
+		MapSqlParameterSource parameters = new MapSqlParameterSource();
 		String feeMatrixDetailSearchQuery = FeeMatrixQueryBuilder.buildFeeMatrixDetailSearchQuery(feeMatrixId,
-				preparedStatementValues);
+				parameters);
 		List<FeeMatrixDetail> feeMatrixDetails = getFeeMatrixDetails(feeMatrixDetailSearchQuery.toString(),
-				preparedStatementValues);
+				parameters);
 
 		return feeMatrixDetails;
 	}
@@ -252,10 +257,10 @@ public class FeeMatrixValidator {
 	 * @param query
 	 * @return {@link FeeMatrixDetail} List of FeeMatrixDetail
 	 */
-	public List<FeeMatrixDetail> getFeeMatrixDetails(String query, List<Object> preparedStatementValues) {
+	public List<FeeMatrixDetail> getFeeMatrixDetails(String query, MapSqlParameterSource parameters) {
 
 		List<FeeMatrixDetail> feeMatrixDetails = new ArrayList<>();
-		List<Map<String, Object>> rows = jdbcTemplate.queryForList(query, preparedStatementValues.toArray());
+		List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(query, parameters);
 
 		for (Map<String, Object> row : rows) {
 			FeeMatrixDetail feeMatrixDetail = new FeeMatrixDetail();
@@ -284,10 +289,10 @@ public class FeeMatrixValidator {
 	 * @param query
 	 * @return {@link FeeMatrix} List of FeeMatrix
 	 */
-	public List<FeeMatrix> getFeeMatrices(String query, List<Object> preparedStatementValues) {
+	public List<FeeMatrix> getFeeMatrices(String query, MapSqlParameterSource parameters) {
 
 		List<FeeMatrix> feeMatrices = new ArrayList<>();
-		List<Map<String, Object>> rows = jdbcTemplate.queryForList(query, preparedStatementValues.toArray());
+		List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(query, parameters);
 
 		for (Map<String, Object> row : rows) {
 			FeeMatrix feeMatrix = new FeeMatrix();
@@ -297,8 +302,8 @@ public class FeeMatrixValidator {
 			feeMatrix.setBusinessNature(BusinessNatureEnum.fromValue(getString(row.get("businessNature"))));
 			feeMatrix.setCategoryId(getLong(row.get("categoryId")));
 			feeMatrix.setSubCategoryId(getLong(row.get("subCategoryId")));
-			feeMatrix.setEffectiveFrom((new Timestamp((long) row.get("effectiveFrom")).getTime())/1000);
-			feeMatrix.setEffectiveTo((new Timestamp((long) row.get("effectiveTo")).getTime())/1000);
+			feeMatrix.setEffectiveFrom(((Timestamp)row.get("effectiveFrom")).getTime());
+			feeMatrix.setEffectiveTo(((Timestamp)row.get("effectiveTo")).getTime());
 			feeMatrix.setFinancialYear(getString(row.get("financialYear")));
 			AuditDetails auditDetails = new AuditDetails();
 			auditDetails.setCreatedBy(getString(row.get("createdby")));

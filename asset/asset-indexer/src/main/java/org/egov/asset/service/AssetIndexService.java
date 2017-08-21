@@ -11,6 +11,7 @@ import org.egov.asset.model.Boundary;
 import org.egov.asset.model.Department;
 import org.egov.asset.model.Location;
 import org.egov.asset.model.Tenant;
+import org.egov.asset.model.enums.DepreciationMethod;
 import org.egov.asset.repository.AssetIndexRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -60,7 +61,7 @@ public class AssetIndexService {
         assetIndex.setAccumulatedDepreciation(asset.getAccumulatedDepreciation());
         assetIndex.setAssetReference(asset.getAssetReference());
         setAssetCategory(assetIndex, asset);
-        if(asset.getModeOfAcquisition() != null)
+        if (asset.getModeOfAcquisition() != null)
             assetIndex.setModeOfAcquisition(asset.getModeOfAcquisition().toString());
         assetIndex.setStatus(asset.getStatus());
         assetIndex.setAssetDetails(asset.getAssetDetails());
@@ -94,8 +95,9 @@ public class AssetIndexService {
         assetIndex.setAssetCategoryCode(assetCategory.getCode());
         assetIndex.setAssetCategoryparentId(assetCategory.getParent());
         assetIndex.setAssetCategoryDepreciationRate(assetCategory.getDepreciationRate());
-
-        assetIndex.setDepreciationMethod(assetCategory.getDepreciationMethod().toString());
+        final DepreciationMethod depreciationMethod = assetCategory.getDepreciationMethod();
+        if (depreciationMethod != null)
+            assetIndex.setDepreciationMethod(depreciationMethod.toString());
     }
 
     private void setAssetDepartment(final AssetIndex assetIndex, final Department department) {

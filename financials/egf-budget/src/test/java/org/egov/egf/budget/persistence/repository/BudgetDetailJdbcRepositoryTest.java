@@ -41,6 +41,7 @@ package org.egov.egf.budget.persistence.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
@@ -72,6 +73,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
@@ -85,10 +87,13 @@ public class BudgetDetailJdbcRepositoryTest {
 
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @Before
     public void setUp() throws Exception {
-        budgetDetailJdbcRepository = new BudgetDetailJdbcRepository(namedParameterJdbcTemplate);
+        budgetDetailJdbcRepository = new BudgetDetailJdbcRepository(namedParameterJdbcTemplate, jdbcTemplate);
     }
 
     @Test
@@ -142,6 +147,21 @@ public class BudgetDetailJdbcRepositoryTest {
         assertThat(row.get("budgetAvailable")).isEqualTo(actualResult.getBudgetAvailable().intValue());
         assertThat(row.get("originalAmount")).isEqualTo(actualResult.getOriginalAmount().intValue());
 
+    }
+    
+    @Test
+    @Sql(scripts = { "/sql/budgetdetail/clearBudgetDetail.sql", "/sql/budgetdetail/insertBudgetDetailData.sql" })
+    public void test_delete() {
+
+        BudgetDetailEntity budgetDetail = BudgetDetailEntity.builder().id("1").anticipatoryAmount(BigDecimal.ONE)
+                .approvedAmount(BigDecimal.ONE).budgetAvailable(BigDecimal.ONE).originalAmount(BigDecimal.ONE)
+                .budgetId("1").budgetGroupId("1").planningPercent(BigDecimal.valueOf(1500)).build();
+        budgetDetail.setTenantId("default");
+        BudgetDetailEntity actualResult = budgetDetailJdbcRepository.delete(budgetDetail);
+
+        List<Map<String, Object>> result = namedParameterJdbcTemplate.query("SELECT * FROM egf_budgetdetail",
+                new BudgetDetailResultExtractor());
+        assertTrue("Result set length is zero", result.size() == 0);
     }
 
     @Test

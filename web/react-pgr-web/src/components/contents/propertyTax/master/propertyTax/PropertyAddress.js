@@ -279,7 +279,7 @@ class PropertyAddress extends Component {
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.locality')+' *'}
+                                                  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.locality')}
                                                   errorText={fieldErrors.locality ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.locality}</span>: ""}
                                                   value={propertyAddress.locality ? propertyAddress.locality:""}
                                                   onChange={(event, index, value) => {
@@ -289,7 +289,7 @@ class PropertyAddress extends Component {
                                                           value: value
                                                         }
                                                       };
-                                                      handleChange(e, "locality", true, "")}
+                                                      handleChange(e, "locality", false, "")}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
@@ -301,7 +301,7 @@ class PropertyAddress extends Component {
                                           </Col>
 										   <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.electionWard')+' *'}
+                                                  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.electionWard')}
                                                   errorText={fieldErrors.electionWard ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.electionWard}</span> : ""}
                                                   value={propertyAddress.electionWard ? propertyAddress.electionWard : ""}
                                                   onChange={(event, index, value) => {
@@ -311,7 +311,7 @@ class PropertyAddress extends Component {
                                                           value: value
                                                         }
                                                       };
-                                                      handleChange(e, "electionWard", true, "")}
+                                                      handleChange(e, "electionWard", false, "")}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
@@ -437,7 +437,7 @@ class PropertyAddress extends Component {
 												  hintText="201301"
                                                   errorText={fieldErrors.pin ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.pin}</span> : ""}
                                                   value={propertyAddress.pin ? propertyAddress.pin : ""}
-                                                  onChange={(e) => handleChange(e, "pin", false, /^\d{6}$/g)}
+                                                  onChange={(e) => handleChange(e, "pin", true, /^\d{6}$/g)}
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
@@ -519,7 +519,6 @@ class PropertyAddress extends Component {
                                                 <Col xs={12} md={3} sm={6}>
                                                     <TextField  className="fullWidth"
                                                         floatingLabelText={translate('pt.create.groups.propertyAddress.fields.address1')+' *'}
-														hintText="Street, location, city"
                                                         errorText={fieldErrors.addressTwo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.addressTwo}</span> : ""}
                                                         value={propertyAddress.addressTwo ? propertyAddress.addressTwo : ""}
                                                         onChange={(e) => handleChange(e, "addressTwo", true, '')}

@@ -34,7 +34,7 @@ public class TaxRatesBuilder {
 
         selectQuery.append(" AND taxHead =?");
         preparedStatementValues.add(taxHead);
-        selectQuery.append(" AND to_date(?,'dd/MM/yyyy') BETWEEN fromdate::date AND  todate::date");
+        selectQuery.append(" AND to_date(?,'dd/MM/yyyy') BETWEEN fromdate::date AND  CASE WHEN  todate::date IS NULL THEN fromdate::date ELSE todate::date END");
         preparedStatementValues.add(validDate);
 
         selectQuery.append(" AND  ?  BETWEEN fromValue AND toValue");
@@ -64,7 +64,7 @@ public class TaxRatesBuilder {
         StringBuffer selectQuery = new StringBuffer();
         selectQuery.append(BASE_SEARCH_QUERY);
         preparedStatementValues.add(tenantId);
-        selectQuery.append(" AND to_date(?,'dd/MM/yyyy') BETWEEN fromdate::date AND  todate::date");
+        selectQuery.append(" AND to_date(?,'dd/MM/yyyy') BETWEEN fromdate::date AND  CASE WHEN  todate::date IS NULL THEN fromdate::date ELSE todate::date END");
         preparedStatementValues.add(validDate);
         return selectQuery.toString();
     }

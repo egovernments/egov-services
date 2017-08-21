@@ -1,11 +1,11 @@
 var dat = {
 	"tl.create": {
-		"numCols": 12/2,
+		"numCols": 12/3,
 		"url": "/tl-services/license/v1/_create",
     "useTimestamp": true,
     "tenantIdRequired": false,
 		"objectName": "licenses",
-
+		"idJsonPath": "licenses[0].id",
 		"groups": [
 			{
 				"label": "tl.create.licenses.groups.TradeDetailsTab",
@@ -15,12 +15,12 @@ var dat = {
 							"name": "OldLicenseNumber",
 							"jsonPath": "licenses[0].oldLicenseNumber",
 							"label": "tl.create.licenses.groups.TradeDetails.OldLicenseNumber",
-							"pattern": "",
+							"pattern": "^.{4,20}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "It should be min 4 and max 20"
 						},
 						{
 							"name": "applicationType",
@@ -47,6 +47,32 @@ var dat = {
 							"hide":true,
 							"defaultValue":"true",
 							"patternErrMsg": ""
+						},
+						{
+							"name": "active",
+							"jsonPath": "licenses[0].active",
+							"label": "tl.create.licenses.groups.TradeDetails.isLegacy",
+							"pattern": "",
+							"type": "text",
+							"isRequired": true,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"hide":true,
+							"defaultValue":"true",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "applicationDate",
+							"jsonPath": "licenses[0].applicationDate",
+							"label": "tl.create.licenses.groups.TradeDetails.isLegacy",
+							"pattern": "",
+							"type": "text",
+							"isRequired": true,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"hide":true,
+							"defaultValue":"1503144186841",
+							"patternErrMsg": ""
 						}
 				]
 			},
@@ -60,7 +86,7 @@ var dat = {
 							"jsonPath": "licenses[0].adhaarNumber",
 							"label": "tl.create.licenses.groups.TradeOwnerDetails.AadharNumber",
 							"pattern": "^.{12,12}$",
-							"type": "number",
+							"type": "text",
 							"isRequired": false ,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -71,7 +97,7 @@ var dat = {
 							"jsonPath": "licenses[0].mobileNumber",
 							"label": "tl.create.licenses.groups.TradeOwnerDetails.Mobile Number",
 							"pattern": "^.{10,10}$",
-							"type": "number",
+							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -114,12 +140,12 @@ var dat = {
 							"name": "TradeOwnerAddress",
 							"jsonPath": "licenses[0].ownerAddress",
 							"label": "tl.create.licenses.groups.TradeOwnerDetails.TradeOwnerAddress",
-							"pattern": "",
+							"pattern": "^.{4,250}$",
 							"type": "textarea",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Min 4 and Max 250"
 						}
 				]
 			},
@@ -132,12 +158,12 @@ var dat = {
 							"name": "PropertyAssessmentNo",
 							"jsonPath": "licenses[0].propertyAssesmentNo",
 							"label": "tl.create.licenses.groups.TradeLocationDetails.PropertyAssessmentNo",
-							"pattern": "",
-							"type": "number",
+							"pattern": "^[0-9]{4,20}$",
+							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Property Assessment Number should be 4 to 20"
 						},
             {
 							"name": "Locality",
@@ -186,10 +212,7 @@ var dat = {
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": "",
-              "defaultValue": [{
-            "key": "",
-            "value": null
-          },
+              "defaultValue": [
           {
             "key": "STATE_GOVERNMENT",
             "value": "STATE_GOVERNMENT"
@@ -204,7 +227,7 @@ var dat = {
               "name": "TradeAddress",
               "jsonPath": "licenses[0].tradeAddress",
               "label": "tl.create.licenses.groups.TradeLocationDetails.TradeAddress",
-              "pattern": "",
+              "pattern": "^.{4,250}$",
               "type": "textarea",
               "isRequired": true,
               "isDisabled": false,
@@ -221,7 +244,7 @@ var dat = {
               "name": "TradeTitle",
               "jsonPath": "licenses[0].tradeTitle",
               "label": "tl.create.licenses.groups.TradeDetails.TradeTitle",
-              "pattern": "",
+              "pattern": "^[a-zA-Z0-9\s\.,]{4,100}$",
               "type": "text",
               "isRequired": true,
               "isDisabled": false,
@@ -239,10 +262,7 @@ var dat = {
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": "",
-              "defaultValue": [{
-            "key": "",
-            "value": null
-          },
+              "defaultValue": [
           {
             "key": "PERMANENT",
             "value": "PERMANENT"
@@ -268,7 +288,7 @@ var dat = {
 							"depedants": [{
 	                "jsonPath": "licenses[0].subCategoryId",
 	                "type": "dropDown",
-	                "pattern": "/tl-masters/category/v1/_search?tenantId=default&type=subcategory&categoryId={licenses[0].categoryId}|$..id|$..name"
+	                "pattern": "/tl-masters/category/v1/_search?tenantId=default&type=subcategory&categoryId={licenses[0].categoryId}|$.categories.*.id|$.categories.*.name"
 	              }]
 						},
             {
@@ -299,7 +319,7 @@ var dat = {
               "jsonPath": "licenses[0].quantity",
               "label": "tl.create.licenses.groups.TradeDetails.tradeValueForUOM",
               "pattern": "^[0-9]+(\.[0-9]{1,2})?$",
-              "type": "number",
+              "type": "text",
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
@@ -321,8 +341,8 @@ var dat = {
               "name": "Remarks",
               "jsonPath": "licenses[0].remarks",
               "label": "tl.create.licenses.groups.TradeDetails.Remarks",
-              "pattern": "",
-              "type": "text",
+              "pattern": "^.{0,1000}$",
+              "type": "textarea",
               "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",
@@ -333,7 +353,7 @@ var dat = {
               "jsonPath": "licenses[0].tradeCommencementDate",
               "label": "tl.create.licenses.groups.TradeDetails.TradeCommencementDate",
               "pattern": "",
-              "type": "datePicker",
+              "type": "date",
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
@@ -344,7 +364,7 @@ var dat = {
               "jsonPath": "licenses[0].licenseValidFromDate",
               "label": "tl.create.licenses.groups.TradeDetails.licenseValidFromDate",
               "pattern": "",
-              "type": "datePicker",
+              "type": "date",
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
@@ -352,7 +372,7 @@ var dat = {
             },
             {
 							"name": "TradeOwner",
-							"jsonPath": "licenses[0].active",
+							"jsonPath": "licenses[0].isPropertyOwner",
 							"label": "tl.create.licenses.groups.TradeDetails.TraderOwnerProperty",
 							"pattern": "",
 							"type": "checkbox",
@@ -396,7 +416,7 @@ var dat = {
               "jsonPath": "licenses[0].agreementDate",
               "label": "tl.create.licenses.groups.agreementDetails.agreementDate",
               "pattern": "",
-              "type": "datePicker",
+              "type": "date",
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
@@ -404,9 +424,9 @@ var dat = {
             },
 						{
 							"name": "agreementNo",
-							"jsonPath": "categories[0].agreementNo",
+							"jsonPath": "licenses[0].agreementNo",
 							"label": "tl.create.licenses.groups.agreementDetails.agreementNo",
-							"pattern": "^.[a-zA-Z]{0,29}$",
+							"pattern": "^[a-zA-Z]{4,128}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
@@ -590,7 +610,7 @@ var dat = {
             "jsonPath": "mobileNumber",
             "label": "tl.search.groups.mobileNumber",
             "pattern": "^.{10,10}$",
-            "type": "number",
+            "type": "text",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -603,15 +623,15 @@ var dat = {
 		],
 		"result": {
 			"header": [{label: "tl.search.result.groups.applicationNumber"},{label: "tl.search.result.groups.tlNumber"}, {label: "tl.search.result.groups.oldTLNumber"},{label: "tl.search.result.groups.category"},{label: "tl.search.result.groups.subCategory"},{label: "tl.search.result.groups.titleOfTrade"},{label: "tl.search.result.groups.tradeOwner"},{label: "tl.search.result.groups.mobileNumber"},{label: "tl.search.result.groups.propertyAssessmentNumber"}, {label: "tl.search.result.groups.applicationStatus"},{label: "tl.search.result.groups.licenseActive"}],
-			"values": ["applicationNumber","licenseNumber", "oldLicenseNumber", "categoryId", "subCategoryId", "tradeTitle", "ownerName", "mobileNumber", "propertyAssesmentNo", "status", "active"],
+			"values": ["applicationNumber","licenseNumber", "oldLicenseNumber", "category", "subCategory", "tradeTitle", "ownerName", "mobileNumber", "propertyAssesmentNo", "applicationType", "active"],
 			"resultPath": "licenses",
 			"rowClickUrlUpdate": "/update/tl/CreateLegacyLicense/{id}",
 			"rowClickUrlView": "/view/tl/CreateLegacyLicense/{id}"
 			}
 	},
 	"tl.view": {
-		"numCols": 12/2,
-		"url": "/tl-services/license/v1/_search?id={id}",
+		"numCols": 12/3,
+		"url": "/tl-services/license/v1/_search?ids={id}",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "licenses",
@@ -626,7 +646,7 @@ var dat = {
             "jsonPath": "licenses[0].adhaarNumber",
             "label": "tl.view.groups.aadharNumber",
             "pattern": "^.{12,12}$",
-            "type": "number",
+            "type": "text",
             "isRequired": false ,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -637,7 +657,7 @@ var dat = {
             "jsonPath": "licenses[0].mobileNumber",
             "label": "tl.view.groups.mobileNumber",
             "pattern": "^.{10,10}$",
-            "type": "number",
+            "type": "text",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -698,7 +718,7 @@ var dat = {
               "jsonPath": "licenses[0].propertyAssesmentNo",
               "label": "tl.licenses.view.groups.PropertyAssessmentNo",
               "pattern": "",
-              "type": "number",
+              "type": "text",
               "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",
@@ -706,7 +726,7 @@ var dat = {
             },
             {
               "name": "Locality",
-              "jsonPath": "licenses[0].localityId",
+              "jsonPath": "licenses[0].localityName",
               "label": "tl.licenses.view.groups.Locality",
               "pattern": "",
               "type": "singleValueList",
@@ -718,7 +738,7 @@ var dat = {
             },
             {
               "name": "adminWardId",
-              "jsonPath": "licenses[0].adminWardId",
+              "jsonPath": "licenses[0].adminWardName",
               "label": "tl.licenses.view.groups.adminWardId",
               "pattern": "",
               "type": "singleValueList",
@@ -730,7 +750,7 @@ var dat = {
             },
             {
               "name": "revenueWardId",
-              "jsonPath": "licenses[0].revenueWardId",
+              "jsonPath": "licenses[0].revenueWardName",
               "label": "tl.licenses.view.groups.revenueWardId",
               "pattern": "",
               "type": "singleValueList",
@@ -751,10 +771,7 @@ var dat = {
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": "",
-              "defaultValue": [{
-            "key": "",
-            "value": null
-          },
+              "defaultValue": [
           {
             "key": "STATE_GOVERNMENT",
             "value": "STATE_GOVERNMENT"
@@ -805,10 +822,7 @@ var dat = {
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": "",
-              "defaultValue": [{
-            "key": "",
-            "value": null
-          },
+              "defaultValue": [
           {
             "key": "PERMANENT",
             "value": "PERMANENT"
@@ -834,7 +848,7 @@ var dat = {
 						},
             {
 							"name": "TradeSubCategory",
-							"jsonPath": "licenses[0].subCategoryId",
+							"jsonPath": "licenses[0].subCategory",
 							"label": "tl.view.licenses.groups.TradeSubCategory",
 							"pattern": "",
 							"type": "singleValueList",
@@ -846,7 +860,7 @@ var dat = {
 						},
             {
               "name": "UOM",
-              "jsonPath": "licenses[0].uomId",
+              "jsonPath": "licenses[0].uom",
               "label": "tl.view.licenses.groups.UOM",
               "pattern": "",
               "type": "text",
@@ -860,7 +874,7 @@ var dat = {
               "jsonPath": "licenses[0].quantity",
               "label": "tl.view.licenses.groups.TradeValuefortheUOM",
               "pattern": "",
-              "type": "number",
+              "type": "text",
               "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",
@@ -893,7 +907,7 @@ var dat = {
               "jsonPath": "licenses[0].tradeCommencementDate",
               "label": "tl.view.licenses.groups.TradeCommencementDate",
               "pattern": "",
-              "type": "datePicker",
+              "type": "date",
               "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",

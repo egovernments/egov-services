@@ -103,7 +103,7 @@ class ServiceGroupCreate extends Component {
            "name" :this.props.createServiceGroup.name,
            "code" :this.props.createServiceGroup.code,
            "description" :this.props.createServiceGroup.description,
-           "tenantId":"default",
+           "tenantId": localStorage.getItem("tenantId"),
            "keyword": "complaint"
           }
       }

@@ -142,10 +142,10 @@ public class BudgetReAppropriationControllerTest {
                 .thenReturn(budgetReAppropriations);
 
         mockMvc.perform(post("/budgetreappropriations/_delete")
-                .content(resources.readRequest("budgetreappropriation/budgetreappropriation_update_valid_request.json"))
+                .content(resources.readRequest("budgetreappropriation/budgetreappropriation_delete_valid_request.json"))
                 .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content().json(resources
-                        .readResponse("budgetreappropriation/budgetreappropriation_update_valid_response.json")));
+                        .readResponse("budgetreappropriation/budgetreappropriation_delete_valid_response.json")));
 
     }
 

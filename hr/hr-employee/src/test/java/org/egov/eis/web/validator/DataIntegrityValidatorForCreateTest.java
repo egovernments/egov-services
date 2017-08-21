@@ -28,6 +28,7 @@ import java.util.*;
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -74,7 +75,7 @@ public class DataIntegrityValidatorForCreateTest {
 			}});
 		}};
 
-		when(hrMastersService.getHRConfigurations(any(RequestInfoWrapper.class))).thenReturn(hrConfigurations);
+		when(hrMastersService.getHRConfigurations(anyString(), any(RequestInfoWrapper.class))).thenReturn(hrConfigurations);
 		when(employeeRepository.duplicateExists("egeis_employee", "gpfNo", "12393243", "1"))
         .thenReturn(!validGpfNo);
 		when(employeeRepository.duplicateExists("egeis_employee", "passportNo", "ASD234234", "1"))

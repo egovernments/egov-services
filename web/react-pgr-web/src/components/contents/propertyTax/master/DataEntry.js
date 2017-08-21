@@ -233,7 +233,7 @@ class DataEntry extends Component {
           console.log(err)
         })
 		
-		 Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:"REVENUE"}).then((res)=>{
+		Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:"REVENUE"}).then((res)=>{
           console.log(res);
           currentThis.setState({zone : res.Boundary})
         }).catch((err)=> {
@@ -242,21 +242,6 @@ class DataEntry extends Component {
           })
           console.log(err)
         })
-		
-		var query = {
-			tenantId: 'default'
-		}
-		
-		Api.commonApiPost('egov-common-workflows/process/_search',query, {}).then((res)=>{
-          console.log(res);
-          currentThis.setState({zone : res.Boundary})
-        }).catch((err)=> {
-           currentThis.setState({
-            zone : []
-          })
-          console.log(err)
-        })
-		
 		
   }
 
@@ -300,10 +285,10 @@ dataEntryTax = () => {
 	
 	if(dataEntry && dataEntry.hasOwnProperty('owners')) {		
 		for(var i=0;i<dataEntry.owners.length;i++){
-			dataEntry.owners[i].locale = userRequest.locale;
+			dataEntry.owners[i].locale = userRequest.locale || 'en_IN';
 			dataEntry.owners[i].type = 'CITIZEN';
 			dataEntry.owners[i].active = true;
-			dataEntry.owners[i].tenantId = 'default';
+			dataEntry.owners[i].tenantId = userRequest.tenantId;
 			dataEntry.owners[i].salutation = null;
 			dataEntry.owners[i].pan = null;
 			dataEntry.owners[i].roles =[  
@@ -373,13 +358,13 @@ dataEntryTax = () => {
       var body = {
 			"properties": [{
 				"occupancyDate":dataEntry.occupancyDate,
-				"tenantId": "default",
+				"tenantId": userRequest.tenantId,
 				"oldUpicNumber": dataEntry.oldUpicNumber,
 				"vltUpicNumber": null,
 				"sequenceNo": dataEntry.sequenceNo || null,
 				"creationReason": dataEntry.reasonForCreation || null,
 				"address": {
-					"tenantId": "default",
+					"tenantId": userRequest.tenantId,
 					"longitude": null,
 					"addressNumber": dataEntry.doorNo || null,
 					"addressLine1": dataEntry.locality || null,
@@ -417,6 +402,8 @@ dataEntryTax = () => {
 					"undividedShare": null,
 					"noOfFloors": numberOfFloors, 
 					"isSuperStructure": null,
+					"bpaNo": dataEntry.bpaNo || null,
+					"bpaDate": dataEntry.bpaDate || null,
 					"landOwner": null,
 					"floorType":(dataEntry.propertyType != 'VACANT_LAND' ? (dataEntry.floorType || null) : null),
 					"woodType": (dataEntry.propertyType != 'VACANT_LAND' ? (dataEntry.woodType || null) : null),
@@ -695,7 +682,7 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: ['reasonForCreation','propertyType', 'usage','extentOfSite','doorNo', 'locality', 'electionWard', 'zoneNo', 'wardNo', 'sequenceNo', 'oldUpicNumber', 'totalFloors']
+          required: ['reasonForCreation','propertyType','pin' ,'usage','extentOfSite','doorNo', 'zoneNo', 'wardNo', 'sequenceNo', 'oldUpicNumber', 'totalFloors', 'currentAssessmentDate', 'firstAssessmentDate', 'lastAssessmentDate']
         },
         pattern: {
           current: [],

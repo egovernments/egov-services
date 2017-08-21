@@ -33,79 +33,79 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/meterStatus")
 public class MeterStatusController {
-	public static final Logger logger = LoggerFactory.getLogger(MeterStatusController.class);
+    public static final Logger logger = LoggerFactory.getLogger(MeterStatusController.class);
 
-	@Autowired
-	private ValidatorUtils validatorUtils;
+    @Autowired
+    private ValidatorUtils validatorUtils;
 
-	@Autowired
-	private MeterStatusService meterStatusService;
+    @Autowired
+    private MeterStatusService meterStatusService;
 
-	@Autowired
-	private ResponseInfoFactory responseInfoFactory;
+    @Autowired
+    private ResponseInfoFactory responseInfoFactory;
 
-	@Autowired
-	private ErrorHandler errHandler;
+    @Autowired
+    private ErrorHandler errHandler;
 
-	@PostMapping(value = "/_create")
-	@ResponseBody
-	public ResponseEntity<?> createMeterStatus(@RequestBody @Valid final MeterStatusReq meterStatusRequest,
-			final BindingResult errors) {
-		if (errors.hasErrors()) {
-			final ErrorResponse errRes = validatorUtils.populateErrors(errors);
-			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
-		}
-		logger.info("MeterStatusRequest :" + meterStatusRequest);
-		final List<ErrorResponse> errorResponses = validatorUtils.validateMeterStatusRequest(meterStatusRequest);
-		if (!errorResponses.isEmpty())
-			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
-		List<MeterStatus> listOfMeterStatus = meterStatusService.pushCreateMeterStatusToQueue(meterStatusRequest);
-		return getSuccessResponse(listOfMeterStatus, "Created", meterStatusRequest.getRequestInfo());
-	}
+    @PostMapping(value = "/_create")
+    @ResponseBody
+    public ResponseEntity<?> createMeterStatus(@RequestBody @Valid final MeterStatusReq meterStatusRequest,
+            final BindingResult errors) {
+        if (errors.hasErrors()) {
+            final ErrorResponse errRes = validatorUtils.populateErrors(errors);
+            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+        }
+        logger.info("MeterStatusRequest :" + meterStatusRequest);
+        final List<ErrorResponse> errorResponses = validatorUtils.validateMeterStatusRequest(meterStatusRequest);
+        if (!errorResponses.isEmpty())
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+        final List<MeterStatus> listOfMeterStatus = meterStatusService.pushCreateMeterStatusToQueue(meterStatusRequest);
+        return getSuccessResponse(listOfMeterStatus, "Created", meterStatusRequest.getRequestInfo());
+    }
 
-	@PostMapping(value = "/_update")
-	@ResponseBody
-	public ResponseEntity<?> updateMeterStatus(@RequestBody @Valid final MeterStatusReq meterStatusRequest,
-			final BindingResult errors) {
-		if (errors.hasErrors()) {
-			final ErrorResponse errRes = validatorUtils.populateErrors(errors);
-			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
-		}
-		logger.info("MeterStatusRequest :" + meterStatusRequest);
-		final List<ErrorResponse> errorResponses = validatorUtils.validateMeterStatusRequest(meterStatusRequest);
-		if (!errorResponses.isEmpty())
-			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
-		List<MeterStatus> listOfMeterStatus = meterStatusService.pushUpdateMeterStatusToQueue(meterStatusRequest);
-		return getSuccessResponse(listOfMeterStatus, null, meterStatusRequest.getRequestInfo());
-	}
+    @PostMapping(value = "/_update")
+    @ResponseBody
+    public ResponseEntity<?> updateMeterStatus(@RequestBody @Valid final MeterStatusReq meterStatusRequest,
+            final BindingResult errors) {
+        if (errors.hasErrors()) {
+            final ErrorResponse errRes = validatorUtils.populateErrors(errors);
+            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+        }
+        logger.info("MeterStatusRequest :" + meterStatusRequest);
+        final List<ErrorResponse> errorResponses = validatorUtils.validateMeterStatusRequest(meterStatusRequest);
+        if (!errorResponses.isEmpty())
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+        final List<MeterStatus> listOfMeterStatus = meterStatusService.pushUpdateMeterStatusToQueue(meterStatusRequest);
+        return getSuccessResponse(listOfMeterStatus, null, meterStatusRequest.getRequestInfo());
+    }
 
-	@PostMapping(value = "/_search")
-	@ResponseBody
-	public ResponseEntity<?> searchMeterStatus(@ModelAttribute @Valid final MeterStatusGetRequest meterStatusGetRequest,
-			final BindingResult modelAttributeBindingResult,
-			@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
-			final BindingResult requestBodyBindingResult) {
-		final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
-		if (modelAttributeBindingResult.hasErrors())
-			return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
-		if (requestBodyBindingResult.hasErrors())
-			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
-		List<MeterStatus> meterStatuses = meterStatusService.getMeterStatus(meterStatusGetRequest);
-		return getSuccessResponse(meterStatuses, null, requestInfo);
-	}
+    @PostMapping(value = "/_search")
+    @ResponseBody
+    public ResponseEntity<?> searchMeterStatus(@ModelAttribute @Valid final MeterStatusGetRequest meterStatusGetRequest,
+            final BindingResult modelAttributeBindingResult,
+            @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            final BindingResult requestBodyBindingResult) {
+        final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+        if (modelAttributeBindingResult.hasErrors())
+            return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
+        if (requestBodyBindingResult.hasErrors())
+            return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
+        final List<MeterStatus> meterStatuses = meterStatusService.getMeterStatus(meterStatusGetRequest);
+        return getSuccessResponse(meterStatuses, null, requestInfo);
+    }
 
-	private ResponseEntity<?> getSuccessResponse(final List<MeterStatus> meterStatusList, final String mode,
-			final RequestInfo requestInfo) {
-		final MeterStatusRes meterStatusResponse = new MeterStatusRes();
-		meterStatusResponse.setMeterStatus(meterStatusList);
-		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-		if (StringUtils.isNotBlank(mode))
-			responseInfo.setStatus(HttpStatus.CREATED.toString());
-		else
-			responseInfo.setStatus(HttpStatus.OK.toString());
-		meterStatusResponse.setResponseInfo(responseInfo);
-		return new ResponseEntity<>(meterStatusResponse, HttpStatus.OK);
+    private ResponseEntity<?> getSuccessResponse(final List<MeterStatus> meterStatusList, final String mode,
+            final RequestInfo requestInfo) {
+        final MeterStatusRes meterStatusResponse = new MeterStatusRes();
+        meterStatusResponse.setMeterStatus(meterStatusList);
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        if (StringUtils.isNotBlank(mode))
+            responseInfo.setStatus(HttpStatus.CREATED.toString());
+        else
+            responseInfo.setStatus(HttpStatus.OK.toString());
+        meterStatusResponse.setResponseInfo(responseInfo);
+        return new ResponseEntity<>(meterStatusResponse, HttpStatus.OK);
 
-	}
+    }
 
 }

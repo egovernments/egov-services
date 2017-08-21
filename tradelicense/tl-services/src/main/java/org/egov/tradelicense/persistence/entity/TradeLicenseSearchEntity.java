@@ -1,15 +1,15 @@
 package org.egov.tradelicense.persistence.entity;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.tradelicense.common.util.TimeStampUtil;
 import org.egov.tradelicense.domain.enums.ApplicationType;
 import org.egov.tradelicense.domain.enums.BusinessNature;
 import org.egov.tradelicense.domain.enums.OwnerShipType;
 import org.egov.tradelicense.domain.model.AuditDetails;
-import org.egov.tradelicense.domain.model.LicenseFeeDetail;
-import org.egov.tradelicense.domain.model.SupportDocument;
+import org.egov.tradelicense.domain.model.LicenseFeeDetailSearch;
+import org.egov.tradelicense.domain.model.SupportDocumentSearch;
 import org.egov.tradelicense.domain.model.TradeLicenseSearch;
 
 import lombok.AllArgsConstructor;
@@ -110,9 +110,13 @@ public class TradeLicenseSearchEntity {
 
 	private Timestamp expiryDate;
 
-	private static List<LicenseFeeDetail> feeDetails;
+	private static List<LicenseFeeDetailSearch> feeDetails;
 
-	private static List<SupportDocument> supportDocuments;
+	private static List<SupportDocumentSearch> supportDocuments;
+	
+	private List<LicenseFeeDetailSearchEntity> feeDetailEntitys;
+
+	private List<SupportDocumentSearchEntity> supportDocumentEntitys;
 
 	private String createdBy;
 
@@ -143,7 +147,7 @@ public class TradeLicenseSearchEntity {
 		tradeLicenseSearch.setOldLicenseNumber(this.oldLicenseNumber);
 
 		if (this.applicationDate != null) {
-			tradeLicenseSearch.setApplicationDate( (this.applicationDate.getTime()/1000));
+			tradeLicenseSearch.setApplicationDate( (this.applicationDate.getTime()));
 		}
 
 		tradeLicenseSearch.setAdhaarNumber(this.adhaarNumber);
@@ -203,15 +207,15 @@ public class TradeLicenseSearchEntity {
 		tradeLicenseSearch.setRemarks(this.remarks);
 
 		if (this.tradeCommencementDate != null) {
-			tradeLicenseSearch.setTradeCommencementDate((this.tradeCommencementDate.getTime()/1000));
+			tradeLicenseSearch.setTradeCommencementDate((this.tradeCommencementDate.getTime()));
 		}
 
 		if (this.agreementDate != null) {
-			tradeLicenseSearch.setAgreementDate((this.agreementDate.getTime()/1000));
+			tradeLicenseSearch.setAgreementDate((this.agreementDate.getTime()));
 		}
 
 		if (this.licenseValidFromDate != null) {
-			tradeLicenseSearch.setLicenseValidFromDate((this.licenseValidFromDate.getTime()/1000));
+			tradeLicenseSearch.setLicenseValidFromDate((this.licenseValidFromDate.getTime()));
 		}
 
 		tradeLicenseSearch.setIsPropertyOwner( this.isPropertyOwner);
@@ -226,11 +230,21 @@ public class TradeLicenseSearchEntity {
 		tradeLicenseSearch.setStatusName(this.statusName);
 
 		if (this.expiryDate != null) {
-			tradeLicenseSearch.setExpiryDate((this.expiryDate.getTime()/1000));
+			tradeLicenseSearch.setExpiryDate((this.expiryDate.getTime()));
 		}
-
+		this.feeDetails = new ArrayList<LicenseFeeDetailSearch>();
+		if( this.feeDetailEntitys != null){
+			for( LicenseFeeDetailSearchEntity feeDetailEntity : this.feeDetailEntitys){
+				this.feeDetails.add( feeDetailEntity.toDomain());
+			}
+		}
 		tradeLicenseSearch.setFeeDetails(this.feeDetails);
-
+		this.supportDocuments = new ArrayList<SupportDocumentSearch>();
+		if( this.supportDocumentEntitys != null){
+			for( SupportDocumentSearchEntity supportDocumentEntity : this.supportDocumentEntitys){
+				this.supportDocuments.add( supportDocumentEntity.toDomain());
+			}
+		} 
 		tradeLicenseSearch.setSupportDocuments(this.supportDocuments);
 
 		auditDetails.setCreatedBy(this.createdBy);

@@ -56,7 +56,8 @@ public class SourceTypeQueryBuilder {
     private ApplicationProperties applicationProperties;
 
     private static final String BASE_QUERY = "SELECT watersource.id as watersource_id, watersource.code as watersource_code,"
-            + " watersource.name as watersource_name, watersource.description as watersource_description,watersource.active as watersource_active, watersource.tenantId as watersource_tenantId "
+            + " watersource.name as watersource_name, watersource.description as watersource_description,watersource.active as watersource_active, "
+            + " watersource.sourcecapacity as watersource_sourcecapacity,watersource.ulbreserved as watersource_ulbreserved ,watersource.tenantId as watersource_tenantId "
             + " FROM egwtr_water_source_type watersource ";
 
     @SuppressWarnings("rawtypes")
@@ -156,13 +157,13 @@ public class SourceTypeQueryBuilder {
     }
 
     public static String insertWaterSourceTypeQuery() {
-        return "INSERT INTO egwtr_water_source_type(id,code,name,description,active,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
-                + "(:id,:code,:name,:description,:active,:createdby,:lastmodifiedby,:createddate,:lastmodifieddate,:tenantid)";
+        return "INSERT INTO egwtr_water_source_type(id,code,name,description,active,sourcecapacity,ulbreserved,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
+                + "(:id,:code,:name,:description,:active,:sourcecapacity,:ulbreserved,:createdby,:lastmodifiedby,:createddate,:lastmodifieddate,:tenantid)";
     }
 
     public static String updateWaterSourceTypeQuery() {
         return "UPDATE egwtr_water_source_type SET name = :name,description = :description ,"
-                + "active = :active ,lastmodifiedby = :lastmodifiedby ,lastmodifieddate = :lastmodifieddate where code = :code ";
+                + "active = :active ,sourcecapacity = :sourcecapacity,ulbreserved = :ulbreserved,lastmodifiedby = :lastmodifiedby ,lastmodifieddate = :lastmodifieddate where code = :code ";
     }
 
     public static String selectWaterSourceByNameAndCodeQuery() {

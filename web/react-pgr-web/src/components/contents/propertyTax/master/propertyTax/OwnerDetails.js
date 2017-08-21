@@ -152,14 +152,12 @@ constructor(props) {
                       <Row>
                         <Col xs={12} md={3} sm={6}>
                           <TextField
-							tabIndex ={1}
                             hintText="434345456545"
                             floatingLabelText={translate('pt.create.groups.ownerDetails.fields.aadhaarNumber')}
                             errorText={fieldErrors.owner ? (fieldErrors.owner.aadhaarNumber ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.aadhaarNumber}</span>: "") : ""}
                             value={ownerDetails.owner ? ownerDetails.owner.aadhaarNumber:""}
                             onChange={(e) => {
 								handleChangeOwner(e,"owner", "aadhaarNumber", false, /^\d{12}$/g);
-                               // handleChangeNextOne(e,"owner", "aadhaarNumber", false, /^\d{12}$/g);
                               }
                             }
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -172,14 +170,12 @@ constructor(props) {
                         </Col>
                         <Col xs={12} md={3} sm={6}>
                           <TextField  className="fullWidth"
-						  tabIndex ={2}
                             hintText="9999888877"
                             floatingLabelText={translate('pt.create.groups.ownerDetails.fields.phoneNumber')+' *'}
                             errorText={fieldErrors.owner ? (fieldErrors.owner.mobileNumber ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.mobileNumber}</span>: ""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.mobileNumber:""}
                             onChange={(e) =>{
 								handleChangeOwner(e, "owner","mobileNumber", true, /^\d{10}$/g)
-                               // handleChangeNextOne(e, "owner","mobileNumber", false, /^\d{10}$/g)
                               }
                             }
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -191,13 +187,12 @@ constructor(props) {
                         </Col>
                         <Col xs={12} md={3} sm={6}>
                           <TextField  className="fullWidth"
-						   tabIndex ={3}
                             hintText="Joe Doe"
                             floatingLabelText={translate('pt.create.groups.ownerDetails.fields.ownerName')+' *'}
                             errorText={fieldErrors.owner ? (fieldErrors.owner.name ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.name}</span>:""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.name:""}
                             onChange={(e) => {
-								handleChangeOwner(e,"owner" ,"name", true, "");
+								handleChangeOwner(e,"owner" ,"name", true, /^[a-zA-Z ]*$/g);
                                 //handleChangeNextOne(e,"owner" ,"name", false, "");
                               }
                             }
@@ -210,7 +205,6 @@ constructor(props) {
                         </Col>
                         <Col xs={12} md={3} sm={6}>
                           <SelectField  className="fullWidth selectOption"
-						  
                             floatingLabelText={translate('pt.create.groups.ownerDetails.fields.gender')+' *'}
                             errorText={fieldErrors.owner ? (fieldErrors.owner.gender? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.owner.gender}</span>:""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.gender:""}
@@ -235,12 +229,12 @@ constructor(props) {
                         <Col xs={12} md={3} sm={6}>
                           <TextField  className="fullWidth"
 						  tabIndex ={5}
-                            hintText="example@example.com"
+                            hintText={translate('pt.create.groups.propertyAddress.emailExample')}
                             floatingLabelText={translate('pt.create.groups.ownerDetails.fields.email')}
                             errorText={fieldErrors.owner ? (fieldErrors.owner.emailId? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.emailId}</span>:""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.emailId:""}
                             onChange={(e) => {
-                                handleChangeNextOne(e, "owner", "emailId", false, /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+                                handleChangeOwner(e, "owner", "emailId", false, /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
                               }
                             }
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -257,7 +251,7 @@ constructor(props) {
                             errorText={fieldErrors.owner ? (fieldErrors.owner.pan? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.pan}</span>:""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.pan:""}
                             onChange={(e) => {
-                                handleChangeNextOne(e, "owner", "pan", false, /^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$/);
+                                handleChangeOwner(e, "owner", "pan", false, /^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$/);
                               }
                             }
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -292,7 +286,7 @@ constructor(props) {
                         </Col>
                         <Col xs={12} md={3} sm={6}>
                           <TextField  className="fullWidth"
-                            hintText="Guardian name"
+                            hintText={translate('pt.create.groups.propertyAddress.guardianName')}
                             floatingLabelText={translate('pt.create.groups.ownerDetails.fields.guardian')}
                             errorText={fieldErrors.owner ?(fieldErrors.owner.fatherOrHusbandName? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.fatherOrHusbandName}</span>:""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.fatherOrHusbandName:""}
@@ -336,7 +330,7 @@ constructor(props) {
                             floatingLabelText={translate('pt.create.groups.ownerDetails.fields.percentageOfOwnerShip')}
                             errorText={fieldErrors.owner ? (fieldErrors.owner.ownerShipPercentage ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.ownerShipPercentage}</span>:""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.ownerShipPercentage:""}
-                            onChange={(e) => handleChangeNextOne(e,"owner", "ownerShipPercentage", false, /^[1-9][0-9]?$|^100$/g)}
+                            onChange={(e) => handleChangeOwner(e,"owner", "ownerShipPercentage", false, /^[1-9][0-9]?$|^100$/g)}
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                             underlineStyle={styles.underlineStyle}
                             underlineFocusStyle={styles.underlineFocusStyle}
@@ -407,11 +401,11 @@ constructor(props) {
                                 <th>{translate('pt.create.groups.ownerDetails.fields.ownerName')}</th>
                                 <th>{translate('pt.create.groups.ownerDetails.fields.gender')}</th>
                                 <th>{translate('pt.create.groups.ownerDetails.fields.email')}</th>
+								<th>{translate('pt.create.groups.ownerDetails.fields.pan')}</th>
                                 <th>{translate('pt.create.groups.ownerDetails.fields.guardianRelation')}</th>
                                 <th>{translate('pt.create.groups.ownerDetails.fields.isPrimaryOwner')}</th>
                                 <th>{translate('pt.create.groups.ownerDetails.fields.guardian')}</th>
-                                <th>{translate('pt.create.groups.ownerDetails.fields.ownerType')}</th>
-                                <th>{translate('pt.create.groups.ownerDetails.fields.percentageOfOwnerShip')}</th>
+                               <th>{translate('pt.create.groups.ownerDetails.fields.percentageOfOwnerShip')}</th>
                                 <th></th>               
                               </tr>
                             </thead>
@@ -420,16 +414,16 @@ constructor(props) {
                                 if(i){
                                   return (<tr key={index}>
                                     <td>{index+1}</td>
-                                    <td>{i.aadhaarNumber || 'NA'}</td>
-                                    <td>{i.mobileNumber || 'NA'}</td>
-                                    <td>{i.name || 'NA'}</td>
-                                    <td>{i.gender || 'NA'}</td>
-                                    <td>{i.emailId || 'NA'}</td>
-                                    <td>{i.gaurdianRelation || 'NA'}</td>
-                                    <td>{(i.isPrimaryOwner == 'PrimaryOwner' ? "True" : "False") || 'NA'}</td>
-                                    <td>{i.fatherOrHusbandName || 'NA'}</td>
-                                    <td>{i.ownerType || 'NA'}</td>
-                                    <td>{i.ownerShipPercentage || 'NA'}</td>
+                                    <td>{i.aadhaarNumber || translate('pt.search.searchProperty.fields.na')}</td>
+                                    <td>{i.mobileNumber || translate('pt.search.searchProperty.fields.na')}</td>
+                                    <td>{i.name || translate('pt.search.searchProperty.fields.na')}</td>
+                                    <td>{i.gender || translate('pt.search.searchProperty.fields.na')}</td>
+                                    <td>{i.emailId || translate('pt.search.searchProperty.fields.na')}</td>
+									<td>{i.pan || translate('pt.search.searchProperty.fields.na')}</td>
+                                    <td>{i.gaurdianRelation || translate('pt.search.searchProperty.fields.na')}</td>
+                                    <td>{(i.isPrimaryOwner == 'PrimaryOwner' ? "True" : "False") || translate('pt.search.searchProperty.fields.na')}</td>
+                                    <td>{i.fatherOrHusbandName || translate('pt.search.searchProperty.fields.na')}</td>
+                                    <td>{i.ownerShipPercentage || translate('pt.search.searchProperty.fields.na')}</td>
                                     <td>
 										<i className="material-icons" style={styles.iconFont} onClick={ () => {
 											editObject("owner",i, true);

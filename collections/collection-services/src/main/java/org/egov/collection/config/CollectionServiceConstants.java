@@ -151,7 +151,10 @@ public class CollectionServiceConstants {
     public  static final String INSTRUMENT_TYPE_CASH = "Cash";
     
     public static final String INVALID_DATE_EXCEPTION_MSG="From Date is greater than To Date";
-
+    
+    public static final String RECEIPT_PREAPPROVED_OR_APPROVED_CONFIG_KEY="RECEIPT_PREAPPROVED_OR_APPROVED";
+    
+    public static final String PREAPPROVED_CONFIG_VALUE="PREAPPROVED";
     
 
 }

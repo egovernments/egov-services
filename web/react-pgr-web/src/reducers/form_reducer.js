@@ -71,11 +71,11 @@ function validate(isRequired, pattern, name, value, validationData, fielderrorMs
   if (!isRequired && value === "") {
     errorText = "";
   }
-  // console.log(validationData.required.required)
-  // console.log(validationData.required.current)
+  console.log(validationData.required.required)
+  console.log(validationData.required.current)
   // console.log(validationData.pattern.required);
   // console.log(validationData.pattern.current);
-  // console.log(validationData.required.required.length, validationData.required.current.length);
+  console.log(validationData.required.required.length, validationData.required.current.length);
   return {
     errorText: errorText,
     validationData: validationData,
@@ -85,8 +85,6 @@ function validate(isRequired, pattern, name, value, validationData, fielderrorMs
 
 
 function validate2(isRequired, pattern, name, value, validatePropertyOwner) {
-
-console.log('Here', validatePropertyOwner);
 
   let errorText = "";
   if (isRequired) {
@@ -152,11 +150,11 @@ console.log('Here', validatePropertyOwner);
   // console.log(validationData.required.current)
   // var isFormValid=false;
   // (validationData.required.required.length == validationData.required.current.length) && (validationData.pattern.required.length == validationData.pattern.current.length)
-  console.log(validatePropertyOwner.required.required.length, validatePropertyOwner.required.current.length);
+  console.log(validatePropertyOwner.required.required.length, validatePropertyOwner.required.current.length, errorText);
   return {
     errorText: errorText,
     validatePropertyOwner: validatePropertyOwner,
-    isOwnerValid: (validatePropertyOwner.required.required.length == validatePropertyOwner.required.current.length)
+    isOwnerValid: (validatePropertyOwner.required.required.length == validatePropertyOwner.required.current.length && errorText =="")
   };
 }
 
@@ -217,7 +215,7 @@ console.log('Here', validatePropertyFloor);
   return {
     errorText: errorText,
     validatePropertyFloor: validatePropertyFloor,
-    isFloorValid: (validatePropertyFloor.required.required.length === validatePropertyFloor.required.current.length)
+    isFloorValid: (validatePropertyFloor.required.required.length === validatePropertyFloor.required.current.length && errorText =="")
   };
 }
 
@@ -337,7 +335,17 @@ export default(state = defaultState, action) => {
       case "RESET_FORM":
           return {
             ...state,
-            form: {}
+            form: {},
+            validationData: {
+                required: {
+                    current: [],
+                    required: []
+                },
+                pattern: {
+                    current: [],
+                    required: []
+                }
+            }
           }
 
       case "RESET_OBJECT":

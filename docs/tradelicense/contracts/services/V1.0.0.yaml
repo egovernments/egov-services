@@ -55,12 +55,14 @@ paths:
           required: false
           type: boolean
           allowEmptyValue: true
-        - name: tradeLicenseId
+        - name: ids
+          type: array
+          items:
+            type: integer
+            format: int64
           in: query
-          description: Primary key of Trade License Object.
-          required: false
-          type: string
-          format: varchar
+          maxItems: 50
+          description: comma seperated list of Ids of Category/SubCategory to get the Category/SubCategory, If array contains Ids of Category and SubCategoryId data will not be returned, As API will consider either one of them based on the Type parameter
         - name: applicationNumber
           in: query
           required: false
@@ -191,6 +193,11 @@ paths:
             4. feeDetails will be considered for creation only when legacy is TRUE,  FeeDetails from last five years  to current year
             5. supportDocuments for a given Trade License will created. In case of not attaching the Mandatory Supported Documents creation of New Trade License Fails, Legacy Trade License does not follow this rule.
             6. localityId, adminWardId, revenuewardId, categoryId, subCategoryId, uomId are Validated for existance, On Non existance of any of these entered values in the system, creation of TradeLicense will Fail
+            7. ApplicationNumber and ApplicationDate are not mandatory for legacy
+            8. license Number will be generated for legacy license
+            9. FeeDetails will validated (no of fee details and financial years of them) based on to the sub category validityyear 
+            and licenseValidFrom of License 
+            10. expirtyDate will calculate based on the last financial year in the feedetail
           
       parameters:
         - name: TradeLicenseRequest
@@ -354,7 +361,7 @@ definitions:
         description: Date from when license is valid as epoch
       isPropertyOwner:
         type: boolean
-        description: set to true if Trade owner is the owner of the property
+        description: set to true agreementNo and agreementDate are Mandatory , set to False agreement No and agreementDate are not mandatory
       agreementDate:
         type: integer
         format: int64
@@ -395,8 +402,6 @@ definitions:
     required:
     - tenantId
     - mobileNumber
-    - applicationType
-    - applicationDate
     - ownerName
     - fatherSpouseName
     - emailId
@@ -678,7 +683,7 @@ definitions:
         type: string
         maxLength: 128
         minLength: 4
-        description: Unique Indentifier of the Financial Year
+        description: financialYear range ex= 2014-15 in request Unique Indentifier of the Financial Year is saved to database
       amount:
         type: number
         format: double

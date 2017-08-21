@@ -30,20 +30,20 @@ public class RoofType {
 
 	@JsonProperty("name")
 	@NotNull
-	@Size(min = 4, max = 128)
+	@Size(min = 2, max = 128)
 	private String name = null;
 
 	@JsonProperty("code")
 	@NotNull
-	@Size(min = 4, max = 64)
+	@Size(min = 2, max = 64)
 	private String code = null;
 
 	@JsonProperty("nameLocal")
-	@Size(min = 8, max = 256)
+	@Size(min = 1, max = 256)
 	private String nameLocal = null;
 
 	@JsonProperty("description")
-	@Size(min = 8, max = 512)
+	@Size(min = 4, max = 512)
 	private String description = null;
 
 	@JsonIgnore

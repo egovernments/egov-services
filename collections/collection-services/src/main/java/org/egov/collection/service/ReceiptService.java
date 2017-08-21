@@ -51,15 +51,15 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.egov.collection.config.ApplicationProperties;
 import org.egov.collection.config.CollectionServiceConstants;
 import org.egov.collection.exception.CustomException;
 import org.egov.collection.model.AuditDetails;
 import org.egov.collection.model.BillingServiceRequestInfo;
 import org.egov.collection.model.BillingServiceRequestWrapper;
 import org.egov.collection.model.Instrument;
-//TODO:Once the Collection Configuration is set up this has to be reverted back	
-/*import org.egov.collection.model.PositionSearchCriteria;
-import org.egov.collection.model.PositionSearchCriteriaWrapper; */
+import org.egov.collection.model.PositionSearchCriteria;
+import org.egov.collection.model.PositionSearchCriteriaWrapper;
 import org.egov.collection.model.ReceiptCommonModel;
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.model.TransactionType;
@@ -78,6 +78,7 @@ import org.egov.collection.web.contract.BillResponse;
 import org.egov.collection.web.contract.BusinessDetailsRequestInfo;
 import org.egov.collection.web.contract.BusinessDetailsResponse;
 import org.egov.collection.web.contract.ChartOfAccount;
+import org.egov.collection.web.contract.CollectionConfigGetRequest;
 import org.egov.collection.web.contract.Purpose;
 import org.egov.collection.web.contract.Receipt;
 import org.egov.collection.web.contract.ReceiptReq;
@@ -97,6 +98,9 @@ public class ReceiptService {
 	public static final Logger LOGGER = LoggerFactory
 			.getLogger(ReceiptService.class);
 
+	@Autowired
+	private ApplicationProperties applicationProperties;
+	
 	@Autowired
 	private ReceiptRepository receiptRepository;
 
@@ -118,9 +122,11 @@ public class ReceiptService {
 	@Autowired
 	private IdGenRepository idGenRepository;
 	
-	//TODO:Once the Collection Configuration is set up this has to be reverted back		
-/*	@Autowired
-	private WorkflowService workflowService; */
+	@Autowired
+	private WorkflowService workflowService;
+	
+	@Autowired
+	private CollectionConfigService collectionConfigService;
 
 	public ReceiptCommonModel getReceipts(
 			ReceiptSearchCriteria receiptSearchCriteria, RequestInfo requestInfo) throws ParseException {
@@ -325,8 +331,20 @@ public class ReceiptService {
 						LOGGER.error("Persisting receipt FAILED! ", e);
 						return receipt;
 					}
-				//TODO:Once the Collection Configuration is set up this has to be reverted back	
-				//	startWokflow(requestInfo, tenantId, receiptHeaderId);
+					CollectionConfigGetRequest collectionConfigGetRequest = new CollectionConfigGetRequest();
+					List<Long> congigKeyIds = new ArrayList<>();
+					congigKeyIds.add(Long.valueOf(applicationProperties.getRcptwflowConfigKey()));
+					collectionConfigGetRequest.setId(congigKeyIds);
+					collectionConfigGetRequest.setTenantId(tenantId);
+					
+					Map<String, List<String>> collectionConfiguration = collectionConfigService.getCollectionConfiguration(collectionConfigGetRequest);
+					if(collectionConfiguration.get(CollectionServiceConstants.RECEIPT_PREAPPROVED_OR_APPROVED_CONFIG_KEY)
+							.get(0).equals(CollectionServiceConstants.PREAPPROVED_CONFIG_VALUE)){
+						LOGGER.info("Receipt is in preapproved state, Wokflow is being started.");
+						startWokflow(requestInfo, tenantId, receiptHeaderId);
+					}
+					LOGGER.info("Receipt is in approved state, No Workflow.");
+
 				}else{
 					throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
 							CollectionServiceConstants.BUSINESSDETAILS_EXCEPTION_MSG, CollectionServiceConstants.BUSINESSDETAILS_EXCEPTION_DESC);
@@ -567,7 +585,7 @@ public class ReceiptService {
 
 	//TODO:Once the Collection Configuration is set up this has to be reverted back	
 	
-/*	private void startWokflow(RequestInfo requestInfo, String tenantId, Long receiptHeaderId){
+	private void startWokflow(RequestInfo requestInfo, String tenantId, Long receiptHeaderId){
 		LOGGER.info("Internally triggering workflow for receipt: "+receiptHeaderId);
 		
 		WorkflowDetailsRequest workflowDetails = new WorkflowDetailsRequest();
@@ -596,7 +614,7 @@ public class ReceiptService {
 		}catch(Exception e){
 			LOGGER.error("Starting workflow failed: ", e);
 		}	
-	} */
+	}
 	
 	public void validateReceiptNumber(String receiptNumber, String tenantId, RequestInfo requestInfo){
 		

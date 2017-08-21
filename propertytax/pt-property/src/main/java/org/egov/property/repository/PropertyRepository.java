@@ -242,6 +242,8 @@ public class PropertyRepository {
 				builderDetailsObject.setType("jsonb");
 				builderDetailsObject.setValue(gson.toJson(propertyDetails.getBuilderDetails()));
 				ps.setObject(37, builderDetailsObject);
+				ps.setString(38, propertyDetails.getBpaNo());
+				ps.setTimestamp(39, TimeStampUtil.getTimeStamp(propertyDetails.getBpaDate()));
 
 				return ps;
 			}
@@ -728,8 +730,8 @@ public class PropertyRepository {
 					AssessmentDate assessmentDate = mapper.readValue(row.get("assessmentdates").toString(),
 							AssessmentDate.class);
 
-					if (assessmentDate.getDate() != null) {
-						assessmentDate.setDate(TimeStampUtil.getDateFormat(assessmentDate.getDate()));
+					if (assessmentDate!=null && assessmentDate.getDate() != null) {
+						assessmentDate.setDate(getString(assessmentDate.getDate()));
 					}
 
 					propertyDetail.setAssessmentDates(assessmentDate);
@@ -756,11 +758,11 @@ public class PropertyRepository {
 							BuilderDetail.class);
 					if (builderDetail.getCertificateCompletionDate() != null) {
 						builderDetail.setCertificateCompletionDate(
-								TimeStampUtil.getDateFormat(builderDetail.getCertificateCompletionDate()));
+								getString(builderDetail.getCertificateCompletionDate()));
 					}
 					if (builderDetail.getCertificateReceiveDate() != null) {
 						builderDetail.setCertificateReceiveDate(
-								TimeStampUtil.getDateFormat(builderDetail.getCertificateReceiveDate()));
+								getString(builderDetail.getCertificateReceiveDate()));
 					}
 					propertyDetail.setBuilderDetails(builderDetail);
 
@@ -768,6 +770,12 @@ public class PropertyRepository {
 					BuilderDetail builderDetail = new BuilderDetail();
 					propertyDetail.setBuilderDetails(builderDetail);
 
+				}
+
+				propertyDetail.setBpaNo(getString(row.get("bpano")));
+				String bpaDate = getString(row.get("bpadate"));
+				if (bpaDate != null) {
+					propertyDetail.setBpaDate(TimeStampUtil.getDateFormat(bpaDate));
 				}
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -982,7 +990,8 @@ public class PropertyRepository {
 				propertyDetails.getWallType(), propertyDetails.getStateId(), propertyDetails.getApplicationNo(),
 				propertyDetails.getAuditDetails().getLastModifiedBy(),
 				propertyDetails.getAuditDetails().getLastModifiedTime(), proertyId, jsonObject, factorsObject,
-				assessmentDatesObject, builderDetailsObject, propertyDetails.getId() };
+				assessmentDatesObject, builderDetailsObject, propertyDetails.getBpaNo(),
+				TimeStampUtil.getTimeStamp(propertyDetails.getBpaDate()), propertyDetails.getId() };
 
 		jdbcTemplate.update(propertyDetailsUpdate, propertyDetailsArgs);
 	}
@@ -1077,7 +1086,7 @@ public class PropertyRepository {
 		Object[] userPropertyArgs = { propertyId, owner.getId(), owner.getIsPrimaryOwner().booleanValue(),
 				owner.getIsSecondaryOwner().booleanValue(), owner.getOwnerShipPercentage(), owner.getOwnerType(),
 				owner.getAuditDetails().getLastModifiedBy(), owner.getAuditDetails().getLastModifiedTime(),
-				owner.getId() };
+				owner.getOwner(),propertyId };
 
 		jdbcTemplate.update(userUpdate, userPropertyArgs);
 

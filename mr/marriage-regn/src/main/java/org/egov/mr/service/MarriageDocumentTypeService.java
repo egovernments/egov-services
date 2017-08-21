@@ -43,14 +43,21 @@ public class MarriageDocumentTypeService {
 		return getSuccessResponse(marriageDocTypesList, requestInfo);
 	}
 
-	// CreateAsync Kafka
+	/**
+	 * @CREATEASYNC_KAFKA
+	 * 
+	 * @param marriageDocTypeRequest
+	 * @return
+	 */
 	public ResponseEntity<?> createAsync(MarriageDocTypeRequest marriageDocTypeRequest) {
 		log.info("Service:: MarriageDocTypeRequest: " + marriageDocTypeRequest);
 		RequestInfo requestInfo = marriageDocTypeRequest.getRequestInfo();
 		List<MarriageDocumentType> marriageDocumentTypes = marriageDocTypeRequest.getMarriageDocTypes();
 		Integer size = marriageDocumentTypes.size();
 
-		// Get Ids From SequenceGenService
+		/**
+		 * @Get Ids From SequenceGenService
+		 */
 		List<Long> ids = sequenceIdGenService.idSeqGen(size, "seq_marriage_document_type");
 		for (int index = 0; index < size; index++) {
 			marriageDocumentTypes.get(index).setId(ids.get(index));
@@ -60,7 +67,12 @@ public class MarriageDocumentTypeService {
 		return getSuccessResponse(marriageDocTypeRequest.getMarriageDocTypes(), requestInfo);
 	}
 
-	// UpdateAsync Kafka
+	/**
+	 * @UPDATEASYNC_KAFKA
+	 * 
+	 * @param marriageDocTypeRequest
+	 * @return
+	 */
 	public ResponseEntity<?> updateAsync(MarriageDocTypeRequest marriageDocTypeRequest) {
 		log.info("Service:: MarriageDocTypeRequest: " + marriageDocTypeRequest);
 		RequestInfo requestInfo = marriageDocTypeRequest.getRequestInfo();
@@ -87,7 +99,10 @@ public class MarriageDocumentTypeService {
 		return getSuccessResponse(marriageDocTypeRequest.getMarriageDocTypes(), requestInfo);
 	}
 
-	// from Consumer
+	/**
+	 * @from_Consumer
+	 * @param marriageDocTypeRequest
+	 */
 	public void create(MarriageDocTypeRequest marriageDocTypeRequest) {
 		marriageDocumentTypeRepository.create(marriageDocTypeRequest.getMarriageDocTypes());
 	}
@@ -96,10 +111,17 @@ public class MarriageDocumentTypeService {
 		marriageDocumentTypeRepository.update(marriageDocTypeRequest.getMarriageDocTypes());
 	}
 
-	// returning the Response to method in the same class
+	/**
+	 * @return the Response to method in the same class
+	 * @param marriageDocTypesList
+	 * @param requestInfo
+	 * @return
+	 */
 	private ResponseEntity<?> getSuccessResponse(List<MarriageDocumentType> marriageDocTypesList,
 			RequestInfo requestInfo) {
-		// Setting ResponseInfo
+		/**
+		 * @Set ResponseInfo
+		 */
 		ResponseInfo responseInfo = new ResponseInfo();
 		responseInfo.setApiId(requestInfo.getApiId());
 		responseInfo.setKey(requestInfo.getKey());
@@ -109,10 +131,14 @@ public class MarriageDocumentTypeService {
 		responseInfo.setTs(requestInfo.getTs());
 		responseInfo.setVer(requestInfo.getVer());
 
-		// Setting regnUnitResponse responseInfo
+		/**
+		 * @Set regnUnitResponse responseInfo
+		 * @Set regnUnitResponse registrationUnitsList
+		 */
+
 		MarriageDocTypeResponse marriageDocTypeResponse = new MarriageDocTypeResponse();
 		marriageDocTypeResponse.setResponseInfo(responseInfo);
-		// Setting regnUnitResponse registrationUnitsList
+		//
 		marriageDocTypeResponse.setMarriageDocTypes(marriageDocTypesList);
 		return new ResponseEntity<MarriageDocTypeResponse>(marriageDocTypeResponse, HttpStatus.OK);
 	}

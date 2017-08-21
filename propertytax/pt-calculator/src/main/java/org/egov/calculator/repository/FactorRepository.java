@@ -232,4 +232,19 @@ public class FactorRepository {
 			auditDetails.setCreatedTime(getLong(row.get("createdtime")));
 		}
 	}
+
+    public List<CalculationFactor> getFactorByFactorTypeAndFactorCode(String factorType,Integer value,String tenantId, String validDate) {
+        List<Object> preparedStatementValues = new ArrayList<Object>();
+
+        String factorSearchSql = FactorQueryBuilder.getFactorsForTaxCalculation(factorType, value, tenantId, validDate,
+                        preparedStatementValues);
+
+        List<CalculationFactor> calculationFactors = new ArrayList<CalculationFactor>();
+
+        calculationFactors = geCalculationFactors(factorSearchSql, preparedStatementValues);
+
+        return calculationFactors;
+
+        
+    }
 }

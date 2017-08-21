@@ -176,7 +176,7 @@ public class TradeLicenseSearchContract {
 	private List<LicenseFeeDetailContract> feeDetails;
 
 	@JsonProperty("supportDocuments")
-	private List<SupportDocumentContract> supportDocuments;
+	private List<SupportDocumentSearchContract> supportDocuments;
 
 	@JsonProperty("status")
 	private Long status;

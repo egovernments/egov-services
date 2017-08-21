@@ -1,0 +1,16 @@
+"budgets": 
+		[
+
+		   	{
+		   		"id":"1",
+				"name":"test",
+				"financialYear":
+				{
+					"finYearRange":"2017-18"
+				},
+		   		"estimationType":"BE",
+		   		"primaryBudget":false,
+		   		"tenantId":"default"
+		   	}
+   	
+   	   ]

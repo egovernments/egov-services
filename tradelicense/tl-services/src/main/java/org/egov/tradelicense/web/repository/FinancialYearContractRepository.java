@@ -30,6 +30,42 @@ public class FinancialYearContractRepository {
 		this.restTemplate = restTemplate;
 	}
 
+	public FinancialYearContract findFinancialYearById(String tenantId, String id,
+			RequestInfoWrapper requestInfoWrapper) {
+
+		String hostUrl = propertiesManager.getFinancialYearServiceHostName()
+				+ propertiesManager.getFinancialYearServiceBasePath();
+		String searchUrl = propertiesManager.getFinancialYearServiceSearchPath();
+		String url = String.format("%s%s", hostUrl, searchUrl);
+		StringBuffer content = new StringBuffer();
+		
+		content.append("ids=" + id);
+		
+
+		if (tenantId != null) {
+			content.append("&tenantId=" + tenantId);
+		}
+		TlMasterRequestInfoWrapper tlMasterRequestInfoWrapper = getTlMasterRequestInfoWrapper(requestInfoWrapper);
+		url = url + content.toString();
+		FinancialYearContractResponse financialYearContractResponse = null;
+		try {
+
+			financialYearContractResponse = restTemplate.postForObject(url, tlMasterRequestInfoWrapper,
+					FinancialYearContractResponse.class);
+
+		} catch (Exception e) {
+			throw new InvalidInputException("Error connecting to Location end point " + url, requestInfoWrapper.getRequestInfo());
+		}
+
+		if (financialYearContractResponse != null && financialYearContractResponse.getFinancialYears() != null
+				&& financialYearContractResponse.getFinancialYears().size() > 0) {
+
+			return financialYearContractResponse.getFinancialYears().get(0);
+		} else {
+			return null;
+		}
+
+	}
 	public FinancialYearContract findFinancialYearIdByDate(String tenantId, Long date,
 			RequestInfoWrapper requestInfoWrapper) {
 
@@ -39,7 +75,7 @@ public class FinancialYearContractRepository {
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
 		SimpleDateFormat sf = new SimpleDateFormat("yyyy/MM/dd");
-		String asOnDate = sf.format(new Date(date * 1000));
+		String asOnDate = sf.format(new Date(date));
 		if (date != null) {
 			content.append("asOnDate=" + asOnDate);
 		}
@@ -56,7 +92,7 @@ public class FinancialYearContractRepository {
 					FinancialYearContractResponse.class);
 
 		} catch (Exception e) {
-			throw new InvalidInputException("Error connecting to Location end point " + url);
+			throw new InvalidInputException("Error connecting to Location end point " + url, requestInfoWrapper.getRequestInfo());
 		}
 
 		if (financialYearContractResponse != null && financialYearContractResponse.getFinancialYears() != null

@@ -164,7 +164,7 @@ class BulkEscalationGeneration extends Component {
 		for(let i = 0;i<bulkEscalationGeneration.serviceCode.length;i++) {
 			var Data = {
 				serviceCode : bulkEscalationGeneration.serviceCode[i],
-				tenantId : "default",
+				tenantId : localStorage.getItem("tenantId"),
 				fromPosition : bulkEscalationGeneration.fromPosition,
 				toPosition : bulkEscalationGeneration.toPosition,
 			}

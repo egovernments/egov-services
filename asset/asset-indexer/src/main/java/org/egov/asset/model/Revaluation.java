@@ -72,6 +72,6 @@ public class Revaluation {
 	private AuditDetails auditDetails = null;
 	
 	@JsonProperty("voucherReference")
-	private Long voucherReference = null;
+	private String voucherReference = null;
 
 }

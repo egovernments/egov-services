@@ -66,7 +66,8 @@ import org.egov.wcms.transaction.model.DemandDetailBean;
 import org.egov.wcms.transaction.model.EstimationCharge;
 import org.egov.wcms.transaction.util.WcmsConnectionConstants;
 import org.egov.wcms.transaction.web.contract.DemandBeanGetRequest;
-import org.egov.wcms.transaction.web.contract.DemandDetailBeanReq;
+import org.egov.wcms.transaction.web.contract.PropertyOwnerInfo;
+import org.egov.wcms.transaction.web.contract.PropertyResponse;
 import org.egov.wcms.transaction.web.contract.RequestInfoWrapper;
 import org.egov.wcms.transaction.web.contract.WaterConnectionReq;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,31 +127,76 @@ public class DemandConnectionService {
 
         return demandList;
     }
+    
+    public PropertyResponse getPropertyDetailsByUpicNo(String propertyIdentifer,String tenantid, RequestInfo requestInfo) {
+        StringBuilder url = new StringBuilder();
+        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+        url.append(configurationManager.getPropertyServiceHostNameTopic())
+                .append(configurationManager.getPropertyServiceSearchPathTopic()).append("?upicNo=")
+                .append(propertyIdentifer)
+                .append("&tenantId=").append(tenantid);
+        PropertyResponse propResp = null;
+        try {
+           propResp = new RestTemplate().postForObject(url.toString(), wrapper,
+                    PropertyResponse.class);
+            System.out.println(propResp!=null ?( propResp.toString() +""+propResp.getProperties().size()):"iisue while binding pt to watertax");
+        } catch (Exception e) {
+            
+            System.out.println(propResp!=null? propResp.toString():"issue with propResp in exception block in WT");
+            
+            throw new WaterConnectionException("Error while Fetching Data from PropertyTax",
+                    "Error while Fetching Data from PropertyTax", requestInfo);
+        }
 
-    public List<Demand> prepareDemandForLegacy(final DemandDetailBeanReq demandDetailBeanReq, final Connection connection,
+        
+        
+        return propResp;
+    }
+
+    public List<Demand> prepareDemandForLegacy(final DemandDetailBean demandReason, final Connection connection,
             final RequestInfo requestInfo, final DemandBeanGetRequest demandBeanGetRequest) {
 
         final List<Demand> demandList = new ArrayList<>();
         final String tenantId = connection.getTenantId();
-        final Owner ownerobj = new Owner();
-        ownerobj.setTenantId(tenantId);
-        ownerobj.setId(requestInfo.getUserInfo().getId());
+         Owner ownerobj =null;
+        PropertyOwnerInfo prop=new PropertyOwnerInfo();
+        if(connection.getPropertyIdentifier()!=null){
+            PropertyResponse propResp=getPropertyDetailsByUpicNo(connection.getPropertyIdentifier(),tenantId,requestInfo);
+           if(propResp!=null && propResp.getProperties().isEmpty() &&
+                   propResp.getProperties().get(0)!=null)
+               prop=propResp.getProperties().get(0).getOwners().get(0);;
+               ownerobj=new Owner();
+               ownerobj.setId(prop.getId());
+               ownerobj.setTenantId(prop.getTenantId());
+               System.out.println("user Object With Pr= ="+ownerobj);
+
+        }
+        else
+        {
+            if(connection.getPropertyIdentifier() ==null &&  connection.getUserid()!=null){
+                ownerobj=new Owner();
+            ownerobj.setId(connection.getUserid());
+            ownerobj.setTenantId(tenantId);
+            System.out.println("user Object WIthout Prop="+ownerobj);
+
+            
+            }
+            
+        }
+        
+       if(ownerobj !=null){
+           System.out.println("user Object="+ownerobj);
         final Demand demand = new Demand();
-        final TaxPeriodResponse taxperiodres = getTaxPeriodByPeriodCycleAndService(tenantId, PeriodCycle.HALFYEAR,
-                demandBeanGetRequest.getExecutionDate());
+        final TaxPeriodResponse taxperiodres = getTaxPeriodByTaxCodeAndService(demandReason.getTaxPeriodCode(), tenantId);
         demand.setTenantId(tenantId);
         demand.setBusinessService(BUSINESSSERVICE);
         demand.setConsumerType(connection.getApplicationType());
         demand.setConsumerCode(connection.getConsumerNumber());
         final Set<DemandDetail> dmdDetailSet = new HashSet<>();
-        for (final DemandDetailBean demandReason : demandDetailBeanReq.getDemandDetailBeans()) {
-            final String demandreasoncode = "WATERCHARGE" + demandReason.getTaxHeadMasterCode().split("#")[1];
+         final String demandreasoncode = "WATERCHARGE" + demandReason.getTaxHeadMasterCode().split("#")[1];
             dmdDetailSet.add(createLegacyDemandDeatils(
                     tenantId, demandreasoncode,
                     demandReason.getTaxAmount(), demandReason.getCollectionAmount(), demandReason.getTaxPeriodCode()));
-
-        }
-
         demand.setOwner(ownerobj);
         demand.setDemandDetails(new ArrayList<>(dmdDetailSet));
         demand.setMinimumAmountPayable(new BigDecimal(1));
@@ -159,8 +205,9 @@ public class DemandConnectionService {
             demand.setTaxPeriodTo(taxperiodres.getTaxPeriods().get(0).getToDate());
         }
         demandList.add(demand);
-
-        return demandList;
+        
+    }
+       return demandList;
     }
 
     private DemandDetail createDemandDeatils(final String tenantId, final String demandReason, final double amount,

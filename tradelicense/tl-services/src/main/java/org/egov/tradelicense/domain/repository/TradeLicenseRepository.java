@@ -8,7 +8,7 @@ import java.util.Map;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.requests.TradeLicenseRequest;
 import org.egov.tradelicense.common.config.PropertiesManager;
-import org.egov.tradelicense.common.domain.exception.InvalidInputException;
+import org.egov.tradelicense.common.domain.exception.DuplicateTradeLicenseException;
 import org.egov.tradelicense.domain.model.LicenseFeeDetail;
 import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
@@ -57,19 +57,19 @@ public class TradeLicenseRepository {
 		return Long.valueOf(id);
 	}
 
-	public void validateUniqueOldLicenseNumber(TradeLicense tradeLicense) {
+	public void validateUniqueOldLicenseNumber(TradeLicense tradeLicense, RequestInfo requestInfo) {
 
 		String sql = getUniqueTenantLicenseQuery(tradeLicense);
 		Integer count = null;
 		try {
 			MapSqlParameterSource parameters = new MapSqlParameterSource();
-	        count = (Integer) namedParameterJdbcTemplate.queryForObject(sql,parameters, Integer.class);
+			count = (Integer) namedParameterJdbcTemplate.queryForObject(sql, parameters, Integer.class);
 		} catch (Exception e) {
 			log.error("error while executing the query :" + sql + " , error message : " + e.getMessage());
 		}
 
 		if (count != 0) {
-			throw new InvalidInputException("tradeLicense number already exists");
+			throw new DuplicateTradeLicenseException(requestInfo);
 		}
 	}
 
@@ -85,13 +85,13 @@ public class TradeLicenseRepository {
 		return uniqueQuery.toString();
 	}
 
-	public void validateUniqueAgreeMentNumber(TradeLicense tradeLicense) {
+	/*public void validateUniqueAgreeMentNumber(TradeLicense tradeLicense) {
 
 		String sql = getUniqueTenantAgreementQuery(tradeLicense);
 		Integer count = null;
 		try {
 			MapSqlParameterSource parameters = new MapSqlParameterSource();
-	        count = (Integer) namedParameterJdbcTemplate.queryForObject(sql,parameters, Integer.class);
+			count = (Integer) namedParameterJdbcTemplate.queryForObject(sql, parameters, Integer.class);
 		} catch (Exception e) {
 			log.error("error while executing the query :" + sql + " , error message : " + e.getMessage());
 		}
@@ -111,7 +111,7 @@ public class TradeLicenseRepository {
 		uniqueQuery.append(" AND LOWER(tenantId) = '" + tenantId + "'");
 
 		return uniqueQuery.toString();
-	}
+	}*/
 
 	public Long getSupportDocumentNextSequence() {
 
@@ -156,16 +156,16 @@ public class TradeLicenseRepository {
 
 	@Transactional
 	public List<TradeLicenseSearch> search(RequestInfo requestInfo, String tenantId, Integer pageSize,
-			Integer pageNumber, String sort, String active, String tradeLicenseId, String applicationNumber,
+			Integer pageNumber, String sort, String active, Integer[] ids, String applicationNumber,
 			String licenseNumber, String oldLicenseNumber, String mobileNumber, String aadhaarNumber, String emailId,
 			String propertyAssesmentNo, Integer adminWard, Integer locality, String ownerName, String tradeTitle,
 			String tradeType, Integer tradeCategory, Integer tradeSubCategory, String legacy, Integer status) {
 
 		List<TradeLicenseSearch> tradeLicenseSearchList = new ArrayList<TradeLicenseSearch>();
 		List<TradeLicenseSearchEntity> licenses = tradeLicenseJdbcRepository.search(requestInfo, tenantId, pageSize,
-				pageNumber, sort, active, tradeLicenseId, applicationNumber, licenseNumber, oldLicenseNumber,
-				mobileNumber, aadhaarNumber, emailId, propertyAssesmentNo, adminWard, locality, ownerName, tradeTitle,
-				tradeType, tradeCategory, tradeSubCategory, legacy, status);
+				pageNumber, sort, active, ids, applicationNumber, licenseNumber, oldLicenseNumber, mobileNumber,
+				aadhaarNumber, emailId, propertyAssesmentNo, adminWard, locality, ownerName, tradeTitle, tradeType,
+				tradeCategory, tradeSubCategory, legacy, status);
 
 		for (TradeLicenseSearchEntity tradeLicenseSearchEntity : licenses) {
 			TradeLicenseSearch tradeLicenseSearch = tradeLicenseSearchEntity.toDomain();

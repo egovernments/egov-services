@@ -4,6 +4,7 @@ import javax.validation.Valid;
 
 import org.egov.tl.commons.web.requests.CategoryRequest;
 import org.egov.tl.commons.web.requests.CategoryResponse;
+import org.egov.tl.commons.web.requests.CategorySearchResponse;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tradelicense.domain.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +70,7 @@ public class CategoryController {
 	 * @throws Exception
 	 */
 	@RequestMapping(path = "/_search", method = RequestMethod.POST)
-	public CategoryResponse getCategoryMaster(@RequestBody RequestInfoWrapper requestInfo,
+	public CategorySearchResponse getCategoryMaster(@RequestBody RequestInfoWrapper requestInfo,
 			@RequestParam(required = true) String tenantId, @RequestParam(required = false) Integer[] ids,
 			@RequestParam(required = false) String name, @RequestParam(required = false) String code,
 			@RequestParam(required = false) String active, @RequestParam(required = false) String type,

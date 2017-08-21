@@ -271,7 +271,7 @@ componentWillUpdate() {
     var body = {
       escalationHierarchy: [ {
 			serviceCode : this.props.defineEscalation.serviceCode,
-			tenantId : "default",
+			tenantId : localStorage.getItem("tenantId"),
 			fromPosition : this.props.defineEscalation.fromPosition,
 			toPosition : this.props.defineEscalation.toPosition,
 			department :this.props.defineEscalation.department,

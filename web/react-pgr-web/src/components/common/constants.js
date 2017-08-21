@@ -9,9 +9,10 @@ module.exports = {
     LABEL_CHECKLIST : "Checklist",
     LABEL_DOCUMENTS : "Documents",
     LABEL_LOADING: "csv.lbl.loading",
+    LABEL_SRN : "pgr.lbl.srn",
 
     COMPLAINT_KEYWORD : "complaint",
-    CITIZEN_SERVICES_KEYWORD : "Deliverable_Service",
+    CITIZEN_SERVICES_KEYWORD : "Deliverable_service",
     CITIZEN_SERVICES_STATUS_NEW : "DSNEW",
     CITIZEN_SERVICES_FILE_TAG : "citizenservices",
     CITIZEN_SERVICES_CHECKLIST_CODE : "CHECKLIST",

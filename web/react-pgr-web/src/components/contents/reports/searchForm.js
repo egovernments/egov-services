@@ -223,8 +223,10 @@ class ShowForm extends Component {
 
       setSearchParams(searchParams);
 
+    var tenantId = localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : '';
 
-      let response=Api.commonApiPost("/report/"+this.state.moduleName+"/_get",{},{tenantId:"default",reportName:this.state.reportName,searchParams}).then(function(response)
+
+      let response=Api.commonApiPost("/report/"+this.state.moduleName+"/_get",{},{tenantId:tenantId,reportName:this.state.reportName,searchParams}).then(function(response)
       {
         // console.log(response)
         setReportResult(response);

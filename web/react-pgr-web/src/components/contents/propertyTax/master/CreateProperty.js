@@ -241,22 +241,7 @@ class CreateProperty extends Component {
           })
           console.log(err)
         })
-		
-		var query = {
-			tenantId: 'default'
-		}
-		
-		Api.commonApiPost('egov-common-workflows/process/_search',query, {}).then((res)=>{
-          console.log(res);
-          currentThis.setState({zone : res.Boundary})
-        }).catch((err)=> {
-           currentThis.setState({
-            zone : []
-          })
-          console.log(err)
-        })
-		
-		
+				
   }
 
   componentWillUnmount() {
@@ -299,10 +284,10 @@ createPropertyTax = () => {
 	
 	if(createProperty && createProperty.hasOwnProperty('owners')) {		
 		for(var i=0;i<createProperty.owners.length;i++){
-			createProperty.owners[i].locale = userRequest.locale;
+			createProperty.owners[i].locale = userRequest.locale || 'en_IN';
 			createProperty.owners[i].type = 'CITIZEN';
 			createProperty.owners[i].active = true;
-			createProperty.owners[i].tenantId = 'default';
+			createProperty.owners[i].tenantId = userRequest.tenantId;
 			createProperty.owners[i].salutation = null;
 			createProperty.owners[i].pan = null;
 			createProperty.owners[i].roles =[  
@@ -372,13 +357,13 @@ createPropertyTax = () => {
       var body = {
 			"properties": [{
 				"occupancyDate":createProperty.occupancyDate || null,
-				"tenantId": "default",
+				"tenantId": userRequest.tenantId,
 				"oldUpicNumber": null,
 				"vltUpicNumber": null,
 				"sequenceNo": createProperty.sequenceNo || null,
 				"creationReason": createProperty.reasonForCreation || null,
 				"address": {
-					"tenantId": "default",
+					"tenantId": userRequest.tenantId,
 					"longitude": null,
 					"addressNumber": createProperty.doorNo || null,
 					"addressLine1": createProperty.locality || null,
@@ -416,6 +401,8 @@ createPropertyTax = () => {
 					"undividedShare": null,
 					"noOfFloors": numberOfFloors, 
 					"isSuperStructure": null,
+					"bpaNo": createProperty.bpaNo || null,
+					"bpaDate": createProperty.bpaDate || null,
 					"landOwner": null,
 					"floorType":(createProperty.propertyType != 'VACANT_LAND' ? (createProperty.floorType || null) : null),
 					"woodType": (createProperty.propertyType != 'VACANT_LAND' ? (createProperty.woodType || null) : null),
@@ -445,6 +432,7 @@ createPropertyTax = () => {
 						"department": createProperty.workflowDepartment || null,
 						"designation":createProperty.workflowDesignation || null,
 						"assignee": createProperty.approver || null,
+						"initiatorPosition" :  createProperty.approver || null,
 						"action": "no",
 						"status": null
 					},
@@ -468,10 +456,10 @@ createPropertyTax = () => {
 						"id": createProperty.street || createProperty.locality || null ,
 						"name": getNameById(currentThis.state.street, createProperty.street)  || getNameById(currentThis.state.locality, createProperty.locality) || null
 					},
-					"adminBoundary": { 
-						"id": createProperty.electionWard || null,
-						"name": getNameById(currentThis.state.election, createProperty.electionWard)  || null
-					},
+					"adminBoundary": createProperty.electionWard ? { 
+						"id": createProperty.electionWard,
+						"name": getNameById(currentThis.state.election, createProperty.electionWard)
+					} : null,
 					"northBoundedBy": createProperty.north || null,
 					"eastBoundedBy": createProperty.east || null,
 					"westBoundedBy": createProperty.west || null,
@@ -689,11 +677,11 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: ['reasonForCreation', 'approver','propertyType', 'usage','extentOfSite','doorNo', 'locality', 'electionWard', 'zoneNo', 'wardNo', 'workflowDepartment', 'workflowDesignation', 'sequenceNo', 'totalFloors']
+          required: ['reasonForCreation', 'approver','propertyType', 'usage','extentOfSite','doorNo', 'zoneNo', 'wardNo', 'workflowDepartment', 'workflowDesignation', 'sequenceNo', 'totalFloors','pin']
         },
         pattern: {
           current: [],
-          required: []
+          required: ['bpaNo', 'bpaDate', 'refPropertyNumber','pinTwo']
         }
       },
 	   validatePropertyOwner: {
@@ -703,7 +691,7 @@ const mapDispatchToProps = dispatch => ({
         },
         pattern: {
           current: [],
-          required: []
+          required: ['aadhaarNumber','emailId','pan','ownerShipPercentage']
         }
       },
 	   validatePropertyFloor: {
@@ -713,7 +701,7 @@ const mapDispatchToProps = dispatch => ({
         },
         pattern: {
           current: [],
-          required: []
+          required: ['occupierName','annualRent', 'manualArv', 'length', 'width', 'occupancyCertiNumber', 'buildingCost', 'landCost',]
         }
       }
     });

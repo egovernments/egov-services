@@ -58,8 +58,6 @@ import org.egov.asset.model.YearWiseDepreciation;
 import org.egov.asset.model.enums.AssetCategoryType;
 import org.egov.asset.model.enums.DepreciationMethod;
 import org.egov.asset.model.enums.ModeOfAcquisition;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -69,10 +67,11 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@Component
-public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
+import lombok.extern.slf4j.Slf4j;
 
-    private static final Logger logger = LoggerFactory.getLogger(AssetRowMapper.class);
+@Component
+@Slf4j
+public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -84,7 +83,7 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
         while (rs.next()) {
             final Long assetId = (Long) rs.getObject("id");
 
-            logger.info("agreementid in row mapper" + assetId);
+            log.info("agreementid in row mapper" + assetId);
 
             Asset asset = map.get(assetId);
             if (asset == null) {
@@ -166,7 +165,7 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
 
                 asset.setAssetCategory(assetCategory);
 
-                logger.info("AssetRowMapper asset:: " + asset);
+                log.info("AssetRowMapper asset:: " + asset);
                 map.put(assetId, asset);
             }
             List<YearWiseDepreciation> ywd = asset.getYearWiseDepreciation();

@@ -41,7 +41,7 @@ public class TradeLicenseContract {
 	@Length(min = 4, max = 128, message="{error.license.tenantId.empty}")
 	private String tenantId;
 
-	@NotNull(message="{error.license.applicationtype}")
+	
 	private ApplicationTypeEnum applicationType;
 
 	@JsonProperty("applicationNumber")
@@ -55,7 +55,7 @@ public class TradeLicenseContract {
 	@Length( min =4, max =20, message="{error.oldLicenseNumber.empty}")
 	private String oldLicenseNumber;
 
-	@NotNull(message="{error.license.applicationDate}")
+	
 	@JsonProperty("applicationDate")
 	private Long applicationDate;
 
@@ -95,7 +95,6 @@ public class TradeLicenseContract {
 	private String ownerAddress;
 
 	@JsonProperty("propertyAssesmentNo")
-	@Length( min = 4, max = 20, message = "{error.license.propertyassesmentNo}")
 	private String propertyAssesmentNo;
 
 	@NotNull(message = "{error.license.locality}")
@@ -169,7 +168,6 @@ public class TradeLicenseContract {
 	private Long agreementDate;
 
 	@JsonProperty("agreementNo")
-	@Length( min = 4, max = 128, message="{error.icense.agreementno}")
 	private String agreementNo;
 
 	@JsonProperty("isLegacy")

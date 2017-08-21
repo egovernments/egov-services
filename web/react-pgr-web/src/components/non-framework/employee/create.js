@@ -118,9 +118,9 @@ const checkRequiredFields = function(type, object) {
       }
       break;
     case 'edu':
-      if(!object.designation) {
+      if(!object.qualification) {
         errorText["education.qualification"] = translate("ui.framework.required");
-      } else if(!object.declaredOn) {
+      } else if(!object.yearOfPassing) {
         errorText["education.yearOfPassing"] = translate("ui.framework.required");
       }
       break;
@@ -130,9 +130,9 @@ const checkRequiredFields = function(type, object) {
       }
       break;
     case 'dept':
-      if(!object.skill) {
+      if(!object.test) {
         errorText["test.test"] = translate("ui.framework.required");
-      } else if(!object.skill) {
+      } else if(!object.yearOfPassing) {
         errorText["test.yearOfPassing"] = translate("ui.framework.required");
       }
       break;
@@ -686,7 +686,7 @@ class Employee extends Component {
         if(dat.hod && dat.hod.length) {
             dat.mainDepartments = [];
             for(var i=0; i<dat.hod.length; i++) {
-                dat.mainDepartments.push(dat.hod[i]);
+                dat.mainDepartments.push(dat.hod[i]["department"]);
             }
             dat.hod = true;
         }
@@ -864,7 +864,7 @@ class Employee extends Component {
         if(asst.hod == "true" || asst.hod == true) {
             asst.hod = [];
             for(let i=0; i<asst.mainDepartments.length; i++) {
-                asst.hod.push(asst.mainDepartments[i]);
+                asst.hod.push({"department": asst.mainDepartments[i]});
             }
         }
 
@@ -1013,7 +1013,7 @@ class Employee extends Component {
         }
 
         let test = Object.assign([], this.props.Employee.test || []);
-        if(this.state.editIndex == '')
+        if(this.state.editIndex === '')
           test.push(this.state.subObject.test);
         else
           test[editIndex] = Object.assign({}, this.state.subObject.test);
@@ -1599,7 +1599,7 @@ class Employee extends Component {
             })
           } else {
             self.setInitDat({
-      code: "",
+      code: null,
       dateOfAppointment: "",
       dateOfJoining: "",
       dateOfRetirement: "",
@@ -2735,7 +2735,7 @@ class Employee extends Component {
               <td>{getNameById(self.state.grades, val.grade)}</td>
               <td><ol>{val.hod && val.hod.length ? val.hod.map(function(v, i) {
                 return (
-                    <li>{getNameById(self.state.departments, v)}</li>
+                    <li>{getNameById(self.state.departments, v.department)}</li>
                 )
               }) : ""}</ol></td>
               <td>{val.govtOrderNumber}</td>
@@ -3034,10 +3034,9 @@ class Employee extends Component {
           return self.props.Employee.test &&  self.props.Employee.test.length ? self.props.Employee.test.map(function(val, i) {
             return (
               <tr key={i}>
-                  <td>{val.serviceInfo}</td>
-                  <td>{val.serviceFrom}</td>
+                  <td>{val.test}</td>
+                  <td>{val.yearOfPassing}</td>
                   <td>{val.remarks}</td>
-                  <td>{val.orderNo}</td>
                   <td>{val.documents && val.documents.length}</td>
                   <td>
                     {self.state.screenType != "view" && <span className="glyphicon glyphicon-pencil" onClick={() => { self.editModalOpen(i, 'dept')}}></span>}&nbsp;&nbsp;

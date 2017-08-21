@@ -20,10 +20,13 @@ public class PropertiesManager {
 	 @Value("${kafka.topics.newconnection.update.name}")
 	 private String updateConnectionTopicName;
 	 
-	 @Value("${egov.services.lams.indexer.host}")
+	 @Value("${egov.services.esindexer.host}")
 	 private String indexServiceHostUrl; 
 	 
-	 @Value("${egov.services.wcms.indexer.name}")
-	 private String indexServiceIndexName;
+	 @Value("${es.index.name}")
+	 private String indexName;
+	 
+	 @Value("${es.document.type}")
+	 private String documentType;
 	 
 }

@@ -177,7 +177,7 @@ class ServiceTypeCreate extends Component {
                     ],
            "slaHours" : parseInt(this.props.createServiceType.slaHours),
            "metadata" :  this.props.createServiceType.metadata,
-           "tenantId":"default"
+           "tenantId":localStorage.getItem("tenantId")
           }
       }
 

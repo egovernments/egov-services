@@ -86,7 +86,6 @@ public class PropertyDetail {
 	private Double siteBreadth = null;
 
 	@JsonProperty("sitalArea")
-	@NotNull
 	private Double sitalArea = null;
 
 	@JsonProperty("totalBuiltupArea")
@@ -152,4 +151,11 @@ public class PropertyDetail {
 
 	@JsonProperty("builderDetails")
 	private BuilderDetail builderDetails = null;
+	
+	@Size(min = 1, max = 16)
+    @JsonProperty("bpaNo")
+    private String bpaNo = null;
+    
+    @JsonProperty("bpaDate")
+    private String bpaDate;
 }

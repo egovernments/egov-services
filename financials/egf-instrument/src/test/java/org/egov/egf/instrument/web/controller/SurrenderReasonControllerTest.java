@@ -100,10 +100,10 @@ public class SurrenderReasonControllerTest {
 				.thenReturn(surrenderReasons);
 
 		mockMvc.perform(post("/surrenderreasons/_delete")
-				.content(resources.readRequest("surrenderreason/surrenderreason_update_valid_request.json"))
+				.content(resources.readRequest("surrenderreason/surrenderreason_delete_valid_request.json"))
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content()
-						.json(resources.readResponse("surrenderreason/surrenderreason_update_valid_response.json")));
+						.json(resources.readResponse("surrenderreason/surrenderreason_delete_valid_response.json")));
 
 	}
 
@@ -114,6 +114,18 @@ public class SurrenderReasonControllerTest {
 				.thenReturn((getSurrenderReasons()));
 
 		mockMvc.perform(post("/surrenderreasons/_update")
+				.content(resources.readRequest("surrenderreason/surrenderreason_delete_invalid_field_value.json"))
+				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
+
+	}
+	
+	@Test
+	public void test_delete_error() throws IOException, Exception {
+
+		when(surrenderReasonService.delete(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+				.thenReturn((getSurrenderReasons()));
+
+		mockMvc.perform(post("/surrenderreasons/_delete")
 				.content(resources.readRequest("surrenderreason/surrenderreason_create_invalid_field_value.json"))
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
 

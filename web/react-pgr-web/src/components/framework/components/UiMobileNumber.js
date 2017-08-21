@@ -14,12 +14,16 @@ export default class UiMobileField extends Component {
 						style={{"display": (item.hide ? 'none' : 'inline-block')}}
 						errorStyle={{"float":"left"}}
 						fullWidth={true} 
-						type="number"
+						type="text"
+						maxLength="10"
 						floatingLabelText={item.label + (item.isRequired ? " *" : "")} 
 						value={this.props.getVal(item.jsonPath)}
 						disabled={item.isDisabled}
 						errorText={this.props.fieldErrors[item.jsonPath]}
-						onChange={(e) => this.props.handler(e, item.jsonPath, item.isRequired ? true : false, '\\d{10}', item.requiredErrMsg, item.patternErrMsg)} />
+						onChange={(e) => {
+							if(e.target.value && !/^\d*$/g.test(e.target.value)) return;
+							this.props.handler(e, item.jsonPath, item.isRequired ? true : false, '^\\d{10}$', item.requiredErrMsg, item.patternErrMsg)
+						}} />
 				);
 		}
 	}

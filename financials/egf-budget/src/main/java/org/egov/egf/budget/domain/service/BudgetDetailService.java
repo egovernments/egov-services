@@ -212,7 +212,6 @@ public class BudgetDetailService {
                 Assert.notNull(budgetdetails, "BudgetDetails to delete must not be null");
                 for (final BudgetDetail budgetDetail : budgetdetails){
                 	Assert.notNull(budgetDetail.getId(), "BudgetDetail ID to delete must not be null");
-                    validator.validate(budgetDetail, errors);
                 }
                 break;
             default:

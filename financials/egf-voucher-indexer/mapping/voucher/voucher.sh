@@ -1,1 +1,1 @@
-curl -X PUT 'localhost:9200/budget?pretty'
+curl -X PUT 'localhost:9200/voucher?pretty'

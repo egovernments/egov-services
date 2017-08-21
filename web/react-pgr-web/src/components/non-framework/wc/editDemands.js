@@ -120,9 +120,9 @@ class AddDemand extends Component {
 	}
 
     Api.commonApiPost('wcms-connection/connection/_search',getDemands,{},false,true).then((res)=>{
-      console.log(res);
+        console.log(res.Connection[0].acknowledgementNumber);
       currentThis.setState({
-        searchData: res.Connection
+        searchData: res
       })
     }).catch((err)=> {
       console.log(err)
@@ -144,9 +144,12 @@ class AddDemand extends Component {
     };
 
     self.props.setLoadingStatus('loading');
-	  Api.commonApiPost('wcms-connection/connection/_leacydemand', {consumerNumber: decodeURIComponent(self.props.match.params.upicNumber), executionDate: "1301616000"}, body, false, true).then((res)=>{
+	  Api.commonApiPost('wcms-connection/connection/_leacydemand', {consumerNumber: decodeURIComponent(self.props.match.params.upicNumber), executionDate: self.state.searchData && self.state.searchData.Connection && self.state.searchData.Connection[0] && self.state.searchData.Connection[0].executionDate}, body, false, true).then((res)=>{
       self.props.setLoadingStatus('hide');
+       self.props.toggleSnackbarAndSetText(true,translate("wc.update.message.success"), true, false);
+      self.props.setRoute("/searchconnection/wc");
 	  }).catch((err)=> {
+      self.props.setLoadingStatus('hide');
 		  self.props.toggleSnackbarAndSetText(true, err.message, false, true);
 	  })
 
@@ -174,7 +177,9 @@ class AddDemand extends Component {
 
     let {search, handleDepartment, getTaxHead, validateCollection} = this;
     let { DemandDetailBeans, searchData } = this.state;
-    console.log(this.state.searchData);
+
+    console.log( );
+
 
     let cThis = this;
 
@@ -192,14 +197,14 @@ class AddDemand extends Component {
     if(DemandDetailBeans.length>0) {
       return DemandDetailBeans.map((item, index)=> {
             return (<tr key={index}>
-                    <td data-label="taxPeriod">{item.taxPeriod}</td>
-                    <td data-label="taxHeadMasterCode">{item.taxHeadMasterCode}</td>
-                    <td data-label="taxAmount">
+                    <td data-label={translate("wc.create.demands.taxPeriod")}>{item.taxPeriod}</td>
+                    <td data-label={translate("wc.create.demands.taxHeadMasterCode")}>{item.taxHeadMasterCode}</td>
+                    <td data-label={translate("wc.create.demands.taxAmount")}>
                     <TextField type="number" id={item.id} name="taxAmount"  value={item.taxAmount}
                       onChange={(e)=>{handleChangeSrchRslt(e, "taxAmount", index)}} />
                     </td>
-                    <td data-label="collectionAmount">
-                    <TextField type="number" id={item.id} name="taxAmount"  value={item.collectionAmount}
+                    <td data-label={translate("wc.create.demands.collectionAmount")}>
+                    <TextField type="number" id={item.id} name="collectionAmount"  value={item.collectionAmount}
                       onChange={(e)=>{handleChangeSrchRslt(e, "collectionAmount", index)}} />
                     </td>
                 </tr>
@@ -211,93 +216,83 @@ class AddDemand extends Component {
 
 
     return (<div><Card className="uiCard">
-				<CardTitle style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate('Applicant Particulars')}</div>} subtitle={<div style={{color:"#354f57", fontSize:15,margin:'8px 0'}}>{translate('Basic Details')}</div>} />
+				<CardTitle style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate("wc.create.demand.applicantParticular")}</div>} subtitle={<div style={{color:"#354f57", fontSize:15,margin:'8px 0'}}>{translate("wc.create.demand.basicDetails")}</div>} />
         <br/>
         <CardText style={styles.reducePadding}>
 					<Grid fluid>
 						<Row>
             <Col xs={12} sm={4} md={3} lg={3}>
-            <span><label><span style={{"fontWeight":"bold"}}>{translate("Assessment Number")}</span></label><br/>
-            <label>{this.props.match.params.upicNumber}</label></span>
+            <span><label><span style={{"fontWeight":"bold"}}>{translate("wc.create.groups.applicantDetails.acknowledgementNumber")}</span></label><br/>
+            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].acknowledgementNumber}</label></span>
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
-            <span><label><span style={{"fontWeight":"bold"}}>{translate("New Consumer Code")}</span></label><br/>
-            <label>{this.props.match.params.upicNumber}</label></span>
+            <span><label><span style={{"fontWeight":"bold"}}>{translate("wc.create.groups.applicantDetails.consumerNumber")}</span></label><br/>
+            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].consumerNumber}</label></span>
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
-            <span><label><span style={{"fontWeight":"bold"}}>{translate("Mobile Number")}</span></label><br/>
-            <label>{this.props.match.params.upicNumber}</label></span>
+            <span><label><span style={{"fontWeight":"bold"}}>{translate("wc.create.groups.applicantDetails.nameOfApplicant")}</span></label><br/>
+            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].property && this.state.searchData.Connection[0].property.nameOfApplicant}</label></span>
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
-            <span><label><span style={{"fontWeight":"bold"}}>{translate("Email")}</span></label><br/>
-            <label>{this.props.match.params.upicNumber}</label></span>
+            <span><label><span style={{"fontWeight":"bold"}}>{translate("wc.create.groups.applicantDetails.address")}</span></label><br/>
+            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].property && this.state.searchData.Connection[0].property.address}</label></span>
             </Col>
             </Row>
             <br/>
             <Row>
             <Col xs={12} sm={4} md={3} lg={3}>
-            <span><label><span style={{"fontWeight":"bold"}}>{translate("Name of Applicant")}</span></label><br/>
-            <label>{searchData.nameOfApplicant}</label></span>
+            <span><label><span style={{"fontWeight":"bold"}}>{translate("wc.create.groups.applicantDetails.mobileNumber")}</span></label><br/>
+            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].property && this.state.searchData.Connection[0].property.mobileNumber}</label></span>
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
-            <span><label><span style={{"fontWeight":"bold"}}>{translate("Locality")}</span></label><br/>
-            <label>{this.props.match.params.upicNumber}</label></span>
+            <span><label><span style={{"fontWeight":"bold"}}>{translate("wc.create.groups.applicantDetails.email")}</span></label><br/>
+            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].property && this.state.searchData.Connection[0].property.email}</label></span>
             </Col>
+
             <Col xs={12} sm={4} md={3} lg={3}>
-            <span><label><span style={{"fontWeight":"bold"}}>{translate("Address")}</span></label><br/>
-            <label>{this.props.match.params.upicNumber}</label></span>
+            <span><label><span style={{"fontWeight":"bold"}}>{translate("wc.create.groups.applicantDetails.locality")}</span></label><br/>
+            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].property && this.state.searchData.Connection[0].property.locality}</label></span>
             </Col>
+
             <Col xs={12} sm={4} md={3} lg={3}>
-            <span><label><span style={{"fontWeight":"bold"}}>{translate("Zone / Ward / Block")}</span></label><br/>
-            <label>{this.props.match.params.upicNumber}</label></span>
-            </Col>
-            </Row>
-              <br/>
-            <Row>
-            <Col xs={12} sm={4} md={3} lg={3}>
-            <span><label><span style={{"fontWeight":"bold"}}>{translate("Aadhaar Number")}</span></label><br/>
-            <label>{this.props.match.params.upicNumber}</label></span>
-            </Col>
-            <Col xs={12} sm={4} md={3} lg={3}>
-            <span><label><span style={{"fontWeight":"bold"}}>{translate("No of floors")}</span></label><br/>
-            <label>{this.props.match.params.upicNumber}</label></span>
-            </Col>
-            <Col xs={12} sm={4} md={3} lg={3}>
-            <span><label><span style={{"fontWeight":"bold"}}>{translate("Connection Type")}</span></label><br/>
-            <label>{this.props.match.params.upicNumber}</label></span>
-            </Col>
-            <Col xs={12} sm={4} md={3} lg={3}>
-            <span><label><span style={{"fontWeight":"bold"}}>{translate("Usage Type")}</span></label><br/>
-            <label>{this.props.match.params.upicNumber}</label></span>
+            <span><label><span style={{"fontWeight":"bold"}}>{translate("wc.create.groups.applicantDetails.zone")}</span></label><br/>
+            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].property && this.state.searchData.Connection[0].property.ward}</label></span>
             </Col>
             </Row>
               <br/>
             <Row>
             <Col xs={12} sm={4} md={3} lg={3}>
-            <span><label><span style={{"fontWeight":"bold"}}>{translate("Property Tax")}</span></label><br/>
-            <label>{this.props.match.params.upicNumber}</label></span>
+            <span><label><span style={{"fontWeight":"bold"}}>{translate("wc.create.groups.applicantDetails.adharNumber")}</span></label><br/>
+            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].property && this.state.searchData.Connection[0].property.adharNumber}</label></span>
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
-            <span><label><span style={{"fontWeight":"bold"}}>{translate("Current Water Charge Due")}</span></label><br/>
-            <label>{this.props.match.params.upicNumber}</label></span>
+            <span><label><span style={{"fontWeight":"bold"}}>{translate("wc.create.groups.applicantDetails.noOfFloors")}</span></label><br/>
+            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].noOfFlats}</label></span>
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
-            <span><label><span style={{"fontWeight":"bold"}}>{translate("Connection Date")}</span></label><br/>
-            <label>{this.props.match.params.upicNumber}</label></span>
+            <span><label><span style={{"fontWeight":"bold"}}>{translate("wc.create.groups.connectionDetails.connectionType")}</span></label><br/>
+            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].connectionType}</label></span>
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
-            <span><label><span style={{"fontWeight":"bold"}}>{translate("Old Consumer Number")}</span></label><br/>
-            <label>{this.props.match.params.upicNumber}</label></span>
+            <span><label><span style={{"fontWeight":"bold"}}>{translate("wc.create.groups.connectionDetails.usageType")}</span></label><br/>
+            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].property && this.state.searchData.Connection[0].property.usageType}</label></span>
+            </Col>
+            </Row>
+              <br/>
+            <Row>
+            <Col xs={12} sm={4} md={3} lg={3}>
+            <span><label><span style={{"fontWeight":"bold"}}>{translate("wc.create.groups.applicantDetails.propertyTaxDue")}</span></label><br/>
+            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].property && this.state.searchData.Connection[0].property.propertyTaxDue}</label></span>
             </Col>
             </Row>
 								<br/>
 								<Table style={{color:"black",fontWeight: "normal", marginBottom:0, minWidth:'100%', width:'auto'}}  bordered responsive>
 									<thead>
 										<tr>
-											<th style={{textAlign:'center'}}>Installment</th>
-											<th  style={{textAlign:'center'}}>Tax</th>
-											<th style={{textAlign:'center'}}>Demand</th>
-                      <th style={{textAlign:'center'}}>Collection</th>
+											<th style={{textAlign:'center'}}>{translate("pt.create.groups.addDemand.fields.installment")}</th>
+											<th  style={{textAlign:'center'}}>{translate("wc.create.demand.tax")}</th>
+											<th style={{textAlign:'center'}}>{translate("wc.create.demands")}</th>
+                      <th style={{textAlign:'center'}}>{translate("pt.create.groups.addDemand.fields.collection")}</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -461,7 +456,8 @@ const mapDispatchToProps = dispatch => ({
    },
    toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
      dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
-   }
+   },
+   setRoute: (route) => dispatch({type: "SET_ROUTE", route})
 
 });
 

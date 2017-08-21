@@ -24,6 +24,7 @@ import org.egov.tl.commons.web.contract.SupportDocumentContract;
 import org.egov.tl.commons.web.contract.TradeLicenseSearchContract;
 import org.egov.tl.commons.web.requests.TradeLicenseRequest;
 import org.egov.tl.commons.web.requests.TradeLicenseSearchResponse;
+import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.configuration.TestConfiguration;
 import org.egov.tradelicense.domain.model.AuditDetails;
 import org.egov.tradelicense.domain.model.LicenseFeeDetail;
@@ -55,6 +56,9 @@ public class TradeLicenseControllerTest {
 
 	@MockBean
 	TradeLicenseService tradeLicenseService;
+	
+	@MockBean
+	PropertiesManager propertiesManager;
 
 	private RequestJsonReader resources = new RequestJsonReader();
 
@@ -103,7 +107,7 @@ public class TradeLicenseControllerTest {
 			mockMvc.perform(post("/license/v1/_create").content(resources.readRequest("legacyTradeCreateRequest.json"))
 					.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isOk())
 					.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-					.andExpect(content().json(resources.readResponse("legacyTradeCreateResponse.json")));
+					.andExpect(content().json(getFileContents("legacyTradeCreateResponse.json")));
 
 			verify(tradeLicenseService).addToQue(captor.capture());
 
@@ -152,7 +156,7 @@ public class TradeLicenseControllerTest {
 			tradeLicenseSearchResponse.setLicenses(tradeLicenseSearchContracts);
 
 			when(tradeLicenseService.getTradeLicense(any(RequestInfo.class), any(String.class), any(Integer.class),
-					any(Integer.class), any(String.class), any(String.class), any(String.class), any(String.class),
+					any(Integer.class), any(String.class), any(String.class), any(Integer[].class), any(String.class),
 					any(String.class), any(String.class), any(String.class), any(String.class), any(String.class),
 					any(String.class), any(Integer.class), any(Integer.class), any(String.class), any(String.class),
 					any(String.class), any(Integer.class), any(Integer.class), any(String.class), any(Integer.class)))

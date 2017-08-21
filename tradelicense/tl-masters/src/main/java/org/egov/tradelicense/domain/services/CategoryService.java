@@ -3,6 +3,7 @@ package org.egov.tradelicense.domain.services;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.requests.CategoryRequest;
 import org.egov.tl.commons.web.requests.CategoryResponse;
+import org.egov.tl.commons.web.requests.CategorySearchResponse;
 
 /**
  * Service class for Category master
@@ -42,7 +43,7 @@ public interface CategoryService {
 	 * @param offSet
 	 * @return CategoryResponse
 	 */
-	public CategoryResponse getCategoryMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
+	public CategorySearchResponse getCategoryMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
 			String code, String active, String type, String businessNature, Integer categoryId, String rateType, String feeType, Integer uomId,
 			Integer pageSize, Integer offSet);
 

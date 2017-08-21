@@ -102,10 +102,10 @@ public class InstrumentAccountCodeControllerTest {
 				.thenReturn(instrumentAccountCodes);
 
 		mockMvc.perform(post("/instrumentaccountcodes/_delete")
-				.content(resources.readRequest("instrumentaccountcode/instrumentaccountcode_update_valid_request.json"))
+				.content(resources.readRequest("instrumentaccountcode/instrumentaccountcode_delete_valid_request.json"))
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content().json(resources
-						.readResponse("instrumentaccountcode/instrumentaccountcode_update_valid_response.json")));
+						.readResponse("instrumentaccountcode/instrumentaccountcode_delete_valid_response.json")));
 
 	}
 
@@ -118,6 +118,19 @@ public class InstrumentAccountCodeControllerTest {
 		mockMvc.perform(post("/instrumentaccountcodes/_update")
 				.content(resources
 						.readRequest("instrumentaccountcode/instrumentaccountcode_create_invalid_field_value.json"))
+				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
+
+	}
+	
+	@Test
+	public void test_delete_error() throws IOException, Exception {
+
+		when(instrumentAccountCodeService.delete(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+				.thenReturn(getInstrumentAccountCodes());
+
+		mockMvc.perform(post("/instrumentaccountcodes/_delete")
+				.content(resources
+						.readRequest("instrumentaccountcode/instrumentaccountcode_delete_invalid_field_value.json"))
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
 
 	}

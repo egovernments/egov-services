@@ -98,7 +98,7 @@ public class WaterConnectionRepository {
 
         final String query = insertQuery;
         LOGGER.info("Insert Query is : " + insertQuery);
-        LOGGER.info("Water Treatment ID Obtained is : " + waterConnectionRequest.getConnection().getWaterTreatmentId());
+        LOGGER.info("Created By and Updated By : " + waterConnectionRequest.getRequestInfo());
         
         Long connectionId = 0L;
         try {
@@ -352,12 +352,7 @@ public class WaterConnectionRepository {
         if(waterConnectionReq!=null){
             Connection connection=waterConnectionReq.getConnection();
         insertQuery = WaterConnectionQueryBuilder.updateConnectionQuery();
-       obj = new Object[] { connection.getConnectionType(), connection.getApplicationType(),
-                connection.getBillingType(), connection.getCategoryId(),
-                connection.getPipesizeId(), connection.getSourceTypeId(), connection.getConnectionStatus(),
-                connection.getSumpCapacity(), connection.getNumberOfTaps(),
-                connection.getNumberOfPersons(), Long.valueOf(waterConnectionReq.getRequestInfo().getUserInfo().getId()),
-                new Date(new java.util.Date().getTime()), connection.getStateId(),connection.getNumberOfFamily(),
+       obj = new Object[] { connection.getStateId(),
                 connection.getAcknowledgementNumber() };
        
         }
@@ -475,6 +470,7 @@ public class WaterConnectionRepository {
                 connection.getSumpCapacity(), connection.getNumberOfTaps(),
                 connection.getNumberOfPersons(), Long.valueOf(waterConnectionReq.getRequestInfo().getUserInfo().getId()),
                 new Date(new java.util.Date().getTime()), connection.getStateId(),connection.getNumberOfFamily(),
+                 connection.getStatus(),connection.getEstimationNumber(),connection.getWorkOrderNumber(),connection.getConsumerNumber(),
                  connection.getAcknowledgementNumber() };
         jdbcTemplate.update(insertQuery, obj);
         
@@ -497,27 +493,31 @@ public class WaterConnectionRepository {
     }
 
 
-    public List<Connection> getConnectionDetails(final WaterConnectionGetReq waterConnectionGetReq) {
-        final List<Object> preparedStatementValues = new ArrayList<>();
-        final String fetchQuery = waterConnectionQueryBuilder.getQuery(waterConnectionGetReq, preparedStatementValues);
-        LOGGER.info("Get Connection Details Query : " + fetchQuery);
-        final List<Connection> connectionList = jdbcTemplate.query(fetchQuery, preparedStatementValues.toArray(),
-                new WaterConnectionRowMapper().new WaterConnectionPropertyRowMapper());
-        LOGGER.info(connectionList.size() + " Connection Objects fetched from DB");
-        
-        final String secondFetchQuery = waterConnectionQueryBuilder.getSecondQuery(waterConnectionGetReq, preparedStatementValues);
-        LOGGER.info("Get Connection Details Query for Without Property Cases : " + secondFetchQuery);
-        try{ 
-        	final List<Connection> secondConnectionList = jdbcTemplate.query(secondFetchQuery, new WaterConnectionRowMapper().new WaterConnectionWithoutPropertyRowMapper());
-        	LOGGER.info(secondConnectionList.size() + " Connection Objects fetched from DB");
-            if(secondConnectionList.size() > 0) { 
-            	connectionList.addAll(secondConnectionList);		
-            }
-        } catch(Exception ex) { 
-        	LOGGER.error("Exception encountered while fetching the Connection list without Property : " + ex);
-        }
-        return connectionList;
-    }
+	public List<Connection> getConnectionDetails(final WaterConnectionGetReq waterConnectionGetReq) {
+		final List<Object> preparedStatementValues = new ArrayList<>();
+		final String fetchQuery = waterConnectionQueryBuilder.getQuery(waterConnectionGetReq, preparedStatementValues);
+		LOGGER.info("Get Connection Details Query : " + fetchQuery);
+		final List<Connection> connectionList = jdbcTemplate.query(fetchQuery, preparedStatementValues.toArray(),
+				new WaterConnectionRowMapper().new WaterConnectionPropertyRowMapper());
+		LOGGER.info(connectionList.size() + " Connection Objects fetched from DB");
+
+		final List<Object> secondPreparedStatementValues = new ArrayList<>();
+		final String secondFetchQuery = waterConnectionQueryBuilder.getSecondQuery(waterConnectionGetReq,
+				secondPreparedStatementValues);
+		LOGGER.info("Get Connection Details Query for Without Property Cases : " + secondFetchQuery);
+		try {
+			final List<Connection> secondConnectionList = jdbcTemplate.query(secondFetchQuery,
+					secondPreparedStatementValues.toArray(),
+					new WaterConnectionRowMapper().new WaterConnectionWithoutPropertyRowMapper());
+			LOGGER.info(secondConnectionList.size() + " Connection Objects fetched from DB");
+			if (secondConnectionList.size() > 0) {
+				connectionList.addAll(secondConnectionList);
+			}
+		} catch (Exception ex) {
+			LOGGER.error("Exception encountered while fetching the Connection list without Property : " + ex);
+		}
+		return connectionList;
+	}
     
     public boolean persistEstimationNoticeLog(EstimationNotice estimationNotice, long connectionId, String tenantId) { 
     	String persistsEstimationNoticeQuery = WaterConnectionQueryBuilder.persistEstimationNoticeQuery();

@@ -1,5 +1,7 @@
 package org.egov.web.indexer.service;
 
+import java.util.Date;
+
 import org.egov.web.indexer.contract.Connection;
 import org.egov.web.indexer.contract.ConnectionDetailsEs;
 import org.egov.web.indexer.contract.ConnectionIndex;
@@ -13,6 +15,7 @@ public class ConnectionAdaptorService {
 	
 	public static final Logger logger = LoggerFactory.getLogger(ConnectionAdaptorService.class);
 	
+	@SuppressWarnings("deprecation")
 	public ConnectionIndex indexOnCreate(WaterConnectionReq waterConnectionReq) { 
 		
 		ConnectionIndex index = new ConnectionIndex();
@@ -23,17 +26,16 @@ public class ConnectionAdaptorService {
 		connDetails.setAssetIdentifier(conn.getAssetIdentifier());
 		connDetails.setBillingType(conn.getBillingType());
 		connDetails.setBplCardHolderName(conn.getBplCardHolderName());
+		connDetails.setCreatedDate(new Date(conn.getCreatedDate()));
 		connDetails.setCategoryId(conn.getCategoryId());
 		connDetails.setCategoryType(conn.getCategoryType());
 		connDetails.setConnectionStatus(conn.getConnectionStatus());
 		connDetails.setConnectionType(conn.getConnectionType());
 		connDetails.setConsumerNumber(conn.getConsumerNumber());
 		connDetails.setDemandid(conn.getDemandid());
-		connDetails.setDocuments(conn.getDocuments());
 		connDetails.setDonationCharge(conn.getDonationCharge());
-		connDetails.setEstimationCharge(conn.getEstimationCharge());
 		connDetails.setEstimationNumber(conn.getEstimationNumber());
-		connDetails.setExecutionDate(conn.getExecutionDate());
+		connDetails.setExecutionDate(new Date(conn.getExecutionDate()));
 		connDetails.setHscPipeSizeType(conn.getHscPipeSizeType());
 		connDetails.setId(conn.getId());
 		connDetails.setIsLegacy(conn.getIsLegacy());

@@ -51,9 +51,10 @@ class CustomMenu extends Component {
     this.wrapperRef = node;
   }
 
-  componentWillReceivePropsMount()
+  componentWillReceiveProps()
   {
-    this.resetMenu();
+    //this.resetMenu();
+    console.log("HERE");
   }
 
   componentDidMount() {
@@ -228,7 +229,7 @@ class CustomMenu extends Component {
 
             }
             else {
-              if (menuConvention.hasOwnProperty(item.path)) {
+              if (menuConvention && menuConvention.hasOwnProperty(item.path)) {
                 // {/*<Link  key={index} to={menuConvention[item.path]} >*/}
                   // {/*</Link>*/}
                 return(
@@ -283,7 +284,7 @@ class CustomMenu extends Component {
                           style={{whiteSpace: "initial"}}
                            onTouchTap={()=>{checkUrl(item); document.title=item.displayName; handleToggle(false)}}
                            leftIcon={<i className="material-icons marginLeft">view_module</i>}
-                           primaryText={<div className="menuStyle" style={{width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}><span className="onHoverText hidden-sm hidden-xs">{item.name}</span><span>{item.name}</span></div>}
+                           primaryText={<div className="menuStyle" style={{width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}><span className="onHoverText hidden-sm hidden-xs">{item.displayName}</span><span>{item.displayName}</span></div>}
                         />
                     </Link>
                   )
@@ -305,7 +306,7 @@ class CustomMenu extends Component {
                          <MenuItem
                               style={{whiteSpace: "initial"}}
                               leftIcon={<i className="material-icons marginLeft">view_module</i>}
-                              primaryText={<div className="menuStyle" style={{width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}><span className="onHoverText hidden-sm hidden-xs">{item.name}</span><span>{item.name}</span></div>}
+                              primaryText={<div className="menuStyle" style={{width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}><span className="onHoverText hidden-sm hidden-xs">{item.displayName}</span><span>{item.displayName}</span></div>}
                            />
                         </a>
                       )
@@ -336,10 +337,10 @@ class CustomMenu extends Component {
 
 
         <Menu desktop={true}>
-      
-					  
+
+
 		{(path|| searchText) &&  <div className="pull-left" style={{marginLeft:12, marginBottom:10, cursor:'pointer'}}  onTouchTap={()=>{changeLevel(path)}}><i className="material-icons" style={{"color": "#757575"}}>arrow_back</i></div>}
-        { path &&  <div className="pull-right" style={{marginRight:12,marginBottom:10,cursor:'pointer'}} onTouchTap={()=>{handleToggle(false); changeLevel("")}} ><i className="material-icons" style={{"color": "#757575"}}>home</i></div>}		  
+        { path &&  <div className="pull-right" style={{marginRight:12,marginBottom:10,cursor:'pointer'}} onTouchTap={()=>{handleToggle(false); changeLevel("")}} ><i className="material-icons" style={{"color": "#757575"}}>home</i></div>}
 
 		<div className="clearfix"></div>
 

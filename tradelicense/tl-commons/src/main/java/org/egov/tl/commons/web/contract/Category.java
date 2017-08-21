@@ -3,7 +3,6 @@ package org.egov.tl.commons.web.contract;
 import java.util.List;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 import org.egov.tl.commons.web.contract.enums.BusinessNatureEnum;
@@ -35,7 +34,7 @@ public class Category {
 	@Pattern(regexp = ".*[^ ].*",message="{error.tenantId.emptyspaces}")
 	@NotEmpty(message="{error.tenantId.empty}")
 	@Length(min = 4, max = 128, message="{error.tenantId.empty}")
-	private String tenantId = null;
+	private String tenantId = null; 
 
 
 	@JsonProperty("name")
@@ -61,7 +60,6 @@ public class Category {
 	private Boolean active = true;
 
 	@JsonProperty("businessNature")
-	@NotNull(message = "{error.businessNature.null}")
 	private BusinessNatureEnum businessNature = null;
 
 	@Valid

@@ -2,25 +2,41 @@ package org.egov.tradelicense.domain.service;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.egov.models.PropertyResponse;
-import org.egov.tl.commons.web.contract.Category;
-import org.egov.tl.commons.web.contract.CategoryDetail;
+import org.egov.tl.commons.web.contract.CategoryDetailSearch;
+import org.egov.tl.commons.web.contract.CategorySearch;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.ResponseInfo;
 import org.egov.tl.commons.web.contract.TradeLicenseSearchContract;
-import org.egov.tl.commons.web.requests.CategoryResponse;
+import org.egov.tl.commons.web.requests.CategorySearchResponse;
 import org.egov.tl.commons.web.requests.DocumentTypeResponse;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tl.commons.web.requests.ResponseInfoFactory;
 import org.egov.tl.commons.web.requests.TradeLicenseRequest;
 import org.egov.tl.commons.web.requests.TradeLicenseSearchResponse;
 import org.egov.tradelicense.common.config.PropertiesManager;
+import org.egov.tradelicense.common.domain.exception.AdhaarNotFoundException;
+import org.egov.tradelicense.common.domain.exception.AgreeMentDateNotFoundException;
+import org.egov.tradelicense.common.domain.exception.AgreeMentNotFoundException;
 import org.egov.tradelicense.common.domain.exception.CustomBindException;
+import org.egov.tradelicense.common.domain.exception.InvalidAdminWardException;
+import org.egov.tradelicense.common.domain.exception.InvalidCategoryException;
+import org.egov.tradelicense.common.domain.exception.InvalidDocumentTypeException;
+import org.egov.tradelicense.common.domain.exception.InvalidFeeDetailException;
 import org.egov.tradelicense.common.domain.exception.InvalidInputException;
+import org.egov.tradelicense.common.domain.exception.InvalidLocalityException;
+import org.egov.tradelicense.common.domain.exception.InvalidPropertyAssesmentException;
+import org.egov.tradelicense.common.domain.exception.InvalidRevenueWardException;
+import org.egov.tradelicense.common.domain.exception.InvalidSubCategoryException;
+import org.egov.tradelicense.common.domain.exception.InvalidUomException;
+import org.egov.tradelicense.common.domain.exception.InvalidValidityYearsException;
+import org.egov.tradelicense.common.domain.exception.LicenseNotFoundException;
+import org.egov.tradelicense.common.domain.exception.PropertyAssesmentNotFoundException;
 import org.egov.tradelicense.domain.model.LicenseFeeDetail;
 import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
@@ -116,40 +132,54 @@ public class TradeLicenseService {
 			if (tradeLicense.getIsLegacy()) {
 
 				if (tradeLicense.getOldLicenseNumber() == null || tradeLicense.getOldLicenseNumber().trim().isEmpty()) {
-					throw new InvalidInputException(propertiesManager.getOldLicenseNumberErrorMsg());
+					//throw new InvalidInputException(propertiesManager.getOldLicenseNumberErrorMsg(), requestInfo);
+					throw new LicenseNotFoundException(requestInfo);
 				}
 				// check unique constraint
-				tradeLicenseRepository.validateUniqueOldLicenseNumber(tradeLicense);
+				tradeLicenseRepository.validateUniqueOldLicenseNumber(tradeLicense, requestInfo);
+			} else {
+				// TODO Application Number and Application Date shoudl be
+				// mandatory
 			}
 
-			if (!tradeLicense.getIsPropertyOwner()) {
-				if ((tradeLicense.getAgreementNo() == null || tradeLicense.getAgreementNo().trim().isEmpty())) {
-					throw new InvalidInputException(propertiesManager.getAgreementNoErrorMsg());
+			if (tradeLicense.getIsPropertyOwner()) {
+				if ((tradeLicense.getAgreementNo() == null || tradeLicense.getAgreementNo().trim().isEmpty()
+						|| tradeLicense.getAgreementNo().trim().length() < 4
+						|| tradeLicense.getAgreementNo().trim().length() > 20)) {
+					throw new AgreeMentNotFoundException(requestInfo);
+					//throw new InvalidInputException(propertiesManager.getAgreementNoErrorMsg(), requestInfo);
 				}
 				if (tradeLicense.getAgreementDate() == null) {
-					throw new InvalidInputException(propertiesManager.getAgreementDateErrorMsg());
+					throw new AgreeMentDateNotFoundException(requestInfo);
+					//throw new InvalidInputException(propertiesManager.getAgreementDateErrorMsg(), requestInfo);
 				}
 
 			}
 
 			if (propertiesManager.getPtisValidation()) {
 
-				if (tradeLicense.getPropertyAssesmentNo() == null) {
-					throw new InvalidInputException();
+				if (tradeLicense.getPropertyAssesmentNo() == null
+						|| tradeLicense.getPropertyAssesmentNo().trim().isEmpty()
+						|| tradeLicense.getPropertyAssesmentNo().trim().length() < 15
+						|| tradeLicense.getPropertyAssesmentNo().trim().length() > 20) {
+					throw new PropertyAssesmentNotFoundException(requestInfo);
+					//throw new InvalidInputException(propertiesManager.getPropertyassesmentNoErrorMsg(), requestInfo);
 				} else {
 					PropertyResponse propertyResponse = propertyContractRepository.findByAssesmentNo(tradeLicense,
 							requestInfoWrapper);
 
 					if (propertyResponse == null || propertyResponse.getProperties() == null
 							|| propertyResponse.getProperties().size() == 0) {
-						throw new InvalidInputException(propertiesManager.getPropertyassesmentNoErrorMsg());
+						throw new InvalidPropertyAssesmentException(requestInfo);
+						//throw new InvalidInputException(propertiesManager.getPropertyassesmentNoErrorMsg(), requestInfo);
 					}
 				}
 			}
 
 			if (propertiesManager.getAdhaarValidation()) {
 				if (tradeLicense.getAdhaarNumber() == null) {
-					throw new InvalidInputException(propertiesManager.getAadhaarNumberErrorMsg());
+					throw new AdhaarNotFoundException(requestInfo);
+					//throw new InvalidInputException(propertiesManager.getAadhaarNumberErrorMsg(), requestInfo);
 				}
 			}
 
@@ -160,7 +190,8 @@ public class TradeLicenseService {
 
 				if (boundaryResponse == null || boundaryResponse.getBoundarys() == null
 						|| boundaryResponse.getBoundarys().size() == 0) {
-					throw new InvalidInputException(propertiesManager.getLocalityErrorMsg());
+					throw new InvalidLocalityException(requestInfo);
+					//throw new InvalidInputException(propertiesManager.getLocalityErrorMsg(), requestInfo);
 				}
 
 			}
@@ -172,7 +203,8 @@ public class TradeLicenseService {
 
 				if (boundaryResponse == null || boundaryResponse.getBoundarys() == null
 						|| boundaryResponse.getBoundarys().size() == 0) {
-					throw new InvalidInputException(propertiesManager.getRevenueWardErrorMsg());
+					throw new InvalidRevenueWardException(requestInfo);
+					//throw new InvalidInputException(propertiesManager.getRevenueWardErrorMsg(), requestInfo);
 				}
 
 			}
@@ -184,34 +216,38 @@ public class TradeLicenseService {
 
 				if (boundaryResponse == null || boundaryResponse.getBoundarys() == null
 						|| boundaryResponse.getBoundarys().size() == 0) {
-					throw new InvalidInputException(propertiesManager.getAdminWardErrorMsg());
+					throw new InvalidAdminWardException(requestInfo);
+					//throw new InvalidInputException(propertiesManager.getAdminWardErrorMsg(), requestInfo);
 				}
 
 			}
 
 			// category validation
 			if (tradeLicense.getCategoryId() != null) {
-				CategoryResponse categoryResponse = categoryContractRepository.findByCategoryId(tradeLicense,
+				CategorySearchResponse categoryResponse = categoryContractRepository.findByCategoryId(tradeLicense,
 						requestInfoWrapper);
 
 				if (categoryResponse == null || categoryResponse.getCategories() == null
 						|| categoryResponse.getCategories().size() == 0) {
-					throw new InvalidInputException(propertiesManager.getCategoryErrorMsg());
+					throw new InvalidCategoryException(requestInfo);
+					//throw new InvalidInputException(propertiesManager.getCategoryErrorMsg(), requestInfo);
 				}
 			}
 
 			// subCategory validation
 			if (tradeLicense.getSubCategoryId() != null) {
-				CategoryResponse categoryResponse = categoryContractRepository.findBySubCategoryId(tradeLicense,
+				CategorySearchResponse categoryResponse = categoryContractRepository.findBySubCategoryId(tradeLicense,
 						requestInfoWrapper);
 
 				if (categoryResponse == null || categoryResponse.getCategories() == null
 						|| categoryResponse.getCategories().size() == 0) {
-					throw new InvalidInputException(propertiesManager.getSubCategoryErrorMsg());
+					throw new InvalidSubCategoryException(requestInfo);
+					//throw new InvalidInputException(propertiesManager.getSubCategoryErrorMsg(), requestInfo);
 				} else {
 					Long validityYears = categoryResponse.getCategories().get(0).getValidityYears();
 					if (Long.valueOf(validityYears) != Long.valueOf(tradeLicense.getValidityYears())) {
-						throw new InvalidInputException(propertiesManager.getValidtyYearsErrorMsg());
+						throw new InvalidValidityYearsException(requestInfo);
+						//throw new InvalidInputException(propertiesManager.getValidatiyYearsMatch(), requestInfo);
 					}
 				}
 			}
@@ -231,7 +267,8 @@ public class TradeLicenseService {
 
 					if (documentTypeResponse == null || documentTypeResponse.getDocumentTypes() == null
 							|| documentTypeResponse.getDocumentTypes().size() == 0) {
-						throw new InvalidInputException(propertiesManager.getDocumentTypeErrorMsg());
+						throw new InvalidDocumentTypeException(requestInfo);
+						//throw new InvalidInputException(propertiesManager.getDocumentTypeErrorMsg(), requestInfo);
 					}
 				}
 
@@ -239,28 +276,31 @@ public class TradeLicenseService {
 
 			// uom validation
 			if (tradeLicense.getUomId() != null) {
-				CategoryResponse categoryResponse = categoryContractRepository.findBySubCategoryUomId(tradeLicense,
-						requestInfoWrapper);
+				CategorySearchResponse categoryResponse = categoryContractRepository
+						.findBySubCategoryUomId(tradeLicense, requestInfoWrapper);
 
 				if (categoryResponse == null || categoryResponse.getCategories() == null
 						|| categoryResponse.getCategories().size() == 0) {
 
-					throw new InvalidInputException(propertiesManager.getUomErrorMsg());
+					throw new InvalidUomException(requestInfo);
+					//throw new InvalidInputException(propertiesManager.getUomErrorMsg(), requestInfo);
 				} else {
 
-					for (Category category : categoryResponse.getCategories()) {
+					for (CategorySearch category : categoryResponse.getCategories()) {
 
 						if (category.getDetails() == null && category.getDetails().size() == 0) {
-							throw new InvalidInputException(propertiesManager.getUomErrorMsg());
+							throw new InvalidUomException(requestInfo);
+							//throw new InvalidInputException(propertiesManager.getUomErrorMsg(), requestInfo);
 						} else {
 							Boolean isExists = false;
-							for (CategoryDetail categoryDetail : category.getDetails()) {
+							for (CategoryDetailSearch categoryDetail : category.getDetails()) {
 								if (categoryDetail.getUomId() == tradeLicense.getUomId()) {
 									isExists = true;
 								}
 							}
 							if (!isExists) {
-								throw new InvalidInputException(propertiesManager.getUomErrorMsg());
+								throw new InvalidUomException(requestInfo);
+								//throw new InvalidInputException(propertiesManager.getUomErrorMsg(), requestInfo);
 							}
 						}
 					}
@@ -278,7 +318,7 @@ public class TradeLicenseService {
 					validPeriod = Integer.valueOf(tradeLicense.getValidityYears().toString());
 				}
 
-				Long currenDate = (System.currentTimeMillis() / 1000);
+				Long currenDate = (System.currentTimeMillis());
 				Calendar today = Calendar.getInstance();
 
 				if (validFrom != null && validPeriod != null) {
@@ -290,30 +330,18 @@ public class TradeLicenseService {
 
 					String currentFinancialYear = null;
 					String licenseValidFromFinancialYear = null;
-					String actualFeeDetailsEndingFinancialYear = null;
-					String actualFeeDetailStartDate = null;
-					Long currentFYId = null;
-					Long licenseValidFYId = null;
 					Integer currentFinancialFromValue = null;
-					Integer currentFinancialToValue = null;
 					Integer licenseValidFinancialFromValue = null;
-					Integer licenseValidFinancialToValue = null;
 					Integer actualFeeDetailStartYear = null;
 					Integer actualFeeDetailsEndYear = null;
-					FinancialYearContract licenseExpiryFYResponse = null;
-
 					if (currentFYResponse != null && licenseValidFYResponse != null) {
 
 						// current financial year details
 						currentFinancialYear = currentFYResponse.getFinYearRange();
-						currentFYId = currentFYResponse.getId();
 						currentFinancialFromValue = Integer.valueOf(currentFinancialYear.split("-")[0]);
-						currentFinancialToValue = currentFinancialFromValue + 1;
 						// license valid financial year details
 						licenseValidFromFinancialYear = licenseValidFYResponse.getFinYearRange();
-						licenseValidFYId = licenseValidFYResponse.getId();
 						licenseValidFinancialFromValue = Integer.valueOf(licenseValidFromFinancialYear.split("-")[0]);
-						licenseValidFinancialToValue = licenseValidFinancialFromValue + 1;
 						// get the fee details starting year
 						if ((currentFinancialFromValue - licenseValidFinancialFromValue) >= 5) {
 							actualFeeDetailStartYear = (currentFinancialFromValue - 5);
@@ -324,7 +352,7 @@ public class TradeLicenseService {
 						actualFeeDetailsEndYear = currentFinancialFromValue;
 					} else {
 
-						throw new InvalidInputException(propertiesManager.getEndPointError());
+						throw new InvalidInputException(propertiesManager.getEndPointError(), requestInfo);
 					}
 					// get the actual fee detail record count
 					Integer actualFeeDetailCount = 0;
@@ -332,40 +360,46 @@ public class TradeLicenseService {
 						actualFeeDetailCount = actualFeeDetailCount + 1;
 						i = i + validPeriod;
 					}
-					// checking actual fee detail count with given fee detail
-					// count
+					// validate given fee detail count
 					if (actualFeeDetailCount != tradeLicense.getFeeDetails().size()) {
-						throw new InvalidInputException(propertiesManager.getFeeDetailsErrorMsg());
+						throw new InvalidFeeDetailException(requestInfo);
+						//throw new InvalidInputException(propertiesManager.getFeeDetailsErrorMsg(), requestInfo);
 					}
-					today.add(Calendar.YEAR, (actualFeeDetailStartYear - actualFeeDetailsEndYear));
+					Date tradeValidFromDate = new Date(validFrom);
+					today.setTimeInMillis(tradeValidFromDate.getTime());
 					// validate the fee details
 					for (int i = 0; i < actualFeeDetailCount; i++) {
+
 						Boolean isFYExists = false;
-						// Integer feeYear = actualFeeDetailStartYear +
-						// (i*validPeriod);
-						// form each fee detail start date and get the
-						// corresponding id
 						today.add(Calendar.YEAR, (i * validPeriod));
-						// actualFeeDetailStartDate = currenDate.substring(0,
-						// currenDate.lastIndexOf("/")+1);
-						// actualFeeDetailStartDate =
-						// actualFeeDetailStartDate.concat(feeYear.toString());
 
 						FinancialYearContract feeDetailFYResponse = financialYearContractRepository
-								.findFinancialYearIdByDate(tenantId, (today.getTimeInMillis() / 1000),
-										requestInfoWrapper);
+								.findFinancialYearIdByDate(tenantId, today.getTimeInMillis(), requestInfoWrapper);
 						if (feeDetailFYResponse != null) {
 							for (LicenseFeeDetail licenseFeeDetail : tradeLicense.getFeeDetails()) {
 								if (licenseFeeDetail.getFinancialYear()
-										.equalsIgnoreCase(feeDetailFYResponse.getId().toString())) {
+										.equalsIgnoreCase(feeDetailFYResponse.getFinYearRange())) {
 									isFYExists = true;
+									licenseFeeDetail.setFinancialYear(feeDetailFYResponse.getId().toString());
 								}
 							}
 							if (!isFYExists) {
-								throw new InvalidInputException(propertiesManager.getFeeDetailsErrorMsg());
+								throw new InvalidFeeDetailException(requestInfo);
+								//throw new InvalidInputException(propertiesManager.getFeeDetailYearNotFound(), requestInfo);
 							}
 						} else {
-							throw new InvalidInputException(propertiesManager.getFeeDetailsErrorMsg());
+							throw new InvalidFeeDetailException(requestInfo);
+							//throw new InvalidInputException(propertiesManager.getFeeDetailYearNotFound(), requestInfo);
+						}
+
+						if (i == actualFeeDetailCount - 1) {
+							today.setTime(feeDetailFYResponse.getEndingDate());
+							today.add(Calendar.YEAR, (validPeriod - 1));
+							feeDetailFYResponse = financialYearContractRepository.findFinancialYearIdByDate(tenantId,
+									(today.getTimeInMillis()), requestInfoWrapper);
+							if (feeDetailFYResponse != null) {
+								tradeLicense.setExpiryDate(feeDetailFYResponse.getEndingDate().getTime());
+							}
 						}
 
 					}
@@ -383,7 +417,7 @@ public class TradeLicenseService {
 		validate(tradeLicenses, errors);
 
 		if (errors.hasErrors()) {
-			throw new CustomBindException(errors);
+			throw new CustomBindException(errors, requestInfo);
 		}
 		// external end point validations
 		validateRelated(tradeLicenses, requestInfo);
@@ -405,8 +439,7 @@ public class TradeLicenseService {
 					feeDetail.setId(tradeLicenseRepository.getFeeDetailNextSequence());
 				}
 			}
-			// license.setLicenseNumber(licenseNumberGenerationService.generate(license.getTenantId(),
-			// requestInfo));
+			license.setLicenseNumber(licenseNumberGenerationService.generate(license.getTenantId(), requestInfo));
 			// license.setApplicationNumber(
 			// applNumberGenrationService.generate(license.getTenantId(),
 			// requestInfo));
@@ -425,7 +458,7 @@ public class TradeLicenseService {
 	}
 
 	public TradeLicenseSearchResponse getTradeLicense(RequestInfo requestInfo, String tenantId, Integer pageSize,
-			Integer pageNumber, String sort, String active, String tradeLicenseId, String applicationNumber,
+			Integer pageNumber, String sort, String active, Integer[] ids, String applicationNumber,
 			String licenseNumber, String oldLicenseNumber, String mobileNumber, String aadhaarNumber, String emailId,
 			String propertyAssesmentNo, Integer adminWard, Integer locality, String ownerName, String tradeTitle,
 			String tradeType, Integer tradeCategory, Integer tradeSubCategory, String legacy, Integer status) {
@@ -451,9 +484,9 @@ public class TradeLicenseService {
 		// }
 
 		List<TradeLicenseSearch> licenses = tradeLicenseRepository.search(requestInfo, tenantId, pageSize, pageNumber,
-				sort, active, tradeLicenseId, applicationNumber, licenseNumber, oldLicenseNumber, mobileNumber,
-				aadhaarNumber, emailId, propertyAssesmentNo, adminWard, locality, ownerName, tradeTitle, tradeType,
-				tradeCategory, tradeSubCategory, legacy, status);
+				sort, active, ids, applicationNumber, licenseNumber, oldLicenseNumber, mobileNumber, aadhaarNumber,
+				emailId, propertyAssesmentNo, adminWard, locality, ownerName, tradeTitle, tradeType, tradeCategory,
+				tradeSubCategory, legacy, status);
 
 		List<TradeLicenseSearchContract> tradeLicenseSearchContracts = new ArrayList<TradeLicenseSearchContract>();
 

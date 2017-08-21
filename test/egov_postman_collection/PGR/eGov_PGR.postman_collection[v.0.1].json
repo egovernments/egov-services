@@ -1,0 +1,2346 @@
+{
+	"variables": [],
+	"info": {
+		"name": "eGov_PGR",
+		"_postman_id": "bbbd2018-85c1-a9aa-8511-146dee08eeab",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "commons",
+			"description": "",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);",
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"tests[\"Status has String\"] = jsonData.ResponseInfo.status.has(\"Access Token generated successfully\");",
+									"",
+									"tests[\"Username is valid\"] = jsonData.UserRequest.userName.has(request.data[\"username\"]);"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/user/oauth/token",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "narasappa",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "demo",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "read",
+									"type": "text"
+								},
+								{
+									"key": "tenantId",
+									"value": "default",
+									"type": "text"
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "FormatTests",
+			"description": "",
+			"item": [
+				{
+					"name": "PGR_Masters",
+					"description": "",
+					"item": [
+						{
+							"name": "Service Group",
+							"description": "",
+							"item": [
+								{
+									"name": "Create Service Group ",
+									"request": {
+										"url": "http://localhost:8093/pgr-master/serviceGroup/v1/_create",
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"ServiceGroup\": {\n    \"name\": \"MyNewCategory001\",\n    \"code\": \"MyNewCategory001\",\n    \"description\": \"Group Service One\",\n    \"tenantId\": \"default\"\n  },\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": \"01-04-2017 01:01:01\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"cd117e86-6826-4944-ab04-f70042c8b251\",\n    \"userInfo\" : { \n      \"id\" : 9\n    }\n  }\n}"
+										},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "Search Service Group ",
+									"request": {
+										"url": {
+											"raw": "http://egov-micro-qa.egovernments.org/pgr-master/serviceGroup/v1/_search?tenantId=default",
+											"protocol": "http",
+											"host": [
+												"egov-micro-qa",
+												"egovernments",
+												"org"
+											],
+											"path": [
+												"pgr-master",
+												"serviceGroup",
+												"v1",
+												"_search"
+											],
+											"query": [
+												{
+													"key": "tenantId",
+													"value": "default",
+													"equals": true,
+													"description": ""
+												},
+												{
+													"key": "keyword",
+													"value": "coplaint",
+													"equals": true,
+													"description": "",
+													"disabled": true
+												}
+											],
+											"variable": []
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "  {\r\n       \"RequestInfo\": {\r\n         \"apiId\" : \"emp\",\r\n         \"ver\" : \"1.0\",\r\n         \"ts\" : \"10-03-2017 00:00:00\",\r\n         \"action\" : \"create\",\r\n         \"did\" : \"1\",\r\n         \"key\" : \"abcdkey\",\r\n         \"msgId\" : \"20170310130900\",\r\n         \"requesterId\" : \"rajesh\",\r\n         \"authToken\" : \"b62ffcf5-7f17-4836-a36d-62c854ffcc23\"\r\n     }\r\n  }"
+										},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "Update Service Group",
+									"request": {
+										"url": "http://localhost:8080/pgr-master/serviceGroup/v1/_update",
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"ServiceGroup\": {\n    \"id\" : 19,\n    \"name\": \"MyNewCategory001\",\n    \"code\": \"MyNewCategory001\",\n    \"description\": \"Service Group Updated\",\n    \"tenantId\": \"default\"\n  },\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": \"01-04-2017 01:01:01\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"645d587c-7225-4739-b07c-6605a1a249da\",\n    \"userInfo\" : { \n      \"id\" : 3\n    }\n  }\n}"
+										},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "Search Service Group Old",
+									"request": {
+										"url": {
+											"raw": "http://egov-micro-dev.egovernments.org/pgr/servicecategories/_search?tenantId=default",
+											"protocol": "http",
+											"host": [
+												"egov-micro-dev",
+												"egovernments",
+												"org"
+											],
+											"path": [
+												"pgr",
+												"servicecategories",
+												"_search"
+											],
+											"query": [
+												{
+													"key": "tenantId",
+													"value": "default",
+													"equals": true,
+													"description": ""
+												}
+											],
+											"variable": []
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n     \"RequestInfo\": {\r\n       \"apiId\" : \"emp\",\r\n       \"ver\" : \"1.0\",\r\n       \"ts\" : \"10-03-2017 00:00:00\",\r\n       \"action\" : \"create\",\r\n       \"did\" : \"1\",\r\n       \"key\" : \"abcdkey\",\r\n       \"msgId\" : \"20170310130900\",\r\n       \"requesterId\" : \"rajesh\",\r\n       \"authToken\" : \"4bae9d95-be21-479a-9a56-9eb2af25b42b\"\r\n   }\r\n}"
+										},
+										"description": ""
+									},
+									"response": []
+								}
+							],
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "OTP Config",
+							"description": "",
+							"item": [
+								{
+									"name": "OTP Config Create",
+									"request": {
+										"url": "http://egov-micro-dev.egovernments.org/pgr-master/OTPConfig/_create",
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n     \"RequestInfo\": {\r\n       \"apiId\" : \"emp\",\r\n       \"ver\" : \"1.0\",\r\n       \"ts\" : \"10-03-2017 00:00:00\",\r\n       \"action\" : \"create\",\r\n       \"did\" : \"1\",\r\n       \"key\" : \"abcdkey\",\r\n       \"msgId\" : \"20170310130900\",\r\n       \"requesterId\" : \"rajesh\",\r\n       \"authToken\" : \"6f106c4a-aa5d-41fa-a5f6-a6c339625e93\"\r\n   },\r\n    \"otpConfig\" : {\r\n     \"tenantId\" : \"BLR090\",\r\n     \"otpEnabledForAnonymousComplaint\" : true\r\n   }\r\n}"
+										},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "OTP Config Search",
+									"request": {
+										"url": {
+											"raw": "http://egov-micro-qa.egovernments.org/pgr-master/OTPConfig/_search?tenantId=default",
+											"protocol": "http",
+											"host": [
+												"egov-micro-qa",
+												"egovernments",
+												"org"
+											],
+											"path": [
+												"pgr-master",
+												"OTPConfig",
+												"_search"
+											],
+											"query": [
+												{
+													"key": "tenantId",
+													"value": "default",
+													"equals": true,
+													"description": ""
+												}
+											],
+											"variable": []
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n}"
+										},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "OTP Config Update",
+									"request": {
+										"url": "http://localhost:8080/pgr-master/OTPConfig/_update",
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n     \"RequestInfo\": {\r\n       \"apiId\" : \"emp\",\r\n       \"ver\" : \"1.0\",\r\n       \"ts\" : \"10-03-2017 00:00:00\",\r\n       \"action\" : \"create\",\r\n       \"did\" : \"1\",\r\n       \"key\" : \"abcdkey\",\r\n       \"msgId\" : \"20170310130900\",\r\n       \"requesterId\" : \"rajesh\",\r\n       \"authToken\" : \"23d44646-37f7-4571-9f71-7d07d3d8b27d\",\r\n       \"userInfo\" : {\r\n         \"id\" : 2\r\n       }\r\n   },\r\n   \"otpConfig\" : {\r\n     \"tenantId\" : \"BLR04\",\r\n     \"otpEnabledForAnonymousComplaint\" : false\r\n   }\r\n}"
+										},
+										"description": ""
+									},
+									"response": []
+								}
+							],
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "Receiving Center",
+							"description": "",
+							"item": [
+								{
+									"name": "Receiving Center Create",
+									"request": {
+										"url": "http://localhost:8093/pgr-master/receivingcenter/v1/_create",
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": " {\r\n   \"RequestInfo\": {\r\n       \"apiId\" : \"emp\",\r\n       \"ver\" : \"1.0\",\r\n       \"ts\" : \"10-03-2017 00:00:00\",\r\n       \"action\" : \"create\",\r\n       \"did\" : \"1\",\r\n       \"key\" : \"abcdkey\",\r\n       \"msgId\" : \"20170310130900\",\r\n       \"requesterId\" : \"rajesh\",\r\n       \"authToken\" : \"b708912c-1851-4672-a9c4-426c657089b5\",\r\n       \"userInfo\" : {\r\n         \"id\" : 4\r\n       }\r\n   },\r\n   \r\n   \"ReceivingCenterType\":{\r\n     \r\n     \"name\" :\"BangaloreOne\",\r\n     \"code\" :\"BangaloreOne\",\r\n     \"description\" :\"Complaint Cell\",\r\n     \"active\" :\"true\",\r\n     \"iscrnrequired\" : \"false\",\r\n     \"orderno\" :\"14\",\r\n     \"tenantId\":\"default\"\r\n     \r\n     \r\n   }\r\n}"
+										},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "Receiving Center Search",
+									"request": {
+										"url": {
+											"raw": "http://localhost:8093/pgr-master/receivingcenter/v1/_search?tenantId=default",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8093",
+											"path": [
+												"pgr-master",
+												"receivingcenter",
+												"v1",
+												"_search"
+											],
+											"query": [
+												{
+													"key": "tenantId",
+													"value": "default",
+													"equals": true,
+													"description": ""
+												}
+											],
+											"variable": []
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": " {\r\n   \"RequestInfo\": {\r\n       \"apiId\" : \"emp\",\r\n       \"ver\" : \"1.0\",\r\n       \"ts\" : \"10-03-2017 00:00:00\",\r\n       \"action\" : \"create\",\r\n       \"did\" : \"1\",\r\n       \"key\" : \"abcdkey\",\r\n       \"msgId\" : \"20170310130900\",\r\n       \"requesterId\" : \"rajesh\",\r\n       \"authToken\" : \"b708912c-1851-4672-a9c4-426c657089b5\"\r\n   }\r\n }"
+										},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "Receiving Center Update",
+									"request": {
+										"url": "http://localhost:8080/pgr-master/receivingcenter/v1/_update",
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n   \"RequestInfo\": {\r\n       \"apiId\" : \"emp\",\r\n       \"ver\" : \"1.0\",\r\n       \"ts\" : \"10-03-2017 00:00:00\",\r\n       \"action\" : \"create\",\r\n       \"did\" : \"1\",\r\n       \"key\" : \"abcdkey\",\r\n       \"msgId\" : \"20170310130900\",\r\n       \"requesterId\" : \"rajesh\",\r\n       \"authToken\" :  \"645d587c-7225-4739-b07c-6605a1a249da\",\r\n       \"userInfo\" : {\r\n         \"id\" : 4\r\n       }\r\n   },\r\n   \r\n   \"ReceivingCenterType\":{\r\n     \"id\" : 22,\r\n     \"name\" :\"BangaloreOne\",\r\n     \"code\" :\"BangaloreOne\",\r\n     \"description\" :\"testdescription\",\r\n     \"active\" :\"true\",\r\n     \"iscrnrequired\" : \"true\",\r\n     \"orderno\" :\"14\",\r\n     \"tenantId\":\"default\"\r\n     \r\n     \r\n   }\r\n}"
+										},
+										"description": ""
+									},
+									"response": []
+								}
+							],
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "Receiving Mode",
+							"description": "",
+							"item": [
+								{
+									"name": "Receiving Mode Create",
+									"request": {
+										"url": "http://localhost:8093/pgr-master/receivingmode/v1/_create",
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{  \n   \"ReceivingModeType\":{  \n      \"name\":\"BBBB\",\n      \"code\":\"BBBB\",\n      \"description\":\"BBB\",\n      \"active\":false,\n      \"tenantId\":\"default\",\n      \"channels\":[  \n         \"MOBILE\"\n      ]\n   },\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":\"27-06-2017 10:30:12\",\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"b3293be0-1972-4ff3-880c-0363f137e8af\",\n       \"userInfo\" : { \n      \"id\" : 5\n    }\n   }\n}"
+										},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "Receiving Mode Search",
+									"request": {
+										"url": {
+											"raw": "http://localhost:8093/pgr-master/receivingmode/v1/_search?tenantId=default",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8093",
+											"path": [
+												"pgr-master",
+												"receivingmode",
+												"v1",
+												"_search"
+											],
+											"query": [
+												{
+													"key": "tenantId",
+													"value": "default",
+													"equals": true,
+													"description": ""
+												}
+											],
+											"variable": []
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": " {\r\n   \"RequestInfo\": {\r\n       \"apiId\" : \"emp\",\r\n       \"ver\" : \"1.0\",\r\n       \"ts\" : \"10-03-2017 00:00:00\",\r\n       \"action\" : \"create\",\r\n       \"did\" : \"1\",\r\n       \"key\" : \"abcdkey\",\r\n       \"msgId\" : \"20170310130900\",\r\n       \"requesterId\" : \"rajesh\",\r\n       \"authToken\" : \"b708912c-1851-4672-a9c4-426c657089b5\"\r\n   }\r\n }"
+										},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "Receiving Mode Update",
+									"request": {
+										"url": "http://localhost:8093/pgr-master/receivingmode/v1/_update",
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{  \n   \"ReceivingModeType\":{  \n      \"name\":\"BBBB\",\n      \"code\":\"BBBB\",\n      \"description\":\"nxkdlncls\",\n      \"active\":false,\n      \"tenantId\":\"default\",\n      \"channels\":[  \n         \"MOBILE\"\n      ]\n   },\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":\"27-06-2017 10:30:12\",\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"b3293be0-1972-4ff3-880c-0363f137e8af\",\n      \"userInfo\" : { \n      \"id\" : 5\n    }\n   }\n}"
+										},
+										"description": ""
+									},
+									"response": []
+								}
+							],
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "Router Type",
+							"description": "",
+							"item": [
+								{
+									"name": "Router Type Search",
+									"request": {
+										"url": {
+											"raw": "http://egov-micro-dev.egovernments.org/workflow/router/v1/_search?tenantId=default&boundaryid=175,177,178",
+											"protocol": "http",
+											"host": [
+												"egov-micro-dev",
+												"egovernments",
+												"org"
+											],
+											"path": [
+												"workflow",
+												"router",
+												"v1",
+												"_search"
+											],
+											"query": [
+												{
+													"key": "tenantId",
+													"value": "default",
+													"equals": true,
+													"description": ""
+												},
+												{
+													"key": "boundaryid",
+													"value": "175,177,178",
+													"equals": true,
+													"description": ""
+												}
+											],
+											"variable": []
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n\"RequestInfo\":{\n\"apiId\": \"1\",\n\"ver\": \"1\",\n\"ts\": \"01-01-2017 01:01:01\",\n\"action\": null,\n\"did\": \"\",\n\"key\": \"\",\n\"msgId\": \"\",\n\"requesterId\": \"\",\n\"authToken\": \"e765f701-3a7f-499b-af07-05272fcca389\"\n}\n}"
+										},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "Create Router",
+									"request": {
+										"url": "{{url}}/workflow/router/v1/_create",
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{  \n   \"routertype\":{  \n      \"position\":2,\n      \"active\":true,\n      \"id\":\"\",\n      \"services\":[  \n         {  \n            \"id\":122\n         }\n      ],\n      \"boundaries\":[  \n         {  \n            \"boundarytype\":\"173\"\n         }\n      ],\n      \"tenantId\":\"default\"\n   },\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":\"27-06-2017 10:30:12\",\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"{{access_token}}\",\n      \"userInfo\":{\n      \t\"id\":7\n      }\n   }\n}"
+										},
+										"description": "    "
+									},
+									"response": []
+								},
+								{
+									"name": "Router Update",
+									"request": {
+										"url": "localhost:8086/workflow/router/v1/_update",
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{  \n   \"routertype\":{  \n      \"position\":1,\n      \"active\":true,\n      \"id\":102,\n      \"services\":[  \n         {  \n            \"id\":122\n         }\n      ],\n      \"boundaries\":[  \n         {  \n            \"boundarytype\":173\n         }\n      ],\n      \"tenantId\":\"default\"\n   },\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":\"27-06-2017 10:30:12\",\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"2af8d38a-0ca9-4b32-8764-edd07444be56\",\n      \"userInfo\":{\n      \t\"id\":7\n      }\n   }\n}"
+										},
+										"description": "    "
+									},
+									"response": []
+								},
+								{
+									"name": "Create Router Local",
+									"request": {
+										"url": "http://localhost:8086/workflow/router/v1/_create",
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{  \n   \"routertype\":{  \n      \"position\":2,\n      \"active\":true,\n      \"id\":\"\",\n      \"services\":[  \n         {  \n            \"id\":43\n         }\n      ],\n      \"boundaries\":[  \n         {  \n            \"boundarytype\":\"173\"\n         }\n      ],\n      \"tenantId\":\"default\"\n   },\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":\"27-06-2017 10:30:12\",\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"9f0673e4-6f62-42d7-befe-0643e6833fb7\",\n      \"userInfo\" : { \n      \"id\" : 5\n    }\n   }\n}"
+										},
+										"description": "    "
+									},
+									"response": []
+								}
+							],
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "Escalation Time Type",
+							"description": "",
+							"item": [
+								{
+									"name": "Escalation Time Type Create",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"Status code is 200\"] = responseCode.code === 200;"
+												]
+											}
+										}
+									],
+									"request": {
+										"url": "{{url}}/workflow/escalation-hours/v1/_create",
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"10-03-2017 00:00:00\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n       \"authToken\" : \"{{access_token}}\"\n     }, \n\n  \"EscalationTimeType\": {\n    \"grievancetype\": {\n      \"id\": {{id}}\n    },\n    \"noOfHours\": \"9\",\n    \"designation\": 6,\n    \"tenantId\": \"default\"\n  }\n}"
+										},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "Escalation Time Type Search",
+									"request": {
+										"url": {
+											"raw": "{{url}}/workflow/escalation-hours/v1/_search?tenantId=default&id=222",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"workflow",
+												"escalation-hours",
+												"v1",
+												"_search"
+											],
+											"query": [
+												{
+													"key": "tenantId",
+													"value": "default",
+													"equals": true,
+													"description": ""
+												},
+												{
+													"key": "id",
+													"value": "222",
+													"equals": true,
+													"description": ""
+												}
+											],
+											"variable": []
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"10-03-2017 00:00:00\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n       \"authToken\" : \"{{access_token}}\"\n   }\n}"
+										},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "Escalation Time Type Update",
+									"request": {
+										"url": "localhost:8086/workflow/escalation-hours/v1/_update",
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"10-03-2017 00:00:00\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n       \"authToken\" : \"69987a74-86f3-4de1-b30f-ec26afb4d737\",\n       \"userInfo\" : {\n         \"id\" : 9\n       }\n      \n   }, \n  \"EscalationTimeType\": {\n    \"id\":5,\n       \"tenantId\" : \"default\", \n      \"grievanceType\" : {\n        \"id\" : 135\n      },\n      \"noOfHours\" : 49,\n      \"designation\" : 2,\n      \"active\" : true,\n      \"auditDetails\" : {\n        \"createdbBy\" : 1\n      }\n  }\n}"
+										},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "Escalation Hours Search",
+									"request": {
+										"url": {
+											"raw": "http://localhost:8086/workflow/escalation-hours/v1/_search?tenantId=default&id=101",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8086",
+											"path": [
+												"workflow",
+												"escalation-hours",
+												"v1",
+												"_search"
+											],
+											"query": [
+												{
+													"key": "tenantId",
+													"value": "default",
+													"equals": true,
+													"description": ""
+												},
+												{
+													"key": "id",
+													"value": "101",
+													"equals": true,
+													"description": ""
+												}
+											],
+											"variable": []
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n     \"RequestInfo\": {\r\n       \"apiId\" : \"emp\",\r\n       \"ver\" : \"1.0\",\r\n       \"ts\" : \"10-03-2017 00:00:00\",\r\n       \"action\" : \"create\",\r\n       \"did\" : \"1\",\r\n       \"key\" : \"abcdkey\",\r\n       \"msgId\" : \"20170310130900\",\r\n       \"requesterId\" : \"rajesh\",\r\n       \"authToken\" : \"9a36ac64-7ff0-4696-8276-b964f10443a4\"\r\n   }\r\n}"
+										},
+										"description": ""
+									},
+									"response": []
+								}
+							],
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "Grievance Type",
+							"description": "",
+							"item": [
+								{
+									"name": "Grievance Type Create",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"Status code is 200\"] = responseCode.code === 200;",
+													""
+												]
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"var name2 = Math.floor((Math.random() * 1000000));",
+													"",
+													"postman.setEnvironmentVariable(\"name\", \"Test_\"+name2);"
+												]
+											}
+										}
+									],
+									"request": {
+										"url": "{{url}}/pgr-master/service/v1/_create",
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n \"Service\": {\n   \"serviceCode\": \"{{name}}\",\n   \"description\" : \"Test the Grievance Type\",\n   \"serviceName\": \"{{name}}\",\n   \"keywords\": [\n     \"{{name}}\"\n   ],\n   \"category\": 4,\n   \"attributes\": [\n     {\n       \"code\": \"MLU\",\n       \"groupCode\": \"{{name\",\n       \"datatypeDescription\": \"MLU\",\n       \"description\": \"{{name}}\",\n       \"required\": true,\n       \"variable\": true,\n       \"datatype\": \"Single value list\",\n       \"attributes\": [\n         {\n           \"key\": \"MLI\",\n           \"name\": \"MLU\"\n         }\n       ]\n     }\n   ],\n   \"slaHours\": 25,\n   \"metadata\": true,\n   \"tenantId\": \"default\"\n },\n \n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": \"01-04-2017 01:01:01\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\",\n    \"userInfo\" : {\n      \"id\" : 9\n    }\n  }\n}"
+										},
+										"description": "    "
+									},
+									"response": []
+								},
+								{
+									"name": "Grievance Type Search",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"Status code is 200\"] = responseCode.code === 200;",
+													"",
+													"var jsonData = JSON.parse(responseBody);",
+													"",
+													"postman.setEnvironmentVariable(\"id\", jsonData.Service[0].id);",
+													"tests[\"Code matches string\"] = jsonData.Service[0].serviceCode.has(environment.name);",
+													"tests[\"Name matches string\"] = jsonData.Service[0].serviceName.has(environment.name);"
+												]
+											}
+										}
+									],
+									"request": {
+										"url": {
+											"raw": "{{url}}/pgr-master/service/v1/_search?tenantId=default&keywords={{name}}&serviceCode={{name}}",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"pgr-master",
+												"service",
+												"v1",
+												"_search"
+											],
+											"query": [
+												{
+													"key": "tenantId",
+													"value": "default",
+													"equals": true,
+													"description": ""
+												},
+												{
+													"key": "keywords",
+													"value": "{{name}}",
+													"equals": true,
+													"description": ""
+												},
+												{
+													"key": "code",
+													"value": "SPOW",
+													"equals": true,
+													"description": "",
+													"disabled": true
+												},
+												{
+													"key": "serviceCode",
+													"value": "{{name}}",
+													"equals": true,
+													"description": ""
+												}
+											],
+											"variable": []
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n     \"RequestInfo\": {\r\n       \"apiId\" : \"emp\",\r\n       \"ver\" : \"1.0\",\r\n       \"ts\" : \"10-03-2017 00:00:00\",\r\n       \"action\" : \"create\",\r\n       \"did\" : \"1\",\r\n       \"key\" : \"abcdkey\",\r\n       \"msgId\" : \"20170310130900\",\r\n       \"requesterId\" : \"rajesh\",\r\n       \"authToken\" : \"{{access_token}}\"\r\n   }\r\n}"
+										},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "Grievance Type Update",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"Status code is 200\"] = responseCode.code === 200;",
+													"",
+													"var jsonData = JSON.parse(responseBody);",
+													"",
+													"tests[\"Code matches string\"] = jsonData.Service[0].serviceCode.has(environment.name);",
+													"tests[\"Name matches string\"] = jsonData.Service[0].serviceName.has(environment.name);"
+												]
+											}
+										}
+									],
+									"request": {
+										"url": "{{url}}/pgr-master/service/v1/_update",
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{  \n  \"Service\":{  \n     \"serviceCode\":\"{{name}}\",\n     \"serviceName\":\"{{name}}\",\n     \"description\":\"Testing the master\",\n     \"active\":true,\n     \"type\":null,\n     \"keywords\":[  \n        \"{{name}}\"\n     ],\n     \"category\":122,\n     \"hasFinancialImpact\":false,\n     \"attributes\":[  \n        {  \n           \"variable\":true,\n           \"code\":\"PRIORITY\",\n           \"dataType\":\"singlevaluelist\",\n           \"required\":true,\n           \"dataTypeDescription\":null,\n           \"description\":\"pgr.priority\",\n           \"groupCode\":\"pgr.group\",\n           \"url\":null,\n           \"roles\":[  \n              \"EMPLOYEE\"\n           ],\n           \"actions\":[  \n              \"UPDATE\"\n           ],\n           \"attribValues\":[  \n              {  \n                 \"key\":\"PRIORITY-1\",\n                 \"name\":\"pgr.priority.one\",\n                 \"isActive\":true\n              },\n              {  \n                 \"key\":\"PRIORITY-2\",\n                 \"name\":\"pgr.priority.two\",\n                 \"isActive\":true\n              },\n              {  \n                 \"key\":\"PRIORITY-3\",\n                 \"name\":\"pgr.priority.three\",\n                 \"isActive\":true\n              }\n           ]\n        }\n     ],\n     \"slaHours\":12,\n     \"metadata\":false,\n     \"tenantId\":\"default\"\n  },\n  \"RequestInfo\":{  \n     \"apiId\":\"org.egov.pt\",\n     \"ver\":\"1.0\",\n     \"ts\":\"27-06-2017 10:30:12\",\n     \"action\":\"asd\",\n     \"did\":\"4354648646\",\n     \"key\":\"xyz\",\n     \"msgId\":\"654654\",\n     \"requesterId\":\"61\",\n     \"authToken\":\"{{access_token}}\"\n  }\n}"
+										},
+										"description": "      "
+									},
+									"response": []
+								}
+							],
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "Escalation Hierarchy",
+							"description": "",
+							"item": [
+								{
+									"name": "Escalation Hierarchy Create",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"Status code is 200\"] = responseCode.code === 200;",
+													"",
+													"var jsonData = JSON.parse(responseBody);",
+													"",
+													"postman.setEnvironmentVariable(\"code\", jsonData.escalationHierarchies[0].serviceCode);"
+												]
+											}
+										}
+									],
+									"request": {
+										"url": "{{url}}/pgr-master/escalation-hierarchy/v1/_create",
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"escalationHierarchy\": [\n    {\n      \"serviceCode\": \"{{name}}\",\n      \"tenantId\": \"default\",\n      \"fromPosition\": 1,\n      \"toPosition\": 2,\n      \"department\": 9,\n      \"designation\": 1\n    }\n  ],\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": \"01-04-2017 01:01:01\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n    }\n}"
+										},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "Escalation Hierarchy Search",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"Status code is 200\"] = responseCode.code === 200;",
+													"",
+													"var jsonData = JSON.parse(responseBody);",
+													"",
+													"tests[\"code matches string\"] = jsonData.escalationHierarchies[0].serviceCode.has(environment.code);"
+												]
+											}
+										}
+									],
+									"request": {
+										"url": {
+											"raw": "{{url}}/pgr-master/escalation-hierarchy/v1/_search?tenantId=default&serviceCode={{code}}",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"pgr-master",
+												"escalation-hierarchy",
+												"v1",
+												"_search"
+											],
+											"query": [
+												{
+													"key": "tenantId",
+													"value": "default",
+													"equals": true,
+													"description": ""
+												},
+												{
+													"key": "serviceCode",
+													"value": "{{code}}",
+													"equals": true,
+													"description": ""
+												}
+											],
+											"variable": []
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"10-03-2017 00:00:00\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n       \"authToken\" : \"{{access_token}}\"\n   }\n}"
+										},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "Escalation Hierarchy Update",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"Status code is 200\"] = responseCode.code === 200;",
+													"",
+													"var jsonData = JSON.parse(responseBody);",
+													"",
+													"tests[\"code matches string\"] = jsonData.escalationHierarchies[0].serviceCode.has(environment.code);"
+												]
+											}
+										}
+									],
+									"request": {
+										"url": "{{url}}/pgr-master/escalation-hierarchy/v1/_update",
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"escalationHierarchy\": [\n    {\n      \"serviceCode\": \"{{code}}\",\n      \"tenantId\": \"default\",\n      \"fromPosition\": 2,\n      \"toPosition\": 6,\n      \"department\": 2,\n      \"designation\": 2\n    }\n  ],\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": \"01-04-2017 01:01:01\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n  }\n}"
+										},
+										"description": ""
+									},
+									"response": []
+								}
+							],
+							"_postman_isSubFolder": true
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "PGR_Transaction",
+					"description": "",
+					"item": [
+						{
+							"name": "CREATE",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"if(responseCode.code === 201){",
+											"tests[\"Status code is 201\"] = responseCode.code === 201;",
+											"postman.setEnvironmentVariable(\"id\", jsonData.serviceRequests[0].serviceRequestId);",
+											"}else{",
+											"    tests[\"Status code is 400\"] = responseCode.code === 400;",
+											"    tests[\"Service Code is invalid\"] = jsonData.error.message.has(\"Service code 'RGW' is invalid for given tenant\");",
+											"}",
+											""
+										]
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"var msgs = [\"PGR.INVALID_SERVICE_TYPE_CODE\", \"Errors2\"];",
+											"",
+											"postman.setEnvironmentVariable(\"msgs\", msgs);",
+											"",
+											"console.log(msgs.length);"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": "{{url}}/pgr/seva/v1/_create",
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{  \n   \"serviceRequest\":{  \n      \"serviceCode\":\"RGW\",\n      \"description\":\"cbwwhdbckjecbkjbsbsd\",\n      \"addressId\":146,\n      \"lat\":\"0.0\",\n      \"lng\":\"0.0\",\n      \"serviceRequestId\":\"\",\n      \"firstName\":\"SANJEEV\",\n      \"phone\":\"9036623763\",\n      \"email\":\"sanjeev@gmail.com\",\n      \"status\":true,\n      \"serviceName\":\"\",\n      \"requestedDatetime\":\"\",\n      \"mediaUrl\":\"\",\n      \"tenantId\":\"default\",\n      \"isAttribValuesPopulated\":true,\n      \"attribValues\":[  \n         {  \n            \"key\":\"systemReceivingMode\",\n            \"name\":\"CALL\"\n         },\n         {  \n            \"key\":\"systemFeedBack\",\n            \"name\":\"3\"\n         },\n         {  \n            \"key\":\"systemStatus\",\n            \"name\":\"REGISTERED\"\n         },\n         {  \n            \"key\":\"systemRequesterAddress\",\n            \"name\":\"cdacc ds\"\n         },\n         {  \n            \"key\":\"systemKeyword\",\n            \"name\":\"Complaint\"\n         },\n         {\n         \t\"key\" : \"keyword\",\n         \t\"name\" : \"complaint\"\n         }\n      ]\n   },\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":\"01-04-2017 01:01:01\",\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\": \"{{access_token}}\"\n   }\n}"
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "SEARCH",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"tests[\"Status code is 200\"] = responseCode.code === 200;",
+											"",
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"tests[\"Body matches string\"] = jsonData.serviceRequests[0].serviceRequestId.has(environment.id);"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": {
+									"raw": "{{url}}/pgr/seva/v1/_search?tenantId=default&serviceRequestId={{id}}",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"pgr",
+										"seva",
+										"v1",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "tenantId",
+											"value": "default",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "serviceRequestId",
+											"value": "{{id}}",
+											"equals": true,
+											"description": ""
+										}
+									],
+									"variable": []
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{  \n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pgr\",\n      \"ver\":\"1.0\",\n      \"ts\":\"21-04-2017 16:20:57\",\n      \"action\":\"POST\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\": \"{{access_token}}\"\n   }\n}"
+								},
+								"description": "to search/get a complaint"
+							},
+							"response": []
+						},
+						{
+							"name": "UPDATE",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"tests[\"Status code is 200\"] = responseCode.code === 200;",
+											"",
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"tests[\"Body matches string\"] = jsonData.serviceRequests[0].serviceRequestId.has(environment.id);"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": "{{url}}/pgr/seva/v1/_update",
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"serviceRequest\": {\n    \"tenantId\": \"default\",\n    \"serviceRequestId\": \"{{id}}\",\n    \"status\": false,\n    \"serviceName\": \"Broken Bin\",\n    \"serviceCode\": \"BRKNB\",\n    \"description\": \"Creating Grievance: \",\n    \"agencyResponsible\": null,\n    \"serviceNotice\": null,\n    \"requestedDatetime\": \"21-08-2017 18:43:39\",\n    \"updatedDatetime\": \"8-21-2017 6:46:39 PM\",\n    \"expectedDatetime\": \"23-08-2017 18:43:40\",\n    \"address\": null,\n    \"addressId\": null,\n    \"zipcode\": null,\n    \"lat\": 0,\n    \"lng\": 0,\n    \"mediaUrls\": null,\n    \"firstName\": \"Karthik\",\n    \"lastName\": null,\n    \"phone\": \"9036623763\",\n    \"email\": \"karthik@gmail.com\",\n    \"deviceId\": null,\n    \"accountId\": null,\n    \"attribValues\": [\n      {\n        \"key\": \"systemReceivingMode\",\n        \"name\": \"EMAIL\"\n      },\n      {\n        \"key\": \"systemFeedBack\",\n        \"name\": \"3\"\n      },\n      {\n        \"key\": \"systemStatus\",\n        \"name\": \"FORWARDED\"\n      },\n      {\n        \"key\": \"systemRequesterAddress\",\n        \"name\": \"Bengaluru, Karnataka\"\n      },\n      {\n        \"key\": \"keyword\",\n        \"name\": \"complaint\"\n      },\n      {\n        \"key\": \"systemLocationId\",\n        \"name\": \"337\"\n      },\n      {\n        \"key\": \"systemLocationName\",\n        \"name\": \"Election Ward No 39\"\n      },\n      {\n        \"key\": \"systemChildLocationId\",\n        \"name\": \"48\"\n      },\n      {\n        \"key\": \"systemPositionId\",\n        \"name\": 21\n      },\n      {\n        \"key\": \"systemStateId\",\n        \"name\": \"419\"\n      },\n      {\n        \"key\": \"systemDesignationId\",\n        \"name\": \"1\"\n      },\n      {\n        \"key\": \"systemDepartmentId\",\n        \"name\": \"1\"\n      },\n      {\n        \"key\": \"systemEscalationHours\",\n        \"name\": \"48\"\n      },\n      {\n        \"key\": \"systemApprovalComments\",\n        \"name\": \"Forwarded to Commissioner\"\n      }\n    ]\n  },\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": \"27-06-2017 10:30:12\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n  }\n}"
+								},
+								"description": ""
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				}
+			]
+		},
+		{
+			"name": "FunctionalTests",
+			"description": "",
+			"item": [
+				{
+					"name": "PGR_Masters",
+					"description": "",
+					"item": [
+						{
+							"name": "Service Group",
+							"description": "",
+							"item": [
+								{
+									"name": "Create Service Group ",
+									"request": {
+										"url": "http://localhost:8093/pgr-master/serviceGroup/v1/_create",
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"ServiceGroup\": {\n    \"name\": \"MyNewCategory001\",\n    \"code\": \"MyNewCategory001\",\n    \"description\": \"Group Service One\",\n    \"tenantId\": \"default\"\n  },\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": \"01-04-2017 01:01:01\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"cd117e86-6826-4944-ab04-f70042c8b251\",\n    \"userInfo\" : { \n      \"id\" : 9\n    }\n  }\n}"
+										},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "Search Service Group ",
+									"request": {
+										"url": {
+											"raw": "http://egov-micro-qa.egovernments.org/pgr-master/serviceGroup/v1/_search?tenantId=default",
+											"protocol": "http",
+											"host": [
+												"egov-micro-qa",
+												"egovernments",
+												"org"
+											],
+											"path": [
+												"pgr-master",
+												"serviceGroup",
+												"v1",
+												"_search"
+											],
+											"query": [
+												{
+													"key": "tenantId",
+													"value": "default",
+													"equals": true,
+													"description": ""
+												},
+												{
+													"key": "keyword",
+													"value": "coplaint",
+													"equals": true,
+													"description": "",
+													"disabled": true
+												}
+											],
+											"variable": []
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "  {\r\n       \"RequestInfo\": {\r\n         \"apiId\" : \"emp\",\r\n         \"ver\" : \"1.0\",\r\n         \"ts\" : \"10-03-2017 00:00:00\",\r\n         \"action\" : \"create\",\r\n         \"did\" : \"1\",\r\n         \"key\" : \"abcdkey\",\r\n         \"msgId\" : \"20170310130900\",\r\n         \"requesterId\" : \"rajesh\",\r\n         \"authToken\" : \"b62ffcf5-7f17-4836-a36d-62c854ffcc23\"\r\n     }\r\n  }"
+										},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "Update Service Group",
+									"request": {
+										"url": "http://localhost:8080/pgr-master/serviceGroup/v1/_update",
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"ServiceGroup\": {\n    \"id\" : 19,\n    \"name\": \"MyNewCategory001\",\n    \"code\": \"MyNewCategory001\",\n    \"description\": \"Service Group Updated\",\n    \"tenantId\": \"default\"\n  },\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": \"01-04-2017 01:01:01\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"645d587c-7225-4739-b07c-6605a1a249da\",\n    \"userInfo\" : { \n      \"id\" : 3\n    }\n  }\n}"
+										},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "Search Service Group Old",
+									"request": {
+										"url": {
+											"raw": "http://egov-micro-dev.egovernments.org/pgr/servicecategories/_search?tenantId=default",
+											"protocol": "http",
+											"host": [
+												"egov-micro-dev",
+												"egovernments",
+												"org"
+											],
+											"path": [
+												"pgr",
+												"servicecategories",
+												"_search"
+											],
+											"query": [
+												{
+													"key": "tenantId",
+													"value": "default",
+													"equals": true,
+													"description": ""
+												}
+											],
+											"variable": []
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n     \"RequestInfo\": {\r\n       \"apiId\" : \"emp\",\r\n       \"ver\" : \"1.0\",\r\n       \"ts\" : \"10-03-2017 00:00:00\",\r\n       \"action\" : \"create\",\r\n       \"did\" : \"1\",\r\n       \"key\" : \"abcdkey\",\r\n       \"msgId\" : \"20170310130900\",\r\n       \"requesterId\" : \"rajesh\",\r\n       \"authToken\" : \"4bae9d95-be21-479a-9a56-9eb2af25b42b\"\r\n   }\r\n}"
+										},
+										"description": ""
+									},
+									"response": []
+								}
+							],
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "OTP Config",
+							"description": "",
+							"item": [
+								{
+									"name": "OTP Config Create",
+									"request": {
+										"url": "http://egov-micro-dev.egovernments.org/pgr-master/OTPConfig/_create",
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n     \"RequestInfo\": {\r\n       \"apiId\" : \"emp\",\r\n       \"ver\" : \"1.0\",\r\n       \"ts\" : \"10-03-2017 00:00:00\",\r\n       \"action\" : \"create\",\r\n       \"did\" : \"1\",\r\n       \"key\" : \"abcdkey\",\r\n       \"msgId\" : \"20170310130900\",\r\n       \"requesterId\" : \"rajesh\",\r\n       \"authToken\" : \"6f106c4a-aa5d-41fa-a5f6-a6c339625e93\"\r\n   },\r\n    \"otpConfig\" : {\r\n     \"tenantId\" : \"BLR090\",\r\n     \"otpEnabledForAnonymousComplaint\" : true\r\n   }\r\n}"
+										},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "OTP Config Search",
+									"request": {
+										"url": {
+											"raw": "http://egov-micro-qa.egovernments.org/pgr-master/OTPConfig/_search?tenantId=default",
+											"protocol": "http",
+											"host": [
+												"egov-micro-qa",
+												"egovernments",
+												"org"
+											],
+											"path": [
+												"pgr-master",
+												"OTPConfig",
+												"_search"
+											],
+											"query": [
+												{
+													"key": "tenantId",
+													"value": "default",
+													"equals": true,
+													"description": ""
+												}
+											],
+											"variable": []
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n}"
+										},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "OTP Config Update",
+									"request": {
+										"url": "http://localhost:8080/pgr-master/OTPConfig/_update",
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n     \"RequestInfo\": {\r\n       \"apiId\" : \"emp\",\r\n       \"ver\" : \"1.0\",\r\n       \"ts\" : \"10-03-2017 00:00:00\",\r\n       \"action\" : \"create\",\r\n       \"did\" : \"1\",\r\n       \"key\" : \"abcdkey\",\r\n       \"msgId\" : \"20170310130900\",\r\n       \"requesterId\" : \"rajesh\",\r\n       \"authToken\" : \"23d44646-37f7-4571-9f71-7d07d3d8b27d\",\r\n       \"userInfo\" : {\r\n         \"id\" : 2\r\n       }\r\n   },\r\n   \"otpConfig\" : {\r\n     \"tenantId\" : \"BLR04\",\r\n     \"otpEnabledForAnonymousComplaint\" : false\r\n   }\r\n}"
+										},
+										"description": ""
+									},
+									"response": []
+								}
+							],
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "Receiving Center",
+							"description": "",
+							"item": [
+								{
+									"name": "Receiving Center Create",
+									"request": {
+										"url": "http://localhost:8093/pgr-master/receivingcenter/v1/_create",
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": " {\r\n   \"RequestInfo\": {\r\n       \"apiId\" : \"emp\",\r\n       \"ver\" : \"1.0\",\r\n       \"ts\" : \"10-03-2017 00:00:00\",\r\n       \"action\" : \"create\",\r\n       \"did\" : \"1\",\r\n       \"key\" : \"abcdkey\",\r\n       \"msgId\" : \"20170310130900\",\r\n       \"requesterId\" : \"rajesh\",\r\n       \"authToken\" : \"b708912c-1851-4672-a9c4-426c657089b5\",\r\n       \"userInfo\" : {\r\n         \"id\" : 4\r\n       }\r\n   },\r\n   \r\n   \"ReceivingCenterType\":{\r\n     \r\n     \"name\" :\"BangaloreOne\",\r\n     \"code\" :\"BangaloreOne\",\r\n     \"description\" :\"Complaint Cell\",\r\n     \"active\" :\"true\",\r\n     \"iscrnrequired\" : \"false\",\r\n     \"orderno\" :\"14\",\r\n     \"tenantId\":\"default\"\r\n     \r\n     \r\n   }\r\n}"
+										},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "Receiving Center Search",
+									"request": {
+										"url": {
+											"raw": "http://localhost:8093/pgr-master/receivingcenter/v1/_search?tenantId=default",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8093",
+											"path": [
+												"pgr-master",
+												"receivingcenter",
+												"v1",
+												"_search"
+											],
+											"query": [
+												{
+													"key": "tenantId",
+													"value": "default",
+													"equals": true,
+													"description": ""
+												}
+											],
+											"variable": []
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": " {\r\n   \"RequestInfo\": {\r\n       \"apiId\" : \"emp\",\r\n       \"ver\" : \"1.0\",\r\n       \"ts\" : \"10-03-2017 00:00:00\",\r\n       \"action\" : \"create\",\r\n       \"did\" : \"1\",\r\n       \"key\" : \"abcdkey\",\r\n       \"msgId\" : \"20170310130900\",\r\n       \"requesterId\" : \"rajesh\",\r\n       \"authToken\" : \"b708912c-1851-4672-a9c4-426c657089b5\"\r\n   }\r\n }"
+										},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "Receiving Center Update",
+									"request": {
+										"url": "http://localhost:8080/pgr-master/receivingcenter/v1/_update",
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n   \"RequestInfo\": {\r\n       \"apiId\" : \"emp\",\r\n       \"ver\" : \"1.0\",\r\n       \"ts\" : \"10-03-2017 00:00:00\",\r\n       \"action\" : \"create\",\r\n       \"did\" : \"1\",\r\n       \"key\" : \"abcdkey\",\r\n       \"msgId\" : \"20170310130900\",\r\n       \"requesterId\" : \"rajesh\",\r\n       \"authToken\" :  \"645d587c-7225-4739-b07c-6605a1a249da\",\r\n       \"userInfo\" : {\r\n         \"id\" : 4\r\n       }\r\n   },\r\n   \r\n   \"ReceivingCenterType\":{\r\n     \"id\" : 22,\r\n     \"name\" :\"BangaloreOne\",\r\n     \"code\" :\"BangaloreOne\",\r\n     \"description\" :\"testdescription\",\r\n     \"active\" :\"true\",\r\n     \"iscrnrequired\" : \"true\",\r\n     \"orderno\" :\"14\",\r\n     \"tenantId\":\"default\"\r\n     \r\n     \r\n   }\r\n}"
+										},
+										"description": ""
+									},
+									"response": []
+								}
+							],
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "Receiving Mode",
+							"description": "",
+							"item": [
+								{
+									"name": "Receiving Mode Create",
+									"request": {
+										"url": "http://localhost:8093/pgr-master/receivingmode/v1/_create",
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{  \n   \"ReceivingModeType\":{  \n      \"name\":\"BBBB\",\n      \"code\":\"BBBB\",\n      \"description\":\"BBB\",\n      \"active\":false,\n      \"tenantId\":\"default\",\n      \"channels\":[  \n         \"MOBILE\"\n      ]\n   },\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":\"27-06-2017 10:30:12\",\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"b3293be0-1972-4ff3-880c-0363f137e8af\",\n       \"userInfo\" : { \n      \"id\" : 5\n    }\n   }\n}"
+										},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "Receiving Mode Search",
+									"request": {
+										"url": {
+											"raw": "http://localhost:8093/pgr-master/receivingmode/v1/_search?tenantId=default",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8093",
+											"path": [
+												"pgr-master",
+												"receivingmode",
+												"v1",
+												"_search"
+											],
+											"query": [
+												{
+													"key": "tenantId",
+													"value": "default",
+													"equals": true,
+													"description": ""
+												}
+											],
+											"variable": []
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": " {\r\n   \"RequestInfo\": {\r\n       \"apiId\" : \"emp\",\r\n       \"ver\" : \"1.0\",\r\n       \"ts\" : \"10-03-2017 00:00:00\",\r\n       \"action\" : \"create\",\r\n       \"did\" : \"1\",\r\n       \"key\" : \"abcdkey\",\r\n       \"msgId\" : \"20170310130900\",\r\n       \"requesterId\" : \"rajesh\",\r\n       \"authToken\" : \"b708912c-1851-4672-a9c4-426c657089b5\"\r\n   }\r\n }"
+										},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "Receiving Mode Update",
+									"request": {
+										"url": "http://localhost:8093/pgr-master/receivingmode/v1/_update",
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{  \n   \"ReceivingModeType\":{  \n      \"name\":\"BBBB\",\n      \"code\":\"BBBB\",\n      \"description\":\"nxkdlncls\",\n      \"active\":false,\n      \"tenantId\":\"default\",\n      \"channels\":[  \n         \"MOBILE\"\n      ]\n   },\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":\"27-06-2017 10:30:12\",\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"b3293be0-1972-4ff3-880c-0363f137e8af\",\n      \"userInfo\" : { \n      \"id\" : 5\n    }\n   }\n}"
+										},
+										"description": ""
+									},
+									"response": []
+								}
+							],
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "Router Type",
+							"description": "",
+							"item": [
+								{
+									"name": "Router Type Search",
+									"request": {
+										"url": {
+											"raw": "http://egov-micro-dev.egovernments.org/workflow/router/v1/_search?tenantId=default&boundaryid=175,177,178",
+											"protocol": "http",
+											"host": [
+												"egov-micro-dev",
+												"egovernments",
+												"org"
+											],
+											"path": [
+												"workflow",
+												"router",
+												"v1",
+												"_search"
+											],
+											"query": [
+												{
+													"key": "tenantId",
+													"value": "default",
+													"equals": true,
+													"description": ""
+												},
+												{
+													"key": "boundaryid",
+													"value": "175,177,178",
+													"equals": true,
+													"description": ""
+												}
+											],
+											"variable": []
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n\"RequestInfo\":{\n\"apiId\": \"1\",\n\"ver\": \"1\",\n\"ts\": \"01-01-2017 01:01:01\",\n\"action\": null,\n\"did\": \"\",\n\"key\": \"\",\n\"msgId\": \"\",\n\"requesterId\": \"\",\n\"authToken\": \"e765f701-3a7f-499b-af07-05272fcca389\"\n}\n}"
+										},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "Create Router",
+									"request": {
+										"url": "{{url}}/workflow/router/v1/_create",
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{  \n   \"routertype\":{  \n      \"position\":2,\n      \"active\":true,\n      \"id\":\"\",\n      \"services\":[  \n         {  \n            \"id\":122\n         }\n      ],\n      \"boundaries\":[  \n         {  \n            \"boundarytype\":\"173\"\n         }\n      ],\n      \"tenantId\":\"default\"\n   },\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":\"27-06-2017 10:30:12\",\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"{{access_token}}\",\n      \"userInfo\":{\n      \t\"id\":7\n      }\n   }\n}"
+										},
+										"description": "    "
+									},
+									"response": []
+								},
+								{
+									"name": "Router Update",
+									"request": {
+										"url": "localhost:8086/workflow/router/v1/_update",
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{  \n   \"routertype\":{  \n      \"position\":1,\n      \"active\":true,\n      \"id\":102,\n      \"services\":[  \n         {  \n            \"id\":122\n         }\n      ],\n      \"boundaries\":[  \n         {  \n            \"boundarytype\":173\n         }\n      ],\n      \"tenantId\":\"default\"\n   },\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":\"27-06-2017 10:30:12\",\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"2af8d38a-0ca9-4b32-8764-edd07444be56\",\n      \"userInfo\":{\n      \t\"id\":7\n      }\n   }\n}"
+										},
+										"description": "    "
+									},
+									"response": []
+								},
+								{
+									"name": "Create Router Local",
+									"request": {
+										"url": "http://localhost:8086/workflow/router/v1/_create",
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{  \n   \"routertype\":{  \n      \"position\":2,\n      \"active\":true,\n      \"id\":\"\",\n      \"services\":[  \n         {  \n            \"id\":43\n         }\n      ],\n      \"boundaries\":[  \n         {  \n            \"boundarytype\":\"173\"\n         }\n      ],\n      \"tenantId\":\"default\"\n   },\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":\"27-06-2017 10:30:12\",\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"9f0673e4-6f62-42d7-befe-0643e6833fb7\",\n      \"userInfo\" : { \n      \"id\" : 5\n    }\n   }\n}"
+										},
+										"description": "    "
+									},
+									"response": []
+								}
+							],
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "Escalation Time Type",
+							"description": "",
+							"item": [
+								{
+									"name": "Escalation Time Type Create",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"Status code is 200\"] = responseCode.code === 200;"
+												]
+											}
+										}
+									],
+									"request": {
+										"url": "{{url}}/workflow/escalation-hours/v1/_create",
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"10-03-2017 00:00:00\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n       \"authToken\" : \"{{access_token}}\"\n     }, \n\n  \"EscalationTimeType\": {\n    \"grievancetype\": {\n      \"id\": {{id}}\n    },\n    \"noOfHours\": \"9\",\n    \"designation\": 6,\n    \"tenantId\": \"default\"\n  }\n}"
+										},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "Escalation Time Type Search",
+									"request": {
+										"url": {
+											"raw": "{{url}}/workflow/escalation-hours/v1/_search?tenantId=default&id=222",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"workflow",
+												"escalation-hours",
+												"v1",
+												"_search"
+											],
+											"query": [
+												{
+													"key": "tenantId",
+													"value": "default",
+													"equals": true,
+													"description": ""
+												},
+												{
+													"key": "id",
+													"value": "222",
+													"equals": true,
+													"description": ""
+												}
+											],
+											"variable": []
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"10-03-2017 00:00:00\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n       \"authToken\" : \"{{access_token}}\"\n   }\n}"
+										},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "Escalation Time Type Update",
+									"request": {
+										"url": "localhost:8086/workflow/escalation-hours/v1/_update",
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"10-03-2017 00:00:00\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n       \"authToken\" : \"69987a74-86f3-4de1-b30f-ec26afb4d737\",\n       \"userInfo\" : {\n         \"id\" : 9\n       }\n      \n   }, \n  \"EscalationTimeType\": {\n    \"id\":5,\n       \"tenantId\" : \"default\", \n      \"grievanceType\" : {\n        \"id\" : 135\n      },\n      \"noOfHours\" : 49,\n      \"designation\" : 2,\n      \"active\" : true,\n      \"auditDetails\" : {\n        \"createdbBy\" : 1\n      }\n  }\n}"
+										},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "Escalation Hours Search",
+									"request": {
+										"url": {
+											"raw": "http://localhost:8086/workflow/escalation-hours/v1/_search?tenantId=default&id=101",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8086",
+											"path": [
+												"workflow",
+												"escalation-hours",
+												"v1",
+												"_search"
+											],
+											"query": [
+												{
+													"key": "tenantId",
+													"value": "default",
+													"equals": true,
+													"description": ""
+												},
+												{
+													"key": "id",
+													"value": "101",
+													"equals": true,
+													"description": ""
+												}
+											],
+											"variable": []
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n     \"RequestInfo\": {\r\n       \"apiId\" : \"emp\",\r\n       \"ver\" : \"1.0\",\r\n       \"ts\" : \"10-03-2017 00:00:00\",\r\n       \"action\" : \"create\",\r\n       \"did\" : \"1\",\r\n       \"key\" : \"abcdkey\",\r\n       \"msgId\" : \"20170310130900\",\r\n       \"requesterId\" : \"rajesh\",\r\n       \"authToken\" : \"9a36ac64-7ff0-4696-8276-b964f10443a4\"\r\n   }\r\n}"
+										},
+										"description": ""
+									},
+									"response": []
+								}
+							],
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "Grievance Type",
+							"description": "",
+							"item": [
+								{
+									"name": "Grievance Type Create",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"Status code is 200\"] = responseCode.code === 200;",
+													""
+												]
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"var name2 = Math.floor((Math.random() * 1000000));",
+													"",
+													"postman.setEnvironmentVariable(\"name\", \"Test_\"+name2);"
+												]
+											}
+										}
+									],
+									"request": {
+										"url": "{{url}}/pgr-master/service/v1/_create",
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n \"Service\": {\n   \"serviceCode\": \"{{name}}\",\n   \"description\" : \"Test the Grievance Type\",\n   \"serviceName\": \"{{name}}\",\n   \"keywords\": [\n     \"{{name}}\"\n   ],\n   \"category\": 4,\n   \"attributes\": [\n     {\n       \"code\": \"MLU\",\n       \"groupCode\": \"{{name\",\n       \"datatypeDescription\": \"MLU\",\n       \"description\": \"{{name}}\",\n       \"required\": true,\n       \"variable\": true,\n       \"datatype\": \"Single value list\",\n       \"attributes\": [\n         {\n           \"key\": \"MLI\",\n           \"name\": \"MLU\"\n         }\n       ]\n     }\n   ],\n   \"slaHours\": 25,\n   \"metadata\": true,\n   \"tenantId\": \"default\"\n },\n \n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": \"01-04-2017 01:01:01\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\",\n    \"userInfo\" : {\n      \"id\" : 9\n    }\n  }\n}"
+										},
+										"description": "    "
+									},
+									"response": []
+								},
+								{
+									"name": "Grievance Type Search",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"Status code is 200\"] = responseCode.code === 200;",
+													"",
+													"var jsonData = JSON.parse(responseBody);",
+													"",
+													"postman.setEnvironmentVariable(\"id\", jsonData.Service[0].id);",
+													"tests[\"Code matches string\"] = jsonData.Service[0].serviceCode.has(environment.name);",
+													"tests[\"Name matches string\"] = jsonData.Service[0].serviceName.has(environment.name);"
+												]
+											}
+										}
+									],
+									"request": {
+										"url": {
+											"raw": "{{url}}/pgr-master/service/v1/_search?tenantId=default",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"pgr-master",
+												"service",
+												"v1",
+												"_search"
+											],
+											"query": [
+												{
+													"key": "tenantId",
+													"value": "default",
+													"equals": true,
+													"description": ""
+												},
+												{
+													"key": "code",
+													"value": "SPOW",
+													"equals": true,
+													"description": "",
+													"disabled": true
+												}
+											],
+											"variable": []
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n     \"RequestInfo\": {\r\n       \"apiId\" : \"emp\",\r\n       \"ver\" : \"1.0\",\r\n       \"ts\" : \"10-03-2017 00:00:00\",\r\n       \"action\" : \"create\",\r\n       \"did\" : \"1\",\r\n       \"key\" : \"abcdkey\",\r\n       \"msgId\" : \"20170310130900\",\r\n       \"requesterId\" : \"rajesh\",\r\n       \"authToken\" : \"{{access_token}}\"\r\n   }\r\n}"
+										},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "Grievance Type Update",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"Status code is 200\"] = responseCode.code === 200;",
+													"",
+													"var jsonData = JSON.parse(responseBody);",
+													"",
+													"tests[\"Code matches string\"] = jsonData.Service[0].serviceCode.has(environment.name);",
+													"tests[\"Name matches string\"] = jsonData.Service[0].serviceName.has(environment.name);"
+												]
+											}
+										}
+									],
+									"request": {
+										"url": "{{url}}/pgr-master/service/v1/_update",
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{  \n  \"Service\":{  \n     \"serviceCode\":\"{{name}}\",\n     \"serviceName\":\"{{name}}\",\n     \"description\":\"Testing the master\",\n     \"active\":true,\n     \"type\":null,\n     \"keywords\":[  \n        \"{{name}}\"\n     ],\n     \"category\":122,\n     \"hasFinancialImpact\":false,\n     \"attributes\":[  \n        {  \n           \"variable\":true,\n           \"code\":\"PRIORITY\",\n           \"dataType\":\"singlevaluelist\",\n           \"required\":true,\n           \"dataTypeDescription\":null,\n           \"description\":\"pgr.priority\",\n           \"groupCode\":\"pgr.group\",\n           \"url\":null,\n           \"roles\":[  \n              \"EMPLOYEE\"\n           ],\n           \"actions\":[  \n              \"UPDATE\"\n           ],\n           \"attribValues\":[  \n              {  \n                 \"key\":\"PRIORITY-1\",\n                 \"name\":\"pgr.priority.one\",\n                 \"isActive\":true\n              },\n              {  \n                 \"key\":\"PRIORITY-2\",\n                 \"name\":\"pgr.priority.two\",\n                 \"isActive\":true\n              },\n              {  \n                 \"key\":\"PRIORITY-3\",\n                 \"name\":\"pgr.priority.three\",\n                 \"isActive\":true\n              }\n           ]\n        }\n     ],\n     \"slaHours\":12,\n     \"metadata\":false,\n     \"tenantId\":\"default\"\n  },\n  \"RequestInfo\":{  \n     \"apiId\":\"org.egov.pt\",\n     \"ver\":\"1.0\",\n     \"ts\":\"27-06-2017 10:30:12\",\n     \"action\":\"asd\",\n     \"did\":\"4354648646\",\n     \"key\":\"xyz\",\n     \"msgId\":\"654654\",\n     \"requesterId\":\"61\",\n     \"authToken\":\"{{access_token}}\"\n  }\n}"
+										},
+										"description": "      "
+									},
+									"response": []
+								}
+							],
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "Escalation Hierarchy",
+							"description": "",
+							"item": [
+								{
+									"name": "Escalation Hierarchy Create",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"Status code is 200\"] = responseCode.code === 200;",
+													"",
+													"var jsonData = JSON.parse(responseBody);",
+													"",
+													"postman.setEnvironmentVariable(\"code\", jsonData.escalationHierarchies[0].serviceCode);"
+												]
+											}
+										}
+									],
+									"request": {
+										"url": "{{url}}/pgr-master/escalation-hierarchy/v1/_create",
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"escalationHierarchy\": [\n    {\n      \"serviceCode\": \"{{name}}\",\n      \"tenantId\": \"default\",\n      \"fromPosition\": 1,\n      \"toPosition\": 2,\n      \"department\": 9,\n      \"designation\": 1\n    }\n  ],\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": \"01-04-2017 01:01:01\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n    }\n}"
+										},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "Escalation Hierarchy Search",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"Status code is 200\"] = responseCode.code === 200;",
+													"",
+													"var jsonData = JSON.parse(responseBody);",
+													"",
+													"tests[\"code matches string\"] = jsonData.escalationHierarchies[0].serviceCode.has(environment.code);"
+												]
+											}
+										}
+									],
+									"request": {
+										"url": {
+											"raw": "{{url}}/pgr-master/escalation-hierarchy/v1/_search?tenantId=default&serviceCode={{code}}",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"pgr-master",
+												"escalation-hierarchy",
+												"v1",
+												"_search"
+											],
+											"query": [
+												{
+													"key": "tenantId",
+													"value": "default",
+													"equals": true,
+													"description": ""
+												},
+												{
+													"key": "serviceCode",
+													"value": "{{code}}",
+													"equals": true,
+													"description": ""
+												}
+											],
+											"variable": []
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"10-03-2017 00:00:00\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n       \"authToken\" : \"{{access_token}}\"\n   }\n}"
+										},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "Escalation Hierarchy Update",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"Status code is 200\"] = responseCode.code === 200;",
+													"",
+													"var jsonData = JSON.parse(responseBody);",
+													"",
+													"tests[\"code matches string\"] = jsonData.escalationHierarchies[0].serviceCode.has(environment.code);"
+												]
+											}
+										}
+									],
+									"request": {
+										"url": "{{url}}/pgr-master/escalation-hierarchy/v1/_update",
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"escalationHierarchy\": [\n    {\n      \"serviceCode\": \"{{code}}\",\n      \"tenantId\": \"default\",\n      \"fromPosition\": 2,\n      \"toPosition\": 6,\n      \"department\": 2,\n      \"designation\": 2\n    }\n  ],\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": \"01-04-2017 01:01:01\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n  }\n}"
+										},
+										"description": ""
+									},
+									"response": []
+								}
+							],
+							"_postman_isSubFolder": true
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "PGR_Transaction",
+					"description": "",
+					"item": [
+						{
+							"name": "CREATE",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"if(responseCode.code === 201){",
+											"tests[\"Status code is 201\"] = responseCode.code === 201;",
+											"postman.setEnvironmentVariable(\"id\", jsonData.serviceRequests[0].serviceRequestId);",
+											"}else{",
+											"    tests[\"Status code is 400\"] = responseCode.code === 400;",
+											"    tests[\"Service Code is Invalid\"] = jsonData.error.fields[0].code.has(\"PGR.INVALID_SERVICE_TYPE_CODE\");",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": "{{url}}/pgr/seva/v1/_create",
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{  \n   \"serviceRequest\":{  \n      \"serviceCode\":\"BRKNB\",\n      \"description\":\"Creating Grievance: \",\n      \"addressId\":206,\n      \"lat\":\"0.0\",\n      \"lng\":\"0.0\",\n      \"serviceRequestId\":\"\",\n      \"firstName\":\"Karthik\",\n      \"phone\":\"9036623763\",\n      \"email\":\"karthik@gmail.com\",\n      \"status\":true,\n      \"serviceName\":\"Grievance\",\n      \"requestedDatetime\":\"\",\n      \"mediaUrl\":\"\",\n      \"tenantId\":\"default\",\n      \"isAttribValuesPopulated\":true,\n      \"attribValues\":[  \n         {  \n            \"key\":\"systemReceivingMode\",\n            \"name\":\"EMAIL\"\n         },\n         {  \n            \"key\":\"systemFeedBack\",\n            \"name\":\"3\"\n         },\n         {  \n            \"key\":\"systemStatus\",\n            \"name\":\"REGISTERED\"\n         },\n         {  \n            \"key\":\"systemRequesterAddress\",\n            \"name\":\"Bengaluru, Karnataka\"\n         },\n         {\n         \t\"key\" : \"keyword\",\n         \t\"name\" : \"complaint\"\n         }\n      ]\n   },\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":\"01-04-2017 01:01:01\",\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\": \"{{access_token}}\"\n   }\n}"
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "UPDATE",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"tests[\"Status code is 200\"] = responseCode.code === 200;",
+											"",
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"tests[\"Body matches string\"] = jsonData.serviceRequests[0].serviceRequestId.has(environment.id);"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": "{{url}}/pgr/seva/v1/_update",
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"serviceRequest\": {\n    \"tenantId\": \"default\",\n    \"serviceRequestId\": \"{{id}}\",\n    \"status\": false,\n    \"serviceName\": \"Broken Bin\",\n    \"serviceCode\": \"BRKNB\",\n    \"description\": \"Creating Grievance: \",\n    \"agencyResponsible\": null,\n    \"serviceNotice\": null,\n    \"requestedDatetime\": \"21-08-2017 18:43:39\",\n    \"updatedDatetime\": \"8-21-2017 6:46:39 PM\",\n    \"expectedDatetime\": \"23-08-2017 18:43:40\",\n    \"address\": null,\n    \"addressId\": null,\n    \"zipcode\": null,\n    \"lat\": 0,\n    \"lng\": 0,\n    \"mediaUrls\": null,\n    \"firstName\": \"Karthik\",\n    \"lastName\": null,\n    \"phone\": \"9036623763\",\n    \"email\": \"karthik@gmail.com\",\n    \"deviceId\": null,\n    \"accountId\": null,\n    \"attribValues\": [\n      {\n        \"key\": \"systemReceivingMode\",\n        \"name\": \"EMAIL\"\n      },\n      {\n        \"key\": \"systemFeedBack\",\n        \"name\": \"3\"\n      },\n      {\n        \"key\": \"systemStatus\",\n        \"name\": \"FORWARDED\"\n      },\n      {\n        \"key\": \"systemRequesterAddress\",\n        \"name\": \"Bengaluru, Karnataka\"\n      },\n      {\n        \"key\": \"keyword\",\n        \"name\": \"complaint\"\n      },\n      {\n        \"key\": \"systemLocationId\",\n        \"name\": \"337\"\n      },\n      {\n        \"key\": \"systemLocationName\",\n        \"name\": \"Election Ward No 39\"\n      },\n      {\n        \"key\": \"systemChildLocationId\",\n        \"name\": \"48\"\n      },\n      {\n        \"key\": \"systemPositionId\",\n        \"name\": 21\n      },\n      {\n        \"key\": \"systemStateId\",\n        \"name\": \"419\"\n      },\n      {\n        \"key\": \"systemDesignationId\",\n        \"name\": \"1\"\n      },\n      {\n        \"key\": \"systemDepartmentId\",\n        \"name\": \"1\"\n      },\n      {\n        \"key\": \"systemEscalationHours\",\n        \"name\": \"48\"\n      },\n      {\n        \"key\": \"systemApprovalComments\",\n        \"name\": \"Forwarded to Commissioner\"\n      }\n    ]\n  },\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": \"27-06-2017 10:30:12\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n  }\n}"
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Search Complaint",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"tests[\"Status code is 200\"] = responseCode.code === 200;",
+											"",
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"tests[\"Body matches string\"] = jsonData.serviceRequests[0].serviceRequestId.has(environment.id);"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": {
+									"raw": "{{url}}/pgr/seva/v1/_search?tenantId=default&serviceRequestId={{id}}",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"pgr",
+										"seva",
+										"v1",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "tenantId",
+											"value": "default",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "serviceRequestId",
+											"value": "{{id}}",
+											"equals": true,
+											"description": ""
+										}
+									],
+									"variable": []
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{  \n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pgr\",\n      \"ver\":\"1.0\",\n      \"ts\":\"21-04-2017 16:20:57\",\n      \"action\":\"POST\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\": \"{{access_token}}\"\n   }\n}"
+								},
+								"description": "to search/get a complaint"
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				}
+			]
+		}
+	]
+}

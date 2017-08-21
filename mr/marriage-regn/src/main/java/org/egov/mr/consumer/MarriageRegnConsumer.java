@@ -3,17 +3,18 @@ package org.egov.mr.consumer;
 import java.util.Map;
 
 import org.egov.mr.config.PropertiesManager;
+import org.egov.mr.model.Fee;
 import org.egov.mr.model.ReissueCertAppl;
+import org.egov.mr.service.FeeService;
 import org.egov.mr.service.MarriageCertService;
 import org.egov.mr.service.MarriageDocumentTypeService;
 import org.egov.mr.service.MarriageRegnService;
 import org.egov.mr.service.RegistrationUnitService;
+import org.egov.mr.web.contract.FeeRequest;
 import org.egov.mr.web.contract.MarriageDocTypeRequest;
 import org.egov.mr.web.contract.MarriageRegnRequest;
 import org.egov.mr.web.contract.RegnUnitRequest;
 import org.egov.mr.web.contract.ReissueCertRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
@@ -46,8 +47,11 @@ public class MarriageRegnConsumer {
 
 	@Autowired
 	private MarriageDocumentTypeService marriageDocumentTypeService;
+	
+	@Autowired
+	private FeeService feeService;
 
-	@KafkaListener(topics = { "${kafka.topics.create.reissueCertificate}","${kafka.topics.update.reissueappl}","${kafka.topics.create.reissueappl}","${kafka.topics.create.registrationunit}", "${kafka.topics.update.registrationunit}",
+	@KafkaListener(topics = { "${kafka.topics.create.fee}","${kafka.topics.update.fee}","${kafka.topics.create.reissueCertificate}","${kafka.topics.update.reissueappl}","${kafka.topics.create.reissueappl}","${kafka.topics.create.registrationunit}", "${kafka.topics.update.registrationunit}",
 			"${kafka.topics.create.marriageregn}", "${kafka.topics.update.marriageregn}",
 			"${kafka.topics.create.marriagedocumenttype}", "${kafka.topics.update.marriagedocumenttype}" })
 	public void processMessage(@Payload Map<String, Object> consumerRecord,
@@ -111,5 +115,9 @@ public class MarriageRegnConsumer {
 			marriageCertService.update(objectMapper.convertValue(consumerRecord, ReissueCertRequest.class));
 		else if(topic.equals(propertiesManager.getCreateReissueCertificateTopicName()))
 			marriageCertService.createCert(objectMapper.convertValue(consumerRecord, ReissueCertAppl.class));
+		else if(topic.equals(propertiesManager.getCreateFeeTopicName()))
+			feeService.createFee(objectMapper.convertValue(consumerRecord, FeeRequest.class));
+		else if(topic.equals(propertiesManager.getUpdateFeeTopicName()))
+			feeService.updateFee(objectMapper.convertValue(consumerRecord, FeeRequest.class));
 	}
 }

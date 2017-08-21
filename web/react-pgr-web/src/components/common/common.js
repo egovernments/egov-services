@@ -292,6 +292,7 @@ var localization_EN_Data = {
     "wc.create.workflow.material": "Material",
     "wc.create.workflow.comment": "Comments are mandatory on Reject.",
     "wc.create.workflow.fields": "Please enter all mandatory fields.",
+    "wc.create.workflow.workflowDetails": "Workflow Details",
     "wc.create.demand.tax": "Tax",
     "wc.create.demands":"Demand",
     "wc.create.demand.basicDetails":"Basic Details",
@@ -2007,7 +2008,7 @@ var localization_MR_Data = {
 "wc.create.workflow.material":"साहित्य,",
 "wc.create.workflow.comment":"नकार करण्याकरिता शेरा अनिवार्य आहेत.",
 "wc.create.workflow.fields":"कृपया सर्व आवश्यक माहिती नोंदवा",
-
+"wc.create.workflow.workflowDetails" : "Workflow Details - Marathi",
     "employee.Employee.fields.city":"city",
     "wc.create.groups.connectionDetails.subUsageType":"Usage Sub Type",
     "pt.create.groups.ownerDetails.fields.primaryOwner": "Primary Owner",

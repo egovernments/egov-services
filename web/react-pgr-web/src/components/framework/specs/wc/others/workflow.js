@@ -86,6 +86,7 @@ var dat = {
                         "jsonPath": "Connection[0].property.locality",
                         "label": "wc.create.groups.applicantDetails.locality",
                         "pattern": "",
+                        "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$.Boundary.*.boundaryNum|$.Boundary.*.name",
                         "type": "label",
                         "isRequired": false,
                         "isDisabled": true,
@@ -107,6 +108,7 @@ var dat = {
                         "name": "Zone",
                         "jsonPath": "Connection[0].property.zone",
                         "label": "wc.create.groups.applicantDetails.zone",
+                        "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE|$.Boundary.*.boundaryNum|$.Boundary.*.name",
                         "pattern": "",
                         "type": "label",
                         "isRequired": false,
@@ -159,12 +161,12 @@ var dat = {
                             {
                                 "jsonPath": "Connection[0].property.usageType",
                                 "type": "dropDown",
-                                "pattern": "/wcms/masters/propertytype-usagetype/_search?tenantId=default&propertyTypeName={Connection[0].property.propertyType}|$..usageCode|$..usageType"
+                                "pattern": "/wcms/masters/propertytype-usagetype/_search?tenantId=default&propertyTypeName={Connection[0].property.propertyType}|$..usageType|$..usageType"
                             },
                             {
                                 "jsonPath": "Connection[0].hscPipeSizeType",
                                 "type": "dropDown",
-                                "pattern": "/wcms/masters/propertytype-pipesize/_search?tenantId=default&propertyTypeName={Connection[0].property.propertyType}|$..pipeSize|$..pipeSize"
+                                "pattern": "/wcms/masters/propertytype-pipesize/_search?tenantId=default&propertyTypeName={Connection[0].property.propertyType}|$..pipeSize|$..pipeSizeInInch"
                             }
                         ],
                         "requiredErrMsg": "",

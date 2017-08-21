@@ -22,7 +22,13 @@ public class MarriageDocumentTypeQueryBuilder {
 
 	StringBuilder selectQuery;
 
-	// Query for _search
+	/**
+	 * @Query for _search
+	 * 
+	 * @param marriageDocumentTypeSearchCriteria
+	 * @param preparedStatementValues
+	 * @return
+	 */
 	public String getSelectQuery(MarriageDocumentTypeSearchCriteria marriageDocumentTypeSearchCriteria,
 			List<Object> preparedStatementValues) {
 		selectQuery = new StringBuilder(BASEQUERY);
@@ -57,7 +63,12 @@ public class MarriageDocumentTypeQueryBuilder {
 		selectQuery.append(";");
 	}
 
-	// Helper Method
+	/**
+	 * @Helper_Method
+	 * 
+	 * @param addAndClauseIfRequiredFlag
+	 * @return
+	 */
 	private Boolean addAndClauseIfRequired(Boolean addAndClauseIfRequiredFlag) {
 		if (addAndClauseIfRequiredFlag) {
 			selectQuery.append("AND ");
@@ -65,7 +76,10 @@ public class MarriageDocumentTypeQueryBuilder {
 		return true;
 	}
 
-	// Query to generate Unique Id
+	/**
+	 * @Query to generate Unique Id
+	 * @return
+	 */
 	public String getIdNextValForMarriageDocType() {
 		return "SELECT NEXTVAL('seq_marriage_document_type') ;";
 	}

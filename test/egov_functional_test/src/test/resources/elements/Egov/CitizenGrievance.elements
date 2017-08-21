@@ -119,6 +119,25 @@
         "identifier":"xpath",
         "value":".//*[@id='root']/div/main/div/form/div[4]/div/div/div[2]/div[2]/div/span/span[1]/span[2]/span",
         "waitFor":"visibility"
-        }
+        },
+        {
+         "elementName":"selectPhoto",
+         "identifier":"css",
+         "value":"input[type=file]",
+         "waitFor":"presence"
+         },
+         {
+         "elementName":"photoValidationMSG",
+         "identifier":"xpath",
+         "value":"//*[text()='File name length should not exceed 30 characters']",
+         "waitFor":"visibility"
+         },
+         {
+         "elementName":"photoMoreThan5MBValidationMSG",
+         "identifier":"xpath",
+         "value":"//*[text()='File size exceeds 5MB']",
+         "waitFor":"visibility"
+         }
+
     ]
 }

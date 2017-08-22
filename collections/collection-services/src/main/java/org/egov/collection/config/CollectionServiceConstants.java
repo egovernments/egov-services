@@ -150,7 +150,8 @@ public class CollectionServiceConstants {
 
     public static final String CUTT_OFF_DATE_CODE = "egcl_0016";
     public static final String CUTT_OFF_DATE_FIELD = "manualReceiptDate";
-    public static final String CUTT_OFF_DATE_MESSAGE = "Manual receipt date is greater than the cut-off date 01/04/2017 for legacy data entry.Please enter proper date";
+    public static final String CUTT_OFF_DATE_MESSAGE = "Manual receipt date is greater than the cut-off date ";
+    public static final String CUTT_OFF_DATE_MESSAGE_DESC = " for legacy data entry.Please enter proper date";
     
     public  static final String INSTRUMENT_TYPE_CASH = "Cash";
     

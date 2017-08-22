@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.egov.citizen.config.CitizenServiceConstants;
 import org.egov.citizen.exception.CustomException;
 import org.egov.citizen.model.SearchDemand;
 import org.egov.citizen.model.ServiceCollection;
@@ -14,9 +15,7 @@ import org.egov.citizen.model.ServiceReqResponse;
 import org.egov.citizen.model.ServiceResponse;
 import org.egov.citizen.model.Value;
 import org.egov.citizen.service.CitizenService;
-import org.egov.citizen.util.CitizenServiceConstants;
 import org.egov.citizen.web.contract.ReceiptRequest;
-import org.egov.citizen.web.contract.ReceiptRes;
 import org.egov.citizen.web.contract.factory.ResponseInfoFactory;
 import org.egov.citizen.web.errorhandlers.Error;
 import org.egov.citizen.web.errorhandlers.ErrorResponse;

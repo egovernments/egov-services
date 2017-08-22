@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.citizen.config.ApplicationProperties;
+import org.egov.citizen.config.CitizenServiceConstants;
 import org.egov.citizen.exception.CustomException;
 import org.egov.citizen.model.BillResponse;
 import org.egov.citizen.model.BillingServiceRequestWrapper;
@@ -19,7 +20,6 @@ import org.egov.citizen.producer.CitizenProducer;
 import org.egov.citizen.repository.BillingServiceRepository;
 import org.egov.citizen.repository.CollectionRepository;
 import org.egov.citizen.repository.ResponseRepository;
-import org.egov.citizen.util.CitizenServiceConstants;
 import org.egov.citizen.web.contract.Bill;
 import org.egov.citizen.web.contract.BillDetail;
 import org.egov.citizen.web.contract.Instrument;
@@ -57,9 +57,6 @@ public class CitizenService {
 	
 	@Autowired
 	private ApplicationProperties applicationProperties;
-	
-	@Autowired
-	private CitizenServiceConstants citizenServiceConstants;
 
 	public List<Value> getQueryParameterList(List<ServiceConfig> list, String serviceCode, Object config) {
 

@@ -161,6 +161,12 @@
          "identifier":"css",
          "value":"[id^='undefined-undefined-ChangeStatus']",
          "waitFor":"visibility"
+         },
+         {
+         "elementName":"complaintDetails",
+         "identifier":"css",
+         "value":"[style='position: relative; display: none;']",
+         "waitFor":"visibility"
          }
 
 

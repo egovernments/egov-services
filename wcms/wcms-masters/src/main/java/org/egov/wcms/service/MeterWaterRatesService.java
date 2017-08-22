@@ -45,6 +45,7 @@ import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.wcms.model.MeterWaterRates;
 import org.egov.wcms.model.enums.BillingType;
 import org.egov.wcms.repository.MeterWaterRatesRepository;
+import org.egov.wcms.util.WcmsConstants;
 import org.egov.wcms.web.contract.MeterWaterRatesGetRequest;
 import org.egov.wcms.web.contract.MeterWaterRatesRequest;
 import org.egov.wcms.web.contract.UsageTypeResponse;
@@ -109,7 +110,7 @@ public class MeterWaterRatesService {
 
         if (meterWaterRatesGetRequest.getUsageTypeName() != null) {
             final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModule(
-                    meterWaterRatesGetRequest.getUsageTypeName(), meterWaterRatesGetRequest.getTenantId());
+                    meterWaterRatesGetRequest.getUsageTypeName(),WcmsConstants.WC, meterWaterRatesGetRequest.getTenantId());
             if (usageType.getUsageTypesSize())
                 meterWaterRatesGetRequest.setUsageTypeId(usageType.getUsageMasters().get(0).getId());
 
@@ -128,7 +129,7 @@ public class MeterWaterRatesService {
     public Boolean getUsageTypeByName(final MeterWaterRates meterWaterRates) {
         Boolean isValidUsage = Boolean.FALSE;
         final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModule(
-                meterWaterRates.getUsageTypeName(),
+                meterWaterRates.getUsageTypeName(),WcmsConstants.WC,
                 meterWaterRates.getTenantId());
         if (usageType.getUsageTypesSize()) {
             isValidUsage = Boolean.TRUE;

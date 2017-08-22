@@ -77,7 +77,7 @@ public class WaterConnectionQueryBuilder {
 			+ " supplytype.tenantId as supplytype_tenantId, pipesize.id as pipesize_id, pipesize.code as pipesize_code, pipesize.sizeinmilimeter as pipesize_sizeinmilimeter,  "
 			+ " pipesize.sizeininch as pipesize_sizeininch,pipesize.active as pipesize_active, pipesize.tenantId as pipesize_tenantId ,propertyuserdetail.property_owner as propertyowner, "
 			+ " propertyuserdetail.aadhaarnumber, propertyuserdetail.mobilenumber, propertyuserdetail.emailid, propertyuserdetail.propertylocation, "
-			+ " plant.name as watertreatmentname from egwtr_waterconnection connection left join egwtr_category category ON NULLIF(connection.categorytype, '')::int = category.id " 
+			+ " plant.name as watertreatmentname, meter.metermake as metermake, meter.initialmeterreading as initialmeterreading, meter.meterslno as meterslno, meter.metercost as metercost  from egwtr_waterconnection connection left join egwtr_category category ON NULLIF(connection.categorytype, '')::int = category.id " 
 			+ " left join egwtr_water_source_type watersource ON NULLIF(connection.sourcetype, '')::int=watersource.id "
 			+ " left join egwtr_supply_type supplytype ON NULLIF(connection.supplytype, '')::int=supplytype.id " 
 			+ " left join egwtr_pipesize pipesize ON NULLIF(connection.hscpipesizetype, '')::int=pipesize.id "

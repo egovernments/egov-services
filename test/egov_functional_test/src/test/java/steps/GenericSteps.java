@@ -238,7 +238,8 @@ public class GenericSteps extends BaseSteps {
     }
 
     @And("^(\\w+) on (\\w+) screen refresh's the webpage$")
-    public void userOnHomeScreenRefreshSTheWebpage() throws Throwable {
+    public void userOnHomeScreenRefreshSTheWebpage(String user, String s) throws Throwable {
+        TimeUnit.SECONDS.sleep(2);
         pageStore.getDriver().navigate().refresh();
     }
 }

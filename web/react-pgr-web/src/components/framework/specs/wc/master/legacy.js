@@ -1323,6 +1323,18 @@ var dat = {
             "patternErrMsg": ""
           },
           {
+            "name": "subUsageType",
+            "jsonPath": "Connection[0].property.subUsageType",
+            "label": "wc.create.groups.connectionDetails.subUsageType",
+            "pattern": "",
+            "type": "singleValueList",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+      			"url":""
+          },
+          {
             "name": "hscPipeSizeType",
             "jsonPath": "Connection[0].hscPipeSizeType",
             "label": "wc.create.groups.connectionDetails.hscPipeSizeType",

@@ -416,8 +416,8 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-			"defaultValue": [],
-			"url":""
+      			"defaultValue": [],
+      			"url":""
           },
           {
             "name": "hscPipeSizeType",
@@ -429,8 +429,8 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-			"defaultValue": [],
-			"url":''
+      			"defaultValue": [],
+      			"url":''
           },
           {
             "name": "applicationType",
@@ -1095,6 +1095,18 @@ var dat = {
             "url": "/pt-property/property/usages/_search?|$..name|$..name",
             "requiredErrMsg": "",
             "patternErrMsg": ""
+          },
+          {
+            "name": "subUsageType",
+            "jsonPath": "Connection[0].property.subUsageType",
+            "label": "wc.create.groups.connectionDetails.subUsageType",
+            "pattern": "",
+            "type": "singleValueList",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+      			"url":""
           },
           {
             "name": "hscPipeSizeType",

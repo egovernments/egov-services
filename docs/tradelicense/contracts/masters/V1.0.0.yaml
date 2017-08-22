@@ -812,12 +812,12 @@ definitions:
           type: string
           description: name of the Category/SubCategory
           maxLength: 100
-          minLength: 4
+          minLength: 1
         code:
           type: string
           description: Unique code of the Category/SubCategory
           maxLength: 20
-          minLength: 4
+          minLength: 1
         parentId:
          type: integer
          format: int64
@@ -861,12 +861,12 @@ definitions:
           type: string
           description: name of the Category/SubCategory
           maxLength: 100
-          minLength: 4
+          minLength: 1
         code:
           type: string
           description: Unique code of the Category/SubCategory
           maxLength: 20
-          minLength: 4
+          minLength: 1
         parentId:
          type: integer
          format: int64
@@ -1023,12 +1023,12 @@ definitions:
           type: string
           description: name of the UOM
           maxLength: 100
-          minLength: 4
+          minLength: 1
         code:
           type: string
           description: code of the UOM
           maxLength: 20
-          minLength: 4
+          minLength: 1
         active:
           type: boolean
           description: True if UOM is active and False if UOM is inactive
@@ -1083,7 +1083,7 @@ definitions:
           type: string
           description: name of the DocumentType
           maxLength: 100
-          minLength: 4
+          minLength: 1
         categoryId:
           type: integer
           format: int64
@@ -1308,12 +1308,12 @@ definitions:
         name:
           type: string
           maxLength: 100
-          minLength: 4
+          minLength: 1
           description: Unique Name of the Status
         code:
           type: string
           maxLength: 20
-          minLength: 4
+          minLength: 1
           description: Unique code of the Status
         active:
           type: string

@@ -2,7 +2,7 @@
 	"variables": [],
 	"info": {
 		"name": "Dev Env TL Masters",
-		"_postman_id": "6c0b3e07-6850-82fe-efff-2b3f66c3e466",
+		"_postman_id": "1b95ad93-d5a8-27d5-5f59-9a7dab0f10d7",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
@@ -393,7 +393,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"1\",\r\n\"authToken\": \"7bd2c537-04a6-4994-9bfa-b782e9cb05a7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\",\r\n\"userInfo\": {\r\n\t\"id\": 2\r\n}\r\n},\r\n    \"categories\": [\r\n        {\r\n            \"id\": 19,\r\n            \"tenantId\": \"default\",\r\n            \"name\": \"Beef & Beef Products\",\r\n            \"code\": \"BEEFPRODUCTS\",\r\n            \"parentId\": 1,\r\n            \"active\": true,\r\n            \"businessNature\": \"Permanent\",\r\n            \"details\": [\r\n                {\r\n                    \"id\": 1,\r\n                    \"categoryId\": 2,\r\n                    \"feeType\": \"License\",\r\n                    \"rateType\": \"Flat_By_Range\",\r\n                    \"uomId\": 1\r\n                }\r\n            ],\r\n            \"auditDetails\": {\r\n                \"createdBy\": 1,\r\n                \"createdTime\": 1501857371395\r\n            }\r\n        }\r\n    ]\r\n}"
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"1\",\r\n\"authToken\": \"7bd2c537-04a6-4994-9bfa-b782e9cb05a7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\",\r\n\"userInfo\": {\r\n\t\"id\": 2\r\n}\r\n},\r\n    \"categories\": [\r\n        {\r\n            \"id\": 19,\r\n            \"tenantId\": \"default\",\r\n            \"name\": \"Beef & Beef Products\",\r\n            \"code\": \"BEEFPRODUCTS\",\r\n            \"parentId\": 1,\r\n            \"active\": true,\r\n            \"businessNature\": \"Permanent\",\r\n            \"validityYears\":2,\r\n            \"details\": [\r\n                {\r\n                    \"id\": 1,\r\n                    \"categoryId\": 2,\r\n                    \"feeType\": \"License\",\r\n                    \"rateType\": \"Flat_By_Range\",\r\n                    \"uomId\": 1\r\n                }\r\n            ],\r\n            \"auditDetails\": {\r\n                \"createdBy\": 1,\r\n                \"createdTime\": 1501857371395\r\n            }\r\n        }\r\n    ]\r\n}"
 				},
 				"description": ""
 			},

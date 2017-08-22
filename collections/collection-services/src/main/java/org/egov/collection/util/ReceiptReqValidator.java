@@ -119,7 +119,7 @@ public class ReceiptReqValidator {
                     Date manualReceiptDate = new Date(billDetails.getReceiptDate());
                     if(manualReceiptDate.after(cutOffDate)) {
                         final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.CUTT_OFF_DATE_CODE)
-                                .message(CollectionServiceConstants.CUTT_OFF_DATE_MESSAGE)
+                                .message(CollectionServiceConstants.CUTT_OFF_DATE_MESSAGE + cutOffDate + CollectionServiceConstants.CUTT_OFF_DATE_MESSAGE_DESC)
                                 .field(CollectionServiceConstants.CUTT_OFF_DATE_FIELD).build();
                         errorFields.add(errorField);
                     }

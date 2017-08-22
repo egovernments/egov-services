@@ -2203,7 +2203,7 @@
 					"description": "",
 					"item": [
 						{
-							"name": "CREATE",
+							"name": "Login",
 							"event": [
 								{
 									"listen": "test",
@@ -2212,13 +2212,115 @@
 										"exec": [
 											"var jsonData = JSON.parse(responseBody);",
 											"",
-											"if(responseCode.code === 201){",
+											"postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);",
+											"",
+											"tests[\"Status code is 200\"] = responseCode.code === 200;",
+											"",
+											"tests[\"Status has String\"] = jsonData.ResponseInfo.status.has(\"Access Token generated successfully\");",
+											"",
+											"tests[\"Username is valid\"] = jsonData.UserRequest.userName.has(request.data[\"username\"]);",
+											"",
+											"postman.setNextRequest(\"Create Complaint\");"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": "{{url}}/user/oauth/token",
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"description": ""
+									},
+									{
+										"key": "Authorization",
+										"value": "Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "username",
+											"value": "narasappa",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "demo",
+											"type": "text"
+										},
+										{
+											"key": "grant_type",
+											"value": "password",
+											"type": "text"
+										},
+										{
+											"key": "scope",
+											"value": "read",
+											"type": "text"
+										},
+										{
+											"key": "tenantId",
+											"value": "default",
+											"type": "text"
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Create Complaint",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
 											"tests[\"Status code is 201\"] = responseCode.code === 201;",
+											"",
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"var reqBody = JSON.parse(request.data);",
+											"",
+											"tests[\"Name matches\"] = jsonData.serviceRequests[0].firstName.has(reqBody.serviceRequest.firstName);",
+											"",
+											"tests[\"MobileNumber matches\"] = jsonData.serviceRequests[0].phone.has(reqBody.serviceRequest.phone);",
+											"",
+											"var responseStatusName = null;",
+											"for(var i=0;i<jsonData.serviceRequests[0].attribValues.length;i++){",
+											"    if(jsonData.serviceRequests[0].attribValues[i].key.has(\"systemStatus\")){",
+											"        responseStatusName = jsonData.serviceRequests[0].attribValues[i].name;",
+											"    }",
+											"}",
+											"",
+											"tests[\"Check status\"] = responseStatusName.has(\"REGISTERED\");",
+											"",
 											"postman.setEnvironmentVariable(\"id\", jsonData.serviceRequests[0].serviceRequestId);",
-											"}else{",
-											"    tests[\"Status code is 400\"] = responseCode.code === 400;",
-											"    tests[\"Service Code is Invalid\"] = jsonData.error.fields[0].code.has(\"PGR.INVALID_SERVICE_TYPE_CODE\");",
-											"}"
+											"",
+											"postman.setEnvironmentVariable(\"phone\",jsonData.serviceRequests[0].phone);",
+											"",
+											"postman.setEnvironmentVariable(\"status\",responseStatusName);",
+											"",
+											"postman.setEnvironmentVariable(\"process\", 0);",
+											"",
+											"postman.setNextRequest(\"Search Complaint\");"
+										]
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"var name2 = Math.floor(Math.random() * 10000);",
+											"",
+											"postman.setEnvironmentVariable(\"name\",\"Test_\"+name2);"
 										]
 									}
 								}
@@ -2235,42 +2337,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{  \n   \"serviceRequest\":{  \n      \"serviceCode\":\"BRKNB\",\n      \"description\":\"Creating Grievance: \",\n      \"addressId\":206,\n      \"lat\":\"0.0\",\n      \"lng\":\"0.0\",\n      \"serviceRequestId\":\"\",\n      \"firstName\":\"Karthik\",\n      \"phone\":\"9036623763\",\n      \"email\":\"karthik@gmail.com\",\n      \"status\":true,\n      \"serviceName\":\"Grievance\",\n      \"requestedDatetime\":\"\",\n      \"mediaUrl\":\"\",\n      \"tenantId\":\"default\",\n      \"isAttribValuesPopulated\":true,\n      \"attribValues\":[  \n         {  \n            \"key\":\"systemReceivingMode\",\n            \"name\":\"EMAIL\"\n         },\n         {  \n            \"key\":\"systemFeedBack\",\n            \"name\":\"3\"\n         },\n         {  \n            \"key\":\"systemStatus\",\n            \"name\":\"REGISTERED\"\n         },\n         {  \n            \"key\":\"systemRequesterAddress\",\n            \"name\":\"Bengaluru, Karnataka\"\n         },\n         {\n         \t\"key\" : \"keyword\",\n         \t\"name\" : \"complaint\"\n         }\n      ]\n   },\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":\"01-04-2017 01:01:01\",\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\": \"{{access_token}}\"\n   }\n}"
-								},
-								"description": ""
-							},
-							"response": []
-						},
-						{
-							"name": "UPDATE",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"type": "text/javascript",
-										"exec": [
-											"tests[\"Status code is 200\"] = responseCode.code === 200;",
-											"",
-											"var jsonData = JSON.parse(responseBody);",
-											"",
-											"tests[\"Body matches string\"] = jsonData.serviceRequests[0].serviceRequestId.has(environment.id);"
-										]
-									}
-								}
-							],
-							"request": {
-								"url": "{{url}}/pgr/seva/v1/_update",
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json",
-										"description": ""
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n  \"serviceRequest\": {\n    \"tenantId\": \"default\",\n    \"serviceRequestId\": \"{{id}}\",\n    \"status\": false,\n    \"serviceName\": \"Broken Bin\",\n    \"serviceCode\": \"BRKNB\",\n    \"description\": \"Creating Grievance: \",\n    \"agencyResponsible\": null,\n    \"serviceNotice\": null,\n    \"requestedDatetime\": \"21-08-2017 18:43:39\",\n    \"updatedDatetime\": \"8-21-2017 6:46:39 PM\",\n    \"expectedDatetime\": \"23-08-2017 18:43:40\",\n    \"address\": null,\n    \"addressId\": null,\n    \"zipcode\": null,\n    \"lat\": 0,\n    \"lng\": 0,\n    \"mediaUrls\": null,\n    \"firstName\": \"Karthik\",\n    \"lastName\": null,\n    \"phone\": \"9036623763\",\n    \"email\": \"karthik@gmail.com\",\n    \"deviceId\": null,\n    \"accountId\": null,\n    \"attribValues\": [\n      {\n        \"key\": \"systemReceivingMode\",\n        \"name\": \"EMAIL\"\n      },\n      {\n        \"key\": \"systemFeedBack\",\n        \"name\": \"3\"\n      },\n      {\n        \"key\": \"systemStatus\",\n        \"name\": \"FORWARDED\"\n      },\n      {\n        \"key\": \"systemRequesterAddress\",\n        \"name\": \"Bengaluru, Karnataka\"\n      },\n      {\n        \"key\": \"keyword\",\n        \"name\": \"complaint\"\n      },\n      {\n        \"key\": \"systemLocationId\",\n        \"name\": \"337\"\n      },\n      {\n        \"key\": \"systemLocationName\",\n        \"name\": \"Election Ward No 39\"\n      },\n      {\n        \"key\": \"systemChildLocationId\",\n        \"name\": \"48\"\n      },\n      {\n        \"key\": \"systemPositionId\",\n        \"name\": 21\n      },\n      {\n        \"key\": \"systemStateId\",\n        \"name\": \"419\"\n      },\n      {\n        \"key\": \"systemDesignationId\",\n        \"name\": \"1\"\n      },\n      {\n        \"key\": \"systemDepartmentId\",\n        \"name\": \"1\"\n      },\n      {\n        \"key\": \"systemEscalationHours\",\n        \"name\": \"48\"\n      },\n      {\n        \"key\": \"systemApprovalComments\",\n        \"name\": \"Forwarded to Commissioner\"\n      }\n    ]\n  },\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": \"27-06-2017 10:30:12\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n  }\n}"
+									"raw": "{  \n   \"serviceRequest\":{  \n      \"serviceCode\":\"TC\",\n      \"description\":\"Creating Grievance: \",\n      \"addressId\":206,\n      \"lat\":\"0.0\",\n      \"lng\":\"0.0\",\n      \"serviceRequestId\":\"\",\n      \"firstName\":\"{{name}}\",\n      \"phone\":\"7777777777\",\n      \"email\":\"karthik@gmail.com\",\n      \"status\":true,\n      \"serviceName\":\"Grievance\",\n      \"requestedDatetime\":\"\",\n      \"mediaUrl\":\"\",\n      \"tenantId\":\"default\",\n      \"isAttribValuesPopulated\":true,\n      \"attribValues\":[  \n         {  \n            \"key\":\"systemReceivingMode\",\n            \"name\":\"CALL\"\n         },\n         {  \n            \"key\":\"systemFeedBack\",\n            \"name\":\"3\"\n         },\n         {  \n            \"key\":\"systemStatus\",\n            \"name\":\"REGISTERED\"\n         },\n         {  \n            \"key\":\"systemRequesterAddress\",\n            \"name\":\"Bengaluru, Karnataka\"\n         },\n         {\n         \t\"key\" : \"keyword\",\n         \t\"name\" : \"complaint\"\n         }\n      ]\n   },\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":\"01-04-2017 01:01:01\",\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\": \"{{access_token}}\"\n   }\n}"
 								},
 								"description": ""
 							},
@@ -2288,7 +2355,33 @@
 											"",
 											"var jsonData = JSON.parse(responseBody);",
 											"",
-											"tests[\"Body matches string\"] = jsonData.serviceRequests[0].serviceRequestId.has(environment.id);"
+											"tests[\"Id matches\"] = jsonData.serviceRequests[0].serviceRequestId.has(environment.id);",
+											"",
+											"tests[\"Name matches\"] = jsonData.serviceRequests[0].firstName.has(environment.name);",
+											"",
+											"tests[\"PhoneNumber matches\"] = jsonData.serviceRequests[0].phone.has(environment.phone);",
+											"",
+											"var responseStatusName = null;",
+											"for(var i=0;i<jsonData.serviceRequests[0].attribValues.length;i++){",
+											"    if(jsonData.serviceRequests[0].attribValues[i].key.has(\"systemStatus\")){",
+											"        responseStatusName = jsonData.serviceRequests[0].attribValues[i].name;",
+											"    }",
+											"}",
+											"",
+											"tests[\"Checks Status\"] = responseStatusName.has(environment.status);",
+											"",
+											"if(environment.process === 0){",
+											"postman.setEnvironmentVariable(\"process\",1);    ",
+											"postman.setNextRequest(\"Update Complaint as Forwarded\");",
+											"}",
+											"else if(environment.process === 1){",
+											"    postman.setEnvironmentVariable(\"process\",2);",
+											"    postman.setNextRequest(\"Update Complaint as Processing\");",
+											"}else if(environment.process === 2){",
+											"    postman.setEnvironmnetVariable(\"process\", 3);",
+											"    postman.setNextRequest(\"Update Complaint as Completed\");",
+											"}else",
+											"postman.setNextRequest(\"Logout\");"
 										]
 									}
 								}
@@ -2334,6 +2427,219 @@
 									"raw": "{  \n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pgr\",\n      \"ver\":\"1.0\",\n      \"ts\":\"21-04-2017 16:20:57\",\n      \"action\":\"POST\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\": \"{{access_token}}\"\n   }\n}"
 								},
 								"description": "to search/get a complaint"
+							},
+							"response": []
+						},
+						{
+							"name": "Update Complaint as Forwarded",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"tests[\"Status code is 200\"] = responseCode.code === 200;",
+											"",
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"var reqBody = JSON.parse(request.data);",
+											"",
+											"tests[\"Name matches\"] = jsonData.serviceRequests[0].firstName.has(reqBody.serviceRequest.firstName);",
+											"",
+											"tests[\"MobileNumber matches\"] = jsonData.serviceRequests[0].phone.has(reqBody.serviceRequest.phone);",
+											"",
+											"tests[\"Id matches\"] = jsonData.serviceRequests[0].serviceRequestId.has(reqBody.serviceRequest.serviceRequestId);",
+											"",
+											"var responseStatusName = null;",
+											"for(var i=0;i<jsonData.serviceRequests[0].attribValues.length;i++){",
+											"    if(jsonData.serviceRequests[0].attribValues[i].key.has(\"systemStatus\")){",
+											"        responseStatusName = jsonData.serviceRequests[0].attribValues[i].name;",
+											"    }",
+											"}",
+											"",
+											"tests[\"Check status\"] = responseStatusName.has(\"FORWARDED\");",
+											"",
+											"postman.setEnvironmentVariable(\"status\",responseStatusName);",
+											"",
+											"postman.setNextRequest(\"Search Complaint\");",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"url": "{{url}}/pgr/seva/v1/_update",
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"serviceRequest\": {\n    \"tenantId\": \"default\",\n    \"serviceRequestId\": \"{{id}}\",\n    \"status\": false,\n    \"serviceName\": \"Broken Bin\",\n    \"serviceCode\": \"BRKNB\",\n    \"description\": \"Creating Grievance: \",\n    \"agencyResponsible\": null,\n    \"serviceNotice\": null,\n    \"requestedDatetime\": \"\",\n    \"updatedDatetime\": \"\",\n    \"expectedDatetime\": \"\",\n    \"address\": null,\n    \"addressId\": null,\n    \"zipcode\": null,\n    \"lat\": 0,\n    \"lng\": 0,\n    \"mediaUrls\": null,\n    \"firstName\": \"{{name}}\",\n    \"lastName\": null,\n    \"phone\": \"{{phone}}\",\n    \"email\": \"karthik@gmail.com\",\n    \"deviceId\": null,\n    \"accountId\": null,\n    \"attribValues\": [\n      {\n        \"key\": \"systemReceivingMode\",\n        \"name\": \"EMAIL\"\n      },\n      {\n        \"key\": \"systemFeedBack\",\n        \"name\": \"3\"\n      },\n      {\n        \"key\": \"systemStatus\",\n        \"name\": \"FORWARDED\"\n      },\n      {\n        \"key\": \"systemRequesterAddress\",\n        \"name\": \"Bengaluru, Karnataka\"\n      },\n      {\n        \"key\": \"keyword\",\n        \"name\": \"complaint\"\n      },\n      {\n        \"key\": \"systemLocationId\",\n        \"name\": \"337\"\n      },\n      {\n        \"key\": \"systemLocationName\",\n        \"name\": \"Election Ward No 39\"\n      },\n      {\n        \"key\": \"systemChildLocationId\",\n        \"name\": \"48\"\n      },\n      {\n        \"key\": \"systemPositionId\",\n        \"name\": 21\n      },\n      {\n        \"key\": \"systemStateId\",\n        \"name\": \"419\"\n      },\n      {\n        \"key\": \"systemDesignationId\",\n        \"name\": \"1\"\n      },\n      {\n        \"key\": \"systemDepartmentId\",\n        \"name\": \"1\"\n      },\n      {\n        \"key\": \"systemEscalationHours\",\n        \"name\": \"48\"\n      },\n      {\n        \"key\": \"systemApprovalComments\",\n        \"name\": \"Forwarded to Commissioner\"\n      }\n    ]\n  },\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": \"27-06-2017 10:30:12\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n  }\n}"
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Update Complaint as Processing",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"tests[\"Status code is 200\"] = responseCode.code === 200;",
+											"",
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"var reqBody = JSON.parse(request.data);",
+											"",
+											"tests[\"Name matches\"] = jsonData.serviceRequests[0].firstName.has(reqBody.serviceRequest.firstName);",
+											"",
+											"tests[\"MobileNumber matches\"] = jsonData.serviceRequests[0].phone.has(reqBody.serviceRequest.phone);",
+											"",
+											"tests[\"Id matches\"] = jsonData.serviceRequests[0].serviceRequestId.has(reqBody.serviceRequest.serviceRequestId);",
+											"",
+											"var responseStatusName = null;",
+											"for(var i=0;i<jsonData.serviceRequests[0].attribValues.length;i++){",
+											"    if(jsonData.serviceRequests[0].attribValues[i].key.has(\"systemStatus\")){",
+											"        responseStatusName = jsonData.serviceRequests[0].attribValues[i].name;",
+											"    }",
+											"}",
+											"",
+											"tests[\"Check status\"] = responseStatusName.has(\"PROCESSING\");",
+											"",
+											"postman.setEnvironmentVariable(\"status\",responseStatusName);",
+											"",
+											"postman.setNextRequest(\"Search Complaint\");",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"url": "{{url}}/pgr/seva/v1/_update",
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"serviceRequest\": {\n    \"tenantId\": \"default\",\n    \"serviceRequestId\": \"{{id}}\",\n    \"status\": false,\n    \"serviceName\": \"Grievance\",\n    \"serviceCode\": \"TC\",\n    \"description\": \"Grievance on Traffic Problem\",\n    \"agencyResponsible\": null,\n    \"serviceNotice\": null,\n    \"requestedDatetime\": \"\",\n    \"updatedDatetime\": \"\",\n    \"expectedDatetime\": \"\",\n    \"address\": null,\n    \"addressId\": null,\n    \"zipcode\": null,\n    \"lat\": 0,\n    \"lng\": 0,\n    \"mediaUrls\": null,\n    \"firstName\": \"{{name}}\",\n    \"lastName\": null,\n    \"phone\": \"{{phone}}\",\n    \"email\": \"nadir@mail.com\",\n    \"deviceId\": null,\n    \"accountId\": null,\n    \"attribValues\": [\n      {\n        \"key\": \"systemReceivingMode\",\n        \"name\": \"namesss\"\n      },\n      {\n        \"key\": \"systemRequesterAddress\",\n        \"name\": \"Bengaluru, Karnataka\"\n      },\n      {\n        \"key\": \"keyword\",\n        \"name\": \"Complaint\"\n      },\n      {\n        \"key\": \"systemLocationId\",\n        \"name\": \"174\"\n      },\n      {\n        \"key\": \"systemLocationName\",\n        \"name\": \"Election Ward No 2\"\n      },\n      {\n        \"key\": \"systemChildLocationId\",\n        \"name\": \"48\"\n      },\n      {\n        \"key\": \"systemStateId\",\n        \"name\": \"432\"\n      },\n      {\n        \"key\": \"systemDepartmentId\",\n        \"name\": \"1\"\n      },\n      {\n        \"key\": \"systemEscalationHours\",\n        \"name\": \"48\"\n      },\n      {\n        \"key\": \"systemStatus\",\n        \"name\": \"PROCESSING\"\n      },\n      {\n        \"key\": \"systemPositionId\",\n        \"name\": \"21\"\n      },\n      {\n        \"key\": \"systemDesignationId\",\n        \"name\": \"794\"\n      },\n      {\n        \"key\": \"systemApprovalComments\",\n        \"name\": \"Processing\"\n      }\n    ]\n  },\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": \"27-06-2017 10:30:12\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n  }\n}"
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Update Complaint as Completed",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"tests[\"Status code is 200\"] = responseCode.code === 200;",
+											"",
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"var reqBody = JSON.parse(request.data);",
+											"",
+											"tests[\"Name matches\"] = jsonData.serviceRequests[0].firstName.has(reqBody.serviceRequest.firstName);",
+											"",
+											"tests[\"MobileNumber matches\"] = jsonData.serviceRequests[0].phone.has(reqBody.serviceRequest.phone);",
+											"",
+											"tests[\"Id matches\"] = jsonData.serviceRequests[0].serviceRequestId.has(reqBody.serviceRequest.serviceRequestId);",
+											"",
+											"var responseStatusName = null;",
+											"for(var i=0;i<jsonData.serviceRequests[0].attribValues.length;i++){",
+											"    if(jsonData.serviceRequests[0].attribValues[i].key.has(\"systemStatus\")){",
+											"        responseStatusName = jsonData.serviceRequests[0].attribValues[i].name;",
+											"    }",
+											"}",
+											"",
+											"tests[\"Check status\"] = responseStatusName.has(\"COMPLETED\");",
+											"",
+											"postman.setEnvironmentVariable(\"status\",responseStatusName);",
+											"",
+											"postman.setNextRequest(\"Search Complaint\");"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": "{{url}}/pgr/seva/v1/_update",
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"serviceRequest\": {\n    \"tenantId\": \"default\",\n    \"serviceRequestId\": \"{{id}}\",\n    \"status\": false,\n    \"serviceName\": \"Traffic Complaints\",\n    \"serviceCode\": \"TC\",\n    \"description\": \"Traffic Problem\",\n    \"agencyResponsible\": null,\n    \"serviceNotice\": null,\n    \"requestedDatetime\": \"22-08-2017 16:00:33\",\n    \"updatedDatetime\": \"8-22-2017 4:16:02 PM\",\n    \"expectedDatetime\": \"24-08-2017 16:09:43\",\n    \"address\": null,\n    \"addressId\": null,\n    \"zipcode\": null,\n    \"lat\": 0,\n    \"lng\": 0,\n    \"mediaUrls\": null,\n    \"firstName\": \"{{name}}\",\n    \"lastName\": null,\n    \"phone\": \"{{phone}}\",\n    \"email\": \"nadir@mail.com\",\n    \"deviceId\": null,\n    \"accountId\": null,\n    \"attribValues\": [\n      {\n        \"key\": \"systemReceivingMode\",\n        \"name\": \"namesss\"\n      },\n      {\n        \"key\": \"systemRequesterAddress\",\n        \"name\": \"Bengaluru, Karnataka\"\n      },\n      {\n        \"key\": \"keyword\",\n        \"name\": \"Complaint\"\n      },\n      {\n        \"key\": \"systemLocationId\",\n        \"name\": \"174\"\n      },\n      {\n        \"key\": \"systemLocationName\",\n        \"name\": \"Election Ward No 2\"\n      },\n      {\n        \"key\": \"systemChildLocationId\",\n        \"name\": \"48\"\n      },\n      {\n        \"key\": \"systemStateId\",\n        \"name\": \"432\"\n      },\n      {\n        \"key\": \"systemDepartmentId\",\n        \"name\": \"1\"\n      },\n      {\n        \"key\": \"systemEscalationHours\",\n        \"name\": \"48\"\n      },\n      {\n        \"key\": \"systemPositionId\",\n        \"name\": \"21\"\n      },\n      {\n        \"key\": \"systemDesignationId\",\n        \"name\": \"794\"\n      },\n      {\n        \"key\": \"systemStatus\",\n        \"name\": \"COMPLETED\"\n      },\n      {\n        \"key\": \"systemApprovalComments\",\n        \"name\": \"Completed\"\n      }\n    ]\n  },\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": \"27-06-2017 10:30:12\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n  }\n}"
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Logout",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"tests[\"Status code is 200\"] = responseCode.code === 200;"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": {
+									"raw": "{{url}}/user/_logout?access_token={{access_token}}",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"user",
+										"_logout"
+									],
+									"query": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}",
+											"equals": true,
+											"description": ""
+										}
+									],
+									"variable": []
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": " {\"RequestInfo\":{\"apiId\":\"org.egov.pgr\",\"ver\":\"1.0\",\"ts\":\"13-04-2017 12:13:30\",\"action\":\"POST\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\": \"{{access_token}}\"\n }}"
+								},
+								"description": ""
 							},
 							"response": []
 						}

@@ -221,7 +221,7 @@ class LegacyLicenseCreate extends Component {
     Api.commonApiPost((url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url), "", formData, "", true).then(function(response){
       self.props.setLoadingStatus('hide');
       self.initData();
-      self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "create" ? "wc.create.message.success" : "wc.update.message.success"), true);
+      self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "create" ? response.responseInfo.status : "wc.update.message.success"), true);
       setTimeout(function() {
         if(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath) {
           if(self.props.actionName == "update") {
@@ -619,6 +619,18 @@ class LegacyLicenseCreate extends Component {
       let obj = specifications[`tl.create`];
 
 
+      Api.commonApiPost("/tl-services/license/v1/_create").then(function(response)
+      {
+
+      console.log(response.responseInfo.status);
+    //  self.handleChange({target:{value:response.categories[0].validityYears}}, , false, "");
+
+      },function(err) {
+        console.log(err);
+
+      });
+
+
       // if (property == "licenses[0].tradeCommencementDate") {
       //   console.log(new Date(e.target.value));
       //   var month = new Date(e.target.value).getMonth()+1;
@@ -746,7 +758,7 @@ if(property == "licenses[0].categoryId"){
 
 
 
- 
+
 
       // console.log(obj);
       let depedants=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);

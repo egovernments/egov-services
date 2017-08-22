@@ -19,7 +19,6 @@ import org.springframework.web.client.RestTemplate;
 
 import com.jayway.jsonpath.JsonPath;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -112,10 +111,19 @@ public class CitizenService {
 		return url;
 	}
 	
-	public Object getDemandDues(String url,Object config,List<String> results){
+	public Object getResponse(String url,Object config,List<String> results){
 		
 		if (url != "") {
 			Object response = restTemplate.postForObject(url,getRequestInfo(config), Object.class);
+			
+			int length = results.size();
+			
+			while(length !=0)
+				
+				for(int i=0;i<results.size();i++){
+					
+					
+				}
 			
 			if (results != null && results.size() == 2) {
 				Object responseObj = JsonPath.read(response, results.get(0));

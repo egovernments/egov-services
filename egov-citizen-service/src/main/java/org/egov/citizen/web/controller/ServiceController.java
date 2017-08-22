@@ -1,7 +1,11 @@
 package org.egov.citizen.web.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.citizen.model.Demand;
+import org.egov.citizen.model.DemandDetail;
+import org.egov.citizen.model.DemandRequest;
 import org.egov.citizen.model.SearchDemand;
 import org.egov.citizen.model.ServiceCollection;
 import org.egov.citizen.model.ServiceConfig;
@@ -73,10 +77,10 @@ public class ServiceController {
 		List<String> results = null;
 		final ObjectMapper objectMapper = new ObjectMapper();
 		ServiceReq servcieReq = objectMapper.convertValue(JsonPath.read(config, "$.serviceReq"), ServiceReq.class);
+				
 		List<ServiceConfig> list = serviceConfigs.getServiceConfigs();
 		String url = "";
 		SearchDemand searchDemand = null;
-
 		for (ServiceConfig serviceConfig : list) {
 			if (serviceConfig.getServiceCode().equals(servcieReq.getServiceCode())) {
 				searchDemand = serviceConfig.getSearchDemand();
@@ -84,17 +88,45 @@ public class ServiceController {
 				results = searchDemand.getResult();
 			}
 		}
-
 		List<Value> queryParamList = citizenService.getQueryParameterList(list, servcieReq.getServiceCode(), config);
 		String sequenceNumber = citizenService.generateSequenceNumber(searchDemand, config);
 		servcieReq.setServiceRequestId(sequenceNumber);
 		url = citizenService.getUrl(url, queryParamList);
-		Object demands = citizenService.getDemandDues(url, config, results);
+		Object demands = citizenService.getResponse(url, config, results);
 		servcieReq.setBackendServiceDetails(demands);
 		citizenService.sendMessageToKafka(servcieReq);
 		serviceReqResponse.setServiceReq(servcieReq);
 		serviceReqResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(citizenService.getRequestInfo(config).getRequestInfo(), true));
 		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);
 	}
+	
+	@PostMapping(value = "/requests/_update")
+	public ResponseEntity<?> updateService(HttpEntity<String> httpEntity){
+		
+		String json = httpEntity.getBody();
+		Object config = Configuration.defaultConfiguration().jsonProvider().parse(json);
+		final ObjectMapper objectMapper = new ObjectMapper();
+		ServiceReq servcieReq = objectMapper.convertValue(JsonPath.read(config, "$.serviceReq"), ServiceReq.class);
+
+		List<ServiceConfig> list = serviceConfigs.getServiceConfigs();
+		
+		String url = "";
+		String[] results=null;
+		SearchDemand searchDemand = null;
+		for (ServiceConfig serviceConfig : list) {
+			if (serviceConfig.getServiceCode().equals(servcieReq.getServiceCode())) {
+				searchDemand = serviceConfig.getSearchDemand();
+				url = searchDemand.getCreateDemandRequest().getUrl();
+				String demandRequest = searchDemand.getCreateDemandRequest().getDemandRequest();
+				Object demand = Configuration.defaultConfiguration().jsonProvider().parse(demandRequest);
+		
+				
+				
+			}
+		}
+
+       return null;	
+	}
+	
 
 }

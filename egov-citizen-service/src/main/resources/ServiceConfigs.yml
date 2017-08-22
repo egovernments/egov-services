@@ -5,13 +5,17 @@ serviceConfigs:
     queryAppend:
        - tenantId :$.serviceReq.attributeValues[0].value
     result: 
-       - $..Demands.length()
+       - $..Demands.length()7
        - $..demandDetails[?(@.taxAmount >= @.collectionAmount)]           
     generateId:
       url: http://egov-micro-dev.egovernments.org/egov-idgen/id/_generate
-      request: {"requestInfo": $.requestInfo,"idRequests":[{"idName":"CS.ServiceRequest","tenantId":$.serviceReq.tenantId,"format":"SRN-[cy:MM]/[fy:yyyy-yy]-[d{4}]"}]}
+      request: {"requestInfo": $.requestInfo,"idRequests":[{"idName":"CS.ServiceRequest","tenantId":"$.serviceReq.tenantId","format":"SRN-[cy:MM]/[fy:yyyy-yy]-[d{4}]"}]}
       result: $.idResponses[0].id
-    
+    createDemandRequest: 
+       "url": "http://egov-micro-dev.egovernments.org/egov-idgen/id/_generate"
+       "demandRequest": '{"RequestInfo": "$.requestInfo","Demands": [{"consumerCode": "$.serviceReq.attributeValues[0].value","businessService": "$.serviceReq.attributeValues[1].value",
+                "taxPeriodFrom": "$.serviceReq.attributeValues[2].value","taxPeriodTo": "$.serviceReq.attributeValues[3].value", "minimumAmountPayable": "$.serviceReq.attributeValues[4].value",
+                "demandDetails": [{"taxHead" : "$.serviceReq.attributeValues[5].value","taxAmount":"$.serviceReq.attributeValues[6].value","collectionAmount" :"$.serviceReq.attributeValues[7].value"}]}]}'
     applicationFee: 100
 
  - serviceCode: PT_EXTRACT
@@ -25,7 +29,7 @@ serviceConfigs:
       - $..demandDetails[?(@.taxAmount >= @.collectionAmount)] 
     generateId:
       url: http://egov-micro-dev.egovernments.org/egov-idgen/id/_generate
-      request: {"requestInfo": $.requestInfo,"idRequests":[{"idName":"CS.ServiceRequest","tenantId":$.serviceReq.tenantId,"format":"SRN-[cy:MM]/[fy:yyyy-yy]-[d{4}]"}]}
+      request: {"requestInfo": $.requestInfo,"idRequests":[{"idName":"CS.ServiceRequest","tenantId":"$.serviceReq[0].tenantId","format":"SRN-[cy:MM]/[fy:yyyy-yy]-[d{4}]"}]}
       result: $.idResponses[0].id  
     applicationFee: 100
 
@@ -40,6 +44,6 @@ serviceConfigs:
       - $..demandDetails[?(@.taxAmount >= @.collectionAmount)] 
     generateId:
       url: http://egov-micro-dev.egovernments.org/egov-idgen/id/_generate
-      request: {"requestInfo": $.requestInfo,"idRequests":[{"idName":"CS.ServiceRequest","tenantId":$.serviceReq.tenantId,"format":"SRN-[cy:MM]/[fy:yyyy-yy]-[d{4}]"}]}
+      request: {"requestInfo": $.requestInfo,"idRequests":[{"idName":"CS.ServiceRequest","tenantId":"$.serviceReq[0].tenantId","format":"SRN-[cy:MM]/[fy:yyyy-yy]-[d{4}]"}]}
       result: $.idResponses[0].id  
     applicationFee: 100

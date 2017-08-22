@@ -17,5 +17,6 @@ public class SearchDemand {
 	private List<String> queryAppend;
 	private List<String> result;
 	private GenerateId generateId;
+	private CreateDemandRequest createDemandRequest;
 
 }

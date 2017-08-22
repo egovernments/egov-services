@@ -29,5 +29,5 @@ public class ServiceReq {
 	private String[] comments;	
 	private Object backendServiceDetails;
 	private AuditDetails auditDetails;
-	
+	private String action;
 }

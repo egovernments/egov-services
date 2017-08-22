@@ -34,13 +34,8 @@ public class BillingServiceRepository {
 		LOGGER.info("URI for search bill in Billing Service: "
 				+ uri.toString());
 		BillResponse response = null;
-		try {
-			response = restTemplate.postForObject(uri.toString(),
+		response = restTemplate.postForObject(uri.toString(),
 					billingServiceRequestWrapper, BillResponse.class);
-		} catch (Exception e) {
-			LOGGER.error("Error while searching bill from billing service. "
-					+ e);
-		}
 		LOGGER.info("Response from billing service: " + response);
 		return response;
 	}

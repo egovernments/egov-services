@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.egov.citizen.exception.CustomException;
 import org.egov.citizen.model.SearchDemand;
 import org.egov.citizen.model.ServiceCollection;
 import org.egov.citizen.model.ServiceConfig;
@@ -13,6 +14,7 @@ import org.egov.citizen.model.ServiceReqResponse;
 import org.egov.citizen.model.ServiceResponse;
 import org.egov.citizen.model.Value;
 import org.egov.citizen.service.CitizenService;
+import org.egov.citizen.util.CitizenServiceConstants;
 import org.egov.citizen.web.contract.ReceiptRequest;
 import org.egov.citizen.web.contract.ReceiptRes;
 import org.egov.citizen.web.contract.factory.ResponseInfoFactory;
@@ -107,6 +109,15 @@ public class ServiceController {
 	public ResponseEntity<?> createReceipt(@RequestBody @Valid ReceiptRequest receiptReq, 
 			BindingResult errors) {
 		
+		if(receiptReq.getStatus().get(0).equals("FAILURE") || receiptReq.getStatus().get(0).equals("CANCEL")){
+			Error error = new Error();
+			error.setCode(400);
+			error.setMessage(CitizenServiceConstants.FAIL_STATUS_MSG);
+			error.setDescription(CitizenServiceConstants.FAIL_STATUS_DESC);
+			
+			return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+
+		}
 		ServiceReqResponse serviceReqResponse = new ServiceReqResponse();
 		ServiceReq serviceReq = new ServiceReq();
 		serviceReq.setBackendServiceDetails(receiptReq);
@@ -123,9 +134,18 @@ public class ServiceController {
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
 		LOGGER.info("Request for receipt creation: " + receiptReq.toString());
-		
-		Object receiptResponse = citizenService.createReceiptForPayment(receiptReq);
-		LOGGER.info("Service response: "+receiptResponse);
+		Object receiptResponse = null;
+		try{
+			receiptResponse = citizenService.createReceiptForPayment(receiptReq);
+		}catch(CustomException e){
+			Error error = new Error();
+			error.setCode(e.getCode());
+			error.setMessage(e.getCustomMessage());
+			error.setDescription(e.getDescription());
+			
+			return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+			
+		}
 		serviceReqResponse.getServiceReq().setBackendServiceDetails(receiptResponse);
 		
 		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);

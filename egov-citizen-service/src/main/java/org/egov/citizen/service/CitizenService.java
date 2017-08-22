@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.citizen.config.ApplicationProperties;
+import org.egov.citizen.exception.CustomException;
 import org.egov.citizen.model.BillResponse;
 import org.egov.citizen.model.BillingServiceRequestWrapper;
 import org.egov.citizen.model.IdGenerationReqWrapper;
@@ -18,6 +19,7 @@ import org.egov.citizen.producer.CitizenProducer;
 import org.egov.citizen.repository.BillingServiceRepository;
 import org.egov.citizen.repository.CollectionRepository;
 import org.egov.citizen.repository.ResponseRepository;
+import org.egov.citizen.util.CitizenServiceConstants;
 import org.egov.citizen.web.contract.Bill;
 import org.egov.citizen.web.contract.BillDetail;
 import org.egov.citizen.web.contract.Instrument;
@@ -29,6 +31,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -54,6 +57,9 @@ public class CitizenService {
 	
 	@Autowired
 	private ApplicationProperties applicationProperties;
+	
+	@Autowired
+	private CitizenServiceConstants citizenServiceConstants;
 
 	public List<Value> getQueryParameterList(List<ServiceConfig> list, String serviceCode, Object config) {
 
@@ -141,13 +147,18 @@ public class CitizenService {
 	}
 	
 	public Object createReceiptForPayment(ReceiptRequest receiptReq){
-		ReceiptRes receiptRes= new ReceiptRes();
 		BillingServiceRequestWrapper billingServiceRequestWrapper = new BillingServiceRequestWrapper();
 		billingServiceRequestWrapper.setBillingServiceRequestInfo(receiptReq.getRequestInfo());
 		billingServiceRequestWrapper.setBillNumber(receiptReq.getBillNumber());
 		billingServiceRequestWrapper.setTenantId(receiptReq.getTenantId());
-		
-		BillResponse billResponse = billingServiceRepository.getBillOnBillNumber(billingServiceRequestWrapper);
+		BillResponse billResponse = null;
+		try{
+			billResponse = billingServiceRepository.getBillOnBillNumber(billingServiceRequestWrapper);
+		}catch(Exception e){
+			LOGGER.error("Couldn't fetch bill: ", e);
+			throw new CustomException(Integer.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
+					CitizenServiceConstants.BILL_INVALID_MSG, CitizenServiceConstants.BILL_INVALID_DESC);
+		}
 		
 		LOGGER.info("Bill number: "+receiptReq.getBillNumber());
 		LOGGER.info("Response from billing svc: "+billResponse);
@@ -180,9 +191,16 @@ public class CitizenService {
 		receiptRequest.setTenantId(receiptReq.getTenantId());
 		
 		LOGGER.info("Request for creation of receipt: "+receiptRequest.toString());
+		Object receiptResponse = null;
+		try{
+			receiptResponse = collectionRepository.createReceipt(receiptRequest);
+		}catch(Exception e){
+			LOGGER.error("Error creating receipt in collection service. ", e);
+			throw new CustomException(Integer.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
+					CitizenServiceConstants.RCPT_INVALID_MSG, CitizenServiceConstants.RCPT_INVALID_DESC);
+		}
 		
-		Object receiptResponse = collectionRepository.createReceipt(receiptRequest);
-		
+
 		LOGGER.info("Response from collection svc: "+receiptResponse);
 
 		

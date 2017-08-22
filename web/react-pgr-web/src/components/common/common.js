@@ -438,7 +438,6 @@ var localization_EN_Data = {
     "pt.create.groups.addDemand.fields.collection": "Collection",
 
     //pt construction details
-	"pt.create.groups.constructionDetails" : "Construction Details",
     "pt.create.groups.constructionDetails.fields.orderDate": "Commencement Date",
     "pt.create.groups.constructionDetails.fields.certificateNumber": "Certificate Number",
     "pt.create.groups.constructionDetails.fields.certificateCompletionDate": "Certificate Completion Date",
@@ -497,6 +496,13 @@ var localization_EN_Data = {
 	"pt.create.groups.acknowledgement.success":"Your new property application has been submitted",
 	"pt.create.groups.acknowledgement.demandSuccess": "Tax and Collection added/updated Successfully",
 	"pt.create.groups.acknowledgement.dataEntrySuccess": "Property details saved and property number generated as",
+	"pt.create.groups.constructionDetails" : "Construction Details",
+	"pt.create.groups.oldPropertyNo" : "Old Property No",
+	"pt.create.groups.propertyNo" : "Property No",
+	"pt.create.groups.assessmentDetails.newProperty": "New Property",
+	"pt.create.groups.assessmentDetails.bifurcation": "Bifurcation",
+	"pt.create.groups.assessmentDetails.bifurcation": "None",
+
 
 
     //employee Object

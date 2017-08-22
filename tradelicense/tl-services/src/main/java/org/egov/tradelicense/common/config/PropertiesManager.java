@@ -110,7 +110,7 @@ public class PropertiesManager {
 	@Value("${error.license.locationendpoint}")
 	private String locationEndPointError;
 	
-	@Value("error.oldLicense.duplicate")
+	@Value("${error.oldLicense.duplicate}")
 	private String duplicateOldTradeLicenseMsg;
 	
 	@Value("${error.license.categoryendpoint}")

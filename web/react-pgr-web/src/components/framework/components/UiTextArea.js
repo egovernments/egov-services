@@ -19,6 +19,7 @@ export default class UiTextArea extends Component {
 						fullWidth={true}
 						multiLine={true}
 						rows={2}
+						maxLength={item.maxLength || ""}
 						floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>} 
 						value={this.props.getVal(item.jsonPath)}
 						disabled={item.isDisabled}

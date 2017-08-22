@@ -307,27 +307,14 @@ var dat = {
           {
             "name": "Primary Owner",
             "jsonPath": "Connection.connectionOwner.isPrimaryOwner",
-            "label": "pt.create.groups.ownerDetails.fields.primaryOwner",
+            "label": "",
             "pattern": "",
             "type": "radio",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-      			"values": [{"label":"employee.createPosition.groups.fields.outsourcepost.value1", "value":true},{"label":"employee.createPosition.groups.fields.outsourcepost.value2", "value":false}],
-      			"defaultValue":true
-          },
-          {
-            "name": "Secondary Owner",
-            "jsonPath": "Connection.connectionOwner.isSecondaryOwner",
-            "label": "pt.create.groups.ownerDetails.fields.secondaryOwner",
-            "pattern": "",
-            "type": "radio",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-      			"values": [{"label":"employee.createPosition.groups.fields.outsourcepost.value1", "value":true},{"label":"employee.createPosition.groups.fields.outsourcepost.value2", "value":false}],
+      			"values": [{"label":"pt.create.groups.ownerDetails.fields.primaryOwner", "value":true},{"label":"pt.create.groups.ownerDetails.fields.secondaryOwner", "value":false}],
       			"defaultValue":true
           }
         ]
@@ -439,7 +426,7 @@ var dat = {
             "pattern": "",
             "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE|$.Boundary.*.boundaryNum|$.Boundary.*.name",
             "type": "singleValueList",
-            "isRequired": true,
+            "isRequired": false,
             "isDisabled": true,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -578,8 +565,8 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-      "defaultValue": [],
-      "url":""
+            "defaultValue": [],
+            "url":""
           },
         {
             "name": "hscPipeSizeType",
@@ -630,7 +617,6 @@ var dat = {
             "url": "/wcms-connection/connection/_getconnectiontypes?|$..key|$..object",
             "requiredErrMsg": "",
             "patternErrMsg": "",
-
             "showHideFields": [{
                    "ifValue": "TEMPORARY",
                    "show": [{
@@ -991,7 +977,7 @@ var dat = {
             {
                 "name": "acknowledgementNumber",
                 "jsonPath": "Connection[0].acknowledgementNumber",
-                "label": "wc.create.groups.applicantDetails.acknowledgementNumber",
+                "label": "wc.create.groups.applicantDetails.consumerNumber",
                 "pattern": "",
                 "type": "text",
                 "isRequired": false,
@@ -1125,23 +1111,9 @@ var dat = {
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": "",
-        			"values": [{"label":"employee.createPosition.groups.fields.outsourcepost.value1", "value":true},{"label":"employee.createPosition.groups.fields.outsourcepost.value2", "value":false}],
-        			"defaultValue":true
-            },
-            {
-              "name": "Secondary Owner",
-              "jsonPath": "Connection[0].connectionOwner.isSecondaryOwner",
-              "label": "pt.create.groups.ownerDetails.fields.secondaryOwner",
-              "pattern": "",
-              "type": "radio",
-              "isRequired": false,
-              "isDisabled": false,
-              "requiredErrMsg": "",
-              "patternErrMsg": "",
-        			"values": [{"label":"employee.createPosition.groups.fields.outsourcepost.value1", "value":true},{"label":"employee.createPosition.groups.fields.outsourcepost.value2", "value":false}],
+        			"values": [{"label":"pt.create.groups.ownerDetails.fields.primaryOwner", "value":true},{"label":"pt.create.groups.ownerDetails.fields.secondaryOwner", "value":false}],
         			"defaultValue":true
             }
-
           ]
         },
         {
@@ -1323,6 +1295,18 @@ var dat = {
             "patternErrMsg": ""
           },
           {
+            "name": "subUsageType",
+            "jsonPath": "Connection[0].property.subUsageType",
+            "label": "wc.create.groups.connectionDetails.subUsageType",
+            "pattern": "",
+            "type": "singleValueList",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+      			"url":""
+          },
+          {
             "name": "hscPipeSizeType",
             "jsonPath": "Connection[0].hscPipeSizeType",
             "label": "wc.create.groups.connectionDetails.hscPipeSizeType",
@@ -1369,7 +1353,20 @@ var dat = {
             "isDisabled": false,
             "url": "/wcms-connection/connection/_getbillingtypes?|$..key|$..object",
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+            "showHideFields": [{
+                   "ifValue": "METERED",
+                   "hide": [{
+                    "name": "description",
+                    "isGroup": false,
+                    "isField": true
+                   }],
+                   "show": [{
+                    "name": "Metered",
+                    "isGroup": true,
+                    "isField": false
+                   }]
+                  }]
           },
           {
             "name": "ConnectionType",
@@ -1381,7 +1378,21 @@ var dat = {
             "isDisabled": false,
             "url": "/wcms-connection/connection/_getconnectiontypes?|$..key|$..object",
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+            "showHideFields": [{
+                   "ifValue": "TEMPORARY",
+                   "show": [{
+                                "name": "fromDate",
+                                "isGroup": false,
+                                "isField": true
+                              },
+                              {
+                               "name": "toDate",
+                               "isGroup": false,
+                               "isField": true
+                             }],
+                  "hide":[]
+              }]
           },
           {
             "name": "SourceType",

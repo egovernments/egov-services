@@ -43,6 +43,11 @@ class UiMultiSelectField extends Component {
 							dropDownData.push(obj);
 					}
 
+					dropDownData.sort(function(s1, s2) {
+						return (s1.value < s2.value) ? -1 : (s1.value > s2.value) ? 1 : 0;
+					});
+
+					dropDownData.unshift({key: null, value: "-- Please Select --"});
 					setDropDownData(item.jsonPath, dropDownData);
 				}
 			},function(err) {

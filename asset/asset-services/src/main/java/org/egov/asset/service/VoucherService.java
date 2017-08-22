@@ -180,7 +180,7 @@ public class VoucherService {
         return debitAccountCodeDetail;
     }
 
-    private List<ChartOfAccountContract> getChartOfAccounts(final RequestInfo requestInfo, final String tenantId,
+    public List<ChartOfAccountContract> getChartOfAccounts(final RequestInfo requestInfo, final String tenantId,
             final Long accountId) {
         final String url = applicationProperties.getEgfServiceHostName()
                 + applicationProperties.getEgfServiceChartOfAccountsSearchPath() + "?tenantId=" + tenantId + "&id="
@@ -236,7 +236,7 @@ public class VoucherService {
     }
 
     public Fund getFundFromVoucherMap(final RequestInfo requestInfo, final String tenantId) {
-        Map<String, String> voucherParamsMap = new HashMap<>();
+        Map<String, String> voucherParamsMap = null;
         try {
             voucherParamsMap = getVoucherParamsMap(tenantId);
         } catch (final Exception e) {
@@ -253,10 +253,11 @@ public class VoucherService {
             throw new RuntimeException("Fund Doesn't exists for code :: " + fundCode);
         else
             return funds.get(0);
+        
     }
 
     public Function getFunctionFromVoucherMap(final RequestInfo requestInfo, final String tenantId) {
-        Map<String, String> voucherParamsMap = new HashMap<>();
+        Map<String, String> voucherParamsMap = null;
         try {
             voucherParamsMap = getVoucherParamsMap(tenantId);
         } catch (final Exception e) {
@@ -277,7 +278,7 @@ public class VoucherService {
             return functions.get(0);
     }
 
-    private HashMap<String, String> getVoucherParamsMap(final String tenantId)
+    public HashMap<String, String> getVoucherParamsMap(final String tenantId)
             throws IOException, JsonParseException, JsonMappingException {
         final String voucherParams = assetConfigurationService
                 .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.VOUCHERPARAMS, tenantId);

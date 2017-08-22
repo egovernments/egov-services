@@ -243,7 +243,7 @@ class Report extends Component {
         <form onSubmit={(e) => {
           search(e)
         }}>
-        {!_.isEmpty(mockData) && moduleName && actionName && <ShowFields groups={mockData[`${moduleName}.${actionName}`].groups} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""}/>}
+        {!_.isEmpty(mockData) && <ShowFields groups={mockData["wc.searchconnection"].groups} noCols={mockData["wc.searchconnection"].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData["wc.searchconnection"].useTimestamp || false} addNewCard={""} removeCard={""}/>}
           <div style={{"textAlign": "center"}}>
             <br/>
             <UiButton item={{"label": "Search", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>

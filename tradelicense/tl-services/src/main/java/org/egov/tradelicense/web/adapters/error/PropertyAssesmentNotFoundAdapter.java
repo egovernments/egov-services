@@ -31,7 +31,7 @@ public class PropertyAssesmentNotFoundAdapter {
 	private Error getError(String customMsg) {
 		final List<ErrorField> fields = Collections.singletonList(getErrorField(customMsg));
 		return Error.builder().code(HTTP_CLIENT_ERROR_CODE).message(PROPERTY_ASSESMENT_NOT_FOUND_EXCEPTION_MESSAGE)
-				.fields(fields).description("").build();
+				.fields(fields).description(customMsg).build();
 	}
 
 	private ErrorField getErrorField(String customMsg) {

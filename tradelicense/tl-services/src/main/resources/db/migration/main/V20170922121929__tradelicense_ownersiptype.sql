@@ -1,0 +1,1 @@
+UPDATE egtl_license SET ownerShipType = 'STATE_GOVERNMENT_OWNED' WHERE ownerShipType ='STATE_GOVERNMENT';

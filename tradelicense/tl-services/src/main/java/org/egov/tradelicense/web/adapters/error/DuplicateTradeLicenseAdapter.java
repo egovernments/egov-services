@@ -33,7 +33,7 @@ public class DuplicateTradeLicenseAdapter {
 		return Error.builder()
 				.code(HTTP_CLIENT_ERROR_CODE)
 				.message(DUPLICATE_TRADE_LICENSE_EXCEPTION_MESSAGE)
-				.description("")
+				.description(customMsg)
 				.fields(fields).build();
 	}
 

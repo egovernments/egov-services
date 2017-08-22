@@ -2,6 +2,7 @@ package org.egov.property.repository.builder;
 
 import java.util.List;
 
+import org.egov.property.utility.ConstantUtility;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -83,17 +84,20 @@ public class SearchMasterBuilder {
 			searchSql.append("AND parent =? ");
 			preparedStatementValues.add(parent);
 		}
+		
+		if ( tableName.equalsIgnoreCase(ConstantUtility.USAGE_TYPE_TABLE_NAME)){
 
-		if (service != null) {
-			if (!service.isEmpty()) {
-				searchSql.append("AND lower(service) in(LOWER(?),LOWER(?)) ");
-				preparedStatementValues.add(service);
+			if (service != null) {
+				if (!service.isEmpty()) {
+					searchSql.append("AND lower(service) in(LOWER(?),LOWER(?)) ");
+					preparedStatementValues.add(service);
+					preparedStatementValues.add(defaultService);
+				}
+
+			} else {
+				searchSql.append("AND lower(service)=LOWER(?) ");
 				preparedStatementValues.add(defaultService);
 			}
-
-		} else {
-			searchSql.append("AND lower(service)=LOWER(?) ");
-			preparedStatementValues.add(defaultService);
 		}
 
 		JSONObject dataSearch = new JSONObject();

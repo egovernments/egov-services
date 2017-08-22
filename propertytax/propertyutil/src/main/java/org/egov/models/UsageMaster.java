@@ -63,5 +63,8 @@ public class UsageMaster {
 	@JsonProperty("data")
 	private String data;
 
+	@JsonProperty("service")
+	private String service = null;
+
 	private AuditDetails auditDetails;
 }

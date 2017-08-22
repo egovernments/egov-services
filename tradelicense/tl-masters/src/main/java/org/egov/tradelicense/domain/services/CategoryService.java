@@ -19,7 +19,7 @@ public interface CategoryService {
 	 * @param CategoryRequest
 	 * @return CategoryResponse
 	 */
-	public CategoryResponse createCategoryMaster(CategoryRequest categoryRequest);
+	public CategoryResponse createCategoryMaster(CategoryRequest categoryRequest, String type);
 
 	/**
 	 * Description : service method for updating category master
@@ -27,7 +27,7 @@ public interface CategoryService {
 	 * @param CategoryRequest
 	 * @return CategoryResponse
 	 */
-	public CategoryResponse updateCategoryMaster(CategoryRequest categoryRequest);
+	public CategoryResponse updateCategoryMaster(CategoryRequest categoryRequest, String type);
 
 	/**
 	 * Description : service method for searching category master

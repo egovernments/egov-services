@@ -1,51 +1,43 @@
 package org.egov.mr.repository.querybuilder;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.mr.TestConfiguration;
 import org.egov.mr.config.ApplicationProperties;
 import org.egov.mr.web.contract.MarriageCertCriteria;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.runners.MockitoJUnitRunner;
 
-@RunWith(SpringRunner.class)
-@WebMvcTest(MarriageCertQueryBuilder.class)
-@Import(TestConfiguration.class)
+@RunWith(MockitoJUnitRunner.class)
 public class MarriageCertQueryBuilderTest {
 
 	@InjectMocks
 	private MarriageCertQueryBuilder marriageCertQueryBuilder;
-	
-	@MockBean
+
+	@Mock
 	private ApplicationProperties applicationProperties;
 
-	@MockBean
+	@Mock
 	private MarriageCertCriteria marriageCertCriteria;
-	
+
 	@Before
 	public void initMocks() {
 		MockitoAnnotations.initMocks(this);
 	}
-	
 
-	@SuppressWarnings({ "static-access" })
 	@Test
 	public void testForGetQuery() {
 		Mockito.doReturn("20").when(applicationProperties).marriageCertSearchPageSizeDefault();
-		List<Object> preparedStatementValues= new ArrayList<>();
-	    MarriageCertCriteria marriageCertCriteria=MarriageCertCriteria.builder().tenantId("ap.kurnool").build();
+		List<Object> preparedStatementValues = new ArrayList<>();
+		MarriageCertCriteria marriageCertCriteria = MarriageCertCriteria.builder().tenantId("ap.kurnool").build();
 		String SelectQuery = " select rc.id as rc_id,rc.regnno as rc_regnno,rc.applicantname as rc_applicantname, rc.applicantaddress as rc_applicantaddress,"
 				+ " rc.applicantmobileno as rc_applicantmobileno, rc.applicantfee as rc_applicantfee, rc.applicantaadhaar as  rc_applicantaadhaar,"
 				+ " rc.applicationnumber as rc_applicationnumber, rc.reissueapplstatus as rc_reissueapplstatus ,rc.stateid as rc_stateid,"
@@ -65,11 +57,9 @@ public class MarriageCertQueryBuilderTest {
 				+ " LEFT OUTER JOIN egmr_marriage_certificate mc ON mc.regnnumber=rc.regnno"
 				+ " LEFT OUTER JOIN egmr_documents ds ON rc.id=ds.reissuecertificateid "
 				+ " WHERE rc.tenantId = ?  LIMIT ? OFFSET ?";
-	    String	ExpectedQuery=marriageCertQueryBuilder.getQuery(marriageCertCriteria, preparedStatementValues);
-	    System.err.println("ExpectedQuery;;;;;;;;;;;;;;;;;"+ExpectedQuery);
-		assertEquals(ExpectedQuery.toString(),SelectQuery.toString());
-		assertEquals((String)preparedStatementValues.get(0), "ap.kurnool");
-		
+		String ExpectedQuery = marriageCertQueryBuilder.getQuery(marriageCertCriteria, preparedStatementValues);
+		assertEquals(ExpectedQuery.toString(), SelectQuery.toString());
+		assertEquals((String) preparedStatementValues.get(0), "ap.kurnool");
 
 	}
 

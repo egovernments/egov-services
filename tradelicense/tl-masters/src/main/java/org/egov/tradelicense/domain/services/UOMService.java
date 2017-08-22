@@ -22,8 +22,7 @@ public interface UOMService {
 	public UOMResponse createUomMaster(UOMRequest uomRequest);
 
 	/**
-	 * Description : service method for updating UOM master
-	 * 
+	 * Description : service method for updating UOM master 
 	 * @param UOMRequest
 	 * @return UOMResponse
 	 */

@@ -12,15 +12,24 @@ export default class UiTextSearch extends Component {
 				return (
 					<div style={{position: 'relative', display: 'inline'}}>
 						<TextField 
+							floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
+							floatingLabelFixed={true} 
 							onBlur={(ev) => this.props.autoComHandler(item.autoCompleteDependancy, item.jsonPath)}
 							style={{"display": (item.hide ? 'none' : 'inline-block')}}
 							errorStyle={{"float":"left"}}
 							fullWidth={true} 
-							floatingLabelText={item.label + (item.isRequired ? " *" : "")} 
+							floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>} 
 							value={this.props.getVal(item.jsonPath)}
 							disabled={item.isDisabled}
 							errorText={this.props.fieldErrors[item.jsonPath]}
-							onChange={(e) => this.props.handler(e, item.jsonPath, item.isRequired ? true : false, item.pattern, item.requiredErrMsg, item.patternErrMsg)} />
+							onChange={(e) => {
+								if(e.target.value) { 
+									e.target.value = e.target.value.replace(/^\s*/, "");
+									if(e.target.value[e.target.value.length-1] == " " && e.target.value[e.target.value.length-2] == " ")
+										return;
+								}
+								this.props.handler(e, item.jsonPath, item.isRequired ? true : false, item.pattern, item.requiredErrMsg, item.patternErrMsg)}
+							} />
 						<span className="glyphicon glyphicon-search" style={{"position":"absolute", "right": "10px", "display": (item.display ? 'none' : '')}} onClick={() => this.props.autoComHandler(item.autoCompleteDependancy, item.jsonPath)}></span>
 					</div>
 				);

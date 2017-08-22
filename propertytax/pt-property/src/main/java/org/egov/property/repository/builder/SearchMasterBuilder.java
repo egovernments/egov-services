@@ -1,6 +1,7 @@
 package org.egov.property.repository.builder;
 
 import java.util.List;
+
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -46,7 +47,7 @@ public class SearchMasterBuilder {
 	public static String buildSearchQuery(String tableName, String tenantId, Integer[] ids, String name,
 			String nameLocal, String code, Boolean active, Boolean isResidential, Integer orderNumber, String category,
 			Integer pageSize, Integer offSet, List<Object> preparedStatementValues, Integer fromYear, Integer toYear,
-			Integer year, String parent) {
+			Integer year, String parent, String service) {
 
 		StringBuffer searchSql = new StringBuffer();
 
@@ -80,6 +81,14 @@ public class SearchMasterBuilder {
 			searchSql.append("AND parent =? ");
 			preparedStatementValues.add(parent);
 		}
+
+		if (service != null) {
+			if (!service.isEmpty()) {
+				searchSql.append("AND service =? ");
+				preparedStatementValues.add(service);
+			}
+
+		} 
 
 		JSONObject dataSearch = new JSONObject();
 
@@ -184,10 +193,10 @@ public class SearchMasterBuilder {
 			pageSize = 30;
 		searchSql.append(" limit ? ");
 		preparedStatementValues.add(pageSize);
-		
+
 		if (offSet == null)
 			offSet = 0;
-		
+
 		searchSql.append(" offset ? ");
 		preparedStatementValues.add(offSet);
 

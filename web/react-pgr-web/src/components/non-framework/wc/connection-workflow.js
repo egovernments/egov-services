@@ -1242,6 +1242,8 @@ class Report extends Component {
               		<Row>
               			<Col xs="12" md="3">
               				<TextField
+                        floatingLabelFixed={true}
+                        floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
               					floatingLabelText={translate("wc.create.workflow.distributionPipeline")}
               					disabled = {self.state.disable}
               					type="number"
@@ -1252,6 +1254,8 @@ class Report extends Component {
               			</Col>
               			<Col xs="12" md="3">
               				<TextField
+                        floatingLabelFixed={true}
+                        floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
               					floatingLabelText={translate("wc.create.workflow.homeDistance")}
               					disabled = {self.state.disable}
               					type="number"
@@ -1262,6 +1266,8 @@ class Report extends Component {
               			</Col>
               			<Col xs="12" md="3">
               				<TextField
+                        floatingLabelFixed={true}
+                        floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
                         floatingLabelText={translate("wc.create.workflow.supervisionCharge")}
               					disabled = {true}
               					type="number"
@@ -1272,7 +1278,9 @@ class Report extends Component {
               			</Col>
               			<Col xs="12" md="3">
               				<TextField
-                        floatingLabelText={translate("wc.create.donation.subtitle") + " *"}
+                        floatingLabelFixed={true}
+                        floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
+                        floatingLabelText={<span>{translate("wc.create.donation.subtitle")}<span style={{"color": "#FF0000"}}> *</span></span>}
               					disabled = {self.state.disable}
               					type="number"
               					value={formData.Connection && formData.Connection[0] && formData.Connection[0].estimationCharge && formData.Connection[0].estimationCharge[0] ? formData.Connection[0].estimationCharge[0].specialSecurityCharges : ""}
@@ -1285,7 +1293,9 @@ class Report extends Component {
               			<Col xs="12" md="3">
               				<TextField
                         type="number"
-              					floatingLabelText={translate("wc.create.workflow.roadCutCharges") + " *"}
+                        floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
+                        floatingLabelFixed={true}
+              					floatingLabelText={<span>{translate("wc.create.workflow.roadCutCharges")}<span style={{"color": "#FF0000"}}> *</span></span>}
               					disabled = {self.state.disable}
               					value={formData.Connection && formData.Connection[0] && formData.Connection[0].estimationCharge && formData.Connection[0].estimationCharge[0] ? formData.Connection[0].estimationCharge[0].roadCutCharges : ""}
               					onChange={(e) => {
@@ -1321,7 +1331,9 @@ class Report extends Component {
          		{!self.state.hide && <Row>
          			<Col xs={12} md={3}>
          				<SelectField dropDownMenuProps={{animated: true, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
-                      floatingLabelText={translate("employee.Assignment.fields.department")+" *"}
+                      floatingLabelFixed={true}
+                      floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
+                      floatingLabelText={<span>{translate("employee.Assignment.fields.department")}<span style={{"color": "#FF0000"}}> *</span></span>}
 		                  value={formData.Connection && formData.Connection[0] && formData.Connection[0].workflowDetails ? formData.Connection[0].workflowDetails.department : ""}
 		                  onChange={(event, key, value) => {
 		                  		handleChange({target: {value}}, "Connection[0].workflowDetails.department", true, "")
@@ -1335,8 +1347,10 @@ class Report extends Component {
          			</Col>
          			<Col xs={12} md={3}>
          				<SelectField 
+                      floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
+                      floatingLabelFixed={true}
                       dropDownMenuProps={{animated: true, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
-                      floatingLabelText={translate("employee.Assignment.fields.designation")+" *"}
+                      floatingLabelText={<span>{translate("employee.Assignment.fields.designation")}<span style={{"color": "#FF0000"}}> *</span></span>}
 		                  value={formData.Connection && formData.Connection[0] && formData.Connection[0].workflowDetails ? formData.Connection[0].workflowDetails.designation : ""}
 		                  onChange={(event, key, value) => {
 		                  	handleChange({target: {value}}, "Connection[0].workflowDetails.designation", true, "")
@@ -1350,8 +1364,10 @@ class Report extends Component {
          			</Col>
          			<Col xs={12} md={3}>
          				<SelectField 
+                      floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
+                      floatingLabelFixed={true}
                       dropDownMenuProps={{animated: true, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
-		                  floatingLabelText={translate("wc.create.groups.approvalDetails.fields.approver")+" *"}
+		                  floatingLabelText={<span>{translate("wc.create.groups.approvalDetails.fields.approver")}<span style={{"color": "#FF0000"}}> *</span></span>}
 		                  value={formData.Connection && formData.Connection[0] && formData.Connection[0].workflowDetails ? formData.Connection[0].workflowDetails.assignee : ""}
 		                  onChange={(event, key, value) => {
 		                  	handleChange({target: {value}}, "Connection[0].workflowDetails.assignee", true, "")
@@ -1367,6 +1383,8 @@ class Report extends Component {
          		<Row>
          			<Col xs={12} md={12}>
          				<TextField
+                    floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
+                    floatingLabelFixed={true}
           					type="text"
           					multiple={true}
           					fullWidth={true}

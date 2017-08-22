@@ -79,7 +79,7 @@ public class CategoryContollerTest {
 
 		try {
 
-			when(categoryService.createCategoryMaster(any(CategoryRequest.class))).thenReturn(categoryResponse);
+			when(categoryService.createCategoryMaster(any(CategoryRequest.class),any(String.class))).thenReturn(categoryResponse);
 
 			mockMvc.perform(post("/category/v1/_create")
 					.contentType(MediaType.APPLICATION_JSON)
@@ -124,7 +124,7 @@ public class CategoryContollerTest {
 
 		try {
 
-			when(categoryService.createCategoryMaster(any(CategoryRequest.class))).thenReturn(categoryResponse);
+			when(categoryService.createCategoryMaster(any(CategoryRequest.class),any(String.class))).thenReturn(categoryResponse);
 
 			mockMvc.perform(
 					post("/category/v1/_create")
@@ -166,7 +166,7 @@ public class CategoryContollerTest {
 
 		try {
 
-			when(categoryService.updateCategoryMaster(any(CategoryRequest.class))).thenReturn(categoryResponse);
+			when(categoryService.updateCategoryMaster(any(CategoryRequest.class),any(String.class))).thenReturn(categoryResponse);
 			mockMvc.perform(post("/category/v1/_update")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("categoryUpdateRequest.json")))
@@ -219,7 +219,7 @@ public class CategoryContollerTest {
 
 		try {
 
-			when(categoryService.updateCategoryMaster(any(CategoryRequest.class))).thenReturn(categoryResponse);
+			when(categoryService.updateCategoryMaster(any(CategoryRequest.class),any(String.class))).thenReturn(categoryResponse);
 			mockMvc.perform(post("/category/v1/_update").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("categoryUpdateRequest.json")))
 					.andExpect(status().isOk())

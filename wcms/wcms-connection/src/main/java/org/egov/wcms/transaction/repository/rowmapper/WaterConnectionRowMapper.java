@@ -41,10 +41,13 @@ package org.egov.wcms.transaction.repository.rowmapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.wcms.transaction.model.Connection;
 import org.egov.wcms.transaction.model.ConnectionOwner;
+import org.egov.wcms.transaction.model.Meter;
 import org.egov.wcms.transaction.model.Property;
 import org.egov.wcms.transaction.web.contract.Address;
 import org.egov.wcms.transaction.web.contract.Boundary;
@@ -66,7 +69,8 @@ public class WaterConnectionRowMapper {
 	public static final Logger LOGGER = LoggerFactory.getLogger(WaterConnectionRowMapper.class);
 	public static final String baseUrl = "http://pt-property:8080" ; 
 	public static final String usageTypeSearch = "/pt-property/property/usages/_search?ids={ids}&tenantId={tenantId}" ; 
-	public static final String propertyTypeSearch = "/pt-property/property/propertytypes/_search?ids={ids}&tenantId={tenantId}"; 
+	public static final String propertyTypeSearch = "/pt-property/property/propertytypes/_search?ids={ids}&tenantId={tenantId}";
+	public static final String METERED = "METERED";
 	
 	public class WaterConnectionPropertyRowMapper implements RowMapper<Connection> {
 		@Override
@@ -85,6 +89,16 @@ public class WaterConnectionRowMapper {
 				prop.setEmail(rs.getString("emailid"));
 			}
 			resolvePropertyUsageTypeNames(rs, prop);
+			if(rs.getString("conn_billtype").equals(METERED)) { 
+				Meter meter = Meter.builder().meterMake(rs.getString("metermake"))
+						.meterCost(rs.getString("metercost"))
+						.meterSlNo(rs.getString("meterslno"))
+						.initialMeterReading(rs.getString("initialmeterreading"))
+						.build();
+				List<Meter> meterList = new ArrayList<>();
+				meterList.add(meter);
+				connection.setMeter(meterList);
+			}
 			connection.setProperty(prop);
 			connection.setWithProperty(true);
 			return connection;

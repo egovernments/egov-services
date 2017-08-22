@@ -1609,6 +1609,11 @@ var localization_MR_Data = {
 	"pt.create.groups.acknowledgement.success":"Your new property application has been submitted",
 	"pt.create.groups.acknowledgement.demandSuccess": "Tax and Collection added/updated Successfully",
 	"pt.create.groups.acknowledgement.dataEntrySuccess": "Property details saved and property number generated as",
+	"pt.create.groups.oldPropertyNo" : "Old Property No",
+	"pt.create.groups.propertyNo" : "Property No",
+	"pt.create.groups.assessmentDetails.newProperty": "New Property",
+	"pt.create.groups.assessmentDetails.bifurcation": "Bifurcation",
+	"pt.create.groups.assessmentDetails.bifurcation": "None",
 	
 	﻿"pt.create.groups.assessmentDetails":"मूल्यांकन तपशील",
 	"wc.crete.Slabs":"स्लॅब्स",

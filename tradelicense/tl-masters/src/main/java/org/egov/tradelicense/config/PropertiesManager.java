@@ -58,6 +58,9 @@ public class PropertiesManager {
 
 	@Value("${duplicate.uom.code}")
 	private String uomCustomMsg;
+	
+	@Value("${duplicate.uom.name}")
+	private String uomDuplicateNameErrorMsg;
 
 	@Value("${duplicate.category.code}")
 	private String categoryCustomMsg;

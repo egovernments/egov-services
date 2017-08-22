@@ -164,10 +164,5 @@ public class PropertiesManager {
 
     @Value("${egov.services.egf_masters_service.searchpath}")
     private String egfMastersServiceSearchPath;
-    
-    @Value("${egov.services.tenant_service.hostname}")
-    private String tenantServiceHostName;
-    
-    @Value("${egov.services.tenant_service.searchpath}")
-    private String tenantServiceSearchPath;
+
 }

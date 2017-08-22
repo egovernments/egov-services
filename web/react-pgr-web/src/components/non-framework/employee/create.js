@@ -1947,7 +1947,7 @@ class Employee extends Component {
                                 <label>{Employee.code || "-"}</label></span>
                             )
                          :
-                            <TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} floatingLabelText={<span>{translate("employee.Employee.fields.code")}<span style={{"color": "#FF0000"}}> *</span></span>} errorText={fieldErrors["code"]} value={Employee.code} onChange={(e) => {
+                            <TextField inputStyle={{"color": "#5F5C57"}} floatingLabelStyle={{"color": (self.state.screenType == 'update' || self.state.autoCode) ? "#A9A9A9" : "#696969", "fontSize": "20px"}} floatingLabelFixed={true} floatingLabelText={<span>{translate("employee.Employee.fields.code")}<span style={{"color": "#FF0000"}}> *</span></span>} errorText={fieldErrors["code"]} value={Employee.code} onChange={(e) => {
                       		    handleChange(e, "code", true, '')
                       	    }} disabled={self.state.screenType == 'update' || self.state.autoCode}/>
                         }
@@ -2075,7 +2075,7 @@ class Employee extends Component {
                             )
                          :
 
-                        <TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} floatingLabelText={<span>{translate("employee.Employee.fields.User.userName")}<span style={{"color": "#FF0000"}}> *</span></span>} errorText={fieldErrors["user"] && fieldErrors["user"]["userName"]} errorText={fieldErrors["user.userName"]} value={Employee.user ? Employee.user.userName : ""} onChange={(e) => {
+                        <TextField inputStyle={{"color": "#5F5C57"}} floatingLabelStyle={{"color": (self.state.screenType == 'update' || self.state.autoUName) ? "#A9A9A9" : "#696969", "fontSize": "20px"}} floatingLabelFixed={true} floatingLabelText={<span>{translate("employee.Employee.fields.User.userName")}<span style={{"color": "#FF0000"}}> *</span></span>} errorText={fieldErrors["user"] && fieldErrors["user"]["userName"]} errorText={fieldErrors["user.userName"]} value={Employee.user ? Employee.user.userName : ""} onChange={(e) => {
                       		handleChangeNextLevel(e, "user", "userName", true, '')
                       	}} disabled={self.state.screenType == 'update' || self.state.autoUName}/>
                       }

@@ -30,7 +30,8 @@ export default class UiEmailField extends Component {
 				return (
 					<TextField 
 						style={{"display": (item.hide ? 'none' : 'inline-block')}}
-						floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} 
+						floatingLabelStyle={{"color": item.isDisabled ? "#A9A9A9" : "#696969", "fontSize": "20px"}}
+						inputStyle={{"color": "#5F5C57"}}
 						floatingLabelFixed={true} 
 						disabled={item.isDisabled}
 						hintText="21/12/1993" 

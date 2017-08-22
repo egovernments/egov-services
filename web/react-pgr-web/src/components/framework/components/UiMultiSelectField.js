@@ -62,7 +62,8 @@ class UiMultiSelectField extends Component {
 				return (
 					<div style={{"display": "flex", "flex-direction": "column-reverse"}}>
 						<SelectField
-							floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
+							floatingLabelStyle={{"color": item.isDisabled ? "#A9A9A9" : "#696969", "fontSize": "20px"}}
+							inputStyle={{"color": "#5F5C57"}}
 							floatingLabelFixed={true} 
 						 	dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
 							style={{"display": (item.hide ? 'none' : 'block')}}

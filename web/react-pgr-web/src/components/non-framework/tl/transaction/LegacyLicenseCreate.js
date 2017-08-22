@@ -704,14 +704,30 @@ class LegacyLicenseCreate extends Component {
       // }
 
 
+if(property == "licenses[0].categoryId"){
+  Api.commonApiPost("/tl-masters/category/v1/_search",{"ids":e.target.value, "type":"subcategory"}).then(function(response)
+  {
+    // handleChange (e, "" )
+    console.log(response);
+    //console.log(response.categories[0].validityYears);
+    handleChange({target:{value:null}}, "licenses[0].validityYears");
 
+
+    handleChange({target:{value:null}}, "licenses[0].uomName");
+    handleChange({target:{value:null}}, "licenses[0].uomId", true);
+
+  },function(err) {
+      console.log(err);
+
+  });
+}
 
       if (property == "licenses[0].subCategoryId") {
         console.log(e.target.value);
         Api.commonApiPost("/tl-masters/category/v1/_search",{"ids":e.target.value, "type":"subcategory"}).then(function(response)
        {
           // handleChange (e, "" )
-          // console.log(response);
+          console.log(response);
           //console.log(response.categories[0].validityYears);
           handleChange({target:{value:response.categories[0].validityYears}}, "licenses[0].validityYears");
           self.setState({
@@ -726,6 +742,7 @@ class LegacyLicenseCreate extends Component {
 
         });
       }
+
 
 
 

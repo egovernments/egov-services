@@ -236,4 +236,9 @@ public class GenericSteps extends BaseSteps {
         WebElement webElement = pageStore.get(GenericPage.class).buildElement(screen, element, "");
         webElement.click();
     }
+
+    @And("^(\\w+) on (\\w+) screen refresh's the webpage$")
+    public void userOnHomeScreenRefreshSTheWebpage() throws Throwable {
+        pageStore.getDriver().navigate().refresh();
+    }
 }

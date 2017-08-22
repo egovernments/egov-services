@@ -746,7 +746,7 @@ if(property == "licenses[0].categoryId"){
 
 
 
-
+ 
 
       // console.log(obj);
       let depedants=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);

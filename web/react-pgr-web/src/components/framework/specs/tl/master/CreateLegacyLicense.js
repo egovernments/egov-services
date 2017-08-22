@@ -156,7 +156,7 @@ var dat = {
             "label": "tl.create.licenses.groups.TradeLocationDetails.PropertyAssessmentNo",
             "pattern": "",
             "type": "number",
-            "isRequired": false,
+            "isRequired": false, 
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "Property Assessment Number should be 4 to 20"

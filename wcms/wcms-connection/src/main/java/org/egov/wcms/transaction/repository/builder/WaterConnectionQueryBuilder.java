@@ -86,7 +86,7 @@ public class WaterConnectionQueryBuilder {
 			+ " from egpt_property prop, egpt_property_owner propowner, eg_user eguser, egpt_propertylocation proploc "
 			+ " where prop.id = propowner.property AND propowner.owner = eguser.id AND prop.id = proploc.property ) propertyuserdetail ON connection.propertyidentifier =propertyuserdetail.prop_upicnumber "
 			+ " left join egwtr_treatment_plant plant ON NULLIF(connection.watertreatmentid, '')::int = plant.id "
-			+ " left join egwtr_meter meter ON meter.connectionid = connection.id  " ;  
+			+ " left join egwtr_meter meter ON meter.connectionid = connection.id WHERE connection.id IS NOT NULL " ;  
 	
 	private static final String QUERY_WITHOUT_PROP = "SELECT DISTINCT conndetails.id as conn_id , conndetails.tenantid as conn_tenant, conndetails.connectiontype as conn_connType, "  
 			+ " conndetails.billingtype as conn_billtype, conndetails.categorytype  as conn_catgtype, conndetails.createdtime as createdtime, " 
@@ -292,10 +292,10 @@ public class WaterConnectionQueryBuilder {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
             final WaterConnectionGetReq waterConnectionGetReq) {
-
+    	
         if (waterConnectionGetReq.getTenantId() == null)
             return;
-
+        
         selectQuery.append(" AND ");
         boolean isAppendAndClause = false;
 

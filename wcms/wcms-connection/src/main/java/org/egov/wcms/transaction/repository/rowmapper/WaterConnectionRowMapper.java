@@ -224,7 +224,6 @@ public class WaterConnectionRowMapper {
 	public PropertyTypeResponse getPropertyNameFromPTModule(
 			final Integer[] propertyTypeId, final String tenantId) {
 		String url = baseUrl + propertyTypeSearch;
-		LOGGER.info("URL for Property Types : "+ url);
 		final RequestInfo requestInfo = RequestInfo.builder().ts(123456789L).build();
 		final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
 		final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
@@ -236,7 +235,6 @@ public class WaterConnectionRowMapper {
 	public UsageTypeResponse getUsageNameFromPTModule(
 			final Integer[] usageTypeId, final String tenantId) {
 		String url = baseUrl + usageTypeSearch;
-		LOGGER.info("URL for Usage Types : "+ url);
 		final RequestInfo requestInfo = RequestInfo.builder().ts(123456789L).build();
 		final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
 		final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);

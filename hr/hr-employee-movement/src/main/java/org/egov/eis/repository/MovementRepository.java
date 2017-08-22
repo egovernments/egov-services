@@ -40,6 +40,7 @@
 
 package org.egov.eis.repository;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.eis.config.PropertiesManager;
 import org.egov.eis.model.Document;
 import org.egov.eis.model.Movement;
@@ -106,11 +107,12 @@ public class MovementRepository {
     }
 
     public MovementRequest saveMovement(final MovementRequest movementRequest) {
+        ProcessInstance processInstance = new ProcessInstance();
         Long stateId = null;
-//        if (StringUtils.isEmpty(movementRequest.getType()))
-//            processInstance = workFlowService.start(movementRequest);
-//        if (processInstance.getId() != null)
-        stateId = 1L;
+        if (StringUtils.isEmpty(movementRequest.getType()))
+            processInstance = workFlowService.start(movementRequest);
+        if (processInstance.getId() != null)
+            stateId = Long.valueOf(processInstance.getId());
         final Date now = new Date();
         final UserResponse userResponse = userService.findUserByUserNameAndTenantId(
                 movementRequest.getRequestInfo());

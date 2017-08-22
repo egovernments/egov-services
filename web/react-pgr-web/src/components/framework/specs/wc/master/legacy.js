@@ -356,7 +356,7 @@ var dat = {
                 "Connection.property.locality":"properties[0].boundary.locationBoundary.id",
                 "Connection.property.zone":"properties[0].boundary.revenueBoundary.id",
                 "Connection.property.ward":"properties[0].boundary.adminBoundary.id",
-                "Connection.property.address":"properties[0].address.addressNumber",
+                "Connection.property.address":"properties[0].address.addressLine1",
                 "Connection.property.property":"properties[0].propertyDetail.propertyType"
               }
             },

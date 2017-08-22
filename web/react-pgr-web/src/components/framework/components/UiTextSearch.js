@@ -19,6 +19,7 @@ export default class UiTextSearch extends Component {
 							style={{"display": (item.hide ? 'none' : 'inline-block')}}
 							errorStyle={{"float":"left"}}
 							fullWidth={true} 
+							maxLength={item.maxLength || ""}
 							floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>} 
 							value={this.props.getVal(item.jsonPath)}
 							disabled={item.isDisabled}

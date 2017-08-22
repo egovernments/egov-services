@@ -34,6 +34,7 @@ export default class UiTextField extends Component {
 							style={{"display": (item.hide ? 'none' : 'inline-block')}}
 							errorStyle={{"float":"left"}}
 							fullWidth={false}
+							maxLength={item.maxLength || ""}
 							floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>} 
 							
 
@@ -56,6 +57,7 @@ export default class UiTextField extends Component {
 							floatingLabelStyle={{"color": item.isDisabled ? "#A9A9A9" : "#696969", "fontSize": "20px"}}
 							inputStyle={{"color": "#5F5C57"}}
 							floatingLabelFixed={true} 
+							maxLength={item.maxLength || ""}
 							style={{"display": (item.hide ? 'none' : 'inline-block')}}
 							errorStyle={{"float":"left"}}
 							fullWidth={true}

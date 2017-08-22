@@ -290,16 +290,16 @@ public class ReceiptService {
 				billDetail.setStatus(ReceiptStatus.APPROVED.toString());
 				
 				billDetail.setReceiptDate(new Date().getTime());
+				String receiptNumber = idGenRepository.generateReceiptNumber(requestInfo,
+						tenantId);
 				try{
-					validateReceiptNumber(idGenRepository.generateReceiptNumber(requestInfo,
-							tenantId), tenantId, requestInfo);
+					validateReceiptNumber(receiptNumber, tenantId, requestInfo);
 				}catch(CustomException e){
 					LOGGER.error("Duplicate Receipt: ", e);
 					throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
 							CollectionServiceConstants.DUPLICATE_RCPT_EXCEPTION_MSG, CollectionServiceConstants.DUPLICATE_RCPT_EXCEPTION_DESC);
 				}
-				billDetail.setReceiptNumber(idGenRepository.generateReceiptNumber(requestInfo,
-						tenantId));
+				billDetail.setReceiptNumber(receiptNumber);
 				Map<String, Object> parametersMap;
 				BusinessDetailsResponse businessDetailsRes = getBusinessDetails(
 						billDetail.getBusinessService(), requestInfo, tenantId);

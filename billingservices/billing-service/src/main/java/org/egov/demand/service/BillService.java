@@ -50,6 +50,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.config.ApplicationProperties;
 import org.egov.demand.helper.BillHelper;
@@ -175,8 +176,12 @@ public class BillService {
 
 		log.debug("prepareBill taxHeadCodes:" + taxHeadCodes);
 
-		Map<String, List<Demand>> map = demands.stream().collect(Collectors.groupingBy(Demand::getBusinessService, Collectors.toList()));
-		Set<String> businessServices = map.keySet();
+		Map<Pair<String, String>, List<Demand>> map = demands.stream()
+				.collect(Collectors.groupingBy(t -> Pair.of(t.getBusinessService(), t.getConsumerCode())));
+		
+		Set<Pair<String, String>> businessConsumerPairMap = map.keySet();
+		//Set<Pair<String, String>> businessConsumerMap = map.keySet();
+		Set<String> businessServices = businessConsumerPairMap.stream().map(t -> t.getLeft()).collect(Collectors.toSet());
 		Map<String,BusinessServiceDetail> businessServiceMap = getBusinessService(businessServices,tenantId,requestInfo);
 		log.info("prepareBill map:" +map);
 		Demand demand = demands.get(0);
@@ -187,8 +192,9 @@ public class BillService {
 
 		List<BillDetail> billDetails = new ArrayList<>();
 
-		for(Map.Entry<String, List<Demand>> entry : map.entrySet()){
-			String businessService = entry.getKey();
+		for(Map.Entry<Pair<String, String>, List<Demand>> entry : map.entrySet()){
+			Pair<String, String> businessConsumerPair = entry.getKey();
+			String businessService = businessConsumerPair.getLeft();
 			List<Demand> demands2 = entry.getValue();
 			log.info("prepareBill demands2:" +demands2);
 			

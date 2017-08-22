@@ -5,6 +5,7 @@ import java.util.List;
 import org.egov.eis.model.Designation;
 import org.egov.eis.repository.DesignationRepository;
 import org.egov.eis.web.contract.DesignationGetRequest;
+import org.egov.eis.web.contract.DesignationRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

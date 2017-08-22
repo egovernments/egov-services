@@ -11,8 +11,10 @@ import org.egov.common.contract.response.ResponseInfo;
 import org.egov.tradelicense.common.domain.exception.AdhaarNotFoundException;
 import org.egov.tradelicense.common.domain.exception.AgreeMentDateNotFoundException;
 import org.egov.tradelicense.common.domain.exception.AgreeMentNotFoundException;
+import org.egov.tradelicense.common.domain.exception.AgreeMentNotValidException;
 import org.egov.tradelicense.common.domain.exception.CustomBindException;
 import org.egov.tradelicense.common.domain.exception.DuplicateTradeLicenseException;
+import org.egov.tradelicense.common.domain.exception.EndPointException;
 import org.egov.tradelicense.common.domain.exception.InvalidAdminWardException;
 import org.egov.tradelicense.common.domain.exception.InvalidCategoryException;
 import org.egov.tradelicense.common.domain.exception.InvalidDocumentTypeException;
@@ -24,12 +26,17 @@ import org.egov.tradelicense.common.domain.exception.InvalidRevenueWardException
 import org.egov.tradelicense.common.domain.exception.InvalidSubCategoryException;
 import org.egov.tradelicense.common.domain.exception.InvalidUomException;
 import org.egov.tradelicense.common.domain.exception.InvalidValidityYearsException;
-import org.egov.tradelicense.common.domain.exception.LicenseNotFoundException;
+import org.egov.tradelicense.common.domain.exception.LegacyFeeDetailNotFoundException;
+import org.egov.tradelicense.common.domain.exception.OldLicenseNotFoundException;
 import org.egov.tradelicense.common.domain.exception.PropertyAssesmentNotFoundException;
+import org.egov.tradelicense.common.domain.exception.TradeLicensesNotEmptyException;
+import org.egov.tradelicense.common.domain.exception.TradeLicensesNotFoundException;
 import org.egov.tradelicense.web.adapters.error.AdhaarNotFoundAdapter;
 import org.egov.tradelicense.web.adapters.error.AgreeMentDateNotFoundAdapter;
 import org.egov.tradelicense.web.adapters.error.AgreeMentNotFoundAdapter;
+import org.egov.tradelicense.web.adapters.error.AgreeMentNotValidAdapter;
 import org.egov.tradelicense.web.adapters.error.DuplicateTradeLicenseAdapter;
+import org.egov.tradelicense.web.adapters.error.EndPointExceptionAdapter;
 import org.egov.tradelicense.web.adapters.error.InvalidAdminWardAdapter;
 import org.egov.tradelicense.web.adapters.error.InvalidCategoryAdapter;
 import org.egov.tradelicense.web.adapters.error.InvalidDocumentTypeAdapter;
@@ -40,8 +47,11 @@ import org.egov.tradelicense.web.adapters.error.InvalidRevenueWardAdapter;
 import org.egov.tradelicense.web.adapters.error.InvalidSubCategoryAdapter;
 import org.egov.tradelicense.web.adapters.error.InvalidUomAdapter;
 import org.egov.tradelicense.web.adapters.error.InvalidValidityYearsAdapter;
-import org.egov.tradelicense.web.adapters.error.LicenseNotFoundAdapter;
+import org.egov.tradelicense.web.adapters.error.LegacyFeeDetailNotFoundAdapter;
+import org.egov.tradelicense.web.adapters.error.OldLicenseNotFoundAdapter;
 import org.egov.tradelicense.web.adapters.error.PropertyAssesmentNotFoundAdapter;
+import org.egov.tradelicense.web.adapters.error.TradeLicensesNotEmptyAdapter;
+import org.egov.tradelicense.web.adapters.error.TradeLicensesNotFoundAdapter;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -80,18 +90,18 @@ public class CustomControllerAdvice {
 		} else {
 			if (errors.getFieldErrorCount() > 0) {
 				error.setMessage("tl.error.missingfields");
-				// error.setDescription("Missing fields");
+				error.setCode(400);
+				 error.setDescription("Missing fields");
 			}
 		}
 		if (errors.hasFieldErrors()) {
 			List<org.springframework.validation.FieldError> fieldErrors = errors.getFieldErrors();
+			error.setFields(new ArrayList<>());
 			for (org.springframework.validation.FieldError errs : fieldErrors) {
 				String errorCode = "tl.error." + errs.getField().substring(errs.getField().indexOf(".") + 1) + "."
 						+ errs.getCode();
 				ErrorField f = new ErrorField(errorCode.toLowerCase(), errs.getDefaultMessage(), errs.getField());
-				error.setFields(new ArrayList<>());
 				error.getFields().add(f);
-
 			}
 		}
 		errRes.setError(error);
@@ -112,7 +122,7 @@ public class CustomControllerAdvice {
 		Error error = new Error();
 		error.setCode(Integer.valueOf(HttpStatus.BAD_REQUEST.toString()));
 		error.setMessage("Inavlid.Input");
-		// error.setDescription(ex.getCustomMsg());
+		 error.setDescription(ex.getCustomMsg());
 		errRes.setError(error);
 		return errRes;
 	}
@@ -152,97 +162,127 @@ public class CustomControllerAdvice {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(AdhaarNotFoundException.class)
 	public ErrorResponse handleAdhaarNotFoundException(AdhaarNotFoundException ex) {
-		return new AdhaarNotFoundAdapter().getErrorResponse(ex.getRequestInfo());
+		return new AdhaarNotFoundAdapter().getErrorResponse(ex.getCustomMsg(), ex.getRequestInfo());
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(AgreeMentDateNotFoundException.class)
 	public ErrorResponse handleAgreeMentDateNotFoundException(AgreeMentDateNotFoundException ex) {
-		return new AgreeMentDateNotFoundAdapter().getErrorResponse(ex.getRequestInfo());
+		return new AgreeMentDateNotFoundAdapter().getErrorResponse(ex.getCustomMsg(), ex.getRequestInfo());
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(AgreeMentNotFoundException.class)
 	public ErrorResponse handleAgreeMentNotFoundException(AgreeMentNotFoundException ex) {
-		return new AgreeMentNotFoundAdapter().getErrorResponse(ex.getRequestInfo());
+		return new AgreeMentNotFoundAdapter().getErrorResponse(ex.getCustomMsg(), ex.getRequestInfo());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(AgreeMentNotValidException.class)
+	public ErrorResponse handleAgreeMentNotValidException(AgreeMentNotValidException ex) {
+		return new AgreeMentNotValidAdapter().getErrorResponse(ex.getCustomMsg(), ex.getRequestInfo());
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(DuplicateTradeLicenseException.class)
 	public ErrorResponse handleDuplicateTradeLicenseException(DuplicateTradeLicenseException ex) {
-		return new DuplicateTradeLicenseAdapter().getErrorResponse(ex.getRequestInfo());
+		return new DuplicateTradeLicenseAdapter().getErrorResponse(ex.getCustomMsg(), ex.getRequestInfo());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(EndPointException.class)
+	public ErrorResponse handleEndPointException(EndPointException ex) {
+		return new EndPointExceptionAdapter().getErrorResponse(ex.getCustomMsg(), ex.getRequestInfo());
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(InvalidAdminWardException.class)
 	public ErrorResponse handleInvalidAdminWardException(InvalidAdminWardException ex) {
-		return new InvalidAdminWardAdapter().getErrorResponse(ex.getRequestInfo());
+		return new InvalidAdminWardAdapter().getErrorResponse(ex.getCustomMsg(), ex.getRequestInfo());
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(InvalidCategoryException.class)
 	public ErrorResponse handleInvalidCategoryException(InvalidCategoryException ex) {
-		return new InvalidCategoryAdapter().getErrorResponse(ex.getRequestInfo());
+		return new InvalidCategoryAdapter().getErrorResponse(ex.getCustomMsg(), ex.getRequestInfo());
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(InvalidDocumentTypeException.class)
 	public ErrorResponse handleInvalidDocumentTypeException(InvalidDocumentTypeException ex) {
-		return new InvalidDocumentTypeAdapter().getErrorResponse(ex.getRequestInfo());
+		return new InvalidDocumentTypeAdapter().getErrorResponse(ex.getCustomMsg(), ex.getRequestInfo());
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(InvalidFeeDetailException.class)
 	public ErrorResponse handleInvalidFeeDetailException(InvalidFeeDetailException ex) {
-		return new InvalidFeeDetailAdapter().getErrorResponse(ex.getRequestInfo());
+		return new InvalidFeeDetailAdapter().getErrorResponse(ex.getCustomMsg(), ex.getRequestInfo());
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(InvalidLocalityException.class)
 	public ErrorResponse handleInvalidLocalityException(InvalidLocalityException ex) {
-		return new InvalidLocalityAdapter().getErrorResponse(ex.getRequestInfo());
+		return new InvalidLocalityAdapter().getErrorResponse(ex.getCustomMsg(), ex.getRequestInfo());
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(InvalidPropertyAssesmentException.class)
 	public ErrorResponse handleInvalidPropertyAssesmentException(InvalidPropertyAssesmentException ex) {
-		return new InvalidPropertyAssesmentAdapter().getErrorResponse(ex.getRequestInfo());
+		return new InvalidPropertyAssesmentAdapter().getErrorResponse(ex.getCustomMsg(), ex.getRequestInfo());
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(InvalidRevenueWardException.class)
 	public ErrorResponse handleInvalidRevenueWardException(InvalidRevenueWardException ex) {
-		return new InvalidRevenueWardAdapter().getErrorResponse(ex.getRequestInfo());
+		return new InvalidRevenueWardAdapter().getErrorResponse(ex.getCustomMsg(), ex.getRequestInfo());
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(InvalidSubCategoryException.class)
 	public ErrorResponse handleInvalidSubCategoryException(InvalidSubCategoryException ex) {
-		return new InvalidSubCategoryAdapter().getErrorResponse(ex.getRequestInfo());
+		return new InvalidSubCategoryAdapter().getErrorResponse(ex.getCustomMsg(), ex.getRequestInfo());
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(InvalidUomException.class)
 	public ErrorResponse handleInvalidUomException(InvalidUomException ex) {
-		return new InvalidUomAdapter().getErrorResponse(ex.getRequestInfo());
+		return new InvalidUomAdapter().getErrorResponse(ex.getCustomMsg(), ex.getRequestInfo());
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(InvalidValidityYearsException.class)
 	public ErrorResponse handleInvalidValidityYearsException(InvalidValidityYearsException ex) {
-		return new InvalidValidityYearsAdapter().getErrorResponse(ex.getRequestInfo());
+		return new InvalidValidityYearsAdapter().getErrorResponse(ex.getCustomMsg(), ex.getRequestInfo());
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ExceptionHandler(LicenseNotFoundException.class)
-	public ErrorResponse handleLicenseNotFoundException(LicenseNotFoundException ex) {
-		return new LicenseNotFoundAdapter().getErrorResponse(ex.getRequestInfo());
+	@ExceptionHandler(OldLicenseNotFoundException.class)
+	public ErrorResponse handleLicenseNotFoundException(OldLicenseNotFoundException ex) {
+		return new OldLicenseNotFoundAdapter().getErrorResponse(ex.getCustomMsg(), ex.getRequestInfo());
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(PropertyAssesmentNotFoundException.class)
-	public ErrorResponse handleInvalidpropertyAssementException(PropertyAssesmentNotFoundException ex) {
-		return new PropertyAssesmentNotFoundAdapter().getErrorResponse(ex.getRequestInfo());
+	public ErrorResponse handleInvalidPropertyAssementException(PropertyAssesmentNotFoundException ex) {
+		return new PropertyAssesmentNotFoundAdapter().getErrorResponse(ex.getCustomMsg(), ex.getRequestInfo());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(LegacyFeeDetailNotFoundException.class)
+	public ErrorResponse handleLegacyFeeDetailNotFoundException(LegacyFeeDetailNotFoundException ex) {
+		return new LegacyFeeDetailNotFoundAdapter().getErrorResponse(ex.getCustomMsg(), ex.getRequestInfo());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(TradeLicensesNotFoundException.class)
+	public ErrorResponse handleTradeLicensesNotFoundException(TradeLicensesNotFoundException ex) {
+		return new TradeLicensesNotFoundAdapter().getErrorResponse(ex.getCustomMsg(), ex.getRequestInfo());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(TradeLicensesNotEmptyException.class)
+	public ErrorResponse handleTradeLicensesNotEmptyException(TradeLicensesNotEmptyException ex) {
+		return new TradeLicensesNotEmptyAdapter().getErrorResponse(ex.getCustomMsg(), ex.getRequestInfo());
 	}
 
 }

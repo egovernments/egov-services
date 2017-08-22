@@ -426,7 +426,7 @@ var dat = {
             "name": "agreementNo",
             "jsonPath": "licenses[0].agreementNo",
             "label": "tl.create.licenses.groups.agreementDetails.agreementNo",
-            "pattern": "^[a-zA-Z]{4,128}$",
+            "pattern": "^[a-zA-Z0-9]{4,128}$",
             "type": "text",
             "isRequired": true,
             "isDisabled": false,
@@ -434,6 +434,22 @@ var dat = {
             "patternErrMsg": "Enter Document Number"
           }
         ]
+      },
+      {
+        "label": "wc.create.groups.fileDetails.title",
+        "name": "Documents",
+        "fields": [{
+          "name": "File",
+          "jsonPath": "Connection.documents",
+          "type": "documentList",
+          "pathToArray": "DocumentTypeApplicationTypes",
+          "displayNameJsonPath": "documentType",
+          "url": "/wcms/masters/documenttype-applicationtype/_search?applicationType=NEWCONNECTION",
+          "autoFillFields": [{
+            "name": "document",
+            "jsonPath": "documentTypeId"
+          }]
+        }]
       }
       // {
       // 	"label": "tl.create.licenses.groups.FeeDetails",

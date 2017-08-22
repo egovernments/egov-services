@@ -41,19 +41,22 @@ public class MarriageRegnConsumer {
 
 	@Autowired
 	private ObjectMapper objectMapper;
-	
+
 	@Autowired
 	private MarriageCertService marriageCertService;
 
 	@Autowired
 	private MarriageDocumentTypeService marriageDocumentTypeService;
-	
+
 	@Autowired
 	private FeeService feeService;
 
-	@KafkaListener(topics = { "${kafka.topics.create.fee}","${kafka.topics.update.fee}","${kafka.topics.create.reissueCertificate}","${kafka.topics.update.reissueappl}","${kafka.topics.create.reissueappl}","${kafka.topics.create.registrationunit}", "${kafka.topics.update.registrationunit}",
-			"${kafka.topics.create.marriageregn}", "${kafka.topics.update.marriageregn}",
-			"${kafka.topics.create.marriagedocumenttype}", "${kafka.topics.update.marriagedocumenttype}" })
+	@KafkaListener(topics = { "${kafka.topics.create.fee}", "${kafka.topics.update.fee}",
+			"${kafka.topics.create.reissueCertificate}", "${kafka.topics.update.reissueappl}",
+			"${kafka.topics.create.reissueappl}", "${kafka.topics.create.registrationunit}",
+			"${kafka.topics.update.registrationunit}", "${kafka.topics.create.marriageregn}",
+			"${kafka.topics.update.marriageregn}", "${kafka.topics.create.marriagedocumenttype}",
+			"${kafka.topics.update.marriagedocumenttype}" })
 	public void processMessage(@Payload Map<String, Object> consumerRecord,
 			@Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
 		log.info("Entered kakfaConsumer ");
@@ -65,7 +68,8 @@ public class MarriageRegnConsumer {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		} else if (topic.equals(propertiesManager.getUpdateMarriageRegnTopicName())) {
+		}
+		if (topic.equals(propertiesManager.getUpdateMarriageRegnTopicName())) {
 			try {
 				log.info("entering update marriageRegn consumer");
 				marriageRegnService.update(objectMapper.convertValue(consumerRecord, MarriageRegnRequest.class));
@@ -81,7 +85,8 @@ public class MarriageRegnConsumer {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		} else if (topic.equals(propertiesManager.getUpdateRegistrationUnitTopicName())) {
+		}
+		if (topic.equals(propertiesManager.getUpdateRegistrationUnitTopicName())) {
 			try {
 				log.info("entering update_RegistrationUnit consumer");
 				registrationUnitService.update(objectMapper.convertValue(consumerRecord, RegnUnitRequest.class));
@@ -100,7 +105,8 @@ public class MarriageRegnConsumer {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		} else if (topic.equals(propertiesManager.getUpdateMarriageDocumentTypeTopicName())) {
+		}
+		if (topic.equals(propertiesManager.getUpdateMarriageDocumentTypeTopicName())) {
 			System.err.println(
 					"ObjectMapper: " + objectMapper.convertValue(consumerRecord, MarriageDocTypeRequest.class));
 			try {
@@ -109,15 +115,16 @@ public class MarriageRegnConsumer {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}else if(topic.equals(propertiesManager.getCreateReissueMarriageRegnTopicName()))
-			marriageCertService.create(objectMapper.convertValue(consumerRecord,ReissueCertRequest.class));
-		else if(topic.equals(propertiesManager.getUpdateReissueMarriageRegnTopicName()))
+		}
+		if (topic.equals(propertiesManager.getCreateReissueMarriageRegnTopicName()))
+			marriageCertService.create(objectMapper.convertValue(consumerRecord, ReissueCertRequest.class));
+		if (topic.equals(propertiesManager.getUpdateReissueMarriageRegnTopicName()))
 			marriageCertService.update(objectMapper.convertValue(consumerRecord, ReissueCertRequest.class));
-		else if(topic.equals(propertiesManager.getCreateReissueCertificateTopicName()))
+		if (topic.equals(propertiesManager.getCreateReissueCertificateTopicName()))
 			marriageCertService.createCert(objectMapper.convertValue(consumerRecord, ReissueCertAppl.class));
-		else if(topic.equals(propertiesManager.getCreateFeeTopicName()))
+		if (topic.equals(propertiesManager.getCreateFeeTopicName()))
 			feeService.createFee(objectMapper.convertValue(consumerRecord, FeeRequest.class));
-		else if(topic.equals(propertiesManager.getUpdateFeeTopicName()))
+		if (topic.equals(propertiesManager.getUpdateFeeTopicName()))
 			feeService.updateFee(objectMapper.convertValue(consumerRecord, FeeRequest.class));
 	}
 }

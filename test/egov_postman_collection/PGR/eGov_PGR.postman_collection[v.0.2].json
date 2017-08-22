@@ -2,7 +2,7 @@
 	"variables": [],
 	"info": {
 		"name": "eGov_PGR",
-		"_postman_id": "bbbd2018-85c1-a9aa-8511-146dee08eeab",
+		"_postman_id": "149492fe-d4f5-3cd0-dbfb-5c96c1ffc252",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
@@ -2307,7 +2307,7 @@
 											"",
 											"postman.setEnvironmentVariable(\"status\",responseStatusName);",
 											"",
-											"postman.setEnvironmentVariable(\"process\", 0);",
+											"postman.setEnvironmentVariable(\"process\", \"zero\");",
 											"",
 											"postman.setNextRequest(\"Search Complaint\");"
 										]
@@ -2353,35 +2353,22 @@
 										"exec": [
 											"tests[\"Status code is 200\"] = responseCode.code === 200;",
 											"",
-											"var jsonData = JSON.parse(responseBody);",
-											"",
-											"tests[\"Id matches\"] = jsonData.serviceRequests[0].serviceRequestId.has(environment.id);",
-											"",
-											"tests[\"Name matches\"] = jsonData.serviceRequests[0].firstName.has(environment.name);",
-											"",
-											"tests[\"PhoneNumber matches\"] = jsonData.serviceRequests[0].phone.has(environment.phone);",
-											"",
-											"var responseStatusName = null;",
-											"for(var i=0;i<jsonData.serviceRequests[0].attribValues.length;i++){",
-											"    if(jsonData.serviceRequests[0].attribValues[i].key.has(\"systemStatus\")){",
-											"        responseStatusName = jsonData.serviceRequests[0].attribValues[i].name;",
-											"    }",
-											"}",
-											"",
-											"tests[\"Checks Status\"] = responseStatusName.has(environment.status);",
-											"",
-											"if(environment.process === 0){",
-											"postman.setEnvironmentVariable(\"process\",1);    ",
+											"if(environment.process.has(\"zero\")){",
+											"postman.setEnvironmentVariable(\"process\", \"one\");    ",
 											"postman.setNextRequest(\"Update Complaint as Forwarded\");",
 											"}",
-											"else if(environment.process === 1){",
-											"    postman.setEnvironmentVariable(\"process\",2);",
+											"else if(environment.process.has(\"one\")){",
+											"    postman.setEnvironmentVariable(\"process\", \"two\");",
 											"    postman.setNextRequest(\"Update Complaint as Processing\");",
-											"}else if(environment.process === 2){",
-											"    postman.setEnvironmnetVariable(\"process\", 3);",
+											"}else if(environment.process.has(\"two\")){",
+											"    postman.setEnvironmentVariable(\"process\", \"three\");",
 											"    postman.setNextRequest(\"Update Complaint as Completed\");",
 											"}else",
-											"postman.setNextRequest(\"Logout\");"
+											"postman.setNextRequest(\"Logout\");",
+											"",
+											"",
+											"",
+											""
 										]
 									}
 								}

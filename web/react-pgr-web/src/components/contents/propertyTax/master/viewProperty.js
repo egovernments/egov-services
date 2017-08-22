@@ -616,11 +616,11 @@ class ViewProperty extends Component {
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.propertyType')}</div>
-												   {item.propertyDetail.propertyType || translate('pt.search.searchProperty.fields.na')}
+												   {getNameByCode(this.state.propertytypes ,item.propertyDetail.propertyType) || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.propertySubType')}</div>
-												   {item.propertyDetail.category || translate('pt.search.searchProperty.fields.na')}
+												   {getNameByCode(this.state.propertytypes ,item.propertyDetail.category) || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.usageType')}</div>
@@ -632,7 +632,7 @@ class ViewProperty extends Component {
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.extentOfSite')}</div>
-													{translate('pt.search.searchProperty.fields.na')}
+													{item.propertyDetail.sitalArea || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.sequenceNo')}</div>

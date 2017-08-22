@@ -116,6 +116,7 @@ class PropertyAddress extends Component {
 
        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"LOCALITY", hierarchyTypeName:"LOCATION"}).then((res)=>{
           console.log(res);
+		  res.Boundary.unshift({id:-1, name:'None'})
           currentThis.setState({locality : res.Boundary})
         }).catch((err)=> {
            currentThis.setState({
@@ -136,6 +137,7 @@ class PropertyAddress extends Component {
 
        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:"REVENUE"}).then((res)=>{
           console.log(res);
+		  res.Boundary.unshift({id:-1, name:'None'})
           currentThis.setState({zone : res.Boundary})
         }).catch((err)=> {
            currentThis.setState({
@@ -146,6 +148,7 @@ class PropertyAddress extends Component {
 
           Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"WARD", hierarchyTypeName:"REVENUE"}).then((res)=>{
           console.log(res);
+		  res.Boundary.unshift({id:-1, name:'None'})
           currentThis.setState({ward : res.Boundary})
         }).catch((err)=> {
           currentThis.setState({
@@ -156,6 +159,7 @@ class PropertyAddress extends Component {
 
          Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"BLOCK", hierarchyTypeName:"REVENUE"}).then((res)=>{
           console.log(res);
+		  res.Boundary.unshift({id:-1, name:'None'})
           currentThis.setState({block : res.Boundary})
         }).catch((err)=> {
           console.log(err)
@@ -170,6 +174,7 @@ class PropertyAddress extends Component {
 
         Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"REVENUE", hierarchyTypeName:"REVENUE"}).then((res)=>{
           console.log(res);
+		  res.Boundary.unshift({id:-1, name:'None'})
           currentThis.setState({revanue : res.Boundary})
         }).catch((err)=> {
           console.log(err)
@@ -177,6 +182,7 @@ class PropertyAddress extends Component {
 
         Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"WARD", hierarchyTypeName:"ADMINISTRATION"}).then((res)=>{
           console.log(res);
+		  res.Boundary.unshift({id:-1, name:'None'})
           currentThis.setState({election : res.Boundary})
         }).catch((err)=> {
           console.log(err)
@@ -191,7 +197,7 @@ class PropertyAddress extends Component {
 
     const renderOption = function(list,listName="") {
         if(list)
-        {	list.unshift({id:-1, name:'None'})
+        {	
             return list.map((item)=>
             {
                 return (<MenuItem key={item.id} value={item.id} primaryText={item.name}/>)
@@ -235,7 +241,7 @@ class PropertyAddress extends Component {
                                                   value={propertyAddress.refPropertyNumber ? propertyAddress.refPropertyNumber : ""}
                                                   onChange={(e) => handleChange(e, "refPropertyNumber", false, /^\d{15}$/g)}
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   maxLength={15}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -256,9 +262,10 @@ class PropertyAddress extends Component {
                                                       handleChange(e, "appComplexName", false, "")}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+												  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                               >
                                                     {renderOption(this.state.apartments)}
                                               </SelectField>
@@ -271,7 +278,7 @@ class PropertyAddress extends Component {
                                                   value={propertyAddress.doorNo ? propertyAddress.doorNo : ""}
                                                   onChange={(e) => handleChange(e, "doorNo", true, /^\d{1,10}$/g)}
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   maxLength={12}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -292,9 +299,10 @@ class PropertyAddress extends Component {
                                                       handleChange(e, "locality", false, "")}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+												  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                               >
                                                       {renderOption(this.state.locality)}
                                               </SelectField>
@@ -314,9 +322,10 @@ class PropertyAddress extends Component {
                                                       handleChange(e, "electionWard", false, "")}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+												  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                               >
                                                     {renderOption(this.state.election)}
                                               </SelectField>
@@ -336,9 +345,10 @@ class PropertyAddress extends Component {
                                                       handleChange(e, "zoneNo", true, "")}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+												  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                               >
                                                   {renderOption(this.state.zone)}
                                               </SelectField>
@@ -358,9 +368,10 @@ class PropertyAddress extends Component {
                                                       handleChange(e, "wardNo", true, "")}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+												  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                               >
                                                     {renderOption(this.state.ward)}
                                               </SelectField>
@@ -380,9 +391,10 @@ class PropertyAddress extends Component {
                                                       handleChange(e, "blockNo", false, "")}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+												  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                               >
                                                       {renderOption(this.state.block)}
                                               </SelectField>
@@ -402,9 +414,10 @@ class PropertyAddress extends Component {
                                                       handleChange(e, "street", false, "")}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+												  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                               >
                                                     {renderOption(this.state.street)}
                                               </SelectField>
@@ -424,9 +437,10 @@ class PropertyAddress extends Component {
                                                       handleChange(e, "revenueCircle", false, "")}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+												  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                               >
                                                     {renderOption(this.state.revanue)}
                                               </SelectField>
@@ -439,7 +453,7 @@ class PropertyAddress extends Component {
                                                   value={propertyAddress.pin ? propertyAddress.pin : ""}
                                                   onChange={(e) => handleChange(e, "pin", true, /^\d{6}$/g)}
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 												  maxLength={6}
@@ -461,9 +475,10 @@ class PropertyAddress extends Component {
                                                       handleChange(e, "totalFloors", true, "")}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+												  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
 												>
 												<MenuItem value={-1} primaryText="None"/>
 												<MenuItem value={1} primaryText="1 Floor"/>
@@ -509,7 +524,7 @@ class PropertyAddress extends Component {
                                                          rows={2}
                                                          rowsMax={4}
                                                         floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                        underlineStyle={styles.underlineStyle}
+                                                        underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                         underlineFocusStyle={styles.underlineFocusStyle}
                                                         maxLength={12}
                                                         floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -526,7 +541,7 @@ class PropertyAddress extends Component {
                                                          rows={2}
                                                          rowsMax={4}
                                                         floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                        underlineStyle={styles.underlineStyle}
+                                                        underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                         underlineFocusStyle={styles.underlineFocusStyle}
                                                         maxLength={128}
                                                         floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -540,7 +555,7 @@ class PropertyAddress extends Component {
                                                         value={propertyAddress.pinTwo ? propertyAddress.pinTwo : ""}
                                                         onChange={(e) => handleChange(e, "pinTwo", false, /^\d{6}$/g)}
                                                         floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                        underlineStyle={styles.underlineStyle}
+                                                        underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                         underlineFocusStyle={styles.underlineFocusStyle}
                                                         maxLength={6}
 

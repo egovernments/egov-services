@@ -24,7 +24,7 @@ export default class UiNumberField extends Component {
 						fullWidth={true}
 						type="date"
 						floatingLabelText={item.label + (item.isRequired ? " *" : "")}
-            floatingLabelFixed={true}
+						floatingLabelFixed={true}
 						value={date}
 						disabled={item.isDisabled}
 						errorText={this.props.fieldErrors[item.jsonPath]}

@@ -161,7 +161,7 @@ constructor(props) {
                               }
                             }
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                            underlineStyle={styles.underlineStyle}
+                            underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                             underlineFocusStyle={styles.underlineFocusStyle}
                             className="fullWidth"
                             maxLength={12}
@@ -179,7 +179,7 @@ constructor(props) {
                               }
                             }
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                            underlineStyle={styles.underlineStyle}
+                            underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                             underlineFocusStyle={styles.underlineFocusStyle}
                             maxLength={10}
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -197,7 +197,7 @@ constructor(props) {
                               }
                             }
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                            underlineStyle={styles.underlineStyle}
+                            underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                             underlineFocusStyle={styles.underlineFocusStyle}
                             maxLength={32}
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -219,16 +219,16 @@ constructor(props) {
                               }
                             }
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                            underlineStyle={styles.underlineStyle}
+                            underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                             underlineFocusStyle={styles.underlineFocusStyle}
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+							dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                             >
 							{renderOption(this.state.gender)}
                           </SelectField>
                         </Col>
                         <Col xs={12} md={3} sm={6}>
                           <TextField  className="fullWidth"
-						  tabIndex ={5}
                             hintText={translate('pt.create.groups.propertyAddress.emailExample')}
                             floatingLabelText={translate('pt.create.groups.ownerDetails.fields.email')}
                             errorText={fieldErrors.owner ? (fieldErrors.owner.emailId? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.emailId}</span>:""): ""}
@@ -238,7 +238,7 @@ constructor(props) {
                               }
                             }
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                            underlineStyle={styles.underlineStyle}
+                            underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                             underlineFocusStyle={styles.underlineFocusStyle}
                             maxLength={32}
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -255,7 +255,7 @@ constructor(props) {
                               }
                             }
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                            underlineStyle={styles.underlineStyle}
+                            underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                             underlineFocusStyle={styles.underlineFocusStyle}
                             maxLength={10}
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -277,9 +277,10 @@ constructor(props) {
                               }
                             }
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                            underlineStyle={styles.underlineStyle}
+                            underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                             underlineFocusStyle={styles.underlineFocusStyle}
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+							dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                             >
 							{renderOption(this.state.gaurdianRelation)}
                           </SelectField>
@@ -294,7 +295,7 @@ constructor(props) {
 								handleChangeOwner(e,  "owner",  "fatherOrHusbandName", false, "")
 							}}
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                            underlineStyle={styles.underlineStyle}
+                            underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                             underlineFocusStyle={styles.underlineFocusStyle}
                             maxLength={32}
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -316,7 +317,7 @@ constructor(props) {
                               }
                             }
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                            underlineStyle={styles.underlineStyle}
+                            underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                             underlineFocusStyle={styles.underlineFocusStyle}
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                             >
@@ -332,7 +333,7 @@ constructor(props) {
                             value={ownerDetails.owner ? ownerDetails.owner.ownerShipPercentage:""}
                             onChange={(e) => handleChangeOwner(e,"owner", "ownerShipPercentage", false, /^[1-9][0-9]?$|^100$/g)}
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                            underlineStyle={styles.underlineStyle}
+                            underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                             underlineFocusStyle={styles.underlineFocusStyle}
                             maxLength={3}
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}

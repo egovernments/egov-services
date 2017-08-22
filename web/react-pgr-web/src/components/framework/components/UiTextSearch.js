@@ -22,7 +22,12 @@ export default class UiTextSearch extends Component {
 							value={this.props.getVal(item.jsonPath)}
 							disabled={item.isDisabled}
 							errorText={this.props.fieldErrors[item.jsonPath]}
-							onChange={(e) => this.props.handler(e, item.jsonPath, item.isRequired ? true : false, item.pattern, item.requiredErrMsg, item.patternErrMsg)} />
+							onChange={(e) => {
+								if(e.target.value) { 
+									e.target.value = e.target.value.replace(/^\s*/, "");
+								}
+								this.props.handler(e, item.jsonPath, item.isRequired ? true : false, item.pattern, item.requiredErrMsg, item.patternErrMsg)}
+							} />
 						<span className="glyphicon glyphicon-search" style={{"position":"absolute", "right": "10px", "display": (item.display ? 'none' : '')}} onClick={() => this.props.autoComHandler(item.autoCompleteDependancy, item.jsonPath)}></span>
 					</div>
 				);

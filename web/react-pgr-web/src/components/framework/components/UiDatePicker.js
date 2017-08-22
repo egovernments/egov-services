@@ -38,6 +38,9 @@ export default class UiEmailField extends Component {
 						errorText={this.props.fieldErrors[item.jsonPath]}
 						value={this.props.getVal(item.jsonPath)}
 						onChange={(e) => {
+							if(e.target.value) { 
+								e.target.value = e.target.value.replace(/^\s*/, "");
+							}
                             this.props.handler(e, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)
                         }}/>
 				);

@@ -21,7 +21,8 @@ export default class UiEmailField extends Component {
 						disabled={item.isDisabled}
 						errorText={this.props.fieldErrors[item.jsonPath]}
 						onChange={(e) => {
-							this.props.handler(e, item.jsonPath, item.isRequired ? true : false, '^(([^<>()[\\]\\.,;:\\s@\\"]+(\.[^<>()[\\]\\.,;:\s@\\"]+)*)|(\\".+\\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$', item.requiredErrMsg, item.patternErrMsg)
+							if(!e.target.value || (e.target.value && /[^\!\#\$\%\^\&*\)\(\+\=\_\-\"\?\>\<\{\}]/.test(e.target.value)))
+								this.props.handler(e, item.jsonPath, item.isRequired ? true : false, '^(([^<>()[\\]\\.,;:\\s@\\"]+(\.[^<>()[\\]\\.,;:\s@\\"]+)*)|(\\".+\\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$', item.requiredErrMsg, item.patternErrMsg)
 						}} />
 				);
 		}

@@ -182,27 +182,14 @@ var dat = {
           {
             "name": "Primary Owner",
             "jsonPath": "Connection.connectionOwner.isPrimaryOwner",
-            "label": "pt.create.groups.ownerDetails.fields.primaryOwner",
+            "label": "",
             "pattern": "",
             "type": "radio",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-      			"values": [{"label":"employee.createPosition.groups.fields.outsourcepost.value1", "value":true},{"label":"employee.createPosition.groups.fields.outsourcepost.value2", "value":false}],
-      			"defaultValue":true
-          },
-          {
-            "name": "Secondary Owner",
-            "jsonPath": "Connection.connectionOwner.isSecondaryOwner",
-            "label": "pt.create.groups.ownerDetails.fields.secondaryOwner",
-            "pattern": "",
-            "type": "radio",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-      			"values": [{"label":"employee.createPosition.groups.fields.outsourcepost.value1", "value":true},{"label":"employee.createPosition.groups.fields.outsourcepost.value2", "value":false}],
+      			"values": [{"label":"pt.create.groups.ownerDetails.fields.primaryOwner", "value":true},{"label":"pt.create.groups.ownerDetails.fields.secondaryOwner", "value":false}],
       			"defaultValue":true
           }
         ]
@@ -314,7 +301,7 @@ var dat = {
             "pattern": "",
             "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE|$.Boundary.*.boundaryNum|$.Boundary.*.name",
             "type": "singleValueList",
-            "isRequired": true,
+            "isRequired": false,
             "isDisabled": true,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -902,25 +889,11 @@ var dat = {
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": "",
-        			"values": [{"label":"employee.createPosition.groups.fields.outsourcepost.value1", "value":true},{"label":"employee.createPosition.groups.fields.outsourcepost.value2", "value":false}],
-        			"defaultValue":true
-            },
-            {
-              "name": "Secondary Owner",
-              "jsonPath": "Connection[0].connectionOwner.isSecondaryOwner",
-              "label": "pt.create.groups.ownerDetails.fields.secondaryOwner",
-              "pattern": "",
-              "type": "radio",
-              "isRequired": false,
-              "isDisabled": false,
-              "requiredErrMsg": "",
-              "patternErrMsg": "",
-        			"values": [{"label":"employee.createPosition.groups.fields.outsourcepost.value1", "value":true},{"label":"employee.createPosition.groups.fields.outsourcepost.value2", "value":false}],
+        			"values": [{"label":"pt.create.groups.ownerDetails.fields.primaryOwner", "value":true},{"label":"pt.create.groups.ownerDetails.fields.secondaryOwner", "value":false}],
         			"defaultValue":true
             }
-
-          ]
-        },{
+          ]},
+        {
         "label": "wc.create.groups.applicantDetails.title", //Cut short labels by taking initial path from parent
         "name": "applicantDetails", //Follow Title case pattern
         "children": [],

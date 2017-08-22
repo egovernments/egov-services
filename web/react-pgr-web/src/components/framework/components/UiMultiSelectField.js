@@ -62,12 +62,14 @@ class UiMultiSelectField extends Component {
 				return (
 					<div style={{"display": "flex", "flex-direction": "column-reverse"}}>
 						<SelectField
+							floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
+							floatingLabelFixed={true} 
 						 	dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
 							style={{"display": (item.hide ? 'none' : 'block')}}
 							errorStyle={{"float":"left"}}
 							fullWidth={true}
 							multiple={true}
-							floatingLabelText={item.label + (item.isRequired ? " *" : "")}
+							floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>} 
 							value={this.props.getVal(item.jsonPath)}
 							disabled={item.isDisabled}
 							onChange={(ev, key, val) => {

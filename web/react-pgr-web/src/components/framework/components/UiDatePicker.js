@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import DatePicker from 'material-ui/DatePicker';
+import TextField from 'material-ui/TextField';
 
 export default class UiEmailField extends Component {
 	constructor(props) {
@@ -28,24 +28,18 @@ export default class UiEmailField extends Component {
 		switch (this.props.ui) {
 			case 'google':
 				return (
-					<DatePicker
-						style={{"display": (item.hide ? 'none' : 'block'), "marginTop": "24px"}}
-						autoOk={true}
-						hintText={item.label + (item.isRequired ? " *" : "")}
-						minDate={this.calcMinMaxDate(item.minDate)}
-						maxDate={this.calcMinMaxDate(item.maxDate)}
+					<TextField 
+						style={{"display": (item.hide ? 'none' : 'inline-block')}}
+						floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} 
+						floatingLabelFixed={true} 
 						disabled={item.isDisabled}
-						formatDate={function(date) {
-							date =new Date(date);
-							return ('0' + date.getDate()).slice(-2) + '/'
-             						+ ('0' + (date.getMonth()+1)).slice(-2) + '/'
-             						+ date.getFullYear();
-						}}
-						value={this.props.getVal(item.jsonPath, true)!=""?new Date(this.props.getVal(item.jsonPath, true)):{}}
+						hintText="21/12/1993" 
+						floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>} 
 						errorText={this.props.fieldErrors[item.jsonPath]}
-						onChange={(ev, dat) => {
-							this.props.handler({target: {value: dat.getTime()}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)
-						}}/>
+						value={this.props.getVal(item.jsonPath)}
+						onChange={(e) => {
+                            this.props.handler(e, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)
+                        }}/>
 				);
 		}
 	}

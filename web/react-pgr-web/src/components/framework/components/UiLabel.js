@@ -32,6 +32,7 @@ export default class UiLabel extends Component {
       }
       
       Api.commonApiPost(context, id, {}, "", useTimestamp || false).then(function(response) {
+        if(response) {
           let keys = jp.query(response,splitArray[1].split("|")[1]);
           let values = jp.query(response,splitArray[1].split("|")[2]);
           let dropDownData = [];
@@ -42,6 +43,7 @@ export default class UiLabel extends Component {
                 })
               }
           }
+        }
       },function(err) {
           console.log(err);
       });
@@ -62,7 +64,7 @@ export default class UiLabel extends Component {
       <div>
    			<Row>
             {!item.hasOwnProperty("isLabel")?<Col style={{textAlign:"left"}} xs={12}>
-              <label><span style={{"fontWeight":500}}>{translate(item.label)}</span></label>
+              <label><span style={{"fontWeight":500, "fontSize": "13px"}}>{translate(item.label)}</span></label>
             </Col>:""}
             <Col style={{textAlign:"left"}} xs={12}>{this.state.value || this.props.getVal(item.jsonPath) || "NA"}</Col>
         </Row>

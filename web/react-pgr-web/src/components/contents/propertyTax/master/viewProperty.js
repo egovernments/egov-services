@@ -398,13 +398,67 @@ class ViewProperty extends Component {
 		return (
                     <Grid fluid key={index}>
                           <br/>
+						  <Card className="uiCard">
+							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>{translate('pt.create.groups.ownerDetails')}</div>} />
+								  {item.owners.length !=0 && item.owners.map((owner, index)=> {
+									  return(
+												<CardText key={index}>
+													<Col md={12} xs={12}>
+														
+															<Row>
+															  <Col xs={4} md={3} style={styles.bold}>
+																  <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.aadhaarNumber')}</div>
+																  {owner.aadhaarNumber ? owner.aadhaarNumber : translate('pt.search.searchProperty.fields.na')}
+															  </Col>	
+															  <Col xs={4} md={3} style={styles.bold}>
+																   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.mobileNumber')}</div>
+																   {owner.mobileNumber ? owner.mobileNumber : translate('pt.search.searchProperty.fields.na')}
+															  </Col>
+															  <Col xs={4} md={3} style={styles.bold}>
+																  <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.ownerName')}</div>
+																   {owner.name ? owner.name : translate('pt.search.searchProperty.fields.na')}
+															  </Col>
+															  <Col xs={4} md={3} style={styles.bold}>
+																  <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.gender')}</div>
+																  {owner.gender ? getNameByCode(currentThis.state.gender, owner.gender) : translate('pt.search.searchProperty.fields.na')}
+															  </Col>
+															</Row>
+															<Row>
+															  <Col xs={4} md={3} style={styles.bold}>
+																   <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.email')}</div>
+																   {owner.emailId ? owner.emailId : translate('pt.search.searchProperty.fields.na')}
+															  </Col>	
+															  <Col xs={4} md={3} style={styles.bold}>
+																   <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.guardianRelation')}</div>
+																   {owner.gaurdianRelation ? getNameByCode(currentThis.state.gaurdianRelation, owner.gaurdianRelation) : translate('pt.search.searchProperty.fields.na')}
+															  </Col>				
+															  <Col xs={4} md={3} style={styles.bold}>
+																   <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.guardian')}</div>
+																   {owner.fatherOrHusbandName ? owner.fatherOrHusbandName : translate('pt.search.searchProperty.fields.na')}
+															  </Col>
+															  <Col xs={4} md={3} style={styles.bold}>
+																   <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.primaryOwner')}</div>
+																   {owner.isPrimaryOwner ? 'True' : 'False'}
+															  </Col>
+															</Row>
+															<Row>
+															  <Col xs={4} md={3} style={styles.bold}>
+																   <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.percentageOfOwnerShip')}</div>
+																   {owner.ownerShipPercentage ? owner.ownerShipPercentage : translate('pt.search.searchProperty.fields.na')}
+															  </Col>
+															</Row>
+														
+													</Col>
+													<div className="clearfix"></div>
+											  </CardText>
+									  )
+								  })}
+                              
+                          </Card>
                           <Card className="uiCard">
 							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>{translate('pt.create.groups.propertyDetails')}</div>} />
                               <CardText>
-								
 									<Col md={12} xs={12}>
-									
-										 
 											<Row>
 											  <Col xs={12} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyDetails.oldAssessmentNumber')}</div>
@@ -503,10 +557,10 @@ class ViewProperty extends Component {
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.propertyAddress')}</div>
 												    {item.address.addressNumber ? item.address.addressNumber+', ' : '' }
-												 {item.address.addressLine1 ? item.address.addressLine1+', ' : '' }
-												 {item.address.addressLine2 ? item.address.addressLine2+', ':''}
-												 {item.address.landmark ? item.address.landmark+', ' : ''}
-												 {item.address.city ? item.address.city : ''}
+													{item.address.addressLine1 ? getNameById(this.state.locality,item.address.addressLine1)+', ' : '' }
+													{item.address.addressLine2 ? item.address.addressLine2+', ':''}
+													{item.address.landmark ? item.address.landmark+', ' : ''}
+													{item.address.city ? item.address.city : ''}
 											  </Col>
 											
 											
@@ -556,55 +610,6 @@ class ViewProperty extends Component {
                               </CardText>
                           </Card>
 				
-						  <Card className="uiCard">
-							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>{translate('pt.create.groups.ownerDetails')}</div>} />
-								  {item.owners.length !=0 && item.owners.map((owner, index)=> {
-									  return(
-												<CardText key={index}>
-													<Col md={12} xs={12}>
-														
-															<Row>
-															  <Col xs={4} md={3} style={styles.bold}>
-																  <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.aadhaarNumber')}</div>
-																  {owner.aadhaarNumber ? owner.aadhaarNumber : translate('pt.search.searchProperty.fields.na')}
-															  </Col>	
-															  <Col xs={4} md={3} style={styles.bold}>
-																   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.mobileNumber')}</div>
-																   {owner.mobileNumber ? owner.mobileNumber : translate('pt.search.searchProperty.fields.na')}
-															  </Col>
-															  <Col xs={4} md={3} style={styles.bold}>
-																  <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.ownerName')}</div>
-																   {owner.name ? owner.name : translate('pt.search.searchProperty.fields.na')}
-															  </Col>
-															  <Col xs={4} md={3} style={styles.bold}>
-																  <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.gender')}</div>
-																  {owner.gender ? getNameByCode(currentThis.state.gender, owner.gender) : translate('pt.search.searchProperty.fields.na')}
-															  </Col>
-															</Row>
-												
-															<Row>
-															  <Col xs={4} md={3} style={styles.bold}>
-																   <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.email')}</div>
-																   {owner.emailId ? owner.emailId : translate('pt.search.searchProperty.fields.na')}
-															  </Col>	
-															  <Col xs={4} md={3} style={styles.bold}>
-																   <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.guardianRelation')}</div>
-																   {owner.gaurdianRelation ? getNameByCode(currentThis.state.gaurdianRelation, owner.gaurdianRelation) : translate('pt.search.searchProperty.fields.na')}
-															  </Col>				
-															  <Col xs={4} md={3} style={styles.bold}>
-																   <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.guardian')}</div>
-																   {owner.fatherOrHusbandName ? owner.fatherOrHusbandName : translate('pt.search.searchProperty.fields.na')}
-															  </Col>
-															</Row>
-														
-													</Col>
-													<div className="clearfix"></div>
-											  </CardText>
-									  )
-								  })}
-                              
-                          </Card>
-						  
 						  <Card className="uiCard">
 							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>{translate('pt.create.groups.assessmentDetails')}</div>} />
                               <CardText>
@@ -708,12 +713,12 @@ class ViewProperty extends Component {
                                               <th>{translate('pt.create.groups.floorDetails.fields.length')}</th>
                                               <th>{translate('pt.create.groups.floorDetails.fields.breadth')}</th>
                                               <th>{translate('pt.create.groups.floorDetails.fields.plinthArea')}</th>
+											  <th>{translate('pt.create.groups.propertyAddress.fields.carpetArea')}</th>
+											  <th>{translate('pt.create.groups.propertyAddress.fields.exemptedArea')}</th>
 											  <th>{translate('pt.create.groups.floorDetails.fields.occupancyCertificateNumber')}</th>
 											  <th>{translate('pt.create.groups.propertyAddress.fields.buildingCost')}</th>
 											  <th>{translate('pt.create.groups.propertyAddress.fields.landCost')}</th>
                                               <th>{translate('pt.create.groups.floorDetails.fields.buildingPermissionNumber')}</th>
-                                             
-                                           
                                             </tr>
                                           </thead>
                                           <tbody>
@@ -739,6 +744,8 @@ class ViewProperty extends Component {
                                                     <td>{parseFloat(i.length) || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{parseFloat(i.width) || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.builtupArea || translate('pt.search.searchProperty.fields.na')}</td>
+													<td>{i.carpetArea || translate('pt.search.searchProperty.fields.na')}</td>
+													<td>{i.exemptedArea || translate('pt.search.searchProperty.fields.na')}</td>
 													<td>{i.occupancyCertiNumber || translate('pt.search.searchProperty.fields.na')}</td>
 													<td>{i.buildingCost || translate('pt.search.searchProperty.fields.na')}</td>
 													<td>{i.landCost || translate('pt.search.searchProperty.fields.na')}</td>

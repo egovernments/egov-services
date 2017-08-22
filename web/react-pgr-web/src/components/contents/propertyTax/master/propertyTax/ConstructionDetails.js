@@ -233,7 +233,7 @@ formatDate(date){
 
     return (
 				<Card className="uiCard">
-                      <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Construction Details</div>} />
+                      <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate('pt.create.groups.constructionDetails')}</div>} />
                       <CardText style={styles.reducePadding}>
                                   <Grid fluid>
                                       <Row>

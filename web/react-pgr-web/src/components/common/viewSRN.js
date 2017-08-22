@@ -72,7 +72,7 @@ class viewsrn extends Component{
       <Grid style={{width:'100%'}}>
         <Card style={{margin:'15px 0'}}>
           <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
-             Complainant Details
+             {translate('pgr.0061')}
            < /div>}/>
            <CardText style={{padding:'8px 16px 0'}}>
             <List>

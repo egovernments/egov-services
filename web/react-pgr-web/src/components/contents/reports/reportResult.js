@@ -1,48 +1,27 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-
 import MenuItem from 'material-ui/MenuItem';
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
-
 import Api from '../../../api/api';
 import {translate} from '../../common/common';
 import _ from 'lodash';
 
-
-
 const $ = require('jquery');
 $.DataTable = require('datatables.net');
 const dt = require('datatables.net-bs');
-
-
 const buttons = require('datatables.net-buttons-bs');
-
 require('datatables.net-buttons/js/buttons.colVis.js'); // Column visibility
 require('datatables.net-buttons/js/buttons.html5.js'); // HTML 5 file export
 require('datatables.net-buttons/js/buttons.flash.js'); // Flash file export
 require('datatables.net-buttons/js/buttons.print.js'); // Print view button
 
-
-
+var sumColumn = [];
 
 class ShowField extends Component {
   constructor(props) {
        super(props);
    }
-
-  //  componentWillMount()
-  //  {
-  //    console.log('will mount');
-  //    $('#searchTable').DataTable({
-  //      dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
-  //      buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
-  //       bDestroy: true,
-  //       language: {
-  //          "emptyTable": "No Records"
-  //       }
-  //     });
-  //  }
 
   componentWillUnmount()
   {
@@ -140,6 +119,111 @@ class ShowField extends Component {
     }
   }
 
+  renderHeader = () => {
+    let { reportResult } = this.props;
+    return(
+      <thead style={{backgroundColor:"#f2851f",color:"white"}}>
+        <tr>
+          {reportResult.hasOwnProperty("reportHeader") && reportResult.reportHeader.map((item,i)=>
+          {
+            if(item.showColumn){
+              return (
+                <th key={i}>{translate(item.label)}</th>
+              )
+            }else{
+              return null;
+            }
+          })
+        }
+        </tr>
+      </thead>
+    )
+  }
+
+  renderBody = () => {
+    sumColumn = [];
+    let { reportResult } = this.props;
+    let {drillDown, checkIfDate} = this;
+    return (
+      <tbody>
+        {reportResult.hasOwnProperty("reportData") && reportResult.reportData.map((dataItem,dataIndex)=>
+        {
+          //array of array
+          let reportHeaderObj = reportResult.reportHeader;
+          return(
+            <tr key={dataIndex}>
+              {dataItem.map((item,itemIndex)=>{
+                var columnObj = {};
+                //array for particular row
+                var respHeader = reportHeaderObj[itemIndex];
+                // console.log(respHeader.total);
+                if(respHeader.showColumn){
+                  columnObj = {};
+                  if(respHeader.total){
+                    columnObj['total'] = respHeader.total;
+                    columnObj['value'] = sumColumn[itemIndex] == undefined ? item : (sumColumn[itemIndex].value)+item;
+                    if(sumColumn[itemIndex]){
+                      //remove the object from that itemIndex
+                      sumColumn.splice(itemIndex, 1);
+                      //add that object in that index
+                      sumColumn.splice(itemIndex,0,columnObj)
+                    }else{
+                      sumColumn.push(columnObj)
+                    }
+                    // console.log(itemIndex,':',item,':',sumColumn[itemIndex]);
+                  }else{
+                    columnObj['total'] = respHeader.total;
+                    columnObj['value'] = 0;
+                    if(sumColumn[itemIndex]){
+                      //remove the object from that itemIndex
+                      sumColumn.splice(itemIndex, 1);
+                      //add that object in that index
+                      sumColumn.splice(itemIndex,0,columnObj)
+                    }else{
+                      sumColumn.push(columnObj)
+                    }
+                  }
+                  return (
+                    <td key={itemIndex} onClick={(e)=>{ drillDown(e,dataIndex,itemIndex,dataItem,item) }}>
+                      {respHeader.defaultValue ? <a href="javascript:void(0)">{checkIfDate(item,itemIndex)}</a> : checkIfDate(item,itemIndex)}
+                    </td>
+                  )
+                }else{
+                  return null;
+                }
+              }
+            )}
+            </tr>
+          )
+        })}
+      </tbody>
+    )
+  }
+
+  renderFooter = () => {
+    var footerexist = false;
+    {sumColumn.map((columnObj, index) => {
+      for (var [key, value] of Object.entries(columnObj)) {
+        if(key === 'total' && value === true){
+          footerexist = true;
+        }
+      }
+    })};
+    if(footerexist){
+      return(
+        <tfoot>
+        <tr>
+          {sumColumn.map((columnObj, index) => {
+            return(
+              <td key={index}>{columnObj.total ? columnObj.value : ''}</td>
+            )
+          })}
+        </tr>
+        </tfoot>
+      )
+    }
+  }
+
   render() {
     let {drillDown,checkIfDate}=this
     let {
@@ -147,11 +231,6 @@ class ShowField extends Component {
       metaData,
       reportResult
     } = this.props;
-    // console.log(metaData);
-
-    // const showRow=()=>{
-    //   return
-    // }
 
     const viewTabel=()=>
     {
@@ -160,46 +239,9 @@ class ShowField extends Component {
           <CardHeader title={< strong > Result < /strong>}/>
           <CardText>
           <Table id="reportTable" style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
-          <thead style={{backgroundColor:"#f2851f",color:"white"}}>
-            <tr>
-              {reportResult.hasOwnProperty("reportHeader") && reportResult.reportHeader.map((item,i)=>
-              {
-                if(item.showColumn){
-                  return (
-                    <th key={i}>{translate(item.label)}</th>
-                  )
-                }else{
-                  return null;
-                }
-              })
-            }
-            </tr>
-          </thead>
-          <tbody>
-            {reportResult.hasOwnProperty("reportData") && reportResult.reportData.map((dataItem,dataIndex)=>
-            {
-              //array of array
-              let reportHeaderObj = reportResult.reportHeader;
-              return(
-                <tr key={dataIndex}>
-                  {dataItem.map((item,itemIndex)=>{
-                    //array for particular row
-                    var respHeader = reportHeaderObj[itemIndex];
-                    // console.log(respHeader.showColumn, respHeader.defaultValue);
-                    if(respHeader.showColumn){
-                      return (
-                        <td key={itemIndex} onClick={(e)=>{ drillDown(e,dataIndex,itemIndex,dataItem,item) }}>
-                          {respHeader.defaultValue ? <a href="javascript:void(0)">{checkIfDate(item,itemIndex)}</a> : checkIfDate(item,itemIndex)}
-                        </td>
-                      )
-                    }else{
-                      return null;
-                    }
-                  })}
-                </tr>
-              )
-            })}
-          </tbody>
+            {this.renderHeader()}
+            {this.renderBody()}
+            {this.renderFooter()}
         </Table>
       </CardText>
       </Card>

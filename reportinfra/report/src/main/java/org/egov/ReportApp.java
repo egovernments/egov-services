@@ -106,22 +106,27 @@ public class ReportApp implements EnvironmentAware {
 			while ((yamlLocation = bufferedReader.readLine()) != null) {
 			
 			if(yamlLocation.startsWith("https")) {
-				LOGGER.info("Coming in to the https loop");
 				LOGGER.info("The Yaml Location is : "+yamlLocation);
 				URL oracle = new URL(yamlLocation);
+				try{
 				rd = mapper.readValue(new InputStreamReader(oracle.openStream()), ReportDefinitions.class);
+				} catch(Exception e) {
+					LOGGER.info("Skipping the report definition "+yamlLocation);
+				}
 				localrd.addAll(rd.getReportDefinitions());
 				
 				} else if(yamlLocation.startsWith("file://")){
-					LOGGER.info("Coming in to the file loop");
 					LOGGER.info("The Yaml Location is : "+yamlLocation);
 					Resource resource = resourceLoader.getResource(yamlLocation.toString());
 					File file = resource.getFile();
+					try{
 					rd = mapper.readValue(file, ReportDefinitions.class);
+					 } catch(Exception e) {
+						LOGGER.info("Skipping the report definition "+yamlLocation);
+					}
 					localrd.addAll(rd.getReportDefinitions());
 					
 				} else {
-					LOGGER.info("Coming in to the else loop");
 					LOGGER.info("The Yaml Location is : "+yamlLocation);
 					URL oracle = new URL(yamlLocation);
 					rd = mapper.readValue(new InputStreamReader(oracle.openStream()), ReportDefinitions.class);

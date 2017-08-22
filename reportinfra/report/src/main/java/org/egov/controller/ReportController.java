@@ -65,8 +65,12 @@ public class ReportController {
 	@ResponseBody
 	public ResponseEntity<?> reloadYamlData(@RequestBody @Valid final MetaDataRequest reportRequest,
 			final BindingResult errors) {
+		try {
 		ReportApp.loadYaml();
-		return reportService.reloadResponse(reportRequest.getRequestInfo());
+		} catch(Exception e){
+			return reportService.reloadResponse(reportRequest.getRequestInfo(),e);
+		}
+		return reportService.reloadResponse(reportRequest.getRequestInfo(),null);
 	}
 	
 }

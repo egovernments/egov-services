@@ -30,7 +30,7 @@ export default class UiLabel extends Component {
           id[queryStringObject[i].split("=")[0]]=queryStringObject[i].split("=")[1];
         }
       }
-      
+
       Api.commonApiPost(context, id, {}, "", useTimestamp || false).then(function(response) {
         if(response) {
           let keys = jp.query(response,splitArray[1].split("|")[1]);

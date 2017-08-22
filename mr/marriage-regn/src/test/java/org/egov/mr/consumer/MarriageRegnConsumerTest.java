@@ -19,6 +19,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -26,36 +27,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@RunWith(SpringRunner.class)
-@WebMvcTest(MarriageRegnConsumer.class)
+@RunWith(MockitoJUnitRunner.class)
 public class MarriageRegnConsumerTest {
-
-	@MockBean
-	private FeeService feeServic;
-
-	@MockBean
-	private PropertiesManager propertiesManagr;
-
-	@MockBean
-	private MarriageRegnService marriageRegnServic;
-
-	@MockBean
-	private RegistrationUnitService registrationUnitService;
-
-	@MockBean
-	private MarriageCertService marriageCertService;
-
-	@MockBean
-	private ObjectMapper objectMapper;
-
-	@MockBean
-	private KafkaTemplate<String, Object> kafkaTemplate;
-
-	@MockBean
-	private MarriageDocumentTypeService marriageDocumentTypeService;
-
-	@InjectMocks
-	private MarriageRegnConsumer marriageRegnConsumer;
 
 	@Mock
 	private PropertiesManager propertiesManager;
@@ -65,6 +38,9 @@ public class MarriageRegnConsumerTest {
 
 	@Mock
 	private FeeService feeService;
+
+	@InjectMocks
+	private MarriageRegnConsumer marriageRegnConsumer;
 
 	@Test
 	public void testCreateMarriageRegn() {
@@ -85,7 +61,7 @@ public class MarriageRegnConsumerTest {
 
 		MarriageRegnRequest mrr = new MarriageRegnRequest();
 		mrr.setMarriageRegn(mr);
-		Mockito.doNothing().when(marriageRegnServic).create(mrr);
+		Mockito.doNothing().when(marriageRegnService).create(mrr);
 
 		marriageRegnConsumer.processMessage(consumerRecord, topic_createMarriageRegn);
 
@@ -110,7 +86,7 @@ public class MarriageRegnConsumerTest {
 
 		MarriageRegnRequest mrr = new MarriageRegnRequest();
 		mrr.setMarriageRegn(mr);
-		Mockito.doNothing().when(marriageRegnServic).create(mrr);
+		Mockito.doNothing().when(marriageRegnService).create(mrr);
 
 		marriageRegnConsumer.processMessage(consumerRecord, topic_createMarriageRegn);
 
@@ -135,7 +111,7 @@ public class MarriageRegnConsumerTest {
 
 		MarriageRegnRequest mrr = new MarriageRegnRequest();
 		mrr.setMarriageRegn(mr);
-		Mockito.doNothing().when(marriageRegnServic).create(mrr);
+		Mockito.doNothing().when(marriageRegnService).create(mrr);
 
 		marriageRegnConsumer.processMessage(consumerRecord, topic_createMarriageRegn);
 
@@ -160,7 +136,7 @@ public class MarriageRegnConsumerTest {
 
 		MarriageRegnRequest mrr = new MarriageRegnRequest();
 		mrr.setMarriageRegn(mr);
-		Mockito.doNothing().when(marriageRegnServic).create(mrr);
+		Mockito.doNothing().when(marriageRegnService).create(mrr);
 
 		marriageRegnConsumer.processMessage(consumerRecord, topic_createMarriageRegn);
 
@@ -186,7 +162,7 @@ public class MarriageRegnConsumerTest {
 
 		MarriageRegnRequest mrr = new MarriageRegnRequest();
 		mrr.setMarriageRegn(mr);
-		Mockito.doNothing().when(marriageRegnServic).create(mrr);
+		Mockito.doNothing().when(marriageRegnService).create(mrr);
 
 		marriageRegnConsumer.processMessage(consumerRecord, topic_createMarriageRegn);
 
@@ -212,7 +188,7 @@ public class MarriageRegnConsumerTest {
 
 		MarriageRegnRequest mrr = new MarriageRegnRequest();
 		mrr.setMarriageRegn(mr);
-		Mockito.doNothing().when(marriageRegnServic).create(mrr);
+		Mockito.doNothing().when(marriageRegnService).create(mrr);
 
 		marriageRegnConsumer.processMessage(consumerRecord, topic_createMarriageRegn);
 
@@ -237,7 +213,7 @@ public class MarriageRegnConsumerTest {
 
 		MarriageRegnRequest mrr = new MarriageRegnRequest();
 		mrr.setMarriageRegn(mr);
-		Mockito.doNothing().when(marriageRegnServic).create(mrr);
+		Mockito.doNothing().when(marriageRegnService).create(mrr);
 
 		marriageRegnConsumer.processMessage(consumerRecord, topic_createMarriageRegn);
 
@@ -262,7 +238,7 @@ public class MarriageRegnConsumerTest {
 
 		MarriageRegnRequest mrr = new MarriageRegnRequest();
 		mrr.setMarriageRegn(mr);
-		Mockito.doNothing().when(marriageRegnServic).create(mrr);
+		Mockito.doNothing().when(marriageRegnService).create(mrr);
 
 		marriageRegnConsumer.processMessage(consumerRecord, topic_createMarriageRegn);
 
@@ -288,7 +264,7 @@ public class MarriageRegnConsumerTest {
 
 		MarriageRegnRequest mrr = new MarriageRegnRequest();
 		mrr.setMarriageRegn(mr);
-		Mockito.doNothing().when(marriageRegnServic).create(mrr);
+		Mockito.doNothing().when(marriageRegnService).create(mrr);
 
 		marriageRegnConsumer.processMessage(consumerRecord, topic_createMarriageRegn);
 
@@ -313,7 +289,7 @@ public class MarriageRegnConsumerTest {
 
 		MarriageRegnRequest mrr = new MarriageRegnRequest();
 		mrr.setMarriageRegn(mr);
-		Mockito.doNothing().when(marriageRegnServic).create(mrr);
+		Mockito.doNothing().when(marriageRegnService).create(mrr);
 
 		marriageRegnConsumer.processMessage(consumerRecord, topic_createMarriageRegn);
 
@@ -338,7 +314,7 @@ public class MarriageRegnConsumerTest {
 
 		MarriageRegnRequest mrr = new MarriageRegnRequest();
 		mrr.setMarriageRegn(mr);
-		Mockito.doNothing().when(marriageRegnServic).create(mrr);
+		Mockito.doNothing().when(marriageRegnService).create(mrr);
 
 		marriageRegnConsumer.processMessage(consumerRecord, topic_createMarriageRegn);
 

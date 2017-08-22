@@ -39,7 +39,7 @@ export default class UiEmailField extends Component {
 						value={this.props.getVal(item.jsonPath)}
 						onChange={(e) => {
 							if(e.target.value) { 
-								e.target.value = e.target.value.replace(/^\s*/, "");
+								e.target.value = e.target.value.trim();
 							}
                             this.props.handler(e, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)
                         }}/>

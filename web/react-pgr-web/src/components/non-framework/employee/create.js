@@ -2088,7 +2088,7 @@ class Employee extends Component {
                             )
                          :
 
-                        <span><label style={{"fontSize": "20px"}}>{translate("employee.fields.isUserActive") }? <span style={{"color": "#FF0000"}}> *</span></label>
+                        <span><label style={{"fontSize": "15px"}}>{translate("employee.fields.isUserActive") }? <span style={{"color": "#FF0000"}}> *</span></label>
                       	<RadioButtonGroup name="isActive" valueSelected={Employee.user ? Employee.user.active : ''} onChange={(e, value) => {
                       		handleChangeNextLevel({target:{value:value}}, 'user', 'active', true, '')
                       	}}>
@@ -2265,7 +2265,7 @@ class Employee extends Component {
                             )
                          :
 
-                        <span><label style={{"fontSize": "20px"}}>{translate("employee.Employee.fields.physicallyDisabled")+"?"}</label>
+                        <span><label style={{"fontSize": "15px"}}>{translate("employee.Employee.fields.physicallyDisabled")+"?"}</label>
                       	<RadioButtonGroup name={translate("employee.Employee.fields.physicallyDisabled")} valueSelected={Employee.physicallyDisabled} onChange={(e, value) => {
                       		handleChange({target:{value:value}}, 'physicallyDisabled', false, '')
                       	}}>
@@ -2291,7 +2291,7 @@ class Employee extends Component {
                             )
                          :
 
-                        <span><label style={{"fontSize": "20px"}}>{translate("employee.Employee.fields.medicalReportProduced")+"?"}</label>
+                        <span><label style={{"fontSize": "15px"}}>{translate("employee.Employee.fields.medicalReportProduced")+"?"}</label>
                       	<RadioButtonGroup name={translate("employee.Employee.fields.medicalReportProduced")} valueSelected={Employee.medicalReportProduced} onChange={(e, value) => {
                       		handleChange({target:{value:value}}, 'medicalReportProduced', true, '')
                       	}}>

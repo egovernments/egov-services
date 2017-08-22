@@ -29,7 +29,6 @@ public class UOMController {
 
 	/**
 	 * Description : This api for creating UOM master
-	 * 
 	 * @param UOMRequest
 	 * @return UOMResponse
 	 * @throws Exception
@@ -42,7 +41,6 @@ public class UOMController {
 
 	/**
 	 * Description : This api for updating UOM master
-	 * 
 	 * 
 	 * @param UOMRequest
 	 * @return UOMResponse

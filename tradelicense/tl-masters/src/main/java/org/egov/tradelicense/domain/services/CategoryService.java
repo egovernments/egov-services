@@ -2,8 +2,8 @@ package org.egov.tradelicense.domain.services;
 
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.requests.CategoryRequest;
-import org.egov.tl.commons.web.requests.CategoryResponse;
-import org.egov.tl.commons.web.requests.CategorySearchResponse;
+import org.egov.tl.commons.web.response.CategoryResponse;
+import org.egov.tl.commons.web.response.CategorySearchResponse;
 
 /**
  * Service class for Category master

@@ -2,14 +2,14 @@ package org.egov.tl.indexer.web.repository;
 
 import java.util.Date;
 
-import org.egov.tl.commons.web.requests.CategoryResponse;
-import org.egov.tl.commons.web.requests.LicenseStatusResponse;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
-import org.egov.tl.commons.web.requests.UOMResponse;
+import org.egov.tl.commons.web.response.CategoryResponse;
+import org.egov.tl.commons.web.response.LicenseStatusResponse;
+import org.egov.tl.commons.web.response.UOMResponse;
 import org.egov.tl.indexer.config.PropertiesManager;
+import org.egov.tl.indexer.web.requests.TlMasterRequestInfo;
+import org.egov.tl.indexer.web.requests.TlMasterRequestInfoWrapper;
 import org.modelmapper.ModelMapper;
-import org.rgov.tl.indexer.web.requests.TlMasterRequestInfo;
-import org.rgov.tl.indexer.web.requests.TlMasterRequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;

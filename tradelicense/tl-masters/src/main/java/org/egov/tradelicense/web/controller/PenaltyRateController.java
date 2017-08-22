@@ -3,8 +3,8 @@ package org.egov.tradelicense.web.controller;
 import javax.validation.Valid;
 
 import org.egov.tl.commons.web.requests.PenaltyRateRequest;
-import org.egov.tl.commons.web.requests.PenaltyRateResponse;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
+import org.egov.tl.commons.web.response.PenaltyRateResponse;
 import org.egov.tradelicense.domain.services.PenaltyRateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;

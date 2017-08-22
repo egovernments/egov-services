@@ -1,4 +1,4 @@
-package org.egov.tradelicense.web.requests;
+package org.egov.tradelicense.web.response;
 
 import java.util.ArrayList;
 import java.util.List;

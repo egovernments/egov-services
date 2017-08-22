@@ -2,7 +2,7 @@ package org.egov.tradelicense.domain.services;
 
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.requests.UOMRequest;
-import org.egov.tl.commons.web.requests.UOMResponse;
+import org.egov.tl.commons.web.response.UOMResponse;
 
 /**
  * Service class for UOM master

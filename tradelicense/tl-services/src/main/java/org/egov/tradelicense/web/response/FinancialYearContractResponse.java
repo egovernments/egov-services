@@ -37,7 +37,7 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.tradelicense.web.requests;
+package org.egov.tradelicense.web.response;
 
 import java.util.List;
 

@@ -789,8 +789,8 @@ public class PropertiesManager {
 		return environment.getProperty("invalid.input.unit.age");
 	}
 	
-	public String getUsageMasterService(){
-		return environment.getProperty("usage.master.service");
+	public String getUsageMasterDefaultService(){
+		return environment.getProperty("usage.master.default.service");
 	}
 
 }

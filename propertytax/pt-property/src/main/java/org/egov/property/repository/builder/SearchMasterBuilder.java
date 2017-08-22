@@ -2,6 +2,7 @@ package org.egov.property.repository.builder;
 
 import java.util.List;
 
+import org.egov.property.utility.ConstantUtility;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -19,6 +20,7 @@ public class SearchMasterBuilder {
 
 	@Autowired
 	Environment environment;
+
 
 	/**
 	 * <p>
@@ -50,6 +52,7 @@ public class SearchMasterBuilder {
 			Integer year, String parent, String service) {
 
 		StringBuffer searchSql = new StringBuffer();
+		String defaultService = "common";// TODO read from property file
 
 		searchSql.append("select * from " + tableName + " where ");
 
@@ -81,14 +84,21 @@ public class SearchMasterBuilder {
 			searchSql.append("AND parent =? ");
 			preparedStatementValues.add(parent);
 		}
+		
+		if ( tableName.equalsIgnoreCase(ConstantUtility.USAGE_TYPE_TABLE_NAME)){
 
-		if (service != null) {
-			if (!service.isEmpty()) {
-				searchSql.append("AND service =? ");
-				preparedStatementValues.add(service);
+			if (service != null) {
+				if (!service.isEmpty()) {
+					searchSql.append("AND lower(service) in(LOWER(?),LOWER(?)) ");
+					preparedStatementValues.add(service);
+					preparedStatementValues.add(defaultService);
+				}
+
+			} else {
+				searchSql.append("AND lower(service)=LOWER(?) ");
+				preparedStatementValues.add(defaultService);
 			}
-
-		} 
+		}
 
 		JSONObject dataSearch = new JSONObject();
 

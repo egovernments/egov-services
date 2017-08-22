@@ -178,4 +178,14 @@ public class DonationQueryBuilder {
         return "SELECT sizeinmilimeter FROM egwtr_pipesize WHERE id = ? and tenantId = ? ";
     }
 
+    
+    public static String selectDonationByCodeQuery() {
+        return " select code FROM egwtr_donation where propertytypeid = ? and usagetypeid = ? and "
+                + "categorytypeid = ? and maxpipesizeid = ? and minpipesizeid = ? and tenantId = ?";
+    }
+
+    public static String selectDonationByCodeNotInQuery() {
+        return " select code from egwtr_donation where propertytypeid = ? and usagetypeid = ? and "
+                + " categorytypeid = ? and maxpipesizeid = ? and minpipesizeid = ? and tenantId = ? and code != ? ";
+    }
 }

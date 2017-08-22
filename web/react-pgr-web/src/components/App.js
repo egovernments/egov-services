@@ -1,24 +1,15 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
-// import PropTypes from 'prop-types';
-
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
-// import {
-//   Redirect,
-//   withRouter
-// } from 'react-router-dom';
 import { withRouter } from 'react-router'
 
 import Header from './common/Header';
 import Footer from './common/Footer';
-// import PropertyTaxSearch from "./contents/PropertyTaxSearch";
 import Snackbar from 'material-ui/Snackbar';
 import LoadingIndicator from './common/LoadingIndicator';
 import router from "../router";
-//api import
-import Api from "../api/api"
-
+import Api from "../api/api";
 
 window.urlCheck = false;
 class App extends Component {

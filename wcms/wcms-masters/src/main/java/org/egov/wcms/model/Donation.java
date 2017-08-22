@@ -108,11 +108,9 @@ public class Donation {
     private Double donationAmount;
 
     @NotNull
-    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date fromDate;
 
     @NotNull
-    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date toDate;
 
     @Size(max = 250)

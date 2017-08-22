@@ -84,6 +84,8 @@ public class CategoryValidator {
 				
 			}else{
 				category.setValidityYears(0l);
+				category.setParentId(null);
+				category.setDetails(null);
 			}
 
 		}

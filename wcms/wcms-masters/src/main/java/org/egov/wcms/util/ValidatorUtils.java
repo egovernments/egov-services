@@ -451,6 +451,7 @@ public class ValidatorUtils {
             checkMaxPipesizeAndMinPipeSize(errorFields, donation);
             checkPropertyTypeAndUsageTypeExist(errorFields, donation);
             checkCategoryTypeAndPipeSizeExist(errorFields, donation);
+            checkDonationsExist(errorFields, donation);
             addTenantIdValidationErrors(donation.getTenantId(), errorFields);
         }
         return errorFields;
@@ -560,7 +561,17 @@ public class ValidatorUtils {
             errorFields.add(errorField);
         }
     }
-
+    
+    private void checkDonationsExist(final List<ErrorField> errorFields,
+            final Donation donation) {
+     
+         if (!donationService.checkDonationsExist(donation)) {
+            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.DONATION_UNIQUE_CODE)
+                    .message(WcmsConstants.DONATION_UNQ_ERROR_MESSAGE)
+                    .field(WcmsConstants.DONATION_UNQ_FIELD_NAME).build();
+            errorFields.add(errorField);
+        }
+    }
     private void checkCategoryTypeAndPipeSizeExist(final List<ErrorField> errorFields,
             final Donation donation) {
         if (propertPipeSizeService.checkPipeSizeExists(donation.getMaxPipeSize(),

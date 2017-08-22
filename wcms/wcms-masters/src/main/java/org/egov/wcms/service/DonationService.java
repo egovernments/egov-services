@@ -44,6 +44,7 @@ import java.util.List;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.wcms.model.Donation;
 import org.egov.wcms.repository.DonationRepository;
+import org.egov.wcms.util.WcmsConstants;
 import org.egov.wcms.web.contract.DonationGetRequest;
 import org.egov.wcms.web.contract.DonationRequest;
 import org.egov.wcms.web.contract.PropertyTypeResponse;
@@ -78,9 +79,8 @@ public class DonationService {
     }
 
     public List<Donation> createDonation(final String topic, final String key, final DonationRequest donationRequest) {
-        for (final Donation donation : donationRequest.getDonation()){
+        for (final Donation donation : donationRequest.getDonation())
             donation.setCode(codeGeneratorService.generate(Donation.SEQ_DONATION));
-        }
         try {
             kafkaTemplate.send(topic, key, donationRequest);
         } catch (final Exception ex) {
@@ -108,7 +108,7 @@ public class DonationService {
         }
         if (donationGetRequest.getUsageType() != null) {
             final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModuleByCode(
-                    donationGetRequest.getUsageType(), donationGetRequest.getTenantId());
+                    donationGetRequest.getUsageType(),WcmsConstants.WC, donationGetRequest.getTenantId());
             if (usageType != null && usageType.getUsageTypesSize())
                 donationGetRequest.setUsageTypeId(usageType.getUsageMasters().get(0).getId());
 
@@ -136,7 +136,7 @@ public class DonationService {
     public Boolean getUsageTypeByName(final Donation donation) {
         Boolean isValidUsage = Boolean.FALSE;
         final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModule(
-                donation.getUsageType(),
+                donation.getUsageType(),WcmsConstants.WC,
                 donation.getTenantId());
         if (usageType.getUsageTypesSize()) {
             isValidUsage = Boolean.TRUE;
@@ -147,6 +147,15 @@ public class DonationService {
         }
         return isValidUsage;
 
+    }
+
+    public boolean checkDonationsExist(final Donation donation) {
+        getPropertyTypeByName(donation);
+        getUsageTypeByName(donation);
+        return donationRepository.checkDonationsExist(donation.getCode(), donation.getPropertyTypeId(),
+                donation.getUsageTypeId(),
+                donation.getCategory(), donation.getMaxPipeSize(), donation.getMinPipeSize(),
+                donation.getTenantId());
     }
 
 }

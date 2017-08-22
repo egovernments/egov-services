@@ -76,7 +76,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 				Long categoryId = categoryRepository.createCategory(category);
 
-				if (category.getParentId() != null) {
+				if (category.getParentId() != null &&  category.getDetails() != null) {
 
 					for (CategoryDetail categoryDetail : category.getDetails()) {
 
@@ -120,7 +120,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 				categoryRepository.updateCategory(category);
 
-				if (category.getParentId() != null) {
+				if (category.getParentId() != null &&  category.getDetails() != null) {
 
 					for (CategoryDetail categoryDetail : category.getDetails()) {
 

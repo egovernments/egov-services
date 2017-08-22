@@ -20,6 +20,7 @@ public class SearchMasterBuilder {
 	@Autowired
 	Environment environment;
 
+
 	/**
 	 * <p>
 	 * This method will form the search query based on the given parameters
@@ -50,6 +51,7 @@ public class SearchMasterBuilder {
 			Integer year, String parent, String service) {
 
 		StringBuffer searchSql = new StringBuffer();
+		String defaultService = "common";// TODO read from property file
 
 		searchSql.append("select * from " + tableName + " where ");
 
@@ -84,11 +86,15 @@ public class SearchMasterBuilder {
 
 		if (service != null) {
 			if (!service.isEmpty()) {
-				searchSql.append("AND service =? ");
+				searchSql.append("AND lower(service) in(LOWER(?),LOWER(?)) ");
 				preparedStatementValues.add(service);
+				preparedStatementValues.add(defaultService);
 			}
 
-		} 
+		} else {
+			searchSql.append("AND lower(service)=LOWER(?) ");
+			preparedStatementValues.add(defaultService);
+		}
 
 		JSONObject dataSearch = new JSONObject();
 

@@ -153,7 +153,7 @@ public class CategoryServiceTest {
 		categoryRequest.setRequestInfo(requestInfo);
 
 		try {
-			CategoryResponse categoryResponse = categoryService.createCategoryMaster(categoryRequest);
+			CategoryResponse categoryResponse = categoryService.createCategoryMaster(categoryRequest,"CATEGORY");
 			if (categoryResponse.getCategories().size() == 0) {
 				assertTrue(false);
 			}
@@ -242,7 +242,7 @@ public class CategoryServiceTest {
 
 		try {
 
-			CategoryResponse categoryResponse = categoryService.createCategoryMaster(categoryRequest);
+			CategoryResponse categoryResponse = categoryService.createCategoryMaster(categoryRequest,"CATEGORY");
 
 			if (categoryResponse.getCategories().size() == 0) {
 				assertTrue(false);
@@ -303,7 +303,7 @@ public class CategoryServiceTest {
 			categoryRequest.setRequestInfo(requestInfo);
 
 			categoryConsumer.resetCountDown();
-			CategoryResponse categoryResponse = categoryService.createCategoryMaster(categoryRequest);
+			CategoryResponse categoryResponse = categoryService.createCategoryMaster(categoryRequest,"SUBCATEGORY");
 
 			categoryConsumer.getLatch().await();
 			if (categoryResponse.getCategories().size() == 0) {
@@ -406,7 +406,7 @@ public class CategoryServiceTest {
 		categoryRequest.setRequestInfo(requestInfo);
 
 		try {
-			CategoryResponse categoryResponse = categoryService.createCategoryMaster(categoryRequest);
+			CategoryResponse categoryResponse = categoryService.createCategoryMaster(categoryRequest,"SUBCATEGORY");
 			if (categoryResponse.getCategories().size() == 0) {
 				assertTrue(false);
 			}
@@ -455,7 +455,7 @@ public class CategoryServiceTest {
 
 		try {
 			categoryConsumer.resetCountDown();
-			CategoryResponse categoryResponse = categoryService.updateCategoryMaster(categoryRequest);
+			CategoryResponse categoryResponse = categoryService.updateCategoryMaster(categoryRequest,"CATEGORY");
 
 			categoryConsumer.getLatch().await();
 			if (categoryResponse.getCategories().size() == 0) {
@@ -540,7 +540,7 @@ public class CategoryServiceTest {
 
 		try {
 			categoryConsumer.resetCountDown();
-			CategoryResponse categoryResponse = categoryService.updateCategoryMaster(categoryRequest);
+			CategoryResponse categoryResponse = categoryService.updateCategoryMaster(categoryRequest,"CATEGORY");
 			categoryConsumer.getLatch().await();
 			if (categoryResponse.getCategories().size() == 0) {
 				assertTrue(false);
@@ -590,7 +590,7 @@ public class CategoryServiceTest {
 		categoryRequest.setRequestInfo(requestInfo);
 
 		try {
-			CategoryResponse categoryResponse = categoryService.updateCategoryMaster(categoryRequest);
+			CategoryResponse categoryResponse = categoryService.updateCategoryMaster(categoryRequest,"CATEGORY");
 
 			if (categoryResponse.getCategories().size() == 0){
 				assertTrue(false);

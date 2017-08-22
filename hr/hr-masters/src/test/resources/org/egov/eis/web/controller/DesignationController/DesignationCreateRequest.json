@@ -1,0 +1,25 @@
+{
+
+	"RequestInfo" : {
+		"apiId" : "apiId",
+		"ver" : "ver",
+		"ts": "06-01-1964 00:00:00",
+		"action" : "action",
+		"did" : "did",
+		"key" : "key",
+		"msgId" : "msgId",
+		"requesterId" : "requesterId",
+		"authToken" : "authToken"
+	
+},
+
+"designation" : {
+      "id": 1,
+      "code": "100",
+      "name": "clerk",
+      "active": true,
+      "description": "clerk",
+      "chartOfAccounts": "accounts",
+      "tenantId": "default"
+    }
+}

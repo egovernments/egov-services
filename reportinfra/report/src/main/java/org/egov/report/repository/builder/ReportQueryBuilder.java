@@ -18,9 +18,17 @@ public class ReportQueryBuilder {
 	   
 	public String buildQuery(List<SearchParam> searchParams, String tenantId, ReportDefinition reportDefinition){
 		
-		LOGGER.info("searchParams:" + searchParams);
+		String baseQuery;
 		
-		String baseQuery = generateQuery(searchParams, tenantId, reportDefinition);
+		LOGGER.info("searchParams:" + searchParams);
+		if(reportDefinition.getQuery().contains("UNION")){
+			baseQuery = generateUnionQuery(searchParams, tenantId, reportDefinition);
+		} else {
+			
+			baseQuery = generateQuery(searchParams, tenantId, reportDefinition);
+			
+		}
+		
 		baseQuery = baseQuery.replaceAll("\\$tenantid","'"+tenantId+"'");
 		
 		for(SearchParam searchParam : searchParams){
@@ -43,6 +51,8 @@ public String generateQuery(List<SearchParam> searchParams, String tenantId, Rep
 		
 		StringBuffer baseQuery = new StringBuffer(reportDefinition.getQuery());
 		
+		String orderByQuery = reportDefinition.getOrderByQuery();
+		
 		String groupByQuery = reportDefinition.getGroupByQuery();
 		
 		for(SearchParam searchParam : searchParams){
@@ -63,6 +73,62 @@ public String generateQuery(List<SearchParam> searchParams, String tenantId, Rep
 	if(groupByQuery != null){
     baseQuery.append(" "+ groupByQuery);
 	}
+	if(orderByQuery != null) {
+		
+		baseQuery.append(" "+ orderByQuery);
+		
+	}
     LOGGER.info("generate baseQuery :"+baseQuery);
     return baseQuery.toString();
-} }
+}
+
+public String generateUnionQuery(List<SearchParam> searchParams, String tenantId, ReportDefinition reportDefinition){
+	
+	LOGGER.info("searchParams:" + searchParams);
+	
+	String baseQuery = reportDefinition.getQuery();
+	
+	String[] unionQueries = baseQuery.split("UNION");
+	
+	StringBuffer query = new StringBuffer();
+	StringBuffer finalQuery = new StringBuffer();
+	
+	for(int i=0; i<unionQueries.length; i++) {
+		
+		query = new StringBuffer(unionQueries[i]);
+		
+		for(SearchParam searchParam : searchParams){
+			
+			Object name = searchParam.getName();
+			
+		    for (SearchColumn sc : reportDefinition.getSearchParams()) 
+		    {
+		            if(name.equals(sc.getName()) && !sc.getIsMandatory()){
+		            	if(sc.getSearchClause() != null) {
+		            	query.append(" " +sc.getSearchClause());
+		            	}
+		            }
+		    }
+			
+		
+	}
+		String groupByQuery = reportDefinition.getGroupByQuery(); 
+		if(groupByQuery != null){
+			query.append(" "+ groupByQuery);
+	    }
+		if(i > 0) {
+		finalQuery.append(" UNION "+query.toString()+ " ");
+		} else {
+			finalQuery.append(query.toString());
+		}
+	}
+	String orderByQuery = reportDefinition.getOrderByQuery(); 
+	if(orderByQuery != null){
+		finalQuery.append(" "+ orderByQuery);
+    }
+	
+	finalQuery.toString();
+LOGGER.info("generate baseUnionQuery :"+finalQuery);
+return finalQuery.toString();
+}
+}

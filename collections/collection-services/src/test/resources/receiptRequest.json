@@ -105,7 +105,8 @@
     "requesterId": "61",
     "authToken": "019e4e9b-0605-43a3-8527-e3ff8181cb63",
     "userInfo":{
-    	"id":1
+    	"id":1,
+        "roles" : []
     }
   }
 }

@@ -123,5 +123,9 @@ public class ApplicationProperties {
     
     @Value("${positionforuser.get.uri.append}")
     private String getPositionAppend;
+    
+    @Value("${receipt.wflow.preapprovedorapproved.config.key}")
+    private String rcptwflowConfigKey;
+    
             
 }

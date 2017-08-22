@@ -30,6 +30,15 @@ public class MarriageDocumentTypeController {
 	@Autowired
 	private MarriageDocumentTypeService marriageDocumentTypeService;
 
+	/**
+	 * @SEARCH
+	 * 
+	 * @param requestInfoWrapper
+	 * @param bindingResultsForRequestInfoWrapper
+	 * @param marriageDocumentTypeSearchCriteria
+	 * @param bindingResultForRegnDocumentTypeSearchCriteria
+	 * @return
+	 */
 	@PostMapping
 	@RequestMapping("/_search")
 	public ResponseEntity<?> search(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
@@ -42,13 +51,11 @@ public class MarriageDocumentTypeController {
 
 		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
-		// Validation
 		ResponseEntity<?> errorResponseEntity = errorHandler.handleBindingErrorsForSearch(requestInfo,
 				bindingResultsForRequestInfoWrapper, bindingResultForRegnDocumentTypeSearchCriteria);
 		if (errorResponseEntity != null)
 			return errorResponseEntity;
 
-		// Entering service method
 		ResponseEntity<?> marriageDocumentTypeResponse = null;
 		try {
 			marriageDocumentTypeResponse = marriageDocumentTypeService.search(marriageDocumentTypeSearchCriteria,
@@ -61,6 +68,13 @@ public class MarriageDocumentTypeController {
 		return marriageDocumentTypeResponse;
 	}
 
+	/**
+	 * @CREATE
+	 * 
+	 * @param marriageDocTypeRequest
+	 * @param bindingResult
+	 * @return
+	 */
 	@PostMapping
 	@RequestMapping("/_create")
 	public ResponseEntity<?> createMarriageDocumentType(
@@ -69,7 +83,9 @@ public class MarriageDocumentTypeController {
 		log.info("Controller:: MarriageDocTypeRequest: " + marriageDocTypeRequest);
 
 		RequestInfo requestInfo = marriageDocTypeRequest.getRequestInfo();
-		// Validate for Binding Errors
+		/**
+		 * @Validate Binding Errors
+		 */
 		if (bindingResult.hasErrors()) {
 			ResponseEntity<?> errorResponseEntity = errorHandler.handleBindingErrorsForCreate(requestInfo,
 					bindingResult);
@@ -81,6 +97,13 @@ public class MarriageDocumentTypeController {
 
 	}
 
+	/**
+	 * @UPDATE
+	 * 
+	 * @param marriageDocTypeRequest
+	 * @param bindingResult
+	 * @return
+	 */
 	@PostMapping
 	@RequestMapping("/_update")
 	public ResponseEntity<?> updateMarriageDocumentType(

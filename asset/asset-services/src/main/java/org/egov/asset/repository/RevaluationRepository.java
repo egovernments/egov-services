@@ -63,10 +63,13 @@ public class RevaluationRepository {
         }
     }
 
-    private String getRevaluationStatus(final AssetStatusObjectName objectName, final Status code,
+    public String getRevaluationStatus(final AssetStatusObjectName objectName, final Status code,
             final String tenantId) {
         final List<AssetStatus> assetStatuses = assetMasterService.getStatuses(objectName, code, tenantId);
-        return assetStatuses.get(0).getStatusValues().get(0).getCode();
+        if (assetStatuses != null && !assetStatuses.isEmpty())
+            return assetStatuses.get(0).getStatusValues().get(0).getCode();
+        else
+            throw new RuntimeException("Status is not present Revaluation for tenant id : " + tenantId);
     }
 
     public List<Revaluation> search(final RevaluationCriteria revaluationCriteria) {

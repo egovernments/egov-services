@@ -77,10 +77,18 @@ public class FeeMatrixController {
 			@RequestParam(required = false) Integer categoryId, @RequestParam(required = false) Integer subcategoryId,
 			@RequestParam(required = false) String financialYear,
 			@RequestParam(required = false) String applicationType,
-			@RequestParam(required = false) String businessNature, @RequestParam(required = false) Integer pageSize,
+			@RequestParam(required = false) String businessNature,
+			@RequestParam(required = false) Integer pageSize,
 			@RequestParam(required = false) Integer offSet) throws Exception {
 
-		return feeMatrixService.getFeeMatrixMaster(requestInfo.getRequestInfo(), tenantId, ids, categoryId,
-				subcategoryId, financialYear, applicationType, businessNature, pageSize, offSet);
+		return feeMatrixService.getFeeMatrixMaster(requestInfo.getRequestInfo(),
+				tenantId, ids,
+				categoryId,
+				subcategoryId,
+				financialYear,
+				applicationType,
+				businessNature,
+				pageSize,
+				offSet);
 	}
 }

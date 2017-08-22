@@ -95,6 +95,8 @@ public class ElasticSearchRepository {
     public void saveConnection(ConnectionIndex connectionIndex) {
     	String url = String.format("%s%s/%s/%s", this.indexServiceHost, indexName, documentType, connectionIndex.getConnectionDetails().getId());
         HttpHeaders headers = getHttpHeaders();
+        LOGGER.info("Connection Index to be added to ES : " + connectionIndex);
+        LOGGER.info("URL to invoke : " + url);
         restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(connectionIndex.getConnectionDetails(), headers), Map.class);
     }
 

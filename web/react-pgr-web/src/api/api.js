@@ -83,13 +83,13 @@ module.exports = {
                 }else if(response && response.response && !response.response.data && response.response.status === 400) {
                     document.title = "eGovernments";
                     var locale = localStorage.getItem('locale');
-                    var _tntId = localStorage.getItem("tenantId");
+                    var _tntId = localStorage.getItem("tenantId") || "default";
                     localStorage.clear();
                     localStorage.setItem('locale', locale);
                     localStorage.reload = true;
                     window.location.hash = "#/" + _tntId;
                 } else if(response){
-                    throw new Error(response);
+                    throw new Error("Oops! Something isn't right. Please try again later.");
                 }else {
                     throw new Error("Server returned unexpected error. Please contact system administrator.");
                 }

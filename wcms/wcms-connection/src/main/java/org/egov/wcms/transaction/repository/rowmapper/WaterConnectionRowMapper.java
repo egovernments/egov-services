@@ -77,8 +77,12 @@ public class WaterConnectionRowMapper {
 			prop.setPropertyTypeId(rs.getString("conn_proptype"));
 			prop.setAddress(rs.getString("conn_propaddress"));
 			prop.setPropertyidentifier(rs.getString("conn_propid"));
+			prop.setLocality(Integer.toString(rs.getInt("propertylocation")));
 			if (null != rs.getString("propertyowner") && rs.getString("propertyowner") != "") {
 				prop.setNameOfApplicant(rs.getString("propertyowner"));
+				prop.setAdharNumber(rs.getString("aadhaarnumber"));
+				prop.setMobileNumber(rs.getString("mobilenumber"));
+				prop.setEmail(rs.getString("emailid"));
 			}
 			resolvePropertyUsageTypeNames(rs, prop);
 			connection.setProperty(prop);

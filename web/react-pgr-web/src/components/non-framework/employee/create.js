@@ -1047,7 +1047,7 @@ class Employee extends Component {
           <form>
             <div className="row">
               <div className="col-md-6 col-xs-12">
-                <label>{translate("employee.Assignment.fields.primary")+ "*"} </label>
+                <label>{<span>{translate("employee.Assignment.fields.primary")}<span style={{"color": "#FF0000"}}> *</span></span>} </label>
                 <RadioButtonGroup name={translate("employee.Assignment.fields.primary")} valueSelected={subObject.assignments.isPrimary} onChange={(e, value) => {
                   self.handleStateChange({target:{value:value}}, "assignments", "isPrimary")
                 }}>
@@ -1062,21 +1062,22 @@ class Employee extends Component {
                 </RadioButtonGroup>
               </div>
               <div className="col-md-6 col-xs-12">
-                <TextField hintText="21/12/1993" floatingLabelText={translate("employee.Assignment.fields.fromDate")+" *"} errorText={self.state.errorText["assignments.fromDate"]} value={subObject.assignments.fromDate} onChange={(e) => {
+                <TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} hintText="21/12/1993" floatingLabelText={<span>{translate("employee.Assignment.fields.fromDate")}<span style={{"color": "#FF0000"}}> *</span></span>} errorText={self.state.errorText["assignments.fromDate"]} value={subObject.assignments.fromDate} onChange={(e) => {
                     self.handleStateChange(e, "assignments", "fromDate", true, datePat)
                 }}/>
               </div>
             </div>
             <div className="row">
               <div className="col-md-6 col-xs-12">
-                <TextField hintText="21/12/1993" floatingLabelText={translate("employee.Assignment.fields.toDate")+" *"} errorText={self.state.errorText["assignments.toDate"]} value={subObject.assignments.toDate} onChange={(e) => {
+                <TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true}  hintText="21/12/1993" floatingLabelText={<span>{translate("employee.Assignment.fields.toDate")}<span style={{"color": "#FF0000"}}> *</span></span>} errorText={self.state.errorText["assignments.toDate"]} value={subObject.assignments.toDate} onChange={(e) => {
                     self.handleStateChange(e, "assignments", "toDate", true, datePat)
                 }}/>
               </div>
               <div className="col-md-6 col-xs-12">
                 <SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                   errorText = {self.state.errorText["assignments.department"]}
-                  floatingLabelText={translate("employee.Assignment.fields.department")+" *"} value={subObject.assignments.department} onChange={(event, key, value) => {
+                  floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} 
+                  floatingLabelText={<span>{translate("employee.Assignment.fields.department")}<span style={{"color": "#FF0000"}}> *</span></span>} value={subObject.assignments.department} onChange={(event, key, value) => {
                   self.handleStateChange({target:{value:value}}, "assignments", "department")
                 }}>
                     {
@@ -1091,7 +1092,8 @@ class Employee extends Component {
               <div className="col-md-6 col-xs-12">
                 <SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                   errorText = {self.state.errorText["assignments.designation"]}
-                  floatingLabelText={translate("employee.Assignment.fields.designation")+"*"} value={subObject.assignments.designation} onChange={(event, key, value) => {
+                  floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} 
+                  floatingLabelText={<span>{translate("employee.Assignment.fields.designation")}<span style={{"color": "#FF0000"}}> *</span></span>} value={subObject.assignments.designation} onChange={(event, key, value) => {
                   self.handleStateChange({target:{value:value}}, "assignments", "designation")
                 }}>
                     {
@@ -1108,7 +1110,8 @@ class Employee extends Component {
                 <AutoComplete
                   errorText = {self.state.errorText["assignments.position"]}
                   fullWidth={true}
-                  floatingLabelText={translate("employee.Assignment.fields.position")+"*"}
+                  floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} 
+                  floatingLabelText={<span>{translate("employee.Assignment.fields.position")}<span style={{"color": "#FF0000"}}> *</span></span>}
                   filter={AutoComplete.caseInsensitiveFilter}
                   dataSource={self.state.positionList}
                   dataSourceConfig={this.state.positionListConfig}
@@ -1127,7 +1130,7 @@ class Employee extends Component {
             </div>
             <div className="row">
               <div className="col-md-6 col-xs-12">
-                <SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Assignment.fields.grade")} value={subObject.assignments.grade} onChange={(event, key, value) => {
+                <SelectField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true}  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Assignment.fields.grade")} value={subObject.assignments.grade} onChange={(event, key, value) => {
                   self.handleStateChange({target:{value:value}}, "assignments", "grade")
                 }}>
                     {
@@ -1138,7 +1141,7 @@ class Employee extends Component {
                 </SelectField>
               </div>
               <div className="col-md-6 col-xs-12">
-                <SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("wc.create.groups.fields.Funtion")} value={subObject.assignments.function} onChange={(event, key, value) => {
+                <SelectField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true}  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("wc.create.groups.fields.Funtion")} value={subObject.assignments.function} onChange={(event, key, value) => {
                   self.handleStateChange({target:{value:value}}, "assignments", "function")
                 }}>
                     {
@@ -1151,7 +1154,7 @@ class Employee extends Component {
             </div>
             <div className="row">
               <div className="col-md-6 col-xs-12">
-                <SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Assignment.fields.functionary")} value={subObject.assignments.functionary} onChange={(event, key, value) => {
+                <SelectField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true}  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Assignment.fields.functionary")} value={subObject.assignments.functionary} onChange={(event, key, value) => {
                   self.handleStateChange({target:{value:value}}, "assignments", "functionary")
                 }}>
                     {
@@ -1162,7 +1165,7 @@ class Employee extends Component {
                 </SelectField>
               </div>
               <div className="col-md-6 col-xs-12">
-                <SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Assignment.fields.fund")} value={subObject.assignments.fund} onChange={(event, key, value) => {
+                <SelectField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true}  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Assignment.fields.fund")} value={subObject.assignments.fund} onChange={(event, key, value) => {
                   self.handleStateChange({target:{value:value}}, "assignments", "fund")
                 }}>
                     {
@@ -1175,7 +1178,7 @@ class Employee extends Component {
             </div>
             <div className="row">
               <div className="col-md-6 col-xs-12">
-                <label>{translate("employee.Assignment.fields.hod")+"? *"}</label>
+                <label>{translate("employee.Assignment.fields.hod")+" ?"}<span style={{"color": "#FF0000"}}> *</span></label>
                 <RadioButtonGroup name={translate("employee.Assignment.fields.hod")} valueSelected={subObject.assignments.hod} onChange={(e, value) => {
                   self.handleStateChange({target:{value:value}}, "assignments", "hod")
                 }}>
@@ -1190,9 +1193,9 @@ class Employee extends Component {
                 </RadioButtonGroup>
               </div>
               <div className="col-md-6 col-xs-12">
-              {subObject.assignments.hod && <SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
+              {subObject.assignments.hod && <SelectField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true}  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                errorText = {self.state.errorText["assignments.mainDepartments"]}
-               floatingLabelText={translate("employee.Assignment.fields.department")+" *"} multiple={true} value={subObject.assignments.mainDepartments} onChange={(event, key, value) => {
+               floatingLabelText={<span>{translate("employee.Assignment.fields.department")}<span style={{"color": "#FF0000"}}> *</span></span>} multiple={true} value={subObject.assignments.mainDepartments} onChange={(event, key, value) => {
                   self.handleStateChange({target:{value:value}}, "assignments", "mainDepartments")
                 }}>
                     {
@@ -1205,7 +1208,7 @@ class Employee extends Component {
             </div>
             <div className="row">
               <div className="col-md-6 col-xs-12">
-                <TextField floatingLabelText={translate("employee.Assignment.fields.govtOrderNumber")} value={subObject.assignments.govtOrderNumber} onChange={(e) => {
+                <TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true}  floatingLabelText={translate("employee.Assignment.fields.govtOrderNumber")} value={subObject.assignments.govtOrderNumber} onChange={(e) => {
                   self.handleStateChange(e, "assignments", "govtOrderNumber")
                 }}/>
               </div>
@@ -1221,9 +1224,9 @@ class Employee extends Component {
           <form>
             <div className="row">
               <div className="col-md-6 col-xs-12">
-                <SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
+                <SelectField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true}  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                  errorText = {self.state.errorText["jurisdictions.jurisdictionsType"]}
-                 floatingLabelText={translate("employee.Employee.fields.jurisdictionsType")+"*"} value={subObject.jurisdictions.jurisdictionsType} onChange={(event, key, value) => {
+                 floatingLabelText={<span>{translate("employee.Employee.fields.jurisdictionsType")}<span style={{"color": "#FF0000"}}> *</span></span>} value={subObject.jurisdictions.jurisdictionsType} onChange={(event, key, value) => {
                   self.loadBoundaries(value)
                   self.handleStateChange({target:{value: value}}, "jurisdictions", "jurisdictionsType")
                 }}>
@@ -1235,9 +1238,9 @@ class Employee extends Component {
                 </SelectField>
               </div>
               <div className="col-md-6 col-xs-12">
-                <SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
+                <SelectField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true}  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                   errorText = {self.state.errorText["jurisdictions.boundary"]}
-                  floatingLabelText={translate("employee.Employee.fields.jurisdictionsList")+"*"} value={subObject.jurisdictions.boundary} onChange={(event, key, value) => {
+                  floatingLabelText={<span>{translate("employee.Employee.fields.jurisdictionsList")}<span style={{"color": "#FF0000"}}> *</span></span>} value={subObject.jurisdictions.boundary} onChange={(event, key, value) => {
                   self.handleStateChange({target:{value: value}}, "jurisdictions", "boundary")
                 }}>
                     {
@@ -1256,25 +1259,26 @@ class Employee extends Component {
             <div className="row">
               <div className="col-md-6 col-xs-12">
                 <TextField
+                  floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} 
                   errorText = {self.state.errorText["serviceHistory.serviceInfo"]}
-                  floatingLabelText={translate("employee.ServiceHistory.fields.ServiceEntryDescription")+" *"} value={subObject.serviceHistory.serviceInfo} onChange={(e) => {
+                  floatingLabelText={<span>{translate("employee.ServiceHistory.fields.ServiceEntryDescription")}<span style={{"color": "#FF0000"}}> *</span></span>} value={subObject.serviceHistory.serviceInfo} onChange={(e) => {
                   self.handleStateChange(e, "serviceHistory", "serviceInfo")
                 }}/>
               </div>
               <div className="col-md-6 col-xs-12">
-                <TextField hintText="21/12/1993" floatingLabelText={translate("employee.ServiceHistory.fields.date")+"*"} errorText={self.state.errorText["serviceHistory.serviceFrom"]} value={subObject.serviceHistory.serviceFrom} onChange={(e) => {
+                <TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true}  hintText="21/12/1993" floatingLabelText={<span>{translate("employee.ServiceHistory.fields.date")}<span style={{"color": "#FF0000"}}> *</span></span>} errorText={self.state.errorText["serviceHistory.serviceFrom"]} value={subObject.serviceHistory.serviceFrom} onChange={(e) => {
                     self.handleStateChange(e, "serviceHistory", "serviceFrom", true, datePat)
                 }}/>
               </div>
             </div>
             <div className="row">
               <div className="col-md-6 col-xs-12">
-                <TextField floatingLabelText={translate("employee.ServiceHistory.fields.remarks")} value={subObject.serviceHistory.remarks} onChange={(e) => {
+                <TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true}  floatingLabelText={translate("employee.ServiceHistory.fields.remarks")} value={subObject.serviceHistory.remarks} onChange={(e) => {
                   self.handleStateChange(e, "serviceHistory", "remarks")
                 }}/>
               </div>
               <div className="col-md-6 col-xs-12">
-                <TextField floatingLabelText={translate("employee.ServiceHistory.fields.orderNo")} value={subObject.serviceHistory.orderNo} onChange={(e) => {
+                <TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true}  floatingLabelText={translate("employee.ServiceHistory.fields.orderNo")} value={subObject.serviceHistory.orderNo} onChange={(e) => {
                   self.handleStateChange(e, "serviceHistory", "orderNo")
                 }}/>
               </div>
@@ -1293,8 +1297,9 @@ class Employee extends Component {
               <div className="row">
                 <div className="col-md-6 col-xs-12">
                   <SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
+                    floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} 
                     errorText = {self.state.errorText["probation.designation"]}
-                    floatingLabelText={translate("employee.Assignment.fields.designation")+" *"} value={subObject.probation.designation} onChange={(event, key, value) => {
+                    floatingLabelText={<span>{translate("employee.Assignment.fields.designation")}<span style={{"color": "#FF0000"}}> *</span></span>} value={subObject.probation.designation} onChange={(event, key, value) => {
                     self.handleStateChange({target:{value: value}}, "probation", "designation")
                   }}>
                     {
@@ -1305,26 +1310,26 @@ class Employee extends Component {
                   </SelectField>
                 </div>
                 <div className="col-md-6 col-xs-12">
-                  <TextField hintText="21/12/1993" floatingLabelText={translate("employee.ServiceHistory.fields.date")+"*"} errorText={self.state.errorText["probation.declaredOn"]} value={subObject.probation.declaredOn} onChange={(e) => {
+                  <TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} hintText="21/12/1993" floatingLabelText={<span>{translate("employee.ServiceHistory.fields.date")}<span style={{"color": "#FF0000"}}> *</span></span>} errorText={self.state.errorText["probation.declaredOn"]} value={subObject.probation.declaredOn} onChange={(e) => {
                     self.handleStateChange(e, "probation", "declaredOn", true, datePat)
                 }}/>
                 </div>
               </div>
               <div className="row">
                 <div className="col-md-6 col-xs-12">
-                  <TextField floatingLabelText={translate("employee.ServiceHistory.fields.orderNo")}value={subObject.probation.orderNo} onChange={(e) => {
+                  <TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} floatingLabelText={translate("employee.ServiceHistory.fields.orderNo")}value={subObject.probation.orderNo} onChange={(e) => {
                     self.handleStateChange(e, "probation", "orderNo")
                   }}/>
                 </div>
                 <div className="col-md-6 col-xs-12">
-                  <TextField hintText="21/12/1993" floatingLabelText={translate("employee.Probation.fields.orderDate")+"*"} errorText={self.state.errorText["probation.orderDate"]} value={subObject.probation.orderDate} onChange={(e) => {
+                  <TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} hintText="21/12/1993" floatingLabelText={<span>{translate("employee.Probation.fields.orderDate")}<span style={{"color": "#FF0000"}}> *</span></span>} errorText={self.state.errorText["probation.orderDate"]} value={subObject.probation.orderDate} onChange={(e) => {
                     self.handleStateChange(e, "probation", "orderDate", true, datePat)
                 }}/>
                 </div>
               </div>
               <div className="row">
                 <div className="col-md-6 col-xs-12">
-                  <TextField floatingLabelText={translate("employee.Probation.fields.remarks")} value={subObject.probation.remarks} onChange={(e) => {
+                  <TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} floatingLabelText={translate("employee.Probation.fields.remarks")} value={subObject.probation.remarks} onChange={(e) => {
                     self.handleStateChange(e, "probation", "remarks")
                   }}/>
                 </div>
@@ -1340,9 +1345,9 @@ class Employee extends Component {
             <form>
               <div className="row">
                 <div className="col-md-6 col-xs-12">
-                  <SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
+                  <SelectField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                     errorText = {self.state.errorText["regularisation.designation"]}
-                    floatingLabelText={translate("employee.Assignment.fields.designation")+" *"} value={subObject.regularisation.designation} onChange={(event, key, value) => {
+                    floatingLabelText={<span>{translate("employee.Assignment.fields.designation")}<span style={{"color": "#FF0000"}}> *</span></span>} value={subObject.regularisation.designation} onChange={(event, key, value) => {
                     self.handleStateChange({target:{value: value}}, "regularisation", "designation")
                   }}>
                     {
@@ -1353,26 +1358,26 @@ class Employee extends Component {
                   </SelectField>
                 </div>
                 <div className="col-md-6 col-xs-12">
-                  <TextField hintText="21/12/1993" floatingLabelText={translate("employee.Regularisation.fields.declaredOn")+"*"} errorText={self.state.errorText["regularisation.declaredOn"]} value={subObject.regularisation.declaredOn} onChange={(e) => {
+                  <TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} hintText="21/12/1993" floatingLabelText={<span>{translate("employee.Regularisation.fields.declaredOn")}<span style={{"color": "#FF0000"}}> *</span></span>} errorText={self.state.errorText["regularisation.declaredOn"]} value={subObject.regularisation.declaredOn} onChange={(e) => {
                     self.handleStateChange(e, "regularisation", "declaredOn", true, datePat)
                 }}/>
                 </div>
               </div>
               <div className="row">
                 <div className="col-md-6 col-xs-12">
-                  <TextField floatingLabelText={translate("employee.Regularisation.fields.orderNo")} value={subObject.regularisation.orderNo} onChange={(e) => {
+                  <TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} floatingLabelText={translate("employee.Regularisation.fields.orderNo")} value={subObject.regularisation.orderNo} onChange={(e) => {
                     self.handleStateChange(e, "regularisation", "orderNo")
                   }}/>
                 </div>
                 <div className="col-md-6 col-xs-12">
-                  <TextField hintText="21/12/1993" floatingLabelText={translate("employee.Regularisation.fields.orderDate")+" *"} errorText={self.state.errorText["regularisation.orderDate"]} value={subObject.regularisation.orderDate} onChange={(e) => {
+                  <TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} hintText="21/12/1993" floatingLabelText={<span>{translate("employee.Regularisation.fields.orderDate")}<span style={{"color": "#FF0000"}}> *</span></span>} errorText={self.state.errorText["regularisation.orderDate"]} value={subObject.regularisation.orderDate} onChange={(e) => {
                     self.handleStateChange(e, "regularisation", "orderDate", true, datePat)
                 }}/>
                 </div>
               </div>
               <div className="row">
                 <div className="col-md-6 col-xs-12">
-                  <TextField floatingLabelText={translate("employee.Regularisation.fields.remarks")} value={subObject.regularisation.remarks} onChange={(e) => {
+                  <TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} floatingLabelText={translate("employee.Regularisation.fields.remarks")} value={subObject.regularisation.remarks} onChange={(e) => {
                     self.handleStateChange(e, "regularisation", "remarks")
                   }}/>
                 </div>
@@ -1390,12 +1395,13 @@ class Employee extends Component {
                 <div className="col-md-6 col-xs-12">
                   <TextField
                     errorText = {self.state.errorText["education.qualification"]}
-                    floatingLabelText={translate("employee.EducationalQualification.fields.qualification")+" *"} value={subObject.education.qualification} onChange={(e) => {
+                    floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} 
+                    floatingLabelText={<span>{translate("employee.EducationalQualification.fields.qualification")}<span style={{"color": "#FF0000"}}> *</span></span>} value={subObject.education.qualification} onChange={(e) => {
                     self.handleStateChange(e, "education", "qualification")
                   }}/>
                 </div>
                 <div className="col-md-6 col-xs-12">
-                  <TextField floatingLabelText={translate("employee.EducationalQualification.fields.majorSubject")} value={subObject.education.majorSubject} onChange={(e) => {
+                  <TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} floatingLabelText={translate("employee.EducationalQualification.fields.majorSubject")} value={subObject.education.majorSubject} onChange={(e) => {
                     self.handleStateChange(e, "education", "majorSubject")
                   }}/>
                 </div>
@@ -1404,14 +1410,15 @@ class Employee extends Component {
                 <div className="col-md-6 col-xs-12">
                   <TextField
                     errorText = {self.state.errorText["education.yearOfPassing"]}
+                    floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} 
                     maxLength="4"
-                    floatingLabelText={translate("employee.EducationalQualification.fields.yearOfPassing")+"*"} value={subObject.education.yearOfPassing} onChange={(e) => {
+                    floatingLabelText={<span>{translate("employee.EducationalQualification.fields.yearOfPassing")}<span style={{"color": "#FF0000"}}> *</span></span>} value={subObject.education.yearOfPassing} onChange={(e) => {
                     if(e.target.value && !/^\d*$/g.test(e.target.value)) return;
                     self.handleStateChange(e, "education", "yearOfPassing")
                   }}/>
                 </div>
                 <div className="col-md-6 col-xs-12">
-                  <TextField floatingLabelText={translate("employee.EducationalQualification.fields.university")} value={subObject.education.university} onChange={(e) => {
+                  <TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} floatingLabelText={translate("employee.EducationalQualification.fields.university")} value={subObject.education.university} onChange={(e) => {
                     self.handleStateChange(e, "education", "university")
                   }}/>
                 </div>
@@ -1431,25 +1438,26 @@ class Employee extends Component {
                 <div className="col-md-6 col-xs-12">
                   <TextField
                     errorText = {self.state.errorText["technical.skill"]}
-                    floatingLabelText={translate("employee.TechnicalQualification.fields.skill")+" *"} value={subObject.technical.skill} onChange={(e) => {
+                    floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} 
+                    floatingLabelText={<span>{translate("employee.TechnicalQualification.fields.skill")}<span style={{"color": "#FF0000"}}> *</span></span>} value={subObject.technical.skill} onChange={(e) => {
                     self.handleStateChange(e, "technical", "skill")
                   }}/>
                 </div>
                 <div className="col-md-6 col-xs-12">
-                  <TextField floatingLabelText={translate("employee.TechnicalQualification.fields.grade")} value={subObject.technical.grade} onChange={(e) => {
+                  <TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} floatingLabelText={translate("employee.TechnicalQualification.fields.grade")} value={subObject.technical.grade} onChange={(e) => {
                     self.handleStateChange(e, "technical", "grade")
                   }}/>
                 </div>
               </div>
               <div className="row">
                 <div className="col-md-6 col-xs-12">
-                  <TextField maxLength="4" floatingLabelText={translate("employee.TechnicalQualification.fields.yearOfPassing")} value={subObject.technical.yearOfPassing} onChange={(e) => {
+                  <TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} maxLength="4" floatingLabelText={translate("employee.TechnicalQualification.fields.yearOfPassing")} value={subObject.technical.yearOfPassing} onChange={(e) => {
                     if(e.target.value && !/^\d*$/g.test(e.target.value)) return;
                     self.handleStateChange(e, "technical", "yearOfPassing")
                   }}/>
                 </div>
                 <div className="col-md-6 col-xs-12">
-                  <TextField floatingLabelText={translate("employee.TechnicalQualification.fields.remarks")} value={subObject.technical.remarks} onChange={(e) => {
+                  <TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} floatingLabelText={translate("employee.TechnicalQualification.fields.remarks")} value={subObject.technical.remarks} onChange={(e) => {
                     self.handleStateChange(e, "technical", "remarks")
                   }}/>
                 </div>
@@ -1469,14 +1477,16 @@ class Employee extends Component {
                 <div className="col-md-6 col-xs-12">
                   <TextField
                     errorText = {self.state.errorText["technical.skill"]}
-                    floatingLabelText={translate("employee.DepartmentalTest.fields.test") +" *"} value={subObject.test.test} onChange={(e) => {
+                    floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} 
+                    floatingLabelText={<span>{translate("employee.DepartmentalTest.fields.test")}<span style={{"color": "#FF0000"}}> *</span></span>} value={subObject.test.test} onChange={(e) => {
                     self.handleStateChange(e, "test", "test")
                   }}/>
                 </div>
                 <div className="col-md-6 col-xs-12">
                   <TextField
                     errorText = {self.state.errorText["technical.skill"]}
-                    maxLength="4" floatingLabelText={translate("employee.TechnicalQualification.fields.yearOfPassing")+"*"} value={subObject.test.yearOfPassing} onChange={(e) => {
+                    floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} 
+                    maxLength="4" floatingLabelText={<span>{translate("employee.TechnicalQualification.fields.yearOfPassing")}<span style={{"color": "#FF0000"}}> *</span></span>} value={subObject.test.yearOfPassing} onChange={(e) => {
                     if(e.target.value && !/^\d*$/g.test(e.target.value)) return;
                     self.handleStateChange(e, "test", "yearOfPassing")
                   }}/>
@@ -1484,7 +1494,7 @@ class Employee extends Component {
               </div>
               <div className="row">
                 <div className="col-md-6 col-xs-12">
-                  <TextField floatingLabelText={translate("employee.TechnicalQualification.fields.remarks")} value={subObject.test.remarks} onChange={(e) => {
+                  <TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} floatingLabelText={translate("employee.TechnicalQualification.fields.remarks")} value={subObject.test.remarks} onChange={(e) => {
                     self.handleStateChange(e, "test", "remarks")
                   }}/>
                 </div>
@@ -1925,7 +1935,7 @@ class Employee extends Component {
                                 <label>{Employee.user ? Employee.user.name : "-"}</label></span>
                             )
                          :
-                            <TextField floatingLabelText={translate("employee.Employee.fields.User.name")+ "*"} errorText={fieldErrors["user"] && fieldErrors["user"]["name"]} value={Employee.user ? Employee.user.name : ""} onChange={(e) => {
+                            <TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} floatingLabelText={<span>{translate("employee.Employee.fields.User.name")}<span style={{"color": "#FF0000"}}> *</span></span>} errorText={fieldErrors["user"] && fieldErrors["user"]["name"]} value={Employee.user ? Employee.user.name : ""} onChange={(e) => {
                                 handleChangeNextLevel(e, "user", "name", true, '')
                             }}/>
                         }
@@ -1937,7 +1947,7 @@ class Employee extends Component {
                                 <label>{Employee.code || "-"}</label></span>
                             )
                          :
-                            <TextField floatingLabelText={translate("employee.Employee.fields.code")+ "*"} errorText={fieldErrors["code"]} value={Employee.code} onChange={(e) => {
+                            <TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} floatingLabelText={<span>{translate("employee.Employee.fields.code")}<span style={{"color": "#FF0000"}}> *</span></span>} errorText={fieldErrors["code"]} value={Employee.code} onChange={(e) => {
                       		    handleChange(e, "code", true, '')
                       	    }} disabled={self.state.screenType == 'update' || self.state.autoCode}/>
                         }
@@ -1951,7 +1961,7 @@ class Employee extends Component {
                          :
 
                             <div ref="myField">
-                          	<SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.employeeType") + " *"} errorText={fieldErrors["employeeType"]} value={Employee.employeeType} onChange={(event, key, value) => {
+                          	<SelectField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={<span>{translate("employee.Employee.fields.employeeType")}<span style={{"color": "#FF0000"}}> *</span></span>} errorText={fieldErrors["employeeType"]} value={Employee.employeeType} onChange={(event, key, value) => {
                           		 handleChange({target:{value:value}}, "employeeType", true, '')
                           	}}>
                                 {
@@ -1971,7 +1981,7 @@ class Employee extends Component {
                             )
                          :
 
-                      	<SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.employeeStatus")+" *"} errorText={fieldErrors["employeeStatus"]} value={Employee.employeeStatus} onChange={(event, key, value) => {
+                      	<SelectField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={<span>{translate("employee.Employee.fields.employeeStatus")}<span style={{"color": "#FF0000"}}> *</span></span>} errorText={fieldErrors["employeeStatus"]} value={Employee.employeeStatus} onChange={(event, key, value) => {
                       		handleChange({target:{value:value}}, "employeeStatus", true, '')
                       	}}>
                             {
@@ -1993,7 +2003,7 @@ class Employee extends Component {
                             )
                          :
 
-                      	<SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.group")} errorText={fieldErrors["group"]} value={Employee.group} onChange={(event, key, value) => {
+                      	<SelectField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.group")} errorText={fieldErrors["group"]} value={Employee.group} onChange={(event, key, value) => {
                       		handleChange({target:{value:value}}, "group", false, '')
                       	}}>
                             {
@@ -2012,7 +2022,7 @@ class Employee extends Component {
                             )
                          :
 
-                         <TextField hintText="21/12/1993" floatingLabelText={translate("employee.Employee.fields.dateOfBirth") + " *"} errorText={fieldErrors["user"] && fieldErrors["user"]["dob"]} value={Employee.user ? Employee.user.dob : ""} onChange={(e) => {
+                         <TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} hintText="21/12/1993" floatingLabelText={<span>{translate("employee.Employee.fields.dateOfBirth")}<span style={{"color": "#FF0000"}}> *</span></span>} errorText={fieldErrors["user"] && fieldErrors["user"]["dob"]} value={Employee.user ? Employee.user.dob : ""} onChange={(e) => {
                             handleChangeNextLevel(e, "user", "dob", true, datePat)
                         }}/>
                       	
@@ -2025,7 +2035,7 @@ class Employee extends Component {
                                 <label>{Employee.user ? Employee.user.gender : "-"}</label></span>
                             )
                          :
-                            <SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.User.gender") + " *"} errorText={fieldErrors["user"] && fieldErrors["user"]["gender"]} value={Employee.user ? Employee.user.gender : ""} onChange={(event, key, value) => {
+                            <SelectField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={<span>{translate("employee.Employee.fields.User.gender")}<span style={{"color": "#FF0000"}}> *</span></span>} errorText={fieldErrors["user"] && fieldErrors["user"]["gender"]} value={Employee.user ? Employee.user.gender : ""} onChange={(event, key, value) => {
                       		handleChangeNextLevel({target:{value:value}}, "user", "gender", true, '')
                       	}}>
                             {
@@ -2043,7 +2053,7 @@ class Employee extends Component {
                                 <label>{Employee.maritalStatus || "-"}</label></span>
                             )
                          :
-                            <SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.maritalStatus") +"*"} errorText={fieldErrors["maritalStatus"]} value={Employee.maritalStatus} onChange={(event, key, value) => {
+                            <SelectField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={<span>{translate("employee.Employee.fields.maritalStatus")}<span style={{"color": "#FF0000"}}> *</span></span>} errorText={fieldErrors["maritalStatus"]} value={Employee.maritalStatus} onChange={(event, key, value) => {
                       		handleChange({target:{value:value}}, "maritalStatus", true, '')
                       	}}>
                             {
@@ -2065,7 +2075,7 @@ class Employee extends Component {
                             )
                          :
 
-                        <TextField floatingLabelText={translate("employee.Employee.fields.User.userName")+" *"} errorText={fieldErrors["user"] && fieldErrors["user"]["userName"]} errorText={fieldErrors["user.userName"]} value={Employee.user ? Employee.user.userName : ""} onChange={(e) => {
+                        <TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} floatingLabelText={<span>{translate("employee.Employee.fields.User.userName")}<span style={{"color": "#FF0000"}}> *</span></span>} errorText={fieldErrors["user"] && fieldErrors["user"]["userName"]} errorText={fieldErrors["user.userName"]} value={Employee.user ? Employee.user.userName : ""} onChange={(e) => {
                       		handleChangeNextLevel(e, "user", "userName", true, '')
                       	}} disabled={self.state.screenType == 'update' || self.state.autoUName}/>
                       }
@@ -2078,7 +2088,7 @@ class Employee extends Component {
                             )
                          :
 
-                        <span><label>{translate("employee.fields.isUserActive")} *</label>
+                        <span><label style={{"fontSize": "15px"}}>{translate("employee.fields.isUserActive") }? <span style={{"color": "#FF0000"}}> *</span></label>
                       	<RadioButtonGroup name="isActive" valueSelected={Employee.user ? Employee.user.active : ''} onChange={(e, value) => {
                       		handleChangeNextLevel({target:{value:value}}, 'user', 'active', true, '')
                       	}}>
@@ -2101,7 +2111,7 @@ class Employee extends Component {
                             )
                          :
 
-                      	<TextField maxLength="10" floatingLabelText={translate("employee.Employee.fields.User.mobileNumber")+" *"}  errorText={fieldErrors["user"] && fieldErrors["user"]["mobileNumber"]} value={Employee.user ? Employee.user.mobileNumber : ""} onChange={(e) => {
+                      	<TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} maxLength="10" floatingLabelText={<span>{translate("employee.Employee.fields.User.mobileNumber")}<span style={{"color": "#FF0000"}}> *</span></span>}  errorText={fieldErrors["user"] && fieldErrors["user"]["mobileNumber"]} value={Employee.user ? Employee.user.mobileNumber : ""} onChange={(e) => {
                       		if(e.target.value && !/^\d*$/g.test(e.target.value)) return;
                             handleChangeNextLevel(e, 'user', 'mobileNumber', true, /^\d{10}$/)
                       	}}/>
@@ -2115,7 +2125,7 @@ class Employee extends Component {
                             )
                          :
 
-                      	<TextField floatingLabelText={translate("employee.Employee.fields.email")} errorText={fieldErrors["user"] && fieldErrors["user"]["emailId"]} type="email" value={Employee.user ? Employee.user.emailId : ""} onChange={(e) => {
+                      	<TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} floatingLabelText={translate("employee.Employee.fields.email")} errorText={fieldErrors["user"] && fieldErrors["user"]["emailId"]} type="email" value={Employee.user ? Employee.user.emailId : ""} onChange={(e) => {
                       		handleChangeNextLevel(e, 'user', 'emailId', false, /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
                       	}}/>
                       }
@@ -2131,7 +2141,7 @@ class Employee extends Component {
                             )
                          :
 
-                      	<TextField floatingLabelText={translate("employee.Employee.fields.fatherSpouseName")} errorText={fieldErrors["user"] && fieldErrors["user"]["fatherOrHusbandName"]} value={Employee.user ? Employee.user.fatherOrHusbandName : ""} onChange={(e) => {
+                      	<TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} floatingLabelText={translate("employee.Employee.fields.fatherSpouseName")} errorText={fieldErrors["user"] && fieldErrors["user"]["fatherOrHusbandName"]} value={Employee.user ? Employee.user.fatherOrHusbandName : ""} onChange={(e) => {
                       		handleChangeNextLevel(e, 'user', 'fatherOrHusbandName', false, '')
                       	}}/>
                       }
@@ -2144,7 +2154,7 @@ class Employee extends Component {
                             )
                          :
 
-                      	<TextField floatingLabelText={translate("employee.Employee.fields.User.birth")} errorText={fieldErrors["placeOfBirth"]} value={Employee.placeOfBirth} onChange={(e) => {
+                      	<TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} floatingLabelText={translate("employee.Employee.fields.User.birth")} errorText={fieldErrors["placeOfBirth"]} value={Employee.placeOfBirth} onChange={(e) => {
                       		handleChange(e, 'placeOfBirth', false, '')
                       	}}/>
                       }
@@ -2157,7 +2167,7 @@ class Employee extends Component {
                             )
                          :
 
-                      	<SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.User.bloodGroup")} errorText={fieldErrors["user"] && fieldErrors["user"]["bloodGroup"]} value={Employee.user ? Employee.user.bloodGroup : ""} onChange={(event, key, value) => {
+                      	<SelectField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.User.bloodGroup")} errorText={fieldErrors["user"] && fieldErrors["user"]["bloodGroup"]} value={Employee.user ? Employee.user.bloodGroup : ""} onChange={(event, key, value) => {
                       		handleChangeNextLevel({target:{value:value}}, "user", "bloodGroup", false, '')
                       	}}>
                             {
@@ -2176,7 +2186,7 @@ class Employee extends Component {
                             )
                          :
 
-                      	<SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.motherTongue")} errorText={fieldErrors["motherTongue"]} value={Employee.motherTongue} onChange={(event, key, value) => {
+                      	<SelectField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.motherTongue")} errorText={fieldErrors["motherTongue"]} value={Employee.motherTongue} onChange={(event, key, value) => {
                       		handleChange({target:{value:value}}, 'motherTongue', false, '')
                       	}}>
                             {
@@ -2198,7 +2208,7 @@ class Employee extends Component {
                             )
                          :
 
-                      	<SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.religion")} errorText={fieldErrors["religion"]} value={Employee.religion} onChange={(event, key, value) => {
+                      	<SelectField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.religion")} errorText={fieldErrors["religion"]} value={Employee.religion} onChange={(event, key, value) => {
 							handleChange({target:{value:value}}, 'religion', false, '')
                       	}}>
                             {
@@ -2217,7 +2227,7 @@ class Employee extends Component {
                             )
                          :
 
-                      	<SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.community")} errorText={fieldErrors["community"]} value={Employee.community} onChange={(event, key, value) => {
+                      	<SelectField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.community")} errorText={fieldErrors["community"]} value={Employee.community} onChange={(event, key, value) => {
                       		handleChange({target:{value:value}}, 'community', false, '')
                       	}}>
                             {
@@ -2236,7 +2246,7 @@ class Employee extends Component {
                             )
                          :
 
-                      	<SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.category")} errorText={fieldErrors["category"]} value={Employee.category} onChange={(event, key, value) => {
+                      	<SelectField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.category")} errorText={fieldErrors["category"]} value={Employee.category} onChange={(event, key, value) => {
                       		handleChange({target:{value:value}}, 'category', false, '')
                       	}}>
                             {
@@ -2255,7 +2265,7 @@ class Employee extends Component {
                             )
                          :
 
-                        <span><label>{translate("employee.Employee.fields.physicallyDisabled")+"?"}</label>
+                        <span><label style={{"fontSize": "15px"}}>{translate("employee.Employee.fields.physicallyDisabled")+"?"}</label>
                       	<RadioButtonGroup name={translate("employee.Employee.fields.physicallyDisabled")} valueSelected={Employee.physicallyDisabled} onChange={(e, value) => {
                       		handleChange({target:{value:value}}, 'physicallyDisabled', false, '')
                       	}}>
@@ -2281,7 +2291,7 @@ class Employee extends Component {
                             )
                          :
 
-                        <span><label>{translate("employee.Employee.fields.medicalReportProduced")+"?"}</label>
+                        <span><label style={{"fontSize": "15px"}}>{translate("employee.Employee.fields.medicalReportProduced")+"?"}</label>
                       	<RadioButtonGroup name={translate("employee.Employee.fields.medicalReportProduced")} valueSelected={Employee.medicalReportProduced} onChange={(e, value) => {
                       		handleChange({target:{value:value}}, 'medicalReportProduced', true, '')
                       	}}>
@@ -2304,7 +2314,7 @@ class Employee extends Component {
                             )
                          :
 
-                      	<TextField floatingLabelText={translate("employee.Employee.fields.identification")} errorText={fieldErrors["user"] && fieldErrors["user"]["identificationMark"]} value={Employee.user ? Employee.user.identificationMark : ""} onChange={(e) => {
+                      	<TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} floatingLabelText={translate("employee.Employee.fields.identification")} errorText={fieldErrors["user"] && fieldErrors["user"]["identificationMark"]} value={Employee.user ? Employee.user.identificationMark : ""} onChange={(e) => {
                       		handleChangeNextLevel(e, 'user', 'identificationMark', false, '')
                       	}}/>
                       }
@@ -2317,7 +2327,7 @@ class Employee extends Component {
                             )
                          :
 
-                      	<TextField floatingLabelText={translate("employee.Employee.fields.pan")} hintText="DACPZ2154D" errorText={fieldErrors["user"] && fieldErrors["user"]["pan"]} value={Employee.user ? Employee.user.pan : ""} onChange={(e) => {
+                      	<TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} floatingLabelText={translate("employee.Employee.fields.pan")} hintText="DACPZ2154D" errorText={fieldErrors["user"] && fieldErrors["user"]["pan"]} value={Employee.user ? Employee.user.pan : ""} onChange={(e) => {
                       		handleChangeNextLevel(e, 'user', 'pan', false, /^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$/)
                       	}}/>
                       }
@@ -2330,7 +2340,7 @@ class Employee extends Component {
                             )
                          :
 
-                      	<TextField floatingLabelText={translate("employee.Employee.fields.passportNo")} errorText={fieldErrors["passportNo"]} value={Employee.passportNo} onChange={(e) => {
+                      	<TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} floatingLabelText={translate("employee.Employee.fields.passportNo")} errorText={fieldErrors["passportNo"]} value={Employee.passportNo} onChange={(e) => {
                       		handleChange(e, 'passportNo', false, '')
                       	}}/>
                       }
@@ -2346,7 +2356,7 @@ class Employee extends Component {
                             )
                          :
 
-                      	<TextField floatingLabelText={translate("employee.Employee.fields.gpfNo")} errorText={fieldErrors["gpfNo"]} value={Employee.gpfNo} onChange={(e) => {
+                      	<TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} floatingLabelText={translate("employee.Employee.fields.gpfNo")} errorText={fieldErrors["gpfNo"]} value={Employee.gpfNo} onChange={(e) => {
                       		handleChange(e, 'gpfNo', false, '')
                       	}}/>
                       }
@@ -2359,7 +2369,7 @@ class Employee extends Component {
                             )
                          :
 
-                      	<TextField maxLength="12" floatingLabelText={translate("employee.Employee.fields.User.aadhaarNumber")} errorText={fieldErrors["user"] && fieldErrors["user"]["aadhaarNumber"]} value={Employee.user ? Employee.user.aadhaarNumber : ""} onChange={(e) => {
+                      	<TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} maxLength="12" floatingLabelText={translate("employee.Employee.fields.User.aadhaarNumber")} errorText={fieldErrors["user"] && fieldErrors["user"]["aadhaarNumber"]} value={Employee.user ? Employee.user.aadhaarNumber : ""} onChange={(e) => {
                       		if(e.target.value && !/^\d*$/g.test(e.target.value)) return;
                             handleChangeNextLevel(e, 'user', 'aadhaarNumber', false, /^\d{12}$/)
                       	}}/>
@@ -2373,7 +2383,7 @@ class Employee extends Component {
                             )
                          :
 
-                      	<SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.bank")} errorText={fieldErrors["bank"]} value={Employee.bank} onChange={(event, key, value) => {
+                      	<SelectField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.bank")} errorText={fieldErrors["bank"]} value={Employee.bank} onChange={(event, key, value) => {
                       		self.loadBranches(value)
                           handleChange({target:{value:value}}, 'bank', false, '')
                       	}}>
@@ -2393,7 +2403,7 @@ class Employee extends Component {
                             )
                          :
 
-                      	<SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.bankBranch")} errorText={fieldErrors["bankBranch"]} value={Employee.bankBranch} onChange={(event, key, value) => {
+                      	<SelectField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.bankBranch")} errorText={fieldErrors["bankBranch"]} value={Employee.bankBranch} onChange={(event, key, value) => {
                       		handleChange({target:{value:value}}, 'bankBranch', false, '')
                       	}}>
                             {
@@ -2415,7 +2425,7 @@ class Employee extends Component {
                             )
                          :
 
-                      	<TextField floatingLabelText={translate("employee.Employee.fields.bankAccount")} errorText={fieldErrors["bankAccount"]} value={Employee.bankAccount} onChange={(e) => {
+                      	<TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} floatingLabelText={translate("employee.Employee.fields.bankAccount")} errorText={fieldErrors["bankAccount"]} value={Employee.bankAccount} onChange={(e) => {
                       		if(e.target.value && !/^\d*$/g.test(e.target.value)) return;
                             handleChange(e, 'bankAccount', false, '')
                       	}}/>
@@ -2429,7 +2439,7 @@ class Employee extends Component {
                             )
                          :
 
-                      	<TextField maxLength="10" floatingLabelText={translate("employee.Employee.fields.User.mobileNumber")} errorText={fieldErrors["user"] && fieldErrors["user"]["altContactNumber"]} value={Employee.user ? Employee.user.altContactNumber : ""} onChange={(e) => {
+                      	<TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} maxLength="10" floatingLabelText={translate("employee.Employee.fields.User.mobileNumber")} errorText={fieldErrors["user"] && fieldErrors["user"]["altContactNumber"]} value={Employee.user ? Employee.user.altContactNumber : ""} onChange={(e) => {
                       		if(e.target.value && !/^\d*$/g.test(e.target.value)) return;
                             handleChangeNextLevel(e, 'user', 'altContactNumber', false, /^\d{10}$/)
                       	}}/>
@@ -2448,7 +2458,7 @@ class Employee extends Component {
                             )
                          :
 
-                      	<TextField floatingLabelText={translate("employee.Employee.fields.permanentAddress")} errorText={fieldErrors["user"] && fieldErrors["user"]["permanentAddress"]} value={Employee.user ? Employee.user.permanentAddress : ""} onChange={(e) => {
+                      	<TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} floatingLabelText={translate("employee.Employee.fields.permanentAddress")} errorText={fieldErrors["user"] && fieldErrors["user"]["permanentAddress"]} value={Employee.user ? Employee.user.permanentAddress : ""} onChange={(e) => {
                       		handleChangeNextLevel(e, 'user', 'permanentAddress', false, '')
                       	}}/>
                       }
@@ -2461,7 +2471,7 @@ class Employee extends Component {
                             )
                          :
 
-                      	<TextField floatingLabelText={translate("employee.Employee.fields.city")} errorText={fieldErrors["user"] && fieldErrors["user"]["permanentCity"]} value={Employee.user ? Employee.user.permanentCity : ""} onChange={(e) => {
+                      	<TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} floatingLabelText={translate("employee.Employee.fields.city")} errorText={fieldErrors["user"] && fieldErrors["user"]["permanentCity"]} value={Employee.user ? Employee.user.permanentCity : ""} onChange={(e) => {
                       		handleChangeNextLevel(e, 'user', 'permanentCity', false, '')
                       	}}/>
                       }
@@ -2474,7 +2484,7 @@ class Employee extends Component {
                             )
                          :
 
-                      	<TextField floatingLabelText={translate("employee.Employee.fields.parmanentPinNumber")} errorText={fieldErrors["user"] && fieldErrors["user"]["permanentPinCode"]} value={Employee.user ? Employee.user.permanentPinCode : ""} onChange={(e) => {
+                      	<TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} floatingLabelText={translate("employee.Employee.fields.parmanentPinNumber")} errorText={fieldErrors["user"] && fieldErrors["user"]["permanentPinCode"]} value={Employee.user ? Employee.user.permanentPinCode : ""} onChange={(e) => {
                       		if(e.target.value && !/^\d*$/g.test(e.target.value)) return;
                             handleChangeNextLevel(e, 'user', 'permanentPinCode', false, '')
                       	}}/>
@@ -2492,7 +2502,7 @@ class Employee extends Component {
                             )
                          :
 
-                      	<TextField floatingLabelText={translate("employee.Employee.fields.correspondenceAddress")} errorText={fieldErrors["user"] && fieldErrors["user"]["correspondenceAddress"]} value={Employee.user ? Employee.user.correspondenceAddress : ""} onChange={(e) => {
+                      	<TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} floatingLabelText={translate("employee.Employee.fields.correspondenceAddress")} errorText={fieldErrors["user"] && fieldErrors["user"]["correspondenceAddress"]} value={Employee.user ? Employee.user.correspondenceAddress : ""} onChange={(e) => {
                       		handleChangeNextLevel(e, 'user', 'correspondenceAddress', false, '')
                       	}}/>
                       }
@@ -2505,7 +2515,7 @@ class Employee extends Component {
                             )
                          :
 
-                      	<TextField floatingLabelText={translate("employee.Employee.fields.city")} errorText={fieldErrors["user.correspondenceCity"]} value={Employee.user ? Employee.user.correspondenceCity : ""} onChange={(e) => {
+                      	<TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} floatingLabelText={translate("employee.Employee.fields.city")} errorText={fieldErrors["user.correspondenceCity"]} value={Employee.user ? Employee.user.correspondenceCity : ""} onChange={(e) => {
                       		handleChangeNextLevel(e, 'user', 'correspondenceCity', false, '')
                       	}}/>
                       }
@@ -2518,7 +2528,7 @@ class Employee extends Component {
                             )
                          :
 
-                      	<TextField floatingLabelText={translate("employee.Employee.fields.correspondencePinNumber")} errorText={fieldErrors["user"] && fieldErrors["user"]["correspondencePinCode"]} value={Employee.user ? Employee.user.correspondencePinCode : ""} onChange={(e) => {
+                      	<TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} floatingLabelText={translate("employee.Employee.fields.correspondencePinNumber")} errorText={fieldErrors["user"] && fieldErrors["user"]["correspondencePinCode"]} value={Employee.user ? Employee.user.correspondencePinCode : ""} onChange={(e) => {
                       		if(e.target.value && !/^\d*$/g.test(e.target.value)) return;
                             handleChangeNextLevel(e, 'user', 'correspondencePinCode', false, '')
                       	}}/>
@@ -2536,7 +2546,7 @@ class Employee extends Component {
                             )
                          :
 
-                      	<SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.languagesKnown")} errorText={fieldErrors["languagesKnown"]} multiple={true} value={Employee.languagesKnown} onChange={(event, key, value) => {
+                      	<SelectField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.languagesKnown")} errorText={fieldErrors["languagesKnown"]} multiple={true} value={Employee.languagesKnown} onChange={(event, key, value) => {
                       		handleChange({target:{value:value}}, 'languagesKnown', false, '')
                       	}}>
                             {
@@ -2555,7 +2565,7 @@ class Employee extends Component {
                             )
                          :
 
-                      	<SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.recruitmentMode")} errorText={fieldErrors["recruitmentMode"]} value={Employee.recruitmentMode} onChange={(event, key, value) => {
+                      	<SelectField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.recruitmentMode")} errorText={fieldErrors["recruitmentMode"]} value={Employee.recruitmentMode} onChange={(event, key, value) => {
                       		handleChange({target:{value:value}}, 'recruitmentMode', false, '')
                       	}}>
                             {
@@ -2574,7 +2584,7 @@ class Employee extends Component {
                             )
                          :
 
-                      	<SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.recruitmentType")} errorText={fieldErrors["recruitmentType"]} value={Employee.recruitmentType} onChange={(event, key, value) => {
+                      	<SelectField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.recruitmentType")} errorText={fieldErrors["recruitmentType"]} value={Employee.recruitmentType} onChange={(event, key, value) => {
                       		handleChange({target:{value:value}}, 'recruitmentType', false, '')
                       	}}>
                             {
@@ -2593,7 +2603,7 @@ class Employee extends Component {
                             )
                          :
 
-                      	<SelectField dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.recruitmentQuota")} errorText={fieldErrors["recruitmentQuota"]} value={Employee.recruitmentQuota} onChange={(event, key, value) => {
+                      	<SelectField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelText={translate("employee.Employee.fields.recruitmentQuota")} errorText={fieldErrors["recruitmentQuota"]} value={Employee.recruitmentQuota} onChange={(event, key, value) => {
                       		handleChange({target:{value:value}}, 'recruitmentQuota', false, '')
                       	}}>
                             {
@@ -2615,7 +2625,7 @@ class Employee extends Component {
                             )
                          :
 
-                      	 <TextField hintText="21/12/1993" floatingLabelText={translate("employee.Employee.fields.dateOfAppointment")+ "*"} errorText={fieldErrors["dateOfAppointment"]} value={Employee.dateOfAppointment} onChange={(e) => {
+                      	 <TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} hintText="21/12/1993" floatingLabelText={<span>{translate("employee.Employee.fields.dateOfAppointment")}<span style={{"color": "#FF0000"}}> *</span></span>} errorText={fieldErrors["dateOfAppointment"]} value={Employee.dateOfAppointment} onChange={(e) => {
                             handleChange(e, 'dateOfAppointment', true, datePat)
                         }}/>
                       }
@@ -2628,7 +2638,7 @@ class Employee extends Component {
                             )
                          :
 
-                        <TextField hintText="21/12/1993" floatingLabelText={translate("employee.Employee.fields.dateOfJoining")} errorText={fieldErrors["dateOfJoining"]} value={Employee.dateOfJoining} onChange={(e) => {
+                        <TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} hintText="21/12/1993" floatingLabelText={translate("employee.Employee.fields.dateOfJoining")} errorText={fieldErrors["dateOfJoining"]} value={Employee.dateOfJoining} onChange={(e) => {
                             handleChange(e, 'dateOfJoining', false, datePat)
                         }}/>
                       }
@@ -2641,7 +2651,7 @@ class Employee extends Component {
                             )
                          :
 
-                      	<TextField type="number" floatingLabelText={translate("employee.Employee.fields.retirementAge")} errorText={fieldErrors["retirementAge"]} value={Employee.retirementAge} onChange={(e) => {
+                      	<TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} type="number" floatingLabelText={translate("employee.Employee.fields.retirementAge")} errorText={fieldErrors["retirementAge"]} value={Employee.retirementAge} onChange={(e) => {
                       		handleChange(e, 'retirementAge', false, '')
                       	}}/>
                       }
@@ -2654,7 +2664,7 @@ class Employee extends Component {
                             )
                          :
 
-                        <TextField hintText="21/12/1993" floatingLabelText={translate("employee.Employee.fields.dateOfRetirement")} errorText={fieldErrors["dateOfRetirement"]} value={Employee.dateOfRetirement} onChange={(e) => {
+                        <TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} hintText="21/12/1993" floatingLabelText={translate("employee.Employee.fields.dateOfRetirement")} errorText={fieldErrors["dateOfRetirement"]} value={Employee.dateOfRetirement} onChange={(e) => {
                             handleChange(e, 'dateOfRetirement', false, datePat)
                         }}/>
                       }
@@ -2670,7 +2680,7 @@ class Employee extends Component {
                             )
                          :
 
-                        <TextField hintText="21/12/1993" floatingLabelText={translate("employee.Employee.fields.dateOfTermination")} errorText={fieldErrors["dateOfTermination"]} value={Employee.dateOfTermination} onChange={(e) => {
+                        <TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} hintText="21/12/1993" floatingLabelText={translate("employee.Employee.fields.dateOfTermination")} errorText={fieldErrors["dateOfTermination"]} value={Employee.dateOfTermination} onChange={(e) => {
                             handleChange(e, 'dateOfTermination', false, datePat)
                         }}/>
                       }
@@ -2683,7 +2693,7 @@ class Employee extends Component {
                             )
                          :
 
-                        <TextField hintText="21/12/1993" floatingLabelText={translate("employee.Employee.fields.dateOfResignation")} errorText={fieldErrors["dateOfResignation"]} value={Employee.dateOfResignation} onChange={(e) => {
+                        <TextField floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelFixed={true} hintText="21/12/1993" floatingLabelText={translate("employee.Employee.fields.dateOfResignation")} errorText={fieldErrors["dateOfResignation"]} value={Employee.dateOfResignation} onChange={(e) => {
                             handleChange(e, 'dateOfResignation', false, datePat)
                         }}/>
                       }
@@ -3268,8 +3278,8 @@ const mapDispatchToProps = dispatch => ({
 
     setForm: (data, isUpdate, codeAuto, unameAuto) => {
         var requiredList = ['user.name', 'code', 'employeeType', 'dateOfAppointment', 'employeeStatus', 'maritalStatus', 'user.userName', 'user.mobileNumber', 'user.active', 'user.dob', 'user.gender'];
-        if(codeAuto) requiredList.splice(1, 1);
-        if(unameAuto) requiredList.splice(6, 1);
+        if(codeAuto) requiredList.splice(requiredList.indexOf('code'), 1);
+        if(unameAuto) requiredList.splice(requiredList.indexOf('user.userName'), 1);
 
         dispatch({
             type: "SET_FORM",

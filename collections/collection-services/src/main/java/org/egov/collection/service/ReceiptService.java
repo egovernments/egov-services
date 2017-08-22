@@ -51,15 +51,15 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.egov.collection.config.ApplicationProperties;
 import org.egov.collection.config.CollectionServiceConstants;
 import org.egov.collection.exception.CustomException;
 import org.egov.collection.model.AuditDetails;
 import org.egov.collection.model.BillingServiceRequestInfo;
 import org.egov.collection.model.BillingServiceRequestWrapper;
 import org.egov.collection.model.Instrument;
-//TODO:Once the Collection Configuration is set up this has to be reverted back	
-/*import org.egov.collection.model.PositionSearchCriteria;
-import org.egov.collection.model.PositionSearchCriteriaWrapper; */
+import org.egov.collection.model.PositionSearchCriteria;
+import org.egov.collection.model.PositionSearchCriteriaWrapper;
 import org.egov.collection.model.ReceiptCommonModel;
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.model.TransactionType;
@@ -78,11 +78,13 @@ import org.egov.collection.web.contract.BillResponse;
 import org.egov.collection.web.contract.BusinessDetailsRequestInfo;
 import org.egov.collection.web.contract.BusinessDetailsResponse;
 import org.egov.collection.web.contract.ChartOfAccount;
+import org.egov.collection.web.contract.CollectionConfigGetRequest;
 import org.egov.collection.web.contract.Purpose;
 import org.egov.collection.web.contract.Receipt;
 import org.egov.collection.web.contract.ReceiptReq;
 import org.egov.collection.web.contract.WorkflowDetailsRequest;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.Role;
 import org.egov.common.contract.request.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,6 +99,9 @@ public class ReceiptService {
 	public static final Logger LOGGER = LoggerFactory
 			.getLogger(ReceiptService.class);
 
+	@Autowired
+	private ApplicationProperties applicationProperties;
+	
 	@Autowired
 	private ReceiptRepository receiptRepository;
 
@@ -118,9 +123,11 @@ public class ReceiptService {
 	@Autowired
 	private IdGenRepository idGenRepository;
 	
-	//TODO:Once the Collection Configuration is set up this has to be reverted back		
-/*	@Autowired
-	private WorkflowService workflowService; */
+	@Autowired
+	private WorkflowService workflowService;
+	
+	@Autowired
+	private CollectionConfigService collectionConfigService;
 
 	public ReceiptCommonModel getReceipts(
 			ReceiptSearchCriteria receiptSearchCriteria, RequestInfo requestInfo) throws ParseException {
@@ -253,7 +260,8 @@ public class ReceiptService {
 			Instrument instrument) {
 		LOGGER.info("Persisting recieptdetail");
 		Receipt receipt = new Receipt();
-		AuditDetails auditDetail = getAuditDetails(requestInfo.getUserInfo());
+        User user = requestInfo.getUserInfo();
+		AuditDetails auditDetail = getAuditDetails(user);
         String transactionId = idGenRepository.generateTransactionNumber(requestInfo,tenantId);
 		for (BillDetail billDetail : bill.getBillDetails()) {
 			if(billDetail.getAmountPaid().longValueExact() > 0){
@@ -282,18 +290,33 @@ public class ReceiptService {
 				
 				//TODO: Revert back once the workflow is enabled		
 				billDetail.setStatus(ReceiptStatus.APPROVED.toString());
-				
-				billDetail.setReceiptDate(new Date().getTime());
+
+				String receiptNumber = idGenRepository.generateReceiptNumber(requestInfo,
+						tenantId);
+
+                CollectionConfigGetRequest collectionConfigRequest = new CollectionConfigGetRequest();
+                collectionConfigRequest.setTenantId(tenantId);
+                collectionConfigRequest.setName(CollectionServiceConstants.MANUAL_RECEIPT_DETAILS_REQUIRED_CONFIG_KEY);
+                List<Role> roleList = requestInfo.getUserInfo().getRoles();
+                Map<String, List<String>> manualReceiptConfiguration = collectionConfigService.getCollectionConfiguration(collectionConfigRequest);
+                if(!manualReceiptConfiguration.isEmpty() && manualReceiptConfiguration.get(CollectionServiceConstants.MANUAL_RECEIPT_DETAILS_REQUIRED_CONFIG_KEY).get(0).equalsIgnoreCase("Yes")
+                        && roleList.stream().anyMatch(role -> CollectionServiceConstants.COLLECTION_LEGACY_RECEIPT_CREATOR_ROLE.contains(role.getName()))  &&  StringUtils.isNotEmpty(billDetail.getManualReceiptNumber()) && billDetail.getReceiptDate() != null) {
+                    billDetail.setReceiptDate(billDetail.getReceiptDate());
+                    billDetail.setManualReceiptNumber(billDetail.getManualReceiptNumber());
+                } else {
+                    billDetail.setReceiptDate(new Date().getTime());
+                    billDetail.setManualReceiptNumber("");
+                }
+
 				try{
-					validateReceiptNumber(idGenRepository.generateReceiptNumber(requestInfo,
-							tenantId), tenantId, requestInfo);
+					validateReceiptNumber(receiptNumber, tenantId, requestInfo);
 				}catch(CustomException e){
 					LOGGER.error("Duplicate Receipt: ", e);
+                    e.printStackTrace();
 					throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
 							CollectionServiceConstants.DUPLICATE_RCPT_EXCEPTION_MSG, CollectionServiceConstants.DUPLICATE_RCPT_EXCEPTION_DESC);
 				}
-				billDetail.setReceiptNumber(idGenRepository.generateReceiptNumber(requestInfo,
-						tenantId));
+				billDetail.setReceiptNumber(receiptNumber);
 				Map<String, Object> parametersMap;
 				BusinessDetailsResponse businessDetailsRes = getBusinessDetails(
 						billDetail.getBusinessService(), requestInfo, tenantId);
@@ -325,8 +348,20 @@ public class ReceiptService {
 						LOGGER.error("Persisting receipt FAILED! ", e);
 						return receipt;
 					}
-				//TODO:Once the Collection Configuration is set up this has to be reverted back	
-				//	startWokflow(requestInfo, tenantId, receiptHeaderId);
+					CollectionConfigGetRequest collectionConfigGetRequest = new CollectionConfigGetRequest();
+					List<Long> congigKeyIds = new ArrayList<>();
+					congigKeyIds.add(Long.valueOf(applicationProperties.getRcptwflowConfigKey()));
+					collectionConfigGetRequest.setId(congigKeyIds);
+					collectionConfigGetRequest.setTenantId(tenantId);
+					
+					Map<String, List<String>> collectionConfiguration = collectionConfigService.getCollectionConfiguration(collectionConfigGetRequest);
+					if(collectionConfiguration.get(CollectionServiceConstants.RECEIPT_PREAPPROVED_OR_APPROVED_CONFIG_KEY)
+							.get(0).equals(CollectionServiceConstants.PREAPPROVED_CONFIG_VALUE)){
+						LOGGER.info("Receipt is in preapproved state, Wokflow is being started.");
+						startWokflow(requestInfo, tenantId, receiptHeaderId);
+					}
+					LOGGER.info("Receipt is in approved state, No Workflow.");
+
 				}else{
 					throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
 							CollectionServiceConstants.BUSINESSDETAILS_EXCEPTION_MSG, CollectionServiceConstants.BUSINESSDETAILS_EXCEPTION_DESC);
@@ -391,6 +426,7 @@ public class ReceiptService {
 		parametersMap.put("location", null);
 		parametersMap.put("isreconciled", false);
 		parametersMap.put("status", billDetail.getStatus());
+        parametersMap.put("manualreceiptnumber",billDetail.getManualReceiptNumber());
 		return parametersMap;
 	}
 
@@ -567,7 +603,7 @@ public class ReceiptService {
 
 	//TODO:Once the Collection Configuration is set up this has to be reverted back	
 	
-/*	private void startWokflow(RequestInfo requestInfo, String tenantId, Long receiptHeaderId){
+	private void startWokflow(RequestInfo requestInfo, String tenantId, Long receiptHeaderId){
 		LOGGER.info("Internally triggering workflow for receipt: "+receiptHeaderId);
 		
 		WorkflowDetailsRequest workflowDetails = new WorkflowDetailsRequest();
@@ -596,7 +632,7 @@ public class ReceiptService {
 		}catch(Exception e){
 			LOGGER.error("Starting workflow failed: ", e);
 		}	
-	} */
+	}
 	
 	public void validateReceiptNumber(String receiptNumber, String tenantId, RequestInfo requestInfo){
 		

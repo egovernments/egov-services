@@ -162,12 +162,22 @@ specifications = require(`../../../../framework/specs/collection/transaction/col
       let {handleChange}=this.props;
       handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
 
-      if(property == "businessService"){
-        
-          console.log("working");
+      // if(property == "businessService"){
+      //     console.log("working");
+      //
+      // }
 
-      }
-
+// function mandatoryField(jsonPath, value){
+//   if ((jsonPath == "businessService") && ((value != "") || (value != null))){
+//     if((jsonPath=="consumerCode") && ((value == "") || (value == "null"))){
+//       console.log("Hi");
+//        return false; 
+//     }
+//     else {
+//       console.log("Hello");
+//     }
+//   }
+// }
 
 
 

@@ -59,6 +59,12 @@ import lombok.Setter;
 @Getter
 public class PropertiesManager {
 
+	@Value("${kafka.topics.update.fee}")
+	private String updateFeeTopicName;
+	
+	@Value("${kafka.topics.create.fee}")
+	private String createFeeTopicName;
+	
 	@Value("${kafka.topics.create.reissueCertificate}")
 	private String createReissueCertificateTopicName;
 	

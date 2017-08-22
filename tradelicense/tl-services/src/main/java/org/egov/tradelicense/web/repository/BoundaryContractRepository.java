@@ -43,7 +43,7 @@ public class BoundaryContractRepository {
 			boundaryResponse = restTemplate.postForObject(url, requestInfoWrapper, BoundaryResponse.class);
 
 		} catch (Exception e) {
-			log.error(propertiesManger.getEndPointError());
+			log.error(propertiesManger.getLocationEndPointError());
 		}
 
 		if (boundaryResponse != null && boundaryResponse.getBoundarys() != null
@@ -75,7 +75,7 @@ public class BoundaryContractRepository {
 			boundaryResponse = restTemplate.postForObject(url, requestInfoWrapper, BoundaryResponse.class);
 
 		} catch (Exception e) {
-			log.error(propertiesManger.getEndPointError());
+			log.error(propertiesManger.getLocationEndPointError());
 		}
 
 		if (boundaryResponse != null && boundaryResponse.getBoundarys() != null
@@ -107,7 +107,7 @@ public class BoundaryContractRepository {
 			boundaryResponse = restTemplate.postForObject(url, requestInfoWrapper, BoundaryResponse.class);
 
 		} catch (Exception e) {
-			log.error(propertiesManger.getEndPointError());
+			log.error(propertiesManger.getLocationEndPointError());
 		}
 
 		if (boundaryResponse != null && boundaryResponse.getBoundarys() != null
@@ -139,7 +139,7 @@ public class BoundaryContractRepository {
 			boundaryResponse = restTemplate.postForObject(url, requestInfoWrapper, BoundaryResponse.class);
 
 		} catch (Exception e) {
-			log.error(propertiesManger.getEndPointError());
+			log.error(propertiesManger.getLocationEndPointError());
 		}
 
 		if (boundaryResponse != null && boundaryResponse.getBoundarys() != null

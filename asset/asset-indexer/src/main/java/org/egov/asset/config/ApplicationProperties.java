@@ -41,8 +41,10 @@
 
 package org.egov.asset.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 
 import lombok.Getter;
 
@@ -50,88 +52,95 @@ import lombok.Getter;
 @Getter
 public class ApplicationProperties {
 
-	@Value("${kafka.topics.save.asset}")
-	private String createAssetTopicName;
+    @Autowired
+    private Environment environment;
 
-	@Value("${kafka.topics.update.asset}")
-	private String updateAssetTopicName;
+    public String getBootstrapServer() {
+        return environment.getProperty("spring.kafka.bootstrap.servers");
+    }
 
-	@Value("${egov.services.boundary_service.hostname}")
-	private String boundaryServiceHostName;
+    @Value("${kafka.topics.save.asset}")
+    private String createAssetTopicName;
 
-	@Value("${egov.services.boundary_service.searchpath}")
-	private String boundaryServiceSearchPath;
+    @Value("${kafka.topics.update.asset}")
+    private String updateAssetTopicName;
 
-	@Value("${egov.services.asset.indexer.host}")
-	private String indexerHost;
+    @Value("${egov.services.boundary_service.hostname}")
+    private String boundaryServiceHostName;
 
-	@Value("${egov.services.asset.indexer.name}")
-	private String assetIndexName;
-	
-	@Value("${egov.services.disposal.indexer.name}")
-	private String disposalIndexName;
-	
-	@Value("${egov.services.revaluation.indexer.name}")
-	private String revaluationIndexName;
-	
-	@Value("${egov.services.assetcategory.indexer.name}")
-	private String assetCategoryIndex;
-	
-	@Value("${kafka.topics.save.assetcategory}")
-	private String saveassetCategoryTopic;
-	
-	@Value("${kafka.topics.update.assetcategory}")
-	private String updateAssetCategoryTopic;
+    @Value("${egov.services.boundary_service.searchpath}")
+    private String boundaryServiceSearchPath;
 
-	@Value("${kafka.topics.save.revaluation}")
-	private String createAssetRevaluationTopicName;
+    @Value("${egov.services.asset.indexer.host}")
+    private String indexerHost;
 
-	@Value("${kafka.topics.update.revaluation}")
-	private String updateAssetRevaluationTopicName;
+    @Value("${egov.services.asset.indexer.name}")
+    private String assetIndexName;
 
-	@Value("${egov.services.egf_service.hostname}")
-	private String egfServiceHostName;
+    @Value("${egov.services.disposal.indexer.name}")
+    private String disposalIndexName;
 
-	@Value("${egov.services.egf_service.functions.searchpath}")
-	private String egfServiceFunctionsSearchPath;
+    @Value("${egov.services.revaluation.indexer.name}")
+    private String revaluationIndexName;
 
-	@Value("${egov.services.egf_service.funds.searchpath}")
-	private String egfServiceFundsSearchPath;
+    @Value("${egov.services.assetcategory.indexer.name}")
+    private String assetCategoryIndex;
 
-	@Value("${egov.services.egf_service.schemes.searchpath}")
-	private String egfServiceSchemesSearchPath;
+    @Value("${kafka.topics.save.assetcategory}")
+    private String saveassetCategoryTopic;
 
-	@Value("${egov.services.egf_service.subschemes.searchpath}")
-	private String egfServiceSubSchemesSearchPath;
+    @Value("${kafka.topics.update.assetcategory}")
+    private String updateAssetCategoryTopic;
 
-	@Value("${egov.services.asset_service.hostname}")
-	private String assetServiceHostName;
+    @Value("${kafka.topics.save.revaluation}")
+    private String createAssetRevaluationTopicName;
 
-	@Value("${egov.services.asset_service.searchpath}")
-	private String assetServiceSearchPath;
+    @Value("${kafka.topics.update.revaluation}")
+    private String updateAssetRevaluationTopicName;
 
-	@Value("${kafka.topics.save.disposal}")
-	private String createAssetDisposalTopicName;
+    @Value("${egov.services.egf_service.hostname}")
+    private String egfServiceHostName;
 
-	@Value("${kafka.topics.update.disposal}")
-	private String updateAssetDisposalTopicName;
+    @Value("${egov.services.egf_service.functions.searchpath}")
+    private String egfServiceFunctionsSearchPath;
 
-	@Value("${egov.services.tenant.host}")
-	private String tenantServiceHostName;
+    @Value("${egov.services.egf_service.funds.searchpath}")
+    private String egfServiceFundsSearchPath;
 
-	@Value("${egov.services.tenant.search.path}")
-	private String tenantServiceSearchPath;
+    @Value("${egov.services.egf_service.schemes.searchpath}")
+    private String egfServiceSchemesSearchPath;
 
-	@Value("${kafka.topics.save.depreciation}")
-	private String saveDepreciationTopic;
+    @Value("${egov.services.egf_service.subschemes.searchpath}")
+    private String egfServiceSubSchemesSearchPath;
 
-	@Value("${kafka.topics.save.currentvalue}")
-	private String saveCurrentvalueTopic;
-	
-	@Value("${egov.services.depreciaition.indexer.url}")
-	private String depreciaitionIndexUrl;
-	
-	@Value("${egov.services.currentvalue.indexer.url}")
-	private String currentValueIndexUrl;
-			
+    @Value("${egov.services.asset_service.hostname}")
+    private String assetServiceHostName;
+
+    @Value("${egov.services.asset_service.searchpath}")
+    private String assetServiceSearchPath;
+
+    @Value("${kafka.topics.save.disposal}")
+    private String createAssetDisposalTopicName;
+
+    @Value("${kafka.topics.update.disposal}")
+    private String updateAssetDisposalTopicName;
+
+    @Value("${egov.services.tenant.host}")
+    private String tenantServiceHostName;
+
+    @Value("${egov.services.tenant.search.path}")
+    private String tenantServiceSearchPath;
+
+    @Value("${kafka.topics.save.depreciation}")
+    private String saveDepreciationTopic;
+
+    @Value("${kafka.topics.save.currentvalue}")
+    private String saveCurrentvalueTopic;
+
+    @Value("${egov.services.depreciaition.indexer.url}")
+    private String depreciaitionIndexUrl;
+
+    @Value("${egov.services.currentvalue.indexer.url}")
+    private String currentValueIndexUrl;
+
 }

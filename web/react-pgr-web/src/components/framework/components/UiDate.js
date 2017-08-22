@@ -19,12 +19,14 @@ export default class UiNumberField extends Component {
 			case 'google':
 				return (
 					<TextField
+						floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
+						floatingLabelFixed={true}
 						style={{"display": (item.hide ? 'none' : 'inline-block')}}
 						errorStyle={{"float":"left"}}
 						fullWidth={true}
 						type="date"
-						floatingLabelText={item.label + (item.isRequired ? " *" : "")}
-						floatingLabelFixed={true}
+						floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>} 
+            			floatingLabelFixed={true}
 						value={date}
 						disabled={item.isDisabled}
 						errorText={this.props.fieldErrors[item.jsonPath]}

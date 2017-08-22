@@ -41,6 +41,7 @@ package org.egov.egf.budget.persistence.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -64,6 +65,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
@@ -77,10 +79,13 @@ public class BudgetJdbcRepositoryTest {
 
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @Before
     public void setUp() throws Exception {
-        budgetJdbcRepository = new BudgetJdbcRepository(namedParameterJdbcTemplate);
+        budgetJdbcRepository = new BudgetJdbcRepository(namedParameterJdbcTemplate, jdbcTemplate);
     }
 
     @Test
@@ -129,6 +134,20 @@ public class BudgetJdbcRepositoryTest {
         assertThat(row.get("id")).isEqualTo(actualResult.getId());
         assertThat(row.get("name")).isEqualTo(actualResult.getName());
 
+    }
+    
+    @Test
+    @Sql(scripts = { "/sql/budget/clearBudget.sql", "/sql/budget/insertBudgetData.sql" })
+    public void test_delete() {
+
+        BudgetEntity budget = BudgetEntity.builder().id("1").name("name").parentId("1").active(true).financialYearId("1")
+                .estimationType("BE").primaryBudget(true).build();
+        budget.setTenantId("default");
+        BudgetEntity actualResult = budgetJdbcRepository.delete(budget);
+
+        List<Map<String, Object>> result = namedParameterJdbcTemplate.query("SELECT * FROM egf_budget",
+                new BudgetResultExtractor());
+        assertTrue("Result set length is zero", result.size() == 0);
     }
 
     @Test

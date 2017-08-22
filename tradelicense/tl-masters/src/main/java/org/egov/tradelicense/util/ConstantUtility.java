@@ -26,4 +26,7 @@ public class ConstantUtility {
 	public static final String FEE_MATRIX_DETAIL_TABLE_NAME = "egtl_fee_matrix_details";
 
 	public static final String LICENSE_STATUS_TABLE_NAME = "egtl_mstr_status";
+	
+	public static final String CATEGORY_TYPE="CATEGORY";
+	public static final String SUB_CATEGORY_TYPE="SUBCATEGORY";
 }

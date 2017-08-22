@@ -80,6 +80,8 @@ public class Connection {
     private String categoryType;
 
     private String categoryId;
+    
+    private Long userid;
 
     @NotNull
     private String hscPipeSizeType;

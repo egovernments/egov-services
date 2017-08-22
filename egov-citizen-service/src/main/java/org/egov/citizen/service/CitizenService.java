@@ -4,32 +4,57 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.citizen.config.ApplicationProperties;
+import org.egov.citizen.config.CitizenServiceConstants;
+import org.egov.citizen.exception.CustomException;
+import org.egov.citizen.model.BillResponse;
+import org.egov.citizen.model.BillingServiceRequestWrapper;
 import org.egov.citizen.model.IdGenerationReqWrapper;
 import org.egov.citizen.model.IdRequest;
+import org.egov.citizen.model.InstrumentType;
 import org.egov.citizen.model.RequestInfoWrapper;
 import org.egov.citizen.model.SearchDemand;
 import org.egov.citizen.model.ServiceConfig;
 import org.egov.citizen.model.ServiceReq;
 import org.egov.citizen.model.Value;
 import org.egov.citizen.producer.CitizenProducer;
+import org.egov.citizen.repository.BillingServiceRepository;
+import org.egov.citizen.repository.CollectionRepository;
+import org.egov.citizen.repository.ResponseRepository;
+import org.egov.citizen.web.contract.Bill;
+import org.egov.citizen.web.contract.BillDetail;
+import org.egov.citizen.web.contract.Instrument;
+import org.egov.citizen.web.contract.Receipt;
+import org.egov.citizen.web.contract.ReceiptReq;
+import org.egov.citizen.web.contract.ReceiptRequest;
+import org.egov.citizen.web.contract.ReceiptRes;
 import org.egov.common.contract.request.RequestInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.jayway.jsonpath.JsonPath;
 
-import lombok.extern.slf4j.Slf4j;
 
 @Service
-@Slf4j
 public class CitizenService {
-
-	@Autowired
-	private RestTemplate restTemplate;
+	
+	public static final Logger LOGGER = LoggerFactory
+			.getLogger(CitizenService.class);
 	
 	@Autowired
 	private CitizenProducer citizenProducer; 
+	
+	@Autowired
+	private BillingServiceRepository billingServiceRepository;
+	
+	@Autowired
+	private ResponseRepository responseRepository;
+	
+	@Autowired
+	private CollectionRepository collectionRepository;
 	
 	@Autowired
 	private ApplicationProperties applicationProperties;
@@ -111,30 +136,73 @@ public class CitizenService {
 		return url;
 	}
 	
-	public Object getResponse(String url,Object config,List<String> results){
+	public Object generateResponseObject(String url, Object config, List<String> results){
 		
-		if (url != "") {
-			Object response = restTemplate.postForObject(url,getRequestInfo(config), Object.class);
-			
-			int length = results.size();
-			
-			while(length !=0)
-				
-				for(int i=0;i<results.size();i++){
-					
-					
-				}
-			
-			if (results != null && results.size() == 2) {
-				Object responseObj = JsonPath.read(response, results.get(0));
-				Object responseObj1 = JsonPath.read(responseObj, "$..Demands[0]");
-				if (responseObj1 != "") {
-					Object res = JsonPath.read(response, results.get(1));
-					return res;
-				}
-			}
+		RequestInfoWrapper requestInfo =  getRequestInfo(config);
+		Object response = responseRepository.generateResponseObject(url, requestInfo, results);
+		
+		return response;
+	}
+	
+	public Object createReceiptForPayment(ReceiptRequest receiptReq){
+		BillingServiceRequestWrapper billingServiceRequestWrapper = new BillingServiceRequestWrapper();
+		billingServiceRequestWrapper.setBillingServiceRequestInfo(receiptReq.getRequestInfo());
+		billingServiceRequestWrapper.setBillNumber(receiptReq.getBillNumber());
+		billingServiceRequestWrapper.setTenantId(receiptReq.getTenantId());
+		BillResponse billResponse = null;
+		try{
+			billResponse = billingServiceRepository.getBillOnBillNumber(billingServiceRequestWrapper);
+		}catch(Exception e){
+			LOGGER.error("Couldn't fetch bill: ", e);
+			throw new CustomException(Integer.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
+					CitizenServiceConstants.BILL_INVALID_MSG, CitizenServiceConstants.BILL_INVALID_DESC);
 		}
-	   return "";	
+		
+		LOGGER.info("Bill number: "+receiptReq.getBillNumber());
+		LOGGER.info("Response from billing svc: "+billResponse);
+		
+		LOGGER.info("Receipt creation flow starts");
+		
+		List<Bill> bills = billResponse.getBill();
+		for(Bill bill: bills){
+			bill.setPaidBy(bill.getPayeeName());
+			for(BillDetail billDetail: bill.getBillDetails()){
+				billDetail.setAmountPaid(receiptReq.getAmountPaid());
+			}
+			
+		}
+		Instrument instrument = new Instrument();
+		InstrumentType instrumentType = new InstrumentType();
+		instrumentType.setName("Cash");
+		instrumentType.setTenantId(receiptReq.getTenantId());
+		instrument.setAmount(receiptReq.getAmountPaid());
+		instrument.setInstrumentType(instrumentType);
+		Receipt receipt = new Receipt();
+		receipt.setBill(bills);
+		receipt.setTenantId(receiptReq.getTenantId());
+		receipt.setInstrument(instrument);
+		List<Receipt> receipts = new ArrayList<>();
+		receipts.add(receipt);
+		ReceiptReq receiptRequest = new ReceiptReq();
+		receiptRequest.setRequestInfo(receiptReq.getRequestInfo());
+		receiptRequest.setReceipt(receipts);
+		receiptRequest.setTenantId(receiptReq.getTenantId());
+		
+		LOGGER.info("Request for creation of receipt: "+receiptRequest.toString());
+		Object receiptResponse = null;
+		try{
+			receiptResponse = collectionRepository.createReceipt(receiptRequest);
+		}catch(Exception e){
+			LOGGER.error("Error creating receipt in collection service. ", e);
+			throw new CustomException(Integer.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
+					CitizenServiceConstants.RCPT_INVALID_MSG, CitizenServiceConstants.RCPT_INVALID_DESC);
+		}
+		
+
+		LOGGER.info("Response from collection svc: "+receiptResponse);
+
+		
+		return receiptResponse;
 	}
 
 	public void sendMessageToKafka(ServiceReq servcieReq){
@@ -143,7 +211,7 @@ public class CitizenService {
 			citizenProducer.producer(applicationProperties.getCreateServiceTopic(),
 					applicationProperties.getCreateServiceTopicKey(), servcieReq);
 		} catch (Exception e) {
-			log.debug("service createAsync:" + e);
+			LOGGER.debug("service createAsync:" + e);
 			throw new RuntimeException(e);
 		}
 		}

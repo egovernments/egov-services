@@ -1,11 +1,11 @@
 package org.egov.citizen.web.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.citizen.model.Demand;
-import org.egov.citizen.model.DemandDetail;
-import org.egov.citizen.model.DemandRequest;
+import javax.validation.Valid;
+
+import org.egov.citizen.config.CitizenServiceConstants;
+import org.egov.citizen.exception.CustomException;
 import org.egov.citizen.model.SearchDemand;
 import org.egov.citizen.model.ServiceCollection;
 import org.egov.citizen.model.ServiceConfig;
@@ -15,14 +15,20 @@ import org.egov.citizen.model.ServiceReqResponse;
 import org.egov.citizen.model.ServiceResponse;
 import org.egov.citizen.model.Value;
 import org.egov.citizen.service.CitizenService;
+import org.egov.citizen.web.contract.ReceiptRequest;
 import org.egov.citizen.web.contract.factory.ResponseInfoFactory;
+import org.egov.citizen.web.errorhandlers.Error;
+import org.egov.citizen.web.errorhandlers.ErrorResponse;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,6 +42,7 @@ import com.jayway.jsonpath.JsonPath;
 
 @RestController
 public class ServiceController {
+	public static final Logger LOGGER = LoggerFactory.getLogger(ServiceController.class);
 
 	@Autowired
 	public ServiceCollection serviceDefination;
@@ -49,10 +56,6 @@ public class ServiceController {
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
 	
-	@Bean
-	RestTemplate restTemplate() {
-		return new RestTemplate();
-	}
 
 	@Autowired
 	public RestTemplate restTemplate;
@@ -92,7 +95,7 @@ public class ServiceController {
 		String sequenceNumber = citizenService.generateSequenceNumber(searchDemand, config);
 		servcieReq.setServiceRequestId(sequenceNumber);
 		url = citizenService.getUrl(url, queryParamList);
-		Object demands = citizenService.getResponse(url, config, results);
+		Object demands = citizenService.generateResponseObject(url, config, results);
 		servcieReq.setBackendServiceDetails(demands);
 		citizenService.sendMessageToKafka(servcieReq);
 		serviceReqResponse.setServiceReq(servcieReq);
@@ -128,5 +131,64 @@ public class ServiceController {
        return null;	
 	}
 	
+	@PostMapping(value = "/requests/receipt/_create")
+	public ResponseEntity<?> createReceipt(@RequestBody @Valid ReceiptRequest receiptReq, 
+			BindingResult errors) {
+		
+		if(receiptReq.getStatus().get(0).equals("FAILURE") || receiptReq.getStatus().get(0).equals("CANCEL")){
+			Error error = new Error();
+			error.setCode(400);
+			error.setMessage(CitizenServiceConstants.FAIL_STATUS_MSG);
+			error.setDescription(CitizenServiceConstants.FAIL_STATUS_DESC);
+			
+			return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 
+		}
+		ServiceReqResponse serviceReqResponse = new ServiceReqResponse();
+		ServiceReq serviceReq = new ServiceReq();
+		serviceReq.setBackendServiceDetails(receiptReq);
+		serviceReqResponse.setServiceReq(serviceReq);
+
+	/*	String json = httpEntity.getBody();
+		Object config = Configuration.defaultConfiguration().jsonProvider().parse(json);
+		List<String> results = null;
+		final ObjectMapper objectMapper = new ObjectMapper();
+		ReceiptRequest receiptReq = objectMapper.convertValue(config, ReceiptRequest.class); */
+		
+		if (errors.hasFieldErrors()) {
+			ErrorResponse errRes = populateErrors(errors);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		}
+		LOGGER.info("Request for receipt creation: " + receiptReq.toString());
+		Object receiptResponse = null;
+		try{
+			receiptResponse = citizenService.createReceiptForPayment(receiptReq);
+		}catch(CustomException e){
+			Error error = new Error();
+			error.setCode(e.getCode());
+			error.setMessage(e.getCustomMessage());
+			error.setDescription(e.getDescription());
+			
+			return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+			
+		}
+		serviceReqResponse.getServiceReq().setBackendServiceDetails(receiptResponse);
+		
+		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);
+	}
+	
+	private ErrorResponse populateErrors(BindingResult errors) {
+		ErrorResponse errRes = new ErrorResponse();
+		Error error = new Error();
+		error.setCode(1);
+		error.setDescription("Error while binding request");
+		if (errors.hasFieldErrors()) {
+			for (FieldError errs : errors.getFieldErrors()) {
+				error.getFields().put(errs.getField(), errs.getDefaultMessage());
+			}
+		}
+		errRes.setError(error);
+		return errRes;
+	}
+	
 }

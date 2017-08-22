@@ -37,50 +37,77 @@
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
+package org.egov.citizen.web.contract;
 
-package org.egov.citizen.config;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
+import org.egov.citizen.model.enums.CollectionType;
 
-import lombok.Getter;
-import lombok.ToString;
-
-@Configuration
+@Setter
 @Getter
-@PropertySource(value = { "classpath:config/application-config.properties" }, ignoreResourceNotFound = true)
 @ToString
-public class ApplicationProperties {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
+public class BillDetail {
 
-	private static final String SEARCH_PAGESIZE_DEFAULT = "search.pagesize.default";
+	private String id;
 
-	@Autowired
-	private Environment environment;
+	private String bill;
 
-	@Value("${kafka.topics.save.service}")
-	private String createServiceTopic;
-	
-	@Value("${kafka.topics.save.service.key}")
-	private String createServiceTopicKey;
-	
-	@Value("${egov.services.billing_service.hostname}")
-	private String billingServiceHostName;
-	
-	@Value("${egov.services.billing_service.search}")
-	private String searchBill;
-	
-	@Value("${egov.services.collection_service.hostname}")
-	private String collectionServiceHostName;
-	
-	@Value("${egov.services.collection_service.receipt.create}")
-	private String createReceiptURI;
+	private Long billDate;
 
+	private String billDescription;
 
-	public String commonsSearchPageSizeDefault() {
-		return environment.getProperty(SEARCH_PAGESIZE_DEFAULT);
-	}
+	private String billNumber; // refNo
+
+	private String consumerCode;
+
+	private String consumerType;
+
+	private BigDecimal minimumAmount;
+
+	private BigDecimal totalAmount;
+
+	private List<String> collectionModesNotAllowed = new ArrayList<>();
+
+	private String tenantId;
+
+	private String businessService; // buisnessDetailsCode
+
+	private String displayMessage;
+
+	private Boolean callBackForApportioning;
+
+	private String receiptNumber;
+
+	private Long receiptDate;
+
+	private String receiptType;
+
+	private String channel;
+
+	private String voucherHeader;
+
+	private CollectionType collectionType;
+
+	private String boundary;
+
+	private String reasonForCancellation;
+
+	private BigDecimal amountPaid;
+
+	private String cancellationRemarks;
+
+	private String status;
+
+	@JsonProperty("billAccountDetails")
+	private List<BillAccountDetail> billAccountDetails = new ArrayList<>();
+
 }

@@ -38,49 +38,40 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.citizen.config;
+package org.egov.citizen.web.errorhandlers;
 
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
-
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
-@Configuration
+import java.util.List;
+
+import org.egov.common.contract.response.ErrorField;
+import org.egov.common.contract.response.ResponseInfo;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Getter
-@PropertySource(value = { "classpath:config/application-config.properties" }, ignoreResourceNotFound = true)
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString
-public class ApplicationProperties {
+@EqualsAndHashCode
+public class ErrorResponse {
 
-	private static final String SEARCH_PAGESIZE_DEFAULT = "search.pagesize.default";
+	@JsonProperty("ResponseInfo")
+	private ResponseInfo responseInfo;
 
-	@Autowired
-	private Environment environment;
-
-	@Value("${kafka.topics.save.service}")
-	private String createServiceTopic;
+	@JsonProperty("Error")
+	private Error error;
 	
-	@Value("${kafka.topics.save.service.key}")
-	private String createServiceTopicKey;
-	
-	@Value("${egov.services.billing_service.hostname}")
-	private String billingServiceHostName;
-	
-	@Value("${egov.services.billing_service.search}")
-	private String searchBill;
-	
-	@Value("${egov.services.collection_service.hostname}")
-	private String collectionServiceHostName;
-	
-	@Value("${egov.services.collection_service.receipt.create}")
-	private String createReceiptURI;
-
-
-	public String commonsSearchPageSizeDefault() {
-		return environment.getProperty(SEARCH_PAGESIZE_DEFAULT);
+	@JsonIgnore
+	public List<ErrorField> getErrorFields() {
+		return error.getErrorFields();
 	}
+
 }

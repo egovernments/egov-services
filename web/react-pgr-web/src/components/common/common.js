@@ -502,8 +502,22 @@ var localization_EN_Data = {
 	"pt.create.groups.assessmentDetails.newProperty": "New Property",
 	"pt.create.groups.assessmentDetails.bifurcation": "Bifurcation",
 	"pt.create.groups.assessmentDetails.bifurcation": "None",
+	"pt.create.groups.workflow":"Workflow",
+	"pt.create.groups.workflow.departmentName": "Department Name",
+	"pt.create.groups.workflow.designationName": "Designation Name",
+	"pt.create.groups.workflow.approverName": "Approver Name",
+	"pt.create.groups.workflow.comment": "Comment",
+	"pt.create.groups.createNewProperty": "Create New Property",
+	"pt.create.groups.ownerDetails.fields.male": "Male",
+	"pt.create.groups.ownerDetails.fields.female": "Female",
+	"pt.create.groups.ownerDetails.fields.Others": "Others",
+	"pt.create.groups.vacantLand.fields.vacantLandDetails":"Vacant Land Details",
+	"pt.create.groups.documentUpload.noFilesToUpload": "No files to upload",
+	"pt.create.groups.addDemand.demandError":"Collection entered should be equal to or less than the Demand",
+	"pt.create.groups.addDemand.demand":"Demand",
+	"pt.create.groups.addDemand.collection":"Collection",
 
-
+	
 
     //employee Object
     "employee.Employee.fields.code": "Code",
@@ -1618,6 +1632,13 @@ var localization_MR_Data = {
 	"pt.create.groups.assessmentDetails.newProperty": "New Property",
 	"pt.create.groups.assessmentDetails.bifurcation": "Bifurcation",
 	"pt.create.groups.assessmentDetails.bifurcation": "None",
+	"pt.create.groups.workflow":"Workflow",
+	"pt.create.groups.workflow.departmentName": "Department Name",
+	"pt.create.groups.workflow.designationName": "Designation Name",
+	"pt.create.groups.workflow.approverName": "Approver Name",
+	"pt.create.groups.workflow.comment": "Comment",
+	"pt.create.groups.createNewProperty": "Create New Property",
+	
 
 	﻿"pt.create.groups.assessmentDetails":"मूल्यांकन तपशील",
 	"wc.crete.Slabs":"स्लॅब्स",

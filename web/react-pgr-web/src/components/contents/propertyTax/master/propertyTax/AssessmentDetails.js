@@ -287,7 +287,7 @@ handleAge = (year) => {
                                       <Row>
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText={translate('pt.create.groups.assessmentDetails.fields.creationReason')+' *'}
+                                                  floatingLabelText={<span>{translate('pt.create.groups.assessmentDetails.fields.creationReason')}<span style={{"color": "#FF0000"}}> *</span></span>}
                                                   errorText={fieldErrors.reasonForCreation ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.reasonForCreation}</span> : ""}
                                                   value={assessmentDetails.reasonForCreation ? assessmentDetails.reasonForCreation : ""}
 												  floatingLabelFixed={true}
@@ -320,7 +320,7 @@ handleAge = (year) => {
 
                                           {(assessmentDetails.reasonForCreation == 'SUBDIVISION') && <Col xs={12} md={3} sm={6}>
                                               <TextField  className="fullWidth"
-                                                  floatingLabelText={translate('pt.create.groups.assessmentDetails.fields.parentUpicNo')+' *'}
+                                                  floatingLabelText={<span>{translate('pt.create.groups.assessmentDetails.fields.parentUpicNo')}<span style={{"color": "#FF0000"}}> *</span></span>}
                                                   errorText={fieldErrors.parentUpicNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.parentUpicNo}</span> : ""}
                                                   value={assessmentDetails.parentUpicNo ? assessmentDetails.parentUpicNo : ""}
                                                   onChange={(e) => {handleChange(e, "parentUpicNo", true, "")}}
@@ -335,7 +335,7 @@ handleAge = (year) => {
                                           </Col>}
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText={translate('pt.create.groups.assessmentDetails.fields.propertyType')+' *'}
+                                                  floatingLabelText={<span>{translate('pt.create.groups.assessmentDetails.fields.propertyType')}<span style={{"color": "#FF0000"}}> *</span></span>}
                                                   errorText={fieldErrors.propertyType ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.propertyType}</span> : ""}
                                                   value={assessmentDetails.propertyType ? assessmentDetails.propertyType : ""}
 												  floatingLabelFixed={true}
@@ -409,7 +409,7 @@ handleAge = (year) => {
                                           </Col>
 										  <Col xs={12} md={3} sm={6}>
 														<SelectField  className="fullWidth selectOption"
-														  floatingLabelText={translate('pt.create.groups.assessmentDetails.fields.usageType')+' *'}
+														  floatingLabelText={<span>{translate('pt.create.groups.assessmentDetails.fields.usageType')}<span style={{"color": "#FF0000"}}> *</span></span>}
 														  errorText={fieldErrors.usage ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.usage}</span> : ""}
 														  value={assessmentDetails.usage ? assessmentDetails.usage : ""}
 														  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
@@ -486,7 +486,7 @@ handleAge = (year) => {
                                           }
                                           <Col xs={12} md={3} sm={6}>
                                               <TextField  className="fullWidth"
-                                                  floatingLabelText={translate('pt.create.groups.assessmentDetails.fields.extentOfSite')+' *'}
+                                                  floatingLabelText={<span>{translate('pt.create.groups.assessmentDetails.fields.extentOfSite')}<span style={{"color": "#FF0000"}}> *</span></span>}
 												  hintText="14"
                                                   errorText={fieldErrors.extentOfSite ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.extentOfSite}</span> : ""}
                                                   value={assessmentDetails.extentOfSite ? assessmentDetails.extentOfSite : ""}
@@ -501,7 +501,7 @@ handleAge = (year) => {
                                           </Col>
 										   <Col xs={12} md={3} sm={6}>
                                               <TextField  className="fullWidth"
-                                                  floatingLabelText={translate('pt.create.groups.assessmentDetails.fields.sequenceNo')+' *'}
+                                                  floatingLabelText={<span>{translate('pt.create.groups.assessmentDetails.fields.sequenceNo')}<span style={{"color": "#FF0000"}}> *</span></span>}
 												  hintText="14"
                                                   errorText={fieldErrors.sequenceNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.sequenceNo}</span> : ""}
                                                   value={assessmentDetails.sequenceNo ? assessmentDetails.sequenceNo : ""}

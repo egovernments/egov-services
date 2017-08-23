@@ -578,7 +578,7 @@ class Inbox extends Component {
                                     <Row>
                                         <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText="Department Name *"
+                                                  floatingLabelText={<span>{translate('pt.create.groups.workflow.departmentName')}<span style={{"color": "#FF0000"}}> *</span></span>}
                                                   errorText={fieldErrors.workflowDepartment ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.workflowDepartment}</span>: ""}
                                                   value={workflow.workflowDepartment ? workflow.workflowDepartment :""}
                                                   onChange={(event, index, value) => {
@@ -600,7 +600,7 @@ class Inbox extends Component {
                                         </Col>
                                         <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText="Designation Name *"
+													floatingLabelText={<span>{translate('pt.create.groups.workflow.designationName')}<span style={{"color": "#FF0000"}}> *</span></span>}
                                                   errorText={fieldErrors.workflowDesignation ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.workflowDesignation}</span>: ""}
                                                   value={workflow.workflowDesignation ? workflow.workflowDesignation :""}
                                                   onChange={(event, index, value) => {
@@ -622,7 +622,7 @@ class Inbox extends Component {
                                         </Col>
                                         <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText="Approver Name *"
+                                                  floatingLabelText={<span>{translate('pt.create.groups.workflow.approverName')}<span style={{"color": "#FF0000"}}> *</span></span>}
                                                   errorText={fieldErrors.approver ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.approver}</span>: ""}
                                                   value={workflow.approver ? workflow.approver : ""}
                                                   onChange={(event, index, value) => {
@@ -643,7 +643,7 @@ class Inbox extends Component {
                                         </Col>
 										<Col xs={12} md={3} sm={6}>
                                               <TextField  className="fullWidth"
-                                                  floatingLabelText="Comments"
+                                                  floatingLabelText={translate('pt.create.groups.workflow.comment')}
                                                   errorText={fieldErrors.comments ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.comments}</span>: ""}
                                                   value={workflow.comments ? workflow.comments : ""}
                                                   onChange={(e) => {

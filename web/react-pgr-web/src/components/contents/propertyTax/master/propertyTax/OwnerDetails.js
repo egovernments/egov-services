@@ -171,7 +171,7 @@ constructor(props) {
                         <Col xs={12} md={3} sm={6}>
                           <TextField  className="fullWidth"
                             hintText="9999888877"
-                            floatingLabelText={translate('pt.create.groups.ownerDetails.fields.phoneNumber')+' *'}
+                            floatingLabelText={<span>{translate('pt.create.groups.ownerDetails.fields.phoneNumber')}<span style={{"color": "#FF0000"}}> *</span></span>}
                             errorText={fieldErrors.owner ? (fieldErrors.owner.mobileNumber ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.mobileNumber}</span>: ""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.mobileNumber:""}
                             onChange={(e) =>{
@@ -188,7 +188,7 @@ constructor(props) {
                         <Col xs={12} md={3} sm={6}>
                           <TextField  className="fullWidth"
                             hintText="Joe Doe"
-                            floatingLabelText={translate('pt.create.groups.ownerDetails.fields.ownerName')+' *'}
+                            floatingLabelText={<span>{translate('pt.create.groups.ownerDetails.fields.ownerName')}<span style={{"color": "#FF0000"}}> *</span></span>}
                             errorText={fieldErrors.owner ? (fieldErrors.owner.name ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.name}</span>:""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.name:""}
                             onChange={(e) => {
@@ -205,7 +205,7 @@ constructor(props) {
                         </Col>
                         <Col xs={12} md={3} sm={6}>
                           <SelectField  className="fullWidth selectOption"
-                            floatingLabelText={translate('pt.create.groups.ownerDetails.fields.gender')+' *'}
+                            floatingLabelText={<span>{translate('pt.create.groups.ownerDetails.fields.gender')}<span style={{"color": "#FF0000"}}> *</span></span>}
                             errorText={fieldErrors.owner ? (fieldErrors.owner.gender? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.owner.gender}</span>:""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.gender:""}
                             onChange={(event, index, value) => {

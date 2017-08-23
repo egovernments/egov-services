@@ -54,6 +54,7 @@ public class UserRequestControllerTest {
     @MockBean
     private TokenService tokenService;
 
+/*
     @Test
     @WithMockUser
     public void testShouldThrowErrorWhileRegisteringWithInvalidCitizen() throws Exception {
@@ -69,6 +70,7 @@ public class UserRequestControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(content().json(getFileContents("createCitizenUnsuccessfulResponse.json")));
     }
+*/
 
     @Test
     @WithMockUser

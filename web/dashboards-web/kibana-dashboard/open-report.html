@@ -67,13 +67,13 @@
 
 	<body class="page-body">
 
-		<div class="page-container overflow-hidden" id="page-container">
+		<div class="page-container overflow-hidden padding-top-40" id="page-container">
 
     <header class="navbar navbar-fixed-top"><!-- set fixed position by adding class "navbar-fixed-top" -->
 
         <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
           <div class="container-fluid">
-            <div class="navbar-header col-md-10 col-xs-10">
+            <div class="navbar-header col-md-8 col-xs-8">
 
               <a class="navbar-brand back hidden" href="">
                 <i class="fa fa-arrow-left" aria-hidden="true"></i>
@@ -82,13 +82,18 @@
               <a class="navbar-brand" href="./index.html">
                 <img src="images/maha-logo.png" height="60">
                 <div>
-                  <span class="title2">Maha State Dashboard</span>
+                  <span class="title">Directorate of Municipal Administration</span>
                 </div>
               </a>
             </div>
 
-            <div class="nav-right-menu col-md-2 col-xs-2">
+            <div class="nav-right-menu col-md-4 col-xs-4">
               <ul class="hr-menu text-right">
+								<li class="hide municipal-menu">
+                  <a href="javascript:void(0);" class="municipal-name">
+                  </a>
+                </li>
+
                 <li class="ico-menu">
                   <a href="javascript:void(0);">
                     <img src="images/logo@2x.png" title="Powered by eGovernments" height="20px">
@@ -99,7 +104,13 @@
             </div>
 
           </div>
+
+					<div class="subtitle bg-gray report-name">
+
+					</div>
+
         </nav>
+
 
       </header>
 
@@ -147,8 +158,13 @@
       console.log('back', QueryString.back);
 			console.log('title', QueryString.title);
 
-			if(QueryString.title){
-				$('.title2').html(QueryString.title);
+			if(QueryString.title)
+				$('.report-name').html(QueryString.title);
+
+			if(QueryString.ulbname){
+				console.log('ulbName', QueryString.ulbname);
+				$('.municipal-menu').removeClass('hide');
+				$('.municipal-name').html(QueryString.ulbname);
 			}
 
       if(QueryString.url)
@@ -187,8 +203,8 @@
           });
 
       });*/
-
     </script>
+
 
 	</body>
 </html>

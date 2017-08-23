@@ -724,12 +724,13 @@ calculateFeeDetails = (licenseValidFromDate, validityYear) => {
 
     //console.log(this.formData.licenses[0].licenseValidFromDate);
      if ((property == "licenses[0].licenseValidFromDate" || property=="licenses[0].subCategoryId") && getVal("licenses[0].licenseValidFromDate") && self.state.validityYear) {
-       if(property == "licenses[0].licenseValidFromDate" && (e.target.value).length == 12 || (e.target.value).length == 13){
-
-          self.calculateFeeDetails(e.target.value, self.state.validityYear)
-
-
-
+console.log(e.target.value);
+console.log(self.state.validityYear);
+console.log((e.target.value+ "").length);
+       if((e.target.value+"").length == 12 || (e.target.value+"").length == 13){
+         console.log(e.target.value);
+         console.log(self.state.validityYear);
+         self.calculateFeeDetails(e.target.value, self.state.validityYear)
         }
        }
 

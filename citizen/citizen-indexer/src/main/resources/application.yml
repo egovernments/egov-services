@@ -1,11 +1,11 @@
 ServiceMaps:
- serviceName: PrpertyTax
+ serviceName: CityzenService
  mappings:
   - version: 1.0.0
-    indexName: pt_index
-    indexType: pt_type
-    fromTopic: egov.es
-    indexID: $.User.mobileNumber
+    indexName: cs_index
+    indexType: cs_type
+    fromTopic: save-service-db
+    indexID: $.serviceReq.serviceRequestId
     jsonPath:
     indexMap:
      - inJsonPath: $.properties[index].name

@@ -755,7 +755,7 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
-		  {
+		       {
             "name": "fromDate",
             "jsonPath": "Connection.fromDate",
             "label": "wc.create.fromDate",
@@ -1516,9 +1516,106 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
-          }
+          },
+          {
+           "name": "fromDate",
+           "jsonPath": "Connection[0].fromDate",
+           "label": "wc.create.fromDate",
+           "pattern": "",
+           "type": "datePicker",
+           "hide":true,
+           "isRequired": false,
+           "isDisabled": false,
+           "requiredErrMsg": "",
+           "patternErrMsg": ""
+         },
+         {
+           "name": "toDate",
+           "jsonPath": "Connection[0].toDate",
+           "label": "wc.create.toDate",
+           "pattern": "",
+           "hide":true,
+           "type": "datePicker",
+           "isRequired": false,
+           "isDisabled": false,
+           "requiredErrMsg": "",
+           "patternErrMsg": ""
+         }
+
         ]
       },
+      {
+          "label": "wc.create.meter.title",
+          "name": "Metered",
+          "hide":true,
+              "children":[meterReading],
+                  "fields": [{
+                      "name": "meterOwner",
+                      "jsonPath": "Connection[0].meter[0].meterOwner",
+                      "label": "wc.group.meterOwner",
+                      "pattern": "^[\s.]*([^\s.][\s.]*){0,50}$",
+                      "type": "text",
+                      "isRequired": false,
+                      "isDisabled": false,
+                      "requiredErrMsg": "",
+                      "patternErrMsg": ""
+                    },
+                    {
+                        "name": "meterModel",
+                        "jsonPath": "Connection[0].meter[0].meterModel",
+                        "label": "wc.group.meterModal",
+                        "pattern": "^[\s.]*([^\s.][\s.]*){0,50}$",
+                        "type": "text",
+                        "isRequired": false,
+                        "isDisabled": false,
+                        "requiredErrMsg": "",
+                        "patternErrMsg": ""
+                      },
+                      {
+                      "name": "meterMake",
+                      "jsonPath": "Connection[0].meter[0].meterMake",
+                      "label": "wc.group.meterMake",
+                      "pattern": "",
+                      "type": "text",
+                      "isRequired": false,
+                      "isDisabled": false,
+                      "requiredErrMsg": "",
+                      "patternErrMsg": ""
+                    },
+                    {
+                        "name": "meterSlNo",
+                        "jsonPath": "Connection[0].meter[0].meterSlNo",
+                        "label": "wc.group.meterNumber",
+                        "pattern": "",
+                        "type": "text",
+                        "isRequired": false,
+                        "isDisabled": false,
+                        "requiredErrMsg": "",
+                        "patternErrMsg": ""
+                      },
+                {
+                      "name": "meterCost",
+                      "jsonPath": "Connection[0].meter[0].meterCost",
+                      "label": "wc.group.meterCost",
+                      "pattern": "",
+                      "type": "text",
+                      "isRequired": false,
+                      "isDisabled": false,
+                      "requiredErrMsg": "",
+                      "patternErrMsg": ""
+                    },
+                {
+                      "name": "initialMeterReading",
+                      "jsonPath": "Connection[0].meter[0].initialMeterReading",
+                      "label": "wc.group.initialMeterReading",
+                      "pattern": "",
+                      "type": "text",
+                      "isRequired": false,
+                      "isDisabled": false,
+                      "requiredErrMsg": "",
+                      "patternErrMsg": ""
+                    }]
+                },
       // {
       //   "label": "wc.create.groups.fileDetails.title",
       //   "name": "Documents",

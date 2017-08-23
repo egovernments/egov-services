@@ -2,9 +2,12 @@ package org.egov.infra.indexer;
 
 
 import java.io.File;
+import java.io.InputStreamReader;
+import java.net.URL;
 
 import javax.annotation.PostConstruct;
 
+import org.assertj.core.api.UrlAssert;
 import org.egov.infra.indexer.web.contract.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -47,14 +50,15 @@ public class IndexerInfraApplication
 	@PostConstruct
 	@Bean
 	public Service loadYaml() {
-		System.out.println("EgovPersistApplication loadYaml");
+		System.out.println("EgovIndexrApplication loadYaml");
 		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 		Service service = null;
 		try {
-			  Resource resource = resourceLoader.getResource("classpath:application.yml"); 
-			  File file = resource.getFile();
-			  service = mapper.readValue(file, Service.class);
-			  log.info("loadYaml service: " + service.toString());
+			URL url = new URL("https://raw.githubusercontent.com/egovernments/egov-services/master/citizen/citizen-indexer/src/main/resources/application.yml");
+			
+			service = mapper.readValue(new InputStreamReader(url.openStream()), Service.class);
+			  
+			log.info("loadYaml service: " + service.toString());
 
 		} catch (Exception e) {
 			e.printStackTrace();

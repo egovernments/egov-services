@@ -18,6 +18,7 @@ import org.egov.citizen.model.ServiceReq;
 import org.egov.citizen.model.Value;
 import org.egov.citizen.producer.CitizenProducer;
 import org.egov.citizen.repository.BillingServiceRepository;
+import org.egov.citizen.repository.CitizenServiceRepository;
 import org.egov.citizen.repository.CollectionRepository;
 import org.egov.citizen.repository.ResponseRepository;
 import org.egov.citizen.web.contract.Bill;
@@ -26,6 +27,7 @@ import org.egov.citizen.web.contract.Instrument;
 import org.egov.citizen.web.contract.Receipt;
 import org.egov.citizen.web.contract.ReceiptReq;
 import org.egov.citizen.web.contract.ReceiptRequest;
+import org.egov.citizen.web.contract.ServiceRequestSearchCriteria;
 import org.egov.common.contract.request.RequestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,6 +59,9 @@ public class CitizenService {
 	
 	@Autowired
 	private ApplicationProperties applicationProperties;
+	
+	@Autowired
+	private CitizenServiceRepository citizenServiceRepository;
 
 	public List<Value> getQueryParameterList(List<ServiceConfig> list, String serviceCode, Object config) {
 
@@ -202,6 +207,40 @@ public class CitizenService {
 
 		
 		return receiptResponse;
+	}
+	
+	public Object generateBill(RequestInfo requestInfo, String mobileNumber, String tenantId){
+		LOGGER.info("Generate bill flow starts for mobile no: "+mobileNumber.toString());
+		BillResponse billResponse = null;
+		try{
+			billResponse = billingServiceRepository.generateBillForDemand(requestInfo, tenantId, mobileNumber);
+		}catch(Exception e){
+			LOGGER.error("Couldn't fetch bill: ", e);
+			throw new CustomException(Integer.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
+					CitizenServiceConstants.BILL_GEN_FAIL_MSG, CitizenServiceConstants.BILL_GEN_FAIL_DESC);
+		}
+				
+		LOGGER.info("Response from billing svc: "+billResponse);
+		
+		return billResponse;
+		
+	}
+	
+	public List<ServiceReq> getServiceRequests(ServiceRequestSearchCriteria serviceRequestSearchCriteria){
+		List<ServiceReq> serviceRequests = new ArrayList<>();
+		try{
+			serviceRequests = citizenServiceRepository.getServiceRequests(serviceRequestSearchCriteria);
+		}catch(Exception e){
+			LOGGER.error("Couldn't fetch service requests ", e);
+			throw new CustomException(Integer.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
+					CitizenServiceConstants.SVCREQ_NOT_FOUND_MSG, CitizenServiceConstants.SVCREQ_NOT_FOUND_DESC);
+		}
+
+		LOGGER.info("ServiceRequests obtained:   "+serviceRequests);
+		
+		return serviceRequests;
+		
+		
 	}
 
 	public void sendMessageToKafka(ServiceReq servcieReq){

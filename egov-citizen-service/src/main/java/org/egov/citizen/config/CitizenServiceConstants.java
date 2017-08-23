@@ -63,5 +63,10 @@ public class CitizenServiceConstants {
 	public static final String FAIL_STATUS_MSG = "Transaction failed";
 	public static final String FAIL_STATUS_DESC = "Payment gateway returned a failed status for your transaction, "
 					+ "receipt will not be generated";
+	
+	public static final String BILL_GEN_FAIL_MSG = "Bill couln't be generated";
+	public static final String BILL_GEN_FAIL_DESC = "Billing service couldn't generate bill for the demand";
 
+	public static final String SVCREQ_NOT_FOUND_MSG = "Service Requests not found";
+	public static final String SVCREQ_NOT_FOUND_DESC = "Service Requests couldn't be fetched for the criteria";
 }

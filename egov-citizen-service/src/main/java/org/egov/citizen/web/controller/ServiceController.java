@@ -1,5 +1,6 @@
 package org.egov.citizen.web.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -17,9 +18,12 @@ import org.egov.citizen.model.ServiceResponse;
 import org.egov.citizen.model.Value;
 import org.egov.citizen.service.CitizenService;
 import org.egov.citizen.web.contract.ReceiptRequest;
+import org.egov.citizen.web.contract.ServiceRequestSearchCriteria;
 import org.egov.citizen.web.contract.factory.ResponseInfoFactory;
 import org.egov.citizen.web.errorhandlers.Error;
 import org.egov.citizen.web.errorhandlers.ErrorResponse;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,9 +35,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
@@ -208,7 +214,36 @@ public class ServiceController {
 
 		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);
 	}
-
+	
+	@PostMapping(value = "/requests/_search")
+	@ResponseBody
+	public ResponseEntity<?> getServiceRequests(@RequestBody RequestInfo requestInfo,
+			@ModelAttribute @Valid ServiceRequestSearchCriteria serviceRequestSearchCriteria,
+			BindingResult errors) {
+		
+		if (errors.hasFieldErrors()) {
+			ErrorResponse errRes = populateErrors(errors);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		}
+		List<ServiceReq> serviceRequests = new ArrayList<>();
+		try{
+			serviceRequests = citizenService.getServiceRequests(serviceRequestSearchCriteria);
+		}catch(CustomException e){
+			Error error = new Error();
+			error.setCode(e.getCode());
+			error.setMessage(e.getCustomMessage());
+			error.setDescription(e.getDescription());
+			
+			return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);	
+		}
+		
+		ServiceReqResponse serviceRes = new ServiceReqResponse();
+		serviceRes.setServiceRequests(serviceRequests);
+		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		serviceRes.setResponseInfo(responseInfo);
+		return new ResponseEntity<>(serviceRes, HttpStatus.OK);
+	}
+	
 	private ErrorResponse populateErrors(BindingResult errors) {
 		ErrorResponse errRes = new ErrorResponse();
 		Error error = new Error();

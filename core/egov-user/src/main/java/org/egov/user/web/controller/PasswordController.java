@@ -1,8 +1,8 @@
 package org.egov.user.web.controller;
 
 import org.egov.user.domain.service.UserService;
-import org.egov.user.web.contract.NonLoggedInUserUpdatePasswordRequest;
 import org.egov.user.web.contract.LoggedInUserUpdatePasswordRequest;
+import org.egov.user.web.contract.NonLoggedInUserUpdatePasswordRequest;
 import org.egov.user.web.contract.UpdatePasswordResponse;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

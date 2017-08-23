@@ -3,7 +3,6 @@ package org.egov.user.web.controller;
 import org.apache.commons.io.IOUtils;
 import org.egov.user.TestConfiguration;
 import org.egov.user.domain.exception.DuplicateUserNameException;
-import org.egov.user.domain.exception.InvalidUserCreateException;
 import org.egov.user.domain.exception.OtpValidationPendingException;
 import org.egov.user.domain.exception.UserNotFoundException;
 import org.egov.user.domain.model.Role;

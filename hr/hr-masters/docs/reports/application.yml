@@ -1,0 +1,72 @@
+---
+ReportDefinitions:
+- reportName: Employee Search
+  summary: Employee Search
+  version: 1.0.0
+  sourceColumns:
+  - name: code
+    label: reports.hr.employee.Employee_Code         
+    type: string
+    source: egeis_employee
+  - name: name
+    label: reports.hr.employee.Employee_Name
+    type: String
+    source: eg_user
+  - name: designation
+    label: reports.hr.employee.Designation
+    type: String
+    source: egeis_assignment
+  - name: department
+    label: reports.hr.employee.Department
+    type: String
+    source: egeis_assignment
+  searchParams:
+  - name: departmentid
+    label: reports.hr.Department
+    type: singlevaluelist
+    pattern: http://egov-common-masters:8889/egov-common-masters/departments/_search?tenantId=$tenantid|$..id|$..name
+    source: eg_department
+    isMandatory: false
+    searchClause: and assign.departmentid=$departmentid
+  - name: designationid
+    label: reports.hr.Designation
+    type: singlevaluelist
+    pattern: http://hr-master:7777/hr-master/designations/_search?tenantId=$tenantid|$..id|$..name 
+    source: egeis_designation
+    isMandatory: false
+    searchClause: and assign.designationid=$designationid
+  - name: code
+    label: reports.hr.Employee_Code/Name 
+    type: String
+    source: hr 
+    isMandatory: false
+    searchClause: and emp.code=$code
+  - name: employeeType
+    label: reports.hr.Employee_Type
+    type: singlevaluelist
+    pattern: http://hr-master:7777/hr-master/employeetypes/_search?tenantId=$tenantid|$..id|$..name
+    source: egeis_employeetype  
+    isMandatory: false
+    searchClause: and emp.employeetypeid=$employeeType
+  - name: status
+    label: reports.hr.Status
+    type: singlevaluelist
+    pattern: http://hr-master:7777/hr-master/hrstatuses/_search?tenantId=$tenantid|$..id|$..name
+    source: egeis_hrstatus
+    searchClause: and emp.employeestatus=$status
+  - name: reports
+    label: reports.hr.viewreport
+  query: select  emp.code as code ,usr.name as name,dept.name as department,desig.name as designation 
+    from egeis_employee emp, egeis_assignment assign,eg_user usr, eg_department dept,egeis_designation desig
+    where  
+    usr.type='EMPLOYEE'
+    and assign.employeeid=emp.id
+    and usr.id=emp.id
+    and assign.departmentid=dept.id
+    and assign.designationid=desig.id
+    order by usr.name
+    
+
+  
+  
+  

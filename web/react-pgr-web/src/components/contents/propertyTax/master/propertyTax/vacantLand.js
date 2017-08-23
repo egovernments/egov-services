@@ -153,7 +153,7 @@ class VacantLand extends Component {
 								  <Col xs={12} md={3} sm={6}>
 									   <TextField
 											hintText=""
-											floatingLabelText={translate('pt.create.groups.propertyAddress.fields.surveyNumber')+'*'}
+											floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.surveyNumber')}<span style={{"color": "#FF0000"}}> *</span></span>}
 											errorText={fieldErrors.survayNumber ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.survayNumber}</span> : ""}
 											value={vacantLand.survayNumber ? vacantLand.survayNumber:""}
 											onChange={(e) => {
@@ -172,7 +172,7 @@ class VacantLand extends Component {
 								  <Col xs={12} md={3} sm={6}>
 									   <TextField
 											hintText=""
-											floatingLabelText={translate('pt.create.groups.propertyAddress.fields.pattaNumber')+' *'}
+											floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.pattaNumber')}<span style={{"color": "#FF0000"}}> *</span></span>}
 											errorText={fieldErrors.pattaNumber ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.pattaNumber}</span> : ""}
 											value={vacantLand.pattaNumber ? vacantLand.pattaNumber:""}
 											onChange={(e) => {
@@ -190,7 +190,7 @@ class VacantLand extends Component {
 								  <Col xs={12} md={3} sm={6}>
 									   <TextField
 											hintText=""
-											floatingLabelText={translate('pt.create.groups.propertyAddress.fields.vacantLandArea') + ' *'}
+											floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.vacantLandArea')}<span style={{"color": "#FF0000"}}> *</span></span>}
 											errorText={fieldErrors.vacantLandArea ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.vacantLandArea}</span> : ""}
 											value={vacantLand.vacantLandArea ? vacantLand.vacantLandArea:""}
 											onChange={(e) => {
@@ -208,7 +208,7 @@ class VacantLand extends Component {
 								   <Col xs={12} md={3} sm={6}>
 									   <TextField
 											hintText=""
-											floatingLabelText={translate('pt.create.groups.propertyAddress.fields.marketValue')+' *'}
+											floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.marketValue')}<span style={{"color": "#FF0000"}}> *</span></span>}
 											errorText={fieldErrors.marketValue ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.marketValue}</span> : ""}
 											value={vacantLand.marketValue ? vacantLand.marketValue:""}
 											onChange={(e) => {
@@ -226,7 +226,7 @@ class VacantLand extends Component {
 								  <Col xs={12} md={3} sm={6}>
 									   <TextField
 											hintText=""
-											floatingLabelText={translate('pt.create.groups.propertyAddress.fields.capitalValue')+' *'}
+											floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.capitalValue')}<span style={{"color": "#FF0000"}}> *</span></span>}
 											errorText={fieldErrors.capitalValue ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.capitalValue}</span> : ""}
 											value={vacantLand.capitalValue ? vacantLand.capitalValue:""}
 											onChange={(e) => {
@@ -245,7 +245,7 @@ class VacantLand extends Component {
 									<TextField  className="fullWidth"
 									  hintText="dd/mm/yyyy"
 									  floatingLabelFixed={true}
-									  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.effectiveDate')+' *'}
+									  floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.effectiveDate')}<span style={{"color": "#FF0000"}}> *</span></span>}
 									  errorText={fieldErrors.effectiveDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.effectiveDate}</span> : ""}
 									  value={vacantLand.effectiveDate ? vacantLand.effectiveDate : ""}
 									  onChange={(e) => {handleChange(e,"effectiveDate", true, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
@@ -257,7 +257,7 @@ class VacantLand extends Component {
 								 <Col xs={12} md={3} sm={6}>
 									   <TextField
 											hintText=""
-											floatingLabelText={translate('pt.create.groups.propertyAddress.fields.vacantLandPlotArea')+' *'}
+											floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.vacantLandPlotArea')}<span style={{"color": "#FF0000"}}> *</span></span>}
 											errorText={fieldErrors.vacantLandPlotArea ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.vacantLandPlotArea}</span> : ""}
 											value={vacantLand.vacantLandPlotArea ? vacantLand.vacantLandPlotArea : ""}
 											onChange={(e) => {
@@ -274,7 +274,7 @@ class VacantLand extends Component {
 								   <Col xs={12} md={3} sm={6}>
 									    <SelectField  className="fullWidth selectOption"
 											hintText=""
-											floatingLabelText={translate('pt.create.groups.propertyAddress.fields.layoutApprovalAuthority')+ ' *'}
+											floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.layoutApprovalAuthority')}<span style={{"color": "#FF0000"}}> *</span></span>}
 											errorText={fieldErrors.layoutApprovalAuthority ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.layoutApprovalAuthority}</span> : ""}
 											value={vacantLand.layoutApprovalAuthority ? vacantLand.layoutApprovalAuthority : ""}
 										    dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
@@ -298,7 +298,7 @@ class VacantLand extends Component {
 								  <Col xs={12} md={3} sm={6}>
 									   <TextField
 											hintText=""
-											floatingLabelText={translate('pt.create.groups.propertyAddress.fields.layoutPermitNumber')+' *'}
+											floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.layoutPermitNumber')}<span style={{"color": "#FF0000"}}> *</span></span>}
 											errorText={fieldErrors.layoutPermitNumber ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.layoutPermitNumber}</span> : ""}
 											value={vacantLand.layoutPermitNumber ? vacantLand.layoutPermitNumber : ""}
 											onChange={(e) => {
@@ -319,7 +319,7 @@ class VacantLand extends Component {
 									<TextField  className="fullWidth"
 									  hintText="dd/mm/yyyy"
 									  floatingLabelFixed={true}
-									  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.layoutPermitDate')+' *'}
+									  floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.layoutPermitDate')}<span style={{"color": "#FF0000"}}> *</span></span>}
 									  errorText={fieldErrors.layoutPermitDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.layoutPermitDate}</span> : ""}
 									  value={vacantLand.layoutPermitDate ? vacantLand.layoutPermitDate : ""}
 									  onChange={(e) => {handleChange(e,"layoutPermitDate", true, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
@@ -333,7 +333,7 @@ class VacantLand extends Component {
 			  </CardText>
 		  </Card>
 		  <Card className="uiCard">
-			  <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Details of surrounding Boundaries of the property</div>} />
+			  <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate('pt.create.groups.surroundingBoundaries')}</div>} />
 			  <CardText style={styles.reducePadding}>
 				 
 						  <Grid fluid>
@@ -341,7 +341,7 @@ class VacantLand extends Component {
 								  <Col xs={12} md={3} sm={6}>
 									   <TextField
 											hintText=""
-											floatingLabelText={translate('pt.create.groups.propertyAddress.fields.northBoundedBy')+ ' *'}
+											floatingLabelText={translate('pt.create.groups.propertyAddress.fields.northBoundedBy')}
 											errorText={fieldErrors.north ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.north}</span> : ""}
 											value={vacantLand.north ? vacantLand.north:""}
 											onChange={(e) => {
@@ -359,7 +359,7 @@ class VacantLand extends Component {
 								  <Col xs={12} md={3} sm={6}>
 									   <TextField
 											hintText=""
-											floatingLabelText={translate('pt.create.groups.propertyAddress.fields.southBoundedBy')+' *'}
+											floatingLabelText={translate('pt.create.groups.propertyAddress.fields.southBoundedBy')}
 											errorText={fieldErrors.south ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.south}</span> : ""}
 											value={vacantLand.south ? vacantLand.south:""}
 											onChange={(e) => {

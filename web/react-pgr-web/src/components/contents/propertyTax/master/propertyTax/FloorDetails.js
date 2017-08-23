@@ -423,17 +423,30 @@ calcArea = (e, type) => {
 }
 
 handleAge = (year) => {
-/*	var query = {
-		fromYear : year,
-		toYear: year
+	
+	let {handleChangeFloor} = this.props;
+		
+	let yr = year.split('/');
+	
+	if(yr[2] !=undefined && yr[2].length==4){
+		var query = {
+			year : yr[2]
+		}
+	
+		var currentThis = this;
+		Api.commonApiPost('pt-property/property/depreciations/_search',query).then((res)=>{
+			if(res.depreciations.length !=0){
+				let e = {
+					target: {
+						value: res.depreciations[0].code
+					}
+				}
+				handleChangeFloor(e, "floor","age", true, "")
+			}	
+		}).catch((err)=> {
+		  console.log(err)
+		})
 	}
-	var currentThis = this;
-	Api.commonApiPost('/property/depreciations/_search',query).then((res)=>{
-	  console.log(res);
-	  currentThis.setState({structureclasses: res.structureClasses})
-	}).catch((err)=> {
-	  console.log(err)
-	})*/
 }	
 
 calcAssessableArea = (e, type) => {
@@ -717,7 +730,7 @@ deleteOccupantName = (index) =>{
 													<Col xs={12} md={3} sm={6}>
 														<SelectField  className="fullWidth selectOption"
 														  floatingLabelFixed={true}
-														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.floorNumber')+ '*'}
+														  floatingLabelText={<span>{translate('pt.create.groups.floorDetails.fields.floorNumber')}<span style={{"color": "#FF0000"}}> *</span></span>}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.floorNo ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.floor.floorNo}</span>:"") : ""}
 														  value={floorDetails.floor ? floorDetails.floor.floorNo : ""}
 														  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
@@ -741,7 +754,7 @@ deleteOccupantName = (index) =>{
 													</Col>
 													<Col xs={12} md={3} sm={6}>
 														 <SelectField  className="fullWidth selectOption"
-															floatingLabelText={translate('pt.create.groups.floorDetails.fields.unitType')+ '*'}
+															floatingLabelText={<span>{translate('pt.create.groups.floorDetails.fields.unitType')}<span style={{"color": "#FF0000"}}> *</span></span>}
 															floatingLabelFixed={true}
 															errorText={fieldErrors.floor ? (fieldErrors.floor.unitType ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.floor.unitType}</span>:"" ): ""}
 															value={floorDetails.floor ? floorDetails.floor.unitType : ""}
@@ -760,7 +773,6 @@ deleteOccupantName = (index) =>{
 																	floorDetails.floor.waterMeterNo = null;
 																	floorDetails.floor.exemptionReason = null;
 																	floorDetails.floor.rentCollected = null;
-																	floorDetails.floor.age = '0TO20';
 																}
 																
 																handleChangeFloor(e,"floor" ,"unitType", true, "");
@@ -823,7 +835,7 @@ deleteOccupantName = (index) =>{
 																	<TextField  className="fullWidth"
 																	  hintText="201"
 																	  floatingLabelFixed={true}
-																	  floatingLabelText={translate('pt.create.groups.floorDetails.fields.flatNo')+' *'}
+																	  floatingLabelText={<span>{translate('pt.create.groups.floorDetails.fields.flatNo')}<span style={{"color": "#FF0000"}}> *</span></span>}
 																	  errorText={fieldErrors.floor ? (fieldErrors.floor.flatNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.flatNo}</span> :""): ""}
 																	  value={floorDetails.floor ? floorDetails.floor.flatNo : ""}
 																	  onChange={(e) => {handleChangeFloor(e,"floor" ,"flatNo", true, /^\d+$/g)}}
@@ -836,7 +848,7 @@ deleteOccupantName = (index) =>{
 															}
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
-														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.unitNumber')+' *'}
+														  floatingLabelText={<span>{translate('pt.create.groups.floorDetails.fields.unitNumber')}<span style={{"color": "#FF0000"}}> *</span></span>}
 														  floatingLabelFixed={true}
 														  hintText="102"
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.unitNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.unitNo}</span> :""): ""}
@@ -852,7 +864,7 @@ deleteOccupantName = (index) =>{
 													<Col xs={12} md={3} sm={6}>
 														<SelectField  className="fullWidth selectOption"
 														  floatingLabelFixed={true}
-														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.constructionClass')+' *'}
+														  floatingLabelText={<span>{translate('pt.create.groups.floorDetails.fields.constructionClass')}<span style={{"color": "#FF0000"}}> *</span></span>}
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.structure? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.floor.structure}</span>:"" ): ""}
 														  value={floorDetails.floor ? floorDetails.floor.structure : ""}
 														  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
@@ -876,7 +888,7 @@ deleteOccupantName = (index) =>{
 													<Col xs={12} md={3} sm={6}>
 														<SelectField  className="fullWidth selectOption"
 														  floatingLabelFixed={true}
-														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.usageType')+' *'}
+														  floatingLabelText={<span>{translate('pt.create.groups.floorDetails.fields.usageType')}<span style={{"color": "#FF0000"}}> *</span></span>}
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.usage? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.floor.usage}</span>:"" ): ""}
 														  value={floorDetails.floor ? floorDetails.floor.usage : ""}
 														  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
@@ -939,7 +951,7 @@ deleteOccupantName = (index) =>{
 													<Col xs={12} md={3} sm={6}>
 														<SelectField  className="fullWidth selectOption"
 														floatingLabelFixed={true}
-														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.occupancy')+' *'}
+														  floatingLabelText={<span>{translate('pt.create.groups.floorDetails.fields.occupancy')}<span style={{"color": "#FF0000"}}> *</span></span>}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.occupancyType?<span style={{position:"absolute", bottom:-41}}>{fieldErrors.floor.occupancyType}</span>:"") : ""}
 														  value={floorDetails.floor ? floorDetails.floor.occupancyType : ""}
 														  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
@@ -1054,10 +1066,11 @@ deleteOccupantName = (index) =>{
 														<TextField  className="fullWidth"
 														  hintText="dd/mm/yyyy"
 														  floatingLabelFixed={true}
-														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.constructionEndDate')+' *'}
+														  floatingLabelText={<span>{translate('pt.create.groups.floorDetails.fields.constructionEndDate')}<span style={{"color": "#FF0000"}}> *</span></span>}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.constCompletionDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.constCompletionDate}</span> :""): ""}
 														  value={floorDetails.floor ? floorDetails.floor.constCompletionDate : ""}
-														  onChange={(e) => {handleChangeFloor(e,"floor" ,"constCompletionDate", true, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
+														  onChange={(e) => { this.handleAge(e.target.value);
+																handleChangeFloor(e,"floor" ,"constCompletionDate", true,  /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -1067,7 +1080,7 @@ deleteOccupantName = (index) =>{
 														<TextField  className="fullWidth"
 														  hintText="dd/mm/yyyy"
 														  floatingLabelFixed={true}
-														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.effectiveFromDate')+' *'}
+														  floatingLabelText={<span>{translate('pt.create.groups.floorDetails.fields.effectiveFromDate')}<span style={{"color": "#FF0000"}}> *</span></span>}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.occupancyDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.occupancyDate}</span> :""): ""}
 														  value={floorDetails.floor ? floorDetails.floor.occupancyDate : ""}
 														  onChange={(e) => {handleChangeFloor(e,"floor" ,"occupancyDate", true, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
@@ -1078,7 +1091,7 @@ deleteOccupantName = (index) =>{
 													</Col>
 													<Col xs={12} md={3} sm={6}>
 														<SelectField  className="fullWidth selectOption"
-														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.unstructuredLand')+' *'}
+														  floatingLabelText={<span>{translate('pt.create.groups.floorDetails.fields.unstructuredLand')}<span style={{"color": "#FF0000"}}> *</span></span>}
 														  errorText={fieldErrors.floor ? ( fieldErrors.floor.isStructured?<span style={{position:"absolute", bottom:-41}}>{fieldErrors.floor.isStructured}</span>:"") : ""}
 														  value={floorDetails.floor ? floorDetails.floor.isStructured : ""}
 														  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
@@ -1153,7 +1166,7 @@ deleteOccupantName = (index) =>{
 													
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
-														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.plinthArea')+' *'}
+														  floatingLabelText={<span>{translate('pt.create.groups.floorDetails.fields.plinthArea')}<span style={{"color": "#FF0000"}}> *</span></span>}
 														  hintText="27.75"
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.builtupArea? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.builtupArea}</span>:"" ): ""}
 														  value={floorDetails.floor ? floorDetails.floor.builtupArea : ""}
@@ -1171,7 +1184,7 @@ deleteOccupantName = (index) =>{
 													
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
-														  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.carpetArea')+' *'}
+														  floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.carpetArea')}<span style={{"color": "#FF0000"}}> *</span></span>}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.carpetArea? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.carpetArea}</span> :""): ""}
 														  value={floorDetails.floor ? floorDetails.floor.carpetArea : ""}
 														  onChange={(e) => {
@@ -1245,7 +1258,7 @@ deleteOccupantName = (index) =>{
 												
 													<Col xs={12} md={3} sm={6}>
 														  <Checkbox
-															label={translate('pt.create.groups.assessmentDetails.fields.isLegal')+' *'}
+															label={<span>{translate('pt.create.groups.assessmentDetails.fields.isLegal')}<span style={{"color": "#FF0000"}}> *</span></span>}
 															style={styles.checkbox}
 															defaultChecked ={true}
 															onCheck = {(e, i, v) => {

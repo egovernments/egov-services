@@ -502,8 +502,16 @@ var localization_EN_Data = {
 	"pt.create.groups.assessmentDetails.newProperty": "New Property",
 	"pt.create.groups.assessmentDetails.bifurcation": "Bifurcation",
 	"pt.create.groups.assessmentDetails.bifurcation": "None",
-
-
+	"pt.create.groups.workflow":"Workflow",
+	"pt.create.groups.workflow.departmentName": "Department Name",
+	"pt.create.groups.workflow.designationName": "Designation Name",
+	"pt.create.groups.workflow.approverName": "Approver Name",
+	"pt.create.groups.workflow.comment": "Comment",
+	"pt.create.groups.createNewProperty": "Create New Property",
+	"pt.create.groups.ownerDetails.fields.male": "Male",
+	"pt.create.groups.ownerDetails.fields.female": "Female",
+	"pt.create.groups.ownerDetails.fields.Others": "Others",
+	
 
     //employee Object
     "employee.Employee.fields.code": "Code",
@@ -1614,6 +1622,12 @@ var localization_MR_Data = {
 	"pt.create.groups.assessmentDetails.newProperty": "New Property",
 	"pt.create.groups.assessmentDetails.bifurcation": "Bifurcation",
 	"pt.create.groups.assessmentDetails.bifurcation": "None",
+	"pt.create.groups.workflow":"Workflow",
+	"pt.create.groups.workflow.departmentName": "Department Name",
+	"pt.create.groups.workflow.designationName": "Designation Name",
+	"pt.create.groups.workflow.approverName": "Approver Name",
+	"pt.create.groups.workflow.comment": "Comment",
+	"pt.create.groups.createNewProperty": "Create New Property",
 	
 	﻿"pt.create.groups.assessmentDetails":"मूल्यांकन तपशील",
 	"wc.crete.Slabs":"स्लॅब्स",

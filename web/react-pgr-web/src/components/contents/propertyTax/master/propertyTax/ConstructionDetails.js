@@ -241,7 +241,7 @@ formatDate(date){
 												<TextField  className="fullWidth"
 												  hintText="dd/mm/yyyy"
 												  floatingLabelFixed={true}
-												  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.currentAssessmentDate')+' *'}
+												  floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.currentAssessmentDate')}<span style={{"color": "#FF0000"}}> *</span></span>}
 												  errorText={fieldErrors.currentAssessmentDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.currentAssessmentDate}</span> : ""}
 												  value={constructionDetails.currentAssessmentDate ? constructionDetails.currentAssessmentDate : ""}
 												  onChange={(e) => {handleChange(e,"currentAssessmentDate", true, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
@@ -254,7 +254,7 @@ formatDate(date){
 												<TextField  className="fullWidth"
 												  hintText="dd/mm/yyyy"
 												  floatingLabelFixed={true}
-												  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.firstAssessmentDate')+' *'}
+												  floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.firstAssessmentDate')}<span style={{"color": "#FF0000"}}> *</span></span>}
 												  errorText={fieldErrors.firstAssessmentDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.firstAssessmentDate}</span> : ""}
 												  value={constructionDetails.firstAssessmentDate ? constructionDetails.firstAssessmentDate : ""}
 												  onChange={(e) => {handleChange(e,"firstAssessmentDate", true, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
@@ -280,7 +280,7 @@ formatDate(date){
 												<TextField  className="fullWidth"
 												  hintText="dd/mm/yyyy"
 												  floatingLabelFixed={true}
-												   floatingLabelText={translate('pt.create.groups.propertyAddress.fields.lastAssessmentDate')+' *'}
+												   floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.lastAssessmentDate')}<span style={{"color": "#FF0000"}}> *</span></span>}
 												  errorText={fieldErrors.lastAssessmentDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.lastAssessmentDate}</span> : ""}
 												  value={constructionDetails.lastAssessmentDate ? constructionDetails.lastAssessmentDate : ""}
 												  onChange={(e) => {handleChange(e,"lastAssessmentDate", true, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}

@@ -61,6 +61,8 @@ public class User {
 	private Long loggedInUserId;
 	@Setter
 	private boolean otpValidationMandatory;
+	@Setter
+	private boolean mobileValidationMandatory = true;
 
 	public void validateNewUser() {
 		if (isUsernameAbsent()
@@ -107,7 +109,7 @@ public class User {
 	}
 
 	public boolean isMobileNumberAbsent() {
-		return isEmpty(mobileNumber);
+		return mobileValidationMandatory && isEmpty(mobileNumber);
 	}
 
 	public boolean isNameAbsent() {

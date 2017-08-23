@@ -18,6 +18,10 @@ import {
   StepLabel,
 } from 'material-ui/Stepper';
 import FlatButton from 'material-ui/FlatButton';
+import WaterReceipt from './receipts/WaterReceipt';
+import WaterCertificate from './receipts/WaterCertificate';
+import PropertyTaxExtract from './receipts/PropertyTaxExtract';
+import PropertyTaxCertificate from './receipts/PropertyTaxCertificate';
 
 import $ from 'jquery';
 import 'datatables.net-buttons/js/buttons.html5.js';// HTML 5 file export
@@ -30,6 +34,7 @@ import 'datatables.net-buttons-bs';
 import jsPDF from 'jspdf';
 import "jspdf-autotable";
 import PDFObject from "pdfobject";
+import html2canvas from 'html2canvas';
 
 
 
@@ -265,9 +270,42 @@ class NoDues extends Component {
 
   generatePdf=(id)=>{
 
-    let {tenantInfo,formData}=this.props;
-    let {getVal,getGrandTotal,getTotal,getPurposeTotal}=this;
+    /*const input = document.getElementById('CertificateForWc');
+    html2canvas(input)
+      .then((canvas) => {
+        const imgData = canvas.toDataURL('image/jpeg');
+        const pdf = new jsPDF();
+        pdf.addImage(imgData, 'JPEG', 0, 0, 210,130);
+        pdf.save("receipt.pdf");
+      });
 
+    let {tenantInfo,formData}=this.props;
+    let {getVal,getGrandTotal,getTotal,getPurposeTotal}=this;*/
+    var mywindow = window.open('', 'PRINT', 'height=400,width=600');
+
+    var cdn = `
+      <!-- Latest compiled and minified CSS -->
+      <link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+      <!-- Optional theme -->
+      <link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">  `;
+    mywindow.document.write('<html><head><title>' + document.title  + '</title>');
+    mywindow.document.write(cdn);
+    mywindow.document.write('</head><body >');
+    mywindow.document.write('<h1>' + document.title  + '</h1>');
+    mywindow.document.write(document.getElementById('CertificateForWc').innerHTML);
+    mywindow.document.write('</body></html>');
+
+    mywindow.document.close(); // necessary for IE >= 10
+    mywindow.focus(); // necessary for IE >= 10*/
+
+    setTimeout(function(){
+      mywindow.print();
+      mywindow.close();
+    }, 1000);
+
+    return true;
+    return;
 
 
     let x=5,y=5,w=200,h=90,rectGap=10,originalX=5,originalY=10,dublicateX=5,dublicateY=5,triplicateX=5,triplicateY=5;
@@ -380,7 +418,7 @@ class NoDues extends Component {
 
 
 
-       doc.save(id+'-' + getVal("Receipt[0].transactionId") + '.pdf');
+       //doc.save(id+'-' + getVal("Receipt[0].transactionId") + '.pdf');
 
       //  doc=new jsPDF();
 
@@ -491,268 +529,20 @@ class NoDues extends Component {
             {showResult &&
               <Grid>
                   <Row>
-                      <Col md={6}>
-                      <Card>
-                        <CardHeader title="Receipt"/>
-                        <CardText>
-                              <Table responsive style={{fontSize:"bold"}} id="ReceiptForWcAPartOne" striped bordered condensed>
-                                  <tbody>
-                                      <tr>
-                                          <td style={{textAlign:"left"}}>
-                                            ULB Logo
-                                          </td>
-                                          <td style={{textAlign:"center"}}>
-                                            ULB Name
-                                            Department
-                                          </td>
-                                          <td style={{textAlign:"right"}}>
-                                            MAH
-                                            LOGO
-                                          </td>
-                                      </tr>
-                                      <tr>
-                                          <td style={{textAlign:"left"}}>
-                                            Receipt Number
-                                          </td>
-                                          <td style={{textAlign:"center"}}>
-                                            Receipt For
-                                          </td>
-                                          <td style={{textAlign:"right"}}>
-                                            Receipt Date
-                                          </td>
-                                      </tr>
-                                      <tr>
-                                          <td colSpan={3} style={{textAlign:"left"}}>
-                                            Connection No : ______________<br/>
-                                            Consumer Owner Name : _________________<br/>
-                                            Amount : ______________<br/>
-                                            Consumer Address :_________________________________<br/>
-                                            Received From : _________________<br/>
-                                          </td>
-                                      </tr>
-
-                                  </tbody>
-                              </Table>
-
-                              <Table id="ReceiptForWcAPartTwo" responsive striped bordered condensed>
-                                  <tbody>
-                                      <tr>
-                                          <td rowSpan={2}>
-                                            Bill Reference No.& Date
-                                          </td>
-                                          <td rowSpan={2}>
-                                            Details
-                                          </td>
-                                          <td colSpan={2}>
-                                            Demand
-                                          </td>
-                                          <td colSpan={2}>
-                                            Payment Received
-                                          </td>
-                                          <td colSpan={2}>
-                                            Balance
-                                          </td>
-                                      </tr>
-                                      <tr>
-                                          <td >
-                                            Arrears
-                                          </td>
-                                          <td >
-                                            Current
-                                          </td>
-                                          <td >
-                                            Arrears
-                                          </td>
-                                          <td >
-                                            Current
-                                          </td>
-                                          <td >
-                                            Arrears
-                                          </td>
-                                          <td >
-                                            Current
-                                          </td>
-                                      </tr>
-                                      <tr>
-                                          <td >
-                                            12134566 12-12-2011
-                                          </td>
-                                          <td >
-                                            Water No dues
-                                          </td>
-                                          <td >
-                                            10
-                                          </td>
-                                          <td >
-                                            19
-                                          </td>
-                                          <td >
-                                            20
-                                          </td>
-                                          <td >
-                                            32
-                                          </td>
-                                          <td>
-                                            20
-                                          </td>
-                                          <td>
-                                            22
-                                          </td>
-                                      </tr>
-                                      <tr>
-                                          <td >
-                                            12134566 12-12-2011
-                                          </td>
-                                          <td >
-                                            Water No dues
-                                          </td>
-                                          <td >
-                                            10
-                                          </td>
-                                          <td >
-                                            19
-                                          </td>
-                                          <td >
-                                            20
-                                          </td>
-                                          <td >
-                                            32
-                                          </td>
-                                          <td>
-                                            20
-                                          </td>
-                                          <td>
-                                            22
-                                          </td>
-                                      </tr>
-                                      <tr>
-                                          <td colSpan={4}>Amount in words :</td>
-                                          <td colSpan={4}>Total Outstanding after collection</td>
-                                      </tr>
-                                      <tr>
-                                        <td colSpan={8}>
-                                          Payment Mode
-                                        </td>
-                                      </tr>
-                                      <tr>
-                                        <td>
-                                          Mode
-                                        </td>
-                                        <td>
-                                          Amount
-                                        </td>
-                                        <td colSpan={2}>
-                                          Cheque / DD No.
-                                        </td>
-                                        <td colSpan={2}>
-                                          Cheque / DD Date.
-                                        </td>
-                                        <td colSpan={4}>
-                                          Bank Name
-                                        </td>
-                                      </tr>
-                                      <tr>
-                                        <td>
-                                          Cheque
-                                        </td>
-                                        <td>
-                                          4100
-                                        </td>
-                                        <td colSpan={2}>
-                                          12123232322
-                                        </td>
-                                        <td colSpan={2}>
-                                          12-12-2017
-                                        </td>
-                                        <td colSpan={2}>
-                                          HDFC
-                                        </td>
-                                      </tr>
-                                  </tbody>
-                              </Table>
-                        </CardText>
-                      </Card>
+                      <Col md={6} id="CertificateForWc">
+                        <WaterReceipt getVal={getVal}/>
                       </Col>
                       <Col md={6}>
-                      <Card>
-                        <CardHeader title="Certificate"/>
-                        <CardText>
-                              <Table responsive style={{fontSize:"bold"}} id="CertificateForWc"  striped bordered condensed>
-                                  <tbody>
-                                      <tr>
-                                          <td style={{textAlign:"left"}}>
-                                            ULB Logo
-                                          </td>
-                                          <td style={{textAlign:"center"}}>
-                                            ULB Name
-                                            Revenue
-                                          </td>
-                                          <td style={{textAlign:"right"}}>
-                                            MAH
-                                            LOGO
-                                          </td>
-                                      </tr>
-                                      <tr>
-                                          <td colSpan={3}>
-                                            <div style={{textAlign:"center"}}>
-                                                No Due Certificate / थकबाकी नसल्याचे प्रमाणपत्र<br/>
-                                              (मुवंई प्रांतिक महानगरपालिका अधिनियम 1949 चे अनुसूचीतील प्रकरण 8 अधिनियम 44, 45 व 46 अन्वये )
-                                            </div>
-                                            <br/>
-                                            <div style={{textAlign:"right"}}>
-                                                  Date / दिनांक :{getVal("Receipt[0].Bill[0].billDetails[0].billDate")} <br/>
-                                                  Certificate No. / प्रमाणपत्र क्रं : ____________
-
-                                            </div>
-                                            <br/>
-                                            <div style={{textAlign:"left"}}>
-                                              प्रती,<br/>
-                                              {getVal("Receipt[0].Bill[0].payeeName")}<br/>
-                                              {getVal("Receipt[0].Bill[0].payeeAddress")}
-
-
-                                            </div>
-                                            <br/>
-                                            <div style={{textAlign:"center"}}>
-                                              Subject /विषय :  सन 2017 - 18 थकबाकी नसल्याचे प्रमाणपत्र मिळणेबाबत.<br/>
-                                              Reference / संदर्भ : आपला अर्ज क्रमांक Application No दिनांक {getVal("Receipt[0].Bill[0].billDetails[0].billDate")}
-
-
-                                            </div>
-                                            <br/>
-                                            <div style={{textAlign:"left"}}>
-                                              महोद्य / महोद्या ,
-
-
-                                            </div>
-                                            <br/>
-                                            <div style={{textAlign:"center"}}>
-                                              संदर्भिय विषयांन्वये प्रमाणित करण्यात येते की, पाणी क्रमांक Consumer No,
-                                              {getVal("Receipt[0].Bill[0].payeeName")} यांच्या नावे नोंद असून, सन financial year  पर्यंतचा संपुर्ण
-                                              पाणी रक्कम भरलेली असून, कोणतीही थकबाकी येणे नाही.
-
-
-                                            </div>
-                                            <br/>
-                                            <div style={{textAlign:"right"}}>
-                                                                      कर अधिक्षक,<br/>
-                                                                   ULB Name
-
-
-                                            </div>
-
-                                          </td>
-                                      </tr>
-
-
-                                  </tbody>
-                              </Table>
-
-
-                        </CardText>
-                      </Card>
+                        <WaterCertificate getVal={getVal}/>
                       </Col>
-
+                  </Row>
+                  <Row>
+                      <Col md={6}>
+                        <PropertyTaxExtract getVal={getVal}/>
+                      </Col>
+                      <Col md={6}>
+                        <PropertyTaxCertificate getVal={getVal}/>
+                      </Col>
                   </Row>
               </Grid>
 

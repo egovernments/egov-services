@@ -146,9 +146,14 @@ public class GenericPage extends BasePage {
         await().atMost(10, TimeUnit.SECONDS).until(() -> driver.findElements(By.cssSelector("div[role=\"presentation\"]:nth-child(1) div div span div div div")).size() >= 1);
         List<WebElement> dropdown = driver.findElements(By.cssSelector("div[role=\"presentation\"]:nth-child(1) div div span div div div"));
         for (WebElement w : dropdown) {
+            System.out.println(w.getText());
             if (w.getText().equals(value)) {
-                clickOnButton(w, driver);
-                break;
+                try {
+                    clickOnButton(w, driver);
+                    break;
+                } catch (Exception e) {
+                    jsClick(w, driver);
+                }
             }
 
         }
@@ -194,6 +199,7 @@ public class GenericPage extends BasePage {
             clickOnButton(driver.findElement(By.xpath("//*[text()='" + getCurrentDate().split("/")[2] + "']")), driver);
             waitForTheElementToBePresent(By.xpath(year));
             clickOnButton(driver.findElement(By.xpath(year)), driver);
+        }
 
 //        // Selects Month
 //        String m = new SimpleDateFormat("MMM").format(Calendar.getInstance().getTime());
@@ -205,13 +211,10 @@ public class GenericPage extends BasePage {
 
             // Select Date
             if (value.split("/")[0].substring(0, 1).contains("0")) {
-                System.out.println("========sub==========="+value.split("/")[0].substring(0, 1));
-            }
                 value = value.split("/")[0].replaceFirst("0", "");
             }
-            String s = "//*[text()='" + value.split("/")[0] + "']";
+        String s = "//span[text()='" + value.split("/")[0] + "']";
             waitForTheElementToBePresent(By.xpath(s));
-            System.out.println("==========" + s);
             clickOnButton(driver.findElement(By.xpath(s)), driver);
 
             // Click on Ok

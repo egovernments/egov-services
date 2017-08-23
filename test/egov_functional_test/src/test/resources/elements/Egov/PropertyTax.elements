@@ -73,6 +73,12 @@
         "waitFor":"visibility"
         },
         {
+        "elementName":"text",
+        "identifier":"xpath",
+        "value":"//*[text()='%s']",
+        "waitFor":"visibility"
+        },
+        {
         "elementName":"referencePropertyNumber",
         "identifier":"css",
         "value":"[id^='undefined-000001111122222-ReferencePropertyNumber']",
@@ -183,7 +189,7 @@
         {
         "elementName":"buildingPermissionNumber",
         "identifier":"css",
-        "value":"[id^='undefined-undefined-BuildingPermissionnumber']",
+        "value":"[id^='undefined-undefined-BuildingPermission']",
         "waitFor":"visibility"
         },
         {
@@ -225,13 +231,13 @@
         {
         "elementName":"floorUsageType",
         "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[6]/div/div/div[2]/div/div/div/div/div/div[5]/div",
+        "value":".//*[@id='root']/div/main/div/form/div[6]/div/div/div[2]/div/div/div/div/div/div[5]/div/div[1]",
         "waitFor":"visibility"
         },
         {
         "elementName":"floorUsageSubType",
         "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[6]/div/div/div[2]/div/div/div/div/div/div[6]",
+        "value":".//*[@id='root']/div/main/div/form/div[6]/div/div/div[2]/div/div/div/div/div/div[6]/div/div[1]",
         "waitFor":"visibility"
         },
         {
@@ -430,6 +436,72 @@
         "elementName":"licenseNumber",
         "identifier":"css",
         "value":"[id^='undefined-undefined-LicenseNumber']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"buildingPermissionDateQA",
+        "identifier":"css",
+        "value":"[id^='undefined-ddmmyyyy-BuildingPermissionDate']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"constructionStartDateQA",
+        "identifier":"css",
+        "value":"[id^='undefined-ddmmyyyy-ConstructionStartDate']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"constructionEndDateQA",
+        "identifier":"css",
+        "value":"[id^='undefined-ddmmyyyy-ConstructionEndDate']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"effectiveFromDateQA",
+        "identifier":"css",
+        "value":"[id^='undefined-ddmmyyyy-EffectiveFromDate']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"currentAssessmentDateQA",
+        "identifier":"css",
+        "value":"[id^='undefined-ddmmyyyy-CurrentAssessmentDate']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"firstAssessmentDateQA",
+        "identifier":"css",
+        "value":"[id^='undefined-ddmmyyyy-FirstAssessmentDate']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"revisedAssessmentDateQA",
+        "identifier":"css",
+        "value":"[id^='undefined-ddmmyyyy-RevisedAssessmentDate']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"lastAssessmentDateQA",
+        "identifier":"css",
+        "value":"[id^='undefined-ddmmyyyy-LastAssessmentDate']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"commencementDateQA",
+        "identifier":"css",
+        "value":"[id^='undefined-ddmmyyyy-CommencementDate']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"certificateCompletionDateQA",
+        "identifier":"css",
+        "value":"[id^='undefined-ddmmyyyy-CertificateCompletionDate']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"certificateReceivedDateQA",
+        "identifier":"css",
+        "value":"[id^='undefined-ddmmyyyy-CertificateReceivedDate']",
         "waitFor":"visibility"
         }
     ]

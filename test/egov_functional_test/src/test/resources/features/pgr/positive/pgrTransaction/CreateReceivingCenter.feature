@@ -34,16 +34,16 @@ Feature: Creating a receiving center
 
     ### On Create Complaint Grievance Screen Entering Contact Information ###
     And user on Grievance screen verifies contactInfo has visible value Contact Information
-    And user on Grievance screen selects receivingMode with value as Manual
-    And user on Grievance screen selects receivingCenter with value as receivingCenterName
+    And user on Grievance screen selects on receivingMode value Manual
+    And user on Grievance screen selects on receivingCenter value receivingCenterName
     And user on Grievance screen types on receivingCRN value --6 digit random number
     And user on Grievance screen types on name value --"User ", 4 random characters
     And user on Grievance screen types on mobileNumber value --"1",9 Digit Number
     And user on Grievance screen types on email value --email
 
     ### On Create Complaint Grievance Screen Entering Grievance Information ###
-    And user on Grievance screen selects grievanceCategory with value as Revenue
-    And user on Grievance screen selects grievanceType with value as Unauthorised Advt. Boards
+    And user on Grievance screen selects on grievanceCategory value Revenue
+    And user on Grievance screen selects on grievanceType value Unauthorised Advt. Boards
 
     ### On Create Complaint Grievance Screen Entering More Details ###
     And user on Grievance screen types on grievanceDetails value Grievance Details
@@ -71,7 +71,7 @@ Feature: Creating a receiving center
 
     ### On Grievance Screen ###
     And user on Grievance screen will see the complaintDetails
-    And user on Grievance screen selects changeStatus with value as <status>
+    And user on Grievance screen selects on changeStatus value <status>
     And user on Grievance screen types on comments value Comments
     And user on Grievance screen clicks on submitButton
     And user on Grievance screen clicks on okButton

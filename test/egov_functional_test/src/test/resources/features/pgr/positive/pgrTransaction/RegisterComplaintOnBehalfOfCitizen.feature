@@ -17,14 +17,14 @@ Feature: Registering a Complaint
 
     ### On Create Complaint Grievance Screen Entering Contact Information ###
     And user on Grievance screen verifies contactInfo has visible value Contact Information
-    And user on Grievance screen selects receivingMode with value as Call
+    And user on Grievance screen selects on receivingMode value Call
     And user on Grievance screen types on name value --"User ", 4 random characters
     And user on Grievance screen types on mobileNumber value --"1",9 Digit Number
     And user on Grievance screen types on email value --email
 
     ### On Create Complaint Grievance Screen Entering Grievance Information ###
-    And user on Grievance screen selects grievanceCategory with value as Revenue
-    And user on Grievance screen selects grievanceType with value as Unauthorised Advt. Boards
+    And user on Grievance screen selects on grievanceCategory value Revenue
+    And user on Grievance screen selects on grievanceType value Unauthorised Advt. Boards
 
     ### On Create Complaint Grievance Screen Entering More Details ###
     And user on Grievance screen types on grievanceDetails value Grievance Details
@@ -52,7 +52,7 @@ Feature: Registering a Complaint
 
     ### On Grievance Screen ###
     And user on Grievance screen will see the complaintDetails
-    And user on Grievance screen selects changeStatus with value as <status>
+    And user on Grievance screen selects on changeStatus value <status>
     And user on Grievance screen types on comments value Comments
     And user on Grievance screen clicks on submitButton
     And user on Grievance screen clicks on okButton
@@ -76,7 +76,7 @@ Feature: Registering a Complaint
     Examples:
       | status    |
       | COMPLETED |
-#      | REJECTED  |
+      | REJECTED  |
 
   @PGR
   Scenario Outline: Creating a complaint on behalf of Citizen With Status as Forwarded
@@ -95,14 +95,14 @@ Feature: Registering a Complaint
 
     ### On Create Complaint Grievance Screen Entering Contact Information ###
     And user on Grievance screen verifies contactInfo has visible value Contact Information
-    And user on Grievance screen selects receivingMode with value as Call
+    And user on Grievance screen selects on receivingMode value Call
     And user on Grievance screen types on name value --"User ", 4 random characters
     And user on Grievance screen types on mobileNumber value --"1",9 Digit Number
     And user on Grievance screen types on email value --email
 
     ### On Create Complaint Grievance Screen Entering Grievance Information ###
-    And user on Grievance screen selects grievanceCategory with value as Revenue
-    And user on Grievance screen selects grievanceType with value as Unauthorised Advt. Boards
+    And user on Grievance screen selects on grievanceCategory value Revenue
+    And user on Grievance screen selects on grievanceType value Unauthorised Advt. Boards
 
     ### On Create Complaint Grievance Screen Entering More Details ###
     And user on Grievance screen types on grievanceDetails value Grievance Details
@@ -130,12 +130,12 @@ Feature: Registering a Complaint
 
     ### On Grievance Screen ###
     And user on Grievance screen will see the complaintDetails
-    And user on Grievance screen selects changeStatus with value as <status>
+    And user on Grievance screen selects on changeStatus value <status>
 
     And user on Grievance screen will see the forwardDepartment
-    And user on Grievance screen selects forwardDepartment with value as <department>
-    And user on Grievance screen selects forwardDesignation with value as <designation>
-    And user on Grievance screen selects forwardPosition with value as <position>
+    And user on Grievance screen selects on forwardDepartment value <department>
+    And user on Grievance screen selects on forwardDesignation value <designation>
+    And user on Grievance screen selects on forwardPosition value <position>
 
     And user on Grievance screen types on comments value Comments
     And user on Grievance screen clicks on submitButton

@@ -80,6 +80,7 @@ import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -232,7 +233,7 @@ public class BillService {
 
 					List<GlCodeMaster> glCodeMasters = glCodesMap.get(demandDetail.getTaxHeadMasterCode());
 
-					if(glCodeMasters != null && glCodeMasters.isEmpty())
+					if(isEmpty(glCodeMasters))
 						throw new RuntimeException("no glcodemasters found for the given taxhead master code"+demandDetail.getTaxHeadMasterCode());
 					log.info("prepareBill glCodeMasters:" + glCodeMasters);
 					GlCodeMaster glCodeMaster = glCodeMasters.stream()

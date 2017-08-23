@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import org.egov.citizen.config.CitizenServiceConstants;
 import org.egov.citizen.exception.CustomException;
+import org.egov.citizen.model.RequestInfoWrapper;
 import org.egov.citizen.model.SearchDemand;
 import org.egov.citizen.model.ServiceCollection;
 import org.egov.citizen.model.ServiceConfig;
@@ -19,8 +20,9 @@ import org.egov.citizen.web.contract.ReceiptRequest;
 import org.egov.citizen.web.contract.factory.ResponseInfoFactory;
 import org.egov.citizen.web.errorhandlers.Error;
 import org.egov.citizen.web.errorhandlers.ErrorResponse;
-import org.egov.common.contract.request.RequestInfo;
-import org.egov.common.contract.response.ResponseInfo;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +34,15 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
+import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
 
 @RestController
 public class ServiceController {
@@ -55,17 +59,16 @@ public class ServiceController {
 
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
-	
 
 	@Autowired
 	public RestTemplate restTemplate;
 
 	@PostMapping(value = "/_search")
-	@ResponseBody
-	public ResponseEntity<?> getService(@RequestBody RequestInfo requestInfo,
+	public ResponseEntity<?> getService(@RequestBody @Valid RequestInfoWrapper requestInfo,
 			@RequestParam(value = "tenantId", required = false) String tenantId) {
 		ServiceResponse serviceRes = new ServiceResponse();
-		serviceRes.setResponseInfo(new ResponseInfo());
+		serviceRes.setResponseInfo(
+				responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo.getRequestInfo(), true));
 		serviceRes.setServices(serviceDefination.getServices());
 		return new ResponseEntity<>(serviceRes, HttpStatus.OK);
 	}
@@ -80,7 +83,7 @@ public class ServiceController {
 		List<String> results = null;
 		final ObjectMapper objectMapper = new ObjectMapper();
 		ServiceReq servcieReq = objectMapper.convertValue(JsonPath.read(config, "$.serviceReq"), ServiceReq.class);
-				
+
 		List<ServiceConfig> list = serviceConfigs.getServiceConfigs();
 		String url = "";
 		SearchDemand searchDemand = null;
@@ -99,48 +102,75 @@ public class ServiceController {
 		servcieReq.setBackendServiceDetails(demands);
 		citizenService.sendMessageToKafka(servcieReq);
 		serviceReqResponse.setServiceReq(servcieReq);
-		serviceReqResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(citizenService.getRequestInfo(config).getRequestInfo(), true));
+		serviceReqResponse.setResponseInfo(responseInfoFactory
+				.createResponseInfoFromRequestInfo(citizenService.getRequestInfo(config).getRequestInfo(), true));
 		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);
 	}
-	
+
 	@PostMapping(value = "/requests/_update")
-	public ResponseEntity<?> updateService(HttpEntity<String> httpEntity){
-		
+	public ResponseEntity<?> updateService(HttpEntity<String> httpEntity) {
+
 		String json = httpEntity.getBody();
 		Object config = Configuration.defaultConfiguration().jsonProvider().parse(json);
 		final ObjectMapper objectMapper = new ObjectMapper();
 		ServiceReq servcieReq = objectMapper.convertValue(JsonPath.read(config, "$.serviceReq"), ServiceReq.class);
 
 		List<ServiceConfig> list = serviceConfigs.getServiceConfigs();
-		
+
+		final Configuration configuration = Configuration.builder().jsonProvider(new JacksonJsonNodeJsonProvider())
+				.mappingProvider(new JacksonMappingProvider()).build();
+
 		String url = "";
-		String[] results=null;
+		String[] results = null;
 		SearchDemand searchDemand = null;
 		for (ServiceConfig serviceConfig : list) {
 			if (serviceConfig.getServiceCode().equals(servcieReq.getServiceCode())) {
 				searchDemand = serviceConfig.getSearchDemand();
 				url = searchDemand.getCreateDemandRequest().getUrl();
 				String demandRequest = searchDemand.getCreateDemandRequest().getDemandRequest();
-				Object demand = Configuration.defaultConfiguration().jsonProvider().parse(demandRequest);
-		
+
+				JSONObject jObject;
+				try {
+					jObject = new JSONObject(demandRequest);
+					
+					jObject.put("RequestInfo", "{"+citizenService.getRequestInfo(config).getRequestInfo().toString()+"}");
+
+					for(Value value: servcieReq.getAttributeValues()){
+					
+					if(value.getKey().equals("consumerCode")){
+						jObject.getJSONArray("Demands").getJSONObject(0).put("consumerCode",value.getValue());
 				
+					} else if(value.getKey().equals("businessService")){
+						jObject.getJSONArray("Demands").getJSONObject(0).put("businessService",value.getValue());
+					} else if(value.getKey().equals("taxPeriodFrom")){
+						
+						jObject.getJSONArray("Demands").getJSONObject(0).put("taxPeriodFrom",value.getValue());
+					}else if(value.getKey().equals("taxPeriodTo")){
+						
+						jObject.getJSONArray("Demands").getJSONObject(0).put("taxPeriodTo",value.getValue());
+					}
+					
+					System.out.println("jObject" + jObject);
+					
+				}
+			}catch(Exception e){
 				
+			}
 			}
 		}
 
-       return null;	
+		return null;
 	}
-	
+
 	@PostMapping(value = "/requests/receipt/_create")
-	public ResponseEntity<?> createReceipt(@RequestBody @Valid ReceiptRequest receiptReq, 
-			BindingResult errors) {
-		
-		if(receiptReq.getStatus().get(0).equals("FAILURE") || receiptReq.getStatus().get(0).equals("CANCEL")){
+	public ResponseEntity<?> createReceipt(@RequestBody @Valid ReceiptRequest receiptReq, BindingResult errors) {
+
+		if (receiptReq.getStatus().get(0).equals("FAILURE") || receiptReq.getStatus().get(0).equals("CANCEL")) {
 			Error error = new Error();
 			error.setCode(400);
 			error.setMessage(CitizenServiceConstants.FAIL_STATUS_MSG);
 			error.setDescription(CitizenServiceConstants.FAIL_STATUS_DESC);
-			
+
 			return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 
 		}
@@ -149,34 +179,36 @@ public class ServiceController {
 		serviceReq.setBackendServiceDetails(receiptReq);
 		serviceReqResponse.setServiceReq(serviceReq);
 
-	/*	String json = httpEntity.getBody();
-		Object config = Configuration.defaultConfiguration().jsonProvider().parse(json);
-		List<String> results = null;
-		final ObjectMapper objectMapper = new ObjectMapper();
-		ReceiptRequest receiptReq = objectMapper.convertValue(config, ReceiptRequest.class); */
-		
+		/*
+		 * String json = httpEntity.getBody(); Object config =
+		 * Configuration.defaultConfiguration().jsonProvider().parse(json);
+		 * List<String> results = null; final ObjectMapper objectMapper = new
+		 * ObjectMapper(); ReceiptRequest receiptReq =
+		 * objectMapper.convertValue(config, ReceiptRequest.class);
+		 */
+
 		if (errors.hasFieldErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
 		LOGGER.info("Request for receipt creation: " + receiptReq.toString());
 		Object receiptResponse = null;
-		try{
+		try {
 			receiptResponse = citizenService.createReceiptForPayment(receiptReq);
-		}catch(CustomException e){
+		} catch (CustomException e) {
 			Error error = new Error();
 			error.setCode(e.getCode());
 			error.setMessage(e.getCustomMessage());
 			error.setDescription(e.getDescription());
-			
+
 			return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
-			
+
 		}
 		serviceReqResponse.getServiceReq().setBackendServiceDetails(receiptResponse);
-		
+
 		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);
 	}
-	
+
 	private ErrorResponse populateErrors(BindingResult errors) {
 		ErrorResponse errRes = new ErrorResponse();
 		Error error = new Error();
@@ -190,5 +222,5 @@ public class ServiceController {
 		errRes.setError(error);
 		return errRes;
 	}
-	
+
 }

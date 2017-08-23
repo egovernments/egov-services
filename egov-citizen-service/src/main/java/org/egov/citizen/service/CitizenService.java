@@ -26,7 +26,6 @@ import org.egov.citizen.web.contract.Instrument;
 import org.egov.citizen.web.contract.Receipt;
 import org.egov.citizen.web.contract.ReceiptReq;
 import org.egov.citizen.web.contract.ReceiptRequest;
-import org.egov.citizen.web.contract.ReceiptRes;
 import org.egov.common.contract.request.RequestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

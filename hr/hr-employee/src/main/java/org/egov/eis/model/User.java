@@ -81,7 +81,6 @@ public class User {
 	@NotNull
 	private Gender gender;
 
-	@NotNull
 	@Size(max=10)
 	private String mobileNumber;
 

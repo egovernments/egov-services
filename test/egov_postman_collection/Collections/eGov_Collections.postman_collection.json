@@ -1,26 +1,514 @@
 {
 	"variables": [],
 	"info": {
-		"name": "eGov_Collections",
-		"_postman_id": "e1c4b3a4-51a8-cedb-6adf-4651de07dc0d",
-		"description": "",
+		"name": "eGov Collections",
+		"_postman_id": "5975343e-927b-d847-b254-7fabd30c431e",
+		"description": "Create receipt",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "Commons",
+			"name": "Common",
 			"description": "",
-			"item": []
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);",
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"tests[\"Status has String\"] = jsonData.ResponseInfo.status.has(\"Access Token generated successfully\");",
+									"",
+									"tests[\"Username is valid\"] = jsonData.UserRequest.userName.has(request.data[\"username\"]);"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/user/oauth/token",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"type": "text",
+									"value": "10001"
+								},
+								{
+									"key": "password",
+									"type": "text",
+									"value": "12345678"
+								},
+								{
+									"key": "grant_type",
+									"type": "text",
+									"value": "password"
+								},
+								{
+									"key": "scope",
+									"type": "text",
+									"value": "read"
+								},
+								{
+									"key": "tenantId",
+									"type": "text",
+									"value": "mh.roha"
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": {
+							"raw": "{{url}}/user/_logout?access_token={{access_token}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"_logout"
+							],
+							"query": [
+								{
+									"key": "access_token",
+									"value": "{{access_token}}",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": " {\"RequestInfo\":{\"apiId\":\"org.egov.pgr\",\"ver\":\"1.0\",\"ts\":\"13-04-2017 12:13:30\",\"action\":\"POST\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\": \"{{access_token}}\"\n }}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
 		},
 		{
-			"name": "Format Tests",
+			"name": "Format Test",
 			"description": "",
-			"item": []
+			"item": [
+				{
+					"name": "Create Receipt",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"transact_id\", jsonData.Receipt[0].transactionId);",
+									"",
+									"postman.setEnvironmentVariable(\"consumer_code\", jsonData.Receipt[0].Bill[0].billDetails[0].consumerCode);",
+									"",
+									"postman.setEnvironmentVariable(\"receipt_num\", jsonData.Receipt[0].Bill[0].billDetails[0].receiptNumber);"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/collection-services/receipts/_create",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"consumerCode\": \"mh.r81632410\",\n  \n  \"Receipt\": [\n    {\n      \"Bill\": [\n        {\n          \"id\": \"104\",\n          \"payeeName\": \"Samar Khan\",\n          \"payeeAddress\": null,\n          \"mobileNumber\": \"9325687415\",\n          \"payeeEmail\": \"samar@mail.com\",\n          \"isActive\": true,\n          \"isCancelled\": false,\n          \"billDetails\": [\n            {\n              \"id\": \"119\",\n              \"tenantId\": \"mh.roha\",\n              \"bill\": \"104\",\n              \"businessService\": \"WC\",\n              \"billNumber\": \"119\",\n              \"billDate\": 1503484356820,\n              \"consumerCode\": \"mh.r81632410\",\n              \"consumerType\": \"NEWCONNECTION\",\n              \"billDescription\": \"WC Consumer Code: mh.r81632410\",\n              \"displayMessage\": \"WC Consumer Code: mh.r81632410\",\n              \"receiptDate\": null,\n              \"receiptNumber\": null,\n              \"minimumAmount\": 14,\n              \"totalAmount\": 2000,\n              \"collectionModesNotAllowed\": [\n                null\n              ],\n              \"callBackForApportioning\": false,\n              \"partPaymentAllowed\": false,\n              \"billAccountDetails\": [\n                {\n                  \"id\": \"909\",\n                  \"tenantId\": \"mh.roha\",\n                  \"billDetail\": \"119\",\n                  \"glcode\": \"1405013\",\n                  \"order\": 1,\n                  \"accountDescription\": \"WATERCHARGE2014-2015-2-1412121600-1427760000\",\n                  \"crAmountToBePaid\": 0,\n                  \"creditAmount\": null,\n                  \"debitAmount\": null,\n                  \"isActualDemand\": true,\n                  \"purpose\": \"ARREAR_AMOUNT\"\n                },\n                {\n                  \"id\": \"910\",\n                  \"tenantId\": \"mh.roha\",\n                  \"billDetail\": \"119\",\n                  \"glcode\": \"1405013\",\n                  \"order\": 1,\n                  \"accountDescription\": \"WATERCHARGE2015-2016-1-1427846400-1443571200\",\n                  \"crAmountToBePaid\": 0,\n                  \"creditAmount\": null,\n                  \"debitAmount\": null,\n                  \"isActualDemand\": true,\n                  \"purpose\": \"ARREAR_AMOUNT\"\n                },\n                {\n                  \"id\": \"911\",\n                  \"tenantId\": \"mh.roha\",\n                  \"billDetail\": \"119\",\n                  \"glcode\": \"1405013\",\n                  \"order\": 1,\n                  \"accountDescription\": \"WATERCHARGE2015-2016-2-1443657600-1459382400\",\n                  \"crAmountToBePaid\": 0,\n                  \"creditAmount\": null,\n                  \"debitAmount\": null,\n                  \"isActualDemand\": true,\n                  \"purpose\": \"ARREAR_AMOUNT\"\n                },\n                {\n                  \"id\": \"912\",\n                  \"tenantId\": \"mh.roha\",\n                  \"billDetail\": \"119\",\n                  \"glcode\": \"1405013\",\n                  \"order\": 1,\n                  \"accountDescription\": \"WATERCHARGE2016-2017-1-1459468800-1475193600\",\n                  \"crAmountToBePaid\": 0,\n                  \"creditAmount\": null,\n                  \"debitAmount\": null,\n                  \"isActualDemand\": true,\n                  \"purpose\": \"ARREAR_AMOUNT\"\n                },\n                {\n                  \"id\": \"913\",\n                  \"tenantId\": \"mh.roha\",\n                  \"billDetail\": \"119\",\n                  \"glcode\": \"1405013\",\n                  \"order\": 1,\n                  \"accountDescription\": \"WATERCHARGE2011-2012-1-1301616000-1317340800\",\n                  \"crAmountToBePaid\": 0,\n                  \"creditAmount\": null,\n                  \"debitAmount\": null,\n                  \"isActualDemand\": true,\n                  \"purpose\": \"ARREAR_AMOUNT\"\n                },\n                {\n                  \"id\": \"914\",\n                  \"tenantId\": \"mh.roha\",\n                  \"billDetail\": \"119\",\n                  \"glcode\": \"1405013\",\n                  \"order\": 1,\n                  \"accountDescription\": \"WATERCHARGE2016-2017-2-1475280000-1490918400\",\n                  \"crAmountToBePaid\": 0,\n                  \"creditAmount\": null,\n                  \"debitAmount\": null,\n                  \"isActualDemand\": true,\n                  \"purpose\": \"ARREAR_AMOUNT\"\n                },\n                {\n                  \"id\": \"915\",\n                  \"tenantId\": \"mh.roha\",\n                  \"billDetail\": \"119\",\n                  \"glcode\": \"1405013\",\n                  \"order\": 1,\n                  \"accountDescription\": \"WATERCHARGE2011-2012-2-1317427200-1333152000\",\n                  \"crAmountToBePaid\": 0,\n                  \"creditAmount\": null,\n                  \"debitAmount\": null,\n                  \"isActualDemand\": true,\n                  \"purpose\": \"ARREAR_AMOUNT\"\n                },\n                {\n                  \"id\": \"916\",\n                  \"tenantId\": \"mh.roha\",\n                  \"billDetail\": \"119\",\n                  \"glcode\": \"1405013\",\n                  \"order\": 1,\n                  \"accountDescription\": \"WATERCHARGE2017-2018-1-1491004800-1506729600\",\n                  \"crAmountToBePaid\": 0,\n                  \"creditAmount\": null,\n                  \"debitAmount\": null,\n                  \"isActualDemand\": true,\n                  \"purpose\": \"ARREAR_AMOUNT\"\n                },\n                {\n                  \"id\": \"917\",\n                  \"tenantId\": \"mh.roha\",\n                  \"billDetail\": \"119\",\n                  \"glcode\": \"1405013\",\n                  \"order\": 1,\n                  \"accountDescription\": \"WATERCHARGE2012-2013-1-1333238400-1348963200\",\n                  \"crAmountToBePaid\": 0,\n                  \"creditAmount\": null,\n                  \"debitAmount\": null,\n                  \"isActualDemand\": true,\n                  \"purpose\": \"ARREAR_AMOUNT\"\n                },\n                {\n                  \"id\": \"918\",\n                  \"tenantId\": \"mh.roha\",\n                  \"billDetail\": \"119\",\n                  \"glcode\": \"1405013\",\n                  \"order\": 1,\n                  \"accountDescription\": \"WATERCHARGE2017-2018-2-1506816000-1522454400\",\n                  \"crAmountToBePaid\": 2000,\n                  \"creditAmount\": null,\n                  \"debitAmount\": null,\n                  \"isActualDemand\": true,\n                  \"purpose\": \"ARREAR_AMOUNT\"\n                },\n                {\n                  \"id\": \"919\",\n                  \"tenantId\": \"mh.roha\",\n                  \"billDetail\": \"119\",\n                  \"glcode\": \"1405013\",\n                  \"order\": 1,\n                  \"accountDescription\": \"WATERCHARGE2012-2013-2-1349049600-1364688000\",\n                  \"crAmountToBePaid\": 0,\n                  \"creditAmount\": null,\n                  \"debitAmount\": null,\n                  \"isActualDemand\": true,\n                  \"purpose\": \"ARREAR_AMOUNT\"\n                },\n                {\n                  \"id\": \"920\",\n                  \"tenantId\": \"mh.roha\",\n                  \"billDetail\": \"119\",\n                  \"glcode\": \"1405013\",\n                  \"order\": 1,\n                  \"accountDescription\": \"WATERCHARGE2013-2014-1-1364774400-1380499200\",\n                  \"crAmountToBePaid\": 0,\n                  \"creditAmount\": null,\n                  \"debitAmount\": null,\n                  \"isActualDemand\": true,\n                  \"purpose\": \"ARREAR_AMOUNT\"\n                },\n                {\n                  \"id\": \"921\",\n                  \"tenantId\": \"mh.roha\",\n                  \"billDetail\": \"119\",\n                  \"glcode\": \"1405013\",\n                  \"order\": 1,\n                  \"accountDescription\": \"WATERCHARGE2013-2014-2-1380585600-1396224000\",\n                  \"crAmountToBePaid\": 0,\n                  \"creditAmount\": null,\n                  \"debitAmount\": null,\n                  \"isActualDemand\": true,\n                  \"purpose\": \"ARREAR_AMOUNT\"\n                },\n                {\n                  \"id\": \"922\",\n                  \"tenantId\": \"mh.roha\",\n                  \"billDetail\": \"119\",\n                  \"glcode\": \"1405013\",\n                  \"order\": 1,\n                  \"accountDescription\": \"WATERCHARGE2014-2015-1-1396310400-1412035200\",\n                  \"crAmountToBePaid\": 0,\n                  \"creditAmount\": null,\n                  \"debitAmount\": null,\n                  \"isActualDemand\": true,\n                  \"purpose\": \"ARREAR_AMOUNT\"\n                }\n              ],\n              \"amountPaid\": \"15\"\n            }\n          ],\n          \"tenantId\": \"mh.roha\",\n          \"auditDetail\": null,\n          \"paidBy\": \"Samar Khan\"\n        }\n      ],\n      \"tenantId\": \"mh.roha\",\n      \"instrument\": {\n        \"instrumentType\": {\n          \"tenantId\": \"mh.roha\",\n          \"name\": \"Cash\"\n        },\n        \"bank\": {\n          \"tenantId\": \"mh.roha\"\n        },\n        \"amount\": 15\n      }\n    }\n  ],\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1503484381493,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n  }\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Search Receipts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"tests[\"Consumer Code matches\"] = jsonData.Receipt[0].Bill[0].billDetails[0].consumerCode.has(environment.consumer_code",
+									");",
+									"",
+									"postman.setNextRequest(\"Logout\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": {
+							"raw": "{{url}}/collection-services/receipts/_search?tenantId=mh.roha&transactionId={{transact_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"collection-services",
+								"receipts",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "mh.roha",
+									"equals": true,
+									"description": ""
+								},
+								{
+									"key": "transactionId",
+									"value": "{{transact_id}}",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"RequestInfo\" : {\n        \"apiId\":\"org.egov.collection\",\n        \"ver\":\"1.0\",\n        \"action\":\"POST\",\n        \"did\":\"4354648646\",\n        \"key\":\"xyz\",\n        \"msgId\":\"654654\",\n        \"requesterId\": \"rajesh\",\n         \"correlationId\" : \"\",\n         \"ts\" : \"10-03-2017 00:00:00\",\n        \"authToken\":\"{{access_token}}\",\n        \"userInfo\":\n        {\n        \t\"id\":1\n        }\n     }\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Update Receipt",
+					"request": {
+						"url": "http://egov-micro-dev.egovernments.org/collection-services/receipt/_update",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"Receipt\": [\n    {\n      \"Bill\": [\n        {\n          \"id\": \"17\",\n          \"payeeName\": \"R Krishna Reddy\",\n          \"payeeAddress\": null,\n          \"payeeEmail\": null,\n          \"isActive\": true,\n          \"isCancelled\": false,\n          \"billDetails\": [\n            {\n              \"id\": \"17\",\n              \"tenantId\": \"default\",\n              \"bill\": \"17\",\n              \"businessService\": \"TL\",\n              \"billNumber\": \"17\",\n              \"billDate\": 1502365191113,\n              \"consumerCode\": \"1016000001\",\n              \"consumerType\": \"PRIVATE\",\n              \"billDescription\": \"Property Tax Consumer Code: 1016000001\",\n              \"displayMessage\": \"Property Tax Consumer Code: 1016000001\",\n              \"minimumAmount\": 1,\n              \"totalAmount\": 1948,\n              \"receiptDate\" : \"1503089751000\",\n              \"manualReceiptNumber\" : \"test123\",\n              \"collectionModesNotAllowed\": [\n                \"Cash\"\n              ],\n              \"callBackForApportioning\": true,\n              \"partPaymentAllowed\": true,\n              \"billAccountDetails\": [\n                {\n                  \"id\": \"48\",\n                  \"tenantId\": \"default\",\n                  \"billDetail\": \"17\",\n                  \"glcode\": \"4501001\",\n                  \"order\": 1,\n                  \"accountDescription\": \"EDU_CESS-1490985000000-1506796199000\",\n                  \"crAmountToBePaid\": 418,\n                  \"creditAmount\": null,\n                  \"debitAmount\": null,\n                  \"isActualDemand\": true,\n                  \"purpose\": \"CURRENT_AMOUNT\"\n                },\n                {\n                  \"id\": \"49\",\n                  \"tenantId\": \"default\",\n                  \"billDetail\": \"17\",\n                  \"glcode\": \"4501001\",\n                  \"order\": 0,\n                  \"accountDescription\": \"PT_TAX-1490985000000-1506796199000\",\n                  \"crAmountToBePaid\": 1500,\n                  \"creditAmount\": null,\n                  \"debitAmount\": null,\n                  \"isActualDemand\": true,\n                  \"purpose\": \"CURRENT_AMOUNT\"\n                },\n                {\n                  \"id\": \"50\",\n                  \"tenantId\": \"default\",\n                  \"billDetail\": \"17\",\n                  \"glcode\": \"4501001\",\n                  \"order\": 1,\n                  \"accountDescription\": \"LIB_CESS-1490985000000-1506796199000\",\n                  \"crAmountToBePaid\": 30,\n                  \"creditAmount\": null,\n                  \"debitAmount\": null,\n                  \"isActualDemand\": true,\n                  \"purpose\": \"CURRENT_AMOUNT\"\n                }\n              ],\n              \"amountPaid\": \"1000\"\n            }\n          ],\n          \"tenantId\": \"default\",\n          \"auditDetail\": null,\n          \"paidBy\": \"murali\"\n        }\n      ],\n      \"tenantId\": \"default\",\n      \"instrument\": {\n       \"transactionNumber\": \"1232356543\",\n        \"transactionDateInput\":\"1503089751000\",\n        \"amount\": 100,\n        \"instrumentType\": {\n          \"name\": \"Cash\",\n          \"tenantId\": \"default\"\n        },\n        \"branchName\":\"Bangalore\",\n        \"bank\": {\n          \"id\": \"1\",\n          \"tenantId\": \"default\"\n        }\n      }\n    }\n  ],\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1502365223899,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"1de6777b-ce64-49ca-8d94-2eec1b5f8dd0\",\n    \"userInfo\":{\n    \t\"id\":73,\n    \t\"roles\": []\n    }\n  }\n}"
+						},
+						"description": "Receipt Update"
+					},
+					"response": []
+				}
+			]
 		},
 		{
-			"name": "Functional Tests",
+			"name": "Functional Test",
 			"description": "",
-			"item": []
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);",
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"tests[\"Status has String\"] = jsonData.ResponseInfo.status.has(\"Access Token generated successfully\");",
+									"",
+									"tests[\"Username is valid\"] = jsonData.UserRequest.userName.has(request.data[\"username\"]);"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/user/oauth/token",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"type": "text",
+									"value": "10001"
+								},
+								{
+									"key": "password",
+									"type": "text",
+									"value": "12345678"
+								},
+								{
+									"key": "grant_type",
+									"type": "text",
+									"value": "password"
+								},
+								{
+									"key": "scope",
+									"type": "text",
+									"value": "read"
+								},
+								{
+									"key": "tenantId",
+									"type": "text",
+									"value": "mh.roha"
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Create Receipt",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 201\"] = responseCode.code === 200;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var reqBody = JSON.parse(request.data);",
+									"",
+									"tests[\"email Number matches\"] = jsonData.Receipt[0].Bill[0].payeeEmail.has(reqBody.Receipt[0].Bill[0].payeeEmail);",
+									"",
+									"tests[\"Business Service matches\"] = jsonData.Receipt[0].Bill[0].billDetails[0].businessService.has(reqBody.Receipt[0].Bill[0].billDetails[0].businessService);",
+									"",
+									"tests[\"Bill Number matches\"] =jsonData.Receipt[0].Bill[0].billDetails[0].billNumber.has(reqBody.Receipt[0].Bill[0].billDetails[0].billNumber);",
+									"",
+									"tests[\"Consumer Code matches\"] =jsonData.Receipt[0].Bill[0].billDetails[0].consumerCode.has(reqBody.Receipt[0].Bill[0].billDetails[0].consumerCode);",
+									"",
+									"postman.setEnvironmentVariable(\"transact_id\", jsonData.Receipt[0].transactionId);",
+									"",
+									"postman.setEnvironmentVariable(\"consumer_code\", jsonData.Receipt[0].Bill[0].billDetails[0].consumerCode);",
+									"",
+									"postman.setEnvironmentVariable(\"receipt_num\", jsonData.Receipt[0].Bill[0].billDetails[0].receiptNumber);",
+									"",
+									"postman.setEnvironmentVariable(\"bill_num\", jsonData.Receipt[0].Bill[0].billDetails[0].billNumber);",
+									"",
+									"postman.setNextRequest(\"Search Receipts\");"
+								]
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var name1 = Math.floor(Math.random() * 10);",
+									"",
+									"postman.setEnvironmentVariable(\"amount\", name1);"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/collection-services/receipts/_create",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"consumerCode\": \"mh.r81632410\",\n  \n  \"Receipt\": [\n    {\n      \"Bill\": [\n        {\n          \"id\": \"104\",\n          \"payeeName\": \"Samar Khan\",\n          \"payeeAddress\": null,\n          \"mobileNumber\": \"9325687415\",\n          \"payeeEmail\": \"samar@mail.com\",\n          \"isActive\": true,\n          \"isCancelled\": false,\n          \"billDetails\": [\n            {\n              \"id\": \"119\",\n              \"tenantId\": \"mh.roha\",\n              \"bill\": \"104\",\n              \"businessService\": \"WC\",\n              \"billNumber\": \"119\",\n              \"billDate\": 1503484356820,\n              \"consumerCode\": \"mh.r81632410\",\n              \"consumerType\": \"NEWCONNECTION\",\n              \"billDescription\": \"WC Consumer Code: mh.r81632410\",\n              \"displayMessage\": \"WC Consumer Code: mh.r81632410\",\n              \"receiptDate\": null,\n              \"receiptNumber\": null,\n              \"minimumAmount\": 14,\n              \"totalAmount\": 2000,\n              \"collectionModesNotAllowed\": [\n                null\n              ],\n              \"callBackForApportioning\": false,\n              \"partPaymentAllowed\": false,\n              \"billAccountDetails\": [\n                {\n                  \"id\": \"909\",\n                  \"tenantId\": \"mh.roha\",\n                  \"billDetail\": \"119\",\n                  \"glcode\": \"1405013\",\n                  \"order\": 1,\n                  \"accountDescription\": \"WATERCHARGE2014-2015-2-1412121600-1427760000\",\n                  \"crAmountToBePaid\": 0,\n                  \"creditAmount\": null,\n                  \"debitAmount\": null,\n                  \"isActualDemand\": true,\n                  \"purpose\": \"ARREAR_AMOUNT\"\n                },\n                {\n                  \"id\": \"910\",\n                  \"tenantId\": \"mh.roha\",\n                  \"billDetail\": \"119\",\n                  \"glcode\": \"1405013\",\n                  \"order\": 1,\n                  \"accountDescription\": \"WATERCHARGE2015-2016-1-1427846400-1443571200\",\n                  \"crAmountToBePaid\": 0,\n                  \"creditAmount\": null,\n                  \"debitAmount\": null,\n                  \"isActualDemand\": true,\n                  \"purpose\": \"ARREAR_AMOUNT\"\n                },\n                {\n                  \"id\": \"911\",\n                  \"tenantId\": \"mh.roha\",\n                  \"billDetail\": \"119\",\n                  \"glcode\": \"1405013\",\n                  \"order\": 1,\n                  \"accountDescription\": \"WATERCHARGE2015-2016-2-1443657600-1459382400\",\n                  \"crAmountToBePaid\": 0,\n                  \"creditAmount\": null,\n                  \"debitAmount\": null,\n                  \"isActualDemand\": true,\n                  \"purpose\": \"ARREAR_AMOUNT\"\n                },\n                {\n                  \"id\": \"912\",\n                  \"tenantId\": \"mh.roha\",\n                  \"billDetail\": \"119\",\n                  \"glcode\": \"1405013\",\n                  \"order\": 1,\n                  \"accountDescription\": \"WATERCHARGE2016-2017-1-1459468800-1475193600\",\n                  \"crAmountToBePaid\": 0,\n                  \"creditAmount\": null,\n                  \"debitAmount\": null,\n                  \"isActualDemand\": true,\n                  \"purpose\": \"ARREAR_AMOUNT\"\n                },\n                {\n                  \"id\": \"913\",\n                  \"tenantId\": \"mh.roha\",\n                  \"billDetail\": \"119\",\n                  \"glcode\": \"1405013\",\n                  \"order\": 1,\n                  \"accountDescription\": \"WATERCHARGE2011-2012-1-1301616000-1317340800\",\n                  \"crAmountToBePaid\": 0,\n                  \"creditAmount\": null,\n                  \"debitAmount\": null,\n                  \"isActualDemand\": true,\n                  \"purpose\": \"ARREAR_AMOUNT\"\n                },\n                {\n                  \"id\": \"914\",\n                  \"tenantId\": \"mh.roha\",\n                  \"billDetail\": \"119\",\n                  \"glcode\": \"1405013\",\n                  \"order\": 1,\n                  \"accountDescription\": \"WATERCHARGE2016-2017-2-1475280000-1490918400\",\n                  \"crAmountToBePaid\": 0,\n                  \"creditAmount\": null,\n                  \"debitAmount\": null,\n                  \"isActualDemand\": true,\n                  \"purpose\": \"ARREAR_AMOUNT\"\n                },\n                {\n                  \"id\": \"915\",\n                  \"tenantId\": \"mh.roha\",\n                  \"billDetail\": \"119\",\n                  \"glcode\": \"1405013\",\n                  \"order\": 1,\n                  \"accountDescription\": \"WATERCHARGE2011-2012-2-1317427200-1333152000\",\n                  \"crAmountToBePaid\": 0,\n                  \"creditAmount\": null,\n                  \"debitAmount\": null,\n                  \"isActualDemand\": true,\n                  \"purpose\": \"ARREAR_AMOUNT\"\n                },\n                {\n                  \"id\": \"916\",\n                  \"tenantId\": \"mh.roha\",\n                  \"billDetail\": \"119\",\n                  \"glcode\": \"1405013\",\n                  \"order\": 1,\n                  \"accountDescription\": \"WATERCHARGE2017-2018-1-1491004800-1506729600\",\n                  \"crAmountToBePaid\": 0,\n                  \"creditAmount\": null,\n                  \"debitAmount\": null,\n                  \"isActualDemand\": true,\n                  \"purpose\": \"ARREAR_AMOUNT\"\n                },\n                {\n                  \"id\": \"917\",\n                  \"tenantId\": \"mh.roha\",\n                  \"billDetail\": \"119\",\n                  \"glcode\": \"1405013\",\n                  \"order\": 1,\n                  \"accountDescription\": \"WATERCHARGE2012-2013-1-1333238400-1348963200\",\n                  \"crAmountToBePaid\": 0,\n                  \"creditAmount\": null,\n                  \"debitAmount\": null,\n                  \"isActualDemand\": true,\n                  \"purpose\": \"ARREAR_AMOUNT\"\n                },\n                {\n                  \"id\": \"918\",\n                  \"tenantId\": \"mh.roha\",\n                  \"billDetail\": \"119\",\n                  \"glcode\": \"1405013\",\n                  \"order\": 1,\n                  \"accountDescription\": \"WATERCHARGE2017-2018-2-1506816000-1522454400\",\n                  \"crAmountToBePaid\": 2000,\n                  \"creditAmount\": null,\n                  \"debitAmount\": null,\n                  \"isActualDemand\": true,\n                  \"purpose\": \"ARREAR_AMOUNT\"\n                },\n                {\n                  \"id\": \"919\",\n                  \"tenantId\": \"mh.roha\",\n                  \"billDetail\": \"119\",\n                  \"glcode\": \"1405013\",\n                  \"order\": 1,\n                  \"accountDescription\": \"WATERCHARGE2012-2013-2-1349049600-1364688000\",\n                  \"crAmountToBePaid\": 0,\n                  \"creditAmount\": null,\n                  \"debitAmount\": null,\n                  \"isActualDemand\": true,\n                  \"purpose\": \"ARREAR_AMOUNT\"\n                },\n                {\n                  \"id\": \"920\",\n                  \"tenantId\": \"mh.roha\",\n                  \"billDetail\": \"119\",\n                  \"glcode\": \"1405013\",\n                  \"order\": 1,\n                  \"accountDescription\": \"WATERCHARGE2013-2014-1-1364774400-1380499200\",\n                  \"crAmountToBePaid\": 0,\n                  \"creditAmount\": null,\n                  \"debitAmount\": null,\n                  \"isActualDemand\": true,\n                  \"purpose\": \"ARREAR_AMOUNT\"\n                },\n                {\n                  \"id\": \"921\",\n                  \"tenantId\": \"mh.roha\",\n                  \"billDetail\": \"119\",\n                  \"glcode\": \"1405013\",\n                  \"order\": 1,\n                  \"accountDescription\": \"WATERCHARGE2013-2014-2-1380585600-1396224000\",\n                  \"crAmountToBePaid\": 0,\n                  \"creditAmount\": null,\n                  \"debitAmount\": null,\n                  \"isActualDemand\": true,\n                  \"purpose\": \"ARREAR_AMOUNT\"\n                },\n                {\n                  \"id\": \"922\",\n                  \"tenantId\": \"mh.roha\",\n                  \"billDetail\": \"119\",\n                  \"glcode\": \"1405013\",\n                  \"order\": 1,\n                  \"accountDescription\": \"WATERCHARGE2014-2015-1-1396310400-1412035200\",\n                  \"crAmountToBePaid\": 0,\n                  \"creditAmount\": null,\n                  \"debitAmount\": null,\n                  \"isActualDemand\": true,\n                  \"purpose\": \"ARREAR_AMOUNT\"\n                }\n              ],\n              \"amountPaid\": \"15\"\n            }\n          ],\n          \"tenantId\": \"mh.roha\",\n          \"auditDetail\": null,\n          \"paidBy\": \"Samar Khan\"\n        }\n      ],\n      \"tenantId\": \"mh.roha\",\n      \"instrument\": {\n        \"instrumentType\": {\n          \"tenantId\": \"mh.roha\",\n          \"name\": \"Cash\"\n        },\n        \"bank\": {\n          \"tenantId\": \"mh.roha\"\n        },\n        \"amount\": {{amount}}\n      }\n    }\n  ],\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1503484381493,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n  }\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Search Receipts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"tests[\"Consumer Code matches\"] = jsonData.Receipt[0].Bill[0].billDetails[0].consumerCode.has(environment.consumer_code",
+									");",
+									"",
+									"postman.setNextRequest(\"Logout\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": {
+							"raw": "{{url}}/collection-services/receipts/_search?tenantId=mh.roha&transactionId={{transact_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"collection-services",
+								"receipts",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "mh.roha",
+									"equals": true,
+									"description": ""
+								},
+								{
+									"key": "transactionId",
+									"value": "{{transact_id}}",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"RequestInfo\" : {\n        \"apiId\":\"org.egov.collection\",\n        \"ver\":\"1.0\",\n        \"action\":\"POST\",\n        \"did\":\"4354648646\",\n        \"key\":\"xyz\",\n        \"msgId\":\"654654\",\n        \"requesterId\": \"rajesh\",\n         \"correlationId\" : \"\",\n         \"ts\" : \"10-03-2017 00:00:00\",\n        \"authToken\":\"{{access_token}}\",\n        \"userInfo\":\n        {\n          \"id\":1\n        }\n     }\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": {
+							"raw": "{{url}}/user/_logout?access_token={{access_token}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"_logout"
+							],
+							"query": [
+								{
+									"key": "access_token",
+									"value": "{{access_token}}",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": " {\"RequestInfo\":{\"apiId\":\"org.egov.pgr\",\"ver\":\"1.0\",\"ts\":\"13-04-2017 12:13:30\",\"action\":\"POST\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\": \"{{access_token}}\"\n }}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }

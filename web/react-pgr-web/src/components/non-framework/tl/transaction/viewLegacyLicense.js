@@ -414,6 +414,7 @@ class Report extends Component {
 
     return (
       <div className="Report">
+      <h3 style={{"textAlign": "center"}}>View Legacy Trade License</h3>
         <form id="printable">
         {!_.isEmpty(mockData) && mockData["tl.view"] && <ShowFields groups={mockData["tl.view"].groups} noCols={mockData["tl.view"].numCols} ui="google" handler={""} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData["tl.view"].useTimestamp || false} addNewCard={""} removeCard={""} screen="view"/>}
           <br/>

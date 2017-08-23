@@ -1025,11 +1025,34 @@ var dat = {
                 "defaultValue": false
               }
             ]
-          }
-
-
-
-
+          },
+                    {
+                      "label": "tl.view.licenses.groups.agreement",
+                      "name": "agreement",
+                      "fields": [{
+                          "name": "agreementNo",
+                          "jsonPath": "licenses[0].agreementNo",
+                          "label": "tl.view.licenses.groups.agreementNo",
+                          "pattern": "",
+                          "type": "text",
+                          "isRequired": false,
+                          "isDisabled": false,
+                          "requiredErrMsg": "",
+                          "patternErrMsg": ""
+                        },
+                        {
+                            "name": "agreementDate",
+                            "jsonPath": "licenses[0].agreementDate",
+                            "label": "tl.view.licenses.groups.agreementDate",
+                            "pattern": "",
+                            "type": "text",
+                            "isRequired": false,
+                            "isDisabled": false,
+                            "requiredErrMsg": "",
+                            "patternErrMsg": ""
+                          }
+                      ]
+                    }
         ]
       },
 

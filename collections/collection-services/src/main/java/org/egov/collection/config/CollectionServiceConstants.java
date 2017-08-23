@@ -147,6 +147,11 @@ public class CollectionServiceConstants {
 
     public static final String INVALID_BILL_EXCEPTION_MSG="Invalid Bill";
     public static final String INVALID_BILL_EXCEPTION_DESC="Bill is invalid, Receipt cannot be created,";
+
+    public static final String CUTT_OFF_DATE_CODE = "egcl_0016";
+    public static final String CUTT_OFF_DATE_FIELD = "manualReceiptDate";
+    public static final String CUTT_OFF_DATE_MESSAGE = "Manual receipt date is greater than the cut-off date ";
+    public static final String CUTT_OFF_DATE_MESSAGE_DESC = " for legacy data entry.Please enter proper date";
     
     public  static final String INSTRUMENT_TYPE_CASH = "Cash";
     
@@ -155,6 +160,12 @@ public class CollectionServiceConstants {
     public static final String RECEIPT_PREAPPROVED_OR_APPROVED_CONFIG_KEY="RECEIPT_PREAPPROVED_OR_APPROVED";
     
     public static final String PREAPPROVED_CONFIG_VALUE="PREAPPROVED";
+
+    public static final String MANUAL_RECEIPT_DETAILS_REQUIRED_CONFIG_KEY="MANUAL_RECEIPT_DETAILS_REQUIRED_OR_NOT";
+
+    public static final String MANUAL_RECEIPT_DETAILS_CUTOFF_DATE_CONFIG_KEY="CUTOFF_DATE_FOR_MANUAL_RECEIPT_DETAILS";
+
+    public static final String COLLECTION_LEGACY_RECEIPT_CREATOR_ROLE ="Legacy Receipt Creator";
     
 
 }

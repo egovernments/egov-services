@@ -165,6 +165,7 @@ class PropertyFactors extends Component {
                                                 floatingLabelText={translate('pt.create.groups.propertyFactors.fields.totalFactor')}
                                                 errorText={fieldErrors.toiletFactor ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.toiletFactor}</span> : ""}
                                                 value={propertyFactors.toiletFactor ? propertyFactors.toiletFactor : ""}
+											    dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                                 onChange={(event, index, value) => {
 													(value == -1) ? value = '' : '';
                                                     var e = {
@@ -175,7 +176,7 @@ class PropertyFactors extends Component {
                                                     handleChange(e, "toiletFactor", false, "")}
                                                 }
                                                 floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                underlineStyle={styles.underlineStyle}
+                                                underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                 underlineFocusStyle={styles.underlineFocusStyle}
                                                 floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >
@@ -187,6 +188,7 @@ class PropertyFactors extends Component {
                                                 floatingLabelText={translate('pt.create.groups.propertyFactors.fields.roadFactor')}
                                                 errorText={fieldErrors.roadFactor ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.roadFactor}</span> : ""}
                                                 value={propertyFactors.roadFactor ? propertyFactors.roadFactor : ""}
+											    dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                                 onChange={(event, index, value) => {
 													(value == -1) ? value = '' : '';
                                                     var e = {
@@ -197,7 +199,7 @@ class PropertyFactors extends Component {
                                                     handleChange(e, "roadFactor", false, "")}
                                                 }
                                                 floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                underlineStyle={styles.underlineStyle}
+                                                underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                 underlineFocusStyle={styles.underlineFocusStyle}
                                                 floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >		
@@ -209,6 +211,7 @@ class PropertyFactors extends Component {
                                                 floatingLabelText={translate('pt.create.groups.propertyFactors.fields.liftFactor')}
                                                 errorText={fieldErrors.liftFactor ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.liftFactor}</span> : ""}
                                                 value={propertyFactors.liftFactor ? propertyFactors.liftFactor : ""}
+											    dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                                 onChange={(event, index, value) => {
 													(value == -1) ? value = '' : '';
                                                     var e = {
@@ -219,7 +222,7 @@ class PropertyFactors extends Component {
                                                     handleChange(e, "liftFactor", false, "")}
                                                 }
                                                 floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                underlineStyle={styles.underlineStyle}
+                                                underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                 underlineFocusStyle={styles.underlineFocusStyle}
                                                 floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >		
@@ -231,6 +234,7 @@ class PropertyFactors extends Component {
                                                 floatingLabelText={translate('pt.create.groups.propertyFactors.fields.parkingFactor')}
                                                 errorText={fieldErrors.parkingFactor ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.parkingFactor }</span>: ""}
                                                 value={propertyFactors.parkingFactor ? propertyFactors.parkingFactor : ""}
+											    dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                                 onChange={(event, index, value) => {
 													(value == -1) ? value = '' : '';
                                                     var e = {
@@ -241,7 +245,7 @@ class PropertyFactors extends Component {
                                                     handleChange(e, "parkingFactor", false, "")}
                                                 }
                                                 floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                underlineStyle={styles.underlineStyle}
+                                                underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                 underlineFocusStyle={styles.underlineFocusStyle}
                                                 floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >		

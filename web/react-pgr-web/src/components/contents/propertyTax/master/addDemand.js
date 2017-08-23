@@ -357,7 +357,7 @@ validateCollection = (index) => {
 										<TextField  className="fullWidth"
 										  floatingLabelText={<span style={{fontSize:'14px'}}>Demand</span>}
 										  type="number"
-										  value={(addDemand['demands'+index] ? addDemand['demands'+index]['demand'+i] : detail.taxAmount) || (detail.taxAmount ? detail.taxAmount : '')}
+										  value={(addDemand['demands'+index] ? addDemand['demands'+index]['demand'+i] : detail.taxAmount) || ''}
 										  onChange={(e) => {
 											  if(addDemand.hasOwnProperty('collections'+index) && addDemand['collections'+index].hasOwnProperty('collection'+i) && addDemand['collections'+index]['collection'+i]) {
 												  validateCollection(i)
@@ -368,6 +368,7 @@ validateCollection = (index) => {
 										  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 										  underlineStyle={styles.underlineStyle}
 										  underlineFocusStyle={styles.underlineFocusStyle}
+										  floatingLabelFixed={true}
 										  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 										/>
 									</td>)
@@ -377,7 +378,7 @@ validateCollection = (index) => {
 										<TextField  className="fullWidth"
 										  floatingLabelText={<span style={{fontSize:'14px'}}>Demand</span>}
 										  type="number"
-										  value={(addDemand['demands'+index] ? addDemand['demands'+index]['demand'+i] : detail.taxAmount) || (detail.taxAmount ? detail.taxAmount : '')}
+										  value={(addDemand['demands'+index] ? addDemand['demands'+index]['demand'+i] : detail.taxAmount) || ''}
 										  onChange={(e) => {
 											  if(addDemand.hasOwnProperty('collections'+index) && addDemand['collections'+index].hasOwnProperty('collection'+i) && addDemand['collections'+index]['collection'+i]) {
 												  validateCollection(i)
@@ -387,6 +388,7 @@ validateCollection = (index) => {
 											  handleChangeNextOne(e,"demands"+index,"demand"+i, false, '')
 										  }}
 										  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+										  floatingLabelFixed={true}
 										  underlineStyle={styles.underlineStyle}
 										  underlineFocusStyle={styles.underlineFocusStyle}
 										  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -420,6 +422,7 @@ validateCollection = (index) => {
 									  handleChangeNextOne(e,"collections"+index,"collection"+i, false, '')
 								  }}
 								  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+								  floatingLabelFixed={true}
 								  underlineStyle={styles.underlineStyle}
 								  underlineFocusStyle={styles.underlineFocusStyle}
 								  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}

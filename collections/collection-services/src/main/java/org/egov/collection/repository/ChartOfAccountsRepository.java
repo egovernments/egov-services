@@ -31,12 +31,13 @@ public class ChartOfAccountsRepository {
 
     }
 
-    public List<ChartOfAccount> getChartOfAccounts(final List<String> chartOfAccountCodes,final String tenantId,final RequestInfo requestInfo) {
+    public List<ChartOfAccount> getChartOfAccounts(final List<String> accountCodes,final String tenantId,final RequestInfo requestInfo) {
         RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
         requestInfoWrapper.setRequestInfo(requestInfo);
+        String chartOfAccountCodes = String.join(",", accountCodes);
         LOGGER.info("URI: "+url);
         LOGGER.info("tenantid: "+tenantId);
         return restTemplate.postForObject(url, requestInfoWrapper,
-                ChartOfAccountsResponse.class,tenantId,chartOfAccountCodes.get(0).toString()).getChartOfAccounts();
+                ChartOfAccountsResponse.class,tenantId,chartOfAccountCodes).getChartOfAccounts();
     }
 }

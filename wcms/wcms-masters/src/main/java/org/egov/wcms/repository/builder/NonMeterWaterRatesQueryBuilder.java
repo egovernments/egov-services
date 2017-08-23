@@ -181,11 +181,15 @@ public class NonMeterWaterRatesQueryBuilder {
     }
 
     public static String getSourceTypeIdQuery() {
-        return " select id FROM egwtr_water_source_type  where name= ? and tenantId = ? ";
+        return " select id FROM egwtr_water_source_type  where name= :name and tenantId = :tenantId ";
     }
 
     public static String getSourceTypeNameQuery() {
         return "SELECT name FROM egwtr_water_source_type WHERE id = ? and tenantId = ? ";
+    }
+    
+    public static String getPipeSizeIdQuery() {
+        return " select id FROM egwtr_pipesize where sizeinmilimeter= :sizeinmilimeter and tenantId = :tenantId ";
     }
 
 }

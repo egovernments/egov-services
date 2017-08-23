@@ -1,4 +1,4 @@
-package org.rgov.tl.indexer.web.requests;
+package org.egov.tl.indexer.web.response;
 
 import java.util.ArrayList;
 import java.util.List;

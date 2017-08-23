@@ -9,11 +9,11 @@ import org.egov.tl.commons.web.contract.CategorySearch;
 import org.egov.tl.commons.web.contract.LicenseStatus;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.UOM;
-import org.egov.tl.commons.web.requests.CategorySearchResponse;
-import org.egov.tl.commons.web.requests.DocumentTypeResponse;
-import org.egov.tl.commons.web.requests.LicenseStatusResponse;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
-import org.egov.tl.commons.web.requests.UOMResponse;
+import org.egov.tl.commons.web.response.CategorySearchResponse;
+import org.egov.tl.commons.web.response.DocumentTypeResponse;
+import org.egov.tl.commons.web.response.LicenseStatusResponse;
+import org.egov.tl.commons.web.response.UOMResponse;
 import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.common.persistense.repository.JdbcRepository;
 import org.egov.tradelicense.common.util.TimeStampUtil;
@@ -29,7 +29,7 @@ import org.egov.tradelicense.web.repository.BoundaryContractRepository;
 import org.egov.tradelicense.web.repository.CategoryContractRepository;
 import org.egov.tradelicense.web.repository.DocumentTypeContractRepository;
 import org.egov.tradelicense.web.repository.FinancialYearContractRepository;
-import org.egov.tradelicense.web.requests.BoundaryResponse;
+import org.egov.tradelicense.web.response.BoundaryResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -162,6 +162,7 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 				license.setUom(getString(uomName));
 				license.setQuantity(getDouble(row.get("quantity")));
 				license.setRemarks(getString(row.get("remarks")));
+				license.setValidityYears( getLong(row.get("validityyears")));
 				license.setTradeCommencementDate(
 						TimeStampUtil.getTimeStampFromDB(getString(row.get("tradeCommencementDate"))));
 				license.setLicenseValidFromDate(

@@ -1,6 +1,8 @@
 package org.egov.property.repository.builder;
 
 import java.util.List;
+
+import org.egov.property.utility.ConstantUtility;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -18,6 +20,7 @@ public class SearchMasterBuilder {
 
 	@Autowired
 	Environment environment;
+
 
 	/**
 	 * <p>
@@ -46,9 +49,10 @@ public class SearchMasterBuilder {
 	public static String buildSearchQuery(String tableName, String tenantId, Integer[] ids, String name,
 			String nameLocal, String code, Boolean active, Boolean isResidential, Integer orderNumber, String category,
 			Integer pageSize, Integer offSet, List<Object> preparedStatementValues, Integer fromYear, Integer toYear,
-			Integer year, String parent) {
+			Integer year, String parent, String service) {
 
 		StringBuffer searchSql = new StringBuffer();
+		String defaultService = "common";// TODO read from property file
 
 		searchSql.append("select * from " + tableName + " where ");
 
@@ -79,6 +83,21 @@ public class SearchMasterBuilder {
 		if (parent != null && !parent.isEmpty()) {
 			searchSql.append("AND parent =? ");
 			preparedStatementValues.add(parent);
+		}
+		
+		if ( tableName.equalsIgnoreCase(ConstantUtility.USAGE_TYPE_TABLE_NAME)){
+
+			if (service != null) {
+				if (!service.isEmpty()) {
+					searchSql.append("AND lower(service) in(LOWER(?),LOWER(?)) ");
+					preparedStatementValues.add(service);
+					preparedStatementValues.add(defaultService);
+				}
+
+			} else {
+				searchSql.append("AND lower(service)=LOWER(?) ");
+				preparedStatementValues.add(defaultService);
+			}
 		}
 
 		JSONObject dataSearch = new JSONObject();
@@ -184,10 +203,10 @@ public class SearchMasterBuilder {
 			pageSize = 30;
 		searchSql.append(" limit ? ");
 		preparedStatementValues.add(pageSize);
-		
+
 		if (offSet == null)
 			offSet = 0;
-		
+
 		searchSql.append(" offset ? ");
 		preparedStatementValues.add(offSet);
 

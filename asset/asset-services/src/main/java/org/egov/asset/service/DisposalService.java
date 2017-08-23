@@ -122,7 +122,7 @@ public class DisposalService {
         return getResponse(disposals, disposalRequest.getRequestInfo());
     }
 
-    private String createVoucherForDisposal(final DisposalRequest disposalRequest, final HttpHeaders headers) {
+    public String createVoucherForDisposal(final DisposalRequest disposalRequest, final HttpHeaders headers) {
         final Disposal disposal = disposalRequest.getDisposal();
         final RequestInfo requestInfo = disposalRequest.getRequestInfo();
         final List<Long> assetIds = new ArrayList<>();

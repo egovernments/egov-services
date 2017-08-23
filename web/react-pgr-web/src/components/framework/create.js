@@ -618,18 +618,19 @@ class Report extends Component {
           				}
           			}
 
-                Api.commonApiPost(context,id).then(function(response)
-                {
-                  let keys=jp.query(response,splitArray[1].split("|")[1]);
-                  let values=jp.query(response,splitArray[1].split("|")[2]);
-                  let dropDownData=[];
-                  for (var k = 0; k < keys.length; k++) {
-                      let obj={};
-                      obj["key"]=keys[k];
-                      obj["value"]=values[k];
-                      dropDownData.push(obj);
+                Api.commonApiPost(context,id).then(function(response) {
+                  if(response) {
+                    let keys=jp.query(response,splitArray[1].split("|")[1]);
+                    let values=jp.query(response,splitArray[1].split("|")[2]);
+                    let dropDownData=[];
+                    for (var k = 0; k < keys.length; k++) {
+                        let obj={};
+                        obj["key"]=keys[k];
+                        obj["value"]=values[k];
+                        dropDownData.push(obj);
+                    }
+                    setDropDownData(value.jsonPath,dropDownData);
                   }
-                  setDropDownData(value.jsonPath,dropDownData);
                 },function(err) {
                     console.log(err);
                 });

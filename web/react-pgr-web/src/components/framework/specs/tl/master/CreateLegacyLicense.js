@@ -13,12 +13,12 @@ var dat = {
             "name": "OldLicenseNumber",
             "jsonPath": "licenses[0].oldLicenseNumber",
             "label": "tl.create.licenses.groups.TradeDetails.OldLicenseNumber",
-            "pattern": "^.{4,20}$",
+            "pattern": "",
             "type": "text",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "It should be min 4 and max 20"
+            "patternErrMsg": "Enter Valid Old License Number (Min: ,Max: )"
           },
           {
             "name": "applicationType",
@@ -82,23 +82,23 @@ var dat = {
             "name": "AadharNumber",
             "jsonPath": "licenses[0].adhaarNumber",
             "label": "tl.create.licenses.groups.TradeOwnerDetails.AadharNumber",
-            "pattern": "^[0-9]{12,12}$",
-            "type": "text",
+            "pattern": "aadhar",
+            "type": "aadhar",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Aadhar Number must be of 12 digits"
+            "patternErrMsg": "Enter Valid Aadhar Number (14 Digit Number)"
           },
           {
             "name": "MobileNumber",
             "jsonPath": "licenses[0].mobileNumber",
             "label": "tl.create.licenses.groups.TradeOwnerDetails.Mobile Number",
-            "pattern": "^[0-9]{10,10}$",
-            "type": "text",
+            "pattern": "",
+            "type": "mobileNumber",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Mobile Number must be of 10 digits"
+            "patternErrMsg": "Enter Valid Mobile Number (10 Digit Number)"
           },
           {
             "name": "TradeOwnerName",
@@ -109,7 +109,7 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Enter Valid Trade Owner Name"
+            "patternErrMsg": "Enter Valid Trade Owner Name (Min:4, Max:100)"
           },
           {
             "name": "FatherSpouseName",
@@ -120,18 +120,18 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Enter Valid Father/Spouse Name"
+            "patternErrMsg": "Enter Valid Father/Spouse Name (Min:4, Max:100)"
           },
           {
             "name": "EmailID",
             "jsonPath": "licenses[0].emailId",
             "label": "tl.create.licenses.TradeOwnerDetails.groups.EmailID",
-            "pattern": "^[a-zA-Z0-9_.]+@[a-zA-Z0-9]+.[a-zA-Z0-9]+$",
-            "type": "text",
+            "pattern": "",
+            "type": "email",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Enter Valid EmailID"
+            "patternErrMsg": "Enter Valid Email ID (ex: abc@xyz.com)"
           },
           {
             "name": "TradeOwnerAddress",
@@ -142,7 +142,7 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Min 4 and Max 250"
+            "patternErrMsg": "Enter Valid Trade Owner Address (Min:4, Max:250)"
           }
         ]
       },
@@ -154,12 +154,12 @@ var dat = {
             "name": "PropertyAssessmentNo",
             "jsonPath": "licenses[0].propertyAssesmentNo",
             "label": "tl.create.licenses.groups.TradeLocationDetails.PropertyAssessmentNo",
-            "pattern": "^[0-9]{4,20}$",
-            "type": "text",
+            "pattern": "",
+            "type": "number",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Property Assessment Number should be 4 to 20"
+            "patternErrMsg": "Enter Valid Property Assessment Number"
           },
           {
             "name": "Locality",
@@ -235,7 +235,7 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "Enter Valid Trade Address (Min:4, Max:100)"
           }
         ]
       },
@@ -246,12 +246,12 @@ var dat = {
             "name": "TradeTitle",
             "jsonPath": "licenses[0].tradeTitle",
             "label": "tl.create.licenses.groups.TradeDetails.TradeTitle",
-            "pattern": "^[a-zA-Z0-9\s\.,]{4,100}$",
+            "pattern": "^.[a-zA-Z./ -]{3,100}$",
             "type": "text",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "Enter Valid Trade Title (Min:4, Max:100)"
           },
           {
             "name": "TradeType",
@@ -324,7 +324,7 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "Enter Valid Trade Value for the UOM (Upto two decimal points)"
           },
           {
             "name": "validity",
@@ -431,9 +431,25 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Enter Document Number"
+            "patternErrMsg": "Enter Valid Agreement No (Min:4, Max:128, Alpha/Numeric)"
           }
         ]
+      },
+      {
+        "label": "wc.create.groups.fileDetails.title",
+        "name": "Documents",
+        "fields": [{
+          "name": "File",
+          "jsonPath": "licenses[0].supportDocuments[0].fileStoreId",
+          "type": "documentList",
+          "pathToArray": "DocumentTypeApplicationTypes",
+          "displayNameJsonPath": "documentType",
+          "url": "/wcms/masters/documenttype-applicationtype/_search?applicationType=NEWCONNECTION",
+          "autoFillFields": [{
+            "name": "document",
+            "jsonPath": "documentTypeId"
+          }]
+        }]
       }
       // {
       // 	"label": "tl.create.licenses.groups.FeeDetails",
@@ -480,174 +496,206 @@ var dat = {
 
 
 
-  "tl.search": {
-    "numCols": 3,
-    "url": "/tl-services/license/v1/_search",
-    "tenantIdRequired": true,
-    "useTimestamp": true,
-    "objectName": "licenses",
-    "groups": [{
-      "label": "tl.search.groups.license.searchTradeLicense",
-      "name": "searchTradeLicense",
-      "fields": [{
-          "name": "applicationNumber",
-          "jsonPath": "applicationNumber",
-          "label": "tl.search.groups.applicationNumber",
-          "pattern": "",
-          "type": "text",
-          "isRequired": false,
-          "isDisabled": false,
-          "requiredErrMsg": "",
-          "patternErrMsg": ""
-        },
-        {
-          "name": "showInactiveLicense",
-          "jsonPath": "active",
-          "label": "tl.search.groups.showInactiveLicense",
-          "pattern": "",
-          "type": "checkbox",
-          "isRequired": false,
-          "isDisabled": false,
-          "requiredErrMsg": "",
-          "patternErrMsg": ""
-        },
-        {
-          "name": "status",
-          "jsonPath": "status",
-          "label": "tl.search.groups.status",
-          "pattern": "",
-          "type": "singleValueList",
-          "url": "/tl-masters/status/v1/_search?tenantId=default|$..id|$..name",
-          "isRequired": false,
-          "isDisabled": false,
-          "requiredErrMsg": "",
-          "patternErrMsg": "",
+    "tl.search": {
+      "numCols": 3,
+      "url": "/tl-services/license/v1/_search",
+      "tenantIdRequired": true,
+      "useTimestamp": true,
+      "objectName": "licenses",
+      "groups": [{
+        "label": "tl.search.groups.license.searchTradeLicense",
+        "name": "searchTradeLicense",
+        "fields": [{
+            "name": "applicationNumber",
+            "jsonPath": "applicationNumber",
+            "label": "tl.search.groups.applicationNumber",
+            "pattern": "",
+            "type": "autoCompelete",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+            "url":"/tl-services/license/v1/_search?|$..applicationNumber|$..applicationNumber",
+            "autoCompleteDependancy": {
+              "autoCompleteUrl": "/tl-services/license/v1/_search?id={value}"
+             }
+          },
+          {
+            "name": "showInactiveLicense",
+            "jsonPath": "active",
+            "label": "tl.search.groups.showInactiveLicense",
+            "pattern": "",
+            "type": "checkbox",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "status",
+            "jsonPath": "status",
+            "label": "tl.search.groups.status",
+            "pattern": "",
+            "type": "singleValueList",
+            "url": "/tl-masters/status/v1/_search?tenantId=default|$..id|$..name",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
 
-        },
-        {
-          "name": "licenseNumber",
-          "jsonPath": "licenseNumber",
-          "label": "tl.search.groups.licenseNumber",
-          "pattern": "",
-          "type": "text",
-          "isRequired": false,
-          "isDisabled": false,
-          "requiredErrMsg": "",
-          "patternErrMsg": ""
-        },
-        {
-          "name": "oldLicenseNumber",
-          "jsonPath": "oldLicenseNumber",
-          "label": "tl.search.groups.oldLicenseNumber",
-          "pattern": "",
-          "type": "text",
-          "isRequired": false,
-          "isDisabled": false,
-          "requiredErrMsg": "",
-          "patternErrMsg": ""
-        },
-        {
-          "name": "tradeCategory",
-          "jsonPath": "categoryId",
-          "label": "tl.search.groups.tradeCategory",
-          "pattern": "",
-          "type": "singleValueList",
-          "url": "/tl-masters/category/v1/_search?tenantId=default&type=category|$..id|$..name",
-          "isRequired": false,
-          "isDisabled": false,
-          "requiredErrMsg": "",
-          "patternErrMsg": ""
-        },
-        {
-          "name": "tradeSubCategory",
-          "jsonPath": "subCategoryId",
-          "label": "tl.search.groups.tradeSubCategory",
-          "pattern": "",
-          "type": "singleValueList",
-          "url": "/tl-masters/category/v1/_search?tenantId=default&type=subcategory|$..id|$..name",
-          "isRequired": false,
-          "isDisabled": false,
-          "requiredErrMsg": "",
-          "patternErrMsg": ""
-        },
-        {
-          "name": "tradeTitle",
-          "jsonPath": "tradeTitle",
-          "label": "tl.search.groups.tradeTitle",
-          "pattern": "",
-          "type": "text",
-          "isRequired": false,
-          "isDisabled": false,
-          "requiredErrMsg": "",
-          "patternErrMsg": ""
-        },
-        {
-          "name": "ownerName",
-          "jsonPath": "ownerName",
-          "label": "tl.search.groups.tradeOwnerName",
-          "pattern": "",
-          "type": "text",
-          "isRequired": false,
-          "isDisabled": false,
-          "requiredErrMsg": "",
-          "patternErrMsg": ""
-        },
-        {
-          "name": "propertyAssesmentNo",
-          "jsonPath": "propertyAssesmentNo",
-          "label": "tl.search.groups.propertyAssesmentNo",
-          "pattern": "",
-          "type": "text",
-          "isRequired": false,
-          "isDisabled": false,
-          "requiredErrMsg": "",
-          "patternErrMsg": ""
-        },
-        {
-          "name": "mobileNumber",
-          "jsonPath": "mobileNumber",
-          "label": "tl.search.groups.mobileNumber",
-          "pattern": "^.{10,10}$",
-          "type": "text",
-          "isRequired": false,
-          "isDisabled": false,
-          "requiredErrMsg": "",
-          "patternErrMsg": "Mobile Number must be of 10 digits"
-        }
+          },
+          {
+            "name": "licenseNumber",
+            "jsonPath": "licenseNumber",
+            "label": "tl.search.groups.licenseNumber",
+            "pattern": "",
+            "type": "autoCompelete",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+            "url":"/tl-services/license/v1/_search?|$..licenseNumber|$..licenseNumber",
+            "autoCompleteDependancy": {
+              "autoCompleteUrl": "/tl-services/license/v1/_search?id={value}"
+             }
+          },
+          {
+            "name": "oldLicenseNumber",
+            "jsonPath": "oldLicenseNumber",
+            "label": "tl.search.groups.oldLicenseNumber",
+            "pattern": "",
+            "type": "autoCompelete",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+            "url":"/tl-services/license/v1/_search?|$..oldLicenseNumber|$..oldLicenseNumber",
+            "autoCompleteDependancy": {
+              "autoCompleteUrl": "/tl-services/license/v1/_search?id={value}"
+             }
+          },
+          {
+            "name": "tradeCategory",
+            "jsonPath": "categoryId",
+            "label": "tl.search.groups.tradeCategory",
+            "pattern": "",
+            "type": "singleValueList",
+            "url": "/tl-masters/category/v1/_search?tenantId=default&type=category|$..id|$..name",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+            "depedants": [{
+              "jsonPath": "subCategoryId",
+              "type": "dropDown",
+              "pattern": "/tl-masters/category/v1/_search?tenantId=default&type=subcategory&categoryId={categoryId}|$.categories.*.id|$.categories.*.name"
+            }]
+          },
+          {
+            "name": "tradeSubCategory",
+            "jsonPath": "subCategoryId",
+            "label": "tl.create.licenses.groups.TradeDetails.TradeSubCategory",
+            "pattern": "",
+            "type": "singleValueList",
+            "url": "",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "tradeTitle",
+            "jsonPath": "tradeTitle",
+            "label": "tl.search.groups.tradeTitle",
+            "pattern": "",
+            "type": "text",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "ownerName",
+            "jsonPath": "ownerName",
+            "label": "tl.search.groups.tradeOwnerName",
+            "pattern": "",
+            "type": "text",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "propertyAssesmentNo",
+            "jsonPath": "propertyAssesmentNo",
+            "label": "tl.search.groups.propertyAssesmentNo",
+            "pattern": "",
+            "type": "text",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "mobileNumber",
+            "jsonPath": "mobileNumber",
+            "label": "tl.search.groups.mobileNumber",
+            "pattern": "^.{10,10}$",
+            "type": "text",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "Mobile Number must be of 10 digits"
+          },
+          {
+            "name": "mobileNumber",
+            "jsonPath": "mobileNumber",
+            "label": "tl.search.groups.mobileNumber",
+            "pattern": "^.{10,10}$",
+            "type": "text",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "Mobile Number must be of 10 digits"
+          }
 
 
-      ]
-    }],
-    "result": {
-      "header": [{
-        label: "tl.search.result.groups.applicationNumber"
-      }, {
-        label: "tl.search.result.groups.tlNumber"
-      }, {
-        label: "tl.search.result.groups.oldTLNumber"
-      }, {
-        label: "tl.search.result.groups.category"
-      }, {
-        label: "tl.search.result.groups.subCategory"
-      }, {
-        label: "tl.search.result.groups.titleOfTrade"
-      }, {
-        label: "tl.search.result.groups.tradeOwner"
-      }, {
-        label: "tl.search.result.groups.mobileNumber"
-      }, {
-        label: "tl.search.result.groups.propertyAssessmentNumber"
-      }, {
-        label: "tl.search.result.groups.applicationStatus"
-      }, {
-        label: "tl.search.result.groups.licenseActive"
+        ]
       }],
-      "values": ["applicationNumber", "licenseNumber", "oldLicenseNumber", "category", "subCategory", "tradeTitle", "ownerName", "mobileNumber", "propertyAssesmentNo", "applicationType", "active"],
-      "resultPath": "licenses",
-      "rowClickUrlUpdate": "/update/tl/CreateLegacyLicense/{id}",
-      "rowClickUrlView": "/view/tl/CreateLegacyLicense/{id}"
-    }
-  },
+      "result": {
+        "header": [{
+          label: "tl.search.result.groups.tlNumber"
+        }, {
+          label: "tl.search.result.groups.oldTLNumber"
+        }, {
+          label: "tl.search.result.groups.category"
+        }, {
+          label: "tl.search.result.groups.subCategory"
+        }, {
+          label: "tl.search.result.groups.titleOfTrade"
+        }, {
+          label: "tl.search.result.groups.tradeOwner"
+        }, {
+          label: "tl.search.result.groups.mobileNumber"
+        }, {
+          label: "tl.search.result.groups.propertyAssessmentNumber"
+        }, {
+          label: "tl.search.result.groups.adminWardName"
+        }, {
+          label: "tl.search.result.groups.validityYears"
+        }, {
+          label: "tl.search.result.groups.licenseStatus"
+        }, {
+          label: "tl.search.result.groups.applicationStatus"
+        }, {
+          label: "tl.search.result.groups.workflowOwnerName"
+        }],
+        "values": ["licenseNumber", "oldLicenseNumber", "category", "subCategory", "tradeTitle", "ownerName", "mobileNumber", "propertyAssesmentNo", "adminWardName", "validityYears","active","statusName",""],
+        "resultPath": "licenses",
+        "rowClickUrlUpdate": "/update/tl/CreateLegacyLicense/{id}",
+        "rowClickUrlView": "/view/tl/CreateLegacyLicense/{id}"
+      }
+    },
   "tl.view": {
     "numCols": 12 / 3,
     "url": "/tl-services/license/v1/_search?ids={id}",

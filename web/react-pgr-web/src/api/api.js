@@ -83,7 +83,7 @@ module.exports = {
                 }else if(response && response.response && !response.response.data && response.response.status === 400) {
                     document.title = "eGovernments";
                     var locale = localStorage.getItem('locale');
-                    var _tntId = localStorage.getItem("tenantId");
+                    var _tntId = localStorage.getItem("tenantId") || "default";
                     localStorage.clear();
                     localStorage.setItem('locale', locale);
                     localStorage.reload = true;

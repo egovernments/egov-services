@@ -18,9 +18,12 @@ const CashOrMops = ()=>{
         <div>
           <Col xs={12} md={12}>
                         <TextField
+                            floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
+                            floatingLabelFixed={true} 
                             floatingLabelText="Amount:"
                             /><br />
                             <TextField
+                            floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
                             floatingLabelText="Paid By:"
                             />
                         </Col>
@@ -34,22 +37,28 @@ const ChequeOrDD = () => {
             <Col xs={12} md={12}>
                 <Col xs={12} md={6}>
                             <TextField
+                                floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
+                                floatingLabelFixed={true} 
                                 floatingLabelText="DD/Cheque Number:"
                                 />
                 </Col>
                 <Col xs={12} md={6}>
-                                <DatePicker floatingLabelText="DD/Cheque Date" container="inline" />
+                                <DatePicker floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelText="DD/Cheque Date" container="inline" />
                 </Col>
             </Col>
 
             <Col xs={12} md={12}>
                 <Col xs={12} md={6}>
                             <TextField
+                                floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
+                                floatingLabelFixed={true} 
                                 floatingLabelText="Bank Name:"
                                 />
                 </Col>
                 <Col xs={12} md={6}>
                        <TextField
+                                floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
+                                floatingLabelFixed={true} 
                                 floatingLabelText="Branch Name:"
                                 />
                 </Col>
@@ -57,9 +66,12 @@ const ChequeOrDD = () => {
 
             <Col xs={12} md={12}>
                         <TextField
+                            floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
+                            floatingLabelFixed={true} 
                             floatingLabelText="Amount:"
                             /><br />
                             <TextField
+                            floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
                             floatingLabelText="Paid By:"
                             />
                         </Col>
@@ -75,25 +87,35 @@ const CreditOrDebitCard = () => {
           <Col xs={12} md={12}>
                 <Col xs={12} md={4}>
                             <TextField
+                                floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
+                                floatingLabelFixed={true} 
                                 floatingLabelText="Last four digits of card:"
                                 />
                 </Col>
                 <Col xs={12} md={4}>
                                 <TextField
+                                floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
+                                floatingLabelFixed={true} 
                                 floatingLabelText="Transacttion Number:"
                                 />
                 </Col>
                 <Col xs={12} md={4}>
                                 <TextField
+                                floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
+                                floatingLabelFixed={true} 
                                 floatingLabelText="Re-enter Transacttion Number:"
                                 />
                 </Col>
             </Col>
             <Col xs={12} md={12}>
                         <TextField
+                            floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
+                            floatingLabelFixed={true} 
                             floatingLabelText="Amount:"
                             /><br />
                             <TextField
+                            floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
+                            floatingLabelFixed={true} 
                             floatingLabelText="Paid By:"
                             />
                         </Col>
@@ -108,17 +130,21 @@ const DirectBank = (props) => {
           <Col xs={12} md={12}>
             <Col xs={12} md={6}>
                         <TextField
+                            floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
+                            floatingLabelFixed={true} 
                             floatingLabelText="Challan/Reference No"
                             />
             </Col>
             <Col xs={12} md={6}>
-                            <DatePicker floatingLabelText="Challan/Transaction Date" container="inline" />
+                            <DatePicker floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}} floatingLabelText="Challan/Transaction Date" container="inline" />
             </Col>
                         </Col>
 
             <Col xs={12} md={12}>
                 <Col xs={12} md={6}>
                         <SelectField
+                            floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
+                            floatingLabelFixed={true} 
                             floatingLabelText="Bank Name"
                              value={props.value.valueBankName}
                              onChange={props.handleChange}
@@ -134,6 +160,8 @@ const DirectBank = (props) => {
                 </Col>
                 <Col xs={12} md={6}>
                         <SelectField
+                            floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
+                            floatingLabelFixed={true} 
                             floatingLabelText="Account Number"
                             value={props.value.valueActNum}
                             onChange={(e,index,value) => {
@@ -157,9 +185,12 @@ const DirectBank = (props) => {
             </Col>
             <Col xs={12} md={12}>
                         <TextField
+                            floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
+                            floatingLabelFixed={true} 
                             floatingLabelText="Amount:"
                             /><br />
                             <TextField
+                            floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
                             floatingLabelText="Paid By:"
                             />
             </Col>
@@ -202,6 +233,7 @@ class CollectionsNew extends Component{
 
                     <Col xs={12} md={12}>
                         <SelectField
+                            floatingLabelFixed={true} 
                             floatingLabelText="How would you like to pay?"
                             value={modeOfPayment?modeOfPayment:null}
                             onChange={(e,index,value) => {

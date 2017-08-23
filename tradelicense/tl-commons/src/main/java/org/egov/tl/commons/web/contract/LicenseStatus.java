@@ -32,13 +32,13 @@ public class LicenseStatus {
 	@JsonProperty("name")
 	@Pattern(regexp = ".*[^ ].*",message="{error.name.emptyspaces}")
 	@NotEmpty(message="{error.name.empty}")
-	@Length(min = 4, max = 100, message="{error.name.empty}")
+	@Length(min = 1, max = 100, message="{error.name.empty}")
 	private String name = null;
 
 	@JsonProperty("code")
 	@Pattern(regexp = ".*[^ ].*",message="{error.code.emptyspaces}")
 	@NotEmpty(message="{error.code.empty}")
-	@Length(min = 4, max = 20, message="{error.code.empty}")
+	@Length(min = 1, max = 20, message="{error.code.empty}")
 	private String code = null;
 
 	@JsonProperty("active")

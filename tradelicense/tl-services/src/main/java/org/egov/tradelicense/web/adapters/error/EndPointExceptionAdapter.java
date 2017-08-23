@@ -31,7 +31,7 @@ public class EndPointExceptionAdapter {
 	private Error getError(String customMsg) {
 		final List<ErrorField> fields = Collections.singletonList(getErrorField(customMsg));
 		return Error.builder().code(HTTP_CLIENT_ERROR_CODE).message(END_POINT_EXCEPTION_MESSAGE).fields(fields)
-				.description("").build();
+				.description(customMsg).build();
 	}
 
 	private ErrorField getErrorField(String customMsg) {

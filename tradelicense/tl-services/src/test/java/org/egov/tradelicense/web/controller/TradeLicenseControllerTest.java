@@ -23,7 +23,7 @@ import org.egov.tl.commons.web.contract.ResponseInfo;
 import org.egov.tl.commons.web.contract.SupportDocumentContract;
 import org.egov.tl.commons.web.contract.TradeLicenseSearchContract;
 import org.egov.tl.commons.web.requests.TradeLicenseRequest;
-import org.egov.tl.commons.web.requests.TradeLicenseSearchResponse;
+import org.egov.tl.commons.web.response.TradeLicenseSearchResponse;
 import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.configuration.TestConfiguration;
 import org.egov.tradelicense.domain.model.AuditDetails;

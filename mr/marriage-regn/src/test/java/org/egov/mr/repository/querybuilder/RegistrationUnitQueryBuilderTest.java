@@ -11,24 +11,24 @@ import org.egov.mr.web.contract.RegistrationUnitSearchCriteria;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(SpringRunner.class)
-@WebMvcTest(RegistrationUnitQueryBuilder.class)
-@Import(TestConfiguration.class)
+@RunWith(MockitoJUnitRunner.class)
 public class RegistrationUnitQueryBuilderTest {
 
 	@InjectMocks
 	private RegistrationUnitQueryBuilder registrationUnitQueryBuilder;
 
-	@MockBean
+	@Mock
 	private RegistrationUnitSearchCriteria registrationUnitSearchCriteria;
 
-	@MockBean
+	@Mock
 	private KafkaTemplate<String, Object> kafkaTemplate;
 
 	@SuppressWarnings({ "static-access" })

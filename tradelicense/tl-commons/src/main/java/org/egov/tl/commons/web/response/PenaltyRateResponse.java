@@ -1,25 +1,25 @@
-package org.egov.tl.commons.web.requests;
+package org.egov.tl.commons.web.response;
 
 import java.util.List;
 
+import org.egov.tl.commons.web.contract.PenaltyRate;
 import org.egov.tl.commons.web.contract.ResponseInfo;
-import org.egov.tl.commons.web.contract.UOM;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * This class describe the set of fields contained in UOMResponse
+ * This class describe the set of fields contained in PenalityRateResponse
  * 
  * @author Pavan Kumar Kamma
  */
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class UOMResponse {
+@AllArgsConstructor
+public class PenaltyRateResponse {
 
 	private ResponseInfo responseInfo;
 
-	private List<UOM> uoms;
+	private List<PenaltyRate> penaltyRates;
 }

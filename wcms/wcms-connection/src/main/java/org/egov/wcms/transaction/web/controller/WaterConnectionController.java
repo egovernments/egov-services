@@ -131,7 +131,7 @@ public class WaterConnectionController {
                 Math.round(waterConnectionRequest.getConnection().getNumberOfPersons()/4+1):null);
        
         waterConnectionService.persistBeforeKafkaPush(waterConnectionRequest);
-       
+       waterConnectionRequest.getConnection().setCreatedDate(Long.toString(new java.util.Date().getTime()));
       Connection connection=waterConnectionService.createWaterConnection(
                 applicationProperties.getCreateNewConnectionTopicName(),
                 "newconnection-create", waterConnectionRequest);

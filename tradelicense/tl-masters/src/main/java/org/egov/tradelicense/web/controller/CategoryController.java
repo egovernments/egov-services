@@ -3,9 +3,9 @@ package org.egov.tradelicense.web.controller;
 import javax.validation.Valid;
 
 import org.egov.tl.commons.web.requests.CategoryRequest;
-import org.egov.tl.commons.web.requests.CategoryResponse;
-import org.egov.tl.commons.web.requests.CategorySearchResponse;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
+import org.egov.tl.commons.web.response.CategoryResponse;
+import org.egov.tl.commons.web.response.CategorySearchResponse;
 import org.egov.tradelicense.domain.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,9 +35,9 @@ public class CategoryController {
 	 * @throws Exception
 	 */
 	@RequestMapping(path = "/_create", method = RequestMethod.POST)
-	public CategoryResponse createCategoryMaster(@Valid @RequestBody CategoryRequest categoryRequest) throws Exception {
+	public CategoryResponse createCategoryMaster(@Valid @RequestBody CategoryRequest categoryRequest, @RequestParam(required = false) String type) throws Exception {
 
-		return categoryService.createCategoryMaster(categoryRequest);
+		return categoryService.createCategoryMaster(categoryRequest,type);
 	}
 
 	/**
@@ -49,9 +49,9 @@ public class CategoryController {
 	 * @throws Exception
 	 */
 	@RequestMapping(path = "/_update", method = RequestMethod.POST)
-	public CategoryResponse updateCategoryMaster(@Valid @RequestBody CategoryRequest categoryRequest) throws Exception {
+	public CategoryResponse updateCategoryMaster(@Valid @RequestBody CategoryRequest categoryRequest, @RequestParam(required = false) String type) throws Exception {
 
-		return categoryService.updateCategoryMaster(categoryRequest);
+		return categoryService.updateCategoryMaster(categoryRequest,type);
 	}
 
 	/**
@@ -76,10 +76,10 @@ public class CategoryController {
 			@RequestParam(required = false) String active, @RequestParam(required = false) String type,
 			@RequestParam(required = false) String businessNature, @RequestParam(required = false) Integer categoryId,
 			@RequestParam(required = false) String rateType, @RequestParam(required = false) String feeType,
-			@RequestParam(required = false) Integer uomId, 
-			@RequestParam(required = false) Integer pageSize, @RequestParam(required = false) Integer offSet) throws Exception {
+			@RequestParam(required = false) Integer uomId, @RequestParam(required = false) Integer pageSize,
+			@RequestParam(required = false) Integer offSet) throws Exception {
 
-		return categoryService.getCategoryMaster(requestInfo.getRequestInfo(), tenantId.trim(), ids, name, code, active, type,
-				businessNature, categoryId, rateType, feeType, uomId, pageSize, offSet);
+		return categoryService.getCategoryMaster(requestInfo.getRequestInfo(), tenantId.trim(), ids, name, code, active,
+				type, businessNature, categoryId, rateType, feeType, uomId, pageSize, offSet);
 	}
 }

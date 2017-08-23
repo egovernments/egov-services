@@ -1,4 +1,4 @@
-package org.egov.tl.commons.web.requests;
+package org.egov.tl.commons.web.response;
 
 import java.util.List;
 

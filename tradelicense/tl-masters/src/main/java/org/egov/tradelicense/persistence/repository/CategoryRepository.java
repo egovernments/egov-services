@@ -36,7 +36,7 @@ public class CategoryRepository {
 	private PropertiesManager propertiesManager;
 	
 	@Autowired
-	 private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	/**
 	 * Description : this method will create category in database
@@ -280,10 +280,6 @@ public class CategoryRepository {
 
 	/**
 	 * This method will cast the given object to String
-	 * 
-	 * @param object
-	 *            that need to be cast to string
-	 * @return {@link String}
 	 */
 	private String getString(Object object) {
 		return object == null ? "" : object.toString();
@@ -292,9 +288,6 @@ public class CategoryRepository {
 	/**
 	 * This method will cast the given object to double
 	 * 
-	 * @param object
-	 *            that need to be cast to Double
-	 * @return {@link Double}
 	 */
 	@SuppressWarnings("unused")
 	private Double getDouble(Object object) {
@@ -303,10 +296,6 @@ public class CategoryRepository {
 
 	/**
 	 * This method will cast the given object to Long
-	 * 
-	 * @param object
-	 *            that need to be cast to Long
-	 * @return {@link Long}
 	 */
 	private Long getLong(Object object) {
 		return object == null ? 0 : Long.parseLong(object.toString());
@@ -314,10 +303,6 @@ public class CategoryRepository {
 
 	/**
 	 * This method will cast the given object to Boolean
-	 * 
-	 * @param object
-	 *            that need to be cast to Boolean
-	 * @return {@link boolean}
 	 */
 	private Boolean getBoolean(Object object) {
 		return object == null ? Boolean.FALSE : (Boolean) object;

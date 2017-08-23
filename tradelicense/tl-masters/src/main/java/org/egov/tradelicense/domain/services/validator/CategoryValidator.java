@@ -16,7 +16,8 @@ import org.egov.tradelicense.persistence.repository.builder.UtilityBuilder;
 import org.egov.tradelicense.persistence.repository.helper.UtilityHelper;
 import org.egov.tradelicense.util.ConstantUtility;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -30,8 +31,11 @@ public class CategoryValidator {
 
 	@Autowired
 	PropertiesManager propertiesManager;
+	
+ 	@Autowired
+	NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-	public void validateCategoryRequest(CategoryRequest categoryRequest, Boolean isNewCategory) {
+	public void validateCategoryRequest(CategoryRequest categoryRequest, Boolean isNewCategory, String type) {
 
 		RequestInfo requestInfo = categoryRequest.getRequestInfo();
 
@@ -39,7 +43,7 @@ public class CategoryValidator {
 			category.setName((category.getName() == null) ? null : category.getName().trim());
 			category.setCode((category.getCode() == null) ? null : category.getCode().trim());
 			category.setTenantId((category.getTenantId() == null) ? null : category.getTenantId().trim());
-			Long ParentId = category.getParentId();
+			Long parentId = category.getParentId();
 			Long categoryId = null;
 
 			if (isNewCategory) {
@@ -71,10 +75,17 @@ public class CategoryValidator {
 				throw new DuplicateNameException(propertiesManager.getCategoryNameDuplicate(), requestInfo);
 			}
 
-			if (ParentId != null) {
-				validateSubCategory(category, requestInfo, isNewCategory);
+			if ( type != null && type.equals(ConstantUtility.SUB_CATEGORY_TYPE)) {
+				if( parentId == null){
+					throw new InvalidInputException(propertiesManager.getInvalidParentIdMsg(), requestInfo);
+				}else{
+					validateSubCategory(category, requestInfo, isNewCategory);
+				}
+				
 			}else{
 				category.setValidityYears(0l);
+				category.setParentId(null);
+				category.setDetails(null);
 			}
 
 		}
@@ -87,9 +98,8 @@ public class CategoryValidator {
 
 		if (isParentExists) {
 
-			if( category.getValidityYears() == null || 
-					category.getValidityYears() < 1 || 
-					category.getValidityYears() > 10){
+			if (category.getValidityYears() == null || category.getValidityYears() < 1
+					|| category.getValidityYears() > 10) {
 				throw new InvalidInputException(propertiesManager.getInvalidValidityYears(), requestInfo);
 			}
 			Map<String, Integer> occurrences = new HashMap<String, Integer>();
@@ -108,11 +118,12 @@ public class CategoryValidator {
 					isCategoryDetailDuplicateExists = checkWhetherDuplicateCategoryDetailRecordExits(categoryDetail,
 							ConstantUtility.CATEGORY_DETAIL_TABLE_NAME, categoryDetailId);
 				}
-				
-				occurrences.put(categoryDetail.getFeeType().toString(), occurrences.containsKey(categoryDetail.getFeeType().toString())
-					    ? occurrences.get(categoryDetail.getFeeType().toString()) + 1 : 1);
-				
-				duplicateFeeType = (occurrences.get( categoryDetail.getFeeType().toString()) >1);
+
+				occurrences.put(categoryDetail.getFeeType().toString(),
+						occurrences.containsKey(categoryDetail.getFeeType().toString())
+								? occurrences.get(categoryDetail.getFeeType().toString()) + 1 : 1);
+
+				duplicateFeeType = (occurrences.get(categoryDetail.getFeeType().toString()) > 1);
 				if (isCategoryDetailDuplicateExists || duplicateFeeType) {
 					throw new DuplicateIdException(propertiesManager.getDuplicateSubCategoryDetail(), requestInfo);
 				}
@@ -131,9 +142,6 @@ public class CategoryValidator {
 		}
 	}
 
-	@Autowired
-	JdbcTemplate jdbcTemplate;
-
 	/**
 	 * This will check whether any record exists with the given parentId in
 	 * database or not
@@ -149,9 +157,10 @@ public class CategoryValidator {
 		int count = 0;
 
 		try {
-			count = (Integer) jdbcTemplate.queryForObject(query, Integer.class);
+			MapSqlParameterSource parameters = new MapSqlParameterSource();
+			count = (Integer) namedParameterJdbcTemplate.queryForObject(query, parameters, Integer.class);
 		} catch (Exception e) {
-			log.error("error while executing the query :"+ query + " , error message : " +  e.getMessage());
+			log.error("error while executing the query :" + query + " , error message : " + e.getMessage());
 		}
 
 		if (count == 0) {
@@ -180,9 +189,12 @@ public class CategoryValidator {
 		int count = 0;
 
 		try {
-			count = (Integer) jdbcTemplate.queryForObject(query, Integer.class);
+
+			MapSqlParameterSource parameters = new MapSqlParameterSource();
+			count = (Integer) namedParameterJdbcTemplate.queryForObject(query, parameters, Integer.class);
+
 		} catch (Exception e) {
-			log.error("error while executing the query :"+ query + " , error message : " +  e.getMessage());
+			log.error("error while executing the query :" + query + " , error message : " + e.getMessage());
 		}
 
 		if (count == 0) {
@@ -207,9 +219,10 @@ public class CategoryValidator {
 		int count = 0;
 
 		try {
-			count = (Integer) jdbcTemplate.queryForObject(query, Integer.class);
+			MapSqlParameterSource parameters = new MapSqlParameterSource();
+			count = (Integer) namedParameterJdbcTemplate.queryForObject(query, parameters, Integer.class);
 		} catch (Exception e) {
-			log.error("error while executing the query :"+ query + " , error message : " +  e.getMessage());
+			log.error("error while executing the query :" + query + " , error message : " + e.getMessage());
 		}
 
 		if (count > 0) {

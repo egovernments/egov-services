@@ -18,7 +18,7 @@ import org.egov.tl.commons.web.contract.DocumentType;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.ResponseInfo;
 import org.egov.tl.commons.web.requests.DocumentTypeRequest;
-import org.egov.tl.commons.web.requests.DocumentTypeResponse;
+import org.egov.tl.commons.web.response.DocumentTypeResponse;
 import org.egov.tradelicense.TradeLicenseApplication;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.services.DocumentTypeService;

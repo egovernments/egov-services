@@ -1,7 +1,7 @@
 package org.egov.tl.indexer.controller;
 
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
-import org.egov.tl.commons.web.requests.TradeLicenseSearchResponse;
+import org.egov.tl.commons.web.response.TradeLicenseSearchResponse;
 import org.egov.tl.indexer.service.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;

@@ -97,11 +97,14 @@ class UiAutoComplete extends Component {
 				return (
           <div >
           <AutoComplete
+          	 floatingLabelStyle={{"color": item.isDisabled ? "#A9A9A9" : "#696969", "fontSize": "20px"}}
+			 inputStyle={{"color": "#5F5C57"}}
+          	 floatingLabelFixed={true}
              style={{"display": (item.hide ? 'none' : 'inline-block')}}
              errorStyle={{"float":"left"}}
              dataSource={dropDownData.hasOwnProperty(item.jsonPath)?dropDownData[item.jsonPath]:[]}
              dataSourceConfig={dataSourceConfig}
-             floatingLabelText={item.label + (item.isRequired ? " *" : "")}
+             floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>} 
              fullWidth={true}
              value={this.props.getVal(item.jsonPath)}
              disabled={item.isDisabled}

@@ -3,8 +3,8 @@ package org.egov.tradelicense.web.controller;
 import javax.validation.Valid;
 
 import org.egov.tl.commons.web.requests.FeeMatrixRequest;
-import org.egov.tl.commons.web.requests.FeeMatrixResponse;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
+import org.egov.tl.commons.web.response.FeeMatrixResponse;
 import org.egov.tradelicense.domain.services.FeeMatrixService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -77,10 +77,18 @@ public class FeeMatrixController {
 			@RequestParam(required = false) Integer categoryId, @RequestParam(required = false) Integer subcategoryId,
 			@RequestParam(required = false) String financialYear,
 			@RequestParam(required = false) String applicationType,
-			@RequestParam(required = false) String businessNature, @RequestParam(required = false) Integer pageSize,
+			@RequestParam(required = false) String businessNature,
+			@RequestParam(required = false) Integer pageSize,
 			@RequestParam(required = false) Integer offSet) throws Exception {
 
-		return feeMatrixService.getFeeMatrixMaster(requestInfo.getRequestInfo(), tenantId, ids, categoryId,
-				subcategoryId, financialYear, applicationType, businessNature, pageSize, offSet);
+		return feeMatrixService.getFeeMatrixMaster(requestInfo.getRequestInfo(),
+				tenantId, ids,
+				categoryId,
+				subcategoryId,
+				financialYear,
+				applicationType,
+				businessNature,
+				pageSize,
+				offSet);
 	}
 }

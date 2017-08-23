@@ -392,12 +392,18 @@ public class WcmsConstants {
     public static final String NON_METER_WATER_RATES_UNIQUE_CODE = "wcms.0075";
     public static final String NON_METER_WATER_RATES_UNQ_FIELD_NAME = "connectionType ,usageTypeName ,sourceTypeName ,pipeSize and fromDate ";
     public static final String NON_METER_WATER_RATES_UNQ_ERROR_MESSAGE = "Entered combination of ConnectionType,UsageType ,SourceType ,PipeSize and fromDate has already been mapped";
+    
+    public static final String DONATION_UNIQUE_CODE = "wcms.0076";
+    public static final String DONATION_UNQ_FIELD_NAME = "peopertyType,usageTypeName ,catgeory ,maxPipeSize and minPipeSize";
+    public static final String DONATION_UNQ_ERROR_MESSAGE = "Entered combination of PropertyType ,UsageType ,CategoryType ,MaxPipeSize and MinPipeSize Inmm has already been mapped";
 
     public static final String ZONE = "Zone";
     public static final String REVENUE = "REVENUE";
     public static final String WARD = "Ward";
     public static final String LOCALITY = "Locality";
     public static final String LOCATION = "LOCATION";
+    
+    public static final String WC = "WC";
 
     public String getErrorMessage(final String property) {
         return environment.getProperty(property);

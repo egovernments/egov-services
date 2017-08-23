@@ -122,7 +122,7 @@ public class RevaluationService {
         return getRevaluationResponse(revaluations);
     }
 
-    private String createVoucherForRevaluation(final RevaluationRequest revaluationRequest, final HttpHeaders headers) {
+    public String createVoucherForRevaluation(final RevaluationRequest revaluationRequest, final HttpHeaders headers) {
         final Revaluation revaluation = revaluationRequest.getRevaluation();
         final List<Long> assetIds = new ArrayList<>();
         final RequestInfo requestInfo = revaluationRequest.getRequestInfo();
@@ -171,7 +171,7 @@ public class RevaluationService {
 
     }
 
-    private List<VouchercreateAccountCodeDetails> getAccountDetails(final Revaluation revaluation,
+    public List<VouchercreateAccountCodeDetails> getAccountDetails(final Revaluation revaluation,
             final AssetCategory assetCategory, final RequestInfo requestInfo) {
         final List<VouchercreateAccountCodeDetails> accountCodeDetails = new ArrayList<VouchercreateAccountCodeDetails>();
         final String tenantId = revaluation.getTenantId();

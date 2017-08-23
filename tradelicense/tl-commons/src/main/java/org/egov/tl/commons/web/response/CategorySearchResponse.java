@@ -1,8 +1,8 @@
-package org.egov.tl.commons.web.requests;
+package org.egov.tl.commons.web.response;
 
 import java.util.List;
 
-import org.egov.tl.commons.web.contract.Category;
+import org.egov.tl.commons.web.contract.CategorySearch;
 import org.egov.tl.commons.web.contract.ResponseInfo;
 
 import lombok.AllArgsConstructor;
@@ -20,9 +20,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CategoryResponse {
+public class CategorySearchResponse {
 
 	private ResponseInfo responseInfo;
 
-	private List<Category> categories;
+	private List<CategorySearch> categories;
 }

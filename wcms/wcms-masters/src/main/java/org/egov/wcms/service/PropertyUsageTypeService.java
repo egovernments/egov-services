@@ -45,6 +45,7 @@ import java.util.List;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.wcms.model.PropertyTypeUsageType;
 import org.egov.wcms.repository.PropertyUsageTypeRepository;
+import org.egov.wcms.util.WcmsConstants;
 import org.egov.wcms.web.contract.PropertyTypeResponse;
 import org.egov.wcms.web.contract.PropertyTypeUsageTypeGetReq;
 import org.egov.wcms.web.contract.PropertyTypeUsageTypeReq;
@@ -115,7 +116,8 @@ public class PropertyUsageTypeService {
         //TODO: changing as per new requirement in Connection need to enhance API
         if (propUsageTypeGetRequest.getUsageCode() != null) {
             final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModuleByCode(
-                    propUsageTypeGetRequest.getUsageCode(), propUsageTypeGetRequest.getTenantId());
+                    propUsageTypeGetRequest.getUsageCode(),WcmsConstants.WC,
+                    propUsageTypeGetRequest.getTenantId());
             if (usageType.getUsageTypesSize())
                 propUsageTypeGetRequest.setUsageTypeId(usageType.getUsageMasters().get(0).getId());
 
@@ -153,13 +155,15 @@ public class PropertyUsageTypeService {
     public Boolean getUsageTypeByName(final PropertyTypeUsageType propUsageType) {
         Boolean isValidUsage = Boolean.FALSE;
         final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModule(
-                propUsageType.getUsageType(),
+                propUsageType.getUsageType(),WcmsConstants.WC,
                 propUsageType.getTenantId());
         if (usageType.getUsageTypesSize()) {
             isValidUsage = Boolean.TRUE;
             propUsageType
                     .setUsageTypeId(usageType.getUsageMasters() != null && usageType.getUsageMasters().get(0) != null
                             ? usageType.getUsageMasters().get(0).getId() : "");
+            propUsageType.setUsageCode(usageType.getUsageMasters() != null && usageType.getUsageMasters().get(0) != null ?usageType.getUsageMasters().get(0).getCode():"");
+            propUsageType.setService(usageType.getUsageMasters() != null && usageType.getUsageMasters().get(0) != null ?usageType.getUsageMasters().get(0).getService():"");
 
         }
         return isValidUsage;

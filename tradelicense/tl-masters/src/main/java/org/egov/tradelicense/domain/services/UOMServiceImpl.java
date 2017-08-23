@@ -7,7 +7,7 @@ import org.egov.tl.commons.web.contract.ResponseInfo;
 import org.egov.tl.commons.web.contract.UOM;
 import org.egov.tl.commons.web.requests.ResponseInfoFactory;
 import org.egov.tl.commons.web.requests.UOMRequest;
-import org.egov.tl.commons.web.requests.UOMResponse;
+import org.egov.tl.commons.web.response.UOMResponse;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.exception.InvalidInputException;
 import org.egov.tradelicense.domain.services.validator.UOMValidator;

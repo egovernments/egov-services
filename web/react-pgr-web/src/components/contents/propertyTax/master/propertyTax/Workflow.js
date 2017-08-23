@@ -251,6 +251,7 @@ class Workflow extends Component {
                                                   floatingLabelText="Department Name *"
                                                   errorText={fieldErrors.workflowDepartment ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.workflowDepartment}</span>: ""}
                                                   value={workflow.workflowDepartment ? workflow.workflowDepartment :""}
+												  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                                   onChange={(event, index, value) => {
 													(value == -1) ? value = '' : '';  
                                                     var e = {
@@ -261,7 +262,7 @@ class Workflow extends Component {
                                                     handleWorkFlowChange(e, 'department');
                                                     handleChange(e, "workflowDepartment", true, "")}}
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                                   >
@@ -273,6 +274,7 @@ class Workflow extends Component {
                                                   floatingLabelText="Designation Name *"
                                                   errorText={fieldErrors.workflowDesignation ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.workflowDesignation}</span>: ""}
                                                   value={workflow.workflowDesignation ? workflow.workflowDesignation :""}
+												  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                                   onChange={(event, index, value) => {
 													  (value == -1) ? value = '' : '';
                                                     var e = {
@@ -283,7 +285,7 @@ class Workflow extends Component {
                                                     handleWorkFlowChange(e, 'designation');
                                                     handleChange(e, "workflowDesignation", true, "")}}
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                                   >
@@ -295,6 +297,7 @@ class Workflow extends Component {
                                                   floatingLabelText="Approver Name *"
                                                   errorText={fieldErrors.approver ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.approver}</span>: ""}
                                                   value={workflow.approver ? workflow.approver : ""}
+												  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                                   onChange={(event, index, value) => {
 													  (value == -1) ? value = '' : '';
                                                     var e = {
@@ -304,7 +307,7 @@ class Workflow extends Component {
                                                     };
                                                     handleChange(e, "approver", true, "")}}
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                                   >
@@ -319,7 +322,7 @@ class Workflow extends Component {
                                                   onChange={(e) => {
                                                     handleChange(e, "comments", false, "")}}
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                                   />

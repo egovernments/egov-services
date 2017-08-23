@@ -1,4 +1,4 @@
-package org.rgov.tl.indexer.web.requests;
+package org.egov.tl.indexer.web.requests;
 
 import org.egov.tl.commons.web.contract.RequestInfo;
 

@@ -565,7 +565,7 @@ public class MasterServiceImpl implements Masterservice {
 
 			if (isExists)
 				throw new DuplicateIdException(propertyTypeRequest.getRequestInfo());
-			
+
 			if (propertyType.getParent() != null) {
 				if (!propertyType.getParent().isEmpty()) {
 					Boolean isParentCodeExists = propertyMasterRepository.checkWhetherRecordExits(
@@ -636,6 +636,10 @@ public class MasterServiceImpl implements Masterservice {
 				}
 			}
 
+			if (usageMaster.getService() == null || usageMaster.getService().isEmpty()) {
+				usageMaster.setService(propertiesManager.getUsageMasterDefaultService());
+			}
+
 			try {
 				usageMaster.setAuditDetails(auditDetails);
 				Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
@@ -684,11 +688,15 @@ public class MasterServiceImpl implements Masterservice {
 								usageMasterRequest.getRequestInfo());
 				}
 			}
+			
+			if (usageMaster.getService() == null || usageMaster.getService().isEmpty()) {
+				usageMaster.setService(propertiesManager.getUsageMasterDefaultService());
+			}
 
 			try {
 				Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 				String data = gson.toJson(usageMaster);
-
+				
 				propertyMasterRepository.updateUsageMaster(usageMaster, data);
 
 			} catch (Exception e) {
@@ -707,19 +715,23 @@ public class MasterServiceImpl implements Masterservice {
 	@Override
 	public UsageMasterResponse getUsageMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
 			String code, String nameLocal, Boolean active, Boolean isResidential, Integer orderNumber, Integer pageSize,
-			Integer offSet, String parent) throws Exception {
+			Integer offSet, String parent, String service) throws Exception {
 
 		UsageMasterResponse usageMasterResponse = new UsageMasterResponse();
+		
+		if (service == null || service.isEmpty()) {
+			service=propertiesManager.getUsageMasterDefaultService();
+		}
 
 		try {
 			List<UsageMaster> usageList = propertyMasterRepository.searchUsage(tenantId, ids, name, code, nameLocal,
-					active, isResidential, orderNumber, pageSize, offSet, parent);
+					active, isResidential, orderNumber, pageSize, offSet, parent, service);
 			usageMasterResponse.setUsageMasters(usageList);
 			ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 			usageMasterResponse.setResponseInfo(responseInfo);
 
 		} catch (Exception e) {
-
+			e.printStackTrace();
 			throw new PropertySearchException("invalid input", requestInfo);
 		}
 

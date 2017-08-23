@@ -1,8 +1,5 @@
 FROM egovio/apline-jre:8u121
 
-MAINTAINER Senthil<senthil.kalimuthu@tarento.com>
-
-
 # INSTRUCTIONS ON HOW TO BUILD JAR:
 # Move to the location where pom.xml is exist in project and build project using below command
 # "mvn clean package"

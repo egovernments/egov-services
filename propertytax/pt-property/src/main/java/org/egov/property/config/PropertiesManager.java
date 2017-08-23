@@ -287,6 +287,8 @@ public class PropertiesManager {
 	private String billingServiceUpdateMisPath;
 	
 	private String usageMasterService;
+	
+	private String propertyUnitAge;
 
 	public String getInvalidInput() {
 		return environment.getProperty("invalid.input");
@@ -791,6 +793,10 @@ public class PropertiesManager {
 	
 	public String getUsageMasterDefaultService(){
 		return environment.getProperty("usage.master.default.service");
+	}
+	
+	public String getPropertyUnitAge(){
+	    return environment.getProperty("egov.property.unit.age");
 	}
 
 }

@@ -2293,7 +2293,7 @@ class Employee extends Component {
 
                         <span><label style={{"fontSize": "15px"}}>{translate("employee.Employee.fields.medicalReportProduced")+"?"}</label>
                       	<RadioButtonGroup name={translate("employee.Employee.fields.medicalReportProduced")} valueSelected={Employee.medicalReportProduced} onChange={(e, value) => {
-                      		handleChange({target:{value:value}}, 'medicalReportProduced', true, '')
+                      		handleChange({target:{value:value}}, 'medicalReportProduced', false, '')
                       	}}>
           					      <RadioButton
           					        value={true}

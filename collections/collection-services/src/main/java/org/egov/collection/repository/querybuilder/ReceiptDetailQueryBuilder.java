@@ -185,8 +185,9 @@ public class ReceiptDetailQueryBuilder {
         if(StringUtils.isNotBlank(searchCriteria.getPaymentType())) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
                     selectQuery);
-            selectQuery.append(" rh.collmodesnotallwd like ?");
-            preparedStatementValues.add("%" + searchCriteria.getPaymentType() + "%");
+            selectQuery.append(" rh.id in(select receiptheader from egcl_receiptinstrument receiptinstrument " +
+                    " inner join egf_instrument instrument on instrument.id=receiptinstrument.instrumentheader where instrument.instrumenttypeid = ?)  ");
+            preparedStatementValues.add(searchCriteria.getPaymentType());
         }
 
 		if (searchCriteria.getReceiptNumbers() != null) {

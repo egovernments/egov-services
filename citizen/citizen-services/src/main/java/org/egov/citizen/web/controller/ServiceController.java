@@ -88,7 +88,7 @@ public class ServiceController {
 		List<String> results = null;
 		final ObjectMapper objectMapper = new ObjectMapper();
 		ServiceReq servcieReq = objectMapper.convertValue(JsonPath.read(config, "$.serviceReq"), ServiceReq.class);
-
+		LOGGER.info("servcieReq: "+servcieReq.toString());
 		List<ServiceConfig> list = serviceConfigs.getServiceConfigs();
 		String url = "";
 		SearchDemand searchDemand = null;
@@ -103,7 +103,8 @@ public class ServiceController {
 		String sequenceNumber = citizenService.generateSequenceNumber(searchDemand, config);
 		servcieReq.setServiceRequestId(sequenceNumber);
 		url = citizenService.getUrl(url, queryParamList);
-		Object demands = citizenService.generateResponseObject(url, config, results);
+		LOGGER.info("config: "+config);
+		Object demands = citizenService.generateResponseObject(url, citizenService.getRequestInfo(config), results);
 		servcieReq.setBackendServiceDetails(demands);
 		citizenService.sendMessageToKafka(servcieReq);
 		serviceReqResponse.setServiceReq(servcieReq);
@@ -150,8 +151,8 @@ public class ServiceController {
 							jObject.getJSONArray("Demands").getJSONObject(0).put("consumerType", "ConsumerType");
 							jObject.getJSONArray("Demands").getJSONObject(0).put("tenantId", servcieReq.getTenantId());
 							jObject.getJSONArray("Demands").getJSONObject(0).put("businessService",applicationProperties.getBusinessService());
-							jObject.getJSONArray("Demands").getJSONObject(0).put("taxPeriodFrom", "1459449000000");
-							jObject.getJSONArray("Demands").getJSONObject(0).put("taxPeriodTo", "1475260199000");
+							jObject.getJSONArray("Demands").getJSONObject(0).put("taxPeriodFrom", applicationProperties.getTaxPeriodFrom());
+							jObject.getJSONArray("Demands").getJSONObject(0).put("taxPeriodTo", applicationProperties.getTaxPeriodTo());
 					    	jObject.getJSONArray("Demands").getJSONObject(0).put("minimumAmountPayable",BigDecimal.valueOf(Long.valueOf(applicationFee)));
 							jObject.getJSONArray("Demands").getJSONObject(0).getJSONArray("demandDetails").getJSONObject(0).put("taxHeadMasterCode", "PT_TAX");
 							jObject.getJSONArray("Demands").getJSONObject(0).getJSONArray("demandDetails").getJSONObject(0).put("taxAmount",applicationFee);

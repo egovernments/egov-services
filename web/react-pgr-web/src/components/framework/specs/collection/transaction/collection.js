@@ -216,15 +216,15 @@ var dat = {
       "header": [{
           "name": "businessService",
           "jsonPath": "businessService",
-          "label": "Biller Service Name",
+          "label": "Billing Service Name",
           "pattern": "",
           "type": "label",
           "isRequired": true,
           "isDisabled": false,
           "requiredErrMsg": "",
           "patternErrMsg": "",
-          "isLabel": false,
-          "url": "/egov-common-masters/businessDetails/_search?&"
+          "url":"egov-common-masters/businessDetails/_search?|$..code|$..name",
+          "isLabel": false
         },
         {
           "name": "consumerCode",

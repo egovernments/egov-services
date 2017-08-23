@@ -96,9 +96,9 @@ class DefineEscalationTime extends Component {
       setLoadingStatus('loading');
 
       let self = this;
-      Api.commonApiPost("/pgr/services/v1/_search", {type: "all"}).then(function(response) {
+      Api.commonApiPost("/pgr-master/service/v1/_search", {keywords: "complaint"}).then(function(response) {
           self.setState({
-            grievanceTypeSource: response.complaintTypes
+            grievanceTypeSource: response.Service
           });
           setLoadingStatus('hide');
       }, function(err) {

@@ -10,6 +10,8 @@ import org.openqa.selenium.WebElement;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -28,18 +30,20 @@ public class GenericPage extends BasePage {
         String value = v.replaceAll("\"", "");
         if (value.contains("--")) {
             if (value.contains(",") && !value.contains("characters")) {
-                value = value.split(",")[0] +
-                        getRandomNumber(Integer.parseInt(value.split(",")[1].replaceAll("[^0-9]+", "")));
+                value = (value.split(",")[0] +
+                        getRandomNumber(Integer.parseInt(value.split(",")[1].replaceAll("[^0-9]+", ""))))
+                        .replaceAll("--", "");
             } else if (value.contains("characters")) {
-                value = value.split(",")[0] +
-                        getRandomCharacters(Integer.parseInt(value.split(",")[1].replaceAll("[^0-9]+", "")));
+                value = (value.split(",")[0] +
+                        getRandomCharacters(Integer.parseInt(value.split(",")[1].replaceAll("[^0-9]+", ""))))
+                        .replaceAll("--", "");
             } else if (value.contains("email")) {
-                value = getRandomEmail();
+                value = getRandomEmail().replaceAll("--", "");
             } else {
-                value = getRandomNumber(Integer.parseInt(value.replaceAll("[^0-9]+", "")));
+                value = getRandomNumber(Integer.parseInt(value.replaceAll("[^0-9]+", ""))).replaceAll("--", "");
             }
         }
-        return value.replaceAll("-", "");
+        return value;
     }
 
     private String getRandomNumber(int c) {
@@ -180,4 +184,39 @@ public class GenericPage extends BasePage {
     private void waitForTheElementToBePresent(By by) throws IOException {
         await().atMost(20, TimeUnit.SECONDS).until(() -> driver.findElements(by).size() > 0);
     }
+
+    public void selectDate(WebElement webElement, String value) throws IOException {
+        clickOnButton(webElement, driver);
+
+        // Select Year
+        if (!(getCurrentDate().split("/")[2].equals(value.split("/")[2]))) {
+            String year = "//*[text()='" + value.split("/")[2] + "']";
+            clickOnButton(driver.findElement(By.xpath("//*[text()='" + getCurrentDate().split("/")[2] + "']")), driver);
+            waitForTheElementToBePresent(By.xpath(year));
+            clickOnButton(driver.findElement(By.xpath(year)), driver);
+
+//        // Selects Month
+//        String m = new SimpleDateFormat("MMM").format(Calendar.getInstance().getTime());
+//        if (driver.findElements(By.xpath("//*[contains(text(),'" + m + "')]")).size() == 1)
+//            System.out.println("ytfvhghujwnvkvr");
+
+//        waitForTheElementToBePresent(By.cssSelector("[d='M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z']"));
+//        clickOnButton(driver.findElement(By.cssSelector("[d='M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z']")), driver);
+
+            // Select Date
+            if (value.split("/")[0].substring(0, 1).contains("0")) {
+                System.out.println("========sub==========="+value.split("/")[0].substring(0, 1));
+            }
+                value = value.split("/")[0].replaceFirst("0", "");
+            }
+            String s = "//*[text()='" + value.split("/")[0] + "']";
+            waitForTheElementToBePresent(By.xpath(s));
+            System.out.println("==========" + s);
+            clickOnButton(driver.findElement(By.xpath(s)), driver);
+
+            // Click on Ok
+            waitForTheElementToBePresent(By.xpath("//*[text()='OK']"));
+            clickOnButton(driver.findElement(By.xpath("//*[text()='OK']")), driver);
+
+        }
 }

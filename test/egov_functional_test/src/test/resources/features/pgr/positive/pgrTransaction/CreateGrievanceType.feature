@@ -143,7 +143,7 @@ Feature: Creating a Grievance Type
     Examples:
       | status    |
       | COMPLETED |
-      | REJECTED  |
+#      | REJECTED  |
 
 
 

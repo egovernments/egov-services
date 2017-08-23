@@ -53,16 +53,18 @@ export default class UiEmailField extends Component {
 						errorText={this.props.fieldErrors[item.jsonPath]}
 						value={this.getDateFormat(this.props.getVal(item.jsonPath))}
 						onChange={(e) => {
+							var val = e.target.value;
 							if(e.target.value) {
 								e.target.value = e.target.value.trim();
 								if(datePat.test(e.target.value)){
 									var _date = e.target.value;
 									_date = _date.split("/");
 									var newDate = _date[1]+"/"+_date[0]+"/"+_date[2];
-									e.target.value = new Date(newDate).getTime();
+									val = Number(new Date(newDate).getTime());
 								}
 							}
-                            this.props.handler(e, item.jsonPath, item.isRequired ? true : false, /\d{12,13}/, item.requiredErrMsg, item.patternErrMsg)
+
+                            this.props.handler({target: {value: val}}, item.jsonPath, item.isRequired ? true : false, /\d{12,13}/, item.requiredErrMsg, item.patternErrMsg)
                         }}/>
 				);
 		}

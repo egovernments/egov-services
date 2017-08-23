@@ -67,10 +67,10 @@ public class ApplicationProperties {
 
     @Value("${kafka.topics.supplytype.update.name}")
     private String updateSupplyTypeTopicName;
-    
+
     @Value("${kafka.topics.servicecharge.create.name}")
     private String createServiceChargeTopicName;
-    
+
     @Value("${kafka.topics.servicecharge.update.name}")
     private String updateServiceChargeTopicName;
 
@@ -314,12 +314,12 @@ public class ApplicationProperties {
     public String getUpdateNonMeterWaterRatesTopicName() {
         return updateNonMeterWaterRatesTopicName;
     }
-    
-    public String getCreateServiceChargeTopicName(){
+
+    public String getCreateServiceChargeTopicName() {
         return createServiceChargeTopicName;
     }
-    
-    public String getUpdateServiceChargeTopicName(){
+
+    public String getUpdateServiceChargeTopicName() {
         return updateServiceChargeTopicName;
     }
 }

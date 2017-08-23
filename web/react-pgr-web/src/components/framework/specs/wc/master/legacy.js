@@ -128,7 +128,7 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": "",
 			"values": [{"label":"wc.group.withProperty", "value":true},{"label":"wc.group.withoutProperty", "value":false}],
-			"defaultValue":true,
+			"defaultValue":false,
       "showHideFields": [{
              "ifValue": false,
              "hide": [{
@@ -153,7 +153,6 @@ var dat = {
         "label": "wc.create.groups.applicantDetails.title", //Cut short labels by taking initial path from parent
         "name": "applicantDetailsWithProp", //Follow Title case pattern
         "multiple": false,
-        "hide":true,
         "fields": [
           {
             "name": "NameOfApplicant",
@@ -324,6 +323,7 @@ var dat = {
         "name": "applicantDetails", //Follow Title case pattern
         "children": [],
         "multiple": false,
+        "hide":true,
         "fields": [{
             "name": "AssessmentNumber",
             "jsonPath": "Connection.property.propertyIdentifier",

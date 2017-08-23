@@ -13,11 +13,11 @@ export default class UiEmailField extends Component {
    			} else if(dateStr.indexOf("+") > -1) {
    				var oneDay = 24 * 60 * 60 * 1000;
    				dateStr = dateStr.split("+")[1];
-   				return new Date(new Date().getTime() + (Number(dateStr) * oneDay)); 
+   				return new Date(new Date().getTime() + (Number(dateStr) * oneDay));
    			} else {
    				var oneDay = 24 * 60 * 60 * 1000;
    				dateStr = dateStr.split("-")[1];
-   				return new Date(new Date().getTime() - (Number(dateStr) * oneDay)); 
+   				return new Date(new Date().getTime() - (Number(dateStr) * oneDay));
    			}
    		} else {
    			return "";
@@ -28,18 +28,18 @@ export default class UiEmailField extends Component {
 		switch (this.props.ui) {
 			case 'google':
 				return (
-					<TextField 
+					<TextField
 						style={{"display": (item.hide ? 'none' : 'inline-block')}}
 						floatingLabelStyle={{"color": item.isDisabled ? "#A9A9A9" : "#696969", "fontSize": "20px"}}
 						inputStyle={{"color": "#5F5C57"}}
-						floatingLabelFixed={true} 
+						floatingLabelFixed={true}
 						disabled={item.isDisabled}
-						hintText="21/12/1993" 
-						floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>} 
+						hintText="21/12/1993"
+						floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>}
 						errorText={this.props.fieldErrors[item.jsonPath]}
 						value={this.props.getVal(item.jsonPath)}
 						onChange={(e) => {
-							if(e.target.value) { 
+							if(e.target.value) {
 								e.target.value = e.target.value.trim();
 							}
                             this.props.handler(e, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)

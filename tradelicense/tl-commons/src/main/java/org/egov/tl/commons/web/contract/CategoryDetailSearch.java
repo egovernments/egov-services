@@ -40,7 +40,7 @@ public class CategoryDetailSearch {
 	@JsonProperty("uomId")
 	@NotNull(message = "{error.uomid.null}")
 	private Long uomId = null;
-	
+
 	@JsonProperty("uomName")
 	private String uomName;
 

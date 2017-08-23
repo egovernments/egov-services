@@ -94,7 +94,7 @@ public class CitizenService {
 	}
 
 	public RequestInfoWrapper getRequestInfo(Object config) {
-
+		LOGGER.info("config wwithin: "+config);
 		RequestInfo requestInfo = new RequestInfo();
 
 		RequestInfoWrapper infoWrapper = new RequestInfoWrapper();

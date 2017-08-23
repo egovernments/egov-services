@@ -3,6 +3,7 @@ package org.egov.citizen.repository;
 import org.egov.citizen.config.ApplicationProperties;
 import org.egov.citizen.model.BillResponse;
 import org.egov.citizen.model.BillingServiceRequestWrapper;
+import org.egov.common.contract.request.RequestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,24 @@ public class BillingServiceRepository {
 					billingServiceRequestWrapper, BillResponse.class);
 		LOGGER.info("Response from billing service: " + response);
 		return response;
+	}
+	
+	public BillResponse generateBillForDemand(RequestInfo requestInfo, String tenantId,
+			String mobileNumber){
+		LOGGER.info("Generating bill from Billing Service");
+		StringBuilder uri = new StringBuilder();
+		String generateCriteria ="?mobileNumber="+mobileNumber;
+		uri.append(applicationProperties.getBillingServiceHostName())
+		   .append(applicationProperties.getGenerateBill())
+		   .append(generateCriteria);
+		LOGGER.info("URI for Generating bill from Billing Service: "
+				+ uri.toString());
+		BillResponse response = null;
+		response = restTemplate.postForObject(uri.toString(),
+				requestInfo, BillResponse.class);
+		LOGGER.info("Response from billing service: " + response);
+		return response;
+		
 	}
 
 }

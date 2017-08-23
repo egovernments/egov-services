@@ -88,7 +88,7 @@ public class ServiceController {
 		List<String> results = null;
 		final ObjectMapper objectMapper = new ObjectMapper();
 		ServiceReq servcieReq = objectMapper.convertValue(JsonPath.read(config, "$.serviceReq"), ServiceReq.class);
-
+		LOGGER.info("servcieReq: "+servcieReq.toString());
 		List<ServiceConfig> list = serviceConfigs.getServiceConfigs();
 		String url = "";
 		SearchDemand searchDemand = null;
@@ -103,6 +103,7 @@ public class ServiceController {
 		String sequenceNumber = citizenService.generateSequenceNumber(searchDemand, config);
 		servcieReq.setServiceRequestId(sequenceNumber);
 		url = citizenService.getUrl(url, queryParamList);
+		LOGGER.info("config: "+config);
 		Object demands = citizenService.generateResponseObject(url, citizenService.getRequestInfo(config), results);
 		servcieReq.setBackendServiceDetails(demands);
 		citizenService.sendMessageToKafka(servcieReq);

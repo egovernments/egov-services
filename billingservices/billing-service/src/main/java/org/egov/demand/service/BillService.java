@@ -232,15 +232,18 @@ public class BillService {
 
 					List<GlCodeMaster> glCodeMasters = glCodesMap.get(demandDetail.getTaxHeadMasterCode());
 
+					if(glCodeMasters != null && glCodeMasters.isEmpty())
+						throw new RuntimeException("no glcodemasters found for the given taxhead master code"+demandDetail.getTaxHeadMasterCode());
 					log.info("prepareBill glCodeMasters:" + glCodeMasters);
 					GlCodeMaster glCodeMaster = glCodeMasters.stream()
-							.filter((t) -> demand2.getTaxPeriodFrom() >= t.getFromDate()
+							.filter(t -> demand2.getTaxPeriodFrom() >= t.getFromDate()
 									&& demand2.getTaxPeriodTo() <= t.getToDate())
 							.findAny().orElse(null);
 					
 					if(glCodeMaster == null) 
 						throw new RuntimeException(
-								"No glCode Found for demandDetail with taxcode :"+demandDetail.getTaxHeadMasterCode());
+								"No glCode Found for taxcode : "+demandDetail.getTaxHeadMasterCode() 
+								+ " and fromdate : "+demand2.getTaxPeriodFrom()+" todate : "+demand2.getTaxPeriodTo());
 
 					log.info("prepareBill taxHeadMaster:" + taxHeadMaster);
 					String taxHeadCode = demandDetail.getTaxHeadMasterCode();

@@ -47,9 +47,13 @@ public class GenericPage extends BasePage {
     }
 
     private String getRandomNumber(int c) {
-        int a = (int) Math.pow(10, c - 1);
-        int b = (int) Math.pow(10, c) - 1;
-        return String.valueOf(a + RandomUtils.nextInt(b));
+        Random random = new Random();
+        char[] digits = new char[c];
+        digits[0] = (char) (random.nextInt(9) + '1');
+        for (int i = 1; i < c; i++) {
+            digits[i] = (char) (random.nextInt(10) + '0');
+        }
+        return new String(digits);
     }
 
     private String getRandomCharacters(int noOfCharacters) {
@@ -146,7 +150,6 @@ public class GenericPage extends BasePage {
         await().atMost(10, TimeUnit.SECONDS).until(() -> driver.findElements(By.cssSelector("div[role=\"presentation\"]:nth-child(1) div div span div div div")).size() >= 1);
         List<WebElement> dropdown = driver.findElements(By.cssSelector("div[role=\"presentation\"]:nth-child(1) div div span div div div"));
         for (WebElement w : dropdown) {
-            System.out.println(w.getText());
             if (w.getText().equals(value)) {
                 try {
                     clickOnButton(w, driver);

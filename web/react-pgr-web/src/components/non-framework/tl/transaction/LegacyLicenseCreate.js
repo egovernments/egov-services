@@ -619,16 +619,16 @@ class LegacyLicenseCreate extends Component {
       let obj = specifications[`tl.create`];
 
 
-      Api.commonApiPost("/tl-services/license/v1/_create").then(function(response)
-      {
-
-      console.log(response.responseInfo.status);
-    //  self.handleChange({target:{value:response.categories[0].validityYears}}, , false, "");
-
-      },function(err) {
-        console.log(err);
-
-      });
+    //   Api.commonApiPost("/tl-services/license/v1/_create").then(function(response)
+    //   {
+    //
+    //   console.log(response.responseInfo.status);
+    // //  self.handleChange({target:{value:response.categories[0].validityYears}}, , false, "");
+    //
+    //   },function(err) {
+    //     console.log(err);
+    //
+    //   });
 
 
       // if (property == "licenses[0].tradeCommencementDate") {

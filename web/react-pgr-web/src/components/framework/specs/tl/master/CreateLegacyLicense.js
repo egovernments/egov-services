@@ -18,7 +18,7 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "It should be min 4 and max 20"
+            "patternErrMsg": "Enter Valid Old License Number (Min: ,Max: )"
           },
           {
             "name": "applicationType",
@@ -87,7 +87,7 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Aadhar Number must be of 12 digits"
+            "patternErrMsg": "Enter Valid Aadhar Number (14 Digit Number)"
           },
           {
             "name": "MobileNumber",
@@ -98,7 +98,7 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Mobile Number must be of 10 digits"
+            "patternErrMsg": "Enter Valid Mobile Number (10 Digit Number)"
           },
           {
             "name": "TradeOwnerName",
@@ -109,7 +109,7 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Enter Valid Trade Owner Name"
+            "patternErrMsg": "Enter Valid Trade Owner Name (Min:4, Max:100)"
           },
           {
             "name": "FatherSpouseName",
@@ -120,7 +120,7 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Enter Valid Father/Spouse Name"
+            "patternErrMsg": "Enter Valid Father/Spouse Name (Min:4, Max:100)"
           },
           {
             "name": "EmailID",
@@ -131,7 +131,7 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Enter Valid Email ID"
+            "patternErrMsg": "Enter Valid Email ID (ex: abc@xyz.com)"
           },
           {
             "name": "TradeOwnerAddress",
@@ -142,7 +142,7 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Min 4 and Max 250"
+            "patternErrMsg": "Enter Valid Trade Owner Address (Min:4, Max:250)"
           }
         ]
       },
@@ -159,7 +159,7 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Property Assessment Number should be 4 to 20"
+            "patternErrMsg": "Enter Valid Property Assessment Number"
           },
           {
             "name": "Locality",
@@ -235,7 +235,7 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "Enter Valid Trade Address (Min:4, Max:100)"
           }
         ]
       },
@@ -251,7 +251,7 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "Enter Valid Trade Title (Min:4, Max:100)"
           },
           {
             "name": "TradeType",
@@ -324,7 +324,7 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "Enter Valid Trade Value for the UOM (Upto two decimal points)"
           },
           {
             "name": "validity",
@@ -431,7 +431,7 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Enter Document Number"
+            "patternErrMsg": "Enter Valid Agreement No (Min:4, Max:128, Alpha/Numeric)"
           }
         ]
       },

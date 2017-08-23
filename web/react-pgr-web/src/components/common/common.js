@@ -516,7 +516,15 @@ var localization_EN_Data = {
 	"pt.create.groups.addDemand.demandError":"Collection entered should be equal to or less than the Demand",
 	"pt.create.groups.addDemand.demand":"Demand",
 	"pt.create.groups.addDemand.collection":"Collection",
-
+	"pt.create.groups.addDemand.period":"Period",
+	"pt.create.groups.floorDetails.fields.flat":"Flat",
+    "pt.create.groups.floorDetails.fields.room":"Room",
+	"pt.create.groups.floorDetails.fields.basement3":"Basement-3",
+	"pt.create.groups.floorDetails.fields.basement2":"Basement-2",
+	"pt.create.groups.floorDetails.fields.basement1":"Basement-1",
+	"pt.create.groups.floorDetails.fields.groundFloor": "Ground Floor",
+	"pt.create.groups.floorDetails.fields.yes": "Yes",
+	"pt.create.groups.floorDetails.fields.no": "No",
 	
 
     //employee Object

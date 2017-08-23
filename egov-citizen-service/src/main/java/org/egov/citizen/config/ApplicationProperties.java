@@ -79,7 +79,7 @@ public class ApplicationProperties {
 	@Value("${egov.services.billing_service.search}")
 	private String searchBill;
 	
-	@Value("${egov.services.billing_service.search}")
+	@Value("${egov.services.billing_service.bill.generate}")
 	private String generateBill;
 	
 	@Value("${egov.services.collection_service.hostname}")

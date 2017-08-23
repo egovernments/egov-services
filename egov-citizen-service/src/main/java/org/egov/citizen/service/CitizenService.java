@@ -97,7 +97,7 @@ public class CitizenService {
 
 		RequestInfoWrapper infoWrapper = new RequestInfoWrapper();
 
-		requestInfo.setAction(JsonPath.read(config, "$.requestInfo.action"));
+	/*	requestInfo.setAction(JsonPath.read(config, "$.requestInfo.action"));
 		requestInfo.setApiId(JsonPath.read(config, "$.requestInfo.apiId"));
 		requestInfo.setAuthToken(JsonPath.read(config, "$.requestInfo.authToken"));
 		requestInfo.setVer(JsonPath.read(config, "$.requestInfo.ver"));
@@ -107,6 +107,18 @@ public class CitizenService {
 		requestInfo.setKey(JsonPath.read(config, "$.requestInfo.key"));
 		User user = new User();
 		user.setId(Long.valueOf(JsonPath.read(config, "$.requestInfo.userInfo.id")));
+		requestInfo.setUserInfo(user); */
+		
+		requestInfo.setAction(JsonPath.read(config, "$.RequestInfo.action"));
+		requestInfo.setApiId(JsonPath.read(config, "$.RequestInfo.apiId"));
+		requestInfo.setAuthToken(JsonPath.read(config, "$.RequestInfo.authToken"));
+		requestInfo.setVer(JsonPath.read(config, "$.RequestInfo.ver"));
+		requestInfo.setTs(Long.valueOf(JsonPath.read(config, "$.RequestInfo.ts").toString()));
+		requestInfo.setDid(JsonPath.read(config, "$.RequestInfo.did"));
+		requestInfo.setMsgId(JsonPath.read(config, "$.RequestInfo.msgId"));
+		requestInfo.setKey(JsonPath.read(config, "$.RequestInfo.key"));
+		User user = new User();
+		user.setId(Long.valueOf(JsonPath.read(config, "$.RequestInfo.userInfo.id")));
 		requestInfo.setUserInfo(user);
 
 		infoWrapper.setRequestInfo(requestInfo);
@@ -159,7 +171,6 @@ public class CitizenService {
 	
 	public Object createDemand(String url,String demand){
 		Object response = null;
-		LOGGER.info("ERRORORRRRRR");
 		try{
 			response = restTemaplate.postForObject(url, demand,	Object.class);
 	    }catch(Exception e){
@@ -264,11 +275,11 @@ public class CitizenService {
 		}
 	}
 	
-	public Object generateBill(RequestInfo requestInfo, String consumerCode, String buisnessService, String tenantId){
+	public Object generateBill(RequestInfoWrapper requestInfoWrapper, String consumerCode, String buisnessService, String tenantId){
 		LOGGER.info("Generate bill flow starts for mobile no: "+consumerCode.toString());
 		BillResponse billResponse = null;
 		try{
-			billResponse = billingServiceRepository.generateBillForDemand(requestInfo, tenantId, consumerCode, buisnessService);
+			billResponse = billingServiceRepository.generateBillForDemand(requestInfoWrapper, tenantId, consumerCode, buisnessService);
 		}catch(Exception e){
 			LOGGER.error("Couldn't fetch bill: ", e);
 			throw new CustomException(Integer.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),

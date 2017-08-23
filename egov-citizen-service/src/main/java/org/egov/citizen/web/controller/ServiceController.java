@@ -132,40 +132,42 @@ public class ServiceController {
 
 				StringBuilder builder = new StringBuilder();
 				builder.append(searchDemand.getUrl()).append("?consumerCode="+servcieReq.getConsumerCode()+"&tenantId="+servcieReq.getTenantId());
+				LOGGER.info("CONFIG: "+config.toString());
 				RequestInfoWrapper requestInfo =  citizenService.getRequestInfo(config);
 				Object response = restTemplate.postForObject(builder.toString(), requestInfo, Object.class);
 				
 				JSONObject jObject;
 				try {
 					jObject = new JSONObject(demandRequest);
-
-					jObject.put("RequestInfo", JsonPath.read(config, "$.requestInfo"));
+					jObject.put("RequestInfo", JsonPath.read(config, "$.RequestInfo"));
 
 					for (Value value : servcieReq.getAttributeValues()) {
 						// todo
-						
 							jObject.getJSONArray("Demands").getJSONObject(0).put("consumerCode", servcieReq.getConsumerCode());
 							jObject.getJSONArray("Demands").getJSONObject(0).put("tenantId", servcieReq.getTenantId());
 							jObject.getJSONArray("Demands").getJSONObject(0).put("businessService",applicationProperties.getBusinessService());
 							jObject.getJSONArray("Demands").getJSONObject(0).put("taxPeriodFrom", JsonPath.read(response, "$..Demands[0].taxPeriodFrom"));
 							jObject.getJSONArray("Demands").getJSONObject(0).put("taxPeriodTo", JsonPath.read(response, "$..Demands[0].taxPeriodTo"));
-							jObject.getJSONArray("Demands").getJSONObject(0).put("minimumAmountPayable",JsonPath.read(config, applicationFee));
+							jObject.getJSONArray("Demands").getJSONObject(0).put("minimumAmountPayable",100);
 							jObject.getJSONArray("Demands").getJSONObject(0).getJSONArray("demandDetails").getJSONObject(0).put("taxHeadMasterCode", "");
 							jObject.getJSONArray("Demands").getJSONObject(0).getJSONArray("demandDetails").getJSONObject(0).put("taxAmount",applicationFee);
 							jObject.getJSONArray("Demands").getJSONObject(0).getJSONArray("demandDetails").getJSONObject(0).put("collectionAmount", "100");
-							jObject.getJSONArray("Demands").getJSONObject(0).getJSONObject("owner").put("id",JsonPath.read(config, "$.requestInfo.userInfo.id"));
+							jObject.getJSONArray("Demands").getJSONObject(0).getJSONObject("owner").put("id",JsonPath.read(config, "$.RequestInfo.userInfo.id"));
 						}
 
-					citizenService.createDemand(url, jObject.toString());
-					Object billRes = citizenService.generateBill(requestInfo.getRequestInfo(), servcieReq.getConsumerCode(), 
+				//	citizenService.createDemand(url, jObject.toString());
+					Object billRes = citizenService.generateBill(requestInfo, servcieReq.getConsumerCode(), 
 							applicationProperties.getBusinessService(), servcieReq.getTenantId());
 					LOGGER.info("Bills generated: "+billRes.toString());
 					
 					Object pgPayLoad = citizenService.generatePGPayload(requestInfo.getRequestInfo(), servcieReq.getConsumerCode(), 
 							applicationProperties.getBusinessService(), servcieReq.getTenantId(), servcieReq.getServiceRequestId());
 					LOGGER.info("PGPayLoad generated: "+pgPayLoad.toString());
-
-					servcieReq.setBackendServiceDetails(billRes+","+pgPayLoad);
+					JSONObject backendServiceDetails = new JSONObject();
+					backendServiceDetails.put("BillResponse", billRes);
+					backendServiceDetails.put("PGPayload", pgPayLoad);
+					
+					servcieReq.setBackendServiceDetails(backendServiceDetails.toString());
 					
 				} catch (CustomException e) {
 					Error error = new Error();

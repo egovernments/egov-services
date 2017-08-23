@@ -3,6 +3,7 @@ package org.egov.citizen.repository;
 import org.egov.citizen.config.ApplicationProperties;
 import org.egov.citizen.model.BillResponse;
 import org.egov.citizen.model.BillingServiceRequestWrapper;
+import org.egov.citizen.model.RequestInfoWrapper;
 import org.egov.common.contract.request.RequestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,11 +74,11 @@ public class BillingServiceRepository {
 		return response;
 	}
 	
-	public BillResponse generateBillForDemand(RequestInfo requestInfo, String tenantId,
+	public BillResponse generateBillForDemand(RequestInfoWrapper requestInfoWrapper, String tenantId,
 			String consumerCode, String buisnessService){
 		LOGGER.info("Generating bill from Billing Service");
 		StringBuilder uri = new StringBuilder();
-		String generateCriteria ="?consumerCode="+consumerCode;
+		String generateCriteria ="?consumerCode="+consumerCode+"&tenantId="+tenantId;
 		uri.append(applicationProperties.getBillingServiceHostName())
 		   .append(applicationProperties.getGenerateBill())
 		   .append(generateCriteria);
@@ -85,7 +86,7 @@ public class BillingServiceRepository {
 				+ uri.toString());
 		BillResponse response = null;
 		response = restTemplate.postForObject(uri.toString(),
-				requestInfo, BillResponse.class);
+				requestInfoWrapper, BillResponse.class);
 		LOGGER.info("Response from billing service: " + response);
 		return response;
 		

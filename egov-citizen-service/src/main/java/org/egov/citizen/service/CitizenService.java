@@ -209,11 +209,11 @@ public class CitizenService {
 		return receiptResponse;
 	}
 	
-	public Object generateBill(RequestInfo requestInfo, String mobileNumber, String tenantId){
-		LOGGER.info("Generate bill flow starts for mobile no: "+mobileNumber.toString());
+	public Object generateBill(RequestInfo requestInfo, String consumerCode, String buisnessService, String tenantId){
+		LOGGER.info("Generate bill flow starts for mobile no: "+consumerCode.toString());
 		BillResponse billResponse = null;
 		try{
-			billResponse = billingServiceRepository.generateBillForDemand(requestInfo, tenantId, mobileNumber);
+			billResponse = billingServiceRepository.generateBillForDemand(requestInfo, tenantId, consumerCode, buisnessService);
 		}catch(Exception e){
 			LOGGER.error("Couldn't fetch bill: ", e);
 			throw new CustomException(Integer.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
@@ -236,7 +236,7 @@ public class CitizenService {
 					CitizenServiceConstants.SVCREQ_NOT_FOUND_MSG, CitizenServiceConstants.SVCREQ_NOT_FOUND_DESC);
 		}
 
-		LOGGER.info("ServiceRequests obtained:   "+serviceRequests);
+		LOGGER.info("ServiceRequests obtained:   "+serviceRequests.toString());
 		
 		return serviceRequests;
 		

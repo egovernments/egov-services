@@ -22,10 +22,7 @@ import org.egov.citizen.web.contract.ServiceRequestSearchCriteria;
 import org.egov.citizen.web.contract.factory.ResponseInfoFactory;
 import org.egov.citizen.web.errorhandlers.Error;
 import org.egov.citizen.web.errorhandlers.ErrorResponse;
-import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +40,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
@@ -217,9 +213,15 @@ public class ServiceController {
 	
 	@PostMapping(value = "/requests/_search")
 	@ResponseBody
-	public ResponseEntity<?> getServiceRequests(@RequestBody RequestInfo requestInfo,
+	public ResponseEntity<?> getServiceRequests(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
+			BindingResult requestInfoerrors,
 			@ModelAttribute @Valid ServiceRequestSearchCriteria serviceRequestSearchCriteria,
 			BindingResult errors) {
+		
+		if (requestInfoerrors.hasFieldErrors()) {
+			ErrorResponse errRes = populateErrors(errors);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		}
 		
 		if (errors.hasFieldErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
@@ -239,7 +241,7 @@ public class ServiceController {
 		
 		ServiceReqResponse serviceRes = new ServiceReqResponse();
 		serviceRes.setServiceRequests(serviceRequests);
-		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfoWrapper.getRequestInfo(), true);
 		serviceRes.setResponseInfo(responseInfo);
 		return new ResponseEntity<>(serviceRes, HttpStatus.OK);
 	}

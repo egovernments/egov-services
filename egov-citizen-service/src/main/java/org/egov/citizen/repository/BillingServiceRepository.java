@@ -42,10 +42,10 @@ public class BillingServiceRepository {
 	}
 	
 	public BillResponse generateBillForDemand(RequestInfo requestInfo, String tenantId,
-			String mobileNumber){
+			String consumerCode, String buisnessService){
 		LOGGER.info("Generating bill from Billing Service");
 		StringBuilder uri = new StringBuilder();
-		String generateCriteria ="?mobileNumber="+mobileNumber;
+		String generateCriteria ="?consumerCode="+consumerCode+"&businessService="+buisnessService;
 		uri.append(applicationProperties.getBillingServiceHostName())
 		   .append(applicationProperties.getGenerateBill())
 		   .append(generateCriteria);

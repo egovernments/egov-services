@@ -16,7 +16,7 @@ public class UnitTax {
     private String floorNumber;
 	
 	@Size(min=1,max=8)
-    private Integer unitNo;
+    private String unitNo;
 
     @NotNull
     private Double assessableArea;

@@ -114,7 +114,7 @@ public class DemandConnectionController {
                 try {
                     for (final TaxPeriod tax : taxPeriodList)
                         dmdDetailBeanList.add(createDemandDeatils(demandBeanGetRequest.getTenantId(),
-                                WcmsConnectionConstants.WATERDEMANDREASONNAME + "#" + tax.getFinancialYear(),
+                                WcmsConnectionConstants.WATERDEMANDREASONNAME ,
                                 tax.getFinancialYear(),
                                 0d, 0d, tax.getCode()));
 

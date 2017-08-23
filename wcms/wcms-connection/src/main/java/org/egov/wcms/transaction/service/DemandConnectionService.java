@@ -168,7 +168,6 @@ public class DemandConnectionService {
                ownerobj=new Owner();
                ownerobj.setId(prop.getId());
                ownerobj.setTenantId(prop.getTenantId());
-               System.out.println("user Object With Pr= ="+ownerobj);
 
         }
         else
@@ -177,8 +176,6 @@ public class DemandConnectionService {
                 ownerobj=new Owner();
             ownerobj.setId(connection.getUserid());
             ownerobj.setTenantId(tenantId);
-            System.out.println("user Object WIthout Prop="+ownerobj);
-
             
             }
             
@@ -186,6 +183,7 @@ public class DemandConnectionService {
         
        if(ownerobj !=null){
            System.out.println("user Object="+ownerobj);
+           
         final Demand demand = new Demand();
         final TaxPeriodResponse taxperiodres = getTaxPeriodByTaxCodeAndService(demandReason.getTaxPeriodCode(), tenantId);
         demand.setTenantId(tenantId);
@@ -193,7 +191,7 @@ public class DemandConnectionService {
         demand.setConsumerType(connection.getApplicationType());
         demand.setConsumerCode(connection.getConsumerNumber());
         final Set<DemandDetail> dmdDetailSet = new HashSet<>();
-         final String demandreasoncode = "WATERCHARGE" + demandReason.getTaxHeadMasterCode().split("#")[1];
+         final String demandreasoncode = "WATERCHARGE";
             dmdDetailSet.add(createLegacyDemandDeatils(
                     tenantId, demandreasoncode,
                     demandReason.getTaxAmount(), demandReason.getCollectionAmount(), demandReason.getTaxPeriodCode()));
@@ -234,18 +232,19 @@ public class DemandConnectionService {
     }
 
     public TaxPeriodResponse getTaxPeriodByPeriodCycleAndService(final String tenantId, final PeriodCycle periodCycle,
-            final Long fromDate) {
+            final Long date) {
         final TaxPeriodCriteria taxperiodcriteria = new TaxPeriodCriteria();
         taxperiodcriteria.setTenantId(tenantId);
-        taxperiodcriteria.setFromDate(fromDate);
+   //     taxperiodcriteria.setFromDate(fromDate);
         taxperiodcriteria.setService(BUSINESSSERVICE);
         taxperiodcriteria.setPeriodCycle(periodCycle);
         final StringBuilder url = new StringBuilder();
         url.append(configurationManager.getBillingDemandServiceHostNameTopic())
                 .append(configurationManager.getTaxperidforfinancialYearTopic());
         url.append("?service=").append(taxperiodcriteria.getService()).append("&tenantId=")
-                .append(taxperiodcriteria.getTenantId())
-                .append("&periodCycle=").append(taxperiodcriteria.getPeriodCycle());
+                .append(taxperiodcriteria.getTenantId());
+               // url.append("&date=").append(date)
+        url.append("&periodCycle=").append(taxperiodcriteria.getPeriodCycle());
         return getTaxPeriodServiceResponse(url);
     }
 

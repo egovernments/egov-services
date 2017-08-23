@@ -9,6 +9,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
+import javax.validation.Valid;
+
 /**
  * NoticeRequest
  */
@@ -24,6 +27,7 @@ public class NoticeRequest   {
   private RequestInfo requestInfo = null;
   
   @JsonProperty("Notice")
+  @Valid
   private Notice notice;
  
 }

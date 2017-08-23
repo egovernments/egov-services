@@ -37,7 +37,7 @@ public class NoticeRepository {
 				notice.getTemplateVersion(),notice.getExpiryDate(),notice.getRent(),notice.getSecurityDeposit(),notice.getCommissionerName(),
 				notice.getZone(),notice.getWard(),notice.getStreet(),notice.getElectionward(),notice.getLocality(),notice.getBlock(),
 				requestInfo.getRequesterId(), new Date(), requestInfo.getRequesterId(), new Date(),
-				notice.getTenantId(),notice.getRentInWord()};
+				notice.getTenantId(),notice.getRentInWord(),notice.getFileStore()};
 		
 		try{
 			jdbcTemplate.update(NoticeQueryBuilder.INSERT_NOTICE_QUERY, obj);

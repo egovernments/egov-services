@@ -16,7 +16,7 @@ public class NoticeQueryBuilder {
 			+ " (id, noticeno, noticedate, agreementno, assetcategory, acknowledgementnumber, assetno, allotteename,"
 			+ " allotteeaddress, allotteemobilenumber, agreementperiod, commencementdate, templateversion, expirydate, rent,"
 			+ " securitydeposit, commissionername, zone, ward, street, electionward, locality, block, createdby,"
-			+ " createddate, lastmodifiedby ,lastmodifieddate, tenantId, rentInWord)" + " VALUES (nextval('seq_eglams_notice'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			+ " createddate, lastmodifiedby ,lastmodifieddate, tenantId, rentInWord, filestore)" + " VALUES (nextval('seq_eglams_notice'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	
 	public final static String SEQ_NOTICE_NO = "SELECT nextval('seq_eglams_noticeno')";
 

@@ -40,6 +40,7 @@ public class NoticeRowMapper implements RowMapper<Notice> {
 		notice.setTenantId(rs.getString("tenantId"));
 		notice.setWard(rs.getLong("ward"));
 		notice.setZone(rs.getLong("zone"));
+		notice.setFileStore(rs.getString("filestore"));
 		
 		return notice;
 	}

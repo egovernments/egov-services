@@ -1,19 +1,16 @@
 package org.egov.infra.indexer;
 
 
-import java.io.File;
 import java.io.InputStreamReader;
 import java.net.URL;
 
 import javax.annotation.PostConstruct;
 
-import org.assertj.core.api.UrlAssert;
 import org.egov.infra.indexer.web.contract.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.web.client.RestTemplate;
 

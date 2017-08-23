@@ -129,7 +129,7 @@ public class CitizenService {
 	}
 
 	public String generateSequenceNumber(SearchDemand searchDemand, Object config) {
-
+		
 		IdRequest idRequest = searchDemand.getGenerateId().getRequest().getIdRequests().get(0);
 		LOGGER.info("Expression: "+idRequest.getTenantId());
 		Object tenantId = JsonPath.read(config, idRequest.getTenantId());

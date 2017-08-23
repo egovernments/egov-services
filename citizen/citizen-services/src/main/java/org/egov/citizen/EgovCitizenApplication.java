@@ -43,7 +43,7 @@ public class EgovCitizenApplication {
 		try {
 			URL url = new URL("https://raw.githubusercontent.com/egovernments/egov-services/master/citizen/citizen-services/src/main/resources/ServiceDefination.yml");
 			serviceDefination = mapper.readValue(new InputStreamReader(url.openStream()), ServiceCollection.class);
-			log.info("loadYaml service: " + serviceDefination.toString());
+			log.info("loadYamlserviceconfig service: " + serviceDefination.toString());
 
 		} catch (Exception e) {
 			e.printStackTrace();

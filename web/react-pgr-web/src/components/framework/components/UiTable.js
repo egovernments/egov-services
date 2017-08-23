@@ -118,7 +118,7 @@ class UiTable extends Component {
   			if(resultList.resultHeader[i2].url) {
   				return self.state[resultList.resultHeader[i2].label] ? self.state[resultList.resultHeader[i2].label][item2] : (item2 + "");
   			} else {
-  				return item2 == true ? translate("employee.createPosition.groups.fields.outsourcepost.value1") : (item2 == false ? translate("employee.createPosition.groups.fields.outsourcepost.value2") : (item2 == null ? "" : (item2 + "")));
+  				return item2 === true ? translate("employee.createPosition.groups.fields.outsourcepost.value1") : (item2 === false ? translate("employee.createPosition.groups.fields.outsourcepost.value2") : (item2 === null ? "" : (item2 + "")));
   			}
   		}
 

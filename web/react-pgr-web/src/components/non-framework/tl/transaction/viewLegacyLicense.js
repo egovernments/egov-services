@@ -89,7 +89,7 @@ chip: {
 }
 };
 
-var CONST_API_GET_FILE = "/filestore/v1/files/id";
+var CONST_API_GET_FILE = "filestore/v1/files/id";
 let reqRequired = [];
 class Report extends Component {
   constructor(props) {
@@ -289,7 +289,6 @@ class Report extends Component {
 
   Api.commonApiPost(url, query, {}, false, specifications["tl.view"].useTimestamp).then(function(res){
       self.props.setFormData(res);
-      console.log("api ",res);
       self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)),"tl", "view", specifications["tl.view"].objectName);
     }, function(err){
 
@@ -328,6 +327,7 @@ class Report extends Component {
           <tr key={i}>
             <td>{i+1}</td>
             <td>{v.documentTypeName}</td>
+            <td>{v.comments}</td>
             <td><a href={window.location.origin + "/" + CONST_API_GET_FILE + "?tenantId=" + localStorage.tenantId + "&fileStoreId=" + v.fileStoreId} target="_blank">Download</a></td>
           </tr>
         )
@@ -335,16 +335,13 @@ class Report extends Component {
     }
 
           const renderBody = function() {
-            console.log("NAM",formData &&  formData.licenses);
             if(formData && formData.hasOwnProperty("licenses") && formData.licenses.length>0){
 
-              console.log("LOos",formData.licenses[0].feeDetails);
             return formData.licenses[0].feeDetails.map(function(item, i) {
-              console.log("BYE");
               return (
                 <div>
                 <Card className="uiCard">
-                    <CardHeader title={<strong>Fee Details</strong>}/>
+                    <CardHeader title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate("tl.table.title.feeDetails")}</div>}/>
                     <CardText>
                     <Table  bordered responsive className="table-striped">
                     <thead>
@@ -371,12 +368,13 @@ class Report extends Component {
                   </Card>
 
                   <Card className="uiCard">
-                      <CardHeader title={<strong>Support Documents</strong>}/>
+                      <CardHeader title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate("tl.table.title.supportDocuments")}</div>}/>
                       <CardText>
                       <Table  bordered responsive className="table-striped">
                       <thead>
                         <tr>
-                          <th>{translate("tl.create.license.table.documentTypeName")}</th>
+                          <th>#</th>
+                          <th>{translate("tl.create.license.table.documentName")}</th>
                           <th>{translate("tl.create.license.table.comments")}</th>
                           <th>{translate("tl.create.license.table.file")}</th>
                         </tr>

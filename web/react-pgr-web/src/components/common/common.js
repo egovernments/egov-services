@@ -946,6 +946,9 @@ var localization_EN_Data = {
   "tl.create.license.table.documentTypeName":"Document Name",
   "tl.create.license.table.comments":"Comments",
   "tl.create.license.table.file":"File",
+  "tl.create.license.table.documentName":"Document Name",
+  "tl.table.title.supportDocuments":"Support Documents",
+  "tl.table.title.feeDetails":"Fee Details",
 
     "wc.create.groups.applicationParticular.title": "Application Particular",
     "wc.create.groups.applicationParticular.title": "Application Particular",

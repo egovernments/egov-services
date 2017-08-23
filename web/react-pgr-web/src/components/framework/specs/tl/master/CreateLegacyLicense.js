@@ -701,7 +701,7 @@ var dat = {
          "values": ["licenseNumber", "oldLicenseNumber", "category", "subCategory", "tradeTitle", "ownerName", "mobileNumber", "propertyAssesmentNo", "adminWardName", "validityYears","active","statusName",""],
          "resultPath": "licenses",
          "rowClickUrlUpdate": "/update/tl/CreateLegacyLicense/{licenseNumber}",
-         "rowClickUrlView": "/view/tl/CreateLegacyLicense/{licenseNumber}"
+         "rowClickUrlView": "/non-framework/tl/transaction/viewLegacyLicense/{licenseNumber}"
        }
      },
 

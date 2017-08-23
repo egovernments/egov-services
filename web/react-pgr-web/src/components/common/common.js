@@ -1,4 +1,11 @@
 var localization_EN_Data = {
+    //citizen servers
+    "noDues.search.citizenServices.title":"Search - Provide one...",
+    "noDues.citizenService.consumerCode":"Consumer Code",
+    "noDues.citizenService.email":"Email",
+    "noDues.citizenService.mobileNumber":"Mobile Number",
+    "noDues.search.citizenServices.description":"Please provide at least one parameter",
+
     "deshboard.title": "Dashboard",
     "ui.framework.required": "Required",
     "ui.framework.patternMessage": "Invalid pattern",

@@ -109,6 +109,7 @@ import Employee from './components/non-framework/employee/create';
 import EmployeeSearch from './components/non-framework/employee/search';
 import SearchLegacyWc from './components/non-framework/wc/search';
 import updateConnection from './components/non-framework/wc/connection-workflow';
+import NoDues from './components/non-framework/citizenServices/NoDues';
 
 const base = "";
 
@@ -229,6 +230,8 @@ const Main = () => {
 
       <Route exact path= {base + '/non-framework/collection/master/paytax/PayTaxCreate'} component={PayTaxCreate}/>
       <Route exact path= {base + '/non-framework/collection/receipt/view/:id'} component={ReceiptView}/>
+      <Route exact path= {base + '/non-framework/citizenServices/no-dues/:status/:id'} component={NoDues}/>
+
       <Route exact path={base + '/empsearch/:actionName'} component={EmployeeSearch}/>
       <Route exact path={base+'/legacy/view/:id'} component={ViewLegacy}/>
       <Route exact path={base+'/wc/addDemand/:upicNumber'} component={EditDemands}/>

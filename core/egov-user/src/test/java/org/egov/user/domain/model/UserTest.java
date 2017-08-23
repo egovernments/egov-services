@@ -54,6 +54,7 @@ public class UserTest {
 				.active(Boolean.TRUE)
 				.gender(Gender.FEMALE)
 				.type(UserType.CITIZEN)
+				.mobileValidationMandatory(true)
 				.build();
 
 		assertTrue(user.isMobileNumberAbsent());

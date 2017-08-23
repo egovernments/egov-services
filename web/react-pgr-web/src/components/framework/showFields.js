@@ -119,7 +119,7 @@ export default class ShowFields extends Component {
           if(listArr[key].objects) {
             return (
               <Card className={"uiCard "} expanded={true}>
-                <CardHeader style={{paddingTop:4,paddingBottom:0}} title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{listArr[key].objects[0].object.label}</div>} showExpandableButton={true} actAsExpander={true}/>
+                <CardHeader style={{paddingTop:4,paddingBottom:0}} title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{listArr[key].objects[0].object.label}</div>} subtitle={typeof(listArr[key].objects[0].object.description)?listArr[key].objects[0].object.description:""} showExpandableButton={true} actAsExpander={true}/>
                   <CardText style={{paddingTop:0,paddingBottom:0}} style={{padding:0}} expandable={true}>
                     {
                       listArr[key].objects.map((grp, grpIndex) => {

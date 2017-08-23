@@ -610,6 +610,46 @@ class LegacyLicenseCreate extends Component {
     setMockData(_mockData);
   }
 
+calculateFeeDetails = (licenseValidFromDate, validityYear) => {
+  var getStartYear = new Date(Number(licenseValidFromDate)).getFullYear();
+  var curDate = new Date();
+  var currentDate = curDate.getFullYear();
+  var fixedDate = curDate.getFullYear();
+  var currentMonth=curDate.getMonth();
+  var FeeDetails = [];
+  var startYear = getStartYear;
+  var Validity = validityYear;
+  let self = this;
+
+  self.handleChange({target:{value:[]}},"licenses[0].feeDetails");
+
+  if(new Date(Number(licenseValidFromDate)).getMonth()>3)
+     {
+         for(var i = startYear; i <= fixedDate; i = (i + validityYear))
+          {
+
+             if (i > (fixedDate - 6) ) {
+             let feeDetails = {"financialYear": i + "-" + (i+1).toString().slice(-2), "amount": "", "paid": false};
+             FeeDetails.push(feeDetails)
+             console.log(i);
+           }
+       }
+
+     }
+     else {
+
+       for(var i = startYear; i <= (fixedDate+1); i = (i + validityYear))
+       {
+          if (i > (fixedDate - 6) ) {
+         let feeDetails = {"financialYear": (i-1) + "-" + (i).toString().slice(-2), "amount": "", "paid": false};
+         FeeDetails.push(feeDetails)
+         console.log(i);
+        }
+      }
+     }
+     self.handleChange({target:{value:FeeDetails}},"licenses[0].feeDetails");
+}
+
   handleChange = (e, property, isRequired=false, pattern="", requiredErrMsg="Required", patternErrMsg="Pattern Missmatch") => {
       let {getVal} = this;
       let self = this;
@@ -654,48 +694,43 @@ class LegacyLicenseCreate extends Component {
     //   });
     // }
 
+    if (property == "licenses[0].subCategoryId") {
+      console.log(e.target.value);
+      Api.commonApiPost("/tl-masters/category/v1/_search",{"ids":e.target.value, "type":"subcategory"}).then(function(response)
+     {
+        // handleChange (e, "" )
+        console.log(response);
+        //console.log(response.categories[0].validityYears);
+        handleChange({target:{value:response.categories[0].validityYears}}, "licenses[0].validityYears");
+        self.setState({
+          validityYear: response.categories[0].validityYears
+        })
 
-     if (property == "licenses[0].licenseValidFromDate" || property=="licenses[0].subCategoryId" && getVal("licenses[0].licenseValidFromDate") && validityYear) {
-         var getStartYear = new Date(e.target.value).getFullYear();
-         var curDate = new Date();
-         var currentDate = curDate.getFullYear();
-         var fixedDate = curDate.getFullYear();
-         var currentMonth=curDate.getMonth();
-         var FeeDetails = [];
-         var startYear = getStartYear;
-         var Validity = validityYear;
+        handleChange({target:{value:_.filter(response.categories[0].details,{feeType:"LICENSE"})[0].uomName}}, "licenses[0].uomName");
+        handleChange({target:{value:_.filter(response.categories[0].details,{feeType:"LICENSE"})[0].uomId}}, "licenses[0].uomId", true);
 
-         handleChange({target:{value:[]}},"licenses[0].feeDetails");
+        if(self.props.formData.licenses[0].licenseValidFromDate && (self.props.formData.licenses[0].licenseValidFromDate+"").length == 12 ||(self.props.formData.licenses[0].licenseValidFromDate+"").length == 13){
+          self.calculateFeeDetails(self.props.formData.licenses[0].licenseValidFromDate, response.categories[0].validityYears)
+        }
 
+        console.log(self.props.formData);
+      },function(err) {
+          console.log(err);
 
-            if(new Date(e.target.value).getMonth()>3)
-               {
-
-                   for(var i = startYear; i <= fixedDate; i = (i + validityYear))
-                    {
-                       if (i > (fixedDate - 6) ) {
-                       let feeDetails = {"financialYear": i + "-" + (i+1).toString().slice(-2), "amount": "", "paid": false};
-                       FeeDetails.push(feeDetails)
-                       console.log(i);
-                     }
-                 }
-
-               }
-               else {
-
-                 for(var i = startYear; i <= (fixedDate+1); i = (i + validityYear))
-                 {
-                    if (i > (fixedDate - 6) ) {
-                   let feeDetails = {"financialYear": (i-1) + "-" + (i).toString().slice(-2), "amount": "", "paid": false};
-                   FeeDetails.push(feeDetails)
-                   console.log(i);
-                  }
-                }
-               }
+      });
+    }
 
 
-          handleChange({target:{value:FeeDetails}},"licenses[0].feeDetails");
 
+    //console.log(this.formData.licenses[0].licenseValidFromDate);
+     if ((property == "licenses[0].licenseValidFromDate" || property=="licenses[0].subCategoryId") && getVal("licenses[0].licenseValidFromDate") && self.state.validityYear) {
+       if(property == "licenses[0].licenseValidFromDate" && (e.target.value).length == 12 || (e.target.value).length == 13){
+
+          self.calculateFeeDetails(e.target.value, self.state.validityYear)
+
+
+
+        }
        }
 
 
@@ -734,26 +769,7 @@ if(property == "licenses[0].categoryId"){
   });
 }
 
-      if (property == "licenses[0].subCategoryId") {
-        console.log(e.target.value);
-        Api.commonApiPost("/tl-masters/category/v1/_search",{"ids":e.target.value, "type":"subcategory"}).then(function(response)
-       {
-          // handleChange (e, "" )
-          console.log(response);
-          //console.log(response.categories[0].validityYears);
-          handleChange({target:{value:response.categories[0].validityYears}}, "licenses[0].validityYears");
-          self.setState({
-            validityYear: response.categories[0].validityYears
-          })
 
-          handleChange({target:{value:_.filter(response.categories[0].details,{feeType:"LICENSE"})[0].uomName}}, "licenses[0].uomName");
-          handleChange({target:{value:_.filter(response.categories[0].details,{feeType:"LICENSE"})[0].uomId}}, "licenses[0].uomId", true);
-
-        },function(err) {
-            console.log(err);
-
-        });
-      }
 
 
 

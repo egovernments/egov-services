@@ -1054,9 +1054,9 @@ deleteOccupantName = (index) =>{
 														  hintText="dd/mm/yyyy"
 														  floatingLabelFixed={true}
 														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.constructionStartDate')}
-														  errorText={fieldErrors.floor ? (fieldErrors.floor.constStartDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.constStartDate}</span> :""): ""}
-														  value={floorDetails.floor ? floorDetails.floor.constStartDate : ""}
-														  onChange={(e) => {handleChangeFloor(e,"floor" ,"constStartDate", false, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
+														  errorText={fieldErrors.floor ? (fieldErrors.floor.constructionStartDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.constructionStartDate}</span> :""): ""}
+														  value={floorDetails.floor ? floorDetails.floor.constructionStartDate : ""}
+														  onChange={(e) => {handleChangeFloor(e,"floor" ,"constructionStartDate", false, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}

@@ -11,7 +11,7 @@ CREATE TABLE egov_citizen_service_req(
  lastmodifiedddate bigint,
  createdby bigint,
  lastmodifiedby bigint,
- jsonvalue json,
+ jsonvalue character varying(50000),
  
  CONSTRAINT egov_citizen_service_req_pkey PRIMARY KEY (id)
  );

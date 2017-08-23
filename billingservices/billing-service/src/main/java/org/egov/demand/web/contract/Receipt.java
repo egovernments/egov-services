@@ -40,8 +40,5 @@ public class Receipt {
 
 	private AuditDetail auditDetails;
 
-	@NotNull
-	private Instrument instrument;
-	
 	private Long stateId;
 }

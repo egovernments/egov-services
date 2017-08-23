@@ -3,6 +3,7 @@ import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import Api from '../../../api/api';
 import jp from "jsonpath";
 import {translate} from '../../common/common';
+import FlatButton from 'material-ui/FlatButton';
 
 export default class UiLabel extends Component {
 	constructor(props) {
@@ -59,6 +60,10 @@ export default class UiLabel extends Component {
       this.setVal();
   }
 
+  openLink(item) {
+    window.open(item.hyperLink + "/" + encodeURIComponent(this.state.value || this.props.getVal(item.jsonPath)), 'mywin', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0');
+  }
+
  	renderLabel = (item) => {
  		return (
       <div>
@@ -66,7 +71,12 @@ export default class UiLabel extends Component {
             {!item.hasOwnProperty("isLabel")?<Col style={{textAlign:"left"}} xs={12}>
               <label><span style={{"fontWeight":500, "fontSize": "13px"}}>{translate(item.label)}</span></label>
             </Col>:""}
-            <Col style={{textAlign:"left"}} xs={12}>{this.state.value || this.props.getVal(item.jsonPath) || "NA"}</Col>
+            {item.hyperLink && (this.state.value || this.props.getVal(item.jsonPath)) ? 
+              (<Col style={{textAlign:"left"}} xs={12}>
+                <FlatButton label={this.state.value || this.props.getVal(item.jsonPath)} primary={true} onClick={() => this.openLink(item)}/>
+              </Col>) 
+              : 
+              <Col style={{textAlign:"left"}} xs={12}>{this.state.value || this.props.getVal(item.jsonPath) || "NA"}</Col>}
         </Row>
         <br/>
       </div>

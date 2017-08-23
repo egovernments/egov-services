@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import TextField from 'material-ui/TextField';
-
+const datePat = /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g;
 export default class UiEmailField extends Component {
 	constructor(props) {
        super(props);
@@ -24,6 +24,19 @@ export default class UiEmailField extends Component {
    		}
    	}
 
+   	getDateFormat = (timeLong) => {
+   		if(timeLong) {
+   			if((timeLong.toString().length == 12 || timeLong.toString().length == 13) && new Date(Number(timeLong)).getTime() > 0) {
+	   			var _date = new Date(Number(timeLong));
+	   			return ('0' + _date.getDate()).slice(-2) + '/'
+	             + ('0' + (_date.getMonth()+1)).slice(-2) + '/'
+	             + _date.getFullYear();
+	   		} else {
+	   			return timeLong;
+	   		}
+   		}
+   	}
+
 	renderDatePicker = (item) => {
 		switch (this.props.ui) {
 			case 'google':
@@ -34,15 +47,22 @@ export default class UiEmailField extends Component {
 						inputStyle={{"color": "#5F5C57"}}
 						floatingLabelFixed={true}
 						disabled={item.isDisabled}
-						hintText="21/12/1993"
-						floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>}
+						hintText="21/12/1993" 
+						maxLength={10}
+						floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>} 
 						errorText={this.props.fieldErrors[item.jsonPath]}
-						value={this.props.getVal(item.jsonPath)}
+						value={this.getDateFormat(this.props.getVal(item.jsonPath))}
 						onChange={(e) => {
 							if(e.target.value) {
 								e.target.value = e.target.value.trim();
+								if(datePat.test(e.target.value)){
+									var _date = e.target.value;
+									_date = _date.split("/");
+									var newDate = _date[1]+"/"+_date[0]+"/"+_date[2];
+									e.target.value = new Date(newDate).getTime();
+								}
 							}
-                            this.props.handler(e, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)
+                            this.props.handler(e, item.jsonPath, item.isRequired ? true : false, /\d{12,13}/, item.requiredErrMsg, item.patternErrMsg)
                         }}/>
 				);
 		}

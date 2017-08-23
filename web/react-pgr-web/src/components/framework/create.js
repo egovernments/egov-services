@@ -782,8 +782,6 @@ class Report extends Component {
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler} = this;
 
-	console.log(formData)
-
     return (
       <div className="Report">
         <form onSubmit={(e) => {

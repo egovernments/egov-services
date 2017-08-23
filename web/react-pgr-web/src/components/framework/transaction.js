@@ -61,6 +61,23 @@ class Transaction extends Component {
     return typeof _.get(this.props.formData, path) != "undefined" ? _.get(this.props.formData, path) : "";
   }
 
+  setDefaultValues (groups, dat) {
+    for(var i=0; i<groups.length; i++) {
+      for(var j=0; j<groups[i].fields.length; j++) {
+        if(typeof groups[i].fields[j].defaultValue == 'string' || typeof groups[i].fields[j].defaultValue == 'number' || typeof groups[i].fields[j].defaultValue == 'boolean') {
+          //console.log(groups[i].fields[j].name + "--" + groups[i].fields[j].defaultValue);
+          _.set(dat, groups[i].fields[j].jsonPath, groups[i].fields[j].defaultValue);
+        }
+
+        if(groups[i].fields[j].children && groups[i].fields[j].children.length) {
+          for(var k=0; k<groups[i].fields[j].children.length; k++) {
+            this.setDefaultValues(groups[i].fields[j].children[k].groups);
+          }
+        }
+      }
+    }
+  }
+
   initData() {
 
     let hashLocation = window.location.hash;
@@ -74,8 +91,10 @@ class Transaction extends Component {
         specifications = require(`./specs/${hash[2]}/transaction/${hash[3]}`).default;
       }
     } catch(e) {}
-    let { setMetaData, setModuleName, setActionName, initForm, setMockData } = this.props;
+    let { setMetaData, setModuleName, setActionName, initForm, setMockData, setFormData } = this.props;
     let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
+    var formData = {};
+    if(obj && obj.groups && obj.groups.length) this.setDefaultValues(obj.groups, formData);
     reqRequired = [];
     this.setLabelAndReturnRequired(obj);
     initForm(reqRequired);
@@ -83,7 +102,7 @@ class Transaction extends Component {
     setMockData(JSON.parse(JSON.stringify(specifications)));
     setModuleName(hashLocation.split("/")[2]);
     setActionName(hashLocation.split("/")[1]);
-
+    setFormData(formData);
     this.setState({
       pathname:this.props.history.location.pathname
     })
@@ -164,7 +183,7 @@ class Transaction extends Component {
       //   values,
       //   showResult: true
       // });
-
+      self.props.handleChange({target: {value: "Cash"}}, "Receipt[0].instrument.instrumentType.name", false, '');
       self.setState({
         resultList,
         showResult: true
@@ -679,7 +698,10 @@ const mapDispatchToProps = dispatch => ({
   },
   removeFieldErrors: (key) => {
     dispatch({type: "REMOVE_FROM_FIELD_ERRORS", key})
-  }
+  },
+  setFormData: (data) => {
+    dispatch({type: "SET_FORM_DATA", data});
+  },
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Transaction);
 

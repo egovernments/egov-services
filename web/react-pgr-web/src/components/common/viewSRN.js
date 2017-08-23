@@ -7,26 +7,8 @@ import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import Divider from 'material-ui/Divider';
 import {translate} from './common';
+import styles from '../../styles/material-ui';
 var axios = require('axios');
-
-const styles = {
-  headerStyle : {
-    fontSize : 19
-  },
-  addBorderBottom:{
-    borderBottom: '1px solid #eee',
-    padding: '10px'
-  },
-  marginStyle:{
-    margin: '15px 0'
-  },
-  customColumnStyle : {
-    overflow: 'inherit',
-    height:'auto',
-    wordWrap: 'break-word',
-    whiteSpace: 'normal'
-  }
-};
 
 class viewsrn extends Component{
   constructor(props){

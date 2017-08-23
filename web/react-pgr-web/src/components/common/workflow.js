@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Grid, Row, Col, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
+import styles from '../../styles/material-ui';
 import {
   Table,
   TableBody,
@@ -10,23 +11,6 @@ import {
   TableRowColumn,
 } from 'material-ui/Table';
 import {translate} from './common';
-
-const styles = {
-  headerStyle : {
-    fontSize : 19
-  },
-  addBorderBottom:{
-    borderBottom: '1px solid #eee',
-    padding: '10px'
-  },
-  marginStyle:{
-    margin: '15px'
-  },
-  customColumnStyle : {
-    wordWrap: 'break-word',
-    whiteSpace: 'normal'
-  }
-};
 
 const workflow = ({workflowdetails}) => {
   const renderWorkflow = () => {

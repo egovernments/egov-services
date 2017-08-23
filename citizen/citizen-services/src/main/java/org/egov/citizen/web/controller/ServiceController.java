@@ -156,7 +156,7 @@ public class ServiceController {
 							jObject.getJSONArray("Demands").getJSONObject(0).getJSONArray("demandDetails").getJSONObject(0).put("taxHeadMasterCode", "PT_TAX");
 							jObject.getJSONArray("Demands").getJSONObject(0).getJSONArray("demandDetails").getJSONObject(0).put("taxAmount",applicationFee);
 							jObject.getJSONArray("Demands").getJSONObject(0).getJSONArray("demandDetails").getJSONObject(0).put("collectionAmount", "100");
-							String demandsString = JsonPath.read(config, "$.RequestInfo.userInfo.id");
+							String demandsString = JsonPath.read(config, "$.requestInfo.userInfo.id");
 							jObject.getJSONArray("Demands").getJSONObject(0).getJSONObject("owner").put("id",demandsString);
 					}
 

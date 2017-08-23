@@ -158,11 +158,16 @@ public class CitizenService {
 	}
 	
 	public Object createDemand(String url,String demand){
-		
-		
-		Object response = restTemaplate.postForObject(url, demand,	Object.class);
-		
-		System.out.println("response" + response);
+		Object response = null;
+		LOGGER.info("ERRORORRRRRR");
+		try{
+			response = restTemaplate.postForObject(url, demand,	Object.class);
+	    }catch(Exception e){
+		  LOGGER.error("Couldn't create demand: ", e);
+			throw new CustomException(Integer.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
+					CitizenServiceConstants.DEMAND_NOT_CREATED_MSG, CitizenServiceConstants.DEMAND_NOT_CREATED_DESC);
+	   }
+		LOGGER.info("Demand creation for app fee response: "+response);
 		
 		return response;
 	}

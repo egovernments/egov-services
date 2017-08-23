@@ -75,5 +75,8 @@ public class CitizenServiceConstants {
 	
 	public static final String DUES_INVALID_MSG = "Dues couln't be fetched";
 	public static final String DUES_INVALID_DESC = "Billing service didn't return updated dues after collection";
+	
+	public static final String DEMAND_NOT_CREATED_MSG = "Demand couldn't be created";
+	public static final String DEMAND_NOT_CREATED_DESC = "Demand creation for application fee failed at the billing service";
 }
 

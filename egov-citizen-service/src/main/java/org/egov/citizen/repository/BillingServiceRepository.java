@@ -77,7 +77,7 @@ public class BillingServiceRepository {
 			String consumerCode, String buisnessService){
 		LOGGER.info("Generating bill from Billing Service");
 		StringBuilder uri = new StringBuilder();
-		String generateCriteria ="?consumerCode="+consumerCode+"&businessService="+buisnessService;
+		String generateCriteria ="?consumerCode="+consumerCode;
 		uri.append(applicationProperties.getBillingServiceHostName())
 		   .append(applicationProperties.getGenerateBill())
 		   .append(generateCriteria);

@@ -157,14 +157,37 @@ public class ServiceController {
 						}
 
 					citizenService.createDemand(url, jObject.toString());
-				} catch (Exception e) {
+					Object billRes = citizenService.generateBill(requestInfo.getRequestInfo(), servcieReq.getConsumerCode(), 
+							applicationProperties.getBusinessService(), servcieReq.getTenantId());
+					LOGGER.info("Bills generated: "+billRes.toString());
+					
+					Object pgPayLoad = citizenService.generatePGPayload(requestInfo.getRequestInfo(), servcieReq.getConsumerCode(), 
+							applicationProperties.getBusinessService(), servcieReq.getTenantId(), servcieReq.getServiceRequestId());
+					LOGGER.info("PGPayLoad generated: "+pgPayLoad.toString());
+
+					servcieReq.setBackendServiceDetails(billRes+","+pgPayLoad);
+					
+				} catch (CustomException e) {
+					Error error = new Error();
+					error.setCode(e.getCode());
+					error.setMessage(e.getCustomMessage());
+					error.setDescription(e.getDescription());
+
+					return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
 
 				}
+				 catch (Exception e) {
+					 e.printStackTrace();
+						return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+
+				 }
 			}
 		}
-
-		return null;
-	}
+		ServiceReqResponse serviceReqResponse = new ServiceReqResponse();
+		serviceReqResponse.setServiceReq(servcieReq);
+		serviceReqResponse.setResponseInfo(responseInfoFactory
+				.createResponseInfoFromRequestInfo(citizenService.getRequestInfo(config).getRequestInfo(), true));
+		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);	}
 
 	@PostMapping(value = "/requests/receipt/_create")
 	public ResponseEntity<?> createReceipt(@RequestBody @Valid ReceiptRequest receiptReq, BindingResult errors) {

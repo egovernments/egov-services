@@ -18,6 +18,7 @@ import org.egov.citizen.model.ServiceReq;
 import org.egov.citizen.model.ServiceReqResponse;
 import org.egov.citizen.model.ServiceResponse;
 import org.egov.citizen.model.Value;
+import org.egov.citizen.service.CitizenPersistService;
 import org.egov.citizen.service.CitizenService;
 import org.egov.citizen.web.contract.ReceiptRequest;
 import org.egov.citizen.web.contract.ServiceRequestSearchCriteria;
@@ -46,7 +47,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RestController
+@Slf4j
 public class ServiceController {
 	public static final Logger LOGGER = LoggerFactory.getLogger(ServiceController.class);
 
@@ -67,6 +71,9 @@ public class ServiceController {
 	
 	@Autowired
 	public RestTemplate restTemplate;
+	
+	@Autowired
+	private CitizenPersistService citizenPersistService;
 
 	@PostMapping(value = "/_search")
 	public ResponseEntity<?> getService(@RequestBody @Valid RequestInfoWrapper requestInfo,
@@ -81,7 +88,7 @@ public class ServiceController {
 	@PostMapping(value = "/requests/_create")
 	public ResponseEntity<?> createService(HttpEntity<String> httpEntity) {
 
-		ServiceReqResponse serviceReqResponse = new ServiceReqResponse();
+		/*ServiceReqResponse serviceReqResponse = new ServiceReqResponse();
 
 		String json = httpEntity.getBody();
 		Object config = Configuration.defaultConfiguration().jsonProvider().parse(json);
@@ -109,7 +116,11 @@ public class ServiceController {
 		citizenService.sendMessageToKafka(servcieReq);
 		serviceReqResponse.setServiceReq(servcieReq);
 		serviceReqResponse.setResponseInfo(responseInfoFactory
-				.createResponseInfoFromRequestInfo(citizenService.getRequestInfo(config).getRequestInfo(), true));
+				.createResponseInfoFromRequestInfo(citizenService.getRequestInfo(config).getRequestInfo(), true));*/
+		
+		String serviceReqJson = httpEntity.getBody();
+		log.info("serviceReqJson:"+serviceReqJson);
+		ServiceReqResponse serviceReqResponse = citizenPersistService.create(serviceReqJson);
 		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);
 	}
 

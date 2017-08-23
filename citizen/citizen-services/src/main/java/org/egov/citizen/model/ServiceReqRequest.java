@@ -2,14 +2,19 @@ package org.egov.citizen.model;
 
 import org.egov.common.contract.request.RequestInfo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 public class ServiceReqRequest {
 
-private RequestInfo requestInfo;	
-private	ServiceReq serviceReq;
+	@JsonProperty("RequestInfo")
+	private RequestInfo requestInfo;
+	private ServiceReq serviceReq;
 
 }

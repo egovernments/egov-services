@@ -1,6 +1,8 @@
 package org.egov.citizen;
 
 import java.io.File;
+import java.io.InputStreamReader;
+import java.net.URL;
 
 import javax.annotation.PostConstruct;
 
@@ -39,10 +41,9 @@ public class EgovCitizenApplication {
 		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 		ServiceCollection serviceDefination = null;
 		try {
-			  Resource resource = resourceLoader.getResource("classpath:ServiceDefination.yml"); 
-			  File file = resource.getFile(); 
-			  serviceDefination = mapper.readValue(file, ServiceCollection.class);
-			  log.info("loadYaml service: " + serviceDefination.toString());
+			URL url = new URL("https://raw.githubusercontent.com/egovernments/egov-services/master/citizen/citizen-services/src/main/resources/ServiceDefination.yml");
+			serviceDefination = mapper.readValue(new InputStreamReader(url.openStream()), ServiceCollection.class);
+			log.info("loadYaml service: " + serviceDefination.toString());
 
 		} catch (Exception e) {
 			e.printStackTrace();

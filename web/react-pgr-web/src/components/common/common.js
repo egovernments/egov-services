@@ -806,7 +806,7 @@ var localization_EN_Data = {
     "tl.create.licenses.groups.TradeDetails.TradeCommencementDate": "Trade Commencement Date",
     "tl.create.licenses.groups.TradeDetails.licenseValidFromDate": "License Valid From Date",
     "tl.create.licenses.groups.TradeDetails.TraderOwnerProperty": "Trader is not the owner of the Property",
-    "tl.create.licenses.groups.agreementDetails.agreementDate": "Date of Execution", 
+    "tl.create.licenses.groups.agreementDetails.agreementDate": "Date of Execution",
     "tl.create.licenses.groups.agreementDetails.agreementNo": "Registered/Non Registered Document No",
     "tl.create.licenses.groups.FeeDetails": "Fee Details",
     "tl.create.license.table.financialYear": "Financial Year",
@@ -909,6 +909,10 @@ var localization_EN_Data = {
   "tl.view.licenses.groups.Remarks": "Remarks",
   "tl.view.licenses.groups.TradeCommencementDate": "Trade Commencement Date eg:dd/mm/yyyy",
   "tl.view.licenses.groups.TraderOwnerProperty": "Trader Owner Property",
+  "tl.search.groups.adminWardName":"Admin Ward",
+  "tl.search.result.groups.validityYears":"Validity Years",
+  "tl.search.result.groups.licenseStatus":"License Status",
+  "tl.search.result.groups.workflowOwnerName":"Workflow Owner Name",
 
     "wc.create.groups.applicationParticular.title": "Application Particular",
     "wc.create.groups.applicationParticular.title": "Application Particular",
@@ -1601,7 +1605,7 @@ var localization_MR_Data = {
     "pt.create.groups.assessmentDetails.fields.extentOfSite": "साइटची व्याप्ती",
     "pt.create.groups.assessmentDetails.fields.propertySubType": "मालमत्ता उप प्रकार",
 
-	
+
 	//pt construction details
 	"pt.create.groups.constructionDetails" : "Construction Details",
 	"pt.create.groups.acknowledgement.forwarded": "Forwarded Successfully",
@@ -1614,7 +1618,7 @@ var localization_MR_Data = {
 	"pt.create.groups.assessmentDetails.newProperty": "New Property",
 	"pt.create.groups.assessmentDetails.bifurcation": "Bifurcation",
 	"pt.create.groups.assessmentDetails.bifurcation": "None",
-	
+
 	﻿"pt.create.groups.assessmentDetails":"मूल्यांकन तपशील",
 	"wc.crete.Slabs":"स्लॅब्स",
 	"reports.pgr.complaint.crn":"तक्रार नोंदणी क्रमांक",

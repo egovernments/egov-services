@@ -264,7 +264,7 @@ public class MovementService {
         List<Movement> movements = new ArrayList<>();
         movements.add(movementRequest.getMovement().get(0));
         movements = validateUpdate(movementRequest);
-        if (movements.get(0).getErrorMsg() != null && movements.get(0).getErrorMsg().isEmpty()) {
+        if (movements.get(0).getErrorMsg() == null) {
             final MovementSearchRequest movementSearchRequest = new MovementSearchRequest();
             final List<Long> ids = new ArrayList<>();
             ids.add(movements.get(0).getId());

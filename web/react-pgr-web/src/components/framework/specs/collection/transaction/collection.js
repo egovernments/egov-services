@@ -223,7 +223,8 @@ var dat = {
           "isDisabled": false,
           "requiredErrMsg": "",
           "patternErrMsg": "",
-          "isLabel": false
+          "isLabel": false,
+          "url": "/egov-common-masters/businessDetails/_search?&"
         },
         {
           "name": "consumerCode",
@@ -236,7 +237,7 @@ var dat = {
           "requiredErrMsg": "",
           "patternErrMsg": "",
           "isLabel": false,
-          "hyperLink": "http://mahaulb.egovernments.org/app/v1/#/legacy/view"
+          "hyperLink": ""
         },
         {
           "name": "totalAmount",

@@ -82,15 +82,24 @@ public class PropertyValidator {
 			throws InvalidPropertyBoundaryException {
 
 		PropertyLocation propertyLocation = property.getBoundary();
-		Long id;
+		Long id = null;
 		if (field.equalsIgnoreCase(propertiesManager.getRevenueBoundary())) {
-			id = propertyLocation.getRevenueBoundary().getId();
+			if (propertyLocation.getRevenueBoundary() != null) {
+				id = propertyLocation.getRevenueBoundary().getId();
+			}
 		} else if (field.equalsIgnoreCase(propertiesManager.getLocationBoundary())) {
-			id = propertyLocation.getLocationBoundary().getId();
+			if (propertyLocation.getLocationBoundary() != null) {
+				id = propertyLocation.getLocationBoundary().getId();
+			}
 		} else {
-			id = propertyLocation.getAdminBoundary().getId();
+			if (propertyLocation.getAdminBoundary() != null) {
+				id = propertyLocation.getAdminBoundary().getId();
+			}
 		}
-		return boundaryRepository.isBoundaryExists(property, requestInfo, id);
+		if (id != null)
+			return boundaryRepository.isBoundaryExists(property, requestInfo, id);
+		else
+			return true;
 
 	}
 
@@ -119,10 +128,12 @@ public class PropertyValidator {
 				throw new InvalidUpdatePropertyException(propertiesManager.getWorkflowAssigneeNotfound(), requestInfo);
 
 			} else if (workflowDetails.getDepartment() == null) {
-				throw new InvalidUpdatePropertyException(propertiesManager.getWorkflowDepartmentNotfound(), requestInfo);
+				throw new InvalidUpdatePropertyException(propertiesManager.getWorkflowDepartmentNotfound(),
+						requestInfo);
 
 			} else if (workflowDetails.getDesignation() == null) {
-				throw new InvalidUpdatePropertyException(propertiesManager.getWorkflowDesignationNotfound(), requestInfo);
+				throw new InvalidUpdatePropertyException(propertiesManager.getWorkflowDesignationNotfound(),
+						requestInfo);
 
 			} else if (workflowDetails.getStatus() == null) {
 				throw new InvalidUpdatePropertyException(propertiesManager.getWorkflowStatusNotfound(), requestInfo);
@@ -271,8 +282,7 @@ public class PropertyValidator {
 				throw new InvalidCodeException(propertiesManager.getInvalidWallTypeCode(), requestInfo);
 		}
 
-		if (property.getPropertyDetail().getPropertyType()
-				.equalsIgnoreCase(propertiesManager.getVacantLand())) {
+		if (property.getPropertyDetail().getPropertyType().equalsIgnoreCase(propertiesManager.getVacantLand())) {
 			if (property.getVacantLand() == null)
 				throw new InvalidVacantLandException(propertiesManager.getInvalidPropertyVacantland(), requestInfo);
 

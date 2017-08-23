@@ -3,20 +3,8 @@ import {Grid, Row, Col, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import RaisedButton from 'material-ui/RaisedButton';
 import FileDownload from 'material-ui/svg-icons/action/get-app';
+import styles from '../../styles/material-ui';
 import {translate} from './common';
-
-const styles = {
-  headerStyle : {
-    fontSize : 19
-  },
-  addBorderBottom:{
-    borderBottom: '1px solid #eee',
-    padding: '10px'
-  },
-  marginStyle:{
-    margin: '15px 0'
-  }
-};
 
 class employeeDocs extends Component{
   constructor(props){

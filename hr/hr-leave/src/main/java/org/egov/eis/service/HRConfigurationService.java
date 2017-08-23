@@ -65,7 +65,9 @@ public class HRConfigurationService {
     private HRConfigurationSearchURLHelper hrConfigurationSearchURLHelper;
 
     public Date getCuttOffDate(final String tenantId, final RequestInfo requestInfo) throws ParseException {
-        final String url = hrConfigurationSearchURLHelper.searchURL(tenantId);
+        final String url = hrConfigurationSearchURLHelper.cuttOffDateSearchURL(tenantId);
+        // url.append("&name=" + propertiesManager.getHrMastersServiceConfigurationsKey());
+
         List<String> values = null;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date cutOffDate = null;
@@ -85,4 +87,27 @@ public class HRConfigurationService {
 
         return cutOffDate;
     }
+
+    public String getCompensatoryValidityDays(final String tenantId, final RequestInfo requestInfo) {
+        final String url = hrConfigurationSearchURLHelper.compensatoryDaysSearchURL(tenantId);
+
+        List<String> values = null;
+        String leaveValidity = null;
+
+        final RequestInfoWrapper wrapper = new RequestInfoWrapper();
+        wrapper.setRequestInfo(requestInfo);
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
+
+        final HRConfigurationResponse hrConfigurationResponse = restTemplate.postForObject(url, request,
+                HRConfigurationResponse.class);
+        if (hrConfigurationResponse != null && !hrConfigurationResponse.getHrConfiguration().isEmpty()) {
+            values = hrConfigurationResponse.getHrConfiguration().get("Compensatory leave validity");
+            leaveValidity = values.get(0);
+        }
+        return leaveValidity;
+    }
+
+
 }

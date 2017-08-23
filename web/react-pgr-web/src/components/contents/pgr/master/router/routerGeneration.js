@@ -120,9 +120,9 @@ class routerGeneration extends Component {
   loadGrievanceType(value){
      var self = this;
      self.props.handleChange({target: {value: ""}}, "complaintTypes", true, "");
-     Api.commonApiPost("/pgr/services/v1/_search", {type:'category', categoryId : value}).then(function(response)
+     Api.commonApiPost("pgr-master/service/v1/_search", {type:'category', categoryId : value}).then(function(response)
      {
-       self.setState({typeList : response.complaintTypes});
+       self.setState({typeList : response.Service});
      },function(err) {
 
      });
@@ -185,7 +185,7 @@ class routerGeneration extends Component {
   		}
   	}
 
-  	Api.commonApiPost("/pgr-master/serviceGroup/v1/_search").then(function(response) {
+  	Api.commonApiPost("/pgr-master/serviceGroup/v1/_search",{keyword: "complaint"}).then(function(response) {
       	checkCountAndCall("categoryList", response.ServiceGroups);
     }, function(err) {
     	checkCountAndCall("categoryList", []);

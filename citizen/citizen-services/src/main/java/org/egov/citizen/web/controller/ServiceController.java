@@ -141,7 +141,8 @@ public class ServiceController {
 
 				try {
 					jObject = new JSONObject(demandRequest);
-					jObject.put("RequestInfo", JsonPath.read(config, "$.RequestInfo"));
+					String configString = JsonPath.read(config, "$.requestInfo");
+					jObject.put("RequestInfo", configString);
 
 					for (Value value : servcieReq.getAttributeValues()) {
 						// todo
@@ -155,7 +156,8 @@ public class ServiceController {
 							jObject.getJSONArray("Demands").getJSONObject(0).getJSONArray("demandDetails").getJSONObject(0).put("taxHeadMasterCode", "PT_TAX");
 							jObject.getJSONArray("Demands").getJSONObject(0).getJSONArray("demandDetails").getJSONObject(0).put("taxAmount",applicationFee);
 							jObject.getJSONArray("Demands").getJSONObject(0).getJSONArray("demandDetails").getJSONObject(0).put("collectionAmount", "100");
-							jObject.getJSONArray("Demands").getJSONObject(0).getJSONObject("owner").put("id",JsonPath.read(config, "$.RequestInfo.userInfo.id"));
+							String demandsString = JsonPath.read(config, "$.RequestInfo.userInfo.id");
+							jObject.getJSONArray("Demands").getJSONObject(0).getJSONObject("owner").put("id",demandsString);
 					}
 
 					//citizenService.createDemand(url, jObject.toString());

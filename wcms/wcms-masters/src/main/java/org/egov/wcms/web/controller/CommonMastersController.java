@@ -51,6 +51,8 @@ import org.egov.wcms.model.CommonDataModel;
 import org.egov.wcms.model.enums.ApplicationType;
 import org.egov.wcms.model.enums.PlantType;
 import org.egov.wcms.model.enums.ReservoirType;
+import org.egov.wcms.model.enums.ServiceChargeType;
+import org.egov.wcms.model.enums.ServiceType;
 import org.egov.wcms.web.contract.CommonEnumResponse;
 import org.egov.wcms.web.contract.RequestInfoWrapper;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
@@ -109,6 +111,30 @@ public class CommonMastersController {
         final List<CommonDataModel> modelList = new ArrayList<>();
         for (final PlantType key : PlantType.values())
             modelList.add(new CommonDataModel(key.name(), key));
+        return getSuccessResponse(modelList, requestInfoWrapper.getRequestInfo());
+    }
+    
+    @RequestMapping(value="/_getservicetypes")
+    public ResponseEntity<?> getServiceTypes(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            BindingResult requestBodyBindingResult){
+        if (requestBodyBindingResult.hasErrors())
+            return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult,
+                    requestInfoWrapper.getRequestInfo());
+        List<CommonDataModel> modelList = new ArrayList<>();
+        for(final ServiceType key : ServiceType.values())
+            modelList.add(new CommonDataModel(key.name(),key));
+        return getSuccessResponse(modelList, requestInfoWrapper.getRequestInfo());
+    }
+    
+    @RequestMapping(value="/_getservicechargetypes")
+    public ResponseEntity<?> getAllServiceChargeTypes(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            final BindingResult requestBodyBindingResult){
+        if (requestBodyBindingResult.hasErrors())
+            return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult,
+                    requestInfoWrapper.getRequestInfo());
+        List<CommonDataModel> modelList = new ArrayList<>();
+        for(final ServiceChargeType key : ServiceChargeType.values())
+            modelList.add(new CommonDataModel(key.name(),key));
         return getSuccessResponse(modelList, requestInfoWrapper.getRequestInfo());
     }
 

@@ -16,7 +16,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -30,15 +29,15 @@ public class LicenseFeeDetailContract {
 	@JsonProperty("licenseId")
 	private Long licenseId;
 
-	@NotEmpty(message="{error.financialYear.empty}")
-	@Length(min =1, max = 128,message="{error.financialYear.empty}")
-	@Pattern(regexp = ".*[^ ].*",message="{error.financialYear.emptyspaces}")
+	@NotEmpty(message = "{error.financialYear.empty}")
+	@Length(min = 1, max = 128, message = "{error.financialYear.empty}")
+	@Pattern(regexp = ".*[^ ].*", message = "{error.financialYear.emptyspaces}")
 	@JsonProperty("financialYear")
 	private String financialYear;
 
-	@NotNull(message="{error.license.amount}")
+	@NotNull(message = "{error.license.amount}")
 	@Min(1)
-	@Digits(integer=10, fraction=2,message="{error.license.amount.decimal}")
+	@Digits(integer = 10, fraction = 2, message = "{error.license.amount.decimal}")
 	@JsonProperty("amount")
 	private Double amount;
 

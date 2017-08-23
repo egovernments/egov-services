@@ -352,14 +352,15 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+            "maxLength": "1000"
           },
           {
             "name": "TradeCommencementDate",
             "jsonPath": "licenses[0].tradeCommencementDate",
             "label": "tl.create.licenses.groups.TradeDetails.TradeCommencementDate",
             "pattern": "",
-            "type": "date",
+            "type": "datePicker",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -370,7 +371,7 @@ var dat = {
             "jsonPath": "licenses[0].licenseValidFromDate",
             "label": "tl.create.licenses.groups.TradeDetails.licenseValidFromDate",
             "pattern": "",
-            "type": "date",
+            "type": "datePicker",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -421,7 +422,7 @@ var dat = {
             "jsonPath": "licenses[0].agreementDate",
             "label": "tl.create.licenses.groups.agreementDetails.agreementDate",
             "pattern": "",
-            "type": "date",
+            "type": "datePicker",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -502,504 +503,509 @@ var dat = {
 
 
 
-    "tl.search": {
-      "numCols": 3,
-      "url": "/tl-services/license/v1/_search",
-      "tenantIdRequired": true,
-      "useTimestamp": true,
-      "objectName": "licenses",
-      "groups": [{
-        "label": "tl.search.groups.license.searchTradeLicense",
-        "name": "searchTradeLicense",
-        "fields": [{
-            "name": "applicationNumber",
-            "jsonPath": "applicationNumber",
-            "label": "tl.search.groups.applicationNumber",
-            "pattern": "",
-            "type": "autoCompelete",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-            "url":"/tl-services/license/v1/_search?|$..applicationNumber|$..applicationNumber",
-            "autoCompleteDependancy": {
-              "autoCompleteUrl": "/tl-services/license/v1/_search?id={value}"
-             }
-          },
-          {
-            "name": "showInactiveLicense",
-            "jsonPath": "active",
-            "label": "tl.search.groups.showInactiveLicense",
-            "pattern": "",
-            "type": "checkbox",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "status",
-            "jsonPath": "status",
-            "label": "tl.search.groups.status",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "/tl-masters/status/v1/_search?tenantId=default|$..id|$..name",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
+  "tl.search": {
+       "numCols": 3,
+       "url": "/tl-services/license/v1/_search",
+       "tenantIdRequired": true,
+       "useTimestamp": true,
+       "objectName": "licenses",
+       "groups": [{
+         "label": "tl.search.groups.license.searchTradeLicense",
+         "name": "searchTradeLicense",
+         "fields": [{
+             "name": "applicationNumber",
+             "jsonPath": "applicationNumber",
+             "label": "tl.search.groups.applicationNumber",
+             "pattern": "",
+             "type": "autoCompelete",
+             "isRequired": false,
+             "isDisabled": false,
+             "requiredErrMsg": "",
+             "patternErrMsg": "",
+             "url":"/tl-services/license/v1/_search?|$..applicationNumber|$..applicationNumber",
+             "autoCompleteDependancy": {
+               "autoCompleteUrl": "/tl-services/license/v1/_search?id={value}"
+              }
+           },
+           {
+             "name": "showInactiveLicense",
+             "jsonPath": "active",
+             "label": "tl.search.groups.showInactiveLicense",
+             "pattern": "",
+             "type": "checkbox",
+             "isRequired": false,
+             "isDisabled": false,
+             "requiredErrMsg": "",
+             "patternErrMsg": ""
+           },
+           {
+             "name": "status",
+             "jsonPath": "status",
+             "label": "tl.search.groups.status",
+             "pattern": "",
+             "type": "singleValueList",
+             "url": "/tl-masters/status/v1/_search?tenantId=default|$..id|$..name",
+             "isRequired": false,
+             "isDisabled": false,
+             "requiredErrMsg": "",
+             "patternErrMsg": "",
 
-          },
-          {
-            "name": "licenseNumber",
-            "jsonPath": "licenseNumber",
-            "label": "tl.search.groups.licenseNumber",
-            "pattern": "",
-            "type": "autoCompelete",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-            "url":"/tl-services/license/v1/_search?|$..licenseNumber|$..licenseNumber",
-            "autoCompleteDependancy": {
-              "autoCompleteUrl": "/tl-services/license/v1/_search?id={value}"
-             }
-          },
-          {
-            "name": "oldLicenseNumber",
-            "jsonPath": "oldLicenseNumber",
-            "label": "tl.search.groups.oldLicenseNumber",
-            "pattern": "",
-            "type": "autoCompelete",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-            "url":"/tl-services/license/v1/_search?|$..oldLicenseNumber|$..oldLicenseNumber",
-            "autoCompleteDependancy": {
-              "autoCompleteUrl": "/tl-services/license/v1/_search?id={value}"
-             }
-          },
-          {
-            "name": "tradeCategory",
-            "jsonPath": "categoryId",
-            "label": "tl.search.groups.tradeCategory",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "/tl-masters/category/v1/_search?tenantId=default&type=category|$..id|$..name",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-            "depedants": [{
-              "jsonPath": "subCategoryId",
-              "type": "dropDown",
-              "pattern": "/tl-masters/category/v1/_search?tenantId=default&type=subcategory&categoryId={categoryId}|$.categories.*.id|$.categories.*.name"
-            }]
-          },
-          {
-            "name": "tradeSubCategory",
-            "jsonPath": "subCategoryId",
-            "label": "tl.create.licenses.groups.TradeDetails.TradeSubCategory",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "tradeTitle",
-            "jsonPath": "tradeTitle",
-            "label": "tl.search.groups.tradeTitle",
-            "pattern": "",
-            "type": "text",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "ownerName",
-            "jsonPath": "ownerName",
-            "label": "tl.search.groups.tradeOwnerName",
-            "pattern": "",
-            "type": "text",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "propertyAssesmentNo",
-            "jsonPath": "propertyAssesmentNo",
-            "label": "tl.search.groups.propertyAssesmentNo",
-            "pattern": "",
-            "type": "text",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "mobileNumber",
-            "jsonPath": "mobileNumber",
-            "label": "tl.search.groups.mobileNumber",
-            "pattern": "^.{10,10}$",
-            "type": "text",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "Mobile Number must be of 10 digits"
-          },
-          {
-            "name": "mobileNumber",
-            "jsonPath": "mobileNumber",
-            "label": "tl.search.groups.mobileNumber",
-            "pattern": "^.{10,10}$",
-            "type": "text",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "Mobile Number must be of 10 digits"
-          }
+           },
+           {
+             "name": "licenseNumber",
+             "jsonPath": "licenseNumber",
+             "label": "tl.search.groups.licenseNumber",
+             "pattern": "",
+             "type": "autoCompelete",
+             "isRequired": false,
+             "isDisabled": false,
+             "requiredErrMsg": "",
+             "patternErrMsg": "",
+             "url":"/tl-services/license/v1/_search?|$..licenseNumber|$..licenseNumber",
+             "autoCompleteDependancy": {
+               "autoCompleteUrl": "/tl-services/license/v1/_search?id={value}"
+              }
+           },
+           {
+             "name": "oldLicenseNumber",
+             "jsonPath": "oldLicenseNumber",
+             "label": "tl.search.groups.oldLicenseNumber",
+             "pattern": "",
+             "type": "autoCompelete",
+             "isRequired": false,
+             "isDisabled": false,
+             "requiredErrMsg": "",
+             "patternErrMsg": "",
+             "url":"/tl-services/license/v1/_search?|$..oldLicenseNumber|$..oldLicenseNumber",
+             "autoCompleteDependancy": {
+               "autoCompleteUrl": "/tl-services/license/v1/_search?id={value}"
+              }
+           },
+           {
+             "name": "tradeCategory",
+             "jsonPath": "categoryId",
+             "label": "tl.search.groups.tradeCategory",
+             "pattern": "",
+             "type": "singleValueList",
+             "url": "/tl-masters/category/v1/_search?tenantId=default&type=category|$..id|$..name",
+             "isRequired": false,
+             "isDisabled": false,
+             "requiredErrMsg": "",
+             "patternErrMsg": "",
+             "depedants": [{
+               "jsonPath": "subCategoryId",
+               "type": "dropDown",
+               "pattern": "/tl-masters/category/v1/_search?tenantId=default&type=subcategory&categoryId={categoryId}|$.categories.*.id|$.categories.*.name"
+             }]
+           },
+           {
+             "name": "tradeSubCategory",
+             "jsonPath": "subCategoryId",
+             "label": "tl.create.licenses.groups.TradeDetails.TradeSubCategory",
+             "pattern": "",
+             "type": "singleValueList",
+             "url": "",
+             "isRequired": false,
+             "isDisabled": false,
+             "requiredErrMsg": "",
+             "patternErrMsg": ""
+           },
+           {
+             "name": "tradeTitle",
+             "jsonPath": "tradeTitle",
+             "label": "tl.search.groups.tradeTitle",
+             "pattern": "",
+             "type": "text",
+             "isRequired": false,
+             "isDisabled": false,
+             "requiredErrMsg": "",
+             "patternErrMsg": ""
+           },
+           {
+             "name": "ownerName",
+             "jsonPath": "ownerName",
+             "label": "tl.search.groups.tradeOwnerName",
+             "pattern": "",
+             "type": "text",
+             "isRequired": false,
+             "isDisabled": false,
+             "requiredErrMsg": "",
+             "patternErrMsg": ""
+           },
+           {
+             "name": "propertyAssesmentNo",
+             "jsonPath": "propertyAssesmentNo",
+             "label": "tl.search.groups.propertyAssesmentNo",
+             "pattern": "",
+             "type": "text",
+             "isRequired": false,
+             "isDisabled": false,
+             "requiredErrMsg": "",
+             "patternErrMsg": ""
+           },
+           {
+             "name": "adminWardName",
+             "jsonPath": "adminWardName",
+             "label": "tl.search.groups.adminWardName",
+             "pattern": "",
+             "type": "singleValueList",
+             "url": "tl-services/license/v1/_search?tenantId=default|$..adminWardName|$..adminWardName",
+             "isRequired": false,
+             "isDisabled": false,
+             "requiredErrMsg": "",
+             "patternErrMsg": ""
+           },
+           {
+             "name": "mobileNumber",
+             "jsonPath": "mobileNumber",
+             "label": "tl.search.groups.mobileNumber",
+             "pattern": "^.{10,10}$",
+             "type": "text",
+             "isRequired": false,
+             "isDisabled": false,
+             "requiredErrMsg": "",
+             "patternErrMsg": "Mobile Number must be of 10 digits"
+           }
 
 
-        ]
-      }],
-      "result": {
-        "header": [{
-          label: "tl.search.result.groups.tlNumber"
-        }, {
-          label: "tl.search.result.groups.oldTLNumber"
-        }, {
-          label: "tl.search.result.groups.category"
-        }, {
-          label: "tl.search.result.groups.subCategory"
-        }, {
-          label: "tl.search.result.groups.titleOfTrade"
-        }, {
-          label: "tl.search.result.groups.tradeOwner"
-        }, {
-          label: "tl.search.result.groups.mobileNumber"
-        }, {
-          label: "tl.search.result.groups.propertyAssessmentNumber"
-        }, {
-          label: "tl.search.result.groups.adminWardName"
-        }, {
-          label: "tl.search.result.groups.validityYears"
-        }, {
-          label: "tl.search.result.groups.licenseStatus"
-        }, {
-          label: "tl.search.result.groups.applicationStatus"
-        }, {
-          label: "tl.search.result.groups.workflowOwnerName"
-        }],
-        "values": ["licenseNumber", "oldLicenseNumber", "category", "subCategory", "tradeTitle", "ownerName", "mobileNumber", "propertyAssesmentNo", "adminWardName", "validityYears","active","statusName",""],
-        "resultPath": "licenses",
-        "rowClickUrlUpdate": "/update/tl/CreateLegacyLicense/{id}",
-        "rowClickUrlView": "/view/tl/CreateLegacyLicense/{id}"
-      }
-    },
-  "tl.view": {
-    "numCols": 12 / 3,
-    "url": "/tl-services/license/v1/_search?ids={id}",
-    "tenantIdRequired": true,
-    "useTimestamp": true,
-    "objectName": "licenses",
-    "label": "tl.view.groups.title",
-    "groups": [{
-        "label": "tl.view.groups.tradeOwnerDetails",
-        "name": "viewCategoryType",
-        "fields": [{
-            "name": "aadharNumber",
-            "jsonPath": "licenses[0].adhaarNumber",
-            "label": "tl.view.groups.aadharNumber",
-            "pattern": "^.{12,12}$",
-            "type": "text",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "Aadhar Number must be of 12 digits"
-          },
-          {
-            "name": "mobileNumber",
-            "jsonPath": "licenses[0].mobileNumber",
-            "label": "tl.view.groups.mobileNumber",
-            "pattern": "^.{10,10}$",
-            "type": "text",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "Mobile Number must be of 10 digits"
-          },
-          {
-            "name": "tradeOwnerName",
-            "jsonPath": "licenses[0].ownerName",
-            "label": "tl.view.groups.tradeOwnerName",
-            "pattern": "^.[a-zA-Z. ]{2,49}$",
-            "type": "text",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "Enter Valid Name"
-          },
-          {
-            "name": "fatherSpouseName",
-            "jsonPath": "licenses[0].fatherSpouseName",
-            "label": "tl.view.groups.fatherSpouseName",
-            "pattern": "",
-            "type": "text",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "emailId",
-            "jsonPath": "licenses[0].emailId",
-            "label": "tl.view.groups.emailId",
-            "pattern": "^[a-zA-Z0-9_.]+@[a-zA-Z0-9]+.[a-zA-Z0-9]+$",
-            "type": "text",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "Enter Valid EmailID"
-          },
-          {
-            "name": "tradeOwnerAddress",
-            "jsonPath": "licenses[0].ownerAddress",
-            "label": "tl.view.groups.tradeOwnerAddress",
-            "pattern": "",
-            "type": "textarea",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          }
-        ]
-      },
-      {
-        "label": "tl.licenses.view.groups.TradeLocationDetails",
-        "name": "TradeLocationDetails",
-        "fields": [{
-            "name": "PropertyAssessmentNo",
-            "jsonPath": "licenses[0].propertyAssesmentNo",
-            "label": "tl.licenses.view.groups.PropertyAssessmentNo",
-            "pattern": "",
-            "type": "text",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "Locality",
-            "jsonPath": "licenses[0].localityName",
-            "label": "tl.licenses.view.groups.Locality",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$..id|$..name",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "adminWardId",
-            "jsonPath": "licenses[0].adminWardName",
-            "label": "tl.licenses.view.groups.adminWardId",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=WARD&hierarchyTypeName=REVENUE|$..boundaryNum|$..name",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "revenueWardId",
-            "jsonPath": "licenses[0].revenueWardName",
-            "label": "tl.licenses.view.groups.revenueWardId",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=WARD&hierarchyTypeName=REVENUE|$..boundaryNum|$..name",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "OwnershipType",
-            "jsonPath": "licenses[0].ownerShipType",
-            "label": "tl.licenses.view.groups.OwnershipType",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-            "defaultValue": [{
-                "key": "STATE_GOVERNMENT",
-                "value": "STATE_GOVERNMENT"
+         ]
+       }],
+       "result": {
+         "header": [{
+           label: "tl.search.result.groups.tlNumber"
+         }, {
+           label: "tl.search.result.groups.oldTLNumber"
+         }, {
+           label: "tl.search.result.groups.category"
+         }, {
+           label: "tl.search.result.groups.subCategory"
+         }, {
+           label: "tl.search.result.groups.titleOfTrade"
+         }, {
+           label: "tl.search.result.groups.tradeOwner"
+         }, {
+           label: "tl.search.result.groups.mobileNumber"
+         }, {
+           label: "tl.search.result.groups.propertyAssessmentNumber"
+         }, {
+           label: "tl.search.groups.adminWardName"
+         }, {
+           label: "tl.search.result.groups.validityYears"
+         }, {
+           label: "tl.search.result.groups.licenseStatus"
+         }, {
+           label: "tl.search.result.groups.applicationStatus"
+         }, {
+           label: "tl.search.result.groups.workflowOwnerName"
+         }],
+         "values": ["licenseNumber", "oldLicenseNumber", "category", "subCategory", "tradeTitle", "ownerName", "mobileNumber", "propertyAssesmentNo", "adminWardName", "validityYears","active","statusName",""],
+         "resultPath": "licenses",
+         "rowClickUrlUpdate": "/update/tl/CreateLegacyLicense/{licenseNumber}",
+         "rowClickUrlView": "/view/tl/CreateLegacyLicense/{licenseNumber}"
+       }
+     },
+
+
+     "tl.view": {
+        "numCols": 12 / 3,
+        "url": "/tl-services/license/v1/_search?licenseNumber={licenseNumber}",
+        "tenantIdRequired": true,
+        "useTimestamp": true,
+        "objectName": "licenses",
+        "label": "tl.view.groups.title",
+        "groups": [{
+            "label": "tl.view.groups.tradeOwnerDetails",
+            "name": "viewCategoryType",
+            "fields": [{
+                "name": "aadharNumber",
+                "jsonPath": "licenses[0].adhaarNumber",
+                "label": "tl.view.groups.aadharNumber",
+                "pattern": "^.{12,12}$",
+                "type": "text",
+                "isRequired": false,
+                "isDisabled": false,
+                "requiredErrMsg": "",
+                "patternErrMsg": "Aadhar Number must be of 12 digits"
               },
               {
-                "key": "RENTED",
-                "value": "RENTED"
+                "name": "mobileNumber",
+                "jsonPath": "licenses[0].mobileNumber",
+                "label": "tl.view.groups.mobileNumber",
+                "pattern": "^.{10,10}$",
+                "type": "text",
+                "isRequired": false,
+                "isDisabled": false,
+                "requiredErrMsg": "",
+                "patternErrMsg": "Mobile Number must be of 10 digits"
+              },
+              {
+                "name": "tradeOwnerName",
+                "jsonPath": "licenses[0].ownerName",
+                "label": "tl.view.groups.tradeOwnerName",
+                "pattern": "^.[a-zA-Z. ]{2,49}$",
+                "type": "text",
+                "isRequired": false,
+                "isDisabled": false,
+                "requiredErrMsg": "",
+                "patternErrMsg": "Enter Valid Name"
+              },
+              {
+                "name": "fatherSpouseName",
+                "jsonPath": "licenses[0].fatherSpouseName",
+                "label": "tl.view.groups.fatherSpouseName",
+                "pattern": "",
+                "type": "text",
+                "isRequired": true,
+                "isDisabled": false,
+                "requiredErrMsg": "",
+                "patternErrMsg": ""
+              },
+              {
+                "name": "emailId",
+                "jsonPath": "licenses[0].emailId",
+                "label": "tl.view.groups.emailId",
+                "pattern": "^[a-zA-Z0-9_.]+@[a-zA-Z0-9]+.[a-zA-Z0-9]+$",
+                "type": "text",
+                "isRequired": false,
+                "isDisabled": false,
+                "requiredErrMsg": "",
+                "patternErrMsg": "Enter Valid EmailID"
+              },
+              {
+                "name": "tradeOwnerAddress",
+                "jsonPath": "licenses[0].ownerAddress",
+                "label": "tl.view.groups.tradeOwnerAddress",
+                "pattern": "",
+                "type": "textarea",
+                "isRequired": false,
+                "isDisabled": false,
+                "requiredErrMsg": "",
+                "patternErrMsg": ""
               }
             ]
           },
           {
-            "name": "TradeAddress",
-            "jsonPath": "licenses[0].tradeAddress",
-            "label": "tl.licenses.view.groups.TradeAddress",
-            "pattern": "",
-            "type": "textarea",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "label": "tl.licenses.view.groups.TradeLocationDetails",
+            "name": "TradeLocationDetails",
+            "fields": [{
+                "name": "PropertyAssessmentNo",
+                "jsonPath": "licenses[0].propertyAssesmentNo",
+                "label": "tl.licenses.view.groups.PropertyAssessmentNo",
+                "pattern": "",
+                "type": "text",
+                "isRequired": false,
+                "isDisabled": false,
+                "requiredErrMsg": "",
+                "patternErrMsg": ""
+              },
+              {
+                "name": "Locality",
+                "jsonPath": "licenses[0].localityName",
+                "label": "tl.licenses.view.groups.Locality",
+                "pattern": "",
+                "type": "singleValueList",
+                "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$..id|$..name",
+                "isRequired": false,
+                "isDisabled": false,
+                "requiredErrMsg": "",
+                "patternErrMsg": ""
+              },
+              {
+                "name": "adminWardId",
+                "jsonPath": "licenses[0].adminWardName",
+                "label": "tl.licenses.view.groups.adminWardId",
+                "pattern": "",
+                "type": "singleValueList",
+                "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=WARD&hierarchyTypeName=REVENUE|$..boundaryNum|$..name",
+                "isRequired": false,
+                "isDisabled": false,
+                "requiredErrMsg": "",
+                "patternErrMsg": ""
+              },
+              {
+                "name": "revenueWardId",
+                "jsonPath": "licenses[0].revenueWardName",
+                "label": "tl.licenses.view.groups.revenueWardId",
+                "pattern": "",
+                "type": "singleValueList",
+                "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=WARD&hierarchyTypeName=REVENUE|$..boundaryNum|$..name",
+                "isRequired": false,
+                "isDisabled": false,
+                "requiredErrMsg": "",
+                "patternErrMsg": ""
+              },
+              {
+                "name": "OwnershipType",
+                "jsonPath": "licenses[0].ownerShipType",
+                "label": "tl.licenses.view.groups.OwnershipType",
+                "pattern": "",
+                "type": "singleValueList",
+                "url": "",
+                "isRequired": false,
+                "isDisabled": false,
+                "requiredErrMsg": "",
+                "patternErrMsg": "",
+                "defaultValue": [{
+                    "key": "STATE_GOVERNMENT",
+                    "value": "STATE_GOVERNMENT"
+                  },
+                  {
+                    "key": "RENTED",
+                    "value": "RENTED"
+                  }
+                ]
+              },
+              {
+                "name": "TradeAddress",
+                "jsonPath": "licenses[0].tradeAddress",
+                "label": "tl.licenses.view.groups.TradeAddress",
+                "pattern": "",
+                "type": "textarea",
+                "isRequired": false,
+                "isDisabled": false,
+                "requiredErrMsg": "",
+                "patternErrMsg": ""
+              }
+            ]
+          },
+
+          {
+            "label": "tl.view.licenses.groups.TradeDetails",
+            "name": "TradeDetails",
+            "fields": [{
+                "name": "TradeTitle",
+                "jsonPath": "licenses[0].tradeTitle",
+                "label": "tl.view.licenses.groups.TradeTitle",
+                "pattern": "",
+                "type": "text",
+                "isRequired": false,
+                "isDisabled": false,
+                "requiredErrMsg": "",
+                "patternErrMsg": ""
+              },
+              {
+                "name": "TradeType",
+                "jsonPath": "licenses[0].tradeType",
+                "label": "tl.view.licenses.groups.TradeType",
+                "pattern": "",
+                "type": "singleValueList",
+                "url": "",
+                "isRequired": false,
+                "isDisabled": false,
+                "requiredErrMsg": "",
+                "patternErrMsg": "",
+                "defaultValue": [{
+                    "key": "PERMANENT",
+                    "value": "PERMANENT"
+                  },
+                  {
+                    "key": "TEMPORARY",
+                    "value": "TEMPORARY"
+                  }
+                ]
+
+              },
+              {
+                "name": "TradeCategory",
+                "jsonPath": "licenses[0].categoryId",
+                "label": "tl.view.licenses.groups.TradeCategory",
+                "pattern": "",
+                "type": "singleValueList",
+                "url": "/tl-masters/category/v1/_search?|$..id|$..name",
+                "isRequired": false,
+                "isDisabled": false,
+                "requiredErrMsg": "",
+                "patternErrMsg": ""
+              },
+              {
+                "name": "TradeSubCategory",
+                "jsonPath": "licenses[0].subCategory",
+                "label": "tl.view.licenses.groups.TradeSubCategory",
+                "pattern": "",
+                "type": "singleValueList",
+                "url": "/tl-masters/category/v1/_search?type=subcategory|$..id|$..name",
+                "isRequired": false,
+                "isDisabled": false,
+                "requiredErrMsg": "",
+                "patternErrMsg": ""
+              },
+              {
+                "name": "UOM",
+                "jsonPath": "licenses[0].uom",
+                "label": "tl.view.licenses.groups.UOM",
+                "pattern": "",
+                "type": "text",
+                "isRequired": false,
+                "isDisabled": false,
+                "requiredErrMsg": "",
+                "patternErrMsg": ""
+              },
+              {
+                "name": "TradeValueforUOM",
+                "jsonPath": "licenses[0].quantity",
+                "label": "tl.view.licenses.groups.TradeValuefortheUOM",
+                "pattern": "",
+                "type": "text",
+                "isRequired": false,
+                "isDisabled": false,
+                "requiredErrMsg": "",
+                "patternErrMsg": ""
+              },
+              {
+                "name": "validity",
+                "jsonPath": "categories[0].validityYears",
+                "label": "tl.view.licenses.groups.validity",
+                "pattern": "",
+                "type": "text",
+                "isRequired": false,
+                "isDisabled": false,
+                "requiredErrMsg": "",
+                "patternErrMsg": ""
+              },
+              {
+                "name": "Remarks",
+                "jsonPath": "licenses[0].remarks",
+                "label": "tl.view.licenses.groups.Remarks",
+                "pattern": "",
+                "type": "text",
+                "isRequired": false,
+                "isDisabled": false,
+                "requiredErrMsg": "",
+                "patternErrMsg": ""
+              },
+              {
+                "name": "TradeCommencementDate",
+                "jsonPath": "licenses[0].tradeCommencementDate",
+                "label": "tl.view.licenses.groups.TradeCommencementDate",
+                "pattern": "",
+                "type": "date",
+                "isRequired": false,
+                "isDisabled": false,
+                "requiredErrMsg": "",
+                "patternErrMsg": ""
+              },
+              {
+                "name": "TradeOwner",
+                "jsonPath": "licenses[0].active",
+                "label": "tl.view.licenses.groups.TraderOwnerProperty",
+                "pattern": "",
+                "type": "checkbox",
+                "isRequired": false,
+                "isDisabled": false,
+                "requiredErrMsg": "",
+                "patternErrMsg": "",
+                "defaultValue": false
+              }
+            ]
           }
+
+
+
+
         ]
       },
 
-      {
-        "label": "tl.view.licenses.groups.TradeDetails",
-        "name": "TradeDetails",
-        "fields": [{
-            "name": "TradeTitle",
-            "jsonPath": "licenses[0].tradeTitle",
-            "label": "tl.view.licenses.groups.TradeTitle",
-            "pattern": "",
-            "type": "text",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "TradeType",
-            "jsonPath": "licenses[0].tradeType",
-            "label": "tl.view.licenses.groups.TradeType",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-            "defaultValue": [{
-                "key": "PERMANENT",
-                "value": "PERMANENT"
-              },
-              {
-                "key": "TEMPORARY",
-                "value": "TEMPORARY"
-              }
-            ]
 
-          },
-          {
-            "name": "TradeCategory",
-            "jsonPath": "licenses[0].categoryId",
-            "label": "tl.view.licenses.groups.TradeCategory",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "/tl-masters/category/v1/_search?|$..id|$..name",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "TradeSubCategory",
-            "jsonPath": "licenses[0].subCategory",
-            "label": "tl.view.licenses.groups.TradeSubCategory",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "/tl-masters/category/v1/_search?type=subcategory|$..id|$..name",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "UOM",
-            "jsonPath": "licenses[0].uom",
-            "label": "tl.view.licenses.groups.UOM",
-            "pattern": "",
-            "type": "text",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "TradeValueforUOM",
-            "jsonPath": "licenses[0].quantity",
-            "label": "tl.view.licenses.groups.TradeValuefortheUOM",
-            "pattern": "",
-            "type": "text",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "validity",
-            "jsonPath": "categories[0].validityYears",
-            "label": "tl.view.licenses.groups.validity",
-            "pattern": "",
-            "type": "text",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "Remarks",
-            "jsonPath": "licenses[0].remarks",
-            "label": "tl.view.licenses.groups.Remarks",
-            "pattern": "",
-            "type": "text",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "TradeCommencementDate",
-            "jsonPath": "licenses[0].tradeCommencementDate",
-            "label": "tl.view.licenses.groups.TradeCommencementDate",
-            "pattern": "",
-            "type": "date",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "TradeOwner",
-            "jsonPath": "licenses[0].active",
-            "label": "tl.view.licenses.groups.TraderOwnerProperty",
-            "pattern": "",
-            "type": "checkbox",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-            "defaultValue": false
-          }
-        ]
-      }
-
-
-
-
-    ]
-  },
   "tl.update": {
     "numCols": 12 / 2,
     "searchUrl": "/tl-masters/v1/category/_search?id={id}",

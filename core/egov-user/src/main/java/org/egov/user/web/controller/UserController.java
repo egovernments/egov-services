@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.servlet.http.HttpServletRequest;
+
 
 @RestController
 public class UserController {
@@ -44,9 +44,8 @@ public class UserController {
 	}
 
 	@PostMapping("/_search")
-	public UserSearchResponse get(@RequestBody UserSearchRequest request, HttpServletRequest httpRequest) {
-		System.out.println("Remote Addr is [" + httpRequest.getRemoteAddr() + "]");
-		System.out.println("Remote host is [" + httpRequest.getRemoteHost() + "]");
+	public UserSearchResponse get(@RequestBody UserSearchRequest request) {
+		
 		if(request.getActive() == null) {
 			request.setActive(true);
 			
@@ -56,9 +55,8 @@ public class UserController {
 
 
 	@PostMapping("/v1/_search")
-	public UserSearchResponse getV1(@RequestBody UserSearchRequest request, HttpServletRequest httpRequest) {
-		System.out.println("Remote Addr is [" + httpRequest.getRemoteAddr() + "]");
-		System.out.println("Remote host is [" + httpRequest.getRemoteHost() + "]");
+	public UserSearchResponse getV1(@RequestBody UserSearchRequest request) {
+		
 		return searchUsers(request);
 	}
 

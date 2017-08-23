@@ -218,7 +218,7 @@ class Report extends Component {
             if(self.props.actionName == "update") {
               var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/");
             } else {
-              var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/") + "/" + _.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath);
+              var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/") + "/" + encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
             }
           }
 
@@ -629,7 +629,12 @@ class Report extends Component {
                         obj["value"]=values[k];
                         dropDownData.push(obj);
                     }
-                    setDropDownData(value.jsonPath,dropDownData);
+
+                    dropDownData.sort(function(s1, s2) {
+                      return (s1.value < s2.value) ? -1 : (s1.value > s2.value) ? 1 : 0;
+                    });
+                    dropDownData.unshift({key: null, value: "-- Please Select --"});
+                    setDropDownData(value.jsonPath, dropDownData);
                   }
                 },function(err) {
                     console.log(err);
@@ -781,13 +786,13 @@ class Report extends Component {
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler} = this;
-
+    
     return (
       <div className="Report">
         <form onSubmit={(e) => {
           create(e)
         }}>
-        {!_.isEmpty(mockData) && moduleName && actionName && <ShowFields
+        {!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] && <ShowFields
                                     groups={mockData[`${moduleName}.${actionName}`].groups}
                                     noCols={mockData[`${moduleName}.${actionName}`].numCols}
                                     ui="google"

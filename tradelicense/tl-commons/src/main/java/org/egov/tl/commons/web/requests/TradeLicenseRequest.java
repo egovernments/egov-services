@@ -23,7 +23,7 @@ public class TradeLicenseRequest {
 	private RequestInfo requestInfo = new RequestInfo();
 
 	@JsonProperty("licenses")
-	@Valid 
+	@Valid
 	private List<TradeLicenseContract> licenses = new ArrayList<TradeLicenseContract>();
 
 }

@@ -180,7 +180,7 @@ class ConstructionTypes extends Component {
 							<Grid fluid>
 								<Row style={{paddingTop:8, paddingBottom:4}}>
 									<Col xs={12} md={6}>
-										{this.state.documentType.length ==0 && <div>No files to upload</div>}
+										{this.state.documentType.length ==0 && <div>{translate('pt.create.groups.documentUpload.noFilesToUpload')}</div>}
 									  {this.state.documentType.length !=0 && this.state.documentType.map((item, index)=>(
 										  <Row style={{margin:'10px 0'}}>
 											<Col xs={12} md={6}>

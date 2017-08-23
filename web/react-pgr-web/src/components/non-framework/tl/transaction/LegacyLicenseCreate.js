@@ -956,16 +956,13 @@ if(property == "licenses[0].categoryId"){
     let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler} = this;
 
 
-//console.log(formData && formData.licenses && formData.licenses[0] && formData.licenses[0].feeDetails);
-
-
     return (
       <div className="Report">
       <h3 style={{"textAlign": "center"}}>Create Legacy Trade License</h3>
         <form onSubmit={(e) => {
           create(e)
         }}>
-        {!_.isEmpty(mockData) && moduleName && actionName && <ShowFields
+        {!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] && <ShowFields
                                     groups={mockData[`${moduleName}.${actionName}`].groups}
                                     noCols={mockData[`${moduleName}.${actionName}`].numCols}
                                     ui="google"

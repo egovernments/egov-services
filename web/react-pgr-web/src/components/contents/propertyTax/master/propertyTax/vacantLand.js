@@ -145,7 +145,7 @@ class VacantLand extends Component {
 
     return (<div>
 			<Card className="uiCard">
-			  <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Vacant Land Details</div>} />
+			  <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate('pt.create.groups.vacantLand.fields.vacantLandDetails')}</div>} />
 			  <CardText style={styles.reducePadding}>
 				  
 						  <Grid fluid>

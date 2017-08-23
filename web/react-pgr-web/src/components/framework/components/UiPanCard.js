@@ -11,7 +11,7 @@ export default class UiPanCard extends Component {
 			case 'google': 
 				return (
 					<TextField 
-						floatingLabelStyle={{"color": item.isDisabled ? "#A9A9A9" : "#696969", "fontSize": "20px"}}
+						floatingLabelStyle={{"color": item.isDisabled ? "#A9A9A9" : "#696969", "fontSize": "20px", "white-space": "nowrap"}}
 						inputStyle={{"color": "#5F5C57"}}
 						floatingLabelFixed={true} 
 						style={{"display": (item.hide ? 'none' : 'inline-block')}}

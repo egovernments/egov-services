@@ -87,4 +87,7 @@ public class PropertiesManager {
 
     @Value("${egov.services.hr_masters_service.hrconfigurations.key}")
     private String hrMastersServiceConfigurationsKey;
+
+    @Value("${egov.services.hr_masters_service.hrconfigurations.compensatorykey}")
+    private String hrMastersServiceCompensatoryConfigurationKey;
 }

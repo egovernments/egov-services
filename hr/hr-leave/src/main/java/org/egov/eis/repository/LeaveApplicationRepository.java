@@ -75,12 +75,12 @@ public class LeaveApplicationRepository {
 
     @Autowired
     private HRStatusService hrStatusService;
-    
+
     @Autowired
     private UserService userService;
 
     public List<LeaveApplication> findForCriteria(final LeaveApplicationGetRequest leaveApplicationGetRequest,
-            final RequestInfo requestInfo) {
+                                                  final RequestInfo requestInfo) {
         final List<Object> preparedStatementValues = new ArrayList<Object>();
         final String queryStr = leaveApplicationQueryBuilder.getQuery(leaveApplicationGetRequest, preparedStatementValues,
                 requestInfo);
@@ -102,7 +102,7 @@ public class LeaveApplicationRepository {
                 leaveApplicationRequest.getRequestInfo());
         for (LeaveApplication leaveApplication : leaveApplicationRequest.getLeaveApplication()) {
             leaveApplication.setStateId(stateId);
-            final Object[] obj = new Object[] { leaveApplication.getApplicationNumber(), leaveApplication.getEmployee(),
+            final Object[] obj = new Object[]{leaveApplication.getApplicationNumber(), leaveApplication.getEmployee(),
                     leaveApplication.getLeaveType().getId(),
                     leaveApplication.getFromDate(), leaveApplication.getToDate(), leaveApplication.getCompensatoryForDate(),
                     leaveApplication.getLeaveDays(),
@@ -110,7 +110,7 @@ public class LeaveApplicationRepository {
                     leaveApplication.getReason(),
                     leaveApplication.getStatus(), leaveApplication.getStateId(),
                     userResponse.getUsers().get(0).getId(),
-                    now, userResponse.getUsers().get(0).getId(), now, leaveApplication.getTenantId() };
+                    now, userResponse.getUsers().get(0).getId(), now, leaveApplication.getTenantId()};
             jdbcTemplate.update(leaveApplicationInsertQuery, obj);
         }
         return leaveApplicationRequest;
@@ -125,7 +125,7 @@ public class LeaveApplicationRepository {
                 leaveApplicationRequest.getRequestInfo());
         leaveApplication.setStateId(Long.valueOf(task.getId()));
         leaveApplicationStatusChange(leaveApplication, leaveApplicationRequest.getRequestInfo());
-        final Object[] obj = new Object[] { leaveApplication.getApplicationNumber(), leaveApplication.getEmployee(),
+        final Object[] obj = new Object[]{leaveApplication.getApplicationNumber(), leaveApplication.getEmployee(),
                 leaveApplication.getLeaveType().getId(),
                 leaveApplication.getFromDate(), leaveApplication.getToDate(), leaveApplication.getCompensatoryForDate(),
                 leaveApplication.getLeaveDays(),
@@ -133,7 +133,7 @@ public class LeaveApplicationRepository {
                 leaveApplication.getReason(),
                 leaveApplication.getStatus(), Long.valueOf(task.getId()),
                 userResponse.getUsers().get(0).getId(), now, leaveApplication.getId(),
-                leaveApplication.getTenantId() };
+                leaveApplication.getTenantId()};
         jdbcTemplate.update(leaveApplicationInsertQuery, obj);
         return leaveApplication;
     }
@@ -159,17 +159,30 @@ public class LeaveApplicationRepository {
     }
 
     public List<LeaveApplication> getLeaveApplicationForDateRange(LeaveApplication leaveApplication,
-            final RequestInfo requestInfo) {
+                                                                  final RequestInfo requestInfo) {
         final String leaveApplicationGetForDateRangeQuery = leaveApplicationQueryBuilder.getLeaveApplicationForDateRangeQuery();
-        final Object[] obj = new Object[] {
+        final Object[] obj = new Object[]{
                 leaveApplication.getFromDate(), leaveApplication.getToDate(),
                 leaveApplication.getFromDate(), leaveApplication.getToDate(),
                 leaveApplication.getEmployee(), hrStatusService.getHRStatuses(LeaveStatus.CANCELLED.toString(),
-                        leaveApplication.getTenantId(), requestInfo).get(0).getId(),
+                leaveApplication.getTenantId(), requestInfo).get(0).getId(),
                 leaveApplication.getId() == null ? -1 : leaveApplication.getId(),
-                leaveApplication.getTenantId() };
+                leaveApplication.getTenantId()};
         final List<LeaveApplication> leaveApplications = jdbcTemplate.query(leaveApplicationGetForDateRangeQuery, obj,
                 leaveApplicationRowMapper);
         return leaveApplications;
     }
+
+
+    public LeaveApplication getLeaveApplicationForDate(Long employeeId, Date compensatoryDate,
+                                                       String tenantId) {
+        final List<Object> preparedStatementValues = new ArrayList<>();
+        preparedStatementValues.add(employeeId);
+        preparedStatementValues.add(compensatoryDate);
+        preparedStatementValues.add(tenantId);
+        final List<LeaveApplication> leaveApplications = leaveApplicationQueryBuilder.getLeaveApplicationForCompensatoryDate(employeeId, compensatoryDate, tenantId);
+        return leaveApplications.isEmpty() ? null : leaveApplications.get(0);
+    }
+
+
 }

@@ -40,14 +40,6 @@
 
 package org.egov.eis.repository;
 
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import org.egov.eis.model.Attendance;
 import org.egov.eis.model.AttendanceType;
 import org.egov.eis.repository.builder.AttendanceQueryBuilder;
@@ -62,6 +54,14 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public class AttendanceRepository {
@@ -88,6 +88,12 @@ public class AttendanceRepository {
         return attendances;
     }
 
+    public List<Attendance> findByCriteria(final AttendanceGetRequest attendanceGetRequest, final List<java.util.Date> holidayDates) throws ParseException {
+        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        final List<Attendance> attendances = attendanceQueryBuilder.getAttendanceQuery(attendanceGetRequest, holidayDates, preparedStatementValues);
+        return attendances;
+    }
+
     @SuppressWarnings("static-access")
     public AttendanceType findAttendanceTypeByCode(final String code, final String tenantId) {
         final List<Object> preparedStatementValues = new ArrayList<Object>();
@@ -103,7 +109,7 @@ public class AttendanceRepository {
     }
 
     public boolean checkAttendanceByEmployeeAndDate(final Long employee, final java.util.Date attendanceDate,
-            final String tenantId) {
+                                                    final String tenantId) {
         final List<Object> preparedStatementValues = new ArrayList<Object>();
         preparedStatementValues.add(employee);
         preparedStatementValues.add(attendanceDate);

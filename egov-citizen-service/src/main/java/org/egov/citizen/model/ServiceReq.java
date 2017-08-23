@@ -30,4 +30,5 @@ public class ServiceReq {
 	private Object backendServiceDetails;
 	private AuditDetails auditDetails;
 	private String action;
+	private String consumerCode;
 }

@@ -33,6 +33,7 @@ public class ResponseRepository {
 					Object res = JsonPath.read(response, results.get(1));
 					return res;
 				}
+				return responseObj;
 			}
 		}
 	   return "";	

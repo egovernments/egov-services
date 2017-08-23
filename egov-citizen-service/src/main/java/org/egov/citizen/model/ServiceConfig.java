@@ -9,6 +9,7 @@ public class ServiceConfig {
 
 	private String serviceCode;
 	private SearchDemand searchDemand;
+	private String applicationFee;
 	
  
 }

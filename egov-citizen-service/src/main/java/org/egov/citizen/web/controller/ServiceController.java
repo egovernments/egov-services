@@ -24,8 +24,6 @@ import org.egov.citizen.web.errorhandlers.Error;
 import org.egov.citizen.web.errorhandlers.ErrorResponse;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +41,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
@@ -123,45 +120,47 @@ public class ServiceController {
 
 		List<ServiceConfig> list = serviceConfigs.getServiceConfigs();
 
-		final Configuration configuration = Configuration.builder().jsonProvider(new JacksonJsonNodeJsonProvider())
-				.mappingProvider(new JacksonMappingProvider()).build();
-
 		String url = "";
-		String[] results = null;
 		SearchDemand searchDemand = null;
 		for (ServiceConfig serviceConfig : list) {
 			if (serviceConfig.getServiceCode().equals(servcieReq.getServiceCode())) {
 				searchDemand = serviceConfig.getSearchDemand();
+				String applicationFee= serviceConfig.getApplicationFee();
 				url = searchDemand.getCreateDemandRequest().getUrl();
+				List<String> results = searchDemand.getResult();
 				String demandRequest = searchDemand.getCreateDemandRequest().getDemandRequest();
 
+				StringBuilder builder = new StringBuilder();
+				builder.append(searchDemand.getUrl()).append("?consumerCode="+servcieReq.getConsumerCode()+"&tenantId="+servcieReq.getTenantId());
+				RequestInfoWrapper requestInfo =  citizenService.getRequestInfo(config);
+				Object response = restTemplate.postForObject(builder.toString(), requestInfo, Object.class);
+				
 				JSONObject jObject;
 				try {
 					jObject = new JSONObject(demandRequest);
-					
-					jObject.put("RequestInfo", "{"+citizenService.getRequestInfo(config).getRequestInfo().toString()+"}");
 
-					for(Value value: servcieReq.getAttributeValues()){
-					
-					if(value.getKey().equals("consumerCode")){
-						jObject.getJSONArray("Demands").getJSONObject(0).put("consumerCode",value.getValue());
-				
-					} else if(value.getKey().equals("businessService")){
-						jObject.getJSONArray("Demands").getJSONObject(0).put("businessService",value.getValue());
-					} else if(value.getKey().equals("taxPeriodFrom")){
+					jObject.put("RequestInfo", JsonPath.read(config, "$.requestInfo"));
+
+					for (Value value : servcieReq.getAttributeValues()) {
+						// todo
 						
-						jObject.getJSONArray("Demands").getJSONObject(0).put("taxPeriodFrom",value.getValue());
-					}else if(value.getKey().equals("taxPeriodTo")){
-						
-						jObject.getJSONArray("Demands").getJSONObject(0).put("taxPeriodTo",value.getValue());
-					}
-					
-					System.out.println("jObject" + jObject);
-					
+							jObject.getJSONArray("Demands").getJSONObject(0).put("consumerCode", servcieReq.getConsumerCode());
+							jObject.getJSONArray("Demands").getJSONObject(0).put("tenantId", servcieReq.getTenantId());
+							jObject.getJSONArray("Demands").getJSONObject(0).put("businessService", "CITIZEN");
+							jObject.getJSONArray("Demands").getJSONObject(0).put("businessService", "Test");
+							jObject.getJSONArray("Demands").getJSONObject(0).put("taxPeriodFrom", JsonPath.read(response, "$..Demands[0].taxPeriodFrom"));
+							jObject.getJSONArray("Demands").getJSONObject(0).put("taxPeriodTo", JsonPath.read(response, "$..Demands[0].taxPeriodTo"));
+							jObject.getJSONArray("Demands").getJSONObject(0).put("minimumAmountPayable",JsonPath.read(config, "0"));
+							jObject.getJSONArray("Demands").getJSONObject(0).getJSONArray("demandDetails").getJSONObject(0).put("taxHeadMasterCode", "");
+							jObject.getJSONArray("Demands").getJSONObject(0).getJSONArray("demandDetails").getJSONObject(0).put("taxAmount",applicationFee);
+							jObject.getJSONArray("Demands").getJSONObject(0).getJSONArray("demandDetails").getJSONObject(0).put("collectionAmount", "100");
+							jObject.getJSONArray("Demands").getJSONObject(0).getJSONObject("owner").put("id",2);
+						}
+
+					citizenService.createDemand(url, jObject.toString());
+				} catch (Exception e) {
+
 				}
-			}catch(Exception e){
-				
-			}
 			}
 		}
 
@@ -214,36 +213,35 @@ public class ServiceController {
 
 		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);
 	}
-	
+
 	@PostMapping(value = "/requests/_search")
 	@ResponseBody
 	public ResponseEntity<?> getServiceRequests(@RequestBody RequestInfo requestInfo,
-			@ModelAttribute @Valid ServiceRequestSearchCriteria serviceRequestSearchCriteria,
-			BindingResult errors) {
-		
+			@ModelAttribute @Valid ServiceRequestSearchCriteria serviceRequestSearchCriteria, BindingResult errors) {
+
 		if (errors.hasFieldErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
 		List<ServiceReq> serviceRequests = new ArrayList<>();
-		try{
+		try {
 			serviceRequests = citizenService.getServiceRequests(serviceRequestSearchCriteria);
-		}catch(CustomException e){
+		} catch (CustomException e) {
 			Error error = new Error();
 			error.setCode(e.getCode());
 			error.setMessage(e.getCustomMessage());
 			error.setDescription(e.getDescription());
-			
-			return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);	
+
+			return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
+
 		ServiceReqResponse serviceRes = new ServiceReqResponse();
 		serviceRes.setServiceRequests(serviceRequests);
 		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 		serviceRes.setResponseInfo(responseInfo);
 		return new ResponseEntity<>(serviceRes, HttpStatus.OK);
 	}
-	
+
 	private ErrorResponse populateErrors(BindingResult errors) {
 		ErrorResponse errRes = new ErrorResponse();
 		Error error = new Error();

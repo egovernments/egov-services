@@ -62,6 +62,9 @@ public class CitizenService {
 	
 	@Autowired
 	private CitizenServiceRepository citizenServiceRepository;
+	
+	@Autowired
+	private RestTemplate restTemaplate;
 
 	public List<Value> getQueryParameterList(List<ServiceConfig> list, String serviceCode, Object config) {
 
@@ -144,6 +147,16 @@ public class CitizenService {
 		
 		RequestInfoWrapper requestInfo =  getRequestInfo(config);
 		Object response = responseRepository.generateResponseObject(url, requestInfo, results);
+		
+		return response;
+	}
+	
+	public Object createDemand(String url,String demand){
+		
+		
+		Object response = restTemaplate.postForObject(url, demand,	Object.class);
+		
+		System.out.println("response" + response);
 		
 		return response;
 	}

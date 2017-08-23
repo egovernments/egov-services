@@ -106,7 +106,7 @@ public class WaterMasterConsumer {
 
     @Autowired
     private PropertyUsageTypeService propUsageTypeService;
-    
+
     @Autowired
     private ServiceChargeService serviceChargeService;
 
@@ -166,8 +166,8 @@ public class WaterMasterConsumer {
             "${kafka.topics.meterwaterrates.update.name}", "${kafka.topics.metercost.create.name}",
             "${kafka.topics.metercost.update.name}", "${kafka.topics.meterstatus.create.name}",
             "${kafka.topics.meterstatus.update.name}", "${kafka.topics.nonmeterwaterrates.create.name}",
-            "${kafka.topics.nonmeterwaterrates.update.name}","${kafka.topics.servicecharge.create.name}",
-    "${kafka.topics.servicecharge.update.name}"})
+            "${kafka.topics.nonmeterwaterrates.update.name}", "${kafka.topics.servicecharge.create.name}",
+            "${kafka.topics.servicecharge.update.name}" })
 
     public void processMessage(final Map<String, Object> consumerRecord,
             @Header(KafkaHeaders.RECEIVED_TOPIC) final String topic) {
@@ -224,13 +224,15 @@ public class WaterMasterConsumer {
             } else if (applicationProperties.getUpdateMeterStatusTopicName().equals(topic)) {
                 log.info("Consuming MeterStatusUpdate Request");
                 meterStatusService.updateMeterStatus(objectMapper.convertValue(consumerRecord, MeterStatusReq.class));
-            }  else if (applicationProperties.getCreateServiceChargeTopicName().equals(topic)){
+            } else if (applicationProperties.getCreateServiceChargeTopicName().equals(topic)) {
                 log.info("Consuming createServiceChargeRequest");
-                serviceChargeService.createServiceCharge(objectMapper.convertValue(consumerRecord, ServiceChargeReq.class));
-            }else if (applicationProperties.getUpdateServiceChargeTopicName().equals(topic)){
+                serviceChargeService
+                        .createServiceCharge(objectMapper.convertValue(consumerRecord, ServiceChargeReq.class));
+            } else if (applicationProperties.getUpdateServiceChargeTopicName().equals(topic)) {
                 log.info("Consuming updateServiceChargeRequest");
-                serviceChargeService.updateServiceCharge(objectMapper.convertValue(consumerRecord, ServiceChargeReq.class));
-            }else if (applicationProperties.getCreateSourceTypeTopicName().equals(topic))
+                serviceChargeService
+                        .updateServiceCharge(objectMapper.convertValue(consumerRecord, ServiceChargeReq.class));
+            } else if (applicationProperties.getCreateSourceTypeTopicName().equals(topic))
                 waterSourceTypeService.create(objectMapper.convertValue(consumerRecord, SourceTypeRequest.class));
             else if (applicationProperties.getUpdateSourceTypeTopicName().equals(topic))
                 waterSourceTypeService.update(objectMapper.convertValue(consumerRecord, SourceTypeRequest.class));
@@ -253,9 +255,11 @@ public class WaterMasterConsumer {
             else if (applicationProperties.getUpdateMeterWaterRatesTopicName().equals(topic))
                 meterWaterRatesService.update(objectMapper.convertValue(consumerRecord, MeterWaterRatesRequest.class));
             else if (applicationProperties.getCreateNonMeterWaterRatesTopicName().equals(topic))
-                nonMeterWaterRatesService.create(objectMapper.convertValue(consumerRecord, NonMeterWaterRatesReq.class));
+                nonMeterWaterRatesService
+                        .create(objectMapper.convertValue(consumerRecord, NonMeterWaterRatesReq.class));
             else if (applicationProperties.getUpdateNonMeterWaterRatesTopicName().equals(topic))
-                nonMeterWaterRatesService.update(objectMapper.convertValue(consumerRecord, NonMeterWaterRatesReq.class));
+                nonMeterWaterRatesService
+                        .update(objectMapper.convertValue(consumerRecord, NonMeterWaterRatesReq.class));
         } catch (final Exception exception) {
             log.debug("processMessage:" + exception);
             throw exception;

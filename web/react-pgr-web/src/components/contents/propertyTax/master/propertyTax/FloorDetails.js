@@ -424,7 +424,7 @@ calcArea = (e, type) => {
 
 handleAge = (year) => {
 	
-	let {handleChangeFloor} = this.props;
+	let {handleChangeNextOne} = this.props;
 		
 	let yr = year.split('/');
 	
@@ -441,7 +441,7 @@ handleAge = (year) => {
 						value: res.depreciations[0].code
 					}
 				}
-				handleChangeFloor(e, "floor","age", true, "")
+				handleChangeNextOne(e, "floor","age", false, "")
 			}	
 		}).catch((err)=> {
 		  console.log(err)

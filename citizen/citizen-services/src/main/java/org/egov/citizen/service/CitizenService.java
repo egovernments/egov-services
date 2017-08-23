@@ -265,6 +265,8 @@ public class CitizenService {
 			LOGGER.info("Response for Dues..: "+response);
 			
 			serviceReq.setBackendServiceDetails(backendServiceDetails.toString());
+			serviceReq.setTenantId(receiptReq.getTenantId());
+			serviceReq.setServiceRequestId(receiptReq.getServiceRequestId());
 			ServiceReqRequest serviceReqRequest = new ServiceReqRequest();
 			serviceReqRequest.setServiceReq(serviceReq);
 			serviceReqRequest.setRequestInfo(receiptReq.getRequestInfo());

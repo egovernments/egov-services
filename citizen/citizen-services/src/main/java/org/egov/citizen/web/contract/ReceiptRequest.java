@@ -56,5 +56,8 @@ public class ReceiptRequest {
 	@JsonProperty("consumerCode")
 	private String consumerCode;
 	
+	@JsonProperty("serviceRequestId")
+	private String serviceRequestId;
+	
 	
 }

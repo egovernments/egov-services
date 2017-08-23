@@ -297,6 +297,7 @@ var localization_EN_Data = {
     "wc.create.demands":"Demand",
     "wc.create.demand.basicDetails":"Basic Details",
     "wc.create.demand.applicantParticular":"Applicant Particulars",
+    "wc.create.error":"Collection Amount cannot be greater than Tax Amount.",
 
 
 
@@ -2086,6 +2087,7 @@ var localization_MR_Data = {
     "wc.create.demand.applicantParticular":"Applicant Particulars-Marathi",
     "employee.createPosition.groups.fields.outsourcepost.value1": "Yes-Marathi",
     "employee.createPosition.groups.fields.outsourcepost.value2": "No-Marathi",
+    "wc.create.error":"Collection Amount cannot be greater than Tax Amount.-Marathi",
 
     ﻿﻿"pgr.0001":"अक्षांश / रेखांश किंवा क्रॉस हायरारकी संकेतांक आवश्यक आहे",
 "pgr.0002":"अक्षांश / रेखांश किंवा क्रॉस हायरारकी संकेतांक आवश्यक आहे",

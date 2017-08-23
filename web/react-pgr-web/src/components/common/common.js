@@ -297,6 +297,7 @@ var localization_EN_Data = {
     "wc.create.demands":"Demand",
     "wc.create.demand.basicDetails":"Basic Details",
     "wc.create.demand.applicantParticular":"Applicant Particulars",
+    "wc.create.error":"Collection Amount cannot be greater than Tax Amount.",
 
 
 
@@ -502,8 +503,30 @@ var localization_EN_Data = {
 	"pt.create.groups.assessmentDetails.newProperty": "New Property",
 	"pt.create.groups.assessmentDetails.bifurcation": "Bifurcation",
 	"pt.create.groups.assessmentDetails.bifurcation": "None",
-
-
+	"pt.create.groups.workflow":"Workflow",
+	"pt.create.groups.workflow.departmentName": "Department Name",
+	"pt.create.groups.workflow.designationName": "Designation Name",
+	"pt.create.groups.workflow.approverName": "Approver Name",
+	"pt.create.groups.workflow.comment": "Comment",
+	"pt.create.groups.createNewProperty": "Create New Property",
+	"pt.create.groups.ownerDetails.fields.male": "Male",
+	"pt.create.groups.ownerDetails.fields.female": "Female",
+	"pt.create.groups.ownerDetails.fields.Others": "Others",
+	"pt.create.groups.vacantLand.fields.vacantLandDetails":"Vacant Land Details",
+	"pt.create.groups.documentUpload.noFilesToUpload": "No files to upload",
+	"pt.create.groups.addDemand.demandError":"Collection entered should be equal to or less than the Demand",
+	"pt.create.groups.addDemand.demand":"Demand",
+	"pt.create.groups.addDemand.collection":"Collection",
+	"pt.create.groups.addDemand.period":"Period",
+	"pt.create.groups.floorDetails.fields.flat":"Flat",
+    "pt.create.groups.floorDetails.fields.room":"Room",
+	"pt.create.groups.floorDetails.fields.basement3":"Basement-3",
+	"pt.create.groups.floorDetails.fields.basement2":"Basement-2",
+	"pt.create.groups.floorDetails.fields.basement1":"Basement-1",
+	"pt.create.groups.floorDetails.fields.groundFloor": "Ground Floor",
+	"pt.create.groups.floorDetails.fields.yes": "Yes",
+	"pt.create.groups.floorDetails.fields.no": "No",
+	
 
     //employee Object
     "employee.Employee.fields.code": "Code",
@@ -806,7 +829,7 @@ var localization_EN_Data = {
     "tl.create.licenses.groups.TradeDetails.TradeCommencementDate": "Trade Commencement Date",
     "tl.create.licenses.groups.TradeDetails.licenseValidFromDate": "License Valid From Date",
     "tl.create.licenses.groups.TradeDetails.TraderOwnerProperty": "Trader is not the owner of the Property",
-    "tl.create.licenses.groups.agreementDetails.agreementDate": "Date of Execution", 
+    "tl.create.licenses.groups.agreementDetails.agreementDate": "Date of Execution",
     "tl.create.licenses.groups.agreementDetails.agreementNo": "Registered/Non Registered Document No",
     "tl.create.licenses.groups.FeeDetails": "Fee Details",
     "tl.create.license.table.financialYear": "Financial Year",
@@ -909,6 +932,11 @@ var localization_EN_Data = {
   "tl.view.licenses.groups.Remarks": "Remarks",
   "tl.view.licenses.groups.TradeCommencementDate": "Trade Commencement Date eg:dd/mm/yyyy",
   "tl.view.licenses.groups.TraderOwnerProperty": "Trader Owner Property",
+  "tl.search.groups.adminWardName":"Admin Ward",
+  "tl.search.result.groups.validityYears":"Validity Years",
+  "tl.search.result.groups.licenseStatus":"License Status",
+  "tl.search.result.groups.workflowOwnerName":"Workflow Owner Name",
+  "tl.licenses.view.groups.tradeDetails":"Trade Details",
 
     "wc.create.groups.applicationParticular.title": "Application Particular",
     "wc.create.groups.applicationParticular.title": "Application Particular",
@@ -1601,7 +1629,7 @@ var localization_MR_Data = {
     "pt.create.groups.assessmentDetails.fields.extentOfSite": "साइटची व्याप्ती",
     "pt.create.groups.assessmentDetails.fields.propertySubType": "मालमत्ता उप प्रकार",
 
-	
+
 	//pt construction details
 	"pt.create.groups.constructionDetails" : "Construction Details",
 	"pt.create.groups.acknowledgement.forwarded": "Forwarded Successfully",
@@ -1614,7 +1642,31 @@ var localization_MR_Data = {
 	"pt.create.groups.assessmentDetails.newProperty": "New Property",
 	"pt.create.groups.assessmentDetails.bifurcation": "Bifurcation",
 	"pt.create.groups.assessmentDetails.bifurcation": "None",
+	"pt.create.groups.workflow":"Workflow",
+	"pt.create.groups.workflow.departmentName": "Department Name",
+	"pt.create.groups.workflow.designationName": "Designation Name",
+	"pt.create.groups.workflow.approverName": "Approver Name",
+	"pt.create.groups.workflow.comment": "Comment",
+	"pt.create.groups.createNewProperty": "Create New Property",
+	"pt.create.groups.ownerDetails.fields.male": "Male",
+	"pt.create.groups.ownerDetails.fields.female": "Female",
+	"pt.create.groups.ownerDetails.fields.Others": "Others",
+	"pt.create.groups.vacantLand.fields.vacantLandDetails":"Vacant Land Details",
+	"pt.create.groups.documentUpload.noFilesToUpload": "No files to upload",
+	"pt.create.groups.addDemand.demandError":"Collection entered should be equal to or less than the Demand",
+	"pt.create.groups.addDemand.demand":"Demand",
+	"pt.create.groups.addDemand.collection":"Collection",
+	"pt.create.groups.addDemand.period":"Period",
+	"pt.create.groups.floorDetails.fields.flat":"Flat",
+    "pt.create.groups.floorDetails.fields.room":"Room",
+	"pt.create.groups.floorDetails.fields.basement3":"Basement-3",
+	"pt.create.groups.floorDetails.fields.basement2":"Basement-2",
+	"pt.create.groups.floorDetails.fields.basement1":"Basement-1",
+	"pt.create.groups.floorDetails.fields.groundFloor": "Ground Floor",
+	"pt.create.groups.floorDetails.fields.yes": "Yes",
+	"pt.create.groups.floorDetails.fields.no": "No",
 	
+
 	﻿"pt.create.groups.assessmentDetails":"मूल्यांकन तपशील",
 	"wc.crete.Slabs":"स्लॅब्स",
 	"reports.pgr.complaint.crn":"तक्रार नोंदणी क्रमांक",
@@ -2036,6 +2088,7 @@ var localization_MR_Data = {
     "wc.create.demand.applicantParticular":"Applicant Particulars-Marathi",
     "employee.createPosition.groups.fields.outsourcepost.value1": "Yes-Marathi",
     "employee.createPosition.groups.fields.outsourcepost.value2": "No-Marathi",
+    "wc.create.error":"Collection Amount cannot be greater than Tax Amount.-Marathi",
 
     ﻿﻿"pgr.0001":"अक्षांश / रेखांश किंवा क्रॉस हायरारकी संकेतांक आवश्यक आहे",
 "pgr.0002":"अक्षांश / रेखांश किंवा क्रॉस हायरारकी संकेतांक आवश्यक आहे",

@@ -625,7 +625,7 @@ createActivate = () => {
 
 	  return(
 		  <div className="createProperty">
-				<h3 style={{padding:15}}>Create New Property</h3>
+				<h3 style={{padding:15}}>{translate('pt.create.groups.createNewProperty')}</h3>
 			  <form onSubmit={(e) => {search(e)}}>
 			
 				  <OwnerDetails />

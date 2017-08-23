@@ -183,8 +183,8 @@ class AddDemand extends Component {
 
     const handleChangeSrchRslt = function(e, name, ind){
       var _emps = Object.assign([], DemandDetailBeans);
-      if(name == "collectionAmount" && _emps[ind]["taxAmount"] < e.target.value) {
-        return cThis.props.toggleSnackbarAndSetText(true, "Collection Amount cannot be greater than Tax Amount.", false, true);
+      if(name == "collectionAmount" && Number(_emps[ind]["taxAmount"]) < Number(e.target.value)) {
+        return cThis.props.toggleSnackbarAndSetText(true, translate("wc.create.error"), false, true);
       }
 
       _emps[ind][name] = e.target.value;

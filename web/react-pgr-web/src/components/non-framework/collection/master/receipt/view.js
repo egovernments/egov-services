@@ -304,6 +304,30 @@ class Report extends Component {
       // doc.rect(x, y, w, h)
       // doc.rect(x, (h*1)+rectGap, w, h)
       // doc.rect(x, (h*2)+rectGap+5, w, h)
+      if (localStorage.getItem('type') != 'EMPLOYEE') {
+        doc.setFontSize(14);
+        doc.setFontType("bold");
+        doc.text(originalX+100, originalY+5,translate(tenantInfo[0].city.name), 'center');
+        doc.text(originalX+170, originalY+5,"Original");
+        doc.setFontType("normal");
+        doc.setFontSize(10);
+        doc.text(originalX+100, originalY+10, "Receipt", 'center');
+
+        var elem = document.getElementById("basic-table1");
+        var res = doc.autoTableHtmlToJson(elem);
+        doc.autoTable(res.columns, res.data, {showHeader:"never",startY: originalY+12});
+
+        elem = document.getElementById("basic-table2");
+        res = doc.autoTableHtmlToJson(elem);
+        doc.autoTable(res.columns, res.data, {startY: doc.autoTable.previous.finalY,theme: "grid"});
+
+        elem = document.getElementById("basic-table3");
+        res = doc.autoTableHtmlToJson(elem);
+        doc.autoTable(res.columns, res.data, {showHeader:"never",startY: doc.autoTable.previous.finalY});
+        doc.save('Receipt-' + getVal("Receipt[0].transactionId") + '.pdf');
+
+      } else {
+
       doc.setFontSize(14);
       doc.setFontType("bold");
       doc.text(originalX+100, originalY+5,translate(tenantInfo[0].city.name), 'center');
@@ -318,12 +342,12 @@ class Report extends Component {
 
       elem = document.getElementById("basic-table2");
       res = doc.autoTableHtmlToJson(elem);
-      doc.autoTable(res.columns, res.data, {startY: doc.autoTable.previous.finalY,theme: "striped"});
+      doc.autoTable(res.columns, res.data, {startY: doc.autoTable.previous.finalY,theme: "grid"});
 
       elem = document.getElementById("basic-table3");
       res = doc.autoTableHtmlToJson(elem);
       doc.autoTable(res.columns, res.data, {showHeader:"never",startY: doc.autoTable.previous.finalY});
-
+        //1 r
       doc.setLineWidth(0.5)
       doc.line(doc.autoTable.previous.finalX+12.5, 25, 210, 25)
 
@@ -341,7 +365,7 @@ class Report extends Component {
 
       elem = document.getElementById("basic-table2");
       res = doc.autoTableHtmlToJson(elem);
-      doc.autoTable(res.columns, res.data, {startY: doc.autoTable.previous.finalY,theme: "striped"});
+      doc.autoTable(res.columns, res.data, {startY: doc.autoTable.previous.finalY,theme: "grid"});
 
       elem = document.getElementById("basic-table3");
       res = doc.autoTableHtmlToJson(elem);
@@ -364,7 +388,7 @@ class Report extends Component {
 
       elem = document.getElementById("basic-table2");
       res = doc.autoTableHtmlToJson(elem);
-      doc.autoTable(res.columns, res.data, {startY: doc.autoTable.previous.finalY,theme: "striped"});
+      doc.autoTable(res.columns, res.data, {startY: doc.autoTable.previous.finalY,theme: "grid"});
 
       elem = document.getElementById("basic-table3");
       res = doc.autoTableHtmlToJson(elem);
@@ -405,10 +429,8 @@ class Report extends Component {
       // elem = document.getElementById("basic-table2");
       // res = doc.autoTableHtmlToJson(elem);
       // doc.autoTable(res.columns, res.data, {startY:doc.autoTable.previous.finalY,theme: "striped"});
-
-
-
        doc.save('Receipt-' + getVal("Receipt[0].transactionId") + '.pdf');
+     }
   }
 
   render() {
@@ -612,7 +634,7 @@ class Report extends Component {
           </Card>
           <Grid>
             <Row>
-                <Col className="text-center" xs={12} md={12} ><IconButton onClick={e=>print()}><i className="material-icons">print</i></IconButton><IconButton onClick={e=>generatePdf()}><i className="material-icons">receipt</i></IconButton></Col>
+                <Col className="text-center" xs={12} md={12} ><span style={{"fontSize": "20px"}}className= "glyphicon glyphicon-print" onClick={e=>print()} ></span>&nbsp;&nbsp;&nbsp;&nbsp;<span className= "glyphicon glyphicon-download-alt" style={{"fontSize": "20px"}} onClick={e=>generatePdf()} ></span></Col>
             </Row>
           </Grid>
           </div>

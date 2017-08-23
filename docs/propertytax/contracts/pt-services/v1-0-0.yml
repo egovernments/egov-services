@@ -877,6 +877,7 @@ definitions:
     - usage
     - occupancyType
     - structure
+	- occupancyDate
     
   WorkFlowDetails:
     type: object

@@ -89,7 +89,7 @@ public class WaterConnectionRowMapper {
 				prop.setEmail(rs.getString("emailid"));
 			}
 			resolvePropertyUsageTypeNames(rs, prop);
-			if(rs.getString("conn_billtype").equals(METERED)) { 
+			if(rs.getString("conn_billtype").equals(METERED) && rs.getBoolean("conn_islegacy")) { 
 				Meter meter = Meter.builder().meterMake(rs.getString("metermake"))
 						.meterCost(rs.getString("metercost"))
 						.meterSlNo(rs.getString("meterslno"))
@@ -183,6 +183,7 @@ public class WaterConnectionRowMapper {
 			if (null != execDate) {
 				connection.setExecutionDate(execDate);
 			}
+			connection.setSubUsageTypeId(rs.getString("subusagetype"));
 		} catch (Exception ex) {
 			LOGGER.error("Exception encountered while mapping the Result Set in Mapper : " + ex);
 		}

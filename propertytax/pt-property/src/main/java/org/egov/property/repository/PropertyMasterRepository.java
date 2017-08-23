@@ -759,7 +759,7 @@ public class PropertyMasterRepository {
 			usageType.setActive(usageData.getActive());
 			usageType.setIsResidential(usageData.getIsResidential());
 			usageType.setOrderNumber(usageData.getOrderNumber());
-			usageType.setService(usageData.getService());
+			usageType.setService(usageType.getService());
 			usageType.setAuditDetails(usageData.getAuditDetails());
 			usageType.setDescription(usageData.getDescription());
 			usageType.setName(usageData.getName());

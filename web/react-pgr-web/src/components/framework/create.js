@@ -629,7 +629,12 @@ class Report extends Component {
                         obj["value"]=values[k];
                         dropDownData.push(obj);
                     }
-                    setDropDownData(value.jsonPath,dropDownData);
+
+                    dropDownData.sort(function(s1, s2) {
+                      return (s1.value < s2.value) ? -1 : (s1.value > s2.value) ? 1 : 0;
+                    });
+                    dropDownData.unshift({key: null, value: "-- Please Select --"});
+                    setDropDownData(value.jsonPath, dropDownData);
                   }
                 },function(err) {
                     console.log(err);

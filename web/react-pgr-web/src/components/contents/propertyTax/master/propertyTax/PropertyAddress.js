@@ -272,7 +272,7 @@ class PropertyAddress extends Component {
                                           </Col>
 										  <Col xs={12} md={3} sm={6}>
                                               <TextField  className="fullWidth"
-                                                  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.doorNo')+' *'}
+                                                  floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.doorNo')}<span style={{"color": "#FF0000"}}> *</span></span>}
 												  hintText="301"
                                                   errorText={fieldErrors.doorNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.doorNo}</span> : ""}
                                                   value={propertyAddress.doorNo ? propertyAddress.doorNo : ""}
@@ -332,7 +332,7 @@ class PropertyAddress extends Component {
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.zoneNo')+' *'}
+                                                  floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.zoneNo')}<span style={{"color": "#FF0000"}}> *</span></span>}
                                                   errorText={fieldErrors.zoneNo ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.zoneNo}</span>: ""}
                                                   value={propertyAddress.zoneNo ? propertyAddress.zoneNo:""}
                                                   onChange={(event, index, value) => {
@@ -355,7 +355,7 @@ class PropertyAddress extends Component {
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.wardNo')+' *'}
+                                                  floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.wardNo')}<span style={{"color": "#FF0000"}}> *</span></span>}
                                                   errorText={fieldErrors.wardNo ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.wardNo}</span> : ""}
                                                   value={propertyAddress.wardNo ? propertyAddress.wardNo : ""}
                                                   onChange={(event, index, value) => {
@@ -447,7 +447,7 @@ class PropertyAddress extends Component {
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
                                               <TextField  className="fullWidth"
-                                                  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.pin')+ ' *'}
+                                                  floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.pin')}<span style={{"color": "#FF0000"}}> *</span></span>}
 												  hintText="201301"
                                                   errorText={fieldErrors.pin ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.pin}</span> : ""}
                                                   value={propertyAddress.pin ? propertyAddress.pin : ""}
@@ -461,7 +461,7 @@ class PropertyAddress extends Component {
                                           </Col>
 										  <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.totalFloors')+' *'}
+                                                  floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.totalFloors')}<span style={{"color": "#FF0000"}}> *</span></span>}
                                                   errorText={fieldErrors.totalFloors ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.totalFloors}</span> : ""}
                                                   value={propertyAddress.totalFloors ? propertyAddress.totalFloors : ""}
                                                   onChange={(event, index, value) => {
@@ -515,7 +515,7 @@ class PropertyAddress extends Component {
                                             <div className="addMoreAddress">
                                                 <Col xs={12} md={3} sm={6}>
                                                     <TextField  className="fullWidth"
-                                                        floatingLabelText={translate('pt.create.groups.propertyAddress.fields.doorNo')+' *'}
+                                                        floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.doorNo')}<span style={{"color": "#FF0000"}}> *</span></span>}
 														hintText="302"
                                                         errorText={fieldErrors.cDoorno ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.cDoorno}</span> : ""}
                                                         value={propertyAddress.cDoorno ? propertyAddress.cDoorno : ""}
@@ -533,7 +533,7 @@ class PropertyAddress extends Component {
                                                 </Col>
                                                 <Col xs={12} md={3} sm={6}>
                                                     <TextField  className="fullWidth"
-                                                        floatingLabelText={translate('pt.create.groups.propertyAddress.fields.address1')+' *'}
+                                                        floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.address1')}<span style={{"color": "#FF0000"}}> *</span></span>}
                                                         errorText={fieldErrors.addressTwo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.addressTwo}</span> : ""}
                                                         value={propertyAddress.addressTwo ? propertyAddress.addressTwo : ""}
                                                         onChange={(e) => handleChange(e, "addressTwo", true, '')}

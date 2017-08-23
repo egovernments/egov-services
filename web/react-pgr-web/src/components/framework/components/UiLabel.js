@@ -73,7 +73,7 @@ export default class UiLabel extends Component {
             </Col>:""}
             {item.hyperLink && (this.state.value || this.props.getVal(item.jsonPath)) ? 
               (<Col style={{textAlign:"left"}} xs={12}>
-                <FlatButton label={this.state.value || this.props.getVal(item.jsonPath)} primary={true} onClick={() => this.openLink(item)}/>
+                <FlatButton label={this.state.value || this.props.getVal(item.jsonPath)} primary={true}/>
               </Col>) 
               : 
               <Col style={{textAlign:"left"}} xs={12}>{this.state.value || this.props.getVal(item.jsonPath) || "NA"}</Col>}

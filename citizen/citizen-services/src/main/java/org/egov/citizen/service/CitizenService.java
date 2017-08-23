@@ -16,6 +16,7 @@ import org.egov.citizen.model.RequestInfoWrapper;
 import org.egov.citizen.model.SearchDemand;
 import org.egov.citizen.model.ServiceConfig;
 import org.egov.citizen.model.ServiceReq;
+import org.egov.citizen.model.ServiceReqRequest;
 import org.egov.citizen.model.Value;
 import org.egov.citizen.producer.CitizenProducer;
 import org.egov.citizen.repository.BillingServiceRepository;
@@ -264,12 +265,13 @@ public class CitizenService {
 			LOGGER.info("Response for Dues..: "+response);
 			
 			serviceReq.setBackendServiceDetails(backendServiceDetails.toString());
-			
-			
+			ServiceReqRequest serviceReqRequest = new ServiceReqRequest();
+			serviceReqRequest.setServiceReq(serviceReq);
+			serviceReqRequest.setRequestInfo(receiptReq.getRequestInfo());
 			try {
-				LOGGER.info("Object being pushed to kafka queue for update........: "+serviceReq.toString());
+				LOGGER.info("Object being pushed to kafka queue for update........: "+serviceReqRequest.toString());
 				citizenProducer.producer(applicationProperties.getUpdateServiceTopic(),
-						applicationProperties.getUpdateServiceTopicKey(), serviceReq);
+						applicationProperties.getUpdateServiceTopicKey(), serviceReqRequest);
 			} catch (Exception e) {
 				LOGGER.error("Error while pushing to kafka queue. ", e);
 				throw new CustomException(Integer.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),

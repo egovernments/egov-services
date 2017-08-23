@@ -2,21 +2,19 @@ package org.egov.egf.master.domain.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.common.constants.Constants;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.TestConfiguration;
 import org.egov.egf.master.domain.model.Function;
 import org.egov.egf.master.domain.model.FunctionSearch;
 import org.egov.egf.master.domain.repository.FunctionRepository;
-import org.egov.egf.master.web.contract.FunctionContract;
-import org.egov.egf.master.web.requests.FunctionRequest;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -41,88 +39,55 @@ public class FunctionServiceTest {
 	private FunctionRepository functionRepository;
 
 	private BindingResult errors = new BeanPropertyBindingResult(null, null);
-
+	private RequestInfo requestInfo = new RequestInfo();
 	private List<Function> functions = new ArrayList<>();
 
-	@Test
-	public final void test_valid_add() {
-
-		Function expected = getFunction();
-		expected.setParentId(null);
-		functions.add(expected);
-		List<Function> actual = functionService.add(functions, errors);
-		assertEquals(expected, actual.get(0));
+	@Before
+	public void setup() {
 	}
 
 	@Test
-	public final void test_valid_update() {
-
-		Function expected = getFunction();
-		expected.setParentId(null);
-		functions.add(expected);
-		List<Function> actual = functionService.update(functions, errors);
-		assertEquals(expected, actual.get(0));
+	public final void testCreate() {
+		functionService.create(getFunctions(), errors, requestInfo);
 	}
 
 	@Test
-	public final void test_add_to_queue() {
+	public final void testUpdate() {
+		functionService.update(getFunctions(), errors, requestInfo);
+	}
 
-		FunctionRequest request = new FunctionRequest();
-		List<FunctionContract> functions = new ArrayList<>();
-
-		FunctionContract function1 = getFunctionContract();
-		function1.setParentId(null);
+	@Test
+	public final void testCreateInvalid() {
+		Function function1 = Function.builder().id("a").code("code").active(true).parentId(null).level(1).build();
 		functions.add(function1);
-		request.setFunctions(functions);
-		functionService.addToQue(request);
-		verify(functionRepository).add(request);
-	}
-
-	@Test
-	public final void test_validate() {
-
-		List<Function> functions = new ArrayList<>();
-
-		Function function1 = getFunction();
-		functions.add(function1);
-		//functionService.validate(functions, Constants.ACTION_CREATE, errors);
-	//	functionService.validate(functions, Constants.ACTION_UPDATE, errors);
-	}
-
-	@Test
-	public final void test_invalid_Add() {
-
-		Function function1 = Function.builder().id("1").code("001").active(true).parentId(null).level(1)
-				.build();
-		functions.add(function1);
-
-		functionService.add(functions, errors);
+		functionService.create(functions, errors, requestInfo);
 	}
 
 	@Test
 	public final void test_save() {
-		Function expextedResult = getFunction();
+		Function expextedResult = getFunctions().get(0);
 		when(functionRepository.save(any(Function.class))).thenReturn(expextedResult);
-		Function actualResult = functionService.save(getFunction());
+		Function actualResult = functionService.save(getFunctions().get(0));
 		assertEquals(expextedResult, actualResult);
+	}
+
+	@Test
+	public final void testSearch() {
+		List<Function> search = new ArrayList<>();
+		search.add(getFunctionSearch());
+		Pagination<Function> expectedResult = new Pagination<>();
+		expectedResult.setPagedData(search);
+		when(functionRepository.search(any(FunctionSearch.class))).thenReturn(expectedResult);
+		Pagination<Function> actualResult = functionService.search(getFunctionSearch());
+		assertEquals(expectedResult, actualResult);
+
 	}
 
 	@Test
 	public final void test_update() {
-		Function expextedResult = getFunction();
+		Function expextedResult = getFunctions().get(0);
 		when(functionRepository.update(any(Function.class))).thenReturn(expextedResult);
-		Function actualResult = functionService.update(getFunction());
-		assertEquals(expextedResult, actualResult);
-	}
-
-	@Test
-	public final void test_search() {
-		List<Function> search = new ArrayList<>();
-		search.add(getFunctionSearch());
-		Pagination<Function> expextedResult = new Pagination<>();
-		expextedResult.setPagedData(search);
-		when(functionRepository.search(any(FunctionSearch.class))).thenReturn(expextedResult);
-		Pagination<Function> actualResult = functionService.search(getFunctionSearch());
+		Function actualResult = functionService.update(getFunctions().get(0));
 		assertEquals(expextedResult, actualResult);
 	}
 
@@ -148,6 +113,22 @@ public class FunctionServiceTest {
 		functionService.fetchRelated(functions);
 	}
 
+	private List<Function> getFunctions() {
+		List<Function> functions = new ArrayList<Function>();
+		Function function = Function.builder().id("1").name("name").code("code").level(1).active(true).build();
+		function.setTenantId("default");
+		functions.add(function);
+		return functions;
+	}
+
+	private FunctionSearch getFunctionSearch() {
+		FunctionSearch functionSearch = new FunctionSearch();
+		functionSearch.setPageSize(0);
+		functionSearch.setOffset(0);
+		functionSearch.setSortBy("Sort");
+		return functionSearch;
+	}
+
 	private Function getFunction() {
 		Function function = Function.builder().id("1").name("function").code("001").active(true)
 				.parentId(getParentFunction()).level(1).build();
@@ -159,18 +140,4 @@ public class FunctionServiceTest {
 				.level(1).build();
 		return function;
 	}
-
-	private FunctionSearch getFunctionSearch() {
-		FunctionSearch functionSearch = new FunctionSearch();
-		functionSearch.setPageSize(500);
-		functionSearch.setOffset(0);
-		functionSearch.setSortBy("name desc");
-		return functionSearch;
-
-	}
-
-	private FunctionContract getFunctionContract() {
-		return FunctionContract.builder().code("001").name("function").active(true).level(1).build();
-	}
-
 }

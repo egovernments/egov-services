@@ -3,13 +3,13 @@ package org.egov.egf.master.domain.service;
 import java.util.List;
 
 import org.egov.common.constants.Constants;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.Function;
 import org.egov.egf.master.domain.model.FunctionSearch;
 import org.egov.egf.master.domain.repository.FunctionRepository;
-import org.egov.egf.master.web.requests.FunctionRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +28,56 @@ public class FunctionService {
 	@Autowired
 	private SmartValidator validator;
 
+	@Transactional
+	public List<Function> create(List<Function> functions, BindingResult errors, RequestInfo requestInfo) {
+
+		try {
+
+			functions = fetchRelated(functions);
+
+			validate(functions, Constants.ACTION_CREATE, errors);
+
+			if (errors.hasErrors()) {
+				throw new CustomBindException(errors);
+			}
+			for (Function b : functions) {
+				b.setId(functionRepository.getNextSequence());
+				b.add();
+			}
+
+		} catch (CustomBindException e) {
+
+			throw new CustomBindException(errors);
+		}
+
+		return functionRepository.save(functions, requestInfo);
+
+	}
+
+	@Transactional
+	public List<Function> update(List<Function> functions, BindingResult errors, RequestInfo requestInfo) {
+
+		try {
+
+			functions = fetchRelated(functions);
+
+			validate(functions, Constants.ACTION_UPDATE, errors);
+
+			if (errors.hasErrors()) {
+				throw new CustomBindException(errors);
+			}
+			for (Function b : functions) {
+				b.update();
+			}
+
+		} catch (CustomBindException e) {
+
+			throw new CustomBindException(errors);
+		}
+
+		return functionRepository.update(functions, requestInfo);
+
+	}
 
 	private BindingResult validate(List<Function> functions, String method, BindingResult errors) {
 
@@ -41,13 +91,12 @@ public class FunctionService {
 				Assert.notNull(functions, "Functions to create must not be null");
 				for (Function function : functions) {
 					validator.validate(function, errors);
-					
 				}
 				break;
 			case Constants.ACTION_UPDATE:
 				Assert.notNull(functions, "Functions to update must not be null");
 				for (Function function : functions) {
-				        Assert.notNull(function.getId(), "Function ID to update must not be null");
+					Assert.notNull(function.getId(), "Function ID to update must not be null");
 					validator.validate(function, errors);
 				}
 				break;
@@ -75,40 +124,6 @@ public class FunctionService {
 		}
 
 		return functions;
-	}
-
-	@Transactional
-	public List<Function> add(List<Function> functions, BindingResult errors) {
-		functions = fetchRelated(functions);
-		validate(functions, Constants.ACTION_CREATE, errors);
-		if (errors.hasErrors()) {
-			throw new CustomBindException(errors);
-		}
-		for(Function b:functions){
-		    //this is hack to support kafka based persist
-		    b.setId(functionRepository.getNextSequence());
-		    b.add();
-		}
-		return functions;
-
-	}
-
-	@Transactional
-	public List<Function> update(List<Function> functions, BindingResult errors) {
-		functions = fetchRelated(functions);
-		validate(functions, Constants.ACTION_UPDATE, errors);
-		if (errors.hasErrors()) {
-			throw new CustomBindException(errors);
-		}
-	        for(Function b:functions){
-	              b.update();
-	        }
-		return functions;
-
-	}
-
-	public void addToQue(FunctionRequest request) {
-		functionRepository.add(request);
 	}
 
 	public Pagination<Function> search(FunctionSearch functionSearch) {

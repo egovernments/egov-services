@@ -66,55 +66,55 @@ public class FundJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
-	        if (fundSearchEntity.getTenantId() != null) {
-	              if (params.length() > 0) {
-	                  params.append(" and ");
-	              }
-	              params.append("tenantId =:tenantId");
-	              paramValues.put("tenantId", fundSearchEntity.getTenantId());
-	        }
+		if (fundSearchEntity.getTenantId() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("tenantId =:tenantId");
+			paramValues.put("tenantId", fundSearchEntity.getTenantId());
+		}
 		if (fundSearchEntity.getId() != null) {
-                    if (params.length() > 0) {
-                            params.append(" and ");
-                    }
-                    params.append("id =:id");
-                    paramValues.put("id", fundSearchEntity.getId());
-                }
-                if (fundSearchEntity.getCode() != null) {
-                        if (params.length() > 0) {
-                                params.append(" and ");
-                        }
-                        params.append("code =:code");
-                        paramValues.put("code", fundSearchEntity.getCode());
-                }
-                if (fundSearchEntity.getName() != null) {
-                        if (params.length() > 0) {
-                                params.append(" and ");
-                        }
-                        params.append("name =:name");
-                        paramValues.put("name", fundSearchEntity.getName());
-                }
-                if (fundSearchEntity.getIdentifier() != null) {
-                        if (params.length() > 0) {
-                                params.append(" and ");
-                        }
-                        params.append("description =:description");
-                        paramValues.put("description", fundSearchEntity.getIdentifier());
-                }
-                if (fundSearchEntity.getActive() != null) {
-                        if (params.length() > 0) {
-                                params.append(" and ");
-                        }
-                        params.append("active =:active");
-                        paramValues.put("active", fundSearchEntity.getActive());
-                }
-                if (fundSearchEntity.getLevel() != null) {
-                        if (params.length() > 0) {
-                                params.append(" and ");
-                        }
-                        params.append("type =:type");
-                        paramValues.put("type", fundSearchEntity.getLevel());
-                }
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("id =:id");
+			paramValues.put("id", fundSearchEntity.getId());
+		}
+		if (fundSearchEntity.getCode() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("code =:code");
+			paramValues.put("code", fundSearchEntity.getCode());
+		}
+		if (fundSearchEntity.getName() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("name =:name");
+			paramValues.put("name", fundSearchEntity.getName());
+		}
+		if (fundSearchEntity.getIdentifier() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("description =:description");
+			paramValues.put("description", fundSearchEntity.getIdentifier());
+		}
+		if (fundSearchEntity.getActive() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("active =:active");
+			paramValues.put("active", fundSearchEntity.getActive());
+		}
+		if (fundSearchEntity.getLevel() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("type =:type");
+			paramValues.put("type", fundSearchEntity.getLevel());
+		}
 
 		Pagination<Fund> page = new Pagination<>();
 		if (fundSearchEntity.getOffset() != null) {
@@ -124,15 +124,13 @@ public class FundJdbcRepository extends JdbcRepository {
 			page.setPageSize(fundSearchEntity.getPageSize());
 		}
 
-		
 		if (params.length() > 0) {
-		
-		searchQuery = searchQuery.replace(":condition", " where " +
-		params.toString());
-		
-		} else 
-		
-		searchQuery = searchQuery.replace(":condition", "");
+
+			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+
+		} else
+
+			searchQuery = searchQuery.replace(":condition", "");
 
 		searchQuery = searchQuery.replace(":orderby", orderBy);
 

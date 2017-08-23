@@ -1,0 +1,138 @@
+---
+ReportDefinitions:
+- reportName: DemandRegister
+  summary: Demand Register Report
+  version: 1.0.0
+  moduleName: property
+  sourceColumns:
+  - name: upicnumber
+    label: reports.property.upicnumber
+    type: number
+    source: collection
+    showColumn: false
+  - name: propertyaddress
+    label: reports.property.address
+    type: number
+    source: completed
+  - name: PT_TAX
+    label: reports.property.pttax
+    type: string
+    source: collection
+  - name: LIB_CESS
+    label: reports.property.libcess
+    type: number
+    source: seva
+  - name: EDU_CESS
+    label: reports.property.educess
+    type: number
+    source: seva
+  - name: VACANT_TAX
+    label: reports.property.vacanttax
+    type: number
+    source: seva
+  - name: EMP_GUA_CESS
+    label: reports.property.empguacess
+    type: number
+    source: seva
+  - name: LATE_PENALTY
+    label: reports.property.latepenalty
+    type: number
+    source: seva
+  - name: ADVANCE
+    label: reports.property.advance
+    type: number
+    source: seva
+  searchParams:
+  - name: revenueboundary
+    label: reports.property.revenueboundary
+    type: singlevaluelist
+    source: property
+    pattern: 
+    isMandatory: false
+    searchClause: and loc.revenueboundary = $revenueboundary
+  - name: locationboundary
+    label: reports.property.locationboundary
+    type: singlevaluelist
+    source: property
+    pattern:
+    isMandatory: false
+    searchClause: and loc.locationboundary = $locationboundary
+  - name: adminboundary
+    label: reports.property.adminboundary
+    type: singlevaluelist
+    pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=default|$..key|$..object
+    isMandatory: false
+    searchClause: AND EGCL_RECEIPTHEADER.STATUS = $status
+    source: collection
+  query: SELECT ROW_NUMBER() OVER (ORDER BY EGCL_RECEIPTHEADER.RECEIPTNUMBER) AS SERIALNUMBER, EGCL_RECEIPTHEADER.RECEIPTNUMBER AS RECEIPT_NUMBER, EG_DEPARTMENT.NAME AS DEPT_NAME, EGCL_RECEIPTHEADER.TOTALAMOUNT AS RECEIPT_AMOUNT, EGCL_RECEIPTHEADER.CONSUMERCODE AS CONSUMER_CODE,  EGCL_RECEIPTHEADER.RECEIPTTYPE AS RECEIPT_TYPE FROM EGCL_RECEIPTHEADER EGCL_RECEIPTHEADER  INNER JOIN EG_BUSINESSDETAILS EG_BUSINESSDETAILS ON EGCL_RECEIPTHEADER.BUSINESSDETAILS = EG_BUSINESSDETAILS.CODE INNER JOIN EGCL_RECEIPTINSTRUMENT EGCL_RECEIPTINSTRUMENT ON EGCL_RECEIPTHEADER.ID = EGCL_RECEIPTINSTRUMENT.RECEIPTHEADER INNER JOIN EGF_INSTRUMENT EGF_INSTRUMENT ON EGCL_RECEIPTINSTRUMENT.INSTRUMENTHEADER = EGF_INSTRUMENT.ID INNER JOIN EG_DEPARTMENT EG_DEPARTMENT ON  EGCL_RECEIPTHEADER.DEPARTMENT = EG_DEPARTMENT.CODE INNER JOIN EG_USER EGUSER ON EGUSER.ID = EGCL_RECEIPTHEADER.CREATEDBY WHERE   
+         EGF_INSTRUMENT.INSTRUMENTTYPEID = 'Cash' AND EGCL_RECEIPTHEADER.TENANTID=$tenantid 
+  orderBy: ORDER BY RECEIPT_NUMBER;
+ 
+ - reportName: CollectionRegister
+  summary: Collection Register Report
+  version: 1.0.0
+  moduleName: property
+  sourceColumns:
+  - name: upicnumber
+    label: reports.property.upicnumber
+    type: number
+    source: collection
+    showColumn: false
+  - name: propertyaddress
+    label: reports.property.address
+    type: number
+    source: completed
+  - name: PT_TAX
+    label: reports.property.pttax
+    type: string
+    source: collection
+  - name: LIB_CESS
+    label: reports.property.libcess
+    type: number
+    source: seva
+  - name: EDU_CESS
+    label: reports.property.educess
+    type: number
+    source: seva
+  - name: VACANT_TAX
+    label: reports.property.vacanttax
+    type: number
+    source: seva
+  - name: EMP_GUA_CESS
+    label: reports.property.empguacess
+    type: number
+    source: seva
+  - name: LATE_PENALTY
+    label: reports.property.latepenalty
+    type: number
+    source: seva
+  - name: ADVANCE
+    label: reports.property.advance
+    type: number
+    source: seva
+  searchParams:
+  - name: revenueboundary
+    label: reports.property.revenueboundary
+    type: singlevaluelist
+    source: property
+    pattern: 
+    isMandatory: false
+    searchClause: and loc.revenueboundary = $revenueboundary
+  - name: locationboundary
+    label: reports.property.locationboundary
+    type: singlevaluelist
+    source: property
+    pattern:
+    isMandatory: false
+    searchClause: and loc.locationboundary = $locationboundary
+  - name: adminboundary
+    label: reports.property.adminboundary
+    type: singlevaluelist
+    pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=default|$..key|$..object
+    isMandatory: false
+    searchClause: AND EGCL_RECEIPTHEADER.STATUS = $status
+    source: collection
+  query: SELECT ROW_NUMBER() OVER (ORDER BY EGCL_RECEIPTHEADER.RECEIPTNUMBER) AS SERIALNUMBER, EGCL_RECEIPTHEADER.RECEIPTNUMBER AS RECEIPT_NUMBER, EG_DEPARTMENT.NAME AS DEPT_NAME, EGCL_RECEIPTHEADER.TOTALAMOUNT AS RECEIPT_AMOUNT, EGCL_RECEIPTHEADER.CONSUMERCODE AS CONSUMER_CODE,  EGCL_RECEIPTHEADER.RECEIPTTYPE AS RECEIPT_TYPE FROM EGCL_RECEIPTHEADER EGCL_RECEIPTHEADER  INNER JOIN EG_BUSINESSDETAILS EG_BUSINESSDETAILS ON EGCL_RECEIPTHEADER.BUSINESSDETAILS = EG_BUSINESSDETAILS.CODE INNER JOIN EGCL_RECEIPTINSTRUMENT EGCL_RECEIPTINSTRUMENT ON EGCL_RECEIPTHEADER.ID = EGCL_RECEIPTINSTRUMENT.RECEIPTHEADER INNER JOIN EGF_INSTRUMENT EGF_INSTRUMENT ON EGCL_RECEIPTINSTRUMENT.INSTRUMENTHEADER = EGF_INSTRUMENT.ID INNER JOIN EG_DEPARTMENT EG_DEPARTMENT ON  EGCL_RECEIPTHEADER.DEPARTMENT = EG_DEPARTMENT.CODE INNER JOIN EG_USER EGUSER ON EGUSER.ID = EGCL_RECEIPTHEADER.CREATEDBY WHERE   
+         EGF_INSTRUMENT.INSTRUMENTTYPEID = 'Cash' AND EGCL_RECEIPTHEADER.TENANTID=$tenantid 
+  orderBy: ORDER BY RECEIPT_NUMBER;
+ 

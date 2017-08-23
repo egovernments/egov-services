@@ -1525,7 +1525,7 @@ initForm : () => {
 	    validatePropertyOwner: {
         required: {
           current: [],
-          required: ['mobileNumber', 'name', 'gaurdianRelation', 'gaurdian', 'gender' ]
+          required: ['mobileNumber', 'name', 'gender' ]
         },
         pattern: {
           current: [],

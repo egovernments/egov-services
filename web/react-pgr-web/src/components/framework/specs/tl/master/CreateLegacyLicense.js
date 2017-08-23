@@ -18,7 +18,7 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Enter Valid Old License Number (Min: ,Max: )"
+            "patternErrMsg": ""
           },
           {
             "name": "applicationType",

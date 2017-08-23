@@ -3,8 +3,8 @@ serviceConfigs:
    searchDemand:
     url: http://egov-micro-dev.egovernments.org/billing-service/demand/_search&businessService=PT
     queryAppend:
-       - tenantId: $.serviceReq.attributeValues[0].value
-       - consumerCode: $.serviceReq.attributeValues[1].value
+       - 'tenantId: $.serviceReq.attributeValues[0].value'
+       - 'consumerCode: $.serviceReq.attributeValues[1].value'
     result: 
        - $..Demands.length()
        - $..demandDetails[?(@.taxAmount > @.collectionAmount)]           
@@ -23,8 +23,8 @@ serviceConfigs:
    searchDemand:
     url: http://egov-micro-dev.egovernments.org/billing-service/demand/_search&businessService=PT
     queryAppend:
-     - tenantId :$.serviceReq.attributeValues[0].value
-     - consumerCode :$.serviceReq.attributeValues[1].value
+     - 'tenantId :$.serviceReq.attributeValues[0].value'
+     - 'consumerCode :$.serviceReq.attributeValues[1].value'
     result:
       - $..Demands.length()   
       - $..demandDetails[?(@.taxAmount > @.collectionAmount)] 
@@ -43,8 +43,8 @@ serviceConfigs:
    searchDemand:
     url: http://egov-micro-dev.egovernments.org/billing-service/demand/_search&businessService=WC
     queryAppend:
-     - tenantId :$.serviceReq.attributeValues[0].value
-     - consumerCode :$.serviceReq.attributeValues[1].value
+     - 'tenantId :$.serviceReq.attributeValues[0].value'
+     - 'consumerCode :$.serviceReq.attributeValues[1].value'
     result:
       - $..Demands.length()
       - $..demandDetails[?(@.taxAmount > @.collectionAmount)] 

@@ -288,12 +288,12 @@ public class BillService {
 
 		Long currDate = new Date().getTime();
 		//TODO check about arrears late payments ask Ramki to take a look
-
-		if (category.equals(Category.TAX) || category.equals(Category.FEE)) {
+		if (category.equals(Category.TAX) || category.equals(Category.FEE) 
+				|| category.equals(Category.FEE)) {
 
 			if (taxPeriodFrom <= currDate && taxPeriodTo >= currDate)
 				return Purpose.CURRENT_AMOUNT;
-			else if (currDate < taxPeriodFrom)
+			else if (currDate > taxPeriodTo)
 				return Purpose.ARREAR_AMOUNT;
 			else
 				return Purpose.ADVANCE_AMOUNT;

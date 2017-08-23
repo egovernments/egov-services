@@ -40,22 +40,17 @@
 
 package org.egov.eis.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.eis.broker.MovementProducer;
 import org.egov.eis.config.PropertiesManager;
 import org.egov.eis.model.Movement;
 import org.egov.eis.model.enums.MovementStatus;
+import org.egov.eis.model.enums.TransferType;
 import org.egov.eis.model.enums.TypeOfMovement;
 import org.egov.eis.repository.MovementRepository;
 import org.egov.eis.util.ApplicationConstants;
-import org.egov.eis.web.contract.MovementRequest;
-import org.egov.eis.web.contract.MovementResponse;
-import org.egov.eis.web.contract.MovementSearchRequest;
-import org.egov.eis.web.contract.MovementUploadResponse;
-import org.egov.eis.web.contract.RequestInfo;
-import org.egov.eis.web.contract.ResponseInfo;
+import org.egov.eis.web.contract.*;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,8 +60,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class MovementService {
@@ -110,18 +105,19 @@ public class MovementService {
     private PropertiesManager propertiesManager;
 
     public List<Movement> getMovements(final MovementSearchRequest movementSearchRequest,
-            final RequestInfo requestInfo) {
+                                       final RequestInfo requestInfo) {
         return movementRepository.findForCriteria(movementSearchRequest, requestInfo);
     }
 
     public ResponseEntity<?> createMovements(final MovementRequest movementRequest, final String type) {
         final Boolean isExcelUpload = type != null && "upload".equalsIgnoreCase(type);
+
         movementRequest.setType(type);
         final List<Movement> movementsList = validate(movementRequest);
         final List<Movement> successMovementsList = new ArrayList<>();
         final List<Movement> errorMovementsList = new ArrayList<>();
         for (final Movement movement : movementsList)
-            if (movement.getErrorMsg().isEmpty())
+            if (movement.getErrorMsg() == null)
                 successMovementsList.add(movement);
             else
                 errorMovementsList.add(movement);
@@ -158,28 +154,88 @@ public class MovementService {
 
     private List<Movement> validate(final MovementRequest movementRequest) {
         for (final Movement movement : movementRequest.getMovement()) {
-            String errorMsg = "";
-            if (movement.getId() != null && movement.getTypeOfMovement().equals(TypeOfMovement.PROMOTION)
-                    && "Approve".equalsIgnoreCase(movement.getWorkflowDetails().getAction()))
-                errorMsg = validateEmployeeForPromotion(movement, movementRequest.getRequestInfo());
-            movement.setErrorMsg(errorMsg);
+            String message = "";
+            final Employee employee = employeeService.getEmployee(movement, movementRequest.getRequestInfo());
+            //validateEmployeeNextDesignationWithCurrent
+            if (employee != null && employee.getId() != null) {
+                for (Assignment assignment : employee.getAssignments()) {
+                    if (assignment.getFromDate().before(movement.getEffectiveFrom())
+                            && assignment.getToDate().after(movement.getEffectiveFrom()) && movement.getPositionAssigned().equals(assignment.getPosition())) {
+                        message = message + applicationConstants.getErrorMessage(applicationConstants.ERR_MOVEMENT_EMPLOYEE_POSITION_VALIDATE) + ", ";
+                    }
+
+                }
+            } else {
+                message = message + applicationConstants.getErrorMessage(applicationConstants.ERR_MOVEMENT_EMPLOYEE_VALIDATE) + ", ";
+            }
+
+            setErrorMessage(movement, message);
+
+            if (movement.getTypeOfMovement().equals(TypeOfMovement.PROMOTION)) {
+
+
+                //validateEmployeeForPromotion
+                final List<Long> positions = positionService.getPositions(movement, movementRequest.getRequestInfo());
+                if (positions.contains(movement.getPositionAssigned()))
+                    message = applicationConstants.getErrorMessage(ApplicationConstants.ERR_POSITION_NOT_VACANT) + ", ";
+                setErrorMessage(movement, message);
+
+                if (movement.getTypeOfMovement() != null && movement.getTypeOfMovement().toString().equalsIgnoreCase(TypeOfMovement.TRANSFER.toString()) && movement.getPromotionBasis() != null) {
+                    message = message + applicationConstants.getErrorMessage(ApplicationConstants.ERR_MOVEMENT_TYPE_VALIDATE) + ", ";
+                }
+
+                setErrorMessage(movement, message);
+
+                if (movement.getTypeOfMovement() != null && !movement.getTypeOfMovement().toString().equalsIgnoreCase(TypeOfMovement.TRANSFER.toString()) && movement.getPromotionBasis() == null) {
+                    message = message + applicationConstants.getErrorMessage(ApplicationConstants.ERR_MOVEMENT_TYPE_VALIDATE_PROMOTION) + ", ";
+                }
+
+                setErrorMessage(movement, message);
+
+
+                if (movement.getTenantId() == null || movement.getTenantId().isEmpty()) {
+                    message = message + applicationConstants.getErrorMessage(ApplicationConstants.ERR_MOVEMENT_NOT_TENANT) + ", ";
+                }
+
+                setErrorMessage(movement, message);
+            }
+            if (movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER) && movement.getReason() == null) {
+
+                message = message + applicationConstants.getErrorMessage(ApplicationConstants.ERR_MOVEMENT_TRANSFER_REASON_VALIDATE) + ", ";
+                setErrorMessage(movement, message);
+
+            }
+            if (movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER) && !movement.getTransferType().equals(TransferType.TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB) && movement.getTransferedLocation() == null) {
+                message = message + applicationConstants.getErrorMessage(ApplicationConstants.ERR_MOVEMENT_TRANSFER_LOCATION_VALIDATE) + ", ";
+                setErrorMessage(movement, message);
+            }
+            List<Movement> existingMovements = movementRepository.findForExistingMovement(movement, movementRequest.getRequestInfo());
+            if (!existingMovements.isEmpty()) {
+                message = message + applicationConstants.getErrorMessage(ApplicationConstants.ERR_MOVEMENT_EXISTING_EMPLOYEE_VALIDATE) + ", ";
+            }
+            setErrorMessage(movement, message);
+
+            if (movement.getEmployeeAcceptance() != null && !movement.getEmployeeAcceptance() && "Approve".equalsIgnoreCase(movement.getWorkflowDetails().getAction())) {
+                message = message + applicationConstants.getErrorMessage(ApplicationConstants.ERR_MOVEMENT_EMPLOYEEACCEPTANCE_VALIDATE) + ", ";
+            }
+
+            setErrorMessage(movement, message);
+
         }
+
         return movementRequest.getMovement();
     }
 
-    private String validateEmployeeForPromotion(final Movement movement, final RequestInfo requestInfo) {
-        String errorMsg = "";
-        final List<Long> positions = positionService.getPositions(movement, requestInfo);
-        if (positions.contains(movement.getPositionAssigned()))
-            errorMsg = applicationConstants.getErrorMessage(ApplicationConstants.ERR_POSITION_NOT_VACANT) + " ";
-        return errorMsg;
+    private void setErrorMessage(Movement movement, String message) {
+        if (!message.isEmpty())
+            movement.setErrorMsg(message);
     }
 
     private ResponseEntity<?> getSuccessResponseForCreate(final List<Movement> movementsList,
-            final RequestInfo requestInfo) {
+                                                          final RequestInfo requestInfo) {
         final MovementResponse movementRes = new MovementResponse();
         HttpStatus httpStatus = HttpStatus.OK;
-        if (!movementsList.get(0).getErrorMsg().isEmpty())
+        if (movementsList.get(0).getErrorMsg() != null)
             httpStatus = HttpStatus.BAD_REQUEST;
         movementRes.setMovement(movementsList);
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
@@ -189,7 +245,7 @@ public class MovementService {
     }
 
     private ResponseEntity<?> getSuccessResponseForUpload(final List<Movement> successMovementsList,
-            final List<Movement> errorMovementsList, final RequestInfo requestInfo) {
+                                                          final List<Movement> errorMovementsList, final RequestInfo requestInfo) {
         final MovementUploadResponse movementUploadResponse = new MovementUploadResponse();
         movementUploadResponse.getSuccessList().addAll(successMovementsList);
         movementUploadResponse.getErrorList().addAll(errorMovementsList);
@@ -207,8 +263,8 @@ public class MovementService {
     public ResponseEntity<?> updateMovement(final MovementRequest movementRequest) {
         List<Movement> movements = new ArrayList<>();
         movements.add(movementRequest.getMovement().get(0));
-        movements = validate(movementRequest);
-        if (movements.get(0).getErrorMsg().isEmpty()) {
+        movements = validateUpdate(movementRequest);
+        if (movements.get(0).getErrorMsg() == null) {
             final MovementSearchRequest movementSearchRequest = new MovementSearchRequest();
             final List<Long> ids = new ArrayList<>();
             ids.add(movements.get(0).getId());
@@ -268,4 +324,47 @@ public class MovementService {
     public Movement update(final MovementRequest movementRequest) {
         return movementRepository.updateMovement(movementRequest);
     }
+
+    private List<Movement> validateUpdate(final MovementRequest movementRequest) {
+        for (final Movement movement : movementRequest.getMovement()) {
+            String errorMsg = "";
+            if (movement.getId() != null && movement.getTypeOfMovement().equals(TypeOfMovement.PROMOTION)
+                    && "Approve".equalsIgnoreCase(movement.getWorkflowDetails().getAction())) {
+                final Employee employee = employeeService.getEmployee(movement, movementRequest.getRequestInfo());
+                String message = "";
+
+                //validateEmployeeForPromotion
+                final List<Long> positions = positionService.getPositions(movement, movementRequest.getRequestInfo());
+                if (positions.contains(movement.getPositionAssigned()))
+                    message = applicationConstants.getErrorMessage(ApplicationConstants.ERR_POSITION_NOT_VACANT) + ", ";
+                setErrorMessage(movement, message);
+
+                //validateEmployeeNextDesignationWithCurrent
+                if (employee != null) {
+                    for (Assignment assignment : employee.getAssignments()) {
+                        if (assignment.getFromDate().before(movement.getEffectiveFrom())
+                                && assignment.getToDate().after(movement.getEffectiveFrom()) && movement.getPositionAssigned().equals(assignment.getPosition())) {
+                            message = message + applicationConstants.ERR_MOVEMENT_EMPLOYEE_POSITION_VALIDATE + ", ";
+                        }
+
+                    }
+                }
+
+                setErrorMessage(movement, message);
+
+                if (movement.getEmployeeAcceptance() != null && !movement.getEmployeeAcceptance()) {
+                    message = message + ApplicationConstants.ERR_MOVEMENT_EMPLOYEEACCEPTANCE_VALIDATE + ", ";
+                }
+
+                setErrorMessage(movement, message);
+
+                movement.setErrorMsg(errorMsg.replace(", ", ","));
+            }
+
+        }
+
+        return movementRequest.getMovement();
+    }
+
+
 }

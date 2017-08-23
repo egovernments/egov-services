@@ -178,15 +178,13 @@ class AddDemand extends Component {
     let {search, handleDepartment, getTaxHead, validateCollection} = this;
     let { DemandDetailBeans, searchData } = this.state;
 
-    console.log( );
-
 
     let cThis = this;
 
     const handleChangeSrchRslt = function(e, name, ind){
       var _emps = Object.assign([], DemandDetailBeans);
-      if(name == "collectionAmount" && _emps[ind]["taxAmount"] < e.target.value) {
-        return cThis.props.toggleSnackbarAndSetText(true, "Collection Amount cannot be greater than Tax Amount.", false, true);
+      if(name == "collectionAmount" && Number(_emps[ind]["taxAmount"]) < Number(e.target.value)) {
+        return cThis.props.toggleSnackbarAndSetText(true, translate("wc.create.error"), false, true);
       }
 
       _emps[ind][name] = e.target.value;
@@ -217,6 +215,11 @@ class AddDemand extends Component {
 
 	}
 
+    const getValue = function(jPath) {
+        if(cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0]) {
+          return cThis.state.searchData.Connection[0][(cThis.state.searchData.Connection[0].withProperty ? "property" : "connectionOwner")][jPath];
+        }
+    }
 
     return (<div><Card className="uiCard">
 				<CardTitle style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate("wc.create.demand.applicantParticular")}</div>} subtitle={<div style={{color:"#354f57", fontSize:15,margin:'8px 0'}}>{translate("wc.create.demand.basicDetails")}</div>} />
@@ -225,69 +228,67 @@ class AddDemand extends Component {
 					<Grid fluid>
 						<Row>
             <Col xs={12} sm={4} md={3} lg={3}>
-            <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.acknowledgementNumber")}</span></label><br/>
-            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].acknowledgementNumber}</label></span>
-            </Col>
-            <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.consumerNumber")}</span></label><br/>
             <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].consumerNumber}</label></span>
             </Col>
+
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.nameOfApplicant")}</span></label><br/>
-            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].property && this.state.searchData.Connection[0].property.nameOfApplicant}</label></span>
+            <label>{getValue("nameOfApplicant")}</label></span>
             </Col>
+
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.address")}</span></label><br/>
-            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].property && this.state.searchData.Connection[0].property.address}</label></span>
+            <label>{getValue("address")}</label></span>
+            </Col>
+
+            <Col xs={12} sm={4} md={3} lg={3}>
+            <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.mobileNumber")}</span></label><br/>
+            <label>{getValue("mobileNumber")}</label></span>
             </Col>
             </Row>
             <br/>
             <Row>
             <Col xs={12} sm={4} md={3} lg={3}>
-            <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.mobileNumber")}</span></label><br/>
-            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].property && this.state.searchData.Connection[0].property.mobileNumber}</label></span>
-            </Col>
-            <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.email")}</span></label><br/>
-            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].property && this.state.searchData.Connection[0].property.email}</label></span>
+            <label>{getValue("email")}</label></span>
             </Col>
 
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.locality")}</span></label><br/>
-            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].property && this.state.searchData.Connection[0].property.locality}</label></span>
+            <label>{getValue("locality")}</label></span>
             </Col>
 
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.zone")}</span></label><br/>
-            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].property && this.state.searchData.Connection[0].property.ward}</label></span>
+            <label>{getValue("ward")}</label></span>
+            </Col>
+            <Col xs={12} sm={4} md={3} lg={3}>
+            <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.adharNumber")}</span></label><br/>
+            <label>{getValue("adharNumber")}</label></span>
             </Col>
             </Row>
               <br/>
             <Row>
-            <Col xs={12} sm={4} md={3} lg={3}>
-            <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.adharNumber")}</span></label><br/>
-            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].property && this.state.searchData.Connection[0].property.adharNumber}</label></span>
-            </Col>
+
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.noOfFloors")}</span></label><br/>
-            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].noOfFlats}</label></span>
+            <label>{getValue("noOfFlats")}</label></span>
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.connectionDetails.connectionType")}</span></label><br/>
-            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].connectionType}</label></span>
+            <label>{getValue("connectionType")}</label></span>
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.connectionDetails.usageType")}</span></label><br/>
-            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].property && this.state.searchData.Connection[0].property.usageType}</label></span>
+            <label>{getValue("usageType")}</label></span>
+            </Col>
+            <Col xs={12} sm={4} md={3} lg={3}>
+            <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.propertyTaxDue")}</span></label><br/>
+            <label>{getValue("propertyTaxDue")}</label></span>
             </Col>
             </Row>
               <br/>
-            <Row>
-            <Col xs={12} sm={4} md={3} lg={3}>
-            <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.propertyTaxDue")}</span></label><br/>
-            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].property && this.state.searchData.Connection[0].property.propertyTaxDue}</label></span>
-            </Col>
-            </Row>
 								<br/>
 								<Table style={{color:"black",fontWeight: "normal", marginBottom:0, minWidth:'100%', width:'auto'}}  bordered responsive>
 									<thead>

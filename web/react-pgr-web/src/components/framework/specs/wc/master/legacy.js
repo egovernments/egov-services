@@ -128,7 +128,7 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": "",
 			"values": [{"label":"wc.group.withProperty", "value":true},{"label":"wc.group.withoutProperty", "value":false}],
-			"defaultValue":true,
+			"defaultValue":false,
       "showHideFields": [{
              "ifValue": false,
              "hide": [{
@@ -153,7 +153,6 @@ var dat = {
         "label": "wc.create.groups.applicantDetails.title", //Cut short labels by taking initial path from parent
         "name": "applicantDetailsWithProp", //Follow Title case pattern
         "multiple": false,
-        "hide":true,
         "fields": [
           {
             "name": "NameOfApplicant",
@@ -307,27 +306,14 @@ var dat = {
           {
             "name": "Primary Owner",
             "jsonPath": "Connection.connectionOwner.isPrimaryOwner",
-            "label": "pt.create.groups.ownerDetails.fields.primaryOwner",
+            "label": "",
             "pattern": "",
             "type": "radio",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-      			"values": [{"label":"employee.createPosition.groups.fields.outsourcepost.value1", "value":true},{"label":"employee.createPosition.groups.fields.outsourcepost.value2", "value":false}],
-      			"defaultValue":true
-          },
-          {
-            "name": "Secondary Owner",
-            "jsonPath": "Connection.connectionOwner.isSecondaryOwner",
-            "label": "pt.create.groups.ownerDetails.fields.secondaryOwner",
-            "pattern": "",
-            "type": "radio",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-      			"values": [{"label":"employee.createPosition.groups.fields.outsourcepost.value1", "value":true},{"label":"employee.createPosition.groups.fields.outsourcepost.value2", "value":false}],
+      			"values": [{"label":"pt.create.groups.ownerDetails.fields.primaryOwner", "value":true},{"label":"pt.create.groups.ownerDetails.fields.secondaryOwner", "value":false}],
       			"defaultValue":true
           }
         ]
@@ -337,6 +323,7 @@ var dat = {
         "name": "applicantDetails", //Follow Title case pattern
         "children": [],
         "multiple": false,
+        "hide":true,
         "fields": [{
             "name": "AssessmentNumber",
             "jsonPath": "Connection.property.propertyIdentifier",
@@ -356,7 +343,7 @@ var dat = {
                 "Connection.property.locality":"properties[0].boundary.locationBoundary.id",
                 "Connection.property.zone":"properties[0].boundary.revenueBoundary.id",
                 "Connection.property.ward":"properties[0].boundary.adminBoundary.id",
-                "Connection.property.address":"properties[0].address.addressNumber",
+                "Connection.property.address":"properties[0].address.addressLine1",
                 "Connection.property.property":"properties[0].propertyDetail.propertyType"
               }
             },
@@ -439,7 +426,7 @@ var dat = {
             "pattern": "",
             "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE|$.Boundary.*.boundaryNum|$.Boundary.*.name",
             "type": "singleValueList",
-            "isRequired": true,
+            "isRequired": false,
             "isDisabled": true,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -578,8 +565,8 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-      "defaultValue": [],
-      "url":""
+            "defaultValue": [],
+            "url":""
           },
         {
             "name": "hscPipeSizeType",
@@ -630,7 +617,6 @@ var dat = {
             "url": "/wcms-connection/connection/_getconnectiontypes?|$..key|$..object",
             "requiredErrMsg": "",
             "patternErrMsg": "",
-
             "showHideFields": [{
                    "ifValue": "TEMPORARY",
                    "show": [{
@@ -769,7 +755,7 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
-		  {
+		       {
             "name": "fromDate",
             "jsonPath": "Connection.fromDate",
             "label": "wc.create.fromDate",
@@ -949,7 +935,7 @@ var dat = {
               "requiredErrMsg": "",
               "patternErrMsg": "",
   			"values": [{"label":"wc.group.withProperty", "value":true},{"label":"wc.group.withoutProperty", "value":false}],
-  			"defaultValue":true,
+  			"defaultValue":false,
         "showHideFields": [{
                "ifValue": false,
                "hide": [{
@@ -975,7 +961,6 @@ var dat = {
           "label": "wc.create.groups.applicantDetails.title", //Cut short labels by taking initial path from parent
           "name": "applicantDetailsWithProp", //Follow Title case pattern
           "multiple": false,
-          "hide":true,
           "fields": [
             {
               "name": "NameOfApplicant",
@@ -991,7 +976,7 @@ var dat = {
             {
                 "name": "acknowledgementNumber",
                 "jsonPath": "Connection[0].acknowledgementNumber",
-                "label": "wc.create.groups.applicantDetails.acknowledgementNumber",
+                "label": "wc.create.groups.applicantDetails.consumerNumber",
                 "pattern": "",
                 "type": "text",
                 "isRequired": false,
@@ -1125,23 +1110,9 @@ var dat = {
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": "",
-        			"values": [{"label":"employee.createPosition.groups.fields.outsourcepost.value1", "value":true},{"label":"employee.createPosition.groups.fields.outsourcepost.value2", "value":false}],
-        			"defaultValue":true
-            },
-            {
-              "name": "Secondary Owner",
-              "jsonPath": "Connection[0].connectionOwner.isSecondaryOwner",
-              "label": "pt.create.groups.ownerDetails.fields.secondaryOwner",
-              "pattern": "",
-              "type": "radio",
-              "isRequired": false,
-              "isDisabled": false,
-              "requiredErrMsg": "",
-              "patternErrMsg": "",
-        			"values": [{"label":"employee.createPosition.groups.fields.outsourcepost.value1", "value":true},{"label":"employee.createPosition.groups.fields.outsourcepost.value2", "value":false}],
+        			"values": [{"label":"pt.create.groups.ownerDetails.fields.primaryOwner", "value":true},{"label":"pt.create.groups.ownerDetails.fields.secondaryOwner", "value":false}],
         			"defaultValue":true
             }
-
           ]
         },
         {
@@ -1149,6 +1120,7 @@ var dat = {
         "name": "applicantDetails", //Follow Title case pattern
         "children": [],
         "multiple": false,
+        "hide":true,
         "fields": [{
             "name": "acknowledgementNumber",
             "jsonPath": "Connection[0].acknowledgementNumber",
@@ -1323,6 +1295,18 @@ var dat = {
             "patternErrMsg": ""
           },
           {
+            "name": "subUsageType",
+            "jsonPath": "Connection[0].property.subUsageType",
+            "label": "wc.create.groups.connectionDetails.subUsageType",
+            "pattern": "",
+            "type": "singleValueList",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+      			"url":""
+          },
+          {
             "name": "hscPipeSizeType",
             "jsonPath": "Connection[0].hscPipeSizeType",
             "label": "wc.create.groups.connectionDetails.hscPipeSizeType",
@@ -1369,7 +1353,20 @@ var dat = {
             "isDisabled": false,
             "url": "/wcms-connection/connection/_getbillingtypes?|$..key|$..object",
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+            "showHideFields": [{
+                   "ifValue": "METERED",
+                   "hide": [{
+                    "name": "description",
+                    "isGroup": false,
+                    "isField": true
+                   }],
+                   "show": [{
+                    "name": "Metered",
+                    "isGroup": true,
+                    "isField": false
+                   }]
+                  }]
           },
           {
             "name": "ConnectionType",
@@ -1381,7 +1378,21 @@ var dat = {
             "isDisabled": false,
             "url": "/wcms-connection/connection/_getconnectiontypes?|$..key|$..object",
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+            "showHideFields": [{
+                   "ifValue": "TEMPORARY",
+                   "show": [{
+                                "name": "fromDate",
+                                "isGroup": false,
+                                "isField": true
+                              },
+                              {
+                               "name": "toDate",
+                               "isGroup": false,
+                               "isField": true
+                             }],
+                  "hide":[]
+              }]
           },
           {
             "name": "SourceType",
@@ -1505,9 +1516,106 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
-          }
+          },
+          {
+           "name": "fromDate",
+           "jsonPath": "Connection[0].fromDate",
+           "label": "wc.create.fromDate",
+           "pattern": "",
+           "type": "datePicker",
+           "hide":true,
+           "isRequired": false,
+           "isDisabled": false,
+           "requiredErrMsg": "",
+           "patternErrMsg": ""
+         },
+         {
+           "name": "toDate",
+           "jsonPath": "Connection[0].toDate",
+           "label": "wc.create.toDate",
+           "pattern": "",
+           "hide":true,
+           "type": "datePicker",
+           "isRequired": false,
+           "isDisabled": false,
+           "requiredErrMsg": "",
+           "patternErrMsg": ""
+         }
+
         ]
       },
+      {
+          "label": "wc.create.meter.title",
+          "name": "Metered",
+          "hide":true,
+              "children":[meterReading],
+                  "fields": [{
+                      "name": "meterOwner",
+                      "jsonPath": "Connection[0].meter[0].meterOwner",
+                      "label": "wc.group.meterOwner",
+                      "pattern": "^[\s.]*([^\s.][\s.]*){0,50}$",
+                      "type": "text",
+                      "isRequired": false,
+                      "isDisabled": false,
+                      "requiredErrMsg": "",
+                      "patternErrMsg": ""
+                    },
+                    {
+                        "name": "meterModel",
+                        "jsonPath": "Connection[0].meter[0].meterModel",
+                        "label": "wc.group.meterModal",
+                        "pattern": "^[\s.]*([^\s.][\s.]*){0,50}$",
+                        "type": "text",
+                        "isRequired": false,
+                        "isDisabled": false,
+                        "requiredErrMsg": "",
+                        "patternErrMsg": ""
+                      },
+                      {
+                      "name": "meterMake",
+                      "jsonPath": "Connection[0].meter[0].meterMake",
+                      "label": "wc.group.meterMake",
+                      "pattern": "",
+                      "type": "text",
+                      "isRequired": false,
+                      "isDisabled": false,
+                      "requiredErrMsg": "",
+                      "patternErrMsg": ""
+                    },
+                    {
+                        "name": "meterSlNo",
+                        "jsonPath": "Connection[0].meter[0].meterSlNo",
+                        "label": "wc.group.meterNumber",
+                        "pattern": "",
+                        "type": "text",
+                        "isRequired": false,
+                        "isDisabled": false,
+                        "requiredErrMsg": "",
+                        "patternErrMsg": ""
+                      },
+                {
+                      "name": "meterCost",
+                      "jsonPath": "Connection[0].meter[0].meterCost",
+                      "label": "wc.group.meterCost",
+                      "pattern": "",
+                      "type": "text",
+                      "isRequired": false,
+                      "isDisabled": false,
+                      "requiredErrMsg": "",
+                      "patternErrMsg": ""
+                    },
+                {
+                      "name": "initialMeterReading",
+                      "jsonPath": "Connection[0].meter[0].initialMeterReading",
+                      "label": "wc.group.initialMeterReading",
+                      "pattern": "",
+                      "type": "text",
+                      "isRequired": false,
+                      "isDisabled": false,
+                      "requiredErrMsg": "",
+                      "patternErrMsg": ""
+                    }]
+                },
       // {
       //   "label": "wc.create.groups.fileDetails.title",
       //   "name": "Documents",

@@ -16,6 +16,7 @@ import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.Location;
 import org.egov.asset.model.enums.ModeOfAcquisition;
+import org.egov.asset.model.enums.Status;
 import org.egov.asset.repository.AssetRepository;
 import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
@@ -58,8 +59,6 @@ public class AssetServiceTest {
 
         final AssetCriteria assetCriteria = AssetCriteria.builder().tenantId("ap.kurnool").build();
         when(assetRepository.findForCriteria(any(AssetCriteria.class))).thenReturn(assets);
-        System.err.println(assetResponse);
-        System.err.println(assetService.getAssets(assetCriteria, new RequestInfo()));
         assertEquals(assetResponse, assetService.getAssets(assetCriteria, new RequestInfo()));
     }
 
@@ -136,7 +135,7 @@ public class AssetServiceTest {
         asset.setTenantId("ap.kurnool");
         asset.setId(null);
         asset.setName("asset name");
-        asset.setStatus("CREATED");
+        asset.setStatus(Status.CREATED.toString());
         asset.setModeOfAcquisition(ModeOfAcquisition.ACQUIRED);
         asset.setEnableYearWiseDepreciation(true);
 

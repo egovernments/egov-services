@@ -80,6 +80,7 @@ import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -232,15 +233,18 @@ public class BillService {
 
 					List<GlCodeMaster> glCodeMasters = glCodesMap.get(demandDetail.getTaxHeadMasterCode());
 
+					if(isEmpty(glCodeMasters))
+						throw new RuntimeException("no glcodemasters found for the given taxhead master code"+demandDetail.getTaxHeadMasterCode());
 					log.info("prepareBill glCodeMasters:" + glCodeMasters);
 					GlCodeMaster glCodeMaster = glCodeMasters.stream()
-							.filter((t) -> demand2.getTaxPeriodFrom() >= t.getFromDate()
+							.filter(t -> demand2.getTaxPeriodFrom() >= t.getFromDate()
 									&& demand2.getTaxPeriodTo() <= t.getToDate())
 							.findAny().orElse(null);
 					
 					if(glCodeMaster == null) 
 						throw new RuntimeException(
-								"No glCode Found for demandDetail with taxcode :"+demandDetail.getTaxHeadMasterCode());
+								"No glCode Found for taxcode : "+demandDetail.getTaxHeadMasterCode() 
+								+ " and fromdate : "+demand2.getTaxPeriodFrom()+" todate : "+demand2.getTaxPeriodTo());
 
 					log.info("prepareBill taxHeadMaster:" + taxHeadMaster);
 					String taxHeadCode = demandDetail.getTaxHeadMasterCode();
@@ -285,12 +289,12 @@ public class BillService {
 
 		Long currDate = new Date().getTime();
 		//TODO check about arrears late payments ask Ramki to take a look
-
-		if (category.equals(Category.TAX) || category.equals(Category.FEE)) {
+		if (category.equals(Category.TAX) || category.equals(Category.FEE) 
+				|| category.equals(Category.CHARGES)) {
 
 			if (taxPeriodFrom <= currDate && taxPeriodTo >= currDate)
 				return Purpose.CURRENT_AMOUNT;
-			else if (currDate < taxPeriodFrom)
+			else if (currDate > taxPeriodTo)
 				return Purpose.ARREAR_AMOUNT;
 			else
 				return Purpose.ADVANCE_AMOUNT;

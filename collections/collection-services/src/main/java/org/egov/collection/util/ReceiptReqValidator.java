@@ -1,25 +1,31 @@
 package org.egov.collection.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.validation.ValidationException;
-
 import org.apache.commons.lang3.StringUtils;
 import org.egov.collection.config.CollectionServiceConstants;
-import org.egov.collection.web.contract.BillAccountDetail;
-import org.egov.collection.web.contract.BillDetail;
-import org.egov.collection.web.contract.Receipt;
-import org.egov.collection.web.contract.ReceiptReq;
-import org.egov.collection.web.contract.ReceiptSearchGetRequest;
-import org.egov.collection.web.errorhandlers.ErrorResponse;
-import org.egov.common.contract.response.ErrorField;
+import org.egov.collection.service.CollectionConfigService;
+import org.egov.collection.web.contract.*;
 import org.egov.collection.web.errorhandlers.Error;
+import org.egov.collection.web.errorhandlers.ErrorResponse;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.Role;
+import org.egov.common.contract.response.ErrorField;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import javax.validation.ValidationException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 @Service
 public class ReceiptReqValidator {
+
+
+    @Autowired
+    private CollectionConfigService collectionConfigService;
 	
 	public List<ErrorResponse> validatecreateReceiptRequest(final ReceiptReq receiptRequest) {
 		final List<ErrorResponse> errorResponses = new ArrayList<>();
@@ -45,6 +51,7 @@ public class ReceiptReqValidator {
 
 	private void addServiceIdValidationErrors(final ReceiptReq receiptRequest,
 			final List<ErrorField> errorFields) {
+        RequestInfo requestInfo = receiptRequest.getRequestInfo();
 	try{	
 		final List<Receipt> receipts = receiptRequest.getReceipt();
 		for(Receipt receipt:receipts){
@@ -92,7 +99,33 @@ public class ReceiptReqValidator {
 						.message(CollectionServiceConstants.BD_CODE_MISSING_MESSAGE)
 						.field(CollectionServiceConstants.BD_CODE_MISSING_FIELD).build();
 				errorFields.add(errorField);
-			}					
+			}
+            CollectionConfigGetRequest collectionConfigGetRequest = new CollectionConfigGetRequest();
+            collectionConfigGetRequest.setTenantId(receipt.getTenantId());
+            collectionConfigGetRequest.setName(CollectionServiceConstants.MANUAL_RECEIPT_DETAILS_REQUIRED_CONFIG_KEY);
+
+            Map<String, List<String>> manualReceiptRequiredConfiguration = collectionConfigService.getCollectionConfiguration(collectionConfigGetRequest);
+
+            List<Role> roleList = requestInfo.getUserInfo().getRoles();
+            if(!manualReceiptRequiredConfiguration.isEmpty() && manualReceiptRequiredConfiguration.get(CollectionServiceConstants.MANUAL_RECEIPT_DETAILS_REQUIRED_CONFIG_KEY).get(0).equalsIgnoreCase("Yes")
+                    && roleList.stream().anyMatch(role -> CollectionServiceConstants.COLLECTION_LEGACY_RECEIPT_CREATOR_ROLE.contains(role.getName())) && StringUtils.isNotEmpty(billDetails.getManualReceiptNumber()) && billDetails.getReceiptDate() != null ) {
+                CollectionConfigGetRequest collectionConfigRequest = new CollectionConfigGetRequest();
+                collectionConfigRequest.setTenantId(receipt.getTenantId());
+                collectionConfigRequest.setName(CollectionServiceConstants.MANUAL_RECEIPT_DETAILS_CUTOFF_DATE_CONFIG_KEY);
+                Map<String, List<String>> manualReceiptCutOffDateConfiguration = collectionConfigService.getCollectionConfiguration(collectionConfigRequest);
+                if(!manualReceiptCutOffDateConfiguration.isEmpty() && manualReceiptCutOffDateConfiguration.get(CollectionServiceConstants.MANUAL_RECEIPT_DETAILS_CUTOFF_DATE_CONFIG_KEY) != null) {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+                    Date cutOffDate = dateFormat.parse(manualReceiptCutOffDateConfiguration.get(CollectionServiceConstants.MANUAL_RECEIPT_DETAILS_CUTOFF_DATE_CONFIG_KEY).get(0));
+                    Date manualReceiptDate = new Date(billDetails.getReceiptDate());
+                    if(manualReceiptDate.after(cutOffDate)) {
+                        final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.CUTT_OFF_DATE_CODE)
+                                .message(CollectionServiceConstants.CUTT_OFF_DATE_MESSAGE + cutOffDate + CollectionServiceConstants.CUTT_OFF_DATE_MESSAGE_DESC)
+                                .field(CollectionServiceConstants.CUTT_OFF_DATE_FIELD).build();
+                        errorFields.add(errorField);
+                    }
+                }
+
+            }
 			for(BillAccountDetail billAccountDetail: billAccountDetails){
 				if(null == billAccountDetail.getPurpose()){
 					final ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.PURPOSE_MISSING_CODE)

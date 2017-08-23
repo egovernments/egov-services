@@ -72,7 +72,8 @@ public class WcmsConstants {
     public static final String INVALID_METER_WATER_RATES_REQUEST_MESSAGE = "Meter Water Rates is invalid";
     public static final String INVALID_SUPPLY_TYPE_REQUEST_MESSAGE = "Supply Type is invalid";
     public static final String INVALID_NON_METER_WATER_RATES_REQUEST_MESSAGE = "Non Meter Water Rates is invalid";
-
+    public static final String INVALID_SERVICE_CHARGE_REQUEST_MESSAGE = "Service Charge is invalid";
+    
     public static final String USAGETYPE_NAME_UNIQUE_CODE = "wcms.0001";
     public static final String USAGETYPE_NAME_UNQ_FIELD_NAME = "name";
     public static final String USAGETYPE_UNQ_ERROR_MESSAGE = "Entered Usage Type already exist";
@@ -392,12 +393,38 @@ public class WcmsConstants {
     public static final String NON_METER_WATER_RATES_UNIQUE_CODE = "wcms.0075";
     public static final String NON_METER_WATER_RATES_UNQ_FIELD_NAME = "connectionType ,usageTypeName ,sourceTypeName ,pipeSize and fromDate ";
     public static final String NON_METER_WATER_RATES_UNQ_ERROR_MESSAGE = "Entered combination of ConnectionType,UsageType ,SourceType ,PipeSize and fromDate has already been mapped";
+    
+    public static final String DONATION_UNIQUE_CODE = "wcms.0076";
+    public static final String DONATION_UNQ_FIELD_NAME = "peopertyType,usageTypeName ,catgeory ,maxPipeSize and minPipeSize";
+    public static final String DONATION_UNQ_ERROR_MESSAGE = "Entered combination of PropertyType ,UsageType ,CategoryType ,MaxPipeSize and MinPipeSize Inmm has already been mapped";
 
+    public static final String SERVICETYPE_MANDATORY_CODE = "wcms.0076";
+    public static final String SERVICETYPE_MANADATORY_FIELD_NAME = "serviceType";
+    public static final String SERVICETYPE_MANADATORY_ERROR_MESSAGE = "serviceType is required";
+    
+    public static final String SERVICECHARGEAPPLICABLE_MANDATORY_CODE = "wcms.0077";
+    public static final String SERVICECHARGEAPPLICABLE_MANADATORY_FIELD_NAME = "serviceChargeApplicable";
+    public static final String SERVICECHARGEAPPLICABLE_MANADATORY_ERROR_MESSAGE = "serviceChargeApplicable is required";
+
+    public static final String SERVICECHARGETYPE_MANDATORY_CODE = "wcms.0078";
+    public static final String SERVICECHARGETYPE_MANADATORY_FIELD_NAME = "serviceChargeType";
+    public static final String SERVICECHARGETYPE_MANADATORY_ERROR_MESSAGE = "serviceChargeType is Required" ;
+  
+    public static final String SERVICECHARGEEFFECTIVEFROM_MANDATORY_CODE = "wcms.0079";
+    public static final String SERVICECHARGEEFFECTIVEFROM_MANADATORY_FIELD_NAME = "effectiveFrom";
+    public static final String SERVICECHARGEEFFECTIVEFROM_MANADATORY_ERROR_MESSAGE = "effectiveFrom is Required";
+    
+    public static final String SERVICECHARGEEFFECTIVETO_MANDATORY_CODE = "wcms.0080";
+    public static final String SERVICECHARGEEFFECTIVETO_MANADATORY_FIELD_NAME = "effectiveTo";
+    public static final String SERVICECHARGEEFFECTIVETO_MANADATORY_ERROR_MESSAGE = "effectiveTo is Required";
+    
     public static final String ZONE = "Zone";
     public static final String REVENUE = "REVENUE";
     public static final String WARD = "Ward";
     public static final String LOCALITY = "Locality";
     public static final String LOCATION = "LOCATION";
+    
+    public static final String WC = "WC";
 
     public String getErrorMessage(final String property) {
         return environment.getProperty(property);

@@ -14,28 +14,28 @@ import org.springframework.http.HttpStatus;
 public class InvalidAdminWardAdapter {
 
 	private static final int HTTP_CLIENT_ERROR_CODE = 400;
-	private static final String INVALID_ADMIN_WARD_EXCEPTION_MESSAGE = "tl.error.invalidAdminWard";
+	private static final String INVALID_ADMIN_WARD_EXCEPTION_MESSAGE = "tl.error.invalid.adminward";
 	private static final String INVALID_ADMIN_WARD_EXCEPTION_FIELD = "adminWardId";
-	private static final String INVALID_ADMIN_WARD_EXCEPTION_FIELD_CODE = "tl.error.adminWardId.notValid";
+	private static final String INVALID_ADMIN_WARD_EXCEPTION_FIELD_CODE = "tl.error.adminwardid.notvalid";
 
-	public ErrorResponse getErrorResponse(RequestInfo requestInfo) {
+	public ErrorResponse getErrorResponse(String customMsg, RequestInfo requestInfo) {
 		ResponseInfo responseInfo = new ResponseInfo();
 		responseInfo.setApiId(requestInfo.getApiId());
 		responseInfo.setVer(requestInfo.getVer());
 		responseInfo.setMsgId(requestInfo.getMsgId());
 		responseInfo.setTs(new Date().toString());
 		responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
-		return new ErrorResponse(null, getError());
+		return new ErrorResponse(responseInfo, getError(customMsg));
 	}
 
-	private Error getError() {
-		final List<ErrorField> fields = Collections.singletonList(getErrorField());
+	private Error getError(String customMsg) {
+		final List<ErrorField> fields = Collections.singletonList(getErrorField(customMsg));
 		return Error.builder().code(HTTP_CLIENT_ERROR_CODE).message(INVALID_ADMIN_WARD_EXCEPTION_MESSAGE)
-				.fields(fields).description("").build();
+				.fields(fields).description(customMsg).build();
 	}
 
-	private ErrorField getErrorField() {
+	private ErrorField getErrorField(String customMsg) {
 		return ErrorField.builder().code(INVALID_ADMIN_WARD_EXCEPTION_FIELD_CODE)
-				.field(INVALID_ADMIN_WARD_EXCEPTION_FIELD).message("").build();
+				.field(INVALID_ADMIN_WARD_EXCEPTION_FIELD).message(customMsg).build();
 	}
 }

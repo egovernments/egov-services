@@ -41,13 +41,19 @@ package org.egov.wcms.repository;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.egov.wcms.model.Donation;
+import org.egov.wcms.model.NonMeterWaterRates;
 import org.egov.wcms.repository.builder.DonationQueryBuilder;
+import org.egov.wcms.repository.builder.MeterWaterRatesQueryBuilder;
+import org.egov.wcms.repository.builder.NonMeterWaterRatesQueryBuilder;
+import org.egov.wcms.repository.builder.PropertyPipeSizeQueryBuilder;
 import org.egov.wcms.repository.rowmapper.DonationRowMapper;
 import org.egov.wcms.service.RestWaterExternalMasterService;
+import org.egov.wcms.util.WcmsConstants;
 import org.egov.wcms.web.contract.DonationGetRequest;
 import org.egov.wcms.web.contract.DonationRequest;
 import org.egov.wcms.web.contract.PropertyTaxResponseInfo;
@@ -261,7 +267,7 @@ public class DonationRepository {
             usageTypeIdsList.add(Integer.valueOf(donation.getUsageTypeId()));
         final Integer[] usageTypeIds = usageTypeIdsList.toArray(new Integer[usageTypeIdsList.size()]);
         final UsageTypeResponse usageResponse = restExternalMasterService.getUsageNameFromPTModule(
-                usageTypeIds, donationRequest.getTenantId());
+                usageTypeIds,WcmsConstants.WC, donationRequest.getTenantId());
         for (final Donation donation : donationList)
             for (final PropertyTaxResponseInfo propertyResponse : usageResponse.getUsageMasters())
                 if (propertyResponse.getId().equals(donation.getUsageTypeId()))
@@ -269,4 +275,60 @@ public class DonationRepository {
         return donationList;
 
     }
+    
+    
+    public boolean checkDonationsExist(final String code, final String propertTypeId, final String usageTypeId,
+            final String categoryName, final Double maxPipeSize, final Double minPipeSize, final String tenantId) {
+        final List<Object> preparedStatementValues = new ArrayList<>();
+        final String pipesizeQuery = DonationQueryBuilder.getPipeSizeIdQuery();
+        final String categoryQuery = DonationQueryBuilder.getCategoryId();
+        Long categoryId = 0L;
+        try {
+            categoryId = jdbcTemplate.queryForObject(categoryQuery,
+                    new Object[] { categoryName, tenantId }, Long.class);
+            log.info("Category Id: " + categoryId);
+        } catch (final EmptyResultDataAccessException e) {
+            log.info("EmptyResultDataAccessException: Query returned empty result set");
+        }
+        if (categoryId == null)
+            log.info("Invalid input.");
+
+       Long maxPipeSizeId = 0L;
+        try {
+            maxPipeSizeId = jdbcTemplate.queryForObject(pipesizeQuery,
+                    new Object[] { maxPipeSize, tenantId }, Long.class);
+        } catch (final EmptyResultDataAccessException e) {
+            log.info("EmptyResultDataAccessException: Query returned empty result set for max pipesize");
+        }
+        if (maxPipeSizeId == null)
+            log.info("Invalid input for MaxPipeSize.");
+
+        Long minPipeSizeId = 0L;
+        try {
+            minPipeSizeId = jdbcTemplate.queryForObject(pipesizeQuery,
+                    new Object[] { minPipeSize, tenantId }, Long.class);
+        } catch (final EmptyResultDataAccessException e) {
+            log.info("EmptyResultDataAccessException: Query returned empty result set for min pipesize");
+        }
+        preparedStatementValues.add(propertTypeId);
+        preparedStatementValues.add(usageTypeId);
+        preparedStatementValues.add(categoryId);
+        preparedStatementValues.add(maxPipeSizeId);
+        preparedStatementValues.add(minPipeSizeId);
+        preparedStatementValues.add(tenantId);
+        final String query;
+        if (code == null)
+            query = DonationQueryBuilder.selectDonationByCodeQuery();
+        else {
+            preparedStatementValues.add(code);
+            query = DonationQueryBuilder.selectDonationByCodeNotInQuery();
+        }
+        final List<Map<String, Object>> donations = jdbcTemplate.queryForList(query,
+                preparedStatementValues.toArray());
+        if (!donations.isEmpty())
+            return false;
+
+        return true;
+    }
+
 }

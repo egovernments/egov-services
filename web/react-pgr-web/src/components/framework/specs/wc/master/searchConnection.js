@@ -73,19 +73,7 @@ var dat = {
           "isDisabled": false,
           "requiredErrMsg": "",
           "patternErrMsg": ""
-        },
-        {
-          "name": "DoorNumber",
-          "jsonPath": "doorNumber",
-          "label": "pt.create.groups.propertyAddress.fields.doorNo",
-          "pattern": "",
-          "type": "text",
-          "isRequired": false,
-          "isDisabled": false,
-          "requiredErrMsg": "",
-          "patternErrMsg": ""
         }
-
       ]
     }]
   }

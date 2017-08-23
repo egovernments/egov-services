@@ -56,6 +56,7 @@ import org.egov.wcms.model.PipeSize;
 import org.egov.wcms.model.PropertyTypeCategoryType;
 import org.egov.wcms.model.PropertyTypePipeSize;
 import org.egov.wcms.model.PropertyTypeUsageType;
+import org.egov.wcms.model.ServiceCharge;
 import org.egov.wcms.model.SourceType;
 import org.egov.wcms.model.StorageReservoir;
 import org.egov.wcms.model.SupplyType;
@@ -91,6 +92,7 @@ import org.egov.wcms.web.contract.PipeSizeRequest;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
 import org.egov.wcms.web.contract.PropertyTypePipeSizeRequest;
 import org.egov.wcms.web.contract.PropertyTypeUsageTypeReq;
+import org.egov.wcms.web.contract.ServiceChargeReq;
 import org.egov.wcms.web.contract.SourceTypeRequest;
 import org.egov.wcms.web.contract.StorageReservoirRequest;
 import org.egov.wcms.web.contract.SupplyTypeRequest;
@@ -451,6 +453,7 @@ public class ValidatorUtils {
             checkMaxPipesizeAndMinPipeSize(errorFields, donation);
             checkPropertyTypeAndUsageTypeExist(errorFields, donation);
             checkCategoryTypeAndPipeSizeExist(errorFields, donation);
+            checkDonationsExist(errorFields, donation);
             addTenantIdValidationErrors(donation.getTenantId(), errorFields);
         }
         return errorFields;
@@ -560,7 +563,17 @@ public class ValidatorUtils {
             errorFields.add(errorField);
         }
     }
-
+    
+    private void checkDonationsExist(final List<ErrorField> errorFields,
+            final Donation donation) {
+     
+         if (!donationService.checkDonationsExist(donation)) {
+            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.DONATION_UNIQUE_CODE)
+                    .message(WcmsConstants.DONATION_UNQ_ERROR_MESSAGE)
+                    .field(WcmsConstants.DONATION_UNQ_FIELD_NAME).build();
+            errorFields.add(errorField);
+        }
+    }
     private void checkCategoryTypeAndPipeSizeExist(final List<ErrorField> errorFields,
             final Donation donation) {
         if (propertPipeSizeService.checkPipeSizeExists(donation.getMaxPipeSize(),
@@ -1343,5 +1356,79 @@ public class ValidatorUtils {
             errorFields.add(errorField);
 
         }
+    }
+    
+    public List<ErrorResponse> validateServiceChargeRequest(ServiceChargeReq serviceChargeRequest, boolean isUpdate) {
+        final ErrorResponse errorResponse = new ErrorResponse();
+        final List<ErrorResponse> errorResponseList = new ArrayList<>();
+        final Error error = getError(serviceChargeRequest, isUpdate);
+        errorResponse.setError(error);
+        if (!errorResponse.getErrorFields().isEmpty())
+            errorResponseList.add(errorResponse);
+        return errorResponseList;
+    }
+
+    private Error getError(ServiceChargeReq serviceChargeRequest, boolean isUpdate) {
+        final List<ErrorField> errorFiled = getErrorFields(serviceChargeRequest, isUpdate);
+        return Error.builder().code(HttpStatus.BAD_REQUEST.value())
+                .message(WcmsConstants.INVALID_SERVICE_CHARGE_REQUEST_MESSAGE).errorFields(errorFiled).build();
+    }
+
+    private List<ErrorField> getErrorFields(ServiceChargeReq serviceChargeRequest, boolean isUpdate) {
+        final List<ErrorField> errorFields = new ArrayList<>();
+        for (final ServiceCharge serviceCharge : serviceChargeRequest.getServiceCharge()) {
+           addServiceChargeValidationErrors(serviceCharge,errorFields,isUpdate);
+        }
+        return errorFields;
+    }
+
+    private void addServiceChargeValidationErrors(ServiceCharge serviceCharge, List<ErrorField> errorFields, boolean isUpdate) {
+        if(isUpdate)
+            if (serviceCharge.getCode() == null || serviceCharge.getCode().isEmpty()) {
+               final ErrorField errorField = ErrorField.builder().code(WcmsConstants.CODE_MANDATORY_CODE)
+                       .message(WcmsConstants.CODE_MANDATORY_ERROR_MESSAGE)
+                       .field(WcmsConstants.CODE_MANDATORY_FIELD_NAME).build();
+               errorFields.add(errorField);
+            }
+           if (StringUtils.isBlank(serviceCharge.getTenantId())) {
+               final ErrorField errorField = ErrorField.builder().code(WcmsConstants.TENANTID_MANDATORY_CODE)
+                       .message(WcmsConstants.TENANTID_MANADATORY_ERROR_MESSAGE)
+                       .field(WcmsConstants.TENANTID_MANADATORY_FIELD_NAME).build();
+               errorFields.add(errorField);
+           }
+           else if(serviceCharge.getServiceType() == null || serviceCharge.getServiceType().isEmpty()){
+               final ErrorField errorField = ErrorField.builder().code(WcmsConstants.SERVICETYPE_MANDATORY_CODE)
+                       .message(WcmsConstants.SERVICETYPE_MANADATORY_ERROR_MESSAGE)
+                       .field(WcmsConstants.SERVICETYPE_MANADATORY_FIELD_NAME).build();
+               errorFields.add(errorField); 
+           }
+           else if(serviceCharge.getServiceChargeApplicable() == null){
+               final ErrorField errorField = ErrorField.builder().code(WcmsConstants.SERVICECHARGEAPPLICABLE_MANDATORY_CODE)
+                       .message(WcmsConstants.SERVICECHARGEAPPLICABLE_MANADATORY_ERROR_MESSAGE)
+                       .field(WcmsConstants.SERVICECHARGEAPPLICABLE_MANADATORY_FIELD_NAME).build();
+               errorFields.add(errorField);    
+           }
+           
+           else if(serviceCharge.getServiceChargeType() == null || serviceCharge.getServiceChargeType().isEmpty()){
+               final ErrorField errorField = ErrorField.builder().code(WcmsConstants.SERVICECHARGETYPE_MANDATORY_CODE)
+                       .message(WcmsConstants.SERVICECHARGETYPE_MANADATORY_ERROR_MESSAGE)
+                       .field(WcmsConstants.SERVICECHARGETYPE_MANADATORY_FIELD_NAME).build();
+               errorFields.add(errorField);    
+           }
+           else if(serviceCharge.getEffectiveFrom() == null){
+               final ErrorField errorField = ErrorField.builder().code(WcmsConstants.SERVICECHARGEEFFECTIVEFROM_MANDATORY_CODE)
+                       .message(WcmsConstants.SERVICECHARGEEFFECTIVEFROM_MANADATORY_ERROR_MESSAGE)
+                       .field(WcmsConstants.SERVICECHARGEEFFECTIVEFROM_MANADATORY_FIELD_NAME).build();
+               errorFields.add(errorField); 
+           }
+           else if(serviceCharge.getEffectiveTo() == null){
+               final ErrorField errorField = ErrorField.builder().code(WcmsConstants.SERVICECHARGEEFFECTIVETO_MANDATORY_CODE)
+                       .message(WcmsConstants.SERVICECHARGEEFFECTIVETO_MANADATORY_ERROR_MESSAGE)
+                       .field(WcmsConstants.SERVICECHARGEEFFECTIVETO_MANADATORY_FIELD_NAME).build();
+               errorFields.add(errorField); 
+           }
+           else 
+               return;
+               
     }
 }

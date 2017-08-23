@@ -28,9 +28,6 @@ import org.springframework.stereotype.Repository;
 public class LicenseStatusRepository {
 
 	@Autowired
-	private JdbcTemplate jdbcTemplate;
-	
-	@Autowired
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Autowired
@@ -39,28 +36,26 @@ public class LicenseStatusRepository {
 	/**
 	 * Description : this method will create LicenseStatus in database
 	 * 
-	 * @param licenseStatus
+	 * @param statuses
 	 * @return LicenseStatusId
 	 */
-	public Long createLicenseStatus(LicenseStatus licenseStatus) {
-		
+	public Long createLicenseStatus(LicenseStatus statuses) {
+
 		final KeyHolder holder = new GeneratedKeyHolder();
-		String LicenseStatusInsert = LicenseStatusQueryBuilder.INSERT_LICENSE_STATUS_QUERY;
-		AuditDetails auditDetails = licenseStatus.getAuditDetails();
+		String insertQueryLicenseStatus = LicenseStatusQueryBuilder.INSERT_LICENSE_STATUS_QUERY;
+		AuditDetails auditDetails = statuses.getAuditDetails();
 		MapSqlParameterSource parameters = new MapSqlParameterSource();
-		parameters.addValue("tenantId",  licenseStatus.getTenantId());
-		parameters.addValue("name",      licenseStatus.getName());
-		parameters.addValue("code",  licenseStatus.getCode());
-		parameters.addValue("active",  licenseStatus.getActive() == null ? true : licenseStatus.getActive());
-		parameters.addValue("createdBy",   auditDetails.getCreatedBy());
-		parameters.addValue("lastModifiedBy",  auditDetails.getLastModifiedBy());
-		parameters.addValue("createdTime",  auditDetails.getCreatedTime());
-		parameters.addValue("lastModifiedTime",  auditDetails.getLastModifiedTime());
-		
-		namedParameterJdbcTemplate.update(LicenseStatusInsert, parameters, holder, new String[] { "id" });
-		
-		
-	
+		parameters.addValue("tenantId", statuses.getTenantId());
+		parameters.addValue("name", statuses.getName());
+		parameters.addValue("code", statuses.getCode());
+		parameters.addValue("active", statuses.getActive() == null ? true : statuses.getActive());
+		parameters.addValue("createdBy", auditDetails.getCreatedBy());
+		parameters.addValue("lastModifiedBy", auditDetails.getLastModifiedBy());
+		parameters.addValue("createdTime", auditDetails.getCreatedTime());
+		parameters.addValue("lastModifiedTime", auditDetails.getLastModifiedTime());
+
+		namedParameterJdbcTemplate.update(insertQueryLicenseStatus, parameters, holder, new String[] { "id" });
+
 		return Long.valueOf(holder.getKey().intValue());
 	}
 
@@ -70,24 +65,23 @@ public class LicenseStatusRepository {
 	 * @param LicenseStatus
 	 * @return LicenseStatus
 	 */
-	public LicenseStatus updateLicenseStatus(LicenseStatus licenseStatus) {
+	public LicenseStatus updateLicenseStatus(LicenseStatus statuses) {
 
 		Long updatedTime = new Date().getTime();
-		String LicenseStatusUpdateSql = LicenseStatusQueryBuilder.UPDATE_LICENSE_STATUS_QUERY;
-        AuditDetails auditDetails = licenseStatus.getAuditDetails();
+		String updateQueryLicense = LicenseStatusQueryBuilder.UPDATE_LICENSE_STATUS_QUERY;
+		AuditDetails auditDetails = statuses.getAuditDetails();
 		MapSqlParameterSource parameters = new MapSqlParameterSource();
-		parameters.addValue("tenantId", licenseStatus.getTenantId());
-		parameters.addValue("code", licenseStatus.getCode());
-		parameters.addValue("name", licenseStatus.getName());
-		parameters.addValue("active", licenseStatus.getActive() == null ? true : licenseStatus.getActive());
+		parameters.addValue("tenantId", statuses.getTenantId());
+		parameters.addValue("code", statuses.getCode());
+		parameters.addValue("name", statuses.getName());
+		parameters.addValue("active", statuses.getActive() == null ? true : statuses.getActive());
 		parameters.addValue("lastModifiedBy", auditDetails == null ? null : auditDetails.getLastModifiedBy());
 		parameters.addValue("lastModifiedTime", updatedTime);
-		parameters.addValue("id", licenseStatus.getId());
-		namedParameterJdbcTemplate.update(LicenseStatusUpdateSql, parameters);
-		
-		return licenseStatus;
+		parameters.addValue("id", statuses.getId());
+		namedParameterJdbcTemplate.update(updateQueryLicense, parameters);
 
-		
+		return statuses;
+
 	}
 
 	/**
@@ -100,6 +94,7 @@ public class LicenseStatusRepository {
 	 * @param active
 	 * @param pageSize
 	 * @param offSet
+	 * 
 	 * @return List<LicenseStatus>
 	 */
 	public List<LicenseStatus> searchLicenseStatus(String tenantId, Integer[] ids, String name, String code,
@@ -112,12 +107,11 @@ public class LicenseStatusRepository {
 		if (offSet == null) {
 			offSet = Integer.valueOf(propertiesManager.getDefaultOffset());
 		}
-		String LicenseStatusSearchQuery = LicenseStatusQueryBuilder.buildSearchQuery(tenantId, ids, name, code, active,
+		String searchQueryLicense = LicenseStatusQueryBuilder.buildSearchQuery(tenantId, ids, name, code, active,
 				pageSize, offSet, parameters);
-		List<LicenseStatus> LicenseStatuslst = getLicenseStatusSearchQuery(LicenseStatusSearchQuery.toString(),
-				parameters);
+		List<LicenseStatus> licenseStatuses = getLicenseStatusSearchQuery(searchQueryLicense.toString(), parameters);
 
-		return LicenseStatuslst;
+		return licenseStatuses;
 	}
 
 	/**
@@ -130,27 +124,27 @@ public class LicenseStatusRepository {
 	 */
 	private List<LicenseStatus> getLicenseStatusSearchQuery(String query, MapSqlParameterSource parameter) {
 
-		List<LicenseStatus> LicenseStatuslst = new ArrayList<>();
+		List<LicenseStatus> statuses = new ArrayList<>();
 		List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(query, parameter);
 		for (Map<String, Object> row : rows) {
 
-			LicenseStatus licenseStatus = new LicenseStatus();
-			licenseStatus.setId(getLong(row.get("id")));
-			licenseStatus.setTenantId(getString(row.get("tenantid")));
-			licenseStatus.setCode(getString(row.get("code")));
-			licenseStatus.setName(getString(row.get("name")));
-			licenseStatus.setActive((Boolean) row.get("active"));
+			LicenseStatus status = new LicenseStatus();
+			status.setId(getLong(row.get("id")));
+			status.setTenantId(getString(row.get("tenantid")));
+			status.setCode(getString(row.get("code")));
+			status.setName(getString(row.get("name")));
+			status.setActive((Boolean) row.get("active"));
 			AuditDetails auditDetails = new AuditDetails();
 			auditDetails.setCreatedBy(getString(row.get("createdby")));
 			auditDetails.setLastModifiedBy(getString(row.get("lastmodifiedby")));
 			auditDetails.setCreatedTime(getLong(row.get("createdtime")));
 			auditDetails.setLastModifiedTime(getLong(row.get("lastmodifiedtime")));
-			licenseStatus.setAuditDetails(auditDetails);
+			status.setAuditDetails(auditDetails);
 
-			LicenseStatuslst.add(licenseStatus);
+			statuses.add(status);
 		}
 
-		return LicenseStatuslst;
+		return statuses;
 	}
 
 	/**

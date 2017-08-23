@@ -71,19 +71,17 @@ module.exports = {
                         throw new Error(_err);
                     }
                 }else if(response && response.response && response.response.data && response.response.data.error){
-                  // let _err = common.translate(response.response.data.error.fields[0].code);
-                  let _err = "";
-                  let fields=response.response.data.error.fields;
-                  for (var i = 0; i < fields.length; i++) {
-                    _err=+common.translate(fields[i].code) + " - "+ fields[i].message +"\n";
-                  }
-
-
+                  let _err = common.translate(response.response.data.error.fields[0].code);
+                  // let _err = "";
+                  // let fields=response.response.data.error.fields;
+                  // for (var i = 0; i < fields.length; i++) {
+                  //   _err=+common.translate(fields[i].code) + " - "+ fields[i].message +"\n";
+                  // }
                   throw new Error(_err);
                 }else if(response && response.response && !response.response.data && response.response.status === 400) {
                     document.title = "eGovernments";
                     var locale = localStorage.getItem('locale');
-                    var _tntId = localStorage.getItem("tenantId");
+                    var _tntId = localStorage.getItem("tenantId") || "default";
                     localStorage.clear();
                     localStorage.setItem('locale', locale);
                     localStorage.reload = true;

@@ -2,7 +2,7 @@
 	"variables": [],
 	"info": {
 		"name": "Dev Env TL Masters",
-		"_postman_id": "6c0b3e07-6850-82fe-efff-2b3f66c3e466",
+		"_postman_id": "9cd758be-9708-6471-e5d0-33042c77bc36",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
@@ -75,7 +75,30 @@
 				}
 			],
 			"request": {
-				"url": "http://egov-micro-dev.egovernments.org/tl-masters/category/v1/_create",
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/category/v1/_create?type=CATEGORY",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"tl-masters",
+						"category",
+						"v1",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "CATEGORY",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
 				"method": "POST",
 				"header": [
 					{
@@ -86,7 +109,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"1\",\r\n\"authToken\": \"7bd2c537-04a6-4994-9bfa-b782e9cb05a7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n},\r\n      \"categories\": \r\n  [{\r\n           \"tenantId\": \"default\",\r\n           \"name\": \"Veterinary Trades\",\r\n           \"code\": \"Veterinary Trades\",\r\n           \"active\": true,\r\n           \"parentId\": null,\r\n           \"businessNature\": null,\r\n           \"details\": null,\r\n           \"auditDetails\": {\r\n               \"createdBy\": \"1\",\r\n               \"lastModifiedBy\": \"1\",\r\n               \"createdTime\": 1501229900093,\r\n               \"lastModifiedTime\": 1501229900093\r\n           }\r\n       }]\r\n\r\n}"
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"1\",\r\n\"authToken\": \"0b34045a-bf24-4ec6-b3a4-d6dd8450d941\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n},\r\n      \"categories\": \r\n  [{\r\n           \"tenantId\": \"default\",\r\n           \"name\": \"VeterinaryT1\",\r\n           \"code\": \"VETERNT1\",\r\n           \"active\": true,\r\n           \"parentId\": null,\r\n           \"businessNature\": null,\r\n           \"details\": null,\r\n           \"validtyYears\":2,\r\n           \"auditDetails\": {\r\n               \"createdBy\": \"1\",\r\n               \"lastModifiedBy\": \"1\",\r\n               \"createdTime\": 1501229900093,\r\n               \"lastModifiedTime\": 1501229900093\r\n           }\r\n       }]\r\n\r\n}"
 				},
 				"description": ""
 			},
@@ -126,7 +149,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"1\",\r\n\"authToken\": \"cef9396c-3ae5-4567-a214-c15b87c451f7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\",\r\n\"userInfo\":{\r\n\t\"id\":1\r\n}\r\n},\r\n  \"documentTypes\": [\r\n  {\r\n  \"tenantId\": \"default\",\r\n  \"name\": \"Environment NOC \",\r\n  \"mandatory\":\"true\",\r\n  \"enabled\":\"true\",\r\n  \"applicationType\":\"NEW\",\r\n           \"auditDetails\": {\r\n               \"createdBy\": 1,\r\n               \"lastModifiedBy\": 1,\r\n               \"createdTime\": 1501229900093,\r\n               \"lastModifiedTime\": 1501229900093\r\n           }\r\n       }\r\n]\r\n}"
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"1\",\r\n\"authToken\": \"e47e0981-553b-4393-bad5-3ac56c0debd4\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\",\r\n\"userInfo\":{\r\n\t\"id\":1\r\n}\r\n},\r\n  \"documentTypes\": [\r\n  {\r\n  \"tenantId\": \"default\",\r\n  \"name\": \"\",\r\n  \"mandatory\":\"true\",\r\n  \"enabled\":\"true\",\r\n  \"applicationType\":\"NEW\",\r\n           \"auditDetails\": {\r\n               \"createdBy\": 1,\r\n               \"lastModifiedBy\": 1,\r\n               \"createdTime\": 1501229900093,\r\n               \"lastModifiedTime\": 1501229900093\r\n           }\r\n       }\r\n]\r\n}"
 				},
 				"description": ""
 			},
@@ -189,7 +212,30 @@
 				}
 			],
 			"request": {
-				"url": "http://egov-micro-dev.egovernments.org/tl-masters/category/v1/_create?",
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/category/v1/_create?type=SUBCATEGORY",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"tl-masters",
+						"category",
+						"v1",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "SUBCATEGORY",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
 				"method": "POST",
 				"header": [
 					{
@@ -200,7 +246,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"7bd2c537-04a6-4994-9bfa-b782e9cb05a7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\",\r\n\"userInfo\": {\r\n\t\"id\": 1\r\n}\r\n},\r\n      \"categories\": [\r\n  {\r\n           \"tenantId\": \"default\",\r\n           \"name\": \"Beef & Beef Products\",\r\n           \"code\": \"Beef & Beef Products\",\r\n           \"active\": true,\r\n           \"parentId\": 1,\r\n           \"validityYears\":2,\r\n          \"details\":[{\r\n\t\t\t\t\"feeType\":\"License\",\r\n\t\t\t\t\"rateType\":\"Flat_By_Range\",\r\n\t\t\t\t\"uomId\":\"1\"\r\n\t\t\t\t}],\r\n\t\t\"businessNature\": \"Permanent\",\r\n           \"auditDetails\": {\r\n               \"createdBy\": \"1\",\r\n               \"lastModifiedBy\": \"1\",\r\n               \"createdTime\": 1501229900093,\r\n               \"lastModifiedTime\": 1501229900093\r\n           }\r\n       }\r\n]\r\n}"
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"a54b13a8-250c-4dc7-acea-9d05b722d660\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\",\r\n\"userInfo\": {\r\n\t\"id\": 1\r\n}\r\n},\r\n      \"categories\": [\r\n  {\r\n           \"tenantId\": \"default\",\r\n           \"name\": \"Beef&Products\",\r\n           \"code\": \"Beef&Products\",\r\n           \"active\": true,\r\n           \"parentId\": 1,\r\n           \"validityYears\":2,\r\n          \"details\":[{\r\n\t\t\t\t\"feeType\":\"License\",\r\n\t\t\t\t\"rateType\":\"Flat_By_Range\",\r\n\t\t\t\t\"uomId\":\"1\"\r\n\t\t\t\t}],\r\n\t\t\"businessNature\": \"Permanent\",\r\n           \"auditDetails\": {\r\n               \"createdBy\": \"1\",\r\n               \"lastModifiedBy\": \"1\",\r\n               \"createdTime\": 1501229900093,\r\n               \"lastModifiedTime\": 1501229900093\r\n           }\r\n       }\r\n]\r\n}"
 				},
 				"description": ""
 			},
@@ -336,7 +382,30 @@
 				}
 			],
 			"request": {
-				"url": "http://egov-micro-dev.egovernments.org/tl-masters/category/v1/_update?",
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/category/v1/_update?type=SUBCATEGORY",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"tl-masters",
+						"category",
+						"v1",
+						"_update"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "SUBCATEGORY",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
 				"method": "POST",
 				"header": [
 					{
@@ -347,7 +416,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"1\",\r\n\"authToken\": \"7bd2c537-04a6-4994-9bfa-b782e9cb05a7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\",\r\n\"userInfo\": {\r\n\t\"id\": 2\r\n}\r\n},\r\n    \"categories\": [\r\n        {\r\n            \"id\": 19,\r\n            \"tenantId\": \"default\",\r\n            \"name\": \"Beef & Beef Products\",\r\n            \"code\": \"BEEFPRODUCTS\",\r\n            \"parentId\": 1,\r\n            \"active\": true,\r\n            \"businessNature\": \"Permanent\",\r\n            \"details\": [\r\n                {\r\n                    \"id\": 1,\r\n                    \"categoryId\": 2,\r\n                    \"feeType\": \"License\",\r\n                    \"rateType\": \"Flat_By_Range\",\r\n                    \"uomId\": 1\r\n                }\r\n            ],\r\n            \"auditDetails\": {\r\n                \"createdBy\": 1,\r\n                \"createdTime\": 1501857371395\r\n            }\r\n        }\r\n    ]\r\n}"
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"1\",\r\n\"authToken\": \"7bd2c537-04a6-4994-9bfa-b782e9cb05a7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\",\r\n\"userInfo\": {\r\n\t\"id\": 2\r\n}\r\n},\r\n    \"categories\": [\r\n        {\r\n            \"id\": 19,\r\n            \"tenantId\": \"default\",\r\n            \"name\": \"Beef & Beef Products\",\r\n            \"code\": \"BEEFPRODUCTS\",\r\n            \"parentId\": 1,\r\n            \"active\": true,\r\n            \"businessNature\": \"Permanent\",\r\n            \"validityYears\":2,\r\n            \"details\": [\r\n                {\r\n                    \"id\": 1,\r\n                    \"categoryId\": 2,\r\n                    \"feeType\": \"License\",\r\n                    \"rateType\": \"Flat_By_Range\",\r\n                    \"uomId\": 1\r\n                }\r\n            ],\r\n            \"auditDetails\": {\r\n                \"createdBy\": 1,\r\n                \"createdTime\": 1501857371395\r\n            }\r\n        }\r\n    ]\r\n}"
 				},
 				"description": ""
 			},
@@ -368,7 +437,7 @@
 			],
 			"request": {
 				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/category/v1/_search?tenantId=default&type=subcategory",
+					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/category/v1/_search?tenantId=default&type=SUBCATEGORY",
 					"protocol": "http",
 					"host": [
 						"egov-micro-dev",
@@ -390,7 +459,7 @@
 						},
 						{
 							"key": "type",
-							"value": "subcategory",
+							"value": "SUBCATEGORY",
 							"equals": true,
 							"description": ""
 						}
@@ -407,7 +476,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"7bd2c537-04a6-4994-9bfa-b782e9cb05a7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n}\r\n}"
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"a54b13a8-250c-4dc7-acea-9d05b722d660\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n}\r\n}"
 				},
 				"description": ""
 			},
@@ -427,7 +496,30 @@
 				}
 			],
 			"request": {
-				"url": "http://egov-micro-dev.egovernments.org/tl-masters/category/v1/_update?",
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/category/v1/_update?type=CATEGORY",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"tl-masters",
+						"category",
+						"v1",
+						"_update"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "CATEGORY",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
 				"method": "POST",
 				"header": [
 					{
@@ -604,7 +696,7 @@
 			],
 			"request": {
 				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/category/v1/_search?tenantId=default&active=True",
+					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/category/v1/_search?tenantId=default&active=True&type=SUBCATEGORY",
 					"protocol": "http",
 					"host": [
 						"egov-micro-dev",
@@ -627,6 +719,12 @@
 						{
 							"key": "active",
 							"value": "True",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "type",
+							"value": "SUBCATEGORY",
 							"equals": true,
 							"description": ""
 						}
@@ -858,13 +956,12 @@
 			],
 			"request": {
 				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/feematrix/v1/_search?tenantId=default",
+					"raw": "http://localhost:8080/tl-masters/feematrix/v1/_search?tenantId=default",
 					"protocol": "http",
 					"host": [
-						"egov-micro-dev",
-						"egovernments",
-						"org"
+						"localhost"
 					],
+					"port": "8080",
 					"path": [
 						"tl-masters",
 						"feematrix",
@@ -891,7 +988,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"b0c7c6ce-bde7-4085-bf72-426e3f5278a8\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\"\r\n}\r\n}"
+					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"fec89599-adc9-46e1-a187-db98a47a6180\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\"\r\n}\r\n}"
 				},
 				"description": ""
 			},

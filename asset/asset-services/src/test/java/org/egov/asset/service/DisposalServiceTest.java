@@ -1,7 +1,6 @@
 package org.egov.asset.service;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
@@ -15,41 +14,47 @@ import java.util.List;
 import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.DisposalRequest;
 import org.egov.asset.contract.DisposalResponse;
+import org.egov.asset.contract.FunctionResponse;
+import org.egov.asset.contract.FundResponse;
+import org.egov.asset.contract.VoucherRequest;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.AssetCriteria;
+import org.egov.asset.model.AssetStatus;
 import org.egov.asset.model.AuditDetails;
 import org.egov.asset.model.ChartOfAccountDetailContract;
+import org.egov.asset.model.Department;
 import org.egov.asset.model.Disposal;
 import org.egov.asset.model.DisposalCriteria;
+import org.egov.asset.model.Function;
+import org.egov.asset.model.Fund;
 import org.egov.asset.model.Location;
-import org.egov.asset.model.enums.AssetCategoryType;
-import org.egov.asset.model.enums.DepreciationMethod;
+import org.egov.asset.model.StatusValue;
+import org.egov.asset.model.Voucher;
+import org.egov.asset.model.VouchercreateAccountCodeDetails;
+import org.egov.asset.model.enums.AssetStatusObjectName;
 import org.egov.asset.model.enums.ModeOfAcquisition;
 import org.egov.asset.model.enums.Status;
 import org.egov.asset.model.enums.TransactionType;
+import org.egov.asset.model.enums.VoucherType;
 import org.egov.asset.repository.AssetRepository;
 import org.egov.asset.repository.DisposalRepository;
 import org.egov.asset.util.FileUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(DisposalService.class)
+@RunWith(MockitoJUnitRunner.class)
 public class DisposalServiceTest {
 
     @Mock
@@ -82,13 +87,14 @@ public class DisposalServiceTest {
     @InjectMocks
     private DisposalService disposalService;
 
-    @Before
-    public void setUp() throws Exception {
-    }
+    @Mock
+    private AssetConfigurationService assetConfigurationService;
 
-    @After
-    public void tearDown() throws Exception {
-    }
+    @Mock
+    private AssetMasterService assetMasterService;
+
+    @Mock
+    private AssetService assetService;
 
     @Test
     public void testSearch() {
@@ -107,57 +113,220 @@ public class DisposalServiceTest {
     }
 
     @Test
-    public void testCreateAsync() throws NumberFormatException, Exception {
+    public void testCreateAsync() throws Exception {
+        final DisposalRequest disposalRequest = getDisposalRequest();
+        final HttpHeaders headers = getHttpHeaders();
+        final DisposalResponse expectedDisposalResponse = getDisposalResponse(
+                "disposal/disposalServiceResponse.disposal1.json");
+        final DisposalResponse actualDisposalResponse = disposalService.createAsync(disposalRequest, headers);
+        actualDisposalResponse.getDisposals().get(0).setId(Long.valueOf("15"));
+        assertEquals(expectedDisposalResponse.toString(), actualDisposalResponse.toString());
+    }
 
-        final DisposalService mock = PowerMockito.mock(DisposalService.class);
-        PowerMockito.doReturn("6").when(mock, "createVoucherForDisposal", any(DisposalRequest.class),
-                any(HttpHeaders.class));
-
-        final DisposalRequest disposalRequest = new DisposalRequest();
-        disposalRequest.setDisposal(getDisposalForCreateAsync());
-        disposalRequest.getDisposal().setProfitLossVoucherReference("6");
-
-        final List<DisposalRequest> insertedDisposalRequest = new ArrayList<>();
-        insertedDisposalRequest.add(disposalRequest);
-        DisposalResponse disposalResponse = null;
-        try {
-            disposalResponse = getDisposal("disposal/disposalServiceResponse.disposal1.json");
-        } catch (final Exception e) {
-            e.printStackTrace();
-            fail();
-        }
-
+    @SuppressWarnings("unchecked")
+    @Test
+    public void createVoucherForDisposalTest() throws Exception {
+        final DisposalRequest disposalRequest = getDisposalRequest();
+        final HttpHeaders headers = getHttpHeaders();
+        final Asset asset = getAsset();
         final List<Asset> assets = new ArrayList<>();
-        assets.add(get_Asset());
+        assets.add(asset);
+        final FunctionResponse functionResponse = getFunctionResponse();
+        final FundResponse fundResponse = getFundResponse();
+        final VoucherRequest voucherRequest = getVoucherRequest();
         when(assetRepository.findForCriteria(any(AssetCriteria.class))).thenReturn(assets);
-        when(applicationProperties.getCreateAssetDisposalTopicName()).thenReturn("kafka.topics.save.disposal");
-        when(disposalRepository.getNextDisposalId()).thenReturn(15);
-
-        assertTrue(disposalResponse.getDisposals().get(0).getId().equals(Long.valueOf("15")));
-        mock.createAsync(disposalRequest, new HttpHeaders());
-
-        assertEquals(disposalResponse.getDisposals().get(0).getProfitLossVoucherReference(),
-                disposalRequest.getDisposal().getProfitLossVoucherReference());
+        when(voucherService.getFunctionData(any(RequestInfo.class), any(String.class), any(Long.class)))
+                .thenReturn(functionResponse);
+        when(voucherService.getFundData(any(RequestInfo.class), any(String.class), any(Long.class)))
+                .thenReturn(fundResponse);
+        when(voucherService.createVoucherRequest(any(Object.class), any(Fund.class), any(Long.class), any(List.class),
+                any(RequestInfo.class), any(String.class))).thenReturn(voucherRequest);
+        disposalService.createVoucherForDisposal(disposalRequest, headers);
     }
 
     @Test
     public void testCreate() {
-        final DisposalService mock = PowerMockito.mock(DisposalService.class);
         DisposalResponse disposalResponse = null;
         try {
-            disposalResponse = getDisposal("disposal/disposalServiceResponse.disposal1.json");
+            disposalResponse = getDisposalResponse("disposal/disposalServiceResponse.disposal1.json");
         } catch (final Exception e) {
             e.printStackTrace();
             fail();
         }
+        final Asset asset = getAsset();
+        final List<Asset> assets = new ArrayList<>();
+        assets.add(asset);
+        final AssetStatus assetStatus = getAssetStatus();
+        final List<AssetStatus> assetStatuses = new ArrayList<>();
+        assetStatuses.add(assetStatus);
         final DisposalRequest disposalRequest = new DisposalRequest();
         disposalRequest.setDisposal(getDisposalForCreateAsync());
-        disposalRequest.getDisposal().setId(Long.valueOf("15"));
-        disposalRequest.getDisposal().setProfitLossVoucherReference("6");
 
-        doNothing().when(disposalRepository).create(disposalRequest);
-        mock.create(disposalRequest);
+        doNothing().when(disposalRepository).create(any(DisposalRequest.class));
         assertEquals(disposalResponse.getDisposals().get(0).toString(), disposalRequest.getDisposal().toString());
+        when(assetRepository.findForCriteria(any(AssetCriteria.class))).thenReturn(assets);
+        when(assetMasterService.getStatuses(any(AssetStatusObjectName.class), any(Status.class), any(String.class)))
+                .thenReturn(assetStatuses);
+        disposalService.setStatusOfAssetToDisposed(disposalRequest);
+        disposalService.create(disposalRequest);
+    }
+
+    private AssetStatus getAssetStatus() {
+        final AssetStatus assetStatus = new AssetStatus();
+        final StatusValue statusValue = new StatusValue();
+        statusValue.setCode(Status.DISPOSED.toString());
+        statusValue.setName(Status.DISPOSED.toString());
+        statusValue.setDescription("Asset status is Disposed");
+        final List<StatusValue> statusValues = new ArrayList<>();
+        statusValues.add(statusValue);
+        assetStatus.setObjectName(AssetStatusObjectName.DISPOSAL.toString());
+        assetStatus.setStatusValues(statusValues);
+        assetStatus.setAuditDetails(getAuditDetails());
+        return assetStatus;
+    }
+
+    private VoucherRequest getVoucherRequest() {
+        final VoucherRequest voucherRequest = new VoucherRequest();
+        final List<Voucher> vouchers = new ArrayList<>();
+        final Voucher voucher = getVoucher();
+        vouchers.add(voucher);
+        voucherRequest.setRequestInfo(null);
+        voucherRequest.setVouchers(vouchers);
+        return voucherRequest;
+    }
+
+    private Voucher getVoucher() {
+        final Voucher voucher = new Voucher();
+        voucher.setCgvn(null);
+        voucher.setDepartment(Long.valueOf("5"));
+        voucher.setDescription("Asset Revaluation Jouranl Voucher");
+        voucher.setFiscalPeriod(null);
+        voucher.setFund(getFund());
+        voucher.setId(Long.valueOf("50"));
+        voucher.setLedgers(getLedgers());
+        voucher.setModuleId(null);
+        voucher.setName("Asset Revaluation");
+        voucher.setOriginalVhId(null);
+        voucher.setRefVhId(null);
+        voucher.setStatus(Status.CREATED.toString());
+        voucher.setType(VoucherType.JOURNALVOUCHER.toString());
+        voucher.setVoucherNumber("1/GJV/00000197/08/2017-18");
+        return null;
+    }
+
+    private List<VouchercreateAccountCodeDetails> getLedgers() {
+        final List<VouchercreateAccountCodeDetails> ledgers = new ArrayList<>();
+        final VouchercreateAccountCodeDetails creditAccountDetails = new VouchercreateAccountCodeDetails();
+        creditAccountDetails.setCreditAmount(new BigDecimal("500"));
+        creditAccountDetails.setDebitAmount(BigDecimal.ZERO);
+        creditAccountDetails.setFunction(getFunction());
+        creditAccountDetails.setGlcode("144005");
+        creditAccountDetails.setSubledgerDetails(null);
+        final VouchercreateAccountCodeDetails debitAccountDetails = new VouchercreateAccountCodeDetails();
+        debitAccountDetails.setCreditAmount(BigDecimal.ZERO);
+        debitAccountDetails.setDebitAmount(new BigDecimal("500"));
+        debitAccountDetails.setFunction(getFunction());
+        debitAccountDetails.setGlcode("122365");
+        debitAccountDetails.setSubledgerDetails(null);
+        ledgers.add(creditAccountDetails);
+        ledgers.add(debitAccountDetails);
+        return ledgers;
+    }
+
+    private FundResponse getFundResponse() {
+        final FundResponse fundResponse = new FundResponse();
+        final List<Fund> funds = new ArrayList<>();
+        final Fund fund = getFund();
+        funds.add(fund);
+        fundResponse.setFunds(funds);
+        fundResponse.setFund(null);
+        fundResponse.setPage(null);
+        fundResponse.setResponseInfo(null);
+        return fundResponse;
+    }
+
+    private Fund getFund() {
+        final Fund fund = new Fund();
+        fund.setActive(true);
+        fund.setCode("01");
+        fund.setName("Municipal Fund");
+        fund.setId(Long.valueOf("1"));
+        fund.setIdentifier(null);
+        fund.setLevel(null);
+        fund.setParentId(null);
+        return fund;
+    }
+
+    private FunctionResponse getFunctionResponse() {
+        final FunctionResponse functionResponse = new FunctionResponse();
+        final List<Function> functions = new ArrayList<>();
+        final Function function = getFunction();
+        functions.add(function);
+        functionResponse.setFunctions(functions);
+        functionResponse.setFunction(null);
+        functionResponse.setPage(null);
+        functionResponse.setResponseInfo(null);
+        return functionResponse;
+    }
+
+    private Function getFunction() {
+        final Function function = new Function();
+        function.setId(Long.valueOf("5"));
+        function.setCode("0600");
+        function.setActive(true);
+        function.setName("Estate");
+        function.setParentId(null);
+        function.setLevel(null);
+        return function;
+    }
+
+    private Asset getAsset() {
+        final Asset asset = new Asset();
+        asset.setTenantId("ap.kurnool");
+        asset.setId(Long.valueOf("1"));
+        asset.setName("asset name");
+        asset.setStatus(Status.CREATED.toString());
+        asset.setModeOfAcquisition(ModeOfAcquisition.ACQUIRED);
+        asset.setEnableYearWiseDepreciation(true);
+
+        final Location location = new Location();
+        location.setLocality(4l);
+        location.setDoorNo("door no");
+
+        final AssetCategory assetCategory = new AssetCategory();
+        assetCategory.setId(1l);
+        assetCategory.setName("category name");
+
+        asset.setLocationDetails(location);
+        asset.setAssetCategory(assetCategory);
+
+        final Department department = new Department();
+        department.setId(Long.valueOf("5"));
+        department.setCode("ENG");
+        department.setName("ENGINEERING");
+
+        asset.setDepartment(department);
+        return asset;
+    }
+
+    private DisposalRequest getDisposalRequest() {
+        final DisposalRequest disposalRequest = new DisposalRequest();
+        disposalRequest.setRequestInfo(new RequestInfo());
+        disposalRequest.setDisposal(getDisposalForCreateAsync());
+        return disposalRequest;
+    }
+
+    private HttpHeaders getHttpHeaders() {
+        final List<MediaType> mediaTypes = new ArrayList<MediaType>();
+        mediaTypes.add(MediaType.ALL);
+        final HttpHeaders requestHeaders = new HttpHeaders();
+        requestHeaders.set(HttpHeaders.COOKIE, "SESSIONID=123");
+        requestHeaders.setPragma("no-cache");
+        requestHeaders.setConnection("keep-alive");
+        requestHeaders.setCacheControl("no-cache");
+        requestHeaders.setAccept(mediaTypes);
+        requestHeaders.setContentType(MediaType.APPLICATION_JSON);
+        return requestHeaders;
     }
 
     private Disposal getDisposalForSearch() {
@@ -193,6 +362,7 @@ public class DisposalServiceTest {
     private Disposal getDisposalForCreateAsync() {
 
         final Disposal disposal = new Disposal();
+        disposal.setId(Long.valueOf("15"));
         disposal.setTenantId("ap.kurnool");
         disposal.setAssetId(Long.valueOf("31"));
         disposal.setBuyerName("Abhi");
@@ -207,45 +377,12 @@ public class DisposalServiceTest {
         disposal.setAssetSaleAccount(Long.valueOf("15"));
         disposal.setProfitLossVoucherReference("6");
         disposal.setAuditDetails(getAuditDetails());
+        disposal.setProfitLossVoucherReference("6");
 
         return disposal;
     }
 
-    private Asset get_Asset() {
-        final Asset asset = new Asset();
-        asset.setTenantId("ap.kurnool");
-        asset.setId(Long.valueOf("31"));
-        asset.setName("asset name");
-        asset.setStatus(Status.CREATED.toString());
-        asset.setModeOfAcquisition(ModeOfAcquisition.ACQUIRED);
-
-        final Location location = new Location();
-        location.setLocality(4l);
-        location.setDoorNo("door no");
-
-        final AssetCategory assetCategory = new AssetCategory();
-        assetCategory.setTenantId("ap.kurnool");
-        assetCategory.setId(Long.valueOf("2"));
-        assetCategory.setName("asset3");
-        assetCategory.setCode(null);
-        assetCategory.setAssetCategoryType(AssetCategoryType.IMMOVABLE);
-        assetCategory.setParent(Long.valueOf("2"));
-        assetCategory.setDepreciationMethod(DepreciationMethod.STRAIGHT_LINE_METHOD);
-        assetCategory.setIsAssetAllow(true);
-        assetCategory.setAccumulatedDepreciationAccount(Long.valueOf("1"));
-        assetCategory.setDepreciationExpenseAccount(Long.valueOf("3"));
-        assetCategory.setUnitOfMeasurement(Long.valueOf("10"));
-        assetCategory.setVersion("v1");
-        assetCategory.setDepreciationRate(null);
-        assetCategory.setAssetAccount(Long.valueOf("2"));
-        assetCategory.setRevaluationReserveAccount(Long.valueOf("2"));
-
-        asset.setLocationDetails(location);
-        asset.setAssetCategory(assetCategory);
-        return asset;
-    }
-
-    private DisposalResponse getDisposal(final String filePath) throws IOException {
+    private DisposalResponse getDisposalResponse(final String filePath) throws IOException {
         final String empJson = new FileUtils().getFileContents(filePath);
         return new ObjectMapper().readValue(empJson, DisposalResponse.class);
     }

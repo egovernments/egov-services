@@ -16,6 +16,7 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import Checkbox from 'material-ui/Checkbox';
 import RaisedButton from 'material-ui/RaisedButton';
+import {translate} from '../../../../common/common';
 import Api from '../../../../../api/api';
 
 
@@ -144,7 +145,7 @@ class VacantLand extends Component {
 
     return (<div>
 			<Card className="uiCard">
-			  <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Vacant Land Details</div>} />
+			  <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate('pt.create.groups.vacantLand.fields.vacantLandDetails')}</div>} />
 			  <CardText style={styles.reducePadding}>
 				  
 						  <Grid fluid>
@@ -152,7 +153,7 @@ class VacantLand extends Component {
 								  <Col xs={12} md={3} sm={6}>
 									   <TextField
 											hintText=""
-											floatingLabelText="Survey Number *"
+											floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.surveyNumber')}<span style={{"color": "#FF0000"}}> *</span></span>}
 											errorText={fieldErrors.survayNumber ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.survayNumber}</span> : ""}
 											value={vacantLand.survayNumber ? vacantLand.survayNumber:""}
 											onChange={(e) => {
@@ -160,7 +161,7 @@ class VacantLand extends Component {
 											  }
 											}
 											floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-											underlineStyle={styles.underlineStyle}
+											underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 											underlineFocusStyle={styles.underlineFocusStyle}
 											className="fullWidth"
 											maxLength={64}
@@ -171,7 +172,7 @@ class VacantLand extends Component {
 								  <Col xs={12} md={3} sm={6}>
 									   <TextField
 											hintText=""
-											floatingLabelText="Patta Number *"
+											floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.pattaNumber')}<span style={{"color": "#FF0000"}}> *</span></span>}
 											errorText={fieldErrors.pattaNumber ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.pattaNumber}</span> : ""}
 											value={vacantLand.pattaNumber ? vacantLand.pattaNumber:""}
 											onChange={(e) => {
@@ -179,7 +180,7 @@ class VacantLand extends Component {
 											  }
 											}
 											floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-											underlineStyle={styles.underlineStyle}
+											underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 											underlineFocusStyle={styles.underlineFocusStyle}
 											className="fullWidth"
 											maxLength={64}
@@ -189,7 +190,7 @@ class VacantLand extends Component {
 								  <Col xs={12} md={3} sm={6}>
 									   <TextField
 											hintText=""
-											floatingLabelText="Vacant Land Area(in Sq. Mtrs) *"
+											floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.vacantLandArea')}<span style={{"color": "#FF0000"}}> *</span></span>}
 											errorText={fieldErrors.vacantLandArea ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.vacantLandArea}</span> : ""}
 											value={vacantLand.vacantLandArea ? vacantLand.vacantLandArea:""}
 											onChange={(e) => {
@@ -197,7 +198,7 @@ class VacantLand extends Component {
 											  }
 											}
 											floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-											underlineStyle={styles.underlineStyle}
+											underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 											underlineFocusStyle={styles.underlineFocusStyle}
 											className="fullWidth"
 											maxLength={64}
@@ -207,7 +208,7 @@ class VacantLand extends Component {
 								   <Col xs={12} md={3} sm={6}>
 									   <TextField
 											hintText=""
-											floatingLabelText="Market Value *"
+											floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.marketValue')}<span style={{"color": "#FF0000"}}> *</span></span>}
 											errorText={fieldErrors.marketValue ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.marketValue}</span> : ""}
 											value={vacantLand.marketValue ? vacantLand.marketValue:""}
 											onChange={(e) => {
@@ -215,7 +216,7 @@ class VacantLand extends Component {
 											  }
 											}
 											floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-											underlineStyle={styles.underlineStyle}
+											underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 											underlineFocusStyle={styles.underlineFocusStyle}
 											className="fullWidth"
 											maxLength={64}
@@ -225,7 +226,7 @@ class VacantLand extends Component {
 								  <Col xs={12} md={3} sm={6}>
 									   <TextField
 											hintText=""
-											floatingLabelText="Capital Value *"
+											floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.capitalValue')}<span style={{"color": "#FF0000"}}> *</span></span>}
 											errorText={fieldErrors.capitalValue ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.capitalValue}</span> : ""}
 											value={vacantLand.capitalValue ? vacantLand.capitalValue:""}
 											onChange={(e) => {
@@ -233,7 +234,7 @@ class VacantLand extends Component {
 											  }
 											}
 											floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-											underlineStyle={styles.underlineStyle}
+											underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 											underlineFocusStyle={styles.underlineFocusStyle}
 											className="fullWidth"
 											maxLength={64}
@@ -241,28 +242,22 @@ class VacantLand extends Component {
 										  />
 								  </Col>
 								  <Col xs={12} md={3} sm={6}>
-									<DatePicker  className="fullWidth datepicker"
-									  floatingLabelText="Effective Date *"
+									<TextField  className="fullWidth"
+									  hintText="dd/mm/yyyy"
+									  floatingLabelFixed={true}
+									  floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.effectiveDate')}<span style={{"color": "#FF0000"}}> *</span></span>}
 									  errorText={fieldErrors.effectiveDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.effectiveDate}</span> : ""}
-									 
-									  onChange={(event,date) => {
-										  var e = {
-											target:{
-												value: date
-											}
-										  }
-										  handleChange(e,"effectiveDate", true, "")}}
+									  value={vacantLand.effectiveDate ? vacantLand.effectiveDate : ""}
+									  onChange={(e) => {handleChange(e,"effectiveDate", true, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
 									  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 									  underlineStyle={styles.underlineStyle}
 									  underlineFocusStyle={styles.underlineFocusStyle}
-									  textFieldStyle={{width: '100%'}}
-									  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-									/>
+									  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}/>
 								</Col>
 								 <Col xs={12} md={3} sm={6}>
 									   <TextField
 											hintText=""
-											floatingLabelText="Vacant Land Plot Area *"
+											floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.vacantLandPlotArea')}<span style={{"color": "#FF0000"}}> *</span></span>}
 											errorText={fieldErrors.vacantLandPlotArea ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.vacantLandPlotArea}</span> : ""}
 											value={vacantLand.vacantLandPlotArea ? vacantLand.vacantLandPlotArea : ""}
 											onChange={(e) => {
@@ -270,7 +265,7 @@ class VacantLand extends Component {
 											  }
 											}
 											floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-											underlineStyle={styles.underlineStyle}
+											underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 											underlineFocusStyle={styles.underlineFocusStyle}
 											className="fullWidth"
 											floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -279,9 +274,10 @@ class VacantLand extends Component {
 								   <Col xs={12} md={3} sm={6}>
 									    <SelectField  className="fullWidth selectOption"
 											hintText=""
-											floatingLabelText="Layout Approval Authority *"
+											floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.layoutApprovalAuthority')}<span style={{"color": "#FF0000"}}> *</span></span>}
 											errorText={fieldErrors.layoutApprovalAuthority ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.layoutApprovalAuthority}</span> : ""}
 											value={vacantLand.layoutApprovalAuthority ? vacantLand.layoutApprovalAuthority : ""}
+										    dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
 											onChange={(event, index, value) => {
 												var e = {
 													target: {
@@ -292,7 +288,7 @@ class VacantLand extends Component {
 											  }
 											}
 											floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-											underlineStyle={styles.underlineStyle}
+											underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 											underlineFocusStyle={styles.underlineFocusStyle}
 											floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 											>
@@ -302,7 +298,7 @@ class VacantLand extends Component {
 								  <Col xs={12} md={3} sm={6}>
 									   <TextField
 											hintText=""
-											floatingLabelText="Layout Permit Number *"
+											floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.layoutPermitNumber')}<span style={{"color": "#FF0000"}}> *</span></span>}
 											errorText={fieldErrors.layoutPermitNumber ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.layoutPermitNumber}</span> : ""}
 											value={vacantLand.layoutPermitNumber ? vacantLand.layoutPermitNumber : ""}
 											onChange={(e) => {
@@ -310,7 +306,7 @@ class VacantLand extends Component {
 											  }
 											}
 											floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-											underlineStyle={styles.underlineStyle}
+											underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 											underlineFocusStyle={styles.underlineFocusStyle}
 											className="fullWidth"
 											maxLength={64}
@@ -319,29 +315,25 @@ class VacantLand extends Component {
 								  </Col>
 								
 								<Col xs={12} md={3} sm={6}>
-									<DatePicker  className="fullWidth datepicker"
-									  floatingLabelText="Layout Permit Date *"
+									
+									<TextField  className="fullWidth"
+									  hintText="dd/mm/yyyy"
+									  floatingLabelFixed={true}
+									  floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.layoutPermitDate')}<span style={{"color": "#FF0000"}}> *</span></span>}
 									  errorText={fieldErrors.layoutPermitDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.layoutPermitDate}</span> : ""}
-									  onChange={(event,date) => {
-										  var e = {
-											target:{
-												value: date
-											}
-										  }
-										  handleChange(e,"layoutPermitDate", true, "")}}
+									  value={vacantLand.layoutPermitDate ? vacantLand.layoutPermitDate : ""}
+									  onChange={(e) => {handleChange(e,"layoutPermitDate", true, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
 									  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 									  underlineStyle={styles.underlineStyle}
 									  underlineFocusStyle={styles.underlineFocusStyle}
-									  textFieldStyle={{width: '100%'}}
-									  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-									/>
+									  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}/>
 								</Col>
 							  </Row>
 						  </Grid>
 			  </CardText>
 		  </Card>
 		  <Card className="uiCard">
-			  <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Details of surrounding Boundaries of the property</div>} />
+			  <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate('pt.create.groups.surroundingBoundaries')}</div>} />
 			  <CardText style={styles.reducePadding}>
 				 
 						  <Grid fluid>
@@ -349,15 +341,15 @@ class VacantLand extends Component {
 								  <Col xs={12} md={3} sm={6}>
 									   <TextField
 											hintText=""
-											floatingLabelText="North"
+											floatingLabelText={translate('pt.create.groups.propertyAddress.fields.northBoundedBy')}
 											errorText={fieldErrors.north ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.north}</span> : ""}
 											value={vacantLand.north ? vacantLand.north:""}
 											onChange={(e) => {
-												handleChange(e,"north", true, /^([0-9]|[a-z])+([0-9a-z]+)$/i);
+												handleChange(e,"north", false, /^([0-9]|[a-z])+([0-9a-z]+)$/i);
 											  }
 											}
 											floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-											underlineStyle={styles.underlineStyle}
+											underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 											underlineFocusStyle={styles.underlineFocusStyle}
 											className="fullWidth"
 											maxLength={256}
@@ -367,15 +359,15 @@ class VacantLand extends Component {
 								  <Col xs={12} md={3} sm={6}>
 									   <TextField
 											hintText=""
-											floatingLabelText="South"
+											floatingLabelText={translate('pt.create.groups.propertyAddress.fields.southBoundedBy')}
 											errorText={fieldErrors.south ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.south}</span> : ""}
 											value={vacantLand.south ? vacantLand.south:""}
 											onChange={(e) => {
-												handleChange(e,"south", true, /^([0-9]|[a-z])+([0-9a-z]+)$/i);
+												handleChange(e,"south", false, /^([0-9]|[a-z])+([0-9a-z]+)$/i);
 											  }
 											}
 											floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-											underlineStyle={styles.underlineStyle}
+											underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 											underlineFocusStyle={styles.underlineFocusStyle}
 											className="fullWidth"
 											maxLength={256}
@@ -385,15 +377,15 @@ class VacantLand extends Component {
 								   <Col xs={12} md={3} sm={6}>
 									   <TextField
 											hintText=""
-											floatingLabelText="East"
+											floatingLabelText={translate('pt.create.groups.propertyAddress.fields.eastBoundedBy')}
 											errorText={fieldErrors.east ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.east}</span> : ""}
 											value={vacantLand.east ? vacantLand.east:""}
 											onChange={(e) => {
-												handleChange(e,"east", true, /^([0-9]|[a-z])+([0-9a-z]+)$/i);
+												handleChange(e,"east", false, /^([0-9]|[a-z])+([0-9a-z]+)$/i);
 											  }
 											}
 											floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-											underlineStyle={styles.underlineStyle}
+											underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 											underlineFocusStyle={styles.underlineFocusStyle}
 											className="fullWidth"
 											maxLength={256}
@@ -403,11 +395,11 @@ class VacantLand extends Component {
 								   <Col xs={12} md={3} sm={6}>
 									   <TextField
 											hintText=""
-											floatingLabelText="West"
+											floatingLabelText={translate('pt.create.groups.propertyAddress.fields.westBoundedBy')}
 											errorText={fieldErrors.west ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.west}</span> : ""}
 											value={vacantLand.west ? vacantLand.west:""}
 											onChange={(e) => {
-												handleChange(e,"west", true, /^([0-9]|[a-z])+([0-9a-z]+)$/i);
+												handleChange(e,"west", false, /^([0-9]|[a-z])+([0-9a-z]+)$/i);
 											  }
 											}
 											floatingLabelFocusStyle={styles.floatingLabelFocusStyle}

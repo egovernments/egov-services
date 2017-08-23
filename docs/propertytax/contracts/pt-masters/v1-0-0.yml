@@ -1671,6 +1671,11 @@ definitions:
           type: integer
           format: int32
           description: order number of the UsageMaster
+        service:
+          type: string
+          description: Service code. Usage for this code. Different services can have different usage. default value is COMMON. This is valid for sub usage also.
+          maxLength: 64
+          minLength: 2
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:

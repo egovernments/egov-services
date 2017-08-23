@@ -14,28 +14,28 @@ import org.springframework.http.HttpStatus;
 public class AgreeMentNotFoundAdapter {
 
 	private static final int HTTP_CLIENT_ERROR_CODE = 400;
-	private static final String AGREEMENT_NOT_FOUND_EXCEPTION_MESSAGE = "tl.error.agreementNotFound";
+	private static final String AGREEMENT_NOT_FOUND_EXCEPTION_MESSAGE = "tl.error.agreementno.notfound";
 	private static final String AGREEMENT_NOT_FOUND_EXCEPTION_FIELD = "agreementNo";
-	private static final String AGREEMENT_NOT_FOUND_EXCEPTION_FIELD_CODE = "tl.error.agreementNo.notFound";
+	private static final String AGREEMENT_NOT_FOUND_EXCEPTION_FIELD_CODE = "tl.error.agreementno.notfound";
 
-	public ErrorResponse getErrorResponse(RequestInfo requestInfo) {
+	public ErrorResponse getErrorResponse(String customMsg, RequestInfo requestInfo) {
 		ResponseInfo responseInfo = new ResponseInfo();
 		responseInfo.setApiId(requestInfo.getApiId());
 		responseInfo.setVer(requestInfo.getVer());
 		responseInfo.setMsgId(requestInfo.getMsgId());
 		responseInfo.setTs(new Date().toString());
 		responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
-		return new ErrorResponse(null, getError());
+		return new ErrorResponse(responseInfo, getError(customMsg));
 	}
 
-	private Error getError() {
-		final List<ErrorField> fields = Collections.singletonList(getErrorField());
+	private Error getError(String customMsg) {
+		final List<ErrorField> fields = Collections.singletonList(getErrorField(customMsg));
 		return Error.builder().code(HTTP_CLIENT_ERROR_CODE).message(AGREEMENT_NOT_FOUND_EXCEPTION_MESSAGE)
-				.fields(fields).description("").build();
+				.fields(fields).description(customMsg).build();
 	}
 
-	private ErrorField getErrorField() {
+	private ErrorField getErrorField(String customMsg) {
 		return ErrorField.builder().code(AGREEMENT_NOT_FOUND_EXCEPTION_FIELD_CODE)
-				.field(AGREEMENT_NOT_FOUND_EXCEPTION_FIELD).message("").build();
+				.field(AGREEMENT_NOT_FOUND_EXCEPTION_FIELD).message(customMsg).build();
 	}
 }

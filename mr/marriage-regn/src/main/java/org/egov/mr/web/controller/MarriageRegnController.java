@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.egov.mr.model.MarriageCertificate;
 import org.egov.mr.model.MarriageRegn;
+import org.egov.mr.model.Page;
 import org.egov.mr.service.MarriageRegnService;
 import org.egov.mr.web.contract.MarriageRegnCriteria;
 import org.egov.mr.web.contract.MarriageRegnRequest;
@@ -113,7 +114,11 @@ public class MarriageRegnController {
 			List<MarriageRegn> marriageRegns = new ArrayList<MarriageRegn>();
 			marriageRegns.add(marriageRegn);
 			marriageRegnResponse.setMarriageRegns(marriageRegns);
+			Page page=new Page();
+			marriageRegnResponse.setPage(page);
+		
 			ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+			System.err.println("::::::responseInfo:::::"+responseInfo);
 			responseInfo.setStatus(HttpStatus.OK.toString());
 			marriageRegnResponse.setResponseInfo(responseInfo);
 			return new ResponseEntity<MarriageRegnResponse>(marriageRegnResponse, HttpStatus.OK);

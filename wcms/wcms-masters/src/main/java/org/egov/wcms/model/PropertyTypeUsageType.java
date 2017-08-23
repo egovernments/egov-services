@@ -76,6 +76,8 @@ public class PropertyTypeUsageType {
     @NotNull
     private String usageType;
     
+    private String service;
+    
     @NotNull
     private String usageCode;
     private String usageTypeId;

@@ -14,28 +14,28 @@ import org.springframework.http.HttpStatus;
 public class InvalidLocalityAdapter {
 
 	private static final int HTTP_CLIENT_ERROR_CODE = 400;
-	private static final String INVALID_LOCALITY_EXCEPTION_MESSAGE = "tl.error.invalidLocality";
+	private static final String INVALID_LOCALITY_EXCEPTION_MESSAGE = "tl.error.invalid.locality";
 	private static final String INVALID_LOCALITY_EXCEPTION_FIELD = "localityId";
-	private static final String INVALID_LOCALITY_EXCEPTION_FIELD_CODE = "tl.error.localityId.notValid";
+	private static final String INVALID_LOCALITY_EXCEPTION_FIELD_CODE = "tl.error.localityid.notvalid";
 
-	public ErrorResponse getErrorResponse(RequestInfo requestInfo) {
+	public ErrorResponse getErrorResponse(String customMsg, RequestInfo requestInfo) {
 		ResponseInfo responseInfo = new ResponseInfo();
 		responseInfo.setApiId(requestInfo.getApiId());
 		responseInfo.setVer(requestInfo.getVer());
 		responseInfo.setMsgId(requestInfo.getMsgId());
 		responseInfo.setTs(new Date().toString());
 		responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
-		return new ErrorResponse(null, getError());
+		return new ErrorResponse(responseInfo, getError(customMsg));
 	}
 
-	private Error getError() {
-		final List<ErrorField> fields = Collections.singletonList(getErrorField());
+	private Error getError(String customMsg) {
+		final List<ErrorField> fields = Collections.singletonList(getErrorField(customMsg));
 		return Error.builder().code(HTTP_CLIENT_ERROR_CODE).message(INVALID_LOCALITY_EXCEPTION_MESSAGE).fields(fields)
-				.description("").build();
+				.description(customMsg).build();
 	}
 
-	private ErrorField getErrorField() {
+	private ErrorField getErrorField(String customMsg) {
 		return ErrorField.builder().code(INVALID_LOCALITY_EXCEPTION_FIELD_CODE).field(INVALID_LOCALITY_EXCEPTION_FIELD)
-				.message("").build();
+				.message(customMsg).build();
 	}
 }

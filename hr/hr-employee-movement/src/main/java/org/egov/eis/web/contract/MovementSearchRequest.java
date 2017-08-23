@@ -91,4 +91,7 @@ public class MovementSearchRequest {
 
     @NotNull
     private String tenantId;
+
+    private String status;
+
 }

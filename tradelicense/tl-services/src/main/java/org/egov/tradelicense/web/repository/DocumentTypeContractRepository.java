@@ -2,9 +2,9 @@ package org.egov.tradelicense.web.repository;
 
 import java.util.Date;
 
-import org.egov.tl.commons.web.requests.DocumentTypeResponse;
 import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
+import org.egov.tl.commons.web.response.DocumentTypeResponse;
 import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.web.requests.TlMasterRequestInfo;

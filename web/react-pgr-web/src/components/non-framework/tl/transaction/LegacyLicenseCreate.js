@@ -221,7 +221,7 @@ class LegacyLicenseCreate extends Component {
     Api.commonApiPost((url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url), "", formData, "", true).then(function(response){
       self.props.setLoadingStatus('hide');
       self.initData();
-      self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "create" ? "wc.create.message.success" : "wc.update.message.success"), true);
+      self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "create" ? response.responseInfo.status : "wc.update.message.success"), true);
       setTimeout(function() {
         if(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath) {
           if(self.props.actionName == "update") {
@@ -610,6 +610,46 @@ class LegacyLicenseCreate extends Component {
     setMockData(_mockData);
   }
 
+calculateFeeDetails = (licenseValidFromDate, validityYear) => {
+  var getStartYear = new Date(Number(licenseValidFromDate)).getFullYear();
+  var curDate = new Date();
+  var currentDate = curDate.getFullYear();
+  var fixedDate = curDate.getFullYear();
+  var currentMonth=curDate.getMonth();
+  var FeeDetails = [];
+  var startYear = getStartYear;
+  var Validity = validityYear;
+  let self = this;
+
+  self.handleChange({target:{value:[]}},"licenses[0].feeDetails");
+
+  if(new Date(Number(licenseValidFromDate)).getMonth()>3)
+     {
+         for(var i = startYear; i <= fixedDate; i = (i + validityYear))
+          {
+
+             if (i > (fixedDate - 6) ) {
+             let feeDetails = {"financialYear": i + "-" + (i+1).toString().slice(-2), "amount": "", "paid": false};
+             FeeDetails.push(feeDetails)
+             console.log(i);
+           }
+       }
+
+     }
+     else {
+
+       for(var i = startYear; i <= (fixedDate+1); i = (i + validityYear))
+       {
+          if (i > (fixedDate - 6) ) {
+         let feeDetails = {"financialYear": (i-1) + "-" + (i).toString().slice(-2), "amount": "", "paid": false};
+         FeeDetails.push(feeDetails)
+         console.log(i);
+        }
+      }
+     }
+     self.handleChange({target:{value:FeeDetails}},"licenses[0].feeDetails");
+}
+
   handleChange = (e, property, isRequired=false, pattern="", requiredErrMsg="Required", patternErrMsg="Pattern Missmatch") => {
       let {getVal} = this;
       let self = this;
@@ -617,6 +657,18 @@ class LegacyLicenseCreate extends Component {
       let hashLocation = window.location.hash;
       let {validityYear}=this.state;
       let obj = specifications[`tl.create`];
+
+
+    //   Api.commonApiPost("/tl-services/license/v1/_create").then(function(response)
+    //   {
+    //
+    //   console.log(response.responseInfo.status);
+    // //  self.handleChange({target:{value:response.categories[0].validityYears}}, , false, "");
+    //
+    //   },function(err) {
+    //     console.log(err);
+    //
+    //   });
 
 
       // if (property == "licenses[0].tradeCommencementDate") {
@@ -642,48 +694,43 @@ class LegacyLicenseCreate extends Component {
     //   });
     // }
 
+    if (property == "licenses[0].subCategoryId") {
+      console.log(e.target.value);
+      Api.commonApiPost("/tl-masters/category/v1/_search",{"ids":e.target.value, "type":"subcategory"}).then(function(response)
+     {
+        // handleChange (e, "" )
+        console.log(response);
+        //console.log(response.categories[0].validityYears);
+        handleChange({target:{value:response.categories[0].validityYears}}, "licenses[0].validityYears");
+        self.setState({
+          validityYear: response.categories[0].validityYears
+        })
 
-     if (property == "licenses[0].licenseValidFromDate" || property=="licenses[0].subCategoryId" && getVal("licenses[0].licenseValidFromDate") && validityYear) {
-         var getStartYear = new Date(e.target.value).getFullYear();
-         var curDate = new Date();
-         var currentDate = curDate.getFullYear();
-         var fixedDate = curDate.getFullYear();
-         var currentMonth=curDate.getMonth();
-         var FeeDetails = [];
-         var startYear = getStartYear;
-         var Validity = validityYear;
+        handleChange({target:{value:_.filter(response.categories[0].details,{feeType:"LICENSE"})[0].uomName}}, "licenses[0].uomName");
+        handleChange({target:{value:_.filter(response.categories[0].details,{feeType:"LICENSE"})[0].uomId}}, "licenses[0].uomId", true);
 
-         handleChange({target:{value:[]}},"licenses[0].feeDetails");
+        if(self.props.formData.licenses[0].licenseValidFromDate && (self.props.formData.licenses[0].licenseValidFromDate+"").length == 12 ||(self.props.formData.licenses[0].licenseValidFromDate+"").length == 13){
+          self.calculateFeeDetails(self.props.formData.licenses[0].licenseValidFromDate, response.categories[0].validityYears)
+        }
 
+        console.log(self.props.formData);
+      },function(err) {
+          console.log(err);
 
-            if(new Date(e.target.value).getMonth()>3)
-               {
-
-                   for(var i = startYear; i <= fixedDate; i = (i + validityYear))
-                    {
-                       if (i > (fixedDate - 6) ) {
-                       let feeDetails = {"financialYear": i + "-" + (i+1).toString().slice(-2), "amount": "", "paid": false};
-                       FeeDetails.push(feeDetails)
-                       console.log(i);
-                     }
-                 }
-
-               }
-               else {
-
-                 for(var i = startYear; i <= (fixedDate+1); i = (i + validityYear))
-                 {
-                    if (i > (fixedDate - 6) ) {
-                   let feeDetails = {"financialYear": (i-1) + "-" + (i).toString().slice(-2), "amount": "", "paid": false};
-                   FeeDetails.push(feeDetails)
-                   console.log(i);
-                  }
-                }
-               }
+      });
+    }
 
 
-          handleChange({target:{value:FeeDetails}},"licenses[0].feeDetails");
 
+    //console.log(this.formData.licenses[0].licenseValidFromDate);
+     if ((property == "licenses[0].licenseValidFromDate" || property=="licenses[0].subCategoryId") && getVal("licenses[0].licenseValidFromDate") && self.state.validityYear) {
+       if(property == "licenses[0].licenseValidFromDate" && (e.target.value).length == 12 || (e.target.value).length == 13){
+
+          self.calculateFeeDetails(e.target.value, self.state.validityYear)
+
+
+
+        }
        }
 
 
@@ -704,28 +751,26 @@ class LegacyLicenseCreate extends Component {
       // }
 
 
+if(property == "licenses[0].categoryId"){
+  Api.commonApiPost("/tl-masters/category/v1/_search",{"ids":e.target.value, "type":"subcategory"}).then(function(response)
+  {
+    // handleChange (e, "" )
+    console.log(response);
+    //console.log(response.categories[0].validityYears);
+    handleChange({target:{value:null}}, "licenses[0].validityYears");
 
 
-      if (property == "licenses[0].subCategoryId") {
-        console.log(e.target.value);
-        Api.commonApiPost("/tl-masters/category/v1/_search",{"ids":e.target.value, "type":"subcategory"}).then(function(response)
-       {
-          // handleChange (e, "" )
-          // console.log(response);
-          //console.log(response.categories[0].validityYears);
-          handleChange({target:{value:response.categories[0].validityYears}}, "licenses[0].validityYears");
-          self.setState({
-            validityYear: response.categories[0].validityYears
-          })
+    handleChange({target:{value:null}}, "licenses[0].uomName");
+    handleChange({target:{value:null}}, "licenses[0].uomId", true);
 
-          handleChange({target:{value:_.filter(response.categories[0].details,{feeType:"LICENSE"})[0].uomName}}, "licenses[0].uomName");
-          handleChange({target:{value:_.filter(response.categories[0].details,{feeType:"LICENSE"})[0].uomId}}, "licenses[0].uomId", true);
+  },function(err) {
+      console.log(err);
 
-        },function(err) {
-            console.log(err);
+  });
+}
 
-        });
-      }
+
+
 
 
 
@@ -927,16 +972,13 @@ class LegacyLicenseCreate extends Component {
     let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler} = this;
 
 
-//console.log(formData && formData.licenses && formData.licenses[0] && formData.licenses[0].feeDetails);
-
-
     return (
       <div className="Report">
       <h3 style={{"textAlign": "center"}}>Create Legacy Trade License</h3>
         <form onSubmit={(e) => {
           create(e)
         }}>
-        {!_.isEmpty(mockData) && moduleName && actionName && <ShowFields
+        {!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] && <ShowFields
                                     groups={mockData[`${moduleName}.${actionName}`].groups}
                                     noCols={mockData[`${moduleName}.${actionName}`].numCols}
                                     ui="google"

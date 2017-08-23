@@ -355,9 +355,9 @@ validateCollection = (index) => {
 								return (
 									<td key={i} className="lastTdBorder">
 										<TextField  className="fullWidth"
-										  floatingLabelText={<span style={{fontSize:'14px'}}>Demand</span>}
+										  floatingLabelText={<span style={{fontSize:'14px'}}>{translate('pt.create.groups.addDemand.demand')}</span>}
 										  type="number"
-										  value={(addDemand['demands'+index] ? addDemand['demands'+index]['demand'+i] : detail.taxAmount) || (detail.taxAmount ? detail.taxAmount : '')}
+										  value={(addDemand['demands'+index] ? addDemand['demands'+index]['demand'+i] : detail.taxAmount) || ''}
 										  onChange={(e) => {
 											  if(addDemand.hasOwnProperty('collections'+index) && addDemand['collections'+index].hasOwnProperty('collection'+i) && addDemand['collections'+index]['collection'+i]) {
 												  validateCollection(i)
@@ -368,6 +368,7 @@ validateCollection = (index) => {
 										  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 										  underlineStyle={styles.underlineStyle}
 										  underlineFocusStyle={styles.underlineFocusStyle}
+										  floatingLabelFixed={true}
 										  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 										/>
 									</td>)
@@ -375,9 +376,9 @@ validateCollection = (index) => {
 								return (
 									<td key={i}>
 										<TextField  className="fullWidth"
-										  floatingLabelText={<span style={{fontSize:'14px'}}>Demand</span>}
+										  floatingLabelText={<span style={{fontSize:'14px'}}>{translate('pt.create.groups.addDemand.demand')}</span>}
 										  type="number"
-										  value={(addDemand['demands'+index] ? addDemand['demands'+index]['demand'+i] : detail.taxAmount) || (detail.taxAmount ? detail.taxAmount : '')}
+										  value={(addDemand['demands'+index] ? addDemand['demands'+index]['demand'+i] : detail.taxAmount) || ''}
 										  onChange={(e) => {
 											  if(addDemand.hasOwnProperty('collections'+index) && addDemand['collections'+index].hasOwnProperty('collection'+i) && addDemand['collections'+index]['collection'+i]) {
 												  validateCollection(i)
@@ -387,6 +388,7 @@ validateCollection = (index) => {
 											  handleChangeNextOne(e,"demands"+index,"demand"+i, false, '')
 										  }}
 										  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+										  floatingLabelFixed={true}
 										  underlineStyle={styles.underlineStyle}
 										  underlineFocusStyle={styles.underlineFocusStyle}
 										  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -407,7 +409,7 @@ validateCollection = (index) => {
 							return (
 							<td key={i} >
 								<TextField  className="fullWidth"
-								  floatingLabelText={<span style={{fontSize:'14px'}}>Collection</span>}
+								  floatingLabelText={<span style={{fontSize:'14px'}}>{translate('pt.create.groups.addDemand.collection')}</span>}
 								  value={addDemand['collections'+index] ? addDemand['collections'+index]['collection'+i] : ''}
 								  type="number"
 								  onChange={(e) => {
@@ -420,6 +422,7 @@ validateCollection = (index) => {
 									  handleChangeNextOne(e,"collections"+index,"collection"+i, false, '')
 								  }}
 								  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+								  floatingLabelFixed={true}
 								  underlineStyle={styles.underlineStyle}
 								  underlineFocusStyle={styles.underlineFocusStyle}
 								  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -469,9 +472,9 @@ validateCollection = (index) => {
 								<Table style={{color:"black",fontWeight: "normal", marginBottom:0, minWidth:'100%', width:'auto'}}  bordered responsive>
 									<thead>
 										<tr>
-											<th style={{textAlign:'center'}}>Period</th>
-											<th colSpan={this.state.demands.length !=0 && this.state.demands[0].demandDetails.length} style={{textAlign:'center'}}>Demand</th>
-											<th colSpan={this.state.demands.length !=0 && this.state.demands[0].demandDetails.length} style={{textAlign:'center'}}>Collection</th>
+											<th style={{textAlign:'center'}}>{translate('pt.create.groups.addDemand.period')}</th>
+											<th colSpan={this.state.demands.length !=0 && this.state.demands[0].demandDetails.length} style={{textAlign:'center'}}>{translate('pt.create.groups.addDemand.demand')}</th>
+											<th colSpan={this.state.demands.length !=0 && this.state.demands[0].demandDetails.length} style={{textAlign:'center'}}>{translate('pt.create.groups.addDemand.collection')}</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -491,7 +494,7 @@ validateCollection = (index) => {
 			</Card>
 			<div style={{textAlign:'center'}}>
 					<br/>
-					{this.state.hasError && <p style={{color:'Red',textAlign:'center'}}>Collection entered should be equal to or less than the Demand<br/></p>}
+					{this.state.hasError && <p style={{color:'Red',textAlign:'center'}}>{translate('pt.create.groups.addDemand.demandError')}<br/></p>}
 
 					<RaisedButton type="button" label="Update" disabled={this.state.hasError}  primary={true} onClick={()=> {
 								this.submitDemand();

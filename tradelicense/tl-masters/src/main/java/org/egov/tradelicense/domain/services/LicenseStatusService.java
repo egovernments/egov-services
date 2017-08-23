@@ -2,7 +2,7 @@ package org.egov.tradelicense.domain.services;
 
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.requests.LicenseStatusRequest;
-import org.egov.tl.commons.web.requests.LicenseStatusResponse;
+import org.egov.tl.commons.web.response.LicenseStatusResponse;
 
 /**
  * Service class for LicenseStatus master

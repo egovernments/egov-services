@@ -223,7 +223,8 @@ var dat = {
           "isDisabled": false,
           "requiredErrMsg": "",
           "patternErrMsg": "",
-          "isLabel": false
+          "isLabel": false,
+          "url": "/egov-common-masters/businessDetails/_search?&"
         },
         {
           "name": "consumerCode",
@@ -235,7 +236,8 @@ var dat = {
           "isDisabled": false,
           "requiredErrMsg": "",
           "patternErrMsg": "",
-          "isLabel": false
+          "isLabel": false,
+          "hyperLink": ""
         },
         {
           "name": "totalAmount",
@@ -304,48 +306,23 @@ var dat = {
           "jsonPath": "Receipt[0].instrument.instrumentType.name",
           "label": "Mode Of Payment",
           "pattern": "",
-          "type": "singleValueList",
+          "type": "radio",
           "isRequired": true,
           "isDisabled": false,
           "url": "",
           "requiredErrMsg": "",
           "patternErrMsg": "",
-          // "showHideFields": [{
-          //   "ifValue": "Cheque",
-          //   "hide": [],
-          //   "show": [{
-          //     "name": "chequeOrDD",
-          //     "isGroup": true,
-          //     "isField": false
-          //   }]
-          // }],
-
-          "defaultValue": [
-            {
-              "key": "Cash",
+          "values": [{
+              "label": "Cash",
               "value": "Cash"
-            },
-            {
-              "key": "Cheque",
+            }, {
+              "label": "Cheque",
               "value": "Cheque"
-            },
-            {
-              "key": "DD",
+            }, {
+              "label": "DD",
               "value": "DD"
-            },
-            // {
-            //   "key": "4",
-            //   "value": "Credit/Debit Card"
-            // },
-            // {
-            //   "key": "5",
-            //   "value": "Direct Bank"
-            // },
-            // {
-            //   "key": "6",
-            //   "value": "SBI MOPS Bank Callan"
-            // }
-          ]
+            }],
+          "defaultValue": "Cash"
         },
         {
           "name": "paidBy",

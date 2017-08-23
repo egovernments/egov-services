@@ -17,17 +17,9 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Fields from '../../common/Fields';
 import Api from '../../../api/api';
+import styles from '../../../styles/material-ui';
 import {translate, validate_fileupload, format_lat_long} from '../../common/common';
 var axios = require('axios');
-
-const styles = {
-  headerStyle : {
-    fontSize : 19
-  },
-  marginStyle:{
-    margin: '15px'
-  }
-};
 
 var _this;
 var request = {};
@@ -127,7 +119,7 @@ class grievanceCreate extends Component {
     this.props.ADD_MANDATORY(name);
     return (
       <Col xs={12} sm={4} md={3} lg={3}>
-        <SelectField maxHeight={200} floatingLabelText={translate('pgr.lbl.receivingcenter')+' *'} value={this.props.grievanceCreate.receivingCenter?  this.props.grievanceCreate.receivingCenter:""} onChange={(event, key, value) => {
+        <SelectField maxHeight={200} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('pgr.lbl.receivingcenter')+' *'} value={this.props.grievanceCreate.receivingCenter?  this.props.grievanceCreate.receivingCenter:""} onChange={(event, key, value) => {
           this.loadCRN(value);
           this.props.handleChange(value, name, true, '') }}
           errorText={this.props.fieldErrors.receivingCenter ? this.props.fieldErrors.receivingCenter : ""} >
@@ -608,7 +600,7 @@ class grievanceCreate extends Component {
                     <Row>
                       {this.state.type === 'EMPLOYEE' ?
                         <Col xs={12} sm={4} md={3} lg={3}>
-                          <SelectField maxHeight={200} fullWidth={true} floatingLabelText={translate('pgr.lbl.receivingmode')+' *'}  value={grievanceCreate.receivingMode?grievanceCreate.receivingMode:""} onChange={(event, key, value) => {
+                          <SelectField maxHeight={200} fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('pgr.lbl.receivingmode')+' *'}  value={grievanceCreate.receivingMode?grievanceCreate.receivingMode:""} onChange={(event, key, value) => {
                             this.loadReceivingCenter(value)
                             handleChange(value, "receivingMode", true, "")}} errorText={fieldErrors.receivingMode ? fieldErrors.receivingMode : ""} >
                             {this.state.receivingModes !== undefined ?
@@ -624,23 +616,23 @@ class grievanceCreate extends Component {
                       }
                       {this.state.isReceivingCenterReq ?
                         <Col xs={12} sm={4} md={3} lg={3}>
-                          <TextField floatingLabelText={translate('CRN')+' *'} multiLine={true} errorText={this.props.fieldErrors.externalCRN ? this.props.fieldErrors.externalCRN : ""} value={this.props.grievanceCreate.externalCRN?this.props.grievanceCreate.externalCRN:""} maxLength="20" onChange={(event, value) => this.props.handleChange(value, "externalCRN", true, '')}/>
+                          <TextField floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('CRN')+' *'} multiLine={true} errorText={this.props.fieldErrors.externalCRN ? this.props.fieldErrors.externalCRN : ""} value={this.props.grievanceCreate.externalCRN?this.props.grievanceCreate.externalCRN:""} maxLength="20" onChange={(event, value) => this.props.handleChange(value, "externalCRN", true, '')}/>
                         </Col>
                       : ''}
                     </Row>
                     <Row>
                       <Col xs={12} sm={4} md={3} lg={3}>
-                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.add.name')+' *'} value={grievanceCreate.firstName?grievanceCreate.firstName:""} errorText={fieldErrors.firstName ? fieldErrors.firstName : ""} maxLength="100" onChange={(event, value) => handleChange(value, "firstName", true, /^[a-zA-Z ]{1,100}$/, translate('pgr.lbl.alphaspace'))}
+                        <TextField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('core.lbl.add.name')+' *'} value={grievanceCreate.firstName?grievanceCreate.firstName:""} errorText={fieldErrors.firstName ? fieldErrors.firstName : ""} maxLength="100" onChange={(event, value) => handleChange(value, "firstName", true, /^[a-zA-Z ]{1,100}$/, translate('pgr.lbl.alphaspace'))}
                         />
                       </Col>
                       <Col xs={12} sm={4} md={3} lg={3}>
-                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.mobilenumber')+' *'} errorText={fieldErrors.phone ? fieldErrors.phone : ""} value={grievanceCreate.phone?grievanceCreate.phone:""} maxLength="10" onChange={(event, value) => handleChange(value, "phone", true, /^\d{10}$/g, translate('core.lbl.enter.mobilenumber'))} />
+                        <TextField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('core.lbl.mobilenumber')+' *'} errorText={fieldErrors.phone ? fieldErrors.phone : ""} value={grievanceCreate.phone?grievanceCreate.phone:""} maxLength="10" onChange={(event, value) => handleChange(value, "phone", true, /^\d{10}$/g, translate('core.lbl.enter.mobilenumber'))} />
                       </Col>
                       <Col xs={12} sm={4} md={3} lg={3}>
-                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.email.compulsory')} errorText={fieldErrors.email ? fieldErrors.email : ""} value={grievanceCreate.email?grievanceCreate.email:""} maxLength="50" onChange={(event, value) => handleChange(value, "email", false, /^(?=.{6,64}$)(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, 'Enter valid Email ID')}  />
+                        <TextField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('core.lbl.email.compulsory')} errorText={fieldErrors.email ? fieldErrors.email : ""} value={grievanceCreate.email?grievanceCreate.email:""} maxLength="50" onChange={(event, value) => handleChange(value, "email", false, /^(?=.{6,64}$)(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, 'Enter valid Email ID')}  />
                       </Col>
                       <Col xs={12} sm={4} md={3} lg={3}>
-                        <TextField fullWidth={true} floatingLabelText={translate('core.lbl.address')} multiLine={true} errorText={fieldErrors.requesterAddress ? fieldErrors.requesterAddress : ""} value={grievanceCreate.requesterAddress?grievanceCreate.requesterAddress:""} maxLength="250" onChange={(event, value) => handleChange(value, "requesterAddress", false, /^.[^]{0,250}$/, translate('pgr.lbl.max')+' 250 '+translate('pgr.lbl.characters'))} />
+                        <TextField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('core.lbl.address')} multiLine={true} errorText={fieldErrors.requesterAddress ? fieldErrors.requesterAddress : ""} value={grievanceCreate.requesterAddress?grievanceCreate.requesterAddress:""} maxLength="250" onChange={(event, value) => handleChange(value, "requesterAddress", false, /^.[^]{0,250}$/, translate('pgr.lbl.max')+' 250 '+translate('pgr.lbl.characters'))} />
                       </Col>
                     </Row>
                   </Grid>
@@ -675,7 +667,7 @@ class grievanceCreate extends Component {
                   </Row> : ''}
                   <Row>
                     <Col xs={12} sm={4} md={3} lg={3}>
-                      <SelectField fullWidth={true} floatingLabelText={translate('pgr.lbl.grievance.category')+' *'} maxHeight={200} value={grievanceCreate.serviceCategory?grievanceCreate.serviceCategory:""} errorText={fieldErrors.serviceCategory ? fieldErrors.serviceCategory : ""} onChange={(event, key, value) => {
+                      <SelectField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('pgr.lbl.grievance.category')+' *'} maxHeight={200} value={grievanceCreate.serviceCategory?grievanceCreate.serviceCategory:""} errorText={fieldErrors.serviceCategory ? fieldErrors.serviceCategory : ""} onChange={(event, key, value) => {
                         this.loadGrievanceType(value),
                         handleChange(value, "serviceCategory", true, "")}}>
                         {this.state.grievanceCategory !== undefined ?
@@ -685,7 +677,7 @@ class grievanceCreate extends Component {
                       </SelectField>
                     </Col>
                     <Col xs={12} sm={4} md={3} lg={3}>
-                      <SelectField fullWidth={true} floatingLabelText={translate('pgr.lbl.grievance.type')+' *'} maxHeight={200} value={grievanceCreate.serviceCode?grievanceCreate.serviceCode:""} errorText={fieldErrors.serviceCode ? fieldErrors.serviceCode : ""} onChange={(event, key, value) => {
+                      <SelectField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('pgr.lbl.grievance.type')+' *'} maxHeight={200} value={grievanceCreate.serviceCode?grievanceCreate.serviceCode:""} errorText={fieldErrors.serviceCode ? fieldErrors.serviceCode : ""} onChange={(event, key, value) => {
                         this.serviceDefinition(value);
                         handleChange(value, "serviceCode", true, "")}}>
                         {this.state.grievanceType.map((grievanceType, index) => (
@@ -704,15 +696,17 @@ class grievanceCreate extends Component {
                   {this.state.attributes ? this.loadSD() : ''}
                   <Row>
                     <Col xs={12} sm={4} md={3} lg={3}>
-                      <TextField fullWidth={true} hintText={translate('pgr.lbl.tencharacter')} floatingLabelText={translate('pgr.lbl.grievancedetails')+' *'} multiLine={true} errorText={fieldErrors.description ? fieldErrors.description : ""} value={grievanceCreate.description?grievanceCreate.description:""} maxLength="1000" onChange={(event, value) => handleChange(value, "description", true, /^.[^]{9,1000}$/, translate('pgr.lbl.min')+' 10 '+translate('pgr.lbl.characters')+'. '+translate('pgr.lbl.max')+' 1000 '+translate('pgr.lbl.characters'))}/>
+                      <TextField fullWidth={true} hintText={translate('pgr.lbl.tencharacter')} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('pgr.lbl.grievancedetails')+' *'} multiLine={true} errorText={fieldErrors.description ? fieldErrors.description : ""} value={grievanceCreate.description?grievanceCreate.description:""} maxLength="1000" onChange={(event, value) => handleChange(value, "description", true, /^.[^]{9,1000}$/, translate('pgr.lbl.min')+' 10 '+translate('pgr.lbl.characters')+'. '+translate('pgr.lbl.max')+' 1000 '+translate('pgr.lbl.characters'))}/>
                     </Col>
                     <Col xs={12} sm={4} md={3} lg={3}>
-                      <TextField fullWidth={true} floatingLabelText={translate('core.lbl.landmark')} multiLine={true} errorText={fieldErrors.address ? fieldErrors.address : ""} value={grievanceCreate.address?grievanceCreate.address:""} maxLength="100" onChange={(event, value) => handleChange(value, "address", false, /^.[^]{0,100}$/, translate('pgr.lbl.max')+' 100 '+translate('pgr.lbl.characters'))}/>
+                      <TextField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('core.lbl.landmark')} multiLine={true} errorText={fieldErrors.address ? fieldErrors.address : ""} value={grievanceCreate.address?grievanceCreate.address:""} maxLength="100" onChange={(event, value) => handleChange(value, "address", false, /^.[^]{0,100}$/, translate('pgr.lbl.max')+' 100 '+translate('pgr.lbl.characters'))}/>
                     </Col>
                     <Col xs={12} sm={4} md={6} lg={6}>
                       <AutoComplete
                         hintText={translate('pgr.lbl.selectmap')}
                         ref="autocomplete"
+                        floatingLabelStyle={styles.floatingLabelStyle}
+                        floatingLabelFixed={true}
                         floatingLabelText={translate('pgr.lbl.grievance.location')+' *'}
                         filter={AutoComplete.noFilter}
                         fullWidth={true}

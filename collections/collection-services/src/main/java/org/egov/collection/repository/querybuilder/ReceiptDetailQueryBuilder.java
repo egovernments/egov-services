@@ -64,8 +64,7 @@ public class ReceiptDetailQueryBuilder {
 			+ "rh.referenceNumber as rh_referenceNumber,rh.referenceDate as rh_referenceDate,"
 			+ "rh.receiptType as rh_receiptType,rh.receiptNumber as rh_receiptNumber,rh.receiptDate"
 			+ " as rh_receiptDate,rh.referenceDesc as rh_referenceDesc,rh.manualReceiptNumber"
-			+ " as rh_manualReceiptNumber,rh.manualReceiptDate as rh_manualReceiptDate,"
-			+ "rh.businessDetails as rh_businessDetails,rh.collectionType"
+			+ " as rh_manualReceiptNumber, rh.businessDetails as rh_businessDetails,rh.collectionType"
 			+ " as rh_collectionType,rh.stateId as rh_stateId,rh.location as rh_location,"
 			+ "rh.isReconciled as rh_isReconciled,rh.status as rh_status,rh.reasonForCancellation"
 			+ " as rh_reasonForCancellation,rh.minimumAmount as rh_minimumAmount,rh.totalAmount"
@@ -311,13 +310,13 @@ public class ReceiptDetailQueryBuilder {
 				+ "receiptnumber, receiptdate, businessdetails, collectiontype, reasonforcancellation, minimumamount, totalamount, "
 				+ "collmodesnotallwd, consumercode, channel, fund, fundsource, function, boundary, department, voucherheader, "
 				+ "depositedbranch, createdby, createddate, lastmodifiedby, lastmodifieddate, tenantid, referencedate, referencedesc, "
-				+ "manualreceiptnumber, manualreceiptdate, reference_ch_id, stateid, location, isreconciled, "
+				+ "manualreceiptnumber, reference_ch_id, stateid, location, isreconciled, "
 				+ "status, transactionid) "
 				+ "VALUES (:id, :payeename, :payeeaddress, :payeeemail, :paidby, :referencenumber, :receipttype, "
 				+ ":receiptnumber, :receiptdate, :businessdetails, :collectiontype, :reasonforcancellation, :minimumamount, :totalamount, "
 				+ ":collmodesnotallwd, :consumercode, :channel, :fund, :fundsource, :function, :boundary, :department, :voucherheader, "
 				+ ":depositedbranch, :createdby, :createddate, :lastmodifiedby, :lastmodifieddate, :tenantid, :referencedate, :referencedesc, "
-				+ ":manualreceiptnumber, :manualreceiptdate, :reference_ch_id, :stateid, :location, :isreconciled, "
+				+ ":manualreceiptnumber, :reference_ch_id, :stateid, :location, :isreconciled, "
 				+ ":status, :transactionid)";
 	}
 

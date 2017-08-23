@@ -285,6 +285,8 @@ public class PropertiesManager {
 	private String workflowBusinessService;
 	
 	private String billingServiceUpdateMisPath;
+	
+	private String usageMasterService;
 
 	public String getInvalidInput() {
 		return environment.getProperty("invalid.input");
@@ -785,6 +787,10 @@ public class PropertiesManager {
 
 	public String getInvalidAge() {
 		return environment.getProperty("invalid.input.unit.age");
+	}
+	
+	public String getUsageMasterDefaultService(){
+		return environment.getProperty("usage.master.default.service");
 	}
 
 }

@@ -69,7 +69,7 @@ public class TradeLicenseRepository {
 		}
 
 		if (count != 0) {
-			throw new DuplicateTradeLicenseException(requestInfo);
+			throw new DuplicateTradeLicenseException(propertiesManager.getDuplicateOldTradeLicenseMsg(), requestInfo);
 		}
 	}
 

@@ -41,6 +41,7 @@
 package org.egov.collection.web.controller;
 
 import org.egov.collection.model.EnumData;
+import org.egov.collection.service.CollectionConfigService;
 import org.egov.collection.service.ReceiptService;
 import org.egov.collection.web.contract.*;
 import org.egov.collection.web.contract.factory.RequestInfoWrapper;
@@ -55,14 +56,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/receipts")
@@ -78,6 +78,9 @@ public class CommonReceiptController {
 
     @Autowired
     private ReceiptService receiptService;
+
+    @Autowired
+    private CollectionConfigService collectionConfigService;
 
     @RequestMapping("/_getDistinctCollectedBy")
     public ResponseEntity<?> searchDistinctCreators(@RequestParam final String tenantId,@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,final BindingResult bindingResult) {
@@ -148,6 +151,34 @@ public class CommonReceiptController {
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
         }
         return getChartOfAccountsResponse(chartOfAccounts,requestInfo);
+    }
+
+    @RequestMapping("/_manualReceiptDetailsRequiredOrNot")
+    public ResponseEntity<?>  checkIfManualReceiptDetailsRequiredOrNot(@ModelAttribute final CollectionConfigGetRequest collectionConfigGetRequest,
+                                                        @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,final BindingResult bindingResult) {
+
+        final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+        if (bindingResult.hasErrors())
+            return errHandler.getErrorResponseEntityForMissingRequestInfo(bindingResult, requestInfo);
+
+        Map<String, List<String>> collectionConfigKeyValMap = new HashMap<>();
+        try {
+            collectionConfigKeyValMap = collectionConfigService.getCollectionConfiguration(collectionConfigGetRequest);
+        } catch(final Exception e) {
+            LOGGER.error("Error while processing request " + collectionConfigKeyValMap, e);
+            return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
+        }
+        return getManualReceiptResponse(collectionConfigKeyValMap,requestInfo);
+    }
+
+    private ResponseEntity<?> getManualReceiptResponse(Map<String, List<String>> collectionConfigKeyValMap, RequestInfo requestInfo) {
+        LOGGER.info("Building success response.");
+        CollectionConfigResponse collectionConfigResponse = new CollectionConfigResponse();
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        responseInfo.setStatus(HttpStatus.OK.toString());
+        collectionConfigResponse.setCollectionConfiguration(collectionConfigKeyValMap);
+        collectionConfigResponse.setResponseInfo(responseInfo);
+        return new ResponseEntity<>(collectionConfigResponse, HttpStatus.OK);
     }
 
     private ResponseEntity<?> getChartOfAccountsResponse(List<ChartOfAccount> chartOfAccounts, RequestInfo requestInfo) {

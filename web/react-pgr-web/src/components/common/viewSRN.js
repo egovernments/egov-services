@@ -7,26 +7,8 @@ import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import Divider from 'material-ui/Divider';
 import {translate} from './common';
+import styles from '../../styles/material-ui';
 var axios = require('axios');
-
-const styles = {
-  headerStyle : {
-    fontSize : 19
-  },
-  addBorderBottom:{
-    borderBottom: '1px solid #eee',
-    padding: '10px'
-  },
-  marginStyle:{
-    margin: '15px 0'
-  },
-  customColumnStyle : {
-    overflow: 'inherit',
-    height:'auto',
-    wordWrap: 'break-word',
-    whiteSpace: 'normal'
-  }
-};
 
 class viewsrn extends Component{
   constructor(props){
@@ -72,7 +54,7 @@ class viewsrn extends Component{
       <Grid style={{width:'100%'}}>
         <Card style={{margin:'15px 0'}}>
           <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
-             Applicant Details
+             {translate('pgr.0061')}
            < /div>}/>
            <CardText style={{padding:'8px 16px 0'}}>
             <List>
@@ -183,17 +165,19 @@ class viewsrn extends Component{
                    </Col>
                  : ''}
                </Row>
-               <Row>
+               <div>
                {this.props.srn.files != undefined && this.props.srn.files.length > 0 ?
-                   <Col xs={12} sm={12} md={12} lg={12}>
-                    <ListItem
-                      primaryText={translate('pgr.lbl.files')}
-                      secondaryText={<div style={styles.customColumnStyle}>{this.filesUploaded()}</div>}
-                    />
-                   </Col>
+                  <Row>
+                     <Col xs={12} sm={6} md={4} lg={3}>
+                      <ListItem
+                        primaryText={translate('pgr.lbl.files')}
+                      />
+                     </Col>
+                     {this.filesUploaded()}
+                   </Row>
                    : ""
                }
-               </Row>
+               </div>
              </List>
            </CardText>
         </Card>

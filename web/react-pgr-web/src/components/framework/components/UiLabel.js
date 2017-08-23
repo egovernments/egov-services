@@ -3,6 +3,7 @@ import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import Api from '../../../api/api';
 import jp from "jsonpath";
 import {translate} from '../../common/common';
+import FlatButton from 'material-ui/FlatButton';
 
 export default class UiLabel extends Component {
 	constructor(props) {
@@ -30,8 +31,9 @@ export default class UiLabel extends Component {
           id[queryStringObject[i].split("=")[0]]=queryStringObject[i].split("=")[1];
         }
       }
-      
+
       Api.commonApiPost(context, id, {}, "", useTimestamp || false).then(function(response) {
+        if(response) {
           let keys = jp.query(response,splitArray[1].split("|")[1]);
           let values = jp.query(response,splitArray[1].split("|")[2]);
           let dropDownData = [];
@@ -42,6 +44,7 @@ export default class UiLabel extends Component {
                 })
               }
           }
+        }
       },function(err) {
           console.log(err);
       });
@@ -57,14 +60,23 @@ export default class UiLabel extends Component {
       this.setVal();
   }
 
+  openLink(item) {
+    window.open(item.hyperLink + "/" + encodeURIComponent(this.state.value || this.props.getVal(item.jsonPath)), 'mywin', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0');
+  }
+
  	renderLabel = (item) => {
  		return (
       <div>
    			<Row>
             {!item.hasOwnProperty("isLabel")?<Col style={{textAlign:"left"}} xs={12}>
-              <label><span style={{"fontWeight":500}}>{translate(item.label)}</span></label>
+              <label><span style={{"fontWeight":500, "fontSize": "13px"}}>{translate(item.label)}</span></label>
             </Col>:""}
-            <Col style={{textAlign:"left"}} xs={12}>{this.state.value || this.props.getVal(item.jsonPath) || "NA"}</Col>
+            {item.hyperLink && (this.state.value || this.props.getVal(item.jsonPath)) ? 
+              (<Col style={{textAlign:"left"}} xs={12}>
+                <FlatButton label={this.state.value || this.props.getVal(item.jsonPath)} primary={true}/>
+              </Col>) 
+              : 
+              <Col style={{textAlign:"left"}} xs={12}>{this.state.value || this.props.getVal(item.jsonPath) || "NA"}</Col>}
         </Row>
         <br/>
       </div>

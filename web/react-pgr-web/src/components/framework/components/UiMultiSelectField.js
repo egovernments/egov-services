@@ -43,6 +43,11 @@ class UiMultiSelectField extends Component {
 							dropDownData.push(obj);
 					}
 
+					dropDownData.sort(function(s1, s2) {
+						return (s1.value < s2.value) ? -1 : (s1.value > s2.value) ? 1 : 0;
+					});
+
+					dropDownData.unshift({key: null, value: "-- Please Select --"});
 					setDropDownData(item.jsonPath, dropDownData);
 				}
 			},function(err) {
@@ -62,12 +67,15 @@ class UiMultiSelectField extends Component {
 				return (
 					<div style={{"display": "flex", "flex-direction": "column-reverse"}}>
 						<SelectField
+							floatingLabelStyle={{"color": item.isDisabled ? "#A9A9A9" : "#696969", "fontSize": "20px"}}
+							inputStyle={{"color": "#5F5C57"}}
+							floatingLabelFixed={true} 
 						 	dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
 							style={{"display": (item.hide ? 'none' : 'block')}}
 							errorStyle={{"float":"left"}}
 							fullWidth={true}
 							multiple={true}
-							floatingLabelText={item.label + (item.isRequired ? " *" : "")}
+							floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>} 
 							value={this.props.getVal(item.jsonPath)}
 							disabled={item.isDisabled}
 							onChange={(ev, key, val) => {

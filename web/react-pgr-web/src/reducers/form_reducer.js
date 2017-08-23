@@ -71,11 +71,11 @@ function validate(isRequired, pattern, name, value, validationData, fielderrorMs
   if (!isRequired && value === "") {
     errorText = "";
   }
-  console.log(validationData.required.required)
-  console.log(validationData.required.current)
+  // console.log(validationData.required.required)
+  // console.log(validationData.required.current)
   // console.log(validationData.pattern.required);
   // console.log(validationData.pattern.current);
-  console.log(validationData.required.required.length, validationData.required.current.length);
+  // console.log(validationData.required.required.length, validationData.required.current.length);
   return {
     errorText: errorText,
     validationData: validationData,
@@ -99,7 +99,7 @@ function validate2(isRequired, pattern, name, value, validatePropertyOwner) {
       errorText = "This field is required";
     }
   }
-  
+
   if(!value.match(/[a-z]/i))  {
 	   if (value.match(/^\d+$/) && parseInt(value) > 0) {
 
@@ -107,14 +107,14 @@ function validate2(isRequired, pattern, name, value, validatePropertyOwner) {
 			validatePropertyOwner.required.current = _.remove(validatePropertyOwner.required.current, (item) => {
 			  return item != name
 			});
-	   
+
 			errorText = "Enter positive value";
-		  
+
 	  }
   }
-  
- 
-  
+
+
+
   if (pattern.toString().length > 0) {
     if (value !== "") {
       if (pattern.test(value)) {
@@ -275,13 +275,13 @@ export default(state = defaultState, action) => {
 			...state
 		}
     break;
-	
+
 	case "FLOOR_NUMBERS":
 		return {
 			...state,
 			noOfFloors: action.noOfFloors
 		}
-		
+
 	 break;
 
 	case "ADD_FLOOR_REQUIRED" :
@@ -448,7 +448,7 @@ export default(state = defaultState, action) => {
 			validatePropertyFloor: action.validatePropertyFloor
 		}
 		break;
-		
+
 	case "SET_FLOOR_NUMBER":
 		console.log('noOfFloors', action.noOfFloors)
 		return {

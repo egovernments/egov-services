@@ -50,6 +50,7 @@ import org.egov.wcms.repository.builder.MeterWaterRatesQueryBuilder;
 import org.egov.wcms.repository.builder.PropertyPipeSizeQueryBuilder;
 import org.egov.wcms.repository.rowmapper.MeterWaterRatesRowMapper;
 import org.egov.wcms.service.RestWaterExternalMasterService;
+import org.egov.wcms.util.WcmsConstants;
 import org.egov.wcms.web.contract.MeterWaterRatesGetRequest;
 import org.egov.wcms.web.contract.MeterWaterRatesRequest;
 import org.egov.wcms.web.contract.PropertyTaxResponseInfo;
@@ -227,7 +228,7 @@ public class MeterWaterRatesRepository {
             usageTypeIdsList.add(Integer.valueOf(meterWaterRates.getUsageTypeId()));
         final Integer[] usageTypeIds = usageTypeIdsList.toArray(new Integer[usageTypeIdsList.size()]);
         final UsageTypeResponse usageResponse = restExternalMasterService.getUsageNameFromPTModule(
-                usageTypeIds, meterWaterRatesGetRequest.getTenantId());
+                usageTypeIds,WcmsConstants.WC, meterWaterRatesGetRequest.getTenantId());
         for (final MeterWaterRates meterWaterRatesObj : meterWaterRatesList)
             for (final PropertyTaxResponseInfo propertyResponse : usageResponse.getUsageMasters())
                 if (propertyResponse.getId().equals(meterWaterRatesObj.getUsageTypeId()))

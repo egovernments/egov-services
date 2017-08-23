@@ -97,15 +97,21 @@ class UiAutoComplete extends Component {
 				return (
           <div >
           <AutoComplete
+          	 floatingLabelStyle={{"color": item.isDisabled ? "#A9A9A9" : "#696969", "fontSize": "20px", "white-space": "nowrap"}}
+			 inputStyle={{"color": "#5F5C57"}}
+          	 floatingLabelFixed={true}
              style={{"display": (item.hide ? 'none' : 'inline-block')}}
              errorStyle={{"float":"left"}}
              dataSource={dropDownData.hasOwnProperty(item.jsonPath)?dropDownData[item.jsonPath]:[]}
              dataSourceConfig={dataSourceConfig}
-             floatingLabelText={item.label + (item.isRequired ? " *" : "")}
+             floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>} 
              fullWidth={true}
              value={this.props.getVal(item.jsonPath)}
              disabled={item.isDisabled}
              errorText={this.props.fieldErrors[item.jsonPath]}
+             onKeyUp={(e) => {
+             	this.props.handler({target: {value: ""}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)
+             }}
              onNewRequest={(value,index) =>{
               this.props.handler({target: {value: value.key}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)
               if(this.props.autoComHandler && item.autoCompleteDependancy) {

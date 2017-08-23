@@ -12,7 +12,7 @@ import org.egov.tl.commons.web.contract.UOM;
 import org.egov.tl.commons.web.contract.UserInfo;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tl.commons.web.requests.UOMRequest;
-import org.egov.tl.commons.web.requests.UOMResponse;
+import org.egov.tl.commons.web.response.UOMResponse;
 import org.egov.tradelicense.TradeLicenseApplication;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.consumers.UOMConsumer;

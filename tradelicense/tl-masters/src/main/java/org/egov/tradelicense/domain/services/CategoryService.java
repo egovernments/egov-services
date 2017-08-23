@@ -2,8 +2,8 @@ package org.egov.tradelicense.domain.services;
 
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.requests.CategoryRequest;
-import org.egov.tl.commons.web.requests.CategoryResponse;
-import org.egov.tl.commons.web.requests.CategorySearchResponse;
+import org.egov.tl.commons.web.response.CategoryResponse;
+import org.egov.tl.commons.web.response.CategorySearchResponse;
 
 /**
  * Service class for Category master
@@ -19,7 +19,7 @@ public interface CategoryService {
 	 * @param CategoryRequest
 	 * @return CategoryResponse
 	 */
-	public CategoryResponse createCategoryMaster(CategoryRequest categoryRequest);
+	public CategoryResponse createCategoryMaster(CategoryRequest categoryRequest, String type);
 
 	/**
 	 * Description : service method for updating category master
@@ -27,7 +27,7 @@ public interface CategoryService {
 	 * @param CategoryRequest
 	 * @return CategoryResponse
 	 */
-	public CategoryResponse updateCategoryMaster(CategoryRequest categoryRequest);
+	public CategoryResponse updateCategoryMaster(CategoryRequest categoryRequest, String type);
 
 	/**
 	 * Description : service method for searching category master

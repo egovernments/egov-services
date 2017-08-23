@@ -16,6 +16,7 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import Checkbox from 'material-ui/Checkbox';
 import RaisedButton from 'material-ui/RaisedButton';
+import {translate} from '../../../../common/common';
 import Api from '../../../../../api/api';
 
 
@@ -140,19 +141,19 @@ class UpicNumber extends Component {
 
     return ( 
 		  <Card className="uiCard">
-			<CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Old Property No.</div>} />
+			<CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate('pt.create.groups.oldPropertyNo')}</div>} />
 			<CardText style={styles.reducePadding}>
 				<Grid fluid>
 					<Row>
 						<Col xs={12} md={3} sm={6}>
 						  <TextField  className="fullWidth"
-							  floatingLabelText="Old Property No. *"
+							  floatingLabelText={<span>{translate('pt.create.groups.oldPropertyNo')}<span style={{"color": "#FF0000"}}> *</span></span>}
 							  errorText={fieldErrors.oldUpicNumber ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.oldUpicNumber}</span>: ""}
 							  value={upicNumber.oldUpicNumber ? upicNumber.oldUpicNumber : ""}
 							  onChange={(e) => {
 								handleChange(e, "oldUpicNumber", true, /^\d{10}$/g)}}
 							  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-							  underlineStyle={styles.underlineStyle}
+							  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 							  underlineFocusStyle={styles.underlineFocusStyle}
 							  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 							  maxLength={10}

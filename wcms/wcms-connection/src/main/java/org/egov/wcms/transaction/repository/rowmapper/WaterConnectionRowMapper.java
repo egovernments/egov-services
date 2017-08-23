@@ -41,10 +41,13 @@ package org.egov.wcms.transaction.repository.rowmapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.wcms.transaction.model.Connection;
 import org.egov.wcms.transaction.model.ConnectionOwner;
+import org.egov.wcms.transaction.model.Meter;
 import org.egov.wcms.transaction.model.Property;
 import org.egov.wcms.transaction.web.contract.Address;
 import org.egov.wcms.transaction.web.contract.Boundary;
@@ -66,7 +69,8 @@ public class WaterConnectionRowMapper {
 	public static final Logger LOGGER = LoggerFactory.getLogger(WaterConnectionRowMapper.class);
 	public static final String baseUrl = "http://pt-property:8080" ; 
 	public static final String usageTypeSearch = "/pt-property/property/usages/_search?ids={ids}&tenantId={tenantId}" ; 
-	public static final String propertyTypeSearch = "/pt-property/property/propertytypes/_search?ids={ids}&tenantId={tenantId}"; 
+	public static final String propertyTypeSearch = "/pt-property/property/propertytypes/_search?ids={ids}&tenantId={tenantId}";
+	public static final String METERED = "METERED";
 	
 	public class WaterConnectionPropertyRowMapper implements RowMapper<Connection> {
 		@Override
@@ -77,8 +81,12 @@ public class WaterConnectionRowMapper {
 			prop.setPropertyTypeId(rs.getString("conn_proptype"));
 			prop.setAddress(rs.getString("conn_propaddress"));
 			prop.setPropertyidentifier(rs.getString("conn_propid"));
+			prop.setLocality(Integer.toString(rs.getInt("propertylocation")));
 			if (null != rs.getString("propertyowner") && rs.getString("propertyowner") != "") {
 				prop.setNameOfApplicant(rs.getString("propertyowner"));
+				prop.setAdharNumber(rs.getString("aadhaarnumber"));
+				prop.setMobileNumber(rs.getString("mobilenumber"));
+				prop.setEmail(rs.getString("emailid"));
 			}
 			resolvePropertyUsageTypeNames(rs, prop);
 			connection.setProperty(prop);
@@ -165,6 +173,17 @@ public class WaterConnectionRowMapper {
 			if (null != execDate) {
 				connection.setExecutionDate(execDate);
 			}
+			connection.setSubUsageTypeId(rs.getString("subusagetype"));
+			if(rs.getString("conn_billtype").equals(METERED) && rs.getBoolean("conn_islegacy")) { 
+				Meter meter = Meter.builder().meterMake(rs.getString("metermake"))
+						.meterCost(rs.getString("metercost"))
+						.meterSlNo(rs.getString("meterslno"))
+						.initialMeterReading(rs.getString("initialmeterreading"))
+						.build();
+				List<Meter> meterList = new ArrayList<>();
+				meterList.add(meter);
+				connection.setMeter(meterList);
+			}
 		} catch (Exception ex) {
 			LOGGER.error("Exception encountered while mapping the Result Set in Mapper : " + ex);
 		}
@@ -206,7 +225,6 @@ public class WaterConnectionRowMapper {
 	public PropertyTypeResponse getPropertyNameFromPTModule(
 			final Integer[] propertyTypeId, final String tenantId) {
 		String url = baseUrl + propertyTypeSearch;
-		LOGGER.info("URL for Property Types : "+ url);
 		final RequestInfo requestInfo = RequestInfo.builder().ts(123456789L).build();
 		final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
 		final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
@@ -218,7 +236,6 @@ public class WaterConnectionRowMapper {
 	public UsageTypeResponse getUsageNameFromPTModule(
 			final Integer[] usageTypeId, final String tenantId) {
 		String url = baseUrl + usageTypeSearch;
-		LOGGER.info("URL for Usage Types : "+ url);
 		final RequestInfo requestInfo = RequestInfo.builder().ts(123456789L).build();
 		final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
 		final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);

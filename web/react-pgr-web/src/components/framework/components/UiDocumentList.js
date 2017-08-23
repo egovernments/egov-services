@@ -22,9 +22,11 @@ export default class UiDocumentList extends Component {
 					return (
 						<Col xs={12} md={12}>
 							<TextField
+								floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
+								floatingLabelFixed={true} 
 								fullWidth={true} 
 								type="text"
-								floatingLabelText={translate("wc.create.name") + (item.isRequired ? " *" : "")} 
+								floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>} 
 								value={self.props.getVal(item.jsonPath + "[" + i + "].name")}
 								disabled={item.isDisabled}
 								errorText={self.props.fieldErrors[item.jsonPath]}

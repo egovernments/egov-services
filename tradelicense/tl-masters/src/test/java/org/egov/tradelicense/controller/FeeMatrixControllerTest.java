@@ -19,7 +19,7 @@ import org.egov.tl.commons.web.contract.FeeMatrixDetail;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.ResponseInfo;
 import org.egov.tl.commons.web.requests.FeeMatrixRequest;
-import org.egov.tl.commons.web.requests.FeeMatrixResponse;
+import org.egov.tl.commons.web.response.FeeMatrixResponse;
 import org.egov.tradelicense.TradeLicenseApplication;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.services.FeeMatrixService;

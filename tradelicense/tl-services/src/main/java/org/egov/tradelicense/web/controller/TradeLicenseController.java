@@ -12,10 +12,12 @@ import org.egov.tl.commons.web.contract.TradeLicenseContract;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tl.commons.web.requests.ResponseInfoFactory;
 import org.egov.tl.commons.web.requests.TradeLicenseRequest;
-import org.egov.tl.commons.web.requests.TradeLicenseResponse;
-import org.egov.tl.commons.web.requests.TradeLicenseSearchResponse;
+import org.egov.tl.commons.web.response.TradeLicenseResponse;
+import org.egov.tl.commons.web.response.TradeLicenseSearchResponse;
 import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.common.domain.exception.CustomBindException;
+import org.egov.tradelicense.common.domain.exception.TradeLicensesNotEmptyException;
+import org.egov.tradelicense.common.domain.exception.TradeLicensesNotFoundException;
 import org.egov.tradelicense.domain.model.AuditDetails;
 import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.domain.service.TradeLicenseService;
@@ -66,17 +68,20 @@ public class TradeLicenseController {
 			BindingResult errors) throws Exception {
 
 //		validate(tradeLicenseRequest.getLicenses(), errors);
+		RequestInfo requestInfo = tradeLicenseRequest.getRequestInfo();
 		if (errors.hasErrors()) {
-			throw new CustomBindException(errors, tradeLicenseRequest.getRequestInfo());
+			throw new CustomBindException(errors, requestInfo);
+		}
+		//check for existence of licenses 
+		if(tradeLicenseRequest.getLicenses() == null){
+			throw new TradeLicensesNotFoundException(propertiesManager.getTradeLicensesNotFoundMsg(), requestInfo);
+		} else if(tradeLicenseRequest.getLicenses().size() == 0){
+			throw new TradeLicensesNotEmptyException(propertiesManager.getTradeLicensesNotEmptyMsg(), requestInfo);
 		}
 		
-		RequestInfo requestInfo = tradeLicenseRequest.getRequestInfo();
 		ModelMapper model = new ModelMapper();
 		TradeLicenseResponse tradeLicenseResponse = new TradeLicenseResponse();
 		tradeLicenseResponse.setResponseInfo(getResponseInfo(requestInfo));
-		if(tradeLicenseResponse.getResponseInfo() != null){
-			tradeLicenseResponse.getResponseInfo().setStatus(propertiesManager.getLegacyCreateSuccessMessage());
-		}
 		List<TradeLicense> tradeLicenses = new ArrayList<>();
 		TradeLicense tradeLicense;
 		
@@ -110,7 +115,28 @@ public class TradeLicenseController {
 		tradeLicenseRequest.setLicenses(tradeLicenseContracts);
 		tradeLicenseService.addToQue(tradeLicenseRequest);
 		tradeLicenseResponse.setLicenses(tradeLicenseContracts);
-
+		
+		//creating success message with the license numbers
+		if(tradeLicenseResponse.getResponseInfo() != null && tradeLicenseResponse.getLicenses() != null
+		   && tradeLicenseResponse.getLicenses().size() > 0){
+			
+			String statusMessage = propertiesManager.getLegacyCreateSuccessMessage();
+			String licenseNumbers = "";
+			int licenseCount = tradeLicenseResponse.getLicenses().size();
+			for(int i=0; i < licenseCount; i++){
+				if(tradeLicenseResponse.getLicenses().get(i).getLicenseNumber() != null){
+					licenseNumbers = licenseNumbers.concat(tradeLicenseRequest.getLicenses().get(i).getLicenseNumber());
+					if(i != (licenseCount - 1)){
+						licenseNumbers = licenseNumbers.concat(", ");
+					}
+				}
+			}
+			if(statusMessage != null){
+				statusMessage = statusMessage.replace("{licenseNumbers}", licenseNumbers);
+			}
+			tradeLicenseResponse.getResponseInfo().setStatus(statusMessage);
+		}
+		
 		return tradeLicenseResponse;
 	}
 

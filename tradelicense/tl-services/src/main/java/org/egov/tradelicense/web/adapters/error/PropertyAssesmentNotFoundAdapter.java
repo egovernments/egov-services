@@ -14,28 +14,28 @@ import org.springframework.http.HttpStatus;
 public class PropertyAssesmentNotFoundAdapter {
 
 	private static final int HTTP_CLIENT_ERROR_CODE = 400;
-	private static final String PROPERTY_ASSESMENT_NOT_FOUND_EXCEPTION_MESSAGE = "tl.error.propertyAsseEmentNotFound";
+	private static final String PROPERTY_ASSESMENT_NOT_FOUND_EXCEPTION_MESSAGE = "tl.error.propertyassesment.notfound";
 	private static final String PROPERTY_ASSESMENT_NOT_FOUND_EXCEPTION_FIELD = "propertyAssesmentNo";
-	private static final String PROPERTY_ASSESMENT_NOT_FOUND_EXCEPTION_FIELD_CODE = "tl.error.propertyAssesmentNo.notFound";
+	private static final String PROPERTY_ASSESMENT_NOT_FOUND_EXCEPTION_FIELD_CODE = "tl.error.propertyassesmentno.notfound";
 
-	public ErrorResponse getErrorResponse(RequestInfo requestInfo) {
+	public ErrorResponse getErrorResponse(String customMsg, RequestInfo requestInfo) {
 		ResponseInfo responseInfo = new ResponseInfo();
 		responseInfo.setApiId(requestInfo.getApiId());
 		responseInfo.setVer(requestInfo.getVer());
 		responseInfo.setMsgId(requestInfo.getMsgId());
 		responseInfo.setTs(new Date().toString());
 		responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
-		return new ErrorResponse(null, getError());
+		return new ErrorResponse(responseInfo, getError(customMsg));
 	}
 
-	private Error getError() {
-		final List<ErrorField> fields = Collections.singletonList(getErrorField());
+	private Error getError(String customMsg) {
+		final List<ErrorField> fields = Collections.singletonList(getErrorField(customMsg));
 		return Error.builder().code(HTTP_CLIENT_ERROR_CODE).message(PROPERTY_ASSESMENT_NOT_FOUND_EXCEPTION_MESSAGE)
-				.fields(fields).description("").build();
+				.fields(fields).description(customMsg).build();
 	}
 
-	private ErrorField getErrorField() {
+	private ErrorField getErrorField(String customMsg) {
 		return ErrorField.builder().code(PROPERTY_ASSESMENT_NOT_FOUND_EXCEPTION_FIELD_CODE)
-				.field(PROPERTY_ASSESMENT_NOT_FOUND_EXCEPTION_FIELD).message("").build();
+				.field(PROPERTY_ASSESMENT_NOT_FOUND_EXCEPTION_FIELD).message(customMsg).build();
 	}
 }

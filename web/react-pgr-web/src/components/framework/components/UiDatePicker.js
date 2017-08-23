@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import DatePicker from 'material-ui/DatePicker';
-
+import TextField from 'material-ui/TextField';
+const datePat = /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g;
 export default class UiEmailField extends Component {
 	constructor(props) {
        super(props);
@@ -13,14 +13,27 @@ export default class UiEmailField extends Component {
    			} else if(dateStr.indexOf("+") > -1) {
    				var oneDay = 24 * 60 * 60 * 1000;
    				dateStr = dateStr.split("+")[1];
-   				return new Date(new Date().getTime() + (Number(dateStr) * oneDay)); 
+   				return new Date(new Date().getTime() + (Number(dateStr) * oneDay));
    			} else {
    				var oneDay = 24 * 60 * 60 * 1000;
    				dateStr = dateStr.split("-")[1];
-   				return new Date(new Date().getTime() - (Number(dateStr) * oneDay)); 
+   				return new Date(new Date().getTime() - (Number(dateStr) * oneDay));
    			}
    		} else {
    			return "";
+   		}
+   	}
+
+   	getDateFormat = (timeLong) => {
+   		if(timeLong) {
+   			if((timeLong.toString().length == 12 || timeLong.toString().length == 13) && new Date(Number(timeLong)).getTime() > 0) {
+	   			var _date = new Date(Number(timeLong));
+	   			return ('0' + _date.getDate()).slice(-2) + '/'
+	             + ('0' + (_date.getMonth()+1)).slice(-2) + '/'
+	             + _date.getFullYear();
+	   		} else {
+	   			return timeLong;
+	   		}
    		}
    	}
 
@@ -28,24 +41,31 @@ export default class UiEmailField extends Component {
 		switch (this.props.ui) {
 			case 'google':
 				return (
-					<DatePicker
-						style={{"display": (item.hide ? 'none' : 'block'), "marginTop": "24px"}}
-						autoOk={true}
-						hintText={item.label + (item.isRequired ? " *" : "")}
-						minDate={this.calcMinMaxDate(item.minDate)}
-						maxDate={this.calcMinMaxDate(item.maxDate)}
+					<TextField
+						style={{"display": (item.hide ? 'none' : 'inline-block')}}
+						floatingLabelStyle={{"color": item.isDisabled ? "#A9A9A9" : "#696969", "fontSize": "20px", "white-space": "nowrap"}}
+						inputStyle={{"color": "#5F5C57"}}
+						floatingLabelFixed={true}
 						disabled={item.isDisabled}
-						formatDate={function(date) {
-							date =new Date(date);
-							return ('0' + date.getDate()).slice(-2) + '/'
-             						+ ('0' + (date.getMonth()+1)).slice(-2) + '/'
-             						+ date.getFullYear();
-						}}
-						value={this.props.getVal(item.jsonPath, true)!=""?new Date(this.props.getVal(item.jsonPath, true)):{}}
+						hintText="DD/MM/YYYY" 
+						maxLength={10}
+						floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>} 
 						errorText={this.props.fieldErrors[item.jsonPath]}
-						onChange={(ev, dat) => {
-							this.props.handler({target: {value: dat.getTime()}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)
-						}}/>
+						value={this.getDateFormat(this.props.getVal(item.jsonPath))}
+						onChange={(e) => {
+							var val = e.target.value;
+							if(e.target.value) {
+								e.target.value = e.target.value.trim();
+								if(datePat.test(e.target.value)){
+									var _date = e.target.value;
+									_date = _date.split("/");
+									var newDate = _date[1]+"/"+_date[0]+"/"+_date[2];
+									val = Number(new Date(newDate).getTime());
+								}
+							}
+
+                            this.props.handler({target: {value: val}}, item.jsonPath, item.isRequired ? true : false, /\d{12,13}/, item.requiredErrMsg, item.patternErrMsg)
+                        }}/>
 				);
 		}
 	}

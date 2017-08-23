@@ -20,7 +20,6 @@ import org.egov.mr.web.contract.RegnUnitRequest;
 import org.egov.mr.web.contract.RegnUnitResponse;
 import org.egov.mr.web.contract.ResponseInfo;
 import org.egov.mr.web.errorhandler.ErrorHandler;
-import org.egov.mr.web.validator.RequestValidator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,9 +47,6 @@ public class RegistrationUnitControllerTest {
 
 	@MockBean
 	private RegnUnitResponse regnUnitResponse;
-
-	@MockBean
-	private RequestValidator RequestValidator;
 
 	@MockBean
 	private ErrorHandler ErrorHandler;

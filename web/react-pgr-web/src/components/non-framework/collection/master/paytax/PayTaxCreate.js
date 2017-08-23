@@ -162,12 +162,22 @@ specifications = require(`../../../../framework/specs/collection/transaction/col
       let {handleChange}=this.props;
       handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
 
-      if(property == "businessService"){
-        
-          console.log("working");
+      // if(property == "businessService"){
+      //     console.log("working");
+      //
+      // }
 
-      }
-
+// function mandatoryField(jsonPath, value){
+//   if ((jsonPath == "businessService") && ((value != "") || (value != null))){
+//     if((jsonPath=="consumerCode") && ((value == "") || (value == "null"))){
+//       console.log("Hi");
+//        return false; 
+//     }
+//     else {
+//       console.log("Hello");
+//     }
+//   }
+// }
 
 
 
@@ -191,7 +201,7 @@ specifications = require(`../../../../framework/specs/collection/transaction/col
         <form onSubmit={(e) => {
           search(e)
         }}>
-        {!_.isEmpty(mockData) && moduleName && actionName && <ShowFields groups={mockData[`${moduleName}.${actionName}`].groups} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""}/>}
+        {!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] && <ShowFields groups={mockData[`${moduleName}.${actionName}`].groups} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""}/>}
           <div style={{"textAlign": "center"}}>
 
 

@@ -2,11 +2,11 @@ package org.egov.tradelicense.web.repository;
 
 import java.util.Date;
 
-import org.egov.tl.commons.web.requests.CategoryResponse;
-import org.egov.tl.commons.web.requests.CategorySearchResponse;
-import org.egov.tl.commons.web.requests.LicenseStatusResponse;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
-import org.egov.tl.commons.web.requests.UOMResponse;
+import org.egov.tl.commons.web.response.CategoryResponse;
+import org.egov.tl.commons.web.response.CategorySearchResponse;
+import org.egov.tl.commons.web.response.LicenseStatusResponse;
+import org.egov.tl.commons.web.response.UOMResponse;
 import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.web.requests.TlMasterRequestInfo;

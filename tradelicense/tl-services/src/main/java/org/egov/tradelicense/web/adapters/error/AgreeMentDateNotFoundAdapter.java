@@ -14,28 +14,28 @@ import org.springframework.http.HttpStatus;
 public class AgreeMentDateNotFoundAdapter {
 
 	private static final int HTTP_CLIENT_ERROR_CODE = 400;
-	private static final String AGREEMENT_DATE_NOT_FOUND_EXCEPTION_MESSAGE = "tl.error.agreementDateNotFound";
+	private static final String AGREEMENT_DATE_NOT_FOUND_EXCEPTION_MESSAGE = "tl.error.agreementdate.notfound";
 	private static final String AGREEMENT_DATE_NOT_FOUND_EXCEPTION_FIELD = "agreementDate";
-	private static final String AGREEMENT_DATE_NOT_FOUND_EXCEPTION_FIELD_CODE = "tl.error.agreementDate.notFound";
+	private static final String AGREEMENT_DATE_NOT_FOUND_EXCEPTION_FIELD_CODE = "tl.error.agreementdate.notfound";
 
-	public ErrorResponse getErrorResponse(RequestInfo requestInfo) {
+	public ErrorResponse getErrorResponse(String customMsg, RequestInfo requestInfo) {
 		ResponseInfo responseInfo = new ResponseInfo();
 		responseInfo.setApiId(requestInfo.getApiId());
 		responseInfo.setVer(requestInfo.getVer());
 		responseInfo.setMsgId(requestInfo.getMsgId());
 		responseInfo.setTs(new Date().toString());
 		responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
-		return new ErrorResponse(null, getError());
+		return new ErrorResponse(responseInfo, getError(customMsg));
 	}
 
-	private Error getError() {
-		final List<ErrorField> fields = Collections.singletonList(getErrorField());
+	private Error getError(String customMsg) {
+		final List<ErrorField> fields = Collections.singletonList(getErrorField(customMsg));
 		return Error.builder().code(HTTP_CLIENT_ERROR_CODE).message(AGREEMENT_DATE_NOT_FOUND_EXCEPTION_MESSAGE)
-				.fields(fields).description("").build();
+				.fields(fields).description(customMsg).build();
 	}
 
-	private ErrorField getErrorField() {
+	private ErrorField getErrorField(String customMsg) {
 		return ErrorField.builder().code(AGREEMENT_DATE_NOT_FOUND_EXCEPTION_FIELD_CODE)
-				.field(AGREEMENT_DATE_NOT_FOUND_EXCEPTION_FIELD).message("").build();
+				.field(AGREEMENT_DATE_NOT_FOUND_EXCEPTION_FIELD).message(customMsg).build();
 	}
 }

@@ -127,8 +127,11 @@ public class WaterConnectionRepository {
                 statement.setString(18, waterConnectionRequest.getConnection().getPropertyIdentifier());
                 statement.setString(19, waterConnectionRequest.getConnection().getProperty().getUsageTypeId());
                 statement.setString(20, waterConnectionRequest.getConnection().getProperty().getPropertyTypeId());
-   
-                statement.setString(21, "AddressTest"); // waterConnectionRequest.getConnection().getProperty().getAddress());
+                if(waterConnectionRequest.getConnection().getWithProperty()) { 
+                	statement.setString(21, waterConnectionRequest.getConnection().getProperty().getAddress());	
+                } else { 
+                	statement.setString(21, waterConnectionRequest.getConnection().getAddress().getAddressLine1());
+                }
                 statement.setDouble(22, waterConnectionRequest.getConnection().getDonationCharge());
 
                 statement.setString(23, waterConnectionRequest.getConnection().getAssetIdentifier());

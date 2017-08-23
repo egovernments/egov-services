@@ -14,6 +14,12 @@ public class PropertiesManager {
 	@Value("${app.timezone}")
 	private String appTimeZone;
 
+	@Value("${error.license.licenses.notfound}")
+	private String tradeLicensesNotFoundMsg;
+	
+	@Value("${error.license.licenses.size.not.empty}")
+	private String tradeLicensesNotEmptyMsg;
+	
 	@Value("${egov.services.tl-masters_v1.hostname}")
 	private String tradeLicenseMasterServiceHostName;
 
@@ -102,8 +108,10 @@ public class PropertiesManager {
 	private String idApplicationNumberGenFormatServiceTopic;
 	
 	@Value("${error.license.locationendpoint}")
-	private String endPointError;
+	private String locationEndPointError;
 	
+	@Value("${error.oldLicense.duplicate}")
+	private String duplicateOldTradeLicenseMsg;
 	
 	@Value("${error.license.categoryendpoint}")
 	private String catEndPointError;
@@ -121,11 +129,17 @@ public class PropertiesManager {
 	@Value("${error.license.agreementdate}")
 	private String agreementDateErrorMsg;
 	
+	@Value("${error.license.agreementno.notfound}")
+	private String agreementNotFoundErrorMsg;
+	
 	@Value("${error.license.agreementno}")
 	private String agreementNoErrorMsg;
 	
-	@Value("${error.license.propertyassesmentNo}")
-	private String propertyassesmentNoErrorMsg;
+	@Value("${error.license.propertyAssesmentNo.notvalid}")
+	private String propertyAssesmentNoInvalidErrorMsg;
+	
+	@Value("${error.license.propertyAssesmentNo.notfound}")
+	private String propertyAssesmentNotFoundMsg;
 	
 	@Value("${error.license.aadhaarnumber}")
 	private String aadhaarNumberErrorMsg;
@@ -160,6 +174,9 @@ public class PropertiesManager {
 	
 	@Value("${error.license.feedetails}")
 	private String feeDetailsErrorMsg;
+	
+	@Value("${error.license.legacy.feedetails.notfound}")
+	private String legacyFeeDetailsNotFoundMsg;
 	
 	@Value("${error.license.feeDetailYearNotFound}")
 	private String feeDetailYearNotFound;

@@ -1,5 +1,6 @@
 package org.egov.citizen.model;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import lombok.Getter;
@@ -33,4 +34,5 @@ public class ServiceReq {
 	private AuditDetails auditDetails;
 	private String action;
 	private String consumerCode;
+	private BigDecimal applicationFee;
 }

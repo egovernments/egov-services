@@ -30,6 +30,8 @@ import org.egov.citizen.web.contract.ReceiptReq;
 import org.egov.citizen.web.contract.ReceiptRequest;
 import org.egov.citizen.web.contract.ServiceRequestSearchCriteria;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.User;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,6 +105,9 @@ public class CitizenService {
 		requestInfo.setDid(JsonPath.read(config, "$.requestInfo.did"));
 		requestInfo.setMsgId(JsonPath.read(config, "$.requestInfo.msgId"));
 		requestInfo.setKey(JsonPath.read(config, "$.requestInfo.key"));
+		User user = new User();
+		user.setId(Long.valueOf(JsonPath.read(config, "$.requestInfo.userInfo.id")));
+		requestInfo.setUserInfo(user);
 
 		infoWrapper.setRequestInfo(requestInfo);
 
@@ -296,7 +301,7 @@ public class CitizenService {
 		return serviceRequests;
 		
 	}
-
+	
 	public void sendMessageToKafka(ServiceReq servcieReq){
 		
 		try {

@@ -90,6 +90,9 @@ public class ApplicationProperties {
 	
 	@Value("${egov.services.billing_service.dues.search}")
 	private String searchDues;
+	
+	@Value("${egov.citizen.service.businessservice}")
+	private String businessService;
 
 
 	public String commonsSearchPageSizeDefault() {

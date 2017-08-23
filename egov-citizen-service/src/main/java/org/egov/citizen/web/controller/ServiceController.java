@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.egov.citizen.config.ApplicationProperties;
 import org.egov.citizen.config.CitizenServiceConstants;
 import org.egov.citizen.exception.CustomException;
 import org.egov.citizen.model.RequestInfoWrapper;
@@ -43,8 +44,6 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
-import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
 
 @RestController
 public class ServiceController {
@@ -61,7 +60,10 @@ public class ServiceController {
 
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
-
+	
+	@Autowired
+	private ApplicationProperties applicationProperties;
+	
 	@Autowired
 	public RestTemplate restTemplate;
 
@@ -126,7 +128,6 @@ public class ServiceController {
 				searchDemand = serviceConfig.getSearchDemand();
 				String applicationFee= serviceConfig.getApplicationFee();
 				url = searchDemand.getCreateDemandRequest().getUrl();
-				List<String> results = searchDemand.getResult();
 				String demandRequest = searchDemand.getCreateDemandRequest().getDemandRequest();
 
 				StringBuilder builder = new StringBuilder();
@@ -145,15 +146,14 @@ public class ServiceController {
 						
 							jObject.getJSONArray("Demands").getJSONObject(0).put("consumerCode", servcieReq.getConsumerCode());
 							jObject.getJSONArray("Demands").getJSONObject(0).put("tenantId", servcieReq.getTenantId());
-							jObject.getJSONArray("Demands").getJSONObject(0).put("businessService", "CITIZEN");
-							jObject.getJSONArray("Demands").getJSONObject(0).put("businessService", "Test");
+							jObject.getJSONArray("Demands").getJSONObject(0).put("businessService",applicationProperties.getBusinessService());
 							jObject.getJSONArray("Demands").getJSONObject(0).put("taxPeriodFrom", JsonPath.read(response, "$..Demands[0].taxPeriodFrom"));
 							jObject.getJSONArray("Demands").getJSONObject(0).put("taxPeriodTo", JsonPath.read(response, "$..Demands[0].taxPeriodTo"));
-							jObject.getJSONArray("Demands").getJSONObject(0).put("minimumAmountPayable",JsonPath.read(config, "0"));
+							jObject.getJSONArray("Demands").getJSONObject(0).put("minimumAmountPayable",JsonPath.read(config, applicationFee));
 							jObject.getJSONArray("Demands").getJSONObject(0).getJSONArray("demandDetails").getJSONObject(0).put("taxHeadMasterCode", "");
 							jObject.getJSONArray("Demands").getJSONObject(0).getJSONArray("demandDetails").getJSONObject(0).put("taxAmount",applicationFee);
 							jObject.getJSONArray("Demands").getJSONObject(0).getJSONArray("demandDetails").getJSONObject(0).put("collectionAmount", "100");
-							jObject.getJSONArray("Demands").getJSONObject(0).getJSONObject("owner").put("id",2);
+							jObject.getJSONArray("Demands").getJSONObject(0).getJSONObject("owner").put("id",JsonPath.read(config, "$.requestInfo.userInfo.id"));
 						}
 
 					citizenService.createDemand(url, jObject.toString());

@@ -94,6 +94,11 @@ public class ApplicationProperties {
 	@Value("${egov.citizen.service.businessservice}")
 	private String businessService;
 
+	@Value("${egov.citizen.service.taxPeriodFrom}")
+	private String taxPeriodFrom;
+	
+	@Value("${egov.citizen.service.taxPeriodTo}")
+	private String taxPeriodTo;
 
 	public String commonsSearchPageSizeDefault() {
 		return environment.getProperty(SEARCH_PAGESIZE_DEFAULT);

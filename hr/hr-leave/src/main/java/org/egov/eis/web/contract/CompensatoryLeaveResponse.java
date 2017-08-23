@@ -40,50 +40,26 @@
 
 package org.egov.eis.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import org.egov.common.contract.response.ResponseInfo;
+import org.egov.eis.model.CompensatoryLeave;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
-@Data
-@NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @EqualsAndHashCode
-public class AttendanceGetRequest {
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class CompensatoryLeaveResponse {
 
-    private List<Long> id;
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
 
-    private List<Long> employeeIds;
-
-    private String applicableOn;
-
-    private Integer month;
-
-    private String year;
-
-    private String code;
-
-    private Long departmentId;
-
-    private Long designationId;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date fromDate;
-
-    private String sortBy;
-
-    private String sortOrder;
-
-    @NotNull
-    private String tenantId;
-
-    @Min(1)
-    private Short pageSize;
-
-    private Short pageNumber;
+    @JsonProperty("CompensatoryLeave")
+    private List<CompensatoryLeave> compensatoryLeaves = new ArrayList<CompensatoryLeave>();
 
 }

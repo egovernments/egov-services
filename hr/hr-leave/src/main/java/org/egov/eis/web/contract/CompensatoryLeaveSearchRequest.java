@@ -40,50 +40,28 @@
 
 package org.egov.eis.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import java.util.Date;
-import java.util.List;
+import javax.validation.constraints.Size;
 
-@Data
+@Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class AttendanceGetRequest {
+public class CompensatoryLeaveSearchRequest {
 
-    private List<Long> id;
-
-    private List<Long> employeeIds;
-
-    private String applicableOn;
-
-    private Integer month;
-
-    private String year;
-
+    @Size(min = 1, max = 256)
     private String code;
-
-    private Long departmentId;
 
     private Long designationId;
 
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date fromDate;
+    private Long departmentId;
 
-    private String sortBy;
+    private Long employeeType;
 
-    private String sortOrder;
-
-    @NotNull
     private String tenantId;
-
-    @Min(1)
-    private Short pageSize;
-
-    private Short pageNumber;
 
 }

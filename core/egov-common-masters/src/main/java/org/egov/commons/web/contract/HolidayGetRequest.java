@@ -40,22 +40,16 @@
 
 package org.egov.commons.web.contract;
 
-import java.util.Date;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -65,33 +59,33 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class HolidayGetRequest {
 
-	private List<Long> id;
-	
-	private Integer year;
+    private List<Long> id;
 
-	@Size(min=3, max=200)
-	private String name;
+    private Integer year;
 
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	private Date applicableOn;
+    @Size(min = 3, max = 200)
+    private String name;
 
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	private Date fromDate;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    private Date applicableOn;
 
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	private Date toDate;
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date fromDate;
 
-	@NotNull
-	private String tenantId;
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date toDate;
+
+    @NotNull
+    private String tenantId;
 
     private String sortBy;
 
-	private String sortOrder;
+    private String sortOrder;
 
-	@Min(1)
-	@Max(500)
-	private Short pageSize;
+    @Min(1)
+    @Max(500)
+    private Short pageSize;
 
-	private Short pageNumber;
+    private Short pageNumber;
 
 }

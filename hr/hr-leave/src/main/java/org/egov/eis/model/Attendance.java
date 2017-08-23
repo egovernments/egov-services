@@ -38,52 +38,28 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.web.contract;
+package org.egov.eis.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
-import java.util.List;
 
-@Data
-@NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @EqualsAndHashCode
-public class AttendanceGetRequest {
+@NoArgsConstructor
+@ToString
+@Data
+public class Attendance {
 
-    private List<Long> id;
-
-    private List<Long> employeeIds;
-
-    private String applicableOn;
-
-    private Integer month;
-
-    private String year;
-
-    private String code;
-
-    private Long departmentId;
-
-    private Long designationId;
-
+    @NotNull
     @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date fromDate;
+    private Date attendanceDate;
 
-    private String sortBy;
-
-    private String sortOrder;
+    @NotNull
+    private Long employee;
 
     @NotNull
     private String tenantId;
-
-    @Min(1)
-    private Short pageSize;
-
-    private Short pageNumber;
-
 }

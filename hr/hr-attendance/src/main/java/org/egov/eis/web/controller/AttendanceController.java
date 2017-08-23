@@ -40,14 +40,6 @@
 
 package org.egov.eis.web.controller;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.validation.Valid;
-
 import org.egov.eis.config.PropertiesManager;
 import org.egov.eis.model.Attendance;
 import org.egov.eis.model.AttendanceType;
@@ -59,12 +51,7 @@ import org.egov.eis.service.EmployeeService;
 import org.egov.eis.service.HRConfigurationService;
 import org.egov.eis.service.HolidayService;
 import org.egov.eis.util.ApplicationConstants;
-import org.egov.eis.web.contract.AttendanceGetRequest;
-import org.egov.eis.web.contract.AttendanceRequest;
-import org.egov.eis.web.contract.AttendanceResponse;
-import org.egov.eis.web.contract.RequestInfo;
-import org.egov.eis.web.contract.RequestInfoWrapper;
-import org.egov.eis.web.contract.ResponseInfo;
+import org.egov.eis.web.contract.*;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.eis.web.errorhandlers.Error;
 import org.egov.eis.web.errorhandlers.ErrorHandler;
@@ -76,13 +63,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.*;
 
 @RestController
 @RequestMapping("/attendances")
@@ -117,7 +101,7 @@ public class AttendanceController {
     @PostMapping(value = "_search")
     @ResponseBody
     public ResponseEntity<?> search(@ModelAttribute @Valid final AttendanceGetRequest attendanceGetRequest,
-            final BindingResult bindingResult, @RequestBody final RequestInfoWrapper requestInfoWrapper) {
+                                    final BindingResult bindingResult, @RequestBody final RequestInfoWrapper requestInfoWrapper) {
         final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
         // validate header
@@ -140,11 +124,11 @@ public class AttendanceController {
         return getSuccessResponse(attendancesList, requestInfo);
     }
 
-    @PostMapping(value = { "_create", "_update" })
+    @PostMapping(value = {"_create", "_update"})
     @ResponseBody
     public ResponseEntity<?> create(@RequestBody @Valid final AttendanceRequest attendanceRequest,
-            @RequestParam("tenantId") final String tenantId,
-            final BindingResult errors) {
+                                    @RequestParam("tenantId") final String tenantId,
+                                    final BindingResult errors) {
         // validate header
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
@@ -159,6 +143,32 @@ public class AttendanceController {
         final List<Attendance> attendances = attendanceService.createAsync(attendanceRequest);
 
         return getSuccessResponse(attendances, attendanceRequest.getRequestInfo());
+    }
+
+    @PostMapping(value = "_getattendance")
+    @ResponseBody
+    public ResponseEntity<?> getAttendance(@ModelAttribute @Valid final AttendanceGetRequest attendanceGetRequest,
+                                           final BindingResult bindingResult, @RequestBody final RequestInfoWrapper requestInfoWrapper) {
+        final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+
+        // validate header
+        if (requestInfo.getApiId() == null || requestInfo.getVer() == null || requestInfo.getTs() == null)
+            return errHandler.getErrorResponseEntityForMissingRequestInfo(requestInfo);
+
+        // validate input params
+        if (bindingResult.hasErrors())
+            return errHandler.getErrorResponseEntityForMissingParameters(bindingResult, requestInfo);
+
+        // Call service
+        List<Attendance> attendancesList = null;
+        try {
+            attendancesList = attendanceService.findAttendanceForHolidays(attendanceGetRequest, requestInfo);
+        } catch (final Exception exception) {
+            logger.error("Error while processing request " + attendanceGetRequest, exception);
+            return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
+        }
+
+        return getSuccessResponse(attendancesList, requestInfo);
     }
 
     @SuppressWarnings("deprecation")

@@ -110,7 +110,111 @@ ReportDefinitions:
     agreement.security_deposit_date as securitydepositdate, agreement.commencement_date as commencementdate,
     agreement.goodwillamount as goodwillamount, agreement.timeperiod as timeperiod,
     agreement.expiry_date as expirydate, agreement.rent as rent,
-    (select SUM(dd.amount) - SUM(dd.amt_collected) from eglams_demand dmd , eg_demand_details dd where agreement.id=dmd.agreementid and 		dmd.demandid::int = dd.id_demand as pendingrent), agreement.payment_cycle as paymentcycle
+    (select SUM(dd.amount) - SUM(dd.amt_collected) from eglams_demand dmd , eg_demand_details dd where agreement.id=dmd.agreementid and     dmd.demandid::int = dd.id_demand as pendingrent), agreement.payment_cycle as paymentcycle
     from eglams_agreement agreement, eg_user usr, egasset_asset asset
     where agreement.allottee = usr.id and agreement.asset = asset.id and agreement.tenant_id = $tenantid
     and asset.revenueward = $revenueward
+
+- reportName: Renewal Pending report
+  summary: Renewal Pending report
+  version: 1.0.0
+  moduleName: lams
+  sourceColumns:
+  - name: agreementnumber
+    label: reports.lams.base.register.agreementnumber
+    type: number
+    source: eglams_agreement
+  - name: allotteename
+    label: reports.lams.base.register.allotteename
+    type: string
+    source: eg_user
+  - name: doorno
+    label: reports.lams.base.register.doorno
+    type: string
+    source: egasset_asset
+  - name: locality
+    label: reports.lams.base.register.locality
+    type: string
+    source: egasset_asset
+  - name: revenueward
+    label: reports.lams.base.register.revenueward
+    type: string
+    source: egasset_asset
+  - name: electionward
+    label: reports.lams.base.register.electionward
+    type: string
+    source: egasset_asset
+  - name: securitydeposit
+    label: reports.lams.base.register.securitydeposit
+    type: number
+    source: eglams_agreement
+  - name: securitydepositdate
+    label: reports.lams.base.register.securitydepositdate
+    type: string
+    source: eglams_agreement
+  - name: commencementdate
+    label: reports.lams.base.register.commencementdate
+    type: string
+    source: eglams_agreement
+  - name: goodwillamount
+    label: reports.lams.base.register.goodwillamount
+    type: number
+    source: eglams_agreement
+  - name: timeperiod
+    label: reports.lams.base.register.timeperiod
+    type: number
+    source: eglams_agreement
+  - name: expirydate
+    label: reports.lams.base.register.expirydate
+    type: string
+    source: eglams_agreement
+  - name: rent
+    label: reports.lams.base.register.rent
+    type: number
+    source: eglams_agreement
+  - name: pendingrent
+    label: reports.lams.base.register.pendingrent
+    type: number
+    source: eg_demand_details
+  - name: paymentcycle
+    label: reports.lams.base.register.paymentcycle
+    type: string
+    source: eglams_agreement
+  searchParams:
+  - name: revenueward
+    label: reports.lams.base.register.revenueward
+    type: singlevaluelist
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=
+     $tenantid&boundaryTypeName=WARD&hierarchyTypeName=REVENUE|$..id|$..name
+    source: egasset_asset
+    isMandatory: true
+  - name: expiring
+    label: reports.lams.base.register.expiringin
+    type: singlevaluelist
+    pattern: 'list://1 month:1 Month, 2 month:2 Months, 3 month:3 Months, 4 month:4 Months, 5 month:5 Months, 6 month:6 Months, 9 month:9 Months, 1 year:1 Year'
+    source: eglams_agreement
+    isMandatory: true
+  - name: assetcategory
+    label: reports.lams.base.register.assetcategory
+    type: singlevaluelist
+    pattern: http://egov-asset:8080/asset-services/assetCategories/_search?&tenantId=$tenantid|$..id|$.AssetCategory[*].name
+    source: egasset_assetcategory
+    isMandatory: false
+    searchClause: and asset.assetcategory = $assetcategory
+  query: select agreement.id as agreementnumber, usr.name as allotteename, asset.doorno as doorno,  asset.revenueward as wardid,
+         (select name from eg_boundary where id = asset.locality and tenantid = $tenantid) as locality,
+         (select name from eg_boundary where id = asset.revenueward and tenantid = $tenantid) as revenueward,
+         (select name from eg_boundary where id = asset.electionward and tenantid = $tenantid) as electionward,
+         agreement.security_deposit as securitydeposit, agreement.security_deposit_date as securitydepositdate,
+         agreement.commencement_date as commencementdate, agreement.goodwillamount as goodwillamount, agreement.timeperiod as timeperiod,
+         agreement.expiry_date as expirydate, agreement.rent as rent,
+         (select SUM(dd.amount) - SUM(dd.amt_collected) from eglams_demand dmd , eg_demand_details dd where agreement.id=dmd.agreementid and dmd.demandid::int = dd.id_demand) as pendingrent,
+         agreement.payment_cycle as paymentcycle
+         from eglams_agreement agreement, eg_user usr, egasset_asset asset
+         where
+         agreement.allottee = usr.id
+         and agreement.asset = asset.id
+         and agreement.tenant_id = $tenantid
+         and asset.revenueward = $revenueward
+         and agreement.expiry_date BETWEEN CURRENT_DATE AND CURRENT_DATE + INTERVAL $expiring
+  orderBy: ORDER BY agreement.id;

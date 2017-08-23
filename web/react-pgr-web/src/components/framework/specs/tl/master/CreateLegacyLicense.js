@@ -109,7 +109,8 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Enter Valid Trade Owner Name (Min:4, Max:100)"
+            "patternErrMsg": "Enter Valid Trade Owner Name (Min:4, Max:100)",
+            "maxLength": "100"
           },
           {
             "name": "FatherSpouseName",
@@ -120,7 +121,8 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Enter Valid Father/Spouse Name (Min:4, Max:100)"
+            "patternErrMsg": "Enter Valid Father/Spouse Name (Min:4, Max:100)",
+            "maxLength": "100"
           },
           {
             "name": "EmailID",
@@ -142,7 +144,8 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Enter Valid Trade Owner Address (Min:4, Max:250)"
+            "patternErrMsg": "Enter Valid Trade Owner Address (Min:4, Max:250)",
+            "maxLength": "250"
           }
         ]
       },
@@ -235,7 +238,8 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Enter Valid Trade Address (Min:4, Max:100)"
+            "patternErrMsg": "Enter Valid Trade Address (Min:4, Max:100)",
+            "maxLength": "100"
           }
         ]
       },
@@ -251,7 +255,8 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Enter Valid Trade Title (Min:4, Max:100)"
+            "patternErrMsg": "Enter Valid Trade Title (Min:4, Max:100)",
+            "maxLength": "100"
           },
           {
             "name": "TradeType",
@@ -431,7 +436,8 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Enter Valid Agreement No (Min:4, Max:128, Alpha/Numeric)"
+            "patternErrMsg": "Enter Valid Agreement No (Min:4, Max:128, Alpha/Numeric)",
+            "maxLength": "128"
           }
         ]
       },

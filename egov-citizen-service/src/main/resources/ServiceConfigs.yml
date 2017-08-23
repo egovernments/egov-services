@@ -15,7 +15,7 @@ serviceConfigs:
        "url": "http://egov-micro-dev.egovernments.org/billing-service/demand/_create"
        "demandRequest": '{"RequestInfo": "$.requestInfo","Demands": [{"consumerCode": "$.serviceReq.attributeValues[0].value","businessService": "$.serviceReq.attributeValues[1].value",
                 "taxPeriodFrom": "$.serviceReq.attributeValues[2].value","taxPeriodTo": "$.serviceReq.attributeValues[3].value", "minimumAmountPayable": "$.serviceReq.attributeValues[4].value",
-                "owner":{"id":""},"demandDetails": [{"taxHead" : "$.serviceReq.attributeValues[5].value","taxAmount":"$.serviceReq.attributeValues[6].value","collectionAmount" :"$.serviceReq.attributeValues[7].value"}]}]}'
+                "owner":{"id":""},"demandDetails": [{"taxHeadMasterCode" : "$.serviceReq.attributeValues[5].value","taxAmount":"$.serviceReq.attributeValues[6].value","collectionAmount" :"$.serviceReq.attributeValues[7].value"}]}]}'
     applicationFee: 100
 
  - serviceCode: PT_EXTRACT

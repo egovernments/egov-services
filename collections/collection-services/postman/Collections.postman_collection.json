@@ -36,7 +36,7 @@
 			"currentHelper": "normal",
 			"helperAttributes": {},
 			"time": 1503473747939,
-			"name": "http://egov-micro-dev.egovernments.org/collection-services/receipt/_create",
+			"name": "http://egov-micro-dev.egovernments.org/collection-services/receipts/_create",
 			"description": "",
 			"collectionId": "74908e9c-5511-6a47-f657-564f1c036e2f",
 			"responses": [],
@@ -92,7 +92,7 @@
 					"enabled": true
 				}
 			],
-			"url": "http://egov-micro-dev.egovernments.org/collection-services/receipt/_update",
+			"url": "http://egov-micro-dev.egovernments.org/collection-services/receipts/_update",
 			"queryParams": [],
 			"preRequestScript": null,
 			"pathVariables": {},
@@ -105,7 +105,7 @@
 			"currentHelper": "normal",
 			"helperAttributes": {},
 			"time": 1503472436649,
-			"name": "http://egov-micro-dev.egovernments.org/collection-services/receipt/_update",
+			"name": "http://egov-micro-dev.egovernments.org/collection-services/receipts/_update",
 			"description": "Receipt Update",
 			"collectionId": "74908e9c-5511-6a47-f657-564f1c036e2f",
 			"responses": [],

@@ -18,12 +18,10 @@ public class ServiceRequestRowMapper implements RowMapper<ServiceReq> {
 		ServiceReq serviceReq = new ServiceReq();
 		
 		serviceReq.setTenantId(rs.getString("tenantid"));
-		serviceReq.setServiceRequestId(rs.getString("servicerequestid"));
+		serviceReq.setServiceRequestId(rs.getString("id"));
 		serviceReq.setBackendServiceDetails(rs.getString("servicerequest"));
 		
 		return serviceReq;
 	}
-	
-	
 
 }

@@ -37,7 +37,6 @@ public class ReceiptRequest {
 	private List<String> status; //This should be an enum
 	
 	@JsonProperty("billNumber")
-	@NotNull
 	private String billNumber;
 	
 	@JsonProperty("responseHash")
@@ -53,4 +52,9 @@ public class ReceiptRequest {
 	@JsonProperty("billService")
 	@NotNull
 	private Object billService;
+	
+	@JsonProperty("consumerCode")
+	private String consumerCode;
+	
+	
 }

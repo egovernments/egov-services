@@ -24,6 +24,7 @@ import org.egov.citizen.repository.ResponseRepository;
 import org.egov.citizen.web.contract.Bill;
 import org.egov.citizen.web.contract.BillDetail;
 import org.egov.citizen.web.contract.Instrument;
+import org.egov.citizen.web.contract.PGPayload;
 import org.egov.citizen.web.contract.Receipt;
 import org.egov.citizen.web.contract.ReceiptReq;
 import org.egov.citizen.web.contract.ReceiptRequest;
@@ -166,9 +167,10 @@ public class CitizenService {
 		billingServiceRequestWrapper.setBillingServiceRequestInfo(receiptReq.getRequestInfo());
 		billingServiceRequestWrapper.setBillNumber(receiptReq.getBillNumber());
 		billingServiceRequestWrapper.setTenantId(receiptReq.getTenantId());
+		billingServiceRequestWrapper.setConsumerNumber(receiptReq.getConsumerCode());
 		BillResponse billResponse = null;
 		try{
-			billResponse = billingServiceRepository.getBillOnBillNumber(billingServiceRequestWrapper);
+			billResponse = billingServiceRepository.getBill(billingServiceRequestWrapper);
 		}catch(Exception e){
 			LOGGER.error("Couldn't fetch bill: ", e);
 			throw new CustomException(Integer.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
@@ -178,55 +180,85 @@ public class CitizenService {
 		LOGGER.info("Bill number: "+receiptReq.getBillNumber());
 		LOGGER.info("Response from billing svc: "+billResponse);
 		
-		LOGGER.info("Receipt creation flow starts");
-		
-		List<Bill> bills = billResponse.getBill();
-		for(Bill bill: bills){
-			bill.setPaidBy(bill.getPayeeName());
-			for(BillDetail billDetail: bill.getBillDetails()){
-				billDetail.setAmountPaid(receiptReq.getAmountPaid());
+		if(!billResponse.getBill().isEmpty()){
+			LOGGER.info("Receipt creation flow starts");
+			
+			List<Bill> bills = billResponse.getBill();
+			for(Bill bill: bills){
+				bill.setPaidBy(bill.getPayeeName());
+				for(BillDetail billDetail: bill.getBillDetails()){
+					billDetail.setAmountPaid(receiptReq.getAmountPaid());
+				}
+				
+			}
+			Instrument instrument = new Instrument();
+			InstrumentType instrumentType = new InstrumentType();
+			instrumentType.setName("Cash");
+			instrumentType.setTenantId(receiptReq.getTenantId());
+			instrument.setAmount(receiptReq.getAmountPaid());
+			instrument.setInstrumentType(instrumentType);
+			Receipt receipt = new Receipt();
+			receipt.setBill(bills);
+			receipt.setTenantId(receiptReq.getTenantId());
+			receipt.setInstrument(instrument);
+			List<Receipt> receipts = new ArrayList<>();
+			receipts.add(receipt);
+			ReceiptReq receiptRequest = new ReceiptReq();
+			receiptRequest.setRequestInfo(receiptReq.getRequestInfo());
+			receiptRequest.setReceipt(receipts);
+			receiptRequest.setTenantId(receiptReq.getTenantId());
+			
+			LOGGER.info("Request for creation of receipt: "+receiptRequest.toString());
+			Object receiptResponse = null;
+			try{
+				receiptResponse = collectionRepository.createReceipt(receiptRequest);
+			}catch(Exception e){
+				LOGGER.error("Error creating receipt in collection service. ", e);
+				throw new CustomException(Integer.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
+						CitizenServiceConstants.RCPT_INVALID_MSG, CitizenServiceConstants.RCPT_INVALID_DESC);
+			}
+	
+			LOGGER.info("Response from collection svc: "+receiptResponse);
+			ServiceReq serviceReq = new ServiceReq();
+			Object response = null;
+			try{
+				LOGGER.info("Fetching updated dues.....");
+				response = billingServiceRepository.getDemand(billingServiceRequestWrapper);
+			}catch(Exception e){
+				LOGGER.error("Couldn't fetch Updated Dues: ", e);
+				throw new CustomException(Integer.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
+						CitizenServiceConstants.DUES_INVALID_MSG, CitizenServiceConstants.DUES_INVALID_DESC);
 			}
 			
-		}
-		Instrument instrument = new Instrument();
-		InstrumentType instrumentType = new InstrumentType();
-		instrumentType.setName("Cash");
-		instrumentType.setTenantId(receiptReq.getTenantId());
-		instrument.setAmount(receiptReq.getAmountPaid());
-		instrument.setInstrumentType(instrumentType);
-		Receipt receipt = new Receipt();
-		receipt.setBill(bills);
-		receipt.setTenantId(receiptReq.getTenantId());
-		receipt.setInstrument(instrument);
-		List<Receipt> receipts = new ArrayList<>();
-		receipts.add(receipt);
-		ReceiptReq receiptRequest = new ReceiptReq();
-		receiptRequest.setRequestInfo(receiptReq.getRequestInfo());
-		receiptRequest.setReceipt(receipts);
-		receiptRequest.setTenantId(receiptReq.getTenantId());
+			LOGGER.info("Response for Dues..: "+response);
+			
+			serviceReq.setBackendServiceDetails(receiptResponse+","+response);
+			
+			try {
+				LOGGER.info("Object being pushed to kafka queue for update........: "+serviceReq.toString());
+				citizenProducer.producer(applicationProperties.getUpdateServiceTopic(),
+						applicationProperties.getUpdateServiceTopicKey(), serviceReq);
+			} catch (Exception e) {
+				LOGGER.error("Error while pushing to kafka queue. ", e);
+				throw new CustomException(Integer.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
+						CitizenServiceConstants.KAFKA_PUSH_FAIL_MSG, CitizenServiceConstants.KAFKA_PUSH_FAIL_DESC);
+			}
+
+			
+			return receiptResponse;
 		
-		LOGGER.info("Request for creation of receipt: "+receiptRequest.toString());
-		Object receiptResponse = null;
-		try{
-			receiptResponse = collectionRepository.createReceipt(receiptRequest);
-		}catch(Exception e){
-			LOGGER.error("Error creating receipt in collection service. ", e);
+		}else{
+			LOGGER.error("Zero bills returned for this consumerCode: "+receiptReq.getConsumerCode());
 			throw new CustomException(Integer.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
-					CitizenServiceConstants.RCPT_INVALID_MSG, CitizenServiceConstants.RCPT_INVALID_DESC);
+					CitizenServiceConstants.BILL_INVALID_MSG, CitizenServiceConstants.BILL_INVALID_DESC);
 		}
-		
-
-		LOGGER.info("Response from collection svc: "+receiptResponse);
-
-		
-		return receiptResponse;
 	}
 	
-	public Object generateBill(RequestInfo requestInfo, String mobileNumber, String tenantId){
-		LOGGER.info("Generate bill flow starts for mobile no: "+mobileNumber.toString());
+	public Object generateBill(RequestInfo requestInfo, String consumerCode, String buisnessService, String tenantId){
+		LOGGER.info("Generate bill flow starts for mobile no: "+consumerCode.toString());
 		BillResponse billResponse = null;
 		try{
-			billResponse = billingServiceRepository.generateBillForDemand(requestInfo, tenantId, mobileNumber);
+			billResponse = billingServiceRepository.generateBillForDemand(requestInfo, tenantId, consumerCode, buisnessService);
 		}catch(Exception e){
 			LOGGER.error("Couldn't fetch bill: ", e);
 			throw new CustomException(Integer.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
@@ -236,6 +268,16 @@ public class CitizenService {
 		LOGGER.info("Response from billing svc: "+billResponse);
 		
 		return billResponse;
+		
+	}
+	
+	public PGPayload generatePGPayload(RequestInfo requestInfo, String consumerCode, String buisnessService, String tenantId,
+			String serviceRequestId){
+		LOGGER.info("Generating PGPayload..");
+		PGPayload pgPayload = PGPayload.builder()
+							  .requestInfo(requestInfo).consumerCode(consumerCode).tenantId(tenantId).billServuce(buisnessService)
+							  .serviceRequestId(serviceRequestId).build();
+		return pgPayload;
 		
 	}
 	
@@ -249,10 +291,9 @@ public class CitizenService {
 					CitizenServiceConstants.SVCREQ_NOT_FOUND_MSG, CitizenServiceConstants.SVCREQ_NOT_FOUND_DESC);
 		}
 
-		LOGGER.info("ServiceRequests obtained:   "+serviceRequests);
+		LOGGER.info("ServiceRequests obtained:   "+serviceRequests.toString());
 		
 		return serviceRequests;
-		
 		
 	}
 

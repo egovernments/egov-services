@@ -13,7 +13,7 @@ public class CitizenServiceQueryBuilder {
 	private static final Logger logger = LoggerFactory.getLogger(CitizenServiceQueryBuilder.class);
 
 
-	private static final String BASE_QUERY = "SELECT jsonvalue as servicerequest, tenantid, servicerequestid FROM egov_citizen_service_req";
+	private static final String BASE_QUERY = "SELECT jsonvalue as servicerequest, tenantid, id FROM egov_citizen_service_req";
 
 	@SuppressWarnings("rawtypes")
 	public String getQuery(ServiceRequestSearchCriteria serviceRequestSearchCriteria, List preparedStatementValues) {
@@ -39,13 +39,13 @@ public class CitizenServiceQueryBuilder {
 
 		if (serviceRequestSearchCriteria.getTenantId() != null) {
 			isAppendAndClause = true;			
-			selectQuery.append(" tenantId = ?");
+			selectQuery.append(" tenantid = ?");
 			preparedStatementValues.add(serviceRequestSearchCriteria.getTenantId());
 		}
 
 		if (serviceRequestSearchCriteria.getServiceRequestId() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" servicerequestid = ?");
+			selectQuery.append(" id = ?");
 			preparedStatementValues.add(serviceRequestSearchCriteria.getServiceRequestId());
 
 		}
@@ -59,7 +59,7 @@ public class CitizenServiceQueryBuilder {
 	}
 
 	private void addOrderByClause(StringBuilder selectQuery, ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
-		String sortBy = (serviceRequestSearchCriteria.getSortBy() == null ? "keyname"
+		String sortBy = (serviceRequestSearchCriteria.getSortBy() == null ? "id"
 				: serviceRequestSearchCriteria.getSortBy());
 		String sortOrder = (serviceRequestSearchCriteria.getSortOrder() == null ? "ASC"
 				: serviceRequestSearchCriteria.getSortOrder());

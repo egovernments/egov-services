@@ -19,4 +19,7 @@ public class BillingServiceRequestWrapper {
 	private String tenantId;
 	
 	private String billNumber;
+	
+	private String consumerNumber;
+
 }

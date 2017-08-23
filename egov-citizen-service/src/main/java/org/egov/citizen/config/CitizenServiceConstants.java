@@ -69,4 +69,11 @@ public class CitizenServiceConstants {
 
 	public static final String SVCREQ_NOT_FOUND_MSG = "Service Requests not found";
 	public static final String SVCREQ_NOT_FOUND_DESC = "Service Requests couldn't be fetched for the criteria";
+	
+	public static final String KAFKA_PUSH_FAIL_MSG = "Object couldn't be pushed to the kafka queue";
+	public static final String KAFKA_PUSH_FAIL_DESC = "Try again by checking the request and the kafka connection";
+	
+	public static final String DUES_INVALID_MSG = "Dues couln't be fetched";
+	public static final String DUES_INVALID_DESC = "Billing service didn't return updated dues after collection";
 }
+

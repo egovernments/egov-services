@@ -22,7 +22,6 @@ import org.egov.citizen.web.contract.ServiceRequestSearchCriteria;
 import org.egov.citizen.web.contract.factory.ResponseInfoFactory;
 import org.egov.citizen.web.errorhandlers.Error;
 import org.egov.citizen.web.errorhandlers.ErrorResponse;
-import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -216,28 +215,35 @@ public class ServiceController {
 
 	@PostMapping(value = "/requests/_search")
 	@ResponseBody
-	public ResponseEntity<?> getServiceRequests(@RequestBody RequestInfo requestInfo,
-			@ModelAttribute @Valid ServiceRequestSearchCriteria serviceRequestSearchCriteria, BindingResult errors) {
-
+	public ResponseEntity<?> getServiceRequests(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
+			BindingResult requestInfoerrors,
+			@ModelAttribute @Valid ServiceRequestSearchCriteria serviceRequestSearchCriteria,
+			BindingResult errors) {
+		
+		if (requestInfoerrors.hasFieldErrors()) {
+			ErrorResponse errRes = populateErrors(errors);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		}
+		
 		if (errors.hasFieldErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
 		List<ServiceReq> serviceRequests = new ArrayList<>();
-		try {
+		try{
 			serviceRequests = citizenService.getServiceRequests(serviceRequestSearchCriteria);
-		} catch (CustomException e) {
+		}catch(CustomException e){
 			Error error = new Error();
 			error.setCode(e.getCode());
 			error.setMessage(e.getCustomMessage());
 			error.setDescription(e.getDescription());
-
-			return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+			
+			return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);	
 		}
-
+		
 		ServiceReqResponse serviceRes = new ServiceReqResponse();
 		serviceRes.setServiceRequests(serviceRequests);
-		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfoWrapper.getRequestInfo(), true);
 		serviceRes.setResponseInfo(responseInfo);
 		return new ResponseEntity<>(serviceRes, HttpStatus.OK);
 	}

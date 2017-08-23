@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Repository
@@ -24,14 +23,22 @@ public class BillingServiceRepository {
 	private ApplicationProperties applicationProperties;
 	
 	
-	public BillResponse getBillOnBillNumber(BillingServiceRequestWrapper billingServiceRequestWrapper) {
+	public BillResponse getBill(BillingServiceRequestWrapper billingServiceRequestWrapper) {
 		LOGGER.info("Search bill from Billing Service");
 		StringBuilder uri = new StringBuilder();
-		String searchCriteria = "?billId="+billingServiceRequestWrapper.getBillNumber()
+		String searchCriteriaOnBillId = "?billId="+billingServiceRequestWrapper.getBillNumber()
 								+"&tenantId="+billingServiceRequestWrapper.getTenantId();
-		uri.append(applicationProperties.getBillingServiceHostName())
-		   .append(applicationProperties.getSearchBill())
-		   .append(searchCriteria);
+		String searchCriteriaOnConsumerCode = "?consumerCode="+billingServiceRequestWrapper.getConsumerNumber()
+		                                      +"&tenantId="+billingServiceRequestWrapper.getTenantId();
+		if(null != billingServiceRequestWrapper.getConsumerNumber() || !billingServiceRequestWrapper.getConsumerNumber().isEmpty()){
+			uri.append(applicationProperties.getBillingServiceHostName())
+			   .append(applicationProperties.getSearchBill())
+			   .append(searchCriteriaOnConsumerCode);
+		}else{
+			uri.append(applicationProperties.getBillingServiceHostName())
+			   .append(applicationProperties.getSearchBill())
+			   .append(searchCriteriaOnBillId);
+		}
 		LOGGER.info("URI for search bill in Billing Service: "
 				+ uri.toString());
 		BillResponse response = null;
@@ -41,11 +48,36 @@ public class BillingServiceRepository {
 		return response;
 	}
 	
+	public Object getDemand(BillingServiceRequestWrapper billingServiceRequestWrapper) {
+		LOGGER.info("Search bill from Billing Service");
+		StringBuilder uri = new StringBuilder();
+		String searchCriteriaOnBillId = "?billId="+billingServiceRequestWrapper.getBillNumber()
+								+"&tenantId="+billingServiceRequestWrapper.getTenantId();
+		String searchCriteriaOnConsumerCode = "?consumerCode="+billingServiceRequestWrapper.getConsumerNumber()
+		                                      +"&tenantId="+billingServiceRequestWrapper.getTenantId();
+		if(null != billingServiceRequestWrapper.getConsumerNumber() || !billingServiceRequestWrapper.getConsumerNumber().isEmpty()){
+			uri.append(applicationProperties.getBillingServiceHostName())
+			   .append(applicationProperties.getSearchDues())
+			   .append(searchCriteriaOnConsumerCode);
+		}else{
+			uri.append(applicationProperties.getBillingServiceHostName())
+			   .append(applicationProperties.getSearchBill())
+			   .append(searchCriteriaOnBillId);
+		}
+		LOGGER.info("URI for search bill in Billing Service: "
+				+ uri.toString());
+		Object response = null;
+		response = restTemplate.postForObject(uri.toString(),
+					billingServiceRequestWrapper.getBillingServiceRequestInfo(), Object.class);
+		LOGGER.info("Response from billing service: " + response);
+		return response;
+	}
+	
 	public BillResponse generateBillForDemand(RequestInfo requestInfo, String tenantId,
-			String mobileNumber){
+			String consumerCode, String buisnessService){
 		LOGGER.info("Generating bill from Billing Service");
 		StringBuilder uri = new StringBuilder();
-		String generateCriteria ="?mobileNumber="+mobileNumber;
+		String generateCriteria ="?consumerCode="+consumerCode+"&businessService="+buisnessService;
 		uri.append(applicationProperties.getBillingServiceHostName())
 		   .append(applicationProperties.getGenerateBill())
 		   .append(generateCriteria);

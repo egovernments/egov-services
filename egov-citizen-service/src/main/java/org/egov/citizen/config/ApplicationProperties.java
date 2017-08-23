@@ -67,6 +67,12 @@ public class ApplicationProperties {
 	@Value("${kafka.topics.save.service.key}")
 	private String createServiceTopicKey;
 	
+	@Value("${kafka.topics.update.service}")
+	private String updateServiceTopic;
+	
+	@Value("${kafka.topics.update.service.key}")
+	private String updateServiceTopicKey;
+	
 	@Value("${egov.services.billing_service.hostname}")
 	private String billingServiceHostName;
 	
@@ -81,6 +87,9 @@ public class ApplicationProperties {
 	
 	@Value("${egov.services.billing_service.bill.generate}")
 	private String createReceiptURI;
+	
+	@Value("${egov.services.billing_service.dues.search}")
+	private String searchDues;
 
 
 	public String commonsSearchPageSizeDefault() {

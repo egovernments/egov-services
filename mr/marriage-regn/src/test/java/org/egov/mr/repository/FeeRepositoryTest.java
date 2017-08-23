@@ -1,6 +1,5 @@
 package org.egov.mr.repository;
 
-import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
@@ -15,18 +14,12 @@ import org.egov.mr.repository.querybuilder.FeeQueryBuilder;
 import org.egov.mr.repository.rowmapper.FeeRowMapper;
 import org.egov.mr.web.contract.FeeCriteria;
 import org.egov.mr.web.contract.FeeRequest;
-
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-
-import lombok.val;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FeeRepositoryTest {
@@ -60,6 +53,7 @@ public class FeeRepositoryTest {
 		feeRepository.findForCriteria(feeCriteria);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testCreateFee() {
 		FeeRequest feeRequest = new FeeRequest();
@@ -69,6 +63,7 @@ public class FeeRepositoryTest {
 		feeRepository.createFee(feeRequest);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testUpdateFee() {
 		FeeRequest feeRequest = new FeeRequest();

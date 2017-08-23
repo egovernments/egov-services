@@ -49,8 +49,10 @@ public class SearchPropertyBuilder {
 
 		Map<String, Object> userSearchRequestInfo = new HashMap<String, Object>();
 
-		if (ownerName != null && !ownerName.isEmpty())
+		if (ownerName != null && !ownerName.isEmpty()) {
 			userSearchRequestInfo.put("name", ownerName);
+			userSearchRequestInfo.put("fuzzyLogic", true);
+		}
 
 		if (mobileNumber != null && !mobileNumber.isEmpty())
 
@@ -73,6 +75,7 @@ public class SearchPropertyBuilder {
 
 			logger.info("SearchpropertyBuilder userSearchUrl :: " + userSearchUrl);
 			logger.info("SearchpropertyBuilder userSearchRequestInfo:: " + userSearchRequestInfo);
+
 			userResponse = restTemplate.postForObject(userSearchUrl.toString(), userSearchRequestInfo,
 					UserResponseInfo.class);
 			logger.info("SearchpropertyBuilder userResponse ::" + userResponse);

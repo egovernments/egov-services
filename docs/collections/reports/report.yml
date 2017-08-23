@@ -38,14 +38,14 @@ ReportDefinitions:
   - name: status
     label: reports.collection.status
     type: singlevaluelist
-    pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=default|$..key|$..object
+    pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=$tenantid|$..key|$..object
     isMandatory: false
     searchClause: AND EGCL_RECEIPTHEADER.STATUS = $status
     source: collection
   - name: collectedby
     label: reports.collection.collectedby
     type: singlevaluelist
-    pattern: http://collection-services:8080/collection-services/receipts/_getDistinctCollectedBy?tenantId=default|$..userName|$..user[*].name
+    pattern: http://collection-services:8080/collection-services/receipts/_getDistinctCollectedBy?tenantId=$tenantid|$..userName|$..user[*].name
     source: collection
     isMandatory: false
     searchClause: AND EGUSER.USERNAME = $collectedby
@@ -119,13 +119,13 @@ ReportDefinitions:
   - name: status
     label: reports.collection.status
     type: singlevaluelist
-    pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=default|$..key|$..object
+    pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=$tenantid|$..key|$..object
     isMandatory: false
     searchClause: AND EGCL_RECEIPTHEADER.STATUS = $status
   - name: department
     label: reports.collection.department
     type: singlevaluelist
-    pattern: http://egov-common-masters:8080/egov-common-masters/departments/_search?tenantId=default|$..id|$..name 
+    pattern: http://egov-common-masters:8080/egov-common-masters/departments/_search?tenantId=$tenantid|$..id|$..name 
     source: collection 
     isMandatory: false
     searchClause: AND EGCL_RECEIPTHEADER.DEPARTMENT = $department
@@ -201,14 +201,14 @@ ReportDefinitions:
   - name: status
     label: reports.collection.status
     type: singlevaluelist
-    pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=default|$..key|$..object
+    pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=$tenantid|$..key|$..object
     source: collection
     isMandatory: false
     searchClause: AND CH.status = $status
   - name: collectedby
     label: reports.collection.collectedby
     type: singlevaluelist
-    pattern: http://collection-services:8080/collection-services/receipts/_getDistinctCollectedBy?tenantId=default|$..userName|$..user[*].name
+    pattern: http://collection-services:8080/collection-services/receipts/_getDistinctCollectedBy?tenantId=$tenantid|$..userName|$..user[*].name
     source: collection
     isMandatory: false
     searchClause: AND us.username =$collectedby
@@ -287,7 +287,7 @@ ReportDefinitions:
   - name: status
     label: reports.collection.status
     type: singlevaluelist
-    pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=default|$..key|$..object
+    pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=$tenantid|$..key|$..object
     source: collection
     isMandatory: false
     searchClause : AND EGCL_RECEIPTHEADER.STATUS = $status 

@@ -56,6 +56,7 @@ import org.egov.wcms.service.PipeSizeService;
 import org.egov.wcms.service.PropertyCategoryService;
 import org.egov.wcms.service.PropertyTypePipeSizeService;
 import org.egov.wcms.service.PropertyUsageTypeService;
+import org.egov.wcms.service.ServiceChargeService;
 import org.egov.wcms.service.SourceTypeService;
 import org.egov.wcms.service.StorageReservoirService;
 import org.egov.wcms.service.SupplyTypeService;
@@ -72,6 +73,7 @@ import org.egov.wcms.web.contract.PipeSizeRequest;
 import org.egov.wcms.web.contract.PropertyTypeCategoryTypeReq;
 import org.egov.wcms.web.contract.PropertyTypePipeSizeRequest;
 import org.egov.wcms.web.contract.PropertyTypeUsageTypeReq;
+import org.egov.wcms.web.contract.ServiceChargeReq;
 import org.egov.wcms.web.contract.SourceTypeRequest;
 import org.egov.wcms.web.contract.StorageReservoirRequest;
 import org.egov.wcms.web.contract.SupplyTypeRequest;
@@ -104,6 +106,9 @@ public class WaterMasterConsumer {
 
     @Autowired
     private PropertyUsageTypeService propUsageTypeService;
+    
+    @Autowired
+    private ServiceChargeService serviceChargeService;
 
     @Autowired
     private DonationService donationService;
@@ -161,7 +166,8 @@ public class WaterMasterConsumer {
             "${kafka.topics.meterwaterrates.update.name}", "${kafka.topics.metercost.create.name}",
             "${kafka.topics.metercost.update.name}", "${kafka.topics.meterstatus.create.name}",
             "${kafka.topics.meterstatus.update.name}", "${kafka.topics.nonmeterwaterrates.create.name}",
-            "${kafka.topics.nonmeterwaterrates.update.name}" })
+            "${kafka.topics.nonmeterwaterrates.update.name}","${kafka.topics.servicecharge.create.name}",
+    "${kafka.topics.servicecharge.update.name}"})
 
     public void processMessage(final Map<String, Object> consumerRecord,
             @Header(KafkaHeaders.RECEIVED_TOPIC) final String topic) {
@@ -218,7 +224,13 @@ public class WaterMasterConsumer {
             } else if (applicationProperties.getUpdateMeterStatusTopicName().equals(topic)) {
                 log.info("Consuming MeterStatusUpdate Request");
                 meterStatusService.updateMeterStatus(objectMapper.convertValue(consumerRecord, MeterStatusReq.class));
-            } else if (applicationProperties.getCreateSourceTypeTopicName().equals(topic))
+            }  else if (applicationProperties.getCreateServiceChargeTopicName().equals(topic)){
+                log.info("Consuming createServiceChargeRequest");
+                serviceChargeService.createServiceCharge(objectMapper.convertValue(consumerRecord, ServiceChargeReq.class));
+            }else if (applicationProperties.getUpdateServiceChargeTopicName().equals(topic)){
+                log.info("Consuming updateServiceChargeRequest");
+                serviceChargeService.updateServiceCharge(objectMapper.convertValue(consumerRecord, ServiceChargeReq.class));
+            }else if (applicationProperties.getCreateSourceTypeTopicName().equals(topic))
                 waterSourceTypeService.create(objectMapper.convertValue(consumerRecord, SourceTypeRequest.class));
             else if (applicationProperties.getUpdateSourceTypeTopicName().equals(topic))
                 waterSourceTypeService.update(objectMapper.convertValue(consumerRecord, SourceTypeRequest.class));

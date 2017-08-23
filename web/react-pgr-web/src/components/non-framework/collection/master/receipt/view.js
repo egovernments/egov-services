@@ -29,7 +29,8 @@ var specifications={};
 let reqRequired = [];
 class Report extends Component {
   state={
-    pathname:""
+    pathname:"",
+    pdfData:""
   }
   constructor(props) {
     super(props);
@@ -324,8 +325,9 @@ class Report extends Component {
         elem = document.getElementById("basic-table3");
         res = doc.autoTableHtmlToJson(elem);
         doc.autoTable(res.columns, res.data, {showHeader:"never",startY: doc.autoTable.previous.finalY});
-        doc.save('Receipt-' + getVal("Receipt[0].transactionId") + '.pdf');
-
+        doc.autoPrint();
+        var res = doc.output("datauristring");
+        // doc.save('Receipt-' + getVal("Receipt[0].transactionId") + '.pdf');
       } else {
 
       doc.setFontSize(14);
@@ -394,6 +396,8 @@ class Report extends Component {
       res = doc.autoTableHtmlToJson(elem);
       doc.autoTable(res.columns, res.data, {showHeader:"never",startY: doc.autoTable.previous.finalY});
 
+
+
       // doc.setFontSize(14);
       // doc.setFontType("bold");
       // doc.text(originalX+100, doc.autoTable.previous.finalY+25, "Receipt"+" Duplicate" , 'center');
@@ -429,18 +433,26 @@ class Report extends Component {
       // elem = document.getElementById("basic-table2");
       // res = doc.autoTableHtmlToJson(elem);
       // doc.autoTable(res.columns, res.data, {startY:doc.autoTable.previous.finalY,theme: "striped"});
-       doc.save('Receipt-' + getVal("Receipt[0].transactionId") + '.pdf');
+      doc.autoPrint();
+      var res = doc.output("datauristring");
+
+      // doc.save('Receipt-' + getVal("Receipt[0].transactionId") + '.pdf');
      }
+     this.setState({
+       pdfData: res
+     })
   }
 
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid,tenantInfo} = this.props;
     let {search, handleChange, getVal, addNewCard, removeCard, rowClickHandler,getPurposeTotal,getTotal,getGrandTotal,int_to_words,print,generatePdf} = this;
-    let {showResult, resultList} = this.state;
+    let {showResult, resultList,pdfData} = this.state;
     // console.log(tenantInfo);
     // console.log(formData);
     return (
+
       <div className="SearchResult" >
+      {(pdfData != undefined) && <div style={{display:'none'}}><iframe src={this.state.pdfData} height="200" width="300"></iframe></div>}
 
 
       {
@@ -529,7 +541,7 @@ class Report extends Component {
                         <th>{translate("collection.create.receiptNumber")}</th>
                         <th>{translate("collection.create.consumerCode")}</th>
                         {/*<th>{translate("collection.search.period")}</th>*/}
-                        {getGrandTotal("ARREAR_AMOUNT",`formData.Receipt[0].Bill[0].billDetails`)>0 && <th>{translate("collection.search.arrears")}</th>}
+                        {getGrandTotal("ARREAR_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 && <th>{translate("collection.search.arrears")}</th>}
                         {getGrandTotal("CURRENT_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 &&<th>{translate("collection.search.current")}</th>}
                         {getGrandTotal("OTHERS",formData.Receipt[0].Bill[0].billDetails)>0 &&<th>{translate("collection.search.interest")}</th>}
                         {getGrandTotal("REBATE",formData.Receipt[0].Bill[0].billDetails)>0 &&<th>{translate("collection.search.rebate")}</th>}
@@ -634,7 +646,7 @@ class Report extends Component {
           </Card>
           <Grid>
             <Row>
-                <Col className="text-center" xs={12} md={12} ><span style={{"fontSize": "20px"}}className= "glyphicon glyphicon-print" onClick={e=>print()} ></span>&nbsp;&nbsp;&nbsp;&nbsp;<span className= "glyphicon glyphicon-download-alt" style={{"fontSize": "20px"}} onClick={e=>generatePdf()} ></span></Col>
+                <Col className="text-center" xs={12} md={12} ><span style={{"fontSize": "20px"}}className= "glyphicon glyphicon-print" onClick={e=>generatePdf()} ></span></Col>
             </Row>
           </Grid>
           </div>

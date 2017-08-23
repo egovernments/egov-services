@@ -1071,7 +1071,7 @@ var dat = {
           },
           {
             "name": "subUsageType",
-            "jsonPath": "Connection[0].property.subUsageType",
+            "jsonPath": "Connection[0].subUsageTypeId",
             "label": "wc.create.groups.connectionDetails.subUsageType",
             "pattern": "",
             "type": "singleValueList",
@@ -1079,7 +1079,7 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-      			"url":""
+      			"url":"/pt-property/property/usages/_search?|$..name|$..name"
           },
           {
             "name": "hscPipeSizeType",

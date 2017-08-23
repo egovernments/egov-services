@@ -1296,7 +1296,7 @@ var dat = {
           },
           {
             "name": "subUsageType",
-            "jsonPath": "Connection[0].property.subUsageType",
+            "jsonPath": "Connection[0].subUsageTypeId",
             "label": "wc.create.groups.connectionDetails.subUsageType",
             "pattern": "",
             "type": "singleValueList",
@@ -1304,7 +1304,7 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-      			"url":""
+      			"url":"/pt-property/property/usages/_search?|$..name|$..name"
           },
           {
             "name": "hscPipeSizeType",
@@ -1523,7 +1523,7 @@ var dat = {
            "label": "wc.create.fromDate",
            "pattern": "",
            "type": "datePicker",
-           "hide":true,
+           "isHidden":true,
            "isRequired": false,
            "isDisabled": false,
            "requiredErrMsg": "",
@@ -1534,7 +1534,7 @@ var dat = {
            "jsonPath": "Connection[0].toDate",
            "label": "wc.create.toDate",
            "pattern": "",
-           "hide":true,
+           "isHidden":true,
            "type": "datePicker",
            "isRequired": false,
            "isDisabled": false,

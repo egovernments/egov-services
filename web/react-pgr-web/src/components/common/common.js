@@ -936,6 +936,7 @@ var localization_EN_Data = {
   "tl.search.result.groups.validityYears":"Validity Years",
   "tl.search.result.groups.licenseStatus":"License Status",
   "tl.search.result.groups.workflowOwnerName":"Workflow Owner Name",
+  "tl.licenses.view.groups.tradeDetails":"Trade Details",
 
     "wc.create.groups.applicationParticular.title": "Application Particular",
     "wc.create.groups.applicationParticular.title": "Application Particular",

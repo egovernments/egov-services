@@ -102,6 +102,7 @@ import Transaction from './components/framework/transaction';
 import Inbox from './components/framework/inbox';
 
 import LegacyLicenseCreate from './components/non-framework/tl/transaction/LegacyLicenseCreate';
+import viewLegacyLicense from './components/non-framework/tl/transaction/viewLegacyLicense';
 
 
 import ReceiptView from './components/non-framework/collection/master/receipt/view';
@@ -227,6 +228,8 @@ const Main = () => {
 		  <Route exact path= {base + '/views/:moduleName/:master?/:id'} component={Inbox}/>
 
       <Route exact path= {base + '/non-framework/tl/transaction/LegacyLicenseCreate'} component={LegacyLicenseCreate}/>
+
+        <Route exact path= {base + '/non-framework/tl/transaction/viewLegacyLicense/:licenseNumber'} component={viewLegacyLicense}/>
 
       <Route exact path= {base + '/non-framework/collection/master/paytax/PayTaxCreate'} component={PayTaxCreate}/>
       <Route exact path= {base + '/non-framework/collection/receipt/view/:id'} component={ReceiptView}/>

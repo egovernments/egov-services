@@ -4,7 +4,6 @@ import org.egov.citizen.config.ApplicationProperties;
 import org.egov.citizen.model.BillResponse;
 import org.egov.citizen.model.BillingServiceRequestWrapper;
 import org.egov.citizen.model.RequestInfoWrapper;
-import org.egov.common.contract.request.RequestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,24 +51,20 @@ public class BillingServiceRepository {
 	public Object getDemand(BillingServiceRequestWrapper billingServiceRequestWrapper) {
 		LOGGER.info("Search bill from Billing Service");
 		StringBuilder uri = new StringBuilder();
-		String searchCriteriaOnBillId = "?billId="+billingServiceRequestWrapper.getBillNumber()
-								+"&tenantId="+billingServiceRequestWrapper.getTenantId();
 		String searchCriteriaOnConsumerCode = "?consumerCode="+billingServiceRequestWrapper.getConsumerNumber()
-		                                      +"&tenantId="+billingServiceRequestWrapper.getTenantId();
-		if(null != billingServiceRequestWrapper.getConsumerNumber() || !billingServiceRequestWrapper.getConsumerNumber().isEmpty()){
+		                                      +"&tenantId="+billingServiceRequestWrapper.getTenantId()
+		                                      +"&businessService="+billingServiceRequestWrapper.getBuisnessService();
 			uri.append(applicationProperties.getBillingServiceHostName())
 			   .append(applicationProperties.getSearchDues())
 			   .append(searchCriteriaOnConsumerCode);
-		}else{
-			uri.append(applicationProperties.getBillingServiceHostName())
-			   .append(applicationProperties.getSearchBill())
-			   .append(searchCriteriaOnBillId);
-		}
+
 		LOGGER.info("URI for search bill in Billing Service: "
 				+ uri.toString());
 		Object response = null;
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(billingServiceRequestWrapper.getBillingServiceRequestInfo());
 		response = restTemplate.postForObject(uri.toString(),
-					billingServiceRequestWrapper.getBillingServiceRequestInfo(), Object.class);
+				requestInfoWrapper, Object.class);
 		LOGGER.info("Response from billing service: " + response);
 		return response;
 	}

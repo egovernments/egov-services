@@ -21,5 +21,7 @@ public class BillingServiceRequestWrapper {
 	private String billNumber;
 	
 	private String consumerNumber;
+	
+	private String buisnessService;
 
 }

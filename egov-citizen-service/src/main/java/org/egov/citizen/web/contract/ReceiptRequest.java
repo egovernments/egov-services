@@ -51,7 +51,7 @@ public class ReceiptRequest {
 	
 	@JsonProperty("billService")
 	@NotNull
-	private Object billService;
+	private String billService;
 	
 	@JsonProperty("consumerCode")
 	private String consumerCode;

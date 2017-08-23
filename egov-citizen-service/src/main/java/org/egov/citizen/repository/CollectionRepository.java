@@ -29,6 +29,7 @@ public class CollectionRepository {
 		   
 		LOGGER.info("URI creating receipt in collection service: "
 				+ uri.toString());
+		LOGGER.info("receiptRequest: "+receiptRequest.toString());
 		Object response = null;
 		response = restTemplate.postForObject(uri.toString(),
 					receiptRequest, Object.class);

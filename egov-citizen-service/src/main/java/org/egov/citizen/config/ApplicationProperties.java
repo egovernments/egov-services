@@ -85,7 +85,7 @@ public class ApplicationProperties {
 	@Value("${egov.services.collection_service.hostname}")
 	private String collectionServiceHostName;
 	
-	@Value("${egov.services.billing_service.bill.generate}")
+	@Value("${egov.services.collection_service.receipt.create}")
 	private String createReceiptURI;
 	
 	@Value("${egov.services.billing_service.dues.search}")

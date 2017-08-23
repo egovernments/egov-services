@@ -138,9 +138,10 @@ public class ServiceController {
 				Object response = restTemplate.postForObject(builder.toString(), requestInfo, Object.class);
 				
 				JSONObject jObject;
+
 				try {
 					jObject = new JSONObject(demandRequest);
-					jObject.put("RequestInfo", JsonPath.read(config, "$.RequestInfo"));
+					jObject.put("RequestInfo", JsonPath.read(config, "$.requestInfo"));
 
 					for (Value value : servcieReq.getAttributeValues()) {
 						// todo
@@ -154,10 +155,10 @@ public class ServiceController {
 							jObject.getJSONArray("Demands").getJSONObject(0).getJSONArray("demandDetails").getJSONObject(0).put("taxHeadMasterCode", "PT_TAX");
 							jObject.getJSONArray("Demands").getJSONObject(0).getJSONArray("demandDetails").getJSONObject(0).put("taxAmount",applicationFee);
 							jObject.getJSONArray("Demands").getJSONObject(0).getJSONArray("demandDetails").getJSONObject(0).put("collectionAmount", "100");
-							jObject.getJSONArray("Demands").getJSONObject(0).getJSONObject("owner").put("id",JsonPath.read(config, "$.RequestInfo.userInfo.id"));
+							jObject.getJSONArray("Demands").getJSONObject(0).getJSONObject("owner").put("id",JsonPath.read(config, "$.requestInfo.userInfo.id"));
 					}
 
-					citizenService.createDemand(url, jObject.toString());
+					//citizenService.createDemand(url, jObject.toString());
 					Object billRes = citizenService.generateBill(requestInfo, servcieReq.getConsumerCode(), 
 							applicationProperties.getBusinessService(), servcieReq.getTenantId());
 					LOGGER.info("Bills generated: "+billRes.toString());
@@ -181,7 +182,6 @@ public class ServiceController {
 
 				}
 				 catch (Exception e) {
-					 e.printStackTrace();
 						return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
 
 				 }
@@ -223,9 +223,9 @@ public class ServiceController {
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
 		LOGGER.info("Request for receipt creation: " + receiptReq.toString());
-		Object receiptResponse = null;
+		ServiceReq serviceRequest = null;
 		try {
-			receiptResponse = citizenService.createReceiptForPayment(receiptReq);
+			serviceRequest = citizenService.createReceiptForPayment(receiptReq);
 		} catch (CustomException e) {
 			Error error = new Error();
 			error.setCode(e.getCode());
@@ -235,7 +235,7 @@ public class ServiceController {
 			return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
 
 		}
-		serviceReqResponse.getServiceReq().setBackendServiceDetails(receiptResponse);
+		serviceReqResponse.setServiceReq(serviceRequest);
 
 		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);
 	}

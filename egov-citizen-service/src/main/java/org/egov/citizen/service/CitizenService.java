@@ -1,5 +1,6 @@
 package org.egov.citizen.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -183,26 +184,28 @@ public class CitizenService {
 		return response;
 	}
 	
-	public Object createReceiptForPayment(ReceiptRequest receiptReq){
+	public ServiceReq createReceiptForPayment(ReceiptRequest receiptReq){
+		LOGGER.info("Incoming request for createReceipt: "+receiptReq);
 		BillingServiceRequestWrapper billingServiceRequestWrapper = new BillingServiceRequestWrapper();
 		billingServiceRequestWrapper.setBillingServiceRequestInfo(receiptReq.getRequestInfo());
 		billingServiceRequestWrapper.setBillNumber(receiptReq.getBillNumber());
 		billingServiceRequestWrapper.setTenantId(receiptReq.getTenantId());
 		billingServiceRequestWrapper.setConsumerNumber(receiptReq.getConsumerCode());
+		billingServiceRequestWrapper.setBuisnessService(receiptReq.getBillService());
 		BillResponse billResponse = null;
 		try{
+			LOGGER.debug("Searching bill...");
 			billResponse = billingServiceRepository.getBill(billingServiceRequestWrapper);
 		}catch(Exception e){
 			LOGGER.error("Couldn't fetch bill: ", e);
 			throw new CustomException(Integer.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
 					CitizenServiceConstants.BILL_INVALID_MSG, CitizenServiceConstants.BILL_INVALID_DESC);
 		}
-		
 		LOGGER.info("Bill number: "+receiptReq.getBillNumber());
-		LOGGER.info("Response from billing svc: "+billResponse);
+		LOGGER.debug("Response from billing svc: "+billResponse);
 		
 		if(!billResponse.getBill().isEmpty()){
-			LOGGER.info("Receipt creation flow starts");
+			LOGGER.debug("Receipt creation flow starts");
 			
 			List<Bill> bills = billResponse.getBill();
 			for(Bill bill: bills){
@@ -212,6 +215,8 @@ public class CitizenService {
 				}
 				
 			}
+			LOGGER.info("Amount paid: "+receiptReq.getAmountPaid());
+
 			Instrument instrument = new Instrument();
 			InstrumentType instrumentType = new InstrumentType();
 			instrumentType.setName("Cash");
@@ -231,10 +236,12 @@ public class CitizenService {
 			
 			LOGGER.info("Request for creation of receipt: "+receiptRequest.toString());
 			Object receiptResponse = null;
+			JSONObject backendServiceDetails = new JSONObject();
 			try{
 				receiptResponse = collectionRepository.createReceipt(receiptRequest);
+				backendServiceDetails.put("ReceiptResponse: ", receiptResponse);
 			}catch(Exception e){
-				LOGGER.error("Error creating receipt in collection service. ", e);
+				LOGGER.error("Error creating receipt in collection service. ");
 				throw new CustomException(Integer.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
 						CitizenServiceConstants.RCPT_INVALID_MSG, CitizenServiceConstants.RCPT_INVALID_DESC);
 			}
@@ -242,9 +249,12 @@ public class CitizenService {
 			LOGGER.info("Response from collection svc: "+receiptResponse);
 			ServiceReq serviceReq = new ServiceReq();
 			Object response = null;
+			
 			try{
 				LOGGER.info("Fetching updated dues.....");
 				response = billingServiceRepository.getDemand(billingServiceRequestWrapper);
+				backendServiceDetails.put("NoDuesResponse: ", response);
+
 			}catch(Exception e){
 				LOGGER.error("Couldn't fetch Updated Dues: ", e);
 				throw new CustomException(Integer.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
@@ -253,7 +263,8 @@ public class CitizenService {
 			
 			LOGGER.info("Response for Dues..: "+response);
 			
-			serviceReq.setBackendServiceDetails(receiptResponse+","+response);
+			serviceReq.setBackendServiceDetails(backendServiceDetails.toString());
+			
 			
 			try {
 				LOGGER.info("Object being pushed to kafka queue for update........: "+serviceReq.toString());
@@ -266,7 +277,7 @@ public class CitizenService {
 			}
 
 			
-			return receiptResponse;
+			return serviceReq;
 		
 		}else{
 			LOGGER.error("Zero bills returned for this consumerCode: "+receiptReq.getConsumerCode());

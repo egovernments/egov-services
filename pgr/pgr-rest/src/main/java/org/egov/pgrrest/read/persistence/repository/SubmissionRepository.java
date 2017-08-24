@@ -21,10 +21,10 @@ import java.util.stream.Collectors;
 
 @Service
 public class SubmissionRepository {
+    private static final String DEFAULT_SORT_FIELD = "lastModifiedDate";
     private SubmissionJpaRepository submissionJpaRepository;
     private SubmissionAttributeJpaRepository submissionAttributeJpaRepository;
     private ServiceRequestTypeJpaRepository serviceTypeJpaRepository;
-    private static final String DEFAULT_SORT_FIELD = "lastModifiedDate";
 
     public SubmissionRepository(SubmissionJpaRepository submissionJpaRepository,
                                 SubmissionAttributeJpaRepository submissionAttributeJpaRepository,
@@ -101,6 +101,10 @@ public class SubmissionRepository {
     }
 
     public List<ServiceRequest> find(ServiceRequestSearchCriteria searchCriteria) {
+        return getServiceRequests(searchCriteria);
+    }
+
+    private List<ServiceRequest> getServiceRequests(ServiceRequestSearchCriteria searchCriteria) {
         final List<Submission> submissions = getSubmissions(searchCriteria);
         enrichSubmissionsWithAttributeEntries(searchCriteria.getTenantId(), submissions);
         enrichSubmissionsWithServiceTypes(searchCriteria.getTenantId(), submissions);

@@ -77,7 +77,11 @@ class viewOrUpdateReceivingMode extends Component {
         var t = $('#searchTable').DataTable({
               dom:'<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
               buttons: ['excel', 'pdf'],
-              bDestroy: true
+              bDestroy: true,
+              order:[],
+              "columnDefs": [
+                { "orderable": false, "targets": 0  }
+              ]
         });
 
         t.on( 'order.dt search.dt', function () {

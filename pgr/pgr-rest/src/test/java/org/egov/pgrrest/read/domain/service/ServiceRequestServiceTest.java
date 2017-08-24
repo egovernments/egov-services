@@ -72,8 +72,7 @@ public class ServiceRequestServiceTest {
         when(serviceRequestValidator.canValidate(any())).thenReturn(true);
         final List<ServiceRequestValidator> validators = Collections.singletonList(serviceRequestValidator);
         serviceRequestService = new ServiceRequestService(complaintRepository, sevaNumberGeneratorService,
-            userRepository, serviceRequestTypeService, validators, customFieldsService, draftService,
-            postgresEnabled);
+            userRepository, serviceRequestTypeService, validators, customFieldsService, draftService, postgresEnabled);
     }
 
     @Test

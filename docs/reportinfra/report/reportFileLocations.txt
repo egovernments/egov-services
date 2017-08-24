@@ -1,3 +1,4 @@
 https://raw.githubusercontent.com/egovernments/egov-services/master/pgr/pgr-master/src/main/resources/application.yml
 https://raw.githubusercontent.com/egovernments/egov-services/master/docs/collections/reports/report.yml
 https://raw.githubusercontent.com/egovernments/egov-services/master/docs/wcms/reports/report.yml
+https://raw.githubusercontent.com/egovernments/egov-services/master/docs/tradelicense/reports/report.yml

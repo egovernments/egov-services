@@ -203,8 +203,15 @@ class Login extends Component {
           for(var i=0; i<query.length; i++) {
             if(query[i].indexOf("link") > -1) {
               switch(query[i].split("=")[1]) {
-                case 'test':
-                  self.props.setRoute("/employee/create");
+                case 'waternodue':
+                  self.props.setRoute("/non-framework/citizenServices/no-dues/search/watercharge");
+                  break;
+                case  'propertytaxextract':
+                  self.props.setRoute("/non-framework/citizenServices/no-dues/extract/watercharge");
+                  break;
+                case 'propertytaxdue':
+                  self.props.setRoute("/non-framework/citizenServices/no-dues/search/propertytax");
+                  break;
               }
             }
           }

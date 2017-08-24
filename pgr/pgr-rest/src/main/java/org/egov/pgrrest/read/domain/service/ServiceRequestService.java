@@ -34,8 +34,9 @@ public class ServiceRequestService {
                                  ServiceRequestTypeService serviceRequestTypeService,
                                  List<ServiceRequestValidator> validators,
                                  ServiceRequestCustomFieldService customFieldService,
-                                 DraftService draftService,
-                                 @Value("${postgres.enabled}") boolean postgresEnabled) {
+                                 DraftService draftService, @Value("${postgres.enabled}") boolean postgresEnabled)
+
+    {
         this.serviceRequestRepository = serviceRequestRepository;
         this.sevaNumberGeneratorService = sevaNumberGeneratorService;
         this.userRepository = userRepository;
@@ -49,8 +50,8 @@ public class ServiceRequestService {
     public List<ServiceRequest> findAll(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
         List<ServiceRequest> serviceRequestList;
         serviceRequestList = postgresEnabled ? serviceRequestRepository.findFromDb(serviceRequestSearchCriteria) :
-            serviceRequestRepository.find(serviceRequestSearchCriteria);
-            maskCitizenDetailsForAnonymousRequest(serviceRequestSearchCriteria, serviceRequestList);
+            getRecordFromES(serviceRequestSearchCriteria);
+        maskCitizenDetailsForAnonymousRequest(serviceRequestSearchCriteria, serviceRequestList);
         return serviceRequestList;
     }
 
@@ -75,6 +76,16 @@ public class ServiceRequestService {
         enrichWithComputedFields(serviceRequest, contractSevaRequest, serviceRequest.getServiceStatus());
         serviceRequestRepository.update(contractSevaRequest);
         deleteDraft(serviceRequest);
+    }
+
+    public List<String> getCrnByAttributes(String receivingMode, Long locationId) {
+        ServiceRequestSearchCriteria serviceRequestSearchCriteria = ServiceRequestSearchCriteria.builder()
+            .receivingMode(receivingMode)
+            .locationId(locationId)
+            .build();
+
+        return serviceRequestRepository.getCrnBySubmissionAttributes(serviceRequestSearchCriteria);
+
     }
 
     private void enrichWithComputedFields(ServiceRequest serviceRequest, SevaRequest contractSevaRequest,
@@ -126,6 +137,15 @@ public class ServiceRequestService {
             return;
         }
         draftService.delete(draftId);
+    }
+
+    private List<ServiceRequest> getRecordFromES(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
+        List<ServiceRequest> serviceRequestList;
+        serviceRequestList = serviceRequestRepository.find(serviceRequestSearchCriteria);
+        if (serviceRequestList.isEmpty()) {
+            serviceRequestList = serviceRequestRepository.findFromDb(serviceRequestSearchCriteria);
+        }
+        return serviceRequestList;
     }
 
 }

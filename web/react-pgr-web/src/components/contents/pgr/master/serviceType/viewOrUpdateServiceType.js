@@ -86,7 +86,11 @@ class viewOrUpdateServiceType extends Component {
         var t = $('#searchTable').DataTable({
              dom:'<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
              buttons: ['excel', 'pdf'],
-             bDestroy: true
+             bDestroy: true,
+             order:[],
+             "columnDefs": [
+               { "orderable": false, "targets": 0  }
+             ]
         });
 
         t.on( 'order.dt search.dt', function () {
@@ -167,8 +171,8 @@ class viewOrUpdateServiceType extends Component {
                                           <th>{translate('core.category')}</th>
                                           <th>{translate('pgr.lbl.active')}</th>
                                           <th>{translate('core.lbl.description')}</th>
-                                          <th>SLA Hour</th>
-                                          <th>Has Financial Impact</th>
+                                          <th>translate('pgr.lbl.slahour')</th>
+                                          <th>translate('pgr.lbl.finimpact')</th>
                                         </tr>
                                     </thead>
                                     <tbody>

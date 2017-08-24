@@ -44,7 +44,7 @@ public class BankContractRepository {
 
         String url = String.format("%s%s", hostUrl, SEARCH_URL);
         StringBuffer content = new StringBuffer();
-        if (bankContract.getId() != null) {
+        if (bankContract.getCode() != null) {
             content.append("code=" + bankContract.getCode());
         }
 

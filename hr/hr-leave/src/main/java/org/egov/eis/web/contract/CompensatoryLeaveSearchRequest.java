@@ -42,6 +42,7 @@ package org.egov.eis.web.contract;
 
 import lombok.*;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Builder
@@ -62,6 +63,7 @@ public class CompensatoryLeaveSearchRequest {
 
     private Long employeeType;
 
+    @NotNull
     private String tenantId;
 
 }

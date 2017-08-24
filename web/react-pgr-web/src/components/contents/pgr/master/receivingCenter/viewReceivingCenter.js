@@ -71,56 +71,46 @@ class ViewReceivingCenter extends Component {
                  {translate('pgr.lbl.receivingcenter')}
                < /div>}/>
                <CardText style={{padding:'8px 16px 0'}}>
-                 <Row>
-                   <Col xs={6} md={3}>
-                    {translate("core.lbl.add.name")}
-                   </Col>
-                   <Col xs={6} md={3}>
-                    {viewReceivingCenter.name ? viewReceivingCenter.name : ''}
-                   </Col>
-                   <Col xs={6} md={3}>
-                     {translate("core.lbl.code")}
-                   </Col>
-                   <Col xs={6} md={3}>
-                    {viewReceivingCenter.code ? viewReceivingCenter.code : ''}
-                   </Col>
-                 </Row>
-                 <Row>
-                   <Col xs={6} md={3}>
-                    {translate("core.lbl.description")}
-                   </Col>
-                   <Col xs={6} md={3}>
-                    {viewReceivingCenter.description? viewReceivingCenter.description : ''}
-                   </Col>
-                   <Col xs={6} md={3}>
-                     {translate("pgr.lbl.active")}
-                   </Col>
-                   <Col xs={6} md={3}>
-                    {viewReceivingCenter.active? "Yes": 'No'}
-                   </Col>
-                 </Row>
-                 <Row>
-                   <Col xs={6} md={3}>
-                    {translate("pgr.lblauditdetails")}
-                   </Col>
-                   <Col xs={6} md={3}>
-                    {viewReceivingCenter.auditdetails ? viewReceivingCenter.auditdetails : ''}
-                   </Col>
-                   <Col xs={6} md={3}>
-                     {translate("pgr.lbl.crn")}
-                   </Col>
-                   <Col xs={6} md={3}>
-                    {viewReceivingCenter.iscrnrequired? "Yes": 'No'}
-                   </Col>
-                 </Row>
-                 <Row>
-                   <Col xs={6} md={3}>
-                    {translate("pgr.lbl.order.no")}
-                   </Col>
-                   <Col xs={6} md={3}>
-                    {viewReceivingCenter.orderno ? viewReceivingCenter.orderno : ''}
-                   </Col>
-                 </Row>
+                 <List>
+                   <Row>
+                     <Col xs={12} sm={6} md={4} lg={3}>
+                       <ListItem
+                         primaryText={translate("core.lbl.add.name")}
+                         secondaryText={<p style={styles.customColumnStyle}>{viewReceivingCenter.name ? viewReceivingCenter.name : ''}</p>}
+                       />
+                     </Col>
+                     <Col xs={12} sm={6} md={4} lg={3}>
+                       <ListItem
+                         primaryText={translate("core.lbl.code")}
+                         secondaryText={<p style={styles.customColumnStyle}>{viewReceivingCenter.code ? viewReceivingCenter.code : ''}</p>}
+                       />
+                     </Col>
+                     <Col xs={12} sm={6} md={4} lg={3}>
+                       <ListItem
+                         primaryText={translate("core.lbl.description")}
+                         secondaryText={<p style={styles.customColumnStyle}>{viewReceivingCenter.description? viewReceivingCenter.description : ''}</p>}
+                       />
+                     </Col>
+                     <Col xs={12} sm={6} md={4} lg={3}>
+                       <ListItem
+                         primaryText={translate("pgr.lbl.active")}
+                         secondaryText={<p style={styles.customColumnStyle}>{viewReceivingCenter.active? "Yes": 'No'}</p>}
+                       />
+                     </Col>
+                     <Col xs={12} sm={6} md={4} lg={3}>
+                       <ListItem
+                         primaryText={translate("pgr.lbl.crn")}
+                         secondaryText={<p style={styles.customColumnStyle}>{viewReceivingCenter.iscrnrequired? "Yes": 'No'}</p>}
+                       />
+                     </Col>
+                     <Col xs={12} sm={6} md={4} lg={3}>
+                       <ListItem
+                         primaryText={translate("pgr.lbl.order.no")}
+                         secondaryText={<p style={styles.customColumnStyle}>{viewReceivingCenter.orderno ? viewReceivingCenter.orderno : ''}</p>}
+                       />
+                     </Col>
+                   </Row>
+                 </List>
                </CardText>
             </Card>
           </Grid>

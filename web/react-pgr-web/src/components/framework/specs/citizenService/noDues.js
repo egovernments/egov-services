@@ -70,7 +70,7 @@ var dat = {
 	},
 	"noDues.search": {
 		"numCols": 12/2,
-		"url": "/wcms/masters/pipesize/_search",
+		"url": "billing-service/demand/_search",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "PipeSize",

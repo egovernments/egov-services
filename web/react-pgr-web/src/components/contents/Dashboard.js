@@ -67,7 +67,7 @@ const content=[
             {
                 icon: 'icon-class-name',
                 label: 'Apply for No Dues',
-                to: '#',
+                to: '#/non-framework/citizenServices/no-dues/search/propertytax',
             },
             {
                 icon: 'icon-class-name',
@@ -140,11 +140,41 @@ const styles = {
 
   }
 };
+const sR=
+  [
+        {
+            "tenantId": "default",
+            "serviceRequestId": "ServiceReq1",
+            "serviceCode": null,
+            "lat": null,
+            "lang": null,
+            "address": null,
+            "addressId": null,
+            "email": null,
+            "deviceId": null,
+            "accountId": null,
+            "firstName": null,
+            "lastName": null,
+            "phone": null,
+            "description": null,
+            "attributeValues": null,
+            "status": null,
+            "assignedTo": null,
+            "comments": null,
+            "backendServiceDetails": "{\n\t\"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1502890899493,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"e04855b2-4378-4ade-9189-6d33b1893390\",\n    \"userInfo\":{\n    \t\"id\":73\n    }\n  }\n}",
+            "auditDetails": null,
+            "action": null,
+            "consumerCode": null,
+            "applicationFee": null
+        }
+    ]
+
 
 class Dashboard extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      serviceRequestsTwo:sR,
       slideIndexOne:0,
       slideIndex: 0,
       serviceRequests: [],
@@ -216,6 +246,22 @@ class Dashboard extends Component {
 
         //citizen services
         let citizenServices=responses[1].ServiceGroups;
+
+        //Call to service request
+
+        // Api.commonApiPost("/report/pgr/_get", {}, {}, null, true).then(function(res) {
+        //   current.setState({
+        //     workflowResult: res,
+        //     hasData: true
+        //   });
+        // }, function(err) {
+        //   current.props.setLoadingStatus('hide');
+        //   current.setState({
+        //     workflowResult: {},
+        //     hasData: false
+        //   });
+        // })
+
 
         current.props.setLoadingStatus('hide');
 
@@ -398,6 +444,7 @@ class Dashboard extends Component {
     //filter citizen services
     let servicesMenus=[];
     let serviceTypeMenus=[];
+    let {serviceRequestsTwo}=this.state;
 
     if(!this.state.selectedServiceCode)
       servicesMenus = this.state.citizenServices.filter(
@@ -504,13 +551,15 @@ class Dashboard extends Component {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>Water</td>
-                                            <td>Apply for No Dues</td>
-                                            <td>20-12-2017</td>
-                                            <td><i className="material-icons">cloud_download</i></td>
+                                        {serviceRequestsTwo.map((item,key)=>{
+                                          return (<tr key={key}>
+                                              <td>{item.serviceRequestId}</td>
+                                              <td>{item.serviceCode}</td>
+                                              <td>20-12-2017</td>
+                                              <td><i className="material-icons">cloud_download</i></td>
 
-                                        </tr>
+                                          </tr>)
+                                        }) }
                                     </tbody>
                                 </Table>
                               </CardText>

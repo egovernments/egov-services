@@ -111,5 +111,4 @@ public class NomineeServiceTest {
         verify(nomineeRepository).update(anyListOf(Nominee.class));
         verify(documentsService).updateDocumentsForNominee(anyListOf(Nominee.class));
     }
-
 }

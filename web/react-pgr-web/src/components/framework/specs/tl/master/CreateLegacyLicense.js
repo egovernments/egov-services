@@ -443,21 +443,25 @@ var dat = {
         ]
       },
       {
-        "label": "wc.create.groups.fileDetails.title",
-        "name": "Documents",
-        "fields": [{
-          "name": "File",
-          "jsonPath": "licenses[0].supportDocuments[0].fileStoreId",
-          "type": "documentList",
-          "pathToArray": "DocumentTypeApplicationTypes",
-          "displayNameJsonPath": "documentType",
-          "url": "/wcms/masters/documenttype-applicationtype/_search?applicationType=NEWCONNECTION",
-          "autoFillFields": [{
-            "name": "document",
-            "jsonPath": "documentTypeId"
-          }]
-        }]
-      }
+          "label": "wc.create.groups.fileDetails.title",
+          "name": "Documents",
+          "fields": [
+            {
+              "name": "File",
+              "jsonPath": "licenses.supportDocuments",
+              "type": "documentList",
+              "pathToArray": "documentTypes",
+              "displayNameJsonPath": "name",
+              "url": "/tl-masters/documenttype/v1/_search?applicationType=NEW",
+              "autoFillFields": [
+                {
+                  "name": "document",
+                  "jsonPath": "documentTypeId"
+                }
+              ]
+            }
+          ]
+        },
       // {
       // 	"label": "tl.create.licenses.groups.FeeDetails",
       // 	"name": "FeeDetails",

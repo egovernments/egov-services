@@ -26,7 +26,7 @@ public class RecruitmentQuotaServiceTest {
 	private RecruitmentQuotaService recruitmentQuotaService;
 	
 	@Test
-	public void test_getObjectType() {
+	public void test_getRecruitmentQuotas() {
 		List<RecruitmentQuota> recruitmentQuotas = new ArrayList<>();
 		when(recruitmentQuotaRepository.findForCriteria(any(RecruitmentQuotaGetRequest.class))).thenReturn(recruitmentQuotas);
 		List<RecruitmentQuota> result = recruitmentQuotaService.getRecruitmentQuotas(any(RecruitmentQuotaGetRequest.class));

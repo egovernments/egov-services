@@ -925,7 +925,7 @@ class NoDues extends Component {
                                             <br/>
                                             <div style={{textAlign:"center"}}>
                                               संदर्भिय विषयांन्वये प्रमाणित करण्यात येते की, पाणी क्रमांक Consumer No,
-                                              {Receipt[0].Bill[0].billDetails[0].consumerCode} यांच्या नावे नोंद असून, सन financial year  पर्यंतचा संपुर्ण
+                                              {Receipt[0].Bill[0].billDetails[0].consumerCode} यांच्या नावे नोंद असून, सन 2017-18  पर्यंतचा संपुर्ण
                                               पाणी रक्कम भरलेली असून, कोणतीही थकबाकी येणे नाही.
 
 

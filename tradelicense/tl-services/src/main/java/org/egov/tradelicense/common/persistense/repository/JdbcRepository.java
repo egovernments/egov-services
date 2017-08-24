@@ -107,11 +107,6 @@ public abstract class JdbcRepository {
 
 	@Transactional
 	public Object create(Object ob) {
-		// System.out.println(allInsertQuery);
-		/*
-		 * ((AuditableEntity) ob).setCreatedDate(new Date()); ((AuditableEntity)
-		 * ob).setLastModifiedDate(new Date());
-		 */
 
 		String obName = ob.getClass().getSimpleName();
 		List<Map<String, Object>> batchValues = new ArrayList<>();
@@ -120,6 +115,20 @@ public abstract class JdbcRepository {
 		System.out.println(obName + "----" + allInsertQuery.get(obName));
 		System.out.println(namedParameterJdbcTemplate);
 		namedParameterJdbcTemplate.batchUpdate(allInsertQuery.get(obName),
+				batchValues.toArray(new Map[batchValues.size()]));
+		return ob;
+	}
+
+	@Transactional
+	public Object update(Object ob) {
+
+		System.out.println(allUpdateQuery);
+		String obName = ob.getClass().getSimpleName();
+		List<Map<String, Object>> batchValues = new ArrayList<>();
+		batchValues.add(paramValues(ob, allUpdateFields.get(obName)));
+		batchValues.get(0).putAll(paramValues(ob, allIdentitiferFields.get(obName)));
+		System.out.println(obName + "----" + allUpdateQuery.get(obName));
+		namedParameterJdbcTemplate.batchUpdate(allUpdateQuery.get(obName),
 				batchValues.toArray(new Map[batchValues.size()]));
 		return ob;
 	}

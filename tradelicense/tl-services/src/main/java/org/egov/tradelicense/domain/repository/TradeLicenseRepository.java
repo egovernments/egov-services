@@ -57,10 +57,11 @@ public class TradeLicenseRepository {
 		return Long.valueOf(id);
 	}
 
-	public void validateUniqueOldLicenseNumber(TradeLicense tradeLicense, RequestInfo requestInfo) {
+	public void validateUniqueLicenseNumber(TradeLicense tradeLicense, Boolean isNewRecord, RequestInfo requestInfo) {
 
-		String sql = getUniqueTenantLicenseQuery(tradeLicense);
+		String sql = getUniqueTenantLicenseQuery(tradeLicense, isNewRecord);
 		Integer count = null;
+		
 		try {
 			MapSqlParameterSource parameters = new MapSqlParameterSource();
 			count = (Integer) namedParameterJdbcTemplate.queryForObject(sql, parameters, Integer.class);
@@ -73,14 +74,51 @@ public class TradeLicenseRepository {
 		}
 	}
 
-	private String getUniqueTenantLicenseQuery(TradeLicense tradeLicense) {
+	private String getUniqueTenantLicenseQuery(TradeLicense tradeLicense, Boolean isNewRecord) {
 
 		String tenantId = tradeLicense.getTenantId();
-		String licNumber = tradeLicense.getOldLicenseNumber();
+		Long id = tradeLicense.getId();
+		String licNumber = "";
+		
+		StringBuffer uniqueQuery = new StringBuffer("select count(*) from egtl_license");
+		uniqueQuery.append("  where tenantId = '" + tenantId + "'");
+		
+		if(tradeLicense.getIsLegacy() && isNewRecord){
+			licNumber = tradeLicense.getOldLicenseNumber();
+			uniqueQuery.append(" AND  oldLicenseNumber = '" + licNumber + "'");
+		} else {
+			licNumber = tradeLicense.getLicenseNumber();
+			uniqueQuery.append(" AND  licenseNumber = '" + licNumber + "'");
+		}
+
+		if(id != null && !isNewRecord){
+			uniqueQuery.append(" AND id != "+ id);
+		}
+		return uniqueQuery.toString();
+	}
+	
+	public void validateTradeLicenseId(TradeLicense tradeLicense, RequestInfo requestInfo) {
+		
+		String sql = getLicenseIdQuery(tradeLicense);
+		Integer count = null;
+		try {
+			MapSqlParameterSource parameters = new MapSqlParameterSource();
+			count = (Integer) namedParameterJdbcTemplate.queryForObject(sql, parameters, Integer.class);
+		} catch (Exception e) {
+			log.error("error while executing the query :" + sql + " , error message : " + e.getMessage());
+		}
+
+		if (count == 0) {
+			throw new DuplicateTradeLicenseException(propertiesManager.getDuplicateOldTradeLicenseMsg(), requestInfo);
+		}
+	}
+	
+	private String getLicenseIdQuery(TradeLicense tradeLicense) {
+
+		Long id = tradeLicense.getId();
 
 		StringBuffer uniqueQuery = new StringBuffer("select count(*) from egtl_license");
-		uniqueQuery.append(" where oldLicenseNumber = '" + licNumber + "'");
-		uniqueQuery.append(" AND tenantId = '" + tenantId + "'");
+		uniqueQuery.append(" where id = " + id );
 
 		return uniqueQuery.toString();
 	}
@@ -124,10 +162,19 @@ public class TradeLicenseRepository {
 		return Long.valueOf(id);
 	}
 
-	public void add(TradeLicenseRequest request) {
+	public void add(TradeLicenseRequest request, Boolean isNewRecord) {
 
 		Map<String, Object> message = new HashMap<>();
-		message.put(propertiesManager.getCreateLegacyTradeValidated(), request);
+		
+		if(isNewRecord){
+			
+			message.put(propertiesManager.getCreateLegacyTradeValidated(), request);
+			
+		} else {
+			
+			message.put(propertiesManager.getUpdateLegacyTradeValidated(), request);
+		}
+		
 		tradeLicenseQueueRepository.add(message);
 	}
 
@@ -152,7 +199,24 @@ public class TradeLicenseRepository {
 
 		return entity.toDomain();
 	}
+	
+	@Transactional
+	public TradeLicense update(TradeLicense tradeLicense) {
+		
+		TradeLicenseEntity entity = tradeLicenseJdbcRepository.update(new TradeLicenseEntity().toEntity(tradeLicense));
+		
+		return entity.toDomain();
+	}
 
+	public TradeLicenseSearch getByLicenseId(TradeLicense tradeLicense, RequestInfo requestInfo){
+		
+		Long licenseId = tradeLicense.getId();
+		TradeLicenseSearchEntity tradeLicenseSearchEntity = tradeLicenseJdbcRepository.searchById(requestInfo, licenseId);
+		TradeLicenseSearch tradeLicenseSearch = tradeLicenseSearchEntity.toDomain();
+		
+		return tradeLicenseSearch;
+	}
+	
 	@Transactional
 	public List<TradeLicenseSearch> search(RequestInfo requestInfo, String tenantId, Integer pageSize,
 			Integer pageNumber, String sort, String active, Integer[] ids, String applicationNumber,
@@ -174,5 +238,6 @@ public class TradeLicenseRepository {
 		return tradeLicenseSearchList;
 
 	}
+	
 
 }

@@ -15,6 +15,7 @@ import org.egov.tradelicense.common.domain.exception.AgreeMentNotValidException;
 import org.egov.tradelicense.common.domain.exception.CustomBindException;
 import org.egov.tradelicense.common.domain.exception.DuplicateTradeLicenseException;
 import org.egov.tradelicense.common.domain.exception.EndPointException;
+import org.egov.tradelicense.common.domain.exception.IdNotFoundException;
 import org.egov.tradelicense.common.domain.exception.InvalidAdminWardException;
 import org.egov.tradelicense.common.domain.exception.InvalidCategoryException;
 import org.egov.tradelicense.common.domain.exception.InvalidDocumentTypeException;
@@ -37,6 +38,7 @@ import org.egov.tradelicense.web.adapters.error.AgreeMentNotFoundAdapter;
 import org.egov.tradelicense.web.adapters.error.AgreeMentNotValidAdapter;
 import org.egov.tradelicense.web.adapters.error.DuplicateTradeLicenseAdapter;
 import org.egov.tradelicense.web.adapters.error.EndPointExceptionAdapter;
+import org.egov.tradelicense.web.adapters.error.IdNotFoundAdapter;
 import org.egov.tradelicense.web.adapters.error.InvalidAdminWardAdapter;
 import org.egov.tradelicense.web.adapters.error.InvalidCategoryAdapter;
 import org.egov.tradelicense.web.adapters.error.InvalidDocumentTypeAdapter;
@@ -193,6 +195,12 @@ public class CustomControllerAdvice {
 	@ExceptionHandler(EndPointException.class)
 	public ErrorResponse handleEndPointException(EndPointException ex) {
 		return new EndPointExceptionAdapter().getErrorResponse(ex.getCustomMsg(), ex.getRequestInfo());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(IdNotFoundException.class)
+	public ErrorResponse handleIdNotFoundException(IdNotFoundException ex) {
+		return new IdNotFoundAdapter().getErrorResponse(ex.getCustomMsg(), ex.getFieldName(), ex.getRequestInfo());
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)

@@ -1,5 +1,5 @@
 insert into service (id, code, name, enabled, displayname, ordernumber, parentmodule, tenantId) 
-values (nextval('SEQ_SERVICE'), 'LICENSEREPORTS', 'License Reports', true, 'License Reports', 4, (select id from service where code = 'TRADELICENSE'), 'default');
+values (nextval('SEQ_SERVICE'), 'LICENSEREPORTS', 'License Reports', true, 'License Reports', 4, (select id from service where code = 'TRADELICENSE' and tenantid ='default'), 'default');
 
 insert into eg_action (id, name, url, servicecode, queryparams, parentmodule, ordernumber, displayname, enabled, createdby, createddate, lastmodifiedby, lastmodifieddate) 
 values(nextval('SEQ_EG_ACTION'),'License Register Report','/tradelicense/report/licenseRegisterReport','LICENSEREPORTS',null,(select id from service where code='LICENSEREPORTS' and tenantid ='default'),1,'License Register Report',true,1,now(),1,now());

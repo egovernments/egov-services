@@ -273,6 +273,7 @@ class Dashboard extends Component {
         });
 
       }).catch(function(err){
+         current.props.setLoadingStatus("hide");
          console.log('error', err);
       });
 

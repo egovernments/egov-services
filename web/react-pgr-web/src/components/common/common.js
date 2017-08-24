@@ -533,7 +533,7 @@ var localization_EN_Data = {
 	"pt.create.groups.floorDetails.fields.groundFloor": "Ground Floor",
 	"pt.create.groups.floorDetails.fields.yes": "Yes",
 	"pt.create.groups.floorDetails.fields.no": "No",
-	
+
 
     //employee Object
     "employee.Employee.fields.code": "Code",
@@ -894,7 +894,6 @@ var localization_EN_Data = {
     "tl.view.licenses.groups.TradeValuefortheUOM": "Trade Value for the UOM",
     "tl.view.licenses.groups.validity": "Validity",
     "tl.view.licenses.groups.Remarks": "Remarks",
-    "tl.view.licenses.groups.TradeCommencementDate": "Trade Commencement Date eg:dd/mm/yyyy",
     "tl.view.licenses.groups.TraderOwnerProperty": "Trader Owner Property",
 
 
@@ -937,13 +936,22 @@ var localization_EN_Data = {
   "tl.view.licenses.groups.TradeValuefortheUOM": "Trade Value for the UOM",
   "tl.view.licenses.groups.validity": "Validity",
   "tl.view.licenses.groups.Remarks": "Remarks",
-  "tl.view.licenses.groups.TradeCommencementDate": "Trade Commencement Date eg:dd/mm/yyyy",
+  "tl.view.licenses.groups.TradeCommencementDate": "Trade Commencement Date",
   "tl.view.licenses.groups.TraderOwnerProperty": "Trader Owner Property",
   "tl.search.groups.adminWardName":"Admin Ward",
   "tl.search.result.groups.validityYears":"Validity Years",
   "tl.search.result.groups.licenseStatus":"License Status",
   "tl.search.result.groups.workflowOwnerName":"Workflow Owner Name",
   "tl.licenses.view.groups.tradeDetails":"Trade Details",
+  "tl.create.license.table.documentTypeName":"Document Name",
+  "tl.create.license.table.comments":"Comments",
+  "tl.create.license.table.file":"File",
+  "tl.create.license.table.documentName":"Document Name",
+  "tl.table.title.supportDocuments":"Support Documents",
+  "tl.table.title.feeDetails":"Fee Details",
+  "tl.view.licenses.groups.agreementDate":"Agreement Date",
+  "tl.view.licenses.groups.agreementNo":"Agreement No",
+  "tl.view.licenses.groups.agreement":"Agreement",
 
     "wc.create.groups.applicationParticular.title": "Application Particular",
     "wc.create.groups.applicationParticular.title": "Application Particular",
@@ -1672,7 +1680,7 @@ var localization_MR_Data = {
 	"pt.create.groups.floorDetails.fields.groundFloor": "Ground Floor",
 	"pt.create.groups.floorDetails.fields.yes": "Yes",
 	"pt.create.groups.floorDetails.fields.no": "No",
-	
+
 
 	﻿"pt.create.groups.assessmentDetails":"मूल्यांकन तपशील",
 	"wc.crete.Slabs":"स्लॅब्स",

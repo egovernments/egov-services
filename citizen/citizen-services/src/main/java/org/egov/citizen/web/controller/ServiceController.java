@@ -18,6 +18,7 @@ import org.egov.citizen.model.ServiceReq;
 import org.egov.citizen.model.ServiceReqResponse;
 import org.egov.citizen.model.ServiceResponse;
 import org.egov.citizen.model.Value;
+import org.egov.citizen.service.CitizenPersistService;
 import org.egov.citizen.service.CitizenService;
 import org.egov.citizen.web.contract.ReceiptRequest;
 import org.egov.citizen.web.contract.ServiceRequestSearchCriteria;
@@ -46,7 +47,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RestController
+@Slf4j
 public class ServiceController {
 	public static final Logger LOGGER = LoggerFactory.getLogger(ServiceController.class);
 
@@ -67,6 +71,9 @@ public class ServiceController {
 	
 	@Autowired
 	public RestTemplate restTemplate;
+	
+	@Autowired
+	private CitizenPersistService citizenPersistService;
 
 	@PostMapping(value = "/_search")
 	public ResponseEntity<?> getService(@RequestBody @Valid RequestInfoWrapper requestInfo,
@@ -81,34 +88,9 @@ public class ServiceController {
 	@PostMapping(value = "/requests/_create")
 	public ResponseEntity<?> createService(HttpEntity<String> httpEntity) {
 
-		ServiceReqResponse serviceReqResponse = new ServiceReqResponse();
-
-		String json = httpEntity.getBody();
-		Object config = Configuration.defaultConfiguration().jsonProvider().parse(json);
-		List<String> results = null;
-		final ObjectMapper objectMapper = new ObjectMapper();
-		ServiceReq servcieReq = objectMapper.convertValue(JsonPath.read(config, "$.serviceReq"), ServiceReq.class);
-
-		List<ServiceConfig> list = serviceConfigs.getServiceConfigs();
-		String url = "";
-		SearchDemand searchDemand = null;
-		for (ServiceConfig serviceConfig : list) {
-			if (serviceConfig.getServiceCode().equals(servcieReq.getServiceCode())) {
-				searchDemand = serviceConfig.getSearchDemand();
-				url = searchDemand.getUrl();
-				results = searchDemand.getResult();
-			}
-		}
-		List<Value> queryParamList = citizenService.getQueryParameterList(list, servcieReq.getServiceCode(), config);
-		String sequenceNumber = citizenService.generateSequenceNumber(searchDemand, config);
-		servcieReq.setServiceRequestId(sequenceNumber);
-		url = citizenService.getUrl(url, queryParamList);
-		Object demands = citizenService.generateResponseObject(url, citizenService.getRequestInfo(config), results);
-		servcieReq.setBackendServiceDetails(demands);
-		citizenService.sendMessageToKafka(servcieReq);
-		serviceReqResponse.setServiceReq(servcieReq);
-		serviceReqResponse.setResponseInfo(responseInfoFactory
-				.createResponseInfoFromRequestInfo(citizenService.getRequestInfo(config).getRequestInfo(), true));
+		String serviceReqJson = httpEntity.getBody();
+		log.info("serviceReqJson:"+serviceReqJson);
+		ServiceReqResponse serviceReqResponse = citizenPersistService.create(serviceReqJson);
 		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);
 	}
 
@@ -132,16 +114,16 @@ public class ServiceController {
 				String demandRequest = searchDemand.getCreateDemandRequest().getDemandRequest();
 
 				StringBuilder builder = new StringBuilder();
-				builder.append(searchDemand.getUrl()).append("?consumerCode="+servcieReq.getConsumerCode()+"&tenantId="+servcieReq.getTenantId());
-				LOGGER.info("CONFIG: "+config.toString());
+				builder.append(searchDemand.getUrl()).append("&consumerCode="+servcieReq.getConsumerCode()+"&tenantId="+servcieReq.getTenantId());
+				LOGGER.info("Config: "+config.toString());
 				RequestInfoWrapper requestInfo =  citizenService.getRequestInfo(config);
 				Object response = restTemplate.postForObject(builder.toString(), requestInfo, Object.class);
-				
+				LOGGER.info("Demands: "+response.toString());
 				JSONObject jObject;
 
 				try {
 					jObject = new JSONObject(demandRequest);
-					String configString = JsonPath.read(config, "$.requestInfo");
+					String configString = JsonPath.read(config, "$.RequestInfo").toString();
 					jObject.put("RequestInfo", configString);
 
 					for (Value value : servcieReq.getAttributeValues()) {
@@ -156,11 +138,11 @@ public class ServiceController {
 							jObject.getJSONArray("Demands").getJSONObject(0).getJSONArray("demandDetails").getJSONObject(0).put("taxHeadMasterCode", "PT_TAX");
 							jObject.getJSONArray("Demands").getJSONObject(0).getJSONArray("demandDetails").getJSONObject(0).put("taxAmount",applicationFee);
 							jObject.getJSONArray("Demands").getJSONObject(0).getJSONArray("demandDetails").getJSONObject(0).put("collectionAmount", "100");
-							String demandsString = JsonPath.read(config, "$.requestInfo.userInfo.id");
+							String demandsString = JsonPath.read(config, "$.RequestInfo.userInfo.id");
 							jObject.getJSONArray("Demands").getJSONObject(0).getJSONObject("owner").put("id",demandsString);
 					}
 
-					//citizenService.createDemand(url, jObject.toString());
+					citizenService.createDemand(url, jObject.toString());
 					Object billRes = citizenService.generateBill(requestInfo, servcieReq.getConsumerCode(), 
 							applicationProperties.getBusinessService(), servcieReq.getTenantId());
 					LOGGER.info("Bills generated: "+billRes.toString());
@@ -184,6 +166,7 @@ public class ServiceController {
 
 				}
 				 catch (Exception e) {
+					 e.printStackTrace();
 						return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
 
 				 }

@@ -43,7 +43,7 @@ public class EgovCitizenApplication {
 		try {
 			URL url = new URL("https://raw.githubusercontent.com/egovernments/egov-services/master/citizen/citizen-services/src/main/resources/ServiceDefination.yml");
 			serviceDefination = mapper.readValue(new InputStreamReader(url.openStream()), ServiceCollection.class);
-			log.info("loadYaml service: " + serviceDefination.toString());
+			log.info("loadYamlserviceconfig service: " + serviceDefination.toString());
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -58,10 +58,9 @@ public class EgovCitizenApplication {
 		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 		ServiceConfigs serviceConfig = null;
 		try {
-			  Resource resource = resourceLoader.getResource("classpath:ServiceConfigs.yml"); 
-			  File file = resource.getFile(); 
-			  serviceConfig = mapper.readValue(file, ServiceConfigs.class);
-			  log.info("loadYaml service: " + serviceConfig.toString());
+			URL url = new URL("https://raw.githubusercontent.com/egovernments/egov-services/master/citizen/citizen-services/src/main/resources/ServiceConfigs.yml");
+			serviceConfig = mapper.readValue(new InputStreamReader(url.openStream()), ServiceConfigs.class);
+			log.info("loadYaml service: " + serviceConfig.toString());
 
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -31,7 +31,7 @@ var requestInfo = {
 var tenantId = localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default';
 
 module.exports = {
-    commonApiPost: (context, queryObject = {}, body = {}, doNotOverride = false, isTimeLong = false, noPageSize = false) => {
+    commonApiPost: (context, queryObject = {}, body = {}, doNotOverride = false, isTimeLong = false, noPageSize = false,authToken="") => {
         var url = context;
         if(url && url[url.length-1] === "/")
             url = url.substring(0, url.length-1);
@@ -54,6 +54,10 @@ module.exports = {
             requestInfo.ts = new Date().getTime();
         }
 
+        if(authToken!="")
+        {
+          requestInfo["authToken"]=authToken;
+        }
 
         body["RequestInfo"] = requestInfo;
 

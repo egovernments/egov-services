@@ -29,5 +29,5 @@ public class LicenseFeeDetailSearch {
 	private Long createdTime;
 
 	private Long lastModifiedTime;
-	
+
 }

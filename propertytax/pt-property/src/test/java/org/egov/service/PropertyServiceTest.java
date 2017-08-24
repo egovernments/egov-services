@@ -1167,7 +1167,7 @@ public class PropertyServiceTest {
 
 			Unit unit = new Unit();
 
-			unit.setUnitNo(1);
+			unit.setUnitNo("1");
 			unit.setUnitType(UnitTypeEnum.FLAT.valueOf("FLAT"));
 			unit.setLength((double) 10);
 			unit.setWidth((double) 15);
@@ -1400,7 +1400,7 @@ public class PropertyServiceTest {
 
 			Unit unit = new Unit();
 			unit.setId((long) 1);
-			unit.setUnitNo(1);
+			unit.setUnitNo("1");
 			unit.setUnitType(UnitTypeEnum.FLAT.valueOf("FLAT"));
 			unit.setLength((double) 15);
 			unit.setWidth((double) 15);

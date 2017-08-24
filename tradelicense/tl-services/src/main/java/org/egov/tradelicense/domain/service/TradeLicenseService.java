@@ -306,7 +306,8 @@ public class TradeLicenseService {
 			// feeDetails Validation
 			if (tradeLicense.getIsLegacy()) {
 				if (tradeLicense.getFeeDetails() == null || tradeLicense.getFeeDetails().size() == 0) {
-					throw new LegacyFeeDetailNotFoundException(propertiesManager.getLegacyFeeDetailsNotFoundMsg(), requestInfo);
+					throw new LegacyFeeDetailNotFoundException(propertiesManager.getLegacyFeeDetailsNotFoundMsg(),
+							requestInfo);
 				}
 			}
 			if (tradeLicense.getFeeDetails() != null && tradeLicense.getFeeDetails().size() > 0) {

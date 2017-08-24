@@ -69,7 +69,7 @@ public class SupportDocumentEntity {
 
 		this.documentTypeId = supportDocument.getDocumentTypeId();
 
-		if(supportDocument.getFileStoreId() != null){
+		if (supportDocument.getFileStoreId() != null) {
 			this.fileStoreId = supportDocument.getFileStoreId().toString();
 		}
 

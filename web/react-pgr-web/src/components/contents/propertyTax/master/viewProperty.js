@@ -737,7 +737,7 @@ class ViewProperty extends Component {
                                                     <td>{i.occupierName || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.annualRent || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{parseFloat(i.manualArv) || translate('pt.search.searchProperty.fields.na')}</td>
-													<td>{i.constStartDate ?  i.constStartDate.split(' ')[0] : translate('pt.search.searchProperty.fields.na') }</td>
+													<td>{i.constructionStartDate ?  i.constructionStartDate.split(' ')[0] : translate('pt.search.searchProperty.fields.na') }</td>
                                                     <td>{i.constCompletionDate ? i.constCompletionDate.split(' ')[0] : translate('pt.search.searchProperty.fields.na') }</td>
                                                     <td>{i.occupancyDate ? i.occupancyDate.split(' ')[0]  : translate('pt.search.searchProperty.fields.na') }</td>
                                                     <td>{(i.isStructured == true ? 'Yes' : i.isStructured)|| translate('pt.search.searchProperty.fields.na')}</td>

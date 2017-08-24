@@ -572,6 +572,11 @@ class NoDues extends Component {
 
   getTotal=(demands)=>{
     let sum=0;
+	
+	if(demands == undefined || demands.length!=0){
+		return false;
+	}
+	
     for (var i = 0; i < demands[0].demandDetails.length; i++) {
       sum+=(demands[0].demandDetails[i].taxAmount-demands[0].demandDetails[i].collectionAmount);
     }

@@ -5,26 +5,14 @@ import {Card, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
 import Checkbox from 'material-ui/Checkbox';
 import DatePicker from 'material-ui/DatePicker';
-import SelectField from 'material-ui/SelectField';
 import AutoComplete from 'material-ui/AutoComplete';
 import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../../api/api';
+import styles from '../../../../../styles/material-ui';
 import {translate} from '../../../../common/common';
-
-const styles = {
-  headerStyle : {
-    fontSize : 19
-  },
-  marginStyle:{
-    margin: '15px'
-  },
-  setTopMargin: {
-    marginTop: 34
-  }
-};
 
 var _this;
 
@@ -146,6 +134,7 @@ class CreateReceivingCenter extends Component {
                               <Col xs={12} sm={4} md={3} lg={3}>
                                   <TextField
                                       fullWidth={true}
+                                      floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                                       floatingLabelText={translate("core.lbl.add.name")+"*"}
                                       value={createReceivingCenter.name? createReceivingCenter.name : ""}
                                       errorText={fieldErrors.name ? fieldErrors.name : ""}
@@ -157,6 +146,7 @@ class CreateReceivingCenter extends Component {
                               <Col xs={12} sm={4} md={3} lg={3}>
                                   <TextField
                                       fullWidth={true}
+                                      floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                                       floatingLabelText={translate("core.lbl.code")+"*"}
                                       value={createReceivingCenter.code? createReceivingCenter.code : ""}
                                       errorText={fieldErrors.code ? fieldErrors.code : ""}
@@ -169,6 +159,7 @@ class CreateReceivingCenter extends Component {
                               <Col xs={12} sm={4} md={3} lg={3}>
                                   <TextField
                                       fullWidth={true}
+                                      floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                                       floatingLabelText={translate("core.lbl.description")}
                                       value={createReceivingCenter.description? createReceivingCenter.description : ""}
                                       errorText={fieldErrors.description ? fieldErrors.description : ""}
@@ -181,6 +172,7 @@ class CreateReceivingCenter extends Component {
                               <Col xs={12} sm={4} md={3} lg={3}>
                                   <TextField
                                       fullWidth={true}
+                                      floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                                       floatingLabelText={translate("pgr.lbl.order.no")+"*"}
                                       value={createReceivingCenter.orderno ? createReceivingCenter.orderno : ""}
                                       errorText={fieldErrors.orderno ? fieldErrors.orderno : ""}

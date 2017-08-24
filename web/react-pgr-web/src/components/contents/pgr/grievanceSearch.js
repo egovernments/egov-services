@@ -398,6 +398,7 @@ class grievanceSearch extends Component {
         			<Col xs={12} sm={4} md={3} lg={3}>
         				<SelectField maxHeight={200} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} fullWidth={true} floatingLabelText={translate("pgr.lbl.complainttype")} value={grievanceSearchSet.serviceCode} onChange={(e, i, value) => {
         					handleChange(value, "serviceCode", false, "")}}>
+                    <MenuItem value="" primaryText="Select" />
                 			{complaintTypeList.map((com, index) => (
                                 <MenuItem value={com.serviceCode} key={index} primaryText={com.serviceName} />
                             ))}
@@ -414,6 +415,7 @@ class grievanceSearch extends Component {
                         onChange={(e, i, value) => {
 	                		       handleChange(value, "status", false, "")}}
                      >
+                     <MenuItem value="" primaryText="Select" />
                     		{statusList.map((stat, index) => (
                                 <MenuItem
                                     value={stat.code}
@@ -427,6 +429,7 @@ class grievanceSearch extends Component {
                 	<Col xs={12} sm={4} md={3} lg={3}>
                     	<SelectField maxHeight={200} fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate("pgr.lbl.receivingmode")} value={grievanceSearchSet.receivingMode} onChange={(e, i, value) => {
                     		handleChange(value, "receivingMode", false, "")}}>
+                        <MenuItem value="" primaryText="Select" />
                     		{receiveingModeList.map((mod, index) => (
                                 <MenuItem value={mod.code} key={index} primaryText={mod.name} />
                             ))}
@@ -451,6 +454,7 @@ class grievanceSearch extends Component {
 	                			<Col xs={12} sm={4} md={3} lg={3}>
 	                				<SelectField maxHeight={200} fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate("core.lbl.location")} value={grievanceSearchSet.locationId} onChange={(e, i, value) => {
 	                					handleChange(value, "locationId", false, "")}}>
+                            <MenuItem value="" primaryText="Select" />
                             			{locationList.map((loc, index) => (
 			                                <MenuItem value={loc.id} key={index} primaryText={loc.name} />
 			                            ))}

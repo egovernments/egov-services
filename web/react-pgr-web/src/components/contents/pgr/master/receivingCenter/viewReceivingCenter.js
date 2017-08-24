@@ -12,20 +12,8 @@ import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../../api/api';
+import styles from '../../../../../styles/material-ui';
 import {translate} from '../../../../common/common';
-
-const styles = {
-  headerStyle : {
-    fontSize : 19
-  },
-  addBorderBottom:{
-    borderBottom: '1px solid #eee',
-    padding: '10px'
-  },
-  marginStyle:{
-    margin: '15px'
-  }
-};
 
 var _this;
 
@@ -83,7 +71,7 @@ class ViewReceivingCenter extends Component {
                  {translate('pgr.lbl.receivingcenter')}
                < /div>}/>
                <CardText style={{padding:'8px 16px 0'}}>
-                 <Row style={styles.addBorderBottom}>
+                 <Row>
                    <Col xs={6} md={3}>
                     {translate("core.lbl.add.name")}
                    </Col>
@@ -97,7 +85,7 @@ class ViewReceivingCenter extends Component {
                     {viewReceivingCenter.code ? viewReceivingCenter.code : ''}
                    </Col>
                  </Row>
-                 <Row style={styles.addBorderBottom}>
+                 <Row>
                    <Col xs={6} md={3}>
                     {translate("core.lbl.description")}
                    </Col>
@@ -111,7 +99,7 @@ class ViewReceivingCenter extends Component {
                     {viewReceivingCenter.active? "Yes": 'No'}
                    </Col>
                  </Row>
-                 <Row style={styles.addBorderBottom}>
+                 <Row>
                    <Col xs={6} md={3}>
                     {translate("pgr.lblauditdetails")}
                    </Col>
@@ -125,7 +113,7 @@ class ViewReceivingCenter extends Component {
                     {viewReceivingCenter.iscrnrequired? "Yes": 'No'}
                    </Col>
                  </Row>
-                 <Row style={styles.addBorderBottom}>
+                 <Row>
                    <Col xs={6} md={3}>
                     {translate("pgr.lbl.order.no")}
                    </Col>

@@ -472,6 +472,7 @@ class createRouter extends Component {
                               loadBoundaries(val);
                               searchTextBoun = "";
                               handleChange(e, "boundaryType", true, "")}}>
+                              <MenuItem value="" primaryText="Select" />
                               {boundaryTypeList.map((item, index) => (
                                         <MenuItem value={item.id} key={index} primaryText={item.name} />
                                     ))}

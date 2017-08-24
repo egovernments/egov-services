@@ -40,112 +40,117 @@
 
 package org.egov.boundary.persistence.repository;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.EntityManager;
-
 import org.egov.boundary.persistence.entity.Boundary;
 import org.egov.boundary.persistence.entity.BoundaryType;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
 import org.hibernate.type.LongType;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.persistence.EntityManager;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class BoundaryRepository {
 
-	private EntityManager entityManager;
+    private EntityManager entityManager;
 
-	@Autowired
-	public BoundaryRepository(EntityManager entityManager) {
-		this.entityManager = entityManager;
-	}
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(BoundaryRepository.class);
 
-	public List<Boundary> getBoundariesByBndryTypeNameAndHierarchyTypeNameAndTenantId(final String boundaryTypeName,
-			final String hierarchyTypeName, final String tenantId) {
-		Session currentSession = entityManager.unwrap(Session.class);
 
-		String sql = "select b.* from eg_Boundary b where b.boundarytype="
-				+ "(select id from eg_boundary_Type t where upper(t.name)=upper(:boundaryTypeName) and t.hierarchyType="
-				+ "(select id from eg_hierarchy_type h where upper(name)=upper(:hierarchyTypeName) and h.tenantId=:tenantId) and t.tenantId=:tenantId)  "
-				+ "and b.tenantid=:tenantId";
-		SQLQuery createSQLQuery = currentSession.createSQLQuery(sql).addScalar("id", LongType.INSTANCE)
-				.addScalar("name").addScalar("boundaryNum", LongType.INSTANCE).addScalar("tenantId");
+    @Autowired
+    public BoundaryRepository(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 
-		createSQLQuery.setString("boundaryTypeName", boundaryTypeName);
-		createSQLQuery.setString("hierarchyTypeName", hierarchyTypeName);
-		createSQLQuery.setString("tenantId", tenantId);
-		createSQLQuery.setResultTransformer(Transformers.aliasToBean(Boundary.class));
+    public List<Boundary> getBoundariesByBndryTypeNameAndHierarchyTypeNameAndTenantId(final String boundaryTypeName,
+                                                                                      final String hierarchyTypeName, final String tenantId) {
+        Session currentSession = entityManager.unwrap(Session.class);
 
-		return createSQLQuery.list();
-	}
+        String sql = "select b.* from eg_Boundary b where b.boundarytype="
+                + "(select id from eg_boundary_Type t where upper(t.name)=upper(:boundaryTypeName) and t.hierarchyType="
+                + "(select id from eg_hierarchy_type h where upper(name)=upper(:hierarchyTypeName) and h.tenantId=:tenantId) and t.tenantId=:tenantId)  "
+                + "and b.tenantid=:tenantId";
+        SQLQuery createSQLQuery = currentSession.createSQLQuery(sql).addScalar("id", LongType.INSTANCE)
+                .addScalar("name").addScalar("boundaryNum", LongType.INSTANCE).addScalar("tenantId");
 
-	public List<Boundary> getAllBoundariesByBoundaryTypeIdAndTenantId(final Long boundaryTypeId,
-			final String tenantId) {
-		Session currentSession = entityManager.unwrap(Session.class);
+        createSQLQuery.setString("boundaryTypeName", boundaryTypeName);
+        createSQLQuery.setString("hierarchyTypeName", hierarchyTypeName);
+        createSQLQuery.setString("tenantId", tenantId);
+        createSQLQuery.setResultTransformer(Transformers.aliasToBean(Boundary.class));
 
-		String sql = "select b.id as id ,b.name as name, b.boundaryNum as boundaryNum,b.tenantId as tenantId ,b.parent as \"parent.id\",bt.id as \"boundaryType.id\" ,bt.name as \"boundaryType.name\" from eg_boundary b,eg_boundary_Type bt where bt.id=:id and b.tenantId=:tenantId and b.boundarytype=bt.id and bt.tenantid=:tenantId";
+        return createSQLQuery.list();
+    }
 
-		SQLQuery createSQLQuery = currentSession.createSQLQuery(sql).addScalar("id", LongType.INSTANCE)
-				.addScalar("name").addScalar("boundaryNum", LongType.INSTANCE)
-				.addScalar("boundaryType.id", LongType.INSTANCE).addScalar("boundaryType.name")
-				.addScalar("parent.id", LongType.INSTANCE).addScalar("tenantId");
+    public List<Boundary> getAllBoundariesByBoundaryTypeIdAndTenantId(final Long boundaryTypeId,
+                                                                      final String tenantId) {
+        Session currentSession = entityManager.unwrap(Session.class);
 
-		createSQLQuery.setLong("id", boundaryTypeId);
-		createSQLQuery.setString("tenantId", tenantId);
+        String sql = "select b.id as id ,b.name as name, b.boundaryNum as boundaryNum,b.tenantId as tenantId ,b.parent as \"parent.id\",bt.id as \"boundaryType.id\" ,bt.name as \"boundaryType.name\" from eg_boundary b,eg_boundary_Type bt where bt.id=:id and b.tenantId=:tenantId and b.boundarytype=bt.id and bt.tenantid=:tenantId";
 
-		return mapToBoundary(createSQLQuery.list());
-	}
+        SQLQuery createSQLQuery = currentSession.createSQLQuery(sql).addScalar("id", LongType.INSTANCE)
+                .addScalar("name").addScalar("boundaryNum", LongType.INSTANCE)
+                .addScalar("boundaryType.id", LongType.INSTANCE).addScalar("boundaryType.name")
+                .addScalar("parent.id", LongType.INSTANCE).addScalar("tenantId");
 
-	public List<Boundary> getBoundariesByIdAndTenantId(final Long id, final String tenantId) {
-		Session currentSession = entityManager.unwrap(Session.class);
+        createSQLQuery.setLong("id", boundaryTypeId);
+        createSQLQuery.setString("tenantId", tenantId);
 
-		String sql = "select b.id as id ,b.name as name, b.boundaryNum as boundaryNum,b.tenantId as tenantId ,b.parent as \"parent.id\",bt.id as \"boundaryType.id\" ,bt.name as \"boundaryType.name\" from eg_boundary b,eg_boundary_Type bt where b.id=:id and b.tenantId=:tenantId and b.boundarytype=bt.id and bt.tenantid=:tenantId";
+        return mapToBoundary(createSQLQuery.list());
+    }
 
-		SQLQuery createSQLQuery = currentSession.createSQLQuery(sql).addScalar("id", LongType.INSTANCE)
-				.addScalar("name").addScalar("boundaryNum", LongType.INSTANCE)
-				.addScalar("boundaryType.id", LongType.INSTANCE).addScalar("boundaryType.name")
-				.addScalar("parent.id", LongType.INSTANCE).addScalar("tenantId");
+    public List<Boundary> getBoundariesByIdAndTenantId(final Long id, final String tenantId) {
+        Session currentSession = entityManager.unwrap(Session.class);
 
-		createSQLQuery.setLong("id", id);
-		createSQLQuery.setString("tenantId", tenantId);
-		return mapToBoundary(createSQLQuery.list());
-	}
+        String sql = "select b.id as id ,b.name as name, b.boundaryNum as boundaryNum,b.tenantId as tenantId ,b.parent as \"parent.id\",bt.id as \"boundaryType.id\" ,bt.name as \"boundaryType.name\" from eg_boundary b,eg_boundary_Type bt where b.id=:id and b.tenantId=:tenantId and b.boundarytype=bt.id and bt.tenantid=:tenantId";
 
-	private List<Boundary> mapToBoundary(List<Object[]> boundarylist) {
-		List<Boundary> boundaryList = new ArrayList<Boundary>();
-		for (Object[] b : boundarylist) {
-			Boundary boundary = new Boundary();
-			boundary.setId(b[0] != null ? Long.valueOf(b[0].toString()) : null);
-			boundary.setName(b[1] != null ? b[1].toString() : "");
-			boundary.setBoundaryNum(b[2] != null ? Long.valueOf(b[2].toString()) : null);
-			boundary.setBoundaryType(new BoundaryType());
-			boundary.getBoundaryType().setId(b[3] != null ? Long.valueOf(b[3].toString()) : null);
-			boundary.getBoundaryType().setName(b[4] != null ? b[4].toString() : "");
-			boundary.setParent(new Boundary());
-			boundary.getParent().setId(b[5] != null ? Long.valueOf(b[5].toString()) : null);
-			boundary.setTenantId(b[6] != null ? b[6].toString() : "");
-			boundaryList.add(boundary);
-		}
-		return boundaryList;
-	}
-	
-	public List<Boundary> getBoundaryByTypeAndNumber(final long boundaryNumber, final long boundaryType) {
-		
-		Session currentSession = entityManager.unwrap(Session.class);
-		
-		String sql = "select b.id as id ,b.name as name, b.boundaryNum as boundaryNum,b.tenantId as tenantId ,b.parent as \"parent.id\",bt.id as \"boundaryType.id\" ,bt.name as \"boundaryType.name\" from eg_boundary b,eg_boundary_Type bt where boundarynum =:boundaryNumber and boundarytype =:boundaryType";
-		
-		SQLQuery createSQLQuery = currentSession.createSQLQuery(sql).addScalar("id", LongType.INSTANCE)
-				.addScalar("name").addScalar("boundaryNum", LongType.INSTANCE)
-				.addScalar("boundaryType.id", LongType.INSTANCE).addScalar("boundaryType.name")
-				.addScalar("parent.id", LongType.INSTANCE).addScalar("tenantId");
-		
-		createSQLQuery.setLong("boundaryNumber", boundaryNumber);
-		createSQLQuery.setLong("boundaryType", boundaryType);
-		return mapToBoundary(createSQLQuery.list());
-	}
+        SQLQuery createSQLQuery = currentSession.createSQLQuery(sql).addScalar("id", LongType.INSTANCE)
+                .addScalar("name").addScalar("boundaryNum", LongType.INSTANCE)
+                .addScalar("boundaryType.id", LongType.INSTANCE).addScalar("boundaryType.name")
+                .addScalar("parent.id", LongType.INSTANCE).addScalar("tenantId");
+
+        createSQLQuery.setLong("id", id);
+        createSQLQuery.setString("tenantId", tenantId);
+        return mapToBoundary(createSQLQuery.list());
+    }
+
+    private List<Boundary> mapToBoundary(List<Object[]> boundarylist) {
+        List<Boundary> boundaryList = new ArrayList<Boundary>();
+        for (Object[] b : boundarylist) {
+            Boundary boundary = new Boundary();
+            boundary.setId(b[0] != null ? Long.valueOf(b[0].toString()) : null);
+            boundary.setName(b[1] != null ? b[1].toString() : "");
+            boundary.setBoundaryNum(b[2] != null ? Long.valueOf(b[2].toString()) : null);
+            boundary.setBoundaryType(new BoundaryType());
+            boundary.getBoundaryType().setId(b[3] != null ? Long.valueOf(b[3].toString()) : null);
+            boundary.getBoundaryType().setName(b[4] != null ? b[4].toString() : "");
+            boundary.setParent(new Boundary());
+            boundary.getParent().setId(b[5] != null ? Long.valueOf(b[5].toString()) : null);
+            boundary.setTenantId(b[6] != null ? b[6].toString() : "");
+            logger.info("BoundaryId:   " +  boundary.getId() + "  Boundary name: " + boundary.getName() + "  BoundaryType ID:  " + boundary.getBoundaryType().getId() +  "   Boundary Type Name:   " + boundary.getBoundaryType()) ;
+
+            boundaryList.add(boundary);
+        }
+        return boundaryList;
+    }
+
+    public List<Boundary> getBoundaryByTypeAndNumber(final long boundaryNumber, final long boundaryType) {
+
+        Session currentSession = entityManager.unwrap(Session.class);
+
+        String sql = "select b.id as id ,b.name as name, b.boundaryNum as boundaryNum,b.tenantId as tenantId ,b.parent as \"parent.id\",bt.id as \"boundaryType.id\" ,bt.name as \"boundaryType.name\" from eg_boundary b,eg_boundary_Type bt where boundarynum =:boundaryNumber and boundarytype =:boundaryType";
+
+        SQLQuery createSQLQuery = currentSession.createSQLQuery(sql).addScalar("id", LongType.INSTANCE)
+                .addScalar("name").addScalar("boundaryNum", LongType.INSTANCE)
+                .addScalar("boundaryType.id", LongType.INSTANCE).addScalar("boundaryType.name")
+                .addScalar("parent.id", LongType.INSTANCE).addScalar("tenantId");
+
+        createSQLQuery.setLong("boundaryNumber", boundaryNumber);
+        createSQLQuery.setLong("boundaryType", boundaryType);
+        return mapToBoundary(createSQLQuery.list());
+    }
 }

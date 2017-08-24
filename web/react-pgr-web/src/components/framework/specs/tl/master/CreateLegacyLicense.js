@@ -701,7 +701,7 @@ var dat = {
          "values": ["licenseNumber", "oldLicenseNumber", "category", "subCategory", "tradeTitle", "ownerName", "mobileNumber", "propertyAssesmentNo", "adminWardName", "validityYears","active","statusName",""],
          "resultPath": "licenses",
          "rowClickUrlUpdate": "/update/tl/CreateLegacyLicense/{licenseNumber}",
-         "rowClickUrlView": "/view/tl/CreateLegacyLicense/{licenseNumber}"
+         "rowClickUrlView": "/non-framework/tl/transaction/viewLegacyLicense/{licenseNumber}"
        }
      },
 
@@ -1025,11 +1025,34 @@ var dat = {
                 "defaultValue": false
               }
             ]
-          }
-
-
-
-
+          },
+                    {
+                      "label": "tl.view.licenses.groups.agreement",
+                      "name": "agreement",
+                      "fields": [{
+                          "name": "agreementNo",
+                          "jsonPath": "licenses[0].agreementNo",
+                          "label": "tl.view.licenses.groups.agreementNo",
+                          "pattern": "",
+                          "type": "text",
+                          "isRequired": false,
+                          "isDisabled": false,
+                          "requiredErrMsg": "",
+                          "patternErrMsg": ""
+                        },
+                        {
+                            "name": "agreementDate",
+                            "jsonPath": "licenses[0].agreementDate",
+                            "label": "tl.view.licenses.groups.agreementDate",
+                            "pattern": "",
+                            "type": "text",
+                            "isRequired": false,
+                            "isDisabled": false,
+                            "requiredErrMsg": "",
+                            "patternErrMsg": ""
+                          }
+                      ]
+                    }
         ]
       },
 

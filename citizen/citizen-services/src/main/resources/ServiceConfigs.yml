@@ -1,7 +1,7 @@
 serviceConfigs:
  - serviceCode: PT_NODUES
    searchDemand:
-    url: http://egov-micro-dev.egovernments.org/billing-service/demand/_search&businessService=PT
+    url: http://egov-micro-dev.egovernments.org/billing-service/demand/_search?businessService=PT
     queryAppend:
        - 'tenantId: $.serviceReq.attributeValues[0].value'
        - 'consumerCode: $.serviceReq.attributeValues[1].value'
@@ -21,7 +21,7 @@ serviceConfigs:
 
  - serviceCode: PT_EXTRACT
    searchDemand:
-    url: http://egov-micro-dev.egovernments.org/billing-service/demand/_search&businessService=PT
+    url: http://egov-micro-dev.egovernments.org/billing-service/demand/_search?businessService=PT
     queryAppend:
      - 'tenantId :$.serviceReq.attributeValues[0].value'
      - 'consumerCode :$.serviceReq.attributeValues[1].value'
@@ -41,7 +41,7 @@ serviceConfigs:
 
  - serviceCode: WATER_NODUES
    searchDemand:
-    url: http://egov-micro-dev.egovernments.org/billing-service/demand/_search&businessService=WC
+    url: http://egov-micro-dev.egovernments.org/billing-service/demand/_search?businessService=WC
     queryAppend:
      - 'tenantId :$.serviceReq.attributeValues[0].value'
      - 'consumerCode :$.serviceReq.attributeValues[1].value'

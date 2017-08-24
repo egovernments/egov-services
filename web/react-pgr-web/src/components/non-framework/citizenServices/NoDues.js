@@ -18,6 +18,10 @@ import {
   StepLabel,
 } from 'material-ui/Stepper';
 import FlatButton from 'material-ui/FlatButton';
+import WaterReceipt from './receipts/WaterReceipt';
+import WaterCertificate from './receipts/WaterCertificate';
+import PropertyTaxExtract from './receipts/PropertyTaxExtract';
+import PropertyTaxCertificate from './receipts/PropertyTaxCertificate';
 
 import $ from 'jquery';
 import 'datatables.net-buttons/js/buttons.html5.js';// HTML 5 file export
@@ -32,6 +36,7 @@ import "jspdf-autotable";
 import PDFObject from "pdfobject";
 import html2canvas from "html2canvas";
 import axios from "axios";
+
 
 
 
@@ -392,14 +397,7 @@ class NoDues extends Component {
 
   generatePdf=(id)=>{
 
-    let {tenantInfo,formData}=this.props;
-    let {getVal,getGrandTotal,getTotal,getPurposeTotal}=this;
-
-
-
-    let x=5,y=5,w=200,h=90,rectGap=10,originalX=5,originalY=10,dublicateX=5,dublicateY=5,triplicateX=5,triplicateY=5;
-
-    const input = document.getElementById('DownloadReceipt');
+    /*const input = document.getElementById('CertificateForWc');
     html2canvas(input)
       .then((canvas) => {
         const imgData = canvas.toDataURL('image/jpeg');
@@ -407,6 +405,46 @@ class NoDues extends Component {
         pdf.addImage(imgData, 'JPEG', 0, 0, 210,130);
         pdf.save("receipt.pdf");
       });
+
+    let {tenantInfo,formData}=this.props;
+    let {getVal,getGrandTotal,getTotal,getPurposeTotal}=this;*/
+    var mywindow = window.open('', 'PRINT', 'height=400,width=600');
+
+    var cdn = `
+      <!-- Latest compiled and minified CSS -->
+      <link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+      <!-- Optional theme -->
+      <link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">  `;
+    mywindow.document.write('<html><head><title>' + document.title  + '</title>');
+    mywindow.document.write(cdn);
+    mywindow.document.write('</head><body >');
+    mywindow.document.write('<h1>' + document.title  + '</h1>');
+    mywindow.document.write(document.getElementById('CertificateForWc').innerHTML);
+    mywindow.document.write('</body></html>');
+
+    mywindow.document.close(); // necessary for IE >= 10
+    mywindow.focus(); // necessary for IE >= 10*/
+
+    setTimeout(function(){
+      mywindow.print();
+      mywindow.close();
+    }, 1000);
+
+    return true;
+    return;
+
+
+    // let x=5,y=5,w=200,h=90,rectGap=10,originalX=5,originalY=10,dublicateX=5,dublicateY=5,triplicateX=5,triplicateY=5;
+    //
+    // const input = document.getElementById('DownloadReceipt');
+    // html2canvas(input)
+    //   .then((canvas) => {
+    //     const imgData = canvas.toDataURL('image/jpeg');
+    //     const pdf = new jsPDF();
+    //     pdf.addImage(imgData, 'JPEG', 0, 0, 210,130);
+    //     pdf.save("receipt.pdf");
+    //   });
 
 
       // var doc = new jsPDF();
@@ -528,6 +566,7 @@ class NoDues extends Component {
       //  doc.save("Receipt"+'-' + getVal("Receipt[0].transactionId") + '.pdf');
 
 
+       //doc.save(id+'-' + getVal("Receipt[0].transactionId") + '.pdf');
 
   }
 

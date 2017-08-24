@@ -51,7 +51,7 @@ const styles = {
 
   rightIcon: {
     marginRight: "10px",
-    marginBottom: "10px"
+    marginBottom: "15px"
   }
 }
 
@@ -107,38 +107,21 @@ const RightIcon = (props) => {
   if (props.token) {
     return (
       <div>
+      <img src={require("../../images/logo@2x.png")} style={styles.rightIcon} alt="right icon"/>
+      <span style={{color:"white"}}>{window.localStorage.getItem("userRequest")?JSON.parse(window.localStorage.getItem("userRequest")).name:""}</span>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <i onClick={()=>{
         if(localStorage.getItem("token"))
           props.setRoute("/prd/dashboard");
         else
           props.setRoute("/");
-      }} className="material-icons" style={{"color":"white", "cursor": "pointer"}}>home</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <img src={require("../../images/logo@2x.png")} style={styles.rightIcon} alt="right icon"/>
-      <span style={{color:"white"}}>{window.localStorage.getItem("userRequest")?JSON.parse(window.localStorage.getItem("userRequest")).name:""}</span>
+      }} className="material-icons" style={{"color":"white", "cursor": "pointer"}}>home</i>
       <IconMenu
             iconButtonElement={<IconButton style={{color:"white"}}><i className="material-icons">more_vert</i></IconButton>}
             anchorOrigin={{horizontal: 'left', vertical: 'top'}}
             targetOrigin={{horizontal: 'left', vertical: 'top'}}
           >
-          {/*<MenuItem primaryText="Worklist"  leftIcon={<i className="material-icons">list</i>}></MenuItem>
-            <MenuItem primaryText="Drafts" leftIcon={<i className="material-icons">drafts</i>}></MenuItem>
-            <MenuItem primaryText="Notification" leftIcon={<i className="material-icons">notifications</i>}></MenuItem>*/
-          /*  <MenuItem primaryText="Edit Profile" containerElement={<Link to={`/profileEdit`}></Link>}  leftIcon={<i className="material-icons">mode_edit</i>}></MenuItem>*/
-          /*  <MenuItem primaryText="Change Password" leftIcon={<i className="material-icons">fingerprint</i>}></MenuItem>
-            <MenuItem primaryText="Feedback" leftIcon={<i className="material-icons">chat</i>}></MenuItem>
-            <MenuItem primaryText="Report an issue" leftIcon={<i className="material-icons">bug_report</i>}></MenuItem>
-            <MenuItem primaryText="Help" leftIcon={<i className="material-icons">help</i>}></MenuItem>
-            */}
             <MenuItem primaryText="Sign Out" onClick={(e)=>{
-                //  Api.commonApiPost("/user/_logout", {access_token: localStorage.getItem('auth')}).then(function(response)
-                //  {
-                //    var locale = localStorage.getItem('locale');
-                //    localStorage.clear();
-                //    localStorage.setItem('locale',locale);
-                //    props.logout();
-                //  },function(err) {
-                //    console.log(err);
-                // });
                 document.title = "Dashboard";
                 var locale = localStorage.getItem('locale');
                 var tenantId=localStorage.getItem('tenantId');

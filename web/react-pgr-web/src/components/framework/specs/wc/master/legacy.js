@@ -1296,7 +1296,7 @@ var dat = {
           },
           {
             "name": "subUsageType",
-            "jsonPath": "Connection[0].subUsageTypeId",
+            "jsonPath": "Connection[0].subUsageType",
             "label": "wc.create.groups.connectionDetails.subUsageType",
             "pattern": "",
             "type": "singleValueList",

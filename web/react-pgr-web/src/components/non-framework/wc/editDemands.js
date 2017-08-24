@@ -236,12 +236,12 @@ class AddDemand extends Component {
 
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.nameOfApplicant")}</span></label><br/>
-            <label>{getValue("nameOfApplicant")}</label></span>
+            <label>{getValue("name")}</label></span>
             </Col>
 
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.address")}</span></label><br/>
-            <label>{getValue("address")}</label></span>
+            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].address && this.state.searchData.Connection[0].address.addressLine1}</label></span>
             </Col>
 
             <Col xs={12} sm={4} md={3} lg={3}>
@@ -253,7 +253,7 @@ class AddDemand extends Component {
             <Row>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.email")}</span></label><br/>
-            <label>{getValue("email")}</label></span>
+            <label>{getValue("emailId")}</label></span>
             </Col>
 
             <Col xs={12} sm={4} md={3} lg={3}>
@@ -267,7 +267,7 @@ class AddDemand extends Component {
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.adharNumber")}</span></label><br/>
-            <label>{getValue("adharNumber")}</label></span>
+            <label>{getValue("aadhaarNumber")}</label></span>
             </Col>
             </Row>
               <br/>
@@ -279,11 +279,11 @@ class AddDemand extends Component {
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.connectionDetails.connectionType")}</span></label><br/>
-            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].connectionStatus}</label></span>
+            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].connectionType}</label></span>
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.connectionDetails.usageType")}</span></label><br/>
-            <label>{getValue("usageType")}</label></span>
+            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].property && this.state.searchData.Connection[0].property.usageType}</label></span>
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.propertyTaxDue")}</span></label><br/>

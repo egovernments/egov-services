@@ -448,7 +448,7 @@ var dat = {
           "fields": [
             {
               "name": "File",
-              "jsonPath": "licenses.supportDocuments",
+              "jsonPath": "licenses[0].supportDocuments",
               "type": "documentList",
               "pathToArray": "documentTypes",
               "displayNameJsonPath": "name",

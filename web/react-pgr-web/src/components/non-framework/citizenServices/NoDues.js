@@ -122,8 +122,10 @@ class NoDues extends Component {
         self.props.toggleSnackbarAndSetText(true, err.message, false, true);
         self.props.setLoadingStatus('hide');
       })
+	  
+	  console.log(formData.consumerCode)
 
-      Api.commonApiPost("/billing-service/bill/_generate", {businessService:"PT",consumerCode:formData.consumerCode}, {}, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res){
+      Api.commonApiPost("/billing-service/bill/_generate", {businessService: this.props.match.params.id=="watercharge" ? 'WC' : 'PT' ,consumerCode:formData.consumerCode}, {}, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res){
         self.props.setLoadingStatus('hide');
         let Receipt=[];
         Receipt[0]={"Bill":[]};
@@ -713,7 +715,7 @@ class NoDues extends Component {
 
             {showResult &&
               <Grid >
-                {Receipt.length>0 &&  <Row >
+                {Receipt != undefined && Receipt.length>0 &&  <Row>
                       <Col md={6} >
                       <Card>
                         <CardHeader title="Receipt"/>
@@ -722,15 +724,14 @@ class NoDues extends Component {
                                   <tbody>
                                       <tr>
                                           <td style={{textAlign:"left"}}>
-                                            ULB Logo
+											  <img src="./temp/images/headerLogo.png" height="30" width="30"/>
                                           </td>
                                           <td style={{textAlign:"center"}}>
-                                            ULB Name
-                                            Department
+                                              <b>Roha Municipal Council</b><br/>
+											  Property Tax Department / करनिर्धारण विभाग
                                           </td>
                                           <td style={{textAlign:"right"}}>
-                                            MAH
-                                            LOGO
+											<img src="./temp/images/AS.png" height="30" width="30"/>
                                           </td>
                                       </tr>
                                       <tr>
@@ -880,21 +881,20 @@ class NoDues extends Component {
                                   <tbody>
                                       <tr>
                                           <td style={{textAlign:"left"}}>
-                                            ULB Logo
+                                             <img src="./temp/images/headerLogo.png" height="30" width="30"/>
                                           </td>
                                           <td style={{textAlign:"center"}}>
-                                            ULB Name
-                                            Revenue
+                                              <b>Roha Municipal Council</b><br/>
+											  Property Tax Department / करनिर्धारण विभाग
                                           </td>
                                           <td style={{textAlign:"right"}}>
-                                            MAH
-                                            LOGO
+                                            <img src="./temp/images/AS.png" height="30" width="30"/>
                                           </td>
                                       </tr>
                                       <tr>
                                           <td colSpan={3}>
                                             <div style={{textAlign:"center"}}>
-                                                No Due Certificate / थकबाकी नसल्याचे प्रमाणपत्र<br/>
+                                               No Due Certificate / थकबाकी नसल्याचे प्रमाणपत्र<br/>
                                               (मुवंई प्रांतिक महानगरपालिका अधिनियम 1949 चे अनुसूचीतील प्रकरण 8 अधिनियम 44, 45 व 46 अन्वये )
                                             </div>
                                             <br/>
@@ -914,7 +914,7 @@ class NoDues extends Component {
                                             <br/>
                                             <div style={{textAlign:"center"}}>
                                               Subject /विषय :  सन 2017 - 18 थकबाकी नसल्याचे प्रमाणपत्र मिळणेबाबत.<br/>
-                                              Reference / संदर्भ : आपला अर्ज क्रमांक Application No दिनांक {new Date(Receipt[0].Bill[0].billDetails[0].billDate).getDate()+"-"+new Date(Receipt[0].Bill[0].billDetails[0].billDate).getMonth()+"-"+new Date(Receipt[0].Bill[0].billDetails[0].billDate).getFullYear()}
+                                              Reference / संदर्भ : आपला अर्ज क्रमांक {Receipt[0].Bill[0].billDetails[0].applicationNo} दिनांक {new Date(Receipt[0].Bill[0].billDetails[0].billDate).getDate()+"-"+new Date(Receipt[0].Bill[0].billDetails[0].billDate).getMonth()+"-"+new Date(Receipt[0].Bill[0].billDetails[0].billDate).getFullYear()}
 
 
                                             </div>
@@ -935,7 +935,7 @@ class NoDues extends Component {
                                             <br/>
                                             <div style={{textAlign:"right"}}>
                                                                       कर अधिक्षक,<br/>
-                                                                   ULB Name
+                                                                      Roha Municipal Council
 
 
                                             </div>

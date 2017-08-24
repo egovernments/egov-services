@@ -66,13 +66,6 @@ public class AssetRepositoryTest {
         assertTrue(assets.equals(assetRepository.findForCriteria(new AssetCriteria())));
     }
 
-    /*
-     * @Test public void testGetAssetCode() { String query = "0000001";
-     * when(jdbcTemplate.queryForObject(any(String.class),any(RowMapper.class)))
-     * .thenReturn(1); assertTrue(query.equals(assetRepository.getAssetCode()));
-     * }
-     */
-
     @Test
     public void testCreateAsset() {
 
@@ -99,8 +92,8 @@ public class AssetRepositoryTest {
         assetRequest.setRequestInfo(requestInfo);
         final Asset asset = getAsset();
         assetRequest.setAsset(asset);
-
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
+
         assertTrue(asset.equals(assetRepository.update(assetRequest)));
     }
 

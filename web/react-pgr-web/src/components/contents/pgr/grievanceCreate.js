@@ -123,6 +123,7 @@ class grievanceCreate extends Component {
           this.loadCRN(value);
           this.props.handleChange(value, name, true, '') }}
           errorText={this.props.fieldErrors.receivingCenter ? this.props.fieldErrors.receivingCenter : ""} >
+          <MenuItem value="" primaryText="Select" />
           {this.state.receivingCenter.map((receivingcenter, index) => (
               receivingcenter.active ? <MenuItem value={receivingcenter.id} key={index} primaryText={receivingcenter.name} /> : ''
           ))}
@@ -603,6 +604,7 @@ class grievanceCreate extends Component {
                           <SelectField maxHeight={200} fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('pgr.lbl.receivingmode')+' *'}  value={grievanceCreate.receivingMode?grievanceCreate.receivingMode:""} onChange={(event, key, value) => {
                             this.loadReceivingCenter(value)
                             handleChange(value, "receivingMode", true, "")}} errorText={fieldErrors.receivingMode ? fieldErrors.receivingMode : ""} >
+                            <MenuItem value="" primaryText="Select" />
                             {this.state.receivingModes !== undefined ?
                             this.state.receivingModes.map((receivingmode, index) => (
                                 receivingmode.active ? <MenuItem value={receivingmode.code} key={index} primaryText={receivingmode.name} /> : ''
@@ -670,6 +672,7 @@ class grievanceCreate extends Component {
                       <SelectField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('pgr.lbl.grievance.category')+' *'} maxHeight={200} value={grievanceCreate.serviceCategory?grievanceCreate.serviceCategory:""} errorText={fieldErrors.serviceCategory ? fieldErrors.serviceCategory : ""} onChange={(event, key, value) => {
                         this.loadGrievanceType(value),
                         handleChange(value, "serviceCategory", true, "")}}>
+                        <MenuItem value="" primaryText="Select" />
                         {this.state.grievanceCategory !== undefined ?
                         this.state.grievanceCategory.map((grievanceCategory, index) => (
                           <MenuItem value={grievanceCategory.id} key={index} primaryText={grievanceCategory.name} />
@@ -678,8 +681,9 @@ class grievanceCreate extends Component {
                     </Col>
                     <Col xs={12} sm={4} md={3} lg={3}>
                       <SelectField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('pgr.lbl.grievance.type')+' *'} maxHeight={200} value={grievanceCreate.serviceCode?grievanceCreate.serviceCode:""} errorText={fieldErrors.serviceCode ? fieldErrors.serviceCode : ""} onChange={(event, key, value) => {
-                        this.serviceDefinition(value);
+                        value ? this.serviceDefinition(value): '';
                         handleChange(value, "serviceCode", true, "")}}>
+                        <MenuItem value="" primaryText="Select" />
                         {this.state.grievanceType.map((grievanceType, index) => (
                             <MenuItem value={grievanceType.serviceCode} key={index} primaryText={grievanceType.serviceName} />
                         ))}
@@ -772,6 +776,7 @@ class grievanceCreate extends Component {
 }
 
   const mapStateToProps = state => {
+    console.log(state.form.form);
     return ({grievanceCreate: state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText});
   }
 

@@ -1,4 +1,11 @@
 var localization_EN_Data = {
+    //citizen servers
+    "noDues.search.citizenServices.title":"Search - Provide one...",
+    "noDues.citizenService.consumerCode":"Consumer Code",
+    "noDues.citizenService.email":"Email",
+    "noDues.citizenService.mobileNumber":"Mobile Number",
+    "noDues.search.citizenServices.description":"Please provide at least one parameter",
+
     "deshboard.title": "Dashboard",
     "ui.framework.required": "Required",
     "ui.framework.patternMessage": "Invalid pattern",
@@ -526,7 +533,7 @@ var localization_EN_Data = {
 	"pt.create.groups.floorDetails.fields.groundFloor": "Ground Floor",
 	"pt.create.groups.floorDetails.fields.yes": "Yes",
 	"pt.create.groups.floorDetails.fields.no": "No",
-	
+
 
     //employee Object
     "employee.Employee.fields.code": "Code",
@@ -887,7 +894,6 @@ var localization_EN_Data = {
     "tl.view.licenses.groups.TradeValuefortheUOM": "Trade Value for the UOM",
     "tl.view.licenses.groups.validity": "Validity",
     "tl.view.licenses.groups.Remarks": "Remarks",
-    "tl.view.licenses.groups.TradeCommencementDate": "Trade Commencement Date eg:dd/mm/yyyy",
     "tl.view.licenses.groups.TraderOwnerProperty": "Trader Owner Property",
 
 
@@ -930,13 +936,23 @@ var localization_EN_Data = {
   "tl.view.licenses.groups.TradeValuefortheUOM": "Trade Value for the UOM",
   "tl.view.licenses.groups.validity": "Validity",
   "tl.view.licenses.groups.Remarks": "Remarks",
-  "tl.view.licenses.groups.TradeCommencementDate": "Trade Commencement Date eg:dd/mm/yyyy",
-  "tl.view.licenses.groups.TraderOwnerProperty": "Trader Owner Property",
+  "tl.view.licenses.groups.TradeCommencementDate": "Trade Commencement Date",
+
   "tl.search.groups.adminWardName":"Admin Ward",
   "tl.search.result.groups.validityYears":"Validity Years",
   "tl.search.result.groups.licenseStatus":"License Status",
   "tl.search.result.groups.workflowOwnerName":"Workflow Owner Name",
   "tl.licenses.view.groups.tradeDetails":"Trade Details",
+  "tl.create.license.table.documentTypeName":"Document Name",
+  "tl.create.license.table.comments":"Comments",
+  "tl.create.license.table.file":"File",
+  "tl.create.license.table.documentName":"Document Name",
+  "tl.table.title.supportDocuments":"Support Documents",
+  "tl.table.title.feeDetails":"Fee Details",
+  "tl.view.licenses.groups.agreementDate":"Agreement Date",
+  "tl.view.licenses.groups.agreementNo":"Agreement No",
+  "tl.view.licenses.groups.agreement":"Agreement",
+  "tl.view.legacyTradeLicense":"View Legacy Trade License",
 
     "wc.create.groups.applicationParticular.title": "Application Particular",
     "wc.create.groups.applicationParticular.title": "Application Particular",
@@ -1665,7 +1681,7 @@ var localization_MR_Data = {
 	"pt.create.groups.floorDetails.fields.groundFloor": "Ground Floor",
 	"pt.create.groups.floorDetails.fields.yes": "Yes",
 	"pt.create.groups.floorDetails.fields.no": "No",
-	
+
 
 	﻿"pt.create.groups.assessmentDetails":"मूल्यांकन तपशील",
 	"wc.crete.Slabs":"स्लॅब्स",
@@ -1967,6 +1983,25 @@ var localization_MR_Data = {
     "tl.create.licenses.groups.FeeDetails.Amount": " रक्कम",
     "tl.create.licenses.groups.FeeDetails.IsPaid": " भरले आहे",
     "tl.create.licenses.groups.SupportingDocuments": " सहाय्यक कागदपत्रे",
+
+    "tl.search.groups.adminWardName":"Admin Ward  - Marathi",
+    "tl.search.result.groups.validityYears":"Validity Years  - Marathi",
+    "tl.search.result.groups.licenseStatus":"License Status  - Marathi",
+    "tl.search.result.groups.workflowOwnerName":"Workflow Owner Name  - Marathi",
+    "tl.licenses.view.groups.tradeDetails":"Trade Details  - Marathi",
+    "tl.create.license.table.documentTypeName":"Document Name  - Marathi",
+    "tl.create.license.table.comments":"Comments  - Marathi",
+    "tl.create.license.table.file":"File  - Marathi",
+    "tl.create.license.table.documentName":"Document Name  - Marathi",
+    "tl.table.title.supportDocuments":"Support Documents  - Marathi",
+    "tl.table.title.feeDetails":"Fee Details  - Marathi",
+    "tl.view.licenses.groups.agreementDate":"Agreement Date  - Marathi",
+    "tl.view.licenses.groups.agreementNo":"Agreement No  - Marathi",
+    "tl.view.licenses.groups.agreement":"Agreement  - Marathi",
+    "tl.view.legacyTradeLicense":"View Legacy Trade License  - Marathi",
+
+
+
     "wc.create.groups.applicationParticular.title": "अर्जाचे विशेष",
     "wc.create.groups.applicationParticular.title": "अर्जाचे विशेष",
     "collection.search.categorytype.title": "शोध पावती शोधा",

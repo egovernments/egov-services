@@ -4,23 +4,14 @@ import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
 import DatePicker from 'material-ui/DatePicker';
-import SelectField from 'material-ui/SelectField';
 import AutoComplete from 'material-ui/AutoComplete';
 import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../../api/api';
+import styles from '../../../../../styles/material-ui';
 import {translate} from '../../../../common/common';
-
-const styles = {
-  headerStyle : {
-    fontSize : 19
-  },
-  marginStyle:{
-    margin: '15px'
-  }
-};
 
 var _this;
 
@@ -167,6 +158,7 @@ class ServiceGroupCreate extends Component {
                               <Col xs={12} sm={4} md={3} lg={3}>
                                   <TextField
                                       fullWidth={true}
+                                      floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                                       floatingLabelText={translate("core.lbl.add.name")+"*"}
                                       value={createServiceGroup.name? createServiceGroup.name : ""}
                                       errorText={fieldErrors.name ? fieldErrors.name : ""}
@@ -178,6 +170,7 @@ class ServiceGroupCreate extends Component {
                               <Col xs={12} sm={4} md={3} lg={3}>
                                   <TextField
                                       fullWidth={true}
+                                      floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                                       floatingLabelText={translate("core.lbl.code")+"*"}
                                       value={createServiceGroup.code? createServiceGroup.code : ""}
                                       errorText={fieldErrors.code ? fieldErrors.code : ""}
@@ -190,6 +183,7 @@ class ServiceGroupCreate extends Component {
                               <Col xs={12} sm={4} md={3} lg={3}>
                                   <TextField
                                       fullWidth={true}
+                                      floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                                       floatingLabelText={translate("core.lbl.description")}
                                       value={createServiceGroup.description? createServiceGroup.description : ""}
                                       errorText={fieldErrors.description ? fieldErrors.description : ""}

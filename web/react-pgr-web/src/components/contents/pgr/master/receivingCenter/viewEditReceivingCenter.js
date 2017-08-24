@@ -11,6 +11,7 @@ import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../../api/api';
+import styles from '../../../../../styles/material-ui';
 import {translate} from '../../../../common/common';
 
 import $ from 'jquery';
@@ -22,14 +23,6 @@ import pdfFonts from "pdfmake/build/vfs_fonts";
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 var flag = 0;
-const styles = {
-  headerStyle : {
-    fontSize : 19
-  },
-  marginStyle:{
-    margin: '15px'
-  }
-};
 
 var _this;
 
@@ -132,7 +125,6 @@ class ViewEditServiceGroup extends Component {
                                           <th>{translate("core.lbl.code")}</th>
                                           <th>{translate("core.lbl.description")}</th>
                                           <th>{translate("pgr.lbl.active")} </th>
-                                          <th>{translate("pgr.lblauditdetails")}</th>
                                           <th>{translate("pgr.lbl.crn")}</th>
                                           <th>{translate("pgr.lbl.order.no")}</th>
                                         </tr>
@@ -152,7 +144,6 @@ class ViewEditServiceGroup extends Component {
                                               <td>{e.code}</td>
                                               <td>{e.description}</td>
                                               <td>{e.active  ? "Yes" : "No"}</td>
-                                              <td>{e.auditDetails}</td>
                                               <td>{e.iscrnrequired ? "Yes" : "No"}</td>
                                               <td>{e.orderno}</td>
                                             </tr>

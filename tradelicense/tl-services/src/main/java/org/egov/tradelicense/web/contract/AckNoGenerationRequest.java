@@ -57,9 +57,9 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AckNoGenerationRequest {
-    @JsonProperty("RequestInfo")
-    private RequestInfo RequestInfo;
+	@JsonProperty("RequestInfo")
+	private RequestInfo RequestInfo;
 
-    private List<AckIdRequest> idRequests;
+	private List<AckIdRequest> idRequests;
 
 }

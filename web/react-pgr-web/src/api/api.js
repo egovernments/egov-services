@@ -31,7 +31,7 @@ var requestInfo = {
 var tenantId = localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default';
 
 module.exports = {
-    commonApiPost: (context, queryObject = {}, body = {}, doNotOverride = false, isTimeLong = false, noPageSize = false) => {
+    commonApiPost: (context, queryObject = {}, body = {}, doNotOverride = false, isTimeLong = false, noPageSize = false,authToken="") => {
         var url = context;
         if(url && url[url.length-1] === "/")
             url = url.substring(0, url.length-1);
@@ -54,6 +54,10 @@ module.exports = {
             requestInfo.ts = new Date().getTime();
         }
 
+        if(authToken!="")
+        {
+          requestInfo["authToken"]=authToken;
+        }
 
         body["RequestInfo"] = requestInfo;
 
@@ -71,14 +75,12 @@ module.exports = {
                         throw new Error(_err);
                     }
                 }else if(response && response.response && response.response.data && response.response.data.error){
-                  // let _err = common.translate(response.response.data.error.fields[0].code);
-                  let _err = "";
-                  let fields=response.response.data.error.fields;
-                  for (var i = 0; i < fields.length; i++) {
-                    _err=+common.translate(fields[i].code) + " - "+ fields[i].message +"\n";
-                  }
-
-
+                  let _err = common.translate(response.response.data.error.fields[0].code);
+                  // let _err = "";
+                  // let fields=response.response.data.error.fields;
+                  // for (var i = 0; i < fields.length; i++) {
+                  //   _err=+common.translate(fields[i].code) + " - "+ fields[i].message +"\n";
+                  // }
                   throw new Error(_err);
                 }else if(response && response.response && !response.response.data && response.response.status === 400) {
                     document.title = "eGovernments";

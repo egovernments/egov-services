@@ -71,7 +71,13 @@ export default (state = defaultState, action) => {
                 fieldErrors: _fieldErrors,
                 isFormValid: _isFormValid
             }
-
+        case "ADD_TO_FIELD_ERRORS":
+            var _fieldErrors = {...state.fieldErrors};
+            _fieldErrors[action.key] = action.value;
+            return {
+                ...state,
+                fieldErrors: _fieldErrors,
+            }
         case "HANDLE_CHANGE_FRAMEWORK":
             var currentState = { ...state };
             action.value = (typeof action.value == "undefined" || action.value == null) ? "" : action.value;
@@ -133,7 +139,7 @@ function validate(fieldErrors, property, value, isRequired, form, requiredFields
   let errorText = isRequired && !value ? translate('ui.framework.required') : '';
   let isFormValid = true;
   for(var i=0; i<requiredFields.length; i++) {
-    if(typeof _.get(form, requiredFields[i]) == 'undefined') {
+    if(typeof _.get(form, requiredFields[i]) == 'undefined' || _.get(form, requiredFields[i]) === "") {
       isFormValid = false;
       break;
     }

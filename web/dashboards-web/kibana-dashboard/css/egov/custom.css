@@ -467,7 +467,7 @@ strong {
 .navbar-custom {
   background: #6b4f2c;
   color: #ebe8e4;
-  border-color: #6b4f2c;
+  /*border-color: #6b4f2c;*/
 }
 .navbar-custom .container-fluid {
   min-height: 72px;
@@ -498,7 +498,7 @@ strong {
   line-height: 42px;
   margin-top: -3px;
 }
-.navbar-custom .navbar-header > a span.title2 {
+.navbar-custom .navbar-header > a span.title2, a span.title {
   color: #fff;
 }
 .navbar-custom .navbar-header > a span.citizen-title {
@@ -524,9 +524,10 @@ strong {
   height: 32px;
   line-height: 32px;
   color: #fff;
-  /* font-weight: bold; */
-  font-size: 13px;
+  font-weight: bold;
+  font-size: 15px;
   text-decoration: none;
+  font-family: semibold;
 }
 .hr-menu li a span.title {
   padding: 0 5px;
@@ -2056,4 +2057,16 @@ a.colorblue
   padding: 20px 0;
   color: white;
   cursor: pointer;
+}
+
+.subtitle{
+  padding: 10px 25px;
+  background: #f3f4f5;
+  font-family: semibold;
+  color: #6b4f2c;
+  text-transform: uppercase;
+}
+
+.padding-top-40{
+  padding-top: 40px;
 }

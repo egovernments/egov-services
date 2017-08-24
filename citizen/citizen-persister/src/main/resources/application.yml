@@ -1,0 +1,237 @@
+serviceMaps:
+ serviceName: User Service
+ mappings:
+ - version: 1.0
+   name: name
+   fromTopic: egov.persist
+   isTransaction: true
+   queryMaps: 
+    - query: INSERT INTO eg_user(title, salutation, dob, locale, username, password, pwdexpirydate, mobilenumber, altcontactnumber, emailid, createddate, lastmodifieddate, createdby, lastmodifiedby, active, name, gender, pan, aadhaarnumber, type, version, guardian, guardianrelation, signature, accountlocked, bloodgroup, photo, identificationmark, tenantid, id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      jsonMaps:
+       - jsonPath: $.Users.*.salutation #title
+         type: STRING
+
+       - jsonPath: $.Users.*.salutation
+         type: STRING
+       
+       - jsonPath: $.Users.*.userDetails.dob
+         type: DATE
+
+       - jsonPath: $.Users.*.locale
+         type: STRING
+
+       - jsonPath: $.Users.*.username
+         type: STRING
+       
+       - jsonPath: $.Users.*.password
+         type: STRING
+
+       - jsonPath: $.Users.*.pwdExpiryDate
+         type: LONG
+         dbType: DATE
+         format: dd/MM/yyyy
+
+       - jsonPath: $.Users.*.mobile
+         type: STRING
+
+       - jsonPath: $.Users.*.userDetails.altContactNumber
+         type: STRING
+       
+       - jsonPath: $.Users.*.email
+         type: STRING
+
+       - jsonPath: current
+         type: CURRENTDATE
+         dbType: DATE
+
+       - jsonPath: current
+         type: CURRENTDATE
+         dbType: DATE
+
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: LONG
+
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: LONG
+       
+       - jsonPath: $.Users.*.active
+         type: BOOLEAN  
+
+       - jsonPath: $.Users.*.name
+         type: STRING
+
+       - jsonPath: $.Users.*.gender
+         type: INT
+
+       - jsonPath: $.Users.*.userDetails.pan
+         type: STRING
+
+       - jsonPath: $.Users.*.aadhaarNumber
+         type: STRING
+
+       - jsonPath: $.Users.*.type
+         type: STRING
+
+       - jsonPath: default.value.0 #version
+         type: INT
+
+       - jsonPath: default.value.guardian #guardian
+         type: STRING
+
+       - jsonPath: default.value.guardianrelation #guardianrelation
+         type: STRING
+
+       - jsonPath: $.Users.*.userDetails.signature 
+         type: STRING
+
+       - jsonPath: $.Users.*.accountLocked
+         type: BOOLEAN
+
+       - jsonPath: $.Users.*.userDetails.bloodGroup 
+         type: STRING
+
+       - jsonPath: $.Users.*.userDetails.photo
+         type: STRING
+
+       - jsonPath: $.Users.*.userDetails.identificationMark
+         type: STRING
+
+       - jsonPath: $.Users.*.tenantId
+         type: STRING
+
+       - jsonPath: $.Users.*.id
+         type: LONG
+    
+    - query: INSERT INTO eg_user_address(id, version, createddate, lastmodifieddate, createdby, lastmodifiedby, type, address, city, pincode, userid, tenantid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      jsonMaps:
+       - jsonPath: $.Users.*.userDetails.addresses.*.id
+         type: STRING
+
+       - jsonPath: default
+         type: LONG
+       
+       - jsonPath: current
+         type: CURRENTDATE
+         dbType: DATE
+
+       - jsonPath: current
+         type: CURRENTDATE
+         dbType: DATE
+
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: LONG
+
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: LONG
+       
+       - jsonPath: $.Users.*.userDetails.addresses.*.addressType
+         type: STRING  
+
+       - jsonPath: $.Users.*.userDetails.addresses.*.addressLine1
+         type: STRING
+
+       - jsonPath: $.Users.*.userDetails.addresses.*.city
+         type: STRING
+
+       - jsonPath: $.Users.*.userDetails.addresses.*.pincode
+         type: STRING
+
+       - jsonPath: $.Users.*.userDetails.addresses.*.userId
+         type: STRING
+
+       - jsonPath: $.Users.*.userDetails.addresses.*.tenantId
+         type: STRING
+         
+ - version: 1.0
+   name: name
+   fromTopic: save-service-db
+   isTransaction: true
+   queryMaps: 
+    - query: INSERT INTO public.egov_citizen_service_req(id, tenantid, userid, servicecode, consumercode, email, mobilenumber, assignedto, createddate, lastmodifiedddate, createdby, lastmodifiedby, jsonvalue) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      jsonMaps:
+       - jsonPath: $.serviceReq.serviceRequestId
+         type: STRING
+
+       - jsonPath: $.serviceReq.tenantId
+         type: STRING
+       
+       - jsonPath: $.requestInfo.userInfo.id
+         type: LONG
+
+       - jsonPath: $.serviceReq.serviceCode
+         type: STRING
+
+       - jsonPath: $.serviceReq.consumerCode
+         type: STRING
+
+       - jsonPath: $.serviceReq.email
+         type: STRING
+       
+       - jsonPath: $.serviceReq.phone
+         type: LONG
+
+       - jsonPath: $.serviceReq.assignedTo
+         type: STRING
+
+       - jsonPath: current
+         type: CURRENTDATE
+         dbType: LONG         
+
+       - jsonPath: current
+         type: CURRENTDATE
+         dbType: LONG        
+
+       - jsonPath: $.requestInfo.userInfo.id
+         type: LONG
+         
+       - jsonPath: $.requestInfo.userInfo.id
+         type: LONG
+  
+       - jsonPath: $.serviceReq
+         type: JSON
+         
+ - version: 1.0
+   name: name
+   fromTopic: update-service-db
+   isTransaction: true
+   queryMaps: 
+    - query: UPDATE egov_citizen_service_req SET  userid=?, servicecode=?, consumercode=?, email=?, mobilenumber=?, assignedto=?,  lastmodifiedddate=?, lastmodifiedby=?, jsonvalue=? WHERE id=? and tenantid=?;
+      jsonMaps:
+       
+       - jsonPath: $.requestInfo.userInfo.id
+         type: LONG
+
+       - jsonPath: $.serviceReq.serviceCode
+         type: STRING
+
+       - jsonPath: $.serviceReq.consumerCode
+         type: STRING
+
+       - jsonPath: $.serviceReq.email
+         type: STRING
+       
+       - jsonPath: $.serviceReq.phone
+         type: LONG
+
+       - jsonPath: $.serviceReq.assignedTo
+         type: STRING
+
+       - jsonPath: current
+         type: CURRENTDATE
+         dbType: LONG        
+         
+       - jsonPath: $.requestInfo.userInfo.id
+         type: LONG
+  
+       - jsonPath: $.serviceReq
+         type: JSON
+       
+       - jsonPath: $.serviceReq.serviceRequestId
+         type: STRING
+
+       - jsonPath: $.serviceReq.tenantId
+         type: STRING
+         
+
+       
+

@@ -88,7 +88,7 @@ public class TradeLicenseEntity {
 	private String agreementNo;
 
 	private Boolean isLegacy = false;
-	
+
 	private Boolean isPropertyOwner = false;
 
 	private Boolean active = true;
@@ -128,7 +128,7 @@ public class TradeLicenseEntity {
 		tradeLicense.setOldLicenseNumber(this.oldLicenseNumber);
 
 		if (this.applicationDate != null) {
-			tradeLicense.setApplicationDate( (this.applicationDate.getTime()));
+			tradeLicense.setApplicationDate((this.applicationDate.getTime()));
 		}
 
 		tradeLicense.setAdhaarNumber(this.adhaarNumber);
@@ -191,7 +191,7 @@ public class TradeLicenseEntity {
 
 		tradeLicense.setIsLegacy(this.isLegacy);
 
-		tradeLicense.setIsPropertyOwner( this.isPropertyOwner);
+		tradeLicense.setIsPropertyOwner(this.isPropertyOwner);
 		tradeLicense.setActive(this.active);
 
 		tradeLicense.setStatus(this.status);
@@ -296,7 +296,7 @@ public class TradeLicenseEntity {
 		this.agreementNo = tradeLicense.getAgreementNo();
 
 		this.isLegacy = tradeLicense.getIsLegacy();
-		
+
 		this.isPropertyOwner = tradeLicense.getIsPropertyOwner();
 
 		this.active = tradeLicense.getActive();

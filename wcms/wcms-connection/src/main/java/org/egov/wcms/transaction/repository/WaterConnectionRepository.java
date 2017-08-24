@@ -187,6 +187,7 @@ public class WaterConnectionRepository {
 
         if (connectionId > 0 ) {
             final List<Object[]> values = new ArrayList<>();
+            if(waterConnectionRequest.getConnection().getDocuments()!=null && !waterConnectionRequest.getConnection().getDocuments().isEmpty()){
             for (final DocumentOwner document : waterConnectionRequest.getConnection().getDocuments()) {
                 document.setDocumentId(Integer.parseInt(document.getDocument()));
                 final Object[] obj = { document.getDocumentId(),
@@ -203,7 +204,8 @@ public class WaterConnectionRepository {
             } catch (final Exception e) {
                 LOGGER.error("Inserting documents failed!", e);
             }
-        }  if (connectionId > 0 && waterConnectionRequest.getConnection().getBillingType() != null &&
+        } 
+        }if (connectionId > 0 && waterConnectionRequest.getConnection().getBillingType() != null &&
                 waterConnectionRequest.getConnection().getBillingType().equals("METERED") &&
                 !waterConnectionRequest.getConnection().getMeter().isEmpty()) {
 
@@ -318,8 +320,10 @@ public class WaterConnectionRepository {
 					PreparedStatement statement = connection.prepareStatement(persistConnectionLocationQuery,
 							returnValColumn);
 					statement.setLong(1, conn.getConnectionLocation().getRevenueBoundary().getId());
-					statement.setLong(2, conn.getConnectionLocation().getLocationBoundary().getId()); 
-					statement.setLong(3, conn.getConnectionLocation().getAdminBoundary().getId());
+					statement.setLong(2, (conn.getConnectionLocation().getLocationBoundary()!=null
+					        ?conn.getConnectionLocation().getLocationBoundary().getId():0l)); 
+					statement.setLong(3, (conn.getConnectionLocation().getAdminBoundary()!=null ?
+					        conn.getConnectionLocation().getAdminBoundary().getId():0l));
 					statement.setLong(4, waterConnectionReq.getRequestInfo().getUserInfo().getId());
 					statement.setDate(5, new Date(new java.util.Date().getTime()));
 					return statement;

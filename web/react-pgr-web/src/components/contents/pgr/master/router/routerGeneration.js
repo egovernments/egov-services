@@ -120,9 +120,9 @@ class routerGeneration extends Component {
   loadGrievanceType(value){
      var self = this;
      self.props.handleChange({target: {value: ""}}, "complaintTypes", true, "");
-     Api.commonApiPost("/pgr/services/v1/_search", {type:'category', categoryId : value}).then(function(response)
+     Api.commonApiPost("pgr-master/service/v1/_search", {type:'category', categoryId : value}).then(function(response)
      {
-       self.setState({typeList : response.complaintTypes});
+       self.setState({typeList : response.Service});
      },function(err) {
 
      });
@@ -185,7 +185,7 @@ class routerGeneration extends Component {
   		}
   	}
 
-  	Api.commonApiPost("/pgr-master/serviceGroup/v1/_search").then(function(response) {
+  	Api.commonApiPost("/pgr-master/serviceGroup/v1/_search",{keyword: "complaint"}).then(function(response) {
       	checkCountAndCall("categoryList", response.ServiceGroups);
     }, function(err) {
     	checkCountAndCall("categoryList", []);
@@ -389,6 +389,7 @@ class routerGeneration extends Component {
 	                					var e = {target: {value: val}};
 	                					loadGrievanceType(val);
 	                					handleChange(e, "complaintTypeCategory", true, "")}}>
+                            <MenuItem value="" primaryText="Select" />
 	                					{categoryList.map((item, index) => (
 			                                <MenuItem value={item.id} key={index} primaryText={item.name} />
 			                            ))}
@@ -403,6 +404,7 @@ class routerGeneration extends Component {
                       onChange={(e, i, val) => {
 	                					var e = {target: {value: val}};
 	                					handleChange(e, "complaintTypes", true, "")}} multiple>
+                            <MenuItem value="" primaryText="Select" />
 	                					{typeList.map((item, index) => (
 			                                <MenuItem
                                         value={item.id}
@@ -419,6 +421,7 @@ class routerGeneration extends Component {
 	                					var e = {target: {value: val}};
 	                					loadBoundaries(val);
 	                					handleChange(e, "boundaryType", true, "")}}>
+                            <MenuItem value="" primaryText="Select" />
 	                					{boundaryTypeList.map((item, index) => (
 			                                <MenuItem value={item.id} key={index} primaryText={item.name} />
 			                            ))}
@@ -433,6 +436,7 @@ class routerGeneration extends Component {
                       onChange={(e, i, val) => {
 	                					var e = {target: {value: val}};
 	                					handleChange(e, "boundaries", true, "")}} multiple>
+                            <MenuItem value="" primaryText="Select" />
 	                					{boundariesList.map((item, index) => (
 			                                <MenuItem
                                         value={item.id}

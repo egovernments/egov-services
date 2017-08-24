@@ -41,10 +41,10 @@ public class TradeLicenseController {
 
 	@Autowired
 	ResponseInfoFactory responseInfoFactory;
-	
+
 	@Autowired
 	private SmartValidator validator;
-	
+
 	@Autowired
 	PropertiesManager propertiesManager;
 
@@ -62,29 +62,29 @@ public class TradeLicenseController {
 		return errors;
 
 	}
-	
+
 	@RequestMapping(path = "/license/v1/_create", method = RequestMethod.POST)
 	public TradeLicenseResponse createTradelicense(@Valid @RequestBody TradeLicenseRequest tradeLicenseRequest,
 			BindingResult errors) throws Exception {
 
-//		validate(tradeLicenseRequest.getLicenses(), errors);
+		// validate(tradeLicenseRequest.getLicenses(), errors);
 		RequestInfo requestInfo = tradeLicenseRequest.getRequestInfo();
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors, requestInfo);
 		}
-		//check for existence of licenses 
-		if(tradeLicenseRequest.getLicenses() == null){
+		// check for existence of licenses
+		if (tradeLicenseRequest.getLicenses() == null) {
 			throw new TradeLicensesNotFoundException(propertiesManager.getTradeLicensesNotFoundMsg(), requestInfo);
-		} else if(tradeLicenseRequest.getLicenses().size() == 0){
+		} else if (tradeLicenseRequest.getLicenses().size() == 0) {
 			throw new TradeLicensesNotEmptyException(propertiesManager.getTradeLicensesNotEmptyMsg(), requestInfo);
 		}
-		
+
 		ModelMapper model = new ModelMapper();
 		TradeLicenseResponse tradeLicenseResponse = new TradeLicenseResponse();
 		tradeLicenseResponse.setResponseInfo(getResponseInfo(requestInfo));
 		List<TradeLicense> tradeLicenses = new ArrayList<>();
 		TradeLicense tradeLicense;
-		
+
 		for (TradeLicenseContract tradeLicenseContract : tradeLicenseRequest.getLicenses()) {
 
 			tradeLicense = new TradeLicense();
@@ -115,28 +115,28 @@ public class TradeLicenseController {
 		tradeLicenseRequest.setLicenses(tradeLicenseContracts);
 		tradeLicenseService.addToQue(tradeLicenseRequest);
 		tradeLicenseResponse.setLicenses(tradeLicenseContracts);
-		
-		//creating success message with the license numbers
-		if(tradeLicenseResponse.getResponseInfo() != null && tradeLicenseResponse.getLicenses() != null
-		   && tradeLicenseResponse.getLicenses().size() > 0){
-			
+
+		// creating success message with the license numbers
+		if (tradeLicenseResponse.getResponseInfo() != null && tradeLicenseResponse.getLicenses() != null
+				&& tradeLicenseResponse.getLicenses().size() > 0) {
+
 			String statusMessage = propertiesManager.getLegacyCreateSuccessMessage();
 			String licenseNumbers = "";
 			int licenseCount = tradeLicenseResponse.getLicenses().size();
-			for(int i=0; i < licenseCount; i++){
-				if(tradeLicenseResponse.getLicenses().get(i).getLicenseNumber() != null){
+			for (int i = 0; i < licenseCount; i++) {
+				if (tradeLicenseResponse.getLicenses().get(i).getLicenseNumber() != null) {
 					licenseNumbers = licenseNumbers.concat(tradeLicenseRequest.getLicenses().get(i).getLicenseNumber());
-					if(i != (licenseCount - 1)){
+					if (i != (licenseCount - 1)) {
 						licenseNumbers = licenseNumbers.concat(", ");
 					}
 				}
 			}
-			if(statusMessage != null){
+			if (statusMessage != null) {
 				statusMessage = statusMessage.replace("{licenseNumbers}", licenseNumbers);
 			}
 			tradeLicenseResponse.getResponseInfo().setStatus(statusMessage);
 		}
-		
+
 		return tradeLicenseResponse;
 	}
 
@@ -165,8 +165,8 @@ public class TradeLicenseController {
 			@RequestParam(required = false) Integer status) throws Exception {
 
 		return tradeLicenseService.getTradeLicense(requestInfo.getRequestInfo(), tenantId, pageSize, pageNumber, sort,
-				active, ids, applicationNumber, licenseNumber, oldLicenseNumber, mobileNumber, aadhaarNumber,
-				emailId, propertyAssesmentNo, adminWard, locality, ownerName, tradeTitle, tradeType, tradeCategory,
+				active, ids, applicationNumber, licenseNumber, oldLicenseNumber, mobileNumber, aadhaarNumber, emailId,
+				propertyAssesmentNo, adminWard, locality, ownerName, tradeTitle, tradeType, tradeCategory,
 				tradeSubCategory, legacy, status);
 	}
 

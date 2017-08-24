@@ -216,13 +216,14 @@ var dat = {
       "header": [{
           "name": "businessService",
           "jsonPath": "businessService",
-          "label": "Biller Service Name",
+          "label": "Billing Service Name",
           "pattern": "",
           "type": "label",
           "isRequired": true,
           "isDisabled": false,
           "requiredErrMsg": "",
           "patternErrMsg": "",
+          "url":"egov-common-masters/businessDetails/_search?|$..code|$..name",
           "isLabel": false
         },
         {
@@ -236,7 +237,7 @@ var dat = {
           "requiredErrMsg": "",
           "patternErrMsg": "",
           "isLabel": false,
-          "hyperLink": "http://mahaulb.egovernments.org/app/v1/#/legacy/view"
+          "hyperLink": ""
         },
         {
           "name": "totalAmount",

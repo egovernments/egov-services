@@ -2,7 +2,6 @@ package org.egov.user.persistence.repository;
 
 import org.egov.user.Resources;
 import org.egov.user.domain.model.OtpValidationRequest;
-import org.egov.user.domain.model.User;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

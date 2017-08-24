@@ -102,6 +102,7 @@ import Transaction from './components/framework/transaction';
 import Inbox from './components/framework/inbox';
 
 import LegacyLicenseCreate from './components/non-framework/tl/transaction/LegacyLicenseCreate';
+import viewLegacyLicense from './components/non-framework/tl/transaction/viewLegacyLicense';
 
 
 import ReceiptView from './components/non-framework/collection/master/receipt/view';
@@ -109,6 +110,7 @@ import Employee from './components/non-framework/employee/create';
 import EmployeeSearch from './components/non-framework/employee/search';
 import SearchLegacyWc from './components/non-framework/wc/search';
 import updateConnection from './components/non-framework/wc/connection-workflow';
+import NoDues from './components/non-framework/citizenServices/NoDues';
 
 const base = "";
 
@@ -227,8 +229,12 @@ const Main = () => {
 
       <Route exact path= {base + '/non-framework/tl/transaction/LegacyLicenseCreate'} component={LegacyLicenseCreate}/>
 
+        <Route exact path= {base + '/non-framework/tl/transaction/viewLegacyLicense/:licenseNumber'} component={viewLegacyLicense}/>
+
       <Route exact path= {base + '/non-framework/collection/master/paytax/PayTaxCreate'} component={PayTaxCreate}/>
       <Route exact path= {base + '/non-framework/collection/receipt/view/:id'} component={ReceiptView}/>
+      <Route exact path= {base + '/non-framework/citizenServices/no-dues/:status/:id'} component={NoDues}/>
+
       <Route exact path={base + '/empsearch/:actionName'} component={EmployeeSearch}/>
       <Route exact path={base+'/legacy/view/:id'} component={ViewLegacy}/>
       <Route exact path={base+'/wc/addDemand/:upicNumber'} component={EditDemands}/>

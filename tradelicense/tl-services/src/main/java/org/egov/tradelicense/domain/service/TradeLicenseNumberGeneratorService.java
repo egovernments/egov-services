@@ -9,10 +9,10 @@ import org.egov.tl.commons.web.contract.RequestInfo;
  *
  */
 public interface TradeLicenseNumberGeneratorService {
-    /**
-     * Method to generate Trade License Number
-     * 
-     * @return generated number
-     */
-    public String generate(final String tenantId, final RequestInfo requestInfo);
+	/**
+	 * Method to generate Trade License Number
+	 * 
+	 * @return generated number
+	 */
+	public String generate(final String tenantId, final RequestInfo requestInfo);
 }

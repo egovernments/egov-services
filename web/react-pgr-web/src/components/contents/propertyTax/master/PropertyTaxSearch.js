@@ -348,7 +348,7 @@ class PropertyTaxSearch extends Component {
 						  </td>
 					  <td>{this.state.demands.hasOwnProperty('consolidatedTax') ? this.state.demands.consolidatedTax.currentDemand : ''}</td>
 					  <td>{this.state.demands.hasOwnProperty('consolidatedTax') ? this.state.demands.consolidatedTax.arrearsDemand : ''}</td>
-					  <td>{item.propertyDetail.propertyType || ''}</td>
+					  <td>{getNameByCode(this.state.propertytypes, item.propertyDetail.propertyType) || ''}</td>
 					  <td>{item.propertyDetail.category || ''}</td>
 					  <td>
 						<DropdownButton title="Action" id="dropdown-3" pullRight>

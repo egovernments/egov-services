@@ -167,7 +167,7 @@ class Login extends Component {
 	    var current = this;
       this.props.setLoadingStatus('loading');
 	   e.preventDefault();
-      var self = this, props = this.props;
+      var self = this, props = this.props, flag = 0;
       let {setActionList}=this.props;
       self.setState({
           errorMsg: ""
@@ -195,7 +195,22 @@ class Login extends Component {
 				localStorage.setItem("type", response.data.UserRequest.type);
 				localStorage.setItem("id", response.data.UserRequest.id);
 				localStorage.setItem("tenantId", response.data.UserRequest.tenantId);
-        props.login(false, response.data.access_token, response.data.UserRequest);
+
+
+        if(window.location.href.indexOf("?") > -1 && window.location.href.indexOf("link") > -1) {
+          var query = window.location.href.split("?")[1].split("&");
+          props.login(false, response.data.access_token, response.data.UserRequest, true);
+          for(var i=0; i<query.length; i++) {
+            if(query[i].indexOf("link") > -1) {
+              switch(query[i].split("=")[1]) {
+                case 'test':
+                  self.props.setRoute("/employee/create");
+              }
+            }
+          }
+        } else 
+          props.login(false, response.data.access_token, response.data.UserRequest);
+          
 
         let roleCodes=[];
         for (var i = 0; i < response.data.UserRequest.roles.length; i++) {
@@ -936,9 +951,9 @@ const mapDispatchToProps = dispatch => ({
   handleChange: (e, property, isRequired, pattern) => {
     dispatch({type: "HANDLE_CHANGE", property, value: e.target.value, isRequired, pattern});
   },
-  login: (error, token, userRequest) =>{
+  login: (error, token, userRequest, doNotNavigate) =>{
     let payload = {
-      "access_token": token, "UserRequest": userRequest
+      "access_token": token, "UserRequest": userRequest, doNotNavigate: doNotNavigate
     };
     dispatch({type: "LOGIN", error, payload})
   },

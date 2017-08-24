@@ -1,0 +1,205 @@
+@import url('https://fonts.googleapis.com/css?family=Lato');
+body{
+	font-family: 'Lato', sans-serif;
+}
+
+.header-section{
+	padding-top: 15px;
+	padding-bottom:15px;
+	background:url("../images/header-bg-1.jpg") no-repeat;
+	background-size: 100% 100%; 
+    border: 1px solid;
+}
+.service-table ul li{
+	margin-left:-55px;
+	list-style: none;
+}
+.right-sction{
+	/*margin-top: 60px;*/
+}
+.h35{
+	font-size: 35px;
+}
+.h20{
+	font-size: 20px;
+}
+.more-option{
+    margin-top: 67px;
+    margin-right: 80px;
+    float: right;
+	/*text-align: center;*/
+}
+.body-section{
+	background:url("../images/bg-3.jpg") no-repeat;
+	background-size: 100% 100%;
+}
+.service-section{
+	padding: 10px;
+
+}
+.service-table{
+   background: rgba(0, 0, 0, 0.5);
+    padding: 15px;
+    border-radius: 3px;
+    margin: 10px 0 20px;
+    color: #fff;
+    height: 414px;
+    overflow-y: scroll;
+}
+.service-table h3,h4{
+	cursor: pointer;
+	color: orange;
+	background-color: rgba(0,0,0,0.5);
+	padding: 10px;
+}
+.news-item a{
+	text-decoration: none;
+	color: #fff;
+	padding: 10px;
+    display: block;
+    margin-bottom: 0px;
+    background: rgba(0, 0, 0, 0.2) none repeat scroll 0 0;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.news-item a:hover{
+	background-color: rgba(121, 85, 72, 0.48);
+}
+
+/*.service-table::-webkit-scrollbar {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    background-color: #F5F5F5;
+} */
+.service-table::-webkit-scrollbar-track
+{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    background-color: #F5F5F5;
+}
+
+.service-table::-webkit-scrollbar
+{
+    width: 6px;
+    background-color: #F5F5F5;
+}
+
+.service-table::-webkit-scrollbar-thumb
+{
+    background-color: #000000;
+}
+
+.doc-head{
+    color: #31708f;
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+    padding: 10px;
+    font-size: 15px;
+    font-weight: 700;
+}
+.docs-section {
+    border-color: #31708f;
+    padding: 10px;
+}
+.modal-title{
+	font-weight: 700;
+	text-align: center;
+	background-color: rgba(63, 132, 181, 0.54);
+	padding: 10px;
+	color: #fff;
+}
+.log-section{
+	float: right;
+	padding: 15px 115px;
+	/*padding-right: 25px;*/
+}
+
+.nav>li>a{
+	color: #fff;
+	padding: 5px 25px;
+}
+.navbar
+{	height: 23px;
+	min-height: 0px;
+	margin-bottom: 0px;
+	border-radius: 0px;
+}
+.navbar-right{
+	margin-right: 100px;
+}
+.navbar-inverse {
+    background-color: rgb(22, 40, 56);
+    border-color: rgb(22, 40, 56);
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #f1f1f1}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {
+    background-color: #3e8e41;
+}
+
+.more-option .btn{
+	
+   /* background: #f78d1d;
+    background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#848383));*/
+}
+
+.servicesbtn{
+	font-size: 12px;
+	 width: 132px;
+    height: 30px;
+    color: #1b1a1a;
+    border: solid 1px #fffefd;
+    background-image: url("../images/service.png");
+	background-repeat: no-repeat;
+	background-position: right;
+	background-size: 25px;
+	padding-right: 30px;
+}
+
+.footer-section{
+	background-color: rgba(128, 128, 128, 0.42);
+	/*padding: 20px;
+	min-height: 30px;*/
+}
+
+.dashboardbtn{
+	font-size: 12px;
+    width: 130px;
+    height: 30px;
+    color: #1b1a1a;
+    border: solid 1px #fffefd;
+	background-image: url("../images/dash-icon.png");
+	background-repeat: no-repeat;
+	background-position: right;
+	background-size: 25px;
+	padding-right: 30px;
+
+}

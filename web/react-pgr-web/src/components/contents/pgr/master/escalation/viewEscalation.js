@@ -9,6 +9,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import DataTable from '../../../../common/Table';
 import Api from '../../../../../api/api';
+import styles from '../../../../../styles/material-ui';
 import {translate} from '../../../../common/common';
 
 import $ from 'jquery';
@@ -20,16 +21,6 @@ import pdfFonts from "pdfmake/build/vfs_fonts";
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 var flag = 0;
-const styles = {
-  headerStyle : {
-    color: 'rgb(90, 62, 27)',
-    fontSize : 19
-  },
-  marginStyle:{
-    margin: '15px'
-  }
-};
-
 
 const getNameById = function(object, id, property = "") {
   if (id == "" || id == null) {

@@ -5,7 +5,7 @@ package org.egov.tradelicense.domain.enums;
  */
 public enum ApplicationType {
 
-	NEW, 
-	
+	NEW,
+
 	RENEW
 }

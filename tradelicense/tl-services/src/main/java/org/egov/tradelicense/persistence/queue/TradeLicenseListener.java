@@ -26,7 +26,7 @@ public class TradeLicenseListener {
 
 	@Autowired
 	PropertiesManager propertiesManager;
-	
+
 	@Autowired
 	TradeLicenseService tradeLicenseService;
 

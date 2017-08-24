@@ -84,9 +84,10 @@ public class FinancialVoucherServiceListener {
 			final VoucherRequest request = objectMapperFactory.create().convertValue(mastersMap.get("voucher_create"),
 					VoucherRequest.class);
 
-			for (final VoucherContract voucherContract : request.getVouchers()) {
+			for (VoucherContract voucherContract : request.getVouchers()) {
 				final Voucher domain = mapper.map(voucherContract, Voucher.class);
-				voucherService.save(domain);
+				Voucher voucher = voucherService.save(domain);
+				voucherContract  = mapper.map(voucher, VoucherContract.class);
 			}
 
 			mastersMap.clear();

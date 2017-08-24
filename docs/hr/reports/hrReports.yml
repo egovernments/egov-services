@@ -1,0 +1,117 @@
+---
+ReportDefinitions:
+- reportName: employee Leave Report
+  summary: employee Leave Report
+  version: 1.0.0
+  sourceColumns:
+  - name: code
+    label: reports.hr.EmployeeCode-Name         
+    type: string
+    source: egeis_employee
+  - name: applicationno
+    label: reports.hr.ApplicationNo
+    type: String
+    source: egeis_leaveApplication
+  - name: leaveType
+    label: reports.hr.leaveType
+    type: String
+    source: egeis_leaveType
+  - name: dateRange
+    label: reports.hr.dateRange
+    type: String
+    source: hr
+  - name: noOfDays
+    label: reports.hr.noOfDays
+    type: String
+    source: hr
+  - name: status
+    label: reports.hr.status
+    type: String
+    source: hr
+  - name: comment
+    label: reports.hr.comments
+    type: String
+    source: hr
+  searchParams:
+  - name: departmentId
+    label: reports.hr.Department
+    type: singlevaluelist
+    pattern: http://egov-common-masters:8080/egov-common-masters/departments/_search?tenantId=$tenantId|$..id|$..name
+    source: hr
+    isMandatory: false
+    searchClause: and dept.id=$departmentId
+  - name: designation
+    label: reports.hr.Designation
+    type: singlevaluelist
+    pattern: http://hr-master:8080/hr-master/designations/_search?tenantId=$tenantId|$..id|$..name  
+    source: hr
+    isMandatory: false
+    searchClause: and desig.id=$designation
+  - name: employeeCode/Name
+    label: reports.hr.Employee_Code/Name 
+    type: String
+    source: hr 
+    isMandatory: false
+    searchClause: and emp.code=$employeeCode/Name
+  - name: employeeType
+    label: reports.hr.EmployeeType
+    type: singlevaluelist
+    pattern: http://hr-master:8080/hr-master/employeetypes/_search?tenantId=default|$..id|$..name
+    source: hr  
+    isMandatory: false
+    searchClause: and emptyp.id=$employeeType
+  - name: employeeStatus
+    label: reports.hr.employeeStatus
+    type: singlevaluelist
+    pattern: http://egov-common-masters:8080/egov-common-masters/departments/_search?tenantId=$tenantId|$..id|$..name
+    source: hr
+    isMandatory: false
+    searchClause: and dept.id=$departmentId
+  - name: leavetype
+    label: reports.hr.calenderYear
+    type: singlevaluelist
+    pattern: http://egov-common-masters:8080/hr-leave/leavetypes/_search?tenantId=$tenantId|$..id|$..name
+    source: hr
+    isMandatory: false
+    searchClause: and leavetype.id=$leavetype
+  - name: dateFrom
+    label: reports.hr.dateFrom
+    type: epoch
+    source: hr
+    isMandatory: false
+    searchClause: and leaveapp.todate >=$dateFrom
+  - name: dateTo
+    label: reports.hr.dateTo
+    type: epoch
+    source: hr
+    isMandatory: false
+    searchClause: and lvtapp.todate <=$dateTo
+  - name: leaveStatus
+    label: reports.hr.leaveStatus
+    type: epoch
+    pattern: http://egov-common-masters:8080/egov-common-masters/calendaryears/_search?tenantId=$tenantId|$..id|$..name
+    source: eg_calendarYear
+    isMandatory: false
+    searchClause: and hrstatus.id = $leaveStatus
+  query: sselect leaveapp.applicationnumber as applicationnumber,emp.code||'-'||usr.name  as name, leavetype.name as leavetype , hrstatus.code as status,
+    leaveapp.fromdate||' - '||leaveapp.todate as daterange, leaveapp.leavedays as noofdays, leaveapp.reason as comment
+    from egeis_employee emp,egeis_leaveapplication leaveapp, eg_user usr, egeis_leavetype leavetype, egeis_hrstatus hrstatus,
+    eg_department dept,egeis_assignment assign,egeis_designation desig,egeis_employeetype emptyp
+    where leaveapp.tenantid=$tenantid
+    and emp.id=leaveapp.employeeid 
+    and usr.id=emp.id 
+    and assign.designationid=desig.id
+    and leavetype.id = leaveapp.leavetypeid
+    and hrstatus.id=leaveapp.status 
+    and assign.employeeid=emp.id
+    and emp.employeetypeid=emptyp.id
+    and assign.departmentid=dept.id
+    and leaveapp.tenantid=assign.tenantid
+    and emp.tenantid=usr.tenantid
+    and assign.tenantid=desig.tenantid
+    and leavetype.tenantid = leaveapp.tenantid
+    and hrstatus.tenantid=leaveapp.tenantid 
+    and assign.tenantid=emp.tenantid
+    and emp.tenantid=emptyp.tenantid
+    and assign.tenantid=dept.tenantid
+    

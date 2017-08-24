@@ -24,6 +24,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 @RestController
 @RequestMapping(value = {"/seva"})
 public class ServiceRequestController {
@@ -84,6 +86,10 @@ public class ServiceRequestController {
                                               @RequestParam(value = "childLocationId", required = false) Long childLocationId,
                                               @RequestBody RequestInfoBody requestInfoBody) {
 
+        boolean searchAttribute = searchAttributes(receivingMode, locationId);
+
+        List<String> crnList = getCrnList(receivingMode, locationId);
+
         ServiceRequestSearchCriteria serviceRequestSearchCriteria = ServiceRequestSearchCriteria.builder()
             .positionId(positionId)
             .startDate(startDate)
@@ -105,6 +111,8 @@ public class ServiceRequestController {
             .fromIndex(fromIndex)
             .pageSize(pageSize)
             .isAnonymous(checkIsAnonymous(requestInfoBody))
+            .searchAttribute(searchAttribute)
+            .crnList(searchAttribute ? crnList : Collections.emptyList())
             .build();
         final List<ServiceRequest> submissions = serviceRequestService.findAll(serviceRequestSearchCriteria);
         return createResponse(submissions);
@@ -205,4 +213,11 @@ public class ServiceRequestController {
         return request != null && request.isAnonymous();
     }
 
+    private boolean searchAttributes(String receivingMode, Long locationId) {
+        return null != locationId || !isEmpty(receivingMode);
+    }
+
+    private List<String> getCrnList(String receivingMode, Long locationId) {
+        return serviceRequestService.getCrnByAttributes(receivingMode, locationId);
+    }
 }

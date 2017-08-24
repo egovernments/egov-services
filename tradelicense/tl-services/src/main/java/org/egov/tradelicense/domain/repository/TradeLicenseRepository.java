@@ -85,33 +85,32 @@ public class TradeLicenseRepository {
 		return uniqueQuery.toString();
 	}
 
-	/*public void validateUniqueAgreeMentNumber(TradeLicense tradeLicense) {
-
-		String sql = getUniqueTenantAgreementQuery(tradeLicense);
-		Integer count = null;
-		try {
-			MapSqlParameterSource parameters = new MapSqlParameterSource();
-			count = (Integer) namedParameterJdbcTemplate.queryForObject(sql, parameters, Integer.class);
-		} catch (Exception e) {
-			log.error("error while executing the query :" + sql + " , error message : " + e.getMessage());
-		}
-
-		if (count != 0) {
-			throw new InvalidInputException("agreementNumber number already exists");
-		}
-	}
-
-	private String getUniqueTenantAgreementQuery(TradeLicense tradeLicense) {
-
-		String tenantId = tradeLicense.getTenantId().toLowerCase();
-		String agreement = tradeLicense.getAgreementNo().toLowerCase();
-
-		StringBuffer uniqueQuery = new StringBuffer("select count(*) from egtl_license");
-		uniqueQuery.append(" where LOWER(agreementNo) = '" + agreement + "'");
-		uniqueQuery.append(" AND LOWER(tenantId) = '" + tenantId + "'");
-
-		return uniqueQuery.toString();
-	}*/
+	/*
+	 * public void validateUniqueAgreeMentNumber(TradeLicense tradeLicense) {
+	 * 
+	 * String sql = getUniqueTenantAgreementQuery(tradeLicense); Integer count =
+	 * null; try { MapSqlParameterSource parameters = new
+	 * MapSqlParameterSource(); count = (Integer)
+	 * namedParameterJdbcTemplate.queryForObject(sql, parameters,
+	 * Integer.class); } catch (Exception e) { log.error(
+	 * "error while executing the query :" + sql + " , error message : " +
+	 * e.getMessage()); }
+	 * 
+	 * if (count != 0) { throw new InvalidInputException(
+	 * "agreementNumber number already exists"); } }
+	 * 
+	 * private String getUniqueTenantAgreementQuery(TradeLicense tradeLicense) {
+	 * 
+	 * String tenantId = tradeLicense.getTenantId().toLowerCase(); String
+	 * agreement = tradeLicense.getAgreementNo().toLowerCase();
+	 * 
+	 * StringBuffer uniqueQuery = new StringBuffer(
+	 * "select count(*) from egtl_license"); uniqueQuery.append(
+	 * " where LOWER(agreementNo) = '" + agreement + "'"); uniqueQuery.append(
+	 * " AND LOWER(tenantId) = '" + tenantId + "'");
+	 * 
+	 * return uniqueQuery.toString(); }
+	 */
 
 	public Long getSupportDocumentNextSequence() {
 
@@ -146,7 +145,7 @@ public class TradeLicenseRepository {
 
 		if (tradeLicense.getFeeDetails() != null && tradeLicense.getFeeDetails().size() > 0) {
 			for (LicenseFeeDetail feeDetail : tradeLicense.getFeeDetails()) {
-				LicenseFeeDetailEntity LicenseFeeEntity = licenseFeeDetailJdbcRepository
+				LicenseFeeDetailEntity licenseFeeEntity = licenseFeeDetailJdbcRepository
 						.create(new LicenseFeeDetailEntity().toEntity(feeDetail));
 			}
 		}

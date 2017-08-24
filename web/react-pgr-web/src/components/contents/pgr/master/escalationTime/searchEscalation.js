@@ -9,6 +9,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import DataTable from '../../../../common/Table';
 import Api from '../../../../../api/api';
+import styles from '../../../../../styles/material-ui';
 import {translate} from '../../../../common/common';
 
 import $ from 'jquery';
@@ -20,14 +21,6 @@ import pdfFonts from "pdfmake/build/vfs_fonts";
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 var flag = 0;
-const styles = {
-  headerStyle : {
-    fontSize : 19
-  },
-  marginStyle:{
-    margin: '15px'
-  }
-};
 
 const getNameById = function(object, id, property = "") {
   if (id == "" || id == null) {
@@ -120,10 +113,10 @@ class SearchEscalation extends Component {
 
       let{setLoadingStatus} = this.props;
 
-      Api.commonApiPost("/pgr/services/v1/_search", {type: "all"}).then(function(response) {
+      Api.commonApiPost("/pgr-master/service/v1/_search", {keywords: "complaint"}).then(function(response) {
         setLoadingStatus('hide');
           self.setState({
-            grievanceTypeSource: response.complaintTypes
+            grievanceTypeSource: response.Service
           })
       }, function(err) {
         self.setState({
@@ -274,6 +267,7 @@ class SearchEscalation extends Component {
                       <Row>
                           <Col xs={12} sm={6} md={6} lg={6}>
                                 <AutoComplete
+                                  floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                                   floatingLabelText={translate("pgr.lbl.grievance.type")}
                                   fullWidth={true}
                                   filter={function filter(searchText, key) {
@@ -300,6 +294,7 @@ class SearchEscalation extends Component {
                           </Col>
                           <Col xs={12} sm={6} md={6} lg={6}>
                                 <AutoComplete
+                                  floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                                   floatingLabelText={translate("pgr.lbl.designation")}
                                   fullWidth={true}
                                   filter={function filter(searchText, key) {

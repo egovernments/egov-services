@@ -69,8 +69,9 @@ public class CitizenPersistService {
 		
 		serviceReqRequest.getServiceReq().setServiceRequestId(id);
 		log.info("serviceReqRequest:"+serviceReqRequest);
-		
+		ObjectMapper mapper = new ObjectMapper();
 		try{
+			//String request = mapper.writeValueAsString(serviceReqRequest);
 			kafkaTemplate.send(createServiceTopic, serviceReqRequest);
 		} catch (Exception ex){
 			log.error("failed to send kafka"+ex);
@@ -83,6 +84,7 @@ public class CitizenPersistService {
 		String req = "{\"RequestInfo\":{\"apiId\":\"org.egov.ptis\",\"ver\":\"1.0\",\"ts\":\"20934234234234\",\"action\":\"asd\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\":\"6ffa7248-7c22-4cd1-9943-af540425d321\"},\"idRequests\":[{\"idName\":\"CS.ServiceRequest\",\"tenantId\":\"default\",\"format\":\"SRN-[cy:MM]/[fy:yyyy-yy]-[d{4}]\"}]}";
 		String url = idGenHost+idGenGetIdUrl;
 		log.info("url:"+url);
+		log.info("req: "+req);
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 

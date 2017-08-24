@@ -12,21 +12,10 @@ import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../../api/api';
+import styles from '../../../../../styles/material-ui';
 import {translate} from '../../../../common/common';
 
 var flag = 0;
-const styles = {
-  headerStyle : {
-    fontSize : 19
-  },
-  marginStyle:{
-    margin: '15px'
-  },
-  setTopMargin: {
-    marginTop: 34
-  }
-};
-
 var _this;
 
 var urlChanged=false;
@@ -159,6 +148,7 @@ class receivingModeCreate extends Component {
                     <Col xs={12} sm={4} md={3} lg={3}>
                      <TextField
                         fullWidth={true}
+                        floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                         floatingLabelText={translate("core.lbl.add.name")+"*"}
                         id="name"
                         errorText={fieldErrors.name ? fieldErrors.name : ""}
@@ -169,6 +159,7 @@ class receivingModeCreate extends Component {
                     <Col xs={12} sm={4} md={3} lg={3}>
                      <TextField
                         fullWidth={true}
+                        floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                         floatingLabelText={translate("core.lbl.code")+"*"}
                         id="code"
                         errorText={fieldErrors.code ? fieldErrors.code : ""}
@@ -180,8 +171,10 @@ class receivingModeCreate extends Component {
                     <Col xs={12} sm={4} md={3} lg={3}>
                      <TextField
                         fullWidth={true}
+                        floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                         floatingLabelText={translate("core.lbl.description")}
                         id="description"
+                        multiLine={true}
                         errorText={fieldErrors.description ? fieldErrors.description : ""}
                         value={receivingmodeSet.description ? receivingmodeSet.description : ""}
                         maxLength="250"
@@ -199,7 +192,9 @@ class receivingModeCreate extends Component {
                                }
                              };
                              handleChange(e, "channels", true, "")}}
+                         floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                           floatingLabelText={translate('pgr.lbl.channel')+" *"} >
+                              <MenuItem value="" primaryText="Select" />
                               <MenuItem
                                 value={"WEB"}
                                 primaryText="WEB"
@@ -216,7 +211,7 @@ class receivingModeCreate extends Component {
                    </Col>
                     <Col xs={12} sm={4} md={3} lg={3}>
                     <Checkbox label={translate("pgr.lbl.active")} id="active" style={styles.setTopMargin}
-                      checked ={receivingmodeSet.active ? true : false}
+                      checked ={receivingmodeSet.active !== undefined ? receivingmodeSet.active : true}
                       onCheck={(e,isInputChecked) => {
                        var e={
                             "target":{

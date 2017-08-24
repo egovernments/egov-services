@@ -23,7 +23,7 @@ public class BoundaryResponse {
 
 	@JsonProperty("ResponseInfo")
 	private ResponseInfo responseInfo = null;
-	
+
 	@JsonProperty("Boundary")
 	private List<Boundary> boundarys = new ArrayList<Boundary>();
 

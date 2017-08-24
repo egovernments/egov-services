@@ -301,6 +301,8 @@ public class ServiceRequestControllerTest {
             .pageSize(20)
             .fromIndex(2)
             .isAnonymous(true)
+            .searchAttribute(true)
+            .crnList(Collections.emptyList())
             .build();
 
         List<ServiceRequest> complaints = new ArrayList<>(Collections.singletonList(complaint));
@@ -355,6 +357,8 @@ public class ServiceRequestControllerTest {
             .pageSize(20)
             .fromIndex(2)
             .isAnonymous(false)
+            .searchAttribute(true)
+            .crnList(Collections.emptyList())
             .build();
 
         List<ServiceRequest> complaints = new ArrayList<>(Collections.singletonList(complaint));

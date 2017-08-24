@@ -176,7 +176,7 @@ public class InstrumentService {
 //						cal1.setTime(instrument.getTransactionDate());
 //						Assert.isTrue(cal1.after(cal), "DD Transaction should be before 6 months of current date or a future date");
 						break;
-					case "bank challan":
+					case "bankchallan":
 						Assert.notNull(instrument.getTransactionNumber(), "Bank Challan Transaction Number must not be null");
 //						Assert.notNull(instrument.getPayee(), "Bank Challan Payee Details must not be null");
 						Assert.notNull(instrument.getBank(), "Bank Challan must contain Bank Details");
@@ -231,8 +231,8 @@ public class InstrumentService {
 					}
 					instrument.setInstrumentType(response.getPagedData().get(0));
 				}
-				if (instrument.getBank() != null && instrument.getBank().getCode() != null) {
-					BankContract bank = bankContractRepository.findByCode(instrument.getBank());
+				if (instrument.getBank() != null && instrument.getBank().getId() != null) {
+					BankContract bank = bankContractRepository.findById(instrument.getBank());
 					if (bank == null) {
 						throw new InvalidDataException("bank", "bank.invalid", " Invalid bank");
 					}

@@ -91,7 +91,7 @@ public class CustomControllerAdvice {
 			if (errors.getFieldErrorCount() > 0) {
 				error.setMessage("tl.error.missingfields");
 				error.setCode(400);
-				 error.setDescription("Missing fields");
+				error.setDescription("Missing fields");
 			}
 		}
 		if (errors.hasFieldErrors()) {
@@ -122,7 +122,7 @@ public class CustomControllerAdvice {
 		Error error = new Error();
 		error.setCode(Integer.valueOf(HttpStatus.BAD_REQUEST.toString()));
 		error.setMessage("Inavlid.Input");
-		 error.setDescription(ex.getCustomMsg());
+		error.setDescription(ex.getCustomMsg());
 		errRes.setError(error);
 		return errRes;
 	}

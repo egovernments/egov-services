@@ -12,6 +12,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import DataTable from '../../../../common/Table';
 import Api from '../../../../../api/api';
+import styles from '../../../../../styles/material-ui';
 import {translate} from '../../../../common/common';
 
 import $ from 'jquery';
@@ -23,15 +24,6 @@ import pdfFonts from "pdfmake/build/vfs_fonts";
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 var flag = 0;
-const styles = {
-  headerStyle : {
-    color: 'rgb(90, 62, 27)',
-    fontSize : 19
-  },
-  marginStyle:{
-    margin: '15px'
-  }
-};
 
 const getNameById = function(object, id, property = "") {
 
@@ -448,6 +440,7 @@ componentWillUpdate() {
                     <Col xs={12} sm={4} md={3} lg={3}>
                         <TextField
                             fullWidth={true}
+                            floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                             floatingLabelText={translate('pgr.lbl.fromposition')+" *"}
                             value={defineEscalation.fromPosition ? getNameById(current.state.positionSource, defineEscalation.fromPosition) : ""}
                             id="name"
@@ -456,6 +449,7 @@ componentWillUpdate() {
                     </Col>
                     <Col xs={12} sm={4} md={3} lg={3}>
                         <SelectField
+                           floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                            floatingLabelText={translate('pgr.lbl.grievance.type')+ " *"}
                            fullWidth={true}
                            value={defineEscalation.serviceCode ? defineEscalation.serviceCode : ""}
@@ -469,6 +463,7 @@ componentWillUpdate() {
                              handleChange(e, "serviceCode", true, "");
                             }}
                           >
+                          <MenuItem value="" primaryText="Select" />
 						  {current.state.grievanceType && current.state.grievanceType.map((item, index)=>{
 							  return(
 								<MenuItem value={item.serviceCode} key={index} primaryText={item.serviceName} />
@@ -478,6 +473,7 @@ componentWillUpdate() {
                     </Col>
                     <Col xs={12} sm={4} md={3} lg={3}>
                         <SelectField
+                           floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                            floatingLabelText={translate('core.lbl.department') + ' *'}
                            fullWidth={true}
                            value={defineEscalation.department ? defineEscalation.department : ""}
@@ -491,6 +487,7 @@ componentWillUpdate() {
                              current.handleDepartment(e);
                             }}
                          >
+                         <MenuItem value="" primaryText="Select" />
 							 {current.state.departments && current.state.departments.map((item, index)=>{
 								 return(
 									<MenuItem value={item.id} key={index} primaryText={item.name} />
@@ -501,6 +498,7 @@ componentWillUpdate() {
                     </Col>
                     <Col xs={12} sm={4} md={3} lg={3}>
                         <SelectField
+                           floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                            floatingLabelText={translate('pgr.lbl.designation')+" *"}
                            fullWidth={true}
                            value={defineEscalation.designation ? defineEscalation.designation : ""}
@@ -514,6 +512,7 @@ componentWillUpdate() {
                              current.handleDesignation(e);
                             }}
                          >
+                         <MenuItem value="" primaryText="Select" />
                            {current.state.designations && current.state.designations.map((item, index)=>{
 								 return(
 									<MenuItem value={item.id} key={index} primaryText={item.name} />
@@ -523,8 +522,10 @@ componentWillUpdate() {
                     </Col>
                     <Col xs={12} sm={4} md={3} lg={3}>
                         <SelectField
+                           floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                            floatingLabelText={translate('core.position.to')+" *"}
                            fullWidth={true}
+                           maxHeight={200}
                            value={defineEscalation.toPosition ?  defineEscalation.toPosition  : ""}
                            onChange= {(e, index ,value) => {
                              var e = {
@@ -535,6 +536,7 @@ componentWillUpdate() {
                              handleChange(e, "toPosition", true, "");
                             }}
                          >
+                         <MenuItem value="" primaryText="Select" />
                             {current.state.toPosition && current.state.toPosition.map((item, index)=>{
 								 return(
 									<MenuItem value={item.id} key={index} primaryText={item.name ?  item.name: getNameById(current.state.toPosition, defineEscalation.toPosition)} />
@@ -584,6 +586,7 @@ componentWillUpdate() {
                       <Row>
                           <Col xs={12} sm={4} md={3} lg={3}>
                                 <AutoComplete
+                                  floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                                   floatingLabelText={translate('pgr.lbl.position')+" *"}
                                   fullWidth={true}
                                   listStyle={{ maxHeight: 200, overflow: 'auto' }}

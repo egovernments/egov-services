@@ -74,18 +74,28 @@ public class VoucherJdbcRepository extends JdbcRepository {
 			params.append("id =:id");
 			paramValues.put("id", voucherSearchEntity.getId());
 		}
+		
+		if (voucherSearchEntity.getIds() != null && !voucherSearchEntity.getIds().isEmpty()) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("ids in(:ids)");
+			paramValues.put("ids", voucherSearchEntity.getIds());
+		}
+		
 		if (voucherSearchEntity.getType() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
 			params.append("type =:type");
 			paramValues.put("type", voucherSearchEntity.getType());
 		}
+		
 		if (voucherSearchEntity.getName() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
 			params.append("name =:name");
 			paramValues.put("name", voucherSearchEntity.getName());
 		}
+		
 		if (voucherSearchEntity.getDescription() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
@@ -98,24 +108,28 @@ public class VoucherJdbcRepository extends JdbcRepository {
 			params.append("voucherNumber =:voucherNumber");
 			paramValues.put("voucherNumber", voucherSearchEntity.getVoucherNumber());
 		}
+		
 		if (voucherSearchEntity.getVoucherDate() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
 			params.append("voucherDate =:voucherDate");
 			paramValues.put("voucherDate", voucherSearchEntity.getVoucherDate());
 		}
+		
 		if (voucherSearchEntity.getOriginalVoucherNumber() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
 			params.append("originalVoucherNumber =:originalVoucherNumber");
 			paramValues.put("originalVoucherNumber", voucherSearchEntity.getOriginalVoucherNumber());
 		}
+		
 		if (voucherSearchEntity.getRefVoucherNumber() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
 			params.append("refVoucherNumber =:refVoucherNumber");
 			paramValues.put("refVoucherNumber", voucherSearchEntity.getRefVoucherNumber());
 		}
+		
 		if (voucherSearchEntity.getModuleName() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
@@ -136,6 +150,7 @@ public class VoucherJdbcRepository extends JdbcRepository {
 			params.append("fundId =:fundId");
 			paramValues.put("fundId", voucherSearchEntity.getFundId());
 		}
+		
 		if (voucherSearchEntity.getStatusId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
@@ -149,6 +164,7 @@ public class VoucherJdbcRepository extends JdbcRepository {
 			params.append("functionId =:functionId");
 			paramValues.put("functionId", voucherSearchEntity.getFunctionId());
 		}
+		
 		if (voucherSearchEntity.getFundsourceId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
@@ -162,6 +178,7 @@ public class VoucherJdbcRepository extends JdbcRepository {
 			params.append("schemeId =:schemeId");
 			paramValues.put("schemeId", voucherSearchEntity.getSchemeId());
 		}
+		
 		if (voucherSearchEntity.getSubSchemeId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
@@ -175,6 +192,7 @@ public class VoucherJdbcRepository extends JdbcRepository {
 			params.append("functionaryId =:functionaryId");
 			paramValues.put("functionaryId", voucherSearchEntity.getFunctionaryId());
 		}
+		
 		if (voucherSearchEntity.getDivisionId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
@@ -188,6 +206,7 @@ public class VoucherJdbcRepository extends JdbcRepository {
 			params.append("departmentId =:departmentId");
 			paramValues.put("departmentId", voucherSearchEntity.getDepartmentId());
 		}
+		
 		if (voucherSearchEntity.getSourcePath() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
@@ -208,28 +227,28 @@ public class VoucherJdbcRepository extends JdbcRepository {
 			params.append("budgetAppropriationNo =:budgetAppropriationNo");
 			paramValues.put("budgetAppropriationNo", voucherSearchEntity.getBudgetAppropriationNo());
 		}
-		if (voucherSearchEntity.getIds() != null) {
+		
+		if (voucherSearchEntity.getGlcode() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("ids =:ids");
-			paramValues.put("ids", voucherSearchEntity.getIds());
+			params.append("glcode =:glcode");
+			paramValues.put("glcode", voucherSearchEntity.getGlcode());
 		}
-
-		if (voucherSearchEntity.getId() != null) {
-			if (params.length() > 0) {
+		
+		if (voucherSearchEntity.getDebitAmount() != null) {
+			if (params.length() > 0)
 				params.append(" and ");
-			}
-			params.append("id =:id");
-			paramValues.put("id", voucherSearchEntity.getId());
+			params.append("debitAmount =:debitAmount");
+			paramValues.put("debitAmount", voucherSearchEntity.getDebitAmount());
 		}
-		if (voucherSearchEntity.getName() != null) {
-			if (params.length() > 0) {
+		
+		if (voucherSearchEntity.getCreditAmount() != null) {
+			if (params.length() > 0)
 				params.append(" and ");
-			}
-			params.append("name =:name");
-			paramValues.put("name", voucherSearchEntity.getName());
+			params.append("creditAmount =:creditAmount");
+			paramValues.put("creditAmount", voucherSearchEntity.getCreditAmount());
 		}
-
+		
 		Pagination<Voucher> page = new Pagination<>();
 		if (voucherSearchEntity.getOffset() != null) {
 			page.setOffset(voucherSearchEntity.getOffset());

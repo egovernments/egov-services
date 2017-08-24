@@ -123,7 +123,7 @@ public class DepreciationRepository {
 	public List<CalculationAssetDetails> getCalculationAssetDetails(DepreciationCriteria depreciationCriteria) {
 
 		String sql = depreciationQueryBuilder.getCalculationAssetDetailsQuery(depreciationCriteria);
-		log.info("the CalculationAssetDetails query-- "+sql);
+		log.debug("the CalculationAssetDetails query-- "+sql);
 		return jdbcTemplate.query(sql, calculationAssetDetailsRowMapper);
 	}
 

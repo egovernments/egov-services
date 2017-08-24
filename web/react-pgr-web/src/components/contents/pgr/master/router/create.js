@@ -11,25 +11,13 @@ import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../../api/api';
+import styles from '../../../../../styles/material-ui';
 import {translate} from '../../../../common/common';
 
 var _this;
 let searchTextCom = "",
     searchTextBoun = "",
     searchTextPos = "";
-
-const styles = {
-  headerStyle : {
-    fontSize : 19
-  },
-  addBorderBottom:{
-    borderBottom: '1px solid #eee',
-    padding: '10px'
-  },
-  marginStyle:{
-    margin: '15px'
-  }
-};
 
 const getNameById = function(object, id, property = "") {
   if (id == "" || id == null) {
@@ -391,7 +379,7 @@ class createRouter extends Component {
                  {(match.params && match.params.type == "view" ? translate("pgr.lbl.view.router") : match.params && match.params.type == "edit" ? translate("pgr.lbl.edit.router") : translate("pgr.lbl.create.router"))}
                < /div>}/>
                <CardText style={{padding:'8px 16px 0'}}>
-                 <Row style={styles.addBorderBottom}>
+                 <Row>
                    <Col xs={6} md={3}>
                     {translate("pgr.lbl.grievance.type")}
                    </Col>
@@ -405,7 +393,7 @@ class createRouter extends Component {
                     {this.getBoundaryTypeName(routerCreateSet.boundaryType)}
                    </Col>
                  </Row>
-                 <Row style={styles.addBorderBottom}>
+                 <Row>
                    <Col xs={6} md={3}>
                     {translate("pgr.lbl.boundary")}
                    </Col>
@@ -436,6 +424,7 @@ class createRouter extends Component {
                      <Col xs={12} sm={6} md={6} lg={6}>
                       <AutoComplete
                           fullWidth={true}
+                          floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                           floatingLabelText={translate("pgr.lbl.grievance.type") + " *"}
                           filter={AutoComplete.caseInsensitiveFilter}
                           dataSource={this.state.complaintSource}
@@ -464,6 +453,7 @@ class createRouter extends Component {
                      <Col xs={12} sm={6} md={6} lg={6}>
                       <SelectField
                         fullWidth={true}
+                        floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                         floatingLabelText={translate("pgr.lbl.boundarytype") + " *"}
                         errorText={fieldErrors.boundaryType || ""}
                         value={(routerCreateSet.boundaryType + "") || ""}
@@ -472,6 +462,7 @@ class createRouter extends Component {
                               loadBoundaries(val);
                               searchTextBoun = "";
                               handleChange(e, "boundaryType", true, "")}}>
+                              <MenuItem value="" primaryText="Select" />
                               {boundaryTypeList.map((item, index) => (
                                         <MenuItem value={item.id} key={index} primaryText={item.name} />
                                     ))}
@@ -480,6 +471,7 @@ class createRouter extends Component {
                      <Col xs={12} sm={6} md={6} lg={6}>
                       <AutoComplete
                           hintText=""
+                          floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                           floatingLabelText={translate("pgr.lbl.boundary") + " *"}
                           fullWidth={true}
                           filter={AutoComplete.caseInsensitiveFilter}
@@ -509,6 +501,7 @@ class createRouter extends Component {
                      <Col xs={12} sm={6} md={6} lg={6}>
                       <AutoComplete
                           fullWidth={true}
+                          floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                           floatingLabelText={translate("pgr.lbl.position") + " *"}
                           filter={AutoComplete.caseInsensitiveFilter}
                           dataSource={this.state.positionSource}

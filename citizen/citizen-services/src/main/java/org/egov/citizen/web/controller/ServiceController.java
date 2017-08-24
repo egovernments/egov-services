@@ -93,8 +93,17 @@ public class ServiceController {
 		ServiceReqResponse serviceReqResponse = citizenPersistService.create(serviceReqJson);
 		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);
 	}
-
+	
 	@PostMapping(value = "/requests/_update")
+	public ResponseEntity<?> updateService(HttpEntity<String> httpEntity) {
+
+		String serviceReqJson = httpEntity.getBody();
+		log.info("update serviceReqJson:"+serviceReqJson);
+		ServiceReqResponse serviceReqResponse = citizenPersistService.update(serviceReqJson);
+		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);
+	}
+
+/*	@PostMapping(value = "/requests/_update")
 	public ResponseEntity<?> updateService(HttpEntity<String> httpEntity) {
 
 		String json = httpEntity.getBody();
@@ -176,7 +185,7 @@ public class ServiceController {
 		serviceReqResponse.setServiceReq(servcieReq);
 		serviceReqResponse.setResponseInfo(responseInfoFactory
 				.createResponseInfoFromRequestInfo(citizenService.getRequestInfo(config).getRequestInfo(), true));
-		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);	}
+		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);	}*/
 
 	@PostMapping(value = "/requests/receipt/_create")
 	public ResponseEntity<?> createReceipt(@RequestBody @Valid ReceiptRequest receiptReq, BindingResult errors) {

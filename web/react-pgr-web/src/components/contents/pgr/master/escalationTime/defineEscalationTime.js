@@ -12,6 +12,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import DataTable from '../../../../common/Table';
 import Api from '../../../../../api/api';
+import styles from '../../../../../styles/material-ui';
 import {translate} from '../../../../common/common';
 
 const $ = require('jquery');
@@ -26,14 +27,6 @@ require('datatables.net-buttons/js/buttons.flash.js'); // Flash file export
 require('datatables.net-buttons/js/buttons.print.js'); // Print view button
 
 var flag = 0;
-const styles = {
-  headerStyle : {
-    fontSize : 19
-  },
-  marginStyle:{
-    margin: '15px'
-  }
-};
 
 const getNameById = function(object, id, property = "") {
   if (id == "" || id == null) {
@@ -358,6 +351,7 @@ class DefineEscalationTime extends Component {
                   <Row>
                     <Col xs={12} sm={4} md={3} lg={3}>
                         <SelectField
+                           floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                            floatingLabelText={translate("pgr.lbl.designation")}
                            fullWidth={true}
                            value={defineEscalationTime.designation ? defineEscalationTime.designation : ""}
@@ -370,6 +364,7 @@ class DefineEscalationTime extends Component {
                              handleChange(e, "designation", true, "");
                             }}
                           >
+                          <MenuItem value="" primaryText="Select" />
                               {current.state.designation && current.state.designation.map((e,i)=>{
                                   return(<MenuItem key={i} value={e.id} primaryText={e.name} />)
                               })}
@@ -378,6 +373,7 @@ class DefineEscalationTime extends Component {
                     <Col xs={12} sm={4} md={3} lg={3}>
                         <TextField
                             fullWidth={true}
+                            floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                             floatingLabelText={translate("pgr.noof.hours")}
                             value={defineEscalationTime.noOfHours ? defineEscalationTime.noOfHours : ""}
                             errorText={fieldErrors.noOfHours ? fieldErrors.noOfHours : ""}
@@ -426,6 +422,7 @@ class DefineEscalationTime extends Component {
                       <Row>
                           <Col xs={12} sm={6} md={6} lg={6}>
                                 <AutoComplete
+                                  floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                                   floatingLabelText={translate("pgr.lbl.grievance.type")}
                                   fullWidth={true}
                                   filter={function filter(searchText, key) {

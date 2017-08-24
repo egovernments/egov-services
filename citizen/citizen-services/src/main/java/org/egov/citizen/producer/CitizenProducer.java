@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @Service
 public class CitizenProducer {
 
@@ -21,7 +23,9 @@ public class CitizenProducer {
 
     public void producer(String topicName, String key, Object value) {
     	logger.info("Value being pushed to the queue: "+value.toString());
-    		//kafkaTemplate.send(topicName, key, value);
-    		template.send(topicName, key, value);
+    	ObjectMapper objectMapper = new ObjectMapper();
+    	String sendingValue = objectMapper.convertValue(value, String.class);
+    	//kafkaTemplate.send(topicName, key, value);
+    		template.send(topicName, key, sendingValue);
     }
 }

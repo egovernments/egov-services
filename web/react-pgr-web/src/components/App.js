@@ -145,7 +145,13 @@ class App extends Component {
       }
       else {
         var hash = window.location.hash.split("/");
-        Api.commonApiPost("tenant/v1/tenant/_search", {code:hash[1]?hash[1]:"default", tenantId: hash[1]?hash[1]:"default"}, {}, true).then(function(res){
+		var urlCode = hash[1];
+		if(hash[1].match('/?')){
+			var codeArray = hash[1].split('?');
+			urlCode = codeArray[0];
+		
+		}
+        Api.commonApiPost("tenant/v1/tenant/_search", {code:hash[1]?urlCode:"default", tenantId: hash[1]?urlCode:"default"}, {}, true).then(function(res){
           // console.log(res);
           setTenantInfo(res.tenant);
         }, function(err){

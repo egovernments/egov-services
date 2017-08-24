@@ -22,16 +22,19 @@ public class ServiceRequestRepository {
     private SubmissionRepository submissionRepository;
     private ServiceRequestESRepository serviceRequestESRepository;
     private ServiceRequestTypeRepository serviceRequestTypeRepository;
+    private SubmissionAttributeRepository submissionAttributeRepository;
 
     @Autowired
     public ServiceRequestRepository(ServiceRequestMessageQueueRepository serviceRequestMessageQueueRepository,
                                     SubmissionRepository submissionRepository, ServiceRequestESRepository
                                         serviceRequestESRepository,
-                                    ServiceRequestTypeRepository serviceRequestTypeRepository) {
+                                    ServiceRequestTypeRepository serviceRequestTypeRepository,
+                                    SubmissionAttributeRepository submissionAttributeRepository) {
         this.serviceRequestMessageQueueRepository = serviceRequestMessageQueueRepository;
         this.submissionRepository = submissionRepository;
         this.serviceRequestESRepository = serviceRequestESRepository;
         this.serviceRequestTypeRepository = serviceRequestTypeRepository;
+        this.submissionAttributeRepository = submissionAttributeRepository;
     }
 
     public void save(SevaRequest sevaRequest) {
@@ -66,6 +69,10 @@ public class ServiceRequestRepository {
 
     public List<ServiceRequest> findFromDb(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
         return submissionRepository.find(serviceRequestSearchCriteria);
+    }
+
+    public List<String> getCrnBySubmissionAttributes(ServiceRequestSearchCriteria searchCriteria) {
+        return this.submissionAttributeRepository.getCrnBySubmissionAttributes(searchCriteria);
     }
 
     public String getServiceName(String serviceCode, String tenantId) {

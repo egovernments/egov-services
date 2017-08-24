@@ -216,11 +216,13 @@ class AddDemand extends Component {
 	}
 
     const getValue = function(jPath) {
+
         if(cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0]) {
-          return cThis.state.searchData.Connection[0][(cThis.state.searchData.Connection[0].withProperty ? "property" : "connectionOwner")][jPath];
+
+          return (cThis.state.searchData.Connection[0][(cThis.state.searchData.Connection[0].withProperty ? "property" : "connectionOwner")][jPath]);
+
         }
     }
-
     return (<div><Card className="uiCard">
 				<CardTitle style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate("wc.create.demand.applicantParticular")}</div>} subtitle={<div style={{color:"#354f57", fontSize:15,margin:'8px 0'}}>{translate("wc.create.demand.basicDetails")}</div>} />
         <br/>
@@ -277,7 +279,7 @@ class AddDemand extends Component {
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.connectionDetails.connectionType")}</span></label><br/>
-            <label>{getValue("connectionType")}</label></span>
+            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].connectionStatus}</label></span>
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.connectionDetails.usageType")}</span></label><br/>

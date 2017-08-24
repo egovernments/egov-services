@@ -33,12 +33,13 @@ public class ServiceRequestRepositoryTest {
 
     private ServiceRequestTypeRepository serviceRequestTypeRepository;
 
+    private SubmissionAttributeRepository submissionAttributeRepository;
 
     @Before
     public void setUp() throws Exception {
         complaintRepository =
             new ServiceRequestRepository(serviceRequestMessageQueueRepository, submissionRepository,
-                serviceRequestESRepository, serviceRequestTypeRepository);
+                serviceRequestESRepository, serviceRequestTypeRepository, submissionAttributeRepository);
     }
 
     @Test

@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import org.egov.citizen.model.ServiceReqRequest;
 import org.egov.citizen.model.ServiceReqResponse;
-import org.egov.citizen.model.ServiceResponse;
 import org.egov.citizen.web.contract.factory.ResponseInfoFactory;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +32,9 @@ public class CitizenPersistService {
 	
 	@Value("${kafka.topics.save.service}")
 	private String createServiceTopic;
+	
+	@Value("${kafka.topics.update.service}")
+	private String updateServiceTopic;
 	
 	@Value("${egov.services.Id_Gen_Service.hostname}")
 	private String idGenHost;
@@ -69,8 +71,8 @@ public class CitizenPersistService {
 		log.info("serviceReqRequest:"+serviceReqRequest);
 		ObjectMapper mapper = new ObjectMapper();
 		try{
-			String request = mapper.writeValueAsString(serviceReqRequest);
-			kafkaTemplate.send(createServiceTopic, request);
+			//String request = mapper.writeValueAsString(serviceReqRequest);
+			kafkaTemplate.send(createServiceTopic, serviceReqRequest);
 		} catch (Exception ex){
 			log.error("failed to send kafka"+ex);
 			ex.printStackTrace();
@@ -100,5 +102,34 @@ public class CitizenPersistService {
 				responseInfoFactory.createResponseInfoFromRequestInfo(serviceReqRequest.getRequestInfo(), true));
 		serviceRes.setServiceReq(serviceReqRequest.getServiceReq());
 		return serviceRes;
+	}
+	
+    public ServiceReqResponse update(String serviceReqJson) {
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+		ServiceReqRequest serviceReqRequest = null;
+		try {
+			serviceReqRequest = objectMapper.readValue(serviceReqJson, ServiceReqRequest.class);
+		} catch (JsonParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+		log.info("update serviceReqRequest:"+serviceReqRequest);
+		
+		try{
+			kafkaTemplate.send(updateServiceTopic, serviceReqRequest);
+		} catch (Exception ex){
+			log.error("failed to send kafka"+ex);
+			ex.printStackTrace();
+		}
+		return getResponse(serviceReqRequest);
 	}
 }

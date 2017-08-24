@@ -10,6 +10,7 @@ import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
+import styles from '../../../../../styles/material-ui';
 import Api from '../../../../../api/api';
 import DataTable from '../../../../common/Table';
 import {translate} from '../../../../common/common';
@@ -56,15 +57,6 @@ const getNameByBoundary = function(object, id) {
             }
         }
 }
-
-const styles = {
-  headerStyle : {
-    fontSize : 19
-  },
-  marginStyle:{
-    margin: '15px'
-  }
-};
 
 var flag = 0;
 class searchRouter extends Component {
@@ -118,7 +110,11 @@ class searchRouter extends Component {
     var t = $('#searchTable').DataTable({
       dom:'<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
       buttons: ['excel', 'pdf'],
-      bDestroy: true
+      bDestroy: true,
+      order:[],
+      "columnDefs": [
+        { "orderable": false, "targets": 0  }
+      ]
     });
 
     t.on( 'order.dt search.dt', function () {
@@ -278,6 +274,7 @@ class searchRouter extends Component {
                    <Col xs={12} sm={6} md={6} lg={6}>
                     <AutoComplete
                         hintText=""
+                        floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                         floatingLabelText={translate("pgr.lbl.grievance.type")}
                         filter={AutoComplete.caseInsensitiveFilter}
                         fullWidth={true}
@@ -303,7 +300,9 @@ class searchRouter extends Component {
                         />
                    </Col>
                    <Col xs={12} sm={6} md={6} lg={6}>
-                    <SelectField maxHeight={200} fullWidth={true} floatingLabelText={translate("pgr.lbl.boundarytype")} value={routerSearchSet.boundaryType} onChange={(e, i, val) => {
+                    <SelectField maxHeight={200} fullWidth={true}
+                      floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
+                      floatingLabelText={translate("pgr.lbl.boundarytype")} value={routerSearchSet.boundaryType} onChange={(e, i, val) => {
                             var e = {target: {value: val}};
                             loadBoundaries(val);
                             handleChange(e, "boundaryType", true, "")}}>
@@ -315,6 +314,7 @@ class searchRouter extends Component {
                    <Col xs={12} sm={6} md={6} lg={6}>
                     <AutoComplete
                         hintText=""
+                        floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                         floatingLabelText={translate("pgr.lbl.boundary")}
                         filter={AutoComplete.caseInsensitiveFilter}
                         fullWidth={true}

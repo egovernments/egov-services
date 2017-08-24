@@ -486,9 +486,21 @@ public class PropertyRepository {
     public void saveBoundary(Property property, Long propertyId) {
 
         PropertyLocation boundary = property.getBoundary();
+        Long revenueBoundaryId = null;
+        Long locationBoundaryId = null;
+        Long adminBoundaryId = null;
+        if (boundary.getRevenueBoundary() != null) {
+            revenueBoundaryId = boundary.getRevenueBoundary().getId();
+        }
+        if (boundary.getLocationBoundary() != null) {
+            locationBoundaryId = boundary.getLocationBoundary().getId();
+        }
+        if (boundary.getAdminBoundary() != null) {
+            adminBoundaryId = boundary.getAdminBoundary().getId();
+        }
 
-        Object[] boundaryArgs = { boundary.getRevenueBoundary().getId(), boundary.getLocationBoundary().getId(),
-                boundary.getAdminBoundary().getId(), boundary.getNorthBoundedBy(), boundary.getEastBoundedBy(),
+        Object[] boundaryArgs = { revenueBoundaryId, locationBoundaryId,
+                adminBoundaryId, boundary.getNorthBoundedBy(), boundary.getEastBoundedBy(),
                 boundary.getWestBoundedBy(), boundary.getSouthBoundedBy(), boundary.getAuditDetails().getCreatedBy(),
                 boundary.getAuditDetails().getLastModifiedBy(), boundary.getAuditDetails().getCreatedTime(),
                 boundary.getAuditDetails().getLastModifiedTime(), propertyId };
@@ -537,14 +549,13 @@ public class PropertyRepository {
                     revenueZone, revenueWard, locality, ownerName, demandFrom, demandTo, propertyId, applicationNo,
                     preparedStatementValues);
             List<Property> properties = getProperty(propertyMap.get("Sql").toString(), preparedStatementValues);
-            if(propertyMap.get("users") != null) {
+            if (propertyMap.get("users") != null) {
                 searchPropertyMap.put("properties", properties);
                 searchPropertyMap.put("users", propertyMap.get("users"));
             } else {
                 searchPropertyMap.put("properties", null);
                 searchPropertyMap.put("users", null);
             }
-           
 
         }
 
@@ -1096,8 +1107,21 @@ public class PropertyRepository {
 
         String boundaryUpdate = BoundaryBuilder.updateBoundaryQuery();
 
-        Object[] boundaryArgs = { boundary.getRevenueBoundary().getId(), boundary.getLocationBoundary().getId(),
-                getLong(boundary.getAdminBoundary().getId()), getString(boundary.getNorthBoundedBy()),
+        Long revenueBoundaryId = null;
+        Long locationBoundaryId = null;
+        Long adminBoundaryId = null;
+        if (boundary.getRevenueBoundary() != null) {
+            revenueBoundaryId = boundary.getRevenueBoundary().getId();
+        }
+        if (boundary.getLocationBoundary() != null) {
+            locationBoundaryId = boundary.getLocationBoundary().getId();
+        }
+        if (boundary.getAdminBoundary() != null) {
+            adminBoundaryId = boundary.getAdminBoundary().getId();
+        }
+
+        Object[] boundaryArgs = { revenueBoundaryId, locationBoundaryId,
+                adminBoundaryId, getString(boundary.getNorthBoundedBy()),
                 getString(boundary.getEastBoundedBy()), getString(boundary.getWestBoundedBy()),
                 getString(boundary.getSouthBoundedBy()), boundary.getAuditDetails().getLastModifiedBy(),
                 boundary.getAuditDetails().getLastModifiedTime(), propertId, boundary.getId() };

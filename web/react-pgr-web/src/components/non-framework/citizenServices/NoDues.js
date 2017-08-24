@@ -122,8 +122,8 @@ class NoDues extends Component {
         self.props.toggleSnackbarAndSetText(true, err.message, false, true);
         self.props.setLoadingStatus('hide');
       })
-
-      Api.commonApiPost("/billing-service/bill/_generate", {businessService:"PT",consumerCode:formData.consumerCode}, {}, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res){
+	  
+      Api.commonApiPost("/billing-service/bill/_generate", {businessService: this.props.match.params.id=="watercharge" ? 'WC' : 'PT' ,consumerCode:formData.consumerCode}, {}, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res){
         self.props.setLoadingStatus('hide');
         let Receipt=[];
         Receipt[0]={"Bill":[]};
@@ -572,6 +572,11 @@ class NoDues extends Component {
 
   getTotal=(demands)=>{
     let sum=0;
+	
+	if(demands == undefined || demands.length!=0){
+		return false;
+	}
+	
     for (var i = 0; i < demands[0].demandDetails.length; i++) {
       sum+=(demands[0].demandDetails[i].taxAmount-demands[0].demandDetails[i].collectionAmount);
     }
@@ -713,7 +718,7 @@ class NoDues extends Component {
 
             {showResult &&
               <Grid >
-                {Receipt.length>0 &&  <Row >
+                {Receipt != undefined && Receipt.length>0 &&  <Row>
                       <Col md={6} >
                       <Card>
                         <CardHeader title="Receipt"/>
@@ -722,35 +727,34 @@ class NoDues extends Component {
                                   <tbody>
                                       <tr>
                                           <td style={{textAlign:"left"}}>
-                                            ULB Logo
+											  <img src="./temp/images/headerLogo.png" height="30" width="30"/>
                                           </td>
                                           <td style={{textAlign:"center"}}>
-                                            ULB Name
-                                            Department
+                                              <b>Roha Municipal Council</b><br/>
+											  Property Tax Department / करनिर्धारण विभाग
                                           </td>
                                           <td style={{textAlign:"right"}}>
-                                            MAH
-                                            LOGO
+											<img src="./temp/images/AS.png" height="30" width="30"/>
                                           </td>
                                       </tr>
                                       <tr>
                                           <td style={{textAlign:"left"}}>
-                                            {Receipt[0].Bill[0].billDetails[0].receiptNumber}
+                                            Receipt Number : {Receipt[0].Bill[0].billDetails[0].receiptNumber}
                                           </td>
                                           <td style={{textAlign:"center"}}>
-                                              {Receipt[0].Bill[0].payeeName}
+                                            Receipt For : {this.props.match.params.id=="watercharge" ? 'Water Charges' : 'Property Tax'}
                                           </td>
                                           <td style={{textAlign:"right"}}>
-                                            {new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getDate()+"-"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getMonth()+"-"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getFullYear()}
+                                            Receipt Date: {new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getDate()+"-"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getMonth()+"-"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getFullYear()}
                                           </td>
                                       </tr>
                                       <tr>
                                           <td colSpan={3} style={{textAlign:"left"}}>
-                                            {match.params.id=="watercharge"?"Water Connection":"Property"} No : {Receipt[0].transactionId}<br/>
+                                            Consumer Code : {Receipt[0].Bill[0].billDetails[0].consumerCode}<br/>
                                             Consumer Owner Name : {Receipt[0].Bill[0].payeeName}<br/>
-                                            Amount :{Receipt[0].Bill[0].billDetails[0].amountPaid}<br/>
+                                            Amount :{Receipt[0].Bill[0].billDetails[0].totalAmount}<br/>
                                             Consumer Address :{Receipt[0].Bill[0].payeeAddress?Receipt[0].Bill[0].payeeAddress:"Bangalore"}<br/>
-                                            Received From : {Receipt[0].Bill[0].billDetails[0].billDescription}<br/>
+                                            Received From : {Receipt[0].Bill[0].paidBy}<br/>
                                           </td>
                                       </tr>
 
@@ -840,32 +844,32 @@ class NoDues extends Component {
                                         <td>
                                           Amount
                                         </td>
-                                        <td colSpan={2}>
-                                          Cheque / DD No.
+										<td colSpan={2}>
+                                           Transaction No
                                         </td>
-                                        <td colSpan={2}>
-                                          Cheque / DD Date.
+										<td colSpan={2}>
+											Transaction Date
                                         </td>
-                                        <td colSpan={4}>
+										{false && <td colSpan={2}>
                                           Bank Name
-                                        </td>
+                                        </td>}
                                       </tr>
                                       <tr>
                                         <td>
-                                          {Receipt[0].instrument.instrumentType.name}
+											Online
                                         </td>
                                         <td>
                                           {getTotal(demands)+100}
                                         </td>
+                                        {Receipt[0].instrument.instrumentType.name=="Cash"? "" : <td colSpan={2}>
+                                          {Receipt[0].transactionId}
+                                        </td>}
                                         <td colSpan={2}>
-                                          {Receipt[0].instrument.instrumentType.name=="Cash"?"":Receipt[0].instrument.transactionNumber}
+                                          {Receipt[0].instrument.instrumentType.name=="Cash"?"":(new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getDate()+"-"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getMonth()+"-"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getFullYear())}
                                         </td>
-                                        <td colSpan={2}>
-                                          {Receipt[0].instrument.instrumentType.name=="Cash"?"":(new Date(Receipt[0].instrument.transactionDate).getDate()+"-"+new Date(Receipt[0].instrument.transactionDate).getMonth()+"-"+new Date(Receipt[0].instrument.transactionDate).getFullYear())}
-                                        </td>
-                                        <td colSpan={2}>
+                                        {false && <td colSpan={2}>
                                           {Receipt[0].instrument.instrumentType.name=="Cash"?"":Receipt[0].instrument.bank.name}
-                                        </td>
+                                        </td>}
                                       </tr>
                                   </tbody>
                               </Table>
@@ -880,21 +884,20 @@ class NoDues extends Component {
                                   <tbody>
                                       <tr>
                                           <td style={{textAlign:"left"}}>
-                                            ULB Logo
+                                             <img src="./temp/images/headerLogo.png" height="30" width="30"/>
                                           </td>
                                           <td style={{textAlign:"center"}}>
-                                            ULB Name
-                                            Revenue
+                                              <b>Roha Municipal Council</b><br/>
+											  Property Tax Department / करनिर्धारण विभाग
                                           </td>
                                           <td style={{textAlign:"right"}}>
-                                            MAH
-                                            LOGO
+                                            <img src="./temp/images/AS.png" height="30" width="30"/>
                                           </td>
                                       </tr>
                                       <tr>
                                           <td colSpan={3}>
                                             <div style={{textAlign:"center"}}>
-                                                No Due Certificate / थकबाकी नसल्याचे प्रमाणपत्र<br/>
+                                               No Due Certificate / थकबाकी नसल्याचे प्रमाणपत्र<br/>
                                               (मुवंई प्रांतिक महानगरपालिका अधिनियम 1949 चे अनुसूचीतील प्रकरण 8 अधिनियम 44, 45 व 46 अन्वये )
                                             </div>
                                             <br/>
@@ -914,7 +917,7 @@ class NoDues extends Component {
                                             <br/>
                                             <div style={{textAlign:"center"}}>
                                               Subject /विषय :  सन 2017 - 18 थकबाकी नसल्याचे प्रमाणपत्र मिळणेबाबत.<br/>
-                                              Reference / संदर्भ : आपला अर्ज क्रमांक Application No दिनांक {new Date(Receipt[0].Bill[0].billDetails[0].billDate).getDate()+"-"+new Date(Receipt[0].Bill[0].billDetails[0].billDate).getMonth()+"-"+new Date(Receipt[0].Bill[0].billDetails[0].billDate).getFullYear()}
+                                              Reference / संदर्भ : आपला अर्ज क्रमांक {Receipt[0].Bill[0].billDetails[0].applicationNo} दिनांक {new Date(Receipt[0].Bill[0].billDetails[0].billDate).getDate()+"-"+new Date(Receipt[0].Bill[0].billDetails[0].billDate).getMonth()+"-"+new Date(Receipt[0].Bill[0].billDetails[0].billDate).getFullYear()}
 
 
                                             </div>
@@ -927,7 +930,7 @@ class NoDues extends Component {
                                             <br/>
                                             <div style={{textAlign:"center"}}>
                                               संदर्भिय विषयांन्वये प्रमाणित करण्यात येते की, पाणी क्रमांक Consumer No,
-                                              {Receipt[0].Bill[0].payeeName} यांच्या नावे नोंद असून, सन financial year  पर्यंतचा संपुर्ण
+                                              {Receipt[0].Bill[0].billDetails[0].consumerCode} यांच्या नावे नोंद असून, सन 2017-18  पर्यंतचा संपुर्ण
                                               पाणी रक्कम भरलेली असून, कोणतीही थकबाकी येणे नाही.
 
 
@@ -935,7 +938,7 @@ class NoDues extends Component {
                                             <br/>
                                             <div style={{textAlign:"right"}}>
                                                                       कर अधिक्षक,<br/>
-                                                                   ULB Name
+                                                                      Roha Municipal Council
 
 
                                             </div>

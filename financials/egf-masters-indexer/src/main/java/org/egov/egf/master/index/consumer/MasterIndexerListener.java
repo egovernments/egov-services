@@ -98,7 +98,7 @@ public class MasterIndexerListener {
 				for (final FundContract fundContract : request.getFunds()) {
 					final HashMap<String, Object> indexObj = getFundIndexObject(fundContract);
 					elasticSearchRepository.index(FUND_OBJECT_TYPE,
-							fundContract.getTenantId() + "-" + fundContract.getName(), indexObj);
+							fundContract.getCode() + "-" + fundContract.getTenantId(), indexObj);
 				}
 		}
 
@@ -111,7 +111,7 @@ public class MasterIndexerListener {
 				for (final BankContract bankContract : request.getBanks()) {
 					final HashMap<String, Object> indexObj = getBankIndexObject(bankContract);
 					elasticSearchRepository.index(BANK_OBJECT_TYPE,
-							bankContract.getTenantId() + "-" + bankContract.getName(), indexObj);
+							bankContract.getCode() + "-" + bankContract.getTenantId(), indexObj);
 				}
 		}
 
@@ -124,7 +124,7 @@ public class MasterIndexerListener {
 				for (final FunctionContract functionContract : request.getFunctions()) {
 					final HashMap<String, Object> indexObj = getFunctionIndexObject(functionContract);
 					elasticSearchRepository.index(FUNCTION_OBJECT_TYPE,
-							functionContract.getTenantId() + "-" + functionContract.getName(), indexObj);
+							functionContract.getCode() + "-" + functionContract.getTenantId(), indexObj);
 				}
 		}
 

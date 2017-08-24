@@ -76,5 +76,7 @@ public class Bank extends Auditable {
 	@NotNull
 	@Size(max = 50)
 	private String type;
+	
+	
 
 }

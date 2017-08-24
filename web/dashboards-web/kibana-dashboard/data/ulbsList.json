@@ -1415,7 +1415,7 @@
    "url": "http://mahaulb.egovernments.org/app/v1/#/mh.roha",
    "ptisUrl": "http://ae35855e9842111e7ac1f02bc1626de1-1479662728.ap-south-1.elb.amazonaws.com/app/kibana#/dashboard/3536f9f0-88ab-11e7-979a-c52362df4f97?embed=true&_g=()",
    "collectionUrl": "http://a99a3c7ac04ac11e78bfd068c35e8c77-1062737105.us-east-1.elb.amazonaws.com:5601/goto/248c292e998988fe11be8ee908729777?embed=true",
-   "pgrUrl": "http://ae35855e9842111e7ac1f02bc1626de1-1479662728.ap-south-1.elb.amazonaws.com/goto/be4bff43d7f629db3dba2a14a8d78763?embed=true",
+   "pgrUrl": "http://ae35855e9842111e7ac1f02bc1626de1-1479662728.ap-south-1.elb.amazonaws.com/goto/3f6850beca3546a1841ae5aab47f045d?embed=true",
    "waterChargesUrl": "",
    "tradeLicenseUrl": ""
  },

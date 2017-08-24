@@ -1,7 +1,7 @@
 ---
 ReportDefinitions:
-- reportName: TradeLicense
-  summary: Trade License Report
+- reportName: licenseRegisterReport
+  summary: Trade License Register Report
   version: 1.0.0
   moduleName: tradelicense
   sourceColumns:

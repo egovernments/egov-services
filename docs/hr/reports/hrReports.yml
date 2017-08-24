@@ -4,6 +4,7 @@ ReportDefinitions:
 - reportName: EmployeeSearch
   summary: Employee Search
   version: 1.0.0
+  moduleName: hr
   sourceColumns:
   - name: code
     label: reports.hr.employee.Employee_Code         
@@ -80,6 +81,7 @@ ReportDefinitions:
 - reportName: DrillDownReportforemployeeview
   summary: DrillDown report for employee view
   version: 1.0.0 
+  moduleName: hr
   sourceColumns:
   - name: code
     label: reports.hr.employee.Employee_Code         
@@ -150,9 +152,10 @@ ReportDefinitions:
     order by usr.name  ;
     
    #attendance Report 
-- reportName: Attendence Report
+- reportName: AttendenceReport
   summary: Attendence Report
   version: 1.0.0
+  moduleName: hr
   sourceColumns:
   - name: employeecode
     label: reports.hr.Attendence.Employee_Code_name         
@@ -238,9 +241,10 @@ ReportDefinitions:
   groupBy: ORDER BY usr.name,emp.code;
   
  # employee Leave Report
-- reportName: employee Leave Report
+- reportName: employeeLeaveReport
   summary: employee Leave Report
   version: 1.0.0
+  moduleName: hr
   sourceColumns:
   - name: code
     label: reports.hr.EmployeeCode-Name         

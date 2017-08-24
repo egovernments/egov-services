@@ -127,7 +127,7 @@ public class VoucherContract extends AuditableContract {
 	@Length(max = 256)
 	private String sourcePath;
 
-	private Boolean budgetCheckRequired = true;
+	private Boolean budgetCheckRequired;
 
 	@Length(max = 50)
 	private String budgetAppropriationNo;
@@ -136,8 +136,9 @@ public class VoucherContract extends AuditableContract {
 
 	public BigDecimal getTotalAmount() {
 		BigDecimal amount = BigDecimal.ZERO;
-		for (final LedgerContract detail : ledgers)
-			amount = amount.add(detail.getDebitAmount());
+		if (ledgers != null)
+			for (final LedgerContract detail : ledgers)
+				amount = amount.add(detail.getDebitAmount());
 		return amount;
 	}
 

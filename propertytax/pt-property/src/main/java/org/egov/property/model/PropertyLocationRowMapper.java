@@ -56,7 +56,7 @@ public class PropertyLocationRowMapper implements RowMapper<Object> {
 	 * @return {@link Long}
 	 */
 	private Long getLong(Object object) {
-		return object == null ? 0l : Long.parseLong(object.toString().trim());
+		return object == null ? null : Long.parseLong(object.toString().trim());
 	}
 
 }

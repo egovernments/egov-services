@@ -1,0 +1,247 @@
+{
+	"id": "0073d547-8c0c-42bf-a960-5ab1f6622258",
+	"name": "Movement copy",
+	"description": "",
+	"order": [
+		"19da3a6c-1d27-7f5d-8c3d-1235676c3589",
+		"b0bcbaf2-e811-d5bf-bb77-fa63a67543a7",
+		"caba3e1e-0d87-b3dd-fe83-5c6b2bc61462",
+		"b3dea7a4-9ffb-605c-39fb-4759e8e79e5c",
+		"35424dac-c693-684d-6060-4f9d368307af",
+		"03d51e31-0aa4-c74a-dd9c-94fefa29de0d"
+	],
+	"folders": [],
+	"folders_order": [],
+	"timestamp": 1499426299110,
+	"owner": "1594421",
+	"public": false,
+	"requests": [
+		{
+			"id": "03d51e31-0aa4-c74a-dd9c-94fefa29de0d",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://egov-micro-dev.egovernments.org/hr-employee-movement/movements/_create?tenantId=default",
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1503576004239,
+			"name": "Create Movement_valid_Employee_in_Process_employee_acceptance_false",
+			"description": "",
+			"collectionId": "0073d547-8c0c-42bf-a960-5ab1f6622258",
+			"responses": [],
+			"isFromCollection": true,
+			"collectionRequestId": "35424dac-c693-684d-6060-4f9d368307af",
+			"rawModeData": "{\n\"RequestInfo\" : {\n    \"apiId\" : \"emp\",\n    \"ver\" : \"1.0\",\n    \"ts\" : \"10-03-2017 00:00:00\",\n    \"action\" : \"create\",\n    \"did\" : \"1\",\n    \"key\" : \"abcdkey\",\n    \"msgId\" : \"20170310130900\",\n    \"requesterId\" : \"rajesh\",\n    \"authToken\" : \"dd29918e-acc3-44aa-b62c-1c26a5a178e4\",\n    \"userInfo\": {\n    \t\"id\":1,\n    \t\"name\":\"test\"\n    }\n  },\n\"Movement\": [\n\t{\n      \"employeeId\": 84,\n      \"typeOfMovement\": \"PROMOTION\",\n      \"currentAssignment\": 1,\n      \"transferType\": \"TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB\",\n      \"promotionBasis\": {\n        \"id\": 1\n      },\n      \"remarks\": \"Transfer\",\n      \"reason\": {\n      \t\"id\": 1\n      },\n      \"effectiveFrom\": \"23/06/2017\",\n      \"enquiryPassedDate\": \"23/06/2017\",\n      \"transferedLocation\": 1,\n      \"departmentAssigned\": 1,\n      \"designationAssigned\": 1,\n      \"positionAssigned\": 1,\n      \"fundAssigned\": 1,\n      \"functionAssigned\": 1,\n      \"employeeAcceptance\": \"true\",\n      \"workflowDetails\": {\n      \t\"assignee\": 1,\n      \t\"tenantId\":\"default\"\n      },\n      \"tenantId\": \"default\"\n    }\n    ]\n}"
+		},
+		{
+			"id": "19da3a6c-1d27-7f5d-8c3d-1235676c3589",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://egov-micro-dev.egovernments.org/hr-employee-movement/movements/_create?tenantId=ap.kurnool",
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "ap.kurnool",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": [],
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": [],
+			"time": 1499953771862,
+			"name": "Create Movement_No_Employee",
+			"description": "",
+			"collectionId": "0073d547-8c0c-42bf-a960-5ab1f6622258",
+			"responses": [],
+			"rawModeData": "{\n\"RequestInfo\" : {\n    \"apiId\" : \"emp\",\n    \"ver\" : \"1.0\",\n    \"ts\" : \"10-03-2017 00:00:00\",\n    \"action\" : \"create\",\n    \"did\" : \"1\",\n    \"key\" : \"abcdkey\",\n    \"msgId\" : \"20170310130900\",\n    \"requesterId\" : \"rajesh\",\n    \"authToken\" : \"dd29918e-acc3-44aa-b62c-1c26a5a178e4\"\n  },\n\"Movement\": [\n\t{\n      \"employeeId\": 1,\n      \"typeOfMovement\": \"PROMOTION\",\n      \"currentAssignment\": 1,\n      \"transferType\": \"TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB\",\n      \"promotionBasis\": {\n        \"id\": 1\n      },\n      \"remarks\": \"Transfer\",\n      \"reason\": {\n      \t\"id\": 1\n      },\n      \"effectiveFrom\": \"23/06/2017\",\n      \"enquiryPassedDate\": \"23/06/2017\",\n      \"transferedLocation\": 1,\n      \"departmentAssigned\": 1,\n      \"designationAssigned\": 1,\n      \"positionAssigned\": 1,\n      \"fundAssigned\": 1,\n      \"functionAssigned\": 1,\n      \"employeeAcceptance\": \"true\",\n      \"workflowDetails\": {\n      \t\"assignee\": 1\n      },\n      \"tenantId\": \"ap.kurnool\"\n    }\n    ]\n}",
+			"collection_id": "0073d547-8c0c-42bf-a960-5ab1f6622258"
+		},
+		{
+			"id": "35424dac-c693-684d-6060-4f9d368307af",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://egov-micro-dev.egovernments.org/hr-employee-movement/movements/_create?tenantId=default",
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1503576004239,
+			"name": "Create Movement_valid_Employee_transfer_no_reason",
+			"description": "",
+			"collectionId": "0073d547-8c0c-42bf-a960-5ab1f6622258",
+			"responses": [],
+			"rawModeData": "{\n\"RequestInfo\" : {\n    \"apiId\" : \"emp\",\n    \"ver\" : \"1.0\",\n    \"ts\" : \"10-03-2017 00:00:00\",\n    \"action\" : \"create\",\n    \"did\" : \"1\",\n    \"key\" : \"abcdkey\",\n    \"msgId\" : \"20170310130900\",\n    \"requesterId\" : \"rajesh\",\n    \"authToken\" : \"dd29918e-acc3-44aa-b62c-1c26a5a178e4\",\n    \"userInfo\": {\n    \t\"id\":1,\n    \t\"name\":\"test\"\n    }\n  },\n\"Movement\": [\n\t{\n      \"employeeId\": 84,\n      \"typeOfMovement\": \"PROMOTION\",\n      \"currentAssignment\": 1,\n      \"transferType\": \"TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB\",\n      \"promotionBasis\": {\n        \"id\": 1\n      },\n      \"remarks\": \"Transfer\",\n      \"reason\": {\n      \t\"id\": 1\n      },\n      \"effectiveFrom\": \"23/06/2017\",\n      \"enquiryPassedDate\": \"23/06/2017\",\n      \"transferedLocation\": 1,\n      \"departmentAssigned\": 1,\n      \"designationAssigned\": 1,\n      \"positionAssigned\": 1,\n      \"fundAssigned\": 1,\n      \"functionAssigned\": 1,\n      \"employeeAcceptance\": \"true\",\n      \"workflowDetails\": {\n      \t\"assignee\": 1,\n      \t\"tenantId\":\"default\"\n      },\n      \"tenantId\": \"default\"\n    }\n    ]\n}"
+		},
+		{
+			"id": "b0bcbaf2-e811-d5bf-bb77-fa63a67543a7",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://kurnool-pilot-services.egovernments.org/hr-employee-movement/movements/_search?tenantId=default",
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": [],
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": [],
+			"time": 1500031272269,
+			"name": "Search Movements",
+			"description": "",
+			"collectionId": "0073d547-8c0c-42bf-a960-5ab1f6622258",
+			"responses": [],
+			"rawModeData": "{\n\t\"RequestInfo\" : {\n\t\t\"apiId\":\"eis\",\"ver\":\"1.0\",\"ts\":\"01-04-2017 01:01:01\",\"action\":\"asd\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\":null\n\t}\n}",
+			"collection_id": "0073d547-8c0c-42bf-a960-5ab1f6622258"
+		},
+		{
+			"id": "b3dea7a4-9ffb-605c-39fb-4759e8e79e5c",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://egov-micro-dev.egovernments.org/hr-employee-movement/movements/_create?tenantId=default",
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1503576004239,
+			"name": "Create Movement_valid_Employee_in_Process_And_position_not Vacant",
+			"description": "",
+			"collectionId": "0073d547-8c0c-42bf-a960-5ab1f6622258",
+			"responses": [],
+			"rawModeData": "{\n\"RequestInfo\" : {\n    \"apiId\" : \"emp\",\n    \"ver\" : \"1.0\",\n    \"ts\" : \"10-03-2017 00:00:00\",\n    \"action\" : \"create\",\n    \"did\" : \"1\",\n    \"key\" : \"abcdkey\",\n    \"msgId\" : \"20170310130900\",\n    \"requesterId\" : \"rajesh\",\n    \"authToken\" : \"dd29918e-acc3-44aa-b62c-1c26a5a178e4\",\n    \"userInfo\": {\n    \t\"id\":1,\n    \t\"name\":\"test\"\n    }\n  },\n\"Movement\": [\n\t{\n      \"employeeId\": 84,\n      \"typeOfMovement\": \"PROMOTION\",\n      \"currentAssignment\": 1,\n      \"transferType\": \"TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB\",\n      \"promotionBasis\": {\n        \"id\": 1\n      },\n      \"remarks\": \"Transfer\",\n      \"reason\": {\n      \t\"id\": 1\n      },\n      \"effectiveFrom\": \"23/06/2017\",\n      \"enquiryPassedDate\": \"23/06/2017\",\n      \"transferedLocation\": 1,\n      \"departmentAssigned\": 1,\n      \"designationAssigned\": 1,\n      \"positionAssigned\": 1,\n      \"fundAssigned\": 1,\n      \"functionAssigned\": 1,\n      \"employeeAcceptance\": \"true\",\n      \"workflowDetails\": {\n      \t\"assignee\": 1,\n      \t\"tenantId\":\"default\"\n      },\n      \"tenantId\": \"default\"\n    }\n    ]\n}"
+		},
+		{
+			"id": "caba3e1e-0d87-b3dd-fe83-5c6b2bc61462",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://egov-micro-dev.egovernments.org/hr-employee-movement/movements/_create?tenantId=default",
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1503576004239,
+			"name": "Create Movement_valid",
+			"description": "",
+			"collectionId": "0073d547-8c0c-42bf-a960-5ab1f6622258",
+			"responses": [],
+			"rawModeData": "{\n\"RequestInfo\" : {\n    \"apiId\" : \"emp\",\n    \"ver\" : \"1.0\",\n    \"ts\" : \"10-03-2017 00:00:00\",\n    \"action\" : \"create\",\n    \"did\" : \"1\",\n    \"key\" : \"abcdkey\",\n    \"msgId\" : \"20170310130900\",\n    \"requesterId\" : \"rajesh\",\n    \"authToken\" : \"dd29918e-acc3-44aa-b62c-1c26a5a178e4\",\n    \"userInfo\": {\n    \t\"id\":1,\n    \t\"name\":\"test\"\n    }\n  },\n\"Movement\": [\n\t{\n      \"employeeId\": 84,\n      \"typeOfMovement\": \"PROMOTION\",\n      \"currentAssignment\": 1,\n      \"transferType\": \"TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB\",\n      \"promotionBasis\": {\n        \"id\": 1\n      },\n      \"remarks\": \"Transfer\",\n      \"reason\": {\n      \t\"id\": 1\n      },\n      \"effectiveFrom\": \"23/06/2017\",\n      \"enquiryPassedDate\": \"23/06/2017\",\n      \"transferedLocation\": 1,\n      \"departmentAssigned\": 1,\n      \"designationAssigned\": 1,\n      \"positionAssigned\": 1,\n      \"fundAssigned\": 1,\n      \"functionAssigned\": 1,\n      \"employeeAcceptance\": \"true\",\n      \"workflowDetails\": {\n      \t\"assignee\": 1,\n      \t\"tenantId\":\"default\"\n      },\n      \"tenantId\": \"default\"\n    }\n    ]\n}"
+		}
+	]
+}

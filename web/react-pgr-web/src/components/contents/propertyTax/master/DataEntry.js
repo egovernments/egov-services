@@ -429,10 +429,6 @@ dataEntryTax = () => {
 					],
 					"documents": [],
 					"stateId": null,
-					"assessmentDates": {
-						"name": "FIRSTASSESSMENT",
-						"date": "10/06/2017"
-					},
 					"builderDetails": {
 						"certificateNumber": dataEntry.certificateNumber || null,
 						"certificateCompletionDate": dataEntry.certificateCompletionDate || null,

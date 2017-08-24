@@ -176,7 +176,7 @@ public class InstrumentService {
 //						cal1.setTime(instrument.getTransactionDate());
 //						Assert.isTrue(cal1.after(cal), "DD Transaction should be before 6 months of current date or a future date");
 						break;
-					case "bank challan":
+					case "bankchallan":
 						Assert.notNull(instrument.getTransactionNumber(), "Bank Challan Transaction Number must not be null");
 //						Assert.notNull(instrument.getPayee(), "Bank Challan Payee Details must not be null");
 						Assert.notNull(instrument.getBank(), "Bank Challan must contain Bank Details");

@@ -44,7 +44,7 @@ public class CitizenPersistService {
 	private ResponseInfoFactory responseInfoFactory;
 
 	@Autowired
-	private LogAwareKafkaTemplate<String, String> kafkaTemplate;
+	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
 	public ServiceReqResponse create(String serviceReqJson) {
 		

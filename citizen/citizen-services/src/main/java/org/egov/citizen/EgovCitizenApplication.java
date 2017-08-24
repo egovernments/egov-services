@@ -24,7 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @SpringBootApplication
 @Slf4j
-@Import({TracerConfiguration.class})
 public class EgovCitizenApplication {
 
 	@Autowired

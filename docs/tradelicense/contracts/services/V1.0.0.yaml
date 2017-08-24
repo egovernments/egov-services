@@ -235,12 +235,11 @@ paths:
             3. feeDetails will be considered for creation or updation only when legacy is TRUE,  Valid FeeDetails from last five years  to current year are allowed. Validited based on the licenseValidFromDate and validity years.
             4. supportDocuments for a given Trade License will be created or updated. In case of not attaching the Mandatory Supported Documents creation of New Trade License Fails, Legacy Trade License does not follow this rule.
             5. localityId, adminWardId, revenuewardId, categoryId, subCategoryId, uomId are Validated for existance, On Non existance of any of these entered values in the system, Updation of TradeLicense will Fail
-            6. license Number will be generated for legacy license
-            7. FeeDetails will validated (no of fee details and financial years of them) based on to the sub category validityyear and and licenseValidFrom of License 
-            8. expirtyDate will be calculate based on the valid last financial year in the feedetail  and validity years 
-            9. License Number, applicationType, applicationDate, applicationNumber, tenantId,id cannot be updated
-            10. validityYears will validated against the subcategory validity years
-            11. agreementNo and agreementDate are manadaoty when isPorpertyOwner is true 
+            6. FeeDetails will validated (no of fee details and financial years of them) based on to the sub category validityyear and and licenseValidFrom of License 
+            7. expirtyDate will be calculate based on the valid last financial year in the feedetail  and validity years 
+            8. License Number, applicationType, applicationDate, applicationNumber, tenantId,id cannot be updated
+            9. validityYears will validated against the subcategory validity years
+            10. agreementNo and agreementDate are manadaoty when isPorpertyOwner is true 
           
       parameters:
         - name: TradeLicenseRequest

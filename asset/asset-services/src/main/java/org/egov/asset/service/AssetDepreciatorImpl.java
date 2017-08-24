@@ -82,7 +82,7 @@ public class AssetDepreciatorImpl implements AssetDepreciator {
      * @param depreciationSum
      * @return
      */
-    private DepreciationDetail computeDepreciationDetail(final CalculationAssetDetails calculationAssetDetail,
+    public DepreciationDetail computeDepreciationDetail(final CalculationAssetDetails calculationAssetDetail,
             final CalculationCurrentValue calculationCurrentValue, final Double depreciationRate,
             final BigDecimal depreciationSum) {
         BigDecimal newCurrVal = null;
@@ -120,7 +120,7 @@ public class AssetDepreciatorImpl implements AssetDepreciator {
                 .valueAfterDepreciation(newCurrVal).status(DepreciationStatus.SUCCESS).build();
     }
 
-    private Double getDepreciationRate(final CalculationAssetDetails calculationAssetDetail) {
+    public Double getDepreciationRate(final CalculationAssetDetails calculationAssetDetail) {
         Double depreciationRate = null;
         if (calculationAssetDetail.getYearwisedepreciationrate() != null)
             depreciationRate = calculationAssetDetail.getYearwisedepreciationrate();

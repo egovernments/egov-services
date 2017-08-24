@@ -104,10 +104,9 @@ public class DisposalServiceTest {
         final DisposalResponse disposalResponse = new DisposalResponse();
         disposalResponse.setDisposals(disposal);
 
-        final RequestInfo requestInfo = new RequestInfo();
         when(disposalRepository.search(any(DisposalCriteria.class))).thenReturn(disposal);
         final DisposalResponse expectedDisposalResponse = disposalService.search(Matchers.any(DisposalCriteria.class),
-                requestInfo);
+                new RequestInfo());
 
         assertEquals(disposalResponse.toString(), expectedDisposalResponse.toString());
     }

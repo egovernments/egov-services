@@ -1,0 +1,431 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Asset_Requests_Collection_2",
+		"_postman_id": "ddd11ed3-b1d9-f09f-9d0e-298a4c015158",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://kurnool-pilot-services.egovernments.org/asset-services/assets/_create?tenantId=ap.kurnool",
+			"request": {
+				"url": {
+					"raw": "http://kurnool-pilot-services.egovernments.org/asset-services/assets/_create?tenantId=ap.kurnool",
+					"protocol": "http",
+					"host": [
+						"kurnool-pilot-services",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"asset-services",
+						"assets",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "ap.kurnool",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pgr\",\n    \"ver\": \"1.0\",\n    \"ts\": \"01-04-2017 01:01:01\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"authToken\": null,\n    \"correlationId\": null,\n    \"userInfo\": {\n      \"id\": 1,\n      \"userName\": \"egovernments\",\n      \"name\": \"Admin\",\n      \"type\": \"SYSTEM\",\n      \"mobileNumber\": null,\n      \"emailId\": null,\n      \"roles\": [\n        {\n          \"id\": null,\n          \"name\": \"SYSTEM\"\n        }\n      ]\n    }\n  },\n  \"Asset\": {\n    \"tenantId\": \"ap.kurnool\",\n    \"name\": \"Asset Community Toilet Complex Test 002\",\n    \"department\": {\n      \"id\": 5,\n      \"name\": null,\n      \"code\": null\n    },\n    \"assetCategory\": {\n      \"tenantId\": \"ap.kurnool\",\n      \"id\": 1585,\n      \"name\": \"Community Toilet Complex\",\n      \"code\": \"023\",\n      \"assetCategoryType\": \"IMMOVABLE\",\n      \"parent\": null,\n      \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n      \"isAssetAllow\": false,\n      \"assetAccount\": null,\n      \"accumulatedDepreciationAccount\": null,\n      \"revaluationReserveAccount\": 807,\n      \"depreciationExpenseAccount\": 770,\n      \"unitOfMeasurement\": null,\n      \"version\": null,\n      \"depreciationRate\": 0,\n      \"assetFieldsDefination\": null\n    },\n    \"assetDetails\": \"\",\n    \"modeOfAcquisition\": \"TENDER\",\n    \"status\": \"CAPITALIZED\",\n    \"description\": \"Asset Community Toilet Complex Test 002\",\n    \"dateOfCreation\": 1497205800000,\n    \"locationDetails\": {\n      \"locality\": 1098,\n      \"zone\": null,\n      \"revenueWard\": null,\n      \"block\": null,\n      \"street\": null,\n      \"electionWard\": null,\n      \"doorNo\": \"\",\n      \"pinCode\": null\n    },\n    \"remarks\": \"\",\n    \"length\": \"\",\n    \"width\": \"\",\n    \"totalArea\": \"\",\n    \"grossValue\": 47500,\n    \"accumulatedDepreciation\": 19350,\n    \"assetReference\": null,\n    \"version\": \"1.0\",\n    \"assetAttributes\": [\n      {\n        \"key\": \"East\",\n        \"type\": \"Text\",\n        \"value\": \"12\"\n      },\n      {\n        \"key\": \"South\",\n        \"type\": \"Text\",\n        \"value\": \"15\"\n      },\n      {\n        \"key\": \"West\",\n        \"type\": \"Text\",\n        \"value\": \"19\"\n      },\n      {\n        \"key\": \"North\",\n        \"type\": \"Text\",\n        \"value\": \"10\"\n      },\n      {\n        \"key\": \"Total Square feet area\",\n        \"type\": \"Text\",\n        \"value\": \"1200\"\n      }\n    ],\n    \"enableYearWiseDepreciation\": true,\n    \"depreciationRate\": null,\n    \"yearWiseDepreciation\": [\n      {\n        \"id\": null,\n        \"depreciationRate\": 13,\n        \"financialYear\": \"2015-16\",\n        \"usefulLifeInYears\": null,\n        \"tenantId\": null\n      },\n      {\n        \"id\": null,\n        \"depreciationRate\": 38,\n        \"financialYear\": \"2016-17\",\n        \"usefulLifeInYears\": null,\n        \"tenantId\": null\n      },\n      {\n        \"id\": null,\n        \"depreciationRate\": 26,\n        \"financialYear\": \"2017-18\",\n        \"usefulLifeInYears\": null,\n        \"tenantId\": null\n      }\n    ]\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://kurnool-pilot-services.egovernments.org/asset-services/assets/_create?tenantId=ap.kurnool",
+			"request": {
+				"url": {
+					"raw": "http://kurnool-pilot-services.egovernments.org/asset-services/assets/_create?tenantId=ap.kurnool",
+					"protocol": "http",
+					"host": [
+						"kurnool-pilot-services",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"asset-services",
+						"assets",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "ap.kurnool",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pgr\",\n    \"ver\": \"1.0\",\n    \"ts\": \"01-04-2017 01:01:01\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"authToken\": null,\n    \"correlationId\": null,\n    \"userInfo\": {\n      \"id\": 1,\n      \"userName\": \"egovernments\",\n      \"name\": \"Admin\",\n      \"type\": \"SYSTEM\",\n      \"mobileNumber\": null,\n      \"emailId\": null,\n      \"roles\": [\n        {\n          \"id\": null,\n          \"name\": \"SYSTEM\"\n        }\n      ]\n    }\n  },\n  \"Asset\": {\n    \"tenantId\": \"ap.kurnool\",\n    \"name\": \"Asset Drains and Culvets Test 002\",\n    \"department\": {\n      \"id\": 5,\n      \"name\": null,\n      \"code\": null\n    },\n    \"assetCategory\": {\n      \"tenantId\": \"ap.kurnool\",\n      \"id\": 1025,\n      \"name\": \"Drains and Culvets\",\n      \"code\": \"017\",\n      \"assetCategoryType\": \"IMMOVABLE\",\n      \"parent\": null,\n      \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n      \"isAssetAllow\": false,\n      \"assetAccount\": null,\n      \"accumulatedDepreciationAccount\": null,\n      \"revaluationReserveAccount\": 807,\n      \"depreciationExpenseAccount\": 770,\n      \"unitOfMeasurement\": null,\n      \"version\": null,\n      \"depreciationRate\": 0,\n      \"assetFieldsDefination\": null\n    },\n    \"assetDetails\": \"\",\n    \"modeOfAcquisition\": \"ACQUIRED\",\n    \"status\": \"CAPITALIZED\",\n    \"description\": \"Asset Drains and Culvets Test 002\",\n    \"dateOfCreation\": 1497292200000,\n    \"locationDetails\": {\n      \"locality\": 1098,\n      \"zone\": null,\n      \"revenueWard\": null,\n      \"block\": null,\n      \"street\": null,\n      \"electionWard\": null,\n      \"doorNo\": \"\",\n      \"pinCode\": null\n    },\n    \"remarks\": \"\",\n    \"length\": \"\",\n    \"width\": \"\",\n    \"totalArea\": \"\",\n    \"grossValue\": 47500,\n    \"accumulatedDepreciation\": 29368,\n    \"assetReference\": null,\n    \"version\": \"1.0\",\n    \"assetAttributes\": [\n      {\n        \"key\": \"Classification of the drain\",\n        \"type\": \"Select\",\n        \"value\": \"Open drain\"\n      },\n      {\n        \"key\": \"Type of drain\",\n        \"type\": \"Select\",\n        \"value\": \"Primary\"\n      },\n      {\n        \"key\": \"Classification of culvert\",\n        \"type\": \"Select\",\n        \"value\": \"Concrete\"\n      },\n      {\n        \"key\": \"Length\",\n        \"type\": \"Text\",\n        \"value\": \"10\"\n      },\n      {\n        \"key\": \"Breadth\",\n        \"type\": \"Text\",\n        \"value\": \"120\"\n      },\n      {\n        \"key\": \"Height\",\n        \"type\": \"Text\",\n        \"value\": \"20\"\n      },\n      {\n        \"key\": \"Land Area (acre/sqmtrs)\",\n        \"type\": \"Text\",\n        \"value\": \"1200\"\n      },\n      {\n        \"key\": \"Condition of the asset\",\n        \"type\": \"Select\",\n        \"value\": \"Good\"\n      },\n      {\n        \"key\": \"Available Doc List\",\n        \"type\": \"Text\",\n        \"value\": \"1\"\n      },\n      {\n        \"key\": \"Description of the drain\",\n        \"type\": \"Select\",\n        \"value\": \"Good\"\n      }\n    ],\n    \"enableYearWiseDepreciation\": true,\n    \"depreciationRate\": null,\n    \"yearWiseDepreciation\": [\n      {\n        \"id\": null,\n        \"depreciationRate\": 19,\n        \"financialYear\": \"2015-16\",\n        \"usefulLifeInYears\": null,\n        \"tenantId\": null\n      },\n      {\n        \"id\": null,\n        \"depreciationRate\": 18,\n        \"financialYear\": \"2016-17\",\n        \"usefulLifeInYears\": null,\n        \"tenantId\": null\n      },\n      {\n        \"id\": null,\n        \"depreciationRate\": 35,\n        \"financialYear\": \"2017-18\",\n        \"usefulLifeInYears\": null,\n        \"tenantId\": null\n      }\n    ]\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://kurnool-pilot-services.egovernments.org/asset-services/assets/_create?tenantId=ap.kurnool",
+			"request": {
+				"url": {
+					"raw": "http://kurnool-pilot-services.egovernments.org/asset-services/assets/_create?tenantId=ap.kurnool",
+					"protocol": "http",
+					"host": [
+						"kurnool-pilot-services",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"asset-services",
+						"assets",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "ap.kurnool",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pgr\",\n    \"ver\": \"1.0\",\n    \"ts\": \"01-04-2017 01:01:01\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"authToken\": null,\n    \"correlationId\": null,\n    \"userInfo\": {\n      \"id\": 1,\n      \"userName\": \"egovernments\",\n      \"name\": \"Admin\",\n      \"type\": \"SYSTEM\",\n      \"mobileNumber\": null,\n      \"emailId\": null,\n      \"roles\": [\n        {\n          \"id\": null,\n          \"name\": \"SYSTEM\"\n        }\n      ]\n    }\n  },\n  \"Asset\": {\n    \"tenantId\": \"ap.kurnool\",\n    \"name\": \"Asset Drains and Culvets Test 003\",\n    \"department\": {\n      \"id\": 5,\n      \"name\": null,\n      \"code\": null\n    },\n    \"assetCategory\": {\n      \"tenantId\": \"ap.kurnool\",\n      \"id\": 1025,\n      \"name\": \"Drains and Culvets\",\n      \"code\": \"017\",\n      \"assetCategoryType\": \"IMMOVABLE\",\n      \"parent\": null,\n      \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n      \"isAssetAllow\": false,\n      \"assetAccount\": null,\n      \"accumulatedDepreciationAccount\": null,\n      \"revaluationReserveAccount\": 807,\n      \"depreciationExpenseAccount\": 770,\n      \"unitOfMeasurement\": null,\n      \"version\": null,\n      \"depreciationRate\": 0,\n      \"assetFieldsDefination\": null\n    },\n    \"assetDetails\": \"\",\n    \"modeOfAcquisition\": \"CONSTRUCTION\",\n    \"status\": \"CAPITALIZED\",\n    \"description\": \"Asset Drains and Culvets Test 003\",\n    \"dateOfCreation\": 1497378600000,\n    \"locationDetails\": {\n      \"locality\": 1098,\n      \"zone\": null,\n      \"revenueWard\": null,\n      \"block\": null,\n      \"street\": null,\n      \"electionWard\": null,\n      \"doorNo\": \"\",\n      \"pinCode\": null\n    },\n    \"remarks\": \"\",\n    \"length\": \"\",\n    \"width\": \"\",\n    \"totalArea\": \"\",\n    \"grossValue\": 47500,\n    \"accumulatedDepreciation\": null,\n    \"assetReference\": null,\n    \"version\": \"1.0\",\n    \"assetAttributes\": [\n      {\n        \"key\": \"Classification of the drain\",\n        \"type\": \"Select\",\n        \"value\": \"Open drain\"\n      },\n      {\n        \"key\": \"Type of drain\",\n        \"type\": \"Select\",\n        \"value\": \"Primary\"\n      },\n      {\n        \"key\": \"Classification of culvert\",\n        \"type\": \"Select\",\n        \"value\": \"Concrete\"\n      },\n      {\n        \"key\": \"Length\",\n        \"type\": \"Text\",\n        \"value\": \"10\"\n      },\n      {\n        \"key\": \"Breadth\",\n        \"type\": \"Text\",\n        \"value\": \"120\"\n      },\n      {\n        \"key\": \"Height\",\n        \"type\": \"Text\",\n        \"value\": \"20\"\n      },\n      {\n        \"key\": \"Land Area (acre/sqmtrs)\",\n        \"type\": \"Text\",\n        \"value\": \"1200\"\n      },\n      {\n        \"key\": \"Condition of the asset\",\n        \"type\": \"Select\",\n        \"value\": \"Good\"\n      },\n      {\n        \"key\": \"Available Doc List\",\n        \"type\": \"Text\",\n        \"value\": \"1\"\n      },\n      {\n        \"key\": \"Description of the drain\",\n        \"type\": \"Select\",\n        \"value\": \"Good\"\n      }\n    ],\n    \"enableYearWiseDepreciation\": false,\n    \"depreciationRate\": 16.32\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://kurnool-pilot-services.egovernments.org/asset-services/assets/_create?tenantId=ap.kurnool",
+			"request": {
+				"url": {
+					"raw": "http://kurnool-pilot-services.egovernments.org/asset-services/assets/_create?tenantId=ap.kurnool",
+					"protocol": "http",
+					"host": [
+						"kurnool-pilot-services",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"asset-services",
+						"assets",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "ap.kurnool",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pgr\",\n    \"ver\": \"1.0\",\n    \"ts\": \"01-04-2017 01:01:01\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"authToken\": null,\n    \"correlationId\": null,\n    \"userInfo\": {\n      \"id\": 1,\n      \"userName\": \"egovernments\",\n      \"name\": \"Admin\",\n      \"type\": \"SYSTEM\",\n      \"mobileNumber\": null,\n      \"emailId\": null,\n      \"roles\": [\n        {\n          \"id\": null,\n          \"name\": \"SYSTEM\"\n        }\n      ]\n    }\n  },\n  \"Asset\": {\n    \"tenantId\": \"ap.kurnool\",\n    \"name\": \"Asset Kalyana Mandapam Test 001\",\n    \"department\": {\n      \"id\": 5,\n      \"name\": null,\n      \"code\": null\n    },\n    \"assetCategory\": {\n      \"tenantId\": \"ap.kurnool\",\n      \"id\": 241,\n      \"name\": \"Kalyana Mandapam\",\n      \"code\": \"008\",\n      \"assetCategoryType\": \"IMMOVABLE\",\n      \"parent\": null,\n      \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n      \"isAssetAllow\": false,\n      \"assetAccount\": 1730,\n      \"accumulatedDepreciationAccount\": null,\n      \"revaluationReserveAccount\": 807,\n      \"depreciationExpenseAccount\": 770,\n      \"unitOfMeasurement\": null,\n      \"version\": null,\n      \"depreciationRate\": 0,\n      \"assetFieldsDefination\": null\n    },\n    \"assetDetails\": \"\",\n    \"modeOfAcquisition\": \"ACQUIRED\",\n    \"status\": \"CAPITALIZED\",\n    \"description\": \"Asset Kalyana Mandapam Test 001\",\n    \"dateOfCreation\": 1497465000000,\n    \"locationDetails\": {\n      \"locality\": 1098,\n      \"zone\": null,\n      \"revenueWard\": null,\n      \"block\": null,\n      \"street\": null,\n      \"electionWard\": null,\n      \"doorNo\": \"\",\n      \"pinCode\": null\n    },\n    \"remarks\": \"\",\n    \"length\": \"\",\n    \"width\": \"\",\n    \"totalArea\": \"\",\n    \"grossValue\": 81500,\n    \"accumulatedDepreciation\": null,\n    \"assetReference\": null,\n    \"version\": \"1.0\",\n    \"assetAttributes\": [\n      {\n        \"key\": \"Total Square Feet Area\",\n        \"type\": \"Number\",\n        \"value\": \"1500\"\n      },\n      {\n        \"key\": \"Total Built up area\",\n        \"type\": \"Number\",\n        \"value\": \"\"\n      },\n      {\n        \"key\": \"Amenities\",\n        \"type\": \"Table\",\n        \"value\": [\n                {\n                  \"key\": \"Type\",\n                  \"type\": \"Text\",\n                  \"value\": \"Ground\"\n                },\n                {\n                  \"key\": \"Total count\",\n                  \"type\": \"Number\",\n                  \"value\": \"2\"\n                }\n        ]\n      }\n    ],\n    \"enableYearWiseDepreciation\": true,\n    \"depreciationRate\": null,\n    \"yearWiseDepreciation\": [\n      {\n        \"id\": null,\n        \"depreciationRate\": 39,\n        \"financialYear\": \"2015-16\",\n        \"usefulLifeInYears\": null,\n        \"tenantId\": null\n      },\n      {\n        \"id\": null,\n        \"depreciationRate\": 11,\n        \"financialYear\": \"2016-17\",\n        \"usefulLifeInYears\": null,\n        \"tenantId\": null\n      },\n      {\n        \"id\": null,\n        \"depreciationRate\": 25,\n        \"financialYear\": \"2017-18\",\n        \"usefulLifeInYears\": null,\n        \"tenantId\": null\n      }\n    ]\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://kurnool-pilot-services.egovernments.org/asset-services/assets/_create?tenantId=ap.kurnool",
+			"request": {
+				"url": {
+					"raw": "http://kurnool-pilot-services.egovernments.org/asset-services/assets/_create?tenantId=ap.kurnool",
+					"protocol": "http",
+					"host": [
+						"kurnool-pilot-services",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"asset-services",
+						"assets",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "ap.kurnool",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pgr\",\n    \"ver\": \"1.0\",\n    \"ts\": \"01-04-2017 01:01:01\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"authToken\": null,\n    \"correlationId\": null,\n    \"userInfo\": {\n      \"id\": 1,\n      \"userName\": \"egovernments\",\n      \"name\": \"Admin\",\n      \"type\": \"SYSTEM\",\n      \"mobileNumber\": null,\n      \"emailId\": null,\n      \"roles\": [\n        {\n          \"id\": null,\n          \"name\": \"SYSTEM\"\n        }\n      ]\n    }\n  },\n  \"Asset\": {\n    \"tenantId\": \"ap.kurnool\",\n    \"name\": \"Asset Kalyana Mandapam Test 002\",\n    \"department\": {\n      \"id\": 5,\n      \"name\": null,\n      \"code\": null\n    },\n    \"assetCategory\": {\n      \"tenantId\": \"ap.kurnool\",\n      \"id\": 241,\n      \"name\": \"Kalyana Mandapam\",\n      \"code\": \"008\",\n      \"assetCategoryType\": \"IMMOVABLE\",\n      \"parent\": null,\n      \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n      \"isAssetAllow\": false,\n      \"assetAccount\": 1730,\n      \"accumulatedDepreciationAccount\": null,\n      \"revaluationReserveAccount\": 807,\n      \"depreciationExpenseAccount\": 770,\n      \"unitOfMeasurement\": null,\n      \"version\": null,\n      \"depreciationRate\": 0,\n      \"assetFieldsDefination\": null\n    },\n    \"assetDetails\": \"\",\n    \"modeOfAcquisition\": \"CONSTRUCTION\",\n    \"status\": \"CAPITALIZED\",\n    \"description\": \"Asset Kalyana Mandapam Test 002\",\n    \"dateOfCreation\": 1497551400000,\n    \"locationDetails\": {\n      \"locality\": 1098,\n      \"zone\": null,\n      \"revenueWard\": null,\n      \"block\": null,\n      \"street\": null,\n      \"electionWard\": null,\n      \"doorNo\": \"\",\n      \"pinCode\": null\n    },\n    \"remarks\": \"\",\n    \"length\": \"\",\n    \"width\": \"\",\n    \"totalArea\": \"\",\n    \"grossValue\": 81500,\n    \"accumulatedDepreciation\": 55423,\n    \"assetReference\": null,\n    \"version\": \"1.0\",\n    \"assetAttributes\": [\n      {\n        \"key\": \"Total Square Feet Area\",\n        \"type\": \"Number\",\n        \"value\": \"1500\"\n      },\n      {\n        \"key\": \"Total Built up area\",\n        \"type\": \"Number\",\n        \"value\": \"\"\n      },\n      {\n        \"key\": \"Amenities\",\n        \"type\": \"Table\",\n        \"value\": [\n                {\n                  \"key\": \"Type\",\n                  \"type\": \"Text\",\n                  \"value\": \"Ground\"\n                },\n                {\n                  \"key\": \"Total count\",\n                  \"type\": \"Number\",\n                  \"value\": \"2\"\n                }\n        ]\n      }\n    ],\n    \"enableYearWiseDepreciation\": true,\n    \"depreciationRate\": null,\n    \"yearWiseDepreciation\": [\n      {\n        \"id\": null,\n        \"depreciationRate\": 39,\n        \"financialYear\": \"2015-16\",\n        \"usefulLifeInYears\": null,\n        \"tenantId\": null\n      },\n      {\n        \"id\": null,\n        \"depreciationRate\": 11,\n        \"financialYear\": \"2016-17\",\n        \"usefulLifeInYears\": null,\n        \"tenantId\": null\n      },\n      {\n        \"id\": null,\n        \"depreciationRate\": 25,\n        \"financialYear\": \"2017-18\",\n        \"usefulLifeInYears\": null,\n        \"tenantId\": null\n      }\n    ]\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://kurnool-pilot-services.egovernments.org/asset-services/assets/_create?tenantId=ap.kurnool",
+			"request": {
+				"url": {
+					"raw": "http://kurnool-pilot-services.egovernments.org/asset-services/assets/_create?tenantId=ap.kurnool",
+					"protocol": "http",
+					"host": [
+						"kurnool-pilot-services",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"asset-services",
+						"assets",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "ap.kurnool",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pgr\",\n    \"ver\": \"1.0\",\n    \"ts\": \"01-04-2017 01:01:01\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"authToken\": null,\n    \"correlationId\": null,\n    \"userInfo\": {\n      \"id\": 1,\n      \"userName\": \"egovernments\",\n      \"name\": \"Admin\",\n      \"type\": \"SYSTEM\",\n      \"mobileNumber\": null,\n      \"emailId\": null,\n      \"roles\": [\n        {\n          \"id\": null,\n          \"name\": \"SYSTEM\"\n        }\n      ]\n    }\n  },\n  \"Asset\": {\n    \"tenantId\": \"ap.kurnool\",\n    \"name\": \"Asset Kalyana Mandapam Test 003\",\n    \"department\": {\n      \"id\": 5,\n      \"name\": null,\n      \"code\": null\n    },\n    \"assetCategory\": {\n      \"tenantId\": \"ap.kurnool\",\n      \"id\": 241,\n      \"name\": \"Kalyana Mandapam\",\n      \"code\": \"008\",\n      \"assetCategoryType\": \"IMMOVABLE\",\n      \"parent\": null,\n      \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n      \"isAssetAllow\": false,\n      \"assetAccount\": 1730,\n      \"accumulatedDepreciationAccount\": null,\n      \"revaluationReserveAccount\": 807,\n      \"depreciationExpenseAccount\": 770,\n      \"unitOfMeasurement\": null,\n      \"version\": null,\n      \"depreciationRate\": 0,\n      \"assetFieldsDefination\": null\n    },\n    \"assetDetails\": \"\",\n    \"modeOfAcquisition\": \"TENDER\",\n    \"status\": \"CAPITALIZED\",\n    \"description\": \"Asset Kalyana Mandapam Test 003\",\n    \"dateOfCreation\": 1497637800000,\n    \"locationDetails\": {\n      \"locality\": 1098,\n      \"zone\": null,\n      \"revenueWard\": null,\n      \"block\": null,\n      \"street\": null,\n      \"electionWard\": null,\n      \"doorNo\": \"\",\n      \"pinCode\": null\n    },\n    \"remarks\": \"\",\n    \"length\": \"\",\n    \"width\": \"\",\n    \"totalArea\": \"\",\n    \"grossValue\": 81500,\n    \"accumulatedDepreciation\": null,\n    \"assetReference\": null,\n    \"version\": \"1.0\",\n    \"assetAttributes\": [\n      {\n        \"key\": \"Total Square Feet Area\",\n        \"type\": \"Number\",\n        \"value\": \"1500\"\n      },\n      {\n        \"key\": \"Total Built up area\",\n        \"type\": \"Number\",\n        \"value\": \"\"\n      },\n      {\n        \"key\": \"Amenities\",\n        \"type\": \"Table\",\n        \"value\": [\n                {\n                  \"key\": \"Type\",\n                  \"type\": \"Text\",\n                  \"value\": \"Ground\"\n                },\n                {\n                  \"key\": \"Total count\",\n                  \"type\": \"Number\",\n                  \"value\": \"2\"\n                }\n        ]\n      }\n    ],\n    \"enableYearWiseDepreciation\": false,\n    \"depreciationRate\": 12.98\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://kurnool-pilot-services.egovernments.org/asset-services/assets/_create?tenantId=ap.kurnool",
+			"request": {
+				"url": {
+					"raw": "http://kurnool-pilot-services.egovernments.org/asset-services/assets/_create?tenantId=ap.kurnool",
+					"protocol": "http",
+					"host": [
+						"kurnool-pilot-services",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"asset-services",
+						"assets",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "ap.kurnool",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pgr\",\n    \"ver\": \"1.0\",\n    \"ts\": \"01-04-2017 01:01:01\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"authToken\": null,\n    \"correlationId\": null,\n    \"userInfo\": {\n      \"id\": 1,\n      \"userName\": \"egovernments\",\n      \"name\": \"Admin\",\n      \"type\": \"SYSTEM\",\n      \"mobileNumber\": null,\n      \"emailId\": null,\n      \"roles\": [\n        {\n          \"id\": null,\n          \"name\": \"SYSTEM\"\n        }\n      ]\n    }\n  },\n  \"Asset\": {\n    \"tenantId\": \"ap.kurnool\",\n    \"name\": \"Asset Lakes and Ponds Test 001\",\n    \"department\": {\n      \"id\": 5,\n      \"name\": null,\n      \"code\": null\n    },\n    \"assetCategory\": {\n      \"tenantId\": \"ap.kurnool\",\n      \"id\": 1249,\n      \"name\": \"Lakes and Ponds\",\n      \"code\": \"020\",\n      \"assetCategoryType\": \"IMMOVABLE\",\n      \"parent\": null,\n      \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n      \"isAssetAllow\": false,\n      \"assetAccount\": 1730,\n      \"accumulatedDepreciationAccount\": null,\n      \"revaluationReserveAccount\": 807,\n      \"depreciationExpenseAccount\": 770,\n      \"unitOfMeasurement\": null,\n      \"version\": null,\n      \"depreciationRate\": 0,\n      \"assetFieldsDefination\": null\n    },\n    \"assetDetails\": \"\",\n    \"modeOfAcquisition\": \"ACQUIRED\",\n    \"status\": \"CAPITALIZED\",\n    \"description\": \"Asset Lakes and Ponds Test 001\",\n    \"dateOfCreation\": 1497724200000,\n    \"locationDetails\": {\n      \"locality\": 1098,\n      \"zone\": null,\n      \"revenueWard\": null,\n      \"block\": null,\n      \"street\": null,\n      \"electionWard\": null,\n      \"doorNo\": \"\",\n      \"pinCode\": null\n    },\n    \"remarks\": \"\",\n    \"length\": \"\",\n    \"width\": \"\",\n    \"totalArea\": \"\",\n    \"grossValue\": 14633,\n    \"accumulatedDepreciation\": null,\n    \"assetReference\": null,\n    \"version\": \"1.0\",\n    \"assetAttributes\": [\n      {\n        \"key\": \"Usage\",\n        \"type\": \"Select\",\n        \"value\": \"Aqua culture\"\n      },\n      {\n        \"key\": \"Possession\",\n        \"type\": \"Select\",\n        \"value\": \"Owned\"\n      },\n      {\n        \"key\": \"Area (acre/sqmtr)\",\n        \"type\": \"Text\",\n        \"value\": \"1233\"\n      },\n      {\n        \"key\": \"Acquired from\",\n        \"type\": \"Text\",\n        \"value\": \"\"\n      },\n      {\n        \"key\": \"Available Doc List\",\n        \"type\": \"Text\",\n        \"value\": \"3\"\n      }\n    ],\n    \"enableYearWiseDepreciation\": true,\n    \"depreciationRate\": null,\n    \"yearWiseDepreciation\": [\n      {\n        \"id\": null,\n        \"depreciationRate\": 27,\n        \"financialYear\": \"2015-16\",\n        \"usefulLifeInYears\": null,\n        \"tenantId\": null\n      },\n      {\n        \"id\": null,\n        \"depreciationRate\": 41,\n        \"financialYear\": \"2017-18\",\n        \"usefulLifeInYears\": null,\n        \"tenantId\": null\n      }\n    ]\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://kurnool-pilot-services.egovernments.org/asset-services/assets/_create?tenantId=ap.kurnool",
+			"request": {
+				"url": {
+					"raw": "http://kurnool-pilot-services.egovernments.org/asset-services/assets/_create?tenantId=ap.kurnool",
+					"protocol": "http",
+					"host": [
+						"kurnool-pilot-services",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"asset-services",
+						"assets",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "ap.kurnool",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pgr\",\n    \"ver\": \"1.0\",\n    \"ts\": \"01-04-2017 01:01:01\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"authToken\": null,\n    \"correlationId\": null,\n    \"userInfo\": {\n      \"id\": 1,\n      \"userName\": \"egovernments\",\n      \"name\": \"Admin\",\n      \"type\": \"SYSTEM\",\n      \"mobileNumber\": null,\n      \"emailId\": null,\n      \"roles\": [\n        {\n          \"id\": null,\n          \"name\": \"SYSTEM\"\n        }\n      ]\n    }\n  },\n  \"Asset\": {\n    \"tenantId\": \"ap.kurnool\",\n    \"name\": \"Asset Lakes and Ponds Test 002\",\n    \"department\": {\n      \"id\": 5,\n      \"name\": null,\n      \"code\": null\n    },\n    \"assetCategory\": {\n      \"tenantId\": \"ap.kurnool\",\n      \"id\": 1249,\n      \"name\": \"Lakes and Ponds\",\n      \"code\": \"020\",\n      \"assetCategoryType\": \"IMMOVABLE\",\n      \"parent\": null,\n      \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n      \"isAssetAllow\": false,\n      \"assetAccount\": 1730,\n      \"accumulatedDepreciationAccount\": null,\n      \"revaluationReserveAccount\": 807,\n      \"depreciationExpenseAccount\": 770,\n      \"unitOfMeasurement\": null,\n      \"version\": null,\n      \"depreciationRate\": 0,\n      \"assetFieldsDefination\": null\n    },\n    \"assetDetails\": \"\",\n    \"modeOfAcquisition\": \"ACQUIRED\",\n    \"status\": \"CAPITALIZED\",\n    \"description\": \"Asset Lakes and Ponds Test 002\",\n    \"dateOfCreation\": 1497810600000,\n    \"locationDetails\": {\n      \"locality\": 1098,\n      \"zone\": null,\n      \"revenueWard\": null,\n      \"block\": null,\n      \"street\": null,\n      \"electionWard\": null,\n      \"doorNo\": \"\",\n      \"pinCode\": null\n    },\n    \"remarks\": \"\",\n    \"length\": \"\",\n    \"width\": \"\",\n    \"totalArea\": \"\",\n    \"grossValue\": 14633,\n    \"accumulatedDepreciation\": 9230,\n    \"assetReference\": null,\n    \"version\": \"1.0\",\n    \"assetAttributes\": [\n      {\n        \"key\": \"Usage\",\n        \"type\": \"Select\",\n        \"value\": \"Aqua culture\"\n      },\n      {\n        \"key\": \"Possession\",\n        \"type\": \"Select\",\n        \"value\": \"Owned\"\n      },\n      {\n        \"key\": \"Area (acre/sqmtr)\",\n        \"type\": \"Text\",\n        \"value\": \"1233\"\n      },\n      {\n        \"key\": \"Acquired from\",\n        \"type\": \"Text\",\n        \"value\": \"\"\n      },\n      {\n        \"key\": \"Available Doc List\",\n        \"type\": \"Text\",\n        \"value\": \"3\"\n      }\n    ],\n    \"enableYearWiseDepreciation\": true,\n    \"depreciationRate\": null,\n    \"yearWiseDepreciation\": [\n      {\n        \"id\": null,\n        \"depreciationRate\": 27,\n        \"financialYear\": \"2015-16\",\n        \"usefulLifeInYears\": null,\n        \"tenantId\": null\n      },\n      {\n        \"id\": null,\n        \"depreciationRate\": 41,\n        \"financialYear\": \"2017-18\",\n        \"usefulLifeInYears\": null,\n        \"tenantId\": null\n      }\n    ]\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://kurnool-pilot-services.egovernments.org/asset-services/assets/_create?tenantId=ap.kurnool",
+			"request": {
+				"url": {
+					"raw": "http://kurnool-pilot-services.egovernments.org/asset-services/assets/_create?tenantId=ap.kurnool",
+					"protocol": "http",
+					"host": [
+						"kurnool-pilot-services",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"asset-services",
+						"assets",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "ap.kurnool",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pgr\",\n    \"ver\": \"1.0\",\n    \"ts\": \"01-04-2017 01:01:01\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"authToken\": null,\n    \"correlationId\": null,\n    \"userInfo\": {\n      \"id\": 1,\n      \"userName\": \"egovernments\",\n      \"name\": \"Admin\",\n      \"type\": \"SYSTEM\",\n      \"mobileNumber\": null,\n      \"emailId\": null,\n      \"roles\": [\n        {\n          \"id\": null,\n          \"name\": \"SYSTEM\"\n        }\n      ]\n    }\n  },\n  \"Asset\": {\n    \"tenantId\": \"ap.kurnool\",\n    \"name\": \"Asset Community Toilet Complex Test 002\",\n    \"department\": {\n      \"id\": 5,\n      \"name\": null,\n      \"code\": null\n    },\n    \"assetCategory\": {\n      \"tenantId\": \"ap.kurnool\",\n      \"id\": 1585,\n      \"name\": \"Community Toilet Complex\",\n      \"code\": \"023\",\n      \"assetCategoryType\": \"IMMOVABLE\",\n      \"parent\": null,\n      \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n      \"isAssetAllow\": false,\n      \"assetAccount\": null,\n      \"accumulatedDepreciationAccount\": null,\n      \"revaluationReserveAccount\": 807,\n      \"depreciationExpenseAccount\": 770,\n      \"unitOfMeasurement\": null,\n      \"version\": null,\n      \"depreciationRate\": 0,\n      \"assetFieldsDefination\": null\n    },\n    \"assetDetails\": \"\",\n    \"modeOfAcquisition\": \"TENDER\",\n    \"status\": \"CAPITALIZED\",\n    \"description\": \"Asset Community Toilet Complex Test 002\",\n    \"dateOfCreation\": 1497897000000,\n    \"locationDetails\": {\n      \"locality\": 1098,\n      \"zone\": null,\n      \"revenueWard\": null,\n      \"block\": null,\n      \"street\": null,\n      \"electionWard\": null,\n      \"doorNo\": \"\",\n      \"pinCode\": null\n    },\n    \"remarks\": \"\",\n    \"length\": \"\",\n    \"width\": \"\",\n    \"totalArea\": \"\",\n    \"grossValue\": 47500,\n    \"accumulatedDepreciation\": 19350,\n    \"assetReference\": null,\n    \"version\": \"1.0\",\n    \"assetAttributes\": [\n      {\n        \"key\": \"East\",\n        \"type\": \"Text\",\n        \"value\": \"12\"\n      },\n      {\n        \"key\": \"South\",\n        \"type\": \"Text\",\n        \"value\": \"15\"\n      },\n      {\n        \"key\": \"West\",\n        \"type\": \"Text\",\n        \"value\": \"19\"\n      },\n      {\n        \"key\": \"North\",\n        \"type\": \"Text\",\n        \"value\": \"10\"\n      },\n      {\n        \"key\": \"Total Square feet area\",\n        \"type\": \"Text\",\n        \"value\": \"1200\"\n      }\n    ],\n    \"enableYearWiseDepreciation\": true,\n    \"depreciationRate\": null,\n    \"yearWiseDepreciation\": [\n      {\n        \"id\": null,\n        \"depreciationRate\": 13,\n        \"financialYear\": \"2015-16\",\n        \"usefulLifeInYears\": null,\n        \"tenantId\": null\n      },\n      {\n        \"id\": null,\n        \"depreciationRate\": 38,\n        \"financialYear\": \"2016-17\",\n        \"usefulLifeInYears\": null,\n        \"tenantId\": null\n      },\n      {\n        \"id\": null,\n        \"depreciationRate\": 26,\n        \"financialYear\": \"2017-18\",\n        \"usefulLifeInYears\": null,\n        \"tenantId\": null\n      }\n    ]\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://kurnool-pilot-services.egovernments.org/asset-services/assets/_create?tenantId=ap.kurnool",
+			"request": {
+				"url": {
+					"raw": "http://kurnool-pilot-services.egovernments.org/asset-services/assets/_create?tenantId=ap.kurnool",
+					"protocol": "http",
+					"host": [
+						"kurnool-pilot-services",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"asset-services",
+						"assets",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "ap.kurnool",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pgr\",\n    \"ver\": \"1.0\",\n    \"ts\": \"01-04-2017 01:01:01\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"authToken\": null,\n    \"correlationId\": null,\n    \"userInfo\": {\n      \"id\": 1,\n      \"userName\": \"egovernments\",\n      \"name\": \"Admin\",\n      \"type\": \"SYSTEM\",\n      \"mobileNumber\": null,\n      \"emailId\": null,\n      \"roles\": [\n        {\n          \"id\": null,\n          \"name\": \"SYSTEM\"\n        }\n      ]\n    }\n  },\n  \"Asset\": {\n    \"tenantId\": \"ap.kurnool\",\n    \"name\": \"Asset Community Toilet Complex Test 003\",\n    \"department\": {\n      \"id\": 5,\n      \"name\": null,\n      \"code\": null\n    },\n    \"assetCategory\": {\n      \"tenantId\": \"ap.kurnool\",\n      \"id\": 1585,\n      \"name\": \"Community Toilet Complex\",\n      \"code\": \"023\",\n      \"assetCategoryType\": \"IMMOVABLE\",\n      \"parent\": null,\n      \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n      \"isAssetAllow\": false,\n      \"assetAccount\": null,\n      \"accumulatedDepreciationAccount\": null,\n      \"revaluationReserveAccount\": 807,\n      \"depreciationExpenseAccount\": 770,\n      \"unitOfMeasurement\": null,\n      \"version\": null,\n      \"depreciationRate\": 0,\n      \"assetFieldsDefination\": null\n    },\n    \"assetDetails\": \"\",\n    \"modeOfAcquisition\": \"TENDER\",\n    \"status\": \"CAPITALIZED\",\n    \"description\": \"Asset Community Toilet Complex Test 003\",\n    \"dateOfCreation\": 1497983400000,\n    \"locationDetails\": {\n      \"locality\": 1098,\n      \"zone\": null,\n      \"revenueWard\": null,\n      \"block\": null,\n      \"street\": null,\n      \"electionWard\": null,\n      \"doorNo\": \"\",\n      \"pinCode\": null\n    },\n    \"remarks\": \"\",\n    \"length\": \"\",\n    \"width\": \"\",\n    \"totalArea\": \"\",\n    \"grossValue\": 7500,\n    \"accumulatedDepreciation\": 190,\n    \"assetReference\": null,\n    \"version\": \"1.0\",\n    \"assetAttributes\": [\n      {\n        \"key\": \"East\",\n        \"type\": \"Text\",\n        \"value\": \"12\"\n      },\n      {\n        \"key\": \"South\",\n        \"type\": \"Text\",\n        \"value\": \"15\"\n      },\n      {\n        \"key\": \"West\",\n        \"type\": \"Text\",\n        \"value\": \"19\"\n      },\n      {\n        \"key\": \"North\",\n        \"type\": \"Text\",\n        \"value\": \"10\"\n      },\n      {\n        \"key\": \"Total Square feet area\",\n        \"type\": \"Text\",\n        \"value\": \"1200\"\n      }\n    ],\n    \"enableYearWiseDepreciation\": false,\n    \"depreciationRate\": 29.36\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

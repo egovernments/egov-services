@@ -69,8 +69,8 @@ public class CitizenPersistService {
 		log.info("serviceReqRequest:"+serviceReqRequest);
 		ObjectMapper mapper = new ObjectMapper();
 		try{
-			String request = mapper.writeValueAsString(serviceReqRequest);
-			kafkaTemplate.send(createServiceTopic, request);
+			//String request = mapper.writeValueAsString(serviceReqRequest);
+			kafkaTemplate.send(createServiceTopic, serviceReqRequest);
 		} catch (Exception ex){
 			log.error("failed to send kafka"+ex);
 			ex.printStackTrace();

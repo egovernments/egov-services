@@ -113,10 +113,10 @@ class SearchEscalation extends Component {
 
       let{setLoadingStatus} = this.props;
 
-      Api.commonApiPost("/pgr/services/v1/_search", {type: "all"}).then(function(response) {
+      Api.commonApiPost("/pgr-master/service/v1/_search", {keywords: "complaint"}).then(function(response) {
         setLoadingStatus('hide');
           self.setState({
-            grievanceTypeSource: response.complaintTypes
+            grievanceTypeSource: response.Service
           })
       }, function(err) {
         self.setState({

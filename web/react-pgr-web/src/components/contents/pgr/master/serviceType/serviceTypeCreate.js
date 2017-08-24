@@ -55,7 +55,7 @@ class ServiceTypeCreate extends Component {
             let {setForm} = this.props;
 
             Api.commonApiPost("/pgr-master/service/v1/_search",{id:this.props.match.params.id, keywords : 'complaint'},body).then(function(response){
-                current.setState({data:response.Service})
+                current.setState({data:response.Service});
                 setForm(response.Service[0])
             }, function(err) {
               current.props.toggleSnackbarAndSetText(true, err.message);
@@ -624,8 +624,8 @@ class ServiceTypeCreate extends Component {
                                   <Checkbox
                                     label={translate("pgr.lbl.active")}
                                     style={styles.setTopMargin}
-                                    checked = {createServiceType.active || false}
-                                    onCheck = {(e, i, value) => { console.log(createServiceType.active, i);
+                                    defaultChecked = {createServiceType.active !== undefined ? createServiceType.active : true}
+                                    onCheck = {(e, i, value) => {
                                       handleChange(value, "active", false, '')
                                     }}
                                     id="active"
@@ -636,8 +636,7 @@ class ServiceTypeCreate extends Component {
                                     label={translate('pgr.lbl.finimpact')}
                                     style={styles.setTopMargin}
                                     checked = {createServiceType.hasFinancialImpact || false}
-                                    onCheck = {(e, i, v) => { console.log(createServiceType.hasFinancialImpact, i);
-
+                                    onCheck = {(e, i, v) => {
                                       var e = {
                                         target: {
                                           value:i

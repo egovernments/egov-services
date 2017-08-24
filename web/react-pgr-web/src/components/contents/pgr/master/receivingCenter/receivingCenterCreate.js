@@ -185,9 +185,8 @@ class CreateReceivingCenter extends Component {
                                   <Checkbox
                                     label={translate("pgr.lbl.active")}
                                     style={styles.setTopMargin}
-                                    checked = {createReceivingCenter.active || false}
+                                    checked = {createReceivingCenter.active !== undefined ? createReceivingCenter.active : true}
                                     onCheck = {(e, i, v) => {
-
                                       var e = {
                                         target: {
                                           value:i

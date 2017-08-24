@@ -210,7 +210,7 @@ class receivingModeCreate extends Component {
                    </Col>
                     <Col xs={12} sm={4} md={3} lg={3}>
                     <Checkbox label={translate("pgr.lbl.active")} id="active" style={styles.setTopMargin}
-                      checked ={receivingmodeSet.active ? true : false}
+                      checked ={receivingmodeSet.active !== undefined ? receivingmodeSet.active : true}
                       onCheck={(e,isInputChecked) => {
                        var e={
                             "target":{

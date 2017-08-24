@@ -149,7 +149,6 @@ class App extends Component {
 		if(hash[1].match('/?')){
 			var codeArray = hash[1].split('?');
 			urlCode = codeArray[0];
-		
 		}
         Api.commonApiPost("tenant/v1/tenant/_search", {code:hash[1]?urlCode:"default", tenantId: hash[1]?urlCode:"default"}, {}, true).then(function(res){
           // console.log(res);

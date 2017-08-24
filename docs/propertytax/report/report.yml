@@ -60,13 +60,39 @@ ReportDefinitions:
   - name: adminboundary
     label: reports.property.adminboundary
     type: singlevaluelist
-    pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=default|$..key|$..object
+    pattern: 
     isMandatory: false
-    searchClause: AND EGCL_RECEIPTHEADER.STATUS = $status
+    searchClause: searchClause: And loc.adminboundary =?
     source: collection
-  query: SELECT ROW_NUMBER() OVER (ORDER BY EGCL_RECEIPTHEADER.RECEIPTNUMBER) AS SERIALNUMBER, EGCL_RECEIPTHEADER.RECEIPTNUMBER AS RECEIPT_NUMBER, EG_DEPARTMENT.NAME AS DEPT_NAME, EGCL_RECEIPTHEADER.TOTALAMOUNT AS RECEIPT_AMOUNT, EGCL_RECEIPTHEADER.CONSUMERCODE AS CONSUMER_CODE,  EGCL_RECEIPTHEADER.RECEIPTTYPE AS RECEIPT_TYPE FROM EGCL_RECEIPTHEADER EGCL_RECEIPTHEADER  INNER JOIN EG_BUSINESSDETAILS EG_BUSINESSDETAILS ON EGCL_RECEIPTHEADER.BUSINESSDETAILS = EG_BUSINESSDETAILS.CODE INNER JOIN EGCL_RECEIPTINSTRUMENT EGCL_RECEIPTINSTRUMENT ON EGCL_RECEIPTHEADER.ID = EGCL_RECEIPTINSTRUMENT.RECEIPTHEADER INNER JOIN EGF_INSTRUMENT EGF_INSTRUMENT ON EGCL_RECEIPTINSTRUMENT.INSTRUMENTHEADER = EGF_INSTRUMENT.ID INNER JOIN EG_DEPARTMENT EG_DEPARTMENT ON  EGCL_RECEIPTHEADER.DEPARTMENT = EG_DEPARTMENT.CODE INNER JOIN EG_USER EGUSER ON EGUSER.ID = EGCL_RECEIPTHEADER.CREATEDBY WHERE   
-         EGF_INSTRUMENT.INSTRUMENTTYPEID = 'Cash' AND EGCL_RECEIPTHEADER.TENANTID=$tenantid 
-  orderBy: ORDER BY RECEIPT_NUMBER;
+  query: select * from ((select prop.upicnumber as upicnumber, address.addressnumber||', '||address.addressline1||', '||address.addressline2||' - '||address.pincode as propertyaddress,
+         'CURRENT' as STATE, SUM((CASE WHEN dd.taxheadcode = 'PT_TAX' THEN dd.taxamount ELSE NULL END)) AS PT_TAX,
+         SUM((CASE WHEN dd.taxheadcode = 'LIB_CESS' THEN dd.taxamount ELSE NULL END)) AS LIB_CESS,
+         SUM((CASE WHEN dd.taxheadcode = 'EDU_CESS' THEN dd.taxamount ELSE NULL END)) AS EDU_CESS,
+         SUM((CASE WHEN dd.taxheadcode = 'VACANT_TAX' THEN dd.taxamount ELSE NULL END)) AS VACANT_TAX,
+         SUM((CASE WHEN dd.taxheadcode = 'EMP_GUA_CESS' THEN dd.taxamount ELSE NULL END)) AS EMP_GUA_CESS,
+         SUM((CASE WHEN dd.taxheadcode = 'LATE_PENALTY' THEN dd.taxamount ELSE NULL END)) AS LATE_PENALTY,
+         SUM((CASE WHEN dd.taxheadcode = 'ADVANCE' THEN dd.collectionamount ELSE NULL END)) AS ADVANCE
+         from egpt_property prop, egpt_propertydetails pd, egpt_address address, egbs_demand demand, egbs_demanddetail dd, egpt_propertylocation loc where prop.id=pd.property
+         and prop.id=address.property and loc.property = prop.id and demand.consumercode=prop.upicnumber
+         and demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE fromdate<=
+         (select extract ('epoch' from (select * from now()))*1000) and todate>=(select extract ('epoch' from (select * from now()))*1000)) 
+         --and loc.revenueboundary =? And loc.locationboundary =? And loc.adminboundary =?
+         UNION 
+         (select prop.upicnumber as upicnumber, address.addressnumber||', '||address.addressline1||', '||address.addressline2||' - '||address.pincode as propertyaddress, 
+         'ARREAR' as STATE,SUM((CASE WHEN dd.taxheadcode = 'PT_TAX' THEN dd.taxamount ELSE NULL END)) AS PT_TAX,
+          SUM((CASE WHEN dd.taxheadcode = 'LIB_CESS' THEN dd.taxamount ELSE NULL END)) AS LIB_CESS,
+          SUM((CASE WHEN dd.taxheadcode = 'EDU_CESS' THEN dd.taxamount ELSE NULL END)) AS EDU_CESS,
+          SUM((CASE WHEN dd.taxheadcode = 'VACANT_TAX' THEN dd.taxamount ELSE NULL END)) AS VACANT_TAX,
+          SUM((CASE WHEN dd.taxheadcode = 'EMP_GUA_CESS' THEN dd.taxamount ELSE NULL END)) AS EMP_GUA_CESS,
+          SUM((CASE WHEN dd.taxheadcode = 'LATE_PENALTY' THEN dd.taxamount ELSE NULL END)) AS LATE_PENALTY,
+          SUM((CASE WHEN dd.taxheadcode = 'ADVANCE' THEN dd.collectionamount ELSE NULL END)) AS ADVANCE
+          from egpt_property prop, egpt_propertydetails pd, egpt_address address, egbs_demand demand, egbs_demanddetail dd, egpt_propertylocation loc where prop.id=pd.property
+          and prop.id=address.property and loc.property = prop.id and demand.consumercode=prop.upicnumber
+          and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and 
+          todate>=(select extract ('epoch' from (select * from now()))*1000)) 
+          --and loc.revenueboundary =? And loc.locationboundary =? And loc.adminboundary =? 
+  groupBy: group by upicnumber,propertyaddress,state)        
+  orderBy: )result order by upicnumber asc,state desc;
  
  - reportName: CollectionRegister
   summary: Collection Register Report
@@ -128,11 +154,36 @@ ReportDefinitions:
   - name: adminboundary
     label: reports.property.adminboundary
     type: singlevaluelist
-    pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=default|$..key|$..object
+    pattern: 
     isMandatory: false
-    searchClause: AND EGCL_RECEIPTHEADER.STATUS = $status
-    source: collection
-  query: SELECT ROW_NUMBER() OVER (ORDER BY EGCL_RECEIPTHEADER.RECEIPTNUMBER) AS SERIALNUMBER, EGCL_RECEIPTHEADER.RECEIPTNUMBER AS RECEIPT_NUMBER, EG_DEPARTMENT.NAME AS DEPT_NAME, EGCL_RECEIPTHEADER.TOTALAMOUNT AS RECEIPT_AMOUNT, EGCL_RECEIPTHEADER.CONSUMERCODE AS CONSUMER_CODE,  EGCL_RECEIPTHEADER.RECEIPTTYPE AS RECEIPT_TYPE FROM EGCL_RECEIPTHEADER EGCL_RECEIPTHEADER  INNER JOIN EG_BUSINESSDETAILS EG_BUSINESSDETAILS ON EGCL_RECEIPTHEADER.BUSINESSDETAILS = EG_BUSINESSDETAILS.CODE INNER JOIN EGCL_RECEIPTINSTRUMENT EGCL_RECEIPTINSTRUMENT ON EGCL_RECEIPTHEADER.ID = EGCL_RECEIPTINSTRUMENT.RECEIPTHEADER INNER JOIN EGF_INSTRUMENT EGF_INSTRUMENT ON EGCL_RECEIPTINSTRUMENT.INSTRUMENTHEADER = EGF_INSTRUMENT.ID INNER JOIN EG_DEPARTMENT EG_DEPARTMENT ON  EGCL_RECEIPTHEADER.DEPARTMENT = EG_DEPARTMENT.CODE INNER JOIN EG_USER EGUSER ON EGUSER.ID = EGCL_RECEIPTHEADER.CREATEDBY WHERE   
-         EGF_INSTRUMENT.INSTRUMENTTYPEID = 'Cash' AND EGCL_RECEIPTHEADER.TENANTID=$tenantid 
-  orderBy: ORDER BY RECEIPT_NUMBER;
+    searchClause: And loc.adminboundary =?
+    source: property
+  query: select * from ((select prop.upicnumber as upicnumber,address.addressnumber||', '||address.addressline1||', '||address.addressline2||' - '||address.pincode as propertyaddress, 
+         'CURRENT' as STATE,SUM((CASE WHEN dd.taxheadcode = 'PT_TAX' THEN dd.collectionamount ELSE NULL END)) AS PT_COLL,
+          SUM((CASE WHEN dd.taxheadcode = 'LIB_CESS' THEN dd.collectionamount ELSE NULL END)) AS LIB_CESS_COLL,
+          SUM((CASE WHEN dd.taxheadcode = 'EDU_CESS' THEN dd.collectionamount ELSE NULL END)) AS EDU_CESS_COLL,
+          SUM((CASE WHEN dd.taxheadcode = 'VACANT_TAX' THEN dd.collectionamount ELSE NULL END)) AS VACANT_TAX_COLL,
+          SUM((CASE WHEN dd.taxheadcode = 'EMP_GUA_CESS' THEN dd.collectionamount ELSE NULL END)) AS EMP_GUA_CESS_COLL,
+          SUM((CASE WHEN dd.taxheadcode = 'LATE_PENALTY' THEN dd.collectionamount ELSE NULL END)) AS LATE_PENALTY_COLL,
+          SUM((CASE WHEN dd.taxheadcode = 'ADVANCE' THEN dd.collectionamount ELSE NULL END)) AS ADVANCE
+          from egpt_property prop, egpt_propertydetails pd, egpt_address address, egbs_demand demand, egbs_demanddetail dd, egpt_propertylocation loc where prop.id=pd.property
+          and prop.id=address.property and loc.property = prop.id and demand.consumercode=prop.upicnumber and demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE 
+          fromdate<=(select extract ('epoch' from (select * from now()))*1000) and todate>=(select extract ('epoch' from (select * from now()))*1000)) 
+          --and loc.revenueboundary =? And loc.locationboundary =? And loc.adminboundary =?
+          UNION 
+         (select prop.upicnumber as upicnumber,address.addressnumber||', '||address.addressline1||', '||address.addressline2||' - '||address.pincode as propertyaddress, 
+         'ARREAR' as STATE,SUM((CASE WHEN dd.taxheadcode = 'PT_TAX' THEN dd.collectionamount ELSE NULL END)) AS PT_COLL,
+         SUM((CASE WHEN dd.taxheadcode = 'LIB_CESS' THEN dd.collectionamount ELSE NULL END)) AS LIB_CESS_COLL,
+         SUM((CASE WHEN dd.taxheadcode = 'EDU_CESS' THEN dd.collectionamount ELSE NULL END)) AS EDU_CESS_COLL,
+         SUM((CASE WHEN dd.taxheadcode = 'VACANT_TAX' THEN dd.collectionamount ELSE NULL END)) AS VACANT_TAX_COLL,
+         SUM((CASE WHEN dd.taxheadcode = 'EMP_GUA_CESS' THEN dd.collectionamount ELSE NULL END)) AS EMP_GUA_CESS_COLL,
+         SUM((CASE WHEN dd.taxheadcode = 'LATE_PENALTY' THEN dd.collectionamount ELSE NULL END)) AS LATE_PENALTY_COLL,
+         SUM((CASE WHEN dd.taxheadcode = 'ADVANCE' THEN dd.collectionamount ELSE NULL END)) AS ADVANCE
+         from egpt_property prop, egpt_propertydetails pd, egpt_address address, egbs_demand demand, egbs_demanddetail dd, egpt_propertylocation loc where prop.id=pd.property
+         and prop.id=address.property and loc.property = prop.id and demand.consumercode=prop.upicnumber
+         and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) 
+         and todate>=(select extract ('epoch' from (select * from now()))*1000)) 
+         --and loc.revenueboundary =? And loc.locationboundary =? And loc.adminboundary =?
+  groupBy: group by upicnumber,propertyaddress,state) 
+  orderBy: )result order by upicnumber asc,state desc;
  

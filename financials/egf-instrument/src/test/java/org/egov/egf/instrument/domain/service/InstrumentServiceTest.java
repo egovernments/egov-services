@@ -174,10 +174,10 @@ public class InstrumentServiceTest {
 	public final void test_create_bankchallan() {
 
 		List<Instrument> expextedResult = getInstruments();
-		expextedResult.get(0).getInstrumentType().setName("bank challan");
+		expextedResult.get(0).getInstrumentType().setName("bankchallan");
 		
 		Pagination<InstrumentType> pit = getInstrumentType();
-		pit.getPagedData().get(0).setName("bank challan");
+		pit.getPagedData().get(0).setName("bankchallan");
 
 		when(instrumentTypeRepository.search(any(InstrumentTypeSearch.class))).thenReturn(pit);
 		when(bankContractRepository.findByCode(any(BankContract.class))).thenReturn(getBankContract());

@@ -166,7 +166,7 @@ public class TradeLicenseJdbcRepositoryTest {
 		SupportDocument supportDocument = new SupportDocument();
 		supportDocument.setComments("comments");
 		supportDocument.setDocumentTypeId(1l);
-		supportDocument.setFileStoreId(1l);
+		supportDocument.setFileStoreId("1");
 		supportDocument.setLicenseId(1l);
 
 		supportDocuments.add(supportDocument);

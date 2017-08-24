@@ -74,6 +74,9 @@ public class PropertiesManager {
 	@Value("${egov.services.tl-services.create.legacy.tradelicense.validated}")
 	private String createLegacyTradeValidated;
 
+	@Value("${egov.services.tl-services.update.legacy.tradelicense.validated}")
+	private String updateLegacyTradeValidated;
+	
 	@Value("${egov.services.egf-masters.hostname}")
 	private String financialYearServiceHostName;
 
@@ -184,5 +187,10 @@ public class PropertiesManager {
 	@Value("${legacy.trade.create.success.status.message}")
     private String legacyCreateSuccessMessage;
 
+	//IdNotFound Exception Related
+	@Value("${oldLicense.id.notFound.customMsg}")
+	private String oldLicenseIdNotFoundCustomMsg;
 	
+	@Value("${id.notFound.field}")
+	private String idField;
 }

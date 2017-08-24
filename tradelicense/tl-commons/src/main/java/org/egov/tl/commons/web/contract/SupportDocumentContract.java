@@ -29,7 +29,7 @@ public class SupportDocumentContract {
 
 	@NotNull(message = "{error.license.filestore}")
 	@JsonProperty("fileStoreId")
-	private Long fileStoreId;
+	private String fileStoreId;
 
 	@JsonProperty("comments")
 	private String comments;

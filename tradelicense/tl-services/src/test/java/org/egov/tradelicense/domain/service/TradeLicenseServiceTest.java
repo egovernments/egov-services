@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.egov.tl.commons.web.contract.CategoryDetail;
 import org.egov.tl.commons.web.contract.CategoryDetailSearch;
 import org.egov.tl.commons.web.contract.CategorySearch;
 import org.egov.tl.commons.web.contract.DocumentType;
@@ -26,6 +25,7 @@ import org.egov.tradelicense.domain.model.LicenseFeeDetail;
 import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.domain.repository.TradeLicenseRepository;
+import org.egov.tradelicense.domain.service.validator.TradeLicenseServiceValidator;
 import org.egov.tradelicense.web.contract.Boundary;
 import org.egov.tradelicense.web.repository.BoundaryContractRepository;
 import org.egov.tradelicense.web.repository.CategoryContractRepository;
@@ -51,6 +51,9 @@ public class TradeLicenseServiceTest {
 	TradeLicenseService tradeLicenseService;
 
 	@Mock
+	TradeLicenseServiceValidator tradeLicenseServiceValidator;
+
+	@Mock
 	private SmartValidator validator;
 
 	@Mock
@@ -64,7 +67,7 @@ public class TradeLicenseServiceTest {
 
 	@Mock
 	private DocumentTypeContractRepository documentTypeContractRepository;
-	
+
 	@Mock
 	private TradeLicenseNumberGeneratorService licenseNumberGenerationService;
 
@@ -110,7 +113,7 @@ public class TradeLicenseServiceTest {
 		when(documentTypeContractRepository.findById(any(TradeLicense.class), any(SupportDocument.class),
 				any(RequestInfoWrapper.class))).thenReturn(getDocumentTypeResponse());
 		tradeLicenses.add(getTradeLicense());
-		tradeLicenseService.validateRelated(tradeLicenses, requestInfo);
+		tradeLicenseServiceValidator.validateCreateTradeLicenseRelated(tradeLicenses, requestInfo);
 	}
 
 	@Test
@@ -212,13 +215,14 @@ public class TradeLicenseServiceTest {
 		licenseFeeDetails.add(getFeeDetail());
 		supportDocuments.add(getSupportDocument());
 		return TradeLicense.builder().id(1l).tenantId("default").applicationType(ApplicationType.NEW).active(true)
-				.applicationDate((new Date("15/08/2017")).getTime()/1000).emailId("abc@xyz.com").isLegacy(true).oldLicenseNumber("12345")
-				.mobileNumber("9999999999").ownerName("pavan").fatherSpouseName("Venkat")
+				.applicationDate((new Date("15/08/2017")).getTime() / 1000).emailId("abc@xyz.com").isLegacy(true)
+				.oldLicenseNumber("12345").mobileNumber("9999999999").ownerName("pavan").fatherSpouseName("Venkat")
 				.ownerAddress("1-12 kamma street").localityId(7).adminWardId(7).revenueWardId(20).categoryId(1l)
 				.subCategoryId(2l).uomId(1l).quantity(10.0).validityYears(1l).tradeAddress("1-12 kamma street")
-				.ownerShipType(OwnerShipType.RENTED).tradeTitle("restaurants").tradeType(BusinessNature.PERMANENT).isPropertyOwner(Boolean.FALSE)
-				.feeDetails(licenseFeeDetails).supportDocuments(supportDocuments).tradeCommencementDate((new Date("15/08/2017")).getTime()/1000)
-				.auditDetails(getAuditDetails()).build();
+				.ownerShipType(OwnerShipType.RENTED).tradeTitle("restaurants").tradeType(BusinessNature.PERMANENT)
+				.isPropertyOwner(Boolean.FALSE).feeDetails(licenseFeeDetails).supportDocuments(supportDocuments)
+				.tradeCommencementDate((new Date("15/08/2017")).getTime() / 1000).auditDetails(getAuditDetails())
+				.build();
 	}
 
 	private AuditDetails getAuditDetails() {

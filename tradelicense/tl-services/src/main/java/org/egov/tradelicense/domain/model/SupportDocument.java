@@ -27,7 +27,7 @@ public class SupportDocument {
 
 	@NotNull
 	@JsonProperty("fileStoreId")
-	private Long fileStoreId;
+	private String fileStoreId;
 
 	@JsonProperty("comments")
 	private String comments;

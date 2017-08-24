@@ -429,6 +429,21 @@ dataEntryTax = () => {
 					],
 					"documents": [],
 					"stateId": null,
+					 "assessmentDates": [{
+							"name": "FIRSTASSESSMENT",
+							"date": dataEntry.firstAssessmentDate || null
+							},{
+
+							"name":"CURRENTASSESSMENT",
+							"date": dataEntry.currentAssessmentDate || null
+							},{
+							"name":"REVISEDASSESSMENT",
+							"date": dataEntry.revisedAssessmentDate || null
+							},{
+							"name":"LASTASSESSMENT",
+							"date": dataEntry.lastAssessmentDate || null
+							}
+						],
 					"builderDetails": {
 						"certificateNumber": dataEntry.certificateNumber || null,
 						"certificateCompletionDate": dataEntry.certificateCompletionDate || null,

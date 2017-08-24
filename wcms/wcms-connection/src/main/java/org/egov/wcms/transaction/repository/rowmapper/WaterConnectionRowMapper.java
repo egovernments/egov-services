@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.wcms.transaction.model.CommonDataObject;
 import org.egov.wcms.transaction.model.Connection;
 import org.egov.wcms.transaction.model.ConnectionOwner;
 import org.egov.wcms.transaction.model.Meter;
@@ -62,6 +63,8 @@ import org.springframework.http.HttpEntity;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+
+import com.google.gson.Gson;
 
 @Component
 public class WaterConnectionRowMapper {
@@ -174,6 +177,16 @@ public class WaterConnectionRowMapper {
 				connection.setExecutionDate(execDate);
 			}
 			connection.setSubUsageTypeId(rs.getString("subusagetype"));
+			if (null != rs.getString("subusagename") && !rs.getString("subusagename").isEmpty()) {
+				try { 
+					Gson g = new Gson(); 
+					CommonDataObject subUsageType = g.fromJson(rs.getString("subusagename"), CommonDataObject.class);
+					connection.setSubUsageType(subUsageType.getName());
+				} catch(Exception e) { 
+					LOGGER.error("Encountered an exception while fetching Sub Usage Type" + e); 
+				}
+				
+			}
 			if(rs.getString("conn_billtype").equals(METERED) && rs.getBoolean("conn_islegacy")) { 
 				Meter meter = Meter.builder().meterMake(rs.getString("metermake"))
 						.meterCost(rs.getString("metercost"))

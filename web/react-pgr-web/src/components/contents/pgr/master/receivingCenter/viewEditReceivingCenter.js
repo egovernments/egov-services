@@ -125,7 +125,6 @@ class ViewEditServiceGroup extends Component {
                                           <th>{translate("core.lbl.code")}</th>
                                           <th>{translate("core.lbl.description")}</th>
                                           <th>{translate("pgr.lbl.active")} </th>
-                                          <th>{translate("pgr.lblauditdetails")}</th>
                                           <th>{translate("pgr.lbl.crn")}</th>
                                           <th>{translate("pgr.lbl.order.no")}</th>
                                         </tr>
@@ -145,7 +144,6 @@ class ViewEditServiceGroup extends Component {
                                               <td>{e.code}</td>
                                               <td>{e.description}</td>
                                               <td>{e.active  ? "Yes" : "No"}</td>
-                                              <td>{e.auditDetails}</td>
                                               <td>{e.iscrnrequired ? "Yes" : "No"}</td>
                                               <td>{e.orderno}</td>
                                             </tr>

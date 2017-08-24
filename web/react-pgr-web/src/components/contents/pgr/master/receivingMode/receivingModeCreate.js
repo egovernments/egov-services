@@ -174,6 +174,7 @@ class receivingModeCreate extends Component {
                         floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                         floatingLabelText={translate("core.lbl.description")}
                         id="description"
+                        multiLine={true}
                         errorText={fieldErrors.description ? fieldErrors.description : ""}
                         value={receivingmodeSet.description ? receivingmodeSet.description : ""}
                         maxLength="250"

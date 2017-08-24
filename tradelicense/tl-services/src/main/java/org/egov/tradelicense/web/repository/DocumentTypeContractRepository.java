@@ -2,9 +2,9 @@ package org.egov.tradelicense.web.repository;
 
 import java.util.Date;
 
-import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tl.commons.web.response.DocumentTypeResponse;
+import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.web.requests.TlMasterRequestInfo;
@@ -21,33 +21,34 @@ import lombok.extern.slf4j.Slf4j;
 public class DocumentTypeContractRepository {
 
 	private RestTemplate restTemplate;
-	
+
 	@Autowired
 	private PropertiesManager propertiesManger;
 
-	public DocumentTypeContractRepository( RestTemplate restTemplate) {
+	public DocumentTypeContractRepository(RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
 	}
 
 	public DocumentTypeResponse findById(RequestInfoWrapper requestInfoWrapper, String tenatId, Long documentTypeId) {
 
-		String hostUrl = propertiesManger.getTradeLicenseMasterServiceHostName() + propertiesManger.getTradeLicenseMasterServiceBasePath();
+		String hostUrl = propertiesManger.getTradeLicenseMasterServiceHostName()
+				+ propertiesManger.getTradeLicenseMasterServiceBasePath();
 		String searchUrl = propertiesManger.getDocumentServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
-		
-		 if(documentTypeId != null){
+
+		if (documentTypeId != null) {
 			if (documentTypeId != null) {
 				content.append("ids=" + documentTypeId);
 			}
 		}
-		
-		if( tenatId != null ){
-			
-				content.append("&tenantId=" + tenatId);
-			
+
+		if (tenatId != null) {
+
+			content.append("&tenantId=" + tenatId);
+
 		}
-		
+
 		TlMasterRequestInfoWrapper tlMasterRequestInfoWrapper = getTlMasterRequestInfoWrapper(requestInfoWrapper);
 		url = url + content.toString();
 		DocumentTypeResponse documentTypeResponse = null;
@@ -65,11 +66,12 @@ public class DocumentTypeContractRepository {
 		}
 
 	}
-	
+
 	public DocumentTypeResponse findById(TradeLicense tradeLicense, SupportDocument supportDocument,
 			RequestInfoWrapper requestInfoWrapper) {
 
-		String hostUrl = propertiesManger.getTradeLicenseMasterServiceHostName() + propertiesManger.getTradeLicenseMasterServiceBasePath();
+		String hostUrl = propertiesManger.getTradeLicenseMasterServiceHostName()
+				+ propertiesManger.getTradeLicenseMasterServiceBasePath();
 		String searchUrl = propertiesManger.getDocumentServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();

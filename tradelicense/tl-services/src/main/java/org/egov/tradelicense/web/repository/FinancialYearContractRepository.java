@@ -38,9 +38,8 @@ public class FinancialYearContractRepository {
 		String searchUrl = propertiesManager.getFinancialYearServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
-		
+
 		content.append("ids=" + id);
-		
 
 		if (tenantId != null) {
 			content.append("&tenantId=" + tenantId);
@@ -54,7 +53,8 @@ public class FinancialYearContractRepository {
 					FinancialYearContractResponse.class);
 
 		} catch (Exception e) {
-			throw new EndPointException("Error connecting to Location end point " + url, requestInfoWrapper.getRequestInfo());
+			throw new EndPointException("Error connecting to Location end point " + url,
+					requestInfoWrapper.getRequestInfo());
 		}
 
 		if (financialYearContractResponse != null && financialYearContractResponse.getFinancialYears() != null
@@ -66,6 +66,7 @@ public class FinancialYearContractRepository {
 		}
 
 	}
+
 	public FinancialYearContract findFinancialYearIdByDate(String tenantId, Long date,
 			RequestInfoWrapper requestInfoWrapper) {
 
@@ -92,7 +93,8 @@ public class FinancialYearContractRepository {
 					FinancialYearContractResponse.class);
 
 		} catch (Exception e) {
-			throw new EndPointException("Error connecting to Location end point " + url, requestInfoWrapper.getRequestInfo());
+			throw new EndPointException("Error connecting to Location end point " + url,
+					requestInfoWrapper.getRequestInfo());
 		}
 
 		if (financialYearContractResponse != null && financialYearContractResponse.getFinancialYears() != null

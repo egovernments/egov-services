@@ -27,7 +27,7 @@ public class TradeLicenseQueueRepository {
 				tradeLicenseProducer.sendMessage(propertiesManager.getCreateLegacyTradeValidated(), "", topicMap);
 			}
 		}
-		
+
 	}
 
 }

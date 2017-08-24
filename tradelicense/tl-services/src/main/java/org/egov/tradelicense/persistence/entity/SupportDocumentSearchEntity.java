@@ -1,7 +1,6 @@
 package org.egov.tradelicense.persistence.entity;
 
 import org.egov.tradelicense.domain.model.AuditDetails;
-import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.SupportDocumentSearch;
 
 import lombok.AllArgsConstructor;

@@ -177,7 +177,7 @@ public class TradeLicenseSearch {
 
 	@JsonProperty("isPropertyOwner")
 	private Boolean isPropertyOwner = false;
-	
+
 	@JsonProperty("supportDocuments")
 	private List<SupportDocumentSearch> supportDocuments;
 

@@ -637,7 +637,7 @@ class NoDues extends Component {
   getTotal=(demands)=>{
     let sum=0;
 	
-	if(demands == undefined || demands.length!=0){
+	if(typeof demands == undefined || demands.length == 0){
 		return false;
 	}
 	

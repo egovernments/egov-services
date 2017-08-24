@@ -2,11 +2,11 @@ package org.egov.property.utility;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.egov.models.AttributeNotFoundException;
 import org.egov.models.Boundary;
-import org.egov.models.CalculationFactorResponse;
 import org.egov.models.Document;
 import org.egov.models.Floor;
 import org.egov.models.Property;
@@ -327,6 +327,23 @@ public class PropertyValidator {
                 if (!ageExists) {
                     throw new InvalidCodeException(propertiesManager.getInvalidPropertyAgeCode(), requestInfo);
                 }
+            } else {
+                Integer diffValue = 0;
+                List<Object> preparedStatementValues = new ArrayList<Object>();
+                Integer occupancyYear = TimeStampUtil.getYear(unit.getOccupancyDate());
+                Calendar cal = Calendar.getInstance();
+                Integer currentYear = cal.getInstance().get(Calendar.YEAR);
+                diffValue = currentYear - occupancyYear;
+                String code = propertyMasterRepository.getAge(tenantId, diffValue, ConstantUtility.DEPRECIATION_TABLE_NAME,
+                        preparedStatementValues);
+                if (code != null) {
+                    if (!code.isEmpty()) {
+                        unit.setAge(code);
+                    }
+                } else {
+                    throw new InvalidCodeException(propertiesManager.getInvalidPropertyAgeCode(), requestInfo);
+                }
+
             }
 
             if (unit.getStructure() != null) {
@@ -369,24 +386,14 @@ public class PropertyValidator {
                 } else {
                     throw new InvalidCodeException(propertiesManager.getInvalidPropertyStructureCode(), requestInfo);
                 }
-                if (unit.getAge() == null) {
-                    CalculationFactorResponse factorValueResponse = calculatorRepository.getAge(tenantId, null,
-                            requestInfoWrapper,
-                            validOccupancyDate,
+
+                if (unit.getAge() != null) {
+                    calculatorRepository.isFactorExists(tenantId, unit.getAge(), requestInfoWrapper, validOccupancyDate,
                             propertiesManager.getPropertyFactorAge());
-                    if (factorValueResponse != null && factorValueResponse.getCalculationFactors() != null) {
-                        if (factorValueResponse.getCalculationFactors().size() != 0) {
-                            unit.setAge(factorValueResponse.getCalculationFactors().get(0).getFactorCode());
-                        }
-                    }
                 } else {
-                    if (unit.getAge() != null) {
-                        calculatorRepository.isFactorExists(tenantId, unit.getAge(), requestInfoWrapper, validOccupancyDate,
-                                propertiesManager.getPropertyFactorAge());
-                    } else {
-                        throw new InvalidCodeException(propertiesManager.getInvalidPropertyAgeCode(), requestInfo);
-                    }
+                    throw new InvalidCodeException(propertiesManager.getInvalidPropertyAgeCode(), requestInfo);
                 }
+
                 if (propertyType != null) {
                     calculatorRepository.isFactorExists(tenantId, propertyType, requestInfoWrapper, validOccupancyDate,
                             propertiesManager.getPropertyFactorPropertytype());

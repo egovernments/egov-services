@@ -170,9 +170,10 @@ public class ComplaintRouterService {
         if (bndry != null) {
             LOG.info("BoundaryId::" + bndry.getId() + "    ,BoundaryName:" + bndry.getName());
             boundaryList.add(bndry);
-            if (bndry.getParent() != null)
+            if (bndry.getParent() != null) {
                 LOG.info("Boundary Parent::" + bndry.getParent().getId() + "Boundary Parent Name" + bndry.getParent().getName());
-            getParentBoundaries(bndry.getParent().getId(), boundaryList, tenantId);
+	            getParentBoundaries(bndry.getParent().getId(), boundaryList, tenantId);
+	        }
         }
     }
 }

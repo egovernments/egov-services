@@ -166,7 +166,7 @@ export default (state = defaultState, action) => {
     case 'REDIRECT':
       return { ...state, redirectTo: null };
     case 'LOGOUT':
-      return { ...state, redirectTo: '/'+action.tenantId, token: null, currentUser: null, showMenu: false };
+      return { ...state, redirectTo: '/'+action.tenantId, token: null, currentUser: null, showMenu: false,actionList:[]};
     case 'FORCE_LOGOUT':
       return { token: null, showMenu: false, showHome: false };
     case 'SETTINGS_SAVED':

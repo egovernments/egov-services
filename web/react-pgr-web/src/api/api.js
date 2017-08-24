@@ -1,5 +1,10 @@
+// var store=require('../store');
+
 var common = require('../components/common/common');
 var axios = require('axios');
+
+// console.log(store.getState);
+
 // var store = require('configureStore').configure();
 
 var instance = axios.create({
@@ -88,6 +93,7 @@ module.exports = {
                     var _tntId = localStorage.getItem("tenantId") || "default";
                     localStorage.clear();
                     localStorage.setItem('locale', locale);
+                    alert("Session got expired please login again")
                     localStorage.reload = true;
                     window.location.hash = "#/" + _tntId;
                 } else if(response){

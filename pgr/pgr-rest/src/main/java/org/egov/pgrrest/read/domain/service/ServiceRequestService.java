@@ -45,9 +45,7 @@ public class ServiceRequestService {
     public List<ServiceRequest> findAll(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
         List<ServiceRequest> serviceRequestList;
         serviceRequestList = serviceRequestRepository.find(serviceRequestSearchCriteria);
-        if (serviceRequestList.isEmpty()) {
-            serviceRequestRepository.findFromDb(serviceRequestSearchCriteria);
-        }
+        isRecordsPresent(serviceRequestSearchCriteria, serviceRequestList);
         maskCitizenDetailsForAnonymousRequest(serviceRequestSearchCriteria, serviceRequestList);
         return serviceRequestList;
     }
@@ -134,6 +132,12 @@ public class ServiceRequestService {
             return;
         }
         draftService.delete(draftId);
+    }
+
+    private void isRecordsPresent(ServiceRequestSearchCriteria serviceRequestSearchCriteria, List<ServiceRequest> serviceRequestList) {
+        if (serviceRequestList.isEmpty()) {
+            serviceRequestRepository.findFromDb(serviceRequestSearchCriteria);
+        }
     }
 
 }

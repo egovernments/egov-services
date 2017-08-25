@@ -569,7 +569,7 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": "",
       			"defaultValue": [],
-      			"url":"/wcms/masters/propertytype-usagetype/_search?tenantId=default&propertyTypeName=Vacant Land|$..usageCode|$..usageType",
+      			"url":"/wcms/masters/propertytype-usagetype/_search?tenantId=default&propertyTypeName=Others|$..usageCode|$..usageType",
             "depedants": [{
                 "jsonPath": "Connection.subUsageType",
                 "type": "dropDown",
@@ -600,7 +600,7 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": "",
             "defaultValue": [],
-            "url":"/wcms/masters/propertytype-pipesize/_search?tenantId=default&propertyTypeName=Vacant Land|$..pipeSize|$..pipeSizeInInch"
+            "url":"/wcms/masters/propertytype-pipesize/_search?tenantId=default&propertyTypeName=Others|$..pipeSize|$..pipeSizeInInch"
           },
           {
             "name": "billingType",
@@ -676,7 +676,7 @@ var dat = {
             "isDisabled": false,
             // "url": "/wcms/masters/supplytype/_search?|$..name|$..name",
             "requiredErrMsg": "",
-            "defaultValue":"BULK",
+            "defaultValue":"Semi Bulk",
             "patternErrMsg": ""
           },
           {

@@ -37,115 +37,71 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.web.controller;
+package org.egov.wcms.service;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.io.IOUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
-import org.egov.common.contract.response.ResponseInfo;
-import org.egov.wcms.TestConfiguration;
 import org.egov.wcms.model.ServiceCharge;
 import org.egov.wcms.model.ServiceChargeDetails;
-import org.egov.wcms.service.ServiceChargeService;
-import org.egov.wcms.util.ValidatorUtils;
+import org.egov.wcms.repository.ServiceChargeRepository;
 import org.egov.wcms.web.contract.ServiceChargeGetRequest;
 import org.egov.wcms.web.contract.ServiceChargeReq;
-import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
-import org.egov.wcms.web.errorhandlers.ErrorHandler;
-import org.egov.wcms.web.errorhandlers.ErrorResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
-@RunWith(SpringRunner.class)
-@WebMvcTest(ServiceChargeController.class)
-@Import(TestConfiguration.class)
-public class ServiceChargeControllerTest {
-    @MockBean
-    private ValidatorUtils validatorUtils;
-
-    @MockBean
-    private ServiceChargeService serviceChargeService;
-
-    @MockBean
-    private ResponseInfoFactory responseInfoFactory;
-
-    @MockBean
-    private ErrorHandler errHandler;
+@RunWith(MockitoJUnitRunner.class)
+public class ServiceChargeServiceTest {
+    @Mock
+    private ServiceChargeRepository serviceChargeRepository;
 
     @InjectMocks
-    private ServiceChargeController serviceChargeController;
-
-    @Autowired
-    private MockMvc mockMvc;
+    private ServiceChargeService serviceChargeService;
 
     @Test
-    public void test_should_create_ServiceCharge() throws Exception {
-        final List<ErrorResponse> errorResponses = new ArrayList<>();
-        when(validatorUtils.validateServiceChargeRequest(getServiceChargeRequest(), false)).thenReturn(errorResponses);
-        when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(true)))
-                .thenReturn(getSuccessRequestInfo());
-        when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(false)))
-                .thenReturn(getFailureRequestInfo());
-        when(serviceChargeService.pushServiceChargeCreateRequestToQueue(getServiceChargeRequest()))
+    public void test_should_push_create_ServiceCharge_to_Queue() {
+        when(serviceChargeRepository.pushServiceChargeCreateReqToQueue(getServiceChargeRequest()))
                 .thenReturn(getListOfServiceCharges());
-        mockMvc.perform(post("/serviceCharges/_create").contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(getFileContents("ServiceChargeRequestCreate.json"))).andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().json(getFileContents("ServiceChargeResponseCreate.json")));
+        assertTrue(getListOfServiceCharges().equals(serviceChargeService
+                .pushServiceChargeCreateRequestToQueue(getServiceChargeRequest())));
     }
 
     @Test
-    public void test_should_update_ServiceCharge() throws Exception {
-        final List<ErrorResponse> errorResponses = new ArrayList<>();
-        when(validatorUtils.validateServiceChargeRequest(getServiceChargeRequest(), true)).thenReturn(errorResponses);
-        when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(true)))
-                .thenReturn(getSuccessRequestInfo());
-        when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(false)))
-                .thenReturn(getFailureRequestInfo());
-        when(serviceChargeService.pushServiceChargeUpdateRequestToQueue(getServiceChargeRequest()))
+    public void test_should_push_update_serviceCharge_to_queue() {
+        when(serviceChargeRepository.pushServiceChargeUpdateReqToQueue(getServiceChargeRequest()))
                 .thenReturn(getListOfServiceCharges());
-        mockMvc.perform(post("/serviceCharges/_update").contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(getFileContents("ServiceChargeRequestUpdate.json"))).andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().json(getFileContents("ServiceChargeResponseUpdate.json")));
+        assertTrue(getListOfServiceCharges()
+                .equals(serviceChargeService.pushServiceChargeUpdateRequestToQueue(getServiceChargeRequest())));
     }
 
     @Test
-    public void test_should_search_serviceCharge() throws Exception {
-        when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(true)))
-                .thenReturn(getSuccessRequestInfo());
-        when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(false)))
-                .thenReturn(getFailureRequestInfo());
-        when(serviceChargeService.getServiceChargesByCriteria(getServiceChargeGetCriteria()))
+    public void test_should_create_serviceCharge() {
+        when(serviceChargeRepository.persistCreateServiceChargeToDb(getServiceChargeRequest()))
+                .thenReturn(getServiceChargeRequest());
+        assertTrue(getServiceChargeRequest().equals(serviceChargeService.createServiceCharge(getServiceChargeRequest())));
+    }
+
+    @Test
+    public void test_should_update_serviceCharge() {
+        when(serviceChargeRepository.persistUpdateServiceChargeRequestToDB(getServiceChargeRequest()))
+                .thenReturn(getServiceChargeRequest());
+        assertTrue(getServiceChargeRequest().equals(serviceChargeService.updateServiceCharge(getServiceChargeRequest())));
+    }
+
+    @Test
+    public void test_should_search_serviceCharge_by_criteria() {
+        when(serviceChargeRepository.searchServiceChargesByCriteria(getServiceChargeGetCriteria()))
                 .thenReturn(getListOfServiceChargesForSearch());
-        mockMvc.perform(post("/serviceCharges/_search?ids=2,3&"
-                + "serviceType=No due Certificate&outsideUlb=false&"
-                + "tenantId=default&sortBy=serviceChargeType&sortOrder=desc")
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .content(getFileContents("ServiceChargeRequest.json")))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().json(getFileContents("ServiceChargeResponse.json")));
+        assertTrue(getListOfServiceChargesForSearch()
+                .equals(serviceChargeService.getServiceChargesByCriteria(getServiceChargeGetCriteria())));
     }
 
     private List<ServiceCharge> getListOfServiceChargesForSearch() {
@@ -229,16 +185,6 @@ public class ServiceChargeControllerTest {
         return Arrays.asList(charge1, charge2, charge3, charge4);
     }
 
-    private ResponseInfo getFailureRequestInfo() {
-        return ResponseInfo.builder().apiId("org.egov.wcms").ver("1.0").resMsgId("uief87324").msgId("654654")
-                .status("failed").build();
-    }
-
-    private ResponseInfo getSuccessRequestInfo() {
-        return ResponseInfo.builder().apiId("org.egov.wcms").ver("1.0").resMsgId("uief87324").msgId("654654")
-                .status("successful").build();
-    }
-
     public ServiceChargeReq getServiceChargeRequest() {
         final User userInfo = User.builder().id(1L).build();
         final RequestInfo requestInfo = RequestInfo.builder().apiId("org.egov.wcms").ver("1.0").action("POST")
@@ -293,14 +239,6 @@ public class ServiceChargeControllerTest {
         return ServiceChargeReq.builder().requestInfo(requestInfo).serviceCharge(Arrays.asList(charge1, charge2,
                 charge3, charge4)).build();
 
-    }
-
-    private String getFileContents(final String fileName) {
-        try {
-            return IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream(fileName), "UTF-8");
-        } catch (final IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
 }

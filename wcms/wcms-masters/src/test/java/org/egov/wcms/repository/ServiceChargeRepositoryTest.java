@@ -37,118 +37,158 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.web.controller;
+package org.egov.wcms.repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.anyMap;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.apache.commons.io.IOUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
-import org.egov.common.contract.response.ResponseInfo;
-import org.egov.wcms.TestConfiguration;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.ServiceCharge;
 import org.egov.wcms.model.ServiceChargeDetails;
-import org.egov.wcms.service.ServiceChargeService;
-import org.egov.wcms.util.ValidatorUtils;
+import org.egov.wcms.repository.builder.ServiceChargeQueryBuilder;
+import org.egov.wcms.repository.rowmapper.ServiceChargeDetailsRowMapper;
+import org.egov.wcms.repository.rowmapper.ServiceChargeRowMapper;
+import org.egov.wcms.service.CodeGeneratorService;
 import org.egov.wcms.web.contract.ServiceChargeGetRequest;
 import org.egov.wcms.web.contract.ServiceChargeReq;
-import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
-import org.egov.wcms.web.errorhandlers.ErrorHandler;
-import org.egov.wcms.web.errorhandlers.ErrorResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
-@RunWith(SpringRunner.class)
-@WebMvcTest(ServiceChargeController.class)
-@Import(TestConfiguration.class)
-public class ServiceChargeControllerTest {
-    @MockBean
-    private ValidatorUtils validatorUtils;
+@RunWith(MockitoJUnitRunner.class)
+public class ServiceChargeRepositoryTest {
 
-    @MockBean
-    private ServiceChargeService serviceChargeService;
+    @Mock
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
-    @MockBean
-    private ResponseInfoFactory responseInfoFactory;
+    @Mock
+    private ApplicationProperties applicationProperties;
 
-    @MockBean
-    private ErrorHandler errHandler;
+    @Mock
+    private ServiceChargeQueryBuilder serviceChargeQueryBuilder;
+
+    @Mock
+    private CodeGeneratorService codeGeneratorService;
+
+    @Mock
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    @Mock
+    private ServiceChargeRowMapper serviceChargeRowMapper;
+
+    @Mock
+    private ServiceChargeDetailsRowMapper serviceChargeDetailsRowmapper;
 
     @InjectMocks
-    private ServiceChargeController serviceChargeController;
-
-    @Autowired
-    private MockMvc mockMvc;
+    private ServiceChargeRepository serviceChargeRepository;
 
     @Test
-    public void test_should_create_ServiceCharge() throws Exception {
-        final List<ErrorResponse> errorResponses = new ArrayList<>();
-        when(validatorUtils.validateServiceChargeRequest(getServiceChargeRequest(), false)).thenReturn(errorResponses);
-        when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(true)))
-                .thenReturn(getSuccessRequestInfo());
-        when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(false)))
-                .thenReturn(getFailureRequestInfo());
-        when(serviceChargeService.pushServiceChargeCreateRequestToQueue(getServiceChargeRequest()))
-                .thenReturn(getListOfServiceCharges());
-        mockMvc.perform(post("/serviceCharges/_create").contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(getFileContents("ServiceChargeRequestCreate.json"))).andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().json(getFileContents("ServiceChargeResponseCreate.json")));
+    public void test_should_persist_create_service_Charge_to_db() {
+        when(codeGeneratorService.generate("SEQ_EGWTR_SERVICECHARGE")).thenReturn("1", "2", "3", "4");
+        when(codeGeneratorService.generate("SEQ_EGWTR_SERVICECHARGE_DETAILS")).thenReturn("1", "2", "3", "4", "5", "6", "7", "8");
+        final ServiceChargeReq serviceChargeRequest = serviceChargeRepository
+                .persistCreateServiceChargeToDb(getServiceChargeRequest());
+        assertThat(serviceChargeRequest.getServiceCharge().size()).isEqualTo(4);
     }
 
     @Test
-    public void test_should_update_ServiceCharge() throws Exception {
-        final List<ErrorResponse> errorResponses = new ArrayList<>();
-        when(validatorUtils.validateServiceChargeRequest(getServiceChargeRequest(), true)).thenReturn(errorResponses);
-        when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(true)))
-                .thenReturn(getSuccessRequestInfo());
-        when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(false)))
-                .thenReturn(getFailureRequestInfo());
-        when(serviceChargeService.pushServiceChargeUpdateRequestToQueue(getServiceChargeRequest()))
-                .thenReturn(getListOfServiceCharges());
-        mockMvc.perform(post("/serviceCharges/_update").contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(getFileContents("ServiceChargeRequestUpdate.json"))).andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().json(getFileContents("ServiceChargeResponseUpdate.json")));
+    public void test_should_persist_update_service_Charge_to_db() {
+        when(codeGeneratorService.generate("SEQ_EGWTR_SERVICECHARGE_DETAILS")).thenReturn("1", "2", "3", "4", "5", "6", "7", "8");
+        final ServiceChargeReq serviceChargeRequest = serviceChargeRepository
+                .persistUpdateServiceChargeRequestToDB(getServiceChargeRequestForUpdate());
+        assertThat(serviceChargeRequest.getServiceCharge().size()).isEqualTo(4);
     }
 
     @Test
-    public void test_should_search_serviceCharge() throws Exception {
-        when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(true)))
-                .thenReturn(getSuccessRequestInfo());
-        when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(false)))
-                .thenReturn(getFailureRequestInfo());
-        when(serviceChargeService.getServiceChargesByCriteria(getServiceChargeGetCriteria()))
-                .thenReturn(getListOfServiceChargesForSearch());
-        mockMvc.perform(post("/serviceCharges/_search?ids=2,3&"
-                + "serviceType=No due Certificate&outsideUlb=false&"
-                + "tenantId=default&sortBy=serviceChargeType&sortOrder=desc")
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .content(getFileContents("ServiceChargeRequest.json")))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().json(getFileContents("ServiceChargeResponse.json")));
+    public void test_should_push_create_serviceCharge_to_db() {
+        when(applicationProperties.getCreateServiceChargeTopicName()).thenReturn("egov.wcms.servicecharge-create");
+        serviceChargeRepository.pushServiceChargeCreateReqToQueue(getServiceChargeRequest());
+        verify(kafkaTemplate).send("egov.wcms.servicecharge-create", getServiceChargeRequest());
+    }
+
+    @Test
+    public void test_should_push_update_serviceCharge_to_db() {
+        when(applicationProperties.getUpdateServiceChargeTopicName()).thenReturn("egov.wcms.servicecharge-update");
+        serviceChargeRepository.pushServiceChargeUpdateReqToQueue(getServiceChargeRequest());
+        verify(kafkaTemplate).send("egov.wcms.servicecharge-update", getServiceChargeRequest());
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void test_should_search_serviceCharge_based_on_certain_Criteria() {
+        final Map<String, Object> preparedStatementValues = new HashMap<>();
+        when(serviceChargeQueryBuilder.getQuery(getServiceChargeGetCriteria(), preparedStatementValues))
+                .thenReturn("Select sc.id as sc_id,sc.code"
+                        + " as sc_code,sc.servicetype as sc_servicetype,sc.servicechargeapplicable"
+                        + " as sc_servicechargeapplicable,"
+                        + "sc.servicechargetype as sc_servicechargetype,sc.description as sc_description,"
+                        + "sc.active as sc_active,sc.effectivefrom as sc_effectivefrom,sc.effectiveto"
+                        + " as sc_effectiveto,sc.outsideulb as sc_outsideulb,sc.tenantid as sc_tenantid,"
+                        + "sc.createdby as sc_createdby,sc.createddate as sc_createddate,sc.lastmodifiedby"
+                        + " as sc_lastmodifiedby,sc.lastmodifieddate as sc_lastmodifieddate from"
+                        + " egwtr_servicecharge sc WHERE sc.id IN (:ids) AND sc.tenantid = :tenantId AND sc.servicetype = :serviceType"
+                        + " AND sc.outsideulb = :outsideUlb ORDER BY sc.serviceChargeType desc");
+
+        when(serviceChargeQueryBuilder.insertServiceChargeDetailsData())
+                .thenReturn("Select scd.id as scd_id,scd.code as scd_code,"
+                        + "scd.uomfrom as scd_uomfrom,scd.uomto as scd_uomto,"
+                        + "scd.amountorpercentage as scd_amountorpercentage,scd.servicecharge as scd_servicecharge,"
+                        + "scd.tenantid as scd_tenantid from egwtr_servicecharge_details scd"
+                        + " where scd.servicecharge = :servicecharge and scd.tenantid = :tenantid");
+        when(namedParameterJdbcTemplate.query(any(String.class), anyMap(), any(org.springframework.jdbc.core.RowMapper.class)))
+                .thenReturn(getListOfServiceChargesForSearch(), getListOfServiceChargeDetails1ForSearch(),
+                        getListOfServiceChargeDetails2ForSearch());
+        assertThat(serviceChargeRepository.searchServiceChargesByCriteria(getServiceChargeGetCriteria())
+                .equals(getListOfServiceChargesAssociatedForSearch()));
+    }
+
+    private List<ServiceChargeDetails> getListOfServiceChargeDetails2ForSearch() {
+        final ServiceChargeDetails details1 = ServiceChargeDetails.builder().id(13L).code("13").uomFrom(0.0).uomTo(100000.0)
+                .amountOrpercentage(12.5).serviceCharge(3L).tenantId("default").build();
+        return Arrays.asList(details1);
+    }
+
+    private List<ServiceChargeDetails> getListOfServiceChargeDetails1ForSearch() {
+        final ServiceChargeDetails details2 = ServiceChargeDetails.builder().id(10L).code("10").uomFrom(0.0).uomTo(1000.0)
+                .amountOrpercentage(100.0).serviceCharge(2L).tenantId("default").build();
+
+        final ServiceChargeDetails details3 = ServiceChargeDetails.builder().id(11L).code("11").uomFrom(1001.0).uomTo(2000.0)
+                .amountOrpercentage(200.0).serviceCharge(2L).tenantId("default").build();
+
+        final ServiceChargeDetails details4 = ServiceChargeDetails.builder().id(12L).code("12").uomFrom(2001.0).uomTo(3000.0)
+                .amountOrpercentage(300.0).serviceCharge(2L).tenantId("default").build();
+        return Arrays.asList(details2, details3, details4);
     }
 
     private List<ServiceCharge> getListOfServiceChargesForSearch() {
+        final ServiceCharge charge1 = ServiceCharge.builder().id(2L).code("2").serviceType("No due Certificate")
+                .serviceChargeApplicable(true)
+                .serviceChargeType("slab").description("no due certificate issued").effectiveFrom(15679009L)
+                .effectiveTo(15679123L).active(true).outsideUlb(false).tenantId("default").createdBy(1L).createdDate(15679009L)
+                .lastModifiedBy(1L).lastModifiedDate(15679009L).build();
+        final ServiceCharge charge2 = ServiceCharge.builder().id(3L).code("3").serviceType("No due Certificate")
+                .serviceChargeApplicable(true)
+                .serviceChargeType("percentage flat").description("no due certificate issued").effectiveFrom(15679009L)
+                .effectiveTo(15679123L).active(true).outsideUlb(false).tenantId("default").createdBy(1L).createdDate(15679009L)
+                .lastModifiedBy(1L).lastModifiedDate(15679009L).build();
+        return Arrays.asList(charge1, charge2);
+    }
+
+    private List<ServiceCharge> getListOfServiceChargesAssociatedForSearch() {
         final ServiceChargeDetails details1 = ServiceChargeDetails.builder().id(13L).code("13").uomFrom(0.0).uomTo(100000.0)
                 .amountOrpercentage(12.5).serviceCharge(3L).tenantId("default").build();
 
@@ -179,7 +219,10 @@ public class ServiceChargeControllerTest {
                 .tenantId("default").sortBy("serviceChargeType").sortOrder("desc").build();
     }
 
-    private List<ServiceCharge> getListOfServiceCharges() {
+    private ServiceChargeReq getServiceChargeRequestForUpdate() {
+        final User userInfo = User.builder().id(1L).build();
+        final RequestInfo requestInfo = RequestInfo.builder().apiId("org.egov.wcms").ver("1.0").action("POST")
+                .did("4354648646").key("xyz").msgId("654654").authToken("345678f").userInfo(userInfo).build();
         final ServiceChargeDetails details1 = ServiceChargeDetails.builder().uomFrom(0.0).uomTo(100000.0)
                 .amountOrpercentage(200.0).tenantId("default").build();
 
@@ -204,39 +247,35 @@ public class ServiceChargeControllerTest {
         final ServiceChargeDetails details8 = ServiceChargeDetails.builder().uomFrom(20001.0).uomTo(30000.0)
                 .amountOrpercentage(6.5).tenantId("default").build();
 
-        final ServiceCharge charge1 = ServiceCharge.builder().serviceType("No due Certificate").serviceChargeApplicable(true)
+        final ServiceCharge charge1 = ServiceCharge.builder().code("1").serviceType("No due Certificate")
+                .serviceChargeApplicable(true)
                 .serviceChargeType("flat").description("no due certificate issued").effectiveFrom(15679009L)
                 .effectiveTo(15679123L).active(true).outsideUlb(false).tenantId("default").createdBy(1L).createdDate(15679009L)
                 .lastModifiedBy(1L).lastModifiedDate(15679009L).chargeDetails(Arrays.asList(details1)).build();
 
-        final ServiceCharge charge2 = ServiceCharge.builder().serviceType("No due Certificate").serviceChargeApplicable(true)
+        final ServiceCharge charge2 = ServiceCharge.builder().code("2").serviceType("No due Certificate")
+                .serviceChargeApplicable(true)
                 .serviceChargeType("slab").description("no due certificate issued").effectiveFrom(15679009L)
                 .effectiveTo(15679123L).active(true).outsideUlb(false).tenantId("default").createdBy(1L).createdDate(15679009L)
                 .lastModifiedBy(1L).lastModifiedDate(15679009L).chargeDetails(Arrays.asList(details2, details3, details4))
                 .build();
 
-        final ServiceCharge charge3 = ServiceCharge.builder().serviceType("No due Certificate").serviceChargeApplicable(true)
+        final ServiceCharge charge3 = ServiceCharge.builder().code("3").serviceType("No due Certificate")
+                .serviceChargeApplicable(true)
                 .serviceChargeType("percentage flat").description("no due certificate issued").effectiveFrom(15679009L)
                 .effectiveTo(15679123L).active(true).outsideUlb(false).tenantId("default").createdBy(1L).createdDate(15679009L)
                 .lastModifiedBy(1L).lastModifiedDate(15679009L).chargeDetails(Arrays.asList(details5)).build();
 
-        final ServiceCharge charge4 = ServiceCharge.builder().serviceType("No due Certificate").serviceChargeApplicable(true)
+        final ServiceCharge charge4 = ServiceCharge.builder().code("4").serviceType("No due Certificate")
+                .serviceChargeApplicable(true)
                 .serviceChargeType("percentage slab").description("no due certificate issued").effectiveFrom(15679009L)
                 .effectiveTo(15679123L).active(true).outsideUlb(false).tenantId("default").createdBy(1L).createdDate(15679009L)
                 .lastModifiedBy(1L).lastModifiedDate(15679009L).chargeDetails(Arrays.asList(details6,
                         details7, details8))
                 .build();
-        return Arrays.asList(charge1, charge2, charge3, charge4);
-    }
 
-    private ResponseInfo getFailureRequestInfo() {
-        return ResponseInfo.builder().apiId("org.egov.wcms").ver("1.0").resMsgId("uief87324").msgId("654654")
-                .status("failed").build();
-    }
-
-    private ResponseInfo getSuccessRequestInfo() {
-        return ResponseInfo.builder().apiId("org.egov.wcms").ver("1.0").resMsgId("uief87324").msgId("654654")
-                .status("successful").build();
+        return ServiceChargeReq.builder().requestInfo(requestInfo).serviceCharge(Arrays.asList(charge1, charge2,
+                charge3, charge4)).build();
     }
 
     public ServiceChargeReq getServiceChargeRequest() {
@@ -293,14 +332,6 @@ public class ServiceChargeControllerTest {
         return ServiceChargeReq.builder().requestInfo(requestInfo).serviceCharge(Arrays.asList(charge1, charge2,
                 charge3, charge4)).build();
 
-    }
-
-    private String getFileContents(final String fileName) {
-        try {
-            return IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream(fileName), "UTF-8");
-        } catch (final IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
 }

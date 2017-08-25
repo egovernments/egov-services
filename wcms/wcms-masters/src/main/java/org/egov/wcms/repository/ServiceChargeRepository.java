@@ -50,7 +50,7 @@ import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.ServiceCharge;
 import org.egov.wcms.model.ServiceChargeDetails;
 import org.egov.wcms.repository.builder.ServiceChargeQueryBuilder;
-import org.egov.wcms.repository.rowmapper.ServiceChargeDetailsRomMapper;
+import org.egov.wcms.repository.rowmapper.ServiceChargeDetailsRowMapper;
 import org.egov.wcms.repository.rowmapper.ServiceChargeRowMapper;
 import org.egov.wcms.service.CodeGeneratorService;
 import org.egov.wcms.web.contract.ServiceChargeGetRequest;
@@ -87,7 +87,7 @@ public class ServiceChargeRepository {
     private ServiceChargeRowMapper serviceChargeRowMapper;
 
     @Autowired
-    private ServiceChargeDetailsRomMapper serviceChargeDetailsRowmapper;
+    private ServiceChargeDetailsRowMapper serviceChargeDetailsRowmapper;
 
     public static final Logger logger = LoggerFactory.getLogger(ServiceChargeRepository.class);
 

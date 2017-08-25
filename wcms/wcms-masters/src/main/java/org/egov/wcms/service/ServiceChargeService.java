@@ -61,7 +61,6 @@ public class ServiceChargeService {
     public List<ServiceCharge> pushServiceChargeCreateRequestToQueue(final ServiceChargeReq serviceChargeRequest) {
         logger.info("ServiceChargeReq :" + serviceChargeRequest);
         return serviceChargeRepository.pushServiceChargeCreateReqToQueue(serviceChargeRequest);
-
     }
 
     public ServiceChargeReq createServiceCharge(final ServiceChargeReq serviceChargeRequest) {

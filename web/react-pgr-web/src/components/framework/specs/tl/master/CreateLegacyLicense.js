@@ -712,7 +712,7 @@ var dat = {
 
      "tl.view": {
         "numCols": 12 / 3,
-        "url": "/tl-services/license/v1/_search?licenseNumber={licenseNumber}",
+        "url": "/tl-services/license/v1/_search?ids={licenseNumber}",
         "tenantIdRequired": true,
         "useTimestamp": true,
         "objectName": "licenses",

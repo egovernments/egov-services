@@ -138,8 +138,6 @@ public class TradeLicenseServiceValidator {
 			validateTradeSubCategoryDetails(tradeLicense, requestInfo);
 			// checking the uom details
 			validateTradeUomDetails(tradeLicense, requestInfo);
-			//checking support document ids
-			//validateSupportDocumentIdsExistance(tradeLicense, requestInfo);
 			// checking support document details
 			validateTradeSupportingDocuments(tradeLicense, requestInfo);
 			// checking feeDetails
@@ -148,20 +146,6 @@ public class TradeLicenseServiceValidator {
 			}
 			// get the tradeLicense with id and bind non-modifiable fields
 			bindTradeNonModifiableFields(tradeLicense, requestInfo);
-		}
-	}
-
-	private void bindTradeNonModifiableFields(TradeLicense tradeLicense, RequestInfo requestInfo) {
-
-		TradeLicenseSearch tradeLicenseSearch = tradeLicenseRepository.getByLicenseId(tradeLicense, requestInfo);
-
-		if (tradeLicenseSearch != null) {
-
-			tradeLicense.setLicenseNumber(tradeLicenseSearch.getLicenseNumber());
-			tradeLicense.setApplicationType(tradeLicenseSearch.getApplicationType());
-			tradeLicense.setApplicationNumber(tradeLicenseSearch.getApplicationNumber());
-			tradeLicense.setTenantId(tradeLicenseSearch.getTenantId());
-			tradeLicense.setApplicationDate(tradeLicenseSearch.getApplicationDate());
 		}
 	}
 
@@ -548,6 +532,63 @@ public class TradeLicenseServiceValidator {
 			}
 		}
 
+	}
+
+	private void validateTradeUpdateSupportDocuments(TradeLicense tradeLicense, RequestInfo requestInfo) {
+
+		if (tradeLicense.getSupportDocuments() != null && tradeLicense.getSupportDocuments().size() > 0) {
+
+			for (SupportDocument supportDocument : tradeLicense.getSupportDocuments()) {
+
+				if (supportDocument.getId() != null) {
+					// check id existence in database
+					tradeLicenseRepository.validateTradeLicenseSupportDocumentId(supportDocument, requestInfo);
+				} else {
+					// get the next sequence of support document id and set it
+					supportDocument.setLicenseId(tradeLicense.getId());
+					supportDocument.setId(tradeLicenseRepository.getSupportDocumentNextSequence());
+				}
+			}
+		}
+	}
+
+	private void validateTradeUpdateFeeDetails(TradeLicense tradeLicense, RequestInfo requestInfo) {
+
+		if (tradeLicense.getFeeDetails() != null && tradeLicense.getFeeDetails().size() > 0) {
+
+			for (LicenseFeeDetail licenseFeeDetail : tradeLicense.getFeeDetails()) {
+
+				if (licenseFeeDetail.getId() != null) {
+					// check id existence in database
+					tradeLicenseRepository.validateTradeLicenseFeeDetailId(licenseFeeDetail, requestInfo);
+				} else {
+					// get the next sequence of fee detail id and set it
+					licenseFeeDetail.setLicenseId(tradeLicense.getId());
+					licenseFeeDetail.setId(tradeLicenseRepository.getFeeDetailNextSequence());
+				}
+			}
+		}
+	}
+
+	private void bindTradeNonModifiableFields(TradeLicense tradeLicense, RequestInfo requestInfo) {
+
+		// checking support document id's
+		validateTradeUpdateSupportDocuments(tradeLicense, requestInfo);
+		// checking fee detail id's
+		if (tradeLicense.getIsLegacy()) {
+			validateTradeUpdateFeeDetails(tradeLicense, requestInfo);
+		}
+
+		TradeLicenseSearch tradeLicenseSearch = tradeLicenseRepository.getByLicenseId(tradeLicense, requestInfo);
+
+		if (tradeLicenseSearch != null) {
+
+			tradeLicense.setLicenseNumber(tradeLicenseSearch.getLicenseNumber());
+			tradeLicense.setApplicationType(tradeLicenseSearch.getApplicationType());
+			tradeLicense.setApplicationNumber(tradeLicenseSearch.getApplicationNumber());
+			tradeLicense.setTenantId(tradeLicenseSearch.getTenantId());
+			tradeLicense.setApplicationDate(tradeLicenseSearch.getApplicationDate());
+		}
 	}
 
 }

@@ -147,6 +147,7 @@ public class TradeLicenseService {
 		return tradeLicenseRepository.save(tradeLicense);
 	}
 
+	@Transactional
 	public List<TradeLicense> update(List<TradeLicense> tradeLicenses, RequestInfo requestInfo, BindingResult errors) {
 
 		validate(tradeLicenses, errors);

@@ -100,14 +100,13 @@ public class TradeLicenseRepository {
 
 	public void validateTradeLicenseId(TradeLicense tradeLicense, RequestInfo requestInfo) {
 
-		String sql = getLicenseIdQuery(tradeLicense);
+		String tableName = "egtl_license";
+		Long id = tradeLicense.getId();
+		String sql = getLicenseIdQuery(tableName, id);
 		Integer count = null;
-		try {
-			MapSqlParameterSource parameters = new MapSqlParameterSource();
-			count = (Integer) namedParameterJdbcTemplate.queryForObject(sql, parameters, Integer.class);
-		} catch (Exception e) {
-			log.error("error while executing the query :" + sql + " , error message : " + e.getMessage());
-		}
+
+		MapSqlParameterSource parameters = new MapSqlParameterSource();
+		count = (Integer) namedParameterJdbcTemplate.queryForObject(sql, parameters, Integer.class);
 
 		if (count == 0) {
 			throw new IdNotFoundException(propertiesManager.getOldLicenseIdNotValidCustomMsg(),
@@ -115,11 +114,75 @@ public class TradeLicenseRepository {
 		}
 	}
 
-	private String getLicenseIdQuery(TradeLicense tradeLicense) {
+	public void validateTradeLicenseSupportDocumentId(SupportDocument supportDocument, RequestInfo requestInfo) {
 
-		Long id = tradeLicense.getId();
+		String tableName = "egtl_support_document";
+		Long id = supportDocument.getId();
+		String sql = getLicenseIdQuery(tableName, id);
+		Integer count = null;
 
-		StringBuffer uniqueQuery = new StringBuffer("select count(*) from egtl_license");
+		MapSqlParameterSource parameters = new MapSqlParameterSource();
+		count = (Integer) namedParameterJdbcTemplate.queryForObject(sql, parameters, Integer.class);
+
+		if (count == 0) {
+			throw new IdNotFoundException(propertiesManager.getSupportDocumentIdNotValidCustomMsg(),
+					propertiesManager.getIdField(), requestInfo);
+		}
+	}
+
+	public void validateTradeLicenseFeeDetailId(LicenseFeeDetail licenseFeeDetail, RequestInfo requestInfo) {
+
+		String tableName = "egtl_fee_details";
+		Long id = licenseFeeDetail.getId();
+		String sql = getLicenseIdQuery(tableName, id);
+		Integer count = null;
+
+		MapSqlParameterSource parameters = new MapSqlParameterSource();
+		count = (Integer) namedParameterJdbcTemplate.queryForObject(sql, parameters, Integer.class);
+
+		if (count == 0) {
+			throw new IdNotFoundException(propertiesManager.getFeeDetailIdNotValidCustomMsg(),
+					propertiesManager.getIdField(), requestInfo);
+		}
+	}
+
+	public Boolean validateUpdateTradeSupportDocumentId(SupportDocument supportDocument) {
+
+		String tableName = "egtl_support_document";
+		Long id = supportDocument.getId();
+		String sql = getLicenseIdQuery(tableName, id);
+		Integer count = null;
+		Boolean isExists = Boolean.TRUE;
+		MapSqlParameterSource parameters = new MapSqlParameterSource();
+		count = (Integer) namedParameterJdbcTemplate.queryForObject(sql, parameters, Integer.class);
+
+		if (count == 0) {
+			isExists = Boolean.FALSE;
+		}
+
+		return isExists;
+	}
+
+	public Boolean validateUpdateTradeLicenseFeeDetailId(LicenseFeeDetail licenseFeeDetail) {
+
+		String tableName = "egtl_fee_details";
+		Long id = licenseFeeDetail.getId();
+		String sql = getLicenseIdQuery(tableName, id);
+		Integer count = null;
+		Boolean isExists = Boolean.TRUE;
+		MapSqlParameterSource parameters = new MapSqlParameterSource();
+		count = (Integer) namedParameterJdbcTemplate.queryForObject(sql, parameters, Integer.class);
+
+		if (count == 0) {
+			isExists = Boolean.FALSE;
+		}
+
+		return isExists;
+	}
+
+	private String getLicenseIdQuery(String tableName, Long id) {
+
+		StringBuffer uniqueQuery = new StringBuffer("select count(*) from " + tableName);
 		uniqueQuery.append(" where id = " + id);
 
 		return uniqueQuery.toString();
@@ -186,16 +249,18 @@ public class TradeLicenseRepository {
 		TradeLicenseEntity entity = tradeLicenseJdbcRepository.create(new TradeLicenseEntity().toEntity(tradeLicense));
 
 		if (tradeLicense.getSupportDocuments() != null && tradeLicense.getSupportDocuments().size() > 0) {
+
 			for (SupportDocument supportDocument : tradeLicense.getSupportDocuments()) {
-				SupportDocumentEntity documentEntity = supportDocumentJdbcRepository
-						.create(new SupportDocumentEntity().toEntity(supportDocument));
+
+				supportDocumentJdbcRepository.create(new SupportDocumentEntity().toEntity(supportDocument));
 			}
 		}
 
 		if (tradeLicense.getFeeDetails() != null && tradeLicense.getFeeDetails().size() > 0) {
+
 			for (LicenseFeeDetail feeDetail : tradeLicense.getFeeDetails()) {
-				LicenseFeeDetailEntity licenseFeeEntity = licenseFeeDetailJdbcRepository
-						.create(new LicenseFeeDetailEntity().toEntity(feeDetail));
+
+				licenseFeeDetailJdbcRepository.create(new LicenseFeeDetailEntity().toEntity(feeDetail));
 			}
 		}
 
@@ -208,33 +273,33 @@ public class TradeLicenseRepository {
 		TradeLicenseEntity entity = tradeLicenseJdbcRepository.update(new TradeLicenseEntity().toEntity(tradeLicense));
 
 		if (tradeLicense.getSupportDocuments() != null && tradeLicense.getSupportDocuments().size() > 0) {
-			
+
 			for (SupportDocument supportDocument : tradeLicense.getSupportDocuments()) {
-				
-				if (supportDocument.getId() != null) {
-					
-					SupportDocumentEntity documentEntity = supportDocumentJdbcRepository
-							.update(new SupportDocumentEntity().toEntity(supportDocument));
+
+				Boolean isDocumentExists = validateUpdateTradeSupportDocumentId(supportDocument);
+
+				if (isDocumentExists) {
+
+					supportDocumentJdbcRepository.update(new SupportDocumentEntity().toEntity(supportDocument));
 				} else {
-					
-					SupportDocumentEntity documentEntity = supportDocumentJdbcRepository
-							.create(new SupportDocumentEntity().toEntity(supportDocument));
+
+					supportDocumentJdbcRepository.create(new SupportDocumentEntity().toEntity(supportDocument));
 				}
 			}
 		}
 
 		if (tradeLicense.getFeeDetails() != null && tradeLicense.getFeeDetails().size() > 0) {
-			
+
 			for (LicenseFeeDetail feeDetail : tradeLicense.getFeeDetails()) {
-				
-				if (feeDetail.getId() != null) {
-					
-					LicenseFeeDetailEntity licenseFeeEntity = licenseFeeDetailJdbcRepository
-							.update(new LicenseFeeDetailEntity().toEntity(feeDetail));
+
+				Boolean isFeeDetailExists = validateUpdateTradeLicenseFeeDetailId(feeDetail);
+
+				if (isFeeDetailExists) {
+
+					licenseFeeDetailJdbcRepository.update(new LicenseFeeDetailEntity().toEntity(feeDetail));
 				} else {
-					
-					LicenseFeeDetailEntity licenseFeeEntity = licenseFeeDetailJdbcRepository
-							.create(new LicenseFeeDetailEntity().toEntity(feeDetail));
+
+					licenseFeeDetailJdbcRepository.create(new LicenseFeeDetailEntity().toEntity(feeDetail));
 				}
 			}
 		}

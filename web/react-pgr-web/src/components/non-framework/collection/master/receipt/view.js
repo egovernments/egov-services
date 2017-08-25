@@ -81,7 +81,15 @@ class Report extends Component {
   }
 
   getVal = (path) => {
-    return typeof _.get(this.props.formData, path) != "undefined" ? _.get(this.props.formData, path) : "";
+    var val = _.get(this.props.formData, path);
+    if(val && ((val + "").length == 13 || (val + "").length == 12) && new Date(Number(val)).getTime() > 0) {
+      var _date = new Date(Number(val));
+      return ('0' + _date.getDate()).slice(-2) + '/'
+               + ('0' + (_date.getMonth()+1)).slice(-2) + '/'
+               + _date.getFullYear();
+    }
+
+    return typeof val != "undefined" ? val : "";
   }
 
   initData() {
@@ -198,10 +206,6 @@ class Report extends Component {
   //     self.props.setLoadingStatus('hide');
   //   })
   // }
-
-  getVal = (path) => {
-    return _.get(this.props.formData, path) || "";
-  }
 
   handleChange=(e, property, isRequired, pattern, requiredErrMsg="Required",patternErrMsg="Pattern Missmatch") => {
       let {handleChange}=this.props;
@@ -485,7 +489,7 @@ class Report extends Component {
                         <tr>
                         <td><strong>Transaction Id</strong> - {getVal("Receipt[0].transactionId")}</td>
 
-                          <td><strong>Receipt Date</strong> - { getVal("Receipt[0].instrument.transactionDate")}</td>
+                          <td><strong>Receipt Date</strong> - { getVal("Receipt[0].Bill[0].billDetails[0].receiptDate")}</td>
 
                           {/*<td></td>
                           <td></td>*/}
@@ -525,7 +529,7 @@ class Report extends Component {
                     <Row>
                     <Col xs={12} md={3}><strong>Payee Name - </strong>{getVal("Receipt[0].Bill[0].payeeName")} </Col>
                     {/*<Col xs={12} md={3}><strong>Receipt Date - </strong>{getVal("Receipt[0].instrument") && getVal("Receipt[0].instrument.transactionDate").split("-")[2]+"-"+getVal("Receipt[0].instrument.transactionDate").split("-")[1]+"-"+getVal("Receipt[0].instrument.transactionDate").split("-")[0]} </Col>*/}
-                    <Col xs={12} md={3}><strong>Receipt Date - </strong>{getVal("Receipt[0].instrument.transactionDate")} </Col>
+                    <Col xs={12} md={3}><strong>Receipt Date - </strong>{getVal("Receipt[0].Bill[0].billDetails[0].receiptDate")} </Col>
                     <Col xs={12} md={3}><strong>Address - </strong>{getVal("Receipt[0].Bill[0].payeeAddress")} </Col>
                     <Col xs={12} md={3}><strong>Transaction Id - </strong>{getVal("Receipt[0].transactionId")} </Col>
                     </Row>

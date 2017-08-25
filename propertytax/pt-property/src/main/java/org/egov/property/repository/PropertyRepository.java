@@ -1097,7 +1097,7 @@ public class PropertyRepository {
         Object[] userPropertyArgs = { propertyId, owner.getId(), owner.getIsPrimaryOwner().booleanValue(),
                 owner.getIsSecondaryOwner().booleanValue(), owner.getOwnerShipPercentage(), owner.getOwnerType(),
                 owner.getAuditDetails().getLastModifiedBy(), owner.getAuditDetails().getLastModifiedTime(),
-                owner.getOwner(), propertyId };
+                owner.getId(), propertyId };
 
         jdbcTemplate.update(userUpdate, userPropertyArgs);
 

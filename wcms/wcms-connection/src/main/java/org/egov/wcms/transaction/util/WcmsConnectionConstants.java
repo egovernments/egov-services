@@ -327,6 +327,12 @@ public class WcmsConnectionConstants {
     public static final String LOCALITY = "Locality";
     public static final String LOCATION = "LOCATION";
     
+    public static final String CONNECTIONSTATUSACTIVE="ACTIVE";
+    public static final String CONNECTIONSTATUSINPROGRESS="INPROGRESS";
+    public static final String CONNECTIONSTATUSCREAED="CREATED";
+
+
+    
     public String getErrorMessage(final String property) {
         return environment.getProperty(property);
     }

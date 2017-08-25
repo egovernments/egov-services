@@ -307,10 +307,11 @@ class LegacyLicenseCreate extends Component {
               self.props.setLoadingStatus('hide');
               self.props.toggleSnackbarAndSetText(true, err, false, true);
             } else {
-              _docs.push({
-                ...supportDocuments[i],
-                fileStoreId: res.files[0].fileStoreId
-              })
+              if(res.files[0].fileStoreId)
+                _docs.push({
+                  ...supportDocuments[i],
+                  fileStoreId: res.files[0].fileStoreId
+                })
               counter--;
               if(counter == 0 && breakOut == 0) {
                 formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][0]["supportDocuments"] = _docs;

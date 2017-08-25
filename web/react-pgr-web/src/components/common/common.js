@@ -306,6 +306,10 @@ var localization_EN_Data = {
     "wc.create.demand.basicDetails":"Basic Details",
     "wc.create.demand.applicantParticular":"Applicant Particulars",
     "wc.create.error":"Collection Amount cannot be greater than Tax Amount.",
+    "wc.create.groups.applicantDetails.manualConsumerNo":"Manual Consumer No",
+    "wc.create.groups.gapCode1":"Gap Code 1",
+    "wc.create.groups.gapCode2":"Gap Code 2",
+    "wc.create.groups.gapCode3":"Gap Code 3",
 
 
 
@@ -2175,8 +2179,12 @@ var localization_MR_Data = {
     "employee.createPosition.groups.fields.outsourcepost.value1": "Yes-Marathi",
     "employee.createPosition.groups.fields.outsourcepost.value2": "No-Marathi",
     "wc.create.error":"Collection Amount cannot be greater than Tax Amount.-Marathi",
+    "wc.create.groups.applicantDetails.manualConsumerNo":"Manual Consumer No-Marathi",
+    "wc.create.groups.gapCode1":"Gap Code 1-Marathi",
+    "wc.create.groups.gapCode2":"Gap Code 2-Marathi",
+    "wc.create.groups.gapCode3":"Gap Code 3-Marathi",
 
-    ﻿﻿"pgr.0001":"अक्षांश / रेखांश किंवा क्रॉस हायरारकी संकेतांक आवश्यक आहे",
+﻿﻿"pgr.0001":"अक्षांश / रेखांश किंवा क्रॉस हायरारकी संकेतांक आवश्यक आहे",
 "pgr.0002":"अक्षांश / रेखांश किंवा क्रॉस हायरारकी संकेतांक आवश्यक आहे",
 "pgr.0003":"अक्षांश / रेखांश किंवा क्रॉस हायरारकी संकेतांक आवश्यक आहे",
 "pgr.0004":" स्थान संकेतांक आवश्यक आहे",

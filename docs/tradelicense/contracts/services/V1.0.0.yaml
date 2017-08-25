@@ -755,8 +755,7 @@ definitions:
         format: int64
         description: Unique Identifier of the Document Type
       fileStoreId:
-        type: integer
-        format: int64
+        type: string
         description: Unique Identifier of the FileStore
       comments:
         type: string

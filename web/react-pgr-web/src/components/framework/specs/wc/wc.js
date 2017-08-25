@@ -143,12 +143,12 @@ var dat = {
             "patternErrMsg": ""
           },
           {
-            "name": "Locality",
-            "jsonPath": "Connection.connectionLocation.locationBoundary.id",
-            "label": "wc.create.groups.applicantDetails.locality",
+            "name": "zoneName",
+            "jsonPath": "Connection.connectionLocation.revenueBoundary.id",
+            "label": "wc.create.groups.fields.zone",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$.Boundary.*.boundaryNum|$.Boundary.*.name",
+            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE|$.Boundary.*.boundaryNum|$.Boundary.*.name",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -167,17 +167,17 @@ var dat = {
             "patternErrMsg": ""
           },
           {
-            "name": "zoneName",
-            "jsonPath": "Connection.connectionLocation.revenueBoundary.id",
-            "label": "wc.create.groups.fields.zone",
+            "name": "Locality",
+            "jsonPath": "Connection.connectionLocation.locationBoundary.id",
+            "label": "wc.create.groups.applicantDetails.locality",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE|$.Boundary.*.boundaryNum|$.Boundary.*.name",
+            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$.Boundary.*.boundaryNum|$.Boundary.*.name",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
-          },
+          },          
           {
             "name": "Primary Owner",
             "jsonPath": "Connection.connectionOwner.isPrimaryOwner",

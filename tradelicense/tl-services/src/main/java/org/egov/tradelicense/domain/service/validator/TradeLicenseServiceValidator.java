@@ -138,6 +138,8 @@ public class TradeLicenseServiceValidator {
 			validateTradeSubCategoryDetails(tradeLicense, requestInfo);
 			// checking the uom details
 			validateTradeUomDetails(tradeLicense, requestInfo);
+			//checking support document ids
+			//validateSupportDocumentIdsExistance(tradeLicense, requestInfo);
 			// checking support document details
 			validateTradeSupportingDocuments(tradeLicense, requestInfo);
 			// checking feeDetails

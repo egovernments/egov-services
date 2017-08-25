@@ -188,9 +188,24 @@ public class PropertiesManager {
     private String legacyCreateSuccessMessage;
 
 	//IdNotFound Exception Related
+	@Value("${id.notFound.field}")
+	private String idField;
+	
 	@Value("${oldLicense.id.notFound.customMsg}")
 	private String oldLicenseIdNotFoundCustomMsg;
 	
-	@Value("${id.notFound.field}")
-	private String idField;
+	@Value("${oldLicense.id.notValid.customMsg}")
+	private String oldLicenseIdNotValidCustomMsg;
+	
+	@Value("${supporting.document.id.notFound.customMsg}")
+	private String supportDocumentIdNotFoundCustomMsg;
+	
+	@Value("${supporting.document.id.notValid.customMsg}")
+	private String supportDocumentIdNotValidCustomMsg;
+	
+	@Value("${feedetail.id.notFound.customMsg}")
+	private String feeDetailIdNotFoundCustomMsg;
+	
+	@Value("${feedetail.id.notValid.customMsg}")
+	private String feeDetailIdNotValidCustomMsg;
 }

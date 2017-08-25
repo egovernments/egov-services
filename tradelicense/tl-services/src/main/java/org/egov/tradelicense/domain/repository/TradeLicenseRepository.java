@@ -9,6 +9,7 @@ import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.requests.TradeLicenseRequest;
 import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.common.domain.exception.DuplicateTradeLicenseException;
+import org.egov.tradelicense.common.domain.exception.IdNotFoundException;
 import org.egov.tradelicense.domain.model.LicenseFeeDetail;
 import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
@@ -61,7 +62,7 @@ public class TradeLicenseRepository {
 
 		String sql = getUniqueTenantLicenseQuery(tradeLicense, isNewRecord);
 		Integer count = null;
-		
+
 		try {
 			MapSqlParameterSource parameters = new MapSqlParameterSource();
 			count = (Integer) namedParameterJdbcTemplate.queryForObject(sql, parameters, Integer.class);
@@ -79,11 +80,11 @@ public class TradeLicenseRepository {
 		String tenantId = tradeLicense.getTenantId();
 		Long id = tradeLicense.getId();
 		String licNumber = "";
-		
+
 		StringBuffer uniqueQuery = new StringBuffer("select count(*) from egtl_license");
 		uniqueQuery.append("  where tenantId = '" + tenantId + "'");
-		
-		if(tradeLicense.getIsLegacy() && isNewRecord){
+
+		if (tradeLicense.getIsLegacy() && isNewRecord) {
 			licNumber = tradeLicense.getOldLicenseNumber();
 			uniqueQuery.append(" AND  oldLicenseNumber = '" + licNumber + "'");
 		} else {
@@ -91,14 +92,14 @@ public class TradeLicenseRepository {
 			uniqueQuery.append(" AND  licenseNumber = '" + licNumber + "'");
 		}
 
-		if(id != null && !isNewRecord){
-			uniqueQuery.append(" AND id != "+ id);
+		if (id != null && !isNewRecord) {
+			uniqueQuery.append(" AND id != " + id);
 		}
 		return uniqueQuery.toString();
 	}
-	
+
 	public void validateTradeLicenseId(TradeLicense tradeLicense, RequestInfo requestInfo) {
-		
+
 		String sql = getLicenseIdQuery(tradeLicense);
 		Integer count = null;
 		try {
@@ -109,16 +110,17 @@ public class TradeLicenseRepository {
 		}
 
 		if (count == 0) {
-			throw new DuplicateTradeLicenseException(propertiesManager.getDuplicateOldTradeLicenseMsg(), requestInfo);
+			throw new IdNotFoundException(propertiesManager.getOldLicenseIdNotValidCustomMsg(),
+					propertiesManager.getIdField(), requestInfo);
 		}
 	}
-	
+
 	private String getLicenseIdQuery(TradeLicense tradeLicense) {
 
 		Long id = tradeLicense.getId();
 
 		StringBuffer uniqueQuery = new StringBuffer("select count(*) from egtl_license");
-		uniqueQuery.append(" where id = " + id );
+		uniqueQuery.append(" where id = " + id);
 
 		return uniqueQuery.toString();
 	}
@@ -165,16 +167,16 @@ public class TradeLicenseRepository {
 	public void add(TradeLicenseRequest request, Boolean isNewRecord) {
 
 		Map<String, Object> message = new HashMap<>();
-		
-		if(isNewRecord){
-			
+
+		if (isNewRecord) {
+
 			message.put(propertiesManager.getCreateLegacyTradeValidated(), request);
-			
+
 		} else {
-			
+
 			message.put(propertiesManager.getUpdateLegacyTradeValidated(), request);
 		}
-		
+
 		tradeLicenseQueueRepository.add(message);
 	}
 
@@ -199,24 +201,57 @@ public class TradeLicenseRepository {
 
 		return entity.toDomain();
 	}
-	
+
 	@Transactional
 	public TradeLicense update(TradeLicense tradeLicense) {
-		
+
 		TradeLicenseEntity entity = tradeLicenseJdbcRepository.update(new TradeLicenseEntity().toEntity(tradeLicense));
-		
+
+		if (tradeLicense.getSupportDocuments() != null && tradeLicense.getSupportDocuments().size() > 0) {
+			
+			for (SupportDocument supportDocument : tradeLicense.getSupportDocuments()) {
+				
+				if (supportDocument.getId() != null) {
+					
+					SupportDocumentEntity documentEntity = supportDocumentJdbcRepository
+							.update(new SupportDocumentEntity().toEntity(supportDocument));
+				} else {
+					
+					SupportDocumentEntity documentEntity = supportDocumentJdbcRepository
+							.create(new SupportDocumentEntity().toEntity(supportDocument));
+				}
+			}
+		}
+
+		if (tradeLicense.getFeeDetails() != null && tradeLicense.getFeeDetails().size() > 0) {
+			
+			for (LicenseFeeDetail feeDetail : tradeLicense.getFeeDetails()) {
+				
+				if (feeDetail.getId() != null) {
+					
+					LicenseFeeDetailEntity licenseFeeEntity = licenseFeeDetailJdbcRepository
+							.update(new LicenseFeeDetailEntity().toEntity(feeDetail));
+				} else {
+					
+					LicenseFeeDetailEntity licenseFeeEntity = licenseFeeDetailJdbcRepository
+							.create(new LicenseFeeDetailEntity().toEntity(feeDetail));
+				}
+			}
+		}
+
 		return entity.toDomain();
 	}
 
-	public TradeLicenseSearch getByLicenseId(TradeLicense tradeLicense, RequestInfo requestInfo){
-		
+	public TradeLicenseSearch getByLicenseId(TradeLicense tradeLicense, RequestInfo requestInfo) {
+
 		Long licenseId = tradeLicense.getId();
-		TradeLicenseSearchEntity tradeLicenseSearchEntity = tradeLicenseJdbcRepository.searchById(requestInfo, licenseId);
+		TradeLicenseSearchEntity tradeLicenseSearchEntity = tradeLicenseJdbcRepository.searchById(requestInfo,
+				licenseId);
 		TradeLicenseSearch tradeLicenseSearch = tradeLicenseSearchEntity.toDomain();
-		
+
 		return tradeLicenseSearch;
 	}
-	
+
 	@Transactional
 	public List<TradeLicenseSearch> search(RequestInfo requestInfo, String tenantId, Integer pageSize,
 			Integer pageNumber, String sort, String active, Integer[] ids, String applicationNumber,
@@ -238,6 +273,5 @@ public class TradeLicenseRepository {
 		return tradeLicenseSearchList;
 
 	}
-	
 
 }

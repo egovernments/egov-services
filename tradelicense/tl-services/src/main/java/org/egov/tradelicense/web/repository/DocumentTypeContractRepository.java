@@ -2,6 +2,7 @@ package org.egov.tradelicense.web.repository;
 
 import java.util.Date;
 
+import org.egov.tl.commons.web.requests.DocumentTypeV2Response;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tl.commons.web.response.DocumentTypeResponse;
 import org.egov.tradelicense.common.config.PropertiesManager;
@@ -67,12 +68,12 @@ public class DocumentTypeContractRepository {
 
 	}
 
-	public DocumentTypeResponse findById(TradeLicense tradeLicense, SupportDocument supportDocument,
+	public DocumentTypeV2Response findByIdAndTlValues(TradeLicense tradeLicense, SupportDocument supportDocument,
 			RequestInfoWrapper requestInfoWrapper) {
 
 		String hostUrl = propertiesManger.getTradeLicenseMasterServiceHostName()
 				+ propertiesManger.getTradeLicenseMasterServiceBasePath();
-		String searchUrl = propertiesManger.getDocumentServiceSearchPath();
+		String searchUrl = propertiesManger.getDocumentServiceV2SearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
 		if (supportDocument.getDocumentTypeId() != null) {
@@ -82,18 +83,33 @@ public class DocumentTypeContractRepository {
 		if (tradeLicense.getTenantId() != null) {
 			content.append("&tenantId=" + tradeLicense.getTenantId());
 		}
+
+		if (tradeLicense.getCategoryId() != null) {
+			content.append("&categoryId=" + tradeLicense.getCategoryId());
+		}
+
+		if (tradeLicense.getSubCategoryId() != null) {
+			content.append("&subCategoryId=" + tradeLicense.getSubCategoryId());
+		}
+
+		if (tradeLicense.getApplicationType() != null) {
+			content.append("&applicationType=" + tradeLicense.getApplicationType().name());
+		}
+
+		content.append("&enabled=" + "true");
+
 		TlMasterRequestInfoWrapper tlMasterRequestInfoWrapper = getTlMasterRequestInfoWrapper(requestInfoWrapper);
 		url = url + content.toString();
-		DocumentTypeResponse documentTypeResponse = null;
+		DocumentTypeV2Response documentTypeV2Response = null;
 		try {
-			documentTypeResponse = restTemplate.postForObject(url, tlMasterRequestInfoWrapper,
-					DocumentTypeResponse.class);
+			documentTypeV2Response = restTemplate.postForObject(url, tlMasterRequestInfoWrapper,
+					DocumentTypeV2Response.class);
 		} catch (Exception e) {
 			log.error(propertiesManger.getDocumentEndPointErrormsg());
 		}
-		if (documentTypeResponse != null && documentTypeResponse.getDocumentTypes() != null
-				&& documentTypeResponse.getDocumentTypes().size() > 0) {
-			return documentTypeResponse;
+		if (documentTypeV2Response != null && documentTypeV2Response.getDocumentTypes() != null
+				&& documentTypeV2Response.getDocumentTypes().size() > 0) {
+			return documentTypeV2Response;
 		} else {
 			return null;
 		}

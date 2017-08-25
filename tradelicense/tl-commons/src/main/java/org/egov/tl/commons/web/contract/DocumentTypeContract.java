@@ -25,36 +25,38 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class DocumentType {
+public class DocumentTypeContract {
 
-	private Long id = null;
+	private Long id;
+
 
 	@JsonProperty("tenantId")
-	@Pattern(regexp = ".*[^ ].*", message = "{error.tenantId.emptyspaces}")
-	@NotEmpty(message = "{error.tenantId.empty}")
-	@Length(min = 4, max = 128, message = "{error.tenantId.empty}")
-	private String tenantId = null;
+	@Pattern(regexp = ".*[^ ].*",message="{error.tenantId.emptyspaces}")
+	@NotEmpty(message="{error.tenantId.empty}")
+	@Length(min = 4, max = 128, message="{error.tenantId.empty}")
+	private String tenantId ;
+
 
 	@JsonProperty("name")
-	@NotEmpty(message = "{error.name.empty}")
-	@Pattern(regexp = ".*[^ ].*", message = "{error.name.emptyspaces}")
-	@Length(min = 1, max = 100, message = "{error.name.empty}")
-	private String name = null;
+	@NotEmpty(message="{error.name.empty}")
+	@Pattern(regexp = ".*[^ ].*",message="{error.name.emptyspaces}")
+	@Length(min = 4, max = 100, message="{error.name.empty}")
+	private String name ;
 
-	private Boolean mandatory = true;
+	private Boolean mandatory;
 
-	private Boolean enabled = true;
+	
+	private Boolean enabled ;
 
-	@NotNull(message = "{error.applicationType.null}")
+	@NotNull(message="{error.applicationType.null}")
 	private ApplicationTypeEnum applicationType;
 
 	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails = null;
+	private AuditDetails auditDetails ;
 	
 	@JsonProperty("categoryId")
 	private Long categoryId ;
 	
 	@JsonProperty("subCategoryId")
 	private Long subCategoryId ;
-	
 }

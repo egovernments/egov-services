@@ -26,7 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  *
  */
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "org.egov")
 @EnableWebMvc
 @Import({ TracerConfiguration.class })
 public class TradeLicenseApplication {

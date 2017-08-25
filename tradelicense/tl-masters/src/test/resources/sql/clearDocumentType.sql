@@ -1,0 +1,1 @@
+delete from egtl_mstr_document_type;

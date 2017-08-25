@@ -151,5 +151,31 @@ public class PropertiesManager {
 
 	@Value("${egov.tradelicense.licensestatus.update.validated}")
 	private String updateLicenseStatusValidated;
+	
+	
+	@Value("${egov.tradelicense.documenttypev2.create.validated}")
+	private String createDocumentTypeV2Validated;
+	
+	@Value("${egov.tradelicense.documenttypev2.update.validated}")
+	private String updateDocumentTypeV2Validated;
+	
+	@Value("${error.document.types.notfound}")
+	private String documentTypeNotFoundMsg;
+	
+	@Value("${error.document.types.empty}")
+	private String documentTypeEmptyMsg;
+	
+	
+	@Value("${error.documenttype.category}")
+	private String categoryErrorMsg;
+	
+	@Value("${error.documenttype.subcategory}")
+	private String subCategoryErrorMsg;
+	
+	@Value("${document.create.success.status.message}")
+    private String documentTypeCreateSuccessMessage;
+	
+	@Value("${document.update.success.status.message}")
+    private String documentTypeUpdateSuccessMessage;
 
 }

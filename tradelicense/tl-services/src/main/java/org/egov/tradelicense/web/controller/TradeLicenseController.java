@@ -23,9 +23,7 @@ import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.domain.service.TradeLicenseService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.validation.SmartValidator;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,20 +46,7 @@ public class TradeLicenseController {
 	@Autowired
 	PropertiesManager propertiesManager;
 
-	private BindingResult validate(List<TradeLicenseContract> tradeLicenses, BindingResult errors) {
-
-		try {
-			Assert.notNull(tradeLicenses, "tradeLicenses to create must not be null");
-			for (TradeLicenseContract tradeLicense : tradeLicenses) {
-				validator.validate(tradeLicense, errors);
-			}
-		} catch (IllegalArgumentException e) {
-			errors.addError(new ObjectError("Missing data", e.getMessage()));
-		}
-
-		return errors;
-
-	}
+	
 
 	@RequestMapping(path = "/license/v1/_create", method = RequestMethod.POST)
 	public TradeLicenseResponse createTradelicense(@Valid @RequestBody TradeLicenseRequest tradeLicenseRequest,

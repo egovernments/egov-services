@@ -10,7 +10,9 @@ import java.util.List;
 import org.egov.tl.commons.web.contract.CategoryDetailSearch;
 import org.egov.tl.commons.web.contract.CategorySearch;
 import org.egov.tl.commons.web.contract.DocumentType;
+import org.egov.tl.commons.web.contract.DocumentTypeContract;
 import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tl.commons.web.requests.DocumentTypeV2Response;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tl.commons.web.requests.ResponseInfoFactory;
 import org.egov.tl.commons.web.response.CategorySearchResponse;
@@ -110,8 +112,8 @@ public class TradeLicenseServiceTest {
 				.thenReturn(getSubCategoyResponse());
 		when(categoryContractRepository.findBySubCategoryUomId(any(TradeLicense.class), any(RequestInfoWrapper.class)))
 				.thenReturn(getSubCategoyResponse());
-		when(documentTypeContractRepository.findById(any(TradeLicense.class), any(SupportDocument.class),
-				any(RequestInfoWrapper.class))).thenReturn(getDocumentTypeResponse());
+		when(documentTypeContractRepository.findByIdAndTlValues(any(TradeLicense.class), any(SupportDocument.class),
+				any(RequestInfoWrapper.class))).thenReturn(getDocumentTypeV2Response());
 		tradeLicenses.add(getTradeLicense());
 		tradeLicenseServiceValidator.validateCreateTradeLicenseRelated(tradeLicenses, requestInfo);
 	}
@@ -130,8 +132,8 @@ public class TradeLicenseServiceTest {
 				.thenReturn(getSubCategoyResponse());
 		when(categoryContractRepository.findBySubCategoryUomId(any(TradeLicense.class), any(RequestInfoWrapper.class)))
 				.thenReturn(getSubCategoyResponse());
-		when(documentTypeContractRepository.findById(any(TradeLicense.class), any(SupportDocument.class),
-				any(RequestInfoWrapper.class))).thenReturn(getDocumentTypeResponse());
+		when(documentTypeContractRepository.findByIdAndTlValues(any(TradeLicense.class), any(SupportDocument.class),
+				any(RequestInfoWrapper.class))).thenReturn(getDocumentTypeV2Response());
 		tradeLicenses.add(getTradeLicense());
 		tradeLicenseService.add(tradeLicenses, requestInfo, errors);
 	}
@@ -201,6 +203,11 @@ public class TradeLicenseServiceTest {
 
 		return DocumentTypeResponse.builder().documentTypes(getDocumentType()).build();
 	}
+	
+	public DocumentTypeV2Response getDocumentTypeV2Response() {
+
+		return DocumentTypeV2Response.builder().documentTypes(getDocumentTypeContract()).build();
+	}
 
 	public List<DocumentType> getDocumentType() {
 
@@ -208,6 +215,14 @@ public class TradeLicenseServiceTest {
 		DocumentType documentType = DocumentType.builder().id(1l).build();
 		documentTypes.add(documentType);
 		return documentTypes;
+	}
+	
+	public List<DocumentTypeContract> getDocumentTypeContract() {
+
+		List<DocumentTypeContract> documentTypescontracts = new ArrayList<>();
+		DocumentTypeContract documentTypeContract = DocumentTypeContract.builder().id(1l).build();
+		documentTypescontracts.add(documentTypeContract);
+		return documentTypescontracts;
 	}
 
 	private TradeLicense getTradeLicense() {

@@ -52,6 +52,9 @@ public class PropertiesManager {
 
 	@Value("${egov.services.tl-masters_v1.documenttype.searchpath}")
 	private String documentServiceSearchPath;
+	
+	@Value("${egov.services.tl-masters_v2.documenttype.searchpath}")
+	private String documentServiceV2SearchPath;
 
 	@Value("${egov.services.tl-masters_v1.category.searchpath}")
 	private String categoryServiceSearchPath;
@@ -208,4 +211,9 @@ public class PropertiesManager {
 	
 	@Value("${feedetail.id.notValid.customMsg}")
 	private String feeDetailIdNotValidCustomMsg;
+	
+	
+	@Value("${applicationfee.applicaable}")
+	private String applicatonFeeApplicable;
+
 }

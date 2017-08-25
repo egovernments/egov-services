@@ -8,6 +8,7 @@ import org.egov.models.PropertyResponse;
 import org.egov.tl.commons.web.contract.CategoryDetailSearch;
 import org.egov.tl.commons.web.contract.CategorySearch;
 import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tl.commons.web.requests.DocumentTypeV2Response;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tl.commons.web.response.CategorySearchResponse;
 import org.egov.tl.commons.web.response.DocumentTypeResponse;
@@ -363,7 +364,7 @@ public class TradeLicenseServiceValidator {
 		if (tradeLicense.getSupportDocuments() != null && tradeLicense.getSupportDocuments().size() > 0) {
 			for (SupportDocument supportDocument : tradeLicense.getSupportDocuments()) {
 
-				DocumentTypeResponse documentTypeResponse = documentTypeContractRepository.findById(tradeLicense,
+				DocumentTypeV2Response documentTypeResponse = documentTypeContractRepository.findByIdAndTlValues(tradeLicense,
 						supportDocument, requestInfoWrapper);
 
 				if (documentTypeResponse == null || documentTypeResponse.getDocumentTypes() == null

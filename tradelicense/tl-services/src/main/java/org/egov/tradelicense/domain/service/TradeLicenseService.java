@@ -116,7 +116,19 @@ public class TradeLicenseService {
 		for (TradeLicense license : tradeLicenses) {
 
 			license.setId(tradeLicenseRepository.getNextSequence());
-			license.setStatus(new Long(1)); // Approved status id 1
+			
+			if( !license.getIsLegacy() ){
+				//TODO: identify the proper ids for the two status and add it here, for now used 2 and 3
+				if( propertiesManager.getApplicatonFeeApplicable().equalsIgnoreCase("Y")){
+					license.setStatus(new Long(2)); // "Pending for Application Fee payment" status id 2
+				}else if(propertiesManager.getApplicatonFeeApplicable().equalsIgnoreCase("N")){
+					license.setStatus(new Long(3)); // "Pending for scrutiny" status id 3
+				}
+				
+			}else{
+				license.setStatus(new Long(1)); // Approved status id 1
+			}
+			
 			if (license.getSupportDocuments() != null && license.getSupportDocuments().size() > 0) {
 				for (SupportDocument supportDocument : license.getSupportDocuments()) {
 					supportDocument.setLicenseId(license.getId());

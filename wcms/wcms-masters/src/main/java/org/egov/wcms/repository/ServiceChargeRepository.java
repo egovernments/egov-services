@@ -41,6 +41,7 @@ package org.egov.wcms.repository;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -49,7 +50,10 @@ import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.ServiceCharge;
 import org.egov.wcms.model.ServiceChargeDetails;
 import org.egov.wcms.repository.builder.ServiceChargeQueryBuilder;
+import org.egov.wcms.repository.rowmapper.ServiceChargeDetailsRomMapper;
+import org.egov.wcms.repository.rowmapper.ServiceChargeRowMapper;
 import org.egov.wcms.service.CodeGeneratorService;
+import org.egov.wcms.web.contract.ServiceChargeGetRequest;
 import org.egov.wcms.web.contract.ServiceChargeReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,6 +83,12 @@ public class ServiceChargeRepository {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+    @Autowired
+    private ServiceChargeRowMapper serviceChargeRowMapper;
+
+    @Autowired
+    private ServiceChargeDetailsRomMapper serviceChargeDetailsRowmapper;
+
     public static final Logger logger = LoggerFactory.getLogger(ServiceChargeRepository.class);
 
     @SuppressWarnings("unchecked")
@@ -98,6 +108,7 @@ public class ServiceChargeRepository {
                     .addValue("servicechargeapplicable", serviceCharge.getServiceChargeApplicable())
                     .addValue("servicechargetype", serviceCharge.getServiceChargeType())
                     .addValue("description", serviceCharge.getDescription())
+                    .addValue("active", serviceCharge.getActive())
                     .addValue("effectivefrom", serviceCharge.getEffectiveFrom())
                     .addValue("effectiveto", serviceCharge.getEffectiveTo()).addValue("outsideulb", serviceCharge.getOutsideUlb())
                     .addValue(TENANT, serviceCharge.getTenantId()).addValue("createdby", serviceChargeRequest.getRequestInfo()
@@ -140,6 +151,7 @@ public class ServiceChargeRepository {
                     .addValue("servicechargeapplicable", serviceCharge.getServiceChargeApplicable())
                     .addValue("servicechargetype", serviceCharge.getServiceChargeType())
                     .addValue("description", serviceCharge.getDescription())
+                    .addValue("active", serviceCharge.getActive())
                     .addValue("effectivefrom", serviceCharge.getEffectiveFrom())
                     .addValue("effectiveto", serviceCharge.getEffectiveTo()).addValue("outsideulb", serviceCharge.getOutsideUlb())
                     .addValue("lastmodifiedby", serviceChargeRequest.getRequestInfo()
@@ -186,6 +198,48 @@ public class ServiceChargeRepository {
             logger.error("Exception Encountered :" + e);
         }
         return serviceChargeRequest.getServiceCharge();
+    }
+
+    public List<ServiceCharge> searchServiceChargesByCriteria(final ServiceChargeGetRequest serviceChargeGetRequest) {
+        final Map<String, Object> preparedStatementValues = new HashMap<>();
+        final List<ServiceChargeDetails> serviceChargeDetails = new ArrayList<>();
+        final String getServiceChargeQuery = serviceChargeQueryBuilder.getQuery(serviceChargeGetRequest, preparedStatementValues);
+        final List<ServiceCharge> listOfServiceChargesFromDB = namedParameterJdbcTemplate.query(getServiceChargeQuery,
+                preparedStatementValues, serviceChargeRowMapper);
+        final String serviceChargeDetailsQuery = serviceChargeQueryBuilder.getServiceChargeDetailsQuery();
+        for (final ServiceCharge serviceCharge : listOfServiceChargesFromDB) {
+            final Map<String, Object> preparedVals = new HashMap<>();
+            preparedVals.put("servicecharge", Long.valueOf(serviceCharge.getCode()));
+            preparedVals.put("tenantid", serviceCharge.getTenantId());
+            final List<ServiceChargeDetails> listOfServiceChargeDetailsFromDB = namedParameterJdbcTemplate.query(
+                    serviceChargeDetailsQuery, preparedVals, serviceChargeDetailsRowmapper);
+            serviceChargeDetails.addAll(listOfServiceChargeDetailsFromDB);
+        }
+        return convertToModel(listOfServiceChargesFromDB, serviceChargeDetails);
+    }
+
+    public List<ServiceCharge> convertToModel(final List<ServiceCharge> listOfServiceChargesFromDB,
+            final List<ServiceChargeDetails> serviceChargeDetails) {
+        final List<ServiceCharge> listOfServiceCharges = new ArrayList<>();
+        for (final ServiceCharge serviceCharge : listOfServiceChargesFromDB) {
+            final List<ServiceChargeDetails> serviceChargeDtls = new ArrayList<>();
+            for (final ServiceChargeDetails serviceChargeDetail : serviceChargeDetails)
+                if (Long.valueOf(serviceCharge.getCode()).equals(serviceChargeDetail.getServiceCharge()))
+                    serviceChargeDtls.add(serviceChargeDetail);
+            final ServiceCharge serviceChrg = ServiceCharge.builder().id(serviceCharge.getId()).code(serviceCharge.getCode())
+                    .description(serviceCharge.getDescription()).active(serviceCharge.getActive())
+                    .effectiveFrom(serviceCharge.getEffectiveFrom()).effectiveTo(serviceCharge.getEffectiveTo())
+                    .serviceType(serviceCharge.getServiceType()).serviceChargeType(serviceCharge.getServiceChargeType())
+                    .serviceChargeApplicable(serviceCharge.getServiceChargeApplicable()).outsideUlb(serviceCharge.getOutsideUlb())
+                    .tenantId(serviceCharge.getTenantId()).createdBy(serviceCharge.getCreatedBy())
+                    .createdDate(serviceCharge.getCreatedDate())
+                    .lastModifiedBy(serviceCharge.getLastModifiedBy()).lastModifiedDate(serviceCharge.getLastModifiedDate())
+                    .chargeDetails(serviceChargeDtls).build();
+            listOfServiceCharges.add(serviceChrg);
+        }
+
+        return listOfServiceCharges;
+
     }
 
 }

@@ -1,0 +1,135 @@
+{
+     "RequestInfo": {
+       "apiId" : "org.egov.wcms",
+       "ver" : "1.0",
+       "action" : "POST",
+       "did" : "4354648646",
+       "key" : "xyz",
+       "msgId" : "654654",
+       "authToken" : "345678f",
+       "userInfo":
+       {
+     	"id":1
+       }
+   },
+   "ServiceCharges":[
+   	{
+   		"serviceType":"No due Certificate",
+   		"serviceChargeApplicable":true,
+   		"serviceChargeType":"flat",
+   		"description":"no due certificate issued",
+   		"effectiveFrom":15679009,
+   		"effectiveTo":15679123,
+   		"outsideUlb":false,
+   		"active":true,
+   		"tenantId":"default",
+   		"createdBy":1,
+   		"createdDate":15679009,
+   		"lastmodifiedBy":1,
+   		"lastModifiedDate":15679009,
+   		"chargeDetails":[
+   			{
+   			"uomFrom":0.0,
+   			"uomTo":100000.0,
+   			"amountOrpercentage":200.0,
+   			"tenantId":"default"
+   			}
+   		]
+   	},
+   	{
+   		"serviceType":"No due Certificate",
+   		"serviceChargeApplicable":true,
+   		"serviceChargeType":"slab",
+   		"description":"no due certificate issued",
+   		"effectiveFrom":15679009,
+   		"effectiveTo":15679123,
+   		"outsideUlb":false,
+   		"active":true,
+   		"tenantId":"default",
+   		"createdBy":1,
+   		"createdDate":15679009,
+   		"lastmodifiedBy":1,
+   		"lastModifiedDate":15679009,
+   		"chargeDetails":[
+   			{
+   			"uomFrom":0.0,
+   			"uomTo":1000.0,
+   			"amountOrpercentage":100.0,
+   			"tenantId":"default"
+   			},
+   			{
+   			"uomFrom":1001.0,
+   			"uomTo":2000.0,
+   			"amountOrpercentage":200.0,
+   			"tenantId":"default"
+   			},
+   			{
+   			"uomFrom":2001.0,
+   			"uomTo":3000.0,
+   			"amountOrpercentage":300.0,
+   			"tenantId":"default"
+   			}
+   		]
+   		
+   	},
+   	{
+   		   	
+   		"serviceType":"No due Certificate",
+   		"serviceChargeApplicable":true,
+   		"serviceChargeType":"percentage flat",
+   		"description":"no due certificate issued",
+   		"effectiveFrom":15679009,
+   		"effectiveTo":15679123,
+   		"outsideUlb":false,
+   		"active":true,
+   		"tenantId":"default",
+   		"createdBy":1,
+   		"createdDate":15679009,
+   		"lastmodifiedBy":1,
+   		"lastModifiedDate":15679009,
+   		"chargeDetails":[
+   			{
+   			"uomFrom":0.0,
+   			"uomTo":100000.0,
+   			"amountOrpercentage":12.5,
+   			"tenantId":"default"
+   			}
+   		]
+   	},
+   	{
+   		"serviceType":"No due Certificate",
+   		"serviceChargeApplicable":true,
+   		"serviceChargeType":"percentage slab",
+   		"description":"no due certificate issued",
+   		"effectiveFrom":15679009,
+   		"effectiveTo":15679123,
+   		"outsideUlb":false,
+   		"active":true,
+   		"tenantId":"default",
+   		"createdBy":1,
+   		"createdDate":15679009,
+   		"lastmodifiedBy":1,
+   		"lastModifiedDate":15679009,
+   		"chargeDetails":[
+   			{
+   			"uomFrom":0.0,
+   			"uomTo":10000.0,
+   			"amountOrpercentage":2.5,
+   			"tenantId":"default"
+   			},
+   			{
+   			"uomFrom":10001.0,
+   			"uomTo":20000.0,
+   			"amountOrpercentage":4.0,
+   			"tenantId":"default"
+   			},
+   			{
+   			"uomFrom":20001.0,
+   			"uomTo":30000.0,
+   			"amountOrpercentage":6.5,
+   			"tenantId":"default"
+   			}
+   		]	
+   	}
+   	]
+}

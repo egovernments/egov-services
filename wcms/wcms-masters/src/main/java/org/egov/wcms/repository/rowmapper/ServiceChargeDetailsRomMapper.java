@@ -37,50 +37,29 @@
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.service;
+package org.egov.wcms.repository.rowmapper;
 
-import java.util.List;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-import org.egov.wcms.model.ServiceCharge;
-import org.egov.wcms.repository.ServiceChargeRepository;
-import org.egov.wcms.web.contract.ServiceChargeGetRequest;
-import org.egov.wcms.web.contract.ServiceChargeReq;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.egov.wcms.model.ServiceChargeDetails;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
-@Service
-public class ServiceChargeService {
+@Component
+public class ServiceChargeDetailsRomMapper implements RowMapper<ServiceChargeDetails> {
 
-    @Autowired
-    private ServiceChargeRepository serviceChargeRepository;
-
-    public static final Logger logger = LoggerFactory.getLogger(ServiceChargeService.class);
-
-    public List<ServiceCharge> pushServiceChargeCreateRequestToQueue(final ServiceChargeReq serviceChargeRequest) {
-        logger.info("ServiceChargeReq :" + serviceChargeRequest);
-        return serviceChargeRepository.pushServiceChargeCreateReqToQueue(serviceChargeRequest);
-
-    }
-
-    public ServiceChargeReq createServiceCharge(final ServiceChargeReq serviceChargeRequest) {
-        return serviceChargeRepository.persistCreateServiceChargeToDb(serviceChargeRequest);
-
-    }
-
-    public List<ServiceCharge> pushServiceChargeUpdateRequestToQueue(final ServiceChargeReq serviceChargeRequest) {
-        logger.info("ServiceChargeReq :" + serviceChargeRequest);
-        return serviceChargeRepository.pushServiceChargeUpdateReqToQueue(serviceChargeRequest);
-    }
-
-    public ServiceChargeReq updateServiceCharge(final ServiceChargeReq serviceChargeRequest) {
-        return serviceChargeRepository.persistUpdateServiceChargeRequestToDB(serviceChargeRequest);
-    }
-
-    public List<ServiceCharge> getServiceChargesByCriteria(final ServiceChargeGetRequest serviceChargeGetRequest) {
-        return serviceChargeRepository.searchServiceChargesByCriteria(serviceChargeGetRequest);
-
+    @Override
+    public ServiceChargeDetails mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+        final ServiceChargeDetails serviceChargeDetail = new ServiceChargeDetails();
+        serviceChargeDetail.setId((Long) rs.getObject("scd_id"));
+        serviceChargeDetail.setCode(rs.getString("scd_code"));
+        serviceChargeDetail.setUomFrom((Double) rs.getObject("scd_uomfrom"));
+        serviceChargeDetail.setUomTo((Double) rs.getObject("scd_uomto"));
+        serviceChargeDetail.setAmountOrpercentage((Double) rs.getObject("scd_amountorpercentage"));
+        serviceChargeDetail.setServiceCharge((Long) rs.getObject("scd_servicecharge"));
+        serviceChargeDetail.setTenantId(rs.getString("scd_tenantid"));
+        return serviceChargeDetail;
     }
 
 }

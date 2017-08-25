@@ -37,50 +37,36 @@
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.service;
+package org.egov.wcms.repository.rowmapper;
 
-import java.util.List;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import org.egov.wcms.model.ServiceCharge;
-import org.egov.wcms.repository.ServiceChargeRepository;
-import org.egov.wcms.web.contract.ServiceChargeGetRequest;
-import org.egov.wcms.web.contract.ServiceChargeReq;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
-@Service
-public class ServiceChargeService {
-
-    @Autowired
-    private ServiceChargeRepository serviceChargeRepository;
-
-    public static final Logger logger = LoggerFactory.getLogger(ServiceChargeService.class);
-
-    public List<ServiceCharge> pushServiceChargeCreateRequestToQueue(final ServiceChargeReq serviceChargeRequest) {
-        logger.info("ServiceChargeReq :" + serviceChargeRequest);
-        return serviceChargeRepository.pushServiceChargeCreateReqToQueue(serviceChargeRequest);
-
-    }
-
-    public ServiceChargeReq createServiceCharge(final ServiceChargeReq serviceChargeRequest) {
-        return serviceChargeRepository.persistCreateServiceChargeToDb(serviceChargeRequest);
-
-    }
-
-    public List<ServiceCharge> pushServiceChargeUpdateRequestToQueue(final ServiceChargeReq serviceChargeRequest) {
-        logger.info("ServiceChargeReq :" + serviceChargeRequest);
-        return serviceChargeRepository.pushServiceChargeUpdateReqToQueue(serviceChargeRequest);
-    }
-
-    public ServiceChargeReq updateServiceCharge(final ServiceChargeReq serviceChargeRequest) {
-        return serviceChargeRepository.persistUpdateServiceChargeRequestToDB(serviceChargeRequest);
-    }
-
-    public List<ServiceCharge> getServiceChargesByCriteria(final ServiceChargeGetRequest serviceChargeGetRequest) {
-        return serviceChargeRepository.searchServiceChargesByCriteria(serviceChargeGetRequest);
-
+@Component
+public class ServiceChargeRowMapper implements RowMapper<ServiceCharge> {
+    @Override
+    public ServiceCharge mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+        final ServiceCharge serviceCharge = new ServiceCharge();
+        serviceCharge.setId(rs.getLong("sc_id"));
+        serviceCharge.setCode(rs.getString("sc_code"));
+        serviceCharge.setServiceType(rs.getString("sc_servicetype"));
+        serviceCharge.setServiceChargeApplicable((Boolean) rs.getObject("sc_servicechargeapplicable"));
+        serviceCharge.setServiceChargeType(rs.getString("sc_servicechargetype"));
+        serviceCharge.setDescription(rs.getString("sc_description"));
+        serviceCharge.setActive((Boolean) rs.getObject("sc_active"));
+        serviceCharge.setEffectiveFrom((Long) rs.getObject("sc_effectivefrom"));
+        serviceCharge.setEffectiveTo((Long) rs.getObject("sc_effectiveto"));
+        serviceCharge.setOutsideUlb((Boolean) rs.getObject("sc_outsideulb"));
+        serviceCharge.setTenantId(rs.getString("sc_tenantid"));
+        serviceCharge.setCreatedBy((Long) rs.getObject("sc_createdby"));
+        serviceCharge.setCreatedDate((Long) rs.getObject("sc_createddate"));
+        serviceCharge.setLastModifiedBy((Long) rs.getObject("sc_lastmodifiedby"));
+        serviceCharge.setLastModifiedDate((Long) rs.getObject("sc_lastmodifieddate"));
+        return serviceCharge;
     }
 
 }

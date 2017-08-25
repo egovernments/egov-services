@@ -39,16 +39,93 @@
  */
 package org.egov.wcms.repository.builder;
 
+import java.util.Map;
+
+import org.egov.wcms.web.contract.ServiceChargeGetRequest;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ServiceChargeQueryBuilder {
 
+    public static final String BASE_QUERY = "Select sc.id as sc_id,sc.code as sc_code,sc.servicetype "
+            + "as sc_servicetype,sc.servicechargeapplicable as sc_servicechargeapplicable,"
+            + "sc.servicechargetype as sc_servicechargetype,sc.description as sc_description,"
+            + "sc.active as sc_active,sc.effectivefrom as sc_effectivefrom,sc.effectiveto"
+            + " as sc_effectiveto,sc.outsideulb as sc_outsideulb,sc.tenantid as sc_tenantid,"
+            + "sc.createdby as sc_createdby,sc.createddate as sc_createddate,sc.lastmodifiedby"
+            + " as sc_lastmodifiedby,sc.lastmodifieddate as sc_lastmodifieddate from"
+            + " egwtr_servicecharge sc";
+
+    public String getServiceChargeDetailsQuery() {
+        return "Select scd.id as scd_id,scd.code as scd_code,"
+                + "scd.uomfrom as scd_uomfrom,scd.uomto as scd_uomto,"
+                + "scd.amountorpercentage as scd_amountorpercentage,scd.servicecharge as scd_servicecharge,"
+                + "scd.tenantid as scd_tenantid from egwtr_servicecharge_details scd"
+                + " where scd.servicecharge = :servicecharge and scd.tenantid = :tenantid";
+    }
+
+    public String getQuery(final ServiceChargeGetRequest serviceChargeGetRequest,
+            final Map<String, Object> preparedStatementValues) {
+        final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+        addWhereClause(serviceChargeGetRequest, preparedStatementValues, selectQuery);
+        addOrderByClause(serviceChargeGetRequest, selectQuery);
+        return selectQuery.toString();
+    }
+
+    private void addOrderByClause(final ServiceChargeGetRequest serviceChargeGetRequest,
+            final StringBuilder selectQuery) {
+        final String sortBy = serviceChargeGetRequest.getSortBy() == null ? "sc.id"
+                : "sc." + serviceChargeGetRequest.getSortBy();
+        final String sortOrder = serviceChargeGetRequest.getSortOrder() == null ? "DESC" : serviceChargeGetRequest.getSortOrder();
+        selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
+    }
+
+    private void addWhereClause(final ServiceChargeGetRequest serviceChargeGetRequest,
+            final Map<String, Object> preparedStatementValues,
+            final StringBuilder selectQuery) {
+        if (serviceChargeGetRequest.getTenantId() == null)
+            return;
+        selectQuery.append(" WHERE");
+        boolean isAppendAndClause = false;
+
+        if (serviceChargeGetRequest.getIds() != null) {
+            isAppendAndClause = true;
+            selectQuery.append(" sc.id IN (:ids)");
+            preparedStatementValues.put("ids", serviceChargeGetRequest.getIds());
+        }
+        if (serviceChargeGetRequest.getTenantId() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" sc.tenantid = :tenantId");
+            preparedStatementValues.put("tenantId", serviceChargeGetRequest.getTenantId());
+        }
+        if (serviceChargeGetRequest.getServiceType() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" sc.servicetype = :serviceType");
+            preparedStatementValues.put("serviceType", serviceChargeGetRequest.getServiceType());
+        }
+        if (serviceChargeGetRequest.getServiceChargeType() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" sc.servicechargetype = :serviceChargeType");
+            preparedStatementValues.put("serviceChargeType", serviceChargeGetRequest.getServiceChargeType());
+        }
+        if (serviceChargeGetRequest.getOutsideUlb() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" sc.outsideulb = :outsideUlb");
+            preparedStatementValues.put("outsideUlb", serviceChargeGetRequest.getOutsideUlb());
+        }
+    }
+
+    private boolean addAndClauseIfRequired(final boolean appendAndClauseFlag, final StringBuilder queryString) {
+        if (appendAndClauseFlag)
+            queryString.append(" AND");
+        return true;
+    }
+
     public String insertServiceChargeData() {
         return "Insert into egwtr_servicecharge (id,code,servicetype,servicechargeapplicable,servicechargetype"
-                + ",description,effectivefrom,effectiveto,outsideulb,tenantid,createdby,createddate,lastmodifiedby,"
+                + ",description,active,effectivefrom,effectiveto,outsideulb,tenantid,createdby,createddate,lastmodifiedby,"
                 + "lastmodifieddate) values (:id,:code,:servicetype,:servicechargeapplicable,:servicechargetype"
-                + ",:description,:effectivefrom,:effectiveto,:outsideulb,:tenantid,:createdby,:createddate,:lastmodifiedby,"
+                + ",:description,:active,:effectivefrom,:effectiveto,:outsideulb,:tenantid,:createdby,:createddate,:lastmodifiedby,"
                 + ":lastmodifieddate)";
     }
 
@@ -59,7 +136,7 @@ public class ServiceChargeQueryBuilder {
 
     public String updateServiceChargeData() {
         return "Update egwtr_servicecharge set servicetype =:servicetype,servicechargeapplicable =:servicechargeapplicable,"
-                + "servicechargetype =:servicechargetype,description =:description,effectivefrom =:effectivefrom,"
+                + "servicechargetype =:servicechargetype,description =:description,active =:active,effectivefrom =:effectivefrom,"
                 + "effectiveto =:effectiveto,outsideulb =:outsideulb,lastmodifiedby =:lastmodifiedby,lastmodifieddate"
                 + " =:lastmodifieddate where code =:code and tenantid =:tenantid";
     }

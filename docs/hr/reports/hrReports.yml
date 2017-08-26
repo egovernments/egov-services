@@ -31,27 +31,27 @@ ReportDefinitions:
       linkedColumn: _parent?reportName={reportName}&status={currentColumnName}&code={code}  
   searchParams:
   - name: departmentid
-    label: reports.hr.employee.Department
+    label: reports.hr.Department
     type: singlevaluelist
     pattern: http://egov-common-masters:8080/egov-common-masters/departments/_search?tenantId=$tenantid|$..id|$..name
     source: eg_department
     isMandatory: false
     searchClause: and assign.departmentid=$departmentid
   - name: designationid
-    label: reports.hr.employee.Designation
+    label: reports.hr.Designation
     type: singlevaluelist
     pattern: http://hr-master:8080/hr-master/designations/_search?tenantId=$tenantid|$..id|$..name 
     source: egeis_designation
     isMandatory: false
     searchClause: and assign.designationid=$designationid
   - name: code
-    label: reports.hr.employee.Employee_Code/Name 
+    label: reports.hr.Employee_Code/Name  
     type: String
     source: hr 
     isMandatory: false
     searchClause: and emp.code=$code
   - name: employeeType
-    label: reports.hr.employee.Employee_Type
+    label: reports.hr.EmployeeType
     type: singlevaluelist
     pattern: http://hr-master:8080/hr-master/employeetypes/_search?tenantId=$tenantid|$..id|$..name
     source: egeis_employeetype  
@@ -109,7 +109,7 @@ ReportDefinitions:
     source: hr    
   searchParams:
   - name: departmentid
-    label: reports.hr.employee.Department
+    label: reports.hr.Department
     type: string
     source: eg_department
     isMandatory: true
@@ -117,17 +117,17 @@ ReportDefinitions:
   - name: designationid
     label: reports.hr.employee.Designation
     type: string
-    source: egeis_designation
+    source: reports.hr.Designation
     isMandatory: true
     searchClause: and assign.designationid=$designationid
   - name: code
-    label: reports.hr.employee.Employee_Code/Name 
+    label: reports.hr.Employee_Code/Name  
     type: string
     source: hr 
     isMandatory: true
     searchClause: and emp.code=$code
   - name: employeeType
-    label: reports.hr.employee.Employee_Type
+    label: reports.hr.EmployeeType
     type: string
     source: egeis_employeetype  
     isMandatory: true
@@ -191,27 +191,27 @@ ReportDefinitions:
     source: eg_calendarYear
     isMandatory: true
   - name: departmentId
-    label: reports.hr.Attendence.Department
+    label: reports.hr.Department
     type: singlevaluelist
     pattern: http://egov-common-masters:8080/egov-common-masters/departments/_search?tenantId=$tenantId|$..id|$..name
     source: hr
     isMandatory: false
     searchClause: and dept.id=$departmentId
   - name: designation
-    label: reports.hr.Attendence.Designation
+    label: reports.hr.Designation
     type: singlevaluelist
     pattern: http://hr-master:8080/hr-master/designations/_search?tenantId=$tenantId|$..id|$..name  
     source: hr
     isMandatory: false
     searchClause: and desig.id=$designation
   - name: code
-    label: reports.hr.Attendence.Employee_Code/Name 
+    label: reports.hr.Employee_Code/Name  
     type: String
     source: egeis_employee 
     isMandatory: false
     searchClause: and emp.code=$code
   - name: employeeType
-    label: reports.hr.Attendence.Employee_Type
+    label: reports.hr.EmployeeType
     type: singlevaluelist
     pattern: http://hr-master:8080/hr-master/employeetypes/_search?tenantId=$tenantId|$..id|$..name
     source: egeis_employee  
@@ -290,7 +290,7 @@ ReportDefinitions:
     isMandatory: false
     searchClause: and desig.id=$designation
   - name: employeeCode/Name
-    label: reports.hr.Employee_Code/Name 
+    label: reports.hr.Employee_Code/Name  
     type: String
     source: hr 
     isMandatory: false
@@ -356,6 +356,9 @@ ReportDefinitions:
     and assign.tenantid=emp.tenantid
     and emp.tenantid=emptyp.tenantid
     and assign.tenantid=dept.tenantid;
+
+
+
 
 
     

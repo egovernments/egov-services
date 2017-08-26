@@ -128,20 +128,6 @@ public class AssetValidator {
             return assetCategories.get(0);
     }
 
-    public void findAsset(final AssetRequest assetRequest) {
-
-        final Asset asset = assetRequest.getAsset();
-        final String existingName = assetService.getAssetName(asset.getTenantId(), asset.getName());
-
-        if (existingName != null) {
-            if (existingName.equalsIgnoreCase(assetRequest.getAsset().getName())) {
-                log.info("duplicate asset with same name found");
-                throw new RuntimeException("Duplicate asset name asset already exists");
-            }
-        } else
-            log.info("no duplicate asset with same name found");
-    }
-
     public void validateRevaluationCriteria(final RevaluationCriteria revaluationCriteria) {
         if (revaluationCriteria.getFromDate() == null && revaluationCriteria.getToDate() != null)
             throw new RuntimeException("Invalid Search! from date required");

@@ -39,25 +39,27 @@ public class ReceiptReqValidator {
 
 	public List<ErrorResponse> validatecreateReceiptRequest(
 			final ReceiptReq receiptRequest) {
-		final List<ErrorResponse> errorResponses = new ArrayList<>();
-		final ErrorResponse errorResponse = new ErrorResponse();
+		List<ErrorResponse> errorResponses = null;
 		final Error error = getError(receiptRequest);
-		errorResponse.setError(error);
-		errorResponses.add(errorResponse);
+		if (error != null) {
+			ErrorResponse errorResponse = new ErrorResponse();
+			errorResponses = new ArrayList<>();
+			errorResponse.setError(error);
+			errorResponses.add(errorResponse);
+		}
 		return errorResponses;
 	}
 
 	private Error getError(final ReceiptReq receiptRequest) {
 		final List<ErrorField> errorFields = getErrorFields(receiptRequest);
-		final Error error = getError(receiptRequest);
+		Error error = null;
 		if (!errorFields.isEmpty())
-			return Error
+			error = Error
 					.builder()
 					.code(HttpStatus.BAD_REQUEST.value())
 					.message(CollectionServiceConstants.INVALID_RECEIPT_REQUEST)
 					.fields(errorFields).build();
-		else
-			return error;
+		return error;
 	}
 
 	private List<ErrorField> getErrorFields(final ReceiptReq receiptRequest) {

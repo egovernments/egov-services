@@ -26,7 +26,7 @@ class CreateDepreciation extends React.Component {
     this.setState({ [name] : value });
   }
 
-  create(e){tate);
+  create(e){
     var body = {
       RequestInfo: requestInfo,
       Depreciation: {
@@ -37,7 +37,6 @@ class CreateDepreciation extends React.Component {
         assetIds: []
       }
     };
-    console.log(JSON.stringify(body));
     $.ajax({
       url : '/asset-services/assets/depreciations/_create',
       type: 'POST',
@@ -49,6 +48,7 @@ class CreateDepreciation extends React.Component {
       },
       success: function(response) {
         if(response.depreciation.depreciationDetails.length > 0){
+          current.setState({error : false});
           var ep=new ExcelPlus();
           ep.createFile("Depreciation");
           ep.write({ "content":[ ["Asset ID", "Status", "Depreciation Rate", 'Value before Depreciation', 'Depreciation', 'Value after Depreciation', "Voucher Reference", "Reason for Failure"] ] });

@@ -364,7 +364,8 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+            "maxLength": "10"
           },
           {
             "name": "licenseValidFromDate",
@@ -375,7 +376,8 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+            "maxLength": "10"
           },
           {
             "name": "TradeOwner",
@@ -426,7 +428,8 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+            "maxLength": "10"
           },
           {
             "name": "agreementNo",

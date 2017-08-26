@@ -76,6 +76,10 @@ public class DonationGetRequest {
     private String usageType;
 
     private String usageTypeId;
+    
+    private String subUsageType;
+
+    private String subUsageTypeId;
 
     private Double minPipeSize;
 

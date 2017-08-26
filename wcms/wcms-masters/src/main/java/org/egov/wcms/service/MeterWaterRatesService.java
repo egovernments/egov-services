@@ -95,7 +95,7 @@ public class MeterWaterRatesService {
 
     public List<MeterWaterRates> updateMeterWaterRates(final String topic, final String key,
             final MeterWaterRatesRequest meterWaterRatesRequest) {
-        for (final MeterWaterRates meterWaterRates : meterWaterRatesRequest.getMeterWaterRates()) 
+        for (final MeterWaterRates meterWaterRates : meterWaterRatesRequest.getMeterWaterRates())
             meterWaterRates.setBillingType(BillingType.METERED.toString());
         try {
             kafkaTemplate.send(topic, key, meterWaterRatesRequest);
@@ -110,9 +110,17 @@ public class MeterWaterRatesService {
 
         if (meterWaterRatesGetRequest.getUsageTypeName() != null) {
             final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModule(
-                    meterWaterRatesGetRequest.getUsageTypeName(),WcmsConstants.WC, meterWaterRatesGetRequest.getTenantId());
+                    meterWaterRatesGetRequest.getUsageTypeName(), WcmsConstants.WC, meterWaterRatesGetRequest.getTenantId());
             if (usageType.getUsageTypesSize())
                 meterWaterRatesGetRequest.setUsageTypeId(usageType.getUsageMasters().get(0).getId());
+
+        }
+        
+        if (meterWaterRatesGetRequest.getSubUsageType()!= null) {
+            final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModuleByCode(
+                    meterWaterRatesGetRequest.getSubUsageType(), WcmsConstants.WC, meterWaterRatesGetRequest.getTenantId());
+            if (usageType != null && usageType.getUsageTypesSize())
+                meterWaterRatesGetRequest.setSubUsageTypeId(usageType.getUsageMasters().get(0).getId());
 
         }
         return meterWaterRatesRepository.findForCriteria(meterWaterRatesGetRequest);
@@ -120,8 +128,9 @@ public class MeterWaterRatesService {
 
     public boolean checkMeterWaterRatesExists(final MeterWaterRates meterWaterRates) {
         getUsageTypeByName(meterWaterRates);
+        getSubUsageType(meterWaterRates);
         return meterWaterRatesRepository.checkMeterWaterRatesExists(meterWaterRates.getCode(),
-                meterWaterRates.getUsageTypeId(),
+                meterWaterRates.getUsageTypeId(),meterWaterRates.getSubUsageTypeId(),
                 meterWaterRates.getSourceTypeName(), meterWaterRates.getPipeSize(),
                 meterWaterRates.getTenantId());
     }
@@ -129,7 +138,7 @@ public class MeterWaterRatesService {
     public Boolean getUsageTypeByName(final MeterWaterRates meterWaterRates) {
         Boolean isValidUsage = Boolean.FALSE;
         final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModule(
-                meterWaterRates.getUsageTypeName(),WcmsConstants.WC,
+                meterWaterRates.getUsageTypeName(), WcmsConstants.WC,
                 meterWaterRates.getTenantId());
         if (usageType.getUsageTypesSize()) {
             isValidUsage = Boolean.TRUE;
@@ -149,6 +158,20 @@ public class MeterWaterRatesService {
 
     public boolean checkSourceTypeExists(final String sourceTypeName, final String tenantId) {
         return meterWaterRatesRepository.checkSourceTypeExists(sourceTypeName, tenantId);
+    }
+
+    public Boolean getSubUsageType(final MeterWaterRates meterWaterRates) {
+        Boolean isValidSubUsageType = Boolean.FALSE;
+        final UsageTypeResponse subUsageType = restExternalMasterService.getUsageIdFromPTModuleByCode(
+                meterWaterRates.getSubUsageType(), WcmsConstants.WC,
+                meterWaterRates.getTenantId());
+        if (subUsageType != null && subUsageType.getUsageMasters() != null && !subUsageType.getUsageMasters().isEmpty()
+                && subUsageType.getUsageMasters().get(0).getId() != null) {
+            meterWaterRates
+                    .setSubUsageTypeId(subUsageType.getUsageMasters().get(0).getId().toString());
+            isValidSubUsageType = Boolean.TRUE;
+        }
+        return isValidSubUsageType;
     }
 
 }

@@ -44,7 +44,6 @@ import java.util.Date;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
@@ -90,6 +89,10 @@ public class Donation {
     private String usageType;
 
     private String usageTypeId;
+
+    private String subUsageType;
+
+    private String subUsageTypeId;
 
     @NotNull
     @Size(min = 1, max = 100)

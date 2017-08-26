@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.TestConfiguration;
 import org.egov.egf.master.domain.model.Bank;
@@ -29,93 +30,110 @@ import org.springframework.validation.SmartValidator;
 @RunWith(SpringRunner.class)
 public class BankBranchServiceTest {
 
-    @InjectMocks
-    private BankBranchService bankBranchService;
+	@InjectMocks
+	private BankBranchService bankBranchService;
 
-    @Mock
-    private SmartValidator validator;
+	@Mock
+	private SmartValidator validator;
 
-    @Mock
-    private BankBranchRepository bankBranchRepository;
+	@Mock
+	private BankBranchRepository bankBranchRepository;
 
-    @Mock
-    private BankRepository bankRepository;
+	@Mock
+	private BankRepository bankRepository;
 
-    private BindingResult errors = new BeanPropertyBindingResult(null, null);
+	private BindingResult errors = new BeanPropertyBindingResult(null, null);
 
-    private List<BankBranch> bankBranches = new ArrayList<>();
+	private RequestInfo requestInfo = new RequestInfo();
 
-    @Before
-    public void setup() {
+	private List<BankBranch> bankBranches = new ArrayList<>();
 
-    }
+	@Before
+	public void setup() {
 
-    @Test
-    public final void testFetchRelated() {
-        when(bankRepository.findById(any(Bank.class))).thenReturn(getBank());
-        bankBranches.add(getBankBranch());
-        bankBranchService.fetchRelated(bankBranches);
-    }
+	}
 
-    @Test
-    public final void testAdd() {
-        when(bankRepository.findById(any(Bank.class))).thenReturn(getBank());
-        bankBranches.add(getBankBranch());
-        bankBranchService.add(bankBranches, errors);
-    }
+	@Test
+	public final void testCreate() {
+		bankBranches.add(getBankBranch());
+		when(bankRepository.findById(any(Bank.class))).thenReturn(getBank());
+		bankBranchService.create(bankBranches, errors, requestInfo);
+	}
 
-    @Test
-    public final void testUpdate() {
-        when(bankRepository.findById(any(Bank.class))).thenReturn(getBank());
-        bankBranches.add(getBankBranch());
-        bankBranchService.update(bankBranches, errors);
-    }
+	@Test
+	public final void testUpdate() {
+		bankBranches.add(getBankBranch());
+		when(bankRepository.findById(any(Bank.class))).thenReturn(getBank());
+		bankBranchService.update(bankBranches, errors, requestInfo);
+	}
 
-    @Test
-    public final void testSearch() {
-        List<BankBranch> search = new ArrayList<>();
-        search.add(getBankBranchSearch());
-        Pagination<BankBranch> expectedResult = new Pagination<>();
-        expectedResult.setPagedData(search);
-        when(bankBranchRepository.search(any(BankBranchSearch.class))).thenReturn(expectedResult);
-        Pagination<BankBranch> actualResult = bankBranchService.search(getBankBranchSearch());
-        assertEquals(expectedResult, actualResult);
-    }
+	@Test
+	public final void testCreateInvalid() {
+		BankBranch bankBranch = BankBranch.builder().id("a").code("code").name("name").active(true).build();
+		bankBranches.add(bankBranch);
+		bankBranchService.create(bankBranches, errors, requestInfo);
+	}
 
-    @Test
-    public final void testSave() {
-        BankBranch expectedResult = getBankBranch();
-        when(bankBranchRepository.save(any(BankBranch.class))).thenReturn(expectedResult);
-        final BankBranch actualResult = bankBranchService.save(getBankBranch());
-        assertEquals(expectedResult, actualResult);
-    }
+	@Test
+	public final void test_save() {
+		BankBranch expextedResult = getBankBranch();
+		when(bankBranchRepository.save(any(BankBranch.class))).thenReturn(getBankBranch());
+		BankBranch actualResult = bankBranchService.save(getBankBranch());
+		assertEquals(expextedResult, actualResult);
+	}
 
-    @Test
-    public final void test_Update() {
-        BankBranch expectedResult = getBankBranch();
-        when(bankBranchRepository.update(any(BankBranch.class))).thenReturn(expectedResult);
-        final BankBranch actualResult = bankBranchService.update(getBankBranch());
-        assertEquals(expectedResult, actualResult);
-    }
+	@Test
+	public final void testSearch() {
+		List<BankBranch> search = new ArrayList<>();
+		search.add(getBankBranch());
+		Pagination<BankBranch> expectedResult = new Pagination<>();
+		expectedResult.setPagedData(search);
+		when(bankBranchRepository.search(any(BankBranchSearch.class))).thenReturn(expectedResult);
+		Pagination<BankBranch> actualResult = bankBranchService.search(getBankBranchSearch());
+		assertEquals(expectedResult, actualResult);
+	}
 
-    private Bank getBank() {
-        Bank bank = Bank.builder().id("1").code("code").description("description").build();
-        bank.setTenantId("default");
-        return bank;
-    }
+	@Test
+	public final void testSave() {
+		BankBranch expectedResult = getBankBranch();
+		when(bankBranchRepository.save(any(BankBranch.class))).thenReturn(expectedResult);
+		final BankBranch actualResult = bankBranchService.save(getBankBranch());
+		assertEquals(expectedResult, actualResult);
+	}
 
-    private BankBranch getBankBranch() {
-        BankBranch bankBranch = BankBranch.builder().id("1").code("code").build();
-        bankBranch.setTenantId("default");
-        bankBranch.setBank(getBank());
-        return bankBranch;
-    }
+	@Test
+	public final void test_Update() {
+		BankBranch expectedResult = getBankBranch();
+		when(bankBranchRepository.update(any(BankBranch.class))).thenReturn(expectedResult);
+		final BankBranch actualResult = bankBranchService.update(getBankBranch());
+		assertEquals(expectedResult, actualResult);
+	}
 
-    private BankBranchSearch getBankBranchSearch() {
-        BankBranchSearch bankBranchSearch = new BankBranchSearch();
-        bankBranchSearch.setPageSize(0);
-        bankBranchSearch.setOffset(0);
-        bankBranchSearch.setSortBy("Sort");
-        return bankBranchSearch;
-    }
+	@Test
+	public final void test_fetch_related_data() {
+		List<BankBranch> expextedResult = new ArrayList<>();
+		List<BankBranch> bankBranches = new ArrayList<>();
+		expextedResult.add(getBankBranch());
+		bankBranches.add(getBankBranch());
+		when(bankRepository.findById(any(Bank.class))).thenReturn(getBank());
+		List<BankBranch> actualResult = bankBranchService.fetchRelated(bankBranches);
+		assertEquals(expextedResult.get(0).getBank().getId(), actualResult.get(0).getBank().getId());
+	}
+
+	private BankBranch getBankBranch() {
+		return BankBranch.builder().id("1").code("code").name("name").bank(getBank()).description("description")
+				.build();
+	}
+
+	private Bank getBank() {
+		return Bank.builder().id("1").code("code").description("description").build();
+	}
+
+	private BankBranchSearch getBankBranchSearch() {
+		BankBranchSearch bankBranchSearch = new BankBranchSearch();
+		bankBranchSearch.setPageSize(0);
+		bankBranchSearch.setOffset(0);
+		bankBranchSearch.setSortBy("Sort");
+		return bankBranchSearch;
+	}
 }

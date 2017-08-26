@@ -1,6 +1,5 @@
 package org.egov.citizen;
 
-import java.io.File;
 import java.io.InputStreamReader;
 import java.net.URL;
 
@@ -14,7 +13,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 
 import com.fasterxml.jackson.databind.ObjectMapper;

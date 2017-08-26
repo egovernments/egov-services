@@ -84,11 +84,6 @@ public class AssetService {
         return getAssetResponse(assets, requestInfo);
     }
 
-    public String getAssetName(final String tenantId, final String name) {
-        log.info("AssetService getAssetName");
-        return assetRepository.findAssetName(tenantId, name);
-    }
-
     public AssetResponse create(final AssetRequest assetRequest) {
         final Asset asset = assetRepository.create(assetRequest);
         final List<Asset> assets = new ArrayList<>();

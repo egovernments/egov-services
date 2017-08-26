@@ -9,7 +9,7 @@ import IconButton from 'material-ui/IconButton';
 // import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 // import PropTypes from 'prop-types'
 import { withRouter } from 'react-router';
-// import Api from '../../api/api';
+import Api from '../../api/api';
 import {logo, tenantName} from './temp/local';
 import {getTitleCase} from '../framework/utility/utility';
 import $ from 'jquery';
@@ -122,12 +122,8 @@ const RightIcon = (props) => {
             targetOrigin={{horizontal: 'left', vertical: 'top'}}
           >
             <MenuItem primaryText="Sign Out" onClick={(e)=>{
-                document.title = "Dashboard";
-                var locale = localStorage.getItem('locale');
-                var tenantId=localStorage.getItem('tenantId');
-                localStorage.clear();
-                localStorage.setItem('locale',locale);
-                props.logout(tenantId);
+                props.logout(localStorage.getItem('tenantId'));
+                props.signOut();
             }} leftIcon={<i className="material-icons">lock</i>}></MenuItem>
      </IconMenu>
 
@@ -164,6 +160,17 @@ class Header extends Component {
     };
   }
 
+  signOut = (e) => {
+    Api.commonApiPost("/user/_logout", {access_token : localStorage.getItem('auth')}).then(function(response) {
+      document.title = "Dashboard";
+      var locale = localStorage.getItem('locale');
+      localStorage.clear();
+      localStorage.setItem('locale',locale);
+    }, function(err) {
+
+    });
+  }
+
   handleToggle = () => {
     var self = this;
     self.props.handleToggle(!self.props.showMenu);
@@ -194,7 +201,7 @@ class Header extends Component {
         <AppBar title={<div><Logo tenantInfo={this.props.tenantInfo} tenantContext={tenantContext}/> {getTitle(this.props.tenantInfo, tenantContext)} </div>}
                 onLeftIconButtonTouchTap={this.handleToggle}
                 iconElementLeft={this.props.token && this.props.currentUser.type !== "CITIZEN" ? <IconButton><i className="material-icons">menu</i></IconButton> : <div></div>}
-                iconElementRight={< RightIcon showHome={this.props.showHome} token={this.props.token} logout={this.props.logout} setRoute={this.props.setRoute}/>}/>
+                iconElementRight={< RightIcon showHome={this.props.showHome} signOut={this.signOut} token={this.props.token} logout={this.props.logout} setRoute={this.props.setRoute}/>}/>
 
         <Drawer containerClassName="side-bar" open={this.props.showMenu || false} >
          {this.props.actionList && this.props.actionList.length>0 && <CustomMenu menuItems={this.state.menuItems} actionList={this.props.actionList} />}

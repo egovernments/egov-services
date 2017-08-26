@@ -137,7 +137,7 @@ public class MasterIndexerListener {
 				for (final BankBranchContract bankBranchContract : request.getBankBranches()) {
 					final HashMap<String, Object> indexObj = getBankBranchIndexObject(bankBranchContract);
 					elasticSearchRepository.index(BANKBRANCH_OBJECT_TYPE,
-							bankBranchContract.getTenantId() + "-" + bankBranchContract.getName(), indexObj);
+							bankBranchContract.getCode() + "-" + bankBranchContract.getTenantId(), indexObj);
 				}
 		}
 

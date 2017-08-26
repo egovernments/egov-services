@@ -165,8 +165,9 @@ public class WaterConnectionRepository {
                         ) {
                     statement.setString(34, waterConnectionRequest.getConnection().getLegacyConsumerNumber());
                     statement.setString(35, waterConnectionRequest.getConnection().getConsumerNumber());
-                  statement.setLong(36, waterConnectionRequest.getConnection().getExecutionDate());
-                   statement.setInt(37, waterConnectionRequest.getConnection().getNoOfFlats());
+                    statement.setLong(36, waterConnectionRequest.getConnection().getExecutionDate());
+                    statement.setInt(37, waterConnectionRequest.getConnection().getNoOfFlats());
+                   statement.setString(38, waterConnectionRequest.getConnection().getStatus());
 
                 }
 

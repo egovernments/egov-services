@@ -70,10 +70,10 @@ ReportDefinitions:
   - name: ward
     label: reports.tradelicense.adminward
     type: singlevaluelist
-    pattern: /egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantId&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION&pageSize=500|$..id|$..name
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION&pageSize=500|$..id|$..name
     source: tradelicense
     isMandatory: false
-    searchClause : AND tl.ward = $ward
+    searchClause : AND tl.adminwardid = $ward
   - name: licenseNo
     label: reports.tradelicense.licenseno
     type: string
@@ -114,21 +114,21 @@ ReportDefinitions:
   - name: licenseType
     label: reports.tradelicense.licensetype
     type: singlevaluelist
-    pattern: /tl-masters/category/v1/_search?tenantId=$tenantId&pageSize=500|$..id|$..name
+    pattern: http://tl-masters:8080/tl-masters/category/v1/_search?tenantId=$tenantid&pageSize=500|$..id|$..name
     source: tradelicense
     isMandatory: false
     searchClause : AND tl.categoryid = $licenseType
   - name: licenseSubType
     label: reports.tradelicense.licensesubtype
     type: url
-    pattern: /tl-masters/category/v1/_search?tenantId=$tenantId&type=SUBCATEGORY&categoryId={licenseType}&pageSize=500|$..id|$..name
+    pattern: /tl-masters/category/v1/_search?tenantId=$tenantid&type=SUBCATEGORY&categoryId={licenseType}&pageSize=500|$..id|$..name
     source: tradelicense
     isMandatory: false
     searchClause : AND tl.subcategoryid = $licenseSubType
   - name: licenseStatus
     label: reports.tradelicense.licensestatus
     type: singlevaluelist
-    pattern: /tl-masters/status/v1/_search?tenantId=default&pageSize=500|$..id|$..name
+    pattern: http://tl-masters:8080/tl-masters/status/v1/_search?tenantId=$tenantid&pageSize=500|$..id|$..name
     source: tradelicense
     isMandatory: false
     searchClause : AND tl.status = $licenseStatus
@@ -145,10 +145,10 @@ ReportDefinitions:
     isMandatory: false
     searchClause : AND tl.propertyassesmentno = $propertyNo
   query: select ward.name as ward, tl.licensenumber as licenseNumber, tl.tradetype as tradeType, tl.ownername as licenseHolder,
-    tl.owneradress as license_holder_address, tl.tradetitle as businessName, tl.tradeaddress as businessAddress,
+    tl.owneraddress as license_holder_address, tl.tradetitle as businessName, tl.tradeaddress as businessAddress,
     locality.name as businessArea, tl.licensevalidfromdate as licenseValidFromDate, tl.expirydate as licenseValidToDate,
     category.name as licenseType, subcategory.name as licenseSubType, tl.status as licenseStatus, tl.adhaarnumber as aadharNo,
     tl.propertyassesmentno as propertyNo from egtl_license as tl, eg_boundary as ward, eg_boundary as locality,
-    egtl_mstr_category as category, egtl_mstr_category as subcategory where ward.id = tl.ward and locality.id = tl.localityid
-    and tl.categoryid = category.id and tl.subcategoryid = subcategory.id and tenantid = $tenantid
+    egtl_mstr_category as category, egtl_mstr_category as subcategory where ward.id = tl.adminwardid and locality.id = tl.localityid
+    and tl.categoryid = category.id and tl.subcategoryid = subcategory.id and tl.tenantid = $tenantid
   orderBy: order by tl.id;

@@ -28,6 +28,7 @@ public class PersistService {
 		List<Mapping> mappings = service.getServiceMaps().getMappings();
 		System.out.println("PersistService persist:"+mappings);
 		for(Mapping mapping : mappings){
+			System.out.println("mapping.getFromTopic():"+mapping.getFromTopic()+","+"topic:"+topic);
 			if(mapping.getFromTopic().equals(topic)){
 				List<QueryMap> queryMaps = mapping.getQueryMaps();
 				for(QueryMap queryMap : queryMaps){

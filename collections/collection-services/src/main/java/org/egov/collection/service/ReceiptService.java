@@ -184,9 +184,9 @@ public class ReceiptService {
 					} else {
 						billDetail
 								.setBillAccountDetails(collectionApportionerService
-										.apportionPaidAmount(billDetail
-												.getAmountPaid(), billDetail
-												.getBillAccountDetails()));
+                                        .apportionPaidAmount(billDetail
+                                                .getAmountPaid(), billDetail
+                                                .getBillAccountDetails()));
 					}
 				}
 				apportionBillDetails.add(billDetail);
@@ -374,7 +374,7 @@ public class ReceiptService {
 								+ parametersMap.toString());
 						receiptRepository.persistReceipt(parametersMap,
 								parametersReceiptDetails, receiptHeaderId,
-								instrument.getId());
+                                createdInstrument.getId());
 					} catch (Exception e) {
 						LOGGER.error("Persisting receipt FAILED! ", e);
 						return receipt;
@@ -672,7 +672,7 @@ public class ReceiptService {
 		positionSearchCriteriaWrapper.setRequestInfo(requestInfo);
 
 		workflowDetails.setAssignee(workflowService
-				.getPositionForUser(positionSearchCriteriaWrapper));
+                .getPositionForUser(positionSearchCriteriaWrapper));
 		workflowDetails.setInitiatorPosition(workflowService
 				.getPositionForUser(positionSearchCriteriaWrapper));
 

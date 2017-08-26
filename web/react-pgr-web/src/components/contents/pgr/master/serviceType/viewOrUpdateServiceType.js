@@ -171,8 +171,8 @@ class viewOrUpdateServiceType extends Component {
                                           <th>{translate('core.category')}</th>
                                           <th>{translate('pgr.lbl.active')}</th>
                                           <th>{translate('core.lbl.description')}</th>
-                                          <th>translate('pgr.lbl.slahour')</th>
-                                          <th>translate('pgr.lbl.finimpact')</th>
+                                          <th>{translate('pgr.lbl.slahour')}</th>
+                                          <th>{translate('pgr.lbl.finimpact')}</th>
                                         </tr>
                                     </thead>
                                     <tbody>

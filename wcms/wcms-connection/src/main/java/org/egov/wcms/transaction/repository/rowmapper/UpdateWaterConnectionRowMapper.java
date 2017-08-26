@@ -58,6 +58,7 @@ public class UpdateWaterConnectionRowMapper implements RowMapper<Connection> {
         connection.setAcknowledgementNumber(rs.getString("acknowledgmentnumber"));
         connection.setConsumerNumber(rs.getString("consumernumber"));
         connection.setApplicationType(rs.getString("applicationType"));
+        connection.setExecutionDate(rs.getLong("executiondate"));
         if(rs.getString("islegacy").equals(Boolean.TRUE))
         connection.setIsLegacy(Boolean.TRUE);
         else

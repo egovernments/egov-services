@@ -10,7 +10,6 @@ import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.model.BankSearch;
 import org.egov.egf.master.domain.repository.BankRepository;
 import org.egov.egf.master.domain.repository.FundRepository;
-import org.egov.egf.master.web.requests.BankRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -114,19 +113,6 @@ public class BankService {
 	}
 
 	@Transactional
-	public List<Bank> add(List<Bank> banks, BindingResult errors) {
-		banks = fetchRelated(banks);
-		validate(banks, Constants.ACTION_CREATE, errors);
-		if (errors.hasErrors()) {
-			throw new CustomBindException(errors);
-		}
-		for (Bank b : banks)
-			b.setId(bankRepository.getNextSequence());
-		return banks;
-
-	}
-
-	@Transactional
 	public List<Bank> update(List<Bank> banks, BindingResult errors) {
 		banks = fetchRelated(banks);
 		validate(banks, Constants.ACTION_UPDATE, errors);
@@ -136,7 +122,6 @@ public class BankService {
 		return banks;
 
 	}
-
 
 	public Pagination<Bank> search(BankSearch bankSearch) {
 		return bankRepository.search(bankSearch);

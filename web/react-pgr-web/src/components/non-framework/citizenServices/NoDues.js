@@ -36,6 +36,7 @@ import "jspdf-autotable";
 import PDFObject from "pdfobject";
 import html2canvas from "html2canvas";
 import axios from "axios";
+import jp from "jsonpath";
 
 
 
@@ -46,9 +47,9 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 var specifications={};
 
 let reqRequired = [];
+
+
 class NoDues extends Component {
-
-
 
   constructor(props) {
     super(props);
@@ -64,21 +65,24 @@ class NoDues extends Component {
       stepIndex: 0,
       open: false,
       demands:[],
-      serviceRequest:{}
+      applicationFeeDemand:[],
+      serviceRequest:{},
+      ReceiptOne:[],
+      Receipt:[]
     }
   }
 
-
-    handleOpen = () => {
-      let {demands}=this.state;
+  handleOpen = () => {
+      let {demands,applicationFeeDemand}=this.state;
       let self=this;
       let {formData}=this.props;
+      self.props.setLoadingStatus('show');
       //api call
       let request=
       {
            "tenantId": localStorage.getItem("tenantId"),
            "serviceRequestId": null,
-           "serviceCode": (this.props.match.params.id == "propertytax") ? "PT_NODUES" : "WC_NODUES",
+           "serviceCode": (this.props.match.params.id == "pt") ? "PT_NODUES" : "WC_NODUES",
            "lat": 12,
            "lang": 23,
            "address": "address",
@@ -90,14 +94,14 @@ class NoDues extends Component {
            "lastName": "firstName",
            "phone": "phone",
            "description": "",
-           "consumerCode" : (this.props.match.params.id == "propertytax") ? "AP-PT-2017/08/18-004950-13" : formData.consumerCode,
+           "consumerCode" : formData.consumerCode,
            "attributeValues": [
              {
                "key": "tenantId",
                "value": localStorage.getItem("tenantId")
              }
            ],
-           "status": "",
+           "status": "CREATED",
            "assignedTo": "assignedTo",
            "comments": [
              "",
@@ -107,109 +111,161 @@ class NoDues extends Component {
          }
 	      self.props.setLoadingStatus('show');
 
+      let demandReq={};
 
-      let demandReq = {
-        "Demands": [
-          {
-            "id": null,
-            "tenantId": localStorage.getItem("tenantId"),
-            "consumerCode": formData.consumerCode,
-            "consumerType": "consumertype1",
-            "businessService": "CS",
-            "minimumAmountPayable": 10,
-            "owner": {
-              "id": JSON.parse(localStorage.userRequest).id,
-              "userName": null,
-              "name": null,
-              "type": null,
-              "mobileNumber": null,
-              "emailId": null,
-              "roles": null
-            },
-            "taxPeriodFrom": 1491004800000,
-            "taxPeriodTo": 1522540799000,
-            "demandDetails": [
-              {
-                "id": null,
-                "demandId": null,
-                "taxHeadMasterCode": (this.props.match.params.status == "extract" ? "PT_EXT_OF_PROP_COPY_CHAR" : (this.props.match.params.id == "propertytax" ? "PT_NO_DUE_CERT_CHAR" : "WC_NO_DUE_CERT_CHAR")),
-                "taxAmount": 200,
-                "collectionAmount": 0
-              }
-            ]
-          }
-        ]
-      };
-      /*Api.commonApiPost("/citizen-services/v1/requests/_create", {}, {"serviceReq":request}, null, self.props.metaData["noDues.search"].useTimestamp,false).then(function(res){
-        self.props.setLoadingStatus('hide');
+      if (applicationFeeDemand[0].id==null || applicationFeeDemand[0].id=="") {
+         demandReq["Demands"] = applicationFeeDemand;
+         demandReq["Demands"][0].tenantId=localStorage.getItem("tenantId");
+         demandReq["Demands"][0].consumerCode=formData.consumerCode;
+         demandReq["Demands"][0].owner.id=JSON.parse(localStorage.userRequest).id;
+         demandReq["Demands"][0].taxPeriodFrom=1491004800000;
+         demandReq["Demands"][0].taxPeriodTo=1522540799000;
+         demandReq["Demands"][0].demandDetails[0].taxHeadMasterCode=(this.props.match.params.status == "extract" ? "PT_EXT_OF_PROP_COPY_CHAR" : (this.props.match.params.id == "pt" ? "PT_NO_DUE_CERT_CHAR" : "WC_NO_DUE_CERT_CHAR"));
 
+          // {
+          //   "Demands": [
+          //     {
+          //       "id": null,
+          //       "tenantId": localStorage.getItem("tenantId"),
+          //       "consumerCode": formData.consumerCode,
+          //       "consumerType": "consumertype1",
+          //       "businessService": "CS",
+          //       "minimumAmountPayable": 10,
+          //       "owner": {
+          //         "id": JSON.parse(localStorage.userRequest).id,
+          //         "userName": null,
+          //         "name": null,
+          //         "type": null,
+          //         "mobileNumber": null,
+          //         "emailId": null,
+          //         "roles": null
+          //       },
+          //       "taxPeriodFrom": 1491004800000,
+          //       "taxPeriodTo": 1522540799000,
+          //       "demandDetails": [
+          //         {
+          //           "id": null,
+          //           "demandId": null,
+          //           "taxHeadMasterCode": (this.props.match.params.status == "extract" ? "PT_EXT_OF_PROP_COPY_CHAR" : (this.props.match.params.id == "pt" ? "PT_NO_DUE_CERT_CHAR" : "WC_NO_DUE_CERT_CHAR")),
+          //           "taxAmount": 200,
+          //           "collectionAmount": 0
+          //         }
+          //       ]
+          //     }
+          //   ]
+          // };
+          Api.commonApiPost("/billing-service/demand/_create", {}, demandReq, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res){
+            setTimeout(function(){
+              Api.commonApiPost("/billing-service/bill/_generate", {businessService: "CS" , consumerCode:formData.consumerCode}, {}, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res){
+                let Receipt=[];
+                Receipt[0]={"Bill":[]};
+                Receipt[0]["Bill"]=res.Bill;
+                Receipt[0]["Bill"][0]["paidBy"]=Receipt[0]["Bill"][0].payeeName;
+                Receipt[0]["tenantId"]=window.localStorage.getItem("tenantId")
+                Receipt[0]["instrument"]={"tenantId":window.localStorage.getItem("tenantId"),"amount":self.getTotal(applicationFeeDemand),"instrumentType":{"name":"Cash"}}
 
-        self.setState({
-          serviceRequest:res.serviceReq
+                Receipt[0]["Bill"][0]["billDetails"][0]["amountPaid"]=self.getTotal(applicationFeeDemand);
+                self.setState({
+                  paidBy: Receipt[0]["Bill"][0].payeeName
+                })
+                console.log(Receipt);
+                // Receipt.push(res.Bill);
+                self.setState({
+                  ReceiptOne:Receipt
+                });
+                console.log(Receipt);
+                self.setState({open: true});
+              }, function(err) {
+                self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+                // self.props.setLoadingStatus('hide');
+              });
+              }, 2000);
+          }, function(err) {
+            self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+            // self.props.setLoadingStatus('hide');
+          })
+      }
+      else {
+        Api.commonApiPost("/billing-service/bill/_generate", {businessService: "CS" , consumerCode:formData.consumerCode}, {}, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res){
+          let Receipt=[];
+          Receipt[0]={"Bill":[]};
+          Receipt[0]["Bill"]=res.Bill;
+          Receipt[0]["Bill"][0]["paidBy"]=Receipt[0]["Bill"][0].payeeName;
+          Receipt[0]["tenantId"]=window.localStorage.getItem("tenantId")
+          Receipt[0]["instrument"]={"tenantId":window.localStorage.getItem("tenantId"),"amount":self.getTotal(applicationFeeDemand),"instrumentType":{"name":"Cash"}}
+
+          Receipt[0]["Bill"][0]["billDetails"][0]["amountPaid"]=self.getTotal(applicationFeeDemand);
+          self.setState({
+            paidBy: Receipt[0]["Bill"][0].payeeName
+          })
+          console.log(Receipt);
+          // Receipt.push(res.Bill);
+          self.setState({
+            ReceiptOne:Receipt
+          });
+          console.log(Receipt);
+          self.setState({open: true});
+        }, function(err) {
+          self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+          // self.props.setLoadingStatus('hide');
         });
-        console.log(res);
-        self.setState({open: true});
+      }
 
-      }, function(err) {
-        self.props.toggleSnackbarAndSetText(true, err.message, false, true);
-        self.props.setLoadingStatus('hide');
-      })*/
-	   
 
-      Api.commonApiPost("/billing-service/demand/_create", {}, demandReq, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res){
-        setTimeout(function(){
-          Api.commonApiPost("/billing-service/bill/_generate", {businessService: "CS" , consumerCode:formData.consumerCode}, {}, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res){
+      Api.commonApiPost("/citizen-services/v1/requests/_create", {}, {"serviceReq":request}, null, self.props.metaData["noDues.search"].useTimestamp,false).then(function(res){
+            // self.props.setLoadingStatus('hide');
+
             self.setState({
-              appRec: res.Bill,
-              ins: {"tenantId":window.localStorage.getItem("tenantId"),"amount":200,"instrumentType":{"name":"Cash"}}
+              serviceRequest:res.serviceReq
             });
+            console.log(res);
+            self.setState({open: true});
+
           }, function(err) {
             self.props.toggleSnackbarAndSetText(true, err.message, false, true);
             self.props.setLoadingStatus('hide');
-          });
-          }, 2000);
-      }, function(err) {
-        self.props.toggleSnackbarAndSetText(true, err.message, false, true);
-        self.props.setLoadingStatus('hide');
       })
 
-      Api.commonApiPost("/billing-service/bill/_generate", {businessService: this.props.match.params.id=="watercharge" ? 'WC' : 'PT' ,consumerCode:formData.consumerCode}, {}, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res){
-        self.props.setLoadingStatus('hide');
-        
-        let Receipt=[];
-        Receipt[0]={"Bill":[]};
-        Receipt[0]["Bill"]=res.Bill;
-        Receipt[0]["Bill"][0]["paidBy"]=Receipt[0]["Bill"][0].payeeName;
-        Receipt[0]["tenantId"]=window.localStorage.getItem("tenantId")
-        Receipt[0]["instrument"]={"tenantId":window.localStorage.getItem("tenantId"),"amount":self.getTotal(demands),"instrumentType":{"name":"Cash"}}
 
-        Receipt[0]["Bill"][0]["billDetails"][0]["amountPaid"]=self.getTotal(demands);
-        self.setState({
-          paidBy: Receipt[0]["Bill"][0].payeeName
+      if (demands.length>0) {
+        Api.commonApiPost("/billing-service/bill/_generate", {businessService: this.props.match.params.id.toUpperCase(),consumerCode:formData.consumerCode}, {}, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res){
+            self.props.setLoadingStatus('hide');
+
+            let Receipt=[];
+            Receipt[0]={"Bill":[]};
+            Receipt[0]["Bill"]=res.Bill;
+            Receipt[0]["Bill"][0]["paidBy"]=Receipt[0]["Bill"][0].payeeName;
+            Receipt[0]["tenantId"]=window.localStorage.getItem("tenantId")
+            Receipt[0]["instrument"]={"tenantId":window.localStorage.getItem("tenantId"),"amount":self.getTotal(demands),"instrumentType":{"name":"Cash"}}
+
+            Receipt[0]["Bill"][0]["billDetails"][0]["amountPaid"]=self.getTotal(demands);
+            self.setState({
+              paidBy: Receipt[0]["Bill"][0].payeeName
+            })
+            console.log(Receipt);
+            // Receipt.push(res.Bill);
+            self.setState({
+              Receipt
+            });
+            console.log(Receipt);
+            self.setState({open: true});
+
+          }, function(err) {
+            self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+            self.props.setLoadingStatus('hide');
         })
-        console.log(Receipt);
-        // Receipt.push(res.Bill);
-        self.setState({
-          Receipt
-        });
-        console.log(Receipt);
-        self.setState({open: true});
 
-      }, function(err) {
-        self.props.toggleSnackbarAndSetText(true, err.message, false, true);
-        self.props.setLoadingStatus('hide');
-      })
+      }
 
 
 
 
-    };
 
-    handleClose = () => {
+  };
+
+  handleClose = () => {
       this.setState({open: false});
-    };
-
-
+  };
 
   handleNext = () => {
     const {stepIndex} = this.state;
@@ -225,8 +281,6 @@ class NoDues extends Component {
       this.setState({stepIndex: stepIndex - 1});
     }
   };
-
-
 
   setLabelAndReturnRequired(configObject) {
     if(configObject && configObject.groups) {
@@ -275,30 +329,24 @@ class NoDues extends Component {
     if (this.props.match.params.status=="pay") {
       this.setState({stepIndex:1})
     }
-    //
-    // var doc = new jsPDF()
-    // doc.text(20, 20, 'Hello world!')
-    // doc.text(20, 30, 'This is client-side Javascript, pumping out a PDF.')
-    // doc.addPage()
-    // doc.text(20, 20, 'Do you like that?')
-    //
-    // // doc.save('Receipt-'+ '.pdf');
-    // var options = {
-    // height: "400px",
-    // page: '2',
-    // pdfOpenParams: {
-    //     view: 'FitV',
-    //     pagemode: 'thumbs',
-    //     search: 'lorem ipsum'
-    //   }
-    // };
-
-    // console.log($("#ReceiptDemo").length);
-    // console.log(doc.output('datauri'));
-    // PDFObject.embed(doc.output('datauri'), "#ReceiptDemo", options);
 
     let hashLocation = window.location.hash;
-    specifications = require(`../../framework/specs/citizenService/noDues`).default;
+    // $.ajax({
+    // url: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/framwork-specification/citizenService/pt/noDues.js?timestamp="+new Date().getTime(),
+    // // dataType: 'application/javascript',
+    // success: function(results)
+    // {
+    //     // var content = JSON.parse(results);
+    //     // console.log(content[(hash[1]?hash[1]:"default")]);
+    //     console.log(results.dat);
+    //     // console.log(require(results).default);
+    //
+    //
+    // },
+    // error: function (results) {
+    //   //Should pick our configObject
+    // }})
+    specifications = require(`../../framework/specs/citizenService/${this.props.match.params.id}/noDues`).default;
     let { setMetaData, setModuleName, setActionName, initForm, setMockData, setFormData } = this.props;
     let obj = specifications["noDues.search"];
     reqRequired = [];
@@ -329,9 +377,17 @@ class NoDues extends Component {
   search = (e) => {
     e.preventDefault();
     let self = this;
-    // self.props.setLoadingStatus('loading');
+    self.props.setLoadingStatus('loading');
     var formData = {...this.props.formData};
-    delete formData['mobileNumber'];
+    let finalObject={};
+    let count=0;
+    for (var variable in formData) {
+      if (formData.hasOwnProperty(variable) && formData[variable]!="") {
+        finalObject[variable]=formData[variable];
+        count++;
+      }
+    }
+    // delete formData['mobileNumber'];
     // console.log(formData);
     // for(var key in formData) {
     //   if(formData[key] !== "" && typeof formData[key] == "undefined")
@@ -349,6 +405,8 @@ class NoDues extends Component {
     //     resultList,
     //     showResult: true
     //   });
+   if(count>1)
+   {
     var instance = axios.create({
       baseURL: window.location.origin,
       headers: {
@@ -366,26 +424,64 @@ class NoDues extends Component {
 
     instance.post('/user/oauth/token', params).then(function(response) {
       localStorage.setItem("auth-token-temp", response.data.access_token);
-      Api.commonApiPost(self.props.metaData["noDues.search"].url, formData, {}, null, self.props.metaData["noDues.search"].useTimestamp,false,response.data.access_token).then(function(res){
-        self.props.setLoadingStatus('hide');
+      Api.commonApiPost(self.props.metaData["noDues.search"].url, finalObject, {}, null, self.props.metaData["noDues.search"].useTimestamp,false,response.data.access_token).then(function(res){
+        // self.props.setLoadingStatus('hide');
+        if(jp.query(res,`$..demandDetails[?(@.taxAmount > @.collectionAmount)]`).length>0)
+        {
+          self.setState({
+            demands:res.Demands
+          });
+        }
+        else {
+          self.setState({
+            demands:[]
+          });
+        }
+        finalObject["businessService"]="CS";
+        Api.commonApiPost(self.props.metaData["noDues.search"].url, finalObject, {}, null, self.props.metaData["noDues.search"].useTimestamp,false,response.data.access_token).then(function(res1){
+          self.props.setLoadingStatus('hide');
+          if(jp.query(res1,`$..demandDetails[?(@.taxAmount > @.collectionAmount)]`).length>0)
+          {
+            self.setState({
+              applicationFeeDemand:res1.Demands
+            });
+          }
+          else {
+            self.setState({
+              applicationFeeDemand:self.props.metaData["noDues.search"].feeDetails
+            });
+          }
+          if (res1.Demands.length>0 || res.Demands.length>0) {
+            self.handleNext();
 
-        self.setState({
-          demands:res.Demands
-        });
-        self.handleNext();
+          } else {
+             self.props.toggleSnackbarAndSetText(true, "No demands for given criteria", false, true);
+          }
+        }, function(err) {
+          self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+          self.props.setLoadingStatus('hide');
+        })
+
+        // self.handleNext();
       }, function(err) {
         self.props.toggleSnackbarAndSetText(true, err.message, false, true);
         self.props.setLoadingStatus('hide');
       })
 
 
-    }).catch(function(response) {
-      self.props.setLoadingStatus('hide');
-      // self.setState({
-      //   errorMsg: "Please check your username and password"
-      // });
-    });
 
+
+        }).catch(function(response) {
+          self.props.setLoadingStatus('hide');
+          // self.setState({
+          //   errorMsg: "Please check your username and password"
+          // });
+        });
+       }
+       else {
+         self.props.setLoadingStatus('hide');
+         self.props.toggleSnackbarAndSetText(true, "Please provide at least one field for search", false, true);
+       }
 
 
   }
@@ -412,47 +508,65 @@ class NoDues extends Component {
   }
 
   pay=()=>{
-    let {serviceRequest,Receipt}=this.state;
+    let {serviceRequest,Receipt,ReceiptOne,applicationFeeDemand,demands,formData}=this.state;
     let self=this;
     this.handleClose();
     self.props.setLoadingStatus('show');
-    // Api.commonApiPost("/citizen-services/v1/requests/_update", {}, {"serviceReq":serviceRequest}, null, self.props.metaData["noDues.search"].useTimestamp,false).then(function(res){
-    //   self.props.setLoadingStatus('hide');
-    //
-    //
-    //   // self.setState({
-    //   //   receipt:res.serviceReq
-    //   // });
-    //   console.log(res);
-    //   self.handleNext();
-    //
-    // }, function(err) {
-    //   self.props.toggleSnackbarAndSetText(true, err.message, false, true);
-    //   self.props.setLoadingStatus('hide');
-    // })
-    var appFeeRec = Object.assign([], Receipt);
-    console.log(appFeeRec);
-    appFeeRec[0]["Bill"] = Object.assign([], self.state.appRec);
-    appFeeRec[0]["instrument"] = Object.assign({}, self.state.ins);
-    console.log(appFeeRec);
-    appFeeRec[0]["Bill"][0]["billDetails"][0]["amountPaid"] = 200;
-    appFeeRec[0]["Bill"][0]["paidBy"] = self.state.paidBy;
-    Api.commonApiPost("/collection-services/receipts/_create", {}, {"Receipt":appFeeRec}, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res1){
-      Api.commonApiPost("/collection-services/receipts/_create", {}, {"Receipt":Receipt}, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res){
+    serviceRequest.status="SUCCESS";
+    Api.commonApiPost("/citizen-services/v1/requests/_update", {}, {"serviceReq":serviceRequest}, null, self.props.metaData["noDues.search"].useTimestamp,false).then(function(res){
       self.props.setLoadingStatus('hide');
 
 
-      self.setState({
-        Receipt:res.Receipt,
-        Receipt2: res1.Receipt
-      });
+      // self.setState({
+      //   receipt:res.serviceReq
+      // });
       console.log(res);
-      self.handleNext();
+      // self.handleNext();
 
     }, function(err) {
       self.props.toggleSnackbarAndSetText(true, err.message, false, true);
       self.props.setLoadingStatus('hide');
     })
+    // var appFeeRec = Object.assign([], Receipt);
+    // console.log(appFeeRec);
+    // appFeeRec[0]["Bill"] = Object.assign([], self.state.appRec);
+    // appFeeRec[0]["instrument"] = Object.assign({}, self.state.ins);
+    // console.log(appFeeRec);
+    // appFeeRec[0]["Bill"][0]["billDetails"][0]["amountPaid"] = applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount;
+    // appFeeRec[0]["Bill"][0]["paidBy"] = self.state.paidBy;
+    Api.commonApiPost("/collection-services/receipts/_create", {}, {"Receipt":ReceiptOne}, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res1){
+      if (demands.length>0) {
+            Api.commonApiPost("/collection-services/receipts/_create", {}, {"Receipt":Receipt}, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res2){
+            self.props.setLoadingStatus('hide');
+
+
+            self.setState({
+              Receipt:res2.Receipt,
+              ReceiptOne: res1.Receipt
+            });
+            console.log(res2);
+            self.handleNext();
+
+          }, function(err) {
+            self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+            self.props.setLoadingStatus('hide');
+          })
+      }
+      else {
+            Api.commonApiPost("/collection-services/receipts/_search", {consumerCode:formData.consumerCode,businessService:formData.businessService}, {}, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res2){
+            self.props.setLoadingStatus('hide');
+            self.setState({
+              Receipt:res2.Receipt,
+              ReceiptOne: res1.Receipt
+            });
+            console.log(res2);
+            self.handleNext();
+
+          }, function(err) {
+            self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+            self.props.setLoadingStatus('hide');
+          })
+      }
     }, function(err) {
       self.props.toggleSnackbarAndSetText(true, err.message, false, true);
       self.props.setLoadingStatus('hide');
@@ -636,15 +750,17 @@ class NoDues extends Component {
 
   getTotal=(demands)=>{
     let sum=0;
-	
-	if(typeof demands == undefined || demands.length == 0){
-		return false;
-	}
-	
-    for (var i = 0; i < demands[0].demandDetails.length; i++) {
-      sum+=(demands[0].demandDetails[i].taxAmount-demands[0].demandDetails[i].collectionAmount);
-    }
-    return sum;
+
+    	if(typeof demands == undefined || demands.length == 0){
+    		return false;
+    	}
+
+      for (var i = 0; i < demands.length; i++) {
+        for (var k = 0; k < demands[i].demandDetails.length; k++) {
+          sum+=(demands[i].demandDetails[k].taxAmount-demands[i].demandDetails[k].collectionAmount);
+        }
+      }
+      return sum;
   }
 
   int_to_words=(int)=> {
@@ -685,7 +801,7 @@ class NoDues extends Component {
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid,match} = this.props;
     let {search,cancel,pay, handleChange, getVal, addNewCard, removeCard, rowClickHandler,handleClose,handleOpen,generatePdf,getTotal,int_to_words} = this;
-    let {showResult, resultList,open,demands,Receipt, Receipt2} = this.state;
+    let {showResult, resultList,open,demands,Receipt, Receipt2,applicationFeeDemand} = this.state;
     const {finished, stepIndex} = this.state;
     const contentStyle = {margin: '0 16px'};
     console.log(formData);
@@ -705,7 +821,7 @@ class NoDues extends Component {
             <Card>
               <CardHeader title={"Payment Details"}/>
               <CardText>
-                {demands.length>0 && <Table responsive>
+                <Table responsive>
                      <thead>
                        <tr>
 
@@ -717,19 +833,25 @@ class NoDues extends Component {
                        </tr>
                       </thead>
                       <tbody>
-                          {demands[0].demandDetails.map((item,key)=>{
-                            return (<tr key={key}>
-                                <td>{new Date(demands[0].taxPeriodFrom).getDate()+"-"+new Date(demands[0].taxPeriodFrom).getMonth()+"-"+new Date(demands[0].taxPeriodFrom).getFullYear()}</td>
-                                <td>{new Date(demands[0].taxPeriodTo).getDate()+"-"+new Date(demands[0].taxPeriodTo).getMonth()+"-"+new Date(demands[0].taxPeriodTo).getFullYear()}</td>
+                          {demands.length>0?demands.map((item,key)=>{
+                              return item.demandDetails.map((itemOne,keyOne)=>{
+                                return (<tr key={keyOne}>
+                                    <td>{new Date(demands[key].taxPeriodFrom).getDate()+"-"+new Date(demands[key].taxPeriodFrom).getMonth()+"-"+new Date(demands[key].taxPeriodFrom).getFullYear()}</td>
+                                    <td>{new Date(demands[key].taxPeriodTo).getDate()+"-"+new Date(demands[key].taxPeriodTo).getMonth()+"-"+new Date(demands[key].taxPeriodTo).getFullYear()}</td>
 
-                               <td>{item.taxHeadMasterCode}</td>
-                               <td style={{textAlign:"right"}}>{item.taxAmount-item.collectionAmount}</td>
-                            </tr>)
-                          })}
+                                   <td>{itemOne.taxHeadMasterCode}</td>
+                                   <td style={{textAlign:"right"}}>{itemOne.taxAmount-itemOne.collectionAmount}</td>
+                                </tr>)
+                              })
+                          }):(
+                            <tr>
+                                <td style={{textAlign:"center"}} colSpan={4}>No Dues</td>
+                            </tr>
+                          )}
 
 
                        </tbody>
-                 </Table>}
+                 </Table>
 
 
                   <Table responsive>
@@ -738,11 +860,11 @@ class NoDues extends Component {
 
                           <tr>
                              <th colSpan={3} style={{textAlign:"left"}}><strong>Application Fees (Rs)</strong></th>
-                             <th style={{textAlign:"right"}}><strong> 100</strong></th>
+                             <th style={{textAlign:"right"}}><strong>{(applicationFeeDemand && applicationFeeDemand.length>0 && applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount)} </strong></th>
                           </tr>
                           <tr>
                              <th colSpan={3} style={{textAlign:"left"}}><strong>Total (Rs) </strong></th>
-                             <th style={{textAlign:"right"}}><strong>{getTotal(demands)+100}</strong></th>
+                             <th style={{textAlign:"right"}}><strong>{getTotal(demands)+(applicationFeeDemand && applicationFeeDemand.length>0 && applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount)}</strong></th>
                           </tr>
                       </thead>
                   </Table>
@@ -766,7 +888,7 @@ class NoDues extends Component {
                         >
                         <div style={{textAlign:"center"}}>
 
-                            <h4>Amount to be paid: Rs {getTotal(demands)+100}</h4>
+                            <h4>Amount to be paid: Rs {getTotal(demands)+(applicationFeeDemand.length>0 && applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount)}</h4>
                             <br/>
 
                         </div>
@@ -806,7 +928,7 @@ class NoDues extends Component {
                                             Receipt Number : {Receipt[0].Bill[0].billDetails[0].receiptNumber}
                                           </td>
                                           <td style={{textAlign:"center"}}>
-                                            Receipt For : {this.props.match.params.id=="watercharge" ? 'Water Charges' : 'Property Tax'}
+                                            Receipt For : {this.props.match.params.id=="wc" ? 'Water Charges' : 'Property Tax'}
                                           </td>
                                           <td style={{textAlign:"right"}}>
                                             Receipt Date: {new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getDate()+"-"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getMonth()+"-"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getFullYear()}
@@ -870,7 +992,7 @@ class NoDues extends Component {
 
                                           </td>
                                           <td >
-                                            {match.params.id=="watercharge"?"Water":"Property"} No dues
+                                            {match.params.id=="wc"?"Water":"Property"} No dues
                                           </td>
                                           <td >
 
@@ -923,7 +1045,7 @@ class NoDues extends Component {
 											Online
                                         </td>
                                         <td>
-                                          {getTotal(demands)+100}
+                                          {getTotal(demands)+applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount}
                                         </td>
                                         {Receipt[0].instrument.instrumentType.name=="Cash"? "" : <td colSpan={2}>
                                           {Receipt[0].transactionId}
@@ -963,7 +1085,7 @@ class NoDues extends Component {
                                             Receipt Number : {Receipt2[0].Bill[0].billDetails[0].receiptNumber}
                                           </td>
                                           <td style={{textAlign:"center"}}>
-                                            Receipt For : {this.props.match.params.id=="watercharge" ? 'Water Charges' : 'Property Tax'}
+                                            Receipt For : {this.props.match.params.id=="wc" ? 'Water Charges' : 'Property Tax'}
                                           </td>
                                           <td style={{textAlign:"right"}}>
                                             Receipt Date: {new Date(Receipt2[0].Bill[0].billDetails[0].receiptDate).getDate()+"-"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getMonth()+"-"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getFullYear()}
@@ -1027,7 +1149,7 @@ class NoDues extends Component {
 
                                           </td>
                                           <td >
-                                            {match.params.id=="watercharge"?"Water":"Property"} No dues
+                                            {match.params.id=="wc"?"Water":"Property"} No dues
                                           </td>
                                           <td >
 
@@ -1065,22 +1187,22 @@ class NoDues extends Component {
                                         <td>
                                           Amount
                                         </td>
-                    <td colSpan={2}>
+                                          <td colSpan={2}>
                                            Transaction No
                                         </td>
-                    <td colSpan={2}>
-                      Transaction Date
+                                          <td colSpan={2}>
+                                            Transaction Date
                                         </td>
-                    {false && <td colSpan={2}>
-                                          Bank Name
-                                        </td>}
+                                        {false && <td colSpan={2}>
+                                                              Bank Name
+                                                            </td>}
                                       </tr>
                                       <tr>
                                         <td>
-                      Online
+                                          Online
                                         </td>
                                         <td>
-                                          {getTotal(demands)+100}
+                                          {getTotal(demands)+(applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount)}
                                         </td>
                                         {Receipt2[0].instrument.instrumentType.name=="Cash"? "" : <td colSpan={2}>
                                           {Receipt2[0].transactionId}

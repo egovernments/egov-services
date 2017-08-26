@@ -70,7 +70,7 @@ ReportDefinitions:
   - name: ward
     label: reports.tradelicense.adminward
     type: singlevaluelist
-    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantId&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION&pageSize=500|$..id|$..name
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION&pageSize=500|$..id|$..name
     source: tradelicense
     isMandatory: false
     searchClause : AND tl.ward = $ward
@@ -114,21 +114,21 @@ ReportDefinitions:
   - name: licenseType
     label: reports.tradelicense.licensetype
     type: singlevaluelist
-    pattern: http://tl-masters:8080/tl-masters/category/v1/_search?tenantId=$tenantId&pageSize=500|$..id|$..name
+    pattern: http://tl-masters:8080/tl-masters/category/v1/_search?tenantId=$tenantid&pageSize=500|$..id|$..name
     source: tradelicense
     isMandatory: false
     searchClause : AND tl.categoryid = $licenseType
   - name: licenseSubType
     label: reports.tradelicense.licensesubtype
     type: url
-    pattern: http://tl-masters:8080/tl-masters/category/v1/_search?tenantId=$tenantId&type=SUBCATEGORY&categoryId={licenseType}&pageSize=500|$..id|$..name
+    pattern: /tl-masters/category/v1/_search?tenantId=$tenantid&type=SUBCATEGORY&categoryId={licenseType}&pageSize=500|$..id|$..name
     source: tradelicense
     isMandatory: false
     searchClause : AND tl.subcategoryid = $licenseSubType
   - name: licenseStatus
     label: reports.tradelicense.licensestatus
     type: singlevaluelist
-    pattern: http://tl-masters:8080/tl-masters/status/v1/_search?tenantId=default&pageSize=500|$..id|$..name
+    pattern: http://tl-masters:8080/tl-masters/status/v1/_search?tenantId=$tenantid&pageSize=500|$..id|$..name
     source: tradelicense
     isMandatory: false
     searchClause : AND tl.status = $licenseStatus

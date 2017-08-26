@@ -145,7 +145,7 @@ ReportDefinitions:
     isMandatory: false
     searchClause : AND tl.propertyassesmentno = $propertyNo
   query: select ward.name as ward, tl.licensenumber as licenseNumber, tl.tradetype as tradeType, tl.ownername as licenseHolder,
-    tl.owneradress as license_holder_address, tl.tradetitle as businessName, tl.tradeaddress as businessAddress,
+    tl.owneraddress as license_holder_address, tl.tradetitle as businessName, tl.tradeaddress as businessAddress,
     locality.name as businessArea, tl.licensevalidfromdate as licenseValidFromDate, tl.expirydate as licenseValidToDate,
     category.name as licenseType, subcategory.name as licenseSubType, tl.status as licenseStatus, tl.adhaarnumber as aadharNo,
     tl.propertyassesmentno as propertyNo from egtl_license as tl, eg_boundary as ward, eg_boundary as locality,

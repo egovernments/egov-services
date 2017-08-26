@@ -179,7 +179,7 @@ public class AssetController {
     public ResponseEntity<?> reevaluateSearch(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
             @ModelAttribute final RevaluationCriteria revaluationCriteria, final BindingResult bindingResult) {
 
-        log.info("reevaluateSearch revaluationCriteria:" + revaluationCriteria);
+        log.debug("reevaluateSearch revaluationCriteria:" + revaluationCriteria);
         if (bindingResult.hasErrors()) {
             final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
@@ -196,7 +196,7 @@ public class AssetController {
     public ResponseEntity<?> dispose(@RequestBody @Valid final DisposalRequest disposalRequest,
             final BindingResult bindingResult, @RequestHeader final HttpHeaders headers) {
 
-        log.info("create dispose:" + disposalRequest);
+        log.debug("create dispose:" + disposalRequest);
         if (bindingResult.hasErrors()) {
             final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
@@ -253,7 +253,7 @@ public class AssetController {
     public ResponseEntity<?> saveCurrentValue(
             @RequestBody @Valid final AssetCurrentValueRequest assetCurrentValueRequest,
             final BindingResult bindingResult) {
-        log.info("create assetcurrentvalue :" + assetCurrentValueRequest);
+        log.debug("create assetcurrentvalue :" + assetCurrentValueRequest);
         if (bindingResult.hasErrors()) {
             final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
@@ -290,6 +290,7 @@ public class AssetController {
         }
         
         log.debug("Request Headers :: " + headers);
+        assetValidator.validateDepreciation(depreciationRequest);
         final DepreciationResponse depreciationResponse = depreciationservice.depreciateAsset(depreciationRequest,
                 headers);
         return new ResponseEntity<>(depreciationResponse, HttpStatus.CREATED);

@@ -71,7 +71,7 @@ public class TradeLicenseRepositoryTest {
 		request.setRequestInfo(getRequestInfo());
 		request.setLicenses(new ArrayList<TradeLicenseContract>());
 		request.getLicenses().add(getTradeLicenseContract());
-		tradeLicenseRepository.add(request);
+		tradeLicenseRepository.add(request, true);
 		Map<String, Object> message = new HashMap<>();
 		message.put(propertiesManager.getCreateLegacyTradeValidated(), request);
 		Mockito.verify(tradeLicenseQueueRepository).add(message);

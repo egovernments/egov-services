@@ -7,11 +7,11 @@ body{
 	padding-top: 15px;
 	padding-bottom:15px;
 	background:url("../images/header-bg-1.jpg") no-repeat;
-	background-size: 100% 100%; 
+	background-size: 100% 100%;
     border: 1px solid;
 }
 .service-table ul li{
-	margin-left:-55px;
+	margin-left:-40px;
 	list-style: none;
 }
 .right-sction{
@@ -166,7 +166,7 @@ body{
 }
 
 .more-option .btn{
-	
+
    /* background: #f78d1d;
     background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#848383));*/
 }

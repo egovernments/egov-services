@@ -1427,6 +1427,12 @@ public class ValidatorUtils {
                        .field(WcmsConstants.SERVICECHARGEEFFECTIVETO_MANADATORY_FIELD_NAME).build();
                errorFields.add(errorField); 
            }
+           else if(serviceCharge.getActive() == null){
+               final ErrorField errorField = ErrorField.builder().code(WcmsConstants.ACTIVE_MANDATORY_CODE)
+                       .message(WcmsConstants.ACTIVE_MANADATORY_ERROR_MESSAGE)
+                       .field(WcmsConstants.ACTIVE_MANADATORY_FIELD_NAME).build();
+               errorFields.add(errorField); 
+           }
            else 
                return;
                

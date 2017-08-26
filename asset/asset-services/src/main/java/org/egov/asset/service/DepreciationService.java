@@ -156,7 +156,7 @@ public class DepreciationService {
 
     }
 
-    private void validationAndGenerationDepreciationVoucher(final Map<Long, DepreciationDetail> depreciationDetailsMap,
+    public void validationAndGenerationDepreciationVoucher(final Map<Long, DepreciationDetail> depreciationDetailsMap,
             final HttpHeaders headers, final RequestInfo requestInfo, final String tenantId,
             final List<CalculationAssetDetails> calculationAssetDetailList,
             final Map<Long, List<CalculationAssetDetails>> cadMap) {
@@ -265,7 +265,7 @@ public class DepreciationService {
      * @param depreciationCriteria
      * @param requestInfo
      */
-    private void setDefaultsInDepreciationCriteria(final DepreciationCriteria depreciationCriteria,
+    public void setDefaultsInDepreciationCriteria(final DepreciationCriteria depreciationCriteria,
             final RequestInfo requestInfo) {
 
         if (depreciationCriteria.getFinancialYear() == null

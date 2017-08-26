@@ -19,12 +19,19 @@ public class TradeLicenseQueueRepository {
 	private String topicKey;
 
 	public void add(Map<String, Object> topicMap) {
+		
 		for (Map.Entry<String, Object> entry : topicMap.entrySet()) {
 
 			key = entry.getKey();
 
 			if (key.equalsIgnoreCase(propertiesManager.getCreateLegacyTradeValidated())) {
+				
 				tradeLicenseProducer.sendMessage(propertiesManager.getCreateLegacyTradeValidated(), "", topicMap);
+				
+			} else if(key.equalsIgnoreCase(propertiesManager.getUpdateLegacyTradeValidated())){
+				
+				tradeLicenseProducer.sendMessage(propertiesManager.getUpdateLegacyTradeValidated(), "", topicMap);
+				
 			}
 		}
 

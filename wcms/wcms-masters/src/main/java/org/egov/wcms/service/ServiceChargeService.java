@@ -43,6 +43,7 @@ import java.util.List;
 
 import org.egov.wcms.model.ServiceCharge;
 import org.egov.wcms.repository.ServiceChargeRepository;
+import org.egov.wcms.web.contract.ServiceChargeGetRequest;
 import org.egov.wcms.web.contract.ServiceChargeReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,7 +61,6 @@ public class ServiceChargeService {
     public List<ServiceCharge> pushServiceChargeCreateRequestToQueue(final ServiceChargeReq serviceChargeRequest) {
         logger.info("ServiceChargeReq :" + serviceChargeRequest);
         return serviceChargeRepository.pushServiceChargeCreateReqToQueue(serviceChargeRequest);
-
     }
 
     public ServiceChargeReq createServiceCharge(final ServiceChargeReq serviceChargeRequest) {
@@ -75,6 +75,11 @@ public class ServiceChargeService {
 
     public ServiceChargeReq updateServiceCharge(final ServiceChargeReq serviceChargeRequest) {
         return serviceChargeRepository.persistUpdateServiceChargeRequestToDB(serviceChargeRequest);
+    }
+
+    public List<ServiceCharge> getServiceChargesByCriteria(final ServiceChargeGetRequest serviceChargeGetRequest) {
+        return serviceChargeRepository.searchServiceChargesByCriteria(serviceChargeGetRequest);
+
     }
 
 }

@@ -30,7 +30,7 @@ public class TradeLicenseListener {
 	@Autowired
 	TradeLicenseService tradeLicenseService;
 
-	@KafkaListener(topics = { "#{propertiesManager.getCreateLegacyTradeValidated()}" })
+	@KafkaListener(topics = { "#{propertiesManager.getCreateLegacyTradeValidated()}", "#{propertiesManager.getUpdateLegacyTradeValidated()}" })
 	public void process(Map<String, Object> mastersMap) {
 
 		if (mastersMap.get(propertiesManager.getCreateLegacyTradeValidated()) != null) {
@@ -45,7 +45,18 @@ public class TradeLicenseListener {
 			}
 			mastersMap.clear();
 		}
+		if (mastersMap.get(propertiesManager.getUpdateLegacyTradeValidated()) != null) {
 
+			TradeLicenseRequest request = objectMapper.convertValue(
+					mastersMap.get(propertiesManager.getUpdateLegacyTradeValidated()), TradeLicenseRequest.class);
+
+			ModelMapper mapper = new ModelMapper();
+			for (TradeLicenseContract tradeLicenseContract : request.getLicenses()) {
+				TradeLicense domain = mapper.map(tradeLicenseContract, TradeLicense.class);
+				tradeLicenseService.update(domain);
+			}
+			mastersMap.clear();
+		}
 	}
 
 }

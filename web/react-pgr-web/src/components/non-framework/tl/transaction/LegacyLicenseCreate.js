@@ -294,27 +294,27 @@ class LegacyLicenseCreate extends Component {
         var jPath = match.replace(/\{|}/g,"");
         _url = _url.replace(match, _.get(formData, jPath));
       }
-
       //Check if documents, upload and get fileStoreId
-      if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"] && formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"].length) {
-        let documents = [...formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"]];
+      if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][0]["supportDocuments"] && formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][0]["supportDocuments"].length) {
+        let supportDocuments = [...formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][0]["supportDocuments"]];
         let _docs = [];
-        let counter = documents.length, breakOut = 0;
-        for(let i=0; i<documents.length; i++) {
-          fileUpload(documents[i].fileStoreId, self.props.moduleName, function(err, res) {
+        let counter = supportDocuments.length, breakOut = 0;
+        for(let i=0; i<supportDocuments.length; i++) {
+          fileUpload(supportDocuments[i].fileStoreId, self.props.moduleName, function(err, res) {
             if(breakOut == 1) return;
             if(err) {
               breakOut = 1;
               self.props.setLoadingStatus('hide');
               self.props.toggleSnackbarAndSetText(true, err, false, true);
             } else {
-              _docs.push({
-                ...documents[i],
-                fileStoreId: res.files[0].fileStoreId
-              })
+              if(res.files[0].fileStoreId)
+                _docs.push({
+                  ...supportDocuments[i],
+                  fileStoreId: res.files[0].fileStoreId
+                })
               counter--;
               if(counter == 0 && breakOut == 0) {
-                formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"] = _docs;
+                formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][0]["supportDocuments"] = _docs;
                 self.makeAjaxCall(formData, _url);
               }
             }

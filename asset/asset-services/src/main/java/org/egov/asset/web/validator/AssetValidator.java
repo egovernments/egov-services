@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.asset.contract.AssetRequest;
+import org.egov.asset.contract.DepreciationRequest;
 import org.egov.asset.contract.DisposalRequest;
 import org.egov.asset.contract.RevaluationRequest;
 import org.egov.asset.model.Asset;
@@ -19,6 +20,7 @@ import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.AssetCurrentValue;
 import org.egov.asset.model.AssetStatus;
+import org.egov.asset.model.DepreciationCriteria;
 import org.egov.asset.model.Disposal;
 import org.egov.asset.model.DisposalCriteria;
 import org.egov.asset.model.Revaluation;
@@ -189,8 +191,7 @@ public class AssetValidator {
             throw new RuntimeException("Sale Value should be present for disposing asset : " + asset.getName());
 
         verifyPanCardAndAdhaarCardForAssetSale(disposal);
-        if (assetConfigurationService.getEnabledVoucherGeneration(AssetConfigurationKeys.ENABLEVOUCHERGENERATION,
-                tenantId)) {
+        if (getEnableYearWiseDepreciation(tenantId)) {
             validateAssetCategoryForVoucherGeneration(asset);
 
             if (asset.getAssetCategory() != null && asset.getAssetCategory().getAssetAccount() == null)
@@ -246,8 +247,7 @@ public class AssetValidator {
         final Asset asset = assetRepository
                 .findForCriteria(AssetCriteria.builder().tenantId(tenantId).id(assetIds).build()).get(0);
         validateAssetForCapitalizedStatus(asset);
-        final boolean enableVoucherGeneration = assetConfigurationService
-                .getEnabledVoucherGeneration(AssetConfigurationKeys.ENABLEVOUCHERGENERATION, tenantId);
+        final boolean enableVoucherGeneration = getEnableYearWiseDepreciation(tenantId);
         if (enableVoucherGeneration) {
             validateAssetCategoryForVoucherGeneration(asset);
             validateFund(revaluation.getFund());
@@ -315,8 +315,7 @@ public class AssetValidator {
         if (typeOfChange == null)
             throw new RuntimeException("Type Of Change is necessary for asset revaluation");
 
-        if (assetConfigurationService.getEnabledVoucherGeneration(AssetConfigurationKeys.ENABLEVOUCHERGENERATION,
-                revaluation.getTenantId())) {
+        if (getEnableYearWiseDepreciation(revaluation.getTenantId())) {
             if (typeOfChange != null && TypeOfChangeEnum.DECREASED.compareTo(typeOfChange) == 0
                     && revaluation.getFixedAssetsWrittenOffAccount() == null)
                 throw new RuntimeException("Fixed Asset Written Off Account is necessary for asset " + asset.getName()
@@ -339,6 +338,11 @@ public class AssetValidator {
         return typeOfChange;
     }
 
+    private boolean getEnableYearWiseDepreciation(final String tenantId) {
+        return assetConfigurationService.getEnabledVoucherGeneration(AssetConfigurationKeys.ENABLEVOUCHERGENERATION,
+                tenantId);
+    }
+
     private void validateAssetCategoryForVoucherGeneration(final Asset asset) {
         if (asset.getAssetCategory() == null)
             throw new RuntimeException(
@@ -356,6 +360,29 @@ public class AssetValidator {
             throw new RuntimeException("Invalid Asset Code for Asset :: " + asset.getName());
         else
             validateYearWiseDepreciationRate(assetRequest.getAsset());
+    }
+
+    public void validateDepreciation(final DepreciationRequest depreciationRequest) {
+        final DepreciationCriteria depreciationCriteria = depreciationRequest.getDepreciationCriteria();
+        final String tenantId = depreciationCriteria.getTenantId();
+        final AssetCriteria assetCriteria = AssetCriteria.builder()
+                .id(new ArrayList<Long>(depreciationCriteria.getAssetIds())).tenantId(tenantId).build();
+        final List<Asset> assets = assetService.getAssets(assetCriteria, depreciationRequest.getRequestInfo())
+                .getAssets();
+        log.debug("Assets For Depreciation :: " + assets);
+        if (getEnableYearWiseDepreciation(tenantId) && assets != null && !assets.isEmpty())
+            for (final Asset asset : assets) {
+                final AssetCategory assetCategory = asset.getAssetCategory();
+                if (assetCategory.getAccumulatedDepreciationAccount() == null)
+                    throw new RuntimeException(
+                            "Accumulated Depreciation Account should be present for voucher generation for asset :: "
+                                    + asset.getName() + " for asset Category :: " + assetCategory.getName());
+                if (assetCategory.getDepreciationExpenseAccount() == null)
+                    throw new RuntimeException(
+                            "Depreciation Expense Account should be present for voucher generation for asset :: "
+                                    + asset.getName() + " for asset Category :: " + assetCategory.getName());
+            }
+
     }
 
 }

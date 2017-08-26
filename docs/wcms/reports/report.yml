@@ -125,8 +125,8 @@ ReportDefinitions:
          INNER JOIN eg_boundary bndry ON bndry.id=propertylocation.revenueboundary WHERE propertylocation.revenueboundary=$revenueboundary group by bndry.name
   
   
-- reportName: DCBReportZoneWise
-  summary: DCB drill down Report Zone wise
+- reportName: DCBReport
+  summary: DCB Report
   version: 1.0.0 
   moduleName: wcms
   sourceColumns:
@@ -182,20 +182,31 @@ ReportDefinitions:
   searchParams:
   - name: zoneid
     label: reports.wcms.zoneid
-    type: string
+    type: singlevaluelist
     source: wcms
-    isMandatory: true
+    isMandatory: false
+  - name: wardid
+    label: reports.wcms.ward
+    type: singlevaluelist
+    source: wcms
+    isMandatory: false
+  - name: localityid
+    label: reports.wcms.localityid
+    type: singlevaluelist
+    source: wcms
+    isMandatory: false
   - name: connectiontype
     label: reports.wcms.connectiontype
-    type: string
+    type: singlevaluelist
+    pattern: 'list://METERED:METERED,NON-METERED:NON-METERED'
     source: wcms
     isMandatory: true  
-  query: select  distinct cast(dcbinfo.zoneid as integer) as "zoneid",boundary.name as "boundaryName", count(hscno) as countofconsumerno,  
-         cast(SUM(arr_demand) as bigint) AS arr_demand,cast(SUM(curr_demand) as bigint) AS curr_demand,cast(SUM(arr_demand+curr_demand) as bigint) as total_demand,
-         cast(SUM(arr_coll) as bigint) AS arr_coll,cast(SUM(curr_coll) as bigint) AS curr_coll,cast(SUM(arr_coll+curr_coll) as bigint) AS total_coll,
-         cast(SUM(arr_balance) as bigint) AS arr_balance,cast(SUM(curr_balance) as bigint) AS curr_balance,cast(SUM(arr_balance+curr_balance) as bigint) AS total_balance
-         from egwtr_connection_view dcbinfo,eg_boundary boundary  where dcbinfo.zoneid=boundary.id  and dcbinfo.zoneid in ($zoneid) and dcbinfo.connectiontype = $connectiontype 
-         and dcbinfo.connectionstatus = 'ACTIVE' group by dcbinfo.zoneid,boundary.name order by boundary.name
+  query: select distinct cast(dcbinfo.wardid as integer) as wardid,boundary.name as  boundaryName ,count(hscno) as countofconsumerno, 
+         cast(SUM(arr_demand) as bigint) AS arr_demand,cast(SUM(curr_demand) as bigint) AS curr_demand,cast(SUM(arr_coll) as bigint) 
+         AS arr_coll,cast(SUM(curr_coll) as bigint) AS curr_coll, cast(SUM(arr_balance) as bigint) AS arr_balance,cast(SUM(curr_balance) as bigint) AS curr_balance
+         from egwtr_connection_view dcbinfo,eg_boundary boundary  where  dcbinfo.wardid=boundary.id  and dcbinfo.wardid in ($wardid)  and dcbinfo.connectiontype in 
+         ($connectionType)  and dcbinfo.connectionstatus = 'ACTIVE'
+  groupBy: group by dcbinfo.wardid,boundary.name order by boundary.name;
          
 - reportName: DCBReportZoneWiseByMunicipality
   summary: DCB drill down Report Zone wise By Municipality

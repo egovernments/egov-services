@@ -18,6 +18,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,12 +63,16 @@ public class ServiceRequestServiceTest {
     @Mock
     private DraftService draftService;
 
+    private
+    @Value("${postgres.enabled}")
+    boolean postgresEnabled;
+
     @Before
     public void before() {
         when(serviceRequestValidator.canValidate(any())).thenReturn(true);
         final List<ServiceRequestValidator> validators = Collections.singletonList(serviceRequestValidator);
         serviceRequestService = new ServiceRequestService(complaintRepository, sevaNumberGeneratorService,
-            userRepository, serviceRequestTypeService, validators, customFieldsService, draftService);
+            userRepository, serviceRequestTypeService, validators, customFieldsService, draftService, postgresEnabled);
     }
 
     @Test

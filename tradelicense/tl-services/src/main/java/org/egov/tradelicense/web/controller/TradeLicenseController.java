@@ -23,9 +23,7 @@ import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.domain.service.TradeLicenseService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.validation.SmartValidator;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,20 +46,7 @@ public class TradeLicenseController {
 	@Autowired
 	PropertiesManager propertiesManager;
 
-	private BindingResult validate(List<TradeLicenseContract> tradeLicenses, BindingResult errors) {
-
-		try {
-			Assert.notNull(tradeLicenses, "tradeLicenses to create must not be null");
-			for (TradeLicenseContract tradeLicense : tradeLicenses) {
-				validator.validate(tradeLicense, errors);
-			}
-		} catch (IllegalArgumentException e) {
-			errors.addError(new ObjectError("Missing data", e.getMessage()));
-		}
-
-		return errors;
-
-	}
+	
 
 	@RequestMapping(path = "/license/v1/_create", method = RequestMethod.POST)
 	public TradeLicenseResponse createTradelicense(@Valid @RequestBody TradeLicenseRequest tradeLicenseRequest,
@@ -113,7 +98,7 @@ public class TradeLicenseController {
 		}
 
 		tradeLicenseRequest.setLicenses(tradeLicenseContracts);
-		tradeLicenseService.addToQue(tradeLicenseRequest);
+		tradeLicenseService.addToQue(tradeLicenseRequest, true);
 		tradeLicenseResponse.setLicenses(tradeLicenseContracts);
 
 		// creating success message with the license numbers
@@ -136,6 +121,63 @@ public class TradeLicenseController {
 			}
 			tradeLicenseResponse.getResponseInfo().setStatus(statusMessage);
 		}
+
+		return tradeLicenseResponse;
+	}
+
+	@RequestMapping(path = "/license/v1/_update", method = RequestMethod.POST)
+	public TradeLicenseResponse updateTradelicense(@Valid @RequestBody TradeLicenseRequest tradeLicenseRequest,
+			BindingResult errors) throws Exception {
+
+		RequestInfo requestInfo = tradeLicenseRequest.getRequestInfo();
+		if (errors.hasErrors()) {
+			throw new CustomBindException(errors, requestInfo);
+		}
+		// check for existence of licenses
+		if (tradeLicenseRequest.getLicenses() == null) {
+			throw new TradeLicensesNotFoundException(propertiesManager.getTradeLicensesNotFoundMsg(), requestInfo);
+		} else if (tradeLicenseRequest.getLicenses().size() == 0) {
+			throw new TradeLicensesNotEmptyException(propertiesManager.getTradeLicensesNotEmptyMsg(), requestInfo);
+		}
+
+		ModelMapper model = new ModelMapper();
+		TradeLicenseResponse tradeLicenseResponse = new TradeLicenseResponse();
+		tradeLicenseResponse.setResponseInfo(getResponseInfo(requestInfo));
+		List<TradeLicense> tradeLicenses = new ArrayList<>();
+		TradeLicense tradeLicense;
+
+		for (TradeLicenseContract tradeLicenseContract : tradeLicenseRequest.getLicenses()) {
+
+			tradeLicense = new TradeLicense();
+			model.map(tradeLicenseContract, tradeLicense);
+			AuditDetails auditDetails = tradeLicense.getAuditDetails();
+			if (auditDetails == null) {
+				auditDetails = new AuditDetails();
+			}
+			auditDetails.setLastModifiedTime(new Date().getTime());
+			if (requestInfo != null && requestInfo.getUserInfo() != null && requestInfo.getUserInfo().getId() != null) {
+				auditDetails.setLastModifiedBy(requestInfo.getUserInfo().getId().toString());
+			}
+
+			tradeLicense.setAuditDetails(auditDetails);
+
+			tradeLicenses.add(tradeLicense);
+		}
+
+		tradeLicenses = tradeLicenseService.update(tradeLicenses, requestInfo, errors);
+
+		List<TradeLicenseContract> tradeLicenseContracts = new ArrayList<>();
+		TradeLicenseContract contract;
+
+		for (TradeLicense f : tradeLicenses) {
+			contract = new TradeLicenseContract();
+			model.map(f, contract);
+			tradeLicenseContracts.add(contract);
+		}
+
+		tradeLicenseRequest.setLicenses(tradeLicenseContracts);
+		tradeLicenseService.addToQue(tradeLicenseRequest, false);
+		tradeLicenseResponse.setLicenses(tradeLicenseContracts);
 
 		return tradeLicenseResponse;
 	}

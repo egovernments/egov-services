@@ -1,0 +1,20 @@
+{
+	"responseInfo": null,
+	"documentTypes": [{
+		"id": null,
+		"tenantId": "default",
+		"name": null,
+		"mandatory": true,
+		"enabled": true,
+		"applicationType": "NEW",
+		"auditDetails": {
+			"createdBy": null,
+			"lastModifiedBy": null,
+			"createdTime": null,
+			"lastModifiedTime": null
+		},
+		"categoryId": null,
+		"subCategoryId": null
+	}]
+	
+	}

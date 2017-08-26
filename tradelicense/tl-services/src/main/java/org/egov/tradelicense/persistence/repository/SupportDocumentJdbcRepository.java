@@ -17,7 +17,15 @@ public class SupportDocumentJdbcRepository extends JdbcRepository {
 	}
 
 	public SupportDocumentEntity create(SupportDocumentEntity entity) {
+		
 		super.create(entity);
+
+		return entity;
+	}
+	
+	public SupportDocumentEntity update(SupportDocumentEntity entity) {
+		
+		super.update(entity);
 
 		return entity;
 	}

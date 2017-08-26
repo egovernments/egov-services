@@ -47,7 +47,7 @@ public class SupportDocumentSearchEntity {
 
 		supportDocument.setDocumentTypeId(this.documentTypeId);
 
-		supportDocument.setFileStoreId(String.valueOf(this.fileStoreId));
+		supportDocument.setFileStoreId(this.fileStoreId);
 
 		supportDocument.setComments(this.comments);
 
@@ -69,9 +69,7 @@ public class SupportDocumentSearchEntity {
 
 		this.documentTypeId = supportDocument.getDocumentTypeId();
 
-		if (supportDocument.getFileStoreId() != null) {
-			this.fileStoreId = supportDocument.getFileStoreId().toString();
-		}
+		this.fileStoreId = supportDocument.getFileStoreId();
 
 		this.documentTypeName = supportDocument.getDocumentTypeName();
 

@@ -448,15 +448,15 @@ var dat = {
           "fields": [
             {
               "name": "File",
-              "jsonPath": "licenses.supportDocuments",
+              "jsonPath": "licenses[0].supportDocuments",
               "type": "documentList",
               "pathToArray": "documentTypes",
               "displayNameJsonPath": "name",
               "url": "/tl-masters/documenttype/v1/_search?applicationType=NEW",
               "autoFillFields": [
                 {
-                  "name": "document",
-                  "jsonPath": "documentTypeId"
+                  "name": "documentTypeId",
+                  "jsonPath": "id"
                 }
               ]
             }
@@ -712,7 +712,7 @@ var dat = {
 
      "tl.view": {
         "numCols": 12 / 3,
-        "url": "/tl-services/license/v1/_search?licenseNumber={licenseNumber}",
+        "url": "/tl-services/license/v1/_search?ids={licenseNumber}",
         "tenantIdRequired": true,
         "useTimestamp": true,
         "objectName": "licenses",

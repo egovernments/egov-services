@@ -40,10 +40,7 @@
 
 package org.egov.collection.repository.rowmapper;
 
-import lombok.EqualsAndHashCode;
-import org.egov.collection.model.ReceiptHeader;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -51,11 +48,20 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
+import lombok.EqualsAndHashCode;
+
+import org.egov.collection.model.ReceiptHeader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
 @EqualsAndHashCode
 @Component
 public class ReceiptRowMapper implements RowMapper<ReceiptHeader> {
+
+	public static final Logger LOGGER = LoggerFactory
+			.getLogger(ReceiptRowMapper.class);
 
 	@Override
 	public ReceiptHeader mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -67,7 +73,8 @@ public class ReceiptRowMapper implements RowMapper<ReceiptHeader> {
 		receiptHeader.setPayeeAddress(rs.getString("rh_payeeAddress"));
 		receiptHeader.setPayeeEmail(rs.getString("rh_payeeEmail"));
 		receiptHeader.setPaidBy(rs.getString("rh_paidBy"));
-		receiptHeader.setReference_ch_id((Long) rs.getObject("rh_reference_ch_id"));
+		receiptHeader.setReference_ch_id((Long) rs
+				.getObject("rh_reference_ch_id"));
 		receiptHeader.setReferenceNumber(rs.getString("rh_referenceNumber"));
 		receiptHeader.setFunction(rs.getString("rh_function"));
 		receiptHeader.setVersion(rs.getLong("rh_version"));
@@ -75,17 +82,22 @@ public class ReceiptRowMapper implements RowMapper<ReceiptHeader> {
 		receiptHeader.setReceiptType(rs.getString("rh_receiptType"));
 		receiptHeader.setReceiptNumber(rs.getString("rh_receiptNumber"));
 		receiptHeader.setReferenceDesc(rs.getString("rh_referenceDesc"));
-		receiptHeader.setManualReceiptNumber(rs.getString("rh_manualReceiptNumber"));
+		receiptHeader.setManualReceiptNumber(rs
+				.getString("rh_manualReceiptNumber"));
 		receiptHeader.setBusinessDetails(rs.getString("rh_businessDetails"));
 		receiptHeader.setCollectionType(rs.getString("rh_collectionType"));
 		receiptHeader.setStateId((Long) rs.getObject("rh_stateId"));
 		receiptHeader.setLocation((Long) rs.getObject("rh_location"));
-		receiptHeader.setIsReconciled((Boolean) rs.getObject("rh_isReconciled"));
+		receiptHeader
+				.setIsReconciled((Boolean) rs.getObject("rh_isReconciled"));
 		receiptHeader.setStatus(rs.getString("rh_status"));
-		receiptHeader.setReasonForCancellation(rs.getString("rh_reasonForCancellation"));
-		receiptHeader.setMinimumAmount((Double) rs.getObject("rh_minimumAmount"));
+		receiptHeader.setReasonForCancellation(rs
+				.getString("rh_reasonForCancellation"));
+		receiptHeader.setMinimumAmount((Double) rs
+				.getObject("rh_minimumAmount"));
 		receiptHeader.setTotalAmount((Double) rs.getObject("rh_totalAmount"));
-		receiptHeader.setCollModesNotAllwd(rs.getString("rh_collModesNotAllwd"));
+		receiptHeader
+				.setCollModesNotAllwd(rs.getString("rh_collModesNotAllwd"));
 		receiptHeader.setConsumerCode(rs.getString("rh_consumerCode"));
 		receiptHeader.setConsumerType(rs.getString("rh_consumerType"));
 		receiptHeader.setFund(rs.getString("rh_fund"));
@@ -97,24 +109,29 @@ public class ReceiptRowMapper implements RowMapper<ReceiptHeader> {
 		receiptHeader.setDisplayMsg(rs.getString("rh_displayMsg"));
 		receiptHeader.setVoucherheader(rs.getString("rh_voucherheader"));
 		receiptHeader.setCreatedBy((Long) rs.getObject("rh_createdBy"));
-		receiptHeader.setLastModifiedBy((Long) rs.getObject("rh_lastModifiedBy"));
-		receiptHeader.setCancellationRemarks(rs.getString("rh_cancellationRemarks"));
-        receiptHeader.setTransactionId(rs.getString("rh_transactionid"));
+		receiptHeader.setLastModifiedBy((Long) rs
+				.getObject("rh_lastModifiedBy"));
+		receiptHeader.setCancellationRemarks(rs
+				.getString("rh_cancellationRemarks"));
+		receiptHeader.setTransactionId(rs.getString("rh_transactionid"));
 
 		try {
-			Date date = isEmpty((Long)rs.getObject("rh_referenceDate")) ? null
-					: sdf.parse(sdf.format((Long)rs.getObject("rh_referenceDate")));
+			Date date = isEmpty((Long) rs.getObject("rh_referenceDate")) ? null
+					: sdf.parse(sdf.format((Long) rs
+							.getObject("rh_referenceDate")));
 			receiptHeader.setReferenceDate(date);
-			date = isEmpty((Long)rs.getObject("rh_receiptDate")) ? null : sdf.parse(sdf.format((Long)rs.getObject("rh_receiptDate")));
+			date = isEmpty((Long) rs.getObject("rh_receiptDate")) ? null : sdf
+					.parse(sdf.format((Long) rs.getObject("rh_receiptDate")));
 			receiptHeader.setReceiptDate(date);
-			date = isEmpty((Long)rs.getObject("rh_createdDate")) ? null : sdf.parse(sdf.format((Long)rs.getObject("rh_createdDate")));
+			date = isEmpty((Long) rs.getObject("rh_createdDate")) ? null : sdf
+					.parse(sdf.format((Long) rs.getObject("rh_createdDate")));
 			receiptHeader.setCreatedDate(date);
-			date = isEmpty((Long)rs.getObject("rh_lastModifiedDate")) ? null
-					: sdf.parse(sdf.format((Long)rs.getObject("rh_lastModifiedDate")));
+			date = isEmpty((Long) rs.getObject("rh_lastModifiedDate")) ? null
+					: sdf.parse(sdf.format((Long) rs
+							.getObject("rh_lastModifiedDate")));
 			receiptHeader.setLastModifiedDate(date);
 		} catch (ParseException e) {
-			e.printStackTrace();
-			throw new SQLException("Parse exception while parsing date");
+			LOGGER.error("Parse exception while parsing date" + e);
 		}
 
 		return receiptHeader;

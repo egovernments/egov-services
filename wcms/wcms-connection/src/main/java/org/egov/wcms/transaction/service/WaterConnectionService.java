@@ -134,6 +134,12 @@ public class WaterConnectionService {
         Long connectionAddressId = 0L ;
         Long connectionLocationId = 0L ;
         try {
+            if(waterConnectionRequest.getConnection()!=null && 
+                    waterConnectionRequest.getConnection().getIsLegacy())
+                waterConnectionRequest.getConnection().setConnectionStatus(WcmsConnectionConstants.CONNECTIONSTATUSACTIVE);
+            else
+                waterConnectionRequest.getConnection().setConnectionStatus(WcmsConnectionConstants.CONNECTIONSTATUSCREAED);
+          
         	if(waterConnectionRequest.getConnection().getWithProperty()){ 
         		waterConnectionRepository.persistConnection(waterConnectionRequest);
         	}

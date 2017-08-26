@@ -88,7 +88,7 @@ public class CustomControllerAdvice {
 		responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
 		errRes.setResponseInfo(responseInfo);
 		Error error = new Error();
-		error.setCode(001);//"org.egov.collections.bank.invalid"
+		error.setCode(400);//"org.egov.collections.bank.invalid"
 		error.setMessage(ex.getMessage());
 		error.setDescription(ex.getLocalizedMessage());
 		errRes.setError(error);

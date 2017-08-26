@@ -40,24 +40,10 @@
 
 package org.egov.collection.web.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.validation.Valid;
-
 import org.egov.collection.model.EnumData;
 import org.egov.collection.service.CollectionConfigService;
 import org.egov.collection.service.ReceiptService;
-import org.egov.collection.web.contract.BusinessDetailsRequestInfo;
-import org.egov.collection.web.contract.BusinessDetailsResponse;
-import org.egov.collection.web.contract.ChartOfAccount;
-import org.egov.collection.web.contract.ChartOfAccountsResponse;
-import org.egov.collection.web.contract.CollectionConfigGetRequest;
-import org.egov.collection.web.contract.CollectionConfigResponse;
-import org.egov.collection.web.contract.StatusResponse;
-import org.egov.collection.web.contract.UserResponse;
+import org.egov.collection.web.contract.*;
 import org.egov.collection.web.contract.factory.RequestInfoWrapper;
 import org.egov.collection.web.contract.factory.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
@@ -69,11 +55,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/receipts")

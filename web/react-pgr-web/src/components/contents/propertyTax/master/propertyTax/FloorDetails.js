@@ -130,6 +130,7 @@ class FloorDetails extends Component {
 		structureclasses:[],
 		occupancies:[],
 		usages:[],
+		subUsage:[],
 		hasLengthWidth: false,
 		roomInFlat:[{code:1, name:'Yes'}, {code:2, name:'No'}],
 		newFloorError : false,
@@ -604,6 +605,21 @@ deleteOccupantName = (index) =>{
 	
 }
  
+ 
+handleUsage = (value) => {
+	
+		let query = { 
+			parent: value
+		}
+	
+	   Api.commonApiPost('pt-property/property/usages/_search', query).then((res)=>{
+          console.log(res);
+          this.setState({subUsage : res.usageMasters})
+        }).catch((err)=> {
+          console.log(err)
+        }).bind(this);
+}   
+ 
   
    render(){
 	  
@@ -853,7 +869,7 @@ deleteOccupantName = (index) =>{
 														  hintText="102"
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.unitNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.unitNo}</span> :""): ""}
 														  value={floorDetails.floor ? floorDetails.floor.unitNo : ""}
-														  onChange={(e) => {handleChangeFloor(e,"floor" ,"unitNo", true, /^\d{0,3}$/g)}}
+														  onChange={(e) => {handleChangeFloor(e,"floor" ,"unitNo", true, /^[a-zA-Z0-9]*$/g)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -899,6 +915,7 @@ deleteOccupantName = (index) =>{
 																  value: value
 																}
 															  };
+															  this.handleUsage(value);
 															  handleChangeFloor(e,"floor" ,"usage", true, "")}
 														  }
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -931,7 +948,7 @@ deleteOccupantName = (index) =>{
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														>
-															{renderOption(this.state.usages)}
+															{renderOption(this.state.subUsage)}
 														</SelectField>
 													</Col>
 													<Col xs={12} md={3} sm={6}>
@@ -1219,7 +1236,7 @@ deleteOccupantName = (index) =>{
 														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.occupancyCertificateNumber')}
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.occupancyCertiNumber? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.occupancyCertiNumber}</span>:"" ): ""}
 														  value={floorDetails.floor ? floorDetails.floor.occupancyCertiNumber : ""}
-														  onChange={(e) => {handleChangeFloor(e,"floor" ,"occupancyCertiNumber", false, /^[a-z0-9]+$/i)}}
+														  onChange={(e) => {handleChangeFloor(e,"floor" ,"occupancyCertiNumber", false, /^[0-9,<>!@#\$%\^\&*\)\(+=._-]+$/g)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 														  underlineFocusStyle={styles.underlineFocusStyle}

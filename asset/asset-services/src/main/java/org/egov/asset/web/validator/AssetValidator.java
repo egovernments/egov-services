@@ -72,8 +72,8 @@ public class AssetValidator {
         final AssetCategory assetCategory = findAssetCategory(assetRequest);
         final Asset asset = assetRequest.getAsset();
         if (asset.getEnableYearWiseDepreciation() != null
-                && AssetCategoryType.LAND.compareTo(assetCategory.getAssetCategoryType()) == 0)
-            asset.setDepreciationRate(Double.valueOf("0.0"));
+                && validateAssetCategoryForLand(assetCategory.getAssetCategoryType()))
+            asset.setDepreciationRate(null);
         else
             validateYearWiseDepreciationRate(asset);
         if (Status.CAPITALIZED.toString().equals(asset.getStatus())) {
@@ -126,20 +126,6 @@ public class AssetValidator {
             throw new RuntimeException("Invalid asset category");
         else
             return assetCategories.get(0);
-    }
-
-    public void findAsset(final AssetRequest assetRequest) {
-
-        final Asset asset = assetRequest.getAsset();
-        final String existingName = assetService.getAssetName(asset.getTenantId(), asset.getName());
-
-        if (existingName != null) {
-            if (existingName.equalsIgnoreCase(assetRequest.getAsset().getName())) {
-                log.info("duplicate asset with same name found");
-                throw new RuntimeException("Duplicate asset name asset already exists");
-            }
-        } else
-            log.info("no duplicate asset with same name found");
     }
 
     public void validateRevaluationCriteria(final RevaluationCriteria revaluationCriteria) {
@@ -372,17 +358,32 @@ public class AssetValidator {
         log.debug("Assets For Depreciation :: " + assets);
         if (getEnableYearWiseDepreciation(tenantId) && assets != null && !assets.isEmpty())
             for (final Asset asset : assets) {
+                validateAssetForCapitalizedStatus(asset);
+                final String assetName = asset.getName();
                 final AssetCategory assetCategory = asset.getAssetCategory();
+                final boolean assetCategoryForLand = validateAssetCategoryForLand(assetCategory.getAssetCategoryType());
+                if (assetCategoryForLand)
+                    throw new RuntimeException("Asset category type is LAND for asset :: " + assetName);
                 if (assetCategory.getAccumulatedDepreciationAccount() == null)
                     throw new RuntimeException(
                             "Accumulated Depreciation Account should be present for voucher generation for asset :: "
-                                    + asset.getName() + " for asset Category :: " + assetCategory.getName());
+                                    + assetName + " for asset Category :: " + assetCategory.getName());
                 if (assetCategory.getDepreciationExpenseAccount() == null)
                     throw new RuntimeException(
                             "Depreciation Expense Account should be present for voucher generation for asset :: "
-                                    + asset.getName() + " for asset Category :: " + assetCategory.getName());
+                                    + assetName + " for asset Category :: " + assetCategory.getName());
             }
+        if (depreciationCriteria.getFinancialYear() == null
+                && (depreciationCriteria.getFromDate() == null || depreciationCriteria.getToDate() == null))
+            throw new RuntimeException("financialyear and (time period)fromdate,todate both "
+                    + "cannot be null please provide atleast one value");
+    }
 
+    private boolean validateAssetCategoryForLand(final AssetCategoryType assetCategoryType) {
+        if (assetCategoryType != null && AssetCategoryType.LAND.compareTo(assetCategoryType) == 0)
+            return true;
+        else
+            return false;
     }
 
 }

@@ -57,7 +57,7 @@ public class DocumentTypeEntity {
 		DocumentType documentType = new DocumentType();;
 		AuditDetails auditDetails = new AuditDetails();
 		documentType.setId(this.id);
-		documentType.setApplicationType(ApplicationTypeEnum.fromValue(this.applicationType));
+		documentType.setApplicationType(( this.applicationType ==null ? null : ApplicationTypeEnum.fromValue(this.applicationType) ));
 		documentType.setEnabled(this.enabled);
 		documentType.setMandatory(this.mandatory);
 		documentType.setName(this.name);
@@ -76,7 +76,7 @@ public class DocumentTypeEntity {
 	{
 		this.id = documentType.getId();
 		this.categoryId = documentType.getId();
-		this.applicationType = documentType.getApplicationType().name();
+		this.applicationType = (documentType.getApplicationType() == null ? null : documentType.getApplicationType().name());
 		this.name = documentType.getName();
 		this.tenantId = documentType.getTenantId();
 		this.subCategoryId = documentType.getSubCategoryId();

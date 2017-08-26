@@ -9,9 +9,9 @@ import org.egov.tl.commons.web.contract.CategorySearch;
 import org.egov.tl.commons.web.contract.LicenseStatus;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.UOM;
+import org.egov.tl.commons.web.requests.DocumentTypeV2Response;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tl.commons.web.response.CategorySearchResponse;
-import org.egov.tl.commons.web.response.DocumentTypeResponse;
 import org.egov.tl.commons.web.response.LicenseStatusResponse;
 import org.egov.tl.commons.web.response.UOMResponse;
 import org.egov.tradelicense.common.config.PropertiesManager;
@@ -64,16 +64,16 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 	}
 
 	public TradeLicenseEntity create(TradeLicenseEntity entity) {
-		
+
 		super.create(entity);
 
 		return entity;
 	}
-	
+
 	public TradeLicenseEntity update(TradeLicenseEntity entity) {
-		
+
 		super.update(entity);
-		
+
 		return entity;
 	}
 
@@ -114,7 +114,11 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 
 		List<TradeLicenseSearchEntity> tradeLicenses = new ArrayList<TradeLicenseSearchEntity>();
 		List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(query, parameter);
-		Map<String, Map<String, String>> uniqueFieldsMap = identifyDependencyFields(requestInfo, rows);
+
+		Map<String, Map<String, String>> uniqueFieldsMap = new HashMap<String, Map<String, String>>();
+		if (rows != null && rows.size() > 0) {
+			uniqueFieldsMap = identifyDependencyFields(requestInfo, rows);
+		}
 
 		for (Map<String, Object> row : rows) {
 
@@ -267,7 +271,7 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 		// preparing request info wrapper for the rest api calls
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
-		DocumentTypeResponse documentTypeResponse;
+		DocumentTypeV2Response documentTypeResponse;
 		MapSqlParameterSource parameter = new MapSqlParameterSource();
 		List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(query, parameter);
 		List<SupportDocumentSearchEntity> supportedDocuments = new ArrayList<SupportDocumentSearchEntity>();
@@ -285,7 +289,7 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 
 			documentTypeResponse = documentTypeRepository.findById(requestInfoWrapper, license.getTenantId(),
 					supportedDocument.getDocumentTypeId());
-			if (documentTypeResponse != null & documentTypeResponse.getDocumentTypes().size() > 0) {
+			if (documentTypeResponse != null && documentTypeResponse.getDocumentTypes().size() > 0) {
 				supportedDocument.setDocumentTypeName(documentTypeResponse.getDocumentTypes().get(0).getName());
 			}
 			supportedDocuments.add(supportedDocument);
@@ -314,7 +318,7 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 		searchSql.append(" tenantId = :tenantId ");
 		parameter.addValue("tenantId", tenantId);
 
-		if (active != null) {
+		if (active != null && !active.trim().isEmpty()) {
 
 			if (active.equalsIgnoreCase("true")) {
 				searchSql.append(" AND active = :active ");
@@ -342,37 +346,37 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			searchSql.append(" AND id IN (" + searchIds + ") ");
 		}
 
-		if (applicationNumber != null && !applicationNumber.isEmpty()) {
+		if (applicationNumber != null && !applicationNumber.trim().isEmpty()) {
 			searchSql.append(" AND applicationNumber = :applicationNumber ");
 			parameter.addValue("applicationNumber", applicationNumber);
 		}
 
-		if (licenseNumber != null && !licenseNumber.isEmpty()) {
+		if (licenseNumber != null && !licenseNumber.trim().isEmpty()) {
 			searchSql.append(" AND licenseNumber = :licenseNumber ");
 			parameter.addValue("licenseNumber", licenseNumber);
 		}
 
-		if (oldLicenseNumber != null && !oldLicenseNumber.isEmpty()) {
+		if (oldLicenseNumber != null && !oldLicenseNumber.trim().isEmpty()) {
 			searchSql.append(" AND oldLicenseNumber = :oldLicenseNumber ");
 			parameter.addValue("oldLicenseNumber", oldLicenseNumber);
 		}
 
-		if (mobileNumber != null && !mobileNumber.isEmpty()) {
+		if (mobileNumber != null && !mobileNumber.trim().isEmpty()) {
 			searchSql.append(" AND mobileNumber = :mobileNumber ");
 			parameter.addValue("mobileNumber", mobileNumber);
 		}
 
-		if (aadhaarNumber != null && !aadhaarNumber.isEmpty()) {
+		if (aadhaarNumber != null && !aadhaarNumber.trim().isEmpty()) {
 			searchSql.append(" AND adhaarNumber = :adhaarNumber ");
 			parameter.addValue("adhaarNumber", aadhaarNumber);
 		}
 
-		if (emailId != null && !emailId.isEmpty()) {
+		if (emailId != null && !emailId.trim().isEmpty()) {
 			searchSql.append(" AND emailId = :emailId ");
 			parameter.addValue("emailId", emailId);
 		}
 
-		if (propertyAssesmentNo != null && !propertyAssesmentNo.isEmpty()) {
+		if (propertyAssesmentNo != null && !propertyAssesmentNo.trim().isEmpty()) {
 			searchSql.append(" AND propertyAssesmentNo = :propertyAssesmentNo ");
 			parameter.addValue("propertyAssesmentNo", propertyAssesmentNo);
 		}
@@ -387,17 +391,17 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			parameter.addValue("localityId", locality);
 		}
 
-		if (ownerName != null && !ownerName.isEmpty()) {
+		if (ownerName != null && !ownerName.trim().isEmpty()) {
 			searchSql.append(" AND ownerName = :ownerName ");
 			parameter.addValue("ownerName", ownerName);
 		}
 
-		if (tradeTitle != null && !tradeTitle.isEmpty()) {
+		if (tradeTitle != null && !tradeTitle.trim().isEmpty()) {
 			searchSql.append(" AND tradeTitle = :tradeTitle ");
 			parameter.addValue("tradeTitle", tradeTitle);
 		}
 
-		if (tradeType != null && !tradeType.isEmpty()) {
+		if (tradeType != null && !tradeType.trim().isEmpty()) {
 			searchSql.append(" AND tradeType = :tradeType ");
 			parameter.addValue("tradeType", tradeType);
 		}
@@ -425,8 +429,11 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 		}
 
 		if (sort == null || sort.isEmpty()) {
-			searchSql.append("  ORDER BY licenseNumber ASC");
 
+			searchSql.append("  ORDER BY licenseNumber ASC");
+		} else if (sort != null && sort.trim().isEmpty()) {
+
+			searchSql.append("  ORDER BY licenseNumber ASC");
 		} else {
 			searchSql.append("  ORDER BY licenseNumber,tradeTitle,ownerName ASC");
 		}
@@ -459,8 +466,12 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 		Map<String, String> localityIdAndNameMap = new HashMap<String, String>();
 		Map<String, String> adminWardIdAndNameMap = new HashMap<String, String>();
 		Map<String, String> revenueWardIdAndNameMap = new HashMap<String, String>();
+		String tenantId = null;
 
-		String tenantId = getString(rows.get(0).get("tenantId"));
+		if (rows != null && rows.size() > 0) {
+			tenantId = getString(rows.get(0).get("tenantId"));
+		}
+
 		// building category unique ids map
 		if (uniqueIds.get("categoryIds") != null) {
 

@@ -7,11 +7,11 @@ import java.util.List;
 import org.egov.models.PropertyResponse;
 import org.egov.tl.commons.web.contract.CategoryDetailSearch;
 import org.egov.tl.commons.web.contract.CategorySearch;
+import org.egov.tl.commons.web.contract.DocumentTypeContract;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.requests.DocumentTypeV2Response;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tl.commons.web.response.CategorySearchResponse;
-import org.egov.tl.commons.web.response.DocumentTypeResponse;
 import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.common.domain.exception.AdhaarNotFoundException;
 import org.egov.tradelicense.common.domain.exception.AgreeMentDateNotFoundException;
@@ -30,6 +30,8 @@ import org.egov.tradelicense.common.domain.exception.InvalidSubCategoryException
 import org.egov.tradelicense.common.domain.exception.InvalidUomException;
 import org.egov.tradelicense.common.domain.exception.InvalidValidityYearsException;
 import org.egov.tradelicense.common.domain.exception.LegacyFeeDetailNotFoundException;
+import org.egov.tradelicense.common.domain.exception.MandatoryDocumentNotFoundException;
+import org.egov.tradelicense.common.domain.exception.NonLegacyLicenseUpdateException;
 import org.egov.tradelicense.common.domain.exception.OldLicenseNotFoundException;
 import org.egov.tradelicense.common.domain.exception.PropertyAssesmentNotFoundException;
 import org.egov.tradelicense.domain.model.LicenseFeeDetail;
@@ -106,6 +108,8 @@ public class TradeLicenseServiceValidator {
 			// checking feeDetails
 			if (tradeLicense.getIsLegacy()) {
 				validateTradeFeeDetails(tradeLicense, requestInfo);
+			} else {
+				setTradeExpiryDate(tradeLicense, requestInfo);
 			}
 		}
 	}
@@ -117,6 +121,11 @@ public class TradeLicenseServiceValidator {
 		Boolean isNewRecord = false;
 
 		for (TradeLicense tradeLicense : tradeLicenses) {
+			
+			if (!tradeLicense.getIsLegacy()) {
+				
+				throw new NonLegacyLicenseUpdateException(propertiesManager.getNonLegacyUpdateCustomMsg(), requestInfo);
+			}
 			// checking the id existance of tradelicense in database
 			validateTradeLicenseIdExistance(tradeLicense, requestInfo);
 			// checking the eistance and uniqueness of licensenumber
@@ -357,15 +366,46 @@ public class TradeLicenseServiceValidator {
 
 		// supporting documents validation
 		if (!tradeLicense.getIsLegacy()) {
-			// TODO check for all mdantory documents types for the given
-			// application type are filled are not.
+
+			DocumentTypeV2Response documentTypeResponse = documentTypeContractRepository
+					.findTradeMandatoryDocuments(tradeLicense, requestInfoWrapper);
+
+			if (documentTypeResponse != null && documentTypeResponse.getDocumentTypes() != null
+					&& documentTypeResponse.getDocumentTypes().size() > 0) {
+
+				for (DocumentTypeContract documentTypeContract : documentTypeResponse.getDocumentTypes()) {
+
+					Boolean isMandatoryDocumentExists = Boolean.FALSE;
+
+					if (tradeLicense.getSupportDocuments() != null && tradeLicense.getSupportDocuments().size() > 0) {
+
+						for (SupportDocument supportDocument : tradeLicense.getSupportDocuments()) {
+
+							if (documentTypeContract.getId() == supportDocument.getDocumentTypeId()) {
+
+								isMandatoryDocumentExists = Boolean.TRUE;
+							}
+						}
+					} else {
+
+						throw new MandatoryDocumentNotFoundException(
+								propertiesManager.getMandatoryDocumentNotFoundCustomMsg(), requestInfo);
+					}
+
+					if (!isMandatoryDocumentExists) {
+
+						throw new MandatoryDocumentNotFoundException(
+								propertiesManager.getMandatoryDocumentNotFoundCustomMsg(), requestInfo);
+					}
+				}
+			}
 		}
 
 		if (tradeLicense.getSupportDocuments() != null && tradeLicense.getSupportDocuments().size() > 0) {
 			for (SupportDocument supportDocument : tradeLicense.getSupportDocuments()) {
 
-				DocumentTypeV2Response documentTypeResponse = documentTypeContractRepository.findByIdAndTlValues(tradeLicense,
-						supportDocument, requestInfoWrapper);
+				DocumentTypeV2Response documentTypeResponse = documentTypeContractRepository
+						.findByIdAndTlValues(tradeLicense, supportDocument, requestInfoWrapper);
 
 				if (documentTypeResponse == null || documentTypeResponse.getDocumentTypes() == null
 						|| documentTypeResponse.getDocumentTypes().size() == 0) {
@@ -568,6 +608,34 @@ public class TradeLicenseServiceValidator {
 					licenseFeeDetail.setId(tradeLicenseRepository.getFeeDetailNextSequence());
 				}
 			}
+		}
+	}
+
+	private void setTradeExpiryDate(TradeLicense tradeLicense, RequestInfo requestInfo) {
+
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+
+		Long commencementDate = tradeLicense.getTradeCommencementDate();
+		Date tradeValidFromDate = new Date(commencementDate);
+		Integer validPeriod = null;
+		String tenantId = tradeLicense.getTenantId();
+		// get the license validity period
+		if (tradeLicense.getValidityYears() != null) {
+
+			validPeriod = Integer.valueOf(tradeLicense.getValidityYears().toString());
+		}
+
+		Calendar today = Calendar.getInstance();
+		today.setTimeInMillis(tradeValidFromDate.getTime());
+		FinancialYearContract commencementFYResponse = financialYearContractRepository
+				.findFinancialYearIdByDate(tenantId, commencementDate, requestInfoWrapper);
+		today.setTime(commencementFYResponse.getEndingDate());
+		today.add(Calendar.YEAR, (validPeriod - 1));
+		commencementFYResponse = financialYearContractRepository.findFinancialYearIdByDate(tenantId,
+				(today.getTimeInMillis()), requestInfoWrapper);
+		if (commencementFYResponse != null) {
+			tradeLicense.setExpiryDate(commencementFYResponse.getEndingDate().getTime());
 		}
 	}
 

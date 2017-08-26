@@ -116,35 +116,56 @@ public class TradeLicenseService {
 		for (TradeLicense license : tradeLicenses) {
 
 			license.setId(tradeLicenseRepository.getNextSequence());
-			
-			if( !license.getIsLegacy() ){
-				//TODO: identify the proper ids for the two status and add it here, for now used 2 and 3
-				if( propertiesManager.getApplicatonFeeApplicable().equalsIgnoreCase("Y")){
-					license.setStatus(new Long(2)); // "Pending for Application Fee payment" status id 2
-				}else if(propertiesManager.getApplicatonFeeApplicable().equalsIgnoreCase("N")){
-					license.setStatus(new Long(3)); // "Pending for scrutiny" status id 3
+
+			if (!license.getIsLegacy()) {
+				// TODO: identify the proper ids for the two status and add it
+				// here, for now used 2 and 3
+				if (propertiesManager.getApplicatonFeeApplicable().equalsIgnoreCase("Y")) {
+					license.setStatus(new Long(2)); // "Pending for Application
+													// Fee payment" status id 2
+				} else if (propertiesManager.getApplicatonFeeApplicable().equalsIgnoreCase("N")) {
+					license.setStatus(new Long(3)); // "Pending for scrutiny"
+													// status id 3
 				}
-				
-			}else{
+
+			} else {
 				license.setStatus(new Long(1)); // Approved status id 1
 			}
-			
+
 			if (license.getSupportDocuments() != null && license.getSupportDocuments().size() > 0) {
+				
 				for (SupportDocument supportDocument : license.getSupportDocuments()) {
+					
 					supportDocument.setLicenseId(license.getId());
 					supportDocument.setId(tradeLicenseRepository.getSupportDocumentNextSequence());
 				}
 			}
-			if (license.getFeeDetails() != null && license.getFeeDetails().size() > 0) {
-				for (LicenseFeeDetail feeDetail : license.getFeeDetails()) {
-					feeDetail.setLicenseId(license.getId());
-					feeDetail.setId(tradeLicenseRepository.getFeeDetailNextSequence());
+			if (license.getIsLegacy()){
+				
+				if (license.getFeeDetails() != null && license.getFeeDetails().size() > 0) {
+					
+					for (LicenseFeeDetail feeDetail : license.getFeeDetails()) {
+						
+						feeDetail.setLicenseId(license.getId());
+						feeDetail.setId(tradeLicenseRepository.getFeeDetailNextSequence());
+					}
 				}
+			} else {
+				//clearing the unnecessary details for new trade license
+				license.setFeeDetails(new ArrayList<>());
+				license.setOldLicenseNumber(null);
+				license.setLicenseNumber(null);
 			}
-			license.setLicenseNumber(licenseNumberGenerationService.generate(license.getTenantId(), requestInfo));
-			// license.setApplicationNumber(
-			// applNumberGenrationService.generate(license.getTenantId(),
-			// requestInfo));
+			
+
+			if (license.getIsLegacy()) {
+
+				license.setLicenseNumber(licenseNumberGenerationService.generate(license.getTenantId(), requestInfo));
+			} else {
+
+				license.setApplicationNumber(applNumberGenrationService.generate(license.getTenantId(), requestInfo));
+			}
+
 		}
 
 		return tradeLicenses;
@@ -169,10 +190,10 @@ public class TradeLicenseService {
 		}
 		// external end point validations
 		tradeLicenseServiceValidator.validateUpdateTradeLicenseRelated(tradeLicenses, requestInfo);
-		
+
 		return tradeLicenses;
 	}
-	
+
 	@Transactional
 	public TradeLicense update(TradeLicense tradeLicense) {
 		return tradeLicenseRepository.update(tradeLicense);

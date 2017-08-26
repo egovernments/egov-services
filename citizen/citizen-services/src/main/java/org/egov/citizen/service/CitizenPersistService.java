@@ -6,6 +6,7 @@ import java.util.Date;
 import org.egov.citizen.model.ServiceReq;
 import org.egov.citizen.model.ServiceReqRequest;
 import org.egov.citizen.model.ServiceReqResponse;
+import org.egov.citizen.repository.ServiceReqRepository;
 import org.egov.citizen.web.contract.factory.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
@@ -51,11 +52,11 @@ public class CitizenPersistService {
 	private ResponseInfoFactory responseInfoFactory;
 	
 	@Autowired
-	private JdbcTemplate jdbcTemplate;
-
-	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
-
+	
+	@Autowired
+	private ServiceReqRepository serviceReqRepository;
+	
 	public ServiceReqResponse create(String serviceReqJson) {
 		
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -80,8 +81,8 @@ public class CitizenPersistService {
 		ObjectMapper mapper = new ObjectMapper();
 		try{
 			//String request = mapper.writeValueAsString(serviceReqRequest);
-			//kafkaTemplate.send(createServiceTopic, serviceReqRequest);
-			persistServiceReq(serviceReqRequest);
+			kafkaTemplate.send(createServiceTopic, serviceReqRequest);
+			serviceReqRepository.persistServiceReq(serviceReqRequest);
 		} catch (Exception ex){
 			log.error("failed to send kafka"+ex);
 			ex.printStackTrace();
@@ -90,7 +91,7 @@ public class CitizenPersistService {
 	}
 
 	public String getServiceReqId() {
-		String req = "{\"RequestInfo\":{\"apiId\":\"org.egov.ptis\",\"ver\":\"1.0\",\"ts\":\"20934234234234\",\"action\":\"asd\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\":\"1d8c2fee-50b3-43bf-affe-fc2e0196b514\"},\"idRequests\":[{\"idName\":\"CS.ServiceRequest\",\"tenantId\":\"default\",\"format\":\"SRN-[cy:MM]/[fy:yyyy-yy]-[d{4}]\"}]}";
+		String req = "{\"RequestInfo\":{\"apiId\":\"org.egov.ptis\",\"ver\":\"1.0\",\"ts\":\"20934234234234\",\"action\":\"asd\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\":\"8403e89b-63cf-455b-a0af-94ebeff10d67\"},\"idRequests\":[{\"idName\":\"CS.ServiceRequest\",\"tenantId\":\"default\",\"format\":\"SRN-[cy:MM]/[fy:yyyy-yy]-[d{4}]\"}]}";
 		String url = idGenHost+idGenGetIdUrl;
 		log.info("url:"+url);
 		log.info("req: "+req);
@@ -105,31 +106,7 @@ public class CitizenPersistService {
 		return id;
 	}
 	
-	public void persistServiceReq(ServiceReqRequest serviceReqRequest){
-		RequestInfo requestInfo = serviceReqRequest.getRequestInfo();
-		ServiceReq serviceReq = serviceReqRequest.getServiceReq();
-		ObjectMapper objectMapper = new ObjectMapper();
-		String jsonValue = null;
-		try {
-			 jsonValue = objectMapper.writeValueAsString(serviceReqRequest);
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		String query = "INSERT INTO egov_citizen_service_req(id, tenantid, userid, "
-				+ "servicecode, consumercode, email, mobilenumber, assignedto, createddate, "
-				+ "lastmodifiedddate, createdby, lastmodifiedby, jsonvalue) VALUES "
-				+ "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"; 
-		final Object[] obj = new Object[] {serviceReq.getServiceRequestId(),serviceReq.getTenantId(), requestInfo.getUserInfo().getId(),
-				serviceReq.getServiceCode(),serviceReq.getConsumerCode(),serviceReq.getEmail(),serviceReq.getPhone(),serviceReq.getAssignedTo(),
-				new Date().getTime(),new Date().getTime(),requestInfo.getUserInfo().getId(),requestInfo.getUserInfo().getId(),
-				jsonValue};
-	        try {
-	            jdbcTemplate.update(query, obj);
-	        } catch (final Exception ex) {
-	            log.info("the exception from insert query : " + ex);
-	        }
-	}
+	
 	
 	private ServiceReqResponse getResponse(ServiceReqRequest serviceReqRequest){
 		ServiceReqResponse serviceRes = new ServiceReqResponse();
@@ -161,10 +138,13 @@ public class CitizenPersistService {
 		
 		try{
 			kafkaTemplate.send(updateServiceTopic, serviceReqRequest);
+			serviceReqRepository.updateServiceReq(serviceReqRequest);
 		} catch (Exception ex){
 			log.error("failed to send kafka"+ex);
 			ex.printStackTrace();
 		}
 		return getResponse(serviceReqRequest);
 	}
+    
+    
 }

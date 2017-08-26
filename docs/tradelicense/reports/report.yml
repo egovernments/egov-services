@@ -73,7 +73,7 @@ ReportDefinitions:
     pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION&pageSize=500|$..id|$..name
     source: tradelicense
     isMandatory: false
-    searchClause : AND tl.ward = $ward
+    searchClause : AND tl.adminwardid = $ward
   - name: licenseNo
     label: reports.tradelicense.licenseno
     type: string

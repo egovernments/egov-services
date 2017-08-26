@@ -101,6 +101,9 @@ public class VoucherService {
 	@Autowired
 	private DepartmentRepository departmentRepository;
 
+	@Autowired
+	private VouchernumberGenerator vouchernumberGenerator;
+
 	private List<String> mandatoryFields = new ArrayList<String>();
 
 	protected List<String> headerFields = new ArrayList<String>();
@@ -118,6 +121,8 @@ public class VoucherService {
 				throw new CustomBindException(errors);
 			}
 
+			populateVoucherNumbers(vouchers);
+
 		} catch (CustomBindException e) {
 
 			throw new CustomBindException(errors);
@@ -125,6 +130,14 @@ public class VoucherService {
 
 		return voucherRepository.save(vouchers, requestInfo);
 
+	}
+
+	private void populateVoucherNumbers(List<Voucher> vouchers) {
+
+		for (Voucher voucher : vouchers) {
+
+			voucher.setVoucherNumber(vouchernumberGenerator.getNextNumber(voucher));
+		}
 	}
 
 	@Transactional

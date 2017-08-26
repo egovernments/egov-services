@@ -152,30 +152,30 @@ public class VoucherESRepository extends ESRepository {
 		if (voucherSearchContract.getDepartment() != null && voucherSearchContract.getDepartment().getId() != null)
 			elasticSearchUtils.add(voucherSearchContract.getDepartment().getId(), "department.id", boolQueryBuilder);
 
-		if (voucherSearchContract.getDivision() != null && voucherSearchContract.getDepartment().getId() != null)
+		if (voucherSearchContract.getDivision() != null && voucherSearchContract.getDivision().getId() != null)
 			elasticSearchUtils.add(voucherSearchContract.getDivision().getId(), "division.id", boolQueryBuilder);
 
-		if (voucherSearchContract.getFunction() != null && voucherSearchContract.getDepartment().getId() != null)
+		if (voucherSearchContract.getFunction() != null && voucherSearchContract.getFunction().getId() != null)
 			elasticSearchUtils.add(voucherSearchContract.getFunction().getId(), "function.id", boolQueryBuilder);
 
-		if (voucherSearchContract.getFunctionary() != null && voucherSearchContract.getDepartment().getId() != null)
+		if (voucherSearchContract.getFunctionary() != null && voucherSearchContract.getFunctionary().getId() != null)
 			elasticSearchUtils.add(voucherSearchContract.getFunctionary().getId(), "functionary.id", boolQueryBuilder);
 
-		if (voucherSearchContract.getFund() != null && voucherSearchContract.getDepartment().getId() != null)
+		if (voucherSearchContract.getFund() != null && voucherSearchContract.getFund().getId() != null)
 			elasticSearchUtils.add(voucherSearchContract.getFund().getId(), "fund.id", boolQueryBuilder);
 
-		if (voucherSearchContract.getFundsource() != null && voucherSearchContract.getDepartment().getId() != null)
+		if (voucherSearchContract.getFundsource() != null && voucherSearchContract.getFundsource().getId() != null)
 			elasticSearchUtils.add(voucherSearchContract.getFundsource().getId(), "fundsource.id", boolQueryBuilder);
 
-		if (voucherSearchContract.getScheme() != null && voucherSearchContract.getDepartment().getId() != null)
+		if (voucherSearchContract.getScheme() != null && voucherSearchContract.getScheme().getId() != null)
 			elasticSearchUtils.add(voucherSearchContract.getScheme().getId(), "scheme.id", boolQueryBuilder);
 
-		if (voucherSearchContract.getSubScheme() != null && voucherSearchContract.getDepartment().getId() != null)
+		if (voucherSearchContract.getSubScheme() != null && voucherSearchContract.getSubScheme().getId() != null)
 			elasticSearchUtils.add(voucherSearchContract.getSubScheme().getId(), "subScheme.id", boolQueryBuilder);
 
 		elasticSearchUtils.add(voucherSearchContract.getSourcePath(), "sourcePath", boolQueryBuilder);
 
-		if (voucherSearchContract.getStatus() != null && voucherSearchContract.getDepartment().getId() != null)
+		if (voucherSearchContract.getStatus() != null && voucherSearchContract.getStatus().getId() != null)
 			elasticSearchUtils.add(voucherSearchContract.getStatus().getId(), "status.id", boolQueryBuilder);
 
 		if (voucherSearchContract.getVoucherDate() != null)

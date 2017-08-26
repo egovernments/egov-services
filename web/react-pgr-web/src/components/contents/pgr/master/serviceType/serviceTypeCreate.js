@@ -121,7 +121,7 @@ class ServiceTypeCreate extends Component {
            "serviceCode": this.props.createServiceType.serviceCode,
            "serviceName" :this.props.createServiceType.serviceName,
            "description" :this.props.createServiceType.description,
-           "active" :this.props.createServiceType.active,
+           "active" :this.props.createServiceType.active !== undefined ? this.props.createServiceType.active : true,
            "type" :this.props.createServiceType.type,
            "keywords": [
                 "complaint"
@@ -168,7 +168,6 @@ class ServiceTypeCreate extends Component {
            "tenantId":localStorage.getItem("tenantId")
           }
       }
-
       if(this.props.match.params.id){
           Api.commonApiPost("/pgr-master/service/v1/_update",{},body).then(function(response){
               current.setState({
@@ -190,8 +189,6 @@ class ServiceTypeCreate extends Component {
             current.props.setLoadingStatus('hide');
         	})
       }
-
-
     }
 
     showCustomFieldForm(isShow)
@@ -624,8 +621,8 @@ class ServiceTypeCreate extends Component {
                                   <Checkbox
                                     label={translate("pgr.lbl.active")}
                                     style={styles.setTopMargin}
-                                    defaultChecked = {createServiceType.active !== undefined ? createServiceType.active : true}
-                                    onCheck = {(e, i, value) => {
+                                    checked = {createServiceType.active !== undefined ? createServiceType.active : true}
+                                    onCheck = {(e, value) => {
                                       handleChange(value, "active", false, '')
                                     }}
                                     id="active"

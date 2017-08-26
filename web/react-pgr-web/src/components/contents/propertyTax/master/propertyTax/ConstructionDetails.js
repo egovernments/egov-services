@@ -377,11 +377,10 @@ formatDate(date){
 												  floatingLabelFixed={true}
                                                   errorText={fieldErrors.licenseNumber ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.licenseNumber}</span> : ""}
                                                   value={constructionDetails.licenseNumber ? constructionDetails.licenseNumber : ""}
-                                                  onChange={(e) => {handleChange(e, "licenseNumber", false, "")}}
+                                                  onChange={(e) => {handleChange(e, "licenseNumber", false, /^[0-9,<>!@#\$%\^\&*\)\(+=._-]+$/g)}}
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
-												  type="number"
                                                   maxLength={15}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               />

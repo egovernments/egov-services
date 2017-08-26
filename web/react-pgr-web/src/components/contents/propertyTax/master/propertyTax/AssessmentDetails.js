@@ -487,7 +487,7 @@ handleAge = (year) => {
                                           <Col xs={12} md={3} sm={6}>
                                               <TextField  className="fullWidth"
                                                   floatingLabelText={<span>{translate('pt.create.groups.assessmentDetails.fields.extentOfSite')}<span style={{"color": "#FF0000"}}> *</span></span>}
-												  hintText="14"
+												  hintText="876"
                                                   errorText={fieldErrors.extentOfSite ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.extentOfSite}</span> : ""}
                                                   value={assessmentDetails.extentOfSite ? assessmentDetails.extentOfSite : ""}
 												  floatingLabelFixed={true}
@@ -518,10 +518,10 @@ handleAge = (year) => {
 										  <Col xs={12} md={3} sm={6}>
 												<TextField  className="fullWidth"
 												  floatingLabelText={translate('pt.create.groups.floorDetails.fields.buildingPermissionNumber')}
-												  errorText={fieldErrors.bpaNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.bpaNo}</span> : ""}
+												  errorText={fieldErrors.bpaNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.bpaNo}</span> : ""}
 												  value={assessmentDetails.bpaNo ? assessmentDetails.bpaNo : ""}
 												  floatingLabelFixed={true}
-												  onChange={(e) => {handleChange(e, "bpaNo", false, /^[a-z0-9]+$/i)}}
+												  onChange={(e) => {handleChange(e, "bpaNo", false, /^[0-9,<>!@#\$%\^\&*\)\(+=._-]+$/g)}}
 												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 												  underlineStyle={styles.underlineStyle}
 												  underlineFocusStyle={styles.underlineFocusStyle}

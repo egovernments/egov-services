@@ -383,7 +383,6 @@ class PropertyTaxSearch extends Component {
           <Card className="uiCard">
             <CardHeader title={< span style = {{ color: 'rgb(53, 79, 87)',fontSize: 18, margin: '8px 0px', fontWeight: 500,}} >{translate('pt.search.searchProperty')}< /span>}/>
             <CardText>
-             
                   <Grid>
 					<Row>
 						<Col xs={12} md={6}>
@@ -436,7 +435,7 @@ class PropertyTaxSearch extends Component {
                       <Col xs={12} md={6}>
                         <TextField errorText={fieldErrors.oldUpicNo
                           ? fieldErrors.oldUpicNo
-                          : ""} floatingLabelFixed={true} value={propertyTaxSearch.oldUpicNo?propertyTaxSearch.oldUpicNo:""} onChange={(e) => handleChange(e, "oldUpicNo", false, /^\d{3,15}$/g)} hintText={translate('pt.create.groups.propertyDetails.oldAssessmentNumber')} floatingLabelText={translate('pt.create.groups.propertyDetails.oldAssessmentNumber')} />
+                          : ""} floatingLabelFixed={true} maxLength={10} value={propertyTaxSearch.oldUpicNo?propertyTaxSearch.oldUpicNo:""} onChange={(e) => handleChange(e, "oldUpicNo", false, /^[a-zA-Z0-9]{10}$/g)} hintText={translate('pt.create.groups.propertyDetails.oldAssessmentNumber')} floatingLabelText={translate('pt.create.groups.propertyDetails.oldAssessmentNumber')} />
                       </Col>
 					  <Col xs={12} md={6}>
 							<SelectField errorText={fieldErrors.usage

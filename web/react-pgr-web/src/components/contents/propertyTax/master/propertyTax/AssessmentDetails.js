@@ -138,7 +138,6 @@ class AssessmentDetails extends Component {
 	let {toggleSnackbarAndSetText} = this.props;
 
       Api.commonApiPost('pt-property/property/propertytypes/_search',{}, {},false, true).then((res)=>{
-		  res.propertyTypes.unshift({id:-1, name:'None'});
         console.log(res);
         currentThis.setState({propertytypes:res.propertyTypes})
       }).catch((err)=> {
@@ -378,7 +377,7 @@ handleAge = (year) => {
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-                                              >
+                                              ><MenuItem value={-1} primaryText="None"/>
                                                   {renderOption(this.state.propertytypes)}
                                               </SelectField>
                                           </Col>
@@ -536,7 +535,22 @@ handleAge = (year) => {
 												  floatingLabelText={translate('pt.create.groups.floorDetails.fields.buildingPermissionDate')}
 												  errorText={fieldErrors.bpaDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.bpaDate}</span> : ""}
 												  value={assessmentDetails.bpaDate ? assessmentDetails.bpaDate : ""}
-												  onChange={(e) => {handleChange(e,"bpaDate", false, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
+												  onChange={(e,value) => {
+													  var val = value;
+													  if(value.length == 2 && !value.match('/')){
+														   val+='/';
+														  } else if(value.length == 5) {
+															  var a = value.split('/');
+															  if(!a[1].match('/')){
+																  val+='/';
+															  }
+														  } 
+													   var e = {
+														  target: {
+															  value: val
+														  }
+														}
+													  handleChange(e,"bpaDate", false, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
 												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 												  underlineStyle={styles.underlineStyle}
 												  underlineFocusStyle={styles.underlineFocusStyle}

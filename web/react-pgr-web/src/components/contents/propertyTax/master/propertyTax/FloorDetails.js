@@ -915,8 +915,10 @@ handleUsage = (value) => {
 																  value: value
 																}
 															  };
-															  this.handleUsage(value);
-															  handleChangeFloor(e,"floor" ,"usage", true, "")}
+															 
+															  handleChangeFloor(e,"floor" ,"usage", true, "")
+															   this.handleUsage(e.target.value)
+															  }
 														  }
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
@@ -1048,7 +1050,7 @@ handleUsage = (value) => {
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 														  underlineFocusStyle={styles.underlineFocusStyle}
-														  maxLength={9}
+														  maxLength={12}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														/>
 													</Col>}
@@ -1061,7 +1063,7 @@ handleUsage = (value) => {
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 														  underlineFocusStyle={styles.underlineFocusStyle}
-														  maxLength={9}
+														  maxLength={12}
 														  type="number"
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														/>
@@ -1073,7 +1075,23 @@ handleUsage = (value) => {
 														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.constructionStartDate')}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.constructionStartDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.constructionStartDate}</span> :""): ""}
 														  value={floorDetails.floor ? floorDetails.floor.constructionStartDate : ""}
-														  onChange={(e) => {handleChangeFloor(e,"floor" ,"constructionStartDate", false, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
+														  onChange={(e, value) => {
+															   var val = value;
+																  if(value.length == 2 && !value.match('/')){
+																	  val+='/';
+																  } else if(value.length == 5) {
+																	  var a = value.split('/');
+																	  if(!a[1].match('/')){
+																		  val+='/';
+																	  }
+																  }
+																  
+																   var e = {
+																	  target: {
+																		  value: val
+																	  }
+																	}
+														  handleChangeFloor(e,"floor" ,"constructionStartDate", false, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -1086,7 +1104,22 @@ handleUsage = (value) => {
 														  floatingLabelText={<span>{translate('pt.create.groups.floorDetails.fields.constructionEndDate')}<span style={{"color": "#FF0000"}}> *</span></span>}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.constCompletionDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.constCompletionDate}</span> :""): ""}
 														  value={floorDetails.floor ? floorDetails.floor.constCompletionDate : ""}
-														  onChange={(e) => { this.handleAge(e.target.value);
+														  onChange={(e, value) => { this.handleAge(e.target.value);
+																 var val = value;
+																  if(value.length == 2 && !value.match('/')){
+																	  val+='/';
+																  } else if(value.length == 5) {
+																	  var a = value.split('/');
+																	  if(!a[1].match('/')){
+																		  val+='/';
+																	  }
+																  }
+																  
+																   var e = {
+																	  target: {
+																		  value: val
+																	  }
+																	}
 																handleChangeFloor(e,"floor" ,"constCompletionDate", true,  /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
@@ -1100,7 +1133,23 @@ handleUsage = (value) => {
 														  floatingLabelText={<span>{translate('pt.create.groups.floorDetails.fields.effectiveFromDate')}<span style={{"color": "#FF0000"}}> *</span></span>}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.occupancyDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.occupancyDate}</span> :""): ""}
 														  value={floorDetails.floor ? floorDetails.floor.occupancyDate : ""}
-														  onChange={(e) => {handleChangeFloor(e,"floor" ,"occupancyDate", true, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
+														  onChange={(e, value) => {
+															   var val = value;
+															  if(value.length == 2 && !value.match('/')){
+																  val+='/';
+															  } else if(value.length == 5) {
+																  var a = value.split('/');
+																  if(!a[1].match('/')){
+																	  val+='/';
+																  }
+															  }
+															  
+															   var e = {
+																  target: {
+																	  value: val
+																  }
+																}
+															  handleChangeFloor(e,"floor" ,"occupancyDate", true, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -1328,7 +1377,7 @@ handleUsage = (value) => {
 													</Col>
 													
 												</Row>
-												{ floorDetails.floors &&
+												{(floorDetails.floors && floorDetails.floors.length!=0)  &&
                                             <div className="col-md-12 col-xs-12"> <br/>
                                           <Table id="floorDetailsTable" style={{color:"black",fontWeight: "normal", marginBottom:0}} bordered responsive>
                                           <thead style={{backgroundColor:"#607b84",color:"white"}}>
@@ -1535,6 +1584,12 @@ initForm : () => {
   },
 
   resetObject: (object, isSectionValid) => {
+	  var ownerRequired = [];
+	  if(window.location.href.match('dataEntry')){
+		 ownerRequired = ['name', 'gender' ];
+	  } else {
+		 ownerRequired = ['mobileNumber', 'name', 'gender' ];
+	  }
     dispatch({
       type: "RESET_OBJECT",
       object,
@@ -1542,7 +1597,7 @@ initForm : () => {
 	    validatePropertyOwner: {
         required: {
           current: [],
-          required: ['mobileNumber', 'name', 'gender' ]
+          required: ownerRequired
         },
         pattern: {
           current: [],

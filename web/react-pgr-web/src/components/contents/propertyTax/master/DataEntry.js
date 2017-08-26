@@ -703,7 +703,7 @@ const mapDispatchToProps = dispatch => ({
 	   validatePropertyOwner: {
         required: {
           current: [],
-          required: ['mobileNumber', 'name', 'gender' ]
+          required: ['name', 'gender' ]
         },
         pattern: {
           current: [],
@@ -786,7 +786,7 @@ const mapDispatchToProps = dispatch => ({
 	    validatePropertyOwner: {
         required: {
           current: [],
-          required: ['mobileNumber', 'name', 'gender' ]
+          required: ['name', 'gender']
         },
         pattern: {
           current: [],

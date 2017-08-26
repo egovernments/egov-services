@@ -244,7 +244,23 @@ formatDate(date){
 												  floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.currentAssessmentDate')}<span style={{"color": "#FF0000"}}> *</span></span>}
 												  errorText={fieldErrors.currentAssessmentDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.currentAssessmentDate}</span> : ""}
 												  value={constructionDetails.currentAssessmentDate ? constructionDetails.currentAssessmentDate : ""}
-												  onChange={(e) => {handleChange(e,"currentAssessmentDate", true, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
+												  onChange={(e, value) => {
+													  var val = value;
+													  if(value.length == 2 && !value.match('/')){
+														  val+='/';
+													  } else if(value.length == 5) {
+														  var a = value.split('/');
+														  if(!a[1].match('/')){
+															  val+='/';
+														  }
+													  }
+													  
+													   var e = {
+														  target: {
+															  value: val
+														  }
+														}			
+													  handleChange(e,"currentAssessmentDate", true, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
 												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 												  underlineStyle={styles.underlineStyle}
 												  underlineFocusStyle={styles.underlineFocusStyle}
@@ -257,7 +273,23 @@ formatDate(date){
 												  floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.firstAssessmentDate')}<span style={{"color": "#FF0000"}}> *</span></span>}
 												  errorText={fieldErrors.firstAssessmentDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.firstAssessmentDate}</span> : ""}
 												  value={constructionDetails.firstAssessmentDate ? constructionDetails.firstAssessmentDate : ""}
-												  onChange={(e) => {handleChange(e,"firstAssessmentDate", true, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
+												  onChange={(e,value) => {
+													   var val = value;
+													  if(value.length == 2 && !value.match('/')){
+														  val+='/';
+													  } else if(value.length == 5) {
+														  var a = value.split('/');
+														  if(!a[1].match('/')){
+															  val+='/';
+														  }
+													  }
+													  
+													   var e = {
+														  target: {
+															  value: val
+														  }
+														}
+													  handleChange(e,"firstAssessmentDate", true, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
 												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 												  underlineStyle={styles.underlineStyle}
 												  underlineFocusStyle={styles.underlineFocusStyle}
@@ -270,7 +302,23 @@ formatDate(date){
 												  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.revisedAssessmentDate')}
 												  errorText={fieldErrors.revisedAssessmentDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.revisedAssessmentDate}</span> : ""}
 												  value={constructionDetails.revisedAssessmentDate ? constructionDetails.revisedAssessmentDate : ""}
-												  onChange={(e) => {handleChange(e,"revisedAssessmentDate", false, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
+												  onChange={(e,value) => {
+													   var val = value;
+													  if(value.length == 2 && !value.match('/')){
+														  val+='/';
+													  } else if(value.length == 5) {
+														  var a = value.split('/');
+														  if(!a[1].match('/')){
+															  val+='/';
+														  }
+													  }
+													  
+													   var e = {
+														  target: {
+															  value: val
+														  }
+														}
+													  handleChange(e,"revisedAssessmentDate", false, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
 												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 												  underlineStyle={styles.underlineStyle}
 												  underlineFocusStyle={styles.underlineFocusStyle}
@@ -283,7 +331,23 @@ formatDate(date){
 												   floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.lastAssessmentDate')}<span style={{"color": "#FF0000"}}> *</span></span>}
 												  errorText={fieldErrors.lastAssessmentDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.lastAssessmentDate}</span> : ""}
 												  value={constructionDetails.lastAssessmentDate ? constructionDetails.lastAssessmentDate : ""}
-												  onChange={(e) => {handleChange(e,"lastAssessmentDate", true, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
+												  onChange={(e,value) => {
+													   var val = value;
+													  if(value.length == 2 && !value.match('/')){
+														  val+='/';
+													  } else if(value.length == 5) {
+														  var a = value.split('/');
+														  if(!a[1].match('/')){
+															  val+='/';
+														  }
+													  }
+													  
+													   var e = {
+														  target: {
+															  value: val
+														  }
+														}
+													  handleChange(e,"lastAssessmentDate", true, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
 												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 												  underlineStyle={styles.underlineStyle}
 												  underlineFocusStyle={styles.underlineFocusStyle}
@@ -296,7 +360,23 @@ formatDate(date){
 												  floatingLabelText={translate('pt.create.groups.constructionDetails.fields.orderDate')}
 												  errorText={fieldErrors.orderDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.orderDate}</span> : ""}
 												  value={constructionDetails.orderDate ? constructionDetails.orderDate : ""}
-												  onChange={(e) => {handleChange(e,"orderDate", false, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
+												  onChange={(e,value) => {
+													   var val = value;
+													  if(value.length == 2 && !value.match('/')){
+														  val+='/';
+													  } else if(value.length == 5) {
+														  var a = value.split('/');
+														  if(!a[1].match('/')){
+															  val+='/';
+														  }
+													  }
+													  
+													   var e = {
+														  target: {
+															  value: val
+														  }
+														}
+													  handleChange(e,"orderDate", false, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
 												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 												  underlineStyle={styles.underlineStyle}
 												  underlineFocusStyle={styles.underlineFocusStyle}
@@ -323,7 +403,23 @@ formatDate(date){
 												  floatingLabelText={translate('pt.create.groups.constructionDetails.fields.certificateCompletionDate')}
 												  errorText={fieldErrors.certificateCompletionDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.certificateCompletionDate}</span> : ""}
 												  value={constructionDetails.certificateCompletionDate ? constructionDetails.certificateCompletionDate : ""}
-												  onChange={(e) => {handleChange(e,"certificateCompletionDate", false, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
+												  onChange={(e,value) => {
+													  var val = value;
+													  if(value.length == 2 && !value.match('/')){
+														  val+='/';
+													  } else if(value.length == 5) {
+														  var a = value.split('/');
+														  if(!a[1].match('/')){
+															  val+='/';
+														  }
+													  }
+													  
+													   var e = {
+														  target: {
+															  value: val
+														  }
+														}
+													  handleChange(e,"certificateCompletionDate", false, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
 												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 												  underlineStyle={styles.underlineStyle}
 												  underlineFocusStyle={styles.underlineFocusStyle}
@@ -337,7 +433,23 @@ formatDate(date){
 												  floatingLabelText={translate('pt.create.groups.constructionDetails.fields.certificateReceivedDate')}
 												  errorText={fieldErrors.certificateReceivedDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.certificateReceivedDate}</span> : ""}
 												  value={constructionDetails.certificateReceivedDate ? constructionDetails.certificateReceivedDate : ""}
-												  onChange={(e) => {handleChange(e,"certificateReceivedDate", false, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
+												  onChange={(e,value) => {
+													   var val = value;
+													  if(value.length == 2 && !value.match('/')){
+														  val+='/';
+													  } else if(value.length == 5) {
+														  var a = value.split('/');
+														  if(!a[1].match('/')){
+															  val+='/';
+														  }
+													  }
+													  
+													   var e = {
+														  target: {
+															  value: val
+														  }
+														}
+													  handleChange(e,"certificateReceivedDate", false, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
 												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 												  underlineStyle={styles.underlineStyle}
 												  underlineFocusStyle={styles.underlineFocusStyle}
@@ -381,7 +493,7 @@ formatDate(date){
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
-                                                  maxLength={15}
+                                                  maxLength={64}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               />
                                           </Col>

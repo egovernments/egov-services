@@ -78,7 +78,14 @@ public class CitizenPersistService {
 			ObjectMapper objectMapper = new ObjectMapper();
 			try {
 				Map<String, Object> m= objectMapper.readValue(s, Map.class);
-				response.add(m.get("serviceReq"));
+				
+				
+				if(m.containsKey("serviceReq"))
+					response.add(m.get("serviceReq"));
+				else {
+					response.add(m);
+				}
+				
 				System.out.println("m:"+m);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -118,7 +125,7 @@ public class CitizenPersistService {
 		ObjectMapper mapper = new ObjectMapper();
 		try{
 			//String request = mapper.writeValueAsString(serviceReqRequest);
-			kafkaTemplate.send(createServiceTopic, serviceReqRequest);
+			//kafkaTemplate.send(createServiceTopic, serviceReqRequest);
 			serviceReqRepository.persistServiceReq(serviceReqRequest);
 		} catch (Exception ex){
 			log.error("failed to send kafka"+ex);
@@ -128,7 +135,7 @@ public class CitizenPersistService {
 	}
 
 	public String getServiceReqId() {
-		String req = "{\"RequestInfo\":{\"apiId\":\"org.egov.ptis\",\"ver\":\"1.0\",\"ts\":\"20934234234234\",\"action\":\"asd\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\":\"8403e89b-63cf-455b-a0af-94ebeff10d67\"},\"idRequests\":[{\"idName\":\"CS.ServiceRequest\",\"tenantId\":\"default\",\"format\":\"SRN-[cy:MM]/[fy:yyyy-yy]-[d{4}]\"}]}";
+		String req = "{\"RequestInfo\":{\"apiId\":\"org.egov.ptis\",\"ver\":\"1.0\",\"ts\":\"20934234234234\",\"action\":\"asd\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\":\"6adb58dd-b4fd-458b-a081-47b368bc954c\"},\"idRequests\":[{\"idName\":\"CS.ServiceRequest\",\"tenantId\":\"default\",\"format\":\"SRN-[cy:MM]/[fy:yyyy-yy]-[d{4}]\"}]}";
 		String url = idGenHost+idGenGetIdUrl;
 		log.info("url:"+url);
 		log.info("req: "+req);
@@ -174,7 +181,7 @@ public class CitizenPersistService {
 		log.info("update serviceReqRequest:"+serviceReqRequest);
 		
 		try{
-			kafkaTemplate.send(updateServiceTopic, serviceReqRequest);
+			//kafkaTemplate.send(updateServiceTopic, serviceReqRequest);
 			serviceReqRepository.updateServiceReq(serviceReqRequest);
 		} catch (Exception ex){
 			log.error("failed to send kafka"+ex);

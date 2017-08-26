@@ -91,8 +91,6 @@ public class ServiceController {
 	@PostMapping(value = "/requests/_create")
 	public ResponseEntity<?> createService(HttpEntity<String> httpEntity) {
 		
-		
-
 		String serviceReqJson = httpEntity.getBody();
 		log.info("serviceReqJson:"+serviceReqJson);
 		ServiceReqResponse serviceReqResponse = citizenPersistService.create(serviceReqJson);

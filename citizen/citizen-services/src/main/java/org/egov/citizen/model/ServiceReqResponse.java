@@ -15,7 +15,7 @@ public class ServiceReqResponse {
 
 	private ResponseInfo responseInfo;
 	private ServiceReq serviceReq;
-	private List<ServiceReq> serviceRequests;
+	//private List<ServiceReq> serviceRequests;
 
 	
 }

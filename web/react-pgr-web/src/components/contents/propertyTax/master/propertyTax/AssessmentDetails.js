@@ -541,7 +541,7 @@ handleAge = (year) => {
 														   val+='/';
 														  } else if(value.length == 5) {
 															  var a = value.split('/');
-															  if(!a[1].match('/')){
+															  if(a[1].length ==2 && !a[1].match('/')){
 																  val+='/';
 															  }
 														  } 

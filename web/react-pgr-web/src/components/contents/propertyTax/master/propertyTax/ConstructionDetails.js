@@ -121,10 +121,6 @@ class ConstructionDetails extends Component {
   constructor(props) {
     super(props);
     this.state= {
-        propertytypes: [],
-        reasonForCreation:[],
-        departments:[],
-		usages:[]
     }
   } 
 
@@ -134,27 +130,7 @@ class ConstructionDetails extends Component {
     var currentThis = this;
 	
 	let {toggleSnackbarAndSetText} = this.props;
-
-      Api.commonApiPost('pt-property/property/propertytypes/_search',{}, {},false, true).then((res)=>{
-		  res.propertyTypes.unshift({id:-1, name:'None'});
-        console.log(res);
-        currentThis.setState({propertytypes:res.propertyTypes})
-      }).catch((err)=> {
-        currentThis.setState({
-          propertytypes:[]
-        })
-		toggleSnackbarAndSetText(true, err.message);
-        console.log(err)
-      })
 	  
-	  
-        Api.commonApiPost('pt-property/property/usages/_search').then((res)=>{
-          console.log(res);
-          currentThis.setState({usages : res.usageMasters})
-        }).catch((err)=> {
-          console.log(err)
-        })
-		
   } 
 
 handleDepartment = (e) => {
@@ -247,10 +223,14 @@ formatDate(date){
 												  onChange={(e, value) => {
 													  var val = value;
 													  if(value.length == 2 && !value.match('/')){
+														  console.log('1');
 														  val+='/';
 													  } else if(value.length == 5) {
+														
 														  var a = value.split('/');
-														  if(!a[1].match('/')){
+														  console.log(a)
+														  if(a[1].length ==2 && !a[1].match('/')){
+															  console.log('3');
 															  val+='/';
 														  }
 													  }
@@ -279,7 +259,7 @@ formatDate(date){
 														  val+='/';
 													  } else if(value.length == 5) {
 														  var a = value.split('/');
-														  if(!a[1].match('/')){
+														  if(a[1].length ==2 && !a[1].match('/')){
 															  val+='/';
 														  }
 													  }
@@ -308,7 +288,7 @@ formatDate(date){
 														  val+='/';
 													  } else if(value.length == 5) {
 														  var a = value.split('/');
-														  if(!a[1].match('/')){
+														  if(a[1].length ==2 && !a[1].match('/')){
 															  val+='/';
 														  }
 													  }
@@ -337,7 +317,7 @@ formatDate(date){
 														  val+='/';
 													  } else if(value.length == 5) {
 														  var a = value.split('/');
-														  if(!a[1].match('/')){
+														  if(a[1].length ==2 && !a[1].match('/')){
 															  val+='/';
 														  }
 													  }
@@ -366,7 +346,7 @@ formatDate(date){
 														  val+='/';
 													  } else if(value.length == 5) {
 														  var a = value.split('/');
-														  if(!a[1].match('/')){
+														  if(a[1].length ==2 && !a[1].match('/')){
 															  val+='/';
 														  }
 													  }
@@ -409,7 +389,7 @@ formatDate(date){
 														  val+='/';
 													  } else if(value.length == 5) {
 														  var a = value.split('/');
-														  if(!a[1].match('/')){
+														  if(a[1].length ==2 && !a[1].match('/')){
 															  val+='/';
 														  }
 													  }
@@ -439,7 +419,7 @@ formatDate(date){
 														  val+='/';
 													  } else if(value.length == 5) {
 														  var a = value.split('/');
-														  if(!a[1].match('/')){
+														  if(a[1].length ==2 && !a[1].match('/')){
 															  val+='/';
 														  }
 													  }

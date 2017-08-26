@@ -56,7 +56,7 @@ public class DocumentTypeV2Service {
 				throw new InvalidInputException(propertiesManager.getInvalidDocumentTypeIdMsg(), requestInfo);
 			}else if( !isNew && documentType.getId() != null ){
 			
-				if (documentTypeJdbcRepository.validateIdExistance(documentType.getCategoryId(),ConstantUtility.DOCUMENT_TYPE_TABLE_NAME) == Boolean.TRUE) {
+				if (documentTypeJdbcRepository.validateIdExistance(documentType.getId(),ConstantUtility.DOCUMENT_TYPE_TABLE_NAME) == Boolean.FALSE) {
 					throw new InvalidInputException(propertiesManager.getInvalidDocumentTypeIdMsg(), requestInfo);
 
 				}
@@ -68,12 +68,14 @@ public class DocumentTypeV2Service {
 				throw new DuplicateDocumentTypeException(propertiesManager.getDocumentTypeCustomMsg(), requestInfo);
 			}
 
-			if (documentTypeJdbcRepository.validateIdExistance(documentType.getCategoryId(), ConstantUtility.CATEGORY_TABLE_NAME) == Boolean.FALSE) {
+			if (documentType.getCategoryId() !=null && 
+					documentTypeJdbcRepository.validateIdExistance(documentType.getCategoryId(), ConstantUtility.CATEGORY_TABLE_NAME) == Boolean.FALSE) {
 				throw new InvalidCategoryException(propertiesManager.getCategoryErrorMsg(), requestInfo);
 
 			}
 
-			if (documentTypeJdbcRepository.validateSubCategoryIdExistance(documentType.getSubCategoryId()) == Boolean.FALSE) {
+			if (documentType.getSubCategoryId() !=null && 
+					documentTypeJdbcRepository.validateSubCategoryIdExistance(documentType.getSubCategoryId()) == Boolean.FALSE) {
 				throw new InvalidSubCategoryException(propertiesManager.getSubCategoryErrorMsg(), requestInfo);
 			}
 
@@ -115,7 +117,7 @@ public class DocumentTypeV2Service {
 		for (DocumentTypeContract documentTypeContract : documentTypes) {
 			documenttypeModel = new DocumentType();
 			moldemap.map(documentTypeContract, documenttypeModel);
-			documentTypeJdbcRepository.update(documenttypeModel);
+			documentTypeDomainRepository.update(documenttypeModel);
 		}
 	}
 

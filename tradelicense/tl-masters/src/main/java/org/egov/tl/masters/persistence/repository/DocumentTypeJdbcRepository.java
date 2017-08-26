@@ -95,7 +95,7 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 		MapSqlParameterSource parameters = new MapSqlParameterSource();
 
 		sql = getUniqueTenantDocumentQuery(ConstantUtility.DOCUMENT_TYPE_TABLE_NAME, documentType.getTenantId(),
-				documentType.getName(), documentType.getApplicationType().name(), documentType.getId(),
+				documentType.getName(), (documentType.getApplicationType() != null ? documentType.getApplicationType().name(): null), documentType.getId(),
 				documentType.getCategoryId(), documentType.getSubCategoryId(), parameters);
 
 		Integer count = null;
@@ -224,21 +224,21 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 		List<DocumentType> documentTypes = search(query, parameters);
 
 		if (documentTypes == null || documentTypes.size() == 0) {
-			if (parameters.hasValue("categoryId")) {
+			if (parameters.hasValue("subCategoryId")) {
 				parameters = new MapSqlParameterSource();
-				// TODO add mandatory also in saerch query
+
 				query = createQueryToGetDocumentContracts(tenantId, ids, name, enabled, mandatory, applicationType,
-						null, subCategoryId, pageSize, offSet, parameters);
+						categoryId, null, pageSize, offSet, parameters);
 
 				documentTypes = search(query, parameters);
 
 			}
 		}
-
+		
 		if (documentTypes == null || documentTypes.size() == 0) {
-			if (parameters.hasValue("subCategoryId")) {
+			if (parameters.hasValue("categoryId")) {
 				parameters = new MapSqlParameterSource();
-
+				// TODO add mandatory also in saerch query
 				query = createQueryToGetDocumentContracts(tenantId, ids, name, enabled, mandatory, applicationType,
 						null, null, pageSize, offSet, parameters);
 

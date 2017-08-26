@@ -48,7 +48,7 @@ public class DocumentTypeContract {
 	
 	private Boolean enabled ;
 
-	@NotNull(message="{error.applicationType.null}")
+	
 	private ApplicationTypeEnum applicationType;
 
 	@JsonProperty("auditDetails")

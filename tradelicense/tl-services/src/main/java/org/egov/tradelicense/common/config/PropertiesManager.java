@@ -213,7 +213,7 @@ public class PropertiesManager {
 	private String feeDetailIdNotValidCustomMsg;
 	
 	
-	@Value("${applicationfee.applicaable}")
+	@Value("${applicationfee.applicable}")
 	private String applicatonFeeApplicable;
 
 }

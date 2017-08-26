@@ -2030,6 +2030,9 @@
         usageTypeId:
           type: string
           description: unique identifier of property usage type object
+        subUsageTypeId:
+          type: string
+          description: unique identifier of property sub usage type object
         maxPipeSizeId:
           type: integer
           format: int64
@@ -2067,6 +2070,7 @@
         - code
         - propertyTypeId
         - usageTypeId
+        - subUsageTypeId
         - maxPipeSizeId
         - minPipeSizeId
         - categoryTypeId
@@ -2566,6 +2570,9 @@
         usageTypeId:
           type: string
           description: unique identifier of property usage type object
+        subUsageTypeId:
+          type: string
+          description: unique identifier of property sub usage type object
         sourceTypeId:
           type: string
           description: unique identifier of property usage type object
@@ -2594,6 +2601,7 @@
         - connectionType
         - sourceTypeId
         - usageTypeId
+        - subUsageTypeId
         - pipeSizeId
         - fromDate
         - amount
@@ -2729,7 +2737,3 @@
         - tenantId
           
           
-          
-        
-          
-

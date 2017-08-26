@@ -39,7 +39,7 @@ public class ReceiptReqValidator {
 
 	public List<ErrorResponse> validatecreateReceiptRequest(
 			final ReceiptReq receiptRequest) {
-		List<ErrorResponse> errorResponses = null;
+		List<ErrorResponse> errorResponses = new ArrayList<>();
 		final Error error = getError(receiptRequest);
 		if (error != null) {
 			ErrorResponse errorResponse = new ErrorResponse();

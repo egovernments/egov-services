@@ -18,8 +18,12 @@ public class Mapping   {
   @JsonProperty("indexName")
   private String indexName = null;
 
-  @JsonProperty("fromTopic")
-  private String fromTopic = null;
+  @JsonProperty("fromTopicSave")
+  private String fromTopicSave = null;
+  
+  @JsonProperty("fromTopicUpdate")
+  private String fromTopicUpdate = null;
+  
   
   @JsonProperty("indexType")
   private String indexType = null;

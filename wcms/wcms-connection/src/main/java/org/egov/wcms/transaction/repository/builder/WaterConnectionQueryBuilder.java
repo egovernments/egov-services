@@ -192,14 +192,14 @@ public class WaterConnectionQueryBuilder {
     }
 
     public static String insertLegacyConnectionQuery() {
-        return "INSERT INTO egwtr_waterconnection(id,tenantid, connectiontype,"
-                + "applicationType, billingtype, categorytype, hscpipesizetype, supplytype, "
-                + "sourcetype, connectionstatus, sumpcapacity, numberofftaps, numberofpersons,"
-                + " acknowledgmentnumber, createdby, lastmodifiedby, createdtime, lastmodifiedtime,"
-                + " propertyidentifier, usagetype, propertytype, address, donationcharge,"
-                + "assetidentifier,waterTreatmentId,islegacy,status,numberOfFamily,"
-                + "subusagetype,plumbername,billsequencenumber,meterowner,metermodel,outsideulb,"
-                + "legacyconsumernumber,consumerNumber,executionDate,noOfFlats) values"
+        return "INSERT INTO egwtr_waterconnection(id,tenantid, connectiontype,applicationType, billingtype, "
+                + "categorytype, hscpipesizetype, supplytype, sourcetype, connectionstatus,"
+                + " sumpcapacity, numberofftaps, numberofpersons, acknowledgmentnumber, createdby,"
+                + " lastmodifiedby, createdtime, lastmodifiedtime,propertyidentifier, usagetype, "
+                + "propertytype, address, donationcharge,assetidentifier,waterTreatmentId,"
+                + "islegacy,status,numberOfFamily,subusagetype,plumbername,"
+                + "billsequencenumber,meterowner,metermodel,outsideulb,legacyconsumernumber,"
+                + "consumerNumber,executionDate,noOfFlats,manualReceiptNumber,housenumber) values"
                 + "(nextval('seq_egwtr_waterconnection'),?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
@@ -207,7 +207,7 @@ public class WaterConnectionQueryBuilder {
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?,"
                 + " ?,?,?,?,?,"
-                + "?,?,?)";
+                + "?,?,?,?.?)";
     }
 
     public static String insertAdditionalConnectionQuery() {

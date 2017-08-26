@@ -356,16 +356,35 @@ public class AssetValidator {
         final String depreciationMinimumValue = applicationProperties.getDepreciaitionMinimumValue();
         final DepreciationCriteria depreciationCriteria = depreciationRequest.getDepreciationCriteria();
         final String tenantId = depreciationCriteria.getTenantId();
-        final AssetCriteria assetCriteria = AssetCriteria.builder()
-                .id(new ArrayList<Long>(depreciationCriteria.getAssetIds())).status(Status.CAPITALIZED.toString())
-                .fromCapitalizedValue(Double.valueOf(depreciationMinimumValue)).tenantId(tenantId).build();
+        final Long fromDate = depreciationCriteria.getFromDate();
+        final Long toDate = depreciationCriteria.getToDate();
+        AssetCriteria assetCriteria = null;
+        if (depreciationCriteria.getFinancialYear() == null && (fromDate == null || toDate == null))
+            throw new RuntimeException("financialyear and (time period)fromdate,todate both "
+                    + "cannot be null please provide atleast one value");
+        else if (fromDate != null && toDate != null)
+            assetCriteria = AssetCriteria.builder().id(new ArrayList<Long>(depreciationCriteria.getAssetIds()))
+                    .status(Status.CAPITALIZED.toString())
+                    .fromCapitalizedValue(Double.valueOf(depreciationMinimumValue)).tenantId(tenantId)
+                    .fromDate(fromDate).toDate(toDate).build();
+        else if (fromDate != null)
+            assetCriteria = AssetCriteria.builder().id(new ArrayList<Long>(depreciationCriteria.getAssetIds()))
+                    .status(Status.CAPITALIZED.toString())
+                    .fromCapitalizedValue(Double.valueOf(depreciationMinimumValue)).tenantId(tenantId)
+                    .fromDate(fromDate).build();
+        else if (toDate != null)
+            assetCriteria = AssetCriteria.builder().id(new ArrayList<Long>(depreciationCriteria.getAssetIds()))
+                    .status(Status.CAPITALIZED.toString())
+                    .fromCapitalizedValue(Double.valueOf(depreciationMinimumValue)).tenantId(tenantId).toDate(toDate)
+                    .build();
+        else
+            assetCriteria = AssetCriteria.builder().id(new ArrayList<Long>(depreciationCriteria.getAssetIds()))
+                    .status(Status.CAPITALIZED.toString())
+                    .fromCapitalizedValue(Double.valueOf(depreciationMinimumValue)).tenantId(tenantId).build();
         final List<Asset> assets = assetService.getAssets(assetCriteria, depreciationRequest.getRequestInfo())
                 .getAssets();
         log.debug("Assets For Depreciation :: " + assets);
-        if (depreciationCriteria.getFinancialYear() == null
-                && (depreciationCriteria.getFromDate() == null || depreciationCriteria.getToDate() == null))
-            throw new RuntimeException("financialyear and (time period)fromdate,todate both "
-                    + "cannot be null please provide atleast one value");
+
         if (getEnableYearWiseDepreciation(tenantId) && assets != null && !assets.isEmpty())
             for (final Asset asset : assets) {
                 final String assetName = asset.getName();

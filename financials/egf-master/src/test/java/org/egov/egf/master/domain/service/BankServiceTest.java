@@ -86,12 +86,6 @@ public class BankServiceTest {
 	}
 
 	@Test
-	public final void testAdd() {
-		banks.add(getBank());
-		bankService.add(banks, errors);
-	}
-
-	@Test
 	public final void testSearch() {
 		List<Bank> search = new ArrayList<>();
 		search.add(getBank());

@@ -68,12 +68,12 @@ public class BankBranchJdbcRepository extends JdbcRepository {
 
 		// implement jdbc specfic search
 		if (bankBranchSearchEntity.getTenantId() != null) {
-                    if (params.length() > 0) {
-                        params.append(" and ");
-                    }
-                    params.append("tenantId =:tenantId");
-                    paramValues.put("tenantId", bankBranchSearchEntity.getTenantId());
-                }
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("tenantId =:tenantId");
+			paramValues.put("tenantId", bankBranchSearchEntity.getTenantId());
+		}
 		if (bankBranchSearchEntity.getId() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
@@ -81,13 +81,13 @@ public class BankBranchJdbcRepository extends JdbcRepository {
 			params.append("id =:id");
 			paramValues.put("id", bankBranchSearchEntity.getId());
 		}
-	        if (bankBranchSearchEntity.getIds() != null) {
-	              if (params.length() > 0) {
-	                      params.append(" and ");
-	              }
-	              params.append("id in(:ids) ");
-	              paramValues.put("ids", new ArrayList<String>(Arrays.asList(bankBranchSearchEntity.getIds().split(","))));
-	        }
+		if (bankBranchSearchEntity.getIds() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("id in(:ids) ");
+			paramValues.put("ids", new ArrayList<String>(Arrays.asList(bankBranchSearchEntity.getIds().split(","))));
+		}
 		if (bankBranchSearchEntity.getBankId() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
@@ -195,15 +195,13 @@ public class BankBranchJdbcRepository extends JdbcRepository {
 			page.setPageSize(bankBranchSearchEntity.getPageSize());
 		}
 
-		
 		if (params.length() > 0) {
-		
-		searchQuery = searchQuery.replace(":condition", " where " +
-		params.toString());
-		
-		} else 
-		
-		searchQuery = searchQuery.replace(":condition", "");
+
+			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+
+		} else
+
+			searchQuery = searchQuery.replace(":condition", "");
 
 		searchQuery = searchQuery.replace(":orderby", orderBy);
 

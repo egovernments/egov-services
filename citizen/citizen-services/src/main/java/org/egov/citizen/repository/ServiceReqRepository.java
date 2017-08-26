@@ -60,10 +60,10 @@ public class ServiceReqRepository {
 		}
 		String query = "UPDATE egov_citizen_service_req SET  userid=?, servicecode=?, consumercode=?, email=?,"
 				+ " mobilenumber=?, assignedto=?,  lastmodifiedddate=?, lastmodifiedby=?,"
-				+ " jsonvalue=? WHERE id=? and tenantid=?;";
+				+ " jsonvalue=?, status=? WHERE id=? and tenantid=?;";
 		final Object[] obj = new Object[] { requestInfo.getUserInfo().getId(), serviceReq.getServiceCode(),
 				serviceReq.getConsumerCode(), serviceReq.getEmail(), serviceReq.getPhone(), serviceReq.getAssignedTo(),
-				new Date().getTime(), requestInfo.getUserInfo().getId(), jsonValue, serviceReq.getServiceRequestId(),
+				new Date().getTime(), requestInfo.getUserInfo().getId(), jsonValue, serviceReq.getStatus(), serviceReq.getServiceRequestId(),
 				serviceReq.getTenantId() };
 		try {
 			jdbcTemplate.update(query, obj);

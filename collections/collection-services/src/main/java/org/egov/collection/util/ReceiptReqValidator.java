@@ -49,15 +49,14 @@ public class ReceiptReqValidator {
 
 	private Error getError(final ReceiptReq receiptRequest) {
 		final List<ErrorField> errorFields = getErrorFields(receiptRequest);
-		final Error error = getError(receiptRequest);
+		Error error = null;
 		if (!errorFields.isEmpty())
-			return Error
+			error = Error
 					.builder()
 					.code(HttpStatus.BAD_REQUEST.value())
 					.message(CollectionServiceConstants.INVALID_RECEIPT_REQUEST)
 					.fields(errorFields).build();
-		else
-			return error;
+		return error;
 	}
 
 	private List<ErrorField> getErrorFields(final ReceiptReq receiptRequest) {

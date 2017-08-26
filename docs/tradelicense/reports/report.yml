@@ -149,6 +149,6 @@ ReportDefinitions:
     locality.name as businessArea, tl.licensevalidfromdate as licenseValidFromDate, tl.expirydate as licenseValidToDate,
     category.name as licenseType, subcategory.name as licenseSubType, tl.status as licenseStatus, tl.adhaarnumber as aadharNo,
     tl.propertyassesmentno as propertyNo from egtl_license as tl, eg_boundary as ward, eg_boundary as locality,
-    egtl_mstr_category as category, egtl_mstr_category as subcategory where ward.id = tl.ward and locality.id = tl.localityid
-    and tl.categoryid = category.id and tl.subcategoryid = subcategory.id and tenantid = $tenantid
+    egtl_mstr_category as category, egtl_mstr_category as subcategory where ward.id = tl.adminwardid and locality.id = tl.localityid
+    and tl.categoryid = category.id and tl.subcategoryid = subcategory.id and tl.tenantid = $tenantid
   orderBy: order by tl.id;

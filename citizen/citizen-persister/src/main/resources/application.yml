@@ -155,7 +155,7 @@ serviceMaps:
        - jsonPath: $.serviceReq.tenantId
          type: STRING
        
-       - jsonPath: $.requestInfo.userInfo.id
+       - jsonPath: $.RequestInfo.userInfo.id
          type: LONG
 
        - jsonPath: $.serviceReq.serviceCode
@@ -181,10 +181,10 @@ serviceMaps:
          type: CURRENTDATE
          dbType: LONG        
 
-       - jsonPath: $.requestInfo.userInfo.id
+       - jsonPath: $.RequestInfo.userInfo.id
          type: LONG
          
-       - jsonPath: $.requestInfo.userInfo.id
+       - jsonPath: $.RequestInfo.userInfo.id
          type: LONG
   
        - jsonPath: $.serviceReq

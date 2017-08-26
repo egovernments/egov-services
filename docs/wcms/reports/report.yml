@@ -43,8 +43,7 @@ ReportDefinitions:
   query: select  boundary.name as boundaryName, dcbinfo.hscno as consumerno,dcbinfo.username as consumerName,
          dcbinfo.pipesize as pipesize,null as usage, (dcbinfo.curr_balance+dcbinfo.arr_balance) as  outstanding
          from egwtr_connection_view dcbinfo,eg_boundary boundary  where  dcbinfo.wardid=boundary.id and 
-         --dcbinfo.zoneid in (1) and dcbinfo.connectionstatus = 'ACTIVE' order by boundary.name;
-
+          dcbinfo.zoneid in (1) and dcbinfo.connectionstatus = 'ACTIVE' order by boundary.name;
 
 - reportName: DemandRegister
   summary: Demand Register Report
@@ -78,9 +77,8 @@ ReportDefinitions:
   - name: total
     label: reports.wcms.total
     type: number
-    source: seva
-    rowTotal: true
-   searchParams:
+    source: seva   
+  searchParams:
   - name: fromDate
     label: reports.wcms.fromdate
     type: string
@@ -105,7 +103,7 @@ ReportDefinitions:
     label: reports.wcms.zoneid
     type: number
     source: wcms
-    showColumn:false
+    showColumn: false
   - name: boundaryName
     label: reports.wcms.boundaryname
     type: string

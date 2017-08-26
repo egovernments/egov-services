@@ -115,20 +115,6 @@ public class AssetRepository {
         return assets;
     }
 
-    public String findAssetName(final String tenantId, final String name) {
-
-        final String queryStr = AssetQueryBuilder.FINDBYNAMEQUERY;
-        log.info("queryStr::" + queryStr + "preparedStatementValues::" + name + "tenantid" + tenantId);
-        String assetName = null;
-        try {
-            assetName = jdbcTemplate.queryForObject(queryStr, new Object[] { name, tenantId }, String.class);
-            log.info("AssetRepository::" + assetName);
-        } catch (final Exception ex) {
-            log.info("the exception from findbyname method indicates no duplicate assets available : " + ex);
-        }
-        return assetName;
-    }
-
     public String getAssetCode() {
         final String query = "SELECT nextval('seq_egasset_assetcode')";
         final Integer result = jdbcTemplate.queryForObject(query, Integer.class);

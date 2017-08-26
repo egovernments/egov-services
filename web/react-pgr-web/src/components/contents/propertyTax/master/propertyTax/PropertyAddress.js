@@ -239,7 +239,7 @@ class PropertyAddress extends Component {
 												  hintText="000001111122222"
                                                   errorText={fieldErrors.refPropertyNumber ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.refPropertyNumber}</span> : ""}
                                                   value={propertyAddress.refPropertyNumber ? propertyAddress.refPropertyNumber : ""}
-                                                  onChange={(e) => handleChange(e, "refPropertyNumber", false, /^\d{15}$/g)}
+                                                  onChange={(e) => handleChange(e, "refPropertyNumber", false, /^[a-zA-Z0-9]*$/g)}
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
@@ -266,7 +266,7 @@ class PropertyAddress extends Component {
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 												  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
-                                              >
+                                              ><MenuItem value={-1} primaryText="None"/>
                                                     {renderOption(this.state.apartments)}
                                               </SelectField>
                                           </Col>
@@ -448,7 +448,7 @@ class PropertyAddress extends Component {
                                           <Col xs={12} md={3} sm={6}>
                                               <TextField  className="fullWidth"
                                                   floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.pin')}<span style={{"color": "#FF0000"}}> *</span></span>}
-												  hintText="201301"
+												  hintText="400050"
                                                   errorText={fieldErrors.pin ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.pin}</span> : ""}
                                                   value={propertyAddress.pin ? propertyAddress.pin : ""}
                                                   onChange={(e) => handleChange(e, "pin", true, /^\d{6}$/g)}
@@ -550,7 +550,7 @@ class PropertyAddress extends Component {
                                                 <Col xs={12} md={3} sm={6}>
                                                     <TextField  className="fullWidth"
                                                         floatingLabelText={translate('pt.create.groups.propertyAddress.fields.pin')}
-														hintText="302301"
+														hintText="400050"
                                                         errorText={fieldErrors.pinTwo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.pinTwo}</span> : ""}
                                                         value={propertyAddress.pinTwo ? propertyAddress.pinTwo : ""}
                                                         onChange={(e) => handleChange(e, "pinTwo", false, /^\d{6}$/g)}

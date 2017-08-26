@@ -250,7 +250,7 @@ public class ReceiptRepositoryTest {
 
 		User userInfo = User.builder().id(1L).build();
 		RequestInfo requestInfo = RequestInfo.builder().apiId("org.egov.collection").ver("1.0").action("POST")
-				.did("4354648646").key("xyz").msgId("654654").requesterId("61").authToken("ksnk").userInfo(userInfo)
+				.did("4354648646").key("xyz").msgId("654654").authToken("ksnk").userInfo(userInfo)
 				.build();
 		BillAccountDetail detail1 = BillAccountDetail.builder().glcode("1405014").isActualDemand(true).id("1")
 				.tenantId("default").billDetail("1").creditAmount(BigDecimal.valueOf(800))

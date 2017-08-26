@@ -1,15 +1,21 @@
 package org.egov.citizen.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.egov.citizen.model.ServiceReq;
 import org.egov.citizen.model.ServiceReqRequest;
 import org.egov.citizen.model.ServiceReqResponse;
 import org.egov.citizen.repository.ServiceReqRepository;
+import org.egov.citizen.web.contract.ServiceRequestSearchCriteria;
 import org.egov.citizen.web.contract.factory.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -28,6 +34,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
+
 
 @Service
 @Slf4j
@@ -56,6 +63,36 @@ public class CitizenPersistService {
 	
 	@Autowired
 	private ServiceReqRepository serviceReqRepository;
+	 
+	
+	public Map<String, Object> serach(ServiceRequestSearchCriteria serviceRequestSearchCriteria, RequestInfo requestInfo){
+		List<Map<String, Object>> maps = serviceReqRepository.search(serviceRequestSearchCriteria);
+		
+		List<Object> response = new ArrayList<>();
+		//Map<String, Object> 
+		
+		for(Map<String, Object> map : maps){
+
+			System.out.println("map.get()"+map.get("serviceReq"));
+			String s = (String)map.get("serviceReq");
+			ObjectMapper objectMapper = new ObjectMapper();
+			try {
+				Map<String, Object> m= objectMapper.readValue(s, Map.class);
+				response.add(m.get("serviceReq"));
+				System.out.println("m:"+m);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+		System.out.println("response:"+response);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("serviceReq", response);
+		map.put("ResponseInfo", responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true));
+		return map;
+	}
 	
 	public ServiceReqResponse create(String serviceReqJson) {
 		

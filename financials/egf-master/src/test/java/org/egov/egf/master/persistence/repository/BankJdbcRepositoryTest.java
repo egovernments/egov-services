@@ -1,6 +1,7 @@
 package org.egov.egf.master.persistence.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNull;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.model.BankSearch;
@@ -19,6 +21,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
@@ -79,6 +82,62 @@ public class BankJdbcRepositoryTest {
 		assertThat(result.getId()).isEqualTo("2");
 		assertThat(result.getName()).isEqualTo("name");
 		assertThat(result.getCode()).isEqualTo("code");
+	}
+
+	@Test(expected = DataIntegrityViolationException.class)
+	@Sql(scripts = { "/sql/clearBank.sql" })
+	public void test_create_with_tenantId_null() {
+
+		BankEntity bank = BankEntity.builder().code("code").name("name").active(true).build();
+		bankJdbcRepository.create(bank);
+
+	}
+
+	@Test
+	@Sql(scripts = { "/sql/clearBank.sql", "/sql/insertBank.sql" })
+	public void test_search_with_no_parameter() {
+
+		Pagination<Bank> page = (Pagination<Bank>) bankJdbcRepository.search(new BankSearch());
+		assertThat(page.getPagedData().get(0).getName()).isEqualTo("name");
+		assertThat(page.getPagedData().get(0).getCode()).isEqualTo("code");
+		assertThat(page.getPagedData().get(0).getActive()).isEqualTo(true);
+
+	}
+
+	@Test
+	@Sql(scripts = { "/sql/clearBank.sql", "/sql/insertBank.sql" })
+	public void test_find_by_invalid_id_should_return_null() {
+
+		BankEntity bankEntity = BankEntity.builder().id("5").build();
+		bankEntity.setTenantId("default");
+		BankEntity result = bankJdbcRepository.findById(bankEntity);
+		assertNull(result);
+
+	}
+
+	@Test(expected = InvalidDataException.class)
+	@Sql(scripts = { "/sql/clearBank.sql", "/sql/insertBank.sql" })
+	public void test_search_invalid_sort_option() {
+
+		BankSearch search = getBankSearch();
+		search.setSortBy("desc");
+		bankJdbcRepository.search(search);
+
+	}
+
+	@Test
+	@Sql(scripts = { "/sql/clearBank.sql", "/sql/insertBank.sql" })
+	public void test_search_without_pagesize_offset_sortby() {
+
+		BankSearch search = getBankSearch();
+		search.setSortBy(null);
+		search.setPageSize(null);
+		search.setOffset(null);
+		Pagination<Bank> page = (Pagination<Bank>) bankJdbcRepository.search(getBankSearch());
+		assertThat(page.getPagedData().get(0).getName()).isEqualTo("name");
+		assertThat(page.getPagedData().get(0).getCode()).isEqualTo("code");
+		assertThat(page.getPagedData().get(0).getActive()).isEqualTo(true);
+
 	}
 
 	class BankResultExtractor implements ResultSetExtractor<List<Map<String, Object>>> {

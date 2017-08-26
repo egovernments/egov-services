@@ -43,4 +43,7 @@ public class AssetCriteria {
 	private Double grossValue;
 	private Double fromCapitalizedValue;
 	private Double toCapitalizedValue;
+	
+        private Long fromDate;
+        private Long toDate;
 }

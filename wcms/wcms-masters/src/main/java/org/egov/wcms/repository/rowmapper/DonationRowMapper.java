@@ -59,6 +59,7 @@ public class DonationRowMapper implements RowMapper<Donation> {
         donation.setCode(rs.getString("donation_code"));
         donation.setPropertyTypeId(rs.getString("donation_propertytypeId"));
         donation.setUsageTypeId(rs.getString("donation_usagetypeId"));
+        donation.setSubUsageTypeId(rs.getString("donation_subusagetypeId"));
         donation.setCategoryTypeId(rs.getLong("donation_categorytypeId"));
         donation.setMaxPipeSizeId(rs.getLong("donation_maxpipesizId"));
         donation.setMinPipeSizeId(rs.getLong("donation_minpipesizeId"));

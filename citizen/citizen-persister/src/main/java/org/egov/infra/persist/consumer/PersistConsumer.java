@@ -10,6 +10,9 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -26,9 +29,18 @@ public class PersistConsumer {
 	public void processMessage(Map<String, Object> consumerRecord, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
 		//log.info("topic:" + record.topic() + ":" + "value:" + record.value());
 		log.info("topic:" + topic+ ":" + "value:" + consumerRecord);
-		System.out.println("ObjectCollection objectCollection:"+service);
+		System.out.println("ObjectCollection consumerRecord:"+consumerRecord);
+		System.out.println("ObjectCollection service:"+service);
+		ObjectMapper objectMapper = new ObjectMapper();
+		String rcvData = null;
 		
-		//persistService.persist(record.topic(), record.value());
+		try {
+			rcvData = objectMapper.writeValueAsString(consumerRecord);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		persistService.persist(topic,rcvData);
 		
 	}
 	

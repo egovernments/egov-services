@@ -37,33 +37,31 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transaction.repository.rowmapper;
+package org.egov.wcms.transaction.demand.contract;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.Set;
 
-import org.egov.wcms.transaction.model.Connection;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+import javax.validation.constraints.NotNull;
 
-@Component
-public class UpdateWaterConnectionRowMapper implements RowMapper<Connection> {
-    @Override
-    public Connection mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-        final Connection connection = new Connection();
-        connection.setId(rs.getLong("id"));
-        connection.setStateId(rs.getLong("stateid"));
-        connection.setStatus(rs.getString("status"));
-        connection.setUserid(rs.getLong("userid"));
-        connection.setAcknowledgementNumber(rs.getString("acknowledgmentnumber"));
-        connection.setConsumerNumber(rs.getString("consumernumber"));
-        connection.setApplicationType(rs.getString("applicationType"));
-        connection.setExecutionDate(rs.getLong("executiondate"));
-        if(rs.getString("islegacy").equals(Boolean.TRUE))
-        connection.setIsLegacy(Boolean.TRUE);
-        else
-            connection.setIsLegacy(Boolean.FALSE);
-        connection.setTenantId(rs.getString("tenantid"));
-        return connection;
-    }
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class DemandDetailCriteria {
+	
+	@NotNull
+	private String tenantId;
+	
+	private String demandId;
+	
+	private String taxHeadCode;
+
+	private Long periodFrom;
+	
+	private Long periodTo;
+	
+	private Set<String> detailsId;
 }

@@ -137,6 +137,9 @@ public class ConfigurationManager {
     @Value("${id.demandBillFormat}")
     private String demandBillGenFormatServiceTopic;
     
+    @Value("${egov.services.demandbill_servivc.searchdemanddetail}")
+    private String searchDemandDEtailExist;
+    
     @Value("${egov.services.finance_service.hostname}")
     private String financeServiceHostName; 
     
@@ -157,6 +160,9 @@ public class ConfigurationManager {
     
     @Value("${egov.services.demandbill_service.createdemand}")
     private String createbillingDemandServiceTopic;
+    
+    @Value("${egov.services.demandbill_servivc.updatedemand}")
+    private String updateDemandServiceTopic;
     
     @Value("${egov.services.demandbill_servivc.searchdemand}")
     private String searchbillingDemandServiceTopic;

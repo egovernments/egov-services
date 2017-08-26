@@ -215,6 +215,8 @@ public class Connection {
     private String plumberName;
 
     private Long billSequenceNumber;
+    
+    private String manualConsumerNumber;
 
     private Boolean outsideULB;
 

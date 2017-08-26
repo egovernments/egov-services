@@ -11,6 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.contract.DepreciationRequest;
 import org.egov.asset.contract.DisposalRequest;
@@ -67,6 +68,9 @@ public class AssetValidator {
 
     @Autowired
     private AssetCommonService assetCommonService;
+
+    @Autowired
+    private ApplicationProperties applicationProperties;
 
     public void validateAsset(final AssetRequest assetRequest) {
         final AssetCategory assetCategory = findAssetCategory(assetRequest);
@@ -349,16 +353,40 @@ public class AssetValidator {
     }
 
     public void validateDepreciation(final DepreciationRequest depreciationRequest) {
+        final String depreciationMinimumValue = applicationProperties.getDepreciaitionMinimumValue();
         final DepreciationCriteria depreciationCriteria = depreciationRequest.getDepreciationCriteria();
         final String tenantId = depreciationCriteria.getTenantId();
-        final AssetCriteria assetCriteria = AssetCriteria.builder()
-                .id(new ArrayList<Long>(depreciationCriteria.getAssetIds())).tenantId(tenantId).build();
+        final Long fromDate = depreciationCriteria.getFromDate();
+        final Long toDate = depreciationCriteria.getToDate();
+        AssetCriteria assetCriteria = null;
+        if (depreciationCriteria.getFinancialYear() == null && (fromDate == null || toDate == null))
+            throw new RuntimeException("financialyear and (time period)fromdate,todate both "
+                    + "cannot be null please provide atleast one value");
+        else if (fromDate != null && toDate != null)
+            assetCriteria = AssetCriteria.builder().id(new ArrayList<Long>(depreciationCriteria.getAssetIds()))
+                    .status(Status.CAPITALIZED.toString())
+                    .fromCapitalizedValue(Double.valueOf(depreciationMinimumValue)).tenantId(tenantId)
+                    .fromDate(fromDate).toDate(toDate).build();
+        else if (fromDate != null)
+            assetCriteria = AssetCriteria.builder().id(new ArrayList<Long>(depreciationCriteria.getAssetIds()))
+                    .status(Status.CAPITALIZED.toString())
+                    .fromCapitalizedValue(Double.valueOf(depreciationMinimumValue)).tenantId(tenantId)
+                    .fromDate(fromDate).build();
+        else if (toDate != null)
+            assetCriteria = AssetCriteria.builder().id(new ArrayList<Long>(depreciationCriteria.getAssetIds()))
+                    .status(Status.CAPITALIZED.toString())
+                    .fromCapitalizedValue(Double.valueOf(depreciationMinimumValue)).tenantId(tenantId).toDate(toDate)
+                    .build();
+        else
+            assetCriteria = AssetCriteria.builder().id(new ArrayList<Long>(depreciationCriteria.getAssetIds()))
+                    .status(Status.CAPITALIZED.toString())
+                    .fromCapitalizedValue(Double.valueOf(depreciationMinimumValue)).tenantId(tenantId).build();
         final List<Asset> assets = assetService.getAssets(assetCriteria, depreciationRequest.getRequestInfo())
                 .getAssets();
         log.debug("Assets For Depreciation :: " + assets);
+
         if (getEnableYearWiseDepreciation(tenantId) && assets != null && !assets.isEmpty())
             for (final Asset asset : assets) {
-                validateAssetForCapitalizedStatus(asset);
                 final String assetName = asset.getName();
                 final AssetCategory assetCategory = asset.getAssetCategory();
                 final boolean assetCategoryForLand = validateAssetCategoryForLand(assetCategory.getAssetCategoryType());
@@ -373,10 +401,7 @@ public class AssetValidator {
                             "Depreciation Expense Account should be present for voucher generation for asset :: "
                                     + assetName + " for asset Category :: " + assetCategory.getName());
             }
-        if (depreciationCriteria.getFinancialYear() == null
-                && (depreciationCriteria.getFromDate() == null || depreciationCriteria.getToDate() == null))
-            throw new RuntimeException("financialyear and (time period)fromdate,todate both "
-                    + "cannot be null please provide atleast one value");
+
     }
 
     private boolean validateAssetCategoryForLand(final AssetCategoryType assetCategoryType) {

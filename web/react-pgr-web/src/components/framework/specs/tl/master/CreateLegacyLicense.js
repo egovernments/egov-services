@@ -364,7 +364,8 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+            "maxLength": "10"
           },
           {
             "name": "licenseValidFromDate",
@@ -375,7 +376,8 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+            "maxLength": "10"
           },
           {
             "name": "TradeOwner",
@@ -426,7 +428,8 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+            "maxLength": "10"
           },
           {
             "name": "agreementNo",
@@ -629,12 +632,12 @@ var dat = {
              "name": "ownerName",
              "jsonPath": "ownerName",
              "label": "tl.search.groups.tradeOwnerName",
-             "pattern": "^.{10,10}$",
+             "pattern": "^.[a-zA-Z. ]{3,99}$",
              "type": "text",
              "isRequired": false,
              "isDisabled": false,
              "requiredErrMsg": "",
-             "patternErrMsg": ""
+             "patternErrMsg": "Enter Valid Father/Spouse Name (Min:4, Max:100)"
            },
            {
              "name": "propertyAssesmentNo",

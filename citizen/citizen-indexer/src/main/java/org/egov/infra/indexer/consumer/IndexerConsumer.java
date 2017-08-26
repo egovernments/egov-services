@@ -24,7 +24,7 @@ public class IndexerConsumer {
 	private IndexerService indexService;
 	
 	
-	@KafkaListener(topics = {"${kafka.consumer.egov.service.es.topic}"})
+	@KafkaListener(topics = {"${kafka.topics.save.servicereq}","${kafka.topics.update.servicereq}"})
 	public void processMessage(ConsumerRecord<String, String> record) {
 		//log.info("topic:" + record.topic() + ":" + "value:" + record.value());
 		//System.out.println("ObjectCollection objectCollection:"+ service);

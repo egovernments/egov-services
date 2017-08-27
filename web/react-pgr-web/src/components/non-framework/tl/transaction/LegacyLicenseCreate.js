@@ -252,7 +252,7 @@ class LegacyLicenseCreate extends Component {
           if(self.props.actionName == "update") {
             var hash = "/update/tl/CreateLegacyLicense/";
           } else {
-            var hash = "/view/tl/CreateLegacyLicense" + "/" + _.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath);
+            var hash = "/non-framework/tl/transaction/viewLegacyLicense" + "/" + encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
           }
           self.props.setRoute(hash);
         }

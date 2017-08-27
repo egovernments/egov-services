@@ -249,11 +249,11 @@ var dat = {
           },
           {
             "name": "AddressNo",
-            "jsonPath": "Connection.address.addressNumber",
+            "jsonPath": "Connection.houseNumber",
             "label": "wc.create.groups.applicantDetails.addressNumber",
             "pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
             "type": "text",
-            "isRequired": true,
+            "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -352,7 +352,7 @@ var dat = {
           },
           {
             "name": "ManualConsumerNo",
-            "jsonPath": "",
+            "jsonPath": "connection.manualConsumerNumber",
             "label": "wc.create.groups.applicantDetails.manualConsumerNo",
             "pattern": "",
             "type": "text",
@@ -1056,6 +1056,17 @@ var dat = {
               "type": "singleValueList",
               "url": "/egov-common-masters/genders/_search?|$.Gender.*|$.Gender.*",
               "isRequired": true,
+              "isDisabled": false,
+              "requiredErrMsg": "",
+              "patternErrMsg": ""
+            },
+            {
+              "name": "AddressNo",
+              "jsonPath": "Connection[0].houseNumber",
+              "label": "wc.create.groups.applicantDetails.addressNumber",
+              "pattern": "^[\s.]*([^\s.][\s.]*){0,16}$",
+              "type": "text",
+              "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": ""

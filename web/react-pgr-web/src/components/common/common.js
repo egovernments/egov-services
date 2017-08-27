@@ -306,10 +306,15 @@ var localization_EN_Data = {
     "wc.create.demand.basicDetails":"Basic Details",
     "wc.create.demand.applicantParticular":"Applicant Particulars",
     "wc.create.error":"Collection Amount cannot be greater than Tax Amount.",
-    "wc.create.groups.applicantDetails.manualConsumerNo":"Manual Consumer No",
+    "wc.create.groups.applicantDetails.manualConsumerNo":"Manual Consumer Number",
     "wc.create.groups.gapCode1":"Gap Code 1",
     "wc.create.groups.gapCode2":"Gap Code 2",
     "wc.create.groups.gapCode3":"Gap Code 3",
+    "wc.group.consumption3": "3rd month Consumption",
+    "wc.group.consumption2": "2nd month Consumption",
+    "wc.group.consumption1": "1st month Consumption",
+    "wc.group.maximumReading":"Maximum Reading",
+    "wc.group.consumptionAdjustment":"Consumption Adjustment",
 
 
 
@@ -1268,7 +1273,8 @@ var localization_EN_Data = {
     "reports.pgr.status.reopened": " Status Reopened",
     "reports.pgr.status.withinsla": " Status within SLA",
     "pgr.0060": "Applicant Details",
-    "pgr.0061": "Complainant Details"
+    "pgr.0061": "Complainant Details",
+    "wc.create.groups.applicantDetails.addressNumber":"House Number",
 };
 
 var localization_MR_Data = {
@@ -2179,10 +2185,16 @@ var localization_MR_Data = {
     "employee.createPosition.groups.fields.outsourcepost.value1": "Yes-Marathi",
     "employee.createPosition.groups.fields.outsourcepost.value2": "No-Marathi",
     "wc.create.error":"Collection Amount cannot be greater than Tax Amount.-Marathi",
-    "wc.create.groups.applicantDetails.manualConsumerNo":"Manual Consumer No-Marathi",
+    "wc.create.groups.applicantDetails.manualConsumerNo":"Manual Consumer Number-Marathi",
     "wc.create.groups.gapCode1":"Gap Code 1-Marathi",
     "wc.create.groups.gapCode2":"Gap Code 2-Marathi",
     "wc.create.groups.gapCode3":"Gap Code 3-Marathi",
+    "wc.create.groups.applicantDetails.addressNumber": "house Number-Marathi",
+    "wc.group.consumption3": "3rd month Consumption-Marathi",
+    "wc.group.consumption2": "2nd month Consumption-Marathi",
+    "wc.group.consumption1": "1st month Consumption-Marathi",
+    "wc.group.maximumReading":"Maximum Reading-Marathi",
+    "wc.group.consumptionAdjustment":"Consumption Adjustment-Marathi",
 
 ﻿﻿"pgr.0001":"अक्षांश / रेखांश किंवा क्रॉस हायरारकी संकेतांक आवश्यक आहे",
 "pgr.0002":"अक्षांश / रेखांश किंवा क्रॉस हायरारकी संकेतांक आवश्यक आहे",

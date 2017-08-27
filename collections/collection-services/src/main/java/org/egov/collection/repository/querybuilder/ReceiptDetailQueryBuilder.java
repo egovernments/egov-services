@@ -400,8 +400,8 @@ public class ReceiptDetailQueryBuilder {
         logger.info("Returning Online payment query to the repository");
 
         return "INSERT INTO egcl_onlinepayments(id, receiptheader, paymentgatewayname, transactionnumber, transactionamount, transactiondate, authorisation_statuscode, "
-                + " status, remarks, createdby, lastmodifiedby, createddate, lastmodifieddate) "
+                + " status, remarks, createdby, lastmodifiedby, createddate, lastmodifieddate, tenantId) "
                 + "VALUES (NEXTVAL('seq_egcl_onlinepayments'), :receiptheader, :paymentgatewayname, :transactionnumber, :transactionamount, :transactiondate, :authorisation_statuscode, "
-                + ":status, :remarks, :version, :createdby, :lastmodifiedby, :createddate, :lastmodifieddate)";
+                + ":status, :remarks, :createdby, :lastmodifiedby, :createddate, :lastmodifieddate, :tenantId)";
     }
 }

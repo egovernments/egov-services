@@ -216,8 +216,7 @@ public class ReceiptController {
 
 	@PostMapping("/_update")
 	@ResponseBody
-	public ResponseEntity<?> update(final BindingResult modelAttributeBindingResult,
-			@RequestBody @Valid ReceiptReq receiptReq, BindingResult errors) {
+	public ResponseEntity<?> update(@RequestBody @Valid ReceiptReq receiptReq, BindingResult errors) {
 
         Receipt receipt = receiptReq.getReceipt().get(0);
         String instrumentType = receipt.getInstrument().getInstrumentType().getName();

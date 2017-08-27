@@ -18,7 +18,7 @@ public class ServiceReqQueryBuilder {
 		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 
 		addWhereClause(selectQuery, preparedStatementValues, serviceRequestSearchCriteria);
-		addOrderByClause(selectQuery, serviceRequestSearchCriteria);
+		//addOrderByClause(selectQuery, serviceRequestSearchCriteria);
 	//	addPagingClause(selectQuery, preparedStatementValues, serviceRequestSearchCriteria);
 
 		log.info("Query : " + selectQuery);
@@ -29,7 +29,7 @@ public class ServiceReqQueryBuilder {
 	private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues,
 			ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
 
-		if (serviceRequestSearchCriteria.getServiceRequestId() == null && serviceRequestSearchCriteria.getTenantId() == null)
+		if (serviceRequestSearchCriteria.getTenantId() == null)
 			return;
 
 		selectQuery.append(" WHERE");
@@ -47,8 +47,9 @@ public class ServiceReqQueryBuilder {
 			preparedStatementValues.add(serviceRequestSearchCriteria.getServiceRequestId());
 
 		}
-
+		System.out.println("serviceRequestSearchCriteria.getUserId():"+serviceRequestSearchCriteria.getUserId());
 		if (serviceRequestSearchCriteria.getUserId() != null) {
+			System.out.println("serviceRequestSearchCriteria.getUserId():"+serviceRequestSearchCriteria.getUserId());
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" userid = ?");
 			preparedStatementValues.add(serviceRequestSearchCriteria.getUserId());
@@ -56,13 +57,13 @@ public class ServiceReqQueryBuilder {
 		}
 	}
 
-	private void addOrderByClause(StringBuilder selectQuery, ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
+	/*private void addOrderByClause(StringBuilder selectQuery, ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
 		String sortBy = (serviceRequestSearchCriteria.getSortBy() == null ? "id"
 				: serviceRequestSearchCriteria.getSortBy());
 		String sortOrder = (serviceRequestSearchCriteria.getSortOrder() == null ? "ASC"
 				: serviceRequestSearchCriteria.getSortOrder());
 		selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
-	}
+	}*/
 	
 	/**
 	 * This method is always called at the beginning of the method so that and

@@ -409,7 +409,7 @@ public class ReceiptRepository {
             onlineReceiptBatchValues.add(new MapSqlParameterSource("receiptheader", receipt.getId()).addValue("paymentgatewayname", onlinePayment.getPaymentGatewayName())
                     .addValue("transactionnumber", onlinePayment.getTransactionnumber()).addValue("transactionamount", onlinePayment.getTransactionAmount()).addValue("transactiondate", onlinePayment.getTransactionDate())
                     .addValue("authorisation_statuscode", onlinePayment.getAuthorisationStatusCode()).addValue("status", onlinePayment.getStatus())
-                    .addValue("remarks", onlinePayment.getRemarks()).addValue("createdby", receiptReq.getRequestInfo().getUserInfo().getId())
+                    .addValue("remarks", onlinePayment.getRemarks()).addValue("createdby", receiptReq.getRequestInfo().getUserInfo().getId()).addValue("tenantId",onlinePayment.getTenantId())
                     .addValue("lastmodifiedby", receiptReq.getRequestInfo().getUserInfo().getId()).addValue("createddate", new Date().getTime()).addValue("lastmodifieddate",new Date().getTime())
                     .getValues());
         }

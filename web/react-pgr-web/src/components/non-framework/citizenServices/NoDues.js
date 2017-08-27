@@ -1277,7 +1277,6 @@ class NoDues extends Component {
                                             Application Fee for {(match.params.id=="wc"?"Water":"Property")} {match.params.status == "extract" ? "Extract" : "no dues"}
                                           </td>
                                           <td >
-
                                           </td>
                                           <td >
 

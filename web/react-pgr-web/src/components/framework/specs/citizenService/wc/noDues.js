@@ -139,7 +139,33 @@ var dat = {
       "resultPath": "PipeSizes",
       "rowClickUrlUpdate": "/update/wc/pipeSize/{id}",
       "rowClickUrlView": "/view/wc/pipeSize/{id}"
-    }
+    },
+    "feeDetails": [{
+      "id": null,
+      "tenantId": window.localStorage.getItem("tenantId"),
+      "consumerCode": "",
+      "consumerType": "consumertype1",
+      "businessService": "CS",
+      "minimumAmountPayable": 10,
+      "owner": {
+        "id": 0,
+        "userName": null,
+        "name": null,
+        "type": null,
+        "mobileNumber": null,
+        "emailId": null,
+        "roles": null
+      },
+      "taxPeriodFrom": 0,
+      "taxPeriodTo":0,
+      "demandDetails": [{
+        "id": null,
+        "demandId": null,
+        "taxHeadMasterCode": "",
+        "taxAmount": 20,
+        "collectionAmount": 0
+      }]
+    }]
   },
   "noDues.view": {
     "numCols": 12 / 3,

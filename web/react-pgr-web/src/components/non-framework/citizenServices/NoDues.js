@@ -48,6 +48,30 @@ var specifications={};
 
 let reqRequired = [];
 
+const getFullDate = function(dat) {
+  var _date = new Date(dat);
+  return ('0' + _date.getDate()).slice(-2) + '/'
+               + ('0' + (_date.getMonth()+1)).slice(-2) + '/'
+               + _date.getFullYear() + " "
+               + ('0' + _date.getHours()).slice(-2) + ":"
+               + ('0' + _date.getMinutes()).slice(-2) + ":"
+               + ('0' + _date.getSeconds()).slice(-2)
+}
+
+const getAmount = function(demands, arrearsBool) {
+    var data = jp.query(demands, arrearsBool ? "$..Demands[?(@.taxPeriodFrom < 1490985000000)]" : "$..Demands[?(@.taxPeriodFrom >= 1490985000000)]");
+    if(data.length) {
+      var taxAmountArr = jp.query(data, "$..taxAmount") || [];
+      var taxSum = 0;
+      for(var i=0; i<taxAmountArr.length; i++)
+        taxSum += taxAmountArr[i];
+      var collectionAmountArr = jp.query(data, "$..collectionAmount") || [];
+      var collSum = 0;
+      for(var i=0; i<collectionAmountArr.length; i++)
+        collSum += collectionAmountArr[i];
+      return taxSum - collSum;
+    } else return "00";
+}
 
 class NoDues extends Component {
 
@@ -348,6 +372,7 @@ class NoDues extends Component {
     let {formData} = this.props;
     finalObject["businessService"] = (self.props.match.params.status == "extract" ? "PT_NODUES" : (self.props.match.params.id == "pt" ? "PT" : "WC"));
     Api.commonApiPost(self.props.metaData["noDues.search"].url, finalObject, {}, null, self.props.metaData["noDues.search"].useTimestamp,false,response.data.access_token).then(function(res){
+        console.log(JSON.stringify(res));
         // self.props.setLoadingStatus('hide');
         if(jp.query(res,`$..demandDetails[?(@.taxAmount > @.collectionAmount)]`).length>0)
         {
@@ -462,71 +487,74 @@ class NoDues extends Component {
         serviceReq = JSON.parse(localStorage.servReq);
       } catch(e) {}
       
-      let SID = "", _servReq;
-      let SC = (self.props.match.params.status == "extract" ? "PT_NODUES" : (self.props.match.params.id == "pt" ? "PT_NODUES" : "WC_NODUES"));
-      console.log(SC);
-      for(let i=0; i<serviceReq.length; i++) {
-        console.log(serviceReq[i].STATUS);
-        console.log(serviceReq[i].serviceCode)
-        if(SC == serviceReq[i].serviceCode && serviceReq[i].status == "CREATED") {
-          console.log("HERE0");
-          SID = serviceReq[i].serviceRequestId;
-          _servReq = serviceReq[i];
-          break;
-        }
-      }
+      Api.commonApiPost("/citizen-services/v1/requests/_search", {userId: JSON.parse(localStorage.getItem("userRequest")).id}, {}, null, true).then(function(ress) {
+          let SID = "", _servReq;
+          let SC = (self.props.match.params.status == "extract" ? "PT_NODUES" : (self.props.match.params.id == "pt" ? "PT_NODUES" : "WC_NODUES"));
+          console.log(SC);
+          for(let i=0; i<ress.serviceReq.length; i++) {
+            //Status needs to be changed
+            if(SC == ress.serviceReq[i].serviceCode && ress.serviceReq[i].status == "CREATED") {
+              SID = ress.serviceReq[i].serviceRequestId;
+              _servReq = ress.serviceReq[i];
+              break;
+            }
+          }
 
-      if(!SID) {
-        console.log("HERE22");
-        let request = {
-           "tenantId": localStorage.getItem("tenantId"),
-           "serviceRequestId": null,
-           "serviceCode": (self.props.match.params.id == "pt") ? "PT_NODUES" : "WC_NODUES",
-           "lat": 12,
-           "lang": 23,
-           "address": "address",
-           "addressId": "addressId",
-           "email": "email",
-           "deviceId": "deviceId",
-           "accountId": "accountId",
-           "firstName": "",
-           "lastName": "firstName",
-           "phone": "phone",
-           "description": "",
-           "consumerCode" : formData.consumerCode,
-           "attributeValues": [
-             {
-               "key": "tenantId",
-               "value": localStorage.getItem("tenantId")
-             }
-           ],
-           "status": "CREATED",
-           "assignedTo": "assignedTo",
-           "comments": [
-             "",
-             ""
-           ],
-           "backendServiceDetails": {}
-        };
+          if(!SID) {
+            console.log("HERE22");
+            let request = {
+               "tenantId": localStorage.getItem("tenantId"),
+               "serviceRequestId": null,
+               "serviceCode": (self.props.match.params.id == "pt") ? "PT_NODUES" : "WC_NODUES",
+               "lat": 12,
+               "lang": 23,
+               "address": "address",
+               "addressId": "addressId",
+               "email": "email",
+               "deviceId": "deviceId",
+               "accountId": "accountId",
+               "firstName": "",
+               "lastName": "firstName",
+               "phone": "phone",
+               "description": "",
+               "consumerCode" : formData.consumerCode,
+               "attributeValues": [
+                 {
+                   "key": "tenantId",
+                   "value": localStorage.getItem("tenantId")
+                 }
+               ],
+               "status": "CREATED",
+               "assignedTo": "assignedTo",
+               "comments": [
+                 "",
+                 ""
+               ],
+               "backendServiceDetails": {}
+            };
 
-        console.log("HERE1");
-        Api.commonApiPost("/citizen-services/v1/requests/_create", {}, {"serviceReq":request}, null, self.props.metaData["noDues.search"].useTimestamp, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
-            console.log("HERE2");
+            console.log("HERE1");
+            Api.commonApiPost("/citizen-services/v1/requests/_create", {}, {"serviceReq":request}, null, self.props.metaData["noDues.search"].useTimestamp, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
+                console.log("HERE2");
+                self.setState({
+                  serviceRequest: res.serviceReq
+                });
+                self.createDemand(res.serviceReq.serviceRequestId, finalObject, response);
+              }, function(err) {
+                self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+                self.props.setLoadingStatus('hide');
+            })        
+          } else {
+            console.log("HERE4");
             self.setState({
-              serviceRequest: res.serviceReq
+                  serviceRequest: _servReq
             });
-            self.createDemand(res.serviceReq.serviceRequestId, finalObject, response);
-          }, function(err) {
-            self.props.toggleSnackbarAndSetText(true, err.message, false, true);
-            self.props.setLoadingStatus('hide');
-        })        
-      } else {
-        console.log("HERE4");
-        self.setState({
-              serviceRequest: _servReq
-        });
-        self.createDemand(SID, finalObject, response);
-      }
+            self.createDemand(SID, finalObject, response);
+          }
+      }, function(err) {
+
+      })
+      
 
         }).catch(function(response) {
           self.props.setLoadingStatus('hide');
@@ -652,7 +680,7 @@ class NoDues extends Component {
 
       <!-- Optional theme -->
       <link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">  `;
-    mywindow.document.write('<html><head><title>' + document.title  + '</title>');
+    mywindow.document.write('<html><head><title> </title>');
     mywindow.document.write(cdn);
     mywindow.document.write('</head><body >');
     mywindow.document.write('<h1>' + document.title  + '</h1>');
@@ -894,8 +922,8 @@ class NoDues extends Component {
                           {demands.length>0?demands.map((item,key)=>{
                               return item.demandDetails.map((itemOne,keyOne)=>{
                                 return (<tr key={keyOne}>
-                                    <td>{new Date(demands[key].taxPeriodFrom).getDate()+"-"+new Date(demands[key].taxPeriodFrom).getMonth()+"-"+new Date(demands[key].taxPeriodFrom).getFullYear()}</td>
-                                    <td>{new Date(demands[key].taxPeriodTo).getDate()+"-"+new Date(demands[key].taxPeriodTo).getMonth()+"-"+new Date(demands[key].taxPeriodTo).getFullYear()}</td>
+                                    <td>{new Date(demands[key].taxPeriodFrom).getDate()+"/"+new Date(demands[key].taxPeriodFrom).getMonth()+"/"+new Date(demands[key].taxPeriodFrom).getFullYear()}</td>
+                                    <td>{new Date(demands[key].taxPeriodTo).getDate()+"/"+new Date(demands[key].taxPeriodTo).getMonth()+"/"+new Date(demands[key].taxPeriodTo).getFullYear()}</td>
 
                                    <td>{itemOne.taxHeadMasterCode}</td>
                                    <td style={{textAlign:"right"}}>{itemOne.taxAmount-itemOne.collectionAmount}</td>
@@ -989,7 +1017,7 @@ class NoDues extends Component {
                                             Receipt For : {this.props.match.params.id=="wc" ? 'Water Charges' : 'Property Tax'}
                                           </td>
                                           <td style={{textAlign:"right"}}>
-                                            Receipt Date: {new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getDate()+"-"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getMonth()+"-"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getFullYear()}
+                                            Receipt Date: {new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getDate()+"/"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getMonth()+"/"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getFullYear()}
                                           </td>
                                       </tr>
                                       <tr>
@@ -1046,35 +1074,35 @@ class NoDues extends Component {
                                       </tr>
                                       <tr>
                                           <td >
-                                            {Receipt[0].Bill[0].billDetails[0].billNumber +" "+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getDate()+"-"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getMonth()+"-"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getFullYear()}
+                                            {Receipt[0].Bill[0].billDetails[0].billNumber +" "+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getDate()+"/"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getMonth()+"/"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getFullYear()}
 
                                           </td>
                                           <td >
                                             {match.params.id=="wc"?"Water":"Property"} No dues
                                           </td>
                                           <td >
-
+                                            {getAmount(this.state.demands, true)}
                                           </td>
                                           <td >
-
+                                            {getAmount(this.state.demands)}
                                           </td>
                                           <td >
-
+                                            {getAmount(this.state.demands, true)}
                                           </td>
                                           <td >
-
+                                            {getAmount(this.state.demands)}
                                           </td>
                                           <td>
-
+                                            00
                                           </td>
                                           <td>
-
+                                            00
                                           </td>
                                       </tr>
 
                                       <tr>
-                                          <td colSpan={4}>Amount in words :{int_to_words(getTotal(demands)+100)}</td>
-                                          <td colSpan={4}>Total Outstanding after collection</td>
+                                          <td colSpan={4}>Amount in words: Rs. {int_to_words(getTotal(demands))} only</td>
+                                          <td colSpan={4}></td>
                                       </tr>
                                       <tr>
                                         <td colSpan={8}>
@@ -1109,7 +1137,7 @@ class NoDues extends Component {
                                           {this.state.serviceRequest.serviceRequestId}
                                         </td>}
                                         <td colSpan={2}>
-                                          {Receipt[0].instrument.instrumentType.name=="Cash"?"":(new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getDate()+"-"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getMonth()+"-"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getFullYear())}
+                                          {Receipt[0].instrument.instrumentType.name=="Cash"?"":(new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getDate()+"/"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getMonth()+"/"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getFullYear())}
                                         </td>
                                         {false && <td colSpan={2}>
                                           {Receipt[0].instrument.instrumentType.name=="Cash"?"":Receipt[0].instrument.bank.name}
@@ -1119,6 +1147,7 @@ class NoDues extends Component {
                               </Table>
                         </CardText>
                       </Card>
+                      <div className="page-break"></div>
                       </Col>}
                                             {ReceiptOne && <Col md={6} >
                       <Card>
@@ -1146,7 +1175,7 @@ class NoDues extends Component {
                                             Receipt For : Application Fee
                                           </td>
                                           <td style={{textAlign:"right"}}>
-                                            Receipt Date: {new Date(ReceiptOne[0].Bill[0].billDetails[0].receiptDate).getDate()+"-"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getMonth()+"-"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getFullYear()}
+                                            Receipt Date: {new Date(ReceiptOne[0].Bill[0].billDetails[0].receiptDate).getDate()+"/"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getMonth()+"/"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getFullYear()}
                                           </td>
                                       </tr>
                                       <tr>
@@ -1171,43 +1200,34 @@ class NoDues extends Component {
                                           <td rowSpan={2}>
                                             Details
                                           </td>
-                                          <td colSpan={2}>
-                                            Demand
+                                      </tr>
+                                      <tr>
+                                          <td >
+                                            
                                           </td>
-                                          <td colSpan={2}>
-                                            Payment Received
+                                          <td >
+                                            
                                           </td>
-                                          <td colSpan={2}>
-                                            Balance
+                                          <td >
+                                            
+                                          </td>
+                                          <td >
+                                            
+                                          </td>
+                                          <td >
+                                            
+                                          </td>
+                                          <td >
+                                           
                                           </td>
                                       </tr>
                                       <tr>
                                           <td >
-                                            Arrears
-                                          </td>
-                                          <td >
-                                            Current
-                                          </td>
-                                          <td >
-                                            Arrears
-                                          </td>
-                                          <td >
-                                            Current
-                                          </td>
-                                          <td >
-                                            Arrears
-                                          </td>
-                                          <td >
-                                            Current
-                                          </td>
-                                      </tr>
-                                      <tr>
-                                          <td >
-                                            {ReceiptOne[0].Bill[0].billDetails[0].billNumber +" "+new Date(ReceiptOne[0].Bill[0].billDetails[0].receiptDate).getDate()+"-"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getMonth()+"-"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getFullYear()}
+                                            {ReceiptOne[0].Bill[0].billDetails[0].billNumber +" "+new Date(ReceiptOne[0].Bill[0].billDetails[0].receiptDate).getDate()+"/"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getMonth()+"/"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getFullYear()}
 
                                           </td>
                                           <td >
-                                            {match.params.id=="wc"?"Water":"Property"} No dues
+                                            Application Fee for {match.params.id=="wc"?"Water":"Property"} no dues
                                           </td>
                                           <td >
 
@@ -1230,8 +1250,8 @@ class NoDues extends Component {
                                       </tr>
 
                                       <tr>
-                                          <td colSpan={4}>Amount in words :{int_to_words(getTotal(demands)+100)}</td>
-                                          <td colSpan={4}>Total Outstanding after collection</td>
+                                          <td colSpan={4}>Amount in words: Rs. {int_to_words(applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount)} only</td>
+                                          <td colSpan={4}></td>
                                       </tr>
                                       <tr>
                                         <td colSpan={8}>
@@ -1266,7 +1286,7 @@ class NoDues extends Component {
                                           {ReceiptOne[0].transactionId}
                                         </td>}
                                         <td colSpan={2}>
-                                          {ReceiptOne[0].instrument.instrumentType.name=="Cash"?"":(new Date(ReceiptOne[0].Bill[0].billDetails[0].receiptDate).getDate()+"-"+new Date(ReceiptOne[0].Bill[0].billDetails[0].receiptDate).getMonth()+"-"+new Date(ReceiptOne[0].Bill[0].billDetails[0].receiptDate).getFullYear())}
+                                          {ReceiptOne[0].instrument.instrumentType.name=="Cash"?"":(new Date(ReceiptOne[0].Bill[0].billDetails[0].receiptDate).getDate()+"/"+new Date(ReceiptOne[0].Bill[0].billDetails[0].receiptDate).getMonth()+"/"+new Date(ReceiptOne[0].Bill[0].billDetails[0].receiptDate).getFullYear())}
                                         </td>
                                         {false && <td colSpan={2}>
                                           {ReceiptOne[0].instrument.instrumentType.name=="Cash"?"":ReceiptOne[0].instrument.bank.name}
@@ -1276,6 +1296,7 @@ class NoDues extends Component {
                               </Table>
                         </CardText>
                       </Card>
+                      <div className="page-break"></div>
                       </Col>}
                       <Col md={6} id="DownloadReceipt">
                       {(this.props.match.params.status != "extract") ? <Card>
@@ -1303,7 +1324,7 @@ class NoDues extends Component {
                                             </div>
                                             <br/>
                                             <div style={{textAlign:"right"}}>
-                                                  Date / दिनांक :{new Date(Receipt[0].Bill[0].billDetails[0].billDate).getDate()+"-"+new Date(Receipt[0].Bill[0].billDetails[0].billDate).getMonth()+"-"+new Date(Receipt[0].Bill[0].billDetails[0].billDate).getFullYear()} <br/>
+                                                  Date / दिनांक :{getFullDate(Receipt[0].Bill[0].billDetails[0].billDate)} <br/>
                                                   Certificate No. / प्रमाणपत्र क्रं : {this.state.serviceRequest.serviceRequestId}
 
                                             </div>
@@ -1318,7 +1339,7 @@ class NoDues extends Component {
                                             <br/>
                                             <div style={{textAlign:"center"}}>
                                               Subject /विषय :  सन 2017 - 18 थकबाकी नसल्याचे प्रमाणपत्र मिळणेबाबत.<br/>
-                                              Reference / संदर्भ : आपला अर्ज क्रमांक {Receipt[0].Bill[0].billDetails[0].applicationNo} दिनांक {new Date(Receipt[0].Bill[0].billDetails[0].billDate).getDate()+"-"+new Date(Receipt[0].Bill[0].billDetails[0].billDate).getMonth()+"-"+new Date(Receipt[0].Bill[0].billDetails[0].billDate).getFullYear()}
+                                              Reference / संदर्भ : आपला अर्ज क्रमांक {Receipt[0].Bill[0].billDetails[0].applicationNo} दिनांक {new Date(Receipt[0].Bill[0].billDetails[0].billDate).getDate()+"/"+new Date(Receipt[0].Bill[0].billDetails[0].billDate).getMonth()+"/"+new Date(Receipt[0].Bill[0].billDetails[0].billDate).getFullYear()}
 
 
                                             </div>

@@ -40,7 +40,8 @@ require('datatables.net-buttons/js/buttons.print.js'); // Print view button
 
 const nameMap = {
   "PT_NODUES": "Property Tax No Dues",
-  "WC_NODUES": "Water Charges No Dues"
+  "WC_NODUES": "Water Charges No Dues",
+  "CREATED": "Created"
 };
 
 const content=[
@@ -583,7 +584,7 @@ class Dashboard extends Component {
                                           <th>
                                             Applied On
                                           </th>
-                                          <th>Action</th>
+                                          <th> </th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -591,7 +592,7 @@ class Dashboard extends Component {
                                           return (<tr key={key}>
                                               <td>{item.serviceRequestId}</td>
                                               <td>{nameMap[item.serviceCode] || item.serviceCode}</td>
-                                              <td>{item.status}</td>
+                                              <td>{nameMap[item.status] || item.status}</td>
                                               <td>{item.auditDetails ? getDate(item.auditDetails.createdDate) : "-"}</td>
                                               {<td><i className="material-icons">cloud_download</i></td>}
 

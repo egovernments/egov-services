@@ -1420,17 +1420,17 @@ handleUsage = (value) => {
                                                     <td>{getNameById(_this.state.floorNumber ,i.floorNo) || translate('pt.search.searchProperty.fields.na')}</td>
 													<td>{getNameById(_this.state.unitType ,i.unitType)  || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.unitNo || translate('pt.search.searchProperty.fields.na')}</td>
-                                                    <td>{i.structure || translate('pt.search.searchProperty.fields.na')}</td>
-                                                    <td>{i.usage || translate('pt.search.searchProperty.fields.na')}</td>
-                                                    <td>{i.usageSubType || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{getNameById(_this.state.structureclasses, i.structure) || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{getNameById(_this.state.usages, i.usage) || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{getNameById(_this.state.subUsage,i.usageSubType) || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.firmName || translate('pt.search.searchProperty.fields.na')}</td>
-                                                    <td>{i.occupancyType || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{getNameById(_this.state.occupancies ,i.occupancyType) || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.occupierName || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.annualRent || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.manualArv || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.constCompletionDate || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.occupancyDate || translate('pt.search.searchProperty.fields.na')}</td>
-                                                    <td>{i.isStructured || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{i.isStructured ? 'Yes' : 'No'}</td>
                                                     <td>{i.length || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.width || translate('pt.search.searchProperty.fields.na')}</td>
 													<td>{i.carpetArea || translate('pt.search.searchProperty.fields.na')}</td>

@@ -189,7 +189,7 @@ class ViewProperty extends Component {
 	
       }).catch((err)=> {
 			setLoadingStatus('hide');
-			toggleSnackbarAndSetText(true, err.message)
+			console.log(err)
       })	
 		
 		
@@ -199,7 +199,6 @@ class ViewProperty extends Component {
         currentThis.setState({
           propertytypes:[]
         })
-		toggleSnackbarAndSetText(true, err.message);
     }) 
 
 	Api.commonApiPost('pt-property/property/departments/_search',{}, {},false, true).then((res)=>{
@@ -208,7 +207,7 @@ class ViewProperty extends Component {
 	  })
 	}).catch((err)=> {
 	  console.log(err)
-		toggleSnackbarAndSetText(true, err.message);
+		console.log(err);
 	})
 	
 	Api.commonApiPost('pt-property/property/floortypes/_search',{}, {},false, true).then((res)=>{
@@ -229,7 +228,7 @@ class ViewProperty extends Component {
       currentThis.setState({
         rooftypes: []
       })
-      console.log(err)
+      console.log(err.message)
     })
 
     Api.commonApiPost('pt-property/property/walltypes/_search',{}, {},false, true).then((res)=>{
@@ -239,7 +238,7 @@ class ViewProperty extends Component {
       currentThis.setState({
         walltypes:[]
       })
-      console.log(err)
+      console.log(err.message)
     })
 
     Api.commonApiPost('pt-property/property/woodtypes/_search',{}, {},false, true).then((res)=>{
@@ -259,7 +258,7 @@ class ViewProperty extends Component {
            currentThis.setState({
             locality : []
           })
-          console.log(err)
+          console.log(err.message)
         })
 
          Api.commonApiPost('pt-property/property/apartments/_search',{}, {},false, true).then((res)=>{
@@ -269,7 +268,7 @@ class ViewProperty extends Component {
            currentThis.setState({
             apartments:[]
           })
-          console.log(err)
+          console.log(err.message)
         }) 
 
        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:"REVENUE"}).then((res)=>{
@@ -532,8 +531,6 @@ class ViewProperty extends Component {
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.doorNo')}</div>
 												   {item.address.addressNumber}
 											  </Col>
-										
-											
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.propertyAddress')}</div>
 												    {item.address.addressNumber ? item.address.addressNumber+', ' : '' }
@@ -542,19 +539,14 @@ class ViewProperty extends Component {
 													{item.address.landmark ? item.address.landmark+', ' : ''}
 													{item.address.city ? item.address.city : ''}
 											  </Col>
-											
-											
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.zoneNo')}</div>
 												   {getNameById(this.state.zone, item.boundary.revenueBoundary.id) || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
-										
-											
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.blockNo')}</div>
 												   NA
 											  </Col>
-											 
 											</Row>
 											<Row>
 											  <Col xs={4} md={3} style={styles.bold}>

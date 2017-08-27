@@ -373,7 +373,7 @@ class NoDues extends Component {
               applicationFeeDemand: self.props.metaData["noDues.search"].feeDetails
             }, function() {
                let demandReq = {};
-               demandReq["Demands"] = self.state.applicationFeeDemand;
+               demandReq["Demands"] =self.state.applicationFeeDemand;
                demandReq["Demands"][0].tenantId=localStorage.getItem("tenantId");
                demandReq["Demands"][0].consumerCode=SID;
                demandReq["Demands"][0].owner.id=JSON.parse(localStorage.userRequest).id;
@@ -614,7 +614,7 @@ class NoDues extends Component {
             Api.commonApiPost("/collection-services/receipts/_search", {consumerCode:formData.consumerCode,businessService:formData.businessService}, {}, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res2){
             self.props.setLoadingStatus('hide');
             self.setState({
-              Receipt:res2.Receipt,
+              Receipt: "",
               ReceiptOne: res1.Receipt
             });
             console.log(res2);
@@ -962,8 +962,8 @@ class NoDues extends Component {
 
             {showResult &&
               <Grid >
-                {Receipt != undefined && Receipt.length>0 &&  <Row id="allCertificates">
-                      <Col md={6} >
+                {(Receipt || ReceiptOne ) &&  <Row id="allCertificates">
+                      {Receipt && <Col md={6} >
                       <Card>
                         <CardHeader title="Receipt"/>
                         <CardText>
@@ -1103,7 +1103,7 @@ class NoDues extends Component {
 											Online
                                         </td>
                                         <td>
-                                          {getTotal(demands)+applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount}
+                                          {getTotal(demands)}
                                         </td>
                                         {Receipt[0].instrument.instrumentType.name=="Cash"? "" : <td colSpan={2}>
                                           {this.state.serviceRequest.serviceRequestId}
@@ -1119,8 +1119,8 @@ class NoDues extends Component {
                               </Table>
                         </CardText>
                       </Card>
-                      </Col>
-                                            <Col md={6} >
+                      </Col>}
+                                            {ReceiptOne && <Col md={6} >
                       <Card>
                         <CardHeader title="Receipt"/>
                         <CardText>
@@ -1143,7 +1143,7 @@ class NoDues extends Component {
                                             Receipt Number : {ReceiptOne[0].Bill[0].billDetails[0].receiptNumber}
                                           </td>
                                           <td style={{textAlign:"center"}}>
-                                            Receipt For : {this.props.match.params.id=="wc" ? 'Water Charges' : 'Property Tax'}
+                                            Receipt For : Application Fee
                                           </td>
                                           <td style={{textAlign:"right"}}>
                                             Receipt Date: {new Date(ReceiptOne[0].Bill[0].billDetails[0].receiptDate).getDate()+"-"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getMonth()+"-"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getFullYear()}
@@ -1260,7 +1260,7 @@ class NoDues extends Component {
                                           Online
                                         </td>
                                         <td>
-                                          {getTotal(demands)+(applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount)}
+                                          {(applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount)}
                                         </td>
                                         {ReceiptOne[0].instrument.instrumentType.name=="Cash"? "" : <td colSpan={2}>
                                           {ReceiptOne[0].transactionId}
@@ -1276,7 +1276,7 @@ class NoDues extends Component {
                               </Table>
                         </CardText>
                       </Card>
-                      </Col>
+                      </Col>}
                       <Col md={6} id="DownloadReceipt">
                       {(this.props.match.params.status != "extract") ? <Card>
                         <CardHeader title="Certificate"/>

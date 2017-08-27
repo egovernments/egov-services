@@ -240,7 +240,7 @@ class Dashboard extends Component {
           current.setState({
             serviceRequests: [],
             citizenServices:[],
-            serviceRequestsTwo: [],
+            serviceRequestsTwo: responses[2] && responses[2].serviceReq ? responses[2].serviceReq : [],
             localArray:[],
              hasData:false
           });

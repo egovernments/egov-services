@@ -434,9 +434,7 @@ class Report extends Component {
             {renderBody()}
 
         </form>
-        <div style={{"textAlign": "center"}}>
-            <UiButton item={{"label": "Print", "uiType":"view"}} ui="google" handler={printer}/>
-        </div>
+      
       </div>
     );
   }

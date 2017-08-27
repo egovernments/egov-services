@@ -61,9 +61,12 @@ public class ReportService {
 			ColumnDetail reportheader = new ColumnDetail();
 			reportheader.setLabel(cd.getLabel());
 			reportheader.setName(cd.getName());
+			
 			TypeEnum te = TypeEnum.valueOf(cd.getType().toString().toUpperCase());
 			
 			reportheader.setType(te);
+			reportheader.setRowTotal(cd.getRowTotal());
+			reportheader.setColumnTotal(cd.getColumnTotal());
 			reportHeaders.add(reportheader);
             
 		}
@@ -78,7 +81,8 @@ public class ReportService {
             sc.setShowColumn(cd.getShowColumn());
 			sc.setDefaultValue(cd.getPattern());
 			sc.setIsMandatory(cd.getIsMandatory());
-
+            sc.setColumnTotal(cd.getColumnTotal());
+            sc.setRowTotal(cd.getRowTotal());
 			searchParams.add(sc);
 
 		}
@@ -129,6 +133,13 @@ public class ReportService {
 		return new ResponseEntity<>(metadataResponses, HttpStatus.OK);
 
 	}
+
+	public List<ReportResponse> getAllReportData(ReportRequest reportRequest,String moduleName) {
+		List<ReportResponse> reportResponse = new ArrayList<ReportResponse>(); 
+		getReportData(reportRequest,moduleName);
+		return reportResponse;
+	}
+
 
 	public ReportResponse getReportData(ReportRequest reportRequest,String moduleName) {
 		
@@ -188,7 +199,7 @@ public class ReportService {
 					}
 				}
 				List<ColumnDetail> columnDetails = columns.stream()
-						.map(p -> new ColumnDetail(p.getShowColumn(),p.getLabel(), p.getType(),p.getDefaultValue(),p.getTotal(),p.getName(),p.getIsMandatory()))
+						.map(p -> new ColumnDetail(p.getShowColumn(),p.getLabel(), p.getType(),p.getDefaultValue(),p.getTotal(),p.getName(),p.getIsMandatory(),p.getRowTotal(),p.getColumnTotal()))
 						.collect(Collectors.toList());
 				
 

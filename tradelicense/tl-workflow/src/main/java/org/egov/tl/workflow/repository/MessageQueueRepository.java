@@ -15,8 +15,8 @@ public class MessageQueueRepository {
 
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
-	public MessageQueueRepository(@Value("${kafka.topics.trade.license.workflow.enriched.topic}") String topicName,
-			@Value("${kafka.topics.trade.license.workflow.enriched.topic}") String keyName,
+	public MessageQueueRepository(@Value("${egov.services.tl-services.tradelicense.workflow.populated.topic}") String topicName,
+			@Value("${egov.services.tl-services.tradelicense.workflow.populated.key}") String keyName,
 			LogAwareKafkaTemplate<String, Object> kafkaTemplate) {
 
 		this.topicName = topicName;

@@ -208,6 +208,7 @@ public class TaxPeriodRepository {
     public boolean checkForDuplicates(List<TaxPeriod> taxPeriodList, String mode){
         boolean duplicatesExist = false;
         String query = taxPeriodQueryBuilder.prepareQueryForValidation(taxPeriodList, mode);
+        logger.info("the query for taxperiodseacrh : "+query);
         try {
             duplicatesExist = jdbcTemplate.queryForObject(query, Boolean.class);
         } catch (DataAccessException ex) {

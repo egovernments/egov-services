@@ -177,7 +177,7 @@ public class WaterConnectionRowMapper {
 				connection.setExecutionDate(execDate);
 			}
 			connection.setSubUsageTypeId(rs.getString("subusagetype"));
-			if (null != rs.getString("subusagename") && !rs.getString("subusagename").isEmpty()) {
+			/*if (null != rs.getString("subusagename") && !rs.getString("subusagename").isEmpty()) {
 				try { 
 					Gson g = new Gson(); 
 					CommonDataObject subUsageType = g.fromJson(rs.getString("subusagename"), CommonDataObject.class);
@@ -186,7 +186,7 @@ public class WaterConnectionRowMapper {
 					LOGGER.error("Encountered an exception while fetching Sub Usage Type" + e); 
 				}
 				
-			}
+			}*/
 			if(rs.getString("conn_billtype").equals(METERED) && rs.getBoolean("conn_islegacy")) { 
 				Meter meter = Meter.builder().meterMake(rs.getString("metermake"))
 						.meterCost(rs.getString("metercost"))

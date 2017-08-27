@@ -137,6 +137,7 @@ public class TradeLicenseSearchEntity {
 		tradeLicenseSearch.setTenantId(this.tenantId);
 
 		if (this.applicationType != null) {
+
 			tradeLicenseSearch.setApplicationType(ApplicationType.valueOf(this.applicationType));
 		}
 
@@ -147,6 +148,7 @@ public class TradeLicenseSearchEntity {
 		tradeLicenseSearch.setOldLicenseNumber(this.oldLicenseNumber);
 
 		if (this.applicationDate != null) {
+
 			tradeLicenseSearch.setApplicationDate((this.applicationDate.getTime()));
 		}
 
@@ -179,12 +181,14 @@ public class TradeLicenseSearchEntity {
 		tradeLicenseSearch.setTradeAddress(this.tradeAddress);
 
 		if (this.ownerShipType != null) {
+
 			tradeLicenseSearch.setOwnerShipType(OwnerShipType.valueOf(this.ownerShipType));
 		}
 
 		tradeLicenseSearch.setTradeTitle(this.tradeTitle);
 
 		if (this.tradeType != null) {
+
 			tradeLicenseSearch.setTradeType(BusinessNature.valueOf(this.tradeType));
 		}
 
@@ -207,18 +211,22 @@ public class TradeLicenseSearchEntity {
 		tradeLicenseSearch.setRemarks(this.remarks);
 
 		if (this.tradeCommencementDate != null) {
+
 			tradeLicenseSearch.setTradeCommencementDate((this.tradeCommencementDate.getTime()));
 		}
 
 		if (this.agreementDate != null) {
+
 			tradeLicenseSearch.setAgreementDate((this.agreementDate.getTime()));
 		}
 
 		if (this.licenseValidFromDate != null) {
+
 			tradeLicenseSearch.setLicenseValidFromDate((this.licenseValidFromDate.getTime()));
 		}
 
 		tradeLicenseSearch.setIsPropertyOwner(this.isPropertyOwner);
+
 		tradeLicenseSearch.setAgreementNo(this.agreementNo);
 
 		tradeLicenseSearch.setIsLegacy(this.isLegacy);
@@ -230,26 +238,40 @@ public class TradeLicenseSearchEntity {
 		tradeLicenseSearch.setStatusName(this.statusName);
 
 		if (this.expiryDate != null) {
+
 			tradeLicenseSearch.setExpiryDate((this.expiryDate.getTime()));
 		}
+
 		this.feeDetails = new ArrayList<LicenseFeeDetailSearch>();
+
 		if (this.feeDetailEntitys != null) {
+
 			for (LicenseFeeDetailSearchEntity feeDetailEntity : this.feeDetailEntitys) {
+
 				this.feeDetails.add(feeDetailEntity.toDomain());
 			}
 		}
+
 		tradeLicenseSearch.setFeeDetails(this.feeDetails);
+
 		this.supportDocuments = new ArrayList<SupportDocumentSearch>();
+
 		if (this.supportDocumentEntitys != null) {
+
 			for (SupportDocumentSearchEntity supportDocumentEntity : this.supportDocumentEntitys) {
+
 				this.supportDocuments.add(supportDocumentEntity.toDomain());
 			}
 		}
+
 		tradeLicenseSearch.setSupportDocuments(this.supportDocuments);
 
 		auditDetails.setCreatedBy(this.createdBy);
+
 		auditDetails.setCreatedTime(this.createdTime);
+
 		auditDetails.setLastModifiedBy(this.lastModifiedBy);
+
 		auditDetails.setLastModifiedTime(this.lastModifiedTime);
 
 		tradeLicenseSearch.setAuditDetails(auditDetails);
@@ -266,6 +288,7 @@ public class TradeLicenseSearchEntity {
 		this.tenantId = tradeLicenseSearch.getTenantId();
 
 		if (tradeLicenseSearch.getApplicationType() != null) {
+
 			this.applicationType = tradeLicenseSearch.getApplicationType().toString();
 		}
 
@@ -276,6 +299,7 @@ public class TradeLicenseSearchEntity {
 		this.oldLicenseNumber = tradeLicenseSearch.getOldLicenseNumber();
 
 		if (tradeLicenseSearch.getApplicationDate() != null) {
+
 			this.applicationDate = new Timestamp(tradeLicenseSearch.getApplicationDate());
 		}
 
@@ -308,12 +332,14 @@ public class TradeLicenseSearchEntity {
 		this.tradeAddress = tradeLicenseSearch.getTradeAddress();
 
 		if (tradeLicenseSearch.getOwnerShipType() != null) {
+
 			this.ownerShipType = tradeLicenseSearch.getOwnerShipType().toString();
 		}
 
 		this.tradeTitle = tradeLicenseSearch.getTradeTitle();
 
 		if (tradeLicenseSearch.getTradeType() != null) {
+
 			this.tradeType = tradeLicenseSearch.getTradeType().toString();
 		}
 
@@ -340,14 +366,17 @@ public class TradeLicenseSearchEntity {
 		this.remarks = tradeLicenseSearch.getRemarks();
 
 		if (tradeLicenseSearch.getTradeCommencementDate() != null) {
+
 			this.tradeCommencementDate = new Timestamp(tradeLicenseSearch.getTradeCommencementDate());
 		}
 
 		if (tradeLicenseSearch.getAgreementDate() != null) {
+
 			this.agreementDate = new Timestamp(tradeLicenseSearch.getAgreementDate());
 		}
 
 		if (tradeLicenseSearch.getLicenseValidFromDate() != null) {
+
 			this.licenseValidFromDate = new Timestamp(tradeLicenseSearch.getLicenseValidFromDate());
 		}
 
@@ -360,6 +389,7 @@ public class TradeLicenseSearchEntity {
 		this.active = tradeLicenseSearch.getActive();
 
 		if (tradeLicenseSearch.getExpiryDate() != null) {
+
 			this.expiryDate = new Timestamp(tradeLicenseSearch.getExpiryDate());
 		}
 

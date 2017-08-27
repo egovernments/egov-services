@@ -1,12 +1,14 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
-import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import Checkbox from 'material-ui/Checkbox';
 import TextField from 'material-ui/TextField';
 import {blue800, red500,white} from 'material-ui/styles/colors';
+import {Grid, Row, Col, DropdownButton,Table, ListGroup, ListGroupItem} from 'react-bootstrap';
+import {List, ListItem} from 'material-ui/List';
 
+import SelectField from 'material-ui/SelectField';
 import _ from "lodash";
 import ShowFields from "../../../framework/showFields";
 
@@ -289,6 +291,7 @@ class Report extends Component {
 
   Api.commonApiPost(url, query, {}, false, specifications["tl.view"].useTimestamp).then(function(res){
       self.props.setFormData(res);
+      console.log(res);
       self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)),"tl", "view", specifications["tl.view"].objectName);
     }, function(err){
 
@@ -300,6 +303,7 @@ class Report extends Component {
   }
 
   getVal = (path) => {
+    console.log("hge;;");
     var val = _.get(this.props.formData, path);
 
     if(val && ((val + "").length == 13 || (val + "").length == 12) && new Date(Number(val)).getTime() > 0) {
@@ -317,8 +321,8 @@ class Report extends Component {
   }
 
   render() {
-    let {mockData, moduleName, actionName, formData, fieldErrors} = this.props;
-    let {handleChange, getVal, addNewCard, removeCard, printer} = this;
+    let {mockData, moduleName, actionName, formData, fieldErrors,date} = this.props;
+    let {handleChange, getVal, addNewCard, removeCard, printer,licenses} = this;
 
 
     const renderFiles = function() {
@@ -422,16 +426,66 @@ class Report extends Component {
         }
       }
     }
+    const dateFormat = function(val){
+      var _date = new Date(Number(val));
+      return ('0' + _date.getDate()).slice(-2) + '/'
+             + ('0' + (_date.getMonth()+1)).slice(-2) + '/'
+             + _date.getFullYear();
+    }
+
+
+    const renderAgreement = function() {
+      if(formData && formData.hasOwnProperty("licenses") && formData.licenses.length>0){
+        console.log(formData.licenses[0].agreementDate);
+
+        var final = dateFormat(formData.licenses[0].agreementDate);
+        console.log("final",final);
+
+        if(!formData.licenses[0].isPropertyOwner){
+          return (
+            <Card className="uiCard">
+                  <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate("tl.create.licenses.groups.agreementDetails")}</div>} />
+                  <CardText style={styles.reducePadding}>
+                          <Grid fluid>
+                                  <Row>
+                                    <Col xs={12}  md={4} sm={6}>
+                                      <Col style={{textAlign:"left"}} xs={12}>
+                                        <label><span style={{"fontWeight":500, "fontSize": "13px"}}>{translate("tl.create.licenses.groups.agreementDetails.agreementDate")}</span></label>
+                                      </Col>
+                                      <Col style={{textAlign:"left"}} xs={12}>{formData.licenses[0].agreementDate? dateFormat(formData.licenses[0].agreementDate): 'NA'}</Col>
+                                      </Col>
+                                      <Col xs={12}  md={4} sm={6}>
+                                        <Col style={{textAlign:"left"}} xs={12}>
+                                          <label><span style={{"fontWeight":500, "fontSize": "13px"}}>{translate("tl.create.licenses.groups.agreementDetails.agreementNo")}</span></label>
+                                        </Col>
+                                        <Col style={{textAlign:"left"}}   xs={12}>{formData.licenses[0].agreementNo? formData.licenses[0].agreementNo: 'NA'}</Col>
+                                        </Col>
+
+                                      </Row>
+                                    </Grid>
+                        </CardText>
+            </Card>
+                        )
+                      }
+      }
+    }
 
     return (
       <div className="Report">
       <h3 style={{"textAlign": "center"}}>{translate("tl.view.legacyTradeLicense")}</h3>
         <form id="printable">
         {!_.isEmpty(mockData) && mockData["tl.view"] && <ShowFields groups={mockData["tl.view"].groups} noCols={mockData["tl.view"].numCols} ui="google" handler={""} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData["tl.view"].useTimestamp || false} addNewCard={""} removeCard={""} screen="view"/>}
-          <br/>
+
           {renderTable()}
-          <br/>
+          {renderAgreement()}
+
             {renderBody()}
+
+            <div>
+         			<Row>
+
+              </Row>
+          </div>
 
         </form>
 

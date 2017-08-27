@@ -78,7 +78,7 @@ const content=[
             {
                 icon: 'icon-class-name',
                 label: 'Apply for Extract',
-                to: '#/coming/soon',
+                to: '#/non-framework/citizenServices/no-dues/extract/pt',
             }
         ],
     },

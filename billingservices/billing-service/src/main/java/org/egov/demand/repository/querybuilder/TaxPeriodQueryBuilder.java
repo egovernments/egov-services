@@ -145,14 +145,14 @@ public class TaxPeriodQueryBuilder {
 				whereClause = whereClause.append(" taxperiod.id != '").append(taxPeriod.getId()).append("' and ");
 			if (StringUtils.isNotBlank(taxPeriod.getTenantId()))
 				whereClause = whereClause.append(" taxperiod.tenantId = '").append(taxPeriod.getTenantId())
-						.append("' and ( ");
+						.append("' and (( ");
 			// from and to dates validation
 			if (StringUtils.isNotBlank(taxPeriod.getFromDate().toString())
 					&& StringUtils.isNotBlank(taxPeriod.getToDate().toString()))
 				whereClause.append(taxPeriod.getFromDate() + " BETWEEN fromdate AND todate OR " + taxPeriod.getToDate()+
 						" BETWEEN fromdate AND todate)" + " OR (fromdate BETWEEN " + taxPeriod.getFromDate() + 
 						" AND "+ taxPeriod.getToDate() + " OR todate BETWEEN " + taxPeriod.getFromDate() + 
-						" AND "+ taxPeriod.getToDate() + "))");
+						" AND "+ taxPeriod.getToDate() + ")))");
 			count++;
 			if (taxPeriodList.size() > count)
 				whereClause = whereClause.append(" or ");

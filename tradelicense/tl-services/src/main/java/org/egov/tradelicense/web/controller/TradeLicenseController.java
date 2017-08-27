@@ -72,8 +72,10 @@ public class TradeLicenseController {
 
 			tradeLicense = new TradeLicense();
 			model.map(tradeLicenseContract, tradeLicense);
+			//preparing audit details
 			AuditDetails auditDetails = new AuditDetails();
 			auditDetails.setCreatedTime(new Date().getTime());
+			auditDetails.setLastModifiedTime(new Date().getTime());
 			if (requestInfo != null && requestInfo.getUserInfo() != null && requestInfo.getUserInfo().getId() != null) {
 				auditDetails.setCreatedBy(requestInfo.getUserInfo().getId().toString());
 				auditDetails.setLastModifiedBy(requestInfo.getUserInfo().getId().toString());

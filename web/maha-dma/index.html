@@ -5,14 +5,94 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Maharashtra Administration</title>
+    <title>Government of Maharashtra</title>
 
+    <link rel="icon" href="images/favicon.ico">
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/custom.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   </head>
   <body style="height:100%;">
+
+    <!-- ulb dropdown options template -->
+    <script id="ulb-option-template" type="text/x-handlebars-template">
+			 <option value="">Select ULB</option>
+			 {{#each this}}
+					<option value="{{ulbName}}" {{#if (eq ulbName "Roha Municipal Council")}}selected="selected"{{/if}}>{{ulbName}}</option>
+			 {{/each}}
+		</script>
+
+    <!-- services menu template -->
+    <script id="services-menu-template" type="text/x-handlebars-template">
+      {{#each .}}
+        <div class="service-details">
+            <div class="col-md-12">
+              <h4>{{@key}}</h4>
+            </div>
+          <ul>
+            <li class="news-item">
+              {{#each this}}
+                <div class="col-md-4">
+                  <a class="action-item" data-service-name="{{serviceName}}" data-module-name="{{moduleName}}" href="javascript:void(0);">{{serviceName}}</a>
+                </div>
+              {{/each}}
+            </li>
+          </ul>
+        </div>
+      {{/each}}
+    </script>
+
+    <!-- Dialog body template -->
+    <script id="documents-body-template" type="text/x-handlebars-template">
+      <div class="alert alert-danger" role="alert">
+         {{#if requiredDocuments}} Required Documents {{else}}  Documents are not required from citizen to avail this service {{/if}}
+      </div>
+
+      {{#each requiredDocuments}}
+      <div class="panel panel-default">
+        <div class="panel-heading">{{requiredDocumentName}}</div>
+        <div class="panel-body">
+          <div class="container-fluid">
+            <div class="row">
+              {{#each documents}}
+                <div class="col-xs-4 col-md-4 col-sm-4 col-lg-4 certificate-name-break">
+                  {{inc @index}}) {{name}}
+                </div>
+              {{/each}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <br/>
+
+      <!-- SLA Table -->
+
+      {{/each}}
+		</script>
+
+    <script type="text/plain">
+      {{#if slaTable}}
+        <table class="table table-bordered">
+          <thead>
+          {{#each slaTable.columns}}
+             <th>{{name}}</th>
+          {{/each}}
+          </thead>
+
+          <tbody>
+            {{#each slaTable.data}}
+              <tr>
+                  {{#each ../uniqueKeys}}
+                      <td>{{lookup .. this}}</td>
+                  {{/each}}
+              </tr>
+           {{/each}}
+          </tbody>
+        </table>
+      {{/if}}
+    </script>
+
    <div class="nav-section">
     <nav class="navbar navbar-inverse">
   <div class="container">
@@ -38,12 +118,12 @@
        </div>
 
        <div class="col-md-8" style="text-align: center">
-         <div class="h35" style="color:#ff9800">Maharashtra Administration</div>
-         <div class="h20">महाराष्ट्र प्रशासन</div>
+         <div class="h35" style="color:#ff9800">Government of Maharashtra</div>
+         <div class="h20">महाराष्ट्र शासन</div>
          <div class="h20" style="color:green">Integrated Citizen Services Portal</div>
        </div>
        <div class="col-md-2">
-         <img src="images/emblem.png" class="img-responsive" style="width:60px">
+         <img src="images/emblem.png" class="img-responsive pull-right" style="width:60px">
        </div>
 
      </div>
@@ -55,10 +135,13 @@
       <div class="col-md-12 service-section" style="height:100%;">
 
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-5">
             <h3 style="color:#fff">SERVICES AVAILABLE ONLINE</h3>
           </div>
-          <div class="col-md-6" style="margin-top: 20px;text-align: right;">
+          <div class="col-md-7" style="margin-top: 20px;text-align: right;">
+            <select id="ulb-dropdown" data-placement="bottom" data-content="Please select the ulb" class="form-control ulb-dropdown">
+              <option>Loading...</option>
+            </select>
              <button type="button" class="btn btn-default" onclick="javascript:window.open('http://mahadma.egovernments.org/dashboard/#ulbreports');" class="btn btn-default dashboardbtn">
                        <i class="material-icons" style="vertical-align: middle;">poll</i> &nbsp;<span style="vertical-align: middle;">Our Dashboards</span>
              </button>
@@ -69,7 +152,7 @@
 
         <div class="service-table" style="height: calc(100% - 80px);border: 1px solid orange;box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px;">
         <!-- <marquee behavior="scroll" direction="up"> -->
-          <div class="service-details">
+          <!-- <div class="service-details">
             <div class="col-md-12">
               <h4>Water Department</h4>
             </div>
@@ -107,7 +190,7 @@
                  <a href="" data-toggle="modal" data-target="#renew-plum-license">Renewal Of Plumber License</a>
               </div>
               <div class="col-md-4">
-                <a href="http://egov-micro-qa.egovernments.org/app/v1/#/mh.roha?link=waternodue" target="_blank">No Due Certificate</a>
+                <a href="javascript:void(0);" class="action-item" data-module-name="Water Department" data-service-name="No Due Certificate" target="_blank">No Due Certificate</a>
               </div>
             </li>
           </ul>
@@ -264,12 +347,12 @@
                 <a href="" data-toggle="modal" data-target="#re-ass">Re Assessment</a>
               </div>
               <div class="col-md-4">
-                <a href="http://egov-micro-qa.egovernments.org/app/v1/#/mh.roha?link=propertytaxdue" target="_blank">No Due Certificate</a>
+                <a href="javascript:void(0);" class="action-item" data-module-name="Property Tax" data-service-name="No Due Certificate" target="_blank">No Due Certificate</a>
               </div>
             </li>
             <li class="news-item">
               <div class="col-md-4">
-                <a href="http://egov-micro-qa.egovernments.org/app/v1/#/mh.roha?link=propertytaxextract" target="_blank">Extract Of Property</a>
+                <a href="javascript:void(0);" class="action-item" data-module-name="Property Tax" data-service-name="Extract Of Property" target="_blank">Extract Of Property</a>
               </div>
               <div class="col-md-4">
                 <a href="" data-toggle="modal" data-target="#exemtion-vac">Exemption For Vaccancy Of Property</a>
@@ -471,7 +554,7 @@
                 <a href="">Purchase Order</a>
               </div>
             </li>
-          </ul>
+          </ul> -->
 
         </div>
         <!-- </marquee> -->
@@ -615,12 +698,35 @@
 
 </div>
 
+<div class="modal fade" id="servicesDetailModal" tabindex="-1" role="dialog" aria-labelledby="servicesDetailModal" aria-hidden="true">
+  <div class="modal-dialog lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="servicesDetailModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body small-text" id="documents-body">
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="apply-btn" class="btn btn-primary">Apply</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" onclick="javscript:print();" class="btn btn-secondary">Print</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.10/handlebars.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/custom.js"></script>
 
 
   </body>

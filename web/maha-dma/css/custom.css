@@ -98,13 +98,11 @@ body{
     border-color: #31708f;
     padding: 10px;
 }
+
 .modal-title{
-	font-weight: 700;
-	text-align: center;
-	background-color: rgba(63, 132, 181, 0.54);
-	padding: 10px;
-	color: #fff;
+	display: inline-block;
 }
+
 .log-section{
 	float: right;
 	padding: 15px 115px;
@@ -122,7 +120,7 @@ body{
 	border-radius: 0px;
 }
 .navbar-right{
-	margin-right: 100px;
+	margin-right: 5px;
 }
 .navbar-inverse {
     background-color: rgb(22, 40, 56);
@@ -202,4 +200,48 @@ body{
 	background-size: 25px;
 	padding-right: 30px;
 
+}
+
+.ulb-dropdown{
+	width: auto;
+	display: inline-block;
+	vertical-align: top;
+	height: 38px;
+	margin-right: 10px;
+}
+
+
+@media print
+{
+  /* on modal open bootstrap adds class "modal-open" to body, so you can handle that case and hide body */
+  body.modal-open {
+      visibility: hidden;
+  }
+
+  body.modal-open .modal .modal-header,
+  body.modal-open .modal .modal-body {
+      visibility: visible; /* make visible modal body and header */
+  }
+
+  .modal {
+        position: absolute;
+        left: 0;
+        top: 0;
+        margin: 0;
+        padding: 0;
+        overflow: visible!important;
+    }
+
+}
+
+.popover{
+	background: #e40c0c;
+}
+
+.popover.bottom>.arrow:after{
+	border-bottom-color: #e20c0c;
+}
+
+.popover-content{
+	color:white;
 }

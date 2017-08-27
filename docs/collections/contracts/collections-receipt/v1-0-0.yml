@@ -586,14 +586,18 @@ definitions:
         type: string
         description: Payment Gateway Name which is received from the third party
       transactionAmount:
-        type: string
+        type: number
+        format: bigdecimal
         description: Transaction Amount for which payment is made
       transactionDate: 
-        type: string
+        type: int
         description: Transaction Date on which payment was done
       authorisationStatusCode:
         type: string
         description: Authorisation Status code received from the payment gateway
+      status:
+        type: string
+        description: status from the payment gateway
       remarks:
         type: string
         description: Authorisation Status Description whether success or failure or any other status

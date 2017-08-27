@@ -53,15 +53,22 @@ public class SupportDocumentSearchEntity {
 
 		supportDocument.setDocumentTypeName(this.documentTypeName);
 
-		supportDocument.setCreatedBy(this.createdBy);
-		supportDocument.setCreatedTime(this.createdTime);
-		supportDocument.setLastModifiedBy(this.lastModifiedBy);
-		supportDocument.setLastModifiedTime(this.lastModifiedTime);
+		auditDetails.setCreatedBy(this.createdBy);
+
+		auditDetails.setCreatedTime(this.createdTime);
+
+		auditDetails.setLastModifiedBy(this.lastModifiedBy);
+
+		auditDetails.setLastModifiedTime(this.lastModifiedTime);
+
+		supportDocument.setAuditDetails(auditDetails);
 
 		return supportDocument;
 	}
 
 	public SupportDocumentSearchEntity toEntity(SupportDocumentSearch supportDocument) {
+
+		AuditDetails auditDetails = supportDocument.getAuditDetails();
 
 		this.id = supportDocument.getId();
 
@@ -75,13 +82,13 @@ public class SupportDocumentSearchEntity {
 
 		this.comments = supportDocument.getComments();
 
-		this.createdBy = supportDocument.getCreatedBy();
+		this.createdBy = (auditDetails == null) ? null : auditDetails.getCreatedBy();
 
-		this.lastModifiedBy = supportDocument.getLastModifiedBy();
+		this.lastModifiedBy = (auditDetails == null) ? null : auditDetails.getLastModifiedBy();
 
-		this.createdTime = supportDocument.getCreatedTime();
+		this.createdTime = (auditDetails == null) ? null : auditDetails.getCreatedTime();
 
-		this.lastModifiedTime = supportDocument.getLastModifiedTime();
+		this.lastModifiedTime = (auditDetails == null) ? null : auditDetails.getLastModifiedTime();
 
 		return this;
 	}

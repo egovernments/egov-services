@@ -138,6 +138,10 @@ public class TradeLicenseService {
 					
 					supportDocument.setLicenseId(license.getId());
 					supportDocument.setId(tradeLicenseRepository.getSupportDocumentNextSequence());
+					if(license.getAuditDetails() != null){
+						supportDocument.setAuditDetails(license.getAuditDetails());
+					}
+					
 				}
 			}
 			if (license.getIsLegacy()){
@@ -148,6 +152,9 @@ public class TradeLicenseService {
 						
 						feeDetail.setLicenseId(license.getId());
 						feeDetail.setId(tradeLicenseRepository.getFeeDetailNextSequence());
+						if(license.getAuditDetails() != null){
+							feeDetail.setAuditDetails(license.getAuditDetails());
+						}
 					}
 				}
 			} else {

@@ -41,7 +41,6 @@ public class TradeLicenseListener {
 
 		if (mastersMap.get("tradelicense-legacy-create") != null) {
 
-
 			TradeLicenseRequest request = objectMapper.convertValue(mastersMap.get("tradelicense-legacy-create"),
 					TradeLicenseRequest.class);
 
@@ -55,7 +54,6 @@ public class TradeLicenseListener {
 			tradeLicenseProducer.sendMessage(topic, key, mastersMap);
 		}
 		if (mastersMap.get("tradelicense-new-create") != null) {
-
 
 			TradeLicenseRequest request = objectMapper.convertValue(mastersMap.get("tradelicense-new-create"),
 					TradeLicenseRequest.class);
@@ -71,7 +69,6 @@ public class TradeLicenseListener {
 		}
 		if (mastersMap.get("tradelicense-legacy-update") != null) {
 
-
 			TradeLicenseRequest request = objectMapper.convertValue(mastersMap.get("tradelicense-legacy-update"),
 					TradeLicenseRequest.class);
 
@@ -85,7 +82,6 @@ public class TradeLicenseListener {
 			tradeLicenseProducer.sendMessage(topic, key, mastersMap);
 		}
 		if (mastersMap.get("tradelicense-new-update") != null) {
-
 
 			TradeLicenseRequest request = objectMapper.convertValue(mastersMap.get("tradelicense-new-update"),
 					TradeLicenseRequest.class);

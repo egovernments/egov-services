@@ -581,6 +581,9 @@ public class TradeLicenseServiceValidator {
 
 			for (SupportDocument supportDocument : tradeLicense.getSupportDocuments()) {
 
+				if(tradeLicense.getAuditDetails() != null){
+					supportDocument.setAuditDetails(tradeLicense.getAuditDetails());
+				}
 				if (supportDocument.getId() != null) {
 					// check id existence in database
 					supportDocument.setLicenseId(tradeLicense.getId());
@@ -600,6 +603,9 @@ public class TradeLicenseServiceValidator {
 
 			for (LicenseFeeDetail licenseFeeDetail : tradeLicense.getFeeDetails()) {
 
+				if(tradeLicense.getAuditDetails() != null){
+					licenseFeeDetail.setAuditDetails(tradeLicense.getAuditDetails());
+				}
 				if (licenseFeeDetail.getId() != null) {
 					// check id existence in database
 					licenseFeeDetail.setLicenseId(tradeLicense.getId());

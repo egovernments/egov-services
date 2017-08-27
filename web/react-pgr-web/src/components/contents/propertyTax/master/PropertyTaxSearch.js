@@ -49,7 +49,7 @@ const styles = {
 
 
 const getNameById = function(object, id, property = "") {
-  if (id == "" || id == null) {
+  if (id == "" || id == null || typeof(object) !== 'object') {
         return "";
     }
     for (var i = 0; i < object.length; i++) {
@@ -71,7 +71,7 @@ const getNameById = function(object, id, property = "") {
 }
 
 const getNameByCode = function(object, code, property = "") {
-  if (code == "" || code == null) {
+  if (code == "" || code == null || typeof(object) !== 'object') {
         return "";
     }
     for (var i = 0; i < object.length; i++) {
@@ -209,7 +209,7 @@ class PropertyTaxSearch extends Component {
 			})
 		} else {
 			
-			if(res.properties.length !=0 && res.properties[0].channel == 'DATA_ENTRY') {
+			if(res.hasOwnProperty('properties') && res.properties.length !=0 && res.properties[0].channel == 'DATA_ENTRY') {
 				current.setState({
 					showDcb: true
 				})
@@ -226,7 +226,7 @@ class PropertyTaxSearch extends Component {
 				resultList:res.properties
 			})
 			
-			if(res.properties.length !=0){
+			if(res.hasOwnProperty('properties') && res.properties.length !=0){
 				var tQuery = {
 					businessService :'PT',
 					consumerCode: res.properties[0].upicNumber || res.properties[0].propertyDetail.applicationNo
@@ -335,7 +335,7 @@ class PropertyTaxSearch extends Component {
 					  <td style={{color:'blue'}} onClick={() => {
 						   history.push(`/propertyTax/view-property/${item.upicNumber}`);
 					  }}>{item.upicNumber || ''}</td>
-					  <td>{(item.owners.length != 0) &&  item.owners.map((item, index)=>{
+					  <td>{(item.hasOwnProperty('owners') && item.owners.length != 0) &&  item.owners.map((item, index)=>{
 						  return(<span>{item.name}</span>)
 					  })}</td>
 					  <td>{item.address.addressNumber || ''}</td>

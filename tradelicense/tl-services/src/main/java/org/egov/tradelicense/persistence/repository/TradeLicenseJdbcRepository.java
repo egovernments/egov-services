@@ -97,13 +97,13 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			Integer pageNumber, String sort, String active, Integer[] ids, String applicationNumber,
 			String licenseNumber, String oldLicenseNumber, String mobileNumber, String aadhaarNumber, String emailId,
 			String propertyAssesmentNo, Integer adminWard, Integer locality, String ownerName, String tradeTitle,
-			String tradeType, Integer tradeCategory, Integer tradeSubCategory, String legacy, Integer status) {
+			String tradeType, Integer tradeCategory, Integer tradeSubCategory, String isLegacy, Integer status) {
 
 		MapSqlParameterSource parameter = new MapSqlParameterSource();
 
 		String query = buildSearchQuery(tenantId, pageSize, pageNumber, sort, active, ids, applicationNumber,
 				licenseNumber, oldLicenseNumber, mobileNumber, aadhaarNumber, emailId, propertyAssesmentNo, adminWard,
-				locality, ownerName, tradeTitle, tradeType, tradeCategory, tradeSubCategory, legacy, status, parameter);
+				locality, ownerName, tradeTitle, tradeType, tradeCategory, tradeSubCategory, isLegacy, status, parameter);
 
 		return executeSearchQuery(requestInfo, query, parameter);
 
@@ -311,7 +311,7 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			Integer[] ids, String applicationNumber, String licenseNumber, String oldLicenseNumber, String mobileNumber,
 			String aadhaarNumber, String emailId, String propertyAssesmentNo, Integer adminWard, Integer locality,
 			String ownerName, String tradeTitle, String tradeType, Integer tradeCategory, Integer tradeSubCategory,
-			String legacy, Integer status, MapSqlParameterSource parameter) {
+			String isLegacy, Integer status, MapSqlParameterSource parameter) {
 
 		StringBuffer searchSql = new StringBuffer();
 		searchSql.append("select * from " + "egtl_license" + " where ");
@@ -326,6 +326,18 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			} else if (active.equalsIgnoreCase("false")) {
 				searchSql.append(" AND active = :active ");
 				parameter.addValue("active", false);
+			}
+
+		}
+		
+		if (isLegacy != null && !isLegacy.trim().isEmpty()) {
+
+			if (isLegacy.equalsIgnoreCase("true")) {
+				searchSql.append(" AND isLegacy = :isLegacy ");
+				parameter.addValue("isLegacy", true);
+			} else if (isLegacy.equalsIgnoreCase("false")) {
+				searchSql.append(" AND isLegacy = :isLegacy ");
+				parameter.addValue("isLegacy", false);
 			}
 
 		}

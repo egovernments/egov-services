@@ -258,6 +258,7 @@ public class ReceiptService {
 		LOGGER.info("Persisting recieptdetail");
 		Receipt receipt = new Receipt();
 		User user = requestInfo.getUserInfo();
+        List<Role> roleList = requestInfo.getUserInfo()  != null ? requestInfo.getUserInfo().getRoles() : new ArrayList<>();
 		AuditDetails auditDetail = getAuditDetails(user);
 		String transactionId = idGenRepository.generateTransactionNumber(
 				requestInfo, tenantId);
@@ -281,13 +282,30 @@ public class ReceiptService {
 						instrument.setTransactionDate(simpleDateFormat
 								.parse(transactionDate));
 						instrument.setTransactionNumber(transactionId);
-					} else {
-						String transactionDate = simpleDateFormat
-								.format(new Date(instrument
-										.getTransactionDateInput()));
-						instrument.setTransactionDate(simpleDateFormat
-								.parse(transactionDate));
-					}
+					} else if(instrument
+                            .getInstrumentType()
+                            .getName()
+                            .equalsIgnoreCase(
+                                    CollectionServiceConstants.INSTRUMENT_TYPE_ONLINE) && user.getRoles() != null && roleList
+                            .stream()
+                            .anyMatch(
+                                    role -> CollectionServiceConstants.COLLECTION_ONLINE_RECEIPT_ROLE
+                                            .contains(role.getName()))) {
+
+                        String transactionDate = simpleDateFormat
+                                .format(new Date());
+                        instrument.setTransactionDate(simpleDateFormat
+                                .parse(transactionDate));
+                        instrument.setTransactionNumber(transactionId);
+
+                    } else {
+                            String transactionDate = simpleDateFormat
+                                    .format(new Date(instrument
+                                            .getTransactionDateInput()));
+                            instrument.setTransactionDate(simpleDateFormat
+                                    .parse(transactionDate));
+
+                    }
 					createdInstrument = instrumentRepository.createInstrument(
 							requestInfo, instrument);
 				} catch (Exception e) {
@@ -307,7 +325,6 @@ public class ReceiptService {
 				collectionConfigRequest.setTenantId(tenantId);
 				collectionConfigRequest
 						.setName(CollectionServiceConstants.MANUAL_RECEIPT_DETAILS_REQUIRED_CONFIG_KEY);
-				List<Role> roleList = requestInfo.getUserInfo().getRoles();
 				Map<String, List<String>> manualReceiptConfiguration = collectionConfigService
 						.getCollectionConfiguration(collectionConfigRequest);
 				if (!manualReceiptConfiguration.isEmpty()
@@ -340,7 +357,18 @@ public class ReceiptService {
 							CollectionServiceConstants.DUPLICATE_RCPT_EXCEPTION_MSG,
 							CollectionServiceConstants.DUPLICATE_RCPT_EXCEPTION_DESC);
 				}
-				billDetail.setReceiptNumber(receiptNumber);
+                if(instrument
+                        .getInstrumentType()
+                        .getName()
+                        .equalsIgnoreCase(
+                                CollectionServiceConstants.INSTRUMENT_TYPE_ONLINE) && user.getRoles() != null && roleList
+                        .stream()
+                        .anyMatch(
+                                role -> CollectionServiceConstants.COLLECTION_ONLINE_RECEIPT_ROLE
+                                        .contains(role.getName()))) {
+                    billDetail.setReceiptNumber("");
+                } else
+				   billDetail.setReceiptNumber(receiptNumber);
 				Map<String, Object> parametersMap;
 				BusinessDetailsResponse businessDetailsRes = getBusinessDetails(
 						billDetail.getBusinessService(), requestInfo, tenantId);
@@ -720,4 +748,8 @@ public class ReceiptService {
 		}
 		return isBillValid;
 	}
+
+    public ReceiptReq saveOnlineReceipts(ReceiptReq receiptReq) {
+        return receiptRepository.insertOnlinePayments(receiptReq);
+    }
 }

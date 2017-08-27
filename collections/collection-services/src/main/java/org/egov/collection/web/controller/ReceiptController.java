@@ -40,25 +40,13 @@
 
 package org.egov.collection.web.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.validation.Valid;
-import javax.validation.ValidationException;
-
 import org.egov.collection.config.CollectionServiceConstants;
 import org.egov.collection.exception.CustomException;
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.service.ReceiptService;
 import org.egov.collection.service.WorkflowService;
 import org.egov.collection.util.ReceiptReqValidator;
-import org.egov.collection.web.contract.Receipt;
-import org.egov.collection.web.contract.ReceiptReq;
-import org.egov.collection.web.contract.ReceiptRes;
-import org.egov.collection.web.contract.ReceiptSearchGetRequest;
-import org.egov.collection.web.contract.ReceiptUpdateRequest;
-import org.egov.collection.web.contract.WorkFlowDetailsResponse;
-import org.egov.collection.web.contract.WorkflowDetailsRequest;
+import org.egov.collection.web.contract.*;
 import org.egov.collection.web.contract.factory.RequestInfoWrapper;
 import org.egov.collection.web.contract.factory.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
@@ -71,12 +59,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import javax.validation.ValidationException;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/receipts")
@@ -228,34 +216,41 @@ public class ReceiptController {
 
 	@PostMapping("/_update")
 	@ResponseBody
-	public ResponseEntity<?> update(
-			@ModelAttribute ReceiptUpdateRequest receiptUpdateRequest,
-			final BindingResult modelAttributeBindingResult,
+	public ResponseEntity<?> update(final BindingResult modelAttributeBindingResult,
 			@RequestBody @Valid ReceiptReq receiptReq, BindingResult errors) {
 
-		WorkflowDetailsRequest workFlowRequest = receiptReq.getReceipt().get(0)
-				.getWorkflowDetails();
-		workFlowRequest.setReceiptHeaderId(receiptUpdateRequest.getId());
-		workFlowRequest.setTenantId(receiptUpdateRequest.getTenantId());
-		workFlowRequest.setRequestInfo(receiptReq.getRequestInfo());
-		if (!validator(workFlowRequest.getTenantId(),
-				workFlowRequest.getReceiptHeaderId())) {
-			LOGGER.info("Invalid TenantId");
-			Error error = new Error();
-			error.setCode(Integer.parseInt(HttpStatus.BAD_REQUEST.toString()));
-			error.setMessage(CollectionServiceConstants.TENANT_ID_MISSING_MESSAGE);
-			ErrorResponse errorResponse = new ErrorResponse();
-			errorResponse.setError(error);
+        Receipt receipt = receiptReq.getReceipt().get(0);
+        String instrumentType = receipt.getInstrument().getInstrumentType().getName();
+         if(instrumentType.equalsIgnoreCase(CollectionServiceConstants.INSTRUMENT_TYPE_ONLINE)) {
+             receiptReq = receiptService.saveOnlineReceipts(receiptReq);
+         } else {
+             for(Receipt receipts : receiptReq.getReceipt()) {
+                 WorkflowDetailsRequest workFlowRequest = receiptReq.getReceipt().get(0)
+                         .getWorkflowDetails();
+                 workFlowRequest.setReceiptHeaderId(Long.valueOf(receipts.getId()));
+                 workFlowRequest.setTenantId(receipt.getTenantId());
+                 workFlowRequest.setRequestInfo(receiptReq.getRequestInfo());
+                 if (!validator(workFlowRequest.getTenantId(),
+                         workFlowRequest.getReceiptHeaderId())) {
+                     LOGGER.info("Invalid TenantId");
+                     Error error = new Error();
+                     error.setCode(Integer.parseInt(HttpStatus.BAD_REQUEST.toString()));
+                     error.setMessage(CollectionServiceConstants.TENANT_ID_MISSING_MESSAGE);
+                     ErrorResponse errorResponse = new ErrorResponse();
+                     errorResponse.setError(error);
 
-			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-		}
-		WorkflowDetailsRequest workFlowDetailsRequest = workFlowService
-				.update(workFlowRequest);
+                     return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+                 }
+                 WorkflowDetailsRequest workFlowDetailsRequest = workFlowService
+                         .update(workFlowRequest);
+                 receipts.setWorkflowDetails(workFlowDetailsRequest);
+             }
+         }
 
-		return getSuccessResponseForUpdate(workFlowDetailsRequest);
+		return getSuccessResponse(receiptReq.getReceipt(),receiptReq.getRequestInfo());
 	}
 
-	private ResponseEntity<?> getSuccessResponseForUpdate(
+	/*private ResponseEntity<?> getSuccessResponseForUpdate(
 			WorkflowDetailsRequest workFlowDetailsRequest) {
 		LOGGER.info("Building success response.");
 		WorkFlowDetailsResponse workFlowDetailsResponse = new WorkFlowDetailsResponse();
@@ -290,7 +285,7 @@ public class ReceiptController {
 		return new ResponseEntity<>(workFlowDetailsResponse, HttpStatus.OK);
 
 	}
-
+*/
 	private boolean validator(String tenantId, long receiptHeaderId) {
 		boolean isTenantValid = true;
 		if (null == tenantId || tenantId.isEmpty() || receiptHeaderId == 0L)

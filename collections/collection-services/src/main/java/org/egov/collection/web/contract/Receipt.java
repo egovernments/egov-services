@@ -17,6 +17,7 @@ import org.egov.collection.model.AuditDetails;
 import org.egov.collection.model.Instrument;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.egov.collection.model.OnlinePayment;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -41,6 +42,8 @@ public class Receipt {
 
 	@NotNull
 	private Instrument instrument;
+
+    private OnlinePayment onlinePayment;
 	
 	private Long stateId;
 	

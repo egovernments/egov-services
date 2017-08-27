@@ -30,13 +30,13 @@ public class TradeLicenseListener {
 	@Autowired
 	TradeLicenseService tradeLicenseService;
 
-	@KafkaListener(topics = { "#{propertiesManager.getCreateLegacyTradeValidated()}", "#{propertiesManager.getUpdateLegacyTradeValidated()}" })
+	@KafkaListener(topics = { "#{propertiesManager.getTradeLicenseValidatedTopic()}" })
 	public void process(Map<String, Object> mastersMap) {
 
-		if (mastersMap.get(propertiesManager.getCreateLegacyTradeValidated()) != null) {
+		if (mastersMap.get("tradelicense-legacy-create") != null) {
 
-			TradeLicenseRequest request = objectMapper.convertValue(
-					mastersMap.get(propertiesManager.getCreateLegacyTradeValidated()), TradeLicenseRequest.class);
+			TradeLicenseRequest request = objectMapper.convertValue(mastersMap.get("tradelicense-legacy-create"),
+					TradeLicenseRequest.class);
 
 			ModelMapper mapper = new ModelMapper();
 			for (TradeLicenseContract tradeLicenseContract : request.getLicenses()) {
@@ -45,10 +45,34 @@ public class TradeLicenseListener {
 			}
 			mastersMap.clear();
 		}
-		if (mastersMap.get(propertiesManager.getUpdateLegacyTradeValidated()) != null) {
+		if (mastersMap.get("tradelicense-new-create") != null) {
 
-			TradeLicenseRequest request = objectMapper.convertValue(
-					mastersMap.get(propertiesManager.getUpdateLegacyTradeValidated()), TradeLicenseRequest.class);
+			TradeLicenseRequest request = objectMapper.convertValue(mastersMap.get("tradelicense-new-create"),
+					TradeLicenseRequest.class);
+
+			ModelMapper mapper = new ModelMapper();
+			for (TradeLicenseContract tradeLicenseContract : request.getLicenses()) {
+				TradeLicense domain = mapper.map(tradeLicenseContract, TradeLicense.class);
+				tradeLicenseService.save(domain);
+			}
+			mastersMap.clear();
+		}
+		if (mastersMap.get("tradelicense-legacy-update") != null) {
+
+			TradeLicenseRequest request = objectMapper.convertValue(mastersMap.get("tradelicense-legacy-update"),
+					TradeLicenseRequest.class);
+
+			ModelMapper mapper = new ModelMapper();
+			for (TradeLicenseContract tradeLicenseContract : request.getLicenses()) {
+				TradeLicense domain = mapper.map(tradeLicenseContract, TradeLicense.class);
+				tradeLicenseService.update(domain);
+			}
+			mastersMap.clear();
+		}
+		if (mastersMap.get("tradelicense-new-update") != null) {
+
+			TradeLicenseRequest request = objectMapper.convertValue(mastersMap.get("tradelicense-new-update"),
+					TradeLicenseRequest.class);
 
 			ModelMapper mapper = new ModelMapper();
 			for (TradeLicenseContract tradeLicenseContract : request.getLicenses()) {

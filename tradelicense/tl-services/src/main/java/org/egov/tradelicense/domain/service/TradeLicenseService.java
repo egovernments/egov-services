@@ -191,6 +191,18 @@ public class TradeLicenseService {
 		// external end point validations
 		tradeLicenseServiceValidator.validateUpdateTradeLicenseRelated(tradeLicenses, requestInfo);
 
+		for (TradeLicense license : tradeLicenses) {
+
+			if (!license.getIsLegacy()) {
+				// TODO: identify the proper ids for the two status and add it
+				// here, for now used 2 and 3
+
+			} else {
+				license.setStatus(new Long(1)); // Approved status id 1
+			}
+
+		}
+		
 		return tradeLicenses;
 	}
 

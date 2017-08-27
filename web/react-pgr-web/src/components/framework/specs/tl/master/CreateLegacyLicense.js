@@ -1024,48 +1024,10 @@ var dat = {
                 "isDisabled": false,
                 "requiredErrMsg": "",
                 "patternErrMsg": ""
-              },
-              {
-                "name": "TradeOwner",
-                "jsonPath": "licenses[0].isPropertyOwner",
-                "label": "tl.create.licenses.groups.TradeDetails.TraderOwnerProperty",
-                "pattern": "",
-                "type": "checkbox",
-                "isRequired": false,
-                "isDisabled": false,
-                "requiredErrMsg": "",
-                "patternErrMsg": "",
-                "defaultValue": false
               }
             ]
-          },
-                    {
-                      "label": "tl.create.licenses.groups.agreementDetails",
-                      "name": "agreement",
-                      "fields": [{
-                          "name": "agreementDate",
-                          "jsonPath": "licenses[0].agreementDate",
-                          "label": "tl.create.licenses.groups.agreementDetails.agreementDate",
-                          "pattern": "",
-                          "type": "date",
-                          "isRequired": false,
-                          "isDisabled": false,
-                          "requiredErrMsg": "",
-                          "patternErrMsg": ""
-                        },
-                        {
-                            "name": "agreementNo",
-                            "jsonPath": "licenses[0].agreementNo",
-                            "label": "tl.create.licenses.groups.agreementDetails.agreementNo",
-                            "pattern": "",
-                            "type": "text",
-                            "isRequired": false,
-                            "isDisabled": false,
-                            "requiredErrMsg": "",
-                            "patternErrMsg": ""
-                          }
-                      ]
-                    }
+          }
+
         ]
       },
 

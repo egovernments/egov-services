@@ -174,7 +174,7 @@ class Dashboard extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      serviceRequestsTwo:sR,
+      serviceRequestsTwo:[],
       slideIndexOne:0,
       slideIndex: 0,
       serviceRequests: [],
@@ -197,7 +197,17 @@ class Dashboard extends Component {
           language: {
              "emptyTable": "No Records"
           }
-    });
+   });
+
+   $('#requestTable').DataTable({
+         dom: 'lBfrtip',
+         buttons: [],
+          bDestroy: true,
+          language: {
+             "emptyTable": "No Records"
+          }
+   });
+
 
 	  let { setLoadingStatus} = this.props;
      setLoadingStatus("loading");
@@ -208,14 +218,16 @@ class Dashboard extends Component {
     if(currentUser.type === constants.ROLE_CITIZEN) {
       Promise.all([
           Api.commonApiPost("/pgr/seva/v1/_search",{userId:currentUser.id},{}),
-          Api.commonApiPost("/pgr-master/serviceGroup/v1/_search",{keywords:constants.CITIZEN_SERVICES_KEYWORD},{})
+          Api.commonApiPost("/pgr-master/serviceGroup/v1/_search",{keywords:constants.CITIZEN_SERVICES_KEYWORD},{}),
+          Api.commonApiPost("/citizen-services/v1/requests/_search", {}, {}, null, true)
       ])
       .then((responses)=>{
         //if any error occurs
-        if(!responses || responses.length ===0 || !responses[0] || !responses[1]){
+        if(!responses || responses.length ===0 || !responses[0] || !responses[1] || !responses[2]){
           current.setState({
             serviceRequests: [],
             citizenServices:[],
+            serviceRequestsTwo: [],
             localArray:[],
              hasData:false
           });
@@ -262,11 +274,11 @@ class Dashboard extends Component {
         //   });
         // })
 
-
         current.props.setLoadingStatus('hide');
 
         current.setState({
           serviceRequests: inboxResponse.serviceRequests,
+          serviceRequestsTwo: responses[2].serviceReq,
           localArray: inboxResponse.serviceRequests,
           citizenServices,
           hasData:true
@@ -367,7 +379,16 @@ class Dashboard extends Component {
           language: {
              "emptyTable": "No Records"
           }
-     });
+       });
+
+       $('#requestTable').DataTable({
+         dom: 'lBfrtip',
+         buttons: [],
+          bDestroy: true,
+          language: {
+             "emptyTable": "No Records"
+          }
+       });
     }
   }
 
@@ -534,7 +555,7 @@ class Dashboard extends Component {
                           <Card>
                             <CardHeader title="My Service Requests"/>
                               <CardText>
-                                <Table>
+                                <Table id="requestTable">
                                     <thead>
                                         <tr>
                                           <th>
@@ -552,7 +573,7 @@ class Dashboard extends Component {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {serviceRequestsTwo.map((item,key)=>{
+                                        {serviceRequestsTwo.map((item, key)=>{
                                           return (<tr key={key}>
                                               <td>{item.serviceRequestId}</td>
                                               <td>{item.serviceCode}</td>

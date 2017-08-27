@@ -535,15 +535,16 @@ var dat = {
               }
            },
            {
-             "name": "showInactiveLicense",
+             "name": "showActiveLicense",
              "jsonPath": "active",
-             "label": "tl.search.groups.showInactiveLicense",
+             "label": "tl.search.groups.showActiveLicense",
              "pattern": "",
              "type": "checkbox",
              "isRequired": false,
              "isDisabled": false,
              "requiredErrMsg": "",
-             "patternErrMsg": ""
+             "patternErrMsg": "",
+             "defaultValue":true
            },
            {
              "name": "status",
@@ -656,7 +657,7 @@ var dat = {
              "label": "tl.search.groups.adminWardName",
              "pattern": "",
              "type": "singleValueList",
-             "url": "tl-services/license/v1/_search?tenantId=default|$..adminWardId|$..adminWardName",
+             "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=WARD&hierarchyTypeName=REVENUE|$..boundaryNum|$..name",
              "isRequired": false,
              "isDisabled": false,
              "requiredErrMsg": "",
@@ -715,7 +716,7 @@ var dat = {
 
      "tl.view": {
         "numCols": 12 / 3,
-        "url": "/tl-services/license/v1/_search?ids={licenseNumber}",
+        "url": "/tl-services/license/v1/_search?licenseNumber={licenseNumber}",
         "tenantIdRequired": true,
         "useTimestamp": true,
         "objectName": "licenses",

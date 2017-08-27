@@ -177,12 +177,12 @@ class NoDues extends Component {
                 self.setState({open: true});
               }, function(err) {
                 self.props.toggleSnackbarAndSetText(true, err.message, false, true);
-                // self.props.setLoadingStatus('hide');
+                self.props.setLoadingStatus('hide');
               });
               }, 2000);
           }, function(err) {
             self.props.toggleSnackbarAndSetText(true, err.message, false, true);
-            // self.props.setLoadingStatus('hide');
+            self.props.setLoadingStatus('hide');
           })
       }
       else {
@@ -207,7 +207,7 @@ class NoDues extends Component {
           self.setState({open: true});
         }, function(err) {
           self.props.toggleSnackbarAndSetText(true, err.message, false, true);
-          // self.props.setLoadingStatus('hide');
+          self.props.setLoadingStatus('hide');
         });
       }
 
@@ -249,12 +249,14 @@ class NoDues extends Component {
             });
             console.log(Receipt);
             self.setState({open: true});
-
+            self.props.setLoadingStatus('hide');
           }, function(err) {
             self.props.toggleSnackbarAndSetText(true, err.message, false, true);
             self.props.setLoadingStatus('hide');
         })
 
+      } else {
+        self.props.setLoadingStatus('hide');
       }
 
 

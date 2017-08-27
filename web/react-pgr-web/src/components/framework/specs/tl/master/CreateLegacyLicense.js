@@ -738,7 +738,7 @@ var dat = {
               },
               {
                 "name": "OldLicenseNumber",
-                "jsonPath": "licenses[0].OldLicenseNumber",
+                "jsonPath": "licenses[0].oldLicenseNumber",
                 "label": "tl.create.licenses.groups.TradeDetails.OldLicenseNumber",
                 "pattern": "",
                 "type": "text",

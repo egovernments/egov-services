@@ -737,7 +737,7 @@ definitions:
       unitNo:
         type: string
         description: unit no. Some ULBs captures the room wise details in case in the same floor different rooms are used for different purposes.
-        maxLength: 8
+        maxLength: 128
         minLength: 1
       unitType:
         type: string
@@ -877,7 +877,7 @@ definitions:
     - usage
     - occupancyType
     - structure
-	- occupancyDate
+    - occupancyDate
     
   WorkFlowDetails:
     type: object

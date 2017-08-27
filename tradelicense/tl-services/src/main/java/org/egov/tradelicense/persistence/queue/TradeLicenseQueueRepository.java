@@ -1,7 +1,8 @@
 package org.egov.tradelicense.persistence.queue;
 
-import java.util.Map;
+import java.util.HashMap;
 
+import org.egov.tl.commons.web.requests.TradeLicenseRequest;
 import org.egov.tradelicense.common.config.PropertiesManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,27 +14,51 @@ public class TradeLicenseQueueRepository {
 	private TradeLicenseProducer tradeLicenseProducer;
 
 	@Autowired
-	PropertiesManager propertiesManager;
+	private PropertiesManager propertiesManager;
 
-	private String key;
-	private String topicKey;
+	public void add(TradeLicenseRequest request) {
 
-	public void add(Map<String, Object> topicMap) {
-		
-		for (Map.Entry<String, Object> entry : topicMap.entrySet()) {
+		String topic = "", key = "";
+		final HashMap<String, Object> tlMap = new HashMap<>();
 
-			key = entry.getKey();
+		topic = propertiesManager.getTradeLicenseValidatedTopic();
 
-			if (key.equalsIgnoreCase(propertiesManager.getCreateLegacyTradeValidated())) {
-				
-				tradeLicenseProducer.sendMessage(propertiesManager.getCreateLegacyTradeValidated(), "", topicMap);
-				
-			} else if(key.equalsIgnoreCase(propertiesManager.getUpdateLegacyTradeValidated())){
-				
-				tradeLicenseProducer.sendMessage(propertiesManager.getUpdateLegacyTradeValidated(), "", topicMap);
-				
-			}
+		switch (request.getRequestInfo().getAction()) {
+
+		case "legacy-create":
+
+			key = propertiesManager.getLegacyTradeLicenseValidatedKey();
+
+			tlMap.put("tradelicense-legacy-create", request);
+
+			break;
+
+		case "new-create":
+
+			key = propertiesManager.getNewTradeLicenseValidatedKey();
+
+			tlMap.put("tradelicense-new-create", request);
+
+			break;
+
+		case "legacy-update":
+
+			key = propertiesManager.getLegacyTradeLicenseValidatedKey();
+
+			tlMap.put("tradelicense-legacy-update", request);
+
+			break;
+
+		case "new-update":
+
+			key = propertiesManager.getNewTradeLicenseValidatedKey();
+
+			tlMap.put("tradelicense-new-update", request);
+
+			break;
 		}
+
+		tradeLicenseProducer.sendMessage(topic, key, tlMap);
 
 	}
 

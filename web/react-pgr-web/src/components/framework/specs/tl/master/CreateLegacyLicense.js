@@ -5,7 +5,7 @@ var dat = {
     "useTimestamp": true,
     "tenantIdRequired": false,
     "objectName": "licenses",
-    "idJsonPath": "licenses[0].id",
+    "idJsonPath": "licenses[0].licenseNumber",
     "groups": [{
         "label": "tl.create.licenses.groups.TradeDetailsTab",
         "name": "TradeDetailsTab",
@@ -527,6 +527,7 @@ var dat = {
              "type": "autoCompelete",
              "isRequired": false,
              "isDisabled": false,
+             "allowWrite":true,
              "requiredErrMsg": "",
              "patternErrMsg": "",
              "url":"/tl-services/license/v1/_search?|$..applicationNumber|$..applicationNumber",
@@ -737,7 +738,7 @@ var dat = {
               },
               {
                 "name": "OldLicenseNumber",
-                "jsonPath": "licenses[0].OldLicenseNumber",
+                "jsonPath": "licenses[0].oldLicenseNumber",
                 "label": "tl.create.licenses.groups.TradeDetails.OldLicenseNumber",
                 "pattern": "",
                 "type": "text",

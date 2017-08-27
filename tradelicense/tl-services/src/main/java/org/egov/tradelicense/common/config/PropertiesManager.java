@@ -74,12 +74,6 @@ public class PropertiesManager {
 	@Value("${egov.services.egov-location.searchpath}")
 	private String locationServiceSearchPath;
 
-	@Value("${egov.services.tl-services.create.legacy.tradelicense.validated}")
-	private String createLegacyTradeValidated;
-
-	@Value("${egov.services.tl-services.update.legacy.tradelicense.validated}")
-	private String updateLegacyTradeValidated;
-	
 	@Value("${egov.services.egf-masters.hostname}")
 	private String financialYearServiceHostName;
 
@@ -225,5 +219,18 @@ public class PropertiesManager {
 	
 	@Value("${nonlegacy.update.customMsg}")
 	private String nonLegacyUpdateCustomMsg;
+	
+	@Value("${egov.services.tl-services.tradelicense.validated.topic}")
+	private String tradeLicenseValidatedTopic;
+
+	
+	@Value("${egov.services.tl-services.tradelicense.legacy.validated.key}")
+	private String legacyTradeLicenseValidatedKey;
+
+	
+	@Value("${egov.services.tl-services.tradelicense.new.validated.key}")
+	private String newTradeLicenseValidatedKey;
+
+
 
 }

@@ -337,7 +337,7 @@ class Report extends Component {
           const renderBody = function() {
             if(formData && formData.hasOwnProperty("licenses") && formData.licenses.length>0){
 
-            return formData.licenses[0].feeDetails.map(function(item, i) {
+            return formData.licenses.map(function(item, i) {
               return (
                 <div>
                 <Card className="uiCard">
@@ -358,7 +358,7 @@ class Report extends Component {
                           <tr key={index}>
                             <td>{item.financialYear}</td>
                             <td>{item.amount}</td>
-                            <td>{item.paid}</td>
+                            <td>{item.paid+""}</td>
                           </tr>
                         )
                       })}

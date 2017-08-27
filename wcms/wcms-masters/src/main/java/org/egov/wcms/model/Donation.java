@@ -44,7 +44,6 @@ import java.util.Date;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
@@ -91,6 +90,10 @@ public class Donation {
 
     private String usageTypeId;
 
+    private String subUsageType;
+
+    private String subUsageTypeId;
+
     @NotNull
     @Size(min = 1, max = 100)
     private Double maxPipeSize;
@@ -108,11 +111,9 @@ public class Donation {
     private Double donationAmount;
 
     @NotNull
-    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date fromDate;
 
     @NotNull
-    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date toDate;
 
     @Size(max = 250)

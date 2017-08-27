@@ -102,6 +102,7 @@ import Transaction from './components/framework/transaction';
 import Inbox from './components/framework/inbox';
 
 import LegacyLicenseCreate from './components/non-framework/tl/transaction/LegacyLicenseCreate';
+import viewLegacyLicense from './components/non-framework/tl/transaction/viewLegacyLicense';
 
 
 import ReceiptView from './components/non-framework/collection/master/receipt/view';
@@ -109,6 +110,8 @@ import Employee from './components/non-framework/employee/create';
 import EmployeeSearch from './components/non-framework/employee/search';
 import SearchLegacyWc from './components/non-framework/wc/search';
 import updateConnection from './components/non-framework/wc/connection-workflow';
+import NoDues from './components/non-framework/citizenServices/NoDues';
+import ComingSoon from './components/non-framework/citizenServices/ComingSoon.js';
 
 const base = "";
 
@@ -117,7 +120,9 @@ const Main = () => {
     <main style={{"marginBottom": "50px"}}>
     <Switch>
         <Route exact path= {base + '/:tenantId?'} component={Login}/>
+        <Route exact path={base + '/coming/soon'} component={ComingSoon}/>
 	     <Route exact path= {base + '/view/:moduleName/:master?/:id'} component={View}/>
+        }
         <Route exact path= {base + '/search/:moduleName/:master?/:action'} component={Search}/>
         <Route exact path={base + '/employee/:action/:id?'} component={Employee}/>
         <Route exact path={base + '/prd/profileEdit'} component={ProfileEdit}/>
@@ -157,8 +162,6 @@ const Main = () => {
         <Route exact path={base+'/pgr/defineEscalationTime'} component={DefineEscalationTime}/>
         <Route exact path={base+'/pgr/createServiceType'} component={ServiceTypeCreate}/>
         <Route exact path={base+'/report/:moduleName/:reportName'} component={Report}/>
-
-
 
         <Route exact path={base+'/wc/createCategoryType'} component={CategoryTypeCreate}/>
         <Route exact name="createCategoryType" path={base+'/wc/createCategoryType/:id?'} component={CategoryTypeCreate}/>
@@ -227,8 +230,12 @@ const Main = () => {
 
       <Route exact path= {base + '/non-framework/tl/transaction/LegacyLicenseCreate'} component={LegacyLicenseCreate}/>
 
+        <Route exact path= {base + '/non-framework/tl/transaction/viewLegacyLicense/:licenseNumber'} component={viewLegacyLicense}/>
+
       <Route exact path= {base + '/non-framework/collection/master/paytax/PayTaxCreate'} component={PayTaxCreate}/>
       <Route exact path= {base + '/non-framework/collection/receipt/view/:id'} component={ReceiptView}/>
+      <Route exact path= {base + '/non-framework/citizenServices/no-dues/:status/:id'} component={NoDues}/>
+
       <Route exact path={base + '/empsearch/:actionName'} component={EmployeeSearch}/>
       <Route exact path={base+'/legacy/view/:id'} component={ViewLegacy}/>
       <Route exact path={base+'/wc/addDemand/:upicNumber'} component={EditDemands}/>

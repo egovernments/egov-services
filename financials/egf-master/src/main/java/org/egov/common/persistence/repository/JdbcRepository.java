@@ -327,6 +327,11 @@ public abstract class JdbcRepository {
 	    return String.valueOf(jdbcTemplate.queryForObject(seqQuery, Long.class)+1);
 	}
 	
+	public void createSequence(String seqName) {
+	    String seqQuery = "create sequence " + seqName + "";
+	    jdbcTemplate.execute(seqQuery);
+	}
+	
 	public Pagination<?> getPagination(String searchQuery, Pagination<?> page, Map<String, Object> paramValues) {
 		String countQuery = "select count(*) from (" + searchQuery + ") as x";
 		Long count = namedParameterJdbcTemplate.queryForObject(countQuery.toString(), paramValues, Long.class);

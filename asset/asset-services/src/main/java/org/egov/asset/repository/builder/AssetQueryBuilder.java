@@ -41,6 +41,8 @@
 
 package org.egov.asset.repository.builder;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.egov.asset.config.ApplicationProperties;
@@ -77,6 +79,7 @@ public class AssetQueryBuilder {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
             final AssetCriteria searchAsset) {
+        new SimpleDateFormat("dd/MM/yyyy");
 
         if (searchAsset.getId() == null && searchAsset.getName() == null && searchAsset.getCode() == null
                 && searchAsset.getDepartment() == null && searchAsset.getAssetCategory() == null
@@ -207,6 +210,25 @@ public class AssetQueryBuilder {
             selectQuery.append(" ASSET.grossvalue BETWEEN ? AND ?");
             preparedStatementValues.add(searchAsset.getFromCapitalizedValue());
             preparedStatementValues.add(searchAsset.getToCapitalizedValue());
+        }
+
+        if (searchAsset.getFromDate() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" ASSET.createddate >= ?");
+            preparedStatementValues.add(new java.sql.Timestamp(new Date(searchAsset.getFromDate() * 1000).getTime()));
+        }
+
+        if (searchAsset.getToDate() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" ASSET.createddate < ?");
+            preparedStatementValues.add(new java.sql.Timestamp(new Date(searchAsset.getToDate() * 1000).getTime()));
+        }
+
+        if (searchAsset.getFromDate() != null && searchAsset.getToDate() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" ASSET.createddate BETWEEN ? AND ?");
+            preparedStatementValues.add(new java.sql.Timestamp(new Date(searchAsset.getFromDate() * 1000).getTime()));
+            preparedStatementValues.add(new java.sql.Timestamp(new Date(searchAsset.getToDate() * 1000).getTime()));
         }
     }
 

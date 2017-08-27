@@ -1,522 +1,175 @@
 ---
 ReportDefinitions:
-
-- reportName: BaseRegisterReport
-  summary: Base Register Report
+- reportName: OutstandingRegister
+  summary: Outstanding Register Report
   version: 1.0.0
   moduleName: wcms
   sourceColumns:
-  - name: consumerNo
-    label: reports.wcms.consumerno
+  - name: boundaryname
+    label: reports.wcms.wardno
     type: string
     source: wcms
-  - name: oldConsumerNo
-    label: reports.wcms.oldconsumerno
+  - name: consumerno
+    label: reports.wcms.consumerno
     type: number
     source: wcms
-  - name: assementNo
-    label: reports.wcms.assesmentno
+  - name: consumername
+    label: reports.wcms.consumername
     type: number
     source: wcms
-  - name: ownerName
-    label: reports.wcms.ownername
-    type: number
-    source: wcms
-  - name: categoryType
-    label: reports.wcms.category
-    type: number
-    source: wcms
-  - name: connectionType
-    label: reports.wcms.connectiontype
-    type: number
-    source: seva
-  - name: waterSource
-    label: reports.wcms.watersource
-    type: number
-    source: seva
-  - name: pipeSize
+  - name: pipesize
     label: reports.wcms.pipesize
     type: number
-    source: seva
-  - name: monthlyRate
-    label: reports.wcms.monthlyrate
-    type: number
-    source: seva
-  - name: arr_demand
-    label: reports.wcms.arraydemand
-    type: number
-    source: seva
-  - name: curr_demand
-    label: reports.wcms.currentdemand
-    type: number
-    source: seva
-  - name: arr_coll
-    label: reports.wcms.arraycollection
-    type: number
-    source: seva
-  - name: curr_coll
-    label: reports.wcms.currentcollection
-    type: number
-    source: seva
-  - name: arr_balance
-    label: reports.wcms.arraybalance
-    type: number
-    source: seva
-  - name: curr_balance
-    label: reports.wcms.currentbalance
-    type: number
-    source: seva
-  searchParams:
-  - name: revenueboundary
-    label: reports.wcms.revenueboundary
-    type: singlevaluelist
-    pattern: http://pgr-master:8080/pgr-master/service/v1/_search?tenantId=default|$..serviceCode|$..serviceName
-    source: seva
-    isMandatory: true
-  query: select dcbinfo.hscno as "consumerNo", dcbinfo.oldhscno as "oldConsumerNo", dcbinfo.propertyid as "assementNo", dcbinfo.username as 
-         "ownerName",dcbinfo.categorytype as "categoryType", dcbinfo.connectiontype as "connectionType" ,dcbinfo.waterSource as "waterSource" ,
-         dcbinfo.pipesize as "pipeSize" , 0 as "monthlyRate",cast(SUM(arr_demand) as bigint) AS arr_demand,cast(SUM(curr_demand) as bigint) AS curr_demand,cast(SUM(arr_coll) 
-         as bigint) AS arr_coll,cast(SUM(curr_coll) as bigint) AS curr_coll, cast(SUM(arr_balance) as bigint) AS arr_balance,cast(SUM(curr_balance) as bigint) AS curr_balance
-         from egwtr_connection_view dcbinfo,eg_boundary boundary, egwtr_water_source_type wt, egwtr_pipesize ps,egwtr_category  cat
-         where  dcbinfo.wardid=boundary.id    and dcbinfo.connectionstatus = 'ACTIVE' and  wt.name=dcbinfo.watersource and ps.sizeinmilimeter=dcbinfo.pipesize  and dcbinfo.categorytype = cat.name and 
-         dcbinfo.wardid in ($revenueboundary) group by dcbinfo.wardid,boundary.name,dcbinfo.hscno,dcbinfo.oldhscno ,dcbinfo.propertyid,dcbinfo.username,dcbinfo.categorytype ,dcbinfo.connectiontype,
-         dcbinfo.waterSource,dcbinfo.pipesize order by boundary.name;
-         
-- reportName: NumberofConnection
-  summary: Number of Connection Report Details
-  version: 1.0.0
-  moduleName: wcms
-  sourceColumns:
-  - name: name
-    label: reports.wcms.boundary.name
-    type: string
     source: wcms
-  - name: newconnection
-    label: reports.wcms.newconnection
-    type: number
-    source: wcms
-  - name: addconnection
-    label: reports.wcms.additionalconnection
-    type: number
-    source: wcms
-  - name: changeofusage
-    label: reports.wcms.changeofusage
-    type: number
-    source: wcms
-  - name: closeconnection
-    label: reports.wcms.closeconnection
-    type: number
-    source: wcms
-  - name: reconnection
-    label: reports.wcms.reconnection
-    type: number
-    source: seva
-  searchParams:
-  - name: revenueboundary
-    label: reports.wcms.revenueboundary
-    type: singlevaluelist
-    pattern: http://pgr-master:8080/pgr-master/service/v1/_search?tenantId=default|$..serviceCode|$..serviceName
-    source: seva
-    isMandatory: true
-  query: SELECT bndry.name as name, COUNT(CASE WHEN con.applicationtype IN ('NEWCONNECTION') THEN 1 END) as newconnection , COUNT(CASE WHEN con.applicationtype IN ('ADDNLCONNECTION') THEN 1 END) addconnection, 
-         COUNT(CASE WHEN con.applicationtype IN ('CHANGEOFUSE') THEN 1 END) changeofusage, COUNT(CASE WHEN con.applicationtype IN ('CLOSINGCONNECTION') THEN 1 END) closeconnection, 
-         COUNT(CASE WHEN con.applicationtype IN ('RECONNECTION') THEN 1 END) reconnection FROM egwtr_waterconnection con 
-         INNER JOIN egpt_property property ON con.propertyidentifier = property.upicnumber INNER JOIN egpt_propertylocation propertylocation ON property.id= propertylocation.property 
-         INNER JOIN eg_boundary bndry ON bndry.id=propertylocation.revenueboundary WHERE propertylocation.revenueboundary=$revenueboundary group by bndry.name
-  
-  
-- reportName: DCBReportZoneWise
-  summary: DCB drill down Report Zone wise
-  version: 1.0.0 
-  moduleName: wcms
-  sourceColumns:
-  - name: zoneid
-    label: reports.wcms.zoneid
-    type: number
-    source: wcms
-    showColumn:false
-  - name: boundaryName
-    label: reports.wcms.boundaryname
-    type: string
-    source: wcms
-  - name: countofconsumerno
-    label: reports.wcms.consumercount
-    type: number
-    source: wcms
-  - name: arr_demand
-    label: reports.wcms.arreardemand
-    type: number
-    source: wcms
-  - name: curr_demand
-    label: reports.wcms.currentdemand
-    type: number
-    source: wcms
-  - name: total_demand
-    label: reports.wcms.totaldemand
-    type: number
-    source: wcms
-  - name: arr_coll
-    label: reports.wcms.arrearcollection
-    type: number
-    source: wcms
-  - name: curr_coll
-    label: reports.wcms.currentcollection
-    type: number
-    source: wcms  
-  - name: total_coll
-    label: reports.wcms.totalcollection
-    type: number
-    source: wcms  
-  - name: arr_balance
-    label: reports.wcms.arrearbalance
-    type: number
-    source: wcms  
-  - name: curr_balance
-    label: reports.wcms.currentbalance
-    type: number
-    source: wcms
-  - name: total_balance
-    label: reports.wcms.totalbalance
-    type: number
-    source: wcms   
-  searchParams:
-  - name: zoneid
-    label: reports.wcms.zoneid
-    type: string
-    source: wcms
-    isMandatory: true
-  - name: connectiontype
-    label: reports.wcms.connectiontype
-    type: string
-    source: wcms
-    isMandatory: true  
-  query: select  distinct cast(dcbinfo.zoneid as integer) as "zoneid",boundary.name as "boundaryName", count(hscno) as countofconsumerno,  
-         cast(SUM(arr_demand) as bigint) AS arr_demand,cast(SUM(curr_demand) as bigint) AS curr_demand,cast(SUM(arr_demand+curr_demand) as bigint) as total_demand,
-         cast(SUM(arr_coll) as bigint) AS arr_coll,cast(SUM(curr_coll) as bigint) AS curr_coll,cast(SUM(arr_coll+curr_coll) as bigint) AS total_coll,
-         cast(SUM(arr_balance) as bigint) AS arr_balance,cast(SUM(curr_balance) as bigint) AS curr_balance,cast(SUM(arr_balance+curr_balance) as bigint) AS total_balance
-         from egwtr_connection_view dcbinfo,eg_boundary boundary  where dcbinfo.zoneid=boundary.id  and dcbinfo.zoneid in ($zoneid) and dcbinfo.connectiontype = $connectiontype 
-         and dcbinfo.connectionstatus = 'ACTIVE' group by dcbinfo.zoneid,boundary.name order by boundary.name
-         
-- reportName: DCBReportZoneWiseByMunicipality
-  summary: DCB drill down Report Zone wise By Municipality
-  version: 1.0.0 
-  moduleName: wcms
-  sourceColumns:
-  - name: zoneid
-    label: reports.wcms.zoneid
-    type: number
-    source: wcms
-    showColumn:false
-  - name: boundaryName
-    label: reports.wcms.boundaryname
-    type: string
-    source: wcms
-  - name: countofconsumerno
-    label: reports.wcms.consumercount
-    type: number
-    source: wcms
-  - name: arr_demand
-    label: reports.wcms.arreardemand
-    type: number
-    source: wcms
-  - name: curr_demand
-    label: reports.wcms.currentdemand
-    type: number
-    source: wcms
-  - name: total_demand
-    label: reports.wcms.totaldemand
-    type: number
-    source: wcms
-  - name: arr_coll
-    label: reports.wcms.arrearcollection
-    type: number
-    source: wcms
-  - name: curr_coll
-    label: reports.wcms.currentcollection
-    type: number
-    source: wcms  
-  - name: total_coll
-    label: reports.wcms.totalcollection
-    type: number
-    source: wcms  
-  - name: arr_balance
-    label: reports.wcms.arrearbalance
-    type: number
-    source: wcms  
-  - name: curr_balance
-    label: reports.wcms.currentbalance
-    type: number
-    source: wcms
-  - name: total_balance
-    label: reports.wcms.totalbalance
-    type: number
-    source: wcms   
-  searchParams:
-  - name: zoneid
-    label: reports.wcms.zoneid
-    type: string
-    source: wcms
-    isMandatory: true
-  - name: connectiontype
-    label: reports.wcms.connectiontype
-    type: string
-    source: wcms
-    isMandatory: true
-  query: select  distinct cast(dcbinfo.zoneid as integer) as "zoneid",boundary.name as "boundaryName", count(hscno) as countofconsumerno,  
-         cast(SUM(arr_demand) as bigint) AS arr_demand,cast(SUM(curr_demand) as bigint) AS curr_demand,cast(SUM(arr_demand+curr_demand) as bigint) as total_demand,
-         cast(SUM(arr_coll) as bigint) AS arr_coll,cast(SUM(curr_coll) as bigint) AS curr_coll,cast(SUM(arr_coll+curr_coll) as bigint) AS total_coll,
-         cast(SUM(arr_balance) as bigint) AS arr_balance,cast(SUM(curr_balance) as bigint) AS curr_balance,cast(SUM(arr_balance+curr_balance) as bigint) AS total_balance
-         from egwtr_connection_view dcbinfo,eg_boundary boundary  where dcbinfo.zoneid=boundary.id  and dcbinfo.zoneid in ($zoneid) and dcbinfo.connectiontype = $connectiontype 
-         and dcbinfo.connectionstatus = 'ACTIVE' group by dcbinfo.zoneid,boundary.name order by boundary.name
-
-- reportName: DCBReportZoneWiseByMunicipalNo
-  summary: DCB drill down Report Zone wise
-  version: 1.0.0 
-  moduleName: wcms
-  sourceColumns:
-  - name: zoneid
-    label: reports.wcms.zoneid
-    type: number
-    source: wcms
-    showColumn:false
-  - name: boundaryName
-    label: reports.wcms.boundaryname
-    type: string
-    source: wcms
-  - name: countofconsumerno
-    label: reports.wcms.consumercount
-    type: number
-    source: wcms
-  - name: arr_demand
-    label: reports.wcms.arreardemand
-    type: number
-    source: wcms
-  - name: curr_demand
-    label: reports.wcms.currentdemand
-    type: number
-    source: wcms
-  - name: total_demand
-    label: reports.wcms.totaldemand
-    type: number
-    source: wcms
-  - name: arr_coll
-    label: reports.wcms.arrearcollection
-    type: number
-    source: wcms
-  - name: curr_coll
-    label: reports.wcms.currentcollection
-    type: number
-    source: wcms  
-  - name: total_coll
-    label: reports.wcms.totalcollection
-    type: number
-    source: wcms  
-  - name: arr_balance
-    label: reports.wcms.arrearbalance
-    type: number
-    source: wcms  
-  - name: curr_balance
-    label: reports.wcms.currentbalance
-    type: number
-    source: wcms
-  - name: total_balance
-    label: reports.wcms.totalbalance
-    type: number
-    source: wcms   
-  searchParams:
-  - name: zoneid
-    label: reports.wcms.zoneid
-    type: string
-    source: wcms
-    isMandatory: true
-  - name: connectiontype
-    label: reports.wcms.connectiontype
-    type: string
-    source: wcms
-    isMandatory: true
-  query: select  distinct cast(dcbinfo.zoneid as integer) as "zoneid",boundary.name as "boundaryName", count(hscno) as countofconsumerno,  
-         cast(SUM(arr_demand) as bigint) AS arr_demand,cast(SUM(curr_demand) as bigint) AS curr_demand,cast(SUM(arr_demand+curr_demand) as bigint) as total_demand,
-         cast(SUM(arr_coll) as bigint) AS arr_coll,cast(SUM(curr_coll) as bigint) AS curr_coll,cast(SUM(arr_coll+curr_coll) as bigint) AS total_coll,
-         cast(SUM(arr_balance) as bigint) AS arr_balance,cast(SUM(curr_balance) as bigint) AS curr_balance,cast(SUM(arr_balance+curr_balance) as bigint) AS total_balance
-         from egwtr_connection_view dcbinfo,eg_boundary boundary  where dcbinfo.zoneid=boundary.id  and dcbinfo.zoneid in ($zoneid) and dcbinfo.connectiontype = $connectiontype 
-         and dcbinfo.connectionstatus = 'ACTIVE' group by dcbinfo.zoneid,boundary.name order by boundary.name
-
-- reportName: DCBReportZoneWiseByMunicipalityName
-  summary: DCB drill down Report Zone wise
-  version: 1.0.0 
-  moduleName: wcms
-  sourceColumns:
-  - name: zoneid
-    label: reports.wcms.zoneid
-    type: number
-    source: wcms
-    showColumn:false
-  - name: boundaryName
-    label: reports.wcms.boundaryname
-    type: string
-    source: wcms
-  - name: countofconsumerno
-    label: reports.wcms.consumercount
-    type: number
-    source: wcms
-  - name: arr_demand
-    label: reports.wcms.arreardemand
-    type: number
-    source: wcms
-  - name: curr_demand
-    label: reports.wcms.currentdemand
-    type: number
-    source: wcms
-  - name: total_demand
-    label: reports.wcms.totaldemand
-    type: number
-    source: wcms
-  - name: arr_coll
-    label: reports.wcms.arrearcollection
-    type: number
-    source: wcms
-  - name: curr_coll
-    label: reports.wcms.currentcollection
-    type: number
-    source: wcms  
-  - name: total_coll
-    label: reports.wcms.totalcollection
-    type: number
-    source: wcms  
-  - name: arr_balance
-    label: reports.wcms.arrearbalance
-    type: number
-    source: wcms  
-  - name: curr_balance
-    label: reports.wcms.currentbalance
-    type: number
-    source: wcms
-  - name: total_balance
-    label: reports.wcms.totalbalance
-    type: number
-    source: wcms   
-  searchParams:
-  - name: zoneid
-    label: reports.wcms.zoneid
-    type: string
-    source: wcms
-    isMandatory: true
-  - name: connectiontype
-    label: reports.wcms.connectiontype
-    type: string
-    source: wcms
-    isMandatory: true  
-  query: select  distinct cast(dcbinfo.zoneid as integer) as "zoneid",boundary.name as "boundaryName", count(hscno) as countofconsumerno,  
-         cast(SUM(arr_demand) as bigint) AS arr_demand,cast(SUM(curr_demand) as bigint) AS curr_demand,cast(SUM(arr_demand+curr_demand) as bigint) as total_demand,
-         cast(SUM(arr_coll) as bigint) AS arr_coll,cast(SUM(curr_coll) as bigint) AS curr_coll,cast(SUM(arr_coll+curr_coll) as bigint) AS total_coll,
-         cast(SUM(arr_balance) as bigint) AS arr_balance,cast(SUM(curr_balance) as bigint) AS curr_balance,cast(SUM(arr_balance+curr_balance) as bigint) AS total_balance
-         from egwtr_connection_view dcbinfo,eg_boundary boundary  where dcbinfo.zoneid=boundary.id  and dcbinfo.zoneid in ($zoneid) and dcbinfo.connectiontype = $connectiontype 
-         and dcbinfo.connectionstatus = 'ACTIVE' group by dcbinfo.zoneid,boundary.name order by boundary.name
-
-  
-- reportName: DailyCollectionReport
-  summary: Daily Collection Report
-  version: 1.0.0 
-  moduleName : wcms
-  sourceColumns:
-  - name: consumerNo
-    label: reports.wcms.consumerno
-    type: string
-    source: submission
-  - name: oldConsumerNo
-    label: reports.wcms.oldconsumerno
-    type: string
-    source: submission
-  - name: assementNo
-    label: reports.wcms.assesmentno
-    type: string
-    source: submission
-  - name: ownerName
-    label: reports.wcms.ownername
-    type: string
-    source: submission
-  - name: categoryType
-    label: reports.wcms.category
-    type: string
-    source: submission
-  - name: period
-    label: reports.wcms.period
-    type: string
-    source: submission
-  - name: doorNo
-    label: reports.wcms.doorno
-    type: string
-    source: submission
-  - name: connectionType
-    label: reports.wcms.connectiontype
-    type: string
-    source: submission   
-  - name: arrears
-    label: reports.wcms.arrears
-    type: string
-    source: submission   
-  - name: current
-    label: reports.wcms.current
-    type: string
-    source: submission   
-  - name: arrearsCollection
-    label: reports.wcms.arrearcollection
-    type: string
-    source: submission 
-  - name: currentCollection
-    label: reports.wcms.currentcollection
-    type: string
-    source: submission  
-  - name: totalDemand
-    label: reports.wcms.totaldemand
-    type: string
-    source: submission  
-  - name: usageType
+  - name: usage
     label: reports.wcms.usage
-    type: string
-    source: submission  
-  - name: waterSource
-    label: reports.wcms.source
-    type: string
-    source: submission  
-  - name: pipeSize
-    label: reports.wcms.pipesize
-    type: string
-    source: submission   
-  - name: totalCollection
-    label: reports.wcms.totalcollection
-    type: string
-    source: submission   
-  - name: monthlyRate
-    label: reports.wcms.monthlyrate
-    type: string
-    source: submission       
+    type: number
+    source: wcms
+  - name: outstanding
+    label: reports.wcms.outstanding
+    type: number
+    source: seva
   searchParams:
   - name: fromDate
-    label: reports.wcms.datefrom
-    type: epoch
+    label: reports.wcms.fromdate
+    type: string
     source: wcms
-    isMandatory: true
+    isMandatory: false
   - name: toDate
-    label: reports.wcms.dateto
-    type: epoch
-    source: wcms
-    isMandatory: true
-  - name: status
-    label: reports.wcms.dateto
+    label: reports.wcms.todate
     type: string
     source: wcms
-    isMandatory: true
-  - name: complainttype
-    label: reports.wcms.dateto
+    isMandatory: false
+  query: select  boundary.name as boundaryName, dcbinfo.hscno as consumerno,dcbinfo.username as consumerName,
+         dcbinfo.pipesize as pipesize,null as usage, (dcbinfo.curr_balance+dcbinfo.arr_balance) as  outstanding
+         from egwtr_connection_view dcbinfo,eg_boundary boundary  where  dcbinfo.wardid=boundary.id and 
+          dcbinfo.zoneid in (1) and dcbinfo.connectionstatus = 'ACTIVE' order by boundary.name;
+
+- reportName: DemandRegister
+  summary: Demand Register Report
+  version: 1.0.0
+  moduleName: wcms
+  sourceColumns:
+  - name: consumerno
+    label: reports.wcms.consumerno
     type: string
+    source: wcms
+  - name: consumername
+    label: reports.wcms.consumername
+    type: number
+    source: wcms
+  - name: billnumber
+    label: reports.wcms.billnumber
+    type: number
+    source: wcms
+  - name: arrear
+    label: reports.wcms.arrear
+    type: number
+    source: wcms
+  - name: current
+    label: reports.wcms.current
+    type: number
+    source: wcms
+  - name: advance
+    label: reports.wcms.advance
+    type: number
+    source: seva
+  - name: total
+    label: reports.wcms.total
+    type: number
+    source: seva   
+  searchParams:
+  - name: fromDate
+    label: reports.wcms.fromdate
+    type: string
+    source: seva
+    isMandatory: false
+  - name: toDate
+    label: reports.wcms.todate
+    type: string
+    source: seva
+    isMandatory: false
+  query: select  boundary.name as boundaryName, dcbinfo.hscno as consumerno,dcbinfo.username as consumerName,
+         dcbinfo.pipesize as pipesize,null as usage, billdet.billno as BillNumber,(dcbinfo.curr_balance) as  Current,
+         dcbinfo.arr_demand as Arrear,dcbinfo.advance_coll as Advance from egwtr_connection_view dcbinfo,eg_boundary boundary,egbs_billdetail billdet where  dcbinfo.wardid=boundary.id and 
+         billdet.consumercode=dcbinfo.hscno and dcbinfo.connectionstatus = 'ACTIVE' order by boundary.name;
+  
+- reportName: DCBReport
+  summary: DCB Report
+  version: 1.0.0 
+  moduleName: wcms
+  sourceColumns:
+  - name: zoneid
+    label: reports.wcms.zoneid
+    type: number
+    source: wcms
+    showColumn: false
+  - name: boundaryName
+    label: reports.wcms.boundaryname
+    type: string
+    source: wcms
+  - name: countofconsumerno
+    label: reports.wcms.consumercount
+    type: number
+    source: wcms
+  - name: arr_demand
+    label: reports.wcms.arreardemand
+    type: number
+    source: wcms
+  - name: curr_demand
+    label: reports.wcms.currentdemand
+    type: number
+    source: wcms
+  - name: total_demand
+    label: reports.wcms.totaldemand
+    type: number
+    source: wcms
+  - name: arr_coll
+    label: reports.wcms.arrearcollection
+    type: number
+    source: wcms
+  - name: curr_coll
+    label: reports.wcms.currentcollection
+    type: number
     source: wcms  
-    isMandatory: true
-  query: select dcbinfo.hscno as "consumerNo", dcbinfo.oldhscno as "oldConsumerNo", dcbinfo.propertyid as "assementNo", dcbinfo.username as "ownerName",dcbinfo.categorytype as "categoryType",
-         dcbinfo.username as "period",'' as "doorNo", dcbinfo.connectiontype as "connectionType" , dcbinfo.arr_demand as "arrears" ,  dcbinfo.curr_demand as "current" ,  
-         dcbinfo.arr_coll as "arrearsCollection" ,  dcbinfo.curr_coll as "currentCollection" ,  dcbinfo.arr_demand+dcbinfo.curr_demand as "totalDemand" , '' as "usageType" , 
-         dcbinfo.waterSource as "waterSource" , dcbinfo.pipesize as "pipeSize" , dcbinfo.arr_coll+dcbinfo.curr_coll as "totalCollection" , '' as "monthlyRate"  from  egwtr_property_usage_type ut, 
-         egwtr_water_source_type wt, egwtr_pipesize ps, egwtr_meter_water_rates wrh,egwtr_connection_view dcbinfo 
-         INNER JOIN eg_boundary wardboundary on dcbinfo.wardid = wardboundary.id  INNER JOIN eg_boundary localboundary on dcbinfo.wardid = localboundary.id 
-         where ut.id=wrh.usagetypeid :: integer and wt.id=wrh.sourcetypeid :: integer and ps.id=wrh.pipesizeid and dcbinfo.watersource :: integer = wrh.sourcetypeid and dcbinfo.pipesize = ps.code :: integer
-         and wrh.active=true and wrh.fromdate <= now() and  wrh.todate >= now() and dcbinfo.connectionstatus = 'ACTIVE' and wardboundary.id = $revenueward
+  - name: total_coll
+    label: reports.wcms.totalcollection
+    type: number
+    source: wcms  
+  - name: arr_balance
+    label: reports.wcms.arrearbalance
+    type: number
+    source: wcms  
+  - name: curr_balance
+    label: reports.wcms.currentbalance
+    type: number
+    source: wcms
+  - name: total_balance
+    label: reports.wcms.totalbalance
+    type: number
+    source: wcms   
+  searchParams:
+  - name: zoneid
+    label: reports.wcms.zoneid
+    type: singlevaluelist
+    pattern: 
+    source: wcms
+    isMandatory: false
+  - name: wardid
+    label: reports.wcms.ward
+    type: singlevaluelist
+    source: wcms
+    pattern: 
+    isMandatory: false
+  - name: connectiontype
+    label: reports.wcms.connectiontype
+    type: singlevaluelist
+    pattern: 'list://METERED:METERED,NON-METERED:NON-METERED'
+    source: wcms
+    isMandatory: false  
+  query: select  distinct cast(dcbinfo.zoneid as integer) as zoneid,boundary.name as boundaryName, count(hscno) as countofconsumerno,
+         cast(SUM(arr_demand) as bigint) AS arr_demand,cast(SUM(curr_demand) as bigint) AS curr_demand,cast(SUM(arr_demand+curr_demand) as bigint) as total_demand,
+         cast(SUM(arr_coll) as bigint) AS arr_coll,cast(SUM(curr_coll) as bigint) AS curr_coll,cast(SUM(arr_coll+curr_coll) as bigint) AS total_coll,
+         cast(SUM(arr_balance) as bigint) AS arr_balance,cast(SUM(curr_balance) as bigint) AS curr_balance,cast(SUM(arr_balance+curr_balance) as bigint) AS total_balance
+         from egwtr_connection_view dcbinfo,eg_boundary boundary  where  dcbinfo.zoneid=boundary.id and dcbinfo.zoneid in (1) and dcbinfo.billingtype in ('METERED') and dcbinfo.connectionstatus = 'ACTIVE'
+         group by dcbinfo.zoneid,boundary.name order by boundary.name;

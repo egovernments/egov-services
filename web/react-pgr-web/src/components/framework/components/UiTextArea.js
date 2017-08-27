@@ -11,13 +11,15 @@ export default class UiTextArea extends Component {
 			case 'google':
 				return (
 					<TextField
-						floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
+						floatingLabelStyle={{"color": item.isDisabled ? "#A9A9A9" : "#696969", "fontSize": "20px", "white-space": "nowrap"}}
+						inputStyle={{"color": "#5F5C57"}}
 						floatingLabelFixed={true} 
 						style={{"display": (item.hide ? 'none' : 'inline-block')}}
 						errorStyle={{"float":"left"}}
 						fullWidth={true}
 						multiLine={true}
 						rows={2}
+						maxLength={item.maxLength || ""}
 						floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>} 
 						value={this.props.getVal(item.jsonPath)}
 						disabled={item.isDisabled}

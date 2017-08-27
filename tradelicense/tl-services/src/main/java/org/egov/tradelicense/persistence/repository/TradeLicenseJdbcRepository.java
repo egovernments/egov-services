@@ -9,17 +9,15 @@ import org.egov.tl.commons.web.contract.CategorySearch;
 import org.egov.tl.commons.web.contract.LicenseStatus;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.UOM;
-import org.egov.tl.commons.web.requests.CategorySearchResponse;
-import org.egov.tl.commons.web.requests.DocumentTypeResponse;
-import org.egov.tl.commons.web.requests.LicenseStatusResponse;
+import org.egov.tl.commons.web.requests.DocumentTypeV2Response;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
-import org.egov.tl.commons.web.requests.UOMResponse;
+import org.egov.tl.commons.web.response.CategorySearchResponse;
+import org.egov.tl.commons.web.response.LicenseStatusResponse;
+import org.egov.tl.commons.web.response.UOMResponse;
 import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.common.persistense.repository.JdbcRepository;
 import org.egov.tradelicense.common.util.TimeStampUtil;
-import org.egov.tradelicense.persistence.entity.LicenseFeeDetailEntity;
 import org.egov.tradelicense.persistence.entity.LicenseFeeDetailSearchEntity;
-import org.egov.tradelicense.persistence.entity.SupportDocumentEntity;
 import org.egov.tradelicense.persistence.entity.SupportDocumentSearchEntity;
 import org.egov.tradelicense.persistence.entity.TradeLicenseEntity;
 import org.egov.tradelicense.persistence.entity.TradeLicenseSearchEntity;
@@ -29,7 +27,7 @@ import org.egov.tradelicense.web.repository.BoundaryContractRepository;
 import org.egov.tradelicense.web.repository.CategoryContractRepository;
 import org.egov.tradelicense.web.repository.DocumentTypeContractRepository;
 import org.egov.tradelicense.web.repository.FinancialYearContractRepository;
-import org.egov.tradelicense.web.requests.BoundaryResponse;
+import org.egov.tradelicense.web.response.BoundaryResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +40,7 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 
 	@Autowired
 	PropertiesManager propertiesManager;
-	
+
 	@Autowired
 	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -51,10 +49,10 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 
 	@Autowired
 	BoundaryContractRepository boundaryContractRepository;
-	
+
 	@Autowired
 	FinancialYearContractRepository financialYearRepository;
-	
+
 	@Autowired
 	DocumentTypeContractRepository documentTypeRepository;
 
@@ -66,23 +64,46 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 	}
 
 	public TradeLicenseEntity create(TradeLicenseEntity entity) {
+
 		super.create(entity);
 
 		return entity;
+	}
+
+	public TradeLicenseEntity update(TradeLicenseEntity entity) {
+
+		super.update(entity);
+
+		return entity;
+	}
+
+	public TradeLicenseSearchEntity searchById(RequestInfo requestInfo, Long licenseId) {
+
+		MapSqlParameterSource parameter = new MapSqlParameterSource();
+		StringBuffer searchSql = new StringBuffer();
+		searchSql.append("select * from " + "egtl_license" + " where ");
+		searchSql.append(" id = :id ");
+		parameter.addValue("id", licenseId);
+		List<TradeLicenseSearchEntity> searchEntities = executeSearchQuery(requestInfo, searchSql.toString(),
+				parameter);
+		TradeLicenseSearchEntity tradeLicenseSearchEntity = null;
+		if (searchEntities != null && searchEntities.size() > 0) {
+			tradeLicenseSearchEntity = searchEntities.get(0);
+		}
+		return tradeLicenseSearchEntity;
 	}
 
 	public List<TradeLicenseSearchEntity> search(RequestInfo requestInfo, String tenantId, Integer pageSize,
 			Integer pageNumber, String sort, String active, Integer[] ids, String applicationNumber,
 			String licenseNumber, String oldLicenseNumber, String mobileNumber, String aadhaarNumber, String emailId,
 			String propertyAssesmentNo, Integer adminWard, Integer locality, String ownerName, String tradeTitle,
-			String tradeType, Integer tradeCategory, Integer tradeSubCategory, String legacy, Integer status) {
+			String tradeType, Integer tradeCategory, Integer tradeSubCategory, String isLegacy, Integer status) {
 
 		MapSqlParameterSource parameter = new MapSqlParameterSource();
 
 		String query = buildSearchQuery(tenantId, pageSize, pageNumber, sort, active, ids, applicationNumber,
 				licenseNumber, oldLicenseNumber, mobileNumber, aadhaarNumber, emailId, propertyAssesmentNo, adminWard,
-				locality, ownerName, tradeTitle, tradeType, tradeCategory, tradeSubCategory, legacy, status,
-				parameter);
+				locality, ownerName, tradeTitle, tradeType, tradeCategory, tradeSubCategory, isLegacy, status, parameter);
 
 		return executeSearchQuery(requestInfo, query, parameter);
 
@@ -92,114 +113,115 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			MapSqlParameterSource parameter) {
 
 		List<TradeLicenseSearchEntity> tradeLicenses = new ArrayList<TradeLicenseSearchEntity>();
-		try {
-			List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(query, parameter);
-			Map<String, Map<String, String>> uniqueFieldsMap = identifyDependencyFields(requestInfo, rows);
+		List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(query, parameter);
 
-			for (Map<String, Object> row : rows) {
-
-				String categoryName = null, subCategoryName = null, uomName = null, statusName = null,
-						localityName = null, adminWardName = null, revenueWardName = null;
-
-				if (uniqueFieldsMap.get("categoryIdAndNameMap") != null) {
-					categoryName = uniqueFieldsMap.get("categoryIdAndNameMap").get(getString(row.get("categoryId")));
-				}
-				if (uniqueFieldsMap.get("subCategoryIdAndNameMap") != null) {
-					subCategoryName = uniqueFieldsMap.get("subCategoryIdAndNameMap")
-							.get(getString(row.get("subCategoryId")));
-				}
-				if (uniqueFieldsMap.get("uomIdAndNameMap") != null) {
-					uomName = uniqueFieldsMap.get("uomIdAndNameMap").get(getString(row.get("uomId")));
-				}
-				if (uniqueFieldsMap.get("statusIdAndNameMap") != null) {
-					statusName = uniqueFieldsMap.get("statusIdAndNameMap").get(getString(row.get("status")));
-				}
-				if (uniqueFieldsMap.get("localityIdAndNameMap") != null) {
-					localityName = uniqueFieldsMap.get("localityIdAndNameMap").get(getString(row.get("localityId")));
-				}
-				if (uniqueFieldsMap.get("adminWardIdAndNameMap") != null) {
-					adminWardName = uniqueFieldsMap.get("adminWardIdAndNameMap").get(getString(row.get("adminWardId")));
-				}
-				if (uniqueFieldsMap.get("revenueWardIdAndNameMap") != null) {
-					revenueWardName = uniqueFieldsMap.get("revenueWardIdAndNameMap")
-							.get(getString(row.get("revenueWardId")));
-				}
-				
-				
-				TradeLicenseSearchEntity license = new TradeLicenseSearchEntity();
-
-				license.setId(getLong(row.get("id")));
-				license.setTenantId(getString(row.get("tenantId")));
-				license.setApplicationType(getString(row.get("applicationType")));
-				license.setApplicationDate(TimeStampUtil.getTimeStampFromDB(getString(row.get("applicationDate"))));
-				license.setApplicationNumber(getString(row.get("applicationNumber")));
-				license.setLicenseNumber(getString(row.get("licenseNumber")));
-				license.setOldLicenseNumber(getString(row.get("oldLicenseNumber")));
-				license.setAdhaarNumber(getString(row.get("adhaarNumber")));
-				license.setMobileNumber(getString(row.get("mobileNumber")));
-				license.setOwnerName(getString(row.get("ownerName")));
-				license.setFatherSpouseName(getString(row.get("fatherSpouseName")));
-				license.setEmailId(getString(row.get("emailId")));
-				license.setOwnerAddress(getString(row.get("ownerAddress")));
-				license.setPropertyAssesmentNo(getString(row.get("propertyAssesmentNo")));
-				license.setLocalityId(Integer.valueOf(getString((row.get("localityId")))));
-				license.setLocalityName(getString(localityName));
-				license.setRevenueWardId(Integer.valueOf((getString(row.get("revenueWardId")))));
-				license.setRevenueWardName(getString(revenueWardName));
-				license.setAdminWardId(Integer.valueOf((getString(row.get("adminWardId")))));
-				license.setAdminWardName(getString(adminWardName));
-				license.setStatus(Long.valueOf((getString(row.get("status")))));
-				license.setStatusName(getString(statusName));
-				license.setTradeAddress(getString(row.get("tradeAddress")));
-				license.setOwnerShipType(getString(row.get("ownerShipType")));
-				license.setTradeTitle(getString(row.get("tradeTitle")));
-				license.setTradeType((getString(row.get("tradeType"))));
-				license.setCategoryId(getLong(row.get("categoryId")));
-				license.setCategory(getString(categoryName));
-				license.setSubCategoryId(getLong(row.get("subCategoryId")));
-				license.setSubCategory(getString(subCategoryName));
-				license.setUomId(getLong(row.get("uomId")));
-				license.setUom(getString(uomName));
-				license.setQuantity(getDouble(row.get("quantity")));
-				license.setRemarks(getString(row.get("remarks")));
-				license.setValidityYears( getLong(row.get("validityyears")));
-				license.setTradeCommencementDate(
-						TimeStampUtil.getTimeStampFromDB(getString(row.get("tradeCommencementDate"))));
-				license.setLicenseValidFromDate(
-						TimeStampUtil.getTimeStampFromDB(getString(row.get("licenseValidFromDate"))));
-				license.setAgreementDate(TimeStampUtil.getTimeStampFromDB(getString(row.get("agreementDate"))));
-				license.setAgreementNo(getString(row.get("agreementNo")));
-				license.setIsLegacy(getBoolean(row.get("isLegacy")));
-				license.setActive(getBoolean(row.get("active")));
-				license.setExpiryDate(TimeStampUtil.getTimeStampFromDB(getString(row.get("expiryDate"))));
-				license.setCreatedBy(getString(row.get("createdBy")));
-				license.setLastModifiedBy(getString(row.get("lastModifiedBy")));
-				license.setLastModifiedTime(getLong(row.get("lastModifiedTime")));
-				license.setCreatedTime(getLong(row.get("createdTime")));
-				license.setFeeDetailEntitys(getFeeDetails(license, requestInfo));
-				license.setSupportDocumentEntitys(getSupportDocuments(license, requestInfo));
-				tradeLicenses.add(license);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		Map<String, Map<String, String>> uniqueFieldsMap = new HashMap<String, Map<String, String>>();
+		if (rows != null && rows.size() > 0) {
+			uniqueFieldsMap = identifyDependencyFields(requestInfo, rows);
 		}
+
+		for (Map<String, Object> row : rows) {
+
+			String categoryName = null, subCategoryName = null, uomName = null, statusName = null, localityName = null,
+					adminWardName = null, revenueWardName = null;
+
+			if (uniqueFieldsMap.get("categoryIdAndNameMap") != null) {
+				categoryName = uniqueFieldsMap.get("categoryIdAndNameMap").get(getString(row.get("categoryId")));
+			}
+			if (uniqueFieldsMap.get("subCategoryIdAndNameMap") != null) {
+				subCategoryName = uniqueFieldsMap.get("subCategoryIdAndNameMap")
+						.get(getString(row.get("subCategoryId")));
+			}
+			if (uniqueFieldsMap.get("uomIdAndNameMap") != null) {
+				uomName = uniqueFieldsMap.get("uomIdAndNameMap").get(getString(row.get("uomId")));
+			}
+			if (uniqueFieldsMap.get("statusIdAndNameMap") != null) {
+				statusName = uniqueFieldsMap.get("statusIdAndNameMap").get(getString(row.get("status")));
+			}
+			if (uniqueFieldsMap.get("localityIdAndNameMap") != null) {
+				localityName = uniqueFieldsMap.get("localityIdAndNameMap").get(getString(row.get("localityId")));
+			}
+			if (uniqueFieldsMap.get("adminWardIdAndNameMap") != null) {
+				adminWardName = uniqueFieldsMap.get("adminWardIdAndNameMap").get(getString(row.get("adminWardId")));
+			}
+			if (uniqueFieldsMap.get("revenueWardIdAndNameMap") != null) {
+				revenueWardName = uniqueFieldsMap.get("revenueWardIdAndNameMap")
+						.get(getString(row.get("revenueWardId")));
+			}
+
+			TradeLicenseSearchEntity license = new TradeLicenseSearchEntity();
+
+			license.setId(getLong(row.get("id")));
+			license.setTenantId(getString(row.get("tenantId")));
+			license.setApplicationType(getString(row.get("applicationType")));
+			license.setApplicationDate(TimeStampUtil.getTimeStampFromDB(getString(row.get("applicationDate"))));
+			license.setApplicationNumber(getString(row.get("applicationNumber")));
+			license.setLicenseNumber(getString(row.get("licenseNumber")));
+			license.setOldLicenseNumber(getString(row.get("oldLicenseNumber")));
+			license.setAdhaarNumber(getString(row.get("adhaarNumber")));
+			license.setMobileNumber(getString(row.get("mobileNumber")));
+			license.setOwnerName(getString(row.get("ownerName")));
+			license.setFatherSpouseName(getString(row.get("fatherSpouseName")));
+			license.setEmailId(getString(row.get("emailId")));
+			license.setOwnerAddress(getString(row.get("ownerAddress")));
+			license.setPropertyAssesmentNo(getString(row.get("propertyAssesmentNo")));
+			license.setLocalityId(Integer.valueOf(getString((row.get("localityId")))));
+			license.setLocalityName(getString(localityName));
+			license.setRevenueWardId(Integer.valueOf((getString(row.get("revenueWardId")))));
+			license.setRevenueWardName(getString(revenueWardName));
+			license.setAdminWardId(Integer.valueOf((getString(row.get("adminWardId")))));
+			license.setAdminWardName(getString(adminWardName));
+			license.setStatus(Long.valueOf((getString(row.get("status")))));
+			license.setStatusName(getString(statusName));
+			license.setTradeAddress(getString(row.get("tradeAddress")));
+			license.setOwnerShipType(getString(row.get("ownerShipType")));
+			license.setTradeTitle(getString(row.get("tradeTitle")));
+			license.setTradeType((getString(row.get("tradeType"))));
+			license.setCategoryId(getLong(row.get("categoryId")));
+			license.setCategory(getString(categoryName));
+			license.setSubCategoryId(getLong(row.get("subCategoryId")));
+			license.setSubCategory(getString(subCategoryName));
+			license.setUomId(getLong(row.get("uomId")));
+			license.setUom(getString(uomName));
+			license.setQuantity(getDouble(row.get("quantity")));
+			license.setRemarks(getString(row.get("remarks")));
+			license.setValidityYears(getLong(row.get("validityyears")));
+			license.setTradeCommencementDate(
+					TimeStampUtil.getTimeStampFromDB(getString(row.get("tradeCommencementDate"))));
+			license.setLicenseValidFromDate(
+					TimeStampUtil.getTimeStampFromDB(getString(row.get("licenseValidFromDate"))));
+			license.setAgreementDate(TimeStampUtil.getTimeStampFromDB(getString(row.get("agreementDate"))));
+			license.setAgreementNo(getString(row.get("agreementNo")));
+			license.setIsLegacy(getBoolean(row.get("isLegacy")));
+			license.setActive(getBoolean(row.get("active")));
+			license.setExpiryDate(TimeStampUtil.getTimeStampFromDB(getString(row.get("expiryDate"))));
+			license.setCreatedBy(getString(row.get("createdBy")));
+			license.setLastModifiedBy(getString(row.get("lastModifiedBy")));
+			license.setLastModifiedTime(getLong(row.get("lastModifiedTime")));
+			license.setCreatedTime(getLong(row.get("createdTime")));
+			license.setFeeDetailEntitys(getFeeDetails(license, requestInfo));
+			license.setSupportDocumentEntitys(getSupportDocuments(license, requestInfo));
+			tradeLicenses.add(license);
+		}
+
 		return tradeLicenses;
 	}
 
-	public List<LicenseFeeDetailSearchEntity> getFeeDetails(TradeLicenseSearchEntity license,RequestInfo requestInfo){
-		
+	public List<LicenseFeeDetailSearchEntity> getFeeDetails(TradeLicenseSearchEntity license, RequestInfo requestInfo) {
+
 		String query = buildFeeDetailsSearchQuery(license.getId().intValue());
-		List<LicenseFeeDetailSearchEntity> licenses = executeFeeDetailsQuery(query,license,requestInfo);
-	
+		List<LicenseFeeDetailSearchEntity> licenses = executeFeeDetailsQuery(query, license, requestInfo);
+
 		return licenses;
 	}
-	
-	private List<LicenseFeeDetailSearchEntity> executeFeeDetailsQuery(String query,TradeLicenseSearchEntity license,RequestInfo requestInfo) {
-	
-		//preparing request info wrapper for the rest api calls
+
+	private List<LicenseFeeDetailSearchEntity> executeFeeDetailsQuery(String query, TradeLicenseSearchEntity license,
+			RequestInfo requestInfo) {
+
+		// preparing request info wrapper for the rest api calls
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
-		FinancialYearContract finYearContract ;
+		FinancialYearContract finYearContract;
 		MapSqlParameterSource parameter = new MapSqlParameterSource();
 		List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(query, parameter);
 		List<LicenseFeeDetailSearchEntity> feeDetails = new ArrayList<LicenseFeeDetailSearchEntity>();
@@ -214,40 +236,42 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			feeDetail.setCreatedTime(getLong(row.get("createdtime")));
 			feeDetail.setLastModifiedBy(getString(row.get("lastmodifiedby")));
 			feeDetail.setLastModifiedTime(getLong(row.get("lastmodifiedtime")));
-			
-			 finYearContract = financialYearRepository.findFinancialYearById(license.getTenantId(), getString(row.get("financialyear")) , requestInfoWrapper);
-			 if( finYearContract != null){
-				 feeDetail.setFinancialYear(finYearContract.getFinYearRange());
-			 }
-			 
+
+			finYearContract = financialYearRepository.findFinancialYearById(license.getTenantId(),
+					getString(row.get("financialyear")), requestInfoWrapper);
+			if (finYearContract != null) {
+				feeDetail.setFinancialYear(finYearContract.getFinYearRange());
+			}
+
 			feeDetails.add(feeDetail);
-			
+
 		}
 		return feeDetails;
 	}
 
-	private String buildFeeDetailsSearchQuery(Integer licenseId){
+	private String buildFeeDetailsSearchQuery(Integer licenseId) {
 		StringBuilder builder = new StringBuilder("select * from egtl_fee_details where ");
 		builder.append("licenseid = ");
 		builder.append(licenseId);
 		return builder.toString();
 	}
 
-	public List<SupportDocumentSearchEntity> getSupportDocuments(TradeLicenseSearchEntity license,RequestInfo requestInfo){
-	
+	public List<SupportDocumentSearchEntity> getSupportDocuments(TradeLicenseSearchEntity license,
+			RequestInfo requestInfo) {
+
 		String query = buildSupportedSearchQuery(license.getId().intValue());
-		List<SupportDocumentSearchEntity> supportedDocs = executeSupportedDocumentQuery(query,license,requestInfo);
-		
+		List<SupportDocumentSearchEntity> supportedDocs = executeSupportedDocumentQuery(query, license, requestInfo);
+
 		return supportedDocs;
 	}
-	
-	
-	private List<SupportDocumentSearchEntity> executeSupportedDocumentQuery(String query,TradeLicenseSearchEntity license,RequestInfo requestInfo){
-		
-		//preparing request info wrapper for the rest api calls
+
+	private List<SupportDocumentSearchEntity> executeSupportedDocumentQuery(String query,
+			TradeLicenseSearchEntity license, RequestInfo requestInfo) {
+
+		// preparing request info wrapper for the rest api calls
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
-		DocumentTypeResponse documentTypeResponse;
+		DocumentTypeV2Response documentTypeResponse;
 		MapSqlParameterSource parameter = new MapSqlParameterSource();
 		List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(query, parameter);
 		List<SupportDocumentSearchEntity> supportedDocuments = new ArrayList<SupportDocumentSearchEntity>();
@@ -262,51 +286,62 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			supportedDocument.setCreatedTime(getLong(row.get("createdtime")));
 			supportedDocument.setLastModifiedBy(getString(row.get("lastmodifiedby")));
 			supportedDocument.setLastModifiedTime(getLong(row.get("lastmodifiedtime")));
-		
-			documentTypeResponse = documentTypeRepository.findById( requestInfoWrapper,license.getTenantId(),supportedDocument.getDocumentTypeId());
-			if( documentTypeResponse != null & documentTypeResponse.getDocumentTypes().size() >0 ){
+
+			documentTypeResponse = documentTypeRepository.findById(requestInfoWrapper, license.getTenantId(),
+					supportedDocument.getDocumentTypeId());
+			if (documentTypeResponse != null && documentTypeResponse.getDocumentTypes().size() > 0) {
 				supportedDocument.setDocumentTypeName(documentTypeResponse.getDocumentTypes().get(0).getName());
 			}
 			supportedDocuments.add(supportedDocument);
-			
+
 		}
 		return supportedDocuments;
 	}
-	
+
 	private String buildSupportedSearchQuery(Integer licenseId) {
-	
+
 		StringBuilder builder = new StringBuilder("select * from egtl_support_document where ");
 		builder.append("licenseid = ");
 		builder.append(licenseId);
-		
+
 		return builder.toString();
 	}
-	
+
 	public String buildSearchQuery(String tenantId, Integer pageSize, Integer pageNumber, String sort, String active,
-			Integer[] ids, String applicationNumber, String licenseNumber, String oldLicenseNumber,
-			String mobileNumber, String aadhaarNumber, String emailId, String propertyAssesmentNo, Integer adminWard,
-			Integer locality, String ownerName, String tradeTitle, String tradeType, Integer tradeCategory,
-			Integer tradeSubCategory,String legacy, Integer status, MapSqlParameterSource parameter) {
+			Integer[] ids, String applicationNumber, String licenseNumber, String oldLicenseNumber, String mobileNumber,
+			String aadhaarNumber, String emailId, String propertyAssesmentNo, Integer adminWard, Integer locality,
+			String ownerName, String tradeTitle, String tradeType, Integer tradeCategory, Integer tradeSubCategory,
+			String isLegacy, Integer status, MapSqlParameterSource parameter) {
 
 		StringBuffer searchSql = new StringBuffer();
 		searchSql.append("select * from " + "egtl_license" + " where ");
 		searchSql.append(" tenantId = :tenantId ");
-		parameter.addValue("tenantId",tenantId);
+		parameter.addValue("tenantId", tenantId);
 
-	
-		if (active != null ) {
+		if (active != null && !active.trim().isEmpty()) {
 
-			if(active.equalsIgnoreCase("true")){
+			if (active.equalsIgnoreCase("true")) {
 				searchSql.append(" AND active = :active ");
-				parameter.addValue("active",true);
-			}
-			else if(active.equalsIgnoreCase("false")){
+				parameter.addValue("active", true);
+			} else if (active.equalsIgnoreCase("false")) {
 				searchSql.append(" AND active = :active ");
-				parameter.addValue("active",false);
+				parameter.addValue("active", false);
 			}
 
 		}
 		
+		if (isLegacy != null && !isLegacy.trim().isEmpty()) {
+
+			if (isLegacy.equalsIgnoreCase("true")) {
+				searchSql.append(" AND isLegacy = :isLegacy ");
+				parameter.addValue("isLegacy", true);
+			} else if (isLegacy.equalsIgnoreCase("false")) {
+				searchSql.append(" AND isLegacy = :isLegacy ");
+				parameter.addValue("isLegacy", false);
+			}
+
+		}
+
 		if (ids != null && ids.length > 0) {
 
 			String searchIds = "";
@@ -322,102 +357,102 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			}
 			searchSql.append(" AND id IN (" + searchIds + ") ");
 		}
-		
-		if (applicationNumber != null && !applicationNumber.isEmpty()) {
+
+		if (applicationNumber != null && !applicationNumber.trim().isEmpty()) {
 			searchSql.append(" AND applicationNumber = :applicationNumber ");
-			parameter.addValue("applicationNumber",applicationNumber);
+			parameter.addValue("applicationNumber", applicationNumber);
 		}
-		
-		if (licenseNumber != null && !licenseNumber.isEmpty()) {
+
+		if (licenseNumber != null && !licenseNumber.trim().isEmpty()) {
 			searchSql.append(" AND licenseNumber = :licenseNumber ");
-			parameter.addValue("licenseNumber",licenseNumber);
+			parameter.addValue("licenseNumber", licenseNumber);
 		}
-		
-		if (oldLicenseNumber != null && !oldLicenseNumber.isEmpty()) {
+
+		if (oldLicenseNumber != null && !oldLicenseNumber.trim().isEmpty()) {
 			searchSql.append(" AND oldLicenseNumber = :oldLicenseNumber ");
-			parameter.addValue("oldLicenseNumber",oldLicenseNumber);
+			parameter.addValue("oldLicenseNumber", oldLicenseNumber);
 		}
-		
-		if (mobileNumber != null && !mobileNumber.isEmpty()) {
+
+		if (mobileNumber != null && !mobileNumber.trim().isEmpty()) {
 			searchSql.append(" AND mobileNumber = :mobileNumber ");
-			parameter.addValue("mobileNumber",mobileNumber);
+			parameter.addValue("mobileNumber", mobileNumber);
 		}
-		
-		if (aadhaarNumber != null && !aadhaarNumber.isEmpty()) {
+
+		if (aadhaarNumber != null && !aadhaarNumber.trim().isEmpty()) {
 			searchSql.append(" AND adhaarNumber = :adhaarNumber ");
 			parameter.addValue("adhaarNumber", aadhaarNumber);
 		}
-		
-		if (emailId != null && !emailId.isEmpty()) {
+
+		if (emailId != null && !emailId.trim().isEmpty()) {
 			searchSql.append(" AND emailId = :emailId ");
 			parameter.addValue("emailId", emailId);
 		}
-		
-		if (propertyAssesmentNo != null && !propertyAssesmentNo.isEmpty()) {
+
+		if (propertyAssesmentNo != null && !propertyAssesmentNo.trim().isEmpty()) {
 			searchSql.append(" AND propertyAssesmentNo = :propertyAssesmentNo ");
 			parameter.addValue("propertyAssesmentNo", propertyAssesmentNo);
 		}
 
-		
-		
 		if (adminWard != null) {
 			searchSql.append(" AND adminWardId = :adminWardId ");
 			parameter.addValue("adminWardId", adminWard);
 		}
-		
+
 		if (locality != null) {
 			searchSql.append(" AND localityId = :localityId ");
 			parameter.addValue("localityId", locality);
 		}
-		
-		if (ownerName != null && !ownerName.isEmpty()) {
+
+		if (ownerName != null && !ownerName.trim().isEmpty()) {
 			searchSql.append(" AND ownerName = :ownerName ");
 			parameter.addValue("ownerName", ownerName);
 		}
-		
-		if (tradeTitle != null && !tradeTitle.isEmpty()) {
+
+		if (tradeTitle != null && !tradeTitle.trim().isEmpty()) {
 			searchSql.append(" AND tradeTitle = :tradeTitle ");
 			parameter.addValue("tradeTitle", tradeTitle);
 		}
-		
-		if (tradeType != null && !tradeType.isEmpty()) {
+
+		if (tradeType != null && !tradeType.trim().isEmpty()) {
 			searchSql.append(" AND tradeType = :tradeType ");
 			parameter.addValue("tradeType", tradeType);
 		}
-		if (tradeCategory != null ) {
+		if (tradeCategory != null) {
 			searchSql.append(" AND categoryId = :categoryId ");
 			parameter.addValue("categoryId", tradeCategory);
 		}
-		
-		if ( tradeSubCategory != null ) {
+
+		if (tradeSubCategory != null) {
 			searchSql.append(" AND subCategoryId = :subCategoryId ");
 			parameter.addValue("subCategoryId", tradeSubCategory);
 		}
-		
-		if ( status != null ) {
+
+		if (status != null) {
 			searchSql.append(" AND status = :status ");
 			parameter.addValue("status", status);
 		}
-		
 
 		if (pageSize == null) {
-			pageSize = Integer.valueOf(propertiesManager.getPageSize());	
+			pageSize = Integer.valueOf(propertiesManager.getPageSize());
 		}
-		
+
 		if (pageNumber == null) {
 			pageNumber = Integer.valueOf(propertiesManager.getPageNumber());
-		}	
-			
-		if (sort == null || sort.isEmpty()) {
-			searchSql.append("  ORDER BY licenseNumber ASC");
-			
-		} else {
-			searchSql.append("  ORDER BY licenseNumber,tradeTitle,ownerName ASC");	
 		}
-	
+
+		if (sort == null || sort.isEmpty()) {
+
+			searchSql.append("  ORDER BY licenseNumber ASC");
+		} else if (sort != null && sort.trim().isEmpty()) {
+
+			searchSql.append("  ORDER BY licenseNumber ASC");
+		} else {
+			searchSql.append("  ORDER BY licenseNumber,tradeTitle,ownerName ASC");
+		}
+
 		searchSql.append(" offset :offset ");
-		parameter.addValue("offset", ((pageNumber-1)*pageSize));
-		
+		parameter.addValue("offset", ((pageNumber - 1) * pageSize));
+
 		searchSql.append(" limit :limit ");
 		parameter.addValue("limit", pageSize);
 
@@ -443,8 +478,12 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 		Map<String, String> localityIdAndNameMap = new HashMap<String, String>();
 		Map<String, String> adminWardIdAndNameMap = new HashMap<String, String>();
 		Map<String, String> revenueWardIdAndNameMap = new HashMap<String, String>();
+		String tenantId = null;
 
-		String tenantId = getString(rows.get(0).get("tenantId"));
+		if (rows != null && rows.size() > 0) {
+			tenantId = getString(rows.get(0).get("tenantId"));
+		}
+
 		// building category unique ids map
 		if (uniqueIds.get("categoryIds") != null) {
 
@@ -713,4 +752,5 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 	private Boolean getBoolean(Object object) {
 		return object == null ? Boolean.FALSE : (Boolean) object;
 	}
+
 }

@@ -3,8 +3,8 @@ package org.egov.tradelicense.web.controller;
 import javax.validation.Valid;
 
 import org.egov.tl.commons.web.requests.FeeMatrixRequest;
-import org.egov.tl.commons.web.requests.FeeMatrixResponse;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
+import org.egov.tl.commons.web.response.FeeMatrixResponse;
 import org.egov.tradelicense.domain.services.FeeMatrixService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;

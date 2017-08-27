@@ -15,6 +15,7 @@ import org.egov.tradelicense.common.domain.exception.AgreeMentNotValidException;
 import org.egov.tradelicense.common.domain.exception.CustomBindException;
 import org.egov.tradelicense.common.domain.exception.DuplicateTradeLicenseException;
 import org.egov.tradelicense.common.domain.exception.EndPointException;
+import org.egov.tradelicense.common.domain.exception.IdNotFoundException;
 import org.egov.tradelicense.common.domain.exception.InvalidAdminWardException;
 import org.egov.tradelicense.common.domain.exception.InvalidCategoryException;
 import org.egov.tradelicense.common.domain.exception.InvalidDocumentTypeException;
@@ -27,6 +28,8 @@ import org.egov.tradelicense.common.domain.exception.InvalidSubCategoryException
 import org.egov.tradelicense.common.domain.exception.InvalidUomException;
 import org.egov.tradelicense.common.domain.exception.InvalidValidityYearsException;
 import org.egov.tradelicense.common.domain.exception.LegacyFeeDetailNotFoundException;
+import org.egov.tradelicense.common.domain.exception.MandatoryDocumentNotFoundException;
+import org.egov.tradelicense.common.domain.exception.NonLegacyLicenseUpdateException;
 import org.egov.tradelicense.common.domain.exception.OldLicenseNotFoundException;
 import org.egov.tradelicense.common.domain.exception.PropertyAssesmentNotFoundException;
 import org.egov.tradelicense.common.domain.exception.TradeLicensesNotEmptyException;
@@ -37,6 +40,7 @@ import org.egov.tradelicense.web.adapters.error.AgreeMentNotFoundAdapter;
 import org.egov.tradelicense.web.adapters.error.AgreeMentNotValidAdapter;
 import org.egov.tradelicense.web.adapters.error.DuplicateTradeLicenseAdapter;
 import org.egov.tradelicense.web.adapters.error.EndPointExceptionAdapter;
+import org.egov.tradelicense.web.adapters.error.IdNotFoundAdapter;
 import org.egov.tradelicense.web.adapters.error.InvalidAdminWardAdapter;
 import org.egov.tradelicense.web.adapters.error.InvalidCategoryAdapter;
 import org.egov.tradelicense.web.adapters.error.InvalidDocumentTypeAdapter;
@@ -48,6 +52,8 @@ import org.egov.tradelicense.web.adapters.error.InvalidSubCategoryAdapter;
 import org.egov.tradelicense.web.adapters.error.InvalidUomAdapter;
 import org.egov.tradelicense.web.adapters.error.InvalidValidityYearsAdapter;
 import org.egov.tradelicense.web.adapters.error.LegacyFeeDetailNotFoundAdapter;
+import org.egov.tradelicense.web.adapters.error.MandatoryDocumentNotFoundAdapter;
+import org.egov.tradelicense.web.adapters.error.NonLegacyLicenseUpdateAdapter;
 import org.egov.tradelicense.web.adapters.error.OldLicenseNotFoundAdapter;
 import org.egov.tradelicense.web.adapters.error.PropertyAssesmentNotFoundAdapter;
 import org.egov.tradelicense.web.adapters.error.TradeLicensesNotEmptyAdapter;
@@ -66,8 +72,18 @@ public class CustomControllerAdvice {
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(MissingServletRequestParameterException.class)
-	public String handleMissingParamsError(Exception ex) {
-		return ex.getMessage();
+	public ErrorResponse handleMissingParamsError(Exception ex) {
+		ErrorResponse errRes = new ErrorResponse();
+		ResponseInfo responseInfo = new ResponseInfo();
+		responseInfo.setTs(new Date().toString());
+		responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
+		errRes.setResponseInfo(responseInfo);
+		Error error = new Error();
+		error.setCode(400);
+		error.setMessage("tl.error.missingparams");
+		error.setDescription(ex.getMessage());
+		errRes.setError(error);
+		return errRes;
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -91,7 +107,7 @@ public class CustomControllerAdvice {
 			if (errors.getFieldErrorCount() > 0) {
 				error.setMessage("tl.error.missingfields");
 				error.setCode(400);
-				 error.setDescription("Missing fields");
+				error.setDescription("Missing fields");
 			}
 		}
 		if (errors.hasFieldErrors()) {
@@ -122,7 +138,7 @@ public class CustomControllerAdvice {
 		Error error = new Error();
 		error.setCode(Integer.valueOf(HttpStatus.BAD_REQUEST.toString()));
 		error.setMessage("Inavlid.Input");
-		 error.setDescription(ex.getCustomMsg());
+		error.setDescription(ex.getCustomMsg());
 		errRes.setError(error);
 		return errRes;
 	}
@@ -196,6 +212,12 @@ public class CustomControllerAdvice {
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(IdNotFoundException.class)
+	public ErrorResponse handleIdNotFoundException(IdNotFoundException ex) {
+		return new IdNotFoundAdapter().getErrorResponse(ex.getCustomMsg(), ex.getFieldName(), ex.getRequestInfo());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(InvalidAdminWardException.class)
 	public ErrorResponse handleInvalidAdminWardException(InvalidAdminWardException ex) {
 		return new InvalidAdminWardAdapter().getErrorResponse(ex.getCustomMsg(), ex.getRequestInfo());
@@ -253,6 +275,18 @@ public class CustomControllerAdvice {
 	@ExceptionHandler(InvalidValidityYearsException.class)
 	public ErrorResponse handleInvalidValidityYearsException(InvalidValidityYearsException ex) {
 		return new InvalidValidityYearsAdapter().getErrorResponse(ex.getCustomMsg(), ex.getRequestInfo());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(MandatoryDocumentNotFoundException.class)
+	public ErrorResponse handleMandatoryDocumentNotFoundException(MandatoryDocumentNotFoundException ex) {
+		return new MandatoryDocumentNotFoundAdapter().getErrorResponse(ex.getCustomMsg(), ex.getRequestInfo());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(NonLegacyLicenseUpdateException.class)
+	public ErrorResponse handleNonLegacyLicenseUpdateException(NonLegacyLicenseUpdateException ex) {
+		return new NonLegacyLicenseUpdateAdapter().getErrorResponse(ex.getCustomMsg(), ex.getRequestInfo());
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)

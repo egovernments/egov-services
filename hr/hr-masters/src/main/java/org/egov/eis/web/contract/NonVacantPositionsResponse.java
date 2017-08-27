@@ -47,6 +47,7 @@ import org.egov.common.contract.response.ResponseInfo;
 import java.util.ArrayList;
 import java.util.List;
 
+@Builder
 @AllArgsConstructor
 @EqualsAndHashCode
 @Getter

@@ -156,7 +156,7 @@ public class DepreciationService {
 
     }
 
-    private void validationAndGenerationDepreciationVoucher(final Map<Long, DepreciationDetail> depreciationDetailsMap,
+    public void validationAndGenerationDepreciationVoucher(final Map<Long, DepreciationDetail> depreciationDetailsMap,
             final HttpHeaders headers, final RequestInfo requestInfo, final String tenantId,
             final List<CalculationAssetDetails> calculationAssetDetailList,
             final Map<Long, List<CalculationAssetDetails>> cadMap) {
@@ -265,32 +265,36 @@ public class DepreciationService {
      * @param depreciationCriteria
      * @param requestInfo
      */
-    private void setDefaultsInDepreciationCriteria(final DepreciationCriteria depreciationCriteria,
+    public void setDefaultsInDepreciationCriteria(final DepreciationCriteria depreciationCriteria,
             final RequestInfo requestInfo) {
-
-        if (depreciationCriteria.getFinancialYear() == null
-                && (depreciationCriteria.getFromDate() == null || depreciationCriteria.getToDate() == null))
-            throw new RuntimeException("financialyear and (time period)fromdate,todate both "
-                    + "cannot be null please provide atleast one value");
-        else if (depreciationCriteria.getFinancialYear() == null) {
+        final String financialYear = depreciationCriteria.getFinancialYear();
+        log.debug("financial year value -- " + financialYear);
+        if (financialYear == null) {
             final Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(depreciationCriteria.getFromDate());
             final int from = calendar.get(Calendar.YEAR);
             calendar.setTimeInMillis(depreciationCriteria.getToDate());
             final int to = calendar.get(Calendar.YEAR);
+            log.debug("Financial Year From :: " + from);
+            log.debug("Financial Year To :: " + to);
             depreciationCriteria.setFinancialYear(from + "-" + Integer.toString(to).substring(2, 4));
-            log.info("financial year value -- " + depreciationCriteria.getFinancialYear());
         } else if (depreciationCriteria.getFromDate() == null && depreciationCriteria.getToDate() == null) {
 
             final String url = applicationProperties.getEgfServiceHostName()
                     + applicationProperties.getEgfFinancialYearSearchPath() + "?tenantId ="
-                    + depreciationCriteria.getTenantId() + "&finYearRange=" + depreciationCriteria.getFinancialYear();
+                    + depreciationCriteria.getTenantId() + "&finYearRange=" + financialYear;
 
-            final FinancialYearContract financialYearContract = restTemplate
+            log.debug("Financial Year Search URL :: " + url);
+            final List<FinancialYearContract> financialYearContracts = restTemplate
                     .postForObject(url, new RequestInfoWrapper(requestInfo), FinancialYearContractResponse.class)
-                    .getFinancialYears().get(0);
-            depreciationCriteria.setToDate(financialYearContract.getEndingDate().getTime());
-            depreciationCriteria.setFromDate(financialYearContract.getStartingDate().getTime());
+                    .getFinancialYears();
+            log.debug("Financial Year Response :: " + financialYearContracts);
+            if (financialYearContracts != null && !financialYearContracts.isEmpty()) {
+                final FinancialYearContract financialYearContract = financialYearContracts.get(0);
+                depreciationCriteria.setToDate(financialYearContract.getEndingDate().getTime());
+                depreciationCriteria.setFromDate(financialYearContract.getStartingDate().getTime());
+            } else
+                throw new RuntimeException("There is no data present for financial year :: " + financialYear);
         }
     }
 

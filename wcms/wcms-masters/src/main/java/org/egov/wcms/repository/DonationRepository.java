@@ -45,9 +45,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.wcms.model.Donation;
+import org.egov.wcms.model.MeterWaterRates;
 import org.egov.wcms.repository.builder.DonationQueryBuilder;
 import org.egov.wcms.repository.rowmapper.DonationRowMapper;
 import org.egov.wcms.service.RestWaterExternalMasterService;
+import org.egov.wcms.util.WcmsConstants;
 import org.egov.wcms.web.contract.DonationGetRequest;
 import org.egov.wcms.web.contract.DonationRequest;
 import org.egov.wcms.web.contract.PropertyTaxResponseInfo;
@@ -125,7 +127,9 @@ public class DonationRepository {
             batchValues.add(
                     new MapSqlParameterSource("id", Long.valueOf(donation.getCode())).addValue("code", donation.getCode())
                             .addValue("propertytypeid", donation.getPropertyTypeId())
-                            .addValue("usagetypeid", donation.getUsageTypeId()).addValue("categorytypeid", categoryId)
+                            .addValue("usagetypeid", donation.getUsageTypeId())
+                            .addValue("subusagetypeid", donation.getSubUsageTypeId())
+                            .addValue("categorytypeid", categoryId)
                             .addValue("maxpipesizeid", maxPipeSizeId).addValue("minpipesizeid", minPipeSizeId)
                             .addValue("fromdate", donation.getFromDate()).addValue("todate", donation.getToDate())
                             .addValue("donationamount", donation.getDonationAmount()).addValue("active", donation.getActive())
@@ -182,7 +186,9 @@ public class DonationRepository {
 
             batchValues.add(
                     new MapSqlParameterSource("propertytypeid", donation.getPropertyTypeId())
-                            .addValue("usagetypeid", donation.getUsageTypeId()).addValue("categorytypeid", categoryId)
+                            .addValue("usagetypeid", donation.getUsageTypeId())
+                            .addValue("subusagetypeid", donation.getSubUsageTypeId())
+                            .addValue("categorytypeid", categoryId)
                             .addValue("maxpipesizeid", maxPipeSizeId).addValue("minpipesizeid", minPipeSizeId)
                             .addValue("fromdate", donation.getFromDate()).addValue("todate", donation.getToDate())
                             .addValue("donationamount", donation.getDonationAmount()).addValue("active", donation.getActive())
@@ -202,6 +208,7 @@ public class DonationRepository {
         final List<Object> preparedStatementValues = new ArrayList<>();
         final List<Integer> propertyTypeIdsList = new ArrayList<>();
         final List<Integer> usageTypeIdsList = new ArrayList<>();
+        final List<Integer> subUsageTypeIdsList = new ArrayList<>();
         try {
             if (donationRequest.getCategoryType() != null)
                 donationRequest.setCategoryTypeId(jdbcTemplate.queryForObject(DonationQueryBuilder.getCategoryId(),
@@ -261,12 +268,79 @@ public class DonationRepository {
             usageTypeIdsList.add(Integer.valueOf(donation.getUsageTypeId()));
         final Integer[] usageTypeIds = usageTypeIdsList.toArray(new Integer[usageTypeIdsList.size()]);
         final UsageTypeResponse usageResponse = restExternalMasterService.getUsageNameFromPTModule(
-                usageTypeIds, donationRequest.getTenantId());
+                usageTypeIds, WcmsConstants.WC, donationRequest.getTenantId());
         for (final Donation donation : donationList)
             for (final PropertyTaxResponseInfo propertyResponse : usageResponse.getUsageMasters())
                 if (propertyResponse.getId().equals(donation.getUsageTypeId()))
                     donation.setUsageType(propertyResponse.getName());
+        
+        // fetch sub usage type Id and set the usage type name here
+        for (final Donation donation : donationList)
+            subUsageTypeIdsList.add(Integer.valueOf(donation.getSubUsageTypeId()));
+        final Integer[] subUsageTypeIds = subUsageTypeIdsList.toArray(new Integer[subUsageTypeIdsList.size()]);
+        final UsageTypeResponse subUsageResponse = restExternalMasterService.getSubUsageNameFromPTModule(
+                subUsageTypeIds,WcmsConstants.WC, donationRequest.getTenantId());
+        for (final Donation donationObj : donationList)
+            for (final PropertyTaxResponseInfo propertyResponse : subUsageResponse.getUsageMasters())
+                if (propertyResponse.getId().equals(donationObj.getSubUsageTypeId()))
+                    donationObj.setSubUsageType(propertyResponse.getName());
         return donationList;
 
     }
+
+    public boolean checkDonationsExist(final String code, final String propertTypeId, final String usageTypeId,
+            final String subUsageTypeId,final String categoryName, final Double maxPipeSize, final Double minPipeSize, final String tenantId) {
+        final List<Object> preparedStatementValues = new ArrayList<>();
+        final String pipesizeQuery = DonationQueryBuilder.getPipeSizeIdQuery();
+        final String categoryQuery = DonationQueryBuilder.getCategoryId();
+        Long categoryId = 0L;
+        try {
+            categoryId = jdbcTemplate.queryForObject(categoryQuery,
+                    new Object[] { categoryName, tenantId }, Long.class);
+            log.info("Category Id: " + categoryId);
+        } catch (final EmptyResultDataAccessException e) {
+            log.info("EmptyResultDataAccessException: Query returned empty result set");
+        }
+        if (categoryId == null)
+            log.info("Invalid input.");
+
+        Long maxPipeSizeId = 0L;
+        try {
+            maxPipeSizeId = jdbcTemplate.queryForObject(pipesizeQuery,
+                    new Object[] { maxPipeSize, tenantId }, Long.class);
+        } catch (final EmptyResultDataAccessException e) {
+            log.info("EmptyResultDataAccessException: Query returned empty result set for max pipesize");
+        }
+        if (maxPipeSizeId == null)
+            log.info("Invalid input for MaxPipeSize.");
+
+        Long minPipeSizeId = 0L;
+        try {
+            minPipeSizeId = jdbcTemplate.queryForObject(pipesizeQuery,
+                    new Object[] { minPipeSize, tenantId }, Long.class);
+        } catch (final EmptyResultDataAccessException e) {
+            log.info("EmptyResultDataAccessException: Query returned empty result set for min pipesize");
+        }
+        preparedStatementValues.add(propertTypeId);
+        preparedStatementValues.add(usageTypeId);
+        preparedStatementValues.add(subUsageTypeId);
+        preparedStatementValues.add(categoryId);
+        preparedStatementValues.add(maxPipeSizeId);
+        preparedStatementValues.add(minPipeSizeId);
+        preparedStatementValues.add(tenantId);
+        final String query;
+        if (code == null)
+            query = DonationQueryBuilder.selectDonationByCodeQuery();
+        else {
+            preparedStatementValues.add(code);
+            query = DonationQueryBuilder.selectDonationByCodeNotInQuery();
+        }
+        final List<Map<String, Object>> donations = jdbcTemplate.queryForList(query,
+                preparedStatementValues.toArray());
+        if (!donations.isEmpty())
+            return false;
+
+        return true;
+    }
+
 }

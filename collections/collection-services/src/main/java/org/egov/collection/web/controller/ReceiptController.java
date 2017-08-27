@@ -40,31 +40,18 @@
 
 package org.egov.collection.web.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.validation.Valid;
-import javax.validation.ValidationException;
-
 import org.egov.collection.config.CollectionServiceConstants;
 import org.egov.collection.exception.CustomException;
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.service.ReceiptService;
 import org.egov.collection.service.WorkflowService;
 import org.egov.collection.util.ReceiptReqValidator;
-import org.egov.collection.web.contract.Receipt;
-import org.egov.collection.web.contract.ReceiptReq;
-import org.egov.collection.web.contract.ReceiptRes;
-import org.egov.collection.web.contract.ReceiptSearchGetRequest;
-import org.egov.collection.web.contract.ReceiptUpdateRequest;
-import org.egov.collection.web.contract.WorkFlowDetailsResponse;
-import org.egov.collection.web.contract.WorkflowDetailsRequest;
+import org.egov.collection.web.contract.*;
 import org.egov.collection.web.contract.factory.RequestInfoWrapper;
 import org.egov.collection.web.contract.factory.ResponseInfoFactory;
-import org.egov.collection.web.errorhandlers.Error;
-import org.egov.collection.web.errorhandlers.ErrorHandler;
-import org.egov.collection.web.errorhandlers.ErrorResponse;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.Error;
+import org.egov.common.contract.response.ErrorResponse;
 import org.egov.common.contract.response.ResponseInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,18 +59,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import javax.validation.ValidationException;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/receipts")
 public class ReceiptController {
-	public static final Logger LOGGER = LoggerFactory.getLogger(ReceiptController.class);
+	public static final Logger LOGGER = LoggerFactory
+			.getLogger(ReceiptController.class);
 
 	@Autowired
 	private ReceiptService receiptService;
@@ -95,117 +82,108 @@ public class ReceiptController {
 	private ResponseInfoFactory responseInfoFactory;
 
 	@Autowired
-	private ErrorHandler errHandler;
-
-	@Autowired
 	private WorkflowService workFlowService;
 
 	@PostMapping("/_search")
 	@ResponseBody
-	public ResponseEntity<?> search(@ModelAttribute @Valid ReceiptSearchGetRequest receiptGetRequest,
+	public ResponseEntity<?> search(
+			@ModelAttribute ReceiptSearchGetRequest receiptGetRequest,
 			final BindingResult modelAttributeBindingResult,
 			@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
 			final BindingResult requestBodyBindingResult) {
 
-		LOGGER.info("Request: "+receiptGetRequest.toString());
-		LOGGER.info("RequestInfo: "+requestInfoWrapper.toString());
-		
+		LOGGER.info("Request: " + receiptGetRequest.toString());
+		LOGGER.info("RequestInfo: " + requestInfoWrapper.toString());
+
 		ReceiptSearchCriteria searchCriteria = ReceiptSearchCriteria.builder()
-				.businessCode(receiptGetRequest.getBusinessCode()).classification(receiptGetRequest.getClassification())
-				.collectedBy(receiptGetRequest.getCollectedBy()).consumerCode(receiptGetRequest.getConsumerCode())
-				.fromDate(receiptGetRequest.getFromDate()).toDate(receiptGetRequest.getToDate())
-				.paymentType(receiptGetRequest.getPaymentType()).receiptNumbers(receiptGetRequest.getReceiptNumbers())
-				.status(receiptGetRequest.getStatus()).tenantId(receiptGetRequest.getTenantId())
-				.sortBy(receiptGetRequest.getSortBy()).sortOrder(receiptGetRequest.getSortOrder()).transactionId(receiptGetRequest.getTransactionId()).build();
+				.businessCode(receiptGetRequest.getBusinessCode())
+				.classification(receiptGetRequest.getClassification())
+				.collectedBy(receiptGetRequest.getCollectedBy())
+				.consumerCode(receiptGetRequest.getConsumerCode())
+				.fromDate(receiptGetRequest.getFromDate())
+				.toDate(receiptGetRequest.getToDate())
+				.paymentType(receiptGetRequest.getPaymentType())
+				.receiptNumbers(receiptGetRequest.getReceiptNumbers())
+				.status(receiptGetRequest.getStatus())
+				.tenantId(receiptGetRequest.getTenantId())
+				.sortBy(receiptGetRequest.getSortBy())
+				.sortOrder(receiptGetRequest.getSortOrder())
+				.transactionId(receiptGetRequest.getTransactionId()).build();
 
 		final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
-		if (modelAttributeBindingResult.hasErrors())
-			return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
-		if (requestBodyBindingResult.hasErrors())
-			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
-		List<Receipt> receipts = new ArrayList<>();
-		
-		try {
-				if(null != receiptGetRequest.getFromDate() && null != receiptGetRequest.getToDate()){
-					receiptReqValidator.validateSearchReceiptRequest(receiptGetRequest);
-				}
-			receipts = receiptService.getReceipts(searchCriteria,requestInfo).toDomainContract();
-		}catch(ValidationException e){
-			LOGGER.info("Exception Message: "+e.getMessage());
-			Error error = new Error();
-			final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-			error.setCode(Integer.valueOf(HttpStatus.BAD_REQUEST.toString()));
-			error.setMessage(e.getMessage());
-			error.setDescription("Validation Exception");
-			ErrorResponse errorResponse = new ErrorResponse();
-			errorResponse.setError(error);
-			errorResponse.setResponseInfo(responseInfo);
-
-			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);	
-		} catch (final Exception exception) {
-			LOGGER.error("Error while processing request " + receiptGetRequest, exception);
-			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
+		if (null != receiptGetRequest.getFromDate()
+				&& null != receiptGetRequest.getToDate()) {
+			receiptReqValidator.validateSearchReceiptRequest(receiptGetRequest);
 		}
+		List<Receipt> receipts = receiptService.getReceipts(searchCriteria,
+				requestInfo).toDomainContract();
 		return getSuccessResponse(receipts, requestInfo);
 	}
 
 	@PostMapping("/_view")
 	@ResponseBody
-	public List<Receipt> view(@ModelAttribute @Valid ReceiptSearchGetRequest receiptGetRequest) {
+	public List<Receipt> view(
+			@ModelAttribute ReceiptSearchGetRequest receiptGetRequest) {
 
 		ReceiptSearchCriteria searchCriteria = ReceiptSearchCriteria.builder()
-				.businessCode(receiptGetRequest.getBusinessCode()).classification(receiptGetRequest.getClassification())
-				.collectedBy(receiptGetRequest.getCollectedBy()).consumerCode(receiptGetRequest.getConsumerCode())
-				.fromDate(receiptGetRequest.getFromDate()).toDate(receiptGetRequest.getToDate())
-				.paymentType(receiptGetRequest.getPaymentType()).receiptNumbers(receiptGetRequest.getReceiptNumbers())
-				.status(receiptGetRequest.getStatus()).tenantId(receiptGetRequest.getTenantId())
-				.sortBy(receiptGetRequest.getSortBy()).sortOrder(receiptGetRequest.getSortOrder()).build();
+				.businessCode(receiptGetRequest.getBusinessCode())
+				.classification(receiptGetRequest.getClassification())
+				.collectedBy(receiptGetRequest.getCollectedBy())
+				.consumerCode(receiptGetRequest.getConsumerCode())
+				.fromDate(receiptGetRequest.getFromDate())
+				.toDate(receiptGetRequest.getToDate())
+				.paymentType(receiptGetRequest.getPaymentType())
+				.receiptNumbers(receiptGetRequest.getReceiptNumbers())
+				.status(receiptGetRequest.getStatus())
+				.tenantId(receiptGetRequest.getTenantId())
+				.sortBy(receiptGetRequest.getSortBy())
+				.sortOrder(receiptGetRequest.getSortOrder()).build();
 
 		List<Receipt> receipts = new ArrayList<>();
 		try {
-			receipts = receiptService.getReceipts(searchCriteria,null).toDomainContract();
+			receipts = receiptService.getReceipts(searchCriteria, null)
+					.toDomainContract();
 		} catch (final Exception exception) {
-			LOGGER.error("Error while processing request " + receiptGetRequest, exception);
+			LOGGER.error("Error while processing request " + receiptGetRequest,
+					exception);
 		}
 		return receipts;
 	}
 
 	@PostMapping("/_cancel")
 	@ResponseBody
-	public ResponseEntity<?> cancelReceipt(@RequestBody @Valid ReceiptReq receiptRequest, BindingResult errors) {
-		if (errors.hasFieldErrors()) {
-			ErrorResponse errRes = populateErrors(errors);
-			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
-		}
-
-		final List<ErrorResponse> errorResponses = receiptReqValidator.validatecreateReceiptRequest(receiptRequest);
+	public ResponseEntity<?> cancelReceipt(
+			@RequestBody ReceiptReq receiptRequest, BindingResult errors) {
+		final List<ErrorResponse> errorResponses = receiptReqValidator
+				.validatecreateReceiptRequest(receiptRequest);
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-		List<Receipt> receipt = receiptService.cancelReceiptPushToQueue(receiptRequest);
+		List<Receipt> receipt = receiptService
+				.cancelReceiptPushToQueue(receiptRequest);
 		return getSuccessResponse(receipt, receiptRequest.getRequestInfo());
 	}
 
 	@PostMapping("/_create")
 	@ResponseBody
-	public ResponseEntity<?> create(@RequestBody @Valid ReceiptReq receiptRequest, BindingResult errors) {
-
-		if (errors.hasFieldErrors()) {
-			ErrorResponse errRes = populateErrors(errors);
-			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
-		}
+	public ResponseEntity<?> create(
+			@RequestBody ReceiptReq receiptRequest, BindingResult errors) {
 		LOGGER.info("Request: " + receiptRequest.toString());
-		final List<ErrorResponse> errorResponses = receiptReqValidator.validatecreateReceiptRequest(receiptRequest);
-		if (!errorResponses.isEmpty())
+		final List<ErrorResponse> errorResponses = receiptReqValidator
+				.validatecreateReceiptRequest(receiptRequest);
+		if (null!=errorResponses && !errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 		Receipt receiptInfo = null;
-		try{
-			receiptInfo = receiptService.apportionAndCreateReceipt(receiptRequest);
-		}catch(CustomException e){
-			LOGGER.info("Exception Message: "+e.getCustomMessage());
+		try {
+			receiptInfo = receiptService
+					.apportionAndCreateReceipt(receiptRequest);
+		} catch (CustomException e) {
+			LOGGER.info("Exception Message: " + e.getCustomMessage());
 			Error error = new Error();
-			final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(receiptRequest.getRequestInfo(), true);
+			final ResponseInfo responseInfo = responseInfoFactory
+					.createResponseInfoFromRequestInfo(
+							receiptRequest.getRequestInfo(), true);
 			error.setCode(Integer.valueOf(e.getCode().toString()));
 			error.setMessage(e.getCustomMessage());
 			error.setDescription(e.getDescription());
@@ -213,11 +191,13 @@ public class ReceiptController {
 			errorResponse.setError(error);
 			errorResponse.setResponseInfo(responseInfo);
 
-			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);	
-		}catch(ValidationException e){
-			LOGGER.info("Exception Message: "+e.getMessage());
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+		} catch (ValidationException e) {
+			LOGGER.info("Exception Message: " + e.getMessage());
 			Error error = new Error();
-			final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(receiptRequest.getRequestInfo(), true);
+			final ResponseInfo responseInfo = responseInfoFactory
+					.createResponseInfoFromRequestInfo(
+							receiptRequest.getRequestInfo(), true);
 			error.setCode(Integer.valueOf(HttpStatus.BAD_REQUEST.toString()));
 			error.setMessage(e.getMessage());
 			error.setDescription("Validation Exception");
@@ -225,64 +205,79 @@ public class ReceiptController {
 			errorResponse.setError(error);
 			errorResponse.setResponseInfo(responseInfo);
 
-			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);	
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
 
 		List<Receipt> receipts = new ArrayList<>();
 		receipts.add(receiptInfo);
 
-		return getSuccessResponse(receipts,  receiptRequest.getRequestInfo());
+		return getSuccessResponse(receipts, receiptRequest.getRequestInfo());
 	}
 
 	@PostMapping("/_update")
 	@ResponseBody
-	public ResponseEntity<?> update(@ModelAttribute @Valid ReceiptUpdateRequest receiptUpdateRequest,
-			final BindingResult modelAttributeBindingResult,
+	public ResponseEntity<?> update(final BindingResult modelAttributeBindingResult,
 			@RequestBody @Valid ReceiptReq receiptReq, BindingResult errors) {
 
-		if (modelAttributeBindingResult.hasErrors()){
-			return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, receiptReq.getRequestInfo());
-		}
-		if (errors.hasFieldErrors()) {
-			ErrorResponse errRes = populateErrors(errors);
-			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
-		}
-		WorkflowDetailsRequest workFlowRequest = receiptReq.getReceipt().get(0).getWorkflowDetails();
-		workFlowRequest.setReceiptHeaderId(receiptUpdateRequest.getId());
-		workFlowRequest.setTenantId(receiptUpdateRequest.getTenantId());
-		workFlowRequest.setRequestInfo(receiptReq.getRequestInfo());
-		if (!validator(workFlowRequest.getTenantId(), workFlowRequest.getReceiptHeaderId())) {
-			LOGGER.info("Invalid TenantId");
-			Error error = new Error();
-			error.setCode(Integer.parseInt(HttpStatus.BAD_REQUEST.toString()));
-			error.setMessage(CollectionServiceConstants.TENANT_ID_MISSING_MESSAGE);
-			ErrorResponse errorResponse = new ErrorResponse();
-			errorResponse.setError(error);
+        Receipt receipt = receiptReq.getReceipt().get(0);
+        String instrumentType = receipt.getInstrument().getInstrumentType().getName();
+         if(instrumentType.equalsIgnoreCase(CollectionServiceConstants.INSTRUMENT_TYPE_ONLINE)) {
+             receiptReq = receiptService.saveOnlineReceipts(receiptReq);
+         } else {
+             for(Receipt receipts : receiptReq.getReceipt()) {
+                 WorkflowDetailsRequest workFlowRequest = receiptReq.getReceipt().get(0)
+                         .getWorkflowDetails();
+                 workFlowRequest.setReceiptHeaderId(Long.valueOf(receipts.getId()));
+                 workFlowRequest.setTenantId(receipt.getTenantId());
+                 workFlowRequest.setRequestInfo(receiptReq.getRequestInfo());
+                 if (!validator(workFlowRequest.getTenantId(),
+                         workFlowRequest.getReceiptHeaderId())) {
+                     LOGGER.info("Invalid TenantId");
+                     Error error = new Error();
+                     error.setCode(Integer.parseInt(HttpStatus.BAD_REQUEST.toString()));
+                     error.setMessage(CollectionServiceConstants.TENANT_ID_MISSING_MESSAGE);
+                     ErrorResponse errorResponse = new ErrorResponse();
+                     errorResponse.setError(error);
 
-			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-		}
-		WorkflowDetailsRequest workFlowDetailsRequest = workFlowService.update(workFlowRequest);
+                     return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+                 }
+                 WorkflowDetailsRequest workFlowDetailsRequest = workFlowService
+                         .update(workFlowRequest);
+                 receipts.setWorkflowDetails(workFlowDetailsRequest);
+             }
+         }
 
-		return getSuccessResponseForUpdate(workFlowDetailsRequest);
+		return getSuccessResponse(receiptReq.getReceipt(),receiptReq.getRequestInfo());
 	}
 
-	private ResponseEntity<?> getSuccessResponseForUpdate(WorkflowDetailsRequest workFlowDetailsRequest) {
+	/*private ResponseEntity<?> getSuccessResponseForUpdate(
+			WorkflowDetailsRequest workFlowDetailsRequest) {
 		LOGGER.info("Building success response.");
 		WorkFlowDetailsResponse workFlowDetailsResponse = new WorkFlowDetailsResponse();
 		final ResponseInfo responseInfo = responseInfoFactory
-				.createResponseInfoFromRequestInfo(workFlowDetailsRequest.getRequestInfo(), true);
+				.createResponseInfoFromRequestInfo(
+						workFlowDetailsRequest.getRequestInfo(), true);
 		responseInfo.setStatus(HttpStatus.OK.toString());
 		workFlowDetailsResponse.setResponseInfo(responseInfo);
-		workFlowDetailsResponse.setTenantId(workFlowDetailsRequest.getTenantId());
-		workFlowDetailsResponse.setReceiptNumber(workFlowDetailsRequest.getReceiptNumber());
-		workFlowDetailsResponse.setBusinessKey(workFlowDetailsRequest.getBusinessKey());
+		workFlowDetailsResponse.setTenantId(workFlowDetailsRequest
+				.getTenantId());
+		workFlowDetailsResponse.setReceiptNumber(workFlowDetailsRequest
+				.getReceiptNumber());
+		workFlowDetailsResponse.setBusinessKey(workFlowDetailsRequest
+				.getBusinessKey());
 		workFlowDetailsResponse.setAction(workFlowDetailsRequest.getAction());
-		workFlowDetailsResponse.setAssignee(workFlowDetailsRequest.getAssignee());
-		workFlowDetailsResponse.setComments(workFlowDetailsRequest.getComments());
-		workFlowDetailsResponse.setDepartment(workFlowDetailsRequest.getDepartment());
-		workFlowDetailsResponse.setDesignation(workFlowDetailsRequest.getDesignation());
-		workFlowDetailsResponse.setInitiatorPosition(workFlowDetailsRequest.getInitiatorPosition());
-		workFlowDetailsResponse.setReceiptHeaderId(workFlowDetailsRequest.getReceiptHeaderId());
+		workFlowDetailsResponse.setAssignee(workFlowDetailsRequest
+				.getAssignee());
+		workFlowDetailsResponse.setComments(workFlowDetailsRequest
+				.getComments());
+		workFlowDetailsResponse.setDepartment(workFlowDetailsRequest
+				.getDepartment());
+		workFlowDetailsResponse.setDesignation(workFlowDetailsRequest
+				.getDesignation());
+		workFlowDetailsResponse.setInitiatorPosition(workFlowDetailsRequest
+				.getInitiatorPosition());
+		workFlowDetailsResponse.setReceiptHeaderId(workFlowDetailsRequest
+				.getReceiptHeaderId());
 		workFlowDetailsResponse.setState(workFlowDetailsRequest.getState());
 		workFlowDetailsResponse.setStateId(workFlowDetailsRequest.getStateId());
 		workFlowDetailsResponse.setStatus(workFlowDetailsRequest.getStatus());
@@ -290,45 +285,23 @@ public class ReceiptController {
 		return new ResponseEntity<>(workFlowDetailsResponse, HttpStatus.OK);
 
 	}
-
+*/
 	private boolean validator(String tenantId, long receiptHeaderId) {
 		boolean isTenantValid = true;
-		if (null == tenantId || tenantId.isEmpty())
+		if (null == tenantId || tenantId.isEmpty() || receiptHeaderId == 0L)
 			isTenantValid = false;
-		else if (receiptHeaderId == 0L)
-			isTenantValid = false;
-
 		return isTenantValid;
 	}
 
-	private ResponseEntity<?> getSuccessResponse(List<Receipt> receipts, RequestInfo requestInfo) {
+	private ResponseEntity<?> getSuccessResponse(List<Receipt> receipts,
+			RequestInfo requestInfo) {
 		LOGGER.info("Building success response.");
 		ReceiptRes receiptResponse = new ReceiptRes();
-		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		final ResponseInfo responseInfo = responseInfoFactory
+				.createResponseInfoFromRequestInfo(requestInfo, true);
 		responseInfo.setStatus(HttpStatus.OK.toString());
 		receiptResponse.setReceipts(receipts);
 		receiptResponse.setResponseInfo(responseInfo);
 		return new ResponseEntity<>(receiptResponse, HttpStatus.OK);
-	}
-
-	private ErrorResponse populateErrors(BindingResult errors) {
-		ErrorResponse errRes = new ErrorResponse();
-
-		/*
-		 * ResponseInfo responseInfo = new ResponseInfo();
-		 * responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
-		 * responseInfo.setApi_id(""); errRes.setResponseInfo(responseInfo);
-		 */
-
-		Error error = new Error();
-		error.setCode(1);
-		error.setDescription("Error while binding request");
-		if (errors.hasFieldErrors()) {
-			for (FieldError errs : errors.getFieldErrors()) {
-				error.getFields().put(errs.getField(), errs.getDefaultMessage());
-			}
-		}
-		errRes.setError(error);
-		return errRes;
 	}
 }

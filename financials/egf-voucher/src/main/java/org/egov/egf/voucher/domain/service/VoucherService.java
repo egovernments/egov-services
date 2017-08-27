@@ -1,7 +1,9 @@
 package org.egov.egf.voucher.domain.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.constants.Constants;
@@ -9,6 +11,9 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
+import org.egov.egf.master.web.contract.AccountDetailKeyContract;
+import org.egov.egf.master.web.contract.AccountDetailTypeContract;
+import org.egov.egf.master.web.contract.ChartOfAccountContract;
 import org.egov.egf.master.web.contract.FinancialConfigurationContract;
 import org.egov.egf.master.web.contract.FinancialConfigurationValueContract;
 import org.egov.egf.master.web.contract.FinancialStatusContract;
@@ -18,6 +23,9 @@ import org.egov.egf.master.web.contract.FundContract;
 import org.egov.egf.master.web.contract.FundsourceContract;
 import org.egov.egf.master.web.contract.SchemeContract;
 import org.egov.egf.master.web.contract.SubSchemeContract;
+import org.egov.egf.master.web.repository.AccountDetailKeyContractRepository;
+import org.egov.egf.master.web.repository.AccountDetailTypeContractRepository;
+import org.egov.egf.master.web.repository.ChartOfAccountContractRepository;
 import org.egov.egf.master.web.repository.FinancialConfigurationContractRepository;
 import org.egov.egf.master.web.repository.FinancialStatusContractRepository;
 import org.egov.egf.master.web.repository.FunctionContractRepository;
@@ -26,6 +34,8 @@ import org.egov.egf.master.web.repository.FundContractRepository;
 import org.egov.egf.master.web.repository.FundsourceContractRepository;
 import org.egov.egf.master.web.repository.SchemeContractRepository;
 import org.egov.egf.master.web.repository.SubSchemeContractRepository;
+import org.egov.egf.voucher.domain.model.Ledger;
+import org.egov.egf.voucher.domain.model.LedgerDetail;
 import org.egov.egf.voucher.domain.model.Voucher;
 import org.egov.egf.voucher.domain.model.VoucherSearch;
 import org.egov.egf.voucher.domain.repository.VoucherRepository;
@@ -59,6 +69,9 @@ public class VoucherService {
 	private FinancialConfigurationContractRepository financialConfigurationContractRepository;
 
 	@Autowired
+	private ChartOfAccountContractRepository chartOfAccountContractRepository;
+
+	@Autowired
 	private FundContractRepository fundContractRepository;
 
 	@Autowired
@@ -77,10 +90,19 @@ public class VoucherService {
 	private FunctionaryContractRepository functionaryContractRepository;
 
 	@Autowired
+	private AccountDetailKeyContractRepository accountDetailKeyContractRepository;
+
+	@Autowired
+	private AccountDetailTypeContractRepository accountDetailTypeContractRepository;
+
+	@Autowired
 	private BoundaryRepository boundaryRepository;
 
 	@Autowired
 	private DepartmentRepository departmentRepository;
+
+	@Autowired
+	private VouchernumberGenerator vouchernumberGenerator;
 
 	private List<String> mandatoryFields = new ArrayList<String>();
 
@@ -99,6 +121,8 @@ public class VoucherService {
 				throw new CustomBindException(errors);
 			}
 
+			populateVoucherNumbers(vouchers);
+
 		} catch (CustomBindException e) {
 
 			throw new CustomBindException(errors);
@@ -106,6 +130,14 @@ public class VoucherService {
 
 		return voucherRepository.save(vouchers, requestInfo);
 
+	}
+
+	private void populateVoucherNumbers(List<Voucher> vouchers) {
+
+		for (Voucher voucher : vouchers) {
+
+			voucher.setVoucherNumber(vouchernumberGenerator.getNextNumber(voucher));
+		}
 	}
 
 	@Transactional
@@ -145,6 +177,11 @@ public class VoucherService {
 				for (Voucher voucher : vouchers) {
 					validator.validate(voucher, errors);
 				}
+
+				getHeaderMandateFields();
+
+				validateMandatoryFields(vouchers);
+
 				break;
 			case Constants.ACTION_UPDATE:
 				Assert.notNull(vouchers, "Vouchers to update must not be null");
@@ -244,12 +281,135 @@ public class VoucherService {
 					voucher.setDepartment(department.getDepartment().get(0));
 				}
 
-				getHeaderMandateFields();
-				
-				validateMandatoryFields(vouchers);
+				fetchRelatedForLedger(vouchers);
+
+				fetchRelatedForLedgerDetail(vouchers);
+
 			}
 
 		return vouchers;
+	}
+
+	private void fetchRelatedForLedger(List<Voucher> vouchers) {
+
+		Map<String, ChartOfAccountContract> coaMap = new HashMap<>();
+		Map<String, FunctionContract> functionMap = new HashMap<>();
+		String tenantId = vouchers.get(0).getTenantId();
+
+		for (Voucher voucher : vouchers) {
+
+			for (Ledger ledger : voucher.getLedgers()) {
+
+				if (ledger.getGlcode() != null) {
+
+					ChartOfAccountContract coa = null;
+
+					if (coaMap.get(ledger.getGlcode()) == null) {
+						ChartOfAccountContract coaContract = new ChartOfAccountContract();
+						coaContract.setGlcode(ledger.getGlcode());
+						coaContract.setTenantId(tenantId);
+
+						coa = chartOfAccountContractRepository.findByGlcode(coaContract);
+
+						if (coa == null) {
+							throw new InvalidDataException("glcode", "ledgers.glcode.invalid",
+									" Invalid glcode: " + ledger.getGlcode());
+						}
+
+						coaMap.put(ledger.getGlcode(), coa);
+
+					}
+
+					ledger.setChartOfAccount(coaMap.get(ledger.getGlcode()));
+
+				}
+
+				if (ledger.getFunction() != null) {
+
+					if (functionMap.get(ledger.getFunction().getId()) == null) {
+
+						ledger.getFunction().setTenantId(tenantId);
+
+						FunctionContract function = funnctionContractRepository.findById(ledger.getFunction());
+
+						if (function == null) {
+							throw new InvalidDataException("function", "ledgers.function.invalid",
+									" Invalid function" + ledger.getFunction().getId());
+						}
+
+						functionMap.put(ledger.getFunction().getId(), function);
+
+					}
+
+					ledger.setFunction(functionMap.get(ledger.getFunction().getId()));
+
+				}
+
+			}
+
+		}
+	}
+
+	private void fetchRelatedForLedgerDetail(List<Voucher> vouchers) {
+
+		Map<String, AccountDetailTypeContract> adtMap = new HashMap<>();
+		Map<String, AccountDetailKeyContract> adkMap = new HashMap<>();
+		String tenantId = vouchers.get(0).getTenantId();
+
+		for (Voucher voucher : vouchers) {
+
+			for (Ledger ledger : voucher.getLedgers()) {
+
+				if (ledger.getLedgerDetails() != null)
+					for (LedgerDetail detail : ledger.getLedgerDetails()) {
+
+						if (detail.getAccountDetailType() != null) {
+
+							if (adtMap.get(detail.getAccountDetailType().getId()) == null) {
+
+								detail.getAccountDetailType().setTenantId(tenantId);
+
+								AccountDetailTypeContract accountDetailType = accountDetailTypeContractRepository
+										.findById(detail.getAccountDetailType());
+
+								if (accountDetailType == null) {
+									throw new InvalidDataException("accountDetailType",
+											"ledgers.ledgerDetails.accountDetailType.invalid",
+											" Invalid accountDetailType" + detail.getAccountDetailType().getId());
+								}
+
+								adtMap.put(detail.getAccountDetailType().getId(), accountDetailType);
+
+							}
+
+							detail.setAccountDetailType(adtMap.get(detail.getAccountDetailType().getId()));
+						}
+						if (detail.getAccountDetailKey() != null) {
+
+							if (adkMap.get(detail.getAccountDetailKey().getId()) == null) {
+
+								detail.getAccountDetailKey().setTenantId(tenantId);
+
+								AccountDetailKeyContract accountDetailKey = accountDetailKeyContractRepository
+										.findById(detail.getAccountDetailKey());
+
+								if (accountDetailKey == null) {
+									throw new InvalidDataException("accountDetailKey",
+											"ledgers.ledgerDetails.accountDetailKey.invalid",
+											" Invalid accountDetailKey" + detail.getAccountDetailKey().getId());
+								}
+
+								adkMap.put(detail.getAccountDetailKey().getId(), accountDetailKey);
+
+							}
+
+							detail.setAccountDetailKey(adkMap.get(detail.getAccountDetailKey().getId()));
+						}
+					}
+
+			}
+
+		}
 	}
 
 	private void getHeaderMandateFields() {
@@ -300,11 +460,14 @@ public class VoucherService {
 	protected void checkMandatoryField(final String fieldName, final Object value) {
 
 		if (mandatoryFields.contains(fieldName) && (value == null || StringUtils.isEmpty(value.toString())))
-			throw new InvalidDataException(fieldName, fieldName + ".invalid", " Invalid " + fieldName);
+			throw new InvalidDataException(fieldName, fieldName + ".invalid", fieldName + " is mandatory");
 
 	}
 
 	public Pagination<Voucher> search(VoucherSearch voucherSearch) {
+
+		Assert.notNull(voucherSearch.getTenantId(), "tenantId is mandatory for voucher search");
+
 		return voucherRepository.search(voucherSearch);
 	}
 

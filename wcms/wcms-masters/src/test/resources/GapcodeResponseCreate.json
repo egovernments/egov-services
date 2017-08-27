@@ -1,0 +1,22 @@
+{
+    "ResponseInfo": {
+        "apiId": "emp",
+        "ver": "1.0",
+        "ts": 1,
+        "resMsgId": "uief87324",
+        "msgId": "20170826",
+        "status": "201"
+    },
+    "Gapcodes": [
+        {
+            "id": 24,
+            "code": "Last 9 months Lowest",
+            "noOfMonths": "Last 9 months",
+            "logic": "Lowest",
+            "description": "customadding",
+            "tenantId": "1",
+            "active": false,
+            "outSideUlb": false
+        }
+    ]
+}

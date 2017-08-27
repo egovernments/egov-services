@@ -56,5 +56,8 @@ public class PropertyTaxResponseInfo {
     
     @JsonProperty("code")
     private String code;
+    
+    @JsonProperty("service")
+    private String service;
         
 }

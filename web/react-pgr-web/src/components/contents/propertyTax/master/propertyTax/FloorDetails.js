@@ -125,11 +125,12 @@ class FloorDetails extends Component {
     super(props);
     this.state= {
 		unitType:[{code:"FLAT", name:'Flat'}, {code:"ROOM", name:'Room'}],
-		floorNumber:[{code:1, name:'Basement-3'},{code:2, name:'Basement-2'},{code:3, name:'Basement-1'},{code:4, name:'Ground Floor'}],
+		floorNumber:[{code:-1, name:'None'},{code:1, name:'Basement-3'},{code:2, name:'Basement-2'},{code:3, name:'Basement-1'},{code:4, name:'Ground Floor'}],
 		rooms: [],
 		structureclasses:[],
 		occupancies:[],
 		usages:[],
+		subUsage:[],
 		hasLengthWidth: false,
 		roomInFlat:[{code:1, name:'Yes'}, {code:2, name:'No'}],
 		newFloorError : false,
@@ -145,6 +146,7 @@ class FloorDetails extends Component {
 
         Api.commonApiPost('pt-property/property/structureclasses/_search').then((res)=>{
           console.log(res);
+		  res.structureClasses.unshift({code:-1, name:'None'})
           currentThis.setState({structureclasses: res.structureClasses})
         }).catch((err)=> {
           console.log(err)
@@ -152,6 +154,7 @@ class FloorDetails extends Component {
 
         Api.commonApiPost('pt-property/property/occuapancies/_search').then((res)=>{
           console.log(res);
+		  res.occuapancyMasters.unshift({code:-1, name:'None'})
           currentThis.setState({occupancies : res.occuapancyMasters})
         }).catch((err)=> {
           console.log(err)
@@ -159,6 +162,7 @@ class FloorDetails extends Component {
 
         Api.commonApiPost('pt-property/property/usages/_search').then((res)=>{
           console.log(res);
+		  res.usageMasters.unshift({code:-1, name:'None'})
           currentThis.setState({usages : res.usageMasters})
         }).catch((err)=> {
           console.log(err)
@@ -420,17 +424,30 @@ calcArea = (e, type) => {
 }
 
 handleAge = (year) => {
-/*	var query = {
-		fromYear : year,
-		toYear: year
+	
+	let {handleChangeNextOne} = this.props;
+		
+	let yr = year.split('/');
+	
+	if(yr[2] !=undefined && yr[2].length==4){
+		var query = {
+			year : yr[2]
+		}
+	
+		var currentThis = this;
+		Api.commonApiPost('pt-property/property/depreciations/_search',query).then((res)=>{
+			if(res.depreciations.length !=0){
+				let e = {
+					target: {
+						value: res.depreciations[0].code
+					}
+				}
+				handleChangeNextOne(e, "floor","age", false, "")
+			}	
+		}).catch((err)=> {
+		  console.log(err)
+		})
 	}
-	var currentThis = this;
-	Api.commonApiPost('/property/depreciations/_search',query).then((res)=>{
-	  console.log(res);
-	  currentThis.setState({structureclasses: res.structureClasses})
-	}).catch((err)=> {
-	  console.log(err)
-	})*/
 }	
 
 calcAssessableArea = (e, type) => {
@@ -588,6 +605,24 @@ deleteOccupantName = (index) =>{
 	
 }
  
+ 
+handleUsage = (value) => {
+	
+		let current = this;
+	
+		let query = { 
+			parent: value
+		}
+	
+	   Api.commonApiPost('pt-property/property/usages/_search', query).then((res)=>{
+			console.log(res);
+			current.setState({subUsage : res.usageMasters})
+        }).catch((err)=> {
+			current.setState({subUsage : []})
+			console.log(err)
+        })
+}   
+ 
   
    render(){
 	  
@@ -595,7 +630,7 @@ deleteOccupantName = (index) =>{
 		   
 		const renderOption = function(list,listName="") {
 			if(list)
-			{	list.unshift({code:-1, name:'None'})
+			{	
 				return list.map((item)=>
 				{
 					return (<MenuItem key={item.code} value={item.code} primaryText={item.name}/>)
@@ -623,7 +658,7 @@ deleteOccupantName = (index) =>{
 		  noOfFloors
 				} = this.props;
 
-		let {calcAssessableArea, handleAge, checkFloors} = this;
+		let {calcAssessableArea, handleAge, checkFloors, handleUsage} = this;
 		let cThis = this;
 		
 		const occupantNames = () => {
@@ -635,6 +670,7 @@ deleteOccupantName = (index) =>{
 								<Col xs={12} md={6}>
 									<TextField  className="fullWidth"
 									  hintText="Mano, Ranjan"
+									  floatingLabelFixed={true}
 									  floatingLabelText={translate('pt.create.groups.floorDetails.fields.occupantName')}
 									  errorText={fieldErrors.occupantName ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.flatNo}</span> : ""}
 									  value={floorDetails.occupantName ? floorDetails.occupantName : ""}
@@ -712,9 +748,11 @@ deleteOccupantName = (index) =>{
 												<Row>
 													<Col xs={12} md={3} sm={6}>
 														<SelectField  className="fullWidth selectOption"
-														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.floorNumber')+ '*'}
+														  floatingLabelFixed={true}
+														  floatingLabelText={<span>{translate('pt.create.groups.floorDetails.fields.floorNumber')}<span style={{"color": "#FF0000"}}> *</span></span>}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.floorNo ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.floor.floorNo}</span>:"") : ""}
 														  value={floorDetails.floor ? floorDetails.floor.floorNo : ""}
+														  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
 														  onChange={(event, index, value) => {
 															 (value == -1) ?  value = '' : '';
 															  var e = {
@@ -735,9 +773,11 @@ deleteOccupantName = (index) =>{
 													</Col>
 													<Col xs={12} md={3} sm={6}>
 														 <SelectField  className="fullWidth selectOption"
-															floatingLabelText={translate('pt.create.groups.floorDetails.fields.unitType')+ '*'}
+															floatingLabelText={<span>{translate('pt.create.groups.floorDetails.fields.unitType')}<span style={{"color": "#FF0000"}}> *</span></span>}
+															floatingLabelFixed={true}
 															errorText={fieldErrors.floor ? (fieldErrors.floor.unitType ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.floor.unitType}</span>:"" ): ""}
 															value={floorDetails.floor ? floorDetails.floor.unitType : ""}
+															dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
 															onChange={(event, index, value) => {
 																(value == -1) ?  value = '' : '';
 							
@@ -752,7 +792,6 @@ deleteOccupantName = (index) =>{
 																	floorDetails.floor.waterMeterNo = null;
 																	floorDetails.floor.exemptionReason = null;
 																	floorDetails.floor.rentCollected = null;
-																	floorDetails.floor.age = '0TO20';
 																}
 																
 																handleChangeFloor(e,"floor" ,"unitType", true, "");
@@ -770,9 +809,11 @@ deleteOccupantName = (index) =>{
 													{(floorDetails.floor ? (floorDetails.floor.unitType == 'FLAT' ? true: false ): false) &&
 															<Col xs={12} md={3} sm={6}>
 																 <SelectField  className="fullWidth selectOption"
+																	floatingLabelFixed={true}
 																	floatingLabelText={translate('pt.create.groups.floorDetails.fields.isRoomFlat')}
 																	errorText={fieldErrors.roomInFlat ? (fieldErrors.floor.roomInFlat ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.floor.roomInFlat}</span>:"" ): ""}
 																	value={floorDetails.floor ? floorDetails.floor.roomInFlat : ""}
+																	dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
 																	onChange={(event, index, value) => {
 																		(value == -1) ?  value = '' : '';
 																		
@@ -812,7 +853,8 @@ deleteOccupantName = (index) =>{
 																<Col xs={12} md={3} sm={6}>			
 																	<TextField  className="fullWidth"
 																	  hintText="201"
-																	  floatingLabelText={translate('pt.create.groups.floorDetails.fields.flatNo')+' *'}
+																	  floatingLabelFixed={true}
+																	  floatingLabelText={<span>{translate('pt.create.groups.floorDetails.fields.flatNo')}<span style={{"color": "#FF0000"}}> *</span></span>}
 																	  errorText={fieldErrors.floor ? (fieldErrors.floor.flatNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.flatNo}</span> :""): ""}
 																	  value={floorDetails.floor ? floorDetails.floor.flatNo : ""}
 																	  onChange={(e) => {handleChangeFloor(e,"floor" ,"flatNo", true, /^\d+$/g)}}
@@ -825,11 +867,12 @@ deleteOccupantName = (index) =>{
 															}
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
-														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.unitNumber')+' *'}
+														  floatingLabelText={<span>{translate('pt.create.groups.floorDetails.fields.unitNumber')}<span style={{"color": "#FF0000"}}> *</span></span>}
+														  floatingLabelFixed={true}
 														  hintText="102"
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.unitNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.unitNo}</span> :""): ""}
 														  value={floorDetails.floor ? floorDetails.floor.unitNo : ""}
-														  onChange={(e) => {handleChangeFloor(e,"floor" ,"unitNo", true, /^\d{0,3}$/g)}}
+														  onChange={(e) => {handleChangeFloor(e,"floor" ,"unitNo", true, /^[a-zA-Z0-9]*$/g)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -839,9 +882,11 @@ deleteOccupantName = (index) =>{
 													</Col>		
 													<Col xs={12} md={3} sm={6}>
 														<SelectField  className="fullWidth selectOption"
-														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.constructionClass')+' *'}
+														  floatingLabelFixed={true}
+														  floatingLabelText={<span>{translate('pt.create.groups.floorDetails.fields.constructionClass')}<span style={{"color": "#FF0000"}}> *</span></span>}
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.structure? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.floor.structure}</span>:"" ): ""}
 														  value={floorDetails.floor ? floorDetails.floor.structure : ""}
+														  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
 														  onChange={(event, index, value) => {
 															  (value == -1) ?  value = '' : '';
 															  var e = {
@@ -861,9 +906,11 @@ deleteOccupantName = (index) =>{
 													</Col>
 													<Col xs={12} md={3} sm={6}>
 														<SelectField  className="fullWidth selectOption"
-														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.usageType')+' *'}
+														  floatingLabelFixed={true}
+														  floatingLabelText={<span>{translate('pt.create.groups.floorDetails.fields.usageType')}<span style={{"color": "#FF0000"}}> *</span></span>}
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.usage? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.floor.usage}</span>:"" ): ""}
 														  value={floorDetails.floor ? floorDetails.floor.usage : ""}
+														  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
 														  onChange={(event, index, value) => {
 															  (value == -1) ?  value = '' : '';
 															  var e = {
@@ -871,7 +918,9 @@ deleteOccupantName = (index) =>{
 																  value: value
 																}
 															  };
-															  handleChangeFloor(e,"floor" ,"usage", true, "")}
+															  handleUsage(e.target.value)
+															  handleChangeFloor(e,"floor" ,"usage", true, "")
+															  }
 														  }
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
@@ -884,9 +933,11 @@ deleteOccupantName = (index) =>{
 													</Col>
 													<Col xs={12} md={3} sm={6}>
 														<SelectField  className="fullWidth selectOption"
+														  floatingLabelFixed={true}
 														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.usageSubType')}
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.usageSubType ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.floor.usageSubType}</span> :""): ""}
 														  value={floorDetails.floor ? floorDetails.floor.usageSubType : ""}
+														  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
 														  onChange={(event, index, value) => {
 															  (value == -1) ?  value = '' : '';
 															  var e = {
@@ -901,11 +952,12 @@ deleteOccupantName = (index) =>{
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														>
-															{renderOption(this.state.usages)}
+															{renderOption(this.state.subUsage)}
 														</SelectField>
 													</Col>
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
+														  floatingLabelFixed={true}
 														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.firmName')}
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.firmName? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.firmName}</span>:"") : ""}
 														  value={floorDetails.floor ? floorDetails.floor.firmName : ""}
@@ -919,9 +971,11 @@ deleteOccupantName = (index) =>{
 													</Col>
 													<Col xs={12} md={3} sm={6}>
 														<SelectField  className="fullWidth selectOption"
-														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.occupancy')+' *'}
+														floatingLabelFixed={true}
+														  floatingLabelText={<span>{translate('pt.create.groups.floorDetails.fields.occupancy')}<span style={{"color": "#FF0000"}}> *</span></span>}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.occupancyType?<span style={{position:"absolute", bottom:-41}}>{fieldErrors.floor.occupancyType}</span>:"") : ""}
 														  value={floorDetails.floor ? floorDetails.floor.occupancyType : ""}
+														  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
 														  onChange={(event, index, value) => {
 															  (value == -1) ?  value = '' : '';
 															  var e = {
@@ -943,6 +997,7 @@ deleteOccupantName = (index) =>{
 														<Row>
 															<Col xs={12} md={9}>
 																<TextField  className="fullWidth"
+																floatingLabelFixed={true}
 																  floatingLabelText={translate('pt.create.groups.floorDetails.fields.occupantName')}
 																  errorText={fieldErrors.floor ? (fieldErrors.floor.occupierName? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.occupierName}</span> :""): ""}
 																  value={floorDetails.floor ? floorDetails.floor.occupierName : ""}
@@ -981,7 +1036,7 @@ deleteOccupantName = (index) =>{
 														  value={floorDetails.floor ? floorDetails.floor.annualRent : ""}
 														  onChange={(e) => {handleChangeFloor(e,"floor" , "annualRent", false, /^\d{3,64}$/g)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-														  underlineStyle={styles.underlineStyle}
+														  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  maxLength={9}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -992,12 +1047,12 @@ deleteOccupantName = (index) =>{
 														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.Arv')}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.arv?<span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.arv}</span>:"") : ""}
 														  value={floorDetails.floor ? floorDetails.floor.arv : ""}
-														  onChange={(e) => {handleChangeFloor(e,"floor" , "arv", false,'')}}
-														  type="number"
+														  onChange={(e) => {handleChangeFloor(e,"floor" , "arv", false, /^[0-9]*$/g)}}
+														  
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-														  underlineStyle={styles.underlineStyle}
+														  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 														  underlineFocusStyle={styles.underlineFocusStyle}
-														  maxLength={9}
+														  maxLength={10}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														/>
 													</Col>}
@@ -1006,91 +1061,108 @@ deleteOccupantName = (index) =>{
 														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.manualArv')}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.manualArv?<span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.manualArv}</span>:"") : ""}
 														  value={floorDetails.floor ? floorDetails.floor.manualArv : ""}
-														  onChange={(e) => {handleChangeFloor(e,"floor" , "manualArv", false, '')}}
+														  onChange={(e) => {handleChangeFloor(e,"floor" , "manualArv", false, /^[0-9]*$/g)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-														  underlineStyle={styles.underlineStyle}
+														  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 														  underlineFocusStyle={styles.underlineFocusStyle}
-														  maxLength={9}
-														  type="number"
+														  maxLength={10}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														/>
 													</Col>
 													<Col xs={12} md={3} sm={6}>
-														<DatePicker  className="fullWidth datepicker"
-														  formatDate={(date)=> this.formatDate(date)}
+														<TextField  className="fullWidth"
+														  hintText="dd/mm/yyyy"
+														  floatingLabelFixed={true}
 														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.constructionStartDate')}
-														  errorText={fieldErrors.floor ? (fieldErrors.floor.constStartDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.constStartDate}</span> :""): ""}
-														  onChange={(event,date) => {
-																var day = (date.getDate() < 10) ? ('0'+date.getDate()) : date.getDate();
-																var month = ((date.getMonth() + 1)<10) ? ('0'+(date.getMonth() + 1)) : (date.getMonth() + 1)
-	
-
-															  var e = {
-																target:{
-																	value: day + "/" + month + "/" + date.getFullYear()
-																}
-															  }
-															handleAge(date.getFullYear());
-															handleChangeFloor(e,"floor" ,"constStartDate", false, "")}}
+														  errorText={fieldErrors.floor ? (fieldErrors.floor.constructionStartDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.constructionStartDate}</span> :""): ""}
+														  value={floorDetails.floor ? floorDetails.floor.constructionStartDate : ""}
+														  onChange={(e, value) => {
+															   var val = value;
+																  if(value.length == 2 && !value.match('/')){
+																	  val+='/';
+																  } else if(value.length == 5) {
+																	  var a = value.split('/');
+																	  if(!a[1].match('/')){
+																		  val+='/';
+																	  }
+																  }
+																  
+																   var e = {
+																	  target: {
+																		  value: val
+																	  }
+																	}
+														  handleChangeFloor(e,"floor" ,"constructionStartDate", false, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
-														  textFieldStyle={{width: '100%'}}
-														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-														/>
+														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}/>
 													</Col>
 													<Col xs={12} md={3} sm={6}>
-														<DatePicker  className="fullWidth datepicker"
-														  formatDate={(date)=> this.formatDate(date)}
-														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.constructionEndDate')+' *'}
+														<TextField  className="fullWidth"
+														  hintText="dd/mm/yyyy"
+														  floatingLabelFixed={true}
+														  floatingLabelText={<span>{translate('pt.create.groups.floorDetails.fields.constructionEndDate')}<span style={{"color": "#FF0000"}}> *</span></span>}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.constCompletionDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.constCompletionDate}</span> :""): ""}
-														  onChange={(event,date) => {
-															  	var day = (date.getDate() < 10) ? ('0'+date.getDate()) : date.getDate();
-																var month = ((date.getMonth() + 1)<10) ? ('0'+(date.getMonth() + 1)) : (date.getMonth() + 1)
-	
-
-															  var e = {
-																target:{
-																	value: day + "/" + month + "/" + date.getFullYear()
-																}
-															  }
-															handleAge(date.getFullYear());
-															handleChangeFloor(e,"floor" ,"constCompletionDate", true, "")}}
+														  value={floorDetails.floor ? floorDetails.floor.constCompletionDate : ""}
+														  onChange={(e, value) => {
+																 var val = value;
+																  if(value.length == 2 && !value.match('/')){
+																	  val+='/';
+																  } else if(value.length == 5) {
+																	  var a = value.split('/');
+																	  if(!a[1].match('/')){
+																		  val+='/';
+																	  }
+																  }
+																  
+																   var e = {
+																	  target: {
+																		  value: val
+																	  }
+																	}
+																handleAge(e.target.value);
+																handleChangeFloor(e,"floor" ,"constCompletionDate", true,  /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
-														  textFieldStyle={{width: '100%'}}
-														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-														/>
+														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}/>
 													</Col>
 													<Col xs={12} md={3} sm={6}>
-														<DatePicker  className="fullWidth datepicker"
-														formatDate={(date)=> this.formatDate(date)}
-														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.effectiveFromDate')+' *'}
-														  errorText={fieldErrors.floor ? (fieldErrors.floor.occupancyDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.occupancyDate}</span> : "") : ""}
-														  onChange={(event,date) => {
-															  	var day = (date.getDate() < 10) ? ('0'+date.getDate()) : date.getDate();
-																var month = ((date.getMonth() + 1)<10) ? ('0'+(date.getMonth() + 1)) : (date.getMonth() + 1)
-	
-
-															  var e = {
-																target:{
-																	value: day + "/" + month + "/" + date.getFullYear()
-																}
+														<TextField  className="fullWidth"
+														  hintText="dd/mm/yyyy"
+														  floatingLabelFixed={true}
+														  floatingLabelText={<span>{translate('pt.create.groups.floorDetails.fields.effectiveFromDate')}<span style={{"color": "#FF0000"}}> *</span></span>}
+														  errorText={fieldErrors.floor ? (fieldErrors.floor.occupancyDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.occupancyDate}</span> :""): ""}
+														  value={floorDetails.floor ? floorDetails.floor.occupancyDate : ""}
+														  onChange={(e, value) => {
+															   var val = value;
+															  if(value.length == 2 && !value.match('/')){
+																  val+='/';
+															  } else if(value.length == 5) {
+																  var a = value.split('/');
+																  if(!a[1].match('/')){
+																	  val+='/';
+																  }
 															  }
-															  handleChangeFloor(e,"floor" ,"occupancyDate", true, "")}}
+															  
+															   var e = {
+																  target: {
+																	  value: val
+																  }
+																}
+															  handleChangeFloor(e,"floor" ,"occupancyDate", true, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
-														  textFieldStyle={{width: '100%'}}
-														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-														/>
+														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}/>
 													</Col>
 													<Col xs={12} md={3} sm={6}>
 														<SelectField  className="fullWidth selectOption"
-														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.unstructuredLand')+' *'}
+														  floatingLabelText={<span>{translate('pt.create.groups.floorDetails.fields.unstructuredLand')}<span style={{"color": "#FF0000"}}> *</span></span>}
 														  errorText={fieldErrors.floor ? ( fieldErrors.floor.isStructured?<span style={{position:"absolute", bottom:-41}}>{fieldErrors.floor.isStructured}</span>:"") : ""}
 														  value={floorDetails.floor ? floorDetails.floor.isStructured : ""}
+														  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
 														  onChange={(event, index, value) => {
 															  (value == -1) ?  value = '' : '';
 															  				  
@@ -1114,7 +1186,7 @@ deleteOccupantName = (index) =>{
 															  }
 														  }
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-														  underlineStyle={styles.underlineStyle}
+														  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														>
@@ -1134,7 +1206,7 @@ deleteOccupantName = (index) =>{
 															  cThis.calcArea(e, 'length');
 														  }}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-														  underlineStyle={styles.underlineStyle}
+														  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  maxLength={6}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -1152,7 +1224,7 @@ deleteOccupantName = (index) =>{
 															  cThis.calcArea(e, 'width');
 															}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-														  underlineStyle={styles.underlineStyle}
+														  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  maxLength={6}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -1162,7 +1234,7 @@ deleteOccupantName = (index) =>{
 													
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
-														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.plinthArea')+' *'}
+														  floatingLabelText={<span>{translate('pt.create.groups.floorDetails.fields.plinthArea')}<span style={{"color": "#FF0000"}}> *</span></span>}
 														  hintText="27.75"
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.builtupArea? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.builtupArea}</span>:"" ): ""}
 														  value={floorDetails.floor ? floorDetails.floor.builtupArea : ""}
@@ -1170,7 +1242,7 @@ deleteOccupantName = (index) =>{
 															  handleChangeFloor(e, "floor","builtupArea", true, /^[0-9.]+$/)
 															}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-														  underlineStyle={styles.underlineStyle}
+														  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  maxLength={6}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -1180,14 +1252,14 @@ deleteOccupantName = (index) =>{
 													
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
-														  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.carpetArea')+' *'}
+														  floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.carpetArea')}<span style={{"color": "#FF0000"}}> *</span></span>}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.carpetArea? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.carpetArea}</span> :""): ""}
 														  value={floorDetails.floor ? floorDetails.floor.carpetArea : ""}
 														  onChange={(e) => {
 															  calcAssessableArea(e,'carpet');
 															  handleChangeFloor(e,"floor" , "carpetArea", true, "")}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-														  underlineStyle={styles.underlineStyle}
+														  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  maxLength={5}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -1203,7 +1275,7 @@ deleteOccupantName = (index) =>{
 															  calcAssessableArea(e,'exempted');
 															  handleChangeFloor(e,"floor" , "exemptedArea", false, /^[0-9]+$/i)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-														  underlineStyle={styles.underlineStyle}
+														  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  maxLength={5}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -1215,9 +1287,9 @@ deleteOccupantName = (index) =>{
 														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.occupancyCertificateNumber')}
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.occupancyCertiNumber? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.occupancyCertiNumber}</span>:"" ): ""}
 														  value={floorDetails.floor ? floorDetails.floor.occupancyCertiNumber : ""}
-														  onChange={(e) => {handleChangeFloor(e,"floor" ,"occupancyCertiNumber", false, /^[a-z0-9]+$/i)}}
+														  onChange={(e) => {handleChangeFloor(e,"floor" ,"occupancyCertiNumber", false, /^[0-9,<>!@#\$%\^\&*\)\(+=._-]+$/g)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-														  underlineStyle={styles.underlineStyle}
+														  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  maxLength={10}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -1231,7 +1303,7 @@ deleteOccupantName = (index) =>{
 														  value={floorDetails.floor ? floorDetails.floor.buildingCost : ""}
 														  onChange={(e) => {handleChangeFloor(e,"floor" ,"buildingCost", false, /^[0-9]+$/i)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-														  underlineStyle={styles.underlineStyle}
+														  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  maxLength={10}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -1245,7 +1317,7 @@ deleteOccupantName = (index) =>{
 														  value={floorDetails.floor ? floorDetails.floor.landCost : ""}
 														  onChange={(e) => {handleChangeFloor(e,"floor" ,"landCost", false, /^[0-9]+$/i)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-														  underlineStyle={styles.underlineStyle}
+														  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  maxLength={10}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -1254,7 +1326,7 @@ deleteOccupantName = (index) =>{
 												
 													<Col xs={12} md={3} sm={6}>
 														  <Checkbox
-															label={translate('pt.create.groups.assessmentDetails.fields.isLegal')+' *'}
+															label={<span>{translate('pt.create.groups.assessmentDetails.fields.isLegal')}<span style={{"color": "#FF0000"}}> *</span></span>}
 															style={styles.checkbox}
 															defaultChecked ={true}
 															onCheck = {(e, i, v) => {
@@ -1300,6 +1372,7 @@ deleteOccupantName = (index) =>{
 																  
 																  setTimeout(()=>{
 																	_this.createFloorObject();
+																	_this.getFloors();
 																	}, 300);
 																}
 															}/>
@@ -1307,7 +1380,7 @@ deleteOccupantName = (index) =>{
 													</Col>
 													
 												</Row>
-												{ floorDetails.floors &&
+												{(floorDetails.floors && floorDetails.floors.length!=0)  &&
                                             <div className="col-md-12 col-xs-12"> <br/>
                                           <Table id="floorDetailsTable" style={{color:"black",fontWeight: "normal", marginBottom:0}} bordered responsive>
                                           <thead style={{backgroundColor:"#607b84",color:"white"}}>
@@ -1347,17 +1420,17 @@ deleteOccupantName = (index) =>{
                                                     <td>{getNameById(_this.state.floorNumber ,i.floorNo) || translate('pt.search.searchProperty.fields.na')}</td>
 													<td>{getNameById(_this.state.unitType ,i.unitType)  || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.unitNo || translate('pt.search.searchProperty.fields.na')}</td>
-                                                    <td>{i.structure || translate('pt.search.searchProperty.fields.na')}</td>
-                                                    <td>{i.usage || translate('pt.search.searchProperty.fields.na')}</td>
-                                                    <td>{i.usageSubType || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{getNameById(_this.state.structureclasses, i.structure) || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{getNameById(_this.state.usages, i.usage) || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{getNameById(_this.state.subUsage,i.usageSubType) || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.firmName || translate('pt.search.searchProperty.fields.na')}</td>
-                                                    <td>{i.occupancyType || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{getNameById(_this.state.occupancies ,i.occupancyType) || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.occupierName || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.annualRent || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.manualArv || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.constCompletionDate || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.occupancyDate || translate('pt.search.searchProperty.fields.na')}</td>
-                                                    <td>{i.isStructured || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{i.isStructured ? 'Yes' : 'No'}</td>
                                                     <td>{i.length || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.width || translate('pt.search.searchProperty.fields.na')}</td>
 													<td>{i.carpetArea || translate('pt.search.searchProperty.fields.na')}</td>
@@ -1514,6 +1587,12 @@ initForm : () => {
   },
 
   resetObject: (object, isSectionValid) => {
+	  var ownerRequired = [];
+	  if(window.location.href.match('dataEntry')){
+		 ownerRequired = ['name', 'gender' ];
+	  } else {
+		 ownerRequired = ['mobileNumber', 'name', 'gender' ];
+	  }
     dispatch({
       type: "RESET_OBJECT",
       object,
@@ -1521,7 +1600,7 @@ initForm : () => {
 	    validatePropertyOwner: {
         required: {
           current: [],
-          required: ['mobileNumber', 'name', 'gaurdianRelation', 'gaurdian', 'gender' ]
+          required: ownerRequired
         },
         pattern: {
           current: [],

@@ -95,7 +95,7 @@ public class TradeLicenseSearchEntity {
 	private Timestamp agreementDate;
 
 	private Boolean isPropertyOwner = false;
-	
+
 	private Timestamp licenseValidFromDate;
 
 	private Long status;
@@ -113,7 +113,7 @@ public class TradeLicenseSearchEntity {
 	private static List<LicenseFeeDetailSearch> feeDetails;
 
 	private static List<SupportDocumentSearch> supportDocuments;
-	
+
 	private List<LicenseFeeDetailSearchEntity> feeDetailEntitys;
 
 	private List<SupportDocumentSearchEntity> supportDocumentEntitys;
@@ -147,7 +147,7 @@ public class TradeLicenseSearchEntity {
 		tradeLicenseSearch.setOldLicenseNumber(this.oldLicenseNumber);
 
 		if (this.applicationDate != null) {
-			tradeLicenseSearch.setApplicationDate( (this.applicationDate.getTime()));
+			tradeLicenseSearch.setApplicationDate((this.applicationDate.getTime()));
 		}
 
 		tradeLicenseSearch.setAdhaarNumber(this.adhaarNumber);
@@ -218,7 +218,7 @@ public class TradeLicenseSearchEntity {
 			tradeLicenseSearch.setLicenseValidFromDate((this.licenseValidFromDate.getTime()));
 		}
 
-		tradeLicenseSearch.setIsPropertyOwner( this.isPropertyOwner);
+		tradeLicenseSearch.setIsPropertyOwner(this.isPropertyOwner);
 		tradeLicenseSearch.setAgreementNo(this.agreementNo);
 
 		tradeLicenseSearch.setIsLegacy(this.isLegacy);
@@ -233,18 +233,18 @@ public class TradeLicenseSearchEntity {
 			tradeLicenseSearch.setExpiryDate((this.expiryDate.getTime()));
 		}
 		this.feeDetails = new ArrayList<LicenseFeeDetailSearch>();
-		if( this.feeDetailEntitys != null){
-			for( LicenseFeeDetailSearchEntity feeDetailEntity : this.feeDetailEntitys){
-				this.feeDetails.add( feeDetailEntity.toDomain());
+		if (this.feeDetailEntitys != null) {
+			for (LicenseFeeDetailSearchEntity feeDetailEntity : this.feeDetailEntitys) {
+				this.feeDetails.add(feeDetailEntity.toDomain());
 			}
 		}
 		tradeLicenseSearch.setFeeDetails(this.feeDetails);
 		this.supportDocuments = new ArrayList<SupportDocumentSearch>();
-		if( this.supportDocumentEntitys != null){
-			for( SupportDocumentSearchEntity supportDocumentEntity : this.supportDocumentEntitys){
-				this.supportDocuments.add( supportDocumentEntity.toDomain());
+		if (this.supportDocumentEntitys != null) {
+			for (SupportDocumentSearchEntity supportDocumentEntity : this.supportDocumentEntitys) {
+				this.supportDocuments.add(supportDocumentEntity.toDomain());
 			}
-		} 
+		}
 		tradeLicenseSearch.setSupportDocuments(this.supportDocuments);
 
 		auditDetails.setCreatedBy(this.createdBy);
@@ -352,7 +352,7 @@ public class TradeLicenseSearchEntity {
 		}
 
 		this.isPropertyOwner = tradeLicenseSearch.getIsPropertyOwner();
-		
+
 		this.agreementNo = tradeLicenseSearch.getAgreementNo();
 
 		this.isLegacy = tradeLicenseSearch.getIsLegacy();

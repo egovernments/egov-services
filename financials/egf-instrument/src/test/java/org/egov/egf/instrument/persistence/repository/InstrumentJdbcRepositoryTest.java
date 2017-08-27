@@ -139,7 +139,7 @@ public class InstrumentJdbcRepositoryTest {
 		Pagination<Instrument> page = (Pagination<Instrument>) instrumentJdbcRepository.search(getInstrumentSearch());
 
 		assertThat(page.getPagedData().get(0).getAmount()).isEqualTo("1.00");
-		assertThat(page.getPagedData().get(0).getBank().getCode()).isEqualTo("code");
+		assertThat(page.getPagedData().get(0).getBank().getId()).isEqualTo("code");
 		assertThat(page.getPagedData().get(0).getBankAccount().getAccountNumber()).isEqualTo("accountNumber");
 		assertThat(page.getPagedData().get(0).getBranchName()).isEqualTo("branchName");
 		assertThat(page.getPagedData().get(0).getDrawer()).isEqualTo("drawer");
@@ -216,7 +216,7 @@ public class InstrumentJdbcRepositoryTest {
 		Pagination<Instrument> page = (Pagination<Instrument>) instrumentJdbcRepository.search(getInstrumentSearch());
 
 		assertThat(page.getPagedData().get(0).getAmount()).isEqualTo("1.00");
-		assertThat(page.getPagedData().get(0).getBank().getCode()).isEqualTo("code");
+		assertThat(page.getPagedData().get(0).getBank().getId()).isEqualTo("code");
 		assertThat(page.getPagedData().get(0).getBankAccount().getAccountNumber()).isEqualTo("accountNumber");
 		assertThat(page.getPagedData().get(0).getBranchName()).isEqualTo("branchName");
 		assertThat(page.getPagedData().get(0).getDrawer()).isEqualTo("drawer");
@@ -292,7 +292,7 @@ public class InstrumentJdbcRepositoryTest {
 		instrumentSearch.setId("1");
 		instrumentSearch.setIds("1");
 		instrumentSearch.setAmount(BigDecimal.ONE);
-		instrumentSearch.setBank(BankContract.builder().code("code").build());
+		instrumentSearch.setBank(BankContract.builder().id("code").build());
 		instrumentSearch.setBankAccount(BankAccountContract.builder().accountNumber("accountNumber").build());
 		instrumentSearch.setBranchName("branchName");
 		instrumentSearch.setDrawer("drawer");

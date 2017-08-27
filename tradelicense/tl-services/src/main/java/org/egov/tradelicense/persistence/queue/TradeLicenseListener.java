@@ -25,18 +25,25 @@ public class TradeLicenseListener {
 	ObjectMapper objectMapper;
 
 	@Autowired
+	TradeLicenseProducer tradeLicenseProducer;
+
+	@Autowired
 	PropertiesManager propertiesManager;
-	
+
 	@Autowired
 	TradeLicenseService tradeLicenseService;
 
-	@KafkaListener(topics = { "#{propertiesManager.getCreateLegacyTradeValidated()}" })
+	@KafkaListener(topics = { "#{propertiesManager.getTradeLicenseWorkFlowPopulatedTopic()}" })
 	public void process(Map<String, Object> mastersMap) {
 
-		if (mastersMap.get(propertiesManager.getCreateLegacyTradeValidated()) != null) {
+		String topic = propertiesManager.getTradeLicensePersistedTopic();
+		String key = propertiesManager.getTradeLicensePersistedKey();
 
-			TradeLicenseRequest request = objectMapper.convertValue(
-					mastersMap.get(propertiesManager.getCreateLegacyTradeValidated()), TradeLicenseRequest.class);
+		if (mastersMap.get("tradelicense-legacy-create") != null) {
+
+
+			TradeLicenseRequest request = objectMapper.convertValue(mastersMap.get("tradelicense-legacy-create"),
+					TradeLicenseRequest.class);
 
 			ModelMapper mapper = new ModelMapper();
 			for (TradeLicenseContract tradeLicenseContract : request.getLicenses()) {
@@ -44,8 +51,54 @@ public class TradeLicenseListener {
 				tradeLicenseService.save(domain);
 			}
 			mastersMap.clear();
+			mastersMap.put("tradelicense-persisted", request);
+			tradeLicenseProducer.sendMessage(topic, key, mastersMap);
 		}
+		if (mastersMap.get("tradelicense-new-create") != null) {
 
+
+			TradeLicenseRequest request = objectMapper.convertValue(mastersMap.get("tradelicense-new-create"),
+					TradeLicenseRequest.class);
+
+			ModelMapper mapper = new ModelMapper();
+			for (TradeLicenseContract tradeLicenseContract : request.getLicenses()) {
+				TradeLicense domain = mapper.map(tradeLicenseContract, TradeLicense.class);
+				tradeLicenseService.save(domain);
+			}
+			mastersMap.clear();
+			mastersMap.put("tradelicense-persisted", request);
+			tradeLicenseProducer.sendMessage(topic, key, mastersMap);
+		}
+		if (mastersMap.get("tradelicense-legacy-update") != null) {
+
+
+			TradeLicenseRequest request = objectMapper.convertValue(mastersMap.get("tradelicense-legacy-update"),
+					TradeLicenseRequest.class);
+
+			ModelMapper mapper = new ModelMapper();
+			for (TradeLicenseContract tradeLicenseContract : request.getLicenses()) {
+				TradeLicense domain = mapper.map(tradeLicenseContract, TradeLicense.class);
+				tradeLicenseService.update(domain);
+			}
+			mastersMap.clear();
+			mastersMap.put("tradelicense-persisted", request);
+			tradeLicenseProducer.sendMessage(topic, key, mastersMap);
+		}
+		if (mastersMap.get("tradelicense-new-update") != null) {
+
+
+			TradeLicenseRequest request = objectMapper.convertValue(mastersMap.get("tradelicense-new-update"),
+					TradeLicenseRequest.class);
+
+			ModelMapper mapper = new ModelMapper();
+			for (TradeLicenseContract tradeLicenseContract : request.getLicenses()) {
+				TradeLicense domain = mapper.map(tradeLicenseContract, TradeLicense.class);
+				tradeLicenseService.update(domain);
+			}
+			mastersMap.clear();
+			mastersMap.put("tradelicense-persisted", request);
+			tradeLicenseProducer.sendMessage(topic, key, mastersMap);
+		}
 	}
 
 }

@@ -1,0 +1,431 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Asset_Requests_Collection_4",
+		"_postman_id": "eef85aac-1e86-c805-0623-cdf4124cbd90",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://kurnool-pilot-services.egovernments.org/asset-services/assets/_create?tenantId=ap.kurnool",
+			"request": {
+				"url": {
+					"raw": "http://kurnool-pilot-services.egovernments.org/asset-services/assets/_create?tenantId=ap.kurnool",
+					"protocol": "http",
+					"host": [
+						"kurnool-pilot-services",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"asset-services",
+						"assets",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "ap.kurnool",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pgr\",\n    \"ver\": \"1.0\",\n    \"ts\": \"01-04-2017 01:01:01\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"authToken\": null,\n    \"correlationId\": null,\n    \"userInfo\": {\n      \"id\": 1,\n      \"userName\": \"egovernments\",\n      \"name\": \"Admin\",\n      \"type\": \"SYSTEM\",\n      \"mobileNumber\": null,\n      \"emailId\": null,\n      \"roles\": [\n        {\n          \"id\": null,\n          \"name\": \"SYSTEM\"\n        }\n      ]\n    }\n  },\n  \"Asset\": {\n    \"tenantId\": \"ap.kurnool\",\n    \"name\": \"Asset Plant and Machinery Test 001\",\n    \"department\": {\n      \"id\": 5,\n      \"name\": null,\n      \"code\": null\n    },\n    \"assetCategory\": {\n      \"tenantId\": \"ap.kurnool\",\n      \"id\": 1361,\n      \"name\": \"Plant and Machinery\",\n      \"code\": \"021\",\n      \"assetCategoryType\": \"IMMOVABLE\",\n      \"parent\": null,\n      \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n      \"isAssetAllow\": false,\n      \"assetAccount\": 1722,\n      \"accumulatedDepreciationAccount\": null,\n      \"revaluationReserveAccount\": 807,\n      \"depreciationExpenseAccount\": 770,\n      \"unitOfMeasurement\": null,\n      \"version\": null,\n      \"depreciationRate\": 0,\n      \"assetFieldsDefination\": null\n    },\n    \"assetDetails\": \"\",\n    \"modeOfAcquisition\": \"ACQUIRED\",\n    \"status\": \"CAPITALIZED\",\n    \"description\": \"Asset Plant and Machinery Test 001\",\n    \"dateOfCreation\": 1498933800000,\n    \"locationDetails\": {\n      \"locality\": 1098,\n      \"zone\": null,\n      \"revenueWard\": null,\n      \"block\": null,\n      \"street\": null,\n      \"electionWard\": null,\n      \"doorNo\": \"\",\n      \"pinCode\": null\n    },\n    \"remarks\": \"\",\n    \"length\": \"\",\n    \"width\": \"\",\n    \"totalArea\": \"\",\n    \"grossValue\": 49523,\n    \"accumulatedDepreciation\": null,\n    \"assetReference\": null,\n    \"version\": \"1.0\",\n    \"assetAttributes\": [\n      {\n        \"key\": \"Capacity\",\n        \"type\": \"Text\",\n        \"value\": \"150\"\n      },\n      {\n        \"key\": \"Condition of Machinery\",\n        \"type\": \"Select\",\n        \"value\": \"Operational\"\n      },\n      {\n        \"key\": \"Since when non-operational\",\n        \"type\": \"Text\",\n        \"value\": \"\"\n      },\n      {\n        \"key\": \"Acquired from\",\n        \"type\": \"Text\",\n        \"value\": \"\"\n      },\n      {\n        \"key\": \"Available Doc List\",\n        \"type\": \"Text\",\n        \"value\": 4\n      }\n    ],\n    \"enableYearWiseDepreciation\": true,\n    \"depreciationRate\": null,\n    \"yearWiseDepreciation\": [\n      {\n        \"id\": null,\n        \"depreciationRate\": 38.43,\n        \"financialYear\": \"2015-16\",\n        \"usefulLifeInYears\": null,\n        \"tenantId\": null\n      },\n      {\n        \"id\": null,\n        \"depreciationRate\": 19.21,\n        \"financialYear\": \"2016-17\",\n        \"usefulLifeInYears\": null,\n        \"tenantId\": null\n      },\n      \n      {\n        \"id\": null,\n        \"depreciationRate\": 34.21,\n        \"financialYear\": \"2017-18\",\n        \"usefulLifeInYears\": null,\n        \"tenantId\": null\n      }\n    ]\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://kurnool-pilot-services.egovernments.org/asset-services/assets/_create?tenantId=ap.kurnool",
+			"request": {
+				"url": {
+					"raw": "http://kurnool-pilot-services.egovernments.org/asset-services/assets/_create?tenantId=ap.kurnool",
+					"protocol": "http",
+					"host": [
+						"kurnool-pilot-services",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"asset-services",
+						"assets",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "ap.kurnool",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pgr\",\n    \"ver\": \"1.0\",\n    \"ts\": \"01-04-2017 01:01:01\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"authToken\": null,\n    \"correlationId\": null,\n    \"userInfo\": {\n      \"id\": 1,\n      \"userName\": \"egovernments\",\n      \"name\": \"Admin\",\n      \"type\": \"SYSTEM\",\n      \"mobileNumber\": null,\n      \"emailId\": null,\n      \"roles\": [\n        {\n          \"id\": null,\n          \"name\": \"SYSTEM\"\n        }\n      ]\n    }\n  },\n  \"Asset\": {\n    \"tenantId\": \"ap.kurnool\",\n    \"name\": \"Asset Plant and Machinery Test 002\",\n    \"department\": {\n      \"id\": 5,\n      \"name\": null,\n      \"code\": null\n    },\n    \"assetCategory\": {\n      \"tenantId\": \"ap.kurnool\",\n      \"id\": 1361,\n      \"name\": \"Plant and Machinery\",\n      \"code\": \"021\",\n      \"assetCategoryType\": \"IMMOVABLE\",\n      \"parent\": null,\n      \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n      \"isAssetAllow\": false,\n      \"assetAccount\": 1722,\n      \"accumulatedDepreciationAccount\": null,\n      \"revaluationReserveAccount\": 807,\n      \"depreciationExpenseAccount\": 770,\n      \"unitOfMeasurement\": null,\n      \"version\": null,\n      \"depreciationRate\": 0,\n      \"assetFieldsDefination\": null\n    },\n    \"assetDetails\": \"\",\n    \"modeOfAcquisition\": \"TENDER\",\n    \"status\": \"CAPITALIZED\",\n    \"description\": \"Asset Plant and Machinery Test 002\",\n    \"dateOfCreation\": 1499020200000,\n    \"locationDetails\": {\n      \"locality\": 1098,\n      \"zone\": null,\n      \"revenueWard\": null,\n      \"block\": null,\n      \"street\": null,\n      \"electionWard\": null,\n      \"doorNo\": \"\",\n      \"pinCode\": null\n    },\n    \"remarks\": \"\",\n    \"length\": \"\",\n    \"width\": \"\",\n    \"totalArea\": \"\",\n    \"grossValue\": 49523,\n    \"accumulatedDepreciation\": 19523,\n    \"assetReference\": null,\n    \"version\": \"1.0\",\n    \"assetAttributes\": [\n      {\n        \"key\": \"Capacity\",\n        \"type\": \"Text\",\n        \"value\": \"150\"\n      },\n      {\n        \"key\": \"Condition of Machinery\",\n        \"type\": \"Select\",\n        \"value\": \"Operational\"\n      },\n      {\n        \"key\": \"Since when non-operational\",\n        \"type\": \"Text\",\n        \"value\": \"\"\n      },\n      {\n        \"key\": \"Acquired from\",\n        \"type\": \"Text\",\n        \"value\": \"\"\n      },\n      {\n        \"key\": \"Available Doc List\",\n        \"type\": \"Text\",\n        \"value\": 4\n      }\n    ],\n    \"enableYearWiseDepreciation\": true,\n    \"depreciationRate\": null,\n    \"yearWiseDepreciation\": [\n      {\n        \"id\": null,\n        \"depreciationRate\": 38.43,\n        \"financialYear\": \"2015-16\",\n        \"usefulLifeInYears\": null,\n        \"tenantId\": null\n      },\n      {\n        \"id\": null,\n        \"depreciationRate\": 19.21,\n        \"financialYear\": \"2016-17\",\n        \"usefulLifeInYears\": null,\n        \"tenantId\": null\n      },\n      \n      {\n        \"id\": null,\n        \"depreciationRate\": 34.21,\n        \"financialYear\": \"2017-18\",\n        \"usefulLifeInYears\": null,\n        \"tenantId\": null\n      }\n    ]\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://kurnool-pilot-services.egovernments.org/asset-services/assets/_create?tenantId=ap.kurnool",
+			"request": {
+				"url": {
+					"raw": "http://kurnool-pilot-services.egovernments.org/asset-services/assets/_create?tenantId=ap.kurnool",
+					"protocol": "http",
+					"host": [
+						"kurnool-pilot-services",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"asset-services",
+						"assets",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "ap.kurnool",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pgr\",\n    \"ver\": \"1.0\",\n    \"ts\": \"01-04-2017 01:01:01\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"authToken\": null,\n    \"correlationId\": null,\n    \"userInfo\": {\n      \"id\": 1,\n      \"userName\": \"egovernments\",\n      \"name\": \"Admin\",\n      \"type\": \"SYSTEM\",\n      \"mobileNumber\": null,\n      \"emailId\": null,\n      \"roles\": [\n        {\n          \"id\": null,\n          \"name\": \"SYSTEM\"\n        }\n      ]\n    }\n  },\n  \"Asset\": {\n    \"tenantId\": \"ap.kurnool\",\n    \"name\": \"Asset Plant and Machinery Test 003\",\n    \"department\": {\n      \"id\": 5,\n      \"name\": null,\n      \"code\": null\n    },\n    \"assetCategory\": {\n      \"tenantId\": \"ap.kurnool\",\n      \"id\": 1361,\n      \"name\": \"Plant and Machinery\",\n      \"code\": \"021\",\n      \"assetCategoryType\": \"IMMOVABLE\",\n      \"parent\": null,\n      \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n      \"isAssetAllow\": false,\n      \"assetAccount\": 1722,\n      \"accumulatedDepreciationAccount\": null,\n      \"revaluationReserveAccount\": 807,\n      \"depreciationExpenseAccount\": 770,\n      \"unitOfMeasurement\": null,\n      \"version\": null,\n      \"depreciationRate\": 0,\n      \"assetFieldsDefination\": null\n    },\n    \"assetDetails\": \"\",\n    \"modeOfAcquisition\": \"ACQUIRED\",\n    \"status\": \"CAPITALIZED\",\n    \"description\": \"Asset Plant and Machinery Test 003\",\n    \"dateOfCreation\": 1499106600000,\n    \"locationDetails\": {\n      \"locality\": 1098,\n      \"zone\": null,\n      \"revenueWard\": null,\n      \"block\": null,\n      \"street\": null,\n      \"electionWard\": null,\n      \"doorNo\": \"\",\n      \"pinCode\": null\n    },\n    \"remarks\": \"\",\n    \"length\": \"\",\n    \"width\": \"\",\n    \"totalArea\": \"\",\n    \"grossValue\": 9000,\n    \"accumulatedDepreciation\": null,\n    \"assetReference\": null,\n    \"version\": \"1.0\",\n    \"assetAttributes\": [\n      {\n        \"key\": \"Capacity\",\n        \"type\": \"Text\",\n        \"value\": \"150\"\n      },\n      {\n        \"key\": \"Condition of Machinery\",\n        \"type\": \"Select\",\n        \"value\": \"Operational\"\n      },\n      {\n        \"key\": \"Since when non-operational\",\n        \"type\": \"Text\",\n        \"value\": \"\"\n      },\n      {\n        \"key\": \"Acquired from\",\n        \"type\": \"Text\",\n        \"value\": \"\"\n      },\n      {\n        \"key\": \"Available Doc List\",\n        \"type\": \"Text\",\n        \"value\": 4\n      }\n    ],\n    \"enableYearWiseDepreciation\": false,\n    \"depreciationRate\": 15.23\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://kurnool-pilot-services.egovernments.org/asset-services/assets/_create?tenantId=ap.kurnool",
+			"request": {
+				"url": {
+					"raw": "http://kurnool-pilot-services.egovernments.org/asset-services/assets/_create?tenantId=ap.kurnool",
+					"protocol": "http",
+					"host": [
+						"kurnool-pilot-services",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"asset-services",
+						"assets",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "ap.kurnool",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pgr\",\n    \"ver\": \"1.0\",\n    \"ts\": \"01-04-2017 01:01:01\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"authToken\": null,\n    \"correlationId\": null,\n    \"userInfo\": {\n      \"id\": 1,\n      \"userName\": \"egovernments\",\n      \"name\": \"Admin\",\n      \"type\": \"SYSTEM\",\n      \"mobileNumber\": null,\n      \"emailId\": null,\n      \"roles\": [\n        {\n          \"id\": null,\n          \"name\": \"SYSTEM\"\n        }\n      ]\n    }\n  },\n  \"Asset\": {\n    \"tenantId\": \"ap.kurnool\",\n    \"name\": \"Asset Roads Test 001\",\n    \"department\": {\n      \"id\": 5,\n      \"name\": null,\n      \"code\": null\n    },\n    \"assetCategory\": {\n      \"tenantId\": \"ap.kurnool\",\n      \"id\": 1697,\n      \"name\": \"Roads\",\n      \"code\": \"024\",\n      \"assetCategoryType\": \"IMMOVABLE\",\n      \"parent\": null,\n      \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n      \"isAssetAllow\": false,\n      \"assetAccount\": 1722,\n      \"accumulatedDepreciationAccount\": null,\n      \"revaluationReserveAccount\": 807,\n      \"depreciationExpenseAccount\": 770,\n      \"unitOfMeasurement\": null,\n      \"version\": null,\n      \"depreciationRate\": 0,\n      \"assetFieldsDefination\": null\n    },\n    \"assetDetails\": \"\",\n    \"modeOfAcquisition\": \"ACQUIRED\",\n    \"status\": \"CAPITALIZED\",\n    \"description\": \"Asset Roads Test 001\",\n    \"dateOfCreation\": 1499193000000,\n    \"locationDetails\": {\n      \"locality\": 1098,\n      \"zone\": null,\n      \"revenueWard\": null,\n      \"block\": null,\n      \"street\": null,\n      \"electionWard\": null,\n      \"doorNo\": \"\",\n      \"pinCode\": null\n    },\n    \"remarks\": \"\",\n    \"length\": \"\",\n    \"width\": \"\",\n    \"totalArea\": \"\",\n    \"grossValue\": 45278,\n    \"accumulatedDepreciation\": null,\n    \"assetReference\": null,\n    \"version\": \"1.0\",\n    \"assetAttributes\": [\n      {\n        \"key\": \"Road type\",\n        \"type\": \"Select\",\n        \"value\": \"concrete road\"\n      },\n      {\n        \"key\": \"Length(m)\",\n        \"type\": \"Number\",\n        \"value\": \"\"\n      },\n      {\n        \"key\": \"Width(m)\",\n        \"type\": \"Number\",\n        \"value\": \"\"\n      },\n      {\n        \"key\": \"Area(Sq.m)\",\n        \"type\": \"Number\",\n        \"value\": \"\"\n      }\n    ],\n    \"enableYearWiseDepreciation\": true,\n    \"depreciationRate\": null,\n    \"yearWiseDepreciation\": [\n      {\n        \"id\": null,\n        \"depreciationRate\": 8.43,\n        \"financialYear\": \"2015-16\",\n        \"usefulLifeInYears\": null,\n        \"tenantId\": null\n      },\n      {\n        \"id\": null,\n        \"depreciationRate\": 1.21,\n        \"financialYear\": \"2016-17\",\n        \"usefulLifeInYears\": null,\n        \"tenantId\": null\n      },\n      \n      {\n        \"id\": null,\n        \"depreciationRate\": 4.76,\n        \"financialYear\": \"2017-18\",\n        \"usefulLifeInYears\": null,\n        \"tenantId\": null\n      }\n    ]\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://kurnool-pilot-services.egovernments.org/asset-services/assets/_create?tenantId=ap.kurnool",
+			"request": {
+				"url": {
+					"raw": "http://kurnool-pilot-services.egovernments.org/asset-services/assets/_create?tenantId=ap.kurnool",
+					"protocol": "http",
+					"host": [
+						"kurnool-pilot-services",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"asset-services",
+						"assets",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "ap.kurnool",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pgr\",\n    \"ver\": \"1.0\",\n    \"ts\": \"01-04-2017 01:01:01\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"authToken\": null,\n    \"correlationId\": null,\n    \"userInfo\": {\n      \"id\": 1,\n      \"userName\": \"egovernments\",\n      \"name\": \"Admin\",\n      \"type\": \"SYSTEM\",\n      \"mobileNumber\": null,\n      \"emailId\": null,\n      \"roles\": [\n        {\n          \"id\": null,\n          \"name\": \"SYSTEM\"\n        }\n      ]\n    }\n  },\n  \"Asset\": {\n    \"tenantId\": \"ap.kurnool\",\n    \"name\": \"Asset Roads Test 002\",\n    \"department\": {\n      \"id\": 5,\n      \"name\": null,\n      \"code\": null\n    },\n    \"assetCategory\": {\n      \"tenantId\": \"ap.kurnool\",\n      \"id\": 1697,\n      \"name\": \"Roads\",\n      \"code\": \"024\",\n      \"assetCategoryType\": \"IMMOVABLE\",\n      \"parent\": null,\n      \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n      \"isAssetAllow\": false,\n      \"assetAccount\": 1722,\n      \"accumulatedDepreciationAccount\": null,\n      \"revaluationReserveAccount\": 807,\n      \"depreciationExpenseAccount\": 770,\n      \"unitOfMeasurement\": null,\n      \"version\": null,\n      \"depreciationRate\": 0,\n      \"assetFieldsDefination\": null\n    },\n    \"assetDetails\": \"\",\n    \"modeOfAcquisition\": \"CONSTRUCTION\",\n    \"status\": \"CAPITALIZED\",\n    \"description\": \"Asset Roads Test 002\",\n    \"dateOfCreation\": 1499279400000,\n    \"locationDetails\": {\n      \"locality\": 1098,\n      \"zone\": null,\n      \"revenueWard\": null,\n      \"block\": null,\n      \"street\": null,\n      \"electionWard\": null,\n      \"doorNo\": \"\",\n      \"pinCode\": null\n    },\n    \"remarks\": \"\",\n    \"length\": \"\",\n    \"width\": \"\",\n    \"totalArea\": \"\",\n    \"grossValue\": 45278,\n    \"accumulatedDepreciation\": 5784,\n    \"assetReference\": null,\n    \"version\": \"1.0\",\n    \"assetAttributes\": [\n      {\n        \"key\": \"Road type\",\n        \"type\": \"Select\",\n        \"value\": \"concrete road\"\n      },\n      {\n        \"key\": \"Length(m)\",\n        \"type\": \"Number\",\n        \"value\": \"\"\n      },\n      {\n        \"key\": \"Width(m)\",\n        \"type\": \"Number\",\n        \"value\": \"\"\n      },\n      {\n        \"key\": \"Area(Sq.m)\",\n        \"type\": \"Number\",\n        \"value\": \"\"\n      }\n    ],\n    \"enableYearWiseDepreciation\": true,\n    \"depreciationRate\": null,\n    \"yearWiseDepreciation\": [\n      {\n        \"id\": null,\n        \"depreciationRate\": 8.43,\n        \"financialYear\": \"2015-16\",\n        \"usefulLifeInYears\": null,\n        \"tenantId\": null\n      },\n      {\n        \"id\": null,\n        \"depreciationRate\": 1.21,\n        \"financialYear\": \"2016-17\",\n        \"usefulLifeInYears\": null,\n        \"tenantId\": null\n      },\n      \n      {\n        \"id\": null,\n        \"depreciationRate\": 4.76,\n        \"financialYear\": \"2017-18\",\n        \"usefulLifeInYears\": null,\n        \"tenantId\": null\n      }\n    ]\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://kurnool-pilot-services.egovernments.org/asset-services/assets/_create?tenantId=ap.kurnool",
+			"request": {
+				"url": {
+					"raw": "http://kurnool-pilot-services.egovernments.org/asset-services/assets/_create?tenantId=ap.kurnool",
+					"protocol": "http",
+					"host": [
+						"kurnool-pilot-services",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"asset-services",
+						"assets",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "ap.kurnool",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pgr\",\n    \"ver\": \"1.0\",\n    \"ts\": \"01-04-2017 01:01:01\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"authToken\": null,\n    \"correlationId\": null,\n    \"userInfo\": {\n      \"id\": 1,\n      \"userName\": \"egovernments\",\n      \"name\": \"Admin\",\n      \"type\": \"SYSTEM\",\n      \"mobileNumber\": null,\n      \"emailId\": null,\n      \"roles\": [\n        {\n          \"id\": null,\n          \"name\": \"SYSTEM\"\n        }\n      ]\n    }\n  },\n  \"Asset\": {\n    \"tenantId\": \"ap.kurnool\",\n    \"name\": \"Asset Roads Test 003\",\n    \"department\": {\n      \"id\": 5,\n      \"name\": null,\n      \"code\": null\n    },\n    \"assetCategory\": {\n      \"tenantId\": \"ap.kurnool\",\n      \"id\": 1697,\n      \"name\": \"Roads\",\n      \"code\": \"024\",\n      \"assetCategoryType\": \"IMMOVABLE\",\n      \"parent\": null,\n      \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n      \"isAssetAllow\": false,\n      \"assetAccount\": 1722,\n      \"accumulatedDepreciationAccount\": null,\n      \"revaluationReserveAccount\": 807,\n      \"depreciationExpenseAccount\": 770,\n      \"unitOfMeasurement\": null,\n      \"version\": null,\n      \"depreciationRate\": 0,\n      \"assetFieldsDefination\": null\n    },\n    \"assetDetails\": \"\",\n    \"modeOfAcquisition\": \"PURCHASED\",\n    \"status\": \"CAPITALIZED\",\n    \"description\": \"Asset Roads Test 003\",\n    \"dateOfCreation\": 1499365800000,\n    \"locationDetails\": {\n      \"locality\": 1098,\n      \"zone\": null,\n      \"revenueWard\": null,\n      \"block\": null,\n      \"street\": null,\n      \"electionWard\": null,\n      \"doorNo\": \"\",\n      \"pinCode\": null\n    },\n    \"remarks\": \"\",\n    \"length\": \"\",\n    \"width\": \"\",\n    \"totalArea\": \"\",\n    \"grossValue\": 6248,\n    \"accumulatedDepreciation\": null,\n    \"assetReference\": null,\n    \"version\": \"1.0\",\n    \"assetAttributes\": [\n      {\n        \"key\": \"Road type\",\n        \"type\": \"Select\",\n        \"value\": \"concrete road\"\n      },\n      {\n        \"key\": \"Length(m)\",\n        \"type\": \"Number\",\n        \"value\": \"\"\n      },\n      {\n        \"key\": \"Width(m)\",\n        \"type\": \"Number\",\n        \"value\": \"\"\n      },\n      {\n        \"key\": \"Area(Sq.m)\",\n        \"type\": \"Number\",\n        \"value\": \"\"\n      }\n    ],\n    \"enableYearWiseDepreciation\": false,\n    \"depreciationRate\": 18.47\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://kurnool-pilot-services.egovernments.org/asset-services/assets/_create?tenantId=ap.kurnool",
+			"request": {
+				"url": {
+					"raw": "http://kurnool-pilot-services.egovernments.org/asset-services/assets/_create?tenantId=ap.kurnool",
+					"protocol": "http",
+					"host": [
+						"kurnool-pilot-services",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"asset-services",
+						"assets",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "ap.kurnool",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pgr\",\n    \"ver\": \"1.0\",\n    \"ts\": \"01-04-2017 01:01:01\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"authToken\": null,\n    \"correlationId\": null,\n    \"userInfo\": {\n      \"id\": 1,\n      \"userName\": \"egovernments\",\n      \"name\": \"Admin\",\n      \"type\": \"SYSTEM\",\n      \"mobileNumber\": null,\n      \"emailId\": null,\n      \"roles\": [\n        {\n          \"id\": null,\n          \"name\": \"SYSTEM\"\n        }\n      ]\n    }\n  },\n  \"Asset\": {\n    \"tenantId\": \"ap.kurnool\",\n    \"name\": \"Asset Shopping Complex Test 001\",\n    \"department\": {\n      \"id\": 5,\n      \"name\": null,\n      \"code\": null\n    },\n    \"assetCategory\": {\n      \"tenantId\": \"ap.kurnool\",\n      \"id\": 913,\n      \"name\": \"Shopping Complex\",\n      \"code\": \"015\",\n      \"assetCategoryType\": \"IMMOVABLE\",\n      \"parent\": null,\n      \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n      \"isAssetAllow\": false,\n      \"assetAccount\": 972,\n      \"accumulatedDepreciationAccount\": null,\n      \"revaluationReserveAccount\": 807,\n      \"depreciationExpenseAccount\": 770,\n      \"unitOfMeasurement\": null,\n      \"version\": null,\n      \"depreciationRate\": 0,\n      \"assetFieldsDefination\": null\n    },\n    \"assetDetails\": \"\",\n    \"modeOfAcquisition\": \"ACQUIRED\",\n    \"status\": \"CAPITALIZED\",\n    \"description\": \"Asset Shopping Complex Test 001\",\n    \"dateOfCreation\": 1499452200000,\n    \"locationDetails\": {\n      \"locality\": 1098,\n      \"zone\": null,\n      \"revenueWard\": null,\n      \"block\": null,\n      \"street\": null,\n      \"electionWard\": null,\n      \"doorNo\": \"\",\n      \"pinCode\": null\n    },\n    \"remarks\": \"\",\n    \"length\": \"\",\n    \"width\": \"\",\n    \"totalArea\": \"\",\n    \"grossValue\": 13547,\n    \"accumulatedDepreciation\": null,\n    \"assetReference\": null,\n    \"version\": \"1.0\",\n    \"assetAttributes\": [\n      {\n        \"key\": \"Door No.\",\n        \"type\": \"Text\",\n        \"value\": \"\"\n      },\n      {\n        \"key\": \"Shopping Complex No.\",\n        \"type\": \"Text\",\n        \"value\": \"SC12345\"\n      },\n      {\n        \"key\": \"No. of Floors\",\n        \"type\": \"Number\",\n        \"value\": \"9\"\n      },\n      {\n        \"key\": \"Total No. of Shops\",\n        \"type\": \"Number\",\n        \"value\": \"25\"\n      },\n      {\n        \"key\": \"Floor Details\",\n        \"type\": \"Table\",\n        \"value\": [\n          {\n            \"key\": \"Floor No.\",\n            \"type\": \"Text\",\n            \"value\": \"2\"\n          },\n          {\n            \"key\": \"No. of Shops\",\n            \"type\": \"Text\",\n            \"value\": \"3\"\n          }\n        ]\n      }\n    ],\n    \"enableYearWiseDepreciation\": true,\n    \"depreciationRate\": null,\n    \"yearWiseDepreciation\": [\n      {\n        \"id\": null,\n        \"depreciationRate\": 21.3,\n        \"financialYear\": \"2015-16\",\n        \"usefulLifeInYears\": null,\n        \"tenantId\": null\n      },\n      {\n        \"id\": null,\n        \"depreciationRate\": 12.21,\n        \"financialYear\": \"2016-17\",\n        \"usefulLifeInYears\": null,\n        \"tenantId\": null\n      },\n      {\n        \"id\": null,\n        \"depreciationRate\": 7.26,\n        \"financialYear\": \"2017-18\",\n        \"usefulLifeInYears\": null,\n        \"tenantId\": null\n      }\n    ]\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://kurnool-pilot-services.egovernments.org/asset-services/assets/_create?tenantId=ap.kurnool",
+			"request": {
+				"url": {
+					"raw": "http://kurnool-pilot-services.egovernments.org/asset-services/assets/_create?tenantId=ap.kurnool",
+					"protocol": "http",
+					"host": [
+						"kurnool-pilot-services",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"asset-services",
+						"assets",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "ap.kurnool",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pgr\",\n    \"ver\": \"1.0\",\n    \"ts\": \"01-04-2017 01:01:01\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"authToken\": null,\n    \"correlationId\": null,\n    \"userInfo\": {\n      \"id\": 1,\n      \"userName\": \"egovernments\",\n      \"name\": \"Admin\",\n      \"type\": \"SYSTEM\",\n      \"mobileNumber\": null,\n      \"emailId\": null,\n      \"roles\": [\n        {\n          \"id\": null,\n          \"name\": \"SYSTEM\"\n        }\n      ]\n    }\n  },\n  \"Asset\": {\n    \"tenantId\": \"ap.kurnool\",\n    \"name\": \"Asset Shopping Complex Test 002\",\n    \"department\": {\n      \"id\": 5,\n      \"name\": null,\n      \"code\": null\n    },\n    \"assetCategory\": {\n      \"tenantId\": \"ap.kurnool\",\n      \"id\": 913,\n      \"name\": \"Shopping Complex\",\n      \"code\": \"015\",\n      \"assetCategoryType\": \"IMMOVABLE\",\n      \"parent\": null,\n      \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n      \"isAssetAllow\": false,\n      \"assetAccount\": 972,\n      \"accumulatedDepreciationAccount\": null,\n      \"revaluationReserveAccount\": 807,\n      \"depreciationExpenseAccount\": 770,\n      \"unitOfMeasurement\": null,\n      \"version\": null,\n      \"depreciationRate\": 0,\n      \"assetFieldsDefination\": null\n    },\n    \"assetDetails\": \"\",\n    \"modeOfAcquisition\": \"CONSTRUCTION\",\n    \"status\": \"CAPITALIZED\",\n    \"description\": \"Asset Shopping Complex Test 002\",\n    \"dateOfCreation\": 1499538600000,\n    \"locationDetails\": {\n      \"locality\": 1098,\n      \"zone\": null,\n      \"revenueWard\": null,\n      \"block\": null,\n      \"street\": null,\n      \"electionWard\": null,\n      \"doorNo\": \"\",\n      \"pinCode\": null\n    },\n    \"remarks\": \"\",\n    \"length\": \"\",\n    \"width\": \"\",\n    \"totalArea\": \"\",\n    \"grossValue\": 15328,\n    \"accumulatedDepreciation\": 2478,\n    \"assetReference\": null,\n    \"version\": \"1.0\",\n    \"assetAttributes\": [\n      {\n        \"key\": \"Door No.\",\n        \"type\": \"Text\",\n        \"value\": \"\"\n      },\n      {\n        \"key\": \"Shopping Complex No.\",\n        \"type\": \"Text\",\n        \"value\": \"SC12345\"\n      },\n      {\n        \"key\": \"No. of Floors\",\n        \"type\": \"Number\",\n        \"value\": \"9\"\n      },\n      {\n        \"key\": \"Total No. of Shops\",\n        \"type\": \"Number\",\n        \"value\": \"25\"\n      },\n      {\n        \"key\": \"Floor Details\",\n        \"type\": \"Table\",\n        \"value\": [\n          {\n            \"key\": \"Floor No.\",\n            \"type\": \"Text\",\n            \"value\": \"2\"\n          },\n          {\n            \"key\": \"No. of Shops\",\n            \"type\": \"Text\",\n            \"value\": \"3\"\n          }\n        ]\n      }\n    ],\n    \"enableYearWiseDepreciation\": true,\n    \"depreciationRate\": null,\n    \"yearWiseDepreciation\": [\n      {\n        \"id\": null,\n        \"depreciationRate\": 21.3,\n        \"financialYear\": \"2015-16\",\n        \"usefulLifeInYears\": null,\n        \"tenantId\": null\n      },\n      {\n        \"id\": null,\n        \"depreciationRate\": 12.21,\n        \"financialYear\": \"2016-17\",\n        \"usefulLifeInYears\": null,\n        \"tenantId\": null\n      },\n      {\n        \"id\": null,\n        \"depreciationRate\": 7.26,\n        \"financialYear\": \"2017-18\",\n        \"usefulLifeInYears\": null,\n        \"tenantId\": null\n      }\n    ]\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://kurnool-pilot-services.egovernments.org/asset-services/assets/_create?tenantId=ap.kurnool",
+			"request": {
+				"url": {
+					"raw": "http://kurnool-pilot-services.egovernments.org/asset-services/assets/_create?tenantId=ap.kurnool",
+					"protocol": "http",
+					"host": [
+						"kurnool-pilot-services",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"asset-services",
+						"assets",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "ap.kurnool",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pgr\",\n    \"ver\": \"1.0\",\n    \"ts\": \"01-04-2017 01:01:01\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"authToken\": null,\n    \"correlationId\": null,\n    \"userInfo\": {\n      \"id\": 1,\n      \"userName\": \"egovernments\",\n      \"name\": \"Admin\",\n      \"type\": \"SYSTEM\",\n      \"mobileNumber\": null,\n      \"emailId\": null,\n      \"roles\": [\n        {\n          \"id\": null,\n          \"name\": \"SYSTEM\"\n        }\n      ]\n    }\n  },\n  \"Asset\": {\n    \"tenantId\": \"ap.kurnool\",\n    \"name\": \"Asset Shopping Complex Test 003\",\n    \"department\": {\n      \"id\": 5,\n      \"name\": null,\n      \"code\": null\n    },\n    \"assetCategory\": {\n      \"tenantId\": \"ap.kurnool\",\n      \"id\": 913,\n      \"name\": \"Shopping Complex\",\n      \"code\": \"015\",\n      \"assetCategoryType\": \"IMMOVABLE\",\n      \"parent\": null,\n      \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n      \"isAssetAllow\": false,\n      \"assetAccount\": 972,\n      \"accumulatedDepreciationAccount\": null,\n      \"revaluationReserveAccount\": 807,\n      \"depreciationExpenseAccount\": 770,\n      \"unitOfMeasurement\": null,\n      \"version\": null,\n      \"depreciationRate\": 0,\n      \"assetFieldsDefination\": null\n    },\n    \"assetDetails\": \"\",\n    \"modeOfAcquisition\": \"ACQUIRED\",\n    \"status\": \"CAPITALIZED\",\n    \"description\": \"Asset Shopping Complex Test 003\",\n    \"dateOfCreation\": 1499625000000,\n    \"locationDetails\": {\n      \"locality\": 1098,\n      \"zone\": null,\n      \"revenueWard\": null,\n      \"block\": null,\n      \"street\": null,\n      \"electionWard\": null,\n      \"doorNo\": \"\",\n      \"pinCode\": null\n    },\n    \"remarks\": \"\",\n    \"length\": \"\",\n    \"width\": \"\",\n    \"totalArea\": \"\",\n    \"grossValue\": 14543,\n    \"accumulatedDepreciation\": null,\n    \"assetReference\": null,\n    \"version\": \"1.0\",\n    \"assetAttributes\": [\n      {\n        \"key\": \"Door No.\",\n        \"type\": \"Text\",\n        \"value\": \"\"\n      },\n      {\n        \"key\": \"Shopping Complex No.\",\n        \"type\": \"Text\",\n        \"value\": \"SC12345\"\n      },\n      {\n        \"key\": \"No. of Floors\",\n        \"type\": \"Number\",\n        \"value\": \"9\"\n      },\n      {\n        \"key\": \"Total No. of Shops\",\n        \"type\": \"Number\",\n        \"value\": \"25\"\n      },\n      {\n        \"key\": \"Floor Details\",\n        \"type\": \"Table\",\n        \"value\": [\n          {\n            \"key\": \"Floor No.\",\n            \"type\": \"Text\",\n            \"value\": \"2\"\n          },\n          {\n            \"key\": \"No. of Shops\",\n            \"type\": \"Text\",\n            \"value\": \"3\"\n          }\n        ]\n      }\n    ],\n    \"enableYearWiseDepreciation\": false,\n    \"depreciationRate\": 17.45\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://kurnool-pilot-services.egovernments.org/asset-services/assets/_create?tenantId=ap.kurnool",
+			"request": {
+				"url": {
+					"raw": "http://kurnool-pilot-services.egovernments.org/asset-services/assets/_create?tenantId=ap.kurnool",
+					"protocol": "http",
+					"host": [
+						"kurnool-pilot-services",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"asset-services",
+						"assets",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "ap.kurnool",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pgr\",\n    \"ver\": \"1.0\",\n    \"ts\": \"01-04-2017 01:01:01\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"authToken\": null,\n    \"correlationId\": null,\n    \"userInfo\": {\n      \"id\": 1,\n      \"userName\": \"egovernments\",\n      \"name\": \"Admin\",\n      \"type\": \"SYSTEM\",\n      \"mobileNumber\": null,\n      \"emailId\": null,\n      \"roles\": [\n        {\n          \"id\": null,\n          \"name\": \"SYSTEM\"\n        }\n      ]\n    }\n  },\n  \"Asset\": {\n    \"tenantId\": \"ap.kurnool\",\n    \"name\": \"Asset Slaughter House Test 001\",\n    \"department\": {\n      \"id\": 5,\n      \"name\": null,\n      \"code\": null\n    },\n    \"assetCategory\": {\n      \"tenantId\": \"ap.kurnool\",\n      \"id\": 465,\n      \"name\": \"Slaughter House\",\n      \"code\": \"011\",\n      \"assetCategoryType\": \"IMMOVABLE\",\n      \"parent\": null,\n      \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n      \"isAssetAllow\": false,\n      \"assetAccount\": 972,\n      \"accumulatedDepreciationAccount\": null,\n      \"revaluationReserveAccount\": 807,\n      \"depreciationExpenseAccount\": 770,\n      \"unitOfMeasurement\": null,\n      \"version\": null,\n      \"depreciationRate\": 0,\n      \"assetFieldsDefination\": null\n    },\n    \"assetDetails\": \"\",\n    \"modeOfAcquisition\": \"ACQUIRED\",\n    \"status\": \"CAPITALIZED\",\n    \"description\": \"Asset Slaughter House Test 001\",\n    \"dateOfCreation\": 1499711400000,\n    \"locationDetails\": {\n      \"locality\": 1098,\n      \"zone\": null,\n      \"revenueWard\": null,\n      \"block\": null,\n      \"street\": null,\n      \"electionWard\": null,\n      \"doorNo\": \"\",\n      \"pinCode\": null\n    },\n    \"remarks\": \"\",\n    \"length\": \"\",\n    \"width\": \"\",\n    \"totalArea\": \"\",\n    \"grossValue\": 36471,\n    \"accumulatedDepreciation\": null,\n    \"assetReference\": null,\n    \"version\": \"1.0\",\n    \"assetAttributes\": [\n      {\n        \"key\": \"East\",\n        \"type\": \"Text\",\n        \"value\": \"\"\n      },\n      {\n        \"key\": \"South\",\n        \"type\": \"Text\",\n        \"value\": \"\"\n      },\n      {\n        \"key\": \"West\",\n        \"type\": \"Text\",\n        \"value\": \"9\"\n      },\n      {\n        \"key\": \"North\",\n        \"type\": \"Text\",\n        \"value\": \"25\"\n      },\n      {\n        \"key\": \"Remarks\",\n        \"type\": \"Text\",\n        \"value\": \"\"\n      },\n      {\n        \"key\": \"Total Square feet area\",\n        \"type\": \"Number\",\n        \"value\": \"25\"\n      }\n    ],\n    \"enableYearWiseDepreciation\": true,\n    \"depreciationRate\": null,\n    \"yearWiseDepreciation\": [\n      {\n        \"id\": null,\n        \"depreciationRate\": 33,\n        \"financialYear\": \"2015-16\",\n        \"usefulLifeInYears\": null,\n        \"tenantId\": null\n      },\n      {\n        \"id\": null,\n        \"depreciationRate\": 18,\n        \"financialYear\": \"2016-17\",\n        \"usefulLifeInYears\": null,\n        \"tenantId\": null\n      },\n      {\n        \"id\": null,\n        \"depreciationRate\": 21,\n        \"financialYear\": \"2017-18\",\n        \"usefulLifeInYears\": null,\n        \"tenantId\": null\n      }\n    ]\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

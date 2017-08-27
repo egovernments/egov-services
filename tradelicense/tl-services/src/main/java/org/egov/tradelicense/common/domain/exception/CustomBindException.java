@@ -1,6 +1,5 @@
 package org.egov.tradelicense.common.domain.exception;
 
-
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.springframework.validation.BindingResult;
 

@@ -637,7 +637,7 @@ public class MasterServiceImpl implements Masterservice {
 			}
 
 			if (usageMaster.getService() == null || usageMaster.getService().isEmpty()) {
-				usageMaster.setService(propertiesManager.getUsageMasterService());
+				usageMaster.setService(propertiesManager.getUsageMasterDefaultService());
 			}
 
 			try {
@@ -690,7 +690,7 @@ public class MasterServiceImpl implements Masterservice {
 			}
 			
 			if (usageMaster.getService() == null || usageMaster.getService().isEmpty()) {
-				usageMaster.setService(propertiesManager.getUsageMasterService());
+				usageMaster.setService(propertiesManager.getUsageMasterDefaultService());
 			}
 
 			try {
@@ -720,7 +720,7 @@ public class MasterServiceImpl implements Masterservice {
 		UsageMasterResponse usageMasterResponse = new UsageMasterResponse();
 		
 		if (service == null || service.isEmpty()) {
-			service=propertiesManager.getUsageMasterService();
+			service=propertiesManager.getUsageMasterDefaultService();
 		}
 
 		try {
@@ -731,7 +731,7 @@ public class MasterServiceImpl implements Masterservice {
 			usageMasterResponse.setResponseInfo(responseInfo);
 
 		} catch (Exception e) {
-
+			e.printStackTrace();
 			throw new PropertySearchException("invalid input", requestInfo);
 		}
 

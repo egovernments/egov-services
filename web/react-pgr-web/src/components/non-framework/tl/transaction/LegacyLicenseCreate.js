@@ -5,6 +5,8 @@ import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import Checkbox from 'material-ui/Checkbox';
 import TextField from 'material-ui/TextField';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
 
 import _ from "lodash";
 import ShowFields from "../../../framework/showFields";
@@ -26,8 +28,31 @@ class LegacyLicenseCreate extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      validityYear: ""
+      validityYear: "",
+      oldDate: "",
+      newDate: "",
+      flag: 0,
+      oldCategoryData: "",
+      newCategoryData: "",
+      flagCat: 0
     }
+
+    this.handleOpen = () => {
+   this.setState({open: true});
+ };
+
+ this.handleClose = () => {
+   this.setState({open: false});
+ };
+
+ this.handleOpenCat = () => {
+ this.setState({openCat: true});
+ };
+
+ this.handleCloseCat = () => {
+   this.setState({openCat: false});
+ };
+
   }
 
   setLabelAndReturnRequired(configObject) {
@@ -221,13 +246,13 @@ class LegacyLicenseCreate extends Component {
     Api.commonApiPost((url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url), "", formData, "", true).then(function(response){
       self.props.setLoadingStatus('hide');
       self.initData();
-      self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "create" ? "wc.create.message.success" : "wc.update.message.success"), true);
+      self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "create" ? response.responseInfo.status : "wc.update.message.success"), true);
       setTimeout(function() {
         if(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath) {
           if(self.props.actionName == "update") {
             var hash = "/update/tl/CreateLegacyLicense/";
           } else {
-            var hash = "/view/tl/CreateLegacyLicense" + "/" + _.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath);
+            var hash = "/non-framework/tl/transaction/viewLegacyLicense" + "/" + encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
           }
           self.props.setRoute(hash);
         }
@@ -294,27 +319,27 @@ class LegacyLicenseCreate extends Component {
         var jPath = match.replace(/\{|}/g,"");
         _url = _url.replace(match, _.get(formData, jPath));
       }
-
       //Check if documents, upload and get fileStoreId
-      if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"] && formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"].length) {
-        let documents = [...formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"]];
+      if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][0]["supportDocuments"] && formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][0]["supportDocuments"].length) {
+        let supportDocuments = [...formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][0]["supportDocuments"]];
         let _docs = [];
-        let counter = documents.length, breakOut = 0;
-        for(let i=0; i<documents.length; i++) {
-          fileUpload(documents[i].fileStoreId, self.props.moduleName, function(err, res) {
+        let counter = supportDocuments.length, breakOut = 0;
+        for(let i=0; i<supportDocuments.length; i++) {
+          fileUpload(supportDocuments[i].fileStoreId, self.props.moduleName, function(err, res) {
             if(breakOut == 1) return;
             if(err) {
               breakOut = 1;
               self.props.setLoadingStatus('hide');
               self.props.toggleSnackbarAndSetText(true, err, false, true);
             } else {
-              _docs.push({
-                ...documents[i],
-                fileStoreId: res.files[0].fileStoreId
-              })
+              if(res.files[0].fileStoreId)
+                _docs.push({
+                  ...supportDocuments[i],
+                  fileStoreId: res.files[0].fileStoreId
+                })
               counter--;
               if(counter == 0 && breakOut == 0) {
-                formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"] = _docs;
+                formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][0]["supportDocuments"] = _docs;
                 self.makeAjaxCall(formData, _url);
               }
             }
@@ -610,6 +635,117 @@ class LegacyLicenseCreate extends Component {
     setMockData(_mockData);
   }
 
+
+  noSubCategoryChange = () => {
+    let self = this;
+    console.log(self.state.oldCategoryData);
+    self.handleChange({target:{value:self.state.oldCategoryData}}, "licenses[0].subCategoryId");
+    this.setState({openCat: false});
+    self.setState({
+      oldCategoryData: "",
+      flagCat: 0
+    })
+  }
+
+  yesSubCategoryChange = () => {
+    let self = this;
+    self.handleChange({target:{value:self.state.newCategoryData}}, "licenses[0].subCategoryId");
+    this.setState({openCat: false});
+    self.setState({
+      oldCategoryData: "",
+      flagCat: 0
+    })
+  }
+
+
+  noChange = () => {
+    let self = this;
+    console.log(self.state.oldDate);
+    self.handleChange({target:{value:self.state.oldDate}}, "licenses[0].licenseValidFromDate");
+    this.setState({open: false});
+    self.setState({
+      oldDate: "",
+      flag: 0
+    })
+  }
+
+  yesChange = () => {
+    let self = this;
+    self.handleChange({target:{value:self.state.newDate}}, "licenses[0].licenseValidFromDate");
+    this.setState({open: false});
+    self.setState({
+      oldDate: "",
+      flag: 0
+    })
+  }
+
+
+//Start Point of API Call to Populate Validity Year and UOMID
+populateValidtyYear = (categoryId) => {
+  let self = this;
+
+Api.commonApiPost("/tl-masters/category/v1/_search",{"ids":categoryId, "type":"subcategory"}).then(function(response)
+{
+  // handleChange (e, "" )
+  console.log(response);
+  //console.log(response.categories[0].validityYears);
+  self.handleChange({target:{value:null}}, "licenses[0].validityYears");
+
+
+  self.handleChange({target:{value:null}}, "licenses[0].uomName");
+  self.handleChange({target:{value:null}}, "licenses[0].uomId", true);
+
+},function(err) {
+    console.log(err);
+
+});
+}
+//End Point of API Call to Populate Validity Year and UOMID
+
+//***Start Fee Details Calculations***
+calculateFeeDetails = (licenseValidFromDate, validityYear) => {
+  var getStartYear = new Date(Number(licenseValidFromDate)).getFullYear();
+  var curDate = new Date();
+  var currentDate = curDate.getFullYear();
+  var fixedDate = curDate.getFullYear();
+  var currentMonth=curDate.getMonth();
+  var FeeDetails = [];
+  var startYear = getStartYear;
+  var Validity = validityYear;
+  let self = this;
+
+  console.log(self.getVal("licenses[0].licenseValidFromDate"));
+
+  self.handleChange({target:{value:[]}},"licenses[0].feeDetails");
+
+  if(new Date(Number(licenseValidFromDate)).getMonth()>3)
+     {
+         for(var i = startYear; i <= fixedDate; i = (i + validityYear))
+          {
+
+             if (i > (fixedDate - 6) ) {
+             let feeDetails = {"financialYear": i + "-" + (i+1).toString().slice(-2), "amount": "", "paid": false};
+             FeeDetails.push(feeDetails)
+             console.log(i);
+           }
+       }
+
+     }
+     else {
+
+       for(var i = startYear; i <= (fixedDate+1); i = (i + validityYear))
+       {
+          if (i > (fixedDate - 6) ) {
+         let feeDetails = {"financialYear": (i-1) + "-" + (i).toString().slice(-2), "amount": "", "paid": false};
+         FeeDetails.push(feeDetails)
+         console.log(i);
+        }
+      }
+     }
+     self.handleChange({target:{value:FeeDetails}},"licenses[0].feeDetails");
+}
+//***End Fee Details Calculations***
+
   handleChange = (e, property, isRequired=false, pattern="", requiredErrMsg="Required", patternErrMsg="Pattern Missmatch") => {
       let {getVal} = this;
       let self = this;
@@ -619,114 +755,113 @@ class LegacyLicenseCreate extends Component {
       let obj = specifications[`tl.create`];
 
 
-      // if (property == "licenses[0].tradeCommencementDate") {
-      //   console.log(new Date(e.target.value));
-      //   var month = new Date(e.target.value).getMonth()+1;
-      //   var date = new Date(e.target.value).getDate()+'/'+month+'/'+new Date(e.target.value).getFullYear();
-      //   console.log(date);
-      //   self.handleChange({target:{value:date}}, "licenses[0].tradeCommencementDate", false, "");
-      // }
 
 
-    //   if (property == "licenses[0].subCategoryId") {
-    //   console.log(e.target.value);
-    //     Api.commonApiPost("/tl-masters/category/v1/_search",{"ids":e.target.value}).then(function(response)
-    //     {
-    //     var checkYear ;
-    //     console.log(checkYear);
-    //    self.handleChange({target:{value:response.categories[0].validityYears}}, , false, "");
-    //
-    //   },function(err) {
-    //       console.log(err);
-    //
-    //   });
-    // }
+    if (property == "licenses[0].subCategoryId") {
+      console.log(e.target.value);
+      Api.commonApiPost("/tl-masters/category/v1/_search",{"ids":e.target.value, "type":"subcategory"}).then(function(response)
+     {
+        // handleChange (e, "" )
+        console.log(response);
+        //console.log(response.categories[0].validityYears);
+        handleChange({target:{value:response.categories[0].validityYears}}, "licenses[0].validityYears");
+        self.setState({
+          validityYear: response.categories[0].validityYears
+        })
+
+        handleChange({target:{value:_.filter(response.categories[0].details,{feeType:"LICENSE"})[0].uomName}}, "licenses[0].uomName");
+        handleChange({target:{value:_.filter(response.categories[0].details,{feeType:"LICENSE"})[0].uomId}}, "licenses[0].uomId", true);
+
+        if(self.props.formData.licenses[0].licenseValidFromDate && (self.props.formData.licenses[0].licenseValidFromDate+"").length == 12 ||(self.props.formData.licenses[0].licenseValidFromDate+"").length == 13){
+          self.calculateFeeDetails(self.props.formData.licenses[0].licenseValidFromDate, response.categories[0].validityYears)
+        }
+
+        console.log(self.props.formData);
+      },function(err) {
+          console.log(err);
+
+      });
+    }
 
 
-     if (property == "licenses[0].licenseValidFromDate" || property=="licenses[0].subCategoryId" && getVal("licenses[0].licenseValidFromDate") && validityYear) {
-         var getStartYear = new Date(e.target.value).getFullYear();
-         var curDate = new Date();
-         var currentDate = curDate.getFullYear();
-         var fixedDate = curDate.getFullYear();
-         var currentMonth=curDate.getMonth();
-         var FeeDetails = [];
-         var startYear = getStartYear;
-         var Validity = validityYear;
-
-         handleChange({target:{value:[]}},"licenses[0].feeDetails");
-
-
-            if(new Date(e.target.value).getMonth()>3)
-               {
-
-                   for(var i = startYear; i <= fixedDate; i = (i + validityYear))
-                    {
-                       if (i > (fixedDate - 6) ) {
-                       let feeDetails = {"financialYear": i + "-" + (i+1).toString().slice(-2), "amount": "", "paid": false};
-                       FeeDetails.push(feeDetails)
-                       console.log(i);
-                     }
-                 }
-
-               }
-               else {
-
-                 for(var i = startYear; i <= (fixedDate+1); i = (i + validityYear))
-                 {
-                    if (i > (fixedDate - 6) ) {
-                   let feeDetails = {"financialYear": (i-1) + "-" + (i).toString().slice(-2), "amount": "", "paid": false};
-                   FeeDetails.push(feeDetails)
-                   console.log(i);
-                  }
-                }
-               }
-
-
-          handleChange({target:{value:FeeDetails}},"licenses[0].feeDetails");
-
+//***Start Point To Populate Fee Details Section***
+     if ((property == "licenses[0].licenseValidFromDate" || property=="licenses[0].subCategoryId") && getVal("licenses[0].licenseValidFromDate") && self.state.validityYear) {
+       if((e.target.value+"").length == 12 || (e.target.value+"").length == 13){
+          console.log(e.target.value);
+         self.calculateFeeDetails(e.target.value, self.state.validityYear)
+        }
        }
+//***End Point To Populate Fee Details Section***
+
+    // //***Start Point for Dialog Pop-Up for Sub Category Field***
+    // if(self.state.flagCat == 0 && property == "licenses[0].subCategoryId"){
+    // console.log(e.target.value);
+    //   self.setState({
+    //     oldCategoryData: e.target.value
+    //   })
+    // }
+    //
+    // if(getVal("licenses[0].feeDetails") && property == "licenses[0].subCategoryId"){
+    // self.setState({
+    //   flagc: 1
+    // })
+    // }
+    //
+    // if(self.state.flagc == 1 && property == "licenses[0].subCategoryId"){
+    // console.log(e.target.value);
+    //   self.setState({
+    //     newCategoryData: e.target.value
+    //   })
+    // }
+    //
+    // if(self.state.flagc == 1 && getVal("licenses[0].feeDetails") && (self.state.oldCategoryData != self.state.newCategoryData)){
+    //   self.handleOpenCat()
+    //
+    //   self.setState({
+    //     flagc: 0
+    //   })
+    //   }
+    //
+    // //***End Point for Dialog Pop-Up for Sub Category Field****
 
 
-      //if (property == "licenses[0].agreementDate") {
-      //   console.log(new Date(e.target.value));
-      //   var month = new Date(e.target.value).getMonth()+1;
-      //   var date = new Date(e.target.value).getDate()+'/'+month+'/'+new Date(e.target.value).getFullYear();
-      //   console.log(date);
-      //   self.handleChange({target:{value:date}}, "licenses[0].agreementDate", false, "");
-      // }
+    //***Start Point for Dialog Pop-Up for License Valid from Date Field***
+    if(self.state.flag == 0 && property == "licenses[0].licenseValidFromDate" && ((e.target.value+"").length == 12 || (e.target.value+"").length == 13)){
+    console.log(e.target.value);
+      self.setState({
+        oldDate: e.target.value
+      })
+    }
 
-      //if (property == "licenses[0].tradeCommencementDate") {
-      //   console.log(new Date(e.target.value));
-      //   var month = new Date(e.target.value).getMonth()+1;
-      //   var date = new Date(e.target.value).getDate()+'/'+month+'/'+new Date(e.target.value).getFullYear();
-      //   console.log(date);
-      //   self.handleChange({target:{value:date}}, "licenses[0].tradeCommencementDate", false, "");
-      // }
+    if(getVal("licenses[0].feeDetails") && property == "licenses[0].licenseValidFromDate"){
+    self.setState({
+      flag: 1
+    })
+    }
 
+    if(self.state.flag == 1 && property == "licenses[0].licenseValidFromDate" && ((e.target.value+"").length == 12 || (e.target.value+"").length == 13)){
+    console.log(e.target.value);
+      self.setState({
+        newDate: e.target.value
+      })
+    }
 
-
-
-      if (property == "licenses[0].subCategoryId") {
-        console.log(e.target.value);
-        Api.commonApiPost("/tl-masters/category/v1/_search",{"ids":e.target.value, "type":"subcategory"}).then(function(response)
-       {
-          // handleChange (e, "" )
-          // console.log(response);
-          //console.log(response.categories[0].validityYears);
-          handleChange({target:{value:response.categories[0].validityYears}}, "licenses[0].validityYears");
-          self.setState({
-            validityYear: response.categories[0].validityYears
-          })
-
-          handleChange({target:{value:_.filter(response.categories[0].details,{feeType:"LICENSE"})[0].uomName}}, "licenses[0].uomName");
-          handleChange({target:{value:_.filter(response.categories[0].details,{feeType:"LICENSE"})[0].uomId}}, "licenses[0].uomId", true);
-
-        },function(err) {
-            console.log(err);
-
-        });
+    if(self.state.flag == 1 && getVal("licenses[0].feeDetails") && (self.state.oldDate != self.state.newDate) && ((e.target.value+"").length == 12 || (e.target.value+"").length == 13)){
+      self.handleOpen()
+      self.setState({
+        flag: 0
+      })
       }
+    //***End Point for Dialog Pop-Up for License Valid from Date Field***
 
+
+
+
+//***Start Point for Populating UOMID and Validity Years***
+if(property == "licenses[0].categoryId"){
+  self.populateValidtyYear(e.target.value)
+}
+//***End Point for Populating UOMID and Validity Years***
 
 
 
@@ -848,6 +983,7 @@ class LegacyLicenseCreate extends Component {
               //console.log(mockData[moduleName + "." + actionName].groups);
               setMockData(mockData);
               var temp = {...formData};
+
               self.setDefaultValues(mockData[moduleName + "." + actionName].groups, temp);
               setFormData(temp);
               break;
@@ -922,12 +1058,37 @@ class LegacyLicenseCreate extends Component {
   }
 
   render() {
+    const actions = [
+          <FlatButton
+            label="No"
+            primary={true}
+            onClick={this.noChange}
+          />,
+          <FlatButton
+            label="Yes"
+            primary={true}
+            keyboardFocused={true}
+            onClick={this.yesChange}
+          />,
+        ];
+
+        const actionsCat = [
+              <FlatButton
+                label="No"
+                primary={true}
+                onClick={this.noSubCategoryChange}
+              />,
+              <FlatButton
+                label="Yes"
+                primary={true}
+                keyboardFocused={true}
+                onClick={this.yesSubCategoryChange}
+              />,
+            ];
+
     let {resultList, rowClickHandler,showDataTable,showHeader} = this.props;
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler} = this;
-
-
-//console.log(formData && formData.licenses && formData.licenses[0] && formData.licenses[0].feeDetails);
 
 
     return (
@@ -936,7 +1097,7 @@ class LegacyLicenseCreate extends Component {
         <form onSubmit={(e) => {
           create(e)
         }}>
-        {!_.isEmpty(mockData) && moduleName && actionName && <ShowFields
+        {!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] && <ShowFields
                                     groups={mockData[`${moduleName}.${actionName}`].groups}
                                     noCols={mockData[`${moduleName}.${actionName}`].numCols}
                                     ui="google"
@@ -974,9 +1135,29 @@ class LegacyLicenseCreate extends Component {
                 })}
               </tbody>
               </Table>
+
   		      </CardText>
   		      </Card>
 
+            <Dialog
+              title="Dialog With Actions"
+              actions={actionsCat}
+              modal={false}
+              open={this.state.openCat}
+              onRequestClose={this.handleCloseCat}
+            >
+            This will reset Fee Details. Do you want to Change Trade Sub-Category?
+            </Dialog>
+
+            <Dialog
+              title="Dialog With Actions"
+              actions={actions}
+              modal={false}
+              open={this.state.open}
+              onRequestClose={this.handleClose}
+            >
+            This will reset Fee Details. Do you want to proceed?
+            </Dialog>
 
 
             <br/>

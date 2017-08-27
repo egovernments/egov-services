@@ -280,13 +280,17 @@ public class PropertiesManager {
 	private String invalidStructure;
 
 	private String invalidAge;
-	
-	//#Billing services
+
+	// #Billing services
 	private String workflowBusinessService;
-	
+
 	private String billingServiceUpdateMisPath;
-	
+
 	private String usageMasterService;
+
+	private String propertyUnitAge;
+
+	private String invalidCategory;
 
 	public String getInvalidInput() {
 		return environment.getProperty("invalid.input");
@@ -719,10 +723,10 @@ public class PropertiesManager {
 		return environment.getProperty("egov.services.billing_service.searchdemand");
 	}
 
-	public String getBillingServiceSearchTaxHeads(){
+	public String getBillingServiceSearchTaxHeads() {
 		return environment.getProperty("egov.services.billing_service.searchtaxheads");
 	}
-	
+
 	public String getInvalidTaxMessage() {
 		return environment.getProperty("invalid.titletransfer.tax.message");
 	}
@@ -759,12 +763,12 @@ public class PropertiesManager {
 
 	public String getInvalidParentMsg() {
 		return environment.getProperty("invalid.property.parent.code");
-	}		
-	
+	}
+
 	public String getBusinessService() {
 		return environment.getProperty("business.service");
-	}		
-	
+	}
+
 	public String getBillingServiceUpdateMisPath() {
 		return environment.getProperty("egov.services.billing_service.updatemisdemand");
 	}
@@ -788,9 +792,17 @@ public class PropertiesManager {
 	public String getInvalidAge() {
 		return environment.getProperty("invalid.input.unit.age");
 	}
-	
-	public String getUsageMasterService(){
-		return environment.getProperty("usage.master.service");
+
+	public String getUsageMasterDefaultService() {
+		return environment.getProperty("usage.master.default.service");
+	}
+
+	public String getPropertyUnitAge() {
+		return environment.getProperty("egov.property.unit.age");
+	}
+
+	public String getInvalidCategory() {
+		return environment.getProperty("invalid.property.category");
 	}
 
 }

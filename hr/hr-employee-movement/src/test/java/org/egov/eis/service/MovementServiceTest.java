@@ -9,16 +9,12 @@ import java.util.List;
 
 import org.egov.eis.config.PropertiesManager;
 import org.egov.eis.model.Movement;
+import org.egov.eis.model.PromotionBasis;
 import org.egov.eis.model.WorkFlowDetails;
 import org.egov.eis.model.enums.TypeOfMovement;
 import org.egov.eis.repository.MovementRepository;
 import org.egov.eis.util.ApplicationConstants;
-import org.egov.eis.web.contract.HRStatus;
-import org.egov.eis.web.contract.MovementRequest;
-import org.egov.eis.web.contract.MovementResponse;
-import org.egov.eis.web.contract.MovementSearchRequest;
-import org.egov.eis.web.contract.RequestInfo;
-import org.egov.eis.web.contract.ResponseInfo;
+import org.egov.eis.web.contract.*;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.junit.Before;
 import org.junit.Test;
@@ -70,6 +66,10 @@ public class MovementServiceTest {
     private ResponseInfo responseInfo;
 
     private WorkFlowDetails workFlowDetails;
+
+    private PromotionBasis promotionBasis;
+
+    private Employee employee;
 
     @Before
     public void before() throws JsonProcessingException {
@@ -127,16 +127,23 @@ public class MovementServiceTest {
     public void test_movement_service_should_create_movement() {
         Movement movement1 = new Movement();
         workFlowDetails = new WorkFlowDetails();
+        promotionBasis = new PromotionBasis();
+        promotionBasis.setId(1L);
         movement1.setId(1L);
         movement1.setEmployeeId(1L);
         movement1.setTypeOfMovement(TypeOfMovement.PROMOTION);
         movement1.setWorkflowDetails(workFlowDetails);
+        movement1.setTenantId("default");
+        movement1.setPromotionBasis(promotionBasis);
         movements = new ArrayList<>();
         movements.add(movement1);
         final MovementRequest movementRequest = new MovementRequest();
         movementRequest.setMovement(movements);
         movementRequest.setRequestInfo(requestInfo);
-
+        employee = new Employee();
+        employee.setTenantId("default");
+        employee.setId(1L);
+        when(employeeService.getEmployee(movement1,movementRequest.getRequestInfo())).thenReturn(employee);
         ResponseEntity<?> responseEntity = movementService.createMovements(movementRequest, null);
         final MovementResponse movementResponse = (MovementResponse) responseEntity.getBody();
         assertEquals(movementResponse.getMovement().size(), movementRequest.getMovement().size());

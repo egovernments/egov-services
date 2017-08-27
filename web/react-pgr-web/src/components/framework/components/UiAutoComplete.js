@@ -97,7 +97,8 @@ class UiAutoComplete extends Component {
 				return (
           <div >
           <AutoComplete
-          	 floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
+          	 floatingLabelStyle={{"color": item.isDisabled ? "#A9A9A9" : "#696969", "fontSize": "20px", "white-space": "nowrap"}}
+			 inputStyle={{"color": "#5F5C57"}}
           	 floatingLabelFixed={true}
              style={{"display": (item.hide ? 'none' : 'inline-block')}}
              errorStyle={{"float":"left"}}
@@ -108,6 +109,9 @@ class UiAutoComplete extends Component {
              value={this.props.getVal(item.jsonPath)}
              disabled={item.isDisabled}
              errorText={this.props.fieldErrors[item.jsonPath]}
+             onKeyUp={(e) => {
+             	this.props.handler({target: {value: (item.allowWrite ? e.target.value : "")}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)
+             }}
              onNewRequest={(value,index) =>{
               this.props.handler({target: {value: value.key}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)
               if(this.props.autoComHandler && item.autoCompleteDependancy) {

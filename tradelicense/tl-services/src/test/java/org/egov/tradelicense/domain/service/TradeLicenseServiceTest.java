@@ -7,15 +7,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.egov.tl.commons.web.contract.CategoryDetail;
 import org.egov.tl.commons.web.contract.CategoryDetailSearch;
 import org.egov.tl.commons.web.contract.CategorySearch;
 import org.egov.tl.commons.web.contract.DocumentType;
+import org.egov.tl.commons.web.contract.DocumentTypeContract;
 import org.egov.tl.commons.web.contract.RequestInfo;
-import org.egov.tl.commons.web.requests.CategorySearchResponse;
-import org.egov.tl.commons.web.requests.DocumentTypeResponse;
+import org.egov.tl.commons.web.requests.DocumentTypeV2Response;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tl.commons.web.requests.ResponseInfoFactory;
+import org.egov.tl.commons.web.response.CategorySearchResponse;
+import org.egov.tl.commons.web.response.DocumentTypeResponse;
 import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.configuration.TestConfiguration;
 import org.egov.tradelicense.domain.enums.ApplicationType;
@@ -26,12 +27,13 @@ import org.egov.tradelicense.domain.model.LicenseFeeDetail;
 import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.domain.repository.TradeLicenseRepository;
+import org.egov.tradelicense.domain.service.validator.TradeLicenseServiceValidator;
 import org.egov.tradelicense.web.contract.Boundary;
 import org.egov.tradelicense.web.repository.BoundaryContractRepository;
 import org.egov.tradelicense.web.repository.CategoryContractRepository;
 import org.egov.tradelicense.web.repository.DocumentTypeContractRepository;
 import org.egov.tradelicense.web.repository.PropertyContractRespository;
-import org.egov.tradelicense.web.requests.BoundaryResponse;
+import org.egov.tradelicense.web.response.BoundaryResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,6 +53,9 @@ public class TradeLicenseServiceTest {
 	TradeLicenseService tradeLicenseService;
 
 	@Mock
+	TradeLicenseServiceValidator tradeLicenseServiceValidator;
+
+	@Mock
 	private SmartValidator validator;
 
 	@Mock
@@ -64,7 +69,7 @@ public class TradeLicenseServiceTest {
 
 	@Mock
 	private DocumentTypeContractRepository documentTypeContractRepository;
-	
+
 	@Mock
 	private TradeLicenseNumberGeneratorService licenseNumberGenerationService;
 
@@ -107,10 +112,10 @@ public class TradeLicenseServiceTest {
 				.thenReturn(getSubCategoyResponse());
 		when(categoryContractRepository.findBySubCategoryUomId(any(TradeLicense.class), any(RequestInfoWrapper.class)))
 				.thenReturn(getSubCategoyResponse());
-		when(documentTypeContractRepository.findById(any(TradeLicense.class), any(SupportDocument.class),
-				any(RequestInfoWrapper.class))).thenReturn(getDocumentTypeResponse());
+		when(documentTypeContractRepository.findByIdAndTlValues(any(TradeLicense.class), any(SupportDocument.class),
+				any(RequestInfoWrapper.class))).thenReturn(getDocumentTypeV2Response());
 		tradeLicenses.add(getTradeLicense());
-		tradeLicenseService.validateRelated(tradeLicenses, requestInfo);
+		tradeLicenseServiceValidator.validateCreateTradeLicenseRelated(tradeLicenses, requestInfo);
 	}
 
 	@Test
@@ -127,8 +132,8 @@ public class TradeLicenseServiceTest {
 				.thenReturn(getSubCategoyResponse());
 		when(categoryContractRepository.findBySubCategoryUomId(any(TradeLicense.class), any(RequestInfoWrapper.class)))
 				.thenReturn(getSubCategoyResponse());
-		when(documentTypeContractRepository.findById(any(TradeLicense.class), any(SupportDocument.class),
-				any(RequestInfoWrapper.class))).thenReturn(getDocumentTypeResponse());
+		when(documentTypeContractRepository.findByIdAndTlValues(any(TradeLicense.class), any(SupportDocument.class),
+				any(RequestInfoWrapper.class))).thenReturn(getDocumentTypeV2Response());
 		tradeLicenses.add(getTradeLicense());
 		tradeLicenseService.add(tradeLicenses, requestInfo, errors);
 	}
@@ -198,6 +203,11 @@ public class TradeLicenseServiceTest {
 
 		return DocumentTypeResponse.builder().documentTypes(getDocumentType()).build();
 	}
+	
+	public DocumentTypeV2Response getDocumentTypeV2Response() {
+
+		return DocumentTypeV2Response.builder().documentTypes(getDocumentTypeContract()).build();
+	}
 
 	public List<DocumentType> getDocumentType() {
 
@@ -206,19 +216,28 @@ public class TradeLicenseServiceTest {
 		documentTypes.add(documentType);
 		return documentTypes;
 	}
+	
+	public List<DocumentTypeContract> getDocumentTypeContract() {
+
+		List<DocumentTypeContract> documentTypescontracts = new ArrayList<>();
+		DocumentTypeContract documentTypeContract = DocumentTypeContract.builder().id(1l).build();
+		documentTypescontracts.add(documentTypeContract);
+		return documentTypescontracts;
+	}
 
 	private TradeLicense getTradeLicense() {
 
 		licenseFeeDetails.add(getFeeDetail());
 		supportDocuments.add(getSupportDocument());
 		return TradeLicense.builder().id(1l).tenantId("default").applicationType(ApplicationType.NEW).active(true)
-				.applicationDate((new Date("15/08/2017")).getTime()/1000).emailId("abc@xyz.com").isLegacy(true).oldLicenseNumber("12345")
-				.mobileNumber("9999999999").ownerName("pavan").fatherSpouseName("Venkat")
+				.applicationDate((new Date("15/08/2017")).getTime() / 1000).emailId("abc@xyz.com").isLegacy(true)
+				.oldLicenseNumber("12345").mobileNumber("9999999999").ownerName("pavan").fatherSpouseName("Venkat")
 				.ownerAddress("1-12 kamma street").localityId(7).adminWardId(7).revenueWardId(20).categoryId(1l)
 				.subCategoryId(2l).uomId(1l).quantity(10.0).validityYears(1l).tradeAddress("1-12 kamma street")
-				.ownerShipType(OwnerShipType.RENTED).tradeTitle("restaurants").tradeType(BusinessNature.PERMANENT).isPropertyOwner(Boolean.FALSE)
-				.feeDetails(licenseFeeDetails).supportDocuments(supportDocuments).tradeCommencementDate((new Date("15/08/2017")).getTime()/1000)
-				.auditDetails(getAuditDetails()).build();
+				.ownerShipType(OwnerShipType.RENTED).tradeTitle("restaurants").tradeType(BusinessNature.PERMANENT)
+				.isPropertyOwner(Boolean.FALSE).feeDetails(licenseFeeDetails).supportDocuments(supportDocuments)
+				.tradeCommencementDate((new Date("15/08/2017")).getTime() / 1000).auditDetails(getAuditDetails())
+				.build();
 	}
 
 	private AuditDetails getAuditDetails() {

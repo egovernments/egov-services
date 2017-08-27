@@ -44,6 +44,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.ArrayUtils;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.eis.config.ApplicationProperties;
 import org.egov.eis.config.PropertiesManager;
 import org.egov.eis.model.*;
 import org.egov.eis.model.enums.BloodGroup;
@@ -161,6 +162,9 @@ public class EmployeeService {
     @Autowired
     private PropertiesManager propertiesManager;
 
+    @Autowired
+    private ApplicationProperties applicationProperties;
+
     public List<EmployeeInfo> getEmployees(EmployeeCriteria empCriteria, RequestInfo requestInfo) throws CloneNotSupportedException {
         List<User> usersList = null;
         List<Long> ids = null;
@@ -214,10 +218,10 @@ public class EmployeeService {
                 employeeInfos.size(), empCriteria, employeeInfos);
     }
 
-    private Map<String,Object> getResponseForExistingRecords(Integer pageSize, Integer pageNumber, Integer recordsFetched,
-                                                             EmployeeCriteria empCriteria, List<EmployeeInfo> empInfoList) {
-        pageSize = isEmpty(pageSize) ? 0 : pageSize;
-        pageNumber = isEmpty(pageNumber) ? 0 : pageNumber;
+    private Map<String, Object> getResponseForExistingRecords(Integer pageSize, Integer pageNumber, Integer recordsFetched,
+                                                              EmployeeCriteria empCriteria, List<EmployeeInfo> empInfoList) {
+        pageSize = isEmpty(pageSize) ? Integer.parseInt(applicationProperties.empSearchPageSizeDefault()) : pageSize;
+        pageNumber = isEmpty(pageNumber) ? 1 : pageNumber;
 
         Integer totalDBRecords = employeeRepository.getTotalDBRecords(empCriteria);
         Integer totalpages = (int) Math.ceil((double) totalDBRecords / pageSize);
@@ -231,7 +235,7 @@ public class EmployeeService {
         }};
     }
 
-    private Map<String,Object> getResponseForNoRecords(Integer pageSize, Integer pageNumber) {
+    private Map<String, Object> getResponseForNoRecords(Integer pageSize, Integer pageNumber) {
         Pagination page = Pagination.builder().totalResults(0).totalPages(0).currentPage(0)
                 .pageNumber(pageNumber).pageSize(pageSize).build();
         return new LinkedHashMap<String, Object>() {{

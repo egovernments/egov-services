@@ -35,7 +35,7 @@ public class TlServicesApplication {
 	public RestTemplate restTemplate() {
 		return new RestTemplate();
 	}
-	
+
 	@Bean
 	public ResponseInfoFactory ResponseInfoFactory() {
 		return new ResponseInfoFactory();
@@ -43,8 +43,7 @@ public class TlServicesApplication {
 
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> logAwareKafkaTemplate;
-	
-	
+
 	@Value("${app.timezone}")
 	private String timeZone;
 
@@ -57,8 +56,8 @@ public class TlServicesApplication {
 	public ObjectMapper getObjectMapper() {
 		final ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
-        objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
+		objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+		objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
 		return objectMapper;
 	}
 

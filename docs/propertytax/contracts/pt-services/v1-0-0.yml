@@ -720,7 +720,7 @@ definitions:
       floorNo:
         type: string
         description: floor no for the floor
-        maxLength: 16
+        maxLength: 128
         minLength: 1
       units:
         description: Flat(s) or Room(s) information on a floor or in a Flat respectively.
@@ -735,10 +735,9 @@ definitions:
     description: A logical group of rooms on a floor
     properties:
       unitNo:
-        type: integer
-        format: int32
+        type: string
         description: unit no. Some ULBs captures the room wise details in case in the same floor different rooms are used for different purposes.
-        maxLength: 8
+        maxLength: 128
         minLength: 1
       unitType:
         type: string
@@ -878,6 +877,7 @@ definitions:
     - usage
     - occupancyType
     - structure
+    - occupancyDate
     
   WorkFlowDetails:
     type: object

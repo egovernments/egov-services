@@ -76,7 +76,43 @@ var meterReading = {
      "isDisabled": false,
      "requiredErrMsg": "",//Remove required messages
      "patternErrMsg": ""
-    }
+   },
+   {
+     "name": "GapCode1",
+     "jsonPath": "",
+     "label": "wc.create.groups.gapCode1",
+     "pattern": "",
+     "type": "singleValueList",
+     "url": "",
+     "isRequired": false,
+     "isDisabled": false,
+     "requiredErrMsg": "",
+     "patternErrMsg": ""
+   },
+   {
+     "name": "GapCode2",
+     "jsonPath": "",
+     "label": "wc.create.groups.gapCode2",
+     "pattern": "",
+     "type": "singleValueList",
+     "url": "",
+     "isRequired": false,
+     "isDisabled": false,
+     "requiredErrMsg": "",
+     "patternErrMsg": ""
+   },
+   {
+     "name": "GapCode3",
+     "jsonPath": "",
+     "label": "wc.create.groups.gapCode3",
+     "pattern": "",
+     "type": "singleValueList",
+     "url": "",
+     "isRequired": false,
+     "isDisabled": false,
+     "requiredErrMsg": "",
+     "patternErrMsg": ""
+   }
    ]
   }
  ]
@@ -128,7 +164,7 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": "",
 			"values": [{"label":"wc.group.withProperty", "value":true},{"label":"wc.group.withoutProperty", "value":false}],
-			"defaultValue":true,
+			"defaultValue":false,
       "showHideFields": [{
              "ifValue": false,
              "hide": [{
@@ -153,7 +189,6 @@ var dat = {
         "label": "wc.create.groups.applicantDetails.title", //Cut short labels by taking initial path from parent
         "name": "applicantDetailsWithProp", //Follow Title case pattern
         "multiple": false,
-        "hide":true,
         "fields": [
           {
             "name": "NameOfApplicant",
@@ -172,7 +207,7 @@ var dat = {
             "label": "wc.create.groups.applicantDetails.mobileNumber",
             "pattern": "",
             "type": "mobileNumber",
-            "isRequired": true,
+            "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -183,7 +218,7 @@ var dat = {
             "label": "wc.create.groups.applicantDetails.email",
             "pattern": "",
             "type": "email",
-            "isRequired": true,
+            "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
@@ -195,7 +230,7 @@ var dat = {
             "label": "wc.create.groups.applicantDetails.adharNumber",
             "pattern": "",
             "type": "aadhar",
-            "isRequired": true,
+            "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -207,7 +242,18 @@ var dat = {
             "pattern": "",
             "type": "singleValueList",
             "url": "/egov-common-masters/genders/_search?|$.Gender.*|$.Gender.*",
-            "isRequired": true,
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "AddressNo",
+            "jsonPath": "Connection.houseNumber",
+            "label": "wc.create.groups.applicantDetails.addressNumber",
+            "pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
+            "type": "text",
+            "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -217,7 +263,7 @@ var dat = {
             "jsonPath": "Connection.address.addressLine1",
             "label": "wc.create.groups.applicantDetails.address",
             "pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
-            "type": "textarea",
+            "type": "text",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -246,13 +292,13 @@ var dat = {
             "patternErrMsg": ""
           },
           {
-            "name": "Locality",
-            "jsonPath": "Connection.connectionLocation.locationBoundary.id",
-            "label": "wc.create.groups.applicantDetails.locality",
+            "name": "zoneName",
+            "jsonPath": "Connection.connectionLocation.revenueBoundary.id",
+            "label": "wc.create.groups.fields.zone",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$.Boundary.*.boundaryNum|$.Boundary.*.name",
-            "isRequired": true,
+            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE|$.Boundary.*.boundaryNum|$.Boundary.*.name",
+            "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -264,35 +310,24 @@ var dat = {
             "pattern": "",
             "type": "singleValueList",
             "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=WARD&hierarchyTypeName=ADMINISTRATION|$.Boundary.*.boundaryNum|$.Boundary.*.name",
-            "isRequired": true,
+            "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
           {
-            "name": "zoneName",
-            "jsonPath": "Connection.connectionLocation.revenueBoundary.id",
-            "label": "wc.create.groups.fields.zone",
+            "name": "Locality",
+            "jsonPath": "Connection.connectionLocation.locationBoundary.id",
+            "label": "wc.create.groups.applicantDetails.locality",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE|$.Boundary.*.boundaryNum|$.Boundary.*.name",
-            "isRequired": true,
+            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$.Boundary.*.boundaryNum|$.Boundary.*.name",
+            "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
           {
-            "name": "consumerNo",
-            "jsonPath": "Connection.legacyConsumerNumber",
-            "label": "wc.create.groups.applicantDetails.consumerNo",
-            "pattern": "",
-            "type": "text",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-      	  {
             "name": "executionDate",
             "jsonPath": "Connection.executionDate",
             "label": "wc.create.groups.applicantDetails.connectionDate",
@@ -305,29 +340,38 @@ var dat = {
             "patternErrMsg": ""
           },
           {
-            "name": "Primary Owner",
-            "jsonPath": "Connection.connectionOwner.isPrimaryOwner",
-            "label": "pt.create.groups.ownerDetails.fields.primaryOwner",
+            "name": "ConsumerNo",
+            "jsonPath": "Connection.legacyConsumerNumber",
+            "label": "wc.create.groups.applicantDetails.consumerNo",
             "pattern": "",
-            "type": "radio",
-            "isRequired": false,
+            "type": "text",
+            "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "",
-      			"values": [{"label":"employee.createPosition.groups.fields.outsourcepost.value1", "value":true},{"label":"employee.createPosition.groups.fields.outsourcepost.value2", "value":false}],
-      			"defaultValue":true
+            "patternErrMsg": ""
           },
           {
-            "name": "Secondary Owner",
-            "jsonPath": "Connection.connectionOwner.isSecondaryOwner",
-            "label": "pt.create.groups.ownerDetails.fields.secondaryOwner",
+            "name": "ManualConsumerNo",
+            "jsonPath": "connection.manualConsumerNumber",
+            "label": "wc.create.groups.applicantDetails.manualConsumerNo",
+            "pattern": "",
+            "type": "text",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "Primary Owner",
+            "jsonPath": "Connection.connectionOwner.isPrimaryOwner",
+            "label": "",
             "pattern": "",
             "type": "radio",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-      			"values": [{"label":"employee.createPosition.groups.fields.outsourcepost.value1", "value":true},{"label":"employee.createPosition.groups.fields.outsourcepost.value2", "value":false}],
+      			"values": [{"label":"pt.create.groups.ownerDetails.fields.primaryOwner", "value":true},{"label":"pt.create.groups.ownerDetails.fields.secondaryOwner", "value":false}],
       			"defaultValue":true
           }
         ]
@@ -337,6 +381,7 @@ var dat = {
         "name": "applicantDetails", //Follow Title case pattern
         "children": [],
         "multiple": false,
+        "hide":true,
         "fields": [{
             "name": "AssessmentNumber",
             "jsonPath": "Connection.property.propertyIdentifier",
@@ -426,7 +471,7 @@ var dat = {
             "jsonPath": "Connection.property.address",
             "label": "wc.create.groups.applicantDetails.address",
             "pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
-            "type": "textarea",
+            "type": "text",
             "isRequired": false,
             "isDisabled": true,
             "requiredErrMsg": "",
@@ -439,7 +484,7 @@ var dat = {
             "pattern": "",
             "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE|$.Boundary.*.boundaryNum|$.Boundary.*.name",
             "type": "singleValueList",
-            "isRequired": true,
+            "isRequired": false,
             "isDisabled": true,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -499,56 +544,29 @@ var dat = {
             "name": "PropertyType",
             "jsonPath": "Connection.property.propertyType",
             "label": "wc.create.groups.connectionDetails.propertyType",
+            "isHidden":true,
             "pattern": "",
-            "type": "singleValueList",
+            "type": "text",
             "isRequired": true,
             "isDisabled": false,
-            "url": "/pt-property/property/propertytypes/_search?|$..name|$..name",
-            "depedants": [{
-                "jsonPath": "Connection.categoryType",
-                "type": "dropDown",
-                "pattern": "/wcms/masters/propertytype-categorytype/_search?tenantId=default&propertyTypeName={Connection.property.propertyType}|$..categoryTypeName|$..categoryTypeName"
-              },
-              {
-                "jsonPath": "Connection.property.usageType",
-                "type": "dropDown",
-                "pattern": "/wcms/masters/propertytype-usagetype/_search?tenantId=default&propertyTypeName={Connection.property.propertyType}|$..usageCode|$..usageType"
-              },
-              {
-                "jsonPath": "Connection.hscPipeSizeType",
-                "type": "dropDown",
-                "pattern": "/wcms/masters/propertytype-pipesize/_search?tenantId=default&propertyTypeName={Connection.property.propertyType}|$..pipeSize|$..pipeSizeInInch"
-              }
-            ],
+            // "url": "/pt-property/property/propertytypes/_search?|$..name|$..name",
+            "defaultValue": "Others",
             "requiredErrMsg": "",
-            "patternErrMsg": "",
-            "showHideFields": [{
-                   "ifValue": "Private",
-                   "hide": [{
-                    "name": "description",
-                    "isGroup": false,
-                    "isField": true
-                   }],
-                   "show": [{
-                    "name": "NoOfFlats",
-                    "isGroup": false,
-                    "isField": true
-                   }]
-                  }]
+            "patternErrMsg": ""
           },
-
           {
             "name": "CategoryType",
             "jsonPath": "Connection.categoryType",
             "label": "wc.create.groups.connectionDetails.categoryType",
+            "isHidden":true,
             "pattern": "",
-            "type": "singleValueList",
+            "type": "text",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-			"defaultValue": [],
-			"url":""
+      			"defaultValue": "General",
+      			// "url":"/wcms/masters/propertytype-categorytype/_search?tenantId=default&propertyTypeName=Vacant Land|$..categoryTypeName|$..categoryTypeName"
           },
           {
             "name": "UsageType",
@@ -560,8 +578,8 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-            "defaultValue": [],
-            "url":'',
+      			"defaultValue": [],
+      			"url":"/wcms/masters/propertytype-usagetype/_search?tenantId=default&propertyTypeName=Others|$..usageCode|$..usageType",
             "depedants": [{
                 "jsonPath": "Connection.subUsageType",
                 "type": "dropDown",
@@ -578,10 +596,10 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-      "defaultValue": [],
-      "url":""
+            "defaultValue": [],
+            "url":""
           },
-        {
+          {
             "name": "hscPipeSizeType",
             "jsonPath": "Connection.hscPipeSizeType",
             "label": "wc.create.groups.connectionDetails.hscPipeSizeType",
@@ -591,8 +609,8 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-			"defaultValue": [],
-			"url":""
+            "defaultValue": [],
+            "url":"/wcms/masters/propertytype-pipesize/_search?tenantId=default&propertyTypeName=Others|$..pipeSize|$..pipeSizeInInch"
           },
           {
             "name": "billingType",
@@ -630,7 +648,6 @@ var dat = {
             "url": "/wcms-connection/connection/_getconnectiontypes?|$..key|$..object",
             "requiredErrMsg": "",
             "patternErrMsg": "",
-
             "showHideFields": [{
                    "ifValue": "TEMPORARY",
                    "show": [{
@@ -662,12 +679,14 @@ var dat = {
             "name": "supplyType",
             "jsonPath": "Connection.supplyType",
             "label": "wc.create.groups.connectionDetails.supplyType",
+            "isHidden": true,
             "pattern": "",
-            "type": "singleValueList",
+            "type": "text",
             "isRequired": true,
             "isDisabled": false,
-            "url": "/wcms/masters/supplytype/_search?|$..name|$..name",
+            // "url": "/wcms/masters/supplytype/_search?|$..name|$..name",
             "requiredErrMsg": "",
+            "defaultValue":"Semi Bulk Type",
             "patternErrMsg": ""
           },
           {
@@ -769,7 +788,7 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
-		  {
+		       {
             "name": "fromDate",
             "jsonPath": "Connection.fromDate",
             "label": "wc.create.fromDate",
@@ -948,9 +967,9 @@ var dat = {
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": "",
-  			"values": [{"label":"wc.group.withProperty", "value":true},{"label":"wc.group.withoutProperty", "value":false}],
-  			"defaultValue":true,
-        "showHideFields": [{
+        			"values": [{"label":"wc.group.withProperty", "value":true},{"label":"wc.group.withoutProperty", "value":false}],
+        			"defaultValue":true,
+              "showHideFields": [{
                "ifValue": false,
                "hide": [{
                 "name": "applicantDetails",
@@ -958,11 +977,6 @@ var dat = {
                 "isField": false
                }],
                "show": [{
-                "name": "NoOfFlats",
-                "isGroup": false,
-                "isField": true
-              },
-              {
                "name": "applicantDetailsWithProp",
                "isGroup": true,
                "isField": false
@@ -974,8 +988,8 @@ var dat = {
         {
           "label": "wc.create.groups.applicantDetails.title", //Cut short labels by taking initial path from parent
           "name": "applicantDetailsWithProp", //Follow Title case pattern
-          "multiple": false,
           "hide":true,
+          "multiple": false,
           "fields": [
             {
               "name": "NameOfApplicant",
@@ -991,7 +1005,7 @@ var dat = {
             {
                 "name": "acknowledgementNumber",
                 "jsonPath": "Connection[0].acknowledgementNumber",
-                "label": "wc.create.groups.applicantDetails.acknowledgementNumber",
+                "label": "wc.create.groups.applicantDetails.consumerNumber",
                 "pattern": "",
                 "type": "text",
                 "isRequired": false,
@@ -1047,11 +1061,22 @@ var dat = {
               "patternErrMsg": ""
             },
             {
+              "name": "AddressNo",
+              "jsonPath": "Connection[0].houseNumber",
+              "label": "wc.create.groups.applicantDetails.addressNumber",
+              "pattern": "^[\s.]*([^\s.][\s.]*){0,16}$",
+              "type": "text",
+              "isRequired": false,
+              "isDisabled": false,
+              "requiredErrMsg": "",
+              "patternErrMsg": ""
+            },
+            {
               "name": "Address",
               "jsonPath": "Connection[0].address.addressLine1",
               "label": "wc.create.groups.applicantDetails.address",
               "pattern": "",
-              "type": "textarea",
+              "type": "text",
               "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",
@@ -1125,23 +1150,9 @@ var dat = {
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": "",
-        			"values": [{"label":"employee.createPosition.groups.fields.outsourcepost.value1", "value":true},{"label":"employee.createPosition.groups.fields.outsourcepost.value2", "value":false}],
-        			"defaultValue":true
-            },
-            {
-              "name": "Secondary Owner",
-              "jsonPath": "Connection[0].connectionOwner.isSecondaryOwner",
-              "label": "pt.create.groups.ownerDetails.fields.secondaryOwner",
-              "pattern": "",
-              "type": "radio",
-              "isRequired": false,
-              "isDisabled": false,
-              "requiredErrMsg": "",
-              "patternErrMsg": "",
-        			"values": [{"label":"employee.createPosition.groups.fields.outsourcepost.value1", "value":true},{"label":"employee.createPosition.groups.fields.outsourcepost.value2", "value":false}],
+        			"values": [{"label":"pt.create.groups.ownerDetails.fields.primaryOwner", "value":true},{"label":"pt.create.groups.ownerDetails.fields.secondaryOwner", "value":false}],
         			"defaultValue":true
             }
-
           ]
         },
         {
@@ -1149,6 +1160,7 @@ var dat = {
         "name": "applicantDetails", //Follow Title case pattern
         "children": [],
         "multiple": false,
+        "hide":false,
         "fields": [{
             "name": "acknowledgementNumber",
             "jsonPath": "Connection[0].acknowledgementNumber",
@@ -1252,7 +1264,7 @@ var dat = {
             "jsonPath": "Connection[0].property.address",
             "label": "wc.create.groups.applicantDetails.address",
             "pattern": "",
-            "type": "textarea",
+            "type": "text",
             "isRequired": false,
             "isDisabled": true,
             "requiredErrMsg": "",
@@ -1287,29 +1299,30 @@ var dat = {
         "label": "wc.create.groups.connectionDetails.title",
         "name": "connectionDetails",
         "multiple": false,
-        "fields": [{
-            "name": "PropertyType",
-            "jsonPath": "Connection[0].property.propertyType",
-            "label": "wc.create.groups.connectionDetails.propertyType",
-            "pattern": "",
-            "type": "singleValueList",
-            "isRequired": false,
-            "isDisabled": false,
-            "url": "/pt-property/property/propertytypes/_search?|$..name|$..name",
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "CategoryType",
-            "jsonPath": "Connection[0].categoryType",
-            "label": "wc.create.groups.connectionDetails.categoryType",
-            "pattern": "",
-            "type": "singleValueList",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
+        "fields": [
+          // {
+          //   "name": "PropertyType",
+          //   "jsonPath": "Connection[0].property.propertyType",
+          //   "label": "wc.create.groups.connectionDetails.propertyType",
+          //   "pattern": "",
+          //   "type": "singleValueList",
+          //   "isRequired": false,
+          //   "isDisabled": false,
+          //   "url": "/pt-property/property/propertytypes/_search?|$..name|$..name",
+          //   "requiredErrMsg": "",
+          //   "patternErrMsg": ""
+          // },
+          // {
+          //   "name": "CategoryType",
+          //   "jsonPath": "Connection[0].categoryType",
+          //   "label": "wc.create.groups.connectionDetails.categoryType",
+          //   "pattern": "",
+          //   "type": "singleValueList",
+          //   "isRequired": false,
+          //   "isDisabled": false,
+          //   "requiredErrMsg": "",
+          //   "patternErrMsg": ""
+          // },
           {
             "name": "UsageType",
             "jsonPath": "Connection[0].property.usageType",
@@ -1321,6 +1334,19 @@ var dat = {
             "url": "/pt-property/property/usages/_search?|$..name|$..name",
             "requiredErrMsg": "",
             "patternErrMsg": ""
+          },
+          {
+            "name": "subUsageType",
+            "jsonPath": "Connection[0].subUsageType",
+            "label": "wc.create.groups.connectionDetails.subUsageType",
+            "pattern": "",
+            "type": "singleValueList",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+      			"url":"/pt-property/property/usages/_search?|$..name|$..name",
+            "convertToString":true
           },
           {
             "name": "hscPipeSizeType",
@@ -1369,7 +1395,20 @@ var dat = {
             "isDisabled": false,
             "url": "/wcms-connection/connection/_getbillingtypes?|$..key|$..object",
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+            "showHideFields": [{
+                   "ifValue": "METERED",
+                   "hide": [{
+                    "name": "description",
+                    "isGroup": false,
+                    "isField": true
+                   }],
+                   "show": [{
+                    "name": "Metered",
+                    "isGroup": true,
+                    "isField": false
+                   }]
+                  }]
           },
           {
             "name": "ConnectionType",
@@ -1381,7 +1420,21 @@ var dat = {
             "isDisabled": false,
             "url": "/wcms-connection/connection/_getconnectiontypes?|$..key|$..object",
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+            "showHideFields": [{
+                   "ifValue": "TEMPORARY",
+                   "show": [{
+                                "name": "fromDate",
+                                "isGroup": false,
+                                "isField": true
+                              },
+                              {
+                               "name": "toDate",
+                               "isGroup": false,
+                               "isField": true
+                             }],
+                  "hide":[]
+              }]
           },
           {
             "name": "SourceType",
@@ -1395,18 +1448,18 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
-          {
-            "name": "supplyType",
-            "jsonPath": "Connection[0].supplyType",
-            "label": "wc.create.groups.connectionDetails.supplyType",
-            "pattern": "",
-            "type": "singleValueList",
-            "isRequired": false,
-            "isDisabled": false,
-            "url": "/wcms/masters/supplytype/_search?|$..name|$..name",
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
+          // {
+          //   "name": "supplyType",
+          //   "jsonPath": "Connection[0].supplyType",
+          //   "label": "wc.create.groups.connectionDetails.supplyType",
+          //   "pattern": "",
+          //   "type": "singleValueList",
+          //   "isRequired": false,
+          //   "isDisabled": false,
+          //   "url": "/wcms/masters/supplytype/_search?|$..name|$..name",
+          //   "requiredErrMsg": "",
+          //   "patternErrMsg": ""
+          // },
 
           {
             "name": "waterTreatment",
@@ -1505,9 +1558,106 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
-          }
+          },
+          {
+           "name": "fromDate",
+           "jsonPath": "Connection[0].fromDate",
+           "label": "wc.create.fromDate",
+           "pattern": "",
+           "type": "datePicker",
+           "isHidden":true,
+           "isRequired": false,
+           "isDisabled": false,
+           "requiredErrMsg": "",
+           "patternErrMsg": ""
+         },
+         {
+           "name": "toDate",
+           "jsonPath": "Connection[0].toDate",
+           "label": "wc.create.toDate",
+           "pattern": "",
+           "isHidden":true,
+           "type": "datePicker",
+           "isRequired": false,
+           "isDisabled": false,
+           "requiredErrMsg": "",
+           "patternErrMsg": ""
+         }
+
         ]
       },
+      {
+          "label": "wc.create.meter.title",
+          "name": "Metered",
+          "hide":true,
+              "children":[meterReading],
+                  "fields": [{
+                      "name": "meterOwner",
+                      "jsonPath": "Connection[0].meter[0].meterOwner",
+                      "label": "wc.group.meterOwner",
+                      "pattern": "^[\s.]*([^\s.][\s.]*){0,50}$",
+                      "type": "text",
+                      "isRequired": false,
+                      "isDisabled": false,
+                      "requiredErrMsg": "",
+                      "patternErrMsg": ""
+                    },
+                    {
+                        "name": "meterModel",
+                        "jsonPath": "Connection[0].meter[0].meterModel",
+                        "label": "wc.group.meterModal",
+                        "pattern": "^[\s.]*([^\s.][\s.]*){0,50}$",
+                        "type": "text",
+                        "isRequired": false,
+                        "isDisabled": false,
+                        "requiredErrMsg": "",
+                        "patternErrMsg": ""
+                      },
+                      {
+                      "name": "meterMake",
+                      "jsonPath": "Connection[0].meter[0].meterMake",
+                      "label": "wc.group.meterMake",
+                      "pattern": "",
+                      "type": "text",
+                      "isRequired": false,
+                      "isDisabled": false,
+                      "requiredErrMsg": "",
+                      "patternErrMsg": ""
+                    },
+                    {
+                        "name": "meterSlNo",
+                        "jsonPath": "Connection[0].meter[0].meterSlNo",
+                        "label": "wc.group.meterNumber",
+                        "pattern": "",
+                        "type": "text",
+                        "isRequired": false,
+                        "isDisabled": false,
+                        "requiredErrMsg": "",
+                        "patternErrMsg": ""
+                      },
+                {
+                      "name": "meterCost",
+                      "jsonPath": "Connection[0].meter[0].meterCost",
+                      "label": "wc.group.meterCost",
+                      "pattern": "",
+                      "type": "text",
+                      "isRequired": false,
+                      "isDisabled": false,
+                      "requiredErrMsg": "",
+                      "patternErrMsg": ""
+                    },
+                {
+                      "name": "initialMeterReading",
+                      "jsonPath": "Connection[0].meter[0].initialMeterReading",
+                      "label": "wc.group.initialMeterReading",
+                      "pattern": "",
+                      "type": "text",
+                      "isRequired": false,
+                      "isDisabled": false,
+                      "requiredErrMsg": "",
+                      "patternErrMsg": ""
+                    }]
+                },
       // {
       //   "label": "wc.create.groups.fileDetails.title",
       //   "name": "Documents",

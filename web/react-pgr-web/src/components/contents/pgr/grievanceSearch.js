@@ -13,9 +13,10 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import ReactPaginate from 'react-paginate';
 import Snackbar from 'material-ui/Snackbar';
+import ServerSideTable from '../../common/table/ServerSideTable';
 import Api from '../../../api/api';
+import styles from '../../../styles/material-ui';
 import {translate, toLocalTime} from '../../common/common';
-
 
 const getNameById = function(object, id, property = "") {
   if(!object) return;
@@ -53,36 +54,6 @@ const getNameByProperty = function(object, key) {
 	}
 }
 
-const styles = {
-  headerStyle : {
-    fontSize : 19
-  },
-  marginStyle:{
-    margin: '15px'
-  },
-  paddingStyle:{
-    padding: '15px'
-  },
-  errorStyle: {
-    color: red500
-  },
-  underlineStyle: {
-    borderColor: brown500
-  },
-  underlineFocusStyle: {
-    borderColor: brown500
-  },
-  floatingLabelStyle: {
-    color: brown500
-  },
-  floatingLabelFocusStyle: {
-    color: brown500
-  },
-  customWidth: {
-    width:100
-  }
-};
-
 class grievanceSearch extends Component {
   constructor(props) {
        super(props);
@@ -97,14 +68,13 @@ class grievanceSearch extends Component {
        		resultList: [],
        		isSearchClicked: false,
        		pageCount: 0,
-       		fromIndex: 0,
           open1: false
        };
        this.search = this.search.bind(this);
        this.setInitialState = this.setInitialState.bind(this);
        this.handleOpenNClose = this.handleOpenNClose.bind(this);
        this.resetAndSearch = this.resetAndSearch.bind(this);
-       this.handlePageClick = this.handlePageClick.bind(this);
+      //  this.handlePageClick = this.handlePageClick.bind(this);
        this.handleNavigation = this.handleNavigation.bind(this);
        this.handleRequestClose = this.handleRequestClose.bind(this);
        this.resetSearch = this.resetSearch.bind(this);
@@ -115,7 +85,6 @@ class grievanceSearch extends Component {
     this.props.changeButtonText(translate("core.lbl.more"));
     this.setState({
       pageCount: 0,
-      fromIndex: 0,
       resultList: [],
       isSearchClicked: false
     })
@@ -136,14 +105,13 @@ class grievanceSearch extends Component {
   	e.preventDefault();
   	var self = this;
   	this.setState({
-  		fromIndex: 0,
   		pageCount: 0
   	}, function() {
   		self.search();
   	})
   }
 
-  search(bool) {
+  search(bool, fromIndex) {
   	var self = this, grievanceSearchSet = this.props.grievanceSearchSet;
   	if(!grievanceSearchSet.serviceRequestId && !grievanceSearchSet.locationId && !grievanceSearchSet.startDate && !grievanceSearchSet.endDate && !grievanceSearchSet.name && !grievanceSearchSet.mobileNumber && !grievanceSearchSet.emailId && !grievanceSearchSet.serviceCode && !grievanceSearchSet.status && !grievanceSearchSet.receivingMode) {
   		self.setState({
@@ -172,16 +140,16 @@ class grievanceSearch extends Component {
   		}
 
   		searchSet.sizePerPage = 10;
-  		searchSet.fromIndex = self.state.fromIndex || "0";
+  		searchSet.fromIndex = fromIndex ? fromIndex : 0;
       self.props.setLoadingStatus("loading");
   		Api.commonApiPost("/pgr/seva/v1/_count", searchSet).then(function(response) {
   			if(response.count) {
   				Api.commonApiPost("/pgr/seva/v1/_search", searchSet).then(function(response1) {
 		      		self.setState({
-		      			resultList: response1.serviceRequests || [],
-		      			isSearchClicked: true,
 		      			pageCount: Math.ceil(response.count / 10)
 		      		});
+              //set header and data for report
+              self.createReportData(response1.serviceRequests);
               self.props.setLoadingStatus("hide");
 			    }, function(err) {
             self.props.setLoadingStatus("hide");
@@ -199,6 +167,47 @@ class grievanceSearch extends Component {
         self.props.toggleSnackbarAndSetText(true, err.message);
 	    });
   	}
+  }
+
+  createReportData = (resultList) => {
+    var self = this;
+    if(resultList.length > 0){
+      var reportData = [];
+      resultList.map(function(val, i) {
+        var reportObj= {};
+        // var triColor = "#fff";
+        // val.attribValues.map((item,index)=>{
+        //   if(item.key =="PRIORITY"){
+        //     if(item.key =="PRIORITY"){
+        //       switch(item.name) {
+        //         case 'PRIORITY-1':
+        //           triColor = "#ff0000";
+        //           break;
+        //         case 'PRIORITY-2':
+        //           triColor = "#00ff00";
+        //           break;
+        //         case 'PRIORITY-3':
+        //           triColor = "#ffff00";
+        //           break;
+        //       }
+        //     }
+        //   }
+        // });
+
+        reportObj['Grievance Number']=val.serviceRequestId;
+        reportObj[`${translate("pgr.lbl.grievance.type")}`]=val.serviceName;
+        reportObj[`${translate("core.lbl.add.name")}`]=val.firstName;
+        reportObj[`${translate("core.lbl.location")}`]=(getNameById(self.state.boundaryList, getNameByProperty(val.attribValues, "systemLocationId"))) + " - " + (getNameById(self.state.boundaryList, getNameByProperty(val.attribValues, "systemChildLocationId")));
+        reportObj[`${translate("core.lbl.status")}`]=getNameByProperty(val.attribValues, "systemStatus");
+        reportObj[`${translate("core.lbl.department")}`]=getNameById(self.state.departmentList, getNameByProperty(val.attribValues, "systemDepartmentId"));
+        reportObj[`${translate("pgr.lbl.registered.date")}`]=val.requestedDatetime;
+        reportData.push(reportObj);
+      });
+      self.setState({
+        resultList : reportData,
+        isSearchClicked: true
+      });
+    }
   }
 
   setInitialState(_state) {
@@ -256,13 +265,13 @@ class grievanceSearch extends Component {
     });
   }
 
-  handlePageClick(data) {
-    let selected = data.selected;
-    let offset = Math.ceil(selected * 10), self = this;
-    self.setState({fromIndex: offset}, () => {
-      self.search(true);
-    });
-  };
+  // handlePageClick(data) {
+  //   let selected = data.selected;
+  //   let offset = Math.ceil(selected * 10), self = this;
+  //   self.setState({fromIndex: offset}, () => {
+  //     self.search(true);
+  //   });
+  // };
 
   handleRequestClose() {
     this.setState({
@@ -305,7 +314,7 @@ class grievanceSearch extends Component {
 
   render() {
 
-  	let {search, resetAndSearch, handlePageClick, handleNavigation, resetSearch} = this;
+  	let {search, resetAndSearch, handleNavigation, resetSearch} = this;
   	let {
   		complaintTypeList,
   		statusList,
@@ -326,108 +335,125 @@ class grievanceSearch extends Component {
 		fieldErrors
   	} = this.props;
 
-  	const renderBody = function() {
-  		if(resultList.length) {
-  			return resultList.map(function(val, i) {
-          var triColor = "#fff";
-          val.attribValues.map((item,index)=>{
-            if(item.key =="PRIORITY"){
-              if(item.key =="PRIORITY"){
-                switch(item.name) {
-                  case 'PRIORITY-1':
-                    triColor = "#ff0000";
-                    break;
-                  case 'PRIORITY-2':
-                    triColor = "#00ff00";
-                    break;
-                  case 'PRIORITY-3':
-                    triColor = "#ffff00";
-                    break;
-                }
-              }
-            }
-          });
+  	// const displayTableCard = function() {
+  	// 	if(isSearchClicked) {
+  	// 		return (
+    //       <Grid style={{width:'100%'}}>
+  	//   			<Card style={styles.marginStyle}>
+    //         	<CardHeader style={{paddingBottom: 0}} title={<div style = {styles.headerStyle} > {translate("pgr.searchresult")} </div>}/>
+    //             <CardText style={{paddingTop:0}}>
+    //                 <Row>
+    //                   {showTable()}
+    //                   {showPagination()}
+    //                 </Row>
+    //             </CardText>
+  	//   			</Card>
+    //       </Grid>
+	  // 		)
+  	// 	}
+  	// }
 
-  				return (
-  					<tr key={i} onClick={()=>{handleNavigation(val.serviceRequestId)}} style={{"cursor": "pointer"}}>
-  						<td style={{minWidth:120}}><span style={{width:6, height:6, borderRadius:50, backgroundColor:triColor, display:"inline-block", marginRight:5}}></span>{val.serviceRequestId}</td>
-  						<td>{val.serviceName}</td>
-  						<td>{val.firstName}</td>
-  						<td>{(getNameById(boundaryList, getNameByProperty(val.attribValues, "systemLocationId"))) + " - " + (getNameById(boundaryList, getNameByProperty(val.attribValues, "systemChildLocationId")))}</td>
-  						<td>{getNameByProperty(val.attribValues, "systemStatus")}</td>
-  						<td>{getNameById(departmentList, getNameByProperty(val.attribValues, "systemDepartmentId"))}</td>
-  						<td>{val.requestedDatetime ? /*toLocalTime(*/val.requestedDatetime/*)*/ : val.requestedDatetime}</td>
-  					</tr>
-  				)
-  			})
-  		}
-  	}
+  	// const showTable = function() {
+		// 	return (
+    //     <div>
+    //       <Col mdOffset={9} md={3}>
+    //         <input type="text" className="form-control"/>
+    //       </Col>
+    //       <Col md={12}>
+    //         <Table style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
+    //           <thead >
+    //             <tr>
+    //               <th>Grievance Number</th>
+    //               <th>{translate("pgr.lbl.grievance.type")}</th>
+    //               <th>{translate("core.lbl.add.name")}</th>
+    //               <th>{translate("core.lbl.location")}</th>
+    //               <th>{translate("core.lbl.status")}</th>
+    //               <th>{translate("core.lbl.department")}</th>
+    //               <th>{translate("pgr.lbl.registered.date")}</th>
+    //             </tr>
+    //           </thead>
+    //           <tbody>
+    //             {renderBody()}
+    //           </tbody>
+    //         </Table>
+    //       </Col>
+    //     </div>
+		// 	);
+  	// }
 
-  	const displayTableCard = function() {
-  		if(isSearchClicked) {
-  			return (
-	  			<Card style={styles.marginStyle}>
-		          	<CardHeader style={{paddingBottom: 0}} title={<div style = {styles.headerStyle} > {translate("pgr.searchresult")} </div>}/>
-	  				{showTable()}
-	  				{showPagination()}
-	  			</Card>
-	  		)
-  		}
-  	}
-  	const showTable = function() {
-			return (
-				<Table style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
-			    <thead >
-			      <tr>
-			        <th>Grievance Number</th>
-			        <th>{translate("pgr.lbl.grievance.type")}</th>
-			        <th>{translate("core.lbl.add.name")}</th>
-			        <th>{translate("core.lbl.location")}</th>
-			        <th>{translate("core.lbl.status")}</th>
-			        <th>{translate("core.lbl.department")}</th>
-			        <th>{translate("pgr.lbl.registered.date")}</th>
-			      </tr>
-			    </thead>
-			    <tbody>
-			    	{renderBody()}
-			    </tbody>
-		    </Table>
-			)
-  	}
+    // const renderBody = function() {
+  	// 	if(resultList.length) {
+  	// 		return resultList.map(function(val, i) {
+    //       var triColor = "#fff";
+    //       val.attribValues.map((item,index)=>{
+    //         if(item.key =="PRIORITY"){
+    //           if(item.key =="PRIORITY"){
+    //             switch(item.name) {
+    //               case 'PRIORITY-1':
+    //                 triColor = "#ff0000";
+    //                 break;
+    //               case 'PRIORITY-2':
+    //                 triColor = "#00ff00";
+    //                 break;
+    //               case 'PRIORITY-3':
+    //                 triColor = "#ffff00";
+    //                 break;
+    //             }
+    //           }
+    //         }
+    //       });
+    //
+  	// 			return (
+  	// 				<tr key={i} onClick={()=>{handleNavigation(val.serviceRequestId)}} style={{"cursor": "pointer"}}>
+  	// 					<td style={{minWidth:120}}><span style={{width:6, height:6, borderRadius:50, backgroundColor:triColor, display:"inline-block", marginRight:5}}></span>{val.serviceRequestId}</td>
+  	// 					<td>{val.serviceName}</td>
+  	// 					<td>{val.firstName}</td>
+  	// 					<td>{(getNameById(boundaryList, getNameByProperty(val.attribValues, "systemLocationId"))) + " - " + (getNameById(boundaryList, getNameByProperty(val.attribValues, "systemChildLocationId")))}</td>
+  	// 					<td>{getNameByProperty(val.attribValues, "systemStatus")}</td>
+  	// 					<td>{getNameById(departmentList, getNameByProperty(val.attribValues, "systemDepartmentId"))}</td>
+  	// 					<td>{val.requestedDatetime ? /*toLocalTime(*/val.requestedDatetime/*)*/ : val.requestedDatetime}</td>
+  	// 				</tr>
+  	// 			)
+  	// 		})
+  	// 	}
+  	// }
 
-  	const showPagination = function() {
-			return (
-				<div style={{"textAlign": "center"}}>
-					<ReactPaginate previousLabel={translate("pgr.lbl.previous")}
-                   nextLabel={translate("pgr.lbl.next")}
-                   breakLabel={<a href="">...</a>}
-                   pageCount={pageCount}
-                   marginPagesDisplayed={2}
-                   pageRangeDisplayed={5}
-                   onPageChange={handlePageClick}
-                   containerClassName={"pagination"}
-                   subContainerClassName={"pages pagination"}
-                   activeClassName={"active"} />
-            </div>
-		)
-  	}
+  	// const showPagination = function() {
+		// 	return (
+    //     <Col md={12}>
+    //       <div style={{"textAlign": "center"}}>
+    //         <ReactPaginate previousLabel={translate("pgr.lbl.previous")}
+    //              nextLabel={translate("pgr.lbl.next")}
+    //              breakLabel={<a href="">...</a>}
+    //              pageCount={pageCount}
+    //              marginPagesDisplayed={2}
+    //              pageRangeDisplayed={5}
+    //              onPageChange={handlePageClick}
+    //              containerClassName={"pagination"}
+    //              subContainerClassName={"pages pagination"}
+    //              activeClassName={"active"} />
+    //       </div>
+    //     </Col>
+		// )
+  	// }
 
   	const showOtherFields = function() {
   		if(buttonText == translate("core.lbl.less")) {
   			return (
   				<Row>
             	<Col xs={12} sm={4} md={3} lg={3}>
-        				<TextField fullWidth={true} floatingLabelText={translate("core.lbl.fullname")} value={grievanceSearchSet.name} onChange={(e, value) => {handleChange(value, "name", false, "")}}/>
+        				<TextField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate("core.lbl.fullname")} value={grievanceSearchSet.name} onChange={(e, value) => {handleChange(value, "name", false, "")}}/>
         			</Col>
         			<Col xs={12} sm={4} md={3} lg={3}>
-        				<TextField fullWidth={true} floatingLabelText={translate("core.lbl.mobilenumber")} errorText={fieldErrors.mobileNumber} value={grievanceSearchSet.mobileNumber} onChange={(e,value) => {handleChange(value, "mobileNumber", false, /^\d{10}$/g)}}/>
+        				<TextField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate("core.lbl.mobilenumber")} errorText={fieldErrors.mobileNumber} value={grievanceSearchSet.mobileNumber} onChange={(e,value) => {handleChange(value, "mobileNumber", false, /^\d{10}$/g)}}/>
         			</Col>
         			<Col xs={12} sm={4} md={3} lg={3}>
-        				<TextField fullWidth={true} floatingLabelText={translate("core.lbl.email.compulsory")} errorText={fieldErrors.emailId} value={grievanceSearchSet.emailId} onChange={(e,value) => {handleChange(value, "emailId", false, /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)}}/>
+        				<TextField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate("core.lbl.email.compulsory")} errorText={fieldErrors.emailId} value={grievanceSearchSet.emailId} onChange={(e,value) => {handleChange(value, "emailId", false, /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)}}/>
         			</Col>
         			<Col xs={12} sm={4} md={3} lg={3}>
-        				<SelectField maxHeight={200} fullWidth={true} floatingLabelText={translate("pgr.lbl.complainttype")} value={grievanceSearchSet.serviceCode} onChange={(e, i, value) => {
+        				<SelectField maxHeight={200} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} fullWidth={true} floatingLabelText={translate("pgr.lbl.complainttype")} value={grievanceSearchSet.serviceCode} onChange={(e, i, value) => {
         					handleChange(value, "serviceCode", false, "")}}>
+                    <MenuItem value="" primaryText="Select" />
                 			{complaintTypeList.map((com, index) => (
                                 <MenuItem value={com.serviceCode} key={index} primaryText={com.serviceName} />
                             ))}
@@ -437,11 +463,14 @@ class grievanceSearch extends Component {
 	                	<SelectField
                         multiple={true}
                         fullWidth={true}
+                        floatingLabelStyle={styles.floatingLabelStyle}
+                        floatingLabelFixed={true}
                         floatingLabelText={translate("core.lbl.status")}
                         value={grievanceSearchSet.status}
                         onChange={(e, i, value) => {
 	                		       handleChange(value, "status", false, "")}}
                      >
+                     <MenuItem value="" primaryText="Select" />
                     		{statusList.map((stat, index) => (
                                 <MenuItem
                                     value={stat.code}
@@ -453,8 +482,9 @@ class grievanceSearch extends Component {
                     	</SelectField>
                 	</Col>
                 	<Col xs={12} sm={4} md={3} lg={3}>
-                    	<SelectField maxHeight={200} fullWidth={true} floatingLabelText={translate("pgr.lbl.receivingmode")} value={grievanceSearchSet.receivingMode} onChange={(e, i, value) => {
+                    	<SelectField maxHeight={200} fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate("pgr.lbl.receivingmode")} value={grievanceSearchSet.receivingMode} onChange={(e, i, value) => {
                     		handleChange(value, "receivingMode", false, "")}}>
+                        <MenuItem value="" primaryText="Select" />
                     		{receiveingModeList.map((mod, index) => (
                                 <MenuItem value={mod.code} key={index} primaryText={mod.name} />
                             ))}
@@ -474,18 +504,19 @@ class grievanceSearch extends Component {
 	              		<Grid>
 	                		<Row>
 	                			<Col xs={12} sm={4} md={3} lg={3}>
-	                				<TextField fullWidth={true} floatingLabelText={translate("pgr.lbl.crnformat")} value={grievanceSearchSet.serviceRequestId || ""} onChange={(e, value) => {handleChange(value, "serviceRequestId", false, "")}}/>
+	                				<TextField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate("pgr.lbl.crnformat")} value={grievanceSearchSet.serviceRequestId || ""} onChange={(e, value) => {handleChange(value, "serviceRequestId", false, "")}}/>
                         </Col>
 	                			<Col xs={12} sm={4} md={3} lg={3}>
-	                				<SelectField maxHeight={200} fullWidth={true} floatingLabelText={translate("core.lbl.location")} value={grievanceSearchSet.locationId} onChange={(e, i, value) => {
+	                				<SelectField maxHeight={200} fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate("core.lbl.location")} value={grievanceSearchSet.locationId} onChange={(e, i, value) => {
 	                					handleChange(value, "locationId", false, "")}}>
+                            <MenuItem value="" primaryText="Select" />
                             			{locationList.map((loc, index) => (
 			                                <MenuItem value={loc.id} key={index} primaryText={loc.name} />
 			                            ))}
                             		</SelectField>
 	                			</Col>
 	                			<Col xs={12} sm={4} md={3} lg={3}>
-	                				<DatePicker fullWidth={true} floatingLabelText={translate("core.lbl.date.fromdate")} hintText={translate("core.lbl.date.fromdate")} container="inline" value={grievanceSearchSet.startDate}
+	                				<DatePicker fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate("core.lbl.date.fromdate")} container="inline" value={grievanceSearchSet.startDate}
                           formatDate={(date)=>{
                             let dateObj = new Date(date);
                             let year = dateObj.getFullYear();
@@ -502,7 +533,7 @@ class grievanceSearch extends Component {
                           />
 	                			</Col>
 	                			<Col xs={12} sm={4} md={3} lg={3}>
-	                				<DatePicker fullWidth={true} floatingLabelText={translate("core.lbl.date.todate")} hintText={translate("core.lbl.date.todate")} container="inline" value={grievanceSearchSet.endDate}
+	                				<DatePicker fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate("core.lbl.date.todate")} container="inline" value={grievanceSearchSet.endDate}
                           formatDate={(date)=>{
                             let dateObj = new Date(date);
                             let year = dateObj.getFullYear();
@@ -532,13 +563,12 @@ class grievanceSearch extends Component {
 	            	</CardText>
 	          </Card>
 	          <div style={{textAlign: 'center'}}>
-
 		          <RaisedButton style={{margin:'15px 5px'}} type="submit" primary={true} label={translate("core.lbl.search")}/>
               <RaisedButton style={{margin:'15px 5px'}} type="button" label={translate("core.lbl.reset")} onClick={(e) => {resetSearch(e)}}/>
-              </div>
+            </div>
 	        </form>
-	        {displayTableCard()}
-
+          {isSearchClicked ? <ServerSideTable resultSet={this.state.resultList} pageCount={this.state.pageCount} search={this.search}/> : ""}
+	        {/*displayTableCard()*/}
 	        <Dialog
 	          title={translate("core.msg.criteria.required")}
 	          open={this.state.open}

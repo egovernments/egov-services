@@ -429,10 +429,21 @@ dataEntryTax = () => {
 					],
 					"documents": [],
 					"stateId": null,
-					"assessmentDates": {
-						"name": "FIRSTASSESSMENT",
-						"date": "10/06/2017"
-					},
+					 "assessmentDates": [{
+							"name": "FIRSTASSESSMENT",
+							"date": dataEntry.firstAssessmentDate || null
+							},{
+
+							"name":"CURRENTASSESSMENT",
+							"date": dataEntry.currentAssessmentDate || null
+							},{
+							"name":"REVISEDASSESSMENT",
+							"date": dataEntry.revisedAssessmentDate || null
+							},{
+							"name":"LASTASSESSMENT",
+							"date": dataEntry.lastAssessmentDate || null
+							}
+						],
 					"builderDetails": {
 						"certificateNumber": dataEntry.certificateNumber || null,
 						"certificateCompletionDate": dataEntry.certificateCompletionDate || null,
@@ -692,7 +703,7 @@ const mapDispatchToProps = dispatch => ({
 	   validatePropertyOwner: {
         required: {
           current: [],
-          required: ['mobileNumber', 'name', 'gender' ]
+          required: ['name', 'gender' ]
         },
         pattern: {
           current: [],
@@ -775,7 +786,7 @@ const mapDispatchToProps = dispatch => ({
 	    validatePropertyOwner: {
         required: {
           current: [],
-          required: ['mobileNumber', 'name', 'gender' ]
+          required: ['name', 'gender']
         },
         pattern: {
           current: [],

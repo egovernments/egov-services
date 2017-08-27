@@ -50,12 +50,12 @@ import lombok.Setter;
 @Setter
 public class IdGenerationException extends RuntimeException {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    private String customMsg;
+	private String customMsg;
 
-    private String msgDetails;
+	private String msgDetails;
 
-    private RequestInfo RequestInfo;
+	private RequestInfo RequestInfo;
 
 }

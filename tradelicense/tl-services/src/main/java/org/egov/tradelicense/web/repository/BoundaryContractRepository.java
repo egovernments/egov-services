@@ -3,7 +3,7 @@ package org.egov.tradelicense.web.repository;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.domain.model.TradeLicense;
-import org.egov.tradelicense.web.requests.BoundaryResponse;
+import org.egov.tradelicense.web.response.BoundaryResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;

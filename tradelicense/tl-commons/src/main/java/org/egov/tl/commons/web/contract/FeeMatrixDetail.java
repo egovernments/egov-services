@@ -23,7 +23,7 @@ public class FeeMatrixDetail {
 	private Long id = null;
 
 	@JsonProperty("feeMatrixId")
-	
+
 	private Long feeMatrixId = null;
 
 	@JsonProperty("uomFrom")
@@ -34,9 +34,9 @@ public class FeeMatrixDetail {
 	@NotNull(message = "{error.uomTo.null}")
 	private Long uomTo = null;
 
-	@NotNull(message="{error.FeeMatrixDetail.amount}")
+	@NotNull(message = "{error.FeeMatrixDetail.amount}")
 	@Min(1)
-	@Digits(integer=10, fraction=2,message="{error.valid.amount}")
+	@Digits(integer = 10, fraction = 2, message = "{error.valid.amount}")
 	@JsonProperty("amount")
 	private Double amount = null;
 

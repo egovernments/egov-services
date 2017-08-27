@@ -28,14 +28,11 @@ export default class UiTextField extends Component {
 				if (item.hasOwnProperty("isLabel") && !item.isLabel) {
 					return (
 						<TextField
-							floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
-							floatingLabelFixed={true} 
+							inputStyle={{"color": "#5F5C57"}}
 							style={{"display": (item.hide ? 'none' : 'inline-block')}}
 							errorStyle={{"float":"left"}}
 							fullWidth={false}
-							floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>} 
-							
-
+							maxLength={item.maxLength || ""}
 							value={this.props.getVal(item.jsonPath)}
 							disabled={item.isDisabled}
 							errorText={this.props.fieldErrors[item.jsonPath]}
@@ -52,8 +49,10 @@ export default class UiTextField extends Component {
 				else {
 					return (
 						<TextField
-							floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
+							floatingLabelStyle={{"color": item.isDisabled ? "#A9A9A9" : "#696969", "fontSize": "20px", "white-space": "nowrap"}}
+							inputStyle={{"color": "#5F5C57"}}
 							floatingLabelFixed={true} 
+							maxLength={item.maxLength || ""}
 							style={{"display": (item.hide ? 'none' : 'inline-block')}}
 							errorStyle={{"float":"left"}}
 							fullWidth={true}

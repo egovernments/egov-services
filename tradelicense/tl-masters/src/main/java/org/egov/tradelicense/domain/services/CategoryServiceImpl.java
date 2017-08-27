@@ -9,9 +9,9 @@ import org.egov.tl.commons.web.contract.CategorySearch;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.ResponseInfo;
 import org.egov.tl.commons.web.requests.CategoryRequest;
-import org.egov.tl.commons.web.requests.CategoryResponse;
-import org.egov.tl.commons.web.requests.CategorySearchResponse;
 import org.egov.tl.commons.web.requests.ResponseInfoFactory;
+import org.egov.tl.commons.web.response.CategoryResponse;
+import org.egov.tl.commons.web.response.CategorySearchResponse;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.exception.InvalidInputException;
 import org.egov.tradelicense.domain.services.validator.CategoryValidator;
@@ -76,7 +76,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 				Long categoryId = categoryRepository.createCategory(category);
 
-				if (category.getParentId() != null) {
+				if (category.getParentId() != null &&  category.getDetails() != null) {
 
 					for (CategoryDetail categoryDetail : category.getDetails()) {
 
@@ -120,7 +120,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 				categoryRepository.updateCategory(category);
 
-				if (category.getParentId() != null) {
+				if (category.getParentId() != null &&  category.getDetails() != null) {
 
 					for (CategoryDetail categoryDetail : category.getDetails()) {
 

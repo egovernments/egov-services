@@ -89,7 +89,7 @@ public class TradeLicense {
 	@NotNull
 	@JsonProperty("adminWardId")
 	private Integer adminWardId;
-	
+
 	@NotNull
 	@JsonProperty("tradeAddress")
 	@Size(max = 256)
@@ -123,7 +123,7 @@ public class TradeLicense {
 	@NotNull
 	@JsonProperty("quantity")
 	private Double quantity;
-	
+
 	@NotNull
 	@JsonProperty("validityYears")
 	private Long validityYears;
@@ -134,7 +134,7 @@ public class TradeLicense {
 	@NotNull
 	@JsonProperty("tradeCommencementDate")
 	private Long tradeCommencementDate;
-	
+
 	@NotNull
 	@JsonProperty("licenseValidFromDate")
 	private Long licenseValidFromDate;
@@ -147,10 +147,10 @@ public class TradeLicense {
 
 	@JsonProperty("isLegacy")
 	private Boolean isLegacy = false;
-	
+
 	@JsonProperty("isPropertyOwner")
 	private Boolean isPropertyOwner = false;
-	
+
 	@JsonProperty("active")
 	private Boolean active = true;
 

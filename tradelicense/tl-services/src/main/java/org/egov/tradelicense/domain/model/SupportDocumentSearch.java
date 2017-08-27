@@ -1,8 +1,5 @@
 package org.egov.tradelicense.domain.model;
 
-import org.egov.tradelicense.domain.model.AuditDetails;
-import org.egov.tradelicense.domain.model.SupportDocument;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +17,7 @@ public class SupportDocumentSearch {
 	private Long licenseId;
 
 	private Long documentTypeId;
-	
+
 	private String documentTypeName;
 
 	private String fileStoreId;
@@ -47,7 +44,7 @@ public class SupportDocumentSearch {
 
 		supportDocument.setDocumentTypeId(this.documentTypeId);
 
-		supportDocument.setFileStoreId(Long.valueOf(this.fileStoreId));
+		supportDocument.setFileStoreId(this.fileStoreId);
 
 		supportDocument.setComments(this.comments);
 
@@ -71,9 +68,7 @@ public class SupportDocumentSearch {
 
 		this.documentTypeId = supportDocument.getDocumentTypeId();
 
-		if(supportDocument.getFileStoreId() != null){
-			this.fileStoreId = supportDocument.getFileStoreId().toString();
-		}
+		this.fileStoreId = supportDocument.getFileStoreId();
 
 		this.comments = supportDocument.getComments();
 

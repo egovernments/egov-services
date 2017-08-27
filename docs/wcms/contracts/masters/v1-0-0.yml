@@ -1198,63 +1198,64 @@
                 https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
                 
   # UsageType Master API:
-    /usagetype/_create:
+    /serviceCharges/_create:
       post:
-        summary: Create new usage type.
-        description: API to bulk create new usage type
+        summary: Create new service charge.
+        description: API to bulk create new service charge
         tags:
-          - Usage Type
+          - Service Charge
         parameters:
-          - name: Usage Type
+          - name: Service Charge
             in: body
             description: required parameters have to be populated
             required: true
             schema:
-              $ref: '#/definitions/UsageTypeReq'
+              $ref: '#/definitions/ServiceChargeReq'
         responses:
           '201':
-            description: Usage Type created successfully.
+            description: Service Charge created successfully.
             schema:
-              $ref: "#/definitions/UsageTypeRes"
+              $ref: "#/definitions/ServiceChargeRes"
           '400':
-            description: Usage Type creation failed.
+            description: Service Charge creation failed.
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
-    /usagetype/_update:
+    /serviceCharges/_update:
       post:
         summary:  while updating in request body code is required and updates existing values based on code
         description: bulk updates existing values
         tags:
-          - Usage Type
+          - Service Charge
         parameters:
-          - name: Usage Type
+          - name: Service Charge
             in: body
             description: required parameters have to be populated
             required: true
             schema:
-              $ref: '#/definitions/UsageTypeReq'
+              $ref: '#/definitions/ServiceChargeReq'
         responses:
           '200':
-            description: Usage Type updated successfully.
+            description: Service Charge updated successfully.
             schema:
-              $ref: "#/definitions/UsageTypeRes"
+              $ref: "#/definitions/ServiceChargeRes"
           '400':
             description: Request failed
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
-    /usagetype/_search:
+    /serviceCharges/_search:
       post:
         summary: searches existing values
         tags:
-          - Usage Type
+          - service Charge
         parameters:
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
           - $ref: "#/parameters/ids"
-          - $ref: "#/parameters/code"
-          - $ref: "#/parameters/name"
+          - $ref: "#/parameters/serviceType"
+          - $ref: "#/parameters/serviceChargeType"
+          - $ref: "#/parameters/outsideUlb"
         responses:
           200: 
             description: Successful response
@@ -1264,6 +1265,74 @@
             description: Invalid input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+  # Gapcode Master API
+    /gapcode/_create:
+      post:
+        summary: Create new Gapcode.
+        description: API to Create new Gapcode
+        tags:
+          - Gapcode
+        parameters:
+          - name: GapcodeReq
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/GapcodeReq'
+        responses:
+          '201':
+            description: Gapcode created successfully.
+            schema:
+              $ref: "#/definitions/GapcodeRes"
+          '400':
+            description: Gapcode creation failed.
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /gapcode/_update:
+      post:
+        summary:  while updating in request body code is required and updates existing values based on code
+        description: bulk updates existing values
+        tags:
+          - Gapcode
+        parameters:
+          - name: Gapcode
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/GapcodeReq'
+        responses:
+          '200':
+            description: Gapcode updated successfully.
+            schema:
+              $ref: "#/definitions/GapcodeRes"
+          '400':
+            description: Request failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /gapcode/_search:
+      post:
+        summary: searches existing values
+        tags:
+          - Gapcode
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - $ref: "#/parameters/id"
+          - $ref: "#/parameters/code"
+        responses:
+          200: 
+            description: Successful response
+            schema:
+              $ref: '#/definitions/GapcodeRes'
+          400:
+            description: Invalid input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
   parameters:
     id:
       name: id
@@ -1384,8 +1453,26 @@
       required: false
       type: boolean
 
+    serviceType:
+      name: serviceType
+      in: query
+      description: type of the service
+      required: false
+      type: string
               
-              
+    serviceChargeType:
+      name: serviceChargeType
+      in: query
+      description: type of the service charge
+      required: false
+      type: string
+      
+    outsideUlb:
+      name: outsideUlb
+      in: query
+      description: outsideUlb
+      required: false
+      type: boolean
               
   definitions:
   
@@ -2011,6 +2098,9 @@
         usageTypeId:
           type: string
           description: unique identifier of property usage type object
+        subUsageTypeId:
+          type: string
+          description: unique identifier of property sub usage type object
         maxPipeSizeId:
           type: integer
           format: int64
@@ -2048,6 +2138,7 @@
         - code
         - propertyTypeId
         - usageTypeId
+        - subUsageTypeId
         - maxPipeSizeId
         - minPipeSizeId
         - categoryTypeId
@@ -2547,6 +2638,9 @@
         usageTypeId:
           type: string
           description: unique identifier of property usage type object
+        subUsageTypeId:
+          type: string
+          description: unique identifier of property sub usage type object
         sourceTypeId:
           type: string
           description: unique identifier of property usage type object
@@ -2575,36 +2669,37 @@
         - connectionType
         - sourceTypeId
         - usageTypeId
+        - subUsageTypeId
         - pipeSizeId
         - fromDate
         - amount
         - noOfTaps
         - tenantId
         
-  # Usage Type definitions
-    UsageTypeReq:
+  # Service Charge definitions
+    ServiceChargeReq:
       type: object
       properties:
         RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        UsageTypes:
-          $ref: '#/definitions/UsageType'
+        ServiceCharges:
+          $ref: '#/definitions/ServiceCharge'
       required:
         - RequestInfo
-        - UsageTypes
+        - ServiceCharges
     
-    UsageTypeRes:
+    ServiceChargeRes:
       type: object
       properties:
         ResponseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        UsageTypes:
+        ServiceCharges:
           type: array
           maximum: 20
           items:
-            $ref: '#/definitions/UsageType'
+            $ref: '#/definitions/ServiceCharge'
     
-    UsageType:
+    ServiceCharge:
       type: object
       properties:
         id:
@@ -2615,18 +2710,51 @@
           type: string
           description: unique code this should be defined by system and readonly.
           maxLength: 20
-        name: 
+        serviceType: 
           type: string
-          description: human readable name should be assigned by user.
-          maxLength: 100
-        description: 
+          description: Type of the service 
+          enum:
+            - Change of ownership
+            - Change of connectionType
+            - Disconnection
+            - Change of Usage
+            - No due certificate
+        serviceChargeApplicable: 
+          type: boolean
+          format: varchar
+          description: TRUE for applicable and FALSE for inapplicable.
+        serviceChargeType:
           type: string
-          description: human readable description should be assigned by user.
-          maxLength: 250
+          description: Type of the service charge
+          enum:
+            - Flat
+            - Slab
+            - Percentage flat
+            - Percentage Slab
+        description:
+          type: string
+          description: description of the service charge
+          maxLength: 1024
         active:
           type: boolean
           format: varchar
           description: TRUE for active and FALSE for inactive.
+        effectiveFrom:
+          type: integer
+          format: int64
+          description: effective from date
+        effectiveTo:
+          type: integer
+          format: int64
+          description: effective to date
+        outsideUlb:
+          type: boolean
+          format: varchar
+          description: if selected values of the service charges  differ 
+        chargeDetails:
+          type: array
+          items:
+            $ref: '#/definitions/ServiceChargeDetails'
         tenantId:
           type: string
           description: Unique Identifier of the tenant 
@@ -2635,7 +2763,120 @@
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
         - code
-        - name
+        - serviceType
+        - serviceChargeApplicable
+        - serviceChargeType
         - active
+        - effectiveFrom
+        - effectiveTo
+        - tenantId
+    
+    ServiceChargeDetails:
+      type: object
+      properties:
+        code:
+          type: string
+          description: unique code this should be defined by system and readonly.
+          maxLength: 20
+        uomFrom:
+          type: number
+          description: uom from
+        uomTo:
+          type: number
+          description: uom to
+        amountOrpercentage:
+          type: number
+          description: amount in case of flat , slab and percentage in case of
+               percentage flat and percentage slab
+        serviceCharge:
+          type: integer
+          format: int 64
+          description : id of service charge
+        tenantId:
+          type: string
+          description: Unique Identifier of the tenant 
+          maxLength: 250
+      required:
+        - code
+        - uomFrom
+        - uomTo
+        - amountOrpercentage
+        - serviceCharge
         - tenantId
 
+  # Gapcode definitions
+    GapcodeReq:
+      type: object
+      properties:
+        RequestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        Gapcodes:
+          type: array
+          maximum: 20
+          items:
+           $ref: '#/definitions/Gapcode'
+      required:
+        - RequestInfo
+        - Gapcodes
+    
+    GapcodeRes:
+      type: object
+      properties:
+        ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        Gapcodes:
+          type: array
+          maximum: 20
+          items:
+           $ref: '#/definitions/Gapcode'
+    
+    Gapcode:
+      type: object
+      properties:
+        id:
+         type: integer
+         format: int64
+         description : id is gapcodeid and Unique identifier, typically defined by system and readonly.
+        code : 
+          type: string
+          description: human readable code is gapcodename..
+          maxLength: 100 
+        name : 
+          type: string
+          description: human readable code is gapcodename..
+          maxLength: 100  
+        outSideUlb:
+          type: boolean
+          format: varchar
+          description: TRUE for outSideUlb and FALSE for NotoutSideUlb.
+        active:
+          type: boolean
+          format: varchar
+          description: TRUE for active and FALSE for inactive.  
+        noOfLastMonths:
+          type: string
+          description: number of last months
+          maximum: 100
+        logic:
+          type: string
+          description: logic of formula
+          maximum: 100
+        description: 
+          type: string
+          description: human readable description should be assigned by user.
+          maximum: 250  
+        tenantId:
+          type: string
+          description: Unique Identifier of the tenant 
+          maxLength: 250
+      required:
+        - name
+        - code        
+        - logic
+        - noOfLastMonths
+        - tenantId
+        
+    
+
+          
+          

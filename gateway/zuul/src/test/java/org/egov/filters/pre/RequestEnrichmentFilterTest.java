@@ -51,7 +51,7 @@ public class RequestEnrichmentFilterTest {
         filter.run();
 
         final Map<String, String> zuulRequestHeaders = currentContext.getZuulRequestHeaders();
-        assertEquals(1, zuulRequestHeaders.size());
+        assertEquals(2, zuulRequestHeaders.size());
         assertEquals(expectedCorrelationId, zuulRequestHeaders.get("x-correlation-id"));
     }
 

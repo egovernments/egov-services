@@ -143,8 +143,7 @@ constructor(props) {
     return (
       <Card className="uiCard">
         <CardHeader title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Owner Details</div>} style={styles.reducePadding} />
-        <CardText >
-       
+        <CardText>
               <Grid fluid>
                 <Row>
                   <Col xs={12} md={12}>
@@ -161,7 +160,7 @@ constructor(props) {
                               }
                             }
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                            underlineStyle={styles.underlineStyle}
+                            underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                             underlineFocusStyle={styles.underlineFocusStyle}
                             className="fullWidth"
                             maxLength={12}
@@ -171,15 +170,19 @@ constructor(props) {
                         <Col xs={12} md={3} sm={6}>
                           <TextField  className="fullWidth"
                             hintText="9999888877"
-                            floatingLabelText={translate('pt.create.groups.ownerDetails.fields.phoneNumber')+' *'}
+                            floatingLabelText={window.location.href.match('dataEntry') ? translate('pt.create.groups.ownerDetails.fields.phoneNumber') : <span>{translate('pt.create.groups.ownerDetails.fields.phoneNumber')}<span style={{"color": "#FF0000"}}> *</span></span>}
                             errorText={fieldErrors.owner ? (fieldErrors.owner.mobileNumber ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.mobileNumber}</span>: ""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.mobileNumber:""}
                             onChange={(e) =>{
-								handleChangeOwner(e, "owner","mobileNumber", true, /^\d{10}$/g)
+								if(window.location.href.match('dataEntry')){
+									handleChangeOwner(e, "owner","mobileNumber", false, /^\d{10}$/g)
+								} else {
+									handleChangeOwner(e, "owner","mobileNumber", true, /^\d{10}$/g)
+								}
                               }
                             }
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                            underlineStyle={styles.underlineStyle}
+                            underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                             underlineFocusStyle={styles.underlineFocusStyle}
                             maxLength={10}
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -188,7 +191,7 @@ constructor(props) {
                         <Col xs={12} md={3} sm={6}>
                           <TextField  className="fullWidth"
                             hintText="Joe Doe"
-                            floatingLabelText={translate('pt.create.groups.ownerDetails.fields.ownerName')+' *'}
+                            floatingLabelText={<span>{translate('pt.create.groups.ownerDetails.fields.ownerName')}<span style={{"color": "#FF0000"}}> *</span></span>}
                             errorText={fieldErrors.owner ? (fieldErrors.owner.name ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.name}</span>:""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.name:""}
                             onChange={(e) => {
@@ -197,7 +200,7 @@ constructor(props) {
                               }
                             }
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                            underlineStyle={styles.underlineStyle}
+                            underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                             underlineFocusStyle={styles.underlineFocusStyle}
                             maxLength={32}
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -205,7 +208,7 @@ constructor(props) {
                         </Col>
                         <Col xs={12} md={3} sm={6}>
                           <SelectField  className="fullWidth selectOption"
-                            floatingLabelText={translate('pt.create.groups.ownerDetails.fields.gender')+' *'}
+                            floatingLabelText={<span>{translate('pt.create.groups.ownerDetails.fields.gender')}<span style={{"color": "#FF0000"}}> *</span></span>}
                             errorText={fieldErrors.owner ? (fieldErrors.owner.gender? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.owner.gender}</span>:""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.gender:""}
                             onChange={(event, index, value) => {
@@ -219,16 +222,16 @@ constructor(props) {
                               }
                             }
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                            underlineStyle={styles.underlineStyle}
+                            underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                             underlineFocusStyle={styles.underlineFocusStyle}
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+							dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                             >
 							{renderOption(this.state.gender)}
                           </SelectField>
                         </Col>
                         <Col xs={12} md={3} sm={6}>
                           <TextField  className="fullWidth"
-						  tabIndex ={5}
                             hintText={translate('pt.create.groups.propertyAddress.emailExample')}
                             floatingLabelText={translate('pt.create.groups.ownerDetails.fields.email')}
                             errorText={fieldErrors.owner ? (fieldErrors.owner.emailId? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.emailId}</span>:""): ""}
@@ -238,7 +241,7 @@ constructor(props) {
                               }
                             }
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                            underlineStyle={styles.underlineStyle}
+                            underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                             underlineFocusStyle={styles.underlineFocusStyle}
                             maxLength={32}
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -255,7 +258,7 @@ constructor(props) {
                               }
                             }
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                            underlineStyle={styles.underlineStyle}
+                            underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                             underlineFocusStyle={styles.underlineFocusStyle}
                             maxLength={10}
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -277,9 +280,10 @@ constructor(props) {
                               }
                             }
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                            underlineStyle={styles.underlineStyle}
+                            underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                             underlineFocusStyle={styles.underlineFocusStyle}
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+							dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                             >
 							{renderOption(this.state.gaurdianRelation)}
                           </SelectField>
@@ -294,7 +298,7 @@ constructor(props) {
 								handleChangeOwner(e,  "owner",  "fatherOrHusbandName", false, "")
 							}}
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                            underlineStyle={styles.underlineStyle}
+                            underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                             underlineFocusStyle={styles.underlineFocusStyle}
                             maxLength={32}
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -316,7 +320,7 @@ constructor(props) {
                               }
                             }
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                            underlineStyle={styles.underlineStyle}
+                            underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                             underlineFocusStyle={styles.underlineFocusStyle}
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                             >
@@ -332,7 +336,7 @@ constructor(props) {
                             value={ownerDetails.owner ? ownerDetails.owner.ownerShipPercentage:""}
                             onChange={(e) => handleChangeOwner(e,"owner", "ownerShipPercentage", false, /^[1-9][0-9]?$|^100$/g)}
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                            underlineStyle={styles.underlineStyle}
+                            underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                             underlineFocusStyle={styles.underlineFocusStyle}
                             maxLength={3}
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -390,7 +394,7 @@ constructor(props) {
                         </Col>
 						<div className="clearfix"></div>
                       </Row>
-                      {ownerDetails.owners &&
+                      {(ownerDetails.owners && ownerDetails.owners.length!=0) &&
                         <div className="col-md-12 col-xs-12">  <br/>
                           <Table id="createPropertyTable" style={{color:"black",fontWeight: "normal", marginBottom:0}} bordered responsive>
                             <thead style={{backgroundColor:"#607b84",color:"white"}}>
@@ -410,7 +414,7 @@ constructor(props) {
                               </tr>
                             </thead>
                             <tbody>
-                              {ownerDetails.owners && ownerDetails.owners.map(function(i, index){
+                              {(ownerDetails.owners && ownerDetails.owners.length!=0)&& ownerDetails.owners.map(function(i, index){
                                 if(i){
                                   return (<tr key={index}>
                                     <td>{index+1}</td>
@@ -462,12 +466,21 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
 	
 setForm: () => {
+	 var ownerRequired = [];
+	 var ownerCurrent = [];
+	  if(window.location.href.match('dataEntry')){
+		 ownerRequired = ['name', 'gender' ];
+		 ownerCurrent = ['name', 'gender'];
+	  } else {
+		 ownerCurrent = ['mobileNumber', 'name', 'gender'];
+		 ownerRequired = ['mobileNumber', 'name', 'gender' ];
+	  }
     dispatch({
       type: "SET_OWNER_STATE",
 	   validatePropertyOwner: {
         required: {
-          current: ['mobileNumber', 'name', 'gender'],
-          required: ['mobileNumber', 'name',  'gender' ]
+          current: ownerCurrent,
+          required: ownerRequired
         },
         pattern: {
           current: [],
@@ -545,8 +558,15 @@ setForm: () => {
       isSectionValid
     })
   },
+  
 
   resetObject: (object, isSectionValid) => {
+	  var ownerRequired = [];
+	  if(window.location.href.match('dataEntry')){
+		 ownerRequired = ['name', 'gender' ];
+	  } else {
+		 ownerRequired = ['mobileNumber', 'name', 'gender' ];
+	  }
     dispatch({
       type: "RESET_OBJECT",
       object,
@@ -554,7 +574,7 @@ setForm: () => {
 	    validatePropertyOwner: {
         required: {
           current: [],
-          required: ['mobileNumber', 'name', 'gender' ]
+          required: ownerRequired
         },
         pattern: {
           current: [],

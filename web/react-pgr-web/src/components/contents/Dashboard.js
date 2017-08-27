@@ -13,6 +13,15 @@ import SwipeableViews from 'react-swipeable-views';
 import {ListItem} from 'material-ui/List';
 import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
+import Paper from 'material-ui/Paper';
+import Menu from 'material-ui/Menu';
+import MenuItem from 'material-ui/MenuItem';
+import Divider from 'material-ui/Divider';
+import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right';
+import Drawer from 'material-ui/Drawer';
+import MetisMenu from 'react-metismenu';
+
+
 
 //api import
 import Api from "../../api/api";
@@ -28,6 +37,90 @@ require('datatables.net-buttons/js/buttons.colVis.js'); // Column visibility
 require('datatables.net-buttons/js/buttons.html5.js'); // HTML 5 file export
 require('datatables.net-buttons/js/buttons.flash.js'); // Flash file export
 require('datatables.net-buttons/js/buttons.print.js'); // Print view button
+
+const nameMap = {
+  "PT_NODUES": "Property Tax No Dues",
+  "WC_NODUES": "Water Charges No Dues"
+};
+
+const content=[
+    // {
+    //     icon: 'icon-class-name',
+    //     label: 'Services',
+    //     to: '#a-link',
+    // },
+    {
+        icon: 'icon-class-name',
+        label: 'Water',
+        content: [
+            {
+                icon: 'icon-class-name',
+                label: 'Apply for No Dues',
+                to: '#/non-framework/citizenServices/no-dues/search/wc',
+            },
+            {
+                icon: 'icon-class-name',
+                label: 'Apply for New Connection',
+                to: '#/coming/soon',
+            }
+        ],
+    },
+    {
+        icon: 'icon-class-name',
+        label: 'Property',
+        content: [
+            {
+                icon: 'icon-class-name',
+                label: 'Apply for No Dues',
+                to: '#/non-framework/citizenServices/no-dues/search/pt',
+            },
+            {
+                icon: 'icon-class-name',
+                label: 'Apply for Extract',
+                to: '#/coming/soon',
+            }
+        ],
+    },
+    {
+        icon: 'icon-class-name',
+        label: 'Trade License',
+        content: [
+            {
+                icon: 'icon-class-name',
+                label: 'Apply for New License',
+                to: '#/coming/soon',
+            }
+        ],
+    },
+    {
+        icon: 'icon-class-name',
+        label: 'Building Plan',
+        content: [
+            {
+                icon: 'icon-class-name',
+                label: 'Apply for Fire NOC',
+                to: '#/coming/soon',
+            }
+        ],
+    },
+    {
+        icon: 'icon-class-name',
+        label: 'Grievance',
+        content: [
+            {
+                icon: 'icon-class-name',
+                label: 'New Grievance',
+                to: '#/pgr/createGrievance',
+            }
+        ],
+    }
+];
+
+const style={
+  display: 'inline-block',
+  float: 'left',
+  margin: '0px 32px 16px 0',
+}
 
 const styles = {
   headline: {
@@ -53,10 +146,49 @@ const styles = {
   }
 };
 
+const getDate = function(val) {
+  var _date = new Date(Number(val));
+      return ('0' + _date.getDate()).slice(-2) + '/'
+               + ('0' + (_date.getMonth()+1)).slice(-2) + '/'
+               + _date.getFullYear();
+}
+
+const sR=
+  [
+        {
+            "tenantId": "default",
+            "serviceRequestId": "ServiceReq1",
+            "serviceCode": null,
+            "lat": null,
+            "lang": null,
+            "address": null,
+            "addressId": null,
+            "email": null,
+            "deviceId": null,
+            "accountId": null,
+            "firstName": null,
+            "lastName": null,
+            "phone": null,
+            "description": null,
+            "attributeValues": null,
+            "status": null,
+            "assignedTo": null,
+            "comments": null,
+            "backendServiceDetails": "{\n\t\"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1502890899493,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"e04855b2-4378-4ade-9189-6d33b1893390\",\n    \"userInfo\":{\n    \t\"id\":73\n    }\n  }\n}",
+            "auditDetails": null,
+            "action": null,
+            "consumerCode": null,
+            "applicationFee": null
+        }
+    ]
+
+
 class Dashboard extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      serviceRequestsTwo:[],
+      slideIndexOne:0,
       slideIndex: 0,
       serviceRequests: [],
       citizenServices:[],
@@ -78,7 +210,17 @@ class Dashboard extends Component {
           language: {
              "emptyTable": "No Records"
           }
-    });
+   });
+
+   $('#requestTable').DataTable({
+         dom: 'lBfrtip',
+         buttons: [],
+          bDestroy: true,
+          language: {
+             "emptyTable": "No Records"
+          }
+   });
+
 
 	  let { setLoadingStatus} = this.props;
      setLoadingStatus("loading");
@@ -89,14 +231,16 @@ class Dashboard extends Component {
     if(currentUser.type === constants.ROLE_CITIZEN) {
       Promise.all([
           Api.commonApiPost("/pgr/seva/v1/_search",{userId:currentUser.id},{}),
-          Api.commonApiPost("/pgr-master/serviceGroup/v1/_search",{keywords:constants.CITIZEN_SERVICES_KEYWORD},{})
+          Api.commonApiPost("/pgr-master/serviceGroup/v1/_search",{keywords:constants.CITIZEN_SERVICES_KEYWORD},{}),
+          Api.commonApiPost("/citizen-services/v1/requests/_search", {userId:currentUser.id}, {}, null, true)
       ])
       .then((responses)=>{
         //if any error occurs
-        if(!responses || responses.length ===0 || !responses[0] || !responses[1]){
+        if(!responses || responses.length ===0 || !responses[0] || !responses[1] || !responses[2]){
           current.setState({
             serviceRequests: [],
             citizenServices:[],
+            serviceRequestsTwo: [],
             localArray:[],
              hasData:false
           });
@@ -128,16 +272,33 @@ class Dashboard extends Component {
         //citizen services
         let citizenServices=responses[1].ServiceGroups;
 
-        current.props.setLoadingStatus('hide');
+        //Call to service request
 
+        // Api.commonApiPost("/report/pgr/_get", {}, {}, null, true).then(function(res) {
+        //   current.setState({
+        //     workflowResult: res,
+        //     hasData: true
+        //   });
+        // }, function(err) {
+        //   current.props.setLoadingStatus('hide');
+        //   current.setState({
+        //     workflowResult: {},
+        //     hasData: false
+        //   });
+        // })
+
+        current.props.setLoadingStatus('hide');
+        localStorage.setItem("servReq", JSON.stringify(responses[2].serviceReq));
         current.setState({
           serviceRequests: inboxResponse.serviceRequests,
+          serviceRequestsTwo: responses[2].serviceReq,
           localArray: inboxResponse.serviceRequests,
           citizenServices,
           hasData:true
         });
 
       }).catch(function(err){
+         current.props.setLoadingStatus("hide");
          console.log('error', err);
       });
 
@@ -231,7 +392,16 @@ class Dashboard extends Component {
           language: {
              "emptyTable": "No Records"
           }
-     });
+       });
+
+       $('#requestTable').DataTable({
+         dom: 'lBfrtip',
+         buttons: [],
+          bDestroy: true,
+          language: {
+             "emptyTable": "No Records"
+          }
+       });
     }
   }
 
@@ -251,6 +421,12 @@ class Dashboard extends Component {
   handleChange = (value) => {
     this.setState({
       slideIndex: value,
+    });
+  };
+
+  handleChangeOne = (value) => {
+    this.setState({
+      slideIndexOne: value,
     });
   };
 
@@ -303,21 +479,22 @@ class Dashboard extends Component {
     //filter citizen services
     let servicesMenus=[];
     let serviceTypeMenus=[];
+    let {serviceRequestsTwo}=this.state;
 
     if(!this.state.selectedServiceCode)
       servicesMenus = this.state.citizenServices.filter(
         (service)=>  !this.state.servicesFilter ||
          service.name.toLowerCase().indexOf(this.state.servicesFilter.toLowerCase()) > -1);
-    else
-    {
+        else
+        {
         var service=this.state.citizenServices.find((service)=>service.code === this.state.selectedServiceCode);
         if(service){
           var types = [];
           if(service.hasOwnProperty("types"))
              types=service.types.filter((type)=> !this.state.servicesFilter || type.serviceName.toLowerCase().indexOf(this.state.servicesFilter.toLowerCase()) > -1);
-          serviceTypeMenus=[...types];
-        }
-    }
+            serviceTypeMenus=[...types];
+          }
+      }
 
     let {workflowResult} = this.state;
     let {handleRowClick, checkIfDate} = this;
@@ -379,123 +556,80 @@ class Dashboard extends Component {
 
       {
             currentUser && currentUser.type==constants.ROLE_CITIZEN?<div>
-          <Tabs
-              onChange={this.handleChange}
-              value={this.state.slideIndex}
-            >
-              <Tab label={translate("csv.lbl.myrequest")} value={0}/>
-              <Tab label={translate(constants.LABEL_SERVICES)} value={1} />
-              <Tab label={translate("pgr.title.create.grievence")} value={2} onClick={()=>{
-                  this.props.history.push("/pgr/createGrievance")
-                }} />
-            </Tabs>
-            <SwipeableViews
-              index={this.state.slideIndex}
-              onChangeIndex={this.handleChange}
-            >
-              <div>
-                  <Grid>
-                    <Row>
-						<Col xs={12} md={12}>
-							<TextField
-								hintText={translate("core.lbl.search")}
-								floatingLabelText={translate("core.lbl.search")}
-								fullWidth={true}
-								onChange={(e, value) =>this.localHandleChange(value)}
-							/>
-						</Col>
-                      {this.state.localArray && this.state.localArray.map((e,i)=>{
+              <Grid>
+                  <Row>
+                      <Col md={2}>
+                        <MetisMenu content={content} activeLinkFromLocation />
 
-							var priority;
-							var triColor = "#fff";
-							e.attribValues.map((item,index)=>{
-							  if(item.key =="PRIORITY"){
-								triColor = item.name
-							  }
-							})
+                      </Col>
 
-                        return(
-                          <Col xs={12} md={4} sm={6} style={{paddingTop:15, paddingBottom:15}} key={i}>
-                             <Card style={{minHeight:320}}>
-                                 <CardHeader subtitleStyle={styles.status}
-                                  title={e.serviceName}
-                                  subtitle={e.attribValues && e.attribValues.map((item,index)=>{
-                                      if(item.key =="systemStatus"){
-                                        return(item.name)
-                                      }
-                                  })}
-                                 />
+                      <Col md={10}>
+                          <br/>
+                          <Card>
+                            <CardHeader title="My Service Requests"/>
+                              <CardText>
+                                <Table id="requestTable">
+                                    <thead>
+                                        <tr>
+                                          <th>
+                                            Service Request No.
+                                          </th>
+                                          <th>
+                                            Service Name
+                                          </th>
+                                          <th>
+                                            Status
+                                          </th>
+                                          <th>
+                                            Applied On
+                                          </th>
+                                          <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {serviceRequestsTwo.map((item, key)=>{
+                                          return (<tr key={key}>
+                                              <td>{item.serviceRequestId}</td>
+                                              <td>{nameMap[item.serviceCode] || item.serviceCode}</td>
+                                              <td>{item.status}</td>
+                                              <td>{item.auditDetails ? getDate(item.auditDetails.createdDate) : "-"}</td>
+                                              {<td><i className="material-icons">cloud_download</i></td>}
 
-                                 <CardHeader  titleStyle={{fontSize:18}}
-                                   title={<Link to={`/pgr/viewGrievance/${e.serviceRequestId}`} target=""><span style={{width:6, height:6, borderRadius:50, backgroundColor:triColor, display:"inline-block", marginRight:5}}></span>{e.serviceRequestId}</Link>}
-                                   subtitle={e.requestedDatetime}
-                                 />
-                                 <CardText>
-                                    Complaint No. {e.serviceRequestId} regarding {e.serviceName} in {e.attribValues && e.attribValues.map((item,index)=>{
-                                        if(item.key =="systemStatus"){
-                                          return(item.name)
-                                        }
-                                    })}
-                                 </CardText>
-                             </Card>
-                          </Col>
-                        )
-                      }) }
-                    </Row>
-                  </Grid>
-              </div>
-              <div style={styles.slide}>
-                  <Grid>
-                    <Row>
-                      <TextField
-        								floatingLabelText={translate("core.lbl.search")}
-        								fullWidth={true}
-                        value={this.state.servicesFilter||""}
-                        onChange={(e, value) => this.filterCitizenServices(value)}
-        							/>
-                    </Row>
-                    <Row>
-                        <Card style={{width:'100%'}}>
-                          <CardTitle style={{padding:'16px 16px 0px 16px'}}>
-                            {this.state.selectedServiceCode ? (
-                              <IconButton onTouchTap={()=>{
-                                  this.onBackFromServiceType();
-                                }}>
-                                <FontIcon className="material-icons">arrow_back</FontIcon>
-                              </IconButton>
-                            ):null}
-                            <span className="custom-card-title disable-selection">{translate(this.state.selectedServiceName)}</span>
-                          </CardTitle>
+                                          </tr>)
+                                        }) }
+                                    </tbody>
+                                </Table>
+                              </CardText>
+                          </Card>
+                          <br/>
 
-                           <CardText style={{padding:'0px 16px 16px 16px'}}>
-                              <Row>
-                                {!this.state.selectedServiceCode && servicesMenus.map((service, index)=>{
-                                     return (<ServiceMenu key={index} service={service} onClick={this.onClickServiceGroup} />);
-                                  })}
-                                {serviceTypeMenus.map((serviceType, index)=>{
-                                  return (<ServiceTypeItem key={index} serviceType={serviceType} onClick={()=>{
-                                      if(serviceType.serviceName !== 'New Water Connection')
-                                        this.props.setRoute(`/services/apply/${serviceType.serviceCode}/${serviceType.serviceName.replace(/\//g, "~")}`);
-                                      else
-                                        this.props.setRoute('/create/wc');
-                                    }}></ServiceTypeItem>)
-                                })}
+                          <Card>
+                            <CardHeader title="My Grievances"/>
+                              <CardText>
+                              <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
+                               <thead>
+                                <tr>
+                                  <th>#</th>
+                                  <th>Application No.</th>
+                                  <th>Date</th>
+                                  <th>Sender</th>
+                                  <th>Nature of Work</th>
+                                  <th>Status</th>
+                                  <th>Comments</th>
+                                </tr>
 
-                                {serviceTypeMenus.length === 0 && servicesMenus.length === 0? (
-                                  <div className="col-xs-12 empty-info">
-                                    <FontIcon className="material-icons icon">inbox</FontIcon>
-                                    <span className="msg">{translate(constants.LABEL_NO_SERVICS)}</span>
-                                  </div>
-                                ) : null}
+                                </thead>
+                                <tbody>
+                                {renderBody()}
+                                </tbody>
+                            </Table>
+                              </CardText>
+                          </Card>
 
-                              </Row>
-                           </CardText>
-                        </Card>
-                    </Row>
-                  </Grid>
-              </div>
-            </SwipeableViews>
-          </div>:  <Card className="uiCard">
+                      </Col>
+                  </Row>
+              </Grid>
+          </div>: <Card className="uiCard">
               <CardHeader title={< div style = {styles.headerStyle} >{translate("deshboard.title")}< /div>} />
 				<CardText>
 						 <Grid style={{"paddingTop":"0"}}>
@@ -654,3 +788,188 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
+
+//
+// <Tabs
+//     onChange={this.handleChange}
+//     value={this.state.slideIndex}
+//   >
+//     <Tab label={translate("csv.lbl.myrequest")} value={0}/>
+//     <Tab label={translate(constants.LABEL_SERVICES)} value={1} />
+//     <Tab label={translate("pgr.title.create.grievence")} value={2} onClick={()=>{
+//         this.props.history.push("/pgr/createGrievance")
+//       }} />
+//   </Tabs>
+//   <SwipeableViews
+//     index={this.state.slideIndex}
+//     onChangeIndex={this.handleChange}
+//   >
+//     <div>
+//         <Grid>
+//           <Row>
+//             <Col xs={12} md={12}>
+//               <TextField
+//                 hintText={translate("core.lbl.search")}
+//                 floatingLabelText={translate("core.lbl.search")}
+//                 fullWidth={true}
+//                 onChange={(e, value) =>this.localHandleChange(value)}
+//               />
+//             </Col>
+//             {this.state.localArray && this.state.localArray.map((e,i)=>{
+//
+//                 var priority;
+//                 var triColor = "#fff";
+//                 e.attribValues.map((item,index)=>{
+//                   if(item.key =="PRIORITY"){
+//                   triColor = item.name
+//                   }
+//                 })
+//
+//               return(
+//                 <Col xs={12} md={4} sm={6} style={{paddingTop:15, paddingBottom:15}} key={i}>
+//                    <Card style={{minHeight:320}}>
+//                        <CardHeader subtitleStyle={styles.status}
+//                         title={e.serviceName}
+//                         subtitle={e.attribValues && e.attribValues.map((item,index)=>{
+//                             if(item.key =="systemStatus"){
+//                               return(item.name)
+//                             }
+//                         })}
+//                        />
+//
+//                        <CardHeader  titleStyle={{fontSize:18}}
+//                          title={<Link to={`/pgr/viewGrievance/${e.serviceRequestId}`} target=""><span style={{width:6, height:6, borderRadius:50, backgroundColor:triColor, display:"inline-block", marginRight:5}}></span>{e.serviceRequestId}</Link>}
+//                          subtitle={e.requestedDatetime}
+//                        />
+//                        <CardText>
+//                           Complaint No. {e.serviceRequestId} regarding {e.serviceName} in {e.attribValues && e.attribValues.map((item,index)=>{
+//                               if(item.key =="systemStatus"){
+//                                 return(item.name)
+//                               }
+//                           })}
+//                        </CardText>
+//                    </Card>
+//                 </Col>
+//               )
+//             }) }
+//           </Row>
+//         </Grid>
+//     </div>
+//     <div style={styles.slide}>
+//         <Grid>
+//           <Row>
+//           {/*  <TextField
+//               floatingLabelText={translate("core.lbl.search")}
+//               fullWidth={true}
+//               value={this.state.servicesFilter||""}
+//               onChange={(e, value) => this.filterCitizenServices(value)}
+//             />*/}
+//           </Row>
+//         {/*  <Row>
+//               <Card style={{width:'100%'}}>
+//                 <CardTitle style={{padding:'16px 16px 0px 16px'}}>
+//                   {this.state.selectedServiceCode ? (
+//                     <IconButton onTouchTap={()=>{
+//                         this.onBackFromServiceType();
+//                       }}>
+//                       <FontIcon className="material-icons">arrow_back</FontIcon>
+//                     </IconButton>
+//                   ):null}
+//                   <span className="custom-card-title disable-selection">{translate(this.state.selectedServiceName)}</span>
+//                 </CardTitle>
+//
+//                  <CardText style={{padding:'0px 16px 16px 16px'}}>
+//                     <Row>
+//                       {!this.state.selectedServiceCode && servicesMenus.map((service, index)=>{
+//                            return (<ServiceMenu key={index} service={service} onClick={this.onClickServiceGroup} />);
+//                         })}
+//                       {serviceTypeMenus.map((serviceType, index)=>{
+//                         return (<ServiceTypeItem key={index} serviceType={serviceType} onClick={()=>{
+//                             if(serviceType.serviceName !== 'New Water Connection')
+//                               this.props.setRoute(`/services/apply/${serviceType.serviceCode}/${serviceType.serviceName.replace(/\//g, "~")}`);
+//                             else
+//                               this.props.setRoute('/create/wc');
+//                           }}></ServiceTypeItem>)
+//                       })}
+//
+//                       {serviceTypeMenus.length === 0 && servicesMenus.length === 0? (
+//                         <div className="col-xs-12 empty-info">
+//                           <FontIcon className="material-icons icon">inbox</FontIcon>
+//                           <span className="msg">{translate(constants.LABEL_NO_SERVICS)}</span>
+//                         </div>
+//                       ) : null}
+//
+//                     </Row>
+//                  </CardText>
+//               </Card>
+//           </Row>*/}
+//           <Row>
+//             <Col md={3}>
+//             {/*
+//               <Drawer open={true}>
+//                  <MenuItem>Menu Item</MenuItem>
+//                  <MenuItem>Menu Item 2</MenuItem>
+//                </Drawer>
+//               */}
+//           {<Paper style={style}>
+//                 <Menu desktop={true}>
+//                   <MenuItem
+//                     primaryText="Water Charge"
+//                     rightIcon={<ArrowDropRight />}
+//                     menuItems={[
+//                       <Link to="/non-framework/citizenServices/no-dues/search/watercharge"><MenuItem primaryText="Nodues"/></Link>,
+//                       <Link to="/non-framework/citizenServices/no-dues/search/watercharge"><MenuItem primaryText="New Connection"/></Link>
+//
+//                     ]}
+//                   />
+//
+//                   <MenuItem
+//                     primaryText="Property Tax"
+//                     rightIcon={<ArrowDropRight />}
+//                     menuItems={[
+//                       <Link to="/non-framework/citizenServices/no-dues/search/propertytax"><MenuItem primaryText="Nodues"/></Link>
+//                     ]}
+//                   />
+//
+//                   <MenuItem
+//                     primaryText="Trade licence"
+//                     rightIcon={<ArrowDropRight />}
+//                     menuItems={[
+//                       <Link to="/non-framework/citizenServices/no-dues/search/tradelicence"><MenuItem primaryText="Nodues"/></Link>
+//                     ]}
+//                   />
+//
+//                 </Menu>
+//               </Paper>}
+//             </Col>
+//             <Col md={9}>
+//                 <Table responsive>
+//                     <thead>
+//                         <th>Name</th>
+//                         <th>Date</th>
+//                         <th>Status</th>
+//
+//                     </thead>
+//                     <tbody>
+//                         <tr>
+//                             <td>Water charge</td>
+//                             <td>21-12-2017</td>
+//                             <td>Progress</td>
+//
+//                         </tr>
+//
+//                         <tr>
+//                             <td>Property Tax</td>
+//                             <td>21-12-2017</td>
+//                             <td>Aporved</td>
+//
+//                         </tr>
+//                     </tbody>
+//                 </Table>
+//             </Col>
+//
+//           </Row>
+//         </Grid>
+//
+//     </div>
+//   </SwipeableViews>

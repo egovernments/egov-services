@@ -154,6 +154,7 @@ public class CollectionServiceConstants {
     public static final String CUTT_OFF_DATE_MESSAGE_DESC = " for legacy data entry.Please enter proper date";
     
     public  static final String INSTRUMENT_TYPE_CASH = "Cash";
+    public  static final String INSTRUMENT_TYPE_ONLINE = "ONLINE";
     
     public static final String INVALID_DATE_EXCEPTION_MSG="From Date is greater than To Date";
     
@@ -166,6 +167,7 @@ public class CollectionServiceConstants {
     public static final String MANUAL_RECEIPT_DETAILS_CUTOFF_DATE_CONFIG_KEY="CUTOFF_DATE_FOR_MANUAL_RECEIPT_DETAILS";
 
     public static final String COLLECTION_LEGACY_RECEIPT_CREATOR_ROLE ="Legacy Receipt Creator";
+    public static final String COLLECTION_ONLINE_RECEIPT_ROLE ="CITIZEN";
     
 
 }

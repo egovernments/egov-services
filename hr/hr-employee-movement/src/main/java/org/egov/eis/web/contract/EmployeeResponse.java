@@ -49,6 +49,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
+
 @AllArgsConstructor
 @EqualsAndHashCode
 @Getter
@@ -61,6 +63,6 @@ public class EmployeeResponse {
     private ResponseInfo responseInfo;
 
     @JsonProperty("Employee")
-    private Employee employee;
+    private List<Employee> employee;
 
 }

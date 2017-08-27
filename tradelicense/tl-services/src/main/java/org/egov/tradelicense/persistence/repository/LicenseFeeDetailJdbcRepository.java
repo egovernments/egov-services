@@ -17,7 +17,15 @@ public class LicenseFeeDetailJdbcRepository extends JdbcRepository {
 	}
 
 	public LicenseFeeDetailEntity create(LicenseFeeDetailEntity entity) {
+		
 		super.create(entity);
+
+		return entity;
+	}
+	
+	public LicenseFeeDetailEntity update(LicenseFeeDetailEntity entity) {
+		
+		super.update(entity);
 
 		return entity;
 	}

@@ -11,6 +11,7 @@ import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../../api/api';
+import styles from '../../../../../styles/material-ui';
 import DataTable from '../../../../common/Table';
 import {translate} from '../../../../common/common';
 
@@ -60,15 +61,6 @@ const getNameById = function(object, id, property = "") {
     }
     return "";
 }
-
-const styles = {
-  headerStyle : {
-    fontSize : 19
-  },
-  marginStyle:{
-    margin: '15px'
-  }
-};
 
 class routerGeneration extends Component {
   constructor(props) {
@@ -120,9 +112,9 @@ class routerGeneration extends Component {
   loadGrievanceType(value){
      var self = this;
      self.props.handleChange({target: {value: ""}}, "complaintTypes", true, "");
-     Api.commonApiPost("/pgr/services/v1/_search", {type:'category', categoryId : value}).then(function(response)
+     Api.commonApiPost("pgr-master/service/v1/_search", {type:'category', categoryId : value}).then(function(response)
      {
-       self.setState({typeList : response.complaintTypes});
+       self.setState({typeList : response.Service});
      },function(err) {
 
      });
@@ -185,7 +177,7 @@ class routerGeneration extends Component {
   		}
   	}
 
-  	Api.commonApiPost("/pgr-master/serviceGroup/v1/_search").then(function(response) {
+  	Api.commonApiPost("/pgr-master/serviceGroup/v1/_search",{keyword: "complaint"}).then(function(response) {
       	checkCountAndCall("categoryList", response.ServiceGroups);
     }, function(err) {
     	checkCountAndCall("categoryList", []);
@@ -385,10 +377,13 @@ class routerGeneration extends Component {
                  <Grid>
                    <Row>
                    <Col xs={12} sm={4} md={3} lg={3}>
-                     <SelectField fullWidth={true} floatingLabelText={translate("pgr.lbl.grievance.category") + " *"} errorText={fieldErrors.complaintTypeCategory} value={routerCreateSet.complaintTypeCategory} onChange={(e, i, val) => {
+                     <SelectField fullWidth={true}
+                       floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
+                       floatingLabelText={translate("pgr.lbl.grievance.category") + " *"} errorText={fieldErrors.complaintTypeCategory} value={routerCreateSet.complaintTypeCategory} onChange={(e, i, val) => {
 	                					var e = {target: {value: val}};
 	                					loadGrievanceType(val);
 	                					handleChange(e, "complaintTypeCategory", true, "")}}>
+                            <MenuItem value="" primaryText="Select" />
 	                					{categoryList.map((item, index) => (
 			                                <MenuItem value={item.id} key={index} primaryText={item.name} />
 			                            ))}
@@ -397,12 +392,14 @@ class routerGeneration extends Component {
                    <Col xs={12} sm={4} md={3} lg={3}>
                     <SelectField
                       fullWidth={true}
+                      floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                       floatingLabelText={translate("pgr.lbl.grievance.type") + " *"}
                       errorText={fieldErrors.complaintTypes}
                       value={routerCreateSet.complaintTypes}
                       onChange={(e, i, val) => {
 	                					var e = {target: {value: val}};
 	                					handleChange(e, "complaintTypes", true, "")}} multiple>
+                            <MenuItem value="" primaryText="Select" />
 	                					{typeList.map((item, index) => (
 			                                <MenuItem
                                         value={item.id}
@@ -415,10 +412,13 @@ class routerGeneration extends Component {
                     </SelectField>
                    </Col>
                    <Col xs={12} sm={4} md={3} lg={3}>
-                     <SelectField fullWidth={true} floatingLabelText={translate("pgr.lbl.boundarytype") + " *"} errorText={fieldErrors.boundaryType || ""} value={routerCreateSet.boundaryType} onChange={(e, i, val) => {
+                     <SelectField fullWidth={true}
+                       floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
+                       floatingLabelText={translate("pgr.lbl.boundarytype") + " *"} errorText={fieldErrors.boundaryType || ""} value={routerCreateSet.boundaryType} onChange={(e, i, val) => {
 	                					var e = {target: {value: val}};
 	                					loadBoundaries(val);
 	                					handleChange(e, "boundaryType", true, "")}}>
+                            <MenuItem value="" primaryText="Select" />
 	                					{boundaryTypeList.map((item, index) => (
 			                                <MenuItem value={item.id} key={index} primaryText={item.name} />
 			                            ))}
@@ -427,12 +427,14 @@ class routerGeneration extends Component {
                    <Col xs={12} sm={4} md={3} lg={3}>
                     <SelectField
                       fullWidth={true}
+                      floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                       floatingLabelText={translate("pgr.lbl.boundary") + " *"}
                       errorText={fieldErrors.boundaries || ""}
                       value={routerCreateSet.boundaries}
                       onChange={(e, i, val) => {
 	                					var e = {target: {value: val}};
 	                					handleChange(e, "boundaries", true, "")}} multiple>
+                            <MenuItem value="" primaryText="Select" />
 	                					{boundariesList.map((item, index) => (
 			                                <MenuItem
                                         value={item.id}
@@ -449,6 +451,7 @@ class routerGeneration extends Component {
                    <Col xs={12} sm={4} md={3} lg={3}>
                     	<AutoComplete
                         hintText=""
+                        floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                         floatingLabelText={translate("pgr.lbl.position") + " *"}
                         filter={AutoComplete.caseInsensitiveFilter}
                         fullWidth={true}

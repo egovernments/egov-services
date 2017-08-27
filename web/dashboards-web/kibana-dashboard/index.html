@@ -383,13 +383,13 @@
 								  return (a < b) ? -1 : (a > b) ? 1 : 0;
 							  }
 
-								function openReport(reportUrl, reportTitle){
+								function openReport(reportUrl, reportTitle, ulbName){
 									if(reportUrl)
-										window.open('open-report.html?url='+encodeURIComponent(reportUrl)+"&back="+encodeURIComponent(window.location.href)+'&title='+reportTitle);
+										window.open('open-report.html?url='+encodeURIComponent(reportUrl)+"&back="+encodeURIComponent(window.location.href)+'&title='+reportTitle+'&ulbname='+ulbName);
 								}
 
 								function openStatelevelReport(elem, title){
-									openReport(stateLevelReports[$(elem).data('report-key')], title);
+									openReport(stateLevelReports[$(elem).data('report-key')], title, "");
 								}
 
 								$(document).ready(function(){
@@ -453,7 +453,7 @@
 											console.log('ulb', ulb);
 											var reportUrl = ulb[$(this).data('url-key')];
 											if(reportUrl){
-												openReport(reportUrl, $(this).data('report-title')+" - "+ulb.ulbName);
+												openReport(reportUrl, $(this).data('report-title'), ulb.ulbName);
 												//window.open('open-report.html?url='+encodeURIComponent(reportUrl)+"&back="+encodeURIComponent(window.location.href)+'&title='+$(this).data('report-title'));
 											}
 											else{

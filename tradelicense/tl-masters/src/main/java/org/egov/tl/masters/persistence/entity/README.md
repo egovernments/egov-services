@@ -1,1 +1,0 @@
-trade license masters domain persistance entities will come here

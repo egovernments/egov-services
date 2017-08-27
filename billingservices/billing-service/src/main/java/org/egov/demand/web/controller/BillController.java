@@ -88,7 +88,11 @@ public class BillController {
 			return new ResponseEntity<>(responseFactory.
 					getErrorResponse(bindingResult, requestInfoWrapper.getRequestInfo()), HttpStatus.BAD_REQUEST);
 		}
-		//billValidator.validateBillRequest(billRequest);
+		billValidator.validateBillGenRequest(generateBillCriteria,bindingResult);
+		if (bindingResult.hasErrors()) {
+			return new ResponseEntity<>(responseFactory.
+					getErrorResponse(bindingResult, requestInfoWrapper.getRequestInfo()), HttpStatus.BAD_REQUEST);
+		}
 		BillResponse billResponse = billService.generateBill(generateBillCriteria, requestInfoWrapper.getRequestInfo());
 		
 		if (billResponse.getBill() != null) {

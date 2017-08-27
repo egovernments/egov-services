@@ -17,6 +17,7 @@ import MenuItem from 'material-ui/MenuItem';
 import Checkbox from 'material-ui/Checkbox';
 import RaisedButton from 'material-ui/RaisedButton';
 import {validate_fileupload} from '../../../../common/common';
+import {translate} from '../../../../common/common';
 import Api from '../../../../../api/api';
 
 
@@ -174,12 +175,12 @@ class ConstructionTypes extends Component {
 
     return (
 			<Card className="uiCard">
-				<CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Documents</div>} />
+				<CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate('employee.Employee.fields.documents')}</div>} />
 				<CardText style={styles.reducePadding}>
 							<Grid fluid>
 								<Row style={{paddingTop:8, paddingBottom:4}}>
 									<Col xs={12} md={6}>
-										{this.state.documentType.length ==0 && <div>No files to upload</div>}
+										{this.state.documentType.length ==0 && <div>{translate('pt.create.groups.documentUpload.noFilesToUpload')}</div>}
 									  {this.state.documentType.length !=0 && this.state.documentType.map((item, index)=>(
 										  <Row style={{margin:'10px 0'}}>
 											<Col xs={12} md={6}>

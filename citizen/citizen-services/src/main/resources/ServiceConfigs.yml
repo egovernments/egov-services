@@ -1,0 +1,60 @@
+serviceConfigs:
+ - serviceCode: PT_NODUES
+   searchDemand:
+    url: http://egov-micro-dev.egovernments.org/billing-service/demand/_search?businessService=PT
+    queryAppend:
+       - 'tenantId: $.serviceReq.attributeValues[0].value'
+       - 'consumerCode: $.serviceReq.attributeValues[1].value'
+    result: 
+       - $..Demands.length()
+       - $..demandDetails[?(@.taxAmount > @.collectionAmount)]           
+    generateId:
+      url: http://egov-micro-dev.egovernments.org/egov-idgen/id/_generate
+      request: {"requestInfo": $.requestInfo,"idRequests":[{"idName":"CS.ServiceRequest","tenantId":"$.serviceReq.tenantId","format":"SRN-[cy:MM]/[fy:yyyy-yy]-[d{4}]"}]}
+      result: $.idResponses[0].id
+    createDemandRequest: 
+       url: "http://egov-micro-dev.egovernments.org/billing-service/demand/_create"
+       demandRequest: '{"RequestInfo": "$.requestInfo","Demands": [{"consumerCode": "$.serviceReq.attributeValues[0].value","businessService": "$.serviceReq.attributeValues[1].value",
+                "taxPeriodFrom": "$.serviceReq.attributeValues[2].value","taxPeriodTo": "$.serviceReq.attributeValues[3].value", "minimumAmountPayable": "$.serviceReq.attributeValues[4].value",
+                "owner":{"id":""},"demandDetails": [{"taxHeadMasterCode" : "$.serviceReq.attributeValues[5].value","taxAmount":"$.serviceReq.attributeValues[6].value","collectionAmount" :"$.serviceReq.attributeValues[7].value"}]}]}'
+    applicationFee: 100
+
+ - serviceCode: PT_EXTRACT
+   searchDemand:
+    url: http://egov-micro-dev.egovernments.org/billing-service/demand/_search?businessService=PT
+    queryAppend:
+     - 'tenantId :$.serviceReq.attributeValues[0].value'
+     - 'consumerCode :$.serviceReq.attributeValues[1].value'
+    result:
+      - $..Demands.length()   
+      - $..demandDetails[?(@.taxAmount > @.collectionAmount)] 
+    generateId:
+      url: http://egov-micro-dev.egovernments.org/egov-idgen/id/_generate
+      request: {"requestInfo": $.requestInfo,"idRequests":[{"idName":"CS.ServiceRequest","tenantId":"$.serviceReq.tenantId","format":"SRN-[cy:MM]/[fy:yyyy-yy]-[d{4}]"}]}
+      result: $.idResponses[0].id 
+    createDemandRequest: 
+       url: "http://egov-micro-dev.egovernments.org/billing-service/demand/_create"
+       demandRequest: '{"RequestInfo": "$.requestInfo","Demands": [{"consumerCode": "$.serviceReq.attributeValues[0].value","businessService": "$.serviceReq.attributeValues[1].value",
+                "taxPeriodFrom": "$.serviceReq.attributeValues[2].value","taxPeriodTo": "$.serviceReq.attributeValues[3].value", "minimumAmountPayable": "$.serviceReq.attributeValues[4].value",
+                "owner":{"id":""},"demandDetails": [{"taxHeadMasterCode" : "$.serviceReq.attributeValues[5].value","taxAmount":"$.serviceReq.attributeValues[6].value","collectionAmount" :"$.serviceReq.attributeValues[7].value"}]}]}'   
+    applicationFee: 100
+
+ - serviceCode: WATER_NODUES
+   searchDemand:
+    url: http://egov-micro-dev.egovernments.org/billing-service/demand/_search?businessService=WC
+    queryAppend:
+     - 'tenantId :$.serviceReq.attributeValues[0].value'
+     - 'consumerCode :$.serviceReq.attributeValues[1].value'
+    result:
+      - $..Demands.length()
+      - $..demandDetails[?(@.taxAmount > @.collectionAmount)] 
+    generateId:
+      url: http://egov-micro-dev.egovernments.org/egov-idgen/id/_generate
+      request: {"requestInfo": $.requestInfo,"idRequests":[{"idName":"CS.ServiceRequest","tenantId":"$.serviceReq.tenantId","format":"SRN-[cy:MM]/[fy:yyyy-yy]-[d{4}]"}]}
+      result: $.idResponses[0].id
+    createDemandRequest: 
+       url: "http://egov-micro-dev.egovernments.org/billing-service/demand/_create"
+       demandRequest: '{"RequestInfo": "$.requestInfo","Demands": [{"consumerCode": "$.serviceReq.attributeValues[0].value","businessService": "$.serviceReq.attributeValues[1].value",
+                "taxPeriodFrom": "$.serviceReq.attributeValues[2].value","taxPeriodTo": "$.serviceReq.attributeValues[3].value", "minimumAmountPayable": "$.serviceReq.attributeValues[4].value",
+                "owner":{"id":""},"demandDetails": [{"taxHeadMasterCode" : "$.serviceReq.attributeValues[5].value","taxAmount":"$.serviceReq.attributeValues[6].value","collectionAmount" :"$.serviceReq.attributeValues[7].value"}]}]}'
+    applicationFee: 100

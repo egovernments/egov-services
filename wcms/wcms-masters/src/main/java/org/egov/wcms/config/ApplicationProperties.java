@@ -68,6 +68,12 @@ public class ApplicationProperties {
     @Value("${kafka.topics.supplytype.update.name}")
     private String updateSupplyTypeTopicName;
 
+    @Value("${kafka.topics.servicecharge.create.name}")
+    private String createServiceChargeTopicName;
+
+    @Value("${kafka.topics.servicecharge.update.name}")
+    private String updateServiceChargeTopicName;
+
     @Value("${kafka.topics.category.create.name}")
     private String createCategoryTopicName;
 
@@ -157,6 +163,12 @@ public class ApplicationProperties {
 
     @Value("${kafka.topics.nonmeterwaterrates.update.name}")
     private String updateNonMeterWaterRatesTopicName;
+    
+    @Value("${kafka.topics.gapcode.create.name}")
+    private String createGapcodeTopicName;
+    
+    @Value("${kafka.topics.gapcode.update.name}")
+    private String updateGapcodeTopicName;  
 
     @Autowired
     private Environment environment;
@@ -307,5 +319,21 @@ public class ApplicationProperties {
 
     public String getUpdateNonMeterWaterRatesTopicName() {
         return updateNonMeterWaterRatesTopicName;
+    }
+
+    public String getCreateServiceChargeTopicName() {
+        return createServiceChargeTopicName;
+    }
+
+    public String getUpdateServiceChargeTopicName() {
+        return updateServiceChargeTopicName;
+    }
+
+    public String getCreateGapcodeTopicName() {
+        return createGapcodeTopicName;
+    }
+    
+    public String getUpdateGapcodeTopicName() {
+        return updateGapcodeTopicName;
     }
 }

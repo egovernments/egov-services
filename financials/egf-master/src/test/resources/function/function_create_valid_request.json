@@ -1,9 +1,9 @@
   "functions": 
 	   [
 		   	{
-			    "name":"function",
+			    "name":"name",
 		   		"tenantId":"default",
-		   		"code":"002",
+		   		"code":"code",
 		   		"active":true,
 		   		"level":1
 		   	}

@@ -1,0 +1,26 @@
+ServiceMaps:
+ serviceName: CityzenService
+ mappings:
+  - version: 1.0.0
+    indexName: cs_index
+    indexType: cs_type
+    fromTopicSave: save-service-db
+    fromTopicUpdate: update-service-db
+    indexID: $.serviceReq.serviceRequestId
+    jsonPath:
+    indexMap:
+     - inJsonPath: $.properties[index].name
+       outJsonPath: $.propertyname
+       indexDatatype: text
+     - inJsonPath: $.properties[index].code
+       outJsonPath: $.propertycode
+       indexDatatype: text
+    omitPaths:
+      - $.properties[index].user.mother
+      - $.properties[index].user.phone
+    maskPaths:
+      - $.properties[index].user.phone
+      - $.properties[index].user.email
+    hashPaths:
+      - $.properties[index].user.userid
+      - $.properties[index].user.name

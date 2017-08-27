@@ -28,7 +28,7 @@ public class Unit {
 
     @JsonProperty("unitNo")
     @NotNull
-    @Size(min = 1, max = 8)
+    @Size(min = 1, max = 128)
     private String unitNo = null;
 
     @JsonProperty("units")

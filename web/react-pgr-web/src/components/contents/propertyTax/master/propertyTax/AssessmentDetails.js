@@ -201,7 +201,7 @@ handleDepartment = (e) => {
           currentThis.setState({propertySubType:res.propertyTypes})
       }).catch((err)=> {
         currentThis.setState({
-          propertytypes:[]
+          propertySubType:[]
         })
 		toggleSnackbarAndSetText(true, err.message);
         console.log(err)
@@ -215,7 +215,7 @@ handleDepartment = (e) => {
 		  })
 		setLoadingStatus('hide');
 		}).catch((err)=> {
-		  console.log(err)
+		    console.log(err)
 		  	toggleSnackbarAndSetText(true, err.message);
 			setLoadingStatus('hide');
 		})
@@ -572,21 +572,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  initForm: () => {
-    dispatch({
-      type: "RESET_STATE",
-      validationData: {
-        required: {
-          current: [],
-          required: ['reasonForCreation', 'propertyType', 'propertySubType', 'extentOfSite' ]
-        },
-        pattern: {
-          current: [],
-          required: []
-        }
-      }
-    });
-  },
+  
   handleChange: (e, property, isRequired, pattern) => {
     dispatch({type: "HANDLE_CHANGE", property, value: e.target.value, isRequired, pattern});
   },

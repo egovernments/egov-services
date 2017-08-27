@@ -38,6 +38,12 @@ require('datatables.net-buttons/js/buttons.html5.js'); // HTML 5 file export
 require('datatables.net-buttons/js/buttons.flash.js'); // Flash file export
 require('datatables.net-buttons/js/buttons.print.js'); // Print view button
 
+const nameMap = {
+  "PT_NODUES": "Property Tax No Dues",
+  "WC_NODUES": "Water Charges No Dues",
+  "CREATED": "Created"
+};
+
 const content=[
     // {
     //     icon: 'icon-class-name',
@@ -56,7 +62,7 @@ const content=[
             {
                 icon: 'icon-class-name',
                 label: 'Apply for New Connection',
-                to: '#',
+                to: '#/coming/soon',
             }
         ],
     },
@@ -72,7 +78,7 @@ const content=[
             {
                 icon: 'icon-class-name',
                 label: 'Apply for Extract',
-                to: '#',
+                to: '#/coming/soon',
             }
         ],
     },
@@ -83,7 +89,7 @@ const content=[
             {
                 icon: 'icon-class-name',
                 label: 'Apply for New License',
-                to: '#',
+                to: '#/coming/soon',
             }
         ],
     },
@@ -94,7 +100,7 @@ const content=[
             {
                 icon: 'icon-class-name',
                 label: 'Apply for Fire NOC',
-                to: '#',
+                to: '#/coming/soon',
             }
         ],
     },
@@ -140,6 +146,14 @@ const styles = {
 
   }
 };
+
+const getDate = function(val) {
+  var _date = new Date(Number(val));
+      return ('0' + _date.getDate()).slice(-2) + '/'
+               + ('0' + (_date.getMonth()+1)).slice(-2) + '/'
+               + _date.getFullYear();
+}
+
 const sR=
   [
         {
@@ -219,7 +233,7 @@ class Dashboard extends Component {
       Promise.all([
           Api.commonApiPost("/pgr/seva/v1/_search",{userId:currentUser.id},{}),
           Api.commonApiPost("/pgr-master/serviceGroup/v1/_search",{keywords:constants.CITIZEN_SERVICES_KEYWORD},{}),
-          Api.commonApiPost("/citizen-services/v1/requests/_search", {}, {}, null, true)
+          Api.commonApiPost("/citizen-services/v1/requests/_search", {userId:currentUser.id}, {}, null, true)
       ])
       .then((responses)=>{
         //if any error occurs
@@ -227,7 +241,7 @@ class Dashboard extends Component {
           current.setState({
             serviceRequests: [],
             citizenServices:[],
-            serviceRequestsTwo: [],
+            serviceRequestsTwo: responses[2] && responses[2].serviceReq ? responses[2].serviceReq : [],
             localArray:[],
              hasData:false
           });
@@ -559,26 +573,28 @@ class Dashboard extends Component {
                                     <thead>
                                         <tr>
                                           <th>
-                                            Type
+                                            Service Request No.
                                           </th>
                                           <th>
-                                            Name
+                                            Service Name
                                           </th>
                                           <th>
-                                            Date
+                                            Status
                                           </th>
                                           <th>
-
+                                            Applied On
                                           </th>
+                                          <th> </th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {serviceRequestsTwo.map((item, key)=>{
                                           return (<tr key={key}>
                                               <td>{item.serviceRequestId}</td>
-                                              <td>{item.serviceCode}</td>
-                                              <td>20-12-2017</td>
-                                              <td><i className="material-icons">cloud_download</i></td>
+                                              <td>{nameMap[item.serviceCode] || item.serviceCode}</td>
+                                              <td>{nameMap[item.status] || item.status}</td>
+                                              <td>{item.auditDetails ? getDate(item.auditDetails.createdDate) : "-"}</td>
+                                              {<td><i className="material-icons">cloud_download</i></td>}
 
                                           </tr>)
                                         }) }

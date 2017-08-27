@@ -62,8 +62,8 @@ public class GapcodeRepository {
                     .addValue("description", gapcode.getDescription())
                     .addValue("createdBy", Long.valueOf(gapcodeRequest.getRequestInfo().getUserInfo().getId()))
                     .addValue("lastUpdatedBy", Long.valueOf(gapcodeRequest.getRequestInfo().getUserInfo().getId()))
-                    .addValue("createdDate", new Date(new java.util.Date().getTime()))
-                    .addValue("lastUpdatedDate", new Date(new java.util.Date().getTime()))
+                    .addValue("createdDate", new Date().getTime())
+                    .addValue("lastUpdatedDate", new Date().getTime())
                     .addValue("tenantId", gapcode.getTenantId())
                     .getValues());
         }
@@ -85,7 +85,7 @@ public class GapcodeRepository {
     					.addValue("description", gapcode.getDescription())
     					.addValue("active", gapcode.getActive())
     					.addValue("lastUpdatedBy", Long.valueOf(gapcodeRequest.getRequestInfo().getUserInfo().getId()))
-    					.addValue("lastUpdatedDate", new Date(new java.util.Date().getTime())).addValue("code", gapcode.getCode()).getValues());
+    					.addValue("lastUpdatedDate", new Date().getTime()).addValue("code", gapcode.getCode()).getValues());
     		}
     		namedParameterJdbcTemplate.batchUpdate(updateGapcode, batchValues.toArray(new Map[gapcodeList.size()]));
     		

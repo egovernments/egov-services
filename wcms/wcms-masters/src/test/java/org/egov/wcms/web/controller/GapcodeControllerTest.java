@@ -126,8 +126,7 @@ public class GapcodeControllerTest {
 	    
 	    
 	    private List<Gapcode> getListOfGapcode() {
-	    	AuditDetails ad = new AuditDetails();
-	        final Gapcode gapcode = Gapcode.builder().id(1L).code("Gapcode123").active(true).auditDetails(ad).tenantId("default").build();
+	        final Gapcode gapcode = Gapcode.builder().id(1L).code("Gapcode123").logic("logic").active(true).tenantId("default").build();
 	        return Arrays.asList(gapcode);
 	    }
 	    

@@ -21,35 +21,43 @@ ReportDefinitions:
     label: reports.property.pttax
     type: string
     source: collection
+    columnTotal: true
   - name: LIB_CESS
     label: reports.property.libcess
     type: number
     source: seva
+    columnTotal: true
   - name: EDU_CESS
     label: reports.property.educess
     type: number
     source: seva
+    columnTotal: true
   - name: VACANT_TAX
     label: reports.property.vacanttax
     type: number
     source: seva
+    columnTotal: true
   - name: EMP_GUA_CESS
     label: reports.property.empguacess
     type: number
     source: seva
+    columnTotal: true
   - name: LATE_PENALTY
     label: reports.property.latepenalty
     type: number
     source: seva
+    columnTotal: true
   - name: ADVANCE
     label: reports.property.advance
     type: number
     source: seva
+    columnTotal: true
   - name: Total
-    label: reports.property.advance
+    label: reports.property.Total
     type: number
     source: seva
     rowTotal: true
+    columnTotal: true
   searchParams:
   - name: revenueboundary
     label: reports.property.revenueboundary
@@ -127,30 +135,43 @@ ReportDefinitions:
     label: reports.property.pttax
     type: string
     source: collection
+    columnTotal: true
   - name: LIB_CESS
     label: reports.property.libcess
     type: number
     source: seva
+    columnTotal: true
   - name: EDU_CESS
     label: reports.property.educess
     type: number
     source: seva
+    columnTotal: true
   - name: VACANT_TAX
     label: reports.property.vacanttax
     type: number
     source: seva
+    columnTotal: true
   - name: EMP_GUA_CESS
     label: reports.property.empguacess
     type: number
     source: seva
+    columnTotal: true
   - name: LATE_PENALTY
     label: reports.property.latepenalty
     type: number
     source: seva
+    columnTotal: true
   - name: ADVANCE
     label: reports.property.advance
     type: number
     source: seva
+    columnTotal: true
+  - name: Total
+    label: reports.property.Total
+    type: number
+    source: seva
+    rowTotal: true
+    columnTotal: true
   searchParams:
   - name: revenueboundary
     label: reports.property.revenueboundary
@@ -233,30 +254,37 @@ ReportDefinitions:
     label: reports.property.pttax
     type: string
     source: collection
+    columnTotal: true
   - name: LIB_CESS_BAL
     label: reports.property.libcess
     type: number
     source: seva
+    columnTotal: true
   - name: EDU_CESS_BAL
     label: reports.property.educess
     type: number
     source: seva
+    columnTotal: true
   - name: VACANT_TAX_BAL
     label: reports.property.vacanttax
     type: number
     source: seva
+    columnTotal: true
   - name: EMP_GUA_CESS_BAL
     label: reports.property.empguacess
     type: number
     source: seva
+    columnTotal: true
   - name: LATE_PENALTY_BAL
     label: reports.property.latepenalty
     type: number
     source: seva
+    columnTotal: true
   - name: ADVANCE
     label: reports.property.advance
     type: number
     source: seva
+    columnTotal: true
   - name: receiptnumber
     label: reports.property.receiptnumber
     type: number
@@ -265,6 +293,12 @@ ReportDefinitions:
     label: reports.property.receiptdate
     type: number
     source: seva
+  - name: Total
+    label: reports.property.total
+    type: number
+    source: seva
+    columnTotal: true
+    rowTotal: true
   searchParams:
   - name: revenueboundary
     label: reports.property.revenueboundary
@@ -334,43 +368,52 @@ ReportDefinitions:
     label: reports.property.upicnumber
     type: number
     source: collection
-    showColumn: false
+    columnTotal: true
   - name: propertyaddress
     label: reports.property.address
     type: number
     source: completed
+    columnTotal: true
   - name: STATE
     label: reports.property.state
     type: number
     source: completed
+    columnTotal: true
   - name: PT_TAX
     label: reports.property.pttax
     type: string
     source: collection
+    columnTotal: true
   - name: LIB_CESS
     label: reports.property.libcess
     type: number
     source: seva
+    columnTotal: true
   - name: EDU_CESS
     label: reports.property.educess
     type: number
     source: seva
+    columnTotal: true
   - name: VACANT_TAX
     label: reports.property.vacanttax
     type: number
     source: seva
+    columnTotal: true
   - name: EMP_GUA_CESS
     label: reports.property.empguacess
     type: number
     source: seva
+    columnTotal: true
   - name: LATE_PENALTY
     label: reports.property.latepenalty
     type: number
     source: seva
+    columnTotal: true
   - name: PT_COLL
     label: reports.property.pttax
     type: string
     source: collection
+    columnTotal: true
   - name: LIB_CESS_COLL
     label: reports.property.libcess
     type: number
@@ -383,42 +426,52 @@ ReportDefinitions:
     label: reports.property.vacanttax
     type: number
     source: seva
+    columnTotal: true
   - name: EMP_GUA_CESS_COLL
     label: reports.property.empguacess
     type: number
     source: seva
+    columnTotal: true
   - name: LATE_PENALTY_COLL
     label: reports.property.latepenalty
     type: number
     source: seva
+    columnTotal: true
   - name: PT_BAL
     label: reports.property.pttax
     type: string
     source: collection
+    columnTotal: true
   - name: LIB_CESS_BAL
     label: reports.property.libcess
     type: number
     source: seva
+    columnTotal: true
   - name: EDU_CESS_BAL
     label: reports.property.educess
     type: number
     source: seva
+    columnTotal: true
   - name: VACANT_TAX_BAL
     label: reports.property.vacanttax
     type: number
     source: seva
+    columnTotal: true
   - name: EMP_GUA_CESS_BAL
     label: reports.property.empguacess
     type: number
     source: seva
+    columnTotal: true
   - name: LATE_PENALTY_BAL
     label: reports.property.latepenalty
     type: number
     source: seva
+    columnTotal: true
   - name: ADVANCE
     label: reports.property.advance
     type: number
     source: seva
+    columnTotal: true
   - name: receiptnumber
     label: reports.property.receiptnumber
     type: number
@@ -427,6 +480,12 @@ ReportDefinitions:
     label: reports.property.receiptdate
     type: number
     source: seva
+  - name: Total
+    label: reports.property.total
+    type: number
+    source: seva
+    columnTotal: true
+    rowTotal: true
   searchParams:
   - name: revenueboundary
     label: reports.property.revenueboundary
@@ -550,36 +609,47 @@ ReportDefinitions:
     label: reports.property.pttax
     type: string
     source: collection
+    columnTotal: true
   - name: LIB_CESS
     label: reports.property.libcess
     type: number
     source: seva
+    columnTotal: true
   - name: EDU_CESS
     label: reports.property.educess
     type: number
     source: seva
+    columnTotal: true
   - name: VACANT_TAX
     label: reports.property.vacanttax
     type: number
     source: seva
+    columnTotal: true
   - name: EMP_GUA_CESS
     label: reports.property.empguacess
     type: number
     source: seva
+    columnTotal: true
   - name: LATE_PENALTY
     label: reports.property.latepenalty
     type: number
     source: seva
+    columnTotal: true
   - name: ADVANCE
     label: reports.property.advance
     type: number
     source: seva
+    columnTotal: true
   - name: receiptnumber
     label: reports.property.receiptnumber
     type: number
     source: seva
   - name: receiptdate
     label: reports.property.receiptdate
+    type: number
+    source: seva
+  - name: Total
+    label: reports.property.total
     type: number
     source: seva
   searchParams:

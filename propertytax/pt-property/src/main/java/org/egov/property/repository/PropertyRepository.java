@@ -744,7 +744,7 @@ public class PropertyRepository {
                     List<AssessmentDate> assessmentDates = new ArrayList<>();
                     TypeReference<List<AssessmentDate>> typeReference = new TypeReference<List<AssessmentDate>>() {
                     };
-                    assessmentDates = new ObjectMapper().readValue(row.get("assessmentDate").toString(), typeReference);
+                    assessmentDates = new ObjectMapper().readValue(row.get("assessmentdates").toString(), typeReference);
 
                     propertyDetail.setAssessmentDates(assessmentDates);
                 } else {

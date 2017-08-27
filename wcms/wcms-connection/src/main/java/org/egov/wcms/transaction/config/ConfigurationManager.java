@@ -113,6 +113,12 @@ public class ConfigurationManager {
     @Value("${id.format}")
     private String idGenFormatServiceTopic;
     
+    @Value("${id.usernameFormat}")
+    private String userNameFormat;
+    
+    @Value("${id.userName}")
+    private String userNameService;
+    
     @Value("${id.hscName}")
     private String hscGenNameServiceTopic;
     

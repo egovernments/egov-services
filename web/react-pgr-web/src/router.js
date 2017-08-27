@@ -111,6 +111,7 @@ import EmployeeSearch from './components/non-framework/employee/search';
 import SearchLegacyWc from './components/non-framework/wc/search';
 import updateConnection from './components/non-framework/wc/connection-workflow';
 import NoDues from './components/non-framework/citizenServices/NoDues';
+import ComingSoon from './components/non-framework/citizenServices/ComingSoon.js';
 
 const base = "";
 
@@ -119,7 +120,9 @@ const Main = () => {
     <main style={{"marginBottom": "50px"}}>
     <Switch>
         <Route exact path= {base + '/:tenantId?'} component={Login}/>
+        <Route exact path={base + '/coming/soon'} component={ComingSoon}/>
 	     <Route exact path= {base + '/view/:moduleName/:master?/:id'} component={View}/>
+        }
         <Route exact path= {base + '/search/:moduleName/:master?/:action'} component={Search}/>
         <Route exact path={base + '/employee/:action/:id?'} component={Employee}/>
         <Route exact path={base + '/prd/profileEdit'} component={ProfileEdit}/>

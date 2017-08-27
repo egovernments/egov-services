@@ -920,3 +920,11 @@ span.errorMsg{
 	color: #F58720;
   font-size: 25px;
 }
+
+@media all {
+	.page-break	{ display: none; }
+}
+
+@media print {
+	.page-break	{ display: block; page-break-after: always; }
+}

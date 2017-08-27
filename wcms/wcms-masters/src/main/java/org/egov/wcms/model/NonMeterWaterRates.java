@@ -80,6 +80,12 @@ public class NonMeterWaterRates {
     @NotNull
     private String usageTypeId;
 
+    private String subUsageType;
+
+    private String subUsageTypeId;
+
+    private Boolean outsideUlb;
+
     @NotNull
     private String sourceTypeName;
 

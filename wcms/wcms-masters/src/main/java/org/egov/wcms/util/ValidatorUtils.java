@@ -1351,6 +1351,11 @@ public class ValidatorUtils {
                     .message(WcmsConstants.PROPERTY_USAGETYPE_INVALID_ERROR_MESSAGE)
                     .field(WcmsConstants.PROPERTY_USAGETYPE_INVALID_FIELD_NAME).build();
             errorFields.add(errorField);
+        } else if (!nonMeterWaterRatesService.getSubUsageType(nonMeterWaterRates)) {
+            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.SUB_USAGETYPE_INVALID_CODE)
+                    .message(WcmsConstants.SUB_USAGETYPE_INVALID_ERROR_MESSAGE)
+                    .field(WcmsConstants.SUB_USAGETYPE_INVALID_FIELD_NAME).build();
+            errorFields.add(errorField);
         } else if (nonMeterWaterRatesService.checkPipeSizeExists(nonMeterWaterRates.getPipeSize(),
                 nonMeterWaterRates.getTenantId())) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.PIPESIZE_INMM_INVALID_CODE)

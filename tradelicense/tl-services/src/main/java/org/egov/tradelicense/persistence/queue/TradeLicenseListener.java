@@ -25,15 +25,22 @@ public class TradeLicenseListener {
 	ObjectMapper objectMapper;
 
 	@Autowired
+	TradeLicenseProducer tradeLicenseProducer;
+
+	@Autowired
 	PropertiesManager propertiesManager;
 
 	@Autowired
 	TradeLicenseService tradeLicenseService;
 
-	@KafkaListener(topics = { "#{propertiesManager.getTradeLicenseValidatedTopic()}" })
+	@KafkaListener(topics = { "#{propertiesManager.getTradeLicenseWorkFlowPopulatedTopic()}" })
 	public void process(Map<String, Object> mastersMap) {
 
+		String topic = propertiesManager.getTradeLicensePersistedTopic();
+		String key = propertiesManager.getTradeLicensePersistedKey();
+
 		if (mastersMap.get("tradelicense-legacy-create") != null) {
+
 
 			TradeLicenseRequest request = objectMapper.convertValue(mastersMap.get("tradelicense-legacy-create"),
 					TradeLicenseRequest.class);
@@ -44,8 +51,11 @@ public class TradeLicenseListener {
 				tradeLicenseService.save(domain);
 			}
 			mastersMap.clear();
+			mastersMap.put("tradelicense-persisted", request);
+			tradeLicenseProducer.sendMessage(topic, key, mastersMap);
 		}
 		if (mastersMap.get("tradelicense-new-create") != null) {
+
 
 			TradeLicenseRequest request = objectMapper.convertValue(mastersMap.get("tradelicense-new-create"),
 					TradeLicenseRequest.class);
@@ -56,8 +66,11 @@ public class TradeLicenseListener {
 				tradeLicenseService.save(domain);
 			}
 			mastersMap.clear();
+			mastersMap.put("tradelicense-persisted", request);
+			tradeLicenseProducer.sendMessage(topic, key, mastersMap);
 		}
 		if (mastersMap.get("tradelicense-legacy-update") != null) {
+
 
 			TradeLicenseRequest request = objectMapper.convertValue(mastersMap.get("tradelicense-legacy-update"),
 					TradeLicenseRequest.class);
@@ -68,8 +81,11 @@ public class TradeLicenseListener {
 				tradeLicenseService.update(domain);
 			}
 			mastersMap.clear();
+			mastersMap.put("tradelicense-persisted", request);
+			tradeLicenseProducer.sendMessage(topic, key, mastersMap);
 		}
 		if (mastersMap.get("tradelicense-new-update") != null) {
+
 
 			TradeLicenseRequest request = objectMapper.convertValue(mastersMap.get("tradelicense-new-update"),
 					TradeLicenseRequest.class);
@@ -80,6 +96,8 @@ public class TradeLicenseListener {
 				tradeLicenseService.update(domain);
 			}
 			mastersMap.clear();
+			mastersMap.put("tradelicense-persisted", request);
+			tradeLicenseProducer.sendMessage(topic, key, mastersMap);
 		}
 	}
 

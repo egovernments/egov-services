@@ -4,3 +4,4 @@ https://raw.githubusercontent.com/egovernments/egov-services/master/docs/wcms/re
 https://raw.githubusercontent.com/egovernments/egov-services/master/docs/tradelicense/reports/report.yml
 https://raw.githubusercontent.com/egovernments/egov-services/docs/hr/reports/hrReports.yml
 https://raw.githubusercontent.com/egovernments/egov-services/master/docs/propertytax/report/report.yml
+https://raw.githubusercontent.com/egovernments/egov-services/master/docs/citizen/reports/report.yml

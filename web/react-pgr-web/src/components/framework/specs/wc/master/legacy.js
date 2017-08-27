@@ -249,11 +249,11 @@ var dat = {
           },
           {
             "name": "AddressNo",
-            "jsonPath": "Connection.address.addressNumber",
+            "jsonPath": "Connection.houseNumber",
             "label": "wc.create.groups.applicantDetails.addressNumber",
             "pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
             "type": "text",
-            "isRequired": true,
+            "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -352,7 +352,7 @@ var dat = {
           },
           {
             "name": "ManualConsumerNo",
-            "jsonPath": "",
+            "jsonPath": "connection.manualConsumerNumber",
             "label": "wc.create.groups.applicantDetails.manualConsumerNo",
             "pattern": "",
             "type": "text",
@@ -1061,6 +1061,17 @@ var dat = {
               "patternErrMsg": ""
             },
             {
+              "name": "AddressNo",
+              "jsonPath": "Connection[0].houseNumber",
+              "label": "wc.create.groups.applicantDetails.addressNumber",
+              "pattern": "^[\s.]*([^\s.][\s.]*){0,16}$",
+              "type": "text",
+              "isRequired": false,
+              "isDisabled": false,
+              "requiredErrMsg": "",
+              "patternErrMsg": ""
+            },
+            {
               "name": "Address",
               "jsonPath": "Connection[0].address.addressLine1",
               "label": "wc.create.groups.applicantDetails.address",
@@ -1326,7 +1337,7 @@ var dat = {
           },
           {
             "name": "subUsageType",
-            "jsonPath": "Connection[0].subUsageType",
+            "jsonPath": "Connection[0].subUsageTypeId",
             "label": "wc.create.groups.connectionDetails.subUsageType",
             "pattern": "",
             "type": "singleValueList",
@@ -1334,8 +1345,7 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-      			"url":"/pt-property/property/usages/_search?|$..name|$..name",
-            "convertToString":true
+      			"url":"/pt-property/property/usages/_search?|$..name|$..name"
           },
           {
             "name": "hscPipeSizeType",

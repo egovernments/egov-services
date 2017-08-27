@@ -66,6 +66,7 @@ public class DonationRowMapper implements RowMapper<Donation> {
         donation.setFromDate(rs.getDate("donation_fromDate"));
         donation.setToDate(rs.getDate("donation_toDate"));
         donation.setActive(rs.getBoolean("donation_active"));
+        donation.setOutsideUlb((Boolean) rs.getObject("donation_outsideulb"));
         donation.setDonationAmount(rs.getDouble("donation_amount"));
         donation.setTenantId(rs.getString("donation_tenantId"));
         return donation;

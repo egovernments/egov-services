@@ -110,6 +110,17 @@ var dat = {
             "patternErrMsg": ""
           },
           {
+            "name": "AddressNo",
+            "jsonPath": "Connection.houseNumber",
+            "label": "wc.create.groups.applicantDetails.addressNumber",
+            "pattern": "^[\s.]*([^\s.][\s.]*){0,16}$",
+            "type": "text",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
             "name": "Address",
             "jsonPath": "Connection.address.addressLine1",
             "label": "wc.create.groups.applicantDetails.address",
@@ -800,6 +811,17 @@ var dat = {
               "patternErrMsg": ""
             },
             {
+              "name": "AddressNo",
+              "jsonPath": "Connection[0].houseNumber",
+              "label": "wc.create.groups.applicantDetails.addressNumber",
+              "pattern": "^[\s.]*([^\s.][\s.]*){0,16}$",
+              "type": "text",
+              "isRequired": false,
+              "isDisabled": false,
+              "requiredErrMsg": "",
+              "patternErrMsg": ""
+            },
+            {
               "name": "Address",
               "jsonPath": "Connection[0].address.addressLine1",
               "label": "wc.create.groups.applicantDetails.address",
@@ -1062,7 +1084,7 @@ var dat = {
           },
           {
             "name": "subUsageType",
-            "jsonPath": "Connection[0].subUsageType",
+            "jsonPath": "Connection[0].subUsageTypeId",
             "label": "wc.create.groups.connectionDetails.subUsageType",
             "pattern": "",
             "type": "singleValueList",

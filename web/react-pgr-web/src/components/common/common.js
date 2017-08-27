@@ -306,10 +306,15 @@ var localization_EN_Data = {
     "wc.create.demand.basicDetails":"Basic Details",
     "wc.create.demand.applicantParticular":"Applicant Particulars",
     "wc.create.error":"Collection Amount cannot be greater than Tax Amount.",
-    "wc.create.groups.applicantDetails.manualConsumerNo":"Manual Consumer No",
+    "wc.create.groups.applicantDetails.manualConsumerNo":"Manual Consumer Number",
     "wc.create.groups.gapCode1":"Gap Code 1",
     "wc.create.groups.gapCode2":"Gap Code 2",
     "wc.create.groups.gapCode3":"Gap Code 3",
+    "wc.group.consumption3": "3rd month Consumption",
+    "wc.group.consumption2": "2nd month Consumption",
+    "wc.group.consumption1": "1st month Consumption",
+    "wc.group.maximumReading":"Maximum Reading",
+    "wc.group.consumptionAdjustment":"Consumption Adjustment",
 
 
 
@@ -843,6 +848,8 @@ var localization_EN_Data = {
     "tl.create.licenses.groups.TradeDetails.TraderOwnerProperty": "Trader is not the owner of the Property",
     "tl.create.licenses.groups.agreementDetails.agreementDate": "Date of Execution",
     "tl.create.licenses.groups.agreementDetails.agreementNo": "Registered/Non Registered Document No",
+    "tl.create.licenses.groups.agreementDetails": "Agreement Details",
+
     "tl.create.licenses.groups.FeeDetails": "Fee Details",
     "tl.create.license.table.financialYear": "Financial Year",
     "tl.create.license.table.amount": "Amount",
@@ -879,7 +886,7 @@ var localization_EN_Data = {
 
     "tl.view.groups.mobileNumber": "Mobile Number",
     "tl.view.groups.tradeOwnerName": "Trade Owner Name",
-    "tl.view.groups.fatherSpouseName": "Father Spouse Name",
+    "tl.view.groups.fatherSpouseName": "Father's/Spouse Name",
     "tl.view.groups.emailId": "Email Id",
     "tl.view.groups.tradeOwnerAddress": "Trade Owner Address",
     "tl.view.groups.title": "View Trade License",
@@ -921,7 +928,7 @@ var localization_EN_Data = {
   "tl.view.groups.aadharNumber": "Aadhaar Number",
   "tl.view.groups.mobileNumber": "Mobile Number",
   "tl.view.groups.tradeOwnerName": "Trade Owner Name",
-  "tl.view.groups.fatherSpouseName": "Father Spouse Name",
+  "tl.view.groups.fatherSpouseName": "Father's/Spouse Name",
   "tl.view.groups.emailId": "Email Id",
   "tl.view.groups.tradeOwnerAddress": "Trade Owner Address",
   "tl.view.groups.title": "View Trade License",
@@ -1268,7 +1275,8 @@ var localization_EN_Data = {
     "reports.pgr.status.reopened": " Status Reopened",
     "reports.pgr.status.withinsla": " Status within SLA",
     "pgr.0060": "Applicant Details",
-    "pgr.0061": "Complainant Details"
+    "pgr.0061": "Complainant Details",
+    "wc.create.groups.applicantDetails.addressNumber":"House Number",
 };
 
 var localization_MR_Data = {
@@ -2012,7 +2020,7 @@ var localization_MR_Data = {
     "tl.view.groups.aadharNumber": "Aadhaar Number - Marathi",
     "tl.view.groups.mobileNumber": "Mobile Number - Marathi",
     "tl.view.groups.tradeOwnerName": "Trade Owner Name - Marathi",
-    "tl.view.groups.fatherSpouseName": "Father Spouse Name - Marathi",
+    "tl.view.groups.fatherSpouseName": "Father's/Spouse Name- Marathi",
     "tl.view.groups.emailId": "Email Id - Marathi",
     "tl.view.groups.tradeOwnerAddress": "Trade Owner Address - Marathi",
     "tl.licenses.view.groups.PropertyAssessmentNo": "Property Assessment No - Marathi",
@@ -2179,10 +2187,16 @@ var localization_MR_Data = {
     "employee.createPosition.groups.fields.outsourcepost.value1": "Yes-Marathi",
     "employee.createPosition.groups.fields.outsourcepost.value2": "No-Marathi",
     "wc.create.error":"Collection Amount cannot be greater than Tax Amount.-Marathi",
-    "wc.create.groups.applicantDetails.manualConsumerNo":"Manual Consumer No-Marathi",
+    "wc.create.groups.applicantDetails.manualConsumerNo":"Manual Consumer Number-Marathi",
     "wc.create.groups.gapCode1":"Gap Code 1-Marathi",
     "wc.create.groups.gapCode2":"Gap Code 2-Marathi",
     "wc.create.groups.gapCode3":"Gap Code 3-Marathi",
+    "wc.create.groups.applicantDetails.addressNumber": "house Number-Marathi",
+    "wc.group.consumption3": "3rd month Consumption-Marathi",
+    "wc.group.consumption2": "2nd month Consumption-Marathi",
+    "wc.group.consumption1": "1st month Consumption-Marathi",
+    "wc.group.maximumReading":"Maximum Reading-Marathi",
+    "wc.group.consumptionAdjustment":"Consumption Adjustment-Marathi",
 
 ﻿﻿"pgr.0001":"अक्षांश / रेखांश किंवा क्रॉस हायरारकी संकेतांक आवश्यक आहे",
 "pgr.0002":"अक्षांश / रेखांश किंवा क्रॉस हायरारकी संकेतांक आवश्यक आहे",

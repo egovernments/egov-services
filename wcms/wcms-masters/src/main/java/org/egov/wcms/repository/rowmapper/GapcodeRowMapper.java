@@ -20,14 +20,10 @@ public class GapcodeRowMapper implements RowMapper<Gapcode> {
 		  gapcode.setNoOfMonths(rs.getString("noOfLastMonths"));
 		  gapcode.setLogic(rs.getString("logic"));
 		  gapcode.setDescription(rs.getString("description"));
-		  if(rs.getDate("createdDate") != null)
-			  gapcode.getAuditDetails().setCreatedDate(rs.getDate("createdDate"));
-		  if(rs.getString("createdBy") != null)
-			  gapcode.getAuditDetails().setCreatedBy(Long.parseLong(rs.getString("createdBy")));
-		  if(rs.getDate("lastUpdatedDate") != null)
-			  gapcode.getAuditDetails().setLastModifiedDate(rs.getDate("lastUpdatedDate"));
-		  if(rs.getString("lastUpdatedBy") != null)
-			  gapcode.getAuditDetails().setLastModifiedBy(Long.parseLong(rs.getString("lastUpdatedBy")));
+		  gapcode.setCreatedDate((Long) rs.getObject("createdDate"));
+		  gapcode.setCreatedBy((Long) rs.getObject("createdBy"));
+		  gapcode.setLastUpdatedDate((Long) rs.getObject("lastmodifieddate"));
+		  gapcode.setLastUpdatedBy((Long) rs.getObject("lastmodifiedby"));
 		  gapcode.setTenantId(rs.getString("tenantid"));
 		  return gapcode;
 	  }

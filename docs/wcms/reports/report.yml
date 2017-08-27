@@ -152,7 +152,7 @@ ReportDefinitions:
   - name: zoneid
     label: reports.wcms.zoneid
     type: singlevaluelist
-    pattern: 
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name
     source: wcms
     isMandatory: false
   - name: wardid
@@ -171,5 +171,5 @@ ReportDefinitions:
          cast(SUM(arr_demand) as bigint) AS arr_demand,cast(SUM(curr_demand) as bigint) AS curr_demand,cast(SUM(arr_demand+curr_demand) as bigint) as total_demand,
          cast(SUM(arr_coll) as bigint) AS arr_coll,cast(SUM(curr_coll) as bigint) AS curr_coll,cast(SUM(arr_coll+curr_coll) as bigint) AS total_coll,
          cast(SUM(arr_balance) as bigint) AS arr_balance,cast(SUM(curr_balance) as bigint) AS curr_balance,cast(SUM(arr_balance+curr_balance) as bigint) AS total_balance
-         from egwtr_connection_view dcbinfo,eg_boundary boundary  where  dcbinfo.zoneid=boundary.id and dcbinfo.zoneid in (1) and dcbinfo.billingtype in ('METERED') and dcbinfo.connectionstatus = 'ACTIVE'
+         from egwtr_connection_view dcbinfo,eg_boundary boundary  where  dcbinfo.zoneid=boundary.id and dcbinfo.zoneid in ($zoneid) and dcbinfo.billingtype in ($connectiontype) and dcbinfo.connectionstatus = 'ACTIVE'
          group by dcbinfo.zoneid,boundary.name order by boundary.name;

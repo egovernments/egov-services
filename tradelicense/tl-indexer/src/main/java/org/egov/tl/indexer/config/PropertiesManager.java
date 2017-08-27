@@ -21,11 +21,8 @@ public class PropertiesManager {
 	@Autowired
 	Environment environment;
 
-	@Value("${egov.services.tl-services.create.legacy.tradelicense.validated}")
-	private String createLegacyTradeValidated;
-	
-	@Value("${egov.services.tl-services.update.legacy.tradelicense.validated}")
-	private String updateLegacyTradeValidated;
+	@Value("${egov.services.tl-services.tradelicense.persisted.topic}")
+	private String tradeLicensePersistedTopic;
 
 	@Value("${es.host}")
 	private String esHost;

@@ -45,9 +45,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.wcms.model.NonMeterWaterRates;
-import org.egov.wcms.repository.builder.MeterWaterRatesQueryBuilder;
 import org.egov.wcms.repository.builder.NonMeterWaterRatesQueryBuilder;
-import org.egov.wcms.repository.builder.PropertyPipeSizeQueryBuilder;
 import org.egov.wcms.repository.rowmapper.NonMeterWaterRatesRowMapper;
 import org.egov.wcms.service.RestWaterExternalMasterService;
 import org.egov.wcms.util.WcmsConstants;
@@ -117,6 +115,8 @@ public class NonMeterWaterRatesRepository {
                             .addValue("billingtype", nonMeterWaterRates.getBillingType())
                             .addValue("connectiontype", nonMeterWaterRates.getConnectionType())
                             .addValue("usagetypeid", nonMeterWaterRates.getUsageTypeId())
+                            .addValue("subusagetypeid", nonMeterWaterRates.getSubUsageTypeId())
+                            .addValue("outsideulb", nonMeterWaterRates.getOutsideUlb())
                             .addValue("sourcetypeid", sourcetypeId).addValue("pipesizeid", pipesizeId)
                             .addValue("fromdate", nonMeterWaterRates.getFromDate())
                             .addValue("amount", nonMeterWaterRates.getAmount()).addValue("active", nonMeterWaterRates.getActive())
@@ -170,9 +170,10 @@ public class NonMeterWaterRatesRepository {
                 log.info("Invalid input.");
             batchValues.add(
                     new MapSqlParameterSource("billingtype", nonMeterWaterRates.getBillingType())
-
                             .addValue("connectiontype", nonMeterWaterRates.getConnectionType())
                             .addValue("usagetypeid", nonMeterWaterRates.getUsageTypeId())
+                            .addValue("subusagetypeid", nonMeterWaterRates.getSubUsageTypeId())
+                            .addValue("outsideulb", nonMeterWaterRates.getOutsideUlb())
                             .addValue("sourcetypeid", sourcetypeId).addValue("pipesizeid", pipesizeId)
                             .addValue("fromdate", nonMeterWaterRates.getFromDate())
                             .addValue("amount", nonMeterWaterRates.getAmount()).addValue("active", nonMeterWaterRates.getActive())
@@ -196,20 +197,30 @@ public class NonMeterWaterRatesRepository {
 
         final Map<String, Object> preparedStatementValues = new HashMap<>();
         final List<Integer> usageTypeIdsList = new ArrayList<>();
+        final List<Integer> subUsageTypeIdsList = new ArrayList<>();
         final String queryStr = nonMeterWaterRatesQueryBuilder.getQuery(nonMeterWaterRatesGetRequest, preparedStatementValues);
         final List<NonMeterWaterRates> nonMeterWaterRatesList = namedParameterJdbcTemplate.query(queryStr,
                 preparedStatementValues, nonMeterWaterRatesRowMapper);
-
         // fetch usage type Id and set the usage type name here
         for (final NonMeterWaterRates nonMeterWaterRates : nonMeterWaterRatesList)
             usageTypeIdsList.add(Integer.valueOf(nonMeterWaterRates.getUsageTypeId()));
         final Integer[] usageTypeIds = usageTypeIdsList.toArray(new Integer[usageTypeIdsList.size()]);
         final UsageTypeResponse usageResponse = restExternalMasterService.getUsageNameFromPTModule(
-                usageTypeIds,WcmsConstants.WC, nonMeterWaterRatesGetRequest.getTenantId());
+                usageTypeIds, WcmsConstants.WC, nonMeterWaterRatesGetRequest.getTenantId());
         for (final NonMeterWaterRates nonMeterWaterRatesObj : nonMeterWaterRatesList)
             for (final PropertyTaxResponseInfo propertyResponse : usageResponse.getUsageMasters())
                 if (propertyResponse.getId().equals(nonMeterWaterRatesObj.getUsageTypeId()))
                     nonMeterWaterRatesObj.setUsageTypeName(propertyResponse.getName());
+        // fetch sub usage type Id and set the usage type name here
+        for (final NonMeterWaterRates nonMeterWaterRates : nonMeterWaterRatesList)
+            subUsageTypeIdsList.add(Integer.valueOf(nonMeterWaterRates.getSubUsageTypeId()));
+        final Integer[] subUsageTypeIds = subUsageTypeIdsList.toArray(new Integer[subUsageTypeIdsList.size()]);
+        final UsageTypeResponse subUsageResponse = restExternalMasterService.getSubUsageNameFromPTModule(
+                subUsageTypeIds, WcmsConstants.WC, nonMeterWaterRatesGetRequest.getTenantId());
+        for (final NonMeterWaterRates nonMeterWaterRatesObj : nonMeterWaterRatesList)
+            for (final PropertyTaxResponseInfo propertyResponse : subUsageResponse.getUsageMasters())
+                if (propertyResponse.getId().equals(nonMeterWaterRatesObj.getSubUsageTypeId()))
+                    nonMeterWaterRatesObj.setSubUsageType(propertyResponse.getName());
         return nonMeterWaterRatesList;
     }
 

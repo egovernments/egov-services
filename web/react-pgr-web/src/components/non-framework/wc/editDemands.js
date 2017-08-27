@@ -102,7 +102,10 @@ class AddDemand extends Component {
 		hasError: false,
 		errorMsg: 'Invalid',
     DemandDetailBeans:[],
-    searchData:[]
+    searchData:[],
+    locality:[],
+    zone:[],
+    subUsageType:[]
     }
   }
 
@@ -135,6 +138,35 @@ class AddDemand extends Component {
     	}).catch((err)=> {
     		console.log(err)
     	})
+
+      Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:"REVENUE"}).then((res)=>{
+           console.log(res);
+           currentThis.setState({zone : res.Boundary})
+         }).catch((err)=> {
+            currentThis.setState({
+             zone : []
+           })
+           console.log(err)
+         })
+
+  		Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"LOCALITY", hierarchyTypeName:"LOCATION"}).then((res)=>{
+            console.log(res);
+            currentThis.setState({locality : res.Boundary})
+          }).catch((err)=> {
+             currentThis.setState({
+              locality : []
+            })
+            console.log(err)
+          })
+      Api.commonApiPost('/pt-property/property/usages/_search', {}).then((res)=>{
+            console.log(res);
+            currentThis.setState({subUsageType : res.usageMasters})
+          }).catch((err)=> {
+             currentThis.setState({
+              subUsageType : []
+            })
+            console.log(err)
+          })
   }
 
   submitDemand = () => {
@@ -147,7 +179,7 @@ class AddDemand extends Component {
 	  Api.commonApiPost('wcms-connection/connection/_leacydemand', {consumerNumber: decodeURIComponent(self.props.match.params.upicNumber), executionDate: self.state.searchData && self.state.searchData.Connection && self.state.searchData.Connection[0] && self.state.searchData.Connection[0].executionDate}, body, false, true).then((res)=>{
       self.props.setLoadingStatus('hide');
        self.props.toggleSnackbarAndSetText(true,translate("wc.update.message.success"), true, false);
-      self.props.setRoute("/searchconnection/wc");
+      self.props.history.push("/searchconnection/wc");
 	  }).catch((err)=> {
       self.props.setLoadingStatus('hide');
 		  self.props.toggleSnackbarAndSetText(true, err.message, false, true);
@@ -193,6 +225,27 @@ class AddDemand extends Component {
           DemandDetailBeans: _emps
       })
     }
+    const getNameById = function(object, id, property = "") {
+      if (id == "" || id == null) {
+            return "";
+        }
+        for (var i = 0; i < object.length; i++) {
+            if (property == "") {
+                if (object[i].id == id) {
+                    return object[i].name;
+                }
+            } else {
+                if (object[i].hasOwnProperty(property)) {
+                    if (object[i].id == id) {
+                        return object[i][property];
+                    }
+                } else {
+                    return "";
+                }
+            }
+        }
+        return "";
+    }
 
 	const showfields = () => {
     if(DemandDetailBeans.length>0) {
@@ -216,82 +269,145 @@ class AddDemand extends Component {
 	}
 
     const getValue = function(jPath) {
+      console.log(jPath);
 
-        if(cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0]) {
-
-          return (cThis.state.searchData.Connection[0][(cThis.state.searchData.Connection[0].withProperty ? "property" : "connectionOwner")][jPath]);
-
-        }
-    }
-    return (<div><Card className="uiCard">
-				<CardTitle style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate("wc.create.demand.applicantParticular")}</div>} subtitle={<div style={{color:"#354f57", fontSize:15,margin:'8px 0'}}>{translate("wc.create.demand.basicDetails")}</div>} />
-        <br/>
-        <CardText style={styles.reducePadding}>
-					<Grid fluid>
-						<Row>
+        if(cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].withProperty) {
+          return (<div>
+            <Row>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.consumerNumber")}</span></label><br/>
-            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].consumerNumber}</label></span>
+            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].consumerNumber}</label></span>
             </Col>
 
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.nameOfApplicant")}</span></label><br/>
-            <label>{getValue("name")}</label></span>
+            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].property && cThis.state.searchData.Connection[0].property.nameOfApplicant}</label></span>
             </Col>
 
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.address")}</span></label><br/>
-            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].address && this.state.searchData.Connection[0].address.addressLine1}</label></span>
+            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].property && cThis.state.searchData.Connection[0].property.address}</label></span>
             </Col>
-
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.mobileNumber")}</span></label><br/>
-            <label>{getValue("mobileNumber")}</label></span>
+            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].property && cThis.state.searchData.Connection[0].property.mobileNumber}</label></span>
             </Col>
             </Row>
             <br/>
             <Row>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.email")}</span></label><br/>
-            <label>{getValue("emailId")}</label></span>
-            </Col>
-
-            <Col xs={12} sm={4} md={3} lg={3}>
-            <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.locality")}</span></label><br/>
-            <label>{getValue("locality")}</label></span>
-            </Col>
-
-            <Col xs={12} sm={4} md={3} lg={3}>
-            <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.zone")}</span></label><br/>
-            <label>{getValue("ward")}</label></span>
+            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].property && cThis.state.searchData.Connection[0].property.email}</label></span>
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.adharNumber")}</span></label><br/>
-            <label>{getValue("aadhaarNumber")}</label></span>
+            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].property && cThis.state.searchData.Connection[0].property.adharNumber}</label></span>
+            </Col>
+            <Col xs={12} sm={4} md={3} lg={3}>
+            <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.locality")}</span></label><br/>
+            <label>{getNameById(cThis.state.locality,cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].property && cThis.state.searchData.Connection[0].property.locality)}</label></span>
+            </Col>
+            <Col xs={12} sm={4} md={3} lg={3}>
+            <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.zone")}</span></label><br/>
+            <label>{getNameById(cThis.state.zone,cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].property && cThis.state.searchData.Connection[0].property.zone)}</label></span>
             </Col>
             </Row>
-              <br/>
+            <br/>
             <Row>
-
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.noOfFloors")}</span></label><br/>
-            <label>{getValue("noOfFlats")}</label></span>
+            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].property && cThis.state.searchData.Connection[0].property.NoOfFlats}</label></span>
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.connectionDetails.connectionType")}</span></label><br/>
-            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].connectionType}</label></span>
+            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].connectionType}</label></span>
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.connectionDetails.usageType")}</span></label><br/>
-            <label>{this.state.searchData && this.state.searchData.Connection && this.state.searchData.Connection[0] && this.state.searchData.Connection[0].property && this.state.searchData.Connection[0].property.usageType}</label></span>
+            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].property.usageType}</label></span>
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
-            <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.propertyTaxDue")}</span></label><br/>
-            <label>{getValue("propertyTaxDue")}</label></span>
+            <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.connectionDetails.subUsageType")}</span></label><br/>
+            <label>{getNameById(cThis.state.subUsageType,cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].subUsageTypeId)}</label></span>
             </Col>
             </Row>
-              <br/>
-								<br/>
+            <br/>
+            <Row>
+            <Col xs={12} sm={4} md={3} lg={3}>
+            <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.propertyTaxDue")}</span></label><br/>
+            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].property.propertyTaxDue}</label></span>
+            </Col>
+            </Row>
+          </div>);
+        } else {
+          return (<div>
+            <Row>
+            <Col xs={12} sm={4} md={3} lg={3}>
+            <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.consumerNumber")}</span></label><br/>
+            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].consumerNumber}</label></span>
+            </Col>
+
+            <Col xs={12} sm={4} md={3} lg={3}>
+            <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.nameOfApplicant")}</span></label><br/>
+            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].connectionOwner && cThis.state.searchData.Connection[0].connectionOwner.name}</label></span>
+            </Col>
+
+            <Col xs={12} sm={4} md={3} lg={3}>
+            <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.address")}</span></label><br/>
+            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].address && cThis.state.searchData.Connection[0].address.addressLine1}</label></span>
+            </Col>
+            <Col xs={12} sm={4} md={3} lg={3}>
+            <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.mobileNumber")}</span></label><br/>
+            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].connectionOwner && cThis.state.searchData.Connection[0].connectionOwner.mobileNumber}</label></span>
+            </Col>
+            </Row>
+            <br/>
+            <Row>
+            <Col xs={12} sm={4} md={3} lg={3}>
+            <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.email")}</span></label><br/>
+            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].connectionOwner && cThis.state.searchData.Connection[0].connectionOwner.emailId}</label></span>
+            </Col>
+            <Col xs={12} sm={4} md={3} lg={3}>
+            <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.adharNumber")}</span></label><br/>
+            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].connectionOwner && cThis.state.searchData.Connection[0].connectionOwner.aadhaarNumber}</label></span>
+            </Col>
+            <Col xs={12} sm={4} md={3} lg={3}>
+            <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.locality")}</span></label><br/>
+            <label>{getNameById(cThis.state.locality, cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].connectionLocation && cThis.state.searchData.Connection[0].connectionLocation.locationBoundary && cThis.state.searchData.Connection[0].connectionLocation.locationBoundary.id)}</label></span>
+            </Col>
+            <Col xs={12} sm={4} md={3} lg={3}>
+            <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.zone")}</span></label><br/>
+            <label>{getNameById(cThis.state.zone, cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].connectionLocation && cThis.state.searchData.Connection[0].connectionLocation.revenueBoundary && cThis.state.searchData.Connection[0].connectionLocation.revenueBoundary.id)}</label></span>
+            </Col>
+            </Row>
+            <br/>
+            <Row>
+            <Col xs={12} sm={4} md={3} lg={3}>
+            <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.connectionDetails.connectionType")}</span></label><br/>
+            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].connectionType}</label></span>
+            </Col>
+            <Col xs={12} sm={4} md={3} lg={3}>
+            <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.connectionDetails.usageType")}</span></label><br/>
+            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].property.usageType}</label></span>
+            </Col>
+            <Col xs={12} sm={4} md={3} lg={3}>
+            <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.connectionDetails.subUsageType")}</span></label><br/>
+              <label>{getNameById(cThis.state.subUsageType,cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].subUsageTypeId)}</label></span>
+            </Col>
+            </Row>
+          </div>);
+        }
+    }
+
+
+    return (<div><Card className="uiCard">
+				<CardTitle style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate("wc.create.demand.applicantParticular")}</div>} subtitle={<div style={{color:"#354f57", fontSize:15,margin:'8px 0'}}>{translate("wc.create.demand.basicDetails")}</div>} />
+        <br/>
+        <CardText style={styles.reducePadding}>
+					<Grid fluid>
+          {getValue(cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0])}
+          <br/>
+          <br/>
 								<Table style={{color:"black",fontWeight: "normal", marginBottom:0, minWidth:'100%', width:'auto'}}  bordered responsive>
 									<thead>
 										<tr>
@@ -303,7 +419,7 @@ class AddDemand extends Component {
 									</thead>
 									<tbody>
 
-										{showfields()}
+										{showfields(cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0])}
 									</tbody>
 								</Table>
 

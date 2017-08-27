@@ -608,16 +608,19 @@ deleteOccupantName = (index) =>{
  
 handleUsage = (value) => {
 	
+		let current = this;
+	
 		let query = { 
 			parent: value
 		}
 	
 	   Api.commonApiPost('pt-property/property/usages/_search', query).then((res)=>{
-          console.log(res);
-          this.setState({subUsage : res.usageMasters})
+			console.log(res);
+			current.setState({subUsage : res.usageMasters})
         }).catch((err)=> {
-          console.log(err)
-        }).bind(this);
+			current.setState({subUsage : []})
+			console.log(err)
+        })
 }   
  
   
@@ -655,7 +658,7 @@ handleUsage = (value) => {
 		  noOfFloors
 				} = this.props;
 
-		let {calcAssessableArea, handleAge, checkFloors} = this;
+		let {calcAssessableArea, handleAge, checkFloors, handleUsage} = this;
 		let cThis = this;
 		
 		const occupantNames = () => {
@@ -915,9 +918,8 @@ handleUsage = (value) => {
 																  value: value
 																}
 															  };
-															 
+															  handleUsage(e.target.value)
 															  handleChangeFloor(e,"floor" ,"usage", true, "")
-															   this.handleUsage(e.target.value)
 															  }
 														  }
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -1045,12 +1047,12 @@ handleUsage = (value) => {
 														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.Arv')}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.arv?<span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.arv}</span>:"") : ""}
 														  value={floorDetails.floor ? floorDetails.floor.arv : ""}
-														  onChange={(e) => {handleChangeFloor(e,"floor" , "arv", false,'')}}
-														  type="number"
+														  onChange={(e) => {handleChangeFloor(e,"floor" , "arv", false, /^[0-9]*$/g)}}
+														  
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 														  underlineFocusStyle={styles.underlineFocusStyle}
-														  maxLength={12}
+														  maxLength={10}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														/>
 													</Col>}
@@ -1059,12 +1061,11 @@ handleUsage = (value) => {
 														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.manualArv')}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.manualArv?<span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.manualArv}</span>:"") : ""}
 														  value={floorDetails.floor ? floorDetails.floor.manualArv : ""}
-														  onChange={(e) => {handleChangeFloor(e,"floor" , "manualArv", false, '')}}
+														  onChange={(e) => {handleChangeFloor(e,"floor" , "manualArv", false, /^[0-9]*$/g)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 														  underlineFocusStyle={styles.underlineFocusStyle}
-														  maxLength={12}
-														  type="number"
+														  maxLength={10}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														/>
 													</Col>
@@ -1104,7 +1105,7 @@ handleUsage = (value) => {
 														  floatingLabelText={<span>{translate('pt.create.groups.floorDetails.fields.constructionEndDate')}<span style={{"color": "#FF0000"}}> *</span></span>}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.constCompletionDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.constCompletionDate}</span> :""): ""}
 														  value={floorDetails.floor ? floorDetails.floor.constCompletionDate : ""}
-														  onChange={(e, value) => { this.handleAge(e.target.value);
+														  onChange={(e, value) => {
 																 var val = value;
 																  if(value.length == 2 && !value.match('/')){
 																	  val+='/';
@@ -1120,6 +1121,7 @@ handleUsage = (value) => {
 																		  value: val
 																	  }
 																	}
+																handleAge(e.target.value);
 																handleChangeFloor(e,"floor" ,"constCompletionDate", true,  /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
@@ -1370,6 +1372,7 @@ handleUsage = (value) => {
 																  
 																  setTimeout(()=>{
 																	_this.createFloorObject();
+																	_this.getFloors();
 																	}, 300);
 																}
 															}/>

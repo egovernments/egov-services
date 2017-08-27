@@ -1,0 +1,28 @@
+{
+   "requestInfo":{
+      "apiId":"emp",
+      "ver":"1.0",
+      "ts":"1",
+      "action":"POST",
+      "did":"1",
+      "key":"abcdkey",
+      "msgId":"20170826",
+      "requesterId":"rajesh",
+      "authToken":"540259ae-3cb1-4d56-ae10-527f27b4a8d7",
+      "userInfo":
+      {
+      	"id":"1"
+      }
+	},
+	"Gapcodes": [
+        {   "code": "Last 9 months Lowest",
+            "noOfMonths": "Last 9 months",
+            "logic": "Lowest",
+            "description": "customadding",
+            "tenantId": "1",
+            "isOutSideUlb": true,
+            "isActive":true
+        }
+    ]
+}
+	

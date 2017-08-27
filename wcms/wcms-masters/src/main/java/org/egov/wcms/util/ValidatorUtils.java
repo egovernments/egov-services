@@ -48,6 +48,7 @@ import org.egov.wcms.model.CategoryType;
 import org.egov.wcms.model.DocumentType;
 import org.egov.wcms.model.DocumentTypeApplicationType;
 import org.egov.wcms.model.Donation;
+import org.egov.wcms.model.Gapcode;
 import org.egov.wcms.model.MeterCost;
 import org.egov.wcms.model.MeterStatus;
 import org.egov.wcms.model.MeterWaterRates;
@@ -84,6 +85,7 @@ import org.egov.wcms.web.contract.CategoryTypeRequest;
 import org.egov.wcms.web.contract.DocumentTypeApplicationTypeReq;
 import org.egov.wcms.web.contract.DocumentTypeReq;
 import org.egov.wcms.web.contract.DonationRequest;
+import org.egov.wcms.web.contract.GapcodeRequest;
 import org.egov.wcms.web.contract.MeterCostReq;
 import org.egov.wcms.web.contract.MeterStatusReq;
 import org.egov.wcms.web.contract.MeterWaterRatesRequest;
@@ -1442,5 +1444,63 @@ public class ValidatorUtils {
         } else
             return;
 
+    }
+
+    public List<ErrorResponse> validateGapcodeRequest(final GapcodeRequest categoryRequest, final Boolean isUpdate) {
+    	final List<ErrorResponse> errorResponses = new ArrayList<>();
+    	final ErrorResponse errorResponse = new ErrorResponse();
+    	final Error error = getError(categoryRequest, isUpdate);
+    	errorResponse.setError(error);
+    	if (!errorResponse.getErrorFields().isEmpty())
+    		errorResponses.add(errorResponse);
+    	return errorResponses;
+    }
+
+    private Error getError(final GapcodeRequest gapcodeRequest, final Boolean isUpdate) {
+    	gapcodeRequest.getGapcode();
+    	final List<ErrorField> errorFields = getErrorFields(gapcodeRequest, isUpdate);
+    	return Error.builder().code(HttpStatus.BAD_REQUEST.value())
+    			.message(WcmsConstants.INVALID_CATEGORY_REQUEST_MESSAGE).errorFields(errorFields).build();
+    }
+
+    private List<ErrorField> getErrorFields(final GapcodeRequest gapcodeRequest, final Boolean isUpdate) {
+    	final List<ErrorField> errorFields = new ArrayList<>();
+    	for (final Gapcode gapcode : gapcodeRequest.getGapcode()) {
+    		addGapcodeNameValidationErrors(gapcode, errorFields,isUpdate);
+    		addTenantIdValidationErrors(gapcode.getTenantId(), errorFields);
+    		addNoOfMonthsValidationErrors(gapcode.getNoOfMonths(), errorFields);
+    		addLogicValidationErrors(gapcode.getLogic(), errorFields);
+    	}
+    	return errorFields;
+    }
+
+    private void addGapcodeNameValidationErrors(final Gapcode gapcode,
+    		final List<ErrorField> errorFields, boolean isUpdate) {
+    	if (gapcode.getName() == null || gapcode.getName().isEmpty()) {
+    		final ErrorField errorField = ErrorField.builder().code(WcmsConstants.GAPCODE_NAME_MANDATORY_CODE)
+    				.message(WcmsConstants.GAPCODE_NAME_MANDATORY_ERROR_MESSAGE)
+    				.field(WcmsConstants.GAPCODE_NAME_MANDATORY_FIELD_NAME).build();
+    		errorFields.add(errorField);
+    	}
+    }
+
+    private void addNoOfMonthsValidationErrors(final String noOfMonths, final List<ErrorField> errorFields){
+        if (noOfMonths == null || noOfMonths.isEmpty()) {
+            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.NO_OF_MONTHS_MANDATORY_CODE)
+                    .message(WcmsConstants.NO_OF_MONTHS_MANADATORY_ERROR_MESSAGE)
+                    .field(WcmsConstants.NO_OF_MONTHS_MANADATORY_FIELD_NAME).build();
+            errorFields.add(errorField);
+        } else
+            return;
+    }
+
+    private void addLogicValidationErrors(final String logic, final List<ErrorField> errorFields){
+        if (logic == null || logic.isEmpty()) {
+            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.LOGIC_MANDATORY_CODE)
+                    .message(WcmsConstants.LOGIC_MANADATORY_ERROR_MESSAGE)
+                    .field(WcmsConstants.LOGIC_MANADATORY_FIELD_NAME).build();
+            errorFields.add(errorField);
+        } else
+            return;
     }
 }

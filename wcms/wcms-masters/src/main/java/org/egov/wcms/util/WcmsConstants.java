@@ -422,6 +422,19 @@ public class WcmsConstants {
     public static final String SUB_USAGETYPE_INVALID_ERROR_MESSAGE = "Please provide valid Sub Usage Type";
     public static final String SUB_USAGETYPE_INVALID_FIELD_NAME = "subUsage Type";
     
+    
+    public static final String GAPCODE_NAME_MANDATORY_CODE = "wcms.0082";
+    public static final String GAPCODE_NAME_MANDATORY_FIELD_NAME = "name";
+    public static final String GAPCODE_NAME_MANDATORY_ERROR_MESSAGE = "name is required";
+    
+    public static final String NO_OF_MONTHS_MANDATORY_CODE = "wcms.0083";
+    public static final String NO_OF_MONTHS_MANADATORY_FIELD_NAME = "noOfMonths";
+    public static final String NO_OF_MONTHS_MANADATORY_ERROR_MESSAGE = "noOfMonths is required";
+    
+    public static final String LOGIC_MANDATORY_CODE = "wcms.0084";
+    public static final String LOGIC_MANADATORY_FIELD_NAME = "logic";
+    public static final String LOGIC_MANADATORY_ERROR_MESSAGE = "logic is required";
+    
     public static final String ZONE = "Zone";
     public static final String REVENUE = "REVENUE";
     public static final String WARD = "Ward";

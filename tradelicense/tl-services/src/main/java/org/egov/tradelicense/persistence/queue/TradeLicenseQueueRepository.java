@@ -21,12 +21,13 @@ public class TradeLicenseQueueRepository {
 		String topic = "", key = "";
 		final HashMap<String, Object> tlMap = new HashMap<>();
 
-		topic = propertiesManager.getTradeLicenseValidatedTopic();
+		
 
 		switch (request.getRequestInfo().getAction()) {
 
 		case "legacy-create":
-
+			
+			topic = propertiesManager.getTradeLicenseWorkFlowPopulatedTopic();
 			key = propertiesManager.getLegacyTradeLicenseValidatedKey();
 
 			tlMap.put("tradelicense-legacy-create", request);
@@ -35,6 +36,7 @@ public class TradeLicenseQueueRepository {
 
 		case "new-create":
 
+			topic = propertiesManager.getTradeLicenseValidatedTopic();
 			key = propertiesManager.getNewTradeLicenseValidatedKey();
 
 			tlMap.put("tradelicense-new-create", request);
@@ -42,7 +44,8 @@ public class TradeLicenseQueueRepository {
 			break;
 
 		case "legacy-update":
-
+			
+			topic = propertiesManager.getTradeLicenseWorkFlowPopulatedTopic();
 			key = propertiesManager.getLegacyTradeLicenseValidatedKey();
 
 			tlMap.put("tradelicense-legacy-update", request);
@@ -50,7 +53,8 @@ public class TradeLicenseQueueRepository {
 			break;
 
 		case "new-update":
-
+			
+			topic = propertiesManager.getTradeLicenseValidatedTopic();
 			key = propertiesManager.getNewTradeLicenseValidatedKey();
 
 			tlMap.put("tradelicense-new-update", request);

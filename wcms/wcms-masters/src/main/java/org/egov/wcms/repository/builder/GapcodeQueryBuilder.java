@@ -17,13 +17,13 @@ import org.springframework.stereotype.Component;
 public class GapcodeQueryBuilder {
 	
 	    public static String insertQuery() {
-	        return "INSERT INTO egwtr_gapcode(id,code,name,outSideUlb,noOfLastMonths,logic,active,description,createdBy,lastUpdatedBy,createdDate,lastUpdatedDate,tenantId) values "
+	        return "INSERT INTO egwtr_gapcode(id,code,name,outSideUlb,noOfLastMonths,logic,active,description,createdBy,lastModifiedBy,createdDate,lastModifiedDate,tenantId) values "
 	                + "(:id,:code,:name,:outSideUlb,:noOfLastMonths,:logic,:active,:description,:createdBy,:lastUpdatedBy,:createdDate,:lastUpdatedDate,:tenantId)";
 	    }
 	    
 	    public static String updateQuery() {
 	        return "UPDATE egwtr_gapcode SET name = :name ,outSideUlb = :outSideUlb ,"
-	                + "noOfLastMonths = :noOfLastMonths,logic = :logic,description = :description,active = :active,lastUpdatedBy = :lastUpdatedBy,lastupdatedDate = :lastUpdatedDate where code = :code ";
+	                + "noOfLastMonths = :noOfLastMonths,logic = :logic,description = :description,active = :active,lastModifiedBy = :lastUpdatedBy,lastModifiedDate = :lastUpdatedDate where code = :code ";
 	    }
 	    
 	    public static String getFormulaQuery() {
@@ -34,7 +34,7 @@ public class GapcodeQueryBuilder {
 	    private ApplicationProperties applicationProperties;
 
 	    private static final String BASE_QUERY = "SELECT id, code, name,"
-	            + " outSideUlb, noOfLastMonths,logic,description,active,createdDate,lastUpdatedDate,createdBy,lastUpdatedBy,tenantId "
+	            + " outSideUlb, noOfLastMonths,logic,description,active,createdDate,lastModifiedDate,createdBy,lastModifiedBy,tenantId "
 	            + " FROM egwtr_gapcode";
 
 	    @SuppressWarnings("rawtypes")

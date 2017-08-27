@@ -52,8 +52,14 @@ public class Gapcode {
 	private String description;
 
 	@NotNull
-	@JsonIgnore
-	private AuditDetails auditDetails;
+    private Long createdBy;
+
+    private Long createdDate;
+
+    @NotNull
+    private Long lastUpdatedBy;
+
+    private Long lastUpdatedDate;
 
 	@Size(max = 250)
 	@NotNull

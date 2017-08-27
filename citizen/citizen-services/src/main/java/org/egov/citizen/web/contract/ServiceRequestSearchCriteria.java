@@ -12,7 +12,7 @@ import lombok.ToString;
 public class ServiceRequestSearchCriteria {
 	
 	private String serviceRequestId;
-	private String userId;
+	private Long userId;
 	@NotNull
 	private String tenantId;
 	private String sortBy;

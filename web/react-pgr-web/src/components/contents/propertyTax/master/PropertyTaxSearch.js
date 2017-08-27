@@ -241,8 +241,6 @@ class PropertyTaxSearch extends Component {
 				})
 			}
 			
-			
-			
 			showTable(true);
 		}
 	

@@ -720,7 +720,7 @@ definitions:
       floorNo:
         type: string
         description: floor no for the floor
-        maxLength: 16
+        maxLength: 128
         minLength: 1
       units:
         description: Flat(s) or Room(s) information on a floor or in a Flat respectively.

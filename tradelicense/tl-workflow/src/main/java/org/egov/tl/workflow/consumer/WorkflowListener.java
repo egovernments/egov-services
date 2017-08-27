@@ -53,12 +53,12 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
-public class TradeLicenseServiceListener {
+public class WorkflowListener {
 
-	@Value("${kafka.topics.trade.license.workflow.enriched.topic}")
+	@Value("${egov.services.tl-services.tradelicense.workflow.populated.topic}")
 	private String workflowEnrichedTopic;
 
-	@Value("${kafka.topics.trade.license.workflow.enriched.key}")
+	@Value("${egov.services.tl-services.tradelicense.workflow.populated.key}")
 	private String workflowEnrichedKey;
 
 	@Autowired
@@ -70,21 +70,36 @@ public class TradeLicenseServiceListener {
 	@Autowired
 	private WorkflowService workflowService;
 
-	@KafkaListener(id = "${kafka.topics.trade.license.validated.id}", topics = "${kafka.topics.trade.license.validated.topic}", group = "${kafka.topics.trade.license.validated.group}")
+	@KafkaListener(id = "${egov.services.tl-services.tradelicense.validated.id}", topics = "${egov.services.tl-services.tradelicense.validated.topic}", group = "${egov.services.tl-services.tradelicense.validated.group}")
 	public void process(final HashMap<String, Object> tlRequestMap) {
 
 		HashMap<String, Object> tlWorkflowEnrichedMap = new HashMap<>();
+		TradeLicenseRequest request;
+		if (tlRequestMap.get("tradelicense-new-create") != null) {
 
-		final TradeLicenseRequest request = objectMapper.convertValue(tlRequestMap.get("trade_license_request"),
-				TradeLicenseRequest.class);
+			request = objectMapper.convertValue(tlRequestMap.get("tradelicense-new-create"), TradeLicenseRequest.class);
 
-		for (final TradeLicenseContract tradeLicense : request.getLicenses()) {
+			for (final TradeLicenseContract tradeLicense : request.getLicenses()) {
 
-			workflowService.enrichWorkflow(tradeLicense, request.getRequestInfo());
+				workflowService.enrichWorkflow(tradeLicense, request.getRequestInfo());
+
+			}
+
+			tlWorkflowEnrichedMap.put("tradelicense-new-create", request);
+
+		} else {
+
+			request = objectMapper.convertValue(tlRequestMap.get("tradelicense-new-update"), TradeLicenseRequest.class);
+
+			for (final TradeLicenseContract tradeLicense : request.getLicenses()) {
+
+				workflowService.enrichWorkflow(tradeLicense, request.getRequestInfo());
+
+			}
+
+			tlWorkflowEnrichedMap.put("tradelicense-new-update", request);
 
 		}
-
-		tlWorkflowEnrichedMap.put("trade_license_employee_enriched", request);
 
 		messageQueueRepository.save(tlWorkflowEnrichedMap);
 

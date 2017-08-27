@@ -189,7 +189,7 @@ class ViewProperty extends Component {
 	
       }).catch((err)=> {
 			setLoadingStatus('hide');
-			toggleSnackbarAndSetText(true, err.message)
+			console.log(err)
       })	
 		
 		
@@ -199,7 +199,6 @@ class ViewProperty extends Component {
         currentThis.setState({
           propertytypes:[]
         })
-		toggleSnackbarAndSetText(true, err.message);
     }) 
 
 	Api.commonApiPost('pt-property/property/departments/_search',{}, {},false, true).then((res)=>{
@@ -208,7 +207,7 @@ class ViewProperty extends Component {
 	  })
 	}).catch((err)=> {
 	  console.log(err)
-		toggleSnackbarAndSetText(true, err.message);
+		console.log(err);
 	})
 	
 	Api.commonApiPost('pt-property/property/floortypes/_search',{}, {},false, true).then((res)=>{
@@ -229,7 +228,7 @@ class ViewProperty extends Component {
       currentThis.setState({
         rooftypes: []
       })
-      console.log(err)
+      console.log(err.message)
     })
 
     Api.commonApiPost('pt-property/property/walltypes/_search',{}, {},false, true).then((res)=>{
@@ -239,7 +238,7 @@ class ViewProperty extends Component {
       currentThis.setState({
         walltypes:[]
       })
-      console.log(err)
+      console.log(err.message)
     })
 
     Api.commonApiPost('pt-property/property/woodtypes/_search',{}, {},false, true).then((res)=>{
@@ -259,7 +258,7 @@ class ViewProperty extends Component {
            currentThis.setState({
             locality : []
           })
-          console.log(err)
+          console.log(err.message)
         })
 
          Api.commonApiPost('pt-property/property/apartments/_search',{}, {},false, true).then((res)=>{
@@ -269,7 +268,7 @@ class ViewProperty extends Component {
            currentThis.setState({
             apartments:[]
           })
-          console.log(err)
+          console.log(err.message)
         }) 
 
        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:"REVENUE"}).then((res)=>{
@@ -427,11 +426,7 @@ class ViewProperty extends Component {
 															  <Col xs={4} md={3} style={styles.bold}>
 																   <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.email')}</div>
 																   {owner.emailId ? owner.emailId : translate('pt.search.searchProperty.fields.na')}
-															  </Col>	
-															  <Col xs={4} md={3} style={styles.bold}>
-																   <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.guardianRelation')}</div>
-																   {owner.gaurdianRelation ? getNameByCode(currentThis.state.gaurdianRelation, owner.gaurdianRelation) : translate('pt.search.searchProperty.fields.na')}
-															  </Col>				
+															  </Col>					
 															  <Col xs={4} md={3} style={styles.bold}>
 																   <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.guardian')}</div>
 																   {owner.fatherOrHusbandName ? owner.fatherOrHusbandName : translate('pt.search.searchProperty.fields.na')}
@@ -464,31 +459,20 @@ class ViewProperty extends Component {
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.oldPropertyNo')}</div>
 												   {item.oldUpicNumber || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
-											
-											
 											  <Col xs={12} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyNo')}</div>
 												   {item.upicNumber || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
-										
-											
-											  <Col xs={12} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>{translate('pt.create.groups.annualRentalValue')}</div>
-												   NA
-											  </Col>
-											
 											  <Col xs={12} md={3} style={styles.bold}>
 												  <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.propertyType')}</div>
 												   {getNameByCode(this.state.propertytypes ,item.propertyDetail.propertyType) || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
-											</Row>
-										 
-										
-											<Row>
-											  <Col xs={4} md={3} style={styles.bold}>
+											   <Col xs={4} md={3} style={styles.bold}>
 												 <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.extentOfSite')}</div>
 												  {item.propertyDetail.sitalArea || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
+											</Row>
+											<Row>											 
 											  <Col xs={4} md={3} style={styles.bold}>
 												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.registrationDocNo')}</div>
 												  {item.propertyDetail.regdDocNo || translate('pt.search.searchProperty.fields.na')}
@@ -501,12 +485,12 @@ class ViewProperty extends Component {
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.AssessmentNumberOfParentProperty')}</div>
 												   NA
 											  </Col>
-											</Row> 
-											<Row>											
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.exemptionCategory')}</div>
 												   {item.propertyDetail.exemptionReason || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
+											</Row> 
+											<Row>											 
 											  <Col xs={4} md={3} style={styles.bold}>
 												    <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.effectiveDate')}</div>
 												   {item.occupancyDate ? item.occupancyDate.split(' ')[0] : translate('pt.search.searchProperty.fields.na')}
@@ -520,22 +504,17 @@ class ViewProperty extends Component {
 												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.propertyDepartment')}</div>
 												  {item.propertyDetail.department || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
-											</Row>
-										 
-										 
-											<Row>
 											  <Col xs={4} md={3} style={styles.bold}>
 												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.registrationDocDate')}</div>
 												  {item.propertyDetail.regdDocDate ? item.propertyDetail.regdDocDate.split(' ')[0] : translate('pt.search.searchProperty.fields.na')}
-
 											  </Col>
-											
+											</Row>
+											<Row>
 											  <Col xs={4} md={3} style={styles.bold}>
 												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.assessmentDate')}</div>
 												  {item.assessmentDate ? item.assessmentDate.split(' ')[0] : translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											</Row>
-										
 									</Col>
 									<div className="clearfix"></div>
                               </CardText>
@@ -552,8 +531,6 @@ class ViewProperty extends Component {
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.doorNo')}</div>
 												   {item.address.addressNumber}
 											  </Col>
-										
-											
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.propertyAddress')}</div>
 												    {item.address.addressNumber ? item.address.addressNumber+', ' : '' }
@@ -562,19 +539,14 @@ class ViewProperty extends Component {
 													{item.address.landmark ? item.address.landmark+', ' : ''}
 													{item.address.city ? item.address.city : ''}
 											  </Col>
-											
-											
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.zoneNo')}</div>
 												   {getNameById(this.state.zone, item.boundary.revenueBoundary.id) || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
-										
-											
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.blockNo')}</div>
 												   NA
 											  </Col>
-											 
 											</Row>
 											<Row>
 											  <Col xs={4} md={3} style={styles.bold}>

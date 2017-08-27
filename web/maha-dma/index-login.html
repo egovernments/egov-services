@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en" style="height:100%;">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Government of Maharashtra</title>
+
+    <link rel="icon" href="images/favicon.ico">
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/custom.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  </head>
+  <body style="height:100%;">
+
+    <!-- ulb dropdown options template -->
+    <script id="ulb-option-template" type="text/x-handlebars-template">
+			 <option value="">Select ULB</option>
+			 {{#each this}}
+					<option value="{{ulbName}}" {{#if (eq ulbName "Roha Municipal Council")}}selected="selected"{{/if}}>{{ulbName}}</option>
+			 {{/each}}
+		</script>
+
+    <!-- services menu template -->
+    <script id="services-menu-template" type="text/x-handlebars-template">
+      {{#each .}}
+        <div class="service-details">
+            <div class="col-md-12">
+              <h4>{{@key}}</h4>
+            </div>
+          <ul>
+            <li class="news-item">
+              {{#each this}}
+                <div class="col-md-6">
+                  <a class="action-item" data-service-name="{{serviceName}}" data-module-name="{{moduleName}}" href="javascript:void(0);">{{serviceName}}</a>
+                </div>
+              {{/each}}
+            </li>
+          </ul>
+        </div>
+      {{/each}}
+    </script>
+
+    <!-- Dialog body template -->
+    <script id="documents-body-template" type="text/x-handlebars-template">
+      <div class="alert alert-danger" role="alert">
+         {{#if requiredDocuments}} Required Documents {{else}}  Documents are not required from citizen to avail this service {{/if}}
+      </div>
+
+      {{#each requiredDocuments}}
+      <div class="panel panel-default">
+        <div class="panel-heading">{{requiredDocumentName}}</div>
+        <div class="panel-body">
+          <div class="container-fluid">
+            <div class="row">
+              {{#each documents}}
+                <div class="col-xs-4 col-md-4 col-sm-4 col-lg-4 certificate-name-break">
+                  {{inc @index}}) {{name}}
+                </div>
+              {{/each}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <br/>
+
+      <!-- SLA Table -->
+
+      {{/each}}
+		</script>
+
+    <script type="text/plain">
+      {{#if slaTable}}
+        <table class="table table-bordered">
+          <thead>
+          {{#each slaTable.columns}}
+             <th>{{name}}</th>
+          {{/each}}
+          </thead>
+
+          <tbody>
+            {{#each slaTable.data}}
+              <tr>
+                  {{#each ../uniqueKeys}}
+                      <td>{{lookup .. this}}</td>
+                  {{/each}}
+              </tr>
+           {{/each}}
+          </tbody>
+        </table>
+      {{/if}}
+    </script>
+
+   <div class="nav-section">
+    <nav class="navbar navbar-inverse">
+  <div class="container">
+
+    <ul class="nav navbar-nav navbar-right">
+
+      <li class="dropdown">
+        <a href="#"> मराठी <!-- <b class="caret"></b> --></a>
+        <!-- <div class="dropdown-content">
+        <a href="#">English</a>
+        <a href="#">मराठी</a>
+
+      </div> -->
+      </li>
+    </ul>
+  </div>
+</nav>
+  </div>
+  <div class="header-section">
+     <div class="container">
+      <div class="col-md-2">
+         <img src="images/maharashtralogo.png" class="img-responsive" style="width:90px">
+       </div>
+
+       <div class="col-md-8" style="text-align: center">
+         <div class="h35" style="color:#ff9800">Government of Maharashtra</div>
+         <div class="h20">महाराष्ट्र शासन</div>
+         <div class="h20" style="color:green">Integrated Citizen Services Portal</div>
+       </div>
+       <div class="col-md-2">
+         <img src="images/emblem.png" class="img-responsive pull-right" style="width:60px">
+       </div>
+
+     </div>
+  </div>
+
+  <div class="body-section" style="height: calc(100% - 194px);overflow-y:auto;overflow-x: hidden;">
+
+    <div class="container" style="height: 100%">
+      <div class="col-md-8 service-section" style="height:100%;">
+
+        <div class="row">
+          <div class="col-md-5">
+            <h4 class="services-title no-background">SERVICES AVAILABLE ONLINE</h4>
+          </div>
+          <div class="col-md-7" style="text-align: right;">
+             <button type="button" class="btn btn-default" onclick="javascript:window.open('http://mahadma.egovernments.org/dashboard/#ulbreports');" class="btn btn-default dashboardbtn">
+                       <i class="material-icons" style="vertical-align: middle;">poll</i> &nbsp;<span style="vertical-align: middle;">Our Dashboards</span>
+             </button>
+          </div>
+        </div>
+
+
+
+        <div class="service-table" style="height: calc(100% - 60px);border: 1px solid orange;box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px;">
+        <!-- <marquee behavior="scroll" direction="up"> -->
+
+        <!-- </marquee> -->
+        </div>
+      </div>
+
+        <div class="col-md-4">
+
+          <div class="login-box" style="margin-top:18px;margin-bottom:15px;">
+              <h4>Sign In</h4>
+              <input type="text" placeholder="Mobile Number / Login ID">
+              <input type="password" placeholder="Password">
+              <select id="ulb-dropdown" style="width:100%" data-placement="bottom" data-content="Please select the ulb" class="form-control ulb-dropdown">
+                <option>Loading...</option>
+              </select>
+              <div class="row" style="margin-top: 20px;">
+              <div class="col-md-6">
+                <button>Login</button>
+              </div>
+              <div class="col-md-6 text-right" style="padding: 8px 20px;font-size: 16px;">
+                <a href="javascript:void(0)">Forgot password?</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="login-box">
+              <p style="padding-top:10px;font-size:15px;">Create your account with this portal to apply online for notified services</p>
+              <button>Create an account</button>
+          </div>
+
+        </div>
+      </div>
+      <!-- <div class="col-md-4 right-sction">
+        <div class="more-option">
+        <button type="button" class="btn btn-default servicesbtn">Apply for Service</button>
+        <button type="button" onclick="javascript:window.open('http://mahadma.egovernments.org/dashboard/#ulbreports');" class="btn btn-default dashboardbtn">Dashboard</button>
+        </div>
+      </div> -->
+    </div>
+
+  </div>
+
+  <!-- modal -->
+  <div id="new-water" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">New Water Connection</h4>
+        </div>
+        <div class="modal-body">
+            <div class="req-doc-citizen">
+              <div class="doc-head">
+                REQUIRED DOCUMENTS FROM CITIZEN
+              </div>
+              <div class="docs-section">
+                NOC from main owner in case of rented property
+              </div>
+
+               <div class="doc-head">
+                DOCUMENTS VERIFIED BY ULB
+              </div>
+              <div class="docs-section">
+                <ol>
+                  <li> Property Extract</li>
+                  <li>Receipt of last property tax paid </li>
+                  <li>Occupancy Certificate (The above document will be verify from their records or Available in system then system will fetch the records from related application)</li>
+                </ol>
+
+              </div>
+            </div>
+        </div>
+
+       <div class="modal-footer" style="text-align: center;">
+            <button type="button" class="btn btn-warning">Apply</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-success">Print</button>
+      </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <div id="change-owner" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Change Of Ownership</h4>
+      </div>
+      <div class="modal-body">
+          <div class="req-doc-citizen">
+            <div class="doc-head">
+                REQUIRED DOCUMENTS FROM CITIZEN
+              </div>
+              <div class="docs-section">
+                N.A.
+              </div>
+             <div class="doc-head">
+              DOCUMENTS VERIFIED BY ULB
+            </div>
+            <div class="docs-section">
+              <ol>
+                <li> Property Transfer certificate</li>
+                <li> Last payment of water bill receipt. </li>
+                <li> Property extract (The above document details will be verify from their records or Available in system then system will fetch the records from related application</li>
+              </ol>
+
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer" style="text-align: center;">
+        <button type="button" class="btn btn-warning">Apply</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-success">Print</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="change-con" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Change Of Connection Size</h4>
+      </div>
+      <div class="modal-body">
+          <div class="req-doc-citizen">
+            <div class="doc-head">
+                REQUIRED DOCUMENTS FROM CITIZEN
+              </div>
+              <div class="docs-section">
+                N.A.
+              </div>
+             <div class="doc-head">
+              DOCUMENTS VERIFIED BY ULB
+            </div>
+            <div class="docs-section">
+              <ol>
+                <li>  Construction/ Completion Certificate.</li>
+                <li>  Last payment of water bill receipt and Property Tax paid receipt (The above document details will be verify from their records or Available in system then system will fetch the records from related application)</li>
+
+              </ol>
+
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer" style="text-align: center;">
+        <button type="button" class="btn btn-warning">Apply</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-success">Print</button>
+      </div>
+    </div>
+
+</div>
+</div>
+<div class="footer-section">
+<div class="container"><p>Best Viewed on internet explorer 9+, firefox, Chrome</p></div>
+
+</div>
+
+<div class="modal fade" id="servicesDetailModal" tabindex="-1" role="dialog" aria-labelledby="servicesDetailModal" aria-hidden="true">
+  <div class="modal-dialog lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="servicesDetailModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body small-text" id="documents-body">
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="apply-btn" class="btn btn-primary">Apply</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" onclick="javscript:print();" class="btn btn-secondary">Print</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.10/handlebars.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/custom.js"></script>
+
+
+  </body>
+</html>

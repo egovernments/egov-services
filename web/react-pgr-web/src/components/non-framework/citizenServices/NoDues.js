@@ -917,6 +917,28 @@ class NoDues extends Component {
     const contentStyle = {margin: '0 16px'};
     console.log(formData);
     console.log(demands);
+
+    const renderProperty = function(floors) {
+      if(floors.length) {
+        return floors.map(function(v, i) {
+          return v.units.map(function(v2, i2) {
+            return (
+              <tr>
+                <td>{v2.unitNo || "-"}</td>
+                <td>{v.floorNo || "-"}</td>
+                <td>{v2.occupierName || "-"}</td>
+                <td>{v2.usage || "-"}</td>
+                <td>{v2.occupancyType || "-"}</td>
+                <td>{v2.arv || "-"}</td>
+                <td>-</td>
+                <td>-</td>
+              </tr>
+            )
+          })
+        })
+      } else return "";
+    }
+
     const getStepContent=(stepIndex)=> {
       switch (stepIndex) {
         case 0:
@@ -1417,14 +1439,14 @@ class NoDues extends Component {
                               </td>
                           </tr>
                           <tr>
-                            <td colSpan={3}>
+                            <td colSpan={8}>
                                 <div style={{textAlign:"center"}}>
                                   <b>Extract of Property</b> / मालमत्तेचा उतारा
                                 </div>
                             </td>
                           </tr>
                           <tr>
-                            <td colSpan={3}>
+                            <td colSpan={8}>
                               <div style={{"whiteSpace": "pre"}}>
                                 <b>Ward:</b>   Election Ward 1                                 <b>Zone: -</b>                                                         <b>Revenue Circle</b>:
                                 <br/>
@@ -1433,7 +1455,7 @@ class NoDues extends Component {
                             </td>
                           </tr>
                           <tr>
-                            <td colSpan={3}>
+                            <td colSpan={8}>
                               <div>
                                 <b>Property No:</b> {Receipt[0].Bill[0].billDetails[0].consumerCode}<br/>
                                 <b>Property Usage / Sub Usage:</b> {this.state.Property && this.state.Property.usage ? this.state.Property.usage : ""}
@@ -1441,7 +1463,7 @@ class NoDues extends Component {
                             </td>
                           </tr>
                           <tr>
-                            <td colSpan={3}>
+                            <td colSpan={8}>
                               <div style={{"whiteSpace": "pre"}}>
                                 <b>Property Owner Name</b>: {this.state.Property && this.state.Property.owners ? this.state.Property.owners[0].name : ""}<br/>
                                 <b>& Address: </b> {getAddress(this.state.Property)}                                                                                        <b>Age of Property</b>
@@ -1449,13 +1471,24 @@ class NoDues extends Component {
                             </td>
                           </tr>
                           <tr>
-                            <td colSpan={3}>
+                            <td colSpan={8}>
                               <div>
                                 <b>Billing Name</b>: {Receipt[0].Bill[0].payeeName}<br/>
                                 <b>& Address:</b> {Receipt[0].Bill[0].payeeAddress?Receipt[0].Bill[0].payeeAddress:""}
                               </div>
                             </td>
                           </tr>
+                          <tr>
+                            <td><b>Unit No</b></td>
+                            <td><b>Floor</b></td>
+                            <td><b>Owner</b></td>
+                            <td><b>Usage</b></td>
+                            <td><b>Occupancy</b></td>
+                            <td><b>ALV</b></td>
+                            <td><b>RV</b></td>
+                            <td><b>Total Tax</b></td>
+                          </tr>
+                          {this.state.Property && this.state.Property.propertyDetail && this.state.Property.propertyDetail.floors ? renderProperty(this.state.Property.propertyDetail.floors) : "No Data Available"}
                       </tbody>
                   </Table>
             </CardText>

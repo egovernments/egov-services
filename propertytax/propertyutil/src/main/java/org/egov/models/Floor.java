@@ -28,7 +28,7 @@ public class Floor {
 
 	@JsonProperty("floorNo")
 	@NotNull
-	@Size(min = 1, max = 16)
+	@Size(min = 1, max = 128)
 	private String floorNo = null;
 
 	@JsonProperty("units")

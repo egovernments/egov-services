@@ -608,16 +608,19 @@ deleteOccupantName = (index) =>{
  
 handleUsage = (value) => {
 	
+		let current = this;
+	
 		let query = { 
 			parent: value
 		}
 	
 	   Api.commonApiPost('pt-property/property/usages/_search', query).then((res)=>{
-          console.log(res);
-          this.setState({subUsage : res.usageMasters})
+			console.log(res);
+			current.setState({subUsage : res.usageMasters})
         }).catch((err)=> {
-          console.log(err)
-        }).bind(this);
+			current.setState({subUsage : []})
+			console.log(err)
+        })
 }   
  
   
@@ -655,7 +658,7 @@ handleUsage = (value) => {
 		  noOfFloors
 				} = this.props;
 
-		let {calcAssessableArea, handleAge, checkFloors} = this;
+		let {calcAssessableArea, handleAge, checkFloors, handleUsage} = this;
 		let cThis = this;
 		
 		const occupantNames = () => {
@@ -915,9 +918,8 @@ handleUsage = (value) => {
 																  value: value
 																}
 															  };
-															 
+															  handleUsage(e.target.value)
 															  handleChangeFloor(e,"floor" ,"usage", true, "")
-															   this.handleUsage(e.target.value)
 															  }
 														  }
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}

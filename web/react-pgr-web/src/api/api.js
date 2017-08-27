@@ -36,7 +36,7 @@ var requestInfo = {
 var tenantId = localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default';
 
 module.exports = {
-    commonApiPost: (context, queryObject = {}, body = {}, doNotOverride = false, isTimeLong = false, noPageSize = false,authToken="") => {
+    commonApiPost: (context, queryObject = {}, body = {}, doNotOverride = false, isTimeLong = false, noPageSize = false, authToken="", userInfo = "") => {
         var url = context;
         if(url && url[url.length-1] === "/")
             url = url.substring(0, url.length-1);
@@ -65,6 +65,10 @@ module.exports = {
         }
 
         body["RequestInfo"] = requestInfo;
+
+        if(userInfo) {
+            body["RequestInfo"]["userInfo"] = userInfo;
+        }
 
         return instance.post(url, body).then(function(response) {
             return response.data;

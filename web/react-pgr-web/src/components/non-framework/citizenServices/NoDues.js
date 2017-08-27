@@ -153,7 +153,7 @@ class NoDues extends Component {
           })
       }
       else {*/
-        Api.commonApiPost("/billing-service/bill/_generate", {businessService: "CS" , consumerCode:formData.consumerCode}, {}, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res){
+        Api.commonApiPost("/billing-service/bill/_generate", {businessService: "CS" , consumerCode: self.state.serviceRequest.serviceRequestId}, {}, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res){
           let Receipt=[];
           Receipt[0]={"Bill":[]};
           Receipt[0]["Bill"]=res.Bill;
@@ -346,6 +346,7 @@ class NoDues extends Component {
   createDemand = (SID, finalObject, response) => {
     let self = this;
     let {formData} = this.props;
+    finalObject["businessService"] = (self.props.match.params.status == "extract" ? "PT_NODUES" : (self.props.match.params.id == "pt" ? "PT" : "WC"));
     Api.commonApiPost(self.props.metaData["noDues.search"].url, finalObject, {}, null, self.props.metaData["noDues.search"].useTimestamp,false,response.data.access_token).then(function(res){
         // self.props.setLoadingStatus('hide');
         if(jp.query(res,`$..demandDetails[?(@.taxAmount > @.collectionAmount)]`).length>0)
@@ -456,7 +457,11 @@ class NoDues extends Component {
     instance.post('/user/oauth/token', params).then(function(response) {
       localStorage.setItem("request-temp", JSON.stringify(response.data.UserRequest));
       localStorage.setItem("auth-token-temp", response.data.access_token);
-      let serviceReq = JSON.parse(localStorage.servReq);
+      let serviceReq = []
+      try {
+        serviceReq = JSON.parse(localStorage.servReq);
+      } catch(e) {}
+      
       let SID = "", _servReq;
       let SC = (self.props.match.params.status == "extract" ? "PT_NODUES" : (self.props.match.params.id == "pt" ? "PT_NODUES" : "WC_NODUES"));
       console.log(SC);
@@ -466,7 +471,7 @@ class NoDues extends Component {
         if(SC == serviceReq[i].serviceCode && serviceReq[i].status == "CREATED") {
           console.log("HERE0");
           SID = serviceReq[i].serviceRequestId;
-          _servReq = serviceReq;
+          _servReq = serviceReq[i];
           break;
         }
       }
@@ -651,7 +656,7 @@ class NoDues extends Component {
     mywindow.document.write(cdn);
     mywindow.document.write('</head><body >');
     mywindow.document.write('<h1>' + document.title  + '</h1>');
-    mywindow.document.write(document.getElementById('CertificateForWc').innerHTML);
+    mywindow.document.write(document.getElementById('allCertificates').innerHTML);
     mywindow.document.write('</body></html>');
 
     mywindow.document.close(); // necessary for IE >= 10
@@ -957,7 +962,7 @@ class NoDues extends Component {
 
             {showResult &&
               <Grid >
-                {Receipt != undefined && Receipt.length>0 &&  <Row>
+                {Receipt != undefined && Receipt.length>0 &&  <Row id="allCertificates">
                       <Col md={6} >
                       <Card>
                         <CardHeader title="Receipt"/>
@@ -1101,7 +1106,7 @@ class NoDues extends Component {
                                           {getTotal(demands)+applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount}
                                         </td>
                                         {Receipt[0].instrument.instrumentType.name=="Cash"? "" : <td colSpan={2}>
-                                          {Receipt[0].transactionId}
+                                          {this.state.serviceRequest.serviceRequestId}
                                         </td>}
                                         <td colSpan={2}>
                                           {Receipt[0].instrument.instrumentType.name=="Cash"?"":(new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getDate()+"-"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getMonth()+"-"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getFullYear())}
@@ -1276,7 +1281,7 @@ class NoDues extends Component {
                       {(this.props.match.params.status != "extract") ? <Card>
                         <CardHeader title="Certificate"/>
                         <CardText>
-                            <Table responsive style={{fontSize:"bold"}} id="CertificateForWc"  striped bordered condensed>
+                            <Table id="CertificateForWc" responsive style={{fontSize:"bold"}}  striped bordered condensed>
                                   <tbody>
                                       <tr>
                                           <td style={{textAlign:"left"}}>
@@ -1299,7 +1304,7 @@ class NoDues extends Component {
                                             <br/>
                                             <div style={{textAlign:"right"}}>
                                                   Date / दिनांक :{new Date(Receipt[0].Bill[0].billDetails[0].billDate).getDate()+"-"+new Date(Receipt[0].Bill[0].billDetails[0].billDate).getMonth()+"-"+new Date(Receipt[0].Bill[0].billDetails[0].billDate).getFullYear()} <br/>
-                                                  Certificate No. / प्रमाणपत्र क्रं : {Receipt[0].transactionId}
+                                                  Certificate No. / प्रमाणपत्र क्रं : {this.state.serviceRequest.serviceRequestId}
 
                                             </div>
                                             <br/>
@@ -1436,7 +1441,7 @@ class NoDues extends Component {
 
       </div>*/}
         <div style={{textAlign:"center"}}>
-            <h3>No Dues Certificate for {match.params.id=="watercharge"?"Water Charge":"Property Tax"}</h3>
+            <h3>No Dues Certificate for {match.params.id=="wc"?"Water Charge":"Property Tax"}</h3>
         </div>
         <Stepper activeStep={stepIndex}>
            <Step>

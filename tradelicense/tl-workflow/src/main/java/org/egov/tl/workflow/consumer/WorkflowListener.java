@@ -74,17 +74,32 @@ public class WorkflowListener {
 	public void process(final HashMap<String, Object> tlRequestMap) {
 
 		HashMap<String, Object> tlWorkflowEnrichedMap = new HashMap<>();
+		TradeLicenseRequest request;
+		if (tlRequestMap.get("tradelicense-new-create") != null) {
 
-		final TradeLicenseRequest request = objectMapper.convertValue(tlRequestMap.get("trade_license_request"),
-				TradeLicenseRequest.class);
+			request = objectMapper.convertValue(tlRequestMap.get("tradelicense-new-create"), TradeLicenseRequest.class);
 
-		for (final TradeLicenseContract tradeLicense : request.getLicenses()) {
+			for (final TradeLicenseContract tradeLicense : request.getLicenses()) {
 
-			workflowService.enrichWorkflow(tradeLicense, request.getRequestInfo());
+				workflowService.enrichWorkflow(tradeLicense, request.getRequestInfo());
+
+			}
+
+			tlWorkflowEnrichedMap.put("tradelicense-new-create", request);
+
+		} else {
+
+			request = objectMapper.convertValue(tlRequestMap.get("tradelicense-new-update"), TradeLicenseRequest.class);
+
+			for (final TradeLicenseContract tradeLicense : request.getLicenses()) {
+
+				workflowService.enrichWorkflow(tradeLicense, request.getRequestInfo());
+
+			}
+
+			tlWorkflowEnrichedMap.put("tradelicense-new-update", request);
 
 		}
-
-		tlWorkflowEnrichedMap.put("trade_license_employee_enriched", request);
 
 		messageQueueRepository.save(tlWorkflowEnrichedMap);
 

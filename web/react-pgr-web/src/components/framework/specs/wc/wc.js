@@ -177,7 +177,7 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
-          },          
+          },
           {
             "name": "Primary Owner",
             "jsonPath": "Connection.connectionOwner.isPrimaryOwner",
@@ -479,7 +479,7 @@ var dat = {
             "isDisabled": false,
             // "url": "/wcms/masters/supplytype/_search?|$..name|$..name",
             "requiredErrMsg": "",
-            "defaultValue":"Semi Bulk",
+            "defaultValue":"Semi Bulk Type",
             "patternErrMsg": ""
           },
 

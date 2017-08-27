@@ -321,7 +321,7 @@ class Report extends Component {
   }
 
   render() {
-    let {mockData, moduleName, actionName, formData, fieldErrors} = this.props;
+    let {mockData, moduleName, actionName, formData, fieldErrors,date} = this.props;
     let {handleChange, getVal, addNewCard, removeCard, printer,licenses} = this;
 
 
@@ -426,12 +426,20 @@ class Report extends Component {
         }
       }
     }
+    const dateFormat = function(val){
+      var _date = new Date(Number(val));
+      return ('0' + _date.getDate()).slice(-2) + '/'
+             + ('0' + (_date.getMonth()+1)).slice(-2) + '/'
+             + _date.getFullYear();
+    }
+
 
     const renderAgreement = function() {
       if(formData && formData.hasOwnProperty("licenses") && formData.licenses.length>0){
         console.log(formData.licenses[0].agreementDate);
-        var date = new Date(formData.licenses[0].agreementDate);
-        console.log(date);
+
+        var final = dateFormat(formData.licenses[0].agreementDate);
+        console.log("final",final);
 
         if(!formData.licenses[0].isPropertyOwner){
           return (
@@ -444,7 +452,7 @@ class Report extends Component {
                                       <Col style={{textAlign:"left"}} xs={12}>
                                         <label><span style={{"fontWeight":500, "fontSize": "13px"}}>{translate("tl.create.licenses.groups.agreementDetails.agreementDate")}</span></label>
                                       </Col>
-                                      <Col style={{textAlign:"left"}} xs={12}>{formData.licenses[0].agreementDate? formData.licenses[0].agreementDate: 'NA'}</Col>
+                                      <Col style={{textAlign:"left"}} xs={12}>{formData.licenses[0].agreementDate? dateFormat(formData.licenses[0].agreementDate): 'NA'}</Col>
                                       </Col>
                                       <Col xs={12}  md={4} sm={6}>
                                         <Col style={{textAlign:"left"}} xs={12}>

@@ -258,14 +258,11 @@ class PropertyTaxSearch extends Component {
   }
 
   componentWillUpdate() {
-    if(flag == 1) {
-      flag = 0;
       $('#propertyTaxTable').dataTable().fnDestroy();
-    }
   }
 
   componentDidUpdate(prevProps, prevState) {
-      if (true) {
+ 
           $('#propertyTaxTable').DataTable({
             dom: 'lBfrtip',
             buttons: [
@@ -275,10 +272,11 @@ class PropertyTaxSearch extends Component {
              bDestroy: true,
 
           });
-      }
   }
 
   render() {
+	  
+	  console.log(this.state.resultList);
 	  
 	  const renderOption = function(list,listName="") {
         if(list)

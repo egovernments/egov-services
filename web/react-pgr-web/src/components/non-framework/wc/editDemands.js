@@ -102,7 +102,10 @@ class AddDemand extends Component {
 		hasError: false,
 		errorMsg: 'Invalid',
     DemandDetailBeans:[],
-    searchData:[]
+    searchData:[],
+    locality:[],
+    zone:[],
+    subUsageType:[]
     }
   }
 
@@ -135,6 +138,35 @@ class AddDemand extends Component {
     	}).catch((err)=> {
     		console.log(err)
     	})
+
+      Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:"REVENUE"}).then((res)=>{
+           console.log(res);
+           currentThis.setState({zone : res.Boundary})
+         }).catch((err)=> {
+            currentThis.setState({
+             zone : []
+           })
+           console.log(err)
+         })
+
+  		Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"LOCALITY", hierarchyTypeName:"LOCATION"}).then((res)=>{
+            console.log(res);
+            currentThis.setState({locality : res.Boundary})
+          }).catch((err)=> {
+             currentThis.setState({
+              locality : []
+            })
+            console.log(err)
+          })
+      Api.commonApiPost('/pt-property/property/usages/_search', {}).then((res)=>{
+            console.log(res);
+            currentThis.setState({subUsageType : res.usageMasters})
+          }).catch((err)=> {
+             currentThis.setState({
+              subUsageType : []
+            })
+            console.log(err)
+          })
   }
 
   submitDemand = () => {
@@ -192,6 +224,27 @@ class AddDemand extends Component {
           ...cThis.state,
           DemandDetailBeans: _emps
       })
+    }
+    const getNameById = function(object, id, property = "") {
+      if (id == "" || id == null) {
+            return "";
+        }
+        for (var i = 0; i < object.length; i++) {
+            if (property == "") {
+                if (object[i].id == id) {
+                    return object[i].name;
+                }
+            } else {
+                if (object[i].hasOwnProperty(property)) {
+                    if (object[i].id == id) {
+                        return object[i][property];
+                    }
+                } else {
+                    return "";
+                }
+            }
+        }
+        return "";
     }
 
 	const showfields = () => {
@@ -252,11 +305,11 @@ class AddDemand extends Component {
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.locality")}</span></label><br/>
-            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].property && cThis.state.searchData.Connection[0].property.locality}</label></span>
+            <label>{getNameById(cThis.state.locality,cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].property && cThis.state.searchData.Connection[0].property.locality)}</label></span>
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.zone")}</span></label><br/>
-            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].property && cThis.state.searchData.Connection[0].property.zone}</label></span>
+            <label>{getNameById(cThis.state.zone,cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].property && cThis.state.searchData.Connection[0].property.zone)}</label></span>
             </Col>
             </Row>
             <br/>
@@ -275,7 +328,7 @@ class AddDemand extends Component {
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.connectionDetails.subUsageType")}</span></label><br/>
-            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].subUsageType}</label></span>
+            <label>{getNameById(cThis.state.subUsageType,cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].subUsageTypeId)}</label></span>
             </Col>
             </Row>
             <br/>
@@ -320,11 +373,11 @@ class AddDemand extends Component {
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.locality")}</span></label><br/>
-            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].connectionLocation && cThis.state.searchData.Connection[0].connectionLocation.locationBoundary && cThis.state.searchData.Connection[0].connectionLocation.locationBoundary.name}</label></span>
+            <label>{getNameById(cThis.state.locality, cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].connectionLocation && cThis.state.searchData.Connection[0].connectionLocation.locationBoundary && cThis.state.searchData.Connection[0].connectionLocation.locationBoundary.id)}</label></span>
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.zone")}</span></label><br/>
-            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].connectionLocation && cThis.state.searchData.Connection[0].connectionLocation.revenueBoundary && cThis.state.searchData.Connection[0].connectionLocation.revenueBoundary.name}</label></span>
+            <label>{getNameById(cThis.state.zone, cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].connectionLocation && cThis.state.searchData.Connection[0].connectionLocation.revenueBoundary && cThis.state.searchData.Connection[0].connectionLocation.revenueBoundary.id)}</label></span>
             </Col>
             </Row>
             <br/>
@@ -339,7 +392,7 @@ class AddDemand extends Component {
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.connectionDetails.subUsageType")}</span></label><br/>
-            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].subUsageType}</label></span>
+              <label>{getNameById(cThis.state.subUsageType,cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].subUsageTypeId)}</label></span>
             </Col>
             </Row>
           </div>);

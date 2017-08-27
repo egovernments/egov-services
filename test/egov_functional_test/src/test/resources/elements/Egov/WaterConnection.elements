@@ -55,45 +55,51 @@
         "waitFor":"visibility"
         },
         {
-        "elementName":"address",
+        "elementName":"addressNumber",
         "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[1]/div[2]/div/div[2]/div[1]/div/div[6]/div/div[1]/div/textarea[2]",
+        "value":".//*[@id='root']/div/main/div/form/div[1]/div[2]/div/div[2]/div[1]/div/div[6]/div/div[1]/input",
         "waitFor":"visibility"
         },
         {
-        "elementName":"city",
+        "elementName":"address",
         "identifier":"xpath",
         "value":".//*[@id='root']/div/main/div/form/div[1]/div[2]/div/div[2]/div[1]/div/div[7]/div/div[1]/input",
         "waitFor":"visibility"
         },
         {
-        "elementName":"pin",
+        "elementName":"city",
         "identifier":"xpath",
         "value":".//*[@id='root']/div/main/div/form/div[1]/div[2]/div/div[2]/div[1]/div/div[8]/div/div[1]/input",
         "waitFor":"visibility"
         },
         {
+        "elementName":"pin",
+        "identifier":"xpath",
+        "value":".//*[@id='root']/div/main/div/form/div[1]/div[2]/div/div[2]/div[1]/div/div[9]/div/div[1]/input",
+        "waitFor":"visibility"
+        },
+        {
         "elementName":"locality",
         "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[1]/div[2]/div/div[2]/div[1]/div/div[9]/div/div[1]/div",
+        "value":".//*[@id='root']/div/main/div/form/div[1]/div[2]/div/div[2]/div[1]/div/div[12]/div/div[1]/div",
         "waitFor":"visibility"
         },
         {
         "elementName":"ward",
         "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[1]/div[2]/div/div[2]/div[1]/div/div[10]/div/div[1]/div[1]",
+        "value":".//*[@id='root']/div/main/div/form/div[1]/div[2]/div/div[2]/div[1]/div/div[11]/div/div[1]/div[1]/div",
         "waitFor":"visibility"
         },
         {
          "elementName":"zone",
          "identifier":"xpath",
-         "value":".//*[@id='root']/div/main/div/form/div[1]/div[2]/div/div[2]/div[1]/div/div[11]/div/div[1]/div[1]",
+         "value":".//*[@id='root']/div/main/div/form/div[1]/div[2]/div/div[2]/div[1]/div/div[10]/div/div[1]",
          "waitFor":"visibility"
         },
         {
          "elementName":"oldConsumerNumber",
          "identifier":"xpath",
-         "value":".//*[@id='root']/div/main/div/form/div[1]/div[2]/div/div[2]/div[1]/div/div[12]/div/div[1]/input",
+         "value":".//*[@id='root']/div/main/div/form/div[1]/div[2]/div/div[2]/div[1]/div/div[14]/div/div[1]/input",
          "waitFor":"visibility"
         },
         {
@@ -117,37 +123,37 @@
         {
         "elementName":"usageType",
         "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[1]/div[4]/div/div[2]/div[1]/div/div[3]/div/div/div[1]",
+        "value":".//*[@id='root']/div/main/div/form/div[1]/div[4]/div/div[2]/div[1]/div/div[1]/div/div/div[1]",
         "waitFor":"visibility"
         },
         {
          "elementName":"usageSubType",
          "identifier":"xpath",
-         "value":".//*[@id='root']/div/main/div/form/div[1]/div[4]/div/div[2]/div[1]/div/div[4]/div/div/div[1]",
+         "value":".//*[@id='root']/div/main/div/form/div[1]/div[4]/div/div[2]/div[1]/div/div[2]/div/div/div[1]",
          "waitFor":"visibility"
         },
         {
          "elementName":"connectionSize",
          "identifier":"xpath",
-         "value":".//*[@id='root']/div/main/div/form/div[1]/div[4]/div/div[2]/div[1]/div/div[5]/div/div/div[1]",
+         "value":".//*[@id='root']/div/main/div/form/div[1]/div[4]/div/div[2]/div[1]/div/div[3]/div/div/div[1]",
          "waitFor":"visibility"
         },
         {
          "elementName":"connectionType",
          "identifier":"xpath",
-         "value":".//*[@id='root']/div/main/div/form/div[1]/div[4]/div/div[2]/div[1]/div/div[6]/div/div/div[1]",
+         "value":".//*[@id='root']/div/main/div/form/div[1]/div[4]/div/div[2]/div[1]/div/div[4]/div/div/div[1]",
          "waitFor":"visibility"
         },
         {
          "elementName":"connectionStatus",
          "identifier":"xpath",
-         "value":".//*[@id='root']/div/main/div/form/div[1]/div[4]/div/div[2]/div[1]/div/div[7]/div/div/div[1]",
+         "value":".//*[@id='root']/div/main/div/form/div[1]/div[4]/div/div[2]/div[1]/div/div[5]/div/div/div[1]",
          "waitFor":"visibility"
         },
         {
         "elementName":"waterSourceType",
         "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[1]/div[4]/div/div[2]/div[1]/div/div[8]/div/div/div[1]",
+        "value":".//*[@id='root']/div/main/div/form/div[1]/div[4]/div/div[2]/div[1]/div/div[6]/div/div/div[1]",
         "waitFor":"visibility"
         },
         {
@@ -159,37 +165,37 @@
         {
          "elementName":"waterTreatment",
          "identifier":"xpath",
-         "value":".//*[@id='root']/div/main/div/form/div[1]/div[4]/div/div[2]/div[1]/div/div[10]/div/div/div[1]",
+         "value":".//*[@id='root']/div/main/div/form/div[1]/div[4]/div/div[2]/div[1]/div/div[7]/div/div/div[1]",
          "waitFor":"visibility"
         },
         {
          "elementName":"sumpCapacityDataEntry",
          "identifier":"xpath",
-         "value":".//*[@id='root']/div/main/div/form/div[1]/div[4]/div/div[2]/div[1]/div/div[11]/div/div/input",
+         "value":".//*[@id='root']/div/main/div/form/div[1]/div[4]/div/div[2]/div[1]/div/div[8]/div/div/input",
          "waitFor":"visibility"
         },
         {
          "elementName":"sequenceNumber",
          "identifier":"xpath",
-         "value":".//*[@id='root']/div/main/div/form/div[1]/div[4]/div/div[2]/div[1]/div/div[12]/div/div/input",
+         "value":".//*[@id='root']/div/main/div/form/div[1]/div[4]/div/div[2]/div[1]/div/div[9]/div/div/input",
          "waitFor":"visibility"
         },
         {
          "elementName":"plumberName",
          "identifier":"xpath",
-         "value":".//*[@id='root']/div/main/div/form/div[1]/div[4]/div/div[2]/div[1]/div/div[13]/div/div/input",
+         "value":"//*[@id='root']/div/main/div/form/div[1]/div[4]/div/div[2]/div[1]/div/div[10]/div/div/input",
          "waitFor":"visibility"
         },
         {
          "elementName":"noOfTaps",
          "identifier":"xpath",
-         "value":".//*[@id='root']/div/main/div/form/div[1]/div[4]/div/div[2]/div[1]/div/div[14]/div/div/input",
+         "value":"//*[@id='root']/div/main/div/form/div[1]/div[4]/div/div[2]/div[1]/div/div[11]/div/div/input",
          "waitFor":"visibility"
         },
         {
          "elementName":"noOfPersonsDataEntry",
          "identifier":"xpath",
-         "value":".//*[@id='root']/div/main/div/form/div[1]/div[4]/div/div[2]/div[1]/div/div[15]/div/div/input",
+         "value":"//*[@id='root']/div/main/div/form/div[1]/div[4]/div/div[2]/div[1]/div/div[12]/div/div/input",
          "waitFor":"visibility"
         },
         {

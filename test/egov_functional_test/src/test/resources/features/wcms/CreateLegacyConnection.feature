@@ -4,7 +4,7 @@ Feature: Creating Legacy Connection
 
     ### On Login Screen ###
     Given user on Login screen verifies signInText has visible value Sign In
-    And user on Login screen types on username value nadirroha
+    And user on Login screen types on username value avinay
     And user on Login screen types on password value 12345678
     And user on Login screen clicks on signIn
 
@@ -20,25 +20,26 @@ Feature: Creating Legacy Connection
     And user on WaterConnection screen types on email value --email
     And user on WaterConnection screen types on aadhaarNumber value --12 digit number
     And user on WaterConnection screen selects on gender value MALE
+    And user on WaterConnection screen types on addressNumber value 12345
     And user on WaterConnection screen types on address value Address
     And user on WaterConnection screen types on city value --"City ", 4 random characters
     And user on WaterConnection screen types on pin value --6 random numbers
     And user on WaterConnection screen selects on locality value Andhar Ali
-    And user on WaterConnection screen selects on ward value Prabhag 1
     And user on WaterConnection screen selects on zone value Zone A
+    And user on WaterConnection screen selects on ward value Prabhag 1
     And user on WaterConnection screen types on oldConsumerNumber value --10 random numbers
-    And user on WaterConnection screen types on physicalConnectionDate value 23/08/2017
+    And user on WaterConnection screen types on physicalConnectionDate value 23/08/2016
 
     ### On Create Legacy Connection entering connection details ###
-    And user on WaterConnection screen selects on propertyTypeDataEntry value Others
-    And user on WaterConnection screen selects on categoryType value GENERAL
+#    And user on WaterConnection screen selects on propertyTypeDataEntry value Others
+#    And user on WaterConnection screen selects on categoryType value GENERAL
     And user on WaterConnection screen selects on usageType value Industrial
     And user on WaterConnection screen selects on usageSubType value Industrial
     And user on WaterConnection screen selects on connectionSize value 1
     And user on WaterConnection screen selects on connectionType value NONMETERED
     And user on WaterConnection screen selects on connectionStatus value PERMANENT
     And user on WaterConnection screen selects on waterSourceType value RIVER
-    And user on WaterConnection screen selects on supplyType value Semi Bulk Type
+#    And user on WaterConnection screen selects on supplyType value Semi Bulk Type
     And user on WaterConnection screen selects on waterTreatment value bhuvaneshwar jal shudhikaran-bhuvaneshwar jal shudhikaran
     And user on WaterConnection screen types on sumpCapacityDataEntry value --3 random numbers
     And user on WaterConnection screen types on sequenceNumber value --6 random numbers

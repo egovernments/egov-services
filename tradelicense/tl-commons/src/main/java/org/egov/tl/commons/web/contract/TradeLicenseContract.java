@@ -197,4 +197,6 @@ public class TradeLicenseContract {
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;
 
+	private WorkFlowDetails workFlowDetails;
+
 }

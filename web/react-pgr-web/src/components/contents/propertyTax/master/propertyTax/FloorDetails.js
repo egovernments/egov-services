@@ -1047,12 +1047,12 @@ handleUsage = (value) => {
 														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.Arv')}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.arv?<span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.arv}</span>:"") : ""}
 														  value={floorDetails.floor ? floorDetails.floor.arv : ""}
-														  onChange={(e) => {handleChangeFloor(e,"floor" , "arv", false,'')}}
-														  type="number"
+														  onChange={(e) => {handleChangeFloor(e,"floor" , "arv", false, /^[0-9]*$/g)}}
+														  
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 														  underlineFocusStyle={styles.underlineFocusStyle}
-														  maxLength={12}
+														  maxLength={10}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														/>
 													</Col>}
@@ -1061,12 +1061,11 @@ handleUsage = (value) => {
 														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.manualArv')}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.manualArv?<span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.manualArv}</span>:"") : ""}
 														  value={floorDetails.floor ? floorDetails.floor.manualArv : ""}
-														  onChange={(e) => {handleChangeFloor(e,"floor" , "manualArv", false, '')}}
+														  onChange={(e) => {handleChangeFloor(e,"floor" , "manualArv", false, /^[0-9]*$/g)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 														  underlineFocusStyle={styles.underlineFocusStyle}
-														  maxLength={12}
-														  type="number"
+														  maxLength={10}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														/>
 													</Col>

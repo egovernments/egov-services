@@ -15,10 +15,6 @@ import lombok.Setter;
 @Builder
 public class TradeLicenseContract {
 
-	public static final String BUSINESS_KEY = "Trade License";
-
-	public static final String WORKFLOW_TYPE = "Trade License";
-
 	public static final String STATE_ID = "stateId";
 
 	@JsonProperty("workFlowDetails")
@@ -31,8 +27,8 @@ public class TradeLicenseContract {
 		ProcessInstanceRequest request = new ProcessInstanceRequest();
 		ProcessInstance processInstance = new ProcessInstance();
 
-		processInstance.setBusinessKey(BUSINESS_KEY);
-		processInstance.setType(WORKFLOW_TYPE);
+		processInstance.setBusinessKey(workFlowDetails.getBusinessKey());
+		processInstance.setType(workFlowDetails.getType());
 		processInstance.setComments(workFlowDetails.getComments());
 		processInstance.setTenantId(getTenantId());
 		processInstance.setAssignee(new Position());
@@ -52,8 +48,8 @@ public class TradeLicenseContract {
 		Task task = new Task();
 
 		task.setId(workFlowDetails.getStateId());
-		task.setBusinessKey(BUSINESS_KEY);
-		task.setType(WORKFLOW_TYPE);
+		task.setBusinessKey(workFlowDetails.getBusinessKey());
+		task.setType(workFlowDetails.getType());
 		task.setComments(workFlowDetails.getComments());
 		task.setAction(workFlowDetails.getAction());
 		task.setStatus(workFlowDetails.getStatus());

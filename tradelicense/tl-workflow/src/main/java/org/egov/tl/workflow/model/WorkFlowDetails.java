@@ -11,6 +11,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class WorkFlowDetails {
 
+	@JsonProperty("type")
+	private String type;
+
+	@JsonProperty("businessKey")
+	private String businessKey;
+
 	@JsonProperty("department")
 	private String department;
 
@@ -28,13 +34,13 @@ public class WorkFlowDetails {
 
 	@JsonProperty("comments")
 	private String comments;
-	
+
 	@JsonProperty("senderName")
 	private String senderName;
-	
+
 	@JsonProperty("details")
 	private String details;
-	
+
 	@JsonProperty("stateId")
 	private String stateId;
 }

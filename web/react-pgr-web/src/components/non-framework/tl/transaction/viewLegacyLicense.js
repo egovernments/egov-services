@@ -334,6 +334,35 @@ class Report extends Component {
       })}
     }
 
+
+        const renderDocuments = function() {
+            if(formData && formData.hasOwnProperty("licenses") && formData.licenses.length>0 && formData.licenses[0] && formData.licenses[0].supportDocuments.length>0  ){
+          {return formData && formData.licenses && formData.licenses[0] && formData.licenses[0].supportDocuments && formData.licenses[0].supportDocuments.length && formData.licenses.map(function(v, i) {
+            return (
+              <Card className="uiCard">
+                  <CardHeader title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate("tl.table.title.supportDocuments")}</div>}/>
+                  <CardText>
+                  <Table  bordered responsive className="table-striped">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>{translate("tl.create.license.table.documentName")}</th>
+                      <th>{translate("tl.create.license.table.comments")}</th>
+                      <th>{translate("tl.create.license.table.file")}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {renderFiles()}
+                  </tbody>
+                  </Table>
+                </CardText>
+                </Card>
+            )
+          })}
+        }
+      }
+
+
           const renderBody = function() {
             if(formData && formData.hasOwnProperty("licenses") && formData.licenses.length>0){
 
@@ -366,25 +395,7 @@ class Report extends Component {
                     </Table>
                   </CardText>
                   </Card>
-
-                  <Card className="uiCard">
-                      <CardHeader title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate("tl.table.title.supportDocuments")}</div>}/>
-                      <CardText>
-                      <Table  bordered responsive className="table-striped">
-                      <thead>
-                        <tr>
-                          <th>#</th>
-                          <th>{translate("tl.create.license.table.documentName")}</th>
-                          <th>{translate("tl.create.license.table.comments")}</th>
-                          <th>{translate("tl.create.license.table.file")}</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {renderFiles()}
-                      </tbody>
-                      </Table>
-                    </CardText>
-                    </Card>
+                  {renderDocuments()}
 
                 </div>
               )

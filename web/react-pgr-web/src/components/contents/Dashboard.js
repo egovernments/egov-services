@@ -275,7 +275,7 @@ class Dashboard extends Component {
         // })
 
         current.props.setLoadingStatus('hide');
-
+        localStorage.setItem("servReq", JSON.stringify(responses[2].serviceReq));
         current.setState({
           serviceRequests: inboxResponse.serviceRequests,
           serviceRequestsTwo: responses[2].serviceReq,

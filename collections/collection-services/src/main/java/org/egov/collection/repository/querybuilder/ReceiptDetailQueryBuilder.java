@@ -395,4 +395,13 @@ public class ReceiptDetailQueryBuilder {
         return "select id from egcl_receiptheader where receiptnumber = ? and tenantId = ? ";
     } */
 
+
+    public static String insertOnlinePayments() {
+        logger.info("Returning Online payment query to the repository");
+
+        return "INSERT INTO egcl_onlinepayments(id, receiptheader, paymentgatewayname, transactionnumber, transactionamount, transactiondate, authorisation_statuscode, "
+                + " status, remarks, createdby, lastmodifiedby, createddate, lastmodifieddate) "
+                + "VALUES (NEXTVAL('seq_egcl_onlinepayments'), :receiptheader, :paymentgatewayname, :transactionnumber, :transactionamount, :transactiondate, :authorisation_statuscode, "
+                + ":status, :remarks, :version, :createdby, :lastmodifiedby, :createddate, :lastmodifieddate)";
+    }
 }

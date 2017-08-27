@@ -248,6 +248,17 @@ var dat = {
             "patternErrMsg": ""
           },
           {
+            "name": "AddressNo",
+            "jsonPath": "Connection.address.addressNumber",
+            "label": "wc.create.groups.applicantDetails.addressNumber",
+            "pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
+            "type": "text",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
             "name": "Address",
             "jsonPath": "Connection.address.addressLine1",
             "label": "wc.create.groups.applicantDetails.address",
@@ -675,7 +686,7 @@ var dat = {
             "isDisabled": false,
             // "url": "/wcms/masters/supplytype/_search?|$..name|$..name",
             "requiredErrMsg": "",
-            "defaultValue":"Semi Bulk",
+            "defaultValue":"Semi Bulk Type",
             "patternErrMsg": ""
           },
           {

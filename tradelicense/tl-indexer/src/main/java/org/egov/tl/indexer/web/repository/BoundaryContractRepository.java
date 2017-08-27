@@ -2,6 +2,7 @@ package org.egov.tl.indexer.web.repository;
 
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tl.indexer.config.PropertiesManager;
+import org.egov.tl.indexer.domain.exception.EndPointException;
 import org.egov.tl.indexer.web.response.BoundaryResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,7 +17,7 @@ public class BoundaryContractRepository {
 	private RestTemplate restTemplate;
 
 	@Autowired
-	private PropertiesManager propertiesManger;
+	private PropertiesManager propertiesManager;
 
 	public BoundaryContractRepository(RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
@@ -24,8 +25,9 @@ public class BoundaryContractRepository {
 
 	public BoundaryResponse findByBoundaryIds(String tenantId, String ids, RequestInfoWrapper requestInfoWrapper) {
 
-		String hostUrl = propertiesManger.getLocationServiceHostName() + propertiesManger.getLocationServiceBasePath();
-		String searchUrl = propertiesManger.getLocationServiceSearchPath();
+		String hostUrl = propertiesManager.getLocationServiceHostName()
+				+ propertiesManager.getLocationServiceBasePath();
+		String searchUrl = propertiesManager.getLocationServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
 		if (ids != null) {
@@ -42,7 +44,8 @@ public class BoundaryContractRepository {
 			boundaryResponse = restTemplate.postForObject(url, requestInfoWrapper, BoundaryResponse.class);
 
 		} catch (Exception e) {
-			log.error("Error while connecting to the location end point");
+			throw new EndPointException(propertiesManager.getEndPointError() + url,
+					requestInfoWrapper.getRequestInfo());
 		}
 
 		if (boundaryResponse != null && boundaryResponse.getBoundarys() != null

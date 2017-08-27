@@ -51,7 +51,7 @@ const content=[
             {
                 icon: 'icon-class-name',
                 label: 'Apply for No Dues',
-                to: '#/non-framework/citizenServices/no-dues/search/watercharge',
+                to: '#/non-framework/citizenServices/no-dues/search/wc',
             },
             {
                 icon: 'icon-class-name',
@@ -67,7 +67,7 @@ const content=[
             {
                 icon: 'icon-class-name',
                 label: 'Apply for No Dues',
-                to: '#/non-framework/citizenServices/no-dues/search/propertytax',
+                to: '#/non-framework/citizenServices/no-dues/search/pt',
             },
             {
                 icon: 'icon-class-name',

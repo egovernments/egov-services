@@ -395,7 +395,7 @@ class PropertyTaxSearch extends Component {
                       <Col xs={12} md={6}>
                         <TextField errorText={fieldErrors.houseNoBldgApt
                           ? fieldErrors.houseNoBldgApt
-                          : ""} id="houseNoBldgApt" floatingLabelFixed={true} value={propertyTaxSearch.houseNoBldgApt?propertyTaxSearch.houseNoBldgApt:""} onChange={(e) => handleChange(e, "houseNoBldgApt", false, /^\d{1,10}$/g)} hintText="654654" floatingLabelText={translate('pt.create.groups.propertyAddress.fields.doorNo')}/>
+                          : ""} id="houseNoBldgApt" maxLength={12} floatingLabelFixed={true} value={propertyTaxSearch.houseNoBldgApt?propertyTaxSearch.houseNoBldgApt:""} onChange={(e) => handleChange(e, "houseNoBldgApt", false, "")} hintText="654654" floatingLabelText={translate('pt.create.groups.propertyAddress.fields.doorNo')}/>
                       </Col>
 
                       <Col xs={12} md={6}>
@@ -409,13 +409,13 @@ class PropertyTaxSearch extends Component {
                       <Col xs={12} md={6}>
                         <TextField errorText={fieldErrors.mobileNumber
                           ? fieldErrors.mobileNumber
-                          : ""} floatingLabelFixed={true} value={propertyTaxSearch.mobileNumber?propertyTaxSearch.mobileNumber:""} onChange={(e) => handleChange(e, "mobileNumber", false, /^\d{10}$/g)} hintText="9584323454" floatingLabelText={translate('pt.create.groups.propertyAddress.mobileNumber')} />
+                          : ""} floatingLabelFixed={true} maxLength={10} value={propertyTaxSearch.mobileNumber?propertyTaxSearch.mobileNumber:""} onChange={(e) => handleChange(e, "mobileNumber", false, /^\d{10}$/g)} hintText="9584323454" floatingLabelText={translate('pt.create.groups.propertyAddress.mobileNumber')} />
                       </Col>
 
                       <Col xs={12} md={6}>
                         <TextField errorText={fieldErrors.aadhaarNumber
                           ? fieldErrors.aadhaarNumber
-                          : ""} floatingLabelFixed={true} value={propertyTaxSearch.aadhaarNumber?propertyTaxSearch.aadhaarNumber:""} onChange={(e) => handleChange(e, "aadhaarNumber", false, /^\d{12}$/g)} hintText={translate('pt.create.groups.ownerDetails.fields.aadhaarNumber')} floatingLabelText={translate('pt.create.groups.ownerDetails.fields.aadhaarNumber')} />
+                          : ""} floatingLabelFixed={true} maxLength={12} value={propertyTaxSearch.aadhaarNumber?propertyTaxSearch.aadhaarNumber:""} onChange={(e) => handleChange(e, "aadhaarNumber", false, /^\d{12}$/g)} hintText={translate('pt.create.groups.ownerDetails.fields.aadhaarNumber')} floatingLabelText={translate('pt.create.groups.ownerDetails.fields.aadhaarNumber')} />
                       </Col>
                     </Row>
                   </Grid>

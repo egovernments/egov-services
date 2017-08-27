@@ -169,6 +169,7 @@ public class Connection {
 
     @NotNull
     private String manualReceiptNumber;
+    
 
     @NotNull
     private List<DocumentOwner> documents;
@@ -218,6 +219,9 @@ public class Connection {
     
     private String manualConsumerNumber;
 
+    private String houseNumber;
+
+    
     private Boolean outsideULB;
 
     private String meterOwner;

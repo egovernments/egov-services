@@ -84,7 +84,7 @@ var dat = {
 							"name": "consumerCode",
 							"jsonPath": "consumerCode",
 							"label": "noDues.citizenService.consumerCode",
-							"pattern": "",
+							"pattern": "^.{0,30}$",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
@@ -95,7 +95,7 @@ var dat = {
 							"name": "email",
 							"jsonPath": "email",
 							"label": "noDues.citizenService.email",
-							"pattern": "",
+							"pattern": "^[a-zA-Z0-9_.]+@[a-zA-Z0-9]+.[a-zA-Z0-9]+$",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
@@ -108,13 +108,13 @@ var dat = {
 							"name": "mobileNumber",
 							"jsonPath": "mobileNumber",
 							"label": "noDues.citizenService.mobileNumber",
-							"pattern": "",
+							"pattern": "^[0-9]{10,10}$",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": "",
-              "defaultValue":JSON.parse(window.localStorage.getItem("userRequest")).mobileNumber
+              "defaultValue":""
 						},
 						{
 							"name": "businessService",
@@ -139,7 +139,8 @@ var dat = {
 			"resultPath": "PipeSizes",
 			"rowClickUrlUpdate": "/update/wc/pipeSize/{id}",
 			"rowClickUrlView": "/view/wc/pipeSize/{id}"
-			}
+		},
+		"feeDetails":[{"id":null,"tenantId":JSON.parse(window.localStorage.getItem("tenantId")),"consumerCode":"","consumerType":"consumertype1","businessService":"CS","minimumAmountPayable":10,"owner":{"id":0,"userName":null,"name":null,"type":null,"mobileNumber":null,"emailId":null,"roles":null},"taxPeriodFrom":,"taxPeriodTo":,"demandDetails":[{"id":null,"demandId":null,"taxHeadMasterCode":"","taxAmount":20,"collectionAmount":0}]}]
 	},
 	"noDues.view": {
 		"numCols": 12/3,

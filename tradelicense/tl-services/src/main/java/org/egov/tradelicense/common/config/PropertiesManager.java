@@ -190,6 +190,9 @@ public class PropertiesManager {
 	@Value("${legacy.trade.create.success.status.message}")
     private String legacyCreateSuccessMessage;
 
+	@Value("${new.trade.create.success.status.message}")
+    private String newTradeLicenseCreateSuccessMessage;
+	
 	//IdNotFound Exception Related
 	@Value("${id.notFound.field}")
 	private String idField;
@@ -215,5 +218,12 @@ public class PropertiesManager {
 	
 	@Value("${applicationfee.applicable}")
 	private String applicatonFeeApplicable;
+	
+	//mandatory document exception message
+	@Value("${mandatory.document.notfound.customMsg}")
+	private String mandatoryDocumentNotFoundCustomMsg;
+	
+	@Value("${nonlegacy.update.customMsg}")
+	private String nonLegacyUpdateCustomMsg;
 
 }

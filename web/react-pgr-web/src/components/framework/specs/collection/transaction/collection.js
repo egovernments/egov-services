@@ -169,7 +169,7 @@ var dat = {
           "name": "mobile",
           "jsonPath": "mobileNumber",
           "label": "Mobile",
-          "pattern": "^.{10,10}$",
+          "pattern": "^[0-9]{10,10}$",
           "type": "number",
           "isRequired": false,
           "isDisabled": false,

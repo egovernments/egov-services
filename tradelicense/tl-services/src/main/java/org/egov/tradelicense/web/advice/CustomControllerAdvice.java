@@ -28,6 +28,8 @@ import org.egov.tradelicense.common.domain.exception.InvalidSubCategoryException
 import org.egov.tradelicense.common.domain.exception.InvalidUomException;
 import org.egov.tradelicense.common.domain.exception.InvalidValidityYearsException;
 import org.egov.tradelicense.common.domain.exception.LegacyFeeDetailNotFoundException;
+import org.egov.tradelicense.common.domain.exception.MandatoryDocumentNotFoundException;
+import org.egov.tradelicense.common.domain.exception.NonLegacyLicenseUpdateException;
 import org.egov.tradelicense.common.domain.exception.OldLicenseNotFoundException;
 import org.egov.tradelicense.common.domain.exception.PropertyAssesmentNotFoundException;
 import org.egov.tradelicense.common.domain.exception.TradeLicensesNotEmptyException;
@@ -50,6 +52,8 @@ import org.egov.tradelicense.web.adapters.error.InvalidSubCategoryAdapter;
 import org.egov.tradelicense.web.adapters.error.InvalidUomAdapter;
 import org.egov.tradelicense.web.adapters.error.InvalidValidityYearsAdapter;
 import org.egov.tradelicense.web.adapters.error.LegacyFeeDetailNotFoundAdapter;
+import org.egov.tradelicense.web.adapters.error.MandatoryDocumentNotFoundAdapter;
+import org.egov.tradelicense.web.adapters.error.NonLegacyLicenseUpdateAdapter;
 import org.egov.tradelicense.web.adapters.error.OldLicenseNotFoundAdapter;
 import org.egov.tradelicense.web.adapters.error.PropertyAssesmentNotFoundAdapter;
 import org.egov.tradelicense.web.adapters.error.TradeLicensesNotEmptyAdapter;
@@ -261,6 +265,18 @@ public class CustomControllerAdvice {
 	@ExceptionHandler(InvalidValidityYearsException.class)
 	public ErrorResponse handleInvalidValidityYearsException(InvalidValidityYearsException ex) {
 		return new InvalidValidityYearsAdapter().getErrorResponse(ex.getCustomMsg(), ex.getRequestInfo());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(MandatoryDocumentNotFoundException.class)
+	public ErrorResponse handleMandatoryDocumentNotFoundException(MandatoryDocumentNotFoundException ex) {
+		return new MandatoryDocumentNotFoundAdapter().getErrorResponse(ex.getCustomMsg(), ex.getRequestInfo());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(NonLegacyLicenseUpdateException.class)
+	public ErrorResponse handleNonLegacyLicenseUpdateException(NonLegacyLicenseUpdateException ex) {
+		return new NonLegacyLicenseUpdateAdapter().getErrorResponse(ex.getCustomMsg(), ex.getRequestInfo());
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)

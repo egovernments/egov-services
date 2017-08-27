@@ -46,8 +46,6 @@ public class TradeLicenseController {
 	@Autowired
 	PropertiesManager propertiesManager;
 
-	
-
 	@RequestMapping(path = "/license/v1/_create", method = RequestMethod.POST)
 	public TradeLicenseResponse createTradelicense(@Valid @RequestBody TradeLicenseRequest tradeLicenseRequest,
 			BindingResult errors) throws Exception {
@@ -101,25 +99,57 @@ public class TradeLicenseController {
 		tradeLicenseService.addToQue(tradeLicenseRequest, true);
 		tradeLicenseResponse.setLicenses(tradeLicenseContracts);
 
-		// creating success message with the license numbers
+		// creating the success message for license create
 		if (tradeLicenseResponse.getResponseInfo() != null && tradeLicenseResponse.getLicenses() != null
 				&& tradeLicenseResponse.getLicenses().size() > 0) {
 
-			String statusMessage = propertiesManager.getLegacyCreateSuccessMessage();
-			String licenseNumbers = "";
-			int licenseCount = tradeLicenseResponse.getLicenses().size();
+			List<TradeLicenseContract> licenses = tradeLicenseResponse.getLicenses();
+			int licenseCount = licenses.size();
+			String legacyText = "";
+			String newTradeText = "";
+			String licenseNumbers = " ";
+			String applicationNumbers = " ";
+
 			for (int i = 0; i < licenseCount; i++) {
-				if (tradeLicenseResponse.getLicenses().get(i).getLicenseNumber() != null) {
-					licenseNumbers = licenseNumbers.concat(tradeLicenseRequest.getLicenses().get(i).getLicenseNumber());
-					if (i != (licenseCount - 1)) {
-						licenseNumbers = licenseNumbers.concat(", ");
+
+				if (licenses.get(i).getIsLegacy()) {
+
+					if (legacyText.isEmpty()) {
+						legacyText = propertiesManager.getLegacyCreateSuccessMessage();
+					}
+
+					if (licenses.get(i).getLicenseNumber() != null) {
+						licenseNumbers = licenseNumbers.concat(licenses.get(i).getLicenseNumber());
+						if (i != (licenseCount - 1)) {
+							licenseNumbers = licenseNumbers.concat(", ");
+						}
+					}
+				} else {
+
+					if (newTradeText.isEmpty()) {
+						newTradeText = propertiesManager.getNewTradeLicenseCreateSuccessMessage();
+					}
+
+					if (licenses.get(i).getApplicationNumber() != null) {
+						applicationNumbers = applicationNumbers.concat(licenses.get(i).getApplicationNumber());
+						if (i != (licenseCount - 1)) {
+							applicationNumbers = applicationNumbers.concat(", ");
+						}
 					}
 				}
 			}
-			if (statusMessage != null) {
-				statusMessage = statusMessage.replace("{licenseNumbers}", licenseNumbers);
+
+			if (legacyText != null && !legacyText.isEmpty()) {
+
+				legacyText = legacyText + licenseNumbers;
 			}
-			tradeLicenseResponse.getResponseInfo().setStatus(statusMessage);
+
+			if (newTradeText != null && !newTradeText.isEmpty()) {
+
+				newTradeText = newTradeText + applicationNumbers;
+			}
+
+			tradeLicenseResponse.getResponseInfo().setStatus(legacyText + newTradeText);
 		}
 
 		return tradeLicenseResponse;
@@ -185,9 +215,6 @@ public class TradeLicenseController {
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
 
 		return responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-		// return
-		// ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
-		// .resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
 	}
 
 	@RequestMapping(path = "/license/v1/_search", method = RequestMethod.POST)

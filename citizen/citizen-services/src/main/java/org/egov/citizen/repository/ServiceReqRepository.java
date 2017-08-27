@@ -1,9 +1,15 @@
 package org.egov.citizen.repository;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
+import org.egov.citizen.model.AuditDetails;
 import org.egov.citizen.model.ServiceReq;
 import org.egov.citizen.model.ServiceReqRequest;
+import org.egov.citizen.repository.querybuilder.ServiceReqQueryBuilder;
+import org.egov.citizen.web.contract.ServiceRequestSearchCriteria;
 import org.egov.common.contract.request.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,6 +26,27 @@ public class ServiceReqRepository {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+	
+	@Autowired
+	private ServiceReqQueryBuilder serviceReqQueryBuilder;
+	
+	public List<Map<String, Object>> search(ServiceRequestSearchCriteria serviceRequestSearchCriteria){
+		log.info("ServiceReqRepository");
+		final List<Object> preparedStatementValues = new ArrayList<>();
+        final String queryStr = serviceReqQueryBuilder.getQuery(serviceRequestSearchCriteria, preparedStatementValues);
+        List<Map<String, Object>> maps = null;
+      //  List<Asset> assets = new ArrayList<Asset>();
+        try {
+            log.info("queryStr::" + queryStr + "preparedStatementValues::" + preparedStatementValues.toString());
+            maps = jdbcTemplate.queryForList(queryStr, preparedStatementValues.toArray());
+            log.info("maps::" + maps);
+        } catch (final Exception ex) {
+        	ex.printStackTrace();
+            log.info("the exception from findforcriteria : " + ex);
+        }
+        return maps;
+		
+	}
 
 	public void persistServiceReq(ServiceReqRequest serviceReqRequest) {
 		RequestInfo requestInfo = serviceReqRequest.getRequestInfo();
@@ -27,7 +54,7 @@ public class ServiceReqRepository {
 		ObjectMapper objectMapper = new ObjectMapper();
 		String jsonValue = null;
 		try {
-			jsonValue = objectMapper.writeValueAsString(serviceReqRequest);
+			jsonValue = objectMapper.writeValueAsString(serviceReq);
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -53,7 +80,7 @@ public class ServiceReqRepository {
 		ObjectMapper objectMapper = new ObjectMapper();
 		String jsonValue = null;
 		try {
-			jsonValue = objectMapper.writeValueAsString(serviceReqRequest);
+			jsonValue = objectMapper.writeValueAsString(serviceReq);
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -71,5 +98,5 @@ public class ServiceReqRepository {
 			log.info("the exception from insert query : " + ex);
 		}
 	}
-
+	
 }

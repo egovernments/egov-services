@@ -184,7 +184,7 @@ public class ReceiptController {
 		LOGGER.info("Request: " + receiptRequest.toString());
 		final List<ErrorResponse> errorResponses = receiptReqValidator
 				.validatecreateReceiptRequest(receiptRequest);
-		if (!errorResponses.isEmpty())
+		if (null!=errorResponses && !errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 		Receipt receiptInfo = null;
 		try {

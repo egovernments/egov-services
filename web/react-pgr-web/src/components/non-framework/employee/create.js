@@ -3277,9 +3277,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
 
     setForm: (data, isUpdate, codeAuto, unameAuto) => {
-        var requiredList = ['user.name', 'code', 'employeeType', 'dateOfAppointment', 'employeeStatus', 'maritalStatus', 'user.userName', 'user.mobileNumber', 'user.active', 'user.dob', 'user.gender'];
+        var requiredList = ['name', 'code', 'employeeType', 'dateOfAppointment', 'employeeStatus', 'maritalStatus', 'userName', 'mobileNumber', 'active', 'dob', 'gender'];
         if(codeAuto) requiredList.splice(requiredList.indexOf('code'), 1);
-        if(unameAuto) requiredList.splice(requiredList.indexOf('user.userName'), 1);
+        if(unameAuto) requiredList.splice(requiredList.indexOf('userName'), 1);
 
         dispatch({
             type: "SET_FORM",
@@ -3288,7 +3288,7 @@ const mapDispatchToProps = dispatch => ({
             fieldErrors: {},
             validationData: {
                 required: {
-                    current: isUpdate ? Object.assign([], requiredList) : ['user.active'],
+                    current: isUpdate ? Object.assign([], requiredList) : ['active'],
                     required: Object.assign([], requiredList)
                 },
                 pattern: {

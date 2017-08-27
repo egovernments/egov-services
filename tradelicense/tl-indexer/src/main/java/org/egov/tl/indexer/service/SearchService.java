@@ -6,11 +6,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.tl.commons.web.contract.Category;
+import org.egov.tl.commons.web.contract.LicenseFeeDetailContract;
 import org.egov.tl.commons.web.contract.LicenseStatus;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.ResponseInfo;
+import org.egov.tl.commons.web.contract.SupportDocumentSearchContract;
 import org.egov.tl.commons.web.contract.TradeLicenseSearchContract;
 import org.egov.tl.commons.web.contract.UOM;
+import org.egov.tl.commons.web.requests.DocumentTypeV2Response;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tl.commons.web.requests.ResponseInfoFactory;
 import org.egov.tl.commons.web.response.CategoryResponse;
@@ -20,8 +23,11 @@ import org.egov.tl.commons.web.response.UOMResponse;
 import org.egov.tl.indexer.client.JestClientEs;
 import org.egov.tl.indexer.config.PropertiesManager;
 import org.egov.tl.indexer.web.contract.Boundary;
+import org.egov.tl.indexer.web.contract.FinancialYearContract;
 import org.egov.tl.indexer.web.repository.BoundaryContractRepository;
 import org.egov.tl.indexer.web.repository.CategoryContractRepository;
+import org.egov.tl.indexer.web.repository.DocumentTypeContractRepository;
+import org.egov.tl.indexer.web.repository.FinancialYearContractRepository;
 import org.egov.tl.indexer.web.response.BoundaryResponse;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -32,6 +38,7 @@ import org.springframework.stereotype.Service;
 import io.searchbox.core.Search;
 import io.searchbox.core.SearchResult;
 import io.searchbox.core.SearchResult.Hit;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 
@@ -39,6 +46,7 @@ import io.searchbox.core.SearchResult.Hit;
  *
  */
 @Service
+@Slf4j
 public class SearchService {
 
 	@Autowired
@@ -56,6 +64,12 @@ public class SearchService {
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
 
+	@Autowired
+	FinancialYearContractRepository financialYearRepository;
+
+	@Autowired
+	DocumentTypeContractRepository documentTypeRepository;
+
 	public TradeLicenseSearchResponse searchFromEs(RequestInfo requestInfo, String tenantId, Integer pageSize,
 			Integer pageNumber, String sort, String active, String tradeLicenseId, String applicationNumber,
 			String licenseNumber, String oldLicenseNumber, String mobileNumber, String aadhaarNumber, String emailId,
@@ -67,6 +81,10 @@ public class SearchService {
 		TradeLicenseSearchResponse tradeLicenseSearchResponse = new TradeLicenseSearchResponse();
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 		tradeLicenseSearchResponse.setResponseInfo(responseInfo);
+
+		// preparing request info wrapper for the rest api calls
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
 
 		List<TradeLicenseSearchContract> tlList = new ArrayList<TradeLicenseSearchContract>();
 
@@ -91,14 +109,17 @@ public class SearchService {
 					.addIndex(propertiesManager.getEsIndex()).addType(propertiesManager.getEsIndexType()).build();
 
 			SearchResult searchresult = null;
+
 			try {
+
 				searchresult = jestClient.getClient().execute(search);
+
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.error("error executing elastic client search");
 			}
 
 			if (searchresult != null && !searchresult.isSucceeded() && searchresult.getErrorMessage() != null) {
+
 				tradeLicenseSearchResponse.setLicenses(tlList);
 				return tradeLicenseSearchResponse;
 			}
@@ -111,47 +132,77 @@ public class SearchService {
 			// identifying unique field ids and getting the unique fields map
 			// with id and name
 			if (tlList != null && tlList.size() > 0) {
+
 				Map<String, Map<String, String>> uniqueFieldsMap = identifyDependencyFields(requestInfo, tlList);
-				for (TradeLicenseSearchContract TradeLicenseSearchContract : tlList) {
+
+				for (TradeLicenseSearchContract tradeLicenseSearchContract : tlList) {
 					String categoryName = null, subCategoryName = null, uomName = null, statusName = null,
 							localityName = null, adminWardName = null, revenueWardName = null;
 
 					if (uniqueFieldsMap.get("categoryIdAndNameMap") != null) {
 						categoryName = uniqueFieldsMap.get("categoryIdAndNameMap")
-								.get(getString(TradeLicenseSearchContract.getCategoryId()));
+								.get(getString(tradeLicenseSearchContract.getCategoryId()));
 					}
 					if (uniqueFieldsMap.get("subCategoryIdAndNameMap") != null) {
 						subCategoryName = uniqueFieldsMap.get("subCategoryIdAndNameMap")
-								.get(getString(TradeLicenseSearchContract.getSubCategoryId()));
+								.get(getString(tradeLicenseSearchContract.getSubCategoryId()));
 					}
 					if (uniqueFieldsMap.get("uomIdAndNameMap") != null) {
 						uomName = uniqueFieldsMap.get("uomIdAndNameMap")
-								.get(getString(TradeLicenseSearchContract.getUomId()));
+								.get(getString(tradeLicenseSearchContract.getUomId()));
 					}
 					if (uniqueFieldsMap.get("statusIdAndNameMap") != null) {
 						statusName = uniqueFieldsMap.get("statusIdAndNameMap")
-								.get(getString(TradeLicenseSearchContract.getStatus()));
+								.get(getString(tradeLicenseSearchContract.getStatus()));
 					}
 					if (uniqueFieldsMap.get("localityIdAndNameMap") != null) {
 						localityName = uniqueFieldsMap.get("localityIdAndNameMap")
-								.get(getString(TradeLicenseSearchContract.getLocalityId()));
+								.get(getString(tradeLicenseSearchContract.getLocalityId()));
 					}
 					if (uniqueFieldsMap.get("adminWardIdAndNameMap") != null) {
 						adminWardName = uniqueFieldsMap.get("adminWardIdAndNameMap")
-								.get(getString(TradeLicenseSearchContract.getAdminWardId()));
+								.get(getString(tradeLicenseSearchContract.getAdminWardId()));
 					}
 					if (uniqueFieldsMap.get("revenueWardIdAndNameMap") != null) {
 						revenueWardName = uniqueFieldsMap.get("revenueWardIdAndNameMap")
-								.get(getString(TradeLicenseSearchContract.getRevenueWardId()));
+								.get(getString(tradeLicenseSearchContract.getRevenueWardId()));
 					}
 
-					TradeLicenseSearchContract.setCategory(categoryName);
-					TradeLicenseSearchContract.setSubCategory(subCategoryName);
-					TradeLicenseSearchContract.setUom(uomName);
-					TradeLicenseSearchContract.setStatusName(statusName);
-					TradeLicenseSearchContract.setLocalityName(localityName);
-					TradeLicenseSearchContract.setAdminWardName(adminWardName);
-					TradeLicenseSearchContract.setRevenueWardName(revenueWardName);
+					tradeLicenseSearchContract.setCategory(categoryName);
+					tradeLicenseSearchContract.setSubCategory(subCategoryName);
+					tradeLicenseSearchContract.setUom(uomName);
+					tradeLicenseSearchContract.setStatusName(statusName);
+					tradeLicenseSearchContract.setLocalityName(localityName);
+					tradeLicenseSearchContract.setAdminWardName(adminWardName);
+					tradeLicenseSearchContract.setRevenueWardName(revenueWardName);
+
+					// set the fee detail financial year range from the id
+					FinancialYearContract finYearContract;
+					for (LicenseFeeDetailContract licenseFeeDetailContract : tradeLicenseSearchContract
+							.getFeeDetails()) {
+
+						finYearContract = financialYearRepository.findFinancialYearById(
+								tradeLicenseSearchContract.getTenantId(), licenseFeeDetailContract.getFinancialYear(),
+								requestInfoWrapper);
+						if (finYearContract != null) {
+							licenseFeeDetailContract.setFinancialYear(finYearContract.getFinYearRange());
+						}
+					}
+
+					// set document name from the document id
+					for (SupportDocumentSearchContract supportDocumentSearchContract : tradeLicenseSearchContract
+							.getSupportDocuments()) {
+
+						DocumentTypeV2Response documentTypeResponse;
+						documentTypeResponse = documentTypeRepository.findById(requestInfoWrapper,
+								tradeLicenseSearchContract.getTenantId(),
+								supportDocumentSearchContract.getDocumentTypeId());
+
+						if (documentTypeResponse != null && documentTypeResponse.getDocumentTypes().size() > 0) {
+							supportDocumentSearchContract
+									.setDocumentTypeName(documentTypeResponse.getDocumentTypes().get(0).getName());
+						}
+					}
 				}
 			}
 
@@ -181,8 +232,12 @@ public class SearchService {
 		Map<String, String> localityIdAndNameMap = new HashMap<String, String>();
 		Map<String, String> adminWardIdAndNameMap = new HashMap<String, String>();
 		Map<String, String> revenueWardIdAndNameMap = new HashMap<String, String>();
+		String tenantId = null;
 
-		String tenantId = tradeLicenseSearchContracts.get(0).getTenantId();
+		if (tradeLicenseSearchContracts != null && tradeLicenseSearchContracts.size() > 0) {
+			tenantId = tradeLicenseSearchContracts.get(0).getTenantId();
+		}
+
 		// building category unique ids map
 		if (uniqueIds.get("categoryIds") != null) {
 

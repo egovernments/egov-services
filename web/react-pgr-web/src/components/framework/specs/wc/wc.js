@@ -521,8 +521,8 @@ var dat = {
             "name": "Sequence No",
             "jsonPath": "Connection.billSequenceNumber",
             "label": "wc.create.groups.connectionDetails.fields.billingNumber",
-            "pattern": "^(0|[1-9][0-9]*)$",
-            "type": "number",
+            "pattern": "^\\d+(\\.\\d{1,3})?$",
+            "type": "text",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -556,7 +556,7 @@ var dat = {
             "label": "wc.create.groups.connectionDetails.fields.numberOfPersons",
             "type": "number",
             "pattern":"^(0|[1-9][0-9]*)$",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
@@ -1092,8 +1092,7 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-      			"url":"/pt-property/property/usages/_search?|$..name|$..name",
-            "convertToString":true
+      			"url":"/pt-property/property/usages/_search?|$..name|$..name"
           },
           {
             "name": "hscPipeSizeType",

@@ -298,7 +298,7 @@ var dat = {
             "pattern": "",
             "type": "singleValueList",
             "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE|$.Boundary.*.boundaryNum|$.Boundary.*.name",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -310,7 +310,7 @@ var dat = {
             "pattern": "",
             "type": "singleValueList",
             "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=WARD&hierarchyTypeName=ADMINISTRATION|$.Boundary.*.boundaryNum|$.Boundary.*.name",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -322,7 +322,7 @@ var dat = {
             "pattern": "",
             "type": "singleValueList",
             "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$.Boundary.*.boundaryNum|$.Boundary.*.name",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -352,7 +352,7 @@ var dat = {
           },
           {
             "name": "ManualConsumerNo",
-            "jsonPath": "connection.manualConsumerNumber",
+            "jsonPath": "Connection.manualConsumerNumber",
             "label": "wc.create.groups.applicantDetails.manualConsumerNo",
             "pattern": "",
             "type": "text",
@@ -518,6 +518,17 @@ var dat = {
             "pattern": "",
             "type": "text",
             "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "ManualConsumerNo",
+            "jsonPath": "Connection.manualConsumerNumber",
+            "label": "wc.create.groups.applicantDetails.manualConsumerNo",
+            "pattern": "",
+            "type": "text",
+            "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -718,7 +729,7 @@ var dat = {
             "jsonPath": "Connection.billSequenceNumber",
             "label": "wc.create.groups.connectionDetails.fields.billingNumber",
             "pattern": "^\\d+(\\.\\d{1,3})?$",
-            "type": "number",
+            "type": "text",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -752,7 +763,7 @@ var dat = {
             "label": "wc.create.groups.connectionDetails.fields.numberOfPersons",
             "type": "number",
             "pattern":"^(0|[1-9][0-9]*)$",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
@@ -1345,7 +1356,7 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-      			"url":"/pt-property/property/usages/_search?|$..name|$..name"
+      			"url":"/pt-property/property/usages/_search?|$..name|$..name",
           },
           {
             "name": "hscPipeSizeType",

@@ -75,12 +75,14 @@ const getAmount = function(demands, arrearsBool) {
 }
 
 const getAddress = function(property) {
+  if(property && property.address)
   return (property.address.addressNumber ? (property.address.addressNumber + ", ") : "") + 
          (property.address.addressLine1 ? (property.address.addressLine1 + ", ") : "") + 
          (property.address.addressLine2 ? (property.address.addressLine2 + ". ") : "") + 
          (property.address.landmark ? ("Landmark: " + property.address.landmark) : "") + 
          (property.address.city ? ("City: " + property.address.city) : "") + 
          (property.address.pincode ? ("- " + property.address.pincode) : "");
+  else return "NA";
 }
 
 class NoDues extends Component {
@@ -604,7 +606,7 @@ class NoDues extends Component {
   getProperty = (cb) => {
     let self = this;
     Api.commonApiPost("pt-property/properties/_search", {"upicNumber": self.props.formData.consumerCode}, {}, null, true, false, localStorage.getItem("auth-token-temp")).then(function(res) {
-      cb(res.properties[0]);
+      cb(res && res.properties && res.properties[0] ? res.properties[0] : {});
     }, function(err){
       cb({});
     })
@@ -664,7 +666,8 @@ class NoDues extends Component {
             self.getProperty(function(property) {
               self.setState({
                 Receipt: "",
-                ReceiptOne: res1.Receipt
+                ReceiptOne: res1.Receipt,
+                Property: property
               });
               console.log(res2);
               self.handleNext();
@@ -1433,14 +1436,14 @@ class NoDues extends Component {
                             <td colSpan={3}>
                               <div>
                                 <b>Property No:</b> {Receipt[0].Bill[0].billDetails[0].consumerCode}<br/>
-                                <b>Property Usage / Sub Usage:</b> {this.state.Property.usage}
+                                <b>Property Usage / Sub Usage:</b> {this.state.Property && this.state.Property.usage ? this.state.Property.usage : ""}
                               </div>
                             </td>
                           </tr>
                           <tr>
                             <td colSpan={3}>
                               <div style={{"whiteSpace": "pre"}}>
-                                <b>Property Owner Name</b>: {this.state.Property.owners[0].name}<br/>
+                                <b>Property Owner Name</b>: {this.state.Property && this.state.Property.owners ? this.state.Property.owners[0].name : ""}<br/>
                                 <b>& Address: </b> {getAddress(this.state.Property)}                                                                                        <b>Age of Property</b>
                               </div>
                             </td>

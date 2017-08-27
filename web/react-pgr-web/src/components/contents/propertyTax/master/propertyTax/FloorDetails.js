@@ -1388,7 +1388,7 @@ handleUsage = (value) => {
                                               <th>#</th>
 											  <th>{translate('pt.create.groups.floorDetails.fields.floorNumber')}</th>
                                               <th>{translate('pt.create.groups.floorDetails.fields.unitType')}</th>
-                                              <th>{translate('pt.create.groups.floorDetails.fields.unitType')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.unitNumber')}</th>
                                               <th>{translate('pt.create.groups.floorDetails.fields.constructionClass')}</th>
                                               <th>{translate('pt.create.groups.floorDetails.fields.usageType')}</th>
                                               <th>{translate('pt.create.groups.floorDetails.fields.usageSubType')}</th>
@@ -1397,6 +1397,7 @@ handleUsage = (value) => {
                                               <th>{translate('pt.create.groups.floorDetails.fields.occupantName')}</th>
                                               <th>{translate('pt.create.groups.floorDetails.fields.annualRent')}</th>
                                               <th>{translate('pt.create.groups.floorDetails.fields.manualArv')}</th>
+											  <th>{translate('pt.create.groups.floorDetails.fields.constructionStartDate')}</th>
                                               <th>{translate('pt.create.groups.floorDetails.fields.constructionEndDate')}</th>
                                               <th>{translate('pt.create.groups.floorDetails.fields.effectiveFromDate')}</th>
                                               <th>{translate('pt.create.groups.floorDetails.fields.unstructuredLand')}</th>
@@ -1408,7 +1409,7 @@ handleUsage = (value) => {
 											  <th>{translate('pt.create.groups.propertyAddress.fields.landCost')}</th>
                                               <th>{translate('pt.create.groups.floorDetails.fields.plinthArea')}</th>
                                               <th>{translate('pt.create.groups.floorDetails.fields.occupancyCertificateNumber')}</th>
-                                              <th>{translate('pt.create.groups.floorDetails.fields.buildingPermissionNumber')}</th>
+                                              <th>{translate('pt.create.groups.assessmentDetails.fields.isLegal')}</th>
                                               <th style={{minWidth:70}}></th>
                                             </tr>
                                           </thead>
@@ -1428,6 +1429,7 @@ handleUsage = (value) => {
                                                     <td>{i.occupierName || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.annualRent || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.manualArv || translate('pt.search.searchProperty.fields.na')}</td>
+													<td>{i.constructionStartDate || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.constCompletionDate || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.occupancyDate || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.isStructured ? 'Yes' : 'No'}</td>
@@ -1439,7 +1441,7 @@ handleUsage = (value) => {
 													<td>{i.landCost || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.builtupArea || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.occupancyCertiNumber || translate('pt.search.searchProperty.fields.na')}</td>
-                                                    <td>{i.bpaNo || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{i.isAuthorised ? 'Yes': 'No'}</td>
                                                     <td>
 														<i className="material-icons" style={styles.iconFont} onClick={ () => {
 															if(i.isStructured){

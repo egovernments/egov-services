@@ -166,7 +166,7 @@ class ViewProperty extends Component {
 			  
 			  res.properties[0].propertyDetail.floors = units;
 			  
-			  this.setState({
+			  currentThis.setState({
 				  resultList: res.properties,
 			  })
 			  
@@ -190,6 +190,9 @@ class ViewProperty extends Component {
       }).catch((err)=> {
 			setLoadingStatus('hide');
 			console.log(err)
+			currentThis.setState({
+				  resultList:[]
+			  })
       })	
 		
 		
@@ -410,7 +413,7 @@ class ViewProperty extends Component {
 																  {owner.aadhaarNumber ? owner.aadhaarNumber : translate('pt.search.searchProperty.fields.na')}
 															  </Col>	
 															  <Col xs={4} md={3} style={styles.bold}>
-																   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.mobileNumber')}</div>
+																   <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.phoneNumber')}</div>
 																   {owner.mobileNumber ? owner.mobileNumber : translate('pt.search.searchProperty.fields.na')}
 															  </Col>
 															  <Col xs={4} md={3} style={styles.bold}>
@@ -426,14 +429,18 @@ class ViewProperty extends Component {
 															  <Col xs={4} md={3} style={styles.bold}>
 																   <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.email')}</div>
 																   {owner.emailId ? owner.emailId : translate('pt.search.searchProperty.fields.na')}
-															  </Col>					
+															  </Col>	
+															  <Col xs={4} md={3} style={styles.bold}>
+																   <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.pan')}</div>
+																   {owner.pan ? owner.pan : translate('pt.search.searchProperty.fields.na')}
+															  </Col>															  
 															  <Col xs={4} md={3} style={styles.bold}>
 																   <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.guardian')}</div>
 																   {owner.fatherOrHusbandName ? owner.fatherOrHusbandName : translate('pt.search.searchProperty.fields.na')}
 															  </Col>
 															  <Col xs={4} md={3} style={styles.bold}>
 																   <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.primaryOwner')}</div>
-																   {owner.isPrimaryOwner ? 'True' : 'False'}
+																   {owner.isPrimaryOwner ? 'Yes' : 'No'}
 															  </Col>
 															</Row>
 															<Row>
@@ -485,31 +492,24 @@ class ViewProperty extends Component {
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.AssessmentNumberOfParentProperty')}</div>
 												   NA
 											  </Col>
-											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.exemptionCategory')}</div>
-												   {item.propertyDetail.exemptionReason || translate('pt.search.searchProperty.fields.na')}
-											  </Col>
-											</Row> 
-											<Row>											 
-											  <Col xs={4} md={3} style={styles.bold}>
+											 <Col xs={4} md={3} style={styles.bold}>
 												    <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.effectiveDate')}</div>
 												   {item.occupancyDate ? item.occupancyDate.split(' ')[0] : translate('pt.search.searchProperty.fields.na')}
 											  </Col>
+											</Row> 
+											<Row>											 
+											 
 											  <Col xs={4} md={3} style={styles.bold}>
 												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.appartment')}</div>
 												  {item.propertyDetail.apartment || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 										
-											  <Col xs={4} md={3} style={styles.bold}>
-												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.propertyDepartment')}</div>
-												  {item.propertyDetail.department || translate('pt.search.searchProperty.fields.na')}
-											  </Col>
+								
 											  <Col xs={4} md={3} style={styles.bold}>
 												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.registrationDocDate')}</div>
 												  {item.propertyDetail.regdDocDate ? item.propertyDetail.regdDocDate.split(' ')[0] : translate('pt.search.searchProperty.fields.na')}
 											  </Col>
-											</Row>
-											<Row>
+									
 											  <Col xs={4} md={3} style={styles.bold}>
 												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.assessmentDate')}</div>
 												  {item.assessmentDate ? item.assessmentDate.split(' ')[0] : translate('pt.search.searchProperty.fields.na')}
@@ -617,11 +617,11 @@ class ViewProperty extends Component {
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.floorDetails.fields.buildingPermissionNumber')}</div>
-													   {translate('pt.search.searchProperty.fields.na')}
+													{item.propertyDetail.bpaNo || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.floorDetails.fields.buildingPermissionDate')}</div>
-													   {translate('pt.search.searchProperty.fields.na')}
+													{item.propertyDetail.bpaDate || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											</Row>
 										 

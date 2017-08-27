@@ -1274,7 +1274,7 @@ class NoDues extends Component {
 
                                           </td>
                                           <td >
-                                            Application Fee for {match.params.id=="wc"?"Water":"Property"} no dues
+                                            Application Fee for {(match.params.id=="wc"?"Water":"Property")} {match.params.status == "extract" ? "Extract" : "no dues"}
                                           </td>
                                           <td >
 
@@ -1427,14 +1427,14 @@ class NoDues extends Component {
                   <Table responsive style={{fontSize:"bold", "marginBottom": "20px"}} id="CertificateForWc" striped bordered condensed>
                       <tbody>
                           <tr>
-                              <td style={{textAlign:"left"}}>
+                              <td style={{textAlign:"left"}} colSpan={2}>
                                 <img src="./temp/images/headerLogo.png" height="30" width="30"/>
                               </td>
-                              <td style={{textAlign:"center"}}>
+                              <td style={{textAlign:"center"}} colSpan={4}>
                                 <b>Roha Municipal Council</b><br/>
                                 {this.props.match.params.id == "pt" ? <span>Property Tax Department / करनिर्धारण विभाग</span> : <span>Water Charges Department</span>}
                               </td>
-                              <td style={{textAlign:"right"}}>
+                              <td style={{textAlign:"right"}} colSpan={2}>
                                 <img src="./temp/images/AS.png" height="30" width="30"/>
                               </td>
                           </tr>

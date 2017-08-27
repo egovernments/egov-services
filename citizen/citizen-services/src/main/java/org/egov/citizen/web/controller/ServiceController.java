@@ -82,7 +82,7 @@ public class ServiceController {
 	public ResponseEntity<?> getServiceReq(@RequestBody @Valid RequestInfoWrapper requestInfo,
 											@ModelAttribute ServiceRequestSearchCriteria serviceRequestSearchCriteria){
 		log.info("serviceRequestSearchCriteria:"+serviceRequestSearchCriteria);
-		Map<String, Object> maps= citizenPersistService.serach(serviceRequestSearchCriteria, requestInfo.getRequestInfo());
+		Map<String, Object> maps = citizenPersistService.serach(serviceRequestSearchCriteria, requestInfo.getRequestInfo());
 		
 		return new ResponseEntity<>(maps ,HttpStatus.OK);
 		

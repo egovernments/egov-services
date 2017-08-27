@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.citizen.model.AuditDetails;
 import org.egov.citizen.model.ServiceReq;
 import org.egov.citizen.model.ServiceReqRequest;
 import org.egov.citizen.repository.querybuilder.ServiceReqQueryBuilder;
@@ -79,7 +80,7 @@ public class ServiceReqRepository {
 		ObjectMapper objectMapper = new ObjectMapper();
 		String jsonValue = null;
 		try {
-			jsonValue = objectMapper.writeValueAsString(serviceReqRequest);
+			jsonValue = objectMapper.writeValueAsString(serviceReq);
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -97,5 +98,5 @@ public class ServiceReqRepository {
 			log.info("the exception from insert query : " + ex);
 		}
 	}
-
+	
 }

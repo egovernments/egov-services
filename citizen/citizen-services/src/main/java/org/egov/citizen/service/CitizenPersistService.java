@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.citizen.model.AuditDetails;
 import org.egov.citizen.model.ServiceReq;
 import org.egov.citizen.model.ServiceReqRequest;
 import org.egov.citizen.model.ServiceReqResponse;
@@ -121,6 +122,7 @@ public class CitizenPersistService {
 		String id = getServiceReqId();
 		
 		serviceReqRequest.getServiceReq().setServiceRequestId(id);
+		serviceReqRequest.getServiceReq().setAuditDetails(getAuditDetaisl(serviceReqRequest.getRequestInfo(), true));
 		log.info("serviceReqRequest:"+serviceReqRequest);
 		ObjectMapper mapper = new ObjectMapper();
 		try{
@@ -135,7 +137,7 @@ public class CitizenPersistService {
 	}
 
 	public String getServiceReqId() {
-		String req = "{\"RequestInfo\":{\"apiId\":\"org.egov.ptis\",\"ver\":\"1.0\",\"ts\":\"20934234234234\",\"action\":\"asd\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\":\"6adb58dd-b4fd-458b-a081-47b368bc954c\"},\"idRequests\":[{\"idName\":\"CS.ServiceRequest\",\"tenantId\":\"default\",\"format\":\"SRN-[cy:MM]/[fy:yyyy-yy]-[d{4}]\"}]}";
+		String req = "{\"RequestInfo\":{\"apiId\":\"org.egov.ptis\",\"ver\":\"1.0\",\"ts\":\"20934234234234\",\"action\":\"asd\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\":\"f18a09ec-77e7-4a1d-9934-0201a3dd979d\"},\"idRequests\":[{\"idName\":\"CS.ServiceRequest\",\"tenantId\":\"default\",\"format\":\"SRN-[cy:MM]/[fy:yyyy-yy]-[d{4}]\"}]}";
 		String url = idGenHost+idGenGetIdUrl;
 		log.info("url:"+url);
 		log.info("req: "+req);
@@ -177,7 +179,10 @@ public class CitizenPersistService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	
+		AuditDetails auditDetails = getAuditDetaisl(serviceReqRequest.getRequestInfo(), false);
+		serviceReqRequest.getServiceReq().getAuditDetails().setLastModifiedBy(auditDetails.getLastModifiedBy());
+		serviceReqRequest.getServiceReq().getAuditDetails().setLastModifiedDate(auditDetails.getLastModifiedDate());
+		
 		log.info("update serviceReqRequest:"+serviceReqRequest);
 		
 		try{
@@ -188,6 +193,19 @@ public class CitizenPersistService {
 			ex.printStackTrace();
 		}
 		return getResponse(serviceReqRequest);
+	}
+    
+    private AuditDetails getAuditDetaisl(RequestInfo requestInfo, boolean isCreate){
+		AuditDetails auditDetails = new AuditDetails();
+		
+		if(isCreate){
+			auditDetails.setCreatedBy(requestInfo.getUserInfo().getId());
+			auditDetails.setCreatedDate(new Date().getTime());
+		}
+		auditDetails.setLastModifiedBy(requestInfo.getUserInfo().getId());
+		auditDetails.setLastModifiedDate(new Date().getTime());
+		
+		return auditDetails;
 	}
     
     

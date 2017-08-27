@@ -54,6 +54,7 @@ public class NonMeterWaterRatesQueryBuilder {
     private static final String BASE_QUERY = "SELECT nonmeterwater.id as nonmeterwater_id,nonmeterwater.code as nonmeterwater_code, nonmeterwater.billingtype as billingtype,"
             + " nonmeterwater.connectiontype as connectiontype,nonmeterwater.sourcetypeid "
             + "as nonmeterwater_sourcetypeid, nonmeterwater.usagetypeid as nonmeterwater_usagetypeid,"
+            + "nonmeterwater.subusagetypeid as nonmeterwater_subusagetypeid,nonmeterwater.outsideulb as nonmeterwater_outsideulb,"
             + "nonmeterwater.pipesizeid as nonmeterwater_pipesizeId,pipesize.sizeinmilimeter as pipesize_sizeinmm,nonmeterwater.fromdate as nonmeterwater_fromdate,nonmeterwater.amount as nonmeterwater_amount ,"
             + " nonmeterwater.nooftaps as nonmeterwater_nooftaps,nonmeterwater.active as nonmeterwater_active, watersource.name as watersource_name,"
             + "nonmeterwater.tenantId as nonmeterwater_tenantId "
@@ -101,7 +102,16 @@ public class NonMeterWaterRatesQueryBuilder {
             selectQuery.append(" nonmeterwater.usagetypeid = :usagetypeid ");
             preparedStatementValues.put("usagetypeid", nonMeterWaterRatesGetRequest.getUsageTypeId());
         }
-
+        if(nonMeterWaterRatesGetRequest.getSubUsageType() != null){
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" nonmeterwater.subusagetypeid = :subusagetypeid");
+            preparedStatementValues.put("subusagetypeid", nonMeterWaterRatesGetRequest.getSubUsageTypeId());
+        }
+        if(nonMeterWaterRatesGetRequest.getOutsideUlb() != null){
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" nonmeterwater.outsideulb = :outsideulb");
+            preparedStatementValues.put("outsideulb", nonMeterWaterRatesGetRequest.getOutsideUlb());
+        }
         if (nonMeterWaterRatesGetRequest.getConnectionType() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" nonmeterwater.connectiontype = :connectiontype ");
@@ -155,14 +165,14 @@ public class NonMeterWaterRatesQueryBuilder {
     }
 
     public static String insertNonMeterWaterRatesQuery() {
-        return "INSERT INTO egwtr_non_meter_water_rates(id,code,billingtype,connectiontype,usagetypeid,sourcetypeid,pipesizeid,fromdate,amount,nooftaps,active,"
+        return "INSERT INTO egwtr_non_meter_water_rates(id,code,billingtype,connectiontype,usagetypeid,subusagetypeid,outsideulb,sourcetypeid,pipesizeid,fromdate,amount,nooftaps,active,"
                 + "createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
-                + "(:id,:code,:billingtype,:connectiontype,:usagetypeid,:sourcetypeid,:pipesizeid,:fromdate,:amount,:nooftaps,:active,"
+                + "(:id,:code,:billingtype,:connectiontype,:usagetypeid,:subusagetypeid,:outsideulb,:sourcetypeid,:pipesizeid,:fromdate,:amount,:nooftaps,:active,"
                 + ":createdby,:lastmodifiedby,:createddate,:lastmodifieddate,:tenantid)";
     }
 
     public static String updateNonMeterWaterRatesQuery() {
-        return "UPDATE egwtr_non_meter_water_rates SET billingtype = :billingtype,connectiontype = :connectiontype ,usagetypeid = :usagetypeid,sourcetypeid = :sourcetypeid,pipesizeid = :pipesizeid ,fromdate = :fromdate "
+        return "UPDATE egwtr_non_meter_water_rates SET billingtype = :billingtype,connectiontype = :connectiontype ,usagetypeid = :usagetypeid,subusagetypeid = :subusagetypeid,outsideulb = :outsideulb,sourcetypeid = :sourcetypeid,pipesizeid = :pipesizeid ,fromdate = :fromdate "
                 + " , amount = :amount ,nooftaps= :nooftaps,active = :active,lastmodifiedby = :lastmodifiedby,lastmodifieddate = :lastmodifieddate where code = :code  and tenantid = :tenantid ";
     }
 

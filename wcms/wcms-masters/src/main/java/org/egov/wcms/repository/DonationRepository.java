@@ -45,7 +45,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.wcms.model.Donation;
-import org.egov.wcms.model.MeterWaterRates;
 import org.egov.wcms.repository.builder.DonationQueryBuilder;
 import org.egov.wcms.repository.rowmapper.DonationRowMapper;
 import org.egov.wcms.service.RestWaterExternalMasterService;
@@ -129,6 +128,7 @@ public class DonationRepository {
                             .addValue("propertytypeid", donation.getPropertyTypeId())
                             .addValue("usagetypeid", donation.getUsageTypeId())
                             .addValue("subusagetypeid", donation.getSubUsageTypeId())
+                            .addValue("outsideulb", donation.getOutsideUlb())
                             .addValue("categorytypeid", categoryId)
                             .addValue("maxpipesizeid", maxPipeSizeId).addValue("minpipesizeid", minPipeSizeId)
                             .addValue("fromdate", donation.getFromDate()).addValue("todate", donation.getToDate())
@@ -188,6 +188,7 @@ public class DonationRepository {
                     new MapSqlParameterSource("propertytypeid", donation.getPropertyTypeId())
                             .addValue("usagetypeid", donation.getUsageTypeId())
                             .addValue("subusagetypeid", donation.getSubUsageTypeId())
+                            .addValue("outsideulb", donation.getOutsideUlb())
                             .addValue("categorytypeid", categoryId)
                             .addValue("maxpipesizeid", maxPipeSizeId).addValue("minpipesizeid", minPipeSizeId)
                             .addValue("fromdate", donation.getFromDate()).addValue("todate", donation.getToDate())
@@ -273,13 +274,13 @@ public class DonationRepository {
             for (final PropertyTaxResponseInfo propertyResponse : usageResponse.getUsageMasters())
                 if (propertyResponse.getId().equals(donation.getUsageTypeId()))
                     donation.setUsageType(propertyResponse.getName());
-        
+
         // fetch sub usage type Id and set the usage type name here
         for (final Donation donation : donationList)
             subUsageTypeIdsList.add(Integer.valueOf(donation.getSubUsageTypeId()));
         final Integer[] subUsageTypeIds = subUsageTypeIdsList.toArray(new Integer[subUsageTypeIdsList.size()]);
         final UsageTypeResponse subUsageResponse = restExternalMasterService.getSubUsageNameFromPTModule(
-                subUsageTypeIds,WcmsConstants.WC, donationRequest.getTenantId());
+                subUsageTypeIds, WcmsConstants.WC, donationRequest.getTenantId());
         for (final Donation donationObj : donationList)
             for (final PropertyTaxResponseInfo propertyResponse : subUsageResponse.getUsageMasters())
                 if (propertyResponse.getId().equals(donationObj.getSubUsageTypeId()))
@@ -289,7 +290,8 @@ public class DonationRepository {
     }
 
     public boolean checkDonationsExist(final String code, final String propertTypeId, final String usageTypeId,
-            final String subUsageTypeId,final String categoryName, final Double maxPipeSize, final Double minPipeSize, final String tenantId) {
+            final String subUsageTypeId, final String categoryName, final Double maxPipeSize, final Double minPipeSize,
+            final String tenantId) {
         final List<Object> preparedStatementValues = new ArrayList<>();
         final String pipesizeQuery = DonationQueryBuilder.getPipeSizeIdQuery();
         final String categoryQuery = DonationQueryBuilder.getCategoryId();

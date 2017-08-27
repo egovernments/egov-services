@@ -80,6 +80,8 @@ public class MeterWaterRatesGetRequest {
     private Double pipeSize;
 
     private Long pipeSizeId;
+    
+    private Boolean outsideUlb;
 
     private Boolean active;
 

@@ -106,6 +106,8 @@ public class Donation {
 
     private Long minPipeSizeId;
 
+    private Boolean outsideUlb;
+
     @NotNull
     @Size(min = 1, max = 100)
     private Double donationAmount;

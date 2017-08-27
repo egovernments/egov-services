@@ -113,7 +113,7 @@ public class DonationService {
                 donationGetRequest.setUsageTypeId(usageType.getUsageMasters().get(0).getId());
 
         }
-        if (donationGetRequest.getSubUsageType()!= null) {
+        if (donationGetRequest.getSubUsageType() != null) {
             final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModuleByCode(
                     donationGetRequest.getSubUsageType(), WcmsConstants.WC, donationGetRequest.getTenantId());
             if (usageType != null && usageType.getUsageTypesSize())
@@ -161,7 +161,7 @@ public class DonationService {
         getUsageTypeByName(donation);
         getSubUsageType(donation);
         return donationRepository.checkDonationsExist(donation.getCode(), donation.getPropertyTypeId(),
-                donation.getUsageTypeId(),donation.getSubUsageTypeId(),
+                donation.getUsageTypeId(), donation.getSubUsageTypeId(),
                 donation.getCategory(), donation.getMaxPipeSize(), donation.getMinPipeSize(),
                 donation.getTenantId());
     }

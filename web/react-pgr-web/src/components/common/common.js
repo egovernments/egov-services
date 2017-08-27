@@ -850,7 +850,7 @@ var localization_EN_Data = {
 
     "tl.search.groups.license.searchTradeLicense": "Search Trade License",
     "tl.search.groups.applicationNumber": "Application Number",
-    "tl.search.groups.showInactiveLicense": "Show Inactive License",
+    "tl.search.groups.showActiveLicense": "Show Active License",
     "tl.search.groups.status": "Status",
     "tl.search.groups.licenseNumber": "License Number",
     "tl.search.groups.oldLicenseNumber": "Old License Number",
@@ -1989,7 +1989,7 @@ var localization_MR_Data = {
     "tl.create.licenses.groups.FeeDetails.IsPaid": " भरले आहे",
     "tl.create.licenses.groups.SupportingDocuments": " सहाय्यक कागदपत्रे",
 
-    "tl.search.groups.showInactiveLicense": "Show Inactive License - Marathi",
+    "tl.search.groups.showInactiveLicense": "Show Active License - Marathi",
     "tl.search.groups.license.searchTradeLicense": "Search Trade License - Marathi",
     "tl.search.groups.adminWardName":"Admin Ward  - Marathi",
     "tl.search.groups.status": "Status - Marathi",

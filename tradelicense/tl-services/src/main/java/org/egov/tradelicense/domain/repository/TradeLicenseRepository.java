@@ -1,9 +1,7 @@
 package org.egov.tradelicense.domain.repository;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.requests.TradeLicenseRequest;
@@ -229,18 +227,34 @@ public class TradeLicenseRepository {
 
 	public void add(TradeLicenseRequest request, Boolean isNewRecord) {
 
-		Map<String, Object> message = new HashMap<>();
+		if (request != null && request.getLicenses() != null && request.getLicenses().size() > 0) {
 
-		if (isNewRecord) {
+			if (isNewRecord) {
 
-			message.put(propertiesManager.getCreateLegacyTradeValidated(), request);
+				if (request.getLicenses().get(0).getIsLegacy()) {
+					
+					request.getRequestInfo().setAction("legacy-create");
+					
+				} else {
+					
+					request.getRequestInfo().setAction("new-create");
+				}
 
-		} else {
+			} else {
 
-			message.put(propertiesManager.getUpdateLegacyTradeValidated(), request);
+				if (request.getLicenses().get(0).getIsLegacy()) {
+					
+					request.getRequestInfo().setAction("legacy-update");
+					
+				} else {
+					
+					request.getRequestInfo().setAction("new-update");
+				}
+			}
+
 		}
 
-		tradeLicenseQueueRepository.add(message);
+		tradeLicenseQueueRepository.add(request);
 	}
 
 	@Transactional

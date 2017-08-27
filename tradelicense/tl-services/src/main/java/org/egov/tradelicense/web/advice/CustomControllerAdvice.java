@@ -72,8 +72,18 @@ public class CustomControllerAdvice {
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(MissingServletRequestParameterException.class)
-	public String handleMissingParamsError(Exception ex) {
-		return ex.getMessage();
+	public ErrorResponse handleMissingParamsError(Exception ex) {
+		ErrorResponse errRes = new ErrorResponse();
+		ResponseInfo responseInfo = new ResponseInfo();
+		responseInfo.setTs(new Date().toString());
+		responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
+		errRes.setResponseInfo(responseInfo);
+		Error error = new Error();
+		error.setCode(400);
+		error.setMessage("tl.error.missingparams");
+		error.setDescription(ex.getMessage());
+		errRes.setError(error);
+		return errRes;
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)

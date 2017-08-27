@@ -59,7 +59,7 @@ const getFullDate = function(dat) {
 }
 
 const getAmount = function(demands, arrearsBool) {
-    var data = jp.query(demands, arrearsBool ? "$..Demands[?(@.taxPeriodFrom < 1490985000000)]" : "$..Demands[?(@.taxPeriodFrom >= 1490985000000)]");
+    var data = jp.query(demands, arrearsBool ? "$..[?(@.taxPeriodFrom < 1490985000000)]" : "$..[?(@.taxPeriodFrom >= 1490985000000)]");
     if(data.length) {
       var taxAmountArr = jp.query(data, "$..taxAmount") || [];
       var taxSum = 0;
@@ -67,10 +67,20 @@ const getAmount = function(demands, arrearsBool) {
         taxSum += taxAmountArr[i];
       var collectionAmountArr = jp.query(data, "$..collectionAmount") || [];
       var collSum = 0;
+
       for(var i=0; i<collectionAmountArr.length; i++)
         collSum += collectionAmountArr[i];
       return taxSum - collSum;
     } else return "00";
+}
+
+const getAddress = function(property) {
+  return (property.address.addressNumber ? (property.address.addressNumber + ", ") : "") + 
+         (property.address.addressLine1 ? (property.address.addressLine1 + ", ") : "") + 
+         (property.address.addressLine2 ? (property.address.addressLine2 + ". ") : "") + 
+         (property.address.landmark ? ("Landmark: " + property.address.landmark) : "") + 
+         (property.address.city ? ("City: " + property.address.city) : "") + 
+         (property.address.pincode ? ("- " + property.address.pincode) : "");
 }
 
 class NoDues extends Component {
@@ -370,9 +380,8 @@ class NoDues extends Component {
   createDemand = (SID, finalObject, response) => {
     let self = this;
     let {formData} = this.props;
-    finalObject["businessService"] = (self.props.match.params.status == "extract" ? "PT_NODUES" : (self.props.match.params.id == "pt" ? "PT" : "WC"));
+    finalObject["businessService"] = (self.props.match.params.status == "extract" ? "PT" : (self.props.match.params.id == "pt" ? "PT" : "WC"));
     Api.commonApiPost(self.props.metaData["noDues.search"].url, finalObject, {}, null, self.props.metaData["noDues.search"].useTimestamp,false,response.data.access_token).then(function(res){
-        console.log(JSON.stringify(res));
         // self.props.setLoadingStatus('hide');
         if(jp.query(res,`$..demandDetails[?(@.taxAmount > @.collectionAmount)]`).length>0)
         {
@@ -592,6 +601,15 @@ class NoDues extends Component {
     this.handleClose();
   }
 
+  getProperty = (cb) => {
+    let self = this;
+    Api.commonApiPost("pt-property/properties/_search", {"upicNumber": self.props.formData.consumerCode}, {}, null, true, false, localStorage.getItem("auth-token-temp")).then(function(res) {
+      cb(res.properties[0]);
+    }, function(err){
+      cb({});
+    })
+  }
+
   pay=()=>{
     let {serviceRequest,Receipt,ReceiptOne,applicationFeeDemand,demands}=this.state;
     let {formData} = this.props;
@@ -625,13 +643,15 @@ class NoDues extends Component {
             Api.commonApiPost("/collection-services/receipts/_create", {}, {"Receipt":Receipt}, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res2){
             self.props.setLoadingStatus('hide');
 
-
-            self.setState({
-              Receipt:res2.Receipt,
-              ReceiptOne: res1.Receipt
-            });
-            console.log(res2);
-            self.handleNext();
+            self.getProperty(function(property) {
+              self.setState({
+                Receipt:res2.Receipt,
+                ReceiptOne: res1.Receipt,
+                Property: property
+              });
+              console.log(res2);
+              self.handleNext();
+            })
 
           }, function(err) {
             self.props.toggleSnackbarAndSetText(true, err.message, false, true);
@@ -641,12 +661,14 @@ class NoDues extends Component {
       else {
             Api.commonApiPost("/collection-services/receipts/_search", {consumerCode:formData.consumerCode,businessService:formData.businessService}, {}, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res2){
             self.props.setLoadingStatus('hide');
-            self.setState({
-              Receipt: "",
-              ReceiptOne: res1.Receipt
-            });
-            console.log(res2);
-            self.handleNext();
+            self.getProperty(function(property) {
+              self.setState({
+                Receipt: "",
+                ReceiptOne: res1.Receipt
+              });
+              console.log(res2);
+              self.handleNext();
+            })
 
           }, function(err) {
             self.props.toggleSnackbarAndSetText(true, err.message, false, true);
@@ -1003,7 +1025,7 @@ class NoDues extends Component {
                                           </td>
                                           <td style={{textAlign:"center"}}>
                                               <b>Roha Municipal Council</b><br/>
-											  Property Tax Department / करनिर्धारण विभाग
+											                         {this.props.match.params.id == "pt" ? <span>Property Tax Department / करनिर्धारण विभाग</span> : <span>Water Charges Department</span>}
                                           </td>
                                           <td style={{textAlign:"right"}}>
 											<img src="./temp/images/AS.png" height="30" width="30"/>
@@ -1084,13 +1106,13 @@ class NoDues extends Component {
                                             {getAmount(this.state.demands, true)}
                                           </td>
                                           <td >
-                                            {getAmount(this.state.demands)}
+                                            {getAmount(this.state.demands, false)}
                                           </td>
                                           <td >
                                             {getAmount(this.state.demands, true)}
                                           </td>
                                           <td >
-                                            {getAmount(this.state.demands)}
+                                            {getAmount(this.state.demands, false)}
                                           </td>
                                           <td>
                                             00
@@ -1161,7 +1183,7 @@ class NoDues extends Component {
                                           </td>
                                           <td style={{textAlign:"center"}}>
                                               <b>Roha Municipal Council</b><br/>
-                        Property Tax Department / करनिर्धारण विभाग
+                                              {this.props.match.params.id == "pt" ? <span>Property Tax Department / करनिर्धारण विभाग</span> : <span>Water Charges Department</span>}
                                           </td>
                                           <td style={{textAlign:"right"}}>
                       <img src="./temp/images/AS.png" height="30" width="30"/>
@@ -1310,7 +1332,7 @@ class NoDues extends Component {
                                           </td>
                                           <td style={{textAlign:"center"}}>
                                               <b>Roha Municipal Council</b><br/>
-											  Property Tax Department / करनिर्धारण विभाग
+											                         {this.props.match.params.id == "pt" ? <span>Property Tax Department / करनिर्धारण विभाग</span> : <span>Water Charges Department</span>}
                                           </td>
                                           <td style={{textAlign:"right"}}>
                                             <img src="./temp/images/AS.png" height="30" width="30"/>
@@ -1385,7 +1407,7 @@ class NoDues extends Component {
                               </td>
                               <td style={{textAlign:"center"}}>
                                 <b>Roha Municipal Council</b><br/>
-                                Property Tax Department / करनिर्धारण विभाग
+                                {this.props.match.params.id == "pt" ? <span>Property Tax Department / करनिर्धारण विभाग</span> : <span>Water Charges Department</span>}
                               </td>
                               <td style={{textAlign:"right"}}>
                                 <img src="./temp/images/AS.png" height="30" width="30"/>
@@ -1411,15 +1433,15 @@ class NoDues extends Component {
                             <td colSpan={3}>
                               <div>
                                 <b>Property No:</b> {Receipt[0].Bill[0].billDetails[0].consumerCode}<br/>
-                                <b>Property Usage / Sub Usage:</b>
+                                <b>Property Usage / Sub Usage:</b> {this.state.Property.usage}
                               </div>
                             </td>
                           </tr>
                           <tr>
                             <td colSpan={3}>
                               <div style={{"whiteSpace": "pre"}}>
-                                <b>Property Owner Name</b>: {Receipt[0].Bill[0].payeeName}<br/>
-                                <b>& Address: </b> {Receipt[0].Bill[0].payeeAddress?Receipt[0].Bill[0].payeeAddress:"Bangalore"}                                                                                        <b>Age of Property</b>
+                                <b>Property Owner Name</b>: {this.state.Property.owners[0].name}<br/>
+                                <b>& Address: </b> {getAddress(this.state.Property)}                                                                                        <b>Age of Property</b>
                               </div>
                             </td>
                           </tr>
@@ -1462,7 +1484,7 @@ class NoDues extends Component {
 
       </div>*/}
         <div style={{textAlign:"center"}}>
-            <h3>No Dues Certificate for {match.params.id=="wc"?"Water Charge":"Property Tax"}</h3>
+            <h3> {match.params.status != "extract" ? <span>No Dues Certificate for {match.params.id=="wc"?"Water Charge":"Property Tax"}</span> : "Property Extract"}</h3>
         </div>
         <Stepper activeStep={stepIndex}>
            <Step>

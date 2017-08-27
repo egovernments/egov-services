@@ -39,7 +39,7 @@ public class ReceiptReqValidator {
 
 	public List<ErrorResponse> validatecreateReceiptRequest(
 			final ReceiptReq receiptRequest) {
-		List<ErrorResponse> errorResponses = new ArrayList<>();
+		List<ErrorResponse> errorResponses = null;
 		final Error error = getError(receiptRequest);
 		if (error != null) {
 			ErrorResponse errorResponse = new ErrorResponse();
@@ -53,7 +53,7 @@ public class ReceiptReqValidator {
 	private Error getError(final ReceiptReq receiptRequest) {
 		final List<ErrorField> errorFields = getErrorFields(receiptRequest);
 		Error error = null;
-		if (!errorFields.isEmpty())
+		if (null!=errorFields &&!errorFields.isEmpty())
 			error = Error
 					.builder()
 					.code(HttpStatus.BAD_REQUEST.value())
@@ -63,16 +63,17 @@ public class ReceiptReqValidator {
 	}
 
 	private List<ErrorField> getErrorFields(final ReceiptReq receiptRequest) {
-		final List<ErrorField> errorFields = new ArrayList<>();
+		final List<ErrorField> errorFields=null;
 		addServiceIdValidationErrors(receiptRequest, errorFields);
 		return errorFields;
 	}
 
 	private void addServiceIdValidationErrors(final ReceiptReq receiptRequest,
-			final List<ErrorField> errorFields) {
+			List<ErrorField> errorFields) {
 		RequestInfo requestInfo = receiptRequest.getRequestInfo();
 		try {
 			final List<Receipt> receipts = receiptRequest.getReceipt();
+			errorFields = new ArrayList<>();
 			for (Receipt receipt : receipts) {
 
 				if (null == receipt.getTenantId()

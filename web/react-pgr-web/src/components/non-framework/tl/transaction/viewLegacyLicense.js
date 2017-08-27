@@ -387,7 +387,7 @@ class Report extends Component {
                           <tr key={index}>
                             <td>{item.financialYear}</td>
                             <td>{item.amount}</td>
-                            <td>{item.paid+""}</td>
+                            <td>{item.paid+""? "Yes": 'No'}</td>
                           </tr>
                         )
                       })}
@@ -434,7 +434,7 @@ class Report extends Component {
             {renderBody()}
 
         </form>
-      
+
       </div>
     );
   }

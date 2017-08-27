@@ -359,18 +359,18 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 		}
 
 		if (applicationNumber != null && !applicationNumber.trim().isEmpty()) {
-			searchSql.append(" AND applicationNumber = :applicationNumber ");
-			parameter.addValue("applicationNumber", applicationNumber);
+			searchSql.append(" AND upper(applicationNumber)  like :applicationNumber");
+			parameter.addValue("applicationNumber", '%' + applicationNumber.toUpperCase() + '%');
 		}
 
 		if (licenseNumber != null && !licenseNumber.trim().isEmpty()) {
-			searchSql.append(" AND licenseNumber = :licenseNumber ");
-			parameter.addValue("licenseNumber", licenseNumber);
+			searchSql.append(" AND upper(licenseNumber)  like  :licenseNumber ");
+			parameter.addValue("licenseNumber", '%' +  licenseNumber.toUpperCase() + '%');
 		}
 
 		if (oldLicenseNumber != null && !oldLicenseNumber.trim().isEmpty()) {
-			searchSql.append(" AND oldLicenseNumber = :oldLicenseNumber ");
-			parameter.addValue("oldLicenseNumber", oldLicenseNumber);
+			searchSql.append(" AND upper(oldLicenseNumber) like :oldLicenseNumber ");
+			parameter.addValue("oldLicenseNumber", '%' + oldLicenseNumber.toUpperCase() + '%');
 		}
 
 		if (mobileNumber != null && !mobileNumber.trim().isEmpty()) {
@@ -389,8 +389,8 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 		}
 
 		if (propertyAssesmentNo != null && !propertyAssesmentNo.trim().isEmpty()) {
-			searchSql.append(" AND propertyAssesmentNo = :propertyAssesmentNo ");
-			parameter.addValue("propertyAssesmentNo", propertyAssesmentNo);
+			searchSql.append(" AND upper(propertyAssesmentNo) like :propertyAssesmentNo ");
+			parameter.addValue("propertyAssesmentNo", '%' + propertyAssesmentNo.toUpperCase() + '%');
 		}
 
 		if (adminWard != null) {
@@ -404,13 +404,13 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 		}
 
 		if (ownerName != null && !ownerName.trim().isEmpty()) {
-			searchSql.append(" AND ownerName = :ownerName ");
-			parameter.addValue("ownerName", ownerName);
+			searchSql.append(" AND upper(ownerName) like :ownerName ");
+			parameter.addValue("ownerName", '%' + ownerName.toUpperCase() + '%');
 		}
 
 		if (tradeTitle != null && !tradeTitle.trim().isEmpty()) {
-			searchSql.append(" AND tradeTitle = :tradeTitle ");
-			parameter.addValue("tradeTitle", tradeTitle);
+			searchSql.append(" AND upper(tradeTitle) like :tradeTitle ");
+			parameter.addValue("tradeTitle", '%' + tradeTitle.toUpperCase() + '%');
 		}
 
 		if (tradeType != null && !tradeType.trim().isEmpty()) {

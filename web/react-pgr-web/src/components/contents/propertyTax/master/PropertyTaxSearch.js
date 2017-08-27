@@ -246,7 +246,7 @@ class PropertyTaxSearch extends Component {
 	
       }).catch((err)=> {
 			setLoadingStatus('hide');
-			toggleSnackbarAndSetText(true, err.message);
+//toggleSnackbarAndSetText(true, err.message);
 			current.setState({
 				resultList:[]
 			})

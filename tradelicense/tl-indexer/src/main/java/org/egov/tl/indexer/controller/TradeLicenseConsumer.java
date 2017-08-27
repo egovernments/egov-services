@@ -43,21 +43,52 @@ public class TradeLicenseConsumer {
 	@Autowired
 	ObjectMapper mapper;
 
-	@KafkaListener(topics = { "#{propertiesManager.getCreateLegacyTradeValidated()}" })
+	@KafkaListener(topics = { "#{propertiesManager.getCreateLegacyTradeValidated()}",
+			"#{propertiesManager.getUpdateLegacyTradeValidated()}" })
 	public void receive(Map<String, TradeLicenseRequest> consumerRecord,
 			@Header(KafkaHeaders.RECEIVED_TOPIC) String topic) throws IOException {
-		TradeLicenseRequest request = mapper.convertValue(
-				(consumerRecord.get(propertiesManager.getCreateLegacyTradeValidated())), TradeLicenseRequest.class);
-		log.info("consumer topic value is: " + topic + " consumer value is" + request);
-		for (TradeLicenseContract tlContract : request.getLicenses()) {
-			String propertyData = mapper.writeValueAsString(tlContract);
-			DocumentResult DocumentResult = client.getClient()
-					.execute(new Index.Builder(propertyData).index(propertiesManager.getEsIndex())
-							.type(propertiesManager.getEsIndexType()).id(String.valueOf(tlContract.getId())).build());
-			if (DocumentResult.isSucceeded())
-				log.info("inserted data successfully to elasticsearch with Topic : "
-						+ propertiesManager.getCreateLegacyTradeValidated());
+
+		if (topic.equalsIgnoreCase(propertiesManager.getCreateLegacyTradeValidated())) {
+
+			TradeLicenseRequest request = mapper.convertValue(
+					(consumerRecord.get(propertiesManager.getCreateLegacyTradeValidated())), TradeLicenseRequest.class);
+			log.info("consumer topic value is: " + topic + " consumer value is" + request);
+
+			for (TradeLicenseContract tlContract : request.getLicenses()) {
+
+				String tradeLicenseData = mapper.writeValueAsString(tlContract);
+				DocumentResult DocumentResult = client.getClient()
+						.execute(new Index.Builder(tradeLicenseData)
+								.index(propertiesManager.getEsIndex())
+								.type(propertiesManager.getEsIndexType())
+								.id(String.valueOf(tlContract.getId()))
+								.build());
+				if (DocumentResult.isSucceeded()){
+					log.info("inserted data successfully to elasticsearch with Topic : "
+							+ propertiesManager.getCreateLegacyTradeValidated());
+				}	
+			}
+		} else if(topic.equalsIgnoreCase(propertiesManager.getUpdateLegacyTradeValidated())){
+			
+			TradeLicenseRequest request = mapper.convertValue(
+					(consumerRecord.get(propertiesManager.getUpdateLegacyTradeValidated())), TradeLicenseRequest.class);
+			log.info("consumer topic value is: " + topic + " consumer value is" + request);
+			for (TradeLicenseContract tlContract : request.getLicenses()) {
+
+				String tradeLicenseData = mapper.writeValueAsString(tlContract);
+				DocumentResult DocumentResult = client.getClient()
+						.execute(new Index.Builder(tradeLicenseData)
+								.index(propertiesManager.getEsIndex())
+								.type(propertiesManager.getEsIndexType())
+								.id(String.valueOf(tlContract.getId()))
+								.build());
+				if (DocumentResult.isSucceeded()){
+					log.info("inserted data successfully to elasticsearch with Topic : "
+							+ propertiesManager.getCreateLegacyTradeValidated());
+				}	
+			}
 		}
+
 	}
 
 }

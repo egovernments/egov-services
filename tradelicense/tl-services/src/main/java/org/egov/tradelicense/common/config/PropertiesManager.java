@@ -220,6 +220,7 @@ public class PropertiesManager {
 	@Value("${nonlegacy.update.customMsg}")
 	private String nonLegacyUpdateCustomMsg;
 	
+	//kafka topics and keys
 	@Value("${egov.services.tl-services.tradelicense.validated.topic}")
 	private String tradeLicenseValidatedTopic;
 
@@ -231,6 +232,13 @@ public class PropertiesManager {
 	@Value("${egov.services.tl-services.tradelicense.new.validated.key}")
 	private String newTradeLicenseValidatedKey;
 
-
+	@Value("${egov.services.tl-services.tradelicense.workflow.populated.topic}")
+	private String tradeLicenseWorkFlowPopulatedTopic;
+	
+	@Value("${egov.services.tl-services.tradelicense.persisted.topic}")
+	private String tradeLicensePersistedTopic;
+	
+	@Value("${egov.services.tl-services.tradelicense.persisted.key}")
+	private String tradeLicensePersistedKey;
 
 }

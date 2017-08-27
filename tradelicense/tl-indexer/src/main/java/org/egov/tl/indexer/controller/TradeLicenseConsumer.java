@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.support.KafkaHeaders;
-import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,8 +30,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TradeLicenseConsumer {
 
-	// TODO Hey there need to read topic name from application properties via
-	// environment
 	@Autowired
 	PropertiesManager propertiesManager;
 
@@ -43,52 +39,27 @@ public class TradeLicenseConsumer {
 	@Autowired
 	ObjectMapper mapper;
 
-	@KafkaListener(topics = { "#{propertiesManager.getCreateLegacyTradeValidated()}",
-			"#{propertiesManager.getUpdateLegacyTradeValidated()}" })
-	public void receive(Map<String, TradeLicenseRequest> consumerRecord,
-			@Header(KafkaHeaders.RECEIVED_TOPIC) String topic) throws IOException {
+	@KafkaListener(topics = { "#{propertiesManager.getTradeLicensePersistedTopic()}" })
+	public void receive(Map<String, Object> tradeLicenseMap) throws IOException {
 
-		if (topic.equalsIgnoreCase(propertiesManager.getCreateLegacyTradeValidated())) {
+		if (tradeLicenseMap.get("tradelicense-persisted") != null) {
 
-			TradeLicenseRequest request = mapper.convertValue(
-					(consumerRecord.get(propertiesManager.getCreateLegacyTradeValidated())), TradeLicenseRequest.class);
-			log.info("consumer topic value is: " + topic + " consumer value is" + request);
+			TradeLicenseRequest request = mapper.convertValue(tradeLicenseMap.get("tradelicense-persisted"),
+					TradeLicenseRequest.class);
 
 			for (TradeLicenseContract tlContract : request.getLicenses()) {
 
 				String tradeLicenseData = mapper.writeValueAsString(tlContract);
 				DocumentResult DocumentResult = client.getClient()
-						.execute(new Index.Builder(tradeLicenseData)
-								.index(propertiesManager.getEsIndex())
-								.type(propertiesManager.getEsIndexType())
-								.id(String.valueOf(tlContract.getId()))
+						.execute(new Index.Builder(tradeLicenseData).index(propertiesManager.getEsIndex())
+								.type(propertiesManager.getEsIndexType()).id(String.valueOf(tlContract.getId()))
 								.build());
-				if (DocumentResult.isSucceeded()){
+				if (DocumentResult.isSucceeded()) {
 					log.info("inserted data successfully to elasticsearch with Topic : "
-							+ propertiesManager.getCreateLegacyTradeValidated());
-				}	
+							+ propertiesManager.getTradeLicensePersistedTopic());
+				}
 			}
-		} else if(topic.equalsIgnoreCase(propertiesManager.getUpdateLegacyTradeValidated())){
-			
-			TradeLicenseRequest request = mapper.convertValue(
-					(consumerRecord.get(propertiesManager.getUpdateLegacyTradeValidated())), TradeLicenseRequest.class);
-			log.info("consumer topic value is: " + topic + " consumer value is" + request);
-			for (TradeLicenseContract tlContract : request.getLicenses()) {
 
-				String tradeLicenseData = mapper.writeValueAsString(tlContract);
-				DocumentResult DocumentResult = client.getClient()
-						.execute(new Index.Builder(tradeLicenseData)
-								.index(propertiesManager.getEsIndex())
-								.type(propertiesManager.getEsIndexType())
-								.id(String.valueOf(tlContract.getId()))
-								.build());
-				if (DocumentResult.isSucceeded()){
-					log.info("inserted data successfully to elasticsearch with Topic : "
-							+ propertiesManager.getCreateLegacyTradeValidated());
-				}	
-			}
 		}
-
 	}
-
 }

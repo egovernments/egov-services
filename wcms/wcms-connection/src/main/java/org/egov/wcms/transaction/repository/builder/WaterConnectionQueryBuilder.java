@@ -207,7 +207,7 @@ public class WaterConnectionQueryBuilder {
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?,"
                 + " ?,?,?,?,?,"
-                + "?,?,?,?.?)";
+                + "?,?,?,?,?)";
     }
 
     public static String insertAdditionalConnectionQuery() {

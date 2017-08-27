@@ -569,6 +569,7 @@ var dat = {
              "isRequired": false,
              "isDisabled": false,
              "requiredErrMsg": "",
+              "allowWrite":true,
              "patternErrMsg": "",
              "url":"/tl-services/license/v1/_search?|$..licenseNumber|$..licenseNumber",
              "autoCompleteDependancy": {
@@ -584,6 +585,7 @@ var dat = {
              "isRequired": false,
              "isDisabled": false,
              "requiredErrMsg": "",
+              "allowWrite":true,
              "patternErrMsg": "",
              "url":"/tl-services/license/v1/_search?|$..oldLicenseNumber|$..oldLicenseNumber",
              "autoCompleteDependancy": {

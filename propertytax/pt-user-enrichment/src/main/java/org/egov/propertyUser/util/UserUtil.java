@@ -61,7 +61,7 @@ public class UserUtil {
 			}
 
 			if (user.getAadhaarNumber() != null && !user.getAadhaarNumber().isEmpty()) {
-				userSearchRequestInfo.put("aadharNumber", user.getAadhaarNumber());
+				userSearchRequestInfo.put("aadhaarNumber", user.getAadhaarNumber());
 			}
 
 			if (user.getEmailId() != null && !user.getEmailId().isEmpty()) {

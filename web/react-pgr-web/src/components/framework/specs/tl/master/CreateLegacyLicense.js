@@ -416,7 +416,7 @@ var dat = {
       },
 
       {
-        "label": "Agreement Details",
+        "label": "tl.create.licenses.groups.agreementDetails",
         "name": "createLicenseCategoryType",
         "hide": true,
         "fields": [{
@@ -683,6 +683,8 @@ var dat = {
        }],
        "result": {
          "header": [{
+           label: "tl.search.result.groups.applicationNumber"
+         }, {
            label: "tl.search.result.groups.tlNumber"
          }, {
            label: "tl.search.result.groups.oldTLNumber"
@@ -709,7 +711,7 @@ var dat = {
          }, {
            label: "tl.search.result.groups.workflowOwnerName"
          }],
-         "values": ["licenseNumber", "oldLicenseNumber", "category", "subCategory", "tradeTitle", "ownerName", "mobileNumber", "propertyAssesmentNo", "adminWardName", "validityYears","active","statusName",""],
+         "values": ["applicationNumber","licenseNumber", "oldLicenseNumber", "category", "subCategory", "tradeTitle", "ownerName", "mobileNumber", "propertyAssesmentNo", "adminWardName", "validityYears","active","statusName",""],
          "resultPath": "licenses",
          "rowClickUrlUpdate": "/update/tl/CreateLegacyLicense/{licenseNumber}",
          "rowClickUrlView": "/non-framework/tl/transaction/viewLegacyLicense/{licenseNumber}"
@@ -1025,8 +1027,8 @@ var dat = {
               },
               {
                 "name": "TradeOwner",
-                "jsonPath": "licenses[0].active",
-                "label": "tl.view.licenses.groups.TraderOwnerProperty",
+                "jsonPath": "licenses[0].isPropertyOwner",
+                "label": "tl.create.licenses.groups.TradeDetails.TraderOwnerProperty",
                 "pattern": "",
                 "type": "checkbox",
                 "isRequired": false,
@@ -1038,23 +1040,23 @@ var dat = {
             ]
           },
                     {
-                      "label": "tl.view.licenses.groups.agreement",
+                      "label": "tl.create.licenses.groups.agreementDetails",
                       "name": "agreement",
                       "fields": [{
-                          "name": "agreementNo",
-                          "jsonPath": "licenses[0].agreementNo",
-                          "label": "tl.view.licenses.groups.agreementNo",
+                          "name": "agreementDate",
+                          "jsonPath": "licenses[0].agreementDate",
+                          "label": "tl.create.licenses.groups.agreementDetails.agreementDate",
                           "pattern": "",
-                          "type": "text",
+                          "type": "date",
                           "isRequired": false,
                           "isDisabled": false,
                           "requiredErrMsg": "",
                           "patternErrMsg": ""
                         },
                         {
-                            "name": "agreementDate",
-                            "jsonPath": "licenses[0].agreementDate",
-                            "label": "tl.view.licenses.groups.agreementDate",
+                            "name": "agreementNo",
+                            "jsonPath": "licenses[0].agreementNo",
+                            "label": "tl.create.licenses.groups.agreementDetails.agreementNo",
                             "pattern": "",
                             "type": "text",
                             "isRequired": false,

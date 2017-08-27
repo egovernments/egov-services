@@ -848,6 +848,8 @@ var localization_EN_Data = {
     "tl.create.licenses.groups.TradeDetails.TraderOwnerProperty": "Trader is not the owner of the Property",
     "tl.create.licenses.groups.agreementDetails.agreementDate": "Date of Execution",
     "tl.create.licenses.groups.agreementDetails.agreementNo": "Registered/Non Registered Document No",
+    "tl.create.licenses.groups.agreementDetails": "Agreement Details",
+
     "tl.create.licenses.groups.FeeDetails": "Fee Details",
     "tl.create.license.table.financialYear": "Financial Year",
     "tl.create.license.table.amount": "Amount",

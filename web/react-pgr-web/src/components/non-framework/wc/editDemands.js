@@ -231,6 +231,27 @@ class AddDemand extends Component {
         }
         for (var i = 0; i < object.length; i++) {
             if (property == "") {
+                if (object[i].boundaryNum == id) {
+                    return object[i].name;
+                }
+            } else {
+                if (object[i].hasOwnProperty(property)) {
+                    if (object[i].boundaryNum == id) {
+                        return object[i][property];
+                    }
+                } else {
+                    return "";
+                }
+            }
+        }
+        return "";
+    }
+    const getNameByIde = function(object, id, property = "") {
+      if (id == "" || id == null) {
+            return "";
+        }
+        for (var i = 0; i < object.length; i++) {
+            if (property == "") {
                 if (object[i].id == id) {
                     return object[i].name;
                 }
@@ -328,7 +349,7 @@ class AddDemand extends Component {
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.connectionDetails.subUsageType")}</span></label><br/>
-            <label>{getNameById(cThis.state.subUsageType,cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].subUsageTypeId)}</label></span>
+            <label>{getNameByIde(cThis.state.subUsageType,cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].subUsageTypeId)}</label></span>
             </Col>
             </Row>
             <br/>
@@ -392,7 +413,7 @@ class AddDemand extends Component {
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.connectionDetails.subUsageType")}</span></label><br/>
-              <label>{getNameById(cThis.state.subUsageType,cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].subUsageTypeId)}</label></span>
+              <label>{getNameByIde(cThis.state.subUsageType,cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].subUsageTypeId)}</label></span>
             </Col>
             </Row>
           </div>);

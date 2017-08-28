@@ -155,10 +155,10 @@ class ShowField extends Component {
                 var columnObj = {};
                 //array for particular row
                 var respHeader = reportHeaderObj[itemIndex];
-                // console.log(respHeader.total);
                 if(respHeader.showColumn){
                   columnObj = {};
                   if(respHeader.total){
+                    columnObj['showColumn'] = respHeader.showColumn;
                     columnObj['total'] = respHeader.total;
                     columnObj['value'] = sumColumn[itemIndex] == undefined ? item : (sumColumn[itemIndex].value)+item;
                     if(sumColumn[itemIndex]){
@@ -171,6 +171,7 @@ class ShowField extends Component {
                     }
                     // console.log(itemIndex,':',item,':',sumColumn[itemIndex]);
                   }else{
+                    columnObj['showColumn'] = respHeader.showColumn;
                     columnObj['total'] = respHeader.total;
                     columnObj['value'] = 0;
                     if(sumColumn[itemIndex]){
@@ -188,6 +189,17 @@ class ShowField extends Component {
                     </td>
                   )
                 }else{
+                  columnObj['showColumn'] = respHeader.showColumn;
+                  columnObj['total'] = respHeader.total;
+                  columnObj['value'] = 0;
+                  if(sumColumn[itemIndex]){
+                    //remove the object from that itemIndex
+                    sumColumn.splice(itemIndex, 1);
+                    //add that object in that index
+                    sumColumn.splice(itemIndex,0,columnObj)
+                  }else{
+                    sumColumn.push(columnObj)
+                  }
                   return null;
                 }
               }
@@ -213,9 +225,13 @@ class ShowField extends Component {
         <tfoot>
         <tr>
           {sumColumn.map((columnObj, index) => {
-            return(
-              <td key={index}>{columnObj.total ? columnObj.value : ''}</td>
-            )
+            if(columnObj.showColumn){
+              return(
+                <td key={index}>{columnObj.total ? columnObj.value : ''}</td>
+              )
+            }else{
+              return null;
+            }
           })}
         </tr>
         </tfoot>

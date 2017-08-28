@@ -235,7 +235,7 @@ public class RestConnectionService {
         if (usagesubtype != null && usagesubtype.getUsageMasters() != null && !usagesubtype.getUsageMasters().isEmpty()
                 && usagesubtype.getUsageMasters().get(0).getId() != null) {
             waterConnectionRequest.getConnection()
-                    .setSubUsageTypeId(usagesubtype.getUsageMasters().get(0).getId().toString());
+                    .setSubUsageTypeId(usagesubtype.getUsageMasters().get(0).getId());
             isValidSubUsageType = Boolean.TRUE;
         }
         return isValidSubUsageType;

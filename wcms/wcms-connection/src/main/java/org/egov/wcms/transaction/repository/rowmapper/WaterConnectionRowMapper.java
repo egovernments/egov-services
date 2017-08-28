@@ -176,7 +176,8 @@ public class WaterConnectionRowMapper {
 			if (null != execDate) {
 				connection.setExecutionDate(execDate);
 			}
-			connection.setSubUsageTypeId(rs.getString("subusagetype"));
+			if(null != rs.getString("subusagetype") && !rs.getString("subusagetype").isEmpty())
+					connection.setSubUsageTypeId(Long.parseLong(rs.getString("subusagetype")));
 			/*if (null != rs.getString("subusagename") && !rs.getString("subusagename").isEmpty()) {
 				try { 
 					Gson g = new Gson(); 

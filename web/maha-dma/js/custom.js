@@ -134,5 +134,34 @@ $(document).ready(function(){
           }
       });
 
+      $('#loginBtn').click(function(e) {
+          if($("#mobileNumber").val() && $("#password").val()) {
+            var tenantId = $("#ulb-dropdown2").val() || "default";
+            $.ajax({
+              url: window.location.origin + "/user/oauth/token?tenantId=" + tenantId + "&username=" + $("#mobileNumber").val() + "&password=" + $("#password").val() + "&grant_type=password&scope=read",
+              type: 'POST',
+              dataType: 'json',
+              data:JSON.stringify({}),
+              contentType: 'application/x-www-form-urlencoded',
+              headers:{
+                'Authorization' :'Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0'
+              },
+              success: function(response) {
+                localStorage.setItem("auth-token", response.access_token);
+                localStorage.setItem("token", response.access_token);
+                localStorage.setItem("userRequest", JSON.stringify(response.UserRequest));
+                localStorage.setItem("auth", response.access_token);
+                localStorage.setItem("type", response.UserRequest.type);
+                localStorage.setItem("id", response.UserRequest.id);
+                localStorage.setItem("tenantId", response.UserRequest.tenantId);
+
+                window.location.href = window.location.origin + "/app/v1/#/prd/dashboard";
+              },
+              error: function() {
+
+              }
+            });
+          }
+      })
 
 });

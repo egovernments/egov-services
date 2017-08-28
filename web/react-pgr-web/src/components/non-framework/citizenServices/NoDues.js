@@ -707,8 +707,7 @@ class NoDues extends Component {
       <link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">  `;
     mywindow.document.write('<html><head><title> </title>');
     mywindow.document.write(cdn);
-    mywindow.document.write('</head><body >');
-    mywindow.document.write('<h1>' + document.title  + '</h1>');
+    mywindow.document.write('</head><body>');
     mywindow.document.write(document.getElementById('allCertificates').innerHTML);
     mywindow.document.write('</body></html>');
 

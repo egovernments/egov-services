@@ -158,14 +158,16 @@
 
           <div class="login-box" style="margin-top:18px;margin-bottom:15px;">
               <h4>Sign In</h4>
-              <input type="text" placeholder="Mobile Number / Login ID">
-              <input type="password" placeholder="Password">
-              <select id="ulb-dropdown" style="width:100%" data-placement="bottom" data-content="Please select the ulb" class="form-control ulb-dropdown">
-                <option>Loading...</option>
+              <input id="mobileNumber" type="text" placeholder="Mobile Number / Login ID">
+              <input id="password" type="password" placeholder="Password">
+              <select id="ulb-dropdown2" style="width:100%" data-placement="bottom" data-content="Please select the ulb" class="form-control ulb-dropdown">
+                <option value="">Please Select...</option>
+                <option value="default">Development- Default</option>
+                <option value="mh.roha">Roha Municipal Council</option>
               </select>
               <div class="row" style="margin-top: 20px;">
               <div class="col-md-6">
-                <button>Login</button>
+                <button id="loginBtn">Login</button>
               </div>
               <div class="col-md-6 text-right" style="padding: 8px 20px;font-size: 16px;">
                 <a href="javascript:void(0)">Forgot password?</a>

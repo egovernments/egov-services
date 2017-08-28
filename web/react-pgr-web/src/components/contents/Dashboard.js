@@ -227,7 +227,7 @@ class Dashboard extends Component {
      setLoadingStatus("loading");
 
     let current = this;
-    let {currentUser}=this.props;
+    let currentUser=JSON.parse(localStorage.userRequest);
 
     if(currentUser.type === constants.ROLE_CITIZEN) {
       Promise.all([
@@ -373,12 +373,30 @@ class Dashboard extends Component {
 
 
 
- componentWillUnmount(){
-     /*$('#searchTable')
-     .DataTable()
-     .destroy(true);*/
- };
+   componentWillUnmount(){
+       /*$('#searchTable')
+       .DataTable()
+       .destroy(true);*/
+   };
 
+   componentDidMount() {
+      let self = this;
+      if(localStorage.token && localStorage.userRequest && !localStorage.actions) {
+        this.props.login(false, localStorage.token, JSON.parse(localStorage.userRequest), true);
+        let roleCodes = [];
+        var UserRequest = JSON.parse(localStorage.userRequest);
+        for (var i = 0; i < UserRequest.roles.length; i++) {
+          roleCodes.push(UserRequest.roles[i].code);
+        }
+        Api.commonApiPost("access/v1/actions/_get",{},{tenantId:localStorage.tenantId, roleCodes, enabled:true}).then(function(response){
+          var actions = response.actions;
+          localStorage.setItem("actions", JSON.stringify(actions));
+          self.props.setActionList(actions);   
+        }, function(err) {
+            console.log(err);
+        });
+      }
+   }
 
    componentDidUpdate() {
     let self = this;
@@ -785,7 +803,16 @@ const mapDispatchToProps = dispatch => ({
         setLoadingStatus: (loadingStatus) => {
       dispatch({type: "SET_LOADING_STATUS", loadingStatus});
     },
-    setRoute: (route) => dispatch({type: "SET_ROUTE", route})
+    setRoute: (route) => dispatch({type: "SET_ROUTE", route}),
+    login: (error, token, userRequest, doNotNavigate) =>{
+      let payload = {
+        "access_token": token, "UserRequest": userRequest, doNotNavigate: doNotNavigate
+      };
+      dispatch({type: "LOGIN", error, payload})
+    },
+    setActionList:(actionList)=>{
+      dispatch({type:"SET_ACTION_LIST",actionList});
+    },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

@@ -112,7 +112,7 @@ import SearchLegacyWc from './components/non-framework/wc/search';
 import updateConnection from './components/non-framework/wc/connection-workflow';
 import NoDues from './components/non-framework/citizenServices/NoDues';
 import ComingSoon from './components/non-framework/citizenServices/ComingSoon.js';
-import CS_WaterConnection from './components/non-framework/citizenServices/wc/create.js';
+//import CS_WaterConnection from './components/non-framework/citizenServices/wc/create.js';
 import ViewWc from './components/non-framework/wc/viewWc';
 
 const base = "";
@@ -244,7 +244,7 @@ const Main = () => {
       <Route exact path={base+'/searchconnection/wc'} component={SearchLegacyWc}/>
       <Route exact path={base+'/wc/application/update/:stateId'} component={updateConnection}/>
 	  <Route exact path={base+'/waterConnection/view/:id'} component={ViewWc}/>
-      <Route exact path={base + '/non-framework/citizenServices/wc'} component={CS_WaterConnection}/>
+      {/*<Route exact path={base + '/non-framework/citizenServices/wc'} component={CS_WaterConnection}/>*/}
     </Switch>
   </main>
 )}

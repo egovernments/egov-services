@@ -3,9 +3,9 @@ package org.egov.mr.web.errorhandler;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.mr.model.RegistrationUnit;
-import org.egov.mr.web.contract.RequestInfo;
-import org.egov.mr.web.contract.ResponseInfo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -63,10 +63,10 @@ public class ErrorHandler {
 		ResponseInfo responseInfo = new ResponseInfo();
 		// Setting ResponseInfo
 		responseInfo.setApiId(requestInfo.getApiId());
-		responseInfo.setKey(requestInfo.getKey());
+		//responseInfo.setKey(requestInfo.getKey());
 		responseInfo.setResMsgId(requestInfo.getMsgId());
 		responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
-		responseInfo.setTenantId(requestInfo.getTenantId());
+		//responseInfo.setTenantId(requestInfo.getTenantId());
 		responseInfo.setTs(requestInfo.getTs());
 		responseInfo.setVer(requestInfo.getVer());
 
@@ -89,10 +89,10 @@ public class ErrorHandler {
 		ResponseInfo responseInfo = new ResponseInfo();
 		// Setting ResponseInfo
 		responseInfo.setApiId(requestInfo.getApiId());
-		responseInfo.setKey(requestInfo.getKey());
+		//responseInfo.setKey(requestInfo.getKey());
 		responseInfo.setResMsgId(requestInfo.getMsgId());
 		responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
-		responseInfo.setTenantId(requestInfo.getTenantId());
+		//responseInfo.setTenantId(requestInfo.getTenantId());
 		responseInfo.setTs(requestInfo.getTs());
 		responseInfo.setVer(requestInfo.getVer());
 
@@ -116,10 +116,10 @@ public class ErrorHandler {
 		ResponseInfo responseInfo = new ResponseInfo();
 		// Setting ResponseInfo
 		responseInfo.setApiId(requestInfo.getApiId());
-		responseInfo.setKey(requestInfo.getKey());
+		//responseInfo.setKey(requestInfo.getKey());
 		responseInfo.setResMsgId(requestInfo.getMsgId());
 		responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
-		responseInfo.setTenantId(requestInfo.getTenantId());
+		//responseInfo.setTenantId(requestInfo.getTenantId());
 		responseInfo.setTs(requestInfo.getTs());
 		responseInfo.setVer(requestInfo.getVer());
 

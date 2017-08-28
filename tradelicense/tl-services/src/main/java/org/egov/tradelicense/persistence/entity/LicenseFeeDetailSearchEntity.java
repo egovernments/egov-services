@@ -1,5 +1,6 @@
 package org.egov.tradelicense.persistence.entity;
 
+import org.egov.tradelicense.domain.model.AuditDetails;
 import org.egov.tradelicense.domain.model.LicenseFeeDetailSearch;
 
 import lombok.AllArgsConstructor;
@@ -36,6 +37,8 @@ public class LicenseFeeDetailSearchEntity {
 
 		LicenseFeeDetailSearch licenseFeeDetail = new LicenseFeeDetailSearch();
 
+		AuditDetails auditDetails = new AuditDetails();
+
 		licenseFeeDetail.setId(this.id);
 
 		licenseFeeDetail.setLicenseId(this.licenseId);
@@ -46,15 +49,22 @@ public class LicenseFeeDetailSearchEntity {
 
 		licenseFeeDetail.setAmount(this.amount);
 
-		licenseFeeDetail.setCreatedBy(this.createdBy);
-		licenseFeeDetail.setCreatedTime(this.createdTime);
-		licenseFeeDetail.setLastModifiedBy(this.lastModifiedBy);
-		licenseFeeDetail.setLastModifiedTime(this.lastModifiedTime);
+		auditDetails.setCreatedBy(this.createdBy);
+
+		auditDetails.setCreatedTime(this.createdTime);
+
+		auditDetails.setLastModifiedBy(this.lastModifiedBy);
+
+		auditDetails.setLastModifiedTime(this.lastModifiedTime);
+
+		licenseFeeDetail.setAuditDetails(auditDetails);
 
 		return licenseFeeDetail;
 	}
 
 	public LicenseFeeDetailSearchEntity toEntity(LicenseFeeDetailSearch licenseFeeDetail) {
+
+		AuditDetails auditDetails = licenseFeeDetail.getAuditDetails();
 
 		this.amount = licenseFeeDetail.getAmount();
 
@@ -66,13 +76,13 @@ public class LicenseFeeDetailSearchEntity {
 
 		this.paid = licenseFeeDetail.getPaid();
 
-		this.createdBy = licenseFeeDetail.getCreatedBy();
+		this.createdBy = (auditDetails == null) ? null : auditDetails.getCreatedBy();
 
-		this.lastModifiedBy = licenseFeeDetail.getLastModifiedBy();
+		this.lastModifiedBy = (auditDetails == null) ? null : auditDetails.getLastModifiedBy();
 
-		this.createdTime = licenseFeeDetail.getCreatedTime();
+		this.createdTime = (auditDetails == null) ? null : auditDetails.getCreatedTime();
 
-		this.lastModifiedTime = licenseFeeDetail.getLastModifiedTime();
+		this.lastModifiedTime = (auditDetails == null) ? null : auditDetails.getLastModifiedTime();
 
 		return this;
 

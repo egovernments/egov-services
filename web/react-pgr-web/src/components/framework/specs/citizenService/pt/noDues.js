@@ -95,8 +95,7 @@ var dat = {
           "isRequired": false,
           "isDisabled": false,
           "requiredErrMsg": "Email addrees is required",
-          "patternErrMsg": "Please provide proper email address",
-          "defaultValue": JSON.parse(window.localStorage.getItem("userRequest")).emailId
+          "patternErrMsg": "Please provide proper email address"
 
         },
         {
@@ -108,8 +107,7 @@ var dat = {
           "isRequired": false,
           "isDisabled": false,
           "requiredErrMsg": "Mobile number is mandatory",
-          "patternErrMsg": "Please provide proper mobile number",
-          "defaultValue": JSON.parse(window.localStorage.getItem("userRequest")).mobileNumber
+          "patternErrMsg": "Please provide proper mobile number"
         },
         {
           "name": "businessService",

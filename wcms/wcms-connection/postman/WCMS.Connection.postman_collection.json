@@ -1,12 +1,13 @@
 {
-	"id": "a866857f-d8cd-fe2c-cfca-0c235cc97730",
+	"id": "1b0e9c4b-5cd0-05a3-3ba1-a1bc6e0e6c8f",
 	"name": "WCMS Connection",
 	"description": "",
 	"order": [
-		"f42d300c-a036-0c9b-4d64-9f10f8596f28",
-		"7c35f2fe-fdf3-2aab-5be8-adea3d29becc",
-		"65bf557d-5ab0-33db-4c9c-ac8883339e5b",
-		"eb2fd19c-79c8-47d1-f6f5-09938001d304"
+		"dc5e4646-03dc-f570-cc49-1b49d3194601",
+		"9a5bc4e5-71bd-b69f-0740-9d864017b528",
+		"edcae908-24fc-05ef-d8b5-150529df304e",
+		"763f3ff5-5974-19aa-c9cf-794e84f39cae",
+		"568f3cac-564f-ce00-2c38-5fcc329bbe69"
 	],
 	"folders": [],
 	"folders_order": [],
@@ -15,7 +16,7 @@
 	"public": false,
 	"requests": [
 		{
-			"id": "65bf557d-5ab0-33db-4c9c-ac8883339e5b",
+			"id": "568f3cac-564f-ce00-2c38-5fcc329bbe69",
 			"headers": "Content-Type: application/json\n",
 			"headerData": [
 				{
@@ -25,7 +26,47 @@
 					"enabled": true
 				}
 			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms-connection/connection/_create?tenantId=default",
+			"url": "http://egov-micro-dev.egovernments.org/wcms-connection/connection/_search?tenantId=default",
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "1b0e9c4b-5cd0-05a3-3ba1-a1bc6e0e6c8f",
+			"data": [],
+			"dataMode": "raw",
+			"name": "Search  Connection",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1502710479603,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1502754623039,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"31b91383-58cd-47c7-87b3-5117abffec0c\"\n  }\n}",
+			"collection_id": "1b0e9c4b-5cd0-05a3-3ba1-a1bc6e0e6c8f"
+		},
+		{
+			"id": "763f3ff5-5974-19aa-c9cf-794e84f39cae",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://egov-micro-qa.egovernments.org/wcms-connection/connection/_create?tenantId=default",
 			"queryParams": [
 				{
 					"key": "tenantId",
@@ -36,23 +77,22 @@
 				}
 			],
 			"preRequestScript": null,
-			"pathVariables": [],
+			"pathVariables": {},
 			"pathVariableData": [],
 			"method": "POST",
 			"data": [],
 			"dataMode": "raw",
 			"tests": null,
 			"currentHelper": "normal",
-			"helperAttributes": [],
-			"time": 1502755201192,
-			"name": "Create New Connection",
+			"helperAttributes": {},
+			"time": 1503901193569,
+			"name": "Create With Prop New Connection",
 			"description": "",
-			"collectionId": "a866857f-d8cd-fe2c-cfca-0c235cc97730",
-			"rawModeData": "{\n  \"Connection\": {\n    \"applicationType\": \"NEWCONNECTION\",\n    \"withProperty\": true,\n    \"asset\": {\n      \"email\": null,\n      \"mobileNumber\": \"1234567890\",\n      \"nameOfApplicant\": \"999999999\",\n      \"aadhaarNumber\": null,\n      \"noOfFloors\": 0,\n      \"locality\": 2\n    },\n    \"documents\": [\n      {\n        \"fileStoreId\": \"\",\n        \"displayName\": \"passport\",\n        \"name\": \"\",\n        \"document\": 6\n      },\n      {\n        \"fileStoreId\": \"\",\n        \"displayName\": \"DocumentType 223\",\n        \"name\": \"\",\n        \"document\": 49\n      },\n      {\n        \"fileStoreId\": \"\",\n        \"displayName\": \"DocumentType 487\",\n        \"name\": \"\",\n        \"document\": 38\n      },\n      {\n        \"fileStoreId\": \"\",\n        \"displayName\": \"doc\",\n        \"name\": \"\",\n        \"document\": 1\n      },\n      {\n        \"fileStoreId\": \"f528bdf0-2b12-4f0d-9b0f-a685141df5d8\",\n        \"displayName\": \"DocumentType 5531\",\n        \"name\": \"legacy.json.txt\",\n        \"document\": 73\n      }\n    ],\n    \"property\": {\n      \"propertyIdentifier\": \"1016000001\",\n      \"propertyType\": \"Vacant Land\",\n      \"usageType\": \"Cinema Halls\"\n    },\n    \"categoryType\": \"Non Residential\",\n    \"hscPipeSizeType\": 24,\n    \"meter\": [\n      {\n        \"meterMake\": \"AWS\",\n        \"meterSlNo\": \"1234\",\n        \"meterCost\": \"12300\",\n        \"initialMeterReading\": \"0213\",\n        \"meterReadings\": [\n          {\n            \"reading\": \"1245\",\n            \"readingDate\": 1502754578502\n          },\n          {\n            \"reading\": \"2564\",\n            \"readingDate\": 1502754584098\n          },\n          {\n            \"reading\": \"2356\",\n            \"readingDate\": 1502754590546\n          }\n        ]\n      }\n    ],\n    \"billingType\": \"METERED\",\n    \"connectionType\": \"PERMANENT\",\n    \"sourceType\": \"ground\",\n    \"supplyType\": \"test\",\n    \"waterTreatment\": \"abcd\",\n    \"sumpCapacity\": \"25\",\n    \"numberOfPersons\": \"5\",\n    \"numberOfFamily\": 2,\n    \"donationCharge\": \"2500\",\n    \"receiptNumber\": \"123456\",\n    \"receiptDate\": 1502754599869,\n    \"tenantId\": \"default\",\n     \"workflowDetails\": {\n    \"initiatorPosition\":2,\n    \"assignee\":2,\n    \"department\":\"2\",\n    \"designation\":\"2\",\n    \"comments\":\"new connection worflow\",\n      \"action\":\"Forward\",\n    \"status\":\"CREATED\"\n    }\n  },\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1502754623039,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"31b91383-58cd-47c7-87b3-5117abffec0c\"\n  }\n}",
-			"collection_id": "a866857f-d8cd-fe2c-cfca-0c235cc97730"
+			"collectionId": "1b0e9c4b-5cd0-05a3-3ba1-a1bc6e0e6c8f",
+			"rawModeData": "{\n  \"Connection\": {\n    \"withProperty\": true,\n    \"connectionOwner\": {\n      \"emailId\": \"\",\n      \"isPrimaryOwner\": true\n    },\n    \"property\": {\n      \"email\": \"sunil@gmail.com\",\n      \"propertyType\": \"Others\",\n      \"propertyIdentifier\": \"15700000028\",\n      \"mobileNumber\": \"9916077654\",\n      \"nameOfApplicant\": \"Ramakrishna\",\n      \"aadhaarNumber\": \"202422314421\",\n      \"noOfFloors\": 1,\n      \"locality\": 787,\n      \"zone\": 640,\n      \"ward\": 716,\n      \"address\": \"787\",\n      \"property\": \"B\",\n      \"usageType\": \"COM\"\n    },\n    \"categoryType\": \"General\",\n    \"applicationType\": \"NEWCONNECTION\",\n    \"connectionStatus\": \"INPROGRESS\",\n    \"supplyType\": \"Semi Bulk Type\",\n    \"workflowDetails\": {\n      \"initiatorPosition\": \"2\",\n      \"department\": 22,\n      \"designation\": 10,\n      \"assignee\": 65,\n      \"comments\": \"Vinay to check this\"\n    },\n    \"documents\": [\n      {\n        \"fileStoreId\": \"039a3067-dc22-42dc-b1e0-c928241ff0a3\",\n        \"displayName\": \"Aadhar Card\",\n        \"name\": \"Screenshot from 2017-06-01 09-46-03.png\",\n        \"document\": 11\n      }\n    ],\n    \"subUsageType\": \"COMR\",\n    \"hscPipeSizeType\": 25.4,\n    \"billingType\": \"NONMETERED\",\n    \"connectionType\": \"PERMANENT\",\n    \"sourceType\": \"RIVER\",\n    \"waterTreatment\": \"bhuvaneshwar jal shudhikaran\",\n    \"sumpCapacity\": \"80\",\n    \"billSequenceNumber\": \"8088\",\n    \"plumberName\": \"Plumber Suresh\",\n    \"numberOfTaps\": \"20\",\n    \"numberOfPersons\": \"20\",\n    \"numberOfFamily\": 5,\n    \"outsideULB\": true,\n    \"tenantId\": \"mh.roha\"\n  },\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1503900995581,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"f6dcdce6-bdf2-4b8b-98a1-f49737ee334b\"\n  }\n}"
 		},
 		{
-			"id": "7c35f2fe-fdf3-2aab-5be8-adea3d29becc",
+			"id": "9a5bc4e5-71bd-b69f-0740-9d864017b528",
 			"headers": "Content-Type: application/json\n",
 			"headerData": [
 				{
@@ -84,52 +124,13 @@
 			"time": 1502755026904,
 			"name": "Create Metered Legacy Connection",
 			"description": "",
-			"collectionId": "a866857f-d8cd-fe2c-cfca-0c235cc97730",
+			"collectionId": "1b0e9c4b-5cd0-05a3-3ba1-a1bc6e0e6c8f",
 			"responses": [],
 			"rawModeData": "{\n  \"Connection\": {\n    \"applicationType\": \"NEWCONNECTION\",\n    \"withProperty\": true,\n    \"asset\": {\n      \"email\": null,\n      \"mobileNumber\": \"1234567890\",\n      \"nameOfApplicant\": \"999999999\",\n      \"aadhaarNumber\": null,\n      \"noOfFloors\": 0,\n      \"locality\": 2\n    },\n    \"documents\": [\n      {\n        \"fileStoreId\": \"\",\n        \"displayName\": \"passport\",\n        \"name\": \"\",\n        \"document\": 6\n      },\n      {\n        \"fileStoreId\": \"\",\n        \"displayName\": \"DocumentType 223\",\n        \"name\": \"\",\n        \"document\": 49\n      },\n      {\n        \"fileStoreId\": \"\",\n        \"displayName\": \"DocumentType 487\",\n        \"name\": \"\",\n        \"document\": 38\n      },\n      {\n        \"fileStoreId\": \"\",\n        \"displayName\": \"doc\",\n        \"name\": \"\",\n        \"document\": 1\n      },\n      {\n        \"fileStoreId\": \"f528bdf0-2b12-4f0d-9b0f-a685141df5d8\",\n        \"displayName\": \"DocumentType 5531\",\n        \"name\": \"legacy.json.txt\",\n        \"document\": 73\n      }\n    ],\n    \"property\": {\n      \"propertyIdentifier\": \"1016000001\",\n      \"propertyType\": \"Vacant Land\",\n      \"usageType\": \"Cinema Halls\"\n    },\n    \"categoryType\": \"Non Residential\",\n    \"hscPipeSizeType\": 24,\n    \"meter\": [\n      {\n        \"meterMake\": \"AWS\",\n        \"meterSlNo\": \"1234\",\n        \"meterCost\": \"12300\",\n        \"initialMeterReading\": \"0213\",\n        \"meterReadings\": [\n          {\n            \"reading\": \"1245\",\n            \"readingDate\": 1502754578502\n          },\n          {\n            \"reading\": \"2564\",\n            \"readingDate\": 1502754584098\n          },\n          {\n            \"reading\": \"2356\",\n            \"readingDate\": 1502754590546\n          }\n        ]\n      }\n    ],\n    \"billingType\": \"METERED\",\n    \"connectionType\": \"PERMANENT\",\n    \"sourceType\": \"ground\",\n    \"supplyType\": \"test\",\n    \"waterTreatment\": \"abcd\",\n    \"sumpCapacity\": \"25\",\n    \"numberOfPersons\": \"5\",\n    \"numberOfFamily\": 2,\n    \"donationCharge\": \"2500\",\n    \"receiptNumber\": \"123456\",\n    \"receiptDate\": 1502754599869,\n    \"tenantId\": \"default\"\n  },\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1502754623039,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"31b91383-58cd-47c7-87b3-5117abffec0c\"\n  }\n}",
-			"collection_id": "a866857f-d8cd-fe2c-cfca-0c235cc97730"
+			"collection_id": "1b0e9c4b-5cd0-05a3-3ba1-a1bc6e0e6c8f"
 		},
 		{
-			"id": "eb2fd19c-79c8-47d1-f6f5-09938001d304",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms-connection/connection/_search?tenantId=default",
-			"queryParams": [
-				{
-					"key": "tenantId",
-					"value": "default",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				}
-			],
-			"pathVariables": {},
-			"pathVariableData": [],
-			"preRequestScript": null,
-			"method": "POST",
-			"collectionId": "a866857f-d8cd-fe2c-cfca-0c235cc97730",
-			"data": [],
-			"dataMode": "raw",
-			"name": "Search  Connection",
-			"description": "",
-			"descriptionFormat": "html",
-			"time": 1502710479603,
-			"version": 2,
-			"responses": [],
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"rawModeData": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1502754623039,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"31b91383-58cd-47c7-87b3-5117abffec0c\"\n  }\n}"
-		},
-		{
-			"id": "f42d300c-a036-0c9b-4d64-9f10f8596f28",
+			"id": "dc5e4646-03dc-f570-cc49-1b49d3194601",
 			"headers": "Content-Type: application/json\n",
 			"headerData": [
 				{
@@ -161,10 +162,48 @@
 			"time": 1502754857601,
 			"name": "Create Non Metered Legacy Connection",
 			"description": "",
-			"collectionId": "a866857f-d8cd-fe2c-cfca-0c235cc97730",
+			"collectionId": "1b0e9c4b-5cd0-05a3-3ba1-a1bc6e0e6c8f",
 			"responses": [],
 			"rawModeData": "{\n  \"Connection\": {\n    \"applicationType\": \"NEWCONNECTION\",\n    \"withProperty\": true,\n    \"asset\": {\n      \"email\": null,\n      \"mobileNumber\": \"1234567890\",\n      \"nameOfApplicant\": \"999999999\",\n      \"aadhaarNumber\": null,\n      \"noOfFloors\": 0,\n      \"locality\": 2\n    },\n    \"documents\": [\n      {\n        \"fileStoreId\": \"\",\n        \"displayName\": \"passport\",\n        \"name\": \"\",\n        \"document\": 6\n      },\n      {\n        \"fileStoreId\": \"\",\n        \"displayName\": \"DocumentType 223\",\n        \"name\": \"\",\n        \"document\": 49\n      },\n      {\n        \"fileStoreId\": \"\",\n        \"displayName\": \"DocumentType 487\",\n        \"name\": \"\",\n        \"document\": 38\n      },\n      {\n        \"fileStoreId\": \"\",\n        \"displayName\": \"doc\",\n        \"name\": \"\",\n        \"document\": 1\n      },\n      {\n        \"fileStoreId\": \"8e9d04bd-57f9-460a-b644-86733ad83e2f\",\n        \"displayName\": \"DocumentType 5531\",\n        \"name\": \"legacy.json.txt\",\n        \"document\": 73\n      }\n    ],\n    \"property\": {\n      \"propertyIdentifier\": \"1016000001\",\n      \"propertyType\": \"Vacant Land\",\n      \"usageType\": \"Cinema Halls\"\n    },\n    \"categoryType\": \"Non Residential\",\n    \"hscPipeSizeType\": 24,\n    \"billingType\": \"NONMETERED\",\n    \"connectionType\": \"PERMANENT\",\n    \"sourceType\": \"ground\",\n    \"supplyType\": \"test\",\n    \"waterTreatment\": \"abcd\",\n    \"sumpCapacity\": \"25\",\n    \"numberOfPersons\": \"5\",\n    \"numberOfFamily\": 2,\n    \"donationCharge\": \"1245\",\n    \"receiptNumber\": \"2515\",\n    \"receiptDate\": 1502754348902,\n    \"tenantId\": \"default\"\n  },\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1502754366121,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"31b91383-58cd-47c7-87b3-5117abffec0c\"\n  }\n}",
-			"collection_id": "a866857f-d8cd-fe2c-cfca-0c235cc97730"
+			"collection_id": "1b0e9c4b-5cd0-05a3-3ba1-a1bc6e0e6c8f"
+		},
+		{
+			"id": "edcae908-24fc-05ef-d8b5-150529df304e",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://egov-micro-qa.egovernments.org/wcms-connection/connection/_create?tenantId=default",
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1503899281139,
+			"name": "Create Without Prop New Connection",
+			"description": "",
+			"collectionId": "1b0e9c4b-5cd0-05a3-3ba1-a1bc6e0e6c8f",
+			"isFromCollection": true,
+			"collectionRequestId": "aab238d5-073f-baa2-addb-362dc1f4f50c",
+			"rawModeData": "{\n  \"Connection\": {\n    \"withProperty\": false,\n    \"connectionOwner\": {\n      \"emailId\": \"NewNameTest@Test.com\",\n      \"isPrimaryOwner\": true,\n      \"name\": \"NewNameTest\",\n      \"mobileNumber\": \"2939284249\",\n      \"aadhaarNumber\": \"879879879879\",\n      \"gender\": \"MALE\"\n    },\n    \"property\": {\n      \"email\": \"\",\n      \"propertyType\": \"Others\",\n      \"propertyIdentifier\": \"\",\n      \"nameOfApplicant\": \"\",\n      \"mobileNumber\": \"\",\n      \"adharNumber\": \"\",\n      \"locality\": \"\",\n      \"address\": \"\",\n      \"zone\": \"\",\n      \"noOfFloors\": \"\",\n      \"propertyTaxDue\": \"\",\n      \"usageType\": \"COM\"\n    },\n    \"categoryType\": \"General\",\n    \"applicationType\": \"NEWCONNECTION\",\n    \"connectionStatus\": \"INPROGRESS\",\n    \"supplyType\": \"Semi Bulk Type\",\n    \"workflowDetails\": {\n      \"initiatorPosition\": \"2\",\n      \"department\": 22,\n      \"designation\": 10,\n      \"assignee\": 64,\n      \"comments\": \"Please check this today only\"\n    },\n    \"documents\": [\n      {\n        \"fileStoreId\": \"c547f6f3-d606-44a1-9e35-94e2f0483a8d\",\n        \"displayName\": \"Aadhar Card\",\n        \"name\": \"Screenshot from 2017-06-01 09-46-03.png\",\n        \"document\": 11\n      }\n    ],\n    \"houseNumber\": \"78\",\n    \"address\": {\n      \"addressLine1\": \"Sarjapur Road\",\n      \"city\": \"Bangalore\",\n      \"pinCode\": \"878268\"\n    },\n    \"connectionLocation\": {\n      \"revenueBoundary\": {\n        \"id\": 6\n      },\n      \"adminBoundary\": {\n        \"id\": 3\n      },\n      \"locationBoundary\": {\n        \"id\": 2\n      }\n    },\n    \"hscPipeSizeType\": 25.4,\n    \"subUsageType\": \"COMR\",\n    \"billingType\": \"NONMETERED\",\n    \"connectionType\": \"PERMANENT\",\n    \"sourceType\": \"RIVER\",\n    \"waterTreatment\": \"bhuvaneshwar jal shudhikaran\",\n    \"sumpCapacity\": \"90\",\n    \"billSequenceNumber\": \"919190\",\n    \"plumberName\": \"Plumber Nagraj\",\n    \"numberOfTaps\": \"10\",\n    \"numberOfPersons\": \"10\",\n    \"numberOfFamily\": 3,\n    \"outsideULB\": true,\n    \"tenantId\": \"mh.roha\"\n  },\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1503898786427,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"5bd6e7ff-6909-4bbf-acbe-48fc28222631\"\n  }\n}"
 		}
 	]
 }

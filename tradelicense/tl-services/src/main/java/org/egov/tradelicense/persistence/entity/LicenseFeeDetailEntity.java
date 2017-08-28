@@ -50,8 +50,11 @@ public class LicenseFeeDetailEntity {
 		licenseFeeDetail.setAmount(this.amount);
 
 		auditDetails.setCreatedBy(this.createdBy);
+
 		auditDetails.setCreatedTime(this.createdTime);
+
 		auditDetails.setLastModifiedBy(this.lastModifiedBy);
+
 		auditDetails.setLastModifiedTime(this.lastModifiedTime);
 
 		licenseFeeDetail.setAuditDetails(auditDetails);

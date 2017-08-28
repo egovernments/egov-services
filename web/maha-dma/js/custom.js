@@ -72,7 +72,6 @@ $(document).ready(function(){
   			  success: function(response){
             servicesList = response;
             groupByModuleServices = arrayGroupByKey(servicesList, "moduleName");
-            console.log('groupByModuleServices', groupByModuleServices);
             loadServiceMenus();
   			  },
   			  cache: false
@@ -107,7 +106,7 @@ $(document).ready(function(){
                     && service.moduleName === moduleName);
           var ulb = ulbsList.find((ulb)=>ulb.ulbName === $('.ulb-dropdown').val());
 
-          if(service){
+          if(service && ulb.url){
             var uniqueKeys = service.slaTable.columns.reduce(function (acc, obj) {
                 return acc.concat(acc.indexOf(obj.key) === -1? obj.key : undefined);
             }, []);
@@ -123,6 +122,7 @@ $(document).ready(function(){
           }
           else{
             //else TODO
+            alert('This service is not available for ' + ulb.ulbName);
           }
       });
 
@@ -134,5 +134,34 @@ $(document).ready(function(){
           }
       });
 
+      $('#loginBtn').click(function(e) {
+          if($("#mobileNumber").val() && $("#password").val()) {
+            var tenantId = $("#ulb-dropdown2").val() || "default";
+            $.ajax({
+              url: window.location.origin + "/user/oauth/token?tenantId=" + tenantId + "&username=" + $("#mobileNumber").val() + "&password=" + $("#password").val() + "&grant_type=password&scope=read",
+              type: 'POST',
+              dataType: 'json',
+              data:JSON.stringify({}),
+              contentType: 'application/x-www-form-urlencoded',
+              headers:{
+                'Authorization' :'Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0'
+              },
+              success: function(response) {
+                localStorage.setItem("auth-token", response.access_token);
+                localStorage.setItem("token", response.access_token);
+                localStorage.setItem("userRequest", JSON.stringify(response.UserRequest));
+                localStorage.setItem("auth", response.access_token);
+                localStorage.setItem("type", response.UserRequest.type);
+                localStorage.setItem("id", response.UserRequest.id);
+                localStorage.setItem("tenantId", response.UserRequest.tenantId);
+
+                window.location.href = window.location.origin + "/app/v1/#/prd/dashboard";
+              },
+              error: function() {
+
+              }
+            });
+          }
+      })
 
 });

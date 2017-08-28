@@ -72,6 +72,8 @@ public class DonationGetRequest {
     private String categoryType;
 
     private Long categoryTypeId;
+    
+    private Boolean outSideUlb;
 
     private String usageType;
 

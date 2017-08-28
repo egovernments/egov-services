@@ -23,6 +23,7 @@ public class MarriageRegnQueryBuilder {
 			+ " JOIN egmr_marrying_person mpb ON mr.brideid = mpb.id AND mr.tenantid = mpb.tenantid"
 			+ " JOIN egmr_registration_unit ru ON mr.regnunitid = ru.id AND mr.tenantid = ru.tenantid"
 	        + " JOIN egmr_marriageregn_witness w ON mr.applicationnumber = w.applicationnumber"
+			+ " JOIN egmr_marriageregn_fee f ON f.id=mr.feeid"
 	        + " LEFT OUTER JOIN egmr_marriage_certificate mc ON mr.applicationnumber = mc.applicationnumber AND mr.tenantid = mc.tenantid";
 	
 	private static final String BASE_QUERY = "SELECT mr.marriagedate as mr_marriagedate, mr.venue as mr_venue,"
@@ -51,6 +52,7 @@ public class MarriageRegnQueryBuilder {
 			+ " mpbg.residenceaddress as mpbg_residenceaddress, mpbg.photo as mpbg_photo, mpbg.nationality as mpbg_nationality,"
 			+ " w.witnessno as w_witnessno, w.name as w_name, w.relation as w_relation, w.relatedto as w_relatedto, w.age as w_age, w.address as w_address, w.relationship as w_relationship,"
 			+ " w.occupation as w_occupation, w.aadhaar as w_aadhaar, w.applicationnumber as w_applicationnumber,"
+			+ " f.id asf_id, f.tenantid as f_tenantid, f.feecriteria as f_feecriteria, f.fee as f_fee, f.fromdate as f_fromdate, f.todate as f_todate,"
 			+ " mc.certificateno as mc_certificateno, mc.certificatedate as mc_certificatedate, mc.certificatetype as mc_certificatetype,"
 			+ " mc.regnnumber as mc_regnnumber, mc.bridegroomphoto as mc_bridegroomphoto, mc.bridephoto as mc_bridephoto,"
 			+ " mc.husbandname as mc_husbandname, mc.husbandaddress as mc_husbandaddress, mc.wifename as mc_wifename, mc.wifeaddress as mc_wifeaddress,"
@@ -62,6 +64,7 @@ public class MarriageRegnQueryBuilder {
 	        + " JOIN egmr_marrying_person mpbg ON mr.bridegroomid = mpbg.id AND mr.tenantid = mpbg.tenantid"
 			+ " JOIN egmr_marrying_person mpb ON mr.brideid = mpb.id AND mr.tenantid = mpb.tenantid"
 	        + " JOIN egmr_marriageregn_witness w ON mr.applicationnumber = w.applicationnumber"
+	        + " JOIN egmr_marriageregn_fee f ON f.id=mr.feeid"
 	        + " LEFT OUTER JOIN egmr_marriage_certificate mc ON mr.applicationnumber = mc.applicationnumber AND mr.tenantid = mc.tenantid";
 	
 	public String getQueryForListOfMarriageRegnIds(MarriageRegnCriteria marriageRegnCriteria,

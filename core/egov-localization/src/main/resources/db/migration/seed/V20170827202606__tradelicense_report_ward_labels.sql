@@ -1,0 +1,1 @@
+UPDATE message SET message = 'Admin Ward' WHERE tenantid='default' and code='reports.tradelicense.adminward' and module='TradeLicense';

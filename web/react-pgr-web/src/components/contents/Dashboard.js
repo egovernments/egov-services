@@ -40,7 +40,8 @@ require('datatables.net-buttons/js/buttons.print.js'); // Print view button
 
 const nameMap = {
   "PT_NODUES": "Property Tax No Dues",
-  "WC_NODUES": "Water Charges No Dues"
+  "WC_NODUES": "Water Charges No Dues",
+  "CREATED": "Created"
 };
 
 const content=[
@@ -77,7 +78,7 @@ const content=[
             {
                 icon: 'icon-class-name',
                 label: 'Apply for Extract',
-                to: '#/coming/soon',
+                to: '#/non-framework/citizenServices/no-dues/extract/pt',
             }
         ],
     },
@@ -226,7 +227,7 @@ class Dashboard extends Component {
      setLoadingStatus("loading");
 
     let current = this;
-    let {currentUser}=this.props;
+    let currentUser=JSON.parse(localStorage.userRequest);
 
     if(currentUser.type === constants.ROLE_CITIZEN) {
       Promise.all([
@@ -240,7 +241,7 @@ class Dashboard extends Component {
           current.setState({
             serviceRequests: [],
             citizenServices:[],
-            serviceRequestsTwo: [],
+            serviceRequestsTwo: responses[2] && responses[2].serviceReq ? responses[2].serviceReq : [],
             localArray:[],
              hasData:false
           });
@@ -372,12 +373,30 @@ class Dashboard extends Component {
 
 
 
- componentWillUnmount(){
-     /*$('#searchTable')
-     .DataTable()
-     .destroy(true);*/
- };
+   componentWillUnmount(){
+       /*$('#searchTable')
+       .DataTable()
+       .destroy(true);*/
+   };
 
+   componentDidMount() {
+      let self = this;
+      if(localStorage.token && localStorage.userRequest && !localStorage.actions) {
+        this.props.login(false, localStorage.token, JSON.parse(localStorage.userRequest), true);
+        let roleCodes = [];
+        var UserRequest = JSON.parse(localStorage.userRequest);
+        for (var i = 0; i < UserRequest.roles.length; i++) {
+          roleCodes.push(UserRequest.roles[i].code);
+        }
+        Api.commonApiPost("access/v1/actions/_get",{},{tenantId:localStorage.tenantId, roleCodes, enabled:true}).then(function(response){
+          var actions = response.actions;
+          localStorage.setItem("actions", JSON.stringify(actions));
+          self.props.setActionList(actions);   
+        }, function(err) {
+            console.log(err);
+        });
+      }
+   }
 
    componentDidUpdate() {
     let self = this;
@@ -583,7 +602,7 @@ class Dashboard extends Component {
                                           <th>
                                             Applied On
                                           </th>
-                                          <th>Action</th>
+                                          <th> </th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -591,7 +610,7 @@ class Dashboard extends Component {
                                           return (<tr key={key}>
                                               <td>{item.serviceRequestId}</td>
                                               <td>{nameMap[item.serviceCode] || item.serviceCode}</td>
-                                              <td>{item.status}</td>
+                                              <td>{nameMap[item.status] || item.status}</td>
                                               <td>{item.auditDetails ? getDate(item.auditDetails.createdDate) : "-"}</td>
                                               {<td><i className="material-icons">cloud_download</i></td>}
 
@@ -784,7 +803,16 @@ const mapDispatchToProps = dispatch => ({
         setLoadingStatus: (loadingStatus) => {
       dispatch({type: "SET_LOADING_STATUS", loadingStatus});
     },
-    setRoute: (route) => dispatch({type: "SET_ROUTE", route})
+    setRoute: (route) => dispatch({type: "SET_ROUTE", route}),
+    login: (error, token, userRequest, doNotNavigate) =>{
+      let payload = {
+        "access_token": token, "UserRequest": userRequest, doNotNavigate: doNotNavigate
+      };
+      dispatch({type: "LOGIN", error, payload})
+    },
+    setActionList:(actionList)=>{
+      dispatch({type:"SET_ACTION_LIST",actionList});
+    },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

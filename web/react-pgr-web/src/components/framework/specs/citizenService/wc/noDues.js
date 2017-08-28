@@ -95,8 +95,7 @@ var dat = {
           "isRequired": false,
           "isDisabled": false,
           "requiredErrMsg": "Email addrees is required",
-          "patternErrMsg": "Please provide proper email address",
-          "defaultValue": JSON.parse(window.localStorage.getItem("userRequest")).emailId
+          "patternErrMsg": "Please provide proper email address"
 
         },
         {
@@ -108,8 +107,7 @@ var dat = {
           "isRequired": false,
           "isDisabled": false,
           "requiredErrMsg": "Mobile number is mandatory",
-          "patternErrMsg": "Please provide proper mobile number",
-          "defaultValue": JSON.parse(window.localStorage.getItem("userRequest")).mobileNumber
+          "patternErrMsg": "Please provide proper mobile number"
         },
         {
           "name": "businessService",
@@ -139,7 +137,33 @@ var dat = {
       "resultPath": "PipeSizes",
       "rowClickUrlUpdate": "/update/wc/pipeSize/{id}",
       "rowClickUrlView": "/view/wc/pipeSize/{id}"
-    }
+    },
+    "feeDetails": [{
+      "id": null,
+      "tenantId": window.localStorage.getItem("tenantId"),
+      "consumerCode": "",
+      "consumerType": "consumertype1",
+      "businessService": "CS",
+      "minimumAmountPayable": 10,
+      "owner": {
+        "id": 0,
+        "userName": null,
+        "name": null,
+        "type": null,
+        "mobileNumber": null,
+        "emailId": null,
+        "roles": null
+      },
+      "taxPeriodFrom": 0,
+      "taxPeriodTo":0,
+      "demandDetails": [{
+        "id": null,
+        "demandId": null,
+        "taxHeadMasterCode": "",
+        "taxAmount": 20,
+        "collectionAmount": 0
+      }]
+    }]
   },
   "noDues.view": {
     "numCols": 12 / 3,

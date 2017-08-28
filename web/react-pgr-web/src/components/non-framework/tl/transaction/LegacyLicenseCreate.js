@@ -18,6 +18,16 @@ import UiButton from '../../../framework/components/UiButton';
 import {fileUpload, getInitiatorPosition} from '../../../framework/utility/utility';
 import $ from "jquery";
 
+var flag = 0;
+var flags = 0;
+var flag1 = 0;
+var flag2 = 0;
+var flag3 = 0;
+var tradeCatVal = "";
+var tradeSubVal = "";
+var tradeLicenseVal = "";
+
+
 var specifications={};
 let reqRequired = [];
 let baseUrl="https://raw.githubusercontent.com/abhiegov/test/master/specs/";
@@ -29,12 +39,6 @@ class LegacyLicenseCreate extends Component {
     super(props);
     this.state = {
       validityYear: "",
-      oldDate: "",
-      newDate: "",
-      flag: 0,
-      oldCategoryData: "",
-      newCategoryData: "",
-      flagCat: 0
     }
 
     this.handleOpen = () => {
@@ -45,13 +49,21 @@ class LegacyLicenseCreate extends Component {
    this.setState({open: false});
  };
 
- this.handleOpenCat = () => {
- this.setState({openCat: true});
- };
+ this.handleOpenSub = () => {
+this.setState({openSub: true});
+};
 
- this.handleCloseCat = () => {
-   this.setState({openCat: false});
- };
+this.handleCloseSub = () => {
+this.setState({openSub: false});
+};
+
+this.handleOpenLicense = () => {
+this.setState({openLicense: true});
+};
+
+this.handleCloseLicense = () => {
+this.setState({openLicense: false});
+};
 
   }
 
@@ -636,49 +648,6 @@ class LegacyLicenseCreate extends Component {
   }
 
 
-  noSubCategoryChange = () => {
-    let self = this;
-    console.log(self.state.oldCategoryData);
-    self.handleChange({target:{value:self.state.oldCategoryData}}, "licenses[0].subCategoryId");
-    this.setState({openCat: false});
-    self.setState({
-      oldCategoryData: "",
-      flagCat: 0
-    })
-  }
-
-  yesSubCategoryChange = () => {
-    let self = this;
-    self.handleChange({target:{value:self.state.newCategoryData}}, "licenses[0].subCategoryId");
-    this.setState({openCat: false});
-    self.setState({
-      oldCategoryData: "",
-      flagCat: 0
-    })
-  }
-
-
-  noChange = () => {
-    let self = this;
-    console.log(self.state.oldDate);
-    self.handleChange({target:{value:self.state.oldDate}}, "licenses[0].licenseValidFromDate");
-    this.setState({open: false});
-    self.setState({
-      oldDate: "",
-      flag: 0
-    })
-  }
-
-  yesChange = () => {
-    let self = this;
-    self.handleChange({target:{value:self.state.newDate}}, "licenses[0].licenseValidFromDate");
-    this.setState({open: false});
-    self.setState({
-      oldDate: "",
-      flag: 0
-    })
-  }
-
 
 //Start Point of API Call to Populate Validity Year and UOMID
 populateValidtyYear = (categoryId) => {
@@ -718,7 +687,7 @@ calculateFeeDetails = (licenseValidFromDate, validityYear) => {
 
   self.handleChange({target:{value:[]}},"licenses[0].feeDetails");
 
-  if(new Date(Number(licenseValidFromDate)).getMonth()>3)
+  if(new Date(Number(licenseValidFromDate)).getMonth() >= 3)
      {
          for(var i = startYear; i <= fixedDate; i = (i + validityYear))
           {
@@ -746,6 +715,100 @@ calculateFeeDetails = (licenseValidFromDate, validityYear) => {
 }
 //***End Fee Details Calculations***
 
+  noChange = () => {
+    let self = this;
+    this.setState({open: false});
+    flag1=1;
+    var e = {target:{value:tradeCatVal}}
+    console.log(tradeCatVal);
+    this.handleChange(e, "licenses[0].categoryId")
+  }
+
+  yesCatChange = () => {
+    let self = this;
+    this.setState({open: false});
+    flag = 1;
+    tradeCatVal = this.props.formData.licenses[0].categoryId;
+  }
+
+    noSubChange = () => {
+      let self = this;
+      this.setState({openSub: false});
+      flag2=1;
+      var e = {target:{value:tradeSubVal}}
+      console.log(tradeCatVal);
+      this.handleChange(e, "licenses[0].subCategoryId")
+
+    }
+
+    yesSubChange = () => {
+      let self = this;
+      this.setState({openSub: false});
+      flags = 1;
+      tradeSubVal = this.props.formData.licenses[0].subCategoryId;
+    }
+
+    noLicenseChange = () => {
+      let self = this;
+      this.setState({openLicense: false});
+      flag3=1;
+      var e = {target:{value:tradeLicenseVal}}
+      this.handleChange(e, "licenses[0].licenseValidFromDate")
+
+    }
+
+    yesLicenseChange = () => {
+      let self = this;
+      this.setState({openLicense: false});
+      flags = 1;
+      tradeLicenseVal = this.props.formData.licenses[0].licenseValidFromDate;
+    }
+
+handlePopUp = (type , jsonPath, value) => {
+  if(type == "tradeCategory") {
+    if(this.getVal("licenses[0].feeDetails") && flag != 0 && tradeCatVal !=  value) {
+      console.log("hello", value);
+      this.handleOpen();
+    } else {
+      console.log("hi", value);
+      flag = 1;
+      tradeCatVal = value;
+
+      console.log(value);
+    }
+  }
+}
+
+handlePopUpsub = (type , jsonPath, value) => {
+  if(type == "tradeSubCategory") {
+    if(this.getVal("licenses[0].feeDetails") && flags != 0 && tradeSubVal !=  value) {
+      console.log("hello", value);
+      this.handleOpenSub();
+    } else {
+      console.log("hi", value);
+      flags = 1;
+      tradeSubVal = value;
+
+      console.log(value);
+    }
+  }
+}
+
+handlePopUpLicense = (type , jsonPath, value) => {
+  if(type == "tradeLicense") {
+    if(this.getVal("licenses[0].feeDetails") && flag != 0 && tradeLicenseVal !=  value && ((value+"").length == 12 || (value+"").length == 13)) {
+      console.log("hello", value);
+      this.handleOpenLicense();
+    } else {
+      console.log("hi", value);
+      flag = 1;
+      tradeLicenseVal = value;
+
+      console.log(value);
+    }
+  }
+}
+
   handleChange = (e, property, isRequired=false, pattern="", requiredErrMsg="Required", patternErrMsg="Pattern Missmatch") => {
       let {getVal} = this;
       let self = this;
@@ -754,8 +817,21 @@ calculateFeeDetails = (licenseValidFromDate, validityYear) => {
       let {validityYear}=this.state;
       let obj = specifications[`tl.create`];
 
+      console.log(e)
 
+      if (property == "licenses[0].categoryId" && flag1==0) {
+        this.handlePopUp("tradeCategory", "licenses[0].categoryId", e.target.value);
+      }
+      if (property == "licenses[0].subCategoryId" && flag2==0) {
+        this.handlePopUpsub("tradeSubCategory", "licenses[0].subCategoryId", e.target.value);
+      }
+      if (property == "licenses[0].licenseValidFromDate" && flag3==0 && ((e.target.value+"").length == 12 || (e.target.value+"").length == 13)) {
+        this.handlePopUpLicense("tradeLicense", "licenses[0].licenseValidFromDate", e.target.value);
+      }
 
+      flag1=0;
+      flag2=0;
+      flag3=0;
 
     if (property == "licenses[0].subCategoryId") {
       console.log(e.target.value);
@@ -793,75 +869,7 @@ calculateFeeDetails = (licenseValidFromDate, validityYear) => {
        }
 //***End Point To Populate Fee Details Section***
 
-    // //***Start Point for Dialog Pop-Up for Sub Category Field***
-    // if(self.state.flagCat == 0 && property == "licenses[0].subCategoryId"){
-    // console.log(e.target.value);
-    //   self.setState({
-    //     oldCategoryData: e.target.value
-    //   })
-    // }
-    //
-    // if(getVal("licenses[0].feeDetails") && property == "licenses[0].subCategoryId"){
-    // self.setState({
-    //   flagc: 1
-    // })
-    // }
-    //
-    // if(self.state.flagc == 1 && property == "licenses[0].subCategoryId"){
-    // console.log(e.target.value);
-    //   self.setState({
-    //     newCategoryData: e.target.value
-    //   })
-    // }
-    //
-    // if(self.state.flagc == 1 && getVal("licenses[0].feeDetails") && (self.state.oldCategoryData != self.state.newCategoryData)){
-    //   self.handleOpenCat()
-    //
-    //   self.setState({
-    //     flagc: 0
-    //   })
-    //   }
-    //
-    // //***End Point for Dialog Pop-Up for Sub Category Field****
 
-
-    //***Start Point for Dialog Pop-Up for License Valid from Date Field***
-    if(self.state.flag == 0 && property == "licenses[0].licenseValidFromDate" && ((e.target.value+"").length == 12 || (e.target.value+"").length == 13)){
-    console.log(e.target.value);
-      self.setState({
-        oldDate: e.target.value
-      })
-    }
-
-    if(getVal("licenses[0].feeDetails") && property == "licenses[0].licenseValidFromDate"){
-    self.setState({
-      flag: 1
-    })
-    }
-
-    if(self.state.flag == 1 && property == "licenses[0].licenseValidFromDate" && ((e.target.value+"").length == 12 || (e.target.value+"").length == 13)){
-    console.log(e.target.value);
-      self.setState({
-        newDate: e.target.value
-      })
-    }
-
-    if(self.state.flag == 1 && getVal("licenses[0].feeDetails") && (self.state.oldDate != self.state.newDate) && ((e.target.value+"").length == 12 || (e.target.value+"").length == 13)){
-      self.handleOpen()
-      self.setState({
-        flag: 0
-      })
-      }
-    //***End Point for Dialog Pop-Up for License Valid from Date Field***
-
-
-
-
-//***Start Point for Populating UOMID and Validity Years***
-if(property == "licenses[0].categoryId"){
-  self.populateValidtyYear(e.target.value)
-}
-//***End Point for Populating UOMID and Validity Years***
 
 
 
@@ -1068,23 +1076,38 @@ if(property == "licenses[0].categoryId"){
             label="Yes"
             primary={true}
             keyboardFocused={true}
-            onClick={this.yesChange}
+            onClick={this.yesCatChange}
           />,
         ];
 
-        const actionsCat = [
+        const actionsSub = [
               <FlatButton
                 label="No"
                 primary={true}
-                onClick={this.noSubCategoryChange}
+                onClick={this.noSubChange}
               />,
               <FlatButton
                 label="Yes"
                 primary={true}
                 keyboardFocused={true}
-                onClick={this.yesSubCategoryChange}
+                onClick={this.yesSubChange}
               />,
             ];
+
+            const actionsLicense = [
+                  <FlatButton
+                    label="No"
+                    primary={true}
+                    onClick={this.noLicenseChange}
+                  />,
+                  <FlatButton
+                    label="Yes"
+                    primary={true}
+                    keyboardFocused={true}
+                    onClick={this.yesLicenseChange}
+                  />,
+                ];
+
 
     let {resultList, rowClickHandler,showDataTable,showHeader} = this.props;
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
@@ -1128,7 +1151,7 @@ if(property == "licenses[0].categoryId"){
                   return (
                     <tr key={index}>
                       <td>{item.financialYear}</td>
-                      <td><TextField value={getVal("licenses[0].feeDetails["+index+"].amount")} errorText={fieldErrors["licenses[0].feeDetails["+index+"].amount"]} onChange= {(e) => handleChange (e, "licenses[0].feeDetails["+index+"].amount", true, "^[0-9]{1,10}(\\.[0-9]{0,2})?$","","Number max 10 degits with 2 decimal")}/></td>
+                      <td><TextField inputStyle={{"textAlign": "right"}} value={getVal("licenses[0].feeDetails["+index+"].amount")} errorText={fieldErrors["licenses[0].feeDetails["+index+"].amount"]} onChange= {(e) => handleChange (e, "licenses[0].feeDetails["+index+"].amount", true, "^[0-9]{1,10}(\\.[0-9]{0,2})?$","","Number max 10 degits with 2 decimal")}/></td>
                       <td><Checkbox checked={getVal("licenses[0].feeDetails["+index+"].paid")}   onCheck = {(obj, bol) => handleChange ({target:{value:bol}}, "licenses[0].feeDetails["+index+"].paid", true, "") }/></td>
                     </tr>
                   )
@@ -1139,15 +1162,6 @@ if(property == "licenses[0].categoryId"){
   		      </CardText>
   		      </Card>
 
-            <Dialog
-              title="Dialog With Actions"
-              actions={actionsCat}
-              modal={false}
-              open={this.state.openCat}
-              onRequestClose={this.handleCloseCat}
-            >
-            This will reset Fee Details. Do you want to Change Trade Sub-Category?
-            </Dialog>
 
             <Dialog
               title="Dialog With Actions"
@@ -1155,6 +1169,26 @@ if(property == "licenses[0].categoryId"){
               modal={false}
               open={this.state.open}
               onRequestClose={this.handleClose}
+            >
+            This will reset Fee Details. Do you want to proceed?
+            </Dialog>
+
+            <Dialog
+              title="Dialog With Actions"
+              actions={actionsSub}
+              modal={false}
+              open={this.state.openSub}
+              onRequestClose={this.handleCloseSub}
+            >
+            This will reset Fee Details. Do you want to proceed?
+            </Dialog>
+
+            <Dialog
+              title="Dialog With Actions"
+              actions={actionsLicense}
+              modal={false}
+              open={this.state.openLicense}
+              onRequestClose={this.handleCloseLicense}
             >
             This will reset Fee Details. Do you want to proceed?
             </Dialog>

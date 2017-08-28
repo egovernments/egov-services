@@ -115,8 +115,8 @@ public class MeterWaterRatesService {
                 meterWaterRatesGetRequest.setUsageTypeId(usageType.getUsageMasters().get(0).getId());
 
         }
-        
-        if (meterWaterRatesGetRequest.getSubUsageType()!= null) {
+
+        if (meterWaterRatesGetRequest.getSubUsageType() != null) {
             final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModuleByCode(
                     meterWaterRatesGetRequest.getSubUsageType(), WcmsConstants.WC, meterWaterRatesGetRequest.getTenantId());
             if (usageType != null && usageType.getUsageTypesSize())
@@ -130,7 +130,7 @@ public class MeterWaterRatesService {
         getUsageTypeByName(meterWaterRates);
         getSubUsageType(meterWaterRates);
         return meterWaterRatesRepository.checkMeterWaterRatesExists(meterWaterRates.getCode(),
-                meterWaterRates.getUsageTypeId(),meterWaterRates.getSubUsageTypeId(),
+                meterWaterRates.getUsageTypeId(), meterWaterRates.getSubUsageTypeId(),
                 meterWaterRates.getSourceTypeName(), meterWaterRates.getPipeSize(),
                 meterWaterRates.getTenantId());
     }

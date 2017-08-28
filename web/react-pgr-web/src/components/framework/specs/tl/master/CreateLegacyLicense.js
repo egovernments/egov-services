@@ -87,7 +87,7 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Enter Valid Aadhar Number (14 Digit Number)"
+            "patternErrMsg": "Enter Valid Aadhar Number (12 Digit Number)"
           },
           {
             "name": "MobileNumber",
@@ -212,7 +212,7 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": "",
             "defaultValue": [{
-                "key": "STATE_GOVERNMENT_OWNED",
+                "key": "STATE GOVERNMENT OWNED",
                 "value": "STATE_GOVERNMENT_OWNED"
               },
               {
@@ -220,7 +220,7 @@ var dat = {
                 "value": "RENTED"
               },
               {
-                "key": "CENTRAL_GOVERNMENT_OWNED",
+                "key": "CENTRAL GOVERNMENT OWNED",
                 "value": "CENTRAL_GOVERNMENT_OWNED"
               },
               {
@@ -364,7 +364,7 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "",
+            "patternErrMsg": "Enter in dd/mm/yyyy Format",
             "maxLength": "10"
           },
           {
@@ -376,7 +376,7 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "",
+            "patternErrMsg": "Enter in dd/mm/yyyy Format",
             "maxLength": "10"
           },
           {
@@ -416,7 +416,7 @@ var dat = {
       },
 
       {
-        "label": "Agreement Details",
+        "label": "tl.create.licenses.groups.agreementDetails",
         "name": "createLicenseCategoryType",
         "hide": true,
         "fields": [{
@@ -428,7 +428,7 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "",
+            "patternErrMsg": "Enter in dd/mm/yyyy Format",
             "maxLength": "10"
           },
           {
@@ -660,7 +660,7 @@ var dat = {
              "label": "tl.search.groups.adminWardName",
              "pattern": "",
              "type": "singleValueList",
-             "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=WARD&hierarchyTypeName=REVENUE|$..boundaryNum|$..name",
+             "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=Ward&hierarchyTypeName=ADMINISTRATION|$..boundaryNum|$..name",
              "isRequired": false,
              "isDisabled": false,
              "requiredErrMsg": "",
@@ -683,6 +683,8 @@ var dat = {
        }],
        "result": {
          "header": [{
+           label: "tl.search.result.groups.applicationNumber"
+         }, {
            label: "tl.search.result.groups.tlNumber"
          }, {
            label: "tl.search.result.groups.oldTLNumber"
@@ -709,7 +711,7 @@ var dat = {
          }, {
            label: "tl.search.result.groups.workflowOwnerName"
          }],
-         "values": ["licenseNumber", "oldLicenseNumber", "category", "subCategory", "tradeTitle", "ownerName", "mobileNumber", "propertyAssesmentNo", "adminWardName", "validityYears","active","statusName",""],
+         "values": ["applicationNumber","licenseNumber", "oldLicenseNumber", "category", "subCategory", "tradeTitle", "ownerName", "mobileNumber", "propertyAssesmentNo", "adminWardName", "validityYears","active","statusName",""],
          "resultPath": "licenses",
          "rowClickUrlUpdate": "/update/tl/CreateLegacyLicense/{licenseNumber}",
          "rowClickUrlView": "/non-framework/tl/transaction/viewLegacyLicense/{licenseNumber}"
@@ -1022,48 +1024,10 @@ var dat = {
                 "isDisabled": false,
                 "requiredErrMsg": "",
                 "patternErrMsg": ""
-              },
-              {
-                "name": "TradeOwner",
-                "jsonPath": "licenses[0].active",
-                "label": "tl.view.licenses.groups.TraderOwnerProperty",
-                "pattern": "",
-                "type": "checkbox",
-                "isRequired": false,
-                "isDisabled": false,
-                "requiredErrMsg": "",
-                "patternErrMsg": "",
-                "defaultValue": false
               }
             ]
-          },
-                    {
-                      "label": "tl.view.licenses.groups.agreement",
-                      "name": "agreement",
-                      "fields": [{
-                          "name": "agreementNo",
-                          "jsonPath": "licenses[0].agreementNo",
-                          "label": "tl.view.licenses.groups.agreementNo",
-                          "pattern": "",
-                          "type": "text",
-                          "isRequired": false,
-                          "isDisabled": false,
-                          "requiredErrMsg": "",
-                          "patternErrMsg": ""
-                        },
-                        {
-                            "name": "agreementDate",
-                            "jsonPath": "licenses[0].agreementDate",
-                            "label": "tl.view.licenses.groups.agreementDate",
-                            "pattern": "",
-                            "type": "text",
-                            "isRequired": false,
-                            "isDisabled": false,
-                            "requiredErrMsg": "",
-                            "patternErrMsg": ""
-                          }
-                      ]
-                    }
+          }
+
         ]
       },
 

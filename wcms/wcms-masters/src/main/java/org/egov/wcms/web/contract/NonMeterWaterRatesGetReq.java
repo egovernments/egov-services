@@ -73,8 +73,14 @@ public class NonMeterWaterRatesGetReq {
     private String usageTypeName;
 
     private String usageTypeId;
+    
+    private String subUsageTypeId;
+    
+    private String subUsageType;
 
     private String sourceTypeName;
+    
+    private Boolean outsideUlb;
 
     private Long sourceTypeId;
 

@@ -11,6 +11,7 @@
  */
 package org.egov.mr.web.contract;
 
+import org.egov.common.contract.response.ResponseInfo;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;

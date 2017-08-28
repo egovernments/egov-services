@@ -50,8 +50,11 @@ public class SupportDocumentEntity {
 		supportDocument.setComments(this.comments);
 
 		auditDetails.setCreatedBy(this.createdBy);
+
 		auditDetails.setCreatedTime(this.createdTime);
+
 		auditDetails.setLastModifiedBy(this.lastModifiedBy);
+
 		auditDetails.setLastModifiedTime(this.lastModifiedTime);
 
 		supportDocument.setAuditDetails(auditDetails);

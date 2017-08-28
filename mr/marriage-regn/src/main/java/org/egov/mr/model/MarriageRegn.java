@@ -48,7 +48,7 @@ public class MarriageRegn {
 	private String marriagePhoto;
 
 	@NotNull
-	private Double fee;
+	private Fee fee;
 
 	private MarryingPerson bridegroom;
 
@@ -84,7 +84,7 @@ public class MarriageRegn {
 
 	private List<MarriageCertificate> certificates = new ArrayList<MarriageCertificate>();
 	
-	private List<Long> demands = new ArrayList<Long>();
+	private List<Demand> demands = new ArrayList<Demand>();
 
 	private List<String> actions = new ArrayList<String>();
 	

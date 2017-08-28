@@ -52,7 +52,7 @@ import lombok.extern.slf4j.Slf4j;
 public class DonationQueryBuilder {
 
     private static final String BASE_QUERY = "SELECT donation.id as donation_id, donation.code as donation_code,donation.propertytypeid as donation_propertytypeId,"
-            + "donation.usagetypeid as donation_usagetypeId,donation.subusagetypeid as donation_subusagetypeId,donation.categorytypeid as donation_categorytypeId,donation.maxpipesizeid"
+            + "donation.usagetypeid as donation_usagetypeId,donation.subusagetypeid as donation_subusagetypeId,donation.outsideulb as donation_outsideulb,donation.categorytypeid as donation_categorytypeId,donation.maxpipesizeid"
             + " as donation_maxpipesizId,donation.minpipesizeid as donation_minpipesizeId,donation.fromdate as donation_fromDate,"
             + "donation.todate as donation_toDate,donation.donationamount as donation_amount, donation.active as donation_active, "
             + "donation.tenantId as donation_tenantId FROM egwtr_donation donation ";
@@ -106,6 +106,12 @@ public class DonationQueryBuilder {
             selectQuery.append(" donation.subusagetypeid = ?");
             preparedStatementValues.add(donation.getSubUsageTypeId());
         }
+        
+        if(donation.getOutSideUlb()!= null){
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" donation.outsideulb = ?");
+            preparedStatementValues.add(donation.getOutSideUlb());
+        }
 
         if (donation.getCategoryType() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
@@ -157,14 +163,14 @@ public class DonationQueryBuilder {
 
     public static String donationInsertQuery() {
         return "INSERT INTO egwtr_donation "
-                + "(id,code, propertytypeid, usagetypeid,subusagetypeid, categorytypeid, maxpipesizeid, minpipesizeid, fromdate, todate, donationamount, "
-                + "active, tenantid, createdby,lastmodifiedby,createddate,lastmodifieddate) VALUES (:id,:code,:propertytypeid, :usagetypeid,:subusagetypeid, :categorytypeid, "
+                + "(id,code, propertytypeid, usagetypeid,subusagetypeid,outsideulb, categorytypeid, maxpipesizeid, minpipesizeid, fromdate, todate, donationamount, "
+                + "active, tenantid, createdby,lastmodifiedby,createddate,lastmodifieddate) VALUES (:id,:code,:propertytypeid, :usagetypeid,:subusagetypeid,:outsideulb,:categorytypeid, "
                 + ":maxpipesizeid, :minpipesizeid, :fromdate, :todate, :donationamount, "
                 + " :active, :tenantid, :createdby,:lastmodifiedby,:createddate,:lastmodifieddate)";
     }
 
     public static String donationUpdateQuery() {
-        return "UPDATE egwtr_donation set propertytypeid= :propertytypeid,usagetypeid= :usagetypeid,subusagetypeid= :subusagetypeid,categorytypeid= :categorytypeid, maxpipesizeid= :maxpipesizeid, minpipesizeid= :minpipesizeid ,"
+        return "UPDATE egwtr_donation set propertytypeid= :propertytypeid,usagetypeid= :usagetypeid,subusagetypeid= :subusagetypeid,outsideulb= :outsideulb,categorytypeid= :categorytypeid, maxpipesizeid= :maxpipesizeid, minpipesizeid= :minpipesizeid ,"
                 + " fromdate= :fromdate, todate= :todate, donationamount= :donationamount, active=:active,lastmodifiedby= :lastmodifiedby, lastmodifieddate= :lastmodifieddate where code= :code ";
     }
 

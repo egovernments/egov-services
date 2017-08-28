@@ -29,6 +29,9 @@ ReportDefinitions:
     label: reports.citizen.print
     type: number
     source: citizen
+    linkedReport:
+      reportName: ReceiptDetail
+      linkedColumn: _url?/pgr/viewGrievance/:srn
   searchParams:
   - name: consumerno
     label: reports.citizen.consumerno
@@ -36,5 +39,11 @@ ReportDefinitions:
     source: citizen
     isMandatory: false
     searchClause: and consumerNo = $consumerno
+  - name: receiptno
+    label: reports.citizen.receiptno
+    type: string
+    source: citizen
+    isMandatory: false
+    searchClause: and receiptno = $receiptno
   query: select receiptNo,receiptDate,totalAmount,payeeName,consumerAddress,'print' as print from egcl_legacy_receipt_header where tenantid = $tenantid
 

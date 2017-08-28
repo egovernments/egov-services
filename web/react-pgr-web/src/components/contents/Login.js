@@ -141,6 +141,10 @@ class Login extends Component {
         localStorage.removeItem("reload");
         this.props.forceLogout();
      }
+
+     if(window.location.href.indexOf("?") > -1 && window.location.href.indexOf("signup") > -1) {
+          this.handleSignUpModalOpen();
+     }
    }
 
 
@@ -204,13 +208,13 @@ class Login extends Component {
             if(query[i].indexOf("link") > -1) {
               switch(query[i].split("=")[1]) {
                 case 'waternodue':
-                  self.props.setRoute("/non-framework/citizenServices/no-dues/search/watercharge");
+                  self.props.setRoute("/non-framework/citizenServices/no-dues/search/wc");
                   break;
                 case  'propertytaxextract':
-                  self.props.setRoute("/non-framework/citizenServices/no-dues/extract/watercharge");
+                  self.props.setRoute("/non-framework/citizenServices/no-dues/extract/pt");
                   break;
                 case 'propertytaxdue':
-                  self.props.setRoute("/non-framework/citizenServices/no-dues/search/propertytax");
+                  self.props.setRoute("/non-framework/citizenServices/no-dues/search/pt");
                   break;
               }
             }
@@ -485,6 +489,7 @@ class Login extends Component {
               User: user
             }).then(function(response){
               self.props.setLoadingStatus('hide');
+              
               self.setState({
                 open3: false,
                 signUpErrorMsg: "",

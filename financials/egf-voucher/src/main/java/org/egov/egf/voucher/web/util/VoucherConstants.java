@@ -25,4 +25,7 @@ public class VoucherConstants {
 	public static final String PENBILL_VOUCHERNO_TYPE = "TJV";
 
 	public static final String CBILL_VOUCHERNO_TYPE = "EJV";
+
+	public static final String PLACEHOLDER = "placeholder";
+	
 }

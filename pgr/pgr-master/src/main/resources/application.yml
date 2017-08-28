@@ -1177,7 +1177,7 @@ ReportDefinitions:
     <= $toDate and sa.key = 'systemLocationId' and boundary.id = (select id from eg_boundary where name = $parentboundary and boundary.tenantid=$tenantid
      and boundarytype =  (select id from eg_boundary_type where hierarchytype =(select id  from eg_hierarchy_type where code = 'ADMIN' and tenantid = $tenantid)
      and name = 'Ward' and tenantid = $tenantid))
-     and cs.tenantid=$tenantid and  ctype.code = sk.servicecode and sk.keyword = 'complaint' GROUP BY dept.name
+     and cs.tenantid=$tenantid and  ctype.code = sk.servicecode and sk.keyword = 'complaint' GROUP BY dept.name;
 
 
 - reportName: DrillDownByBoundaryLocalityDepartmentGetComplaintType

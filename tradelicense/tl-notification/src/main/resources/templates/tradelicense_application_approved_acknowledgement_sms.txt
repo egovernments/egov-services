@@ -1,0 +1,1 @@
+Dear {{Owner}}, The application with No : {{Application Number}} for New license has been Approved. The license fee of Rs. {{Amount}} need to be paid to process the certificate printing.

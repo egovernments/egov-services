@@ -1,0 +1,6 @@
+Dear {{Owner}},
+
+New Trade License Application No.{{Application number}} has been verified and forwarded to the Inspection Authoriry. The authorised person will be visiting shortly. Please be available. 
+
+Thanks,
+{{ULB Name}}

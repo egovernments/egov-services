@@ -489,6 +489,7 @@ class Login extends Component {
               User: user
             }).then(function(response){
               self.props.setLoadingStatus('hide');
+              
               self.setState({
                 open3: false,
                 signUpErrorMsg: "",

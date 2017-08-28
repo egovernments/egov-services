@@ -87,7 +87,7 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Enter Valid Aadhar Number (14 Digit Number)"
+            "patternErrMsg": "Enter Valid Aadhar Number (12 Digit Number)"
           },
           {
             "name": "MobileNumber",
@@ -212,7 +212,7 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": "",
             "defaultValue": [{
-                "key": "STATE_GOVERNMENT_OWNED",
+                "key": "STATE GOVERNMENT OWNED",
                 "value": "STATE_GOVERNMENT_OWNED"
               },
               {
@@ -220,7 +220,7 @@ var dat = {
                 "value": "RENTED"
               },
               {
-                "key": "CENTRAL_GOVERNMENT_OWNED",
+                "key": "CENTRAL GOVERNMENT OWNED",
                 "value": "CENTRAL_GOVERNMENT_OWNED"
               },
               {
@@ -364,7 +364,7 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "",
+            "patternErrMsg": "Enter in dd/mm/yyyy Format",
             "maxLength": "10"
           },
           {
@@ -376,7 +376,7 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "",
+            "patternErrMsg": "Enter in dd/mm/yyyy Format",
             "maxLength": "10"
           },
           {
@@ -428,7 +428,7 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "",
+            "patternErrMsg": "Enter in dd/mm/yyyy Format",
             "maxLength": "10"
           },
           {

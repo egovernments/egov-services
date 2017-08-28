@@ -104,7 +104,7 @@ public class MeterWaterRatesQueryBuilder {
             selectQuery.append(" meterwater.subusagetypeid = ?");
             preparedStatementValues.add(meterWaterRatesGetRequest.getSubUsageTypeId());
         }
-        if(meterWaterRatesGetRequest.getOutsideUlb() != null){
+        if (meterWaterRatesGetRequest.getOutsideUlb() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" meterwater.outsideulb = ?");
             preparedStatementValues.add(meterWaterRatesGetRequest.getOutsideUlb());
@@ -157,7 +157,7 @@ public class MeterWaterRatesQueryBuilder {
     }
 
     public static String insertMeterWaterRatesQuery() {
-        return "INSERT INTO egwtr_meter_water_rates(id,code,billingtype,usagetypeid,subusagetypeid,outsideulb,outsourcetypeid,pipesizeid,fromdate,todate,active,"
+        return "INSERT INTO egwtr_meter_water_rates(id,code,billingtype,usagetypeid,subusagetypeid,outsideulb,sourcetypeid,pipesizeid,fromdate,todate,active,"
                 + "createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
                 + "(:id,:code,:billingtype,:usagetypeid,:subusagetypeid,:outsideulb,:sourcetypeid,:pipesizeid,:fromdate,:todate,:active,"
                 + ":createdby,:lastmodifiedby,:createddate,:lastmodifieddate,:tenantid)";

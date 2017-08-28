@@ -456,7 +456,7 @@ class Report extends Component {
     return (
 
       <div className="SearchResult" >
-      {(pdfData != undefined) && <div style={{display:'none'}}><iframe src={this.state.pdfData} height="200" width="300"></iframe></div>}
+      {(pdfData != undefined) && <div style={{visibility:'hidden',position:'absolute', zIndex:'-2'}}><iframe src={this.state.pdfData} height="200" width="300"></iframe></div>}
 
 
       {

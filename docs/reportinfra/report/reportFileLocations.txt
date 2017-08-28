@@ -2,6 +2,6 @@ https://raw.githubusercontent.com/egovernments/egov-services/master/pgr/pgr-mast
 https://raw.githubusercontent.com/egovernments/egov-services/master/docs/collections/reports/report.yml
 https://raw.githubusercontent.com/egovernments/egov-services/master/docs/wcms/reports/report.yml
 https://raw.githubusercontent.com/egovernments/egov-services/master/docs/tradelicense/reports/report.yml
-https://raw.githubusercontent.com/egovernments/egov-services/docs/hr/reports/hrReports.yml
+https://raw.githubusercontent.com/egovernments/egov-services/master/docs/hr/reports/hrReports.yml
 https://raw.githubusercontent.com/egovernments/egov-services/master/docs/propertytax/report/report.yml
 https://raw.githubusercontent.com/egovernments/egov-services/master/docs/citizen/reports/report.yml

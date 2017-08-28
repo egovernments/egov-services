@@ -707,8 +707,7 @@ class NoDues extends Component {
       <link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">  `;
     mywindow.document.write('<html><head><title> </title>');
     mywindow.document.write(cdn);
-    mywindow.document.write('</head><body >');
-    mywindow.document.write('<h1>' + document.title  + '</h1>');
+    mywindow.document.write('</head><body>');
     mywindow.document.write(document.getElementById('allCertificates').innerHTML);
     mywindow.document.write('</body></html>');
 
@@ -1072,7 +1071,7 @@ class NoDues extends Component {
                                             Consumer Code : {Receipt[0].Bill[0].billDetails[0].consumerCode}<br/>
                                             Consumer Owner Name : {Receipt[0].Bill[0].payeeName}<br/>
                                             Amount :{Receipt[0].Bill[0].billDetails[0].totalAmount}<br/>
-                                            Consumer Address :{Receipt[0].Bill[0].payeeAddress?Receipt[0].Bill[0].payeeAddress:"Bangalore"}<br/>
+                                            Consumer Address :{Receipt[0].Bill[0].payeeAddress?Receipt[0].Bill[0].payeeAddress:"Roha"}<br/>
                                             Received From : {Receipt[0].Bill[0].paidBy}<br/>
                                           </td>
                                       </tr>
@@ -1230,7 +1229,7 @@ class NoDues extends Component {
                                             Consumer Code : {ReceiptOne[0].Bill[0].billDetails[0].consumerCode}<br/>
                                             Consumer Owner Name : {ReceiptOne[0].Bill[0].payeeName}<br/>
                                             Amount :{ReceiptOne[0].Bill[0].billDetails[0].totalAmount}<br/>
-                                            Consumer Address :{ReceiptOne[0].Bill[0].payeeAddress?ReceiptOne[0].Bill[0].payeeAddress:"Bangalore"}<br/>
+                                            Consumer Address :{ReceiptOne[0].Bill[0].payeeAddress?ReceiptOne[0].Bill[0].payeeAddress:"Roha"}<br/>
                                             Received From : {ReceiptOne[0].Bill[0].paidBy}<br/>
                                           </td>
                                       </tr>
@@ -1378,7 +1377,7 @@ class NoDues extends Component {
                                             <div style={{textAlign:"left"}}>
                                               प्रती,<br/>
                                               {Receipt[0].Bill[0].payeeName}<br/>
-                                              {Receipt[0].Bill[0].payeeAddress?Receipt[0].Bill[0].payeeAddress:"Bangalore"}
+                                              {Receipt[0].Bill[0].payeeAddress?Receipt[0].Bill[0].payeeAddress:"Roha"}
 
 
                                             </div>

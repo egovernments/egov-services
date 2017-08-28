@@ -11,10 +11,14 @@ import lombok.ToString;
 @ToString
 public class ServiceRequestSearchCriteria {
 	
-	private String serviceRequestId;
-	private Long userId;
 	@NotNull
 	private String tenantId;
+	private String serviceRequestId;
+	private Long userId;
+	private String serviceCode;
+	private String consumerCode;
+	private String assignedTo;
+	private String status;
 	private String sortBy;
 	private String sortOrder;
 

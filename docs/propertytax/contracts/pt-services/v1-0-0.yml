@@ -784,8 +784,15 @@ definitions:
       usage:
         type: string
         description: usage of the Unit
-        maxLength: 64
+        maxLength: 128
         minLength: 1
+        
+      subUsage:
+        type: string
+        description: sub usage of the Unit
+        maxLength: 128
+        minLength: 1
+        
       occupancyType:
         type: string
         description: occupancy of the Unit

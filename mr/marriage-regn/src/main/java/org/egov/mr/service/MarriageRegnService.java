@@ -1,24 +1,25 @@
 package org.egov.mr.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.mr.config.PropertiesManager;
 import org.egov.mr.model.AuditDetails;
+import org.egov.mr.model.Fee;
 import org.egov.mr.model.MarriageRegn;
+import org.egov.mr.repository.FeeRepository;
 import org.egov.mr.repository.MarriageCertRepository;
 import org.egov.mr.repository.MarriageRegnRepository;
 import org.egov.mr.repository.MarryingPersonRepository;
+import org.egov.mr.web.contract.FeeRequest;
 import org.egov.mr.web.contract.MarriageRegnCriteria;
 import org.egov.mr.web.contract.MarriageRegnRequest;
-import org.egov.mr.web.contract.RequestInfo;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,7 +45,8 @@ public class MarriageRegnService {
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
-	public List<MarriageRegn> getMarriageRegns(MarriageRegnCriteria marriageRegnCriteria, RequestInfo requestInfo) {
+	public List<MarriageRegn> getMarriageRegns(MarriageRegnCriteria marriageRegnCriteria,
+			org.egov.common.contract.request.RequestInfo requestInfo) {
 		List<MarriageRegn> marriageRegnList = marriageRegnRepository.findForCriteria(marriageRegnCriteria);
 		return marriageRegnList;
 	}
@@ -57,6 +59,7 @@ public class MarriageRegnService {
 		populateAuditDetailsForMarriageRegnCreate(marriageRegnRequest);
 
 		log.info("marriageRegnRequest::" + marriageRegnRequest);
+		kafkaTemplate.send(propertiesManager.getCreateMarriageFeeGenerated(), marriageRegnRequest);
 		kafkaTemplate.send(propertiesManager.getCreateMarriageRegnTopicName(), marriageRegnRequest);
 		return marriageRegn;
 	}
@@ -66,12 +69,14 @@ public class MarriageRegnService {
 		MarriageRegn marriageRegn = marriageRegnRequest.getMarriageRegn();
 
 		marriageRegn.setIsActive(false);
-		AuditDetails auditDetails = new AuditDetails();
-		auditDetails.setCreatedBy(requestInfo.getRequesterId());
-		auditDetails.setCreatedTime(new Date().getTime());
-		auditDetails.setLastModifiedBy(requestInfo.getRequesterId());
-		auditDetails.setLastModifiedTime(new Date().getTime());
-		marriageRegn.setAuditDetails(auditDetails);
+		/*
+		 * AuditDetails auditDetails = new AuditDetails();
+		 * auditDetails.setCreatedBy(requestInfo.);
+		 * auditDetails.setCreatedTime(new Date().getTime());
+		 * auditDetails.setLastModifiedBy(requestInfo.);
+		 * auditDetails.setLastModifiedTime(new Date().getTime());
+		 * marriageRegn.setAuditDetails(auditDetails);
+		 */
 	}
 
 	@Transactional
@@ -80,6 +85,7 @@ public class MarriageRegnService {
 		marriageRegnRepository.save(marriageRegn);
 		marryingPersonRepository.save(marriageRegn.getBridegroom(), marriageRegn.getTenantId());
 		marryingPersonRepository.save(marriageRegn.getBride(), marriageRegn.getTenantId());
+
 	}
 
 	public MarriageRegn updateAsync(MarriageRegnRequest marriageRegnRequest) {
@@ -106,7 +112,7 @@ public class MarriageRegnService {
 		MarriageRegn marriageRegn = marriageRegnRequest.getMarriageRegn();
 
 		AuditDetails auditDetails = new AuditDetails();
-		auditDetails.setLastModifiedBy(requestInfo.getRequesterId());
+		/* auditDetails.setLastModifiedBy(requestInfo.getRequesterId()); */
 		auditDetails.setLastModifiedTime(new Date().getTime());
 		marriageRegn.setAuditDetails(auditDetails);
 	}

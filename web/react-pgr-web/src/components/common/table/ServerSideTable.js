@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import {Grid, Row, Col, Table} from 'react-bootstrap';
 import ReactPaginate from 'react-paginate';
@@ -28,13 +29,16 @@ class ServerSideTable extends Component {
       });
     }
   }
+  handleNavigation = (path) => {
+    this.props.setRoute(path);
+  }
   handleChange = (event) => {
     var results = [];
     let toSearch = event.target.value.toLowerCase();
-    for(var i=0; i<this.state.resultList.length; i++) {
-      for(var key in this.state.resultList[i]) {
-        if(this.state.resultList[i][key].toLowerCase().indexOf(toSearch)!=-1) {
-          results.push(this.state.resultList[i]);
+    for(var i=0; i<this.state.resultList.reportReponseData.length; i++) {
+      for(var key in this.state.resultList.reportReponseData[i]) {
+        if(this.state.resultList.reportReponseData[i][key].toLowerCase().indexOf(toSearch)!=-1) {
+          results.push(this.state.resultList.reportReponseData[i]);
         }
       }
     }
@@ -46,30 +50,40 @@ class ServerSideTable extends Component {
   }
   renderHeader = () => {
     let {resultList} = this.state;
-    if(resultList && resultList.length > 0){
-      return Object.keys(resultList[0]).map((header, index) => {
-        return(
-          <th key={index}>{header}</th>
-        )
-      });
+    if(resultList){
+      if(resultList.reportReponseData && resultList.reportReponseData.length > 0){
+        return Object.keys(resultList.reportReponseData[0]).map((header, index) => {
+          return(
+            <th key={index}>{header}</th>
+          )
+        });
+      }
     }
   }
   renderBody = () => {
     let {resultList, userSearchResult, userSearch} = this.state;
-    var searchResponse = userSearch ? userSearchResult : resultList;
-    if(searchResponse && searchResponse.length > 0){
-      return searchResponse.map((obj, index) => {
-        return(
-          <tr key={index}>
-            {Object.values(obj).map((data, idx) => {
-              return (
-                <td key={idx}>{data}</td>
-              )
-            })
-            }
-          </tr>
-        )
-      });
+    if(resultList){
+      var searchResponse = userSearch ? userSearchResult : resultList.reportReponseData;
+      if(searchResponse && searchResponse.length > 0){
+        return searchResponse.map((obj, index) => {
+          return(
+            <tr key={index}>
+              {Object.values(obj).map((data, idx) => {
+                if(Object.values(resultList.reportActionData[0])[idx].trim()){
+                  return (
+                    <td key={idx}><a href="javascript:void(0)" onClick={(e) => {this.handleNavigation(Object.values(resultList.reportActionData[0])[idx]+data)}}>{data}</a></td>
+                  )
+                }else{
+                  return (
+                    <td key={idx}>{data}</td>
+                  )
+                }
+              })
+              }
+            </tr>
+          )
+        });
+      }
     }
   }
   showPagination = () => {
@@ -127,4 +141,11 @@ class ServerSideTable extends Component {
   }
 }
 
-export default ServerSideTable;
+// export default ServerSideTable;
+const mapStateToProps = state => ({});
+
+const mapDispatchToProps = dispatch => ({
+  setRoute: (route) => dispatch({type: "SET_ROUTE", route})
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ServerSideTable);

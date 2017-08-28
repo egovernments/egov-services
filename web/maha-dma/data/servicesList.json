@@ -4,6 +4,7 @@
     "moduleName":"Water Department",
     "icon":"card_membership",
     "redirectUrl":"?link=waternodue",
+    "url":"non-framework/citizenServices/no-dues/search/wc",
     "language_key":"",
     "requiredDocuments":[],
     "slaTable":{
@@ -55,6 +56,7 @@
     "icon":"card_membership",
     "moduleName":"Property Tax",
     "redirectUrl":"?link=propertytaxdue",
+    "url":"non-framework/citizenServices/no-dues/search/pt",
     "language_key":"",
     "requiredDocuments":[],
     "slaTable":{
@@ -106,6 +108,7 @@
     "icon":"card_membership",
     "moduleName":"Property Tax",
     "redirectUrl":"?link=propertytaxextract",
+    "url":"non-framework/citizenServices/no-dues/extract/pt",
     "language_key":"",
     "requiredDocuments":[],
     "slaTable":{

@@ -5,16 +5,15 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.egov.mr.model.MarriageCertificate;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.mr.model.MarriageRegn;
 import org.egov.mr.model.Page;
 import org.egov.mr.service.MarriageRegnService;
 import org.egov.mr.web.contract.MarriageRegnCriteria;
 import org.egov.mr.web.contract.MarriageRegnRequest;
 import org.egov.mr.web.contract.MarriageRegnResponse;
-import org.egov.mr.web.contract.RequestInfo;
 import org.egov.mr.web.contract.RequestInfoWrapper;
-import org.egov.mr.web.contract.ResponseInfo;
 import org.egov.mr.web.contract.ResponseInfoFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

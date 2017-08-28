@@ -3,6 +3,8 @@ package org.egov.mr.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.mr.config.PropertiesManager;
 import org.egov.mr.model.MarriageDocumentType;
 import org.egov.mr.repository.MarriageDocumentTypeRepository;
@@ -10,8 +12,6 @@ import org.egov.mr.util.SequenceIdGenService;
 import org.egov.mr.web.contract.MarriageDocTypeRequest;
 import org.egov.mr.web.contract.MarriageDocTypeResponse;
 import org.egov.mr.web.contract.MarriageDocumentTypeSearchCriteria;
-import org.egov.mr.web.contract.RequestInfo;
-import org.egov.mr.web.contract.ResponseInfo;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,7 +37,7 @@ public class MarriageDocumentTypeService {
 	private SequenceIdGenService sequenceIdGenService;
 
 	public ResponseEntity<?> search(MarriageDocumentTypeSearchCriteria marriageDocumentTypeSearchCriteria,
-			RequestInfo requestInfo) {
+			org.egov.common.contract.request.RequestInfo requestInfo) {
 		List<MarriageDocumentType> marriageDocTypesList = marriageDocumentTypeRepository
 				.search(marriageDocumentTypeSearchCriteria);
 		return getSuccessResponse(marriageDocTypesList, requestInfo);
@@ -124,10 +124,10 @@ public class MarriageDocumentTypeService {
 		 */
 		ResponseInfo responseInfo = new ResponseInfo();
 		responseInfo.setApiId(requestInfo.getApiId());
-		responseInfo.setKey(requestInfo.getKey());
+		//responseInfo.setKey(requestInfo.getKey());
 		responseInfo.setResMsgId(requestInfo.getMsgId());
 		responseInfo.setStatus(HttpStatus.OK.toString());
-		responseInfo.setTenantId(requestInfo.getTenantId());
+		//responseInfo.setTenantId(requestInfo.getTenantId());
 		responseInfo.setTs(requestInfo.getTs());
 		responseInfo.setVer(requestInfo.getVer());
 

@@ -1,6 +1,6 @@
 package org.egov.mr.web.errorhandler;
 
-import org.egov.mr.web.contract.ResponseInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;

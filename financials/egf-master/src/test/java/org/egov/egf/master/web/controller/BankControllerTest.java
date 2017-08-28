@@ -114,7 +114,7 @@ public class BankControllerTest {
 	@Test
 	public void testCreate_Error() throws IOException, Exception {
 
-		when(bankService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)));
+		when(bankService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class))).thenReturn(getBanks());
 
 		mockMvc.perform(
 				post("/banks/_create").content(resources.readRequest("bank/bank_create_invalid_field_value.json"))

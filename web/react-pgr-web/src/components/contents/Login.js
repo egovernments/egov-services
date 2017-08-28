@@ -141,6 +141,10 @@ class Login extends Component {
         localStorage.removeItem("reload");
         this.props.forceLogout();
      }
+
+     if(window.location.href.indexOf("?") > -1 && window.location.href.indexOf("signup") > -1) {
+          this.handleSignUpModalOpen();
+     }
    }
 
 
@@ -485,6 +489,7 @@ class Login extends Component {
               User: user
             }).then(function(response){
               self.props.setLoadingStatus('hide');
+              
               self.setState({
                 open3: false,
                 signUpErrorMsg: "",

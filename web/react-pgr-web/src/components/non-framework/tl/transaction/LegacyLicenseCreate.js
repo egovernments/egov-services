@@ -301,7 +301,7 @@ this.setState({openLicense: false});
     var feeCheck=true;
     console.log();
     for (var i = 0; i < formData.licenses[0].feeDetails.length; i++) {
-      if(formData.licenses[0].feeDetails[i].amount == 0 ||  formData.licenses[i].feeDetails[0].amount == ""){
+      if(formData.licenses[0].feeDetails[i].amount == 0 ||  formData.licenses[0].feeDetails[i].amount == ""){
         feeCheck=false;
       }
     }

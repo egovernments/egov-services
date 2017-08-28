@@ -120,7 +120,7 @@ ReportDefinitions:
     searchClause: AND EGCL_RECEIPTHEADER.DEPARTMENT = $department
   - name: paymentmode
     label: reports.collection.paymentmode
-    type: singlevaluelistn
+    type: singlevaluelist
     pattern: 'list://Cash:Cash,Cheque:Cheque,DD:DD' 
     isMandatory: true
     searchClause:  AND EGF_INSTRUMENTTYPE.NAME= $paymentmode

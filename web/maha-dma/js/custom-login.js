@@ -33,6 +33,10 @@ $(document).ready(function(){
     var documentsTempalte = Handlebars.compile($('#documents-body-template').html());
     var servicesMenuTempalte = Handlebars.compile($('#services-menu-template').html());
 
+    if(localStorage.getItem('auth-token')){
+      window.location.href = window.location.origin + "/app/v1/#/prd/dashboard";
+    }
+
     $('#ulb-dropdown').popover();
 
     $('#ulb-dropdown').click(function(e){
@@ -147,6 +151,7 @@ $(document).ready(function(){
 
           if($("#mobileNumber").val() && $("#password").val()) {
             var tenantId = $("#ulb-dropdown").val() || "default";
+            waitingDialog.show('Please wait logging...');
             $.ajax({
               url: window.location.origin + "/user/oauth/token?tenantId=" + tenantId + "&username=" + $("#mobileNumber").val() + "&password=" + $("#password").val() + "&grant_type=password&scope=read",
               type: 'POST',
@@ -157,6 +162,7 @@ $(document).ready(function(){
                 'Authorization' :'Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0'
               },
               success: function(response) {
+                waitingDialog.hide();
                 localStorage.setItem("auth-token", response.access_token);
                 localStorage.setItem("token", response.access_token);
                 localStorage.setItem("userRequest", JSON.stringify(response.UserRequest));

@@ -584,7 +584,8 @@
           <div class="login-box" style="margin-top:18px;margin-bottom:15px;">
               <h4>Sign In</h4>
               <input id="mobileNumber" type="text" placeholder="Mobile Number / Login ID">
-              <input id="password" type="password" placeholder="Password">
+              <input id="password" type="password" placeholder="Password" onkeydown="if (event.keyCode == 13)
+                        document.getElementById('loginBtn').click()">
               <select id="ulb-dropdown" style="width:100%" data-placement="bottom" data-content="Please select the ulb" class="form-control ulb-dropdown">
                 <option value="">Please Select...</option>
               </select>
@@ -771,6 +772,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.10/handlebars.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/waitingfor.js"></script>
     <script src="js/custom-login.js"></script>
 
 

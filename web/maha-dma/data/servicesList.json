@@ -6,7 +6,37 @@
     "redirectUrl":"?link=waternodue",
     "url":"non-framework/citizenServices/no-dues/search/wc",
     "language_key":"",
-    "requiredDocuments":[],
+    "requiredDocuments":[
+      {
+        "requiredDocumentName":"ID Proof (Any one)",
+        "documents":[
+          {
+            "name":"Aadhaar Card"
+          },
+          {
+            "name":"Voter ID Card"
+          },
+          {
+            "name":"Passport"
+          }
+        ]
+      },
+
+      {
+        "requiredDocumentName":"ID Proof (Any one)",
+        "documents":[
+          {
+            "name":"Aadhaar Card"
+          },
+          {
+            "name":"Voter ID Card"
+          },
+          {
+            "name":"Passport"
+          }
+        ]
+      }
+    ],
     "slaTable":{
         "columns":[
           {
@@ -49,6 +79,94 @@
         }
       ]
     }
+  },
+
+  {
+    "serviceName":"New Water Connection",
+    "moduleName":"Water Department",
+    "icon":"card_membership",
+    "redirectUrl":"",
+    "url":"non-framework/citizenServices/no-dues/search/wc",
+    "language_key":"",
+    "requiredDocuments":[],
+    "slaTable":{}
+  },
+
+  {
+    "serviceName":"Change Of Ownership",
+    "moduleName":"Water Department",
+    "icon":"card_membership",
+    "redirectUrl":"",
+    "url":"non-framework/citizenServices/no-dues/search/wc",
+    "language_key":"",
+    "requiredDocuments":[],
+    "slaTable":{}
+  },
+
+  {
+    "serviceName":"Change Of Connection Size",
+    "moduleName":"Water Department",
+    "icon":"card_membership",
+    "redirectUrl":"",
+    "url":"",
+    "language_key":"",
+    "requiredDocuments":[],
+    "slaTable":{}
+  },
+
+  {
+    "serviceName":"Temporary/Permanent Disconnection",
+    "moduleName":"Water Department",
+    "icon":"card_membership",
+    "redirectUrl":"",
+    "url":"",
+    "language_key":"",
+    "requiredDocuments":[],
+    "slaTable":{}
+  },
+
+  {
+    "serviceName":"Reconnection",
+    "moduleName":"Water Department",
+    "icon":"card_membership",
+    "redirectUrl":"",
+    "url":"",
+    "language_key":"",
+    "requiredDocuments":[],
+    "slaTable":{}
+  },
+
+  {
+    "serviceName":"Change Of Usage",
+    "moduleName":"Water Department",
+    "icon":"card_membership",
+    "redirectUrl":"",
+    "url":"",
+    "language_key":"",
+    "requiredDocuments":[],
+    "slaTable":{}
+  },
+
+  {
+    "serviceName":"Plumber License",
+    "moduleName":"Water Department",
+    "icon":"card_membership",
+    "redirectUrl":"",
+    "url":"",
+    "language_key":"",
+    "requiredDocuments":[],
+    "slaTable":{}
+  },
+
+  {
+    "serviceName":"Renewal Of Plumber License",
+    "moduleName":"Water Department",
+    "icon":"card_membership",
+    "redirectUrl":"",
+    "url":"",
+    "language_key":"",
+    "requiredDocuments":[],
+    "slaTable":{}
   },
 
   {
@@ -156,46 +274,80 @@
   },
 
   {
-    "serviceName":"New Temporary/Permanent Trade license",
-    "icon":"card_membership",
-    "moduleName":"Trade License",
-    "redirectUrl":"",
-    "url":"non-framework/citizenServices/no-dues/search/pt",
-    "language_key":"",
-    "requiredDocuments":[
-      {
-        "requiredDocumentName":"ID Proof (Any one)",
-        "documents":[
-          {
-            "name":"Aadhaar Card"
-          },
-          {
-            "name":"Voter ID Card"
-          },
-          {
-            "name":"Passport"
-          }
-        ]
-      },
+      "serviceName":"New Assessment",
+      "moduleName":"Property Tax",
+      "icon":"card_membership",
+      "redirectUrl":"",
+      "url":"",
+      "language_key":"",
+      "requiredDocuments":[],
+      "slaTable":{}
+  },
 
-      {
-        "requiredDocumentName":"ID Proof (Any one)",
-        "documents":[
-          {
-            "name":"Aadhaar Card"
-          },
-          {
-            "name":"Voter ID Card"
-          },
-          {
-            "name":"Passport"
-          }
-        ]
-      }
-    ],
-    "slaTable":{
+  {
+      "serviceName":"ReAssessment",
+      "moduleName":"Property Tax",
+      "icon":"card_membership",
+      "redirectUrl":"",
+      "url":"",
+      "language_key":"",
+      "requiredDocuments":[],
+      "slaTable":{}
+  },
 
-    }
+  {
+      "serviceName":"Exemption For Vacancy Of Property",
+      "moduleName":"Property Tax",
+      "icon":"card_membership",
+      "redirectUrl":"",
+      "url":"",
+      "language_key":"",
+      "requiredDocuments":[],
+      "slaTable":{}
+  },
+
+  {
+      "serviceName":"Self Assessment",
+      "moduleName":"Property Tax",
+      "icon":"card_membership",
+      "redirectUrl":"",
+      "url":"",
+      "language_key":"",
+      "requiredDocuments":[],
+      "slaTable":{}
+  },
+
+  {
+      "serviceName":"Objection Registration",
+      "moduleName":"Property Tax",
+      "icon":"card_membership",
+      "redirectUrl":"",
+      "url":"",
+      "language_key":"",
+      "requiredDocuments":[],
+      "slaTable":{}
+  },
+
+  {
+      "serviceName":"Property Transfer by heredity/Other Modes",
+      "moduleName":"Property Tax",
+      "icon":"card_membership",
+      "redirectUrl":"",
+      "url":"",
+      "language_key":"",
+      "requiredDocuments":[],
+      "slaTable":{}
+  },
+
+  {
+      "serviceName":"Subdivision/Bifurcation Of Properties",
+      "moduleName":"Property Tax",
+      "icon":"card_membership",
+      "redirectUrl":"",
+      "url":"",
+      "language_key":"",
+      "requiredDocuments":[],
+      "slaTable":{}
   }
 
 ]

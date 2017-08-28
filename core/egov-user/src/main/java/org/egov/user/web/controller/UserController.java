@@ -1,20 +1,35 @@
 package org.egov.user.web.controller;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.user.config.UserServiceConstants;
 import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.UserDetail;
 import org.egov.user.domain.service.TokenService;
 import org.egov.user.domain.service.UserService;
-import org.egov.user.web.contract.*;
+import org.egov.user.web.contract.CreateUserRequest;
+import org.egov.user.web.contract.UserDetailResponse;
+import org.egov.user.web.contract.UserRequest;
+import org.egov.user.web.contract.UserSearchRequest;
+import org.egov.user.web.contract.UserSearchResponse;
+import org.egov.user.web.contract.UserSearchResponseContent;
 import org.egov.user.web.contract.auth.CustomUserDetails;
+import org.egov.user.web.errorhandlers.Error;
+import org.egov.user.web.errorhandlers.ErrorResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 
 
@@ -72,14 +87,23 @@ public class UserController {
 	}
 
 	@PostMapping("/users/{id}/_updatenovalidate")
-	public UserDetailResponse updateUserWithoutValidation(@PathVariable final Long id,
+	public ResponseEntity<?> updateUserWithoutValidation(@PathVariable final Long id,
 														  @RequestBody final CreateUserRequest createUserRequest,
 														  @RequestHeader HttpHeaders headers) {
+		
+		if(CollectionUtils.isEmpty(createUserRequest.getUser().getRoles())|| createUserRequest.getUser().getRoles()!=null && CollectionUtils.isEmpty(createUserRequest.getUser().getRoles())){
+			ErrorResponse errorResponse = validateUserRole();
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+		}
 		User user = createUserRequest.toDomain(false);
 		user.setMobileValidationMandatory(isMobileValidationRequired(headers));
 		user.setId(id);
 		final User updatedUser = userService.updateWithoutOtpValidation(id, user);
-		return createResponse(updatedUser);
+		UserRequest userRequest = new UserRequest(updatedUser);
+		ResponseInfo responseInfo = ResponseInfo.builder()
+				.status(String.valueOf(HttpStatus.OK.value()))
+				.build();
+		return new ResponseEntity<>(new UserDetailResponse(responseInfo, Collections.singletonList(userRequest)), HttpStatus.OK);
 	}
 
 	@PostMapping("/profile/_update")
@@ -120,5 +144,15 @@ public class UserController {
 		}
 		return true;
 	}
-
+	
+	private ErrorResponse validateUserRole(){
+		
+			ErrorResponse errorResponse = new ErrorResponse();
+			
+			Error error = new Error();
+			error.setCode(Integer.parseInt(HttpStatus.BAD_REQUEST.toString()));
+			error.setMessage(UserServiceConstants.ROLECODE_MISSING_MESSAGE);
+			errorResponse.setError(error);
+            return errorResponse;
 }
+}	

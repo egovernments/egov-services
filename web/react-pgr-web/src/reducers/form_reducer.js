@@ -19,7 +19,8 @@ const defaultState = {
   isError: false,
   isOwnerValid: false,
   isFloorValid: false,
-  noOfFloors: 0
+  noOfFloors: 0,
+  hasDemandError: false
 };
 
 
@@ -242,8 +243,48 @@ function validateFileField(isRequired, code, files, validationData, errorMsg){
    };
 }
 
+function validateCollection(addDemand) {
+
+	var hasError = false;
+	var demands = [];
+	var collections = [];
+	
+	for(var key in addDemand) {
+		if(addDemand.hasOwnProperty(key)){
+			if(key.match('collections')) {
+				collections.push(addDemand[key])
+			} else {
+				demands.push(addDemand[key])
+			}
+		}
+	}
+
+	for(var i=0; i<collections.length;i++){
+		var count = 0;
+		for (var key in collections[i]){
+			if(collections[i][key] && demands[i]["demand" + count] && Number(collections[i][key]) > Number(demands[i]["demand" + count])){
+					hasError = true
+				    return hasError;
+			} else {
+				hasError = false
+			}
+			count++;
+		}
+	}
+	
+	return hasError;
+}
+
 export default(state = defaultState, action) => {
   switch (action.type) {
+	  
+	  
+	case "VALIDATE_COLLECTION":
+		var validationData = validateCollection(state.form);
+		return {
+			...state,
+			hasDemandError:validationData
+		}
 
 
 	case "ADD_REQUIRED" :

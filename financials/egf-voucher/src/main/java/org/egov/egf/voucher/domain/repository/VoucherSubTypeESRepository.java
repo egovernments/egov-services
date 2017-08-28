@@ -109,9 +109,9 @@ public class VoucherSubTypeESRepository extends ESRepository {
 		}
 
 		final BoolQueryBuilder boolQueryBuilder = boolQueryBuilderForVoucherSubTypes(criteria);
-		SearchRequestBuilder searchRequestBuilder = esClient.prepareSearch(
-				VoucherSubType.class.getSimpleName().toLowerCase()).setTypes(
-						VoucherSubType.class.getSimpleName().toLowerCase());
+		SearchRequestBuilder searchRequestBuilder = esClient.prepareSearch(VoucherSubType.class.getSimpleName().toLowerCase())
+				.setTypes(VoucherSubType.class.getSimpleName().toLowerCase())
+				.setSize(9999);
 
 		if (!orderByList.isEmpty()) {
 			for (String orderBy : orderByList) {

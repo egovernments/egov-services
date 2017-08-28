@@ -162,10 +162,11 @@ class Header extends Component {
 
   signOut = (e) => {
     var locale = localStorage.getItem('locale');
+    var token = localStorage.getItem('token');
     localStorage.clear();
-    localStorage.setItem('locale',locale);
+    localStorage.setItem('locale', locale);
     
-    Api.commonApiPost("/user/_logout", {access_token : localStorage.getItem('auth')}).then(function(response) {
+    Api.commonApiPost("/user/_logout", {access_token : token}).then(function(response) {
       document.title = "Dashboard";
     }, function(err) {
 

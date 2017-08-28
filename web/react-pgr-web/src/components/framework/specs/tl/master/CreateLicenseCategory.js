@@ -14,12 +14,13 @@ var dat = {
 							"name": "name",
 							"jsonPath": "categories[0].name",
 							"label": "tl.create.groups.categorytype.name",
-							"pattern": "^.[a-zA-Z. ]{2,49}$",
+							"pattern": "^.[a-zA-Z. ]{3,99}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": "Enter Valid Name"
+							"patternErrMsg": "Enter Valid Trade Owner Name (Min:4, Max:100)",
+							"maxLength": "100"
 						},
 						{
 							"name": "code",
@@ -30,7 +31,8 @@ var dat = {
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": "Enter 15 digit Alpha/Numeric Code"
+							"patternErrMsg": "Enter Valid Code (15 digit, Alpha/Numeric)",
+							"maxLength": "15"
 						},
 						{
 							"name": "active",
@@ -75,7 +77,7 @@ var dat = {
 			}
 		],
 		"result": {
-			"header": [{label: "tl.create.groups.categorytype.code"},{label: "tl.create.groups.categorytype.name"}, {label: "tl.create.groups.categorytype.active"}],
+			"header": [{label: "tl.create.groups.categorytype.name"},{label: "tl.create.groups.categorytype.code"}, {label: "tl.create.groups.categorytype.active"}],
 			"values": ["code","name", "active"],
 			"resultPath": "categories",
 			"rowClickUrlUpdate": "/update/tl/CreateLicenseCategory/{id}",
@@ -114,6 +116,18 @@ var dat = {
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
+					},
+					{
+						"name": "active",
+						"jsonPath": "categories[0].active",
+						"label": "tl.view.groups.categorytype.active",
+						"pattern": "",
+						"type": "checkbox",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"defaultValue":true
 					}
 				]
 			}

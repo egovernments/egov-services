@@ -107,13 +107,13 @@ $(document).ready(function(){
           var ulb = ulbsList.find((ulb)=>ulb.ulbName === $('.ulb-dropdown').val());
 
           if(service && ulb.url){
-            var uniqueKeys = service.slaTable.columns.reduce(function (acc, obj) {
-                return acc.concat(acc.indexOf(obj.key) === -1? obj.key : undefined);
-            }, []);
-
-            console.log('uniqueKeys', uniqueKeys);
-
-            service['uniqueKeys'] = uniqueKeys;
+            // var uniqueKeys = service.slaTable.columns.reduce(function (acc, obj) {
+            //     return acc.concat(acc.indexOf(obj.key) === -1? obj.key : undefined);
+            // }, []);
+            //
+            // console.log('uniqueKeys', uniqueKeys);
+            // 
+            // service['uniqueKeys'] = uniqueKeys;
 
             //documentsTempalte
             $('#apply-btn').attr('data-url', ulb.url+service.redirectUrl);

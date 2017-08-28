@@ -28,21 +28,18 @@
       <div class="service-details">
 
       {{#each .}}
-        {{#if (eq @key "Trade License")}}
-        {{else}}
           <div class="col-md-12">
             <h4>{{@key}}</h4>
           </div>
           <ul>
+            {{#each this}}
             <li class="news-item">
-              {{#each this}}
-                <div class="col-md-6">
-                  <a class="action-item" data-service-name="{{serviceName}}" data-module-name="{{moduleName}}" href="javascript:void(0);">{{serviceName}}</a>
-                </div>
-              {{/each}}
+              <div class="col-md-6">
+                <a class="action-item" data-service-name="{{serviceName}}" data-module-name="{{moduleName}}" href="javascript:void(0);">{{serviceName}}</a>
+              </div>
             </li>
+            {{/each}}
           </ul>
-        {{/if}}
       {{/each}}
 
       <div class="col-md-12">
@@ -119,52 +116,7 @@
        </li>
      </ul>
 
-
-
-
-          <div class="col-md-12">
-            <h4> Water Department</h4>
-           </div>
-          <ul>
-            <li class="news-item">
-              <div class="col-md-6">
-                <a href="" data-toggle="modal" data-target="#new-water">New Water Connection</a>
-              </div>
-              <div class="col-md-6">
-                 <a href="" data-toggle="modal" data-target="#change-owner">Change Of Ownership</a>
-              </div>
-            </li>
-
-            <li class="news-item">
-              <div class="col-md-6">
-                <a href="" data-toggle="modal" data-target="#change-con">Change Of Connection Size</a>
-              </div>
-              <div class="col-md-6">
-                 <a href="" data-toggle="modal" data-target="#per-dis">Temporary/Permanent Disconnection</a>
-              </div>
-            </li>
-
-            <li class="news-item">
-              <div class="col-md-6">
-                <a href="" data-toggle="modal" data-target="#re-con">Reconnection</a>
-              </div>
-              <div class="col-md-6">
-                 <a href="" data-toggle="modal" data-target="#change-user">Change Of Usage</a>
-              </div>
-            </li>
-
-            <li class="news-item">
-              <div class="col-md-6">
-                <a href="" data-toggle="modal" data-target="#plum-license">Plumber License</a>
-              </div>
-              <div class="col-md-6">
-                 <a href="" data-toggle="modal" data-target="#renew-plum-license">Renewal Of Plumber License</a>
-              </div>
-            </li>
-
-          </ul>
-
-          <div class="col-md-12">
+      <div class="col-md-12">
             <h4>Marriage  Registration</h4>
           </div>
           <ul>
@@ -232,19 +184,6 @@
           </ul>
 
           <div class="col-md-12">
-            <h4>DAK (TAPAL) Management</h4>
-          </div
-
-          <ul>
-            <li class="news-item">
-              <div class="col-md-6">
-                <a href="" data-toggle="modal" data-target="#inwarded-tapal">Inwarded TAPAL Status</a>
-              </div>
-
-            </li>
-          </ul>
-
-          <div class="col-md-12">
             <h4>NOC</h4>
           </div>
           <ul>
@@ -291,41 +230,6 @@
           </ul>
 
           <div class="col-md-12">
-            <h4>Property Tax</h4>
-          </div>
-          <ul>
-            <li class="news-item">
-              <div class="col-md-6">
-                <a href="" data-toggle="modal" data-target="#new-ass">New Assessment</a>
-              </div>
-              <div class="col-md-6">
-                <a href="" data-toggle="modal" data-target="#re-ass">Re Assessment</a>
-              </div>
-            </li>
-            <li class="news-item">
-              <div class="col-md-6">
-                <a href="" data-toggle="modal" data-target="#exemtion-vac">Exemption For Vaccancy Of Property</a>
-              </div>
-              <div class="col-md-6">
-                <a href="" data-toggle="modal" data-target="#self-ass">Self Assessment</a>
-              </div>
-            </li>
-            <li class="news-item">
-              <div class="col-md-6">
-                <a href="" data-toggle="modal" data-target="#obj-reg">Objection Registration</a>
-              </div>
-              <div class="col-md-6">
-                <a href="" data-toggle="modal" data-target="#prop-trans">Property Transfer by heredity/ Other Modes</a>
-              </div>
-            </li>
-            <li class="news-item">
-              <div class="col-md-6">
-                <a href="" data-toggle="modal" data-target="#sub-proper">Subdivision/Bifurcation Of Properties</a>
-              </div>
-            </li>
-          </ul>
-
-          <div class="col-md-12">
             <h4>Tree Census</h4>
           </div>
           <ul>
@@ -343,29 +247,6 @@
             <li class="news-item">
               <div class="col-md-6">
                 <a href="" data-toggle="modal" data-target="#app-for-scheme">Application For Scheme</a>
-              </div>
-            </li>
-          </ul>
-
-          <div class="col-md-12">
-            <h4>Mobile Application</h4>
-          </div>
-
-          <ul>
-            <li class="news-item">
-              <div class="col-md-6">
-                <a href="" data-toggle="modal" data-target="#lodging-grav">Lodging Grievance</a>
-              </div>
-              <div class="col-md-6">
-                <a href="" data-toggle="modal" data-target="#grav-status">Grievance Status</a>
-              </div>
-            </li>
-            <li class="news-item">
-              <div class="col-md-6">
-                <a href="" data-toggle="modal" data-target="#property-bill">Property/Water Bill dues checking and Payment</a>
-              </div>
-              <div class="col-md-6">
-                <a href="" data-toggle="modal" data-target="#all-citizen">All Citizen Services Provided by all modules</a>
               </div>
             </li>
           </ul>
@@ -393,73 +274,6 @@
             </li>
           </ul>
 
-          <div class="col-md-12">
-            <h4>HRMS</h4>
-          </div>
-          <ul>
-            <li class="news-item">
-              <div class="col-md-6">
-                <a href="" data-toggle="modal" data-target="#leave-form">Leave Request Form</a>
-              </div>
-              <div class="col-md-6">
-                <a href="" data-toggle="modal" data-target="#appraisal-form">Appraisal Form</a>
-              </div>
-            </li>
-            <li class="news-item">
-              <div class="col-md-6">
-                <a href="" data-toggle="modal" data-target="#tran-req-form">Transfer Request Form</a>
-              </div>
-              <div class="col-md-6">
-                <a href="" data-toggle="modal" data-target="#prop-declar-form">Proposed Declaration Form</a>
-              </div>
-            </li>
-            <li class="news-item">
-              <div class="col-md-6">
-                <a href="" data-toggle="modal" data-target="#final-declar-form">Final Declaration Form</a>
-              </div>
-              <div class="col-md-6">
-                <a href="" data-toggle="modal" data-target="#noc-application">NOC Application</a>
-              </div>
-            </li>
-            <li class="news-item">
-              <div class="col-md-6">
-                <a href="" data-toggle="modal" data-target="#gpf-loan">GPF Loan Application</a>
-              </div>
-              <div class="col-md-6">
-                <a href="" data-toggle="modal" data-target="#advance-app">Advance Application</a>
-              </div>
-            </li>
-            <li class="news-item">
-              <div class="col-md-6">
-                <a href="">Training Request</a>
-              </div>
-              <div class="col-md-6">
-                <a href="">Grievance Departmental Complaint</a>
-              </div>
-            </li>
-          </ul>
-
-          <div class="col-md-12">
-            <h4>Inventory</h4>
-          </div>
-          <ul>
-            <li class="news-item">
-              <div class="col-md-6">
-                <a href="">Material Indent</a>
-              </div>
-              <div class="col-md-6">
-                <a href="">Material Issue</a>
-              </div>
-            </li>
-            <li class="news-item">
-              <div class="col-md-6">
-                <a href="">Material Receipt</a>
-              </div>
-              <div class="col-md-6">
-                <a href="">Purchase Order</a>
-              </div>
-            </li>
-          </ul>
 
         </div>
 
@@ -475,24 +289,22 @@
       </div>
 
       {{#each requiredDocuments}}
-      <div class="panel panel-default">
-        <div class="panel-heading">{{requiredDocumentName}}</div>
-        <div class="panel-body">
-          <div class="container-fluid">
-            <div class="row">
-              {{#each documents}}
-                <div class="col-xs-4 col-md-4 col-sm-4 col-lg-4 certificate-name-break">
-                  {{inc @index}}) {{name}}
-                </div>
-              {{/each}}
+        <div class="panel panel-default">
+          <div class="panel-heading">{{requiredDocumentName}}</div>
+          <div class="panel-body">
+            <div class="container-fluid">
+              <div class="row">
+                {{#each documents}}
+                  <div class="col-xs-4 col-md-4 col-sm-4 col-lg-4 certificate-name-break">
+                    {{inc @index}}) {{name}}
+                  </div>
+                {{/each}}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <br/>
-
+        <br/>
       <!-- SLA Table -->
-
       {{/each}}
 		</script>
 

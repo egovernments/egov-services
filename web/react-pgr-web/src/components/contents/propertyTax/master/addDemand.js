@@ -170,8 +170,6 @@ class AddDemand extends Component {
 						
 			Api.commonApiPost('/billing-service/taxperiods/_search', periodQuery, {}, false, true).then((res)=>{
 				    setLoadingStatus('hide');
-					console.log('periods', res);
-					setLoadingStatus('hide');
 					currentThis.setState({
 					 taxPeriod:[
 						...currentThis.state.taxPeriod,
@@ -213,6 +211,11 @@ class AddDemand extends Component {
 		toggleSnackbarAndSetText(true, err.message);
 	})
   }
+  
+  
+  getTaxHeads = (taxHead) => {
+	  
+  }
 
   submitDemand = () => {
 
@@ -246,56 +249,6 @@ class AddDemand extends Component {
   }
 
 
-validateCollection = (index) => {
-
-	var current = this;
-
-	var demands = [];
-	var collections = [];
-
-
-	setTimeout(() => {
-
-		let {addDemand} = current.props;
-
-		//console.log(addDemand);
-
-		for(var key in addDemand) {
-			if(addDemand.hasOwnProperty(key)){
-				if(key.match('collections')) {
-					collections.push(addDemand[key])
-				} else {
-					demands.push(addDemand[key])
-				}
-			}
-		}
-
-		console.log(collections, demands);
-
-		for(var i=0; i<collections.length;i++){
-			var count = 0;
-			for (var key in collections[i]){
-				if(collections[i][key] && demands[i]["demand" + count] && Number(collections[i][key]) > Number(demands[i]["demand" + count])){
-					console.log(collections[i][key]);
-					console.log(demands[i]["demand" + count]);
-					current.setState({
-						hasError: true
-					})
-					return false;
-				} else {
-					current.setState({
-						hasError: false
-					})
-				}
-				count++;
-			}
-		}
-
-
-	}, 100)
-
-}
-
   render() {
 	  
     const renderOption = function(list,listName="") {
@@ -322,10 +275,12 @@ validateCollection = (index) => {
       isEditIndex,
       isAddRoom,
 	  addDepandencyFields,
-	  removeDepandencyFields
+	  removeDepandencyFields,
+	  hasDemandError,
+	  validateCollection
     } = this.props;
-
-    let {search, handleDepartment, getTaxHead, validateCollection} = this;
+	
+    let {search, handleDepartment, getTaxHead} = this;
 
     let cThis = this;
 
@@ -333,13 +288,15 @@ validateCollection = (index) => {
 
 		if(this.state.demands.length !=0){
 
-		return this.state.demands.map((demand, index)=> {
-			
-			console.log(index);
-			
+		return this.state.demands.map((demand, index)=> {			
 			return(
 				<tr key={index}>
-					<td style={{width:100}} className="lastTdBorder">{(this.state.taxPeriod.length !=0) ? (this.state.taxPeriod[index] ? this.state.taxPeriod[index].code: '') : ''}</td>
+					<td style={{width:100}} className="lastTdBorder">{(this.state.taxPeriod.length !=0) && this.state.taxPeriod.map((code, index)=>{
+						console.log(demand, code)
+						if(demand.taxPeriodFrom == code.fromDate && demand.taxPeriodTo == code.toDate){
+							return(<span>{code.code}</span>)
+						}
+					})}</td>
 						{demand.demandDetails.map((detail, i)=>{
 
 							if(!addDemand.hasOwnProperty('demands'+index)){
@@ -359,12 +316,8 @@ validateCollection = (index) => {
 										  type="number"
 										  value={(addDemand['demands'+index] ? addDemand['demands'+index]['demand'+i] : detail.taxAmount) || ''}
 										  onChange={(e) => {
-											  if(addDemand.hasOwnProperty('collections'+index) && addDemand['collections'+index].hasOwnProperty('collection'+i) && addDemand['collections'+index]['collection'+i]) {
-												  validateCollection(i)
-											  } else {
-												  validateCollection(i);
-											  }
-											  handleChangeNextOne(e,"demands"+index,"demand"+i, false, '')}}
+											  handleChangeNextOne(e,"demands"+index,"demand"+i, false, '')
+											  validateCollection()}}
 										  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 										  underlineStyle={styles.underlineStyle}
 										  underlineFocusStyle={styles.underlineFocusStyle}
@@ -380,12 +333,8 @@ validateCollection = (index) => {
 										  type="number"
 										  value={(addDemand['demands'+index] ? addDemand['demands'+index]['demand'+i] : detail.taxAmount) || ''}
 										  onChange={(e) => {
-											  if(addDemand.hasOwnProperty('collections'+index) && addDemand['collections'+index].hasOwnProperty('collection'+i) && addDemand['collections'+index]['collection'+i]) {
-												  validateCollection(i)
-											  } else {
-												  validateCollection(i);
-											  }
 											  handleChangeNextOne(e,"demands"+index,"demand"+i, false, '')
+											  validateCollection();
 										  }}
 										  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 										  floatingLabelFixed={true}
@@ -413,13 +362,8 @@ validateCollection = (index) => {
 								  value={addDemand['collections'+index] ? addDemand['collections'+index]['collection'+i] : ''}
 								  type="number"
 								  onChange={(e) => {
-									  if(addDemand.hasOwnProperty('demands'+index) && addDemand['demands'+index].hasOwnProperty('demand'+i) && addDemand['demands'+index]['demand'+i]) {
-										  validateCollection(i)
-									  } else {
-										  validateCollection(i);
-									  }
-
 									  handleChangeNextOne(e,"collections"+index,"collection"+i, false, '')
+									  validateCollection();
 								  }}
 								  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 								  floatingLabelFixed={true}
@@ -494,9 +438,8 @@ validateCollection = (index) => {
 			</Card>
 			<div style={{textAlign:'center'}}>
 					<br/>
-					{this.state.hasError && <p style={{color:'Red',textAlign:'center'}}>{translate('pt.create.groups.addDemand.demandError')}<br/></p>}
-
-					<RaisedButton type="button" label="Update" disabled={this.state.hasError}  primary={true} onClick={()=> {
+					{hasDemandError && <p style={{color:'Red',textAlign:'center'}}>{translate('pt.create.groups.addDemand.demandError')}<br/></p>}
+					<RaisedButton type="button" label="Update" disabled={hasDemandError}  primary={true} onClick={()=> {
 								this.submitDemand();
 								}
 					}/>
@@ -510,7 +453,8 @@ const mapStateToProps = state => ({
   addDemand:state.form.form,
   fieldErrors: state.form.fieldErrors,
   editIndex: state.form.editIndex,
-  addRoom : state.form.addRoom
+  addRoom : state.form.addRoom,
+  hasDemandError : state.form.hasDemandError
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -529,6 +473,7 @@ const mapDispatchToProps = dispatch => ({
       }
     });
   },
+  
   handleChange: (e, property, isRequired, pattern) => {
     dispatch({type: "HANDLE_CHANGE", property, value: e.target.value, isRequired, pattern});
   },
@@ -543,100 +488,12 @@ const mapDispatchToProps = dispatch => ({
       pattern
     })
   },
-  addNestedFormData: (formArray, formData) => {
-    dispatch({
-      type: "PUSH_ONE",
-      formArray,
-      formData
-    })
-  },
 
-  addNestedFormDataTwo: (formObject, formArray, formData) => {
-    dispatch({
-      type: "PUSH_ONE_ARRAY",
-      formObject,
-      formArray,
-      formData
-    })
-  },
-
-  deleteObject: (property, index) => {
-    dispatch({
-      type: "DELETE_OBJECT",
-      property,
-      index
-    })
-  },
-
-  deleteNestedObject: (property,propertyOne, index) => {
-    dispatch({
-      type: "DELETE_NESTED_OBJECT",
-      property,
-      propertyOne,
-      index
-    })
-  },
-
-  editObject: (objectName, object, isEditable) => {
-    dispatch({
-      type: "EDIT_OBJECT",
-      objectName,
-      object,
-      isEditable
-    })
-  },
-
-  resetObject: (object) => {
-    dispatch({
-      type: "RESET_OBJECT",
-      object
-    })
-  },
-
-  updateObject: (objectName, object) => {
-    dispatch({
-      type: "UPDATE_OBJECT",
-      objectName,
-      object
-    })
-  },
-
-  updateNestedObject:  (objectName, objectArray, object) => {
-    dispatch({
-      type: "UPDATE_NESTED_OBJECT",
-      objectName,
-      objectArray,
-      object
-    })
-  },
-
-  isEditIndex: (index) => {
-    dispatch({
-      type: "EDIT_INDEX",
-      index
-    })
-  },
-
-  addDepandencyFields: (property) => {
-		dispatch({
-			type: 'ADD_REQUIRED',
-			property
-		})
-	},
-
-	removeDepandencyFields: (property) => {
-		dispatch({
-			type: 'REMOVE_REQUIRED',
-			property
-		})
-	},
-
-  isAddRoom: (room) => {
-    dispatch({
-      type: "ADD_ROOM",
-      room
-    })
-  },
+ validateCollection: () => {
+	 dispatch({
+		type: "VALIDATE_COLLECTION" 
+	 })
+ },
 
    setLoadingStatus: (loadingStatus) => {
      dispatch({type: "SET_LOADING_STATUS", loadingStatus});

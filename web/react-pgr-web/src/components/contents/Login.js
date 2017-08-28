@@ -141,6 +141,10 @@ class Login extends Component {
         localStorage.removeItem("reload");
         this.props.forceLogout();
      }
+
+     if(window.location.href.indexOf("?") > -1 && window.location.href.indexOf("signup") > -1) {
+          this.handleSignUpModalOpen();
+     }
    }
 
 

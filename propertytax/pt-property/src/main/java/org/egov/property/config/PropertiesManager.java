@@ -165,6 +165,8 @@ public class PropertiesManager {
 
 	private String invalidPropertyUsageCode;
 
+	private String invalidPropertySubUsageCode;
+
 	private String invalidPropertyOccupancyCode;
 
 	private String invalidPropertyAgeCode;
@@ -557,6 +559,10 @@ public class PropertiesManager {
 
 	public String getInvalidPropertyUsageCode() {
 		return environment.getProperty("invalid.input.usage");
+	}
+	
+	public String getInvalidPropertySubUsageCode() {
+		return environment.getProperty("invalid.input.subusage");
 	}
 
 	public String getInvalidPropertyOccupancyCode() {

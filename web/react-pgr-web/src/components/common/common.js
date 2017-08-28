@@ -989,6 +989,16 @@ var localization_EN_Data = {
     "reports.collection.paymentmode": "Payment Mode",
     "reports.collection.revenuehead": "Revenue Head",
     "reports.collection.department": "Department",
+
+    "reports.collection.receipt.date":"Receipt Date",
+    "reports.collection.receipt.number":"Receipt Number",
+    "reports.collection.department.name":"Department Name",
+    "reports.collection.service.name":"Service Name",
+    "reports.collection.cashamount":"Cash Amount",
+    "reports.collection.chequedd_amount":"Cheque DD Amount",
+    "reports.collection.online.amount":"Online Amount",
+    "reports.collection.status.description":"Status Description",
+
     "collection.create.consumerCode": "Consumer Code",
     "collection.search.period": "Period",
     "collection.search.arrears": "Arrears",
@@ -2114,6 +2124,18 @@ var localization_MR_Data = {
     "reports.collection.paymentmode": "देयक मोड",
     "reports.collection.revenuehead": "महसूल विभागाचे प्रमुख",
     "reports.collection.department": "विभाग",
+
+
+        "reports.collection.receipt.date":"Receipt Date - Marathi",
+        "reports.collection.receipt.number":"Receipt Number - Marathi",
+        "reports.collection.department.name":"Department Name - Marathi",
+        "reports.collection.service.name":"Service Name - Marathi",
+        "reports.collection.cashamount":"Cash Amount - Marathi",
+        "reports.collection.chequedd_amount":"Cheque DD Amount - Marathi",
+        "reports.collection.online.amount":"Online Amount - Marathi",
+        "reports.collection.status.description":"Status Description - Marathi",
+
+
     ﻿"employee.Employee.fields.EmployeePhoto":"कर्मचारी फोटो",
 "employee.Employee.fields.EmployeeSignature":"कर्मचारी स्वाक्षरी",
 "employee.Employee.fields.OtherAttachments":"इतर अटॅचमेंट",

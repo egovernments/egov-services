@@ -1247,7 +1247,7 @@ class NoDues extends Component {
                                           <td colSpan={3} style={{textAlign:"left"}}>
                                             Service Request Number : {ReceiptOne[0].Bill[0].billDetails[0].consumerCode}<br/>
                                             Applicant Name : {ReceiptOne[0].Bill[0].payeeName}<br/>
-                                            Amount : {Receipt[0].Bill[0].billDetails[0].totalAmount?("RS."+Receipt[0].Bill[0].billDetails[0].totalAmount+"/-"):"NA"}<br/>
+                                            Amount : {Receipt[0].Bill[0].billDetails[0].totalAmount?("RS."+ReceiptOne[0].Bill[0].billDetails[0].totalAmount+"/-"):"NA"}<br/>
 
                                           </td>
                                       </tr>

@@ -68,8 +68,11 @@ import org.egov.wcms.transaction.web.contract.PropertyCategoryResponseInfo;
 import org.egov.wcms.transaction.web.contract.PropertyInfo;
 import org.egov.wcms.transaction.web.contract.PropertyResponse;
 import org.egov.wcms.transaction.web.contract.PropertyUsageTypeResponseInfo;
+import org.egov.wcms.transaction.web.contract.RequestInfoBody;
 import org.egov.wcms.transaction.web.contract.RequestInfoWrapper;
 import org.egov.wcms.transaction.web.contract.SupplyResponseInfo;
+import org.egov.wcms.transaction.web.contract.Tenant;
+import org.egov.wcms.transaction.web.contract.TenantResponse;
 import org.egov.wcms.transaction.web.contract.TreatmentPlantResponse;
 import org.egov.wcms.transaction.web.contract.UsageMasterResponse;
 import org.egov.wcms.transaction.web.contract.WaterConnectionReq;
@@ -421,11 +424,38 @@ public class RestConnectionService {
             if(null!=finYear && !finYear.isEmpty()) { 
             	return ackNumber=tenantId.substring(0,4).concat(ackNumber);
             }	*/
-            return ackNumber=tenantId.substring(0,4).concat(ackNumber);
+        	String ulbName = getULBNameFromTenant(tenantId, requestInfo);
+        	if(!ulbName.equals("")){ 
+        		return ackNumber = ulbName.substring(0,4).concat(ackNumber);
+        	} else {
+        		return ackNumber = tenantId.substring(0,4).concat(ackNumber);
+        	}
         }
 
         return ackNumber;
     }
+    
+	public String getULBNameFromTenant(String tenantId, RequestInfo requestInfo) { 
+		StringBuilder url = new StringBuilder(configurationManager.getTenantServiceBasePath() + configurationManager.getTenantServiceSearchPath()); 
+		url.append("?code=" + tenantId); 
+		RequestInfoBody requestInfoBody = new RequestInfoBody(requestInfo); 
+		final HttpEntity<RequestInfoBody> request = new HttpEntity<>(requestInfoBody);
+		logger.info("URL to invoke Tenant Service : " + url.toString());
+		logger.info("Request Info to invoke the URL : " + request);
+		String ulbCode = ""; 
+        TenantResponse tr = new RestTemplate().postForObject(url.toString(), request, TenantResponse.class);
+        if(null!=tr) { 
+        	logger.info("Tenant Response : " + tr);
+        	if(null != tr.getTenant()){ 
+        		for(Tenant tenant : tr.getTenant()) { 
+        			if(null != tenant.getCity()) { 
+        				ulbCode = tenant.getCity().getName();  
+        			}
+        		}
+        	}
+        }
+		return ulbCode;
+	}
     
     public Demand getDemandEstimation(Connection connection) { 
     	StringBuilder url = new StringBuilder();

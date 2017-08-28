@@ -88,17 +88,6 @@ $(document).ready(function(){
 
       $(document).on('click', 'a.action-item', function(e){
           //console.log('serviceName', $(this).data('service-name'));
-
-          console.log('redirectUrl', redirectUrl);
-
-          if(!$('#ulb-dropdown').val()){
-            $('#ulb-dropdown').popover('show');
-            return;
-          }
-          else{
-            $('#ulb-dropdown').popover('hide');
-          }
-
           var serviceName = $(this).data('service-name');
           var moduleName = $(this).data('module-name');
           $('#servicesDetailModalLabel').html($(this).data('service-name')+" - "+moduleName);
@@ -108,15 +97,17 @@ $(document).ready(function(){
 
           var ulb = ulbsList.find((ulb)=>ulb.tenantId === $('#ulb-dropdown').val());
 
-          if(service && ulb.url){
-            var uniqueKeys = service.slaTable.columns.reduce(function (acc, obj) {
-                return acc.concat(acc.indexOf(obj.key) === -1? obj.key : undefined);
-            }, []);
+          if(service){
+            if(!service.slaTable){
+              var uniqueKeys = service.slaTable.columns.reduce(function (acc, obj) {
+                  return acc.concat(acc.indexOf(obj.key) === -1? obj.key : undefined);
+              }, []);
+              service['uniqueKeys'] = uniqueKeys;
+            }
 
-            service['uniqueKeys'] = uniqueKeys;
 
             //documentsTempalte
-            $('#apply-btn').attr('data-url', service.url);
+            $('#apply-btn').attr('data-url', service.redirectUrl);
             $('#documents-body').html(documentsTempalte(service));
             $('#servicesDetailModal').modal('show');
           }
@@ -146,7 +137,13 @@ $(document).ready(function(){
 
       $('#loginBtn').click(function(e) {
 
-          console.log('redirectUrl', window.location.origin + "/"+ redirectUrl);
+          if(!$('#ulb-dropdown').val()){
+            $('#ulb-dropdown').popover('show');
+            return;
+          }
+          else{
+            $('#ulb-dropdown').popover('hide');
+          }
 
           if($("#mobileNumber").val() && $("#password").val()) {
             var tenantId = $("#ulb-dropdown").val() || "default";
@@ -171,7 +168,7 @@ $(document).ready(function(){
                     window.location.href = window.location.origin + "/app/v1/#/prd/dashboard";
                 }
                 else{
-                  window.location.href = window.location.origin + "/"+ redirectUrl;
+                  window.location.href = window.location.origin + "/app/v1/#/prd/dashboard"+ redirectUrl;
                 }
 
               },
@@ -179,6 +176,9 @@ $(document).ready(function(){
 
               }
             });
+          }
+          else{
+            alert('Please enter your mobile no / login id and password!');
           }
       })
 

@@ -153,6 +153,49 @@
         }
       ]
     }
+  },
+
+  {
+    "serviceName":"New Temporary/Permanent Trade license",
+    "icon":"card_membership",
+    "moduleName":"Trade License",
+    "redirectUrl":"",
+    "url":"non-framework/citizenServices/no-dues/search/pt",
+    "language_key":"",
+    "requiredDocuments":[
+      {
+        "requiredDocumentName":"ID Proof (Any one)",
+        "documents":[
+          {
+            "name":"Aadhaar Card"
+          },
+          {
+            "name":"Voter ID Card"
+          },
+          {
+            "name":"Passport"
+          }
+        ]
+      },
+
+      {
+        "requiredDocumentName":"ID Proof (Any one)",
+        "documents":[
+          {
+            "name":"Aadhaar Card"
+          },
+          {
+            "name":"Voter ID Card"
+          },
+          {
+            "name":"Passport"
+          }
+        ]
+      }
+    ],
+    "slaTable":{
+
+    }
   }
 
 ]

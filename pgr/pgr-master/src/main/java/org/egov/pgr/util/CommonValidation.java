@@ -43,7 +43,7 @@ public class CommonValidation {
         if (!code.isEmpty() && null != code && code.length() > 100) {
             error.put(CODE, "pgr.0065");
             error.put(FIELD, "code");
-            error.put(MESSAGE, "Code must be below 100 characters");
+            error.put(MESSAGE, "Code must be below 20 characters");
             throw new PGRMasterException(error);
         }
     }
@@ -52,7 +52,7 @@ public class CommonValidation {
         if (!name.isEmpty() && null != name && name.length() > 150) {
             error.put(CODE, "pgr.0066");
             error.put(FIELD, "name");
-            error.put(MESSAGE, "Name must be below 150 characters");
+            error.put(MESSAGE, "Name must be below 100 characters");
             throw new PGRMasterException(error);
         }
     }

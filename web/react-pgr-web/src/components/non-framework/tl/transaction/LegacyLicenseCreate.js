@@ -1116,7 +1116,7 @@ handlePopUpLicense = (type , jsonPath, value) => {
 
     return (
       <div className="Report">
-      <h3 style={{"textAlign": "center"}}>Create Legacy Trade License</h3>
+      <h3 style={{"textAlign": "center"}}>{translate("tl.create.legacyTradeLicense")}</h3>
         <form onSubmit={(e) => {
           create(e)
         }}>

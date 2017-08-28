@@ -7,14 +7,13 @@ import Api from '../../../api/api';
 import {translate} from '../../common/common';
 import _ from 'lodash';
 
-const $ = require('jquery');
-$.DataTable = require('datatables.net');
-const dt = require('datatables.net-bs');
-const buttons = require('datatables.net-buttons-bs');
-require('datatables.net-buttons/js/buttons.colVis.js'); // Column visibility
-require('datatables.net-buttons/js/buttons.html5.js'); // HTML 5 file export
-require('datatables.net-buttons/js/buttons.flash.js'); // Flash file export
-require('datatables.net-buttons/js/buttons.print.js'); // Print view button
+import $ from 'jquery';
+import 'datatables.net-buttons/js/buttons.html5.js';// HTML 5 file export
+import 'datatables.net-buttons/js/buttons.flash.js';// Flash file export
+import jszip from 'jszip/dist/jszip';
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 var sumColumn = [];
 
@@ -39,8 +38,15 @@ class ShowField extends Component {
     }
   }
 
-  componentWillReceiveProps(nextprops){
+  componentDidMount(){
+    this.setState({reportName : this.props.match.params.reportName});
   }
+
+  componentWillReceiveProps(nextprops){
+    if((this.props.match.params.moduleName !== nextprops.match.params.moduleName) || (this.props.match.params.reportName !== nextprops.match.params.reportName))
+    this.setState({reportName : nextprops.match.params.reportName});
+  }
+
 
   componentDidUpdate() {
     // console.log('did update');

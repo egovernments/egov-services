@@ -218,3 +218,95 @@ ReportDefinitions:
          and asset.revenueward = $revenueward
          and agreement.expiry_date BETWEEN CURRENT_DATE AND CURRENT_DATE + INTERVAL $expiring
   orderBy: ORDER BY agreement.id;
+
+- reportName: Defaulters Report
+  summary: Defaulters report
+  version: 1.0.0
+  moduleName: lams
+  sourceColumns:
+  - name: agreementnumber
+    label: reports.lams.defaulters.agreementnumber
+    type: number
+    source: eglams_agreement
+  - name: allotteename
+    label: reports.lams.defaulters.allotteename
+    type: string
+    source: eg_user
+  - name: mobilenumber
+    label: reports.lams.defaulters.mobilenumber
+    type: string
+    source: egasset_asset
+  - name: locality
+    label: reports.lams.base.register.locality
+    type: string
+    source: egasset_asset
+  - name: allotteeaddress
+    label: reports.lams.defaulters.allotteeaddress
+    type: string
+    source: eg_user_address
+  - name: agreementcreateddate
+    label: reports.lams.defaulters.agreementcreateddate
+    type: string
+    source: eglams_agreement
+  - name: agreementexpirydate
+    label: reports.lams.defaulters.electionward
+    type: string
+    source: eglams_agreement
+  - name: totalrent
+    label: reports.lams.defaulters.totalrent
+    type: number
+    source: eg_demand_details
+  - name: totalpending
+    label: reports.lams.defaulters.totalpending
+    type: number
+    source: eg_demand_details
+  - name: currentrentpending
+    label: reports.lams.defaulters.currentrentpending
+    type: number
+    source: eg_demand_details
+  - name: arrearspending
+    label: reports.lams.defaulters.arrearspending
+    type: number
+    source: eg_demand_details
+  searchParams:
+  - name: revenueward
+    label: reports.lams.base.register.revenueward
+    type: singlevaluelist
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=
+     $tenantid&boundaryTypeName=WARD&hierarchyTypeName=REVENUE|$..id|$..name
+    source: egasset_asset
+    isMandatory: false
+    searchClause: and asset.revenueward = $revenueward
+  - name: assetcategory
+    label: reports.lams.base.register.assetcategory
+    type: singlevaluelist
+    pattern: http://egov-asset:8080/asset-services/assetCategories/_search?&tenantId=$tenantid|$..id|$.AssetCategory[*].name
+    source: egasset_assetcategory
+    isMandatory: false
+    searchClause: and asset.assetcategory = $assetcategory
+  query: select agreement.id as agreementnumber, usr.name as allotteename, usr.mobilenumber as mobilenumber,
+         (select name from eg_boundary where id = asset.locality and tenantid = $tenantid) as locality,
+         (select address from eg_user_address where userid = usr.id and tenantid = $tenantid and type = usr.type) as allotteeaddress,
+         agreement.created_date as agreementcreateddate, agreement.expiry_date as agreementexpirydate,
+         (select SUM(dd.amount) from eglams_demand dmd , eg_demand_details dd, eg_demand_reason dr, eg_demand_reason_master rm
+         where agreement.id=dmd.agreementid and dmd.demandid::int = dd.id_demand  and dd.id_demand_reason = dr.id and dr.id_demand_reason_master = rm.id
+         and rm.code not in ('GOODWILL_AMOUNT') and agreement.tenant_id = $tenantid) as totalrent,
+         (select SUM(dd.amount)-SUM(dd.amt_collected) from eglams_demand dmd , eg_demand_details dd, eg_demand_reason dr, eg_demand_reason_master rm
+         where agreement.id=dmd.agreementid and dmd.demandid::int = dd.id_demand and dd.id_demand_reason = dr.id and dr.id_demand_reason_master = rm.id
+         and rm.code not in ('GOODWILL_AMOUNT') and agreement.tenant_id = $tenantid) as totalpending,
+         (select SUM(dd.amount)-SUM(dd.amt_collected)
+         from eglams_demand dmd, eg_demand_details dd, eg_demand_reason dr, eg_demand_reason_master rm, eg_installment_master im
+         where agreement.id=dmd.agreementid
+         and dmd.demandid::int = dd.id_demand and dd.id_demand_reason = dr.id and dr.id_demand_reason_master = rm.id
+         and rm.code not in ('GOODWILL_AMOUNT') and dr.id_installment = im.id and agreement.payment_cycle = im.installment_type
+         and CURRENT_DATE BETWEEN im.start_date and im.end_date and agreement.tenant_id = $tenantid) as currentrentpending,
+         (select SUM(dd.amount)-SUM(dd.amt_collected)
+         from eglams_demand dmd, eg_demand_details dd, eg_demand_reason dr, eg_demand_reason_master rm, eg_installment_master im
+         where agreement.id=dmd.agreementid and dmd.demandid::int = dd.id_demand and dd.id_demand_reason = dr.id
+         and dr.id_demand_reason_master = rm.id and rm.code not in ('GOODWILL_AMOUNT') and dr.id_installment = im.id
+         and agreement.payment_cycle = im.installment_type and CURRENT_DATE >= im.end_date and agreement.tenant_id = $tenantid) as arrearspending
+         from eglams_agreement agreement, eg_user usr, egasset_asset asset
+         where agreement.allottee = usr.id
+         and agreement.asset = asset.id
+         and agreement.tenant_id = $tenantid
+  orderBy: ORDER BY agreement.id;

@@ -27,12 +27,17 @@ public class ServiceReq {
 	private String phone;
 	private String description;
     private List<Value>	attributeValues;
-	private String status;	
 	private String assignedTo;
-	private String[] comments;	
 	private Object backendServiceDetails;
 	private AuditDetails auditDetails;
 	private String action;
 	private String consumerCode;
-	private BigDecimal applicationFee;
+	
+	private List<Comment> comments;	
+	private List<Document> documents;	
+	private String status;	
+	private String moduleStatus;	
+	private BigDecimal additionalFee;
+
+
 }

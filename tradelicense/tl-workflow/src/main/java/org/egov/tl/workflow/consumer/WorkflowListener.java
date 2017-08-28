@@ -40,10 +40,17 @@
 package org.egov.tl.workflow.consumer;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.egov.tl.workflow.model.TradeLicenseContract;
 import org.egov.tl.workflow.model.TradeLicenseRequest;
 import org.egov.tl.workflow.repository.MessageQueueRepository;
+import org.egov.tl.workflow.repository.contract.Department;
+import org.egov.tl.workflow.repository.contract.Designation;
+import org.egov.tl.workflow.repository.contract.Employee;
+import org.egov.tl.workflow.service.DepartmentService;
+import org.egov.tl.workflow.service.DesignationService;
+import org.egov.tl.workflow.service.EmployeeService;
 import org.egov.tl.workflow.service.WorkflowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,6 +68,12 @@ public class WorkflowListener {
 	@Value("${egov.services.tl-services.tradelicense.workflow.populated.key}")
 	private String workflowEnrichedKey;
 
+	@Value("${default.citizen.workflow.initiator.department.name}")
+	private String citizenWorkflowInitiatorDepartment;
+
+	@Value("${default.citizen.workflow.initiator.designation.name}")
+	private String citizenWorkflowInitiatorDesignation;
+
 	@Autowired
 	private ObjectMapper objectMapper;
 
@@ -69,6 +82,15 @@ public class WorkflowListener {
 
 	@Autowired
 	private WorkflowService workflowService;
+
+	@Autowired
+	private EmployeeService employeeService;
+
+	@Autowired
+	private DepartmentService departmentService;
+
+	@Autowired
+	private DesignationService designationService;
 
 	@KafkaListener(id = "${egov.services.tl-services.tradelicense.validated.id}", topics = "${egov.services.tl-services.tradelicense.validated.topic}", group = "${egov.services.tl-services.tradelicense.validated.group}")
 	public void process(final HashMap<String, Object> tlRequestMap) {
@@ -80,6 +102,13 @@ public class WorkflowListener {
 			request = objectMapper.convertValue(tlRequestMap.get("tradelicense-new-create"), TradeLicenseRequest.class);
 
 			for (final TradeLicenseContract tradeLicense : request.getLicenses()) {
+				
+				
+				//Need to enable this if license is creating from citizen service
+				
+				/*if (tradeLicense != null && tradeLicense.getWorkFlowDetails() != null
+						&& tradeLicense.getWorkFlowDetails().getAssignee() == null)
+					populateAssigneeForCitizen(tradeLicense);*/
 
 				workflowService.enrichWorkflow(tradeLicense, request.getRequestInfo());
 
@@ -102,6 +131,31 @@ public class WorkflowListener {
 		}
 
 		messageQueueRepository.save(tlWorkflowEnrichedMap);
+
+	}
+
+	private void populateAssigneeForCitizen(TradeLicenseContract tradeLicense) {
+
+		String departmentId = null, designationId = null;
+
+		List<Department> departments = departmentService.getByName(citizenWorkflowInitiatorDepartment,
+				tradeLicense.getTenantId());
+
+		List<Designation> designations = designationService.getByName(citizenWorkflowInitiatorDesignation,
+				tradeLicense.getTenantId());
+
+		if (departments != null && !departments.isEmpty() && departments.get(0).getId() != null
+				&& !departments.get(0).getId().isEmpty())
+			departmentId = departments.get(0).getId();
+
+		if (designations != null && !designations.isEmpty() && designations.get(0).getId() != null)
+			designationId = designations.get(0).getId().toString();
+
+		List<Employee> employees = employeeService.getByDeptIdAndDesgId(departmentId, designationId,
+				tradeLicense.getTenantId());
+
+		if (employees != null && !employees.isEmpty() && employees.get(0).getId() != null)
+			tradeLicense.getWorkFlowDetails().setAssignee(employees.get(0).getId());
 
 	}
 

@@ -298,72 +298,86 @@ this.setState({openLicense: false});
     let isFormValid=true;
     let self = this, _url;
     var formData = {...this.props.formData};
-
-    if(formData.licenses[0].isPropertyOwner)
-    {
-        if (!formData.licenses[0].agreementDate || !formData.licenses[0].agreementNo) {
-          isFormValid=false;
-        }
+    var feeCheck=true;
+    console.log();
+    for (var i = 0; i < formData.licenses[0].feeDetails.length; i++) {
+      if(formData.licenses[0].feeDetails[i].amount == 0 ||  formData.licenses[0].feeDetails[i].amount == ""){
+        feeCheck=false;
+      }
     }
 
-    if (isFormValid) {
-
-
-      self.props.setLoadingStatus('loading');
-
-      formData.licenses[0]["tenantId"]  = localStorage.getItem("tenantId") || "default";
-
-      if(self.props.moduleName && self.props.actionName && self.props.metaData && self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].tenantIdRequired) {
-        if(!formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName])
-          formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName] = {};
-
-        if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName].constructor == Array) {
-          for(var i=0; i< formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName].length; i++) {
-            formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][i]["tenantId"] = localStorage.getItem("tenantId") || "default";
+    if (feeCheck) {
+      if(formData.licenses[0].isPropertyOwner)
+      {
+          if (!formData.licenses[0].agreementDate || !formData.licenses[0].agreementNo) {
+            isFormValid=false;
           }
-        } else
-          formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["tenantId"] = localStorage.getItem("tenantId") || "default";
       }
 
-      if(/\{.*\}/.test(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url)) {
-        _url = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url;
-        var match = _url.match(/\{.*\}/)[0];
-        var jPath = match.replace(/\{|}/g,"");
-        _url = _url.replace(match, _.get(formData, jPath));
-      }
-      //Check if documents, upload and get fileStoreId
-      if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][0]["supportDocuments"] && formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][0]["supportDocuments"].length) {
-        let supportDocuments = [...formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][0]["supportDocuments"]];
-        let _docs = [];
-        let counter = supportDocuments.length, breakOut = 0;
-        for(let i=0; i<supportDocuments.length; i++) {
-          fileUpload(supportDocuments[i].fileStoreId, self.props.moduleName, function(err, res) {
-            if(breakOut == 1) return;
-            if(err) {
-              breakOut = 1;
-              self.props.setLoadingStatus('hide');
-              self.props.toggleSnackbarAndSetText(true, err, false, true);
-            } else {
-              if(res.files[0].fileStoreId)
-                _docs.push({
-                  ...supportDocuments[i],
-                  fileStoreId: res.files[0].fileStoreId
-                })
-              counter--;
-              if(counter == 0 && breakOut == 0) {
-                formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][0]["supportDocuments"] = _docs;
-                self.makeAjaxCall(formData, _url);
-              }
+      if (isFormValid) {
+
+
+        self.props.setLoadingStatus('loading');
+
+        formData.licenses[0]["tenantId"]  = localStorage.getItem("tenantId") || "default";
+
+        if(self.props.moduleName && self.props.actionName && self.props.metaData && self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].tenantIdRequired) {
+          if(!formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName])
+            formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName] = {};
+
+          if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName].constructor == Array) {
+            for(var i=0; i< formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName].length; i++) {
+              formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][i]["tenantId"] = localStorage.getItem("tenantId") || "default";
             }
-          })
+          } else
+            formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["tenantId"] = localStorage.getItem("tenantId") || "default";
         }
-      } else {
-        self.makeAjaxCall(formData, _url);
+
+        if(/\{.*\}/.test(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url)) {
+          _url = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url;
+          var match = _url.match(/\{.*\}/)[0];
+          var jPath = match.replace(/\{|}/g,"");
+          _url = _url.replace(match, _.get(formData, jPath));
+        }
+        //Check if documents, upload and get fileStoreId
+        if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][0]["supportDocuments"] && formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][0]["supportDocuments"].length) {
+          let supportDocuments = [...formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][0]["supportDocuments"]];
+          let _docs = [];
+          let counter = supportDocuments.length, breakOut = 0;
+          for(let i=0; i<supportDocuments.length; i++) {
+            fileUpload(supportDocuments[i].fileStoreId, self.props.moduleName, function(err, res) {
+              if(breakOut == 1) return;
+              if(err) {
+                breakOut = 1;
+                self.props.setLoadingStatus('hide');
+                self.props.toggleSnackbarAndSetText(true, err, false, true);
+              } else {
+                if(res.files[0].fileStoreId)
+                  _docs.push({
+                    ...supportDocuments[i],
+                    fileStoreId: res.files[0].fileStoreId
+                  })
+                counter--;
+                if(counter == 0 && breakOut == 0) {
+                  formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][0]["supportDocuments"] = _docs;
+                  self.makeAjaxCall(formData, _url);
+                }
+              }
+            })
+          }
+        } else {
+           feeCheck=false;
+          self.makeAjaxCall(formData, _url);
+        }
       }
+      else {
+        self.props.toggleSnackbarAndSetText(true, "Please enter required field", false, true);
+      }
+    } else {
+      self.props.toggleSnackbarAndSetText(true, "Please enter amount greater than 0", false, true);
+
     }
-    else {
-      self.props.toggleSnackbarAndSetText(true, "Please enter required field", false, true);
-    }
+
 
 
 
@@ -835,9 +849,13 @@ handlePopUpLicense = (type , jsonPath, value) => {
       flag2=0;
       flag3=0;
 
-if(property == "licenses[0].categoryId" && ("licenses[0].subCategoryId" == "" || "licenses[0].subCategoryId" == null)){
+if(property == "licenses[0].categoryId"){
+console.log(getVal("licenses[0].categoryId"));
+if(self.props.formData.licenses[0].categoryId == "" || self.props.formData.licenses[0].categoryId == null){
+console.log(getVal("licenses[0].categoryId"));
   self.props.handleChange({target:{value:null}}, self.props.formData.licenses[0].subCategoryId);
   this.populateValidtyYear();
+}
 }
 
     if (property == "licenses[0].subCategoryId") {
@@ -877,6 +895,9 @@ if(property == "licenses[0].categoryId" && ("licenses[0].subCategoryId" == "" ||
 //***End Point To Populate Fee Details Section***
 
 
+// if("licenses[0].feeDetails[0].amount" != "" && "licenses[0].feeDetails[0].amount" != 0 && "licenses[0].feeDetails[0].amount" != null){
+//   self.props.handleChange({target:{value: self.props.formData.licenses[0].feeDetails[0].amount}}, "licenses[0].amount");
+// }
 
 
 

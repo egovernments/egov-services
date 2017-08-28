@@ -72,7 +72,7 @@ public class AssetQueryBuilder {
         log.info("get query");
         addWhereClause(selectQuery, preparedStatementValues, searchAsset);
         addPagingClause(selectQuery, preparedStatementValues, searchAsset);
-        log.info("Query from asset querybuilde for search : " + selectQuery);
+        log.debug("Query from asset querybuilder for search : " + selectQuery);
         return selectQuery.toString();
     }
 

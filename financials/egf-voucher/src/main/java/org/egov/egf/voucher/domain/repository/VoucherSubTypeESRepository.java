@@ -16,6 +16,7 @@ import org.egov.egf.voucher.web.contract.VoucherSubTypeSearchContract;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.sort.SortOrder;
@@ -111,7 +112,11 @@ public class VoucherSubTypeESRepository extends ESRepository {
 		final BoolQueryBuilder boolQueryBuilder = boolQueryBuilderForVoucherSubTypes(criteria);
 		SearchRequestBuilder searchRequestBuilder = esClient.prepareSearch(VoucherSubType.class.getSimpleName().toLowerCase())
 				.setTypes(VoucherSubType.class.getSimpleName().toLowerCase())
-				.setSize(9999);
+				.setSize(9999);//To retrieve all records from the elastic,
+				//.setScroll(new TimeValue(6000000)), this will cache the records for the set no of milli seconds, 
+				//any changes to these records will not be reflected in the search during this period.
+				//Please take decision on implementing the caching.
+				
 
 		if (!orderByList.isEmpty()) {
 			for (String orderBy : orderByList) {

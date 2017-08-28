@@ -405,7 +405,7 @@ class CustomMenu extends Component {
                            <a key={index} href={base+item.url+((item.queryParams!="" && item.queryParams)?"?"+item.queryParams:"")} target="_blank">
                              <MenuItem
                                   style={{whiteSpace: "initial"}}
-                                  leftIcon={<i className="material-icons marginLeft">view_module</i>}
+                                  leftIcon={<i style={{top: "12px", margin: "0px", left: "24px"}} className="material-icons marginLeft">view_module</i>}
                                   primaryText={<div className="menuStyle" style={{width: "127px", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"}}><span className="onHoverText hidden-sm hidden-xs">{item.name}</span><span>{item.name}</span></div>}
                                />
                             </a>

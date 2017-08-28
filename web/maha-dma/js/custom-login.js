@@ -30,7 +30,7 @@ function arrayGroupByKey(arry, groupByKey){
 $(document).ready(function(){
 
 		var ulbOptionTemplate = Handlebars.compile($('#ulb-option-template').html());
-    var documentsTempalte = Handlebars.compile($('#documents-body-template').html());
+    var documentsTemplate = Handlebars.compile($('#documents-body-template').html());
     var servicesMenuTempalte = Handlebars.compile($('#services-menu-template').html());
 
     if(localStorage.getItem('auth-token')){
@@ -87,6 +87,8 @@ $(document).ready(function(){
       }
 
       function loadServiceMenus(){
+        console.log('coming inside');
+        console.log('groupByModuleServices', groupByModuleServices);
         $('.service-table').html(servicesMenuTempalte(groupByModuleServices));
       }
 
@@ -111,11 +113,11 @@ $(document).ready(function(){
 
             console.log('service', service);
 
-            console.log('docs response', documentsTempalte(service));
+            console.log('docs response', documentsTemplate(service));
 
             //documentsTempalte
             $('#apply-btn').attr('data-url', service.redirectUrl);
-            $('#documents-body').html(documentsTempalte(service));
+            $('#documents-body').html(documentsTemplate(service));
             $('#servicesDetailModal').modal('show');
           }
           else{
@@ -191,6 +193,18 @@ $(document).ready(function(){
           else{
             alert('Please enter your mobile no / login id and password!');
           }
-      })
+      });
+
+      $(document).on('click', '.toggle-header', function(e){
+        $content = $($(this).data('target'));
+        if($content.hasClass('collapse')){
+          $content.removeClass('collapse');
+          $(this).find('i.toggle-icon').html('keyboard_arrow_up')
+        }
+        else{
+          $content.addClass('collapse');
+          $(this).find('i.toggle-icon').html('keyboard_arrow_down')
+        }
+      });
 
 });

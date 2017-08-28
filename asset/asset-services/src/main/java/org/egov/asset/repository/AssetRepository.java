@@ -106,11 +106,11 @@ public class AssetRepository {
         final String queryStr = assetQueryBuilder.getQuery(assetCriteria, preparedStatementValues);
         List<Asset> assets = new ArrayList<Asset>();
         try {
-            log.info("queryStr::" + queryStr + "preparedStatementValues::" + preparedStatementValues.toString());
+            log.debug("queryStr::" + queryStr + "preparedStatementValues::" + preparedStatementValues.toString());
             assets = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), assetRowMapper);
-            log.info("AssetRepository::" + assets);
+            log.debug("AssetRepository::" + assets);
         } catch (final Exception ex) {
-            log.info("the exception from findforcriteria : " + ex);
+            log.debug("the exception from findforcriteria : " + ex);
         }
         return assets;
     }
@@ -118,12 +118,12 @@ public class AssetRepository {
     public String getAssetCode() {
         final String query = "SELECT nextval('seq_egasset_assetcode')";
         final Integer result = jdbcTemplate.queryForObject(query, Integer.class);
-        log.info("result:" + result);
+        log.debug("result:" + result);
         StringBuilder code = null;
         try {
             code = new StringBuilder(String.format("%06d", result));
         } catch (final Exception ex) {
-            log.info("the exception from seq number gen for code : " + ex);
+            log.debug("the exception from seq number gen for code : " + ex);
         }
         return code.toString();
     }

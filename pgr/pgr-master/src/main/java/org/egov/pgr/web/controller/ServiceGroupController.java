@@ -46,6 +46,7 @@ import org.egov.pgr.config.ApplicationProperties;
 import org.egov.pgr.domain.exception.PGRMasterException;
 import org.egov.pgr.domain.model.ServiceGroup;
 import org.egov.pgr.service.ServiceGroupService;
+import org.egov.pgr.util.CommonValidation;
 import org.egov.pgr.util.PgrMasterConstants;
 import org.egov.pgr.web.contract.RequestInfoWrapper;
 import org.egov.pgr.web.contract.ServiceGroupGetRequest;
@@ -91,6 +92,9 @@ public class ServiceGroupController {
 
     @Autowired
     private ErrorHandler errHandler;
+
+    @Autowired
+    private CommonValidation commonValidation;
 
     HashMap<String, String> serviceGroupException = new HashMap<>();
 
@@ -168,8 +172,16 @@ public class ServiceGroupController {
         verifyRequestUniqueness(serviceGroupRequest, action);
         verifyIfNameAlreadyExists(serviceGroupRequest, action);
         verifyIfCodeAlreadyExists(serviceGroupRequest, action);
+        commonValidation(serviceGroupRequest.getServiceGroup());
     }
 
+    private void commonValidation(ServiceGroup serviceGroup) {
+        commonValidation.validateCode(serviceGroup.getCode());
+        commonValidation.validateCodeLength(serviceGroup.getCode());
+        commonValidation.validateName(serviceGroup.getName());
+        commonValidation.validateNameLength(serviceGroup.getName());
+        commonValidation.validateDescriptionLength(serviceGroup.getDescription());
+    }
 
     private void addServiceGroupNameValidationErrors(final ServiceGroupRequest serviceGroupRequest) {
         final ServiceGroup serviceGroup = serviceGroupRequest.getServiceGroup();

@@ -135,7 +135,7 @@
         {
         "elementName":"userName",
         "identifier":"css",
-        "value":"[style='height: inherit;'] tr td:nth-child(4)",
+        "value":"[style] tr td:nth-child(4)",
         "waitFor":"visibility"
         },
         {

@@ -9,6 +9,7 @@ Feature: Creating Legacy Connection
     And user on Login screen clicks on signIn
 
     ### On Homepage Screen ###
+    And user on Grievance screen will see the complaintDetails
     And user on Home screen verifies myTasks has visible value My Tasks
     And user on Home screen clicks on menu
     And user on Home screen types on menuSearch value Create Legacy Connection

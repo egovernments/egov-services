@@ -5,7 +5,7 @@ Feature: Creating a Grievance Type
     ####### Create A Grievance Category #######
     ### On Login Screen ###
     Given user on Login screen verifies signInText has visible value Sign In
-    And user on Login screen types on username value ramana
+    And user on Login screen types on username value narasappa
     And user on Login screen types on password value demo
     And user on Login screen clicks on signIn
 
@@ -68,6 +68,7 @@ Feature: Creating a Grievance Type
     And user on Home screen clicks on firstMenuItem
 
     ### On Create Router Screen ###
+    And user on Grievance screen will wait until the page loads
     And user on Grievance screen types on grievanceType suggestion box with value grievanceTypeName
     And user on Grievance screen selects on boundaryType value Ward
     And user on Grievance screen types on routerBoundary suggestion box with value Election Ward No 31

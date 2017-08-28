@@ -15,7 +15,7 @@
         {
         "elementName":"crnStatus",
         "identifier":"css",
-        "value":"[style='cursor: pointer;'] td:nth-child(5)",
+        "value":"[style] td:nth-child(5)",
         "waitFor":"visibility"
         }
     ]

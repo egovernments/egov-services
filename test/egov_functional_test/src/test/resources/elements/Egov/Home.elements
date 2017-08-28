@@ -3,7 +3,7 @@
         {
         "elementName":"menu",
         "identifier":"xpath",
-        "value":"//i[text() = 'menu']",
+        "value":"//*[@class='Header']/div/div[1]/button",
         "waitFor":"visibility"
         },
         {
@@ -20,8 +20,8 @@
         },
         {
         "elementName":"firstMenuItem",
-        "identifier":"css",
-        "value":".menuStyle",
+        "identifier":"xpath",
+        "value":"(.//*[@class='menuStyle'])[1]",
         "waitFor":"visibility"
         },
         {
@@ -58,6 +58,18 @@
         "elementName":"applicationBox",
         "identifier":"xpath",
         "value":"//*[contains(text(),'%s')]",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"background",
+        "identifier":"css",
+        "value":"[style='position: relative; display: none;']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"homeButton",
+        "identifier":"xpath",
+        "value":"//i[text()='home']",
         "waitFor":"visibility"
         }
     ]

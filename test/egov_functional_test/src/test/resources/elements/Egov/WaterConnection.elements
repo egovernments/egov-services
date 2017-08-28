@@ -51,7 +51,7 @@
         {
         "elementName":"gender",
         "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[1]/div[2]/div/div[2]/div[1]/div/div[5]/div/div[1]/div",
+        "value":".//*[@id='root']/div/main/div/form/div[1]/div[2]/div/div[2]/div[1]/div/div[5]/div/div[1]/div[1]",
         "waitFor":"visibility"
         },
         {

@@ -6,17 +6,17 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import steps.GenericSteps;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import static com.jayway.awaitility.Awaitility.await;
+import static com.testvagrant.stepdefs.core.Tapster.tapster;
 
 public class GenericPage extends BasePage {
 
@@ -145,9 +145,9 @@ public class GenericPage extends BasePage {
 
     public void clickOnDropdown(WebElement webElement, String value) {
 
-//        do {
         clickOnButton(webElement, driver);
         await().atMost(10, TimeUnit.SECONDS).until(() -> driver.findElements(By.cssSelector("div[role=\"presentation\"]:nth-child(1) div div span div div div")).size() >= 1);
+
         List<WebElement> dropdown = driver.findElements(By.cssSelector("div[role=\"presentation\"]:nth-child(1) div div span div div div"));
         for (WebElement w : dropdown) {
             if (w.getText().equals(value)) {
@@ -158,13 +158,7 @@ public class GenericPage extends BasePage {
                     jsClick(w, driver);
                 }
             }
-
         }
-
-//            String element = "//*[text()='" + value + "']";
-//            WebElement element1 = driver.findElement(By.xpath(element));
-//            clickOnButton(element1, driver);
-//        } while (!(value.equals(driver.findElement(By.xpath("//*[text()='" + value + "']")).getText())));
     }
 
     public void actionOnSuggestionBox(WebElement webElement, String value) {
@@ -193,36 +187,29 @@ public class GenericPage extends BasePage {
         await().atMost(20, TimeUnit.SECONDS).until(() -> driver.findElements(by).size() > 0);
     }
 
-    public void selectDate(WebElement webElement, String value) throws IOException {
-        clickOnButton(webElement, driver);
+    public String findDataIsComingFromDataTable(String v) {
+        if (v.contains("<"))
+            return GenericSteps.dataTableStore.get(GenericSteps.i++);
+        return v;
+    }
 
-        // Select Year
-        if (!(getCurrentDate().split("/")[2].equals(value.split("/")[2]))) {
-            String year = "//*[text()='" + value.split("/")[2] + "']";
-            clickOnButton(driver.findElement(By.xpath("//*[text()='" + getCurrentDate().split("/")[2] + "']")), driver);
-            waitForTheElementToBePresent(By.xpath(year));
-            clickOnButton(driver.findElement(By.xpath(year)), driver);
-        }
+    public void tapsterServesActionWithElement(String consumer, String screen, String action, String value, WebElement webElement) throws IOException {
+        tapster().useDriver(driver)
+                .asConsumer(consumer)
+                .onScreen(screen)
+                .doAction(action)
+                .withValue(value)
+                .serveWithElement(webElement);
+    }
 
-//        // Selects Month
-//        String m = new SimpleDateFormat("MMM").format(Calendar.getInstance().getTime());
-//        if (driver.findElements(By.xpath("//*[contains(text(),'" + m + "')]")).size() == 1)
-//            System.out.println("ytfvhghujwnvkvr");
+    public void tapsterServesAction(String consumer, String screen, String element, String action, String value) throws IOException {
+        tapster().useDriver(driver)
+                .asConsumer(consumer)
+                .onScreen(screen)
+                .onElement(element)
+                .doAction(action)
+                .withValue(value)
+                .serve();
+    }
 
-//        waitForTheElementToBePresent(By.cssSelector("[d='M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z']"));
-//        clickOnButton(driver.findElement(By.cssSelector("[d='M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z']")), driver);
-
-            // Select Date
-            if (value.split("/")[0].substring(0, 1).contains("0")) {
-                value = value.split("/")[0].replaceFirst("0", "");
-            }
-        String s = "//span[text()='" + value.split("/")[0] + "']";
-            waitForTheElementToBePresent(By.xpath(s));
-            clickOnButton(driver.findElement(By.xpath(s)), driver);
-
-            // Click on Ok
-            waitForTheElementToBePresent(By.xpath("//*[text()='OK']"));
-            clickOnButton(driver.findElement(By.xpath("//*[text()='OK']")), driver);
-
-        }
 }

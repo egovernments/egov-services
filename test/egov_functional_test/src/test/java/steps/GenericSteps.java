@@ -2,13 +2,10 @@ package steps;
 
 import com.testvagrant.stepdefs.exceptions.NoSuchEventException;
 import cucumber.api.DataTable;
-import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
-import org.omg.CORBA.TIMEOUT;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
-import pages.BasePage;
 import pages.GenericPage;
 import utils.StringExtract;
 
@@ -23,16 +20,19 @@ import static com.testvagrant.stepdefs.core.Tapster.tapster;
 
 public class GenericSteps extends BaseSteps {
 
-    private static List<String> dataTableStore = new ArrayList<>();
-    private static int i = 0;
+    public static List<String> dataTableStore = new ArrayList<>();
+    public static int i = 0;
     private static Map<String, String> copyValues = new HashMap<>();
+    private WebElement webElement;
 
     @Given("^(\\w+)\\s+on\\s+(\\w+)\\s+screen\\s+(\\w+)\\s+on\\s+(\\w+)\\s+value\\s+(.*)$")
     public void consumerOnScreenPerformsActionOnElementWithValue(String consumer, String screen, String action, String element, String value) throws NoSuchEventException, IOException, InterruptedException {
 
+        TimeUnit.SECONDS.sleep(1);
+
         if (!value.equals("null")) {
-            TimeUnit.SECONDS.sleep(1);
-            value = findDataIsComingFromDataTable(value);
+
+            value = pageStore.get(GenericPage.class).findDataIsComingFromDataTable(value);
             if (copyValues.containsKey(value))
                 value = copyValues.get(value);
             else
@@ -41,90 +41,48 @@ public class GenericSteps extends BaseSteps {
             if (value.contains("/"))
                 value = value.replaceAll("/", "");
 
-            if (!action.equals("uploads") && !action.equals("selects") && !action.equals("selectDate")) {
-                WebElement webElement = pageStore.get(GenericPage.class).buildElement(screen, element, value);
-                tapster().useDriver(pageStore.getDriver())
-                        .asConsumer(consumer)
-                        .onScreen(screen)
-                        .onElement(element)
-                        .doAction(action)
-                        .withValue(value)
-                        .serveWithElement(webElement);
-            } else if (action.equals("selects")) {
-                WebElement webElement = pageStore.get(GenericPage.class).buildElement(screen, element, value);
-                pageStore.get(GenericPage.class).clickOnDropdown(webElement, value);
-            } else if (action.equals("selectDate")) {
-                TimeUnit.SECONDS.sleep(1);
-                WebElement webElement = pageStore.get(GenericPage.class).buildElement(screen, element, value);
-                pageStore.get(GenericPage.class).selectDate(webElement, value);
-            } else {
-                tapster().useDriver(pageStore.getDriver())
-                        .asConsumer(consumer)
-                        .onScreen(screen)
-                        .onElement(element)
-                        .doAction(action)
-                        .withValue(System.getProperty("user.dir") + "/src/test/resources/" + value)
-                        .serve();
+            switch (action) {
+
+                case "selects":
+                    webElement = pageStore.get(GenericPage.class).buildElement(screen, element, value);
+                    pageStore.get(GenericPage.class).clickOnDropdown(webElement, value);
+                    break;
+
+                case "uploads":
+                    pageStore.get(GenericPage.class).tapsterServesAction(consumer, screen, element, action,
+                            System.getProperty("user.dir") + "/src/test/resources/" + value);
+                    break;
+
+                default:
+                    webElement = pageStore.get(GenericPage.class).buildElement(screen, element, value);
+                    pageStore.get(GenericPage.class).tapsterServesActionWithElement(consumer, screen, action, value, webElement);
             }
         }
-
-    }
-
-    private String findDataIsComingFromDataTable(String v) {
-        if (v.contains("<"))
-            return dataTableStore.get(i++);
-           return v;
     }
 
     @And("^(\\w+)\\s+on\\s+(\\w+)\\s+screen\\s+(\\w+)\\s+on\\s+(\\w+)$")
     public void consumerOnScreenPerformsActionOnElement(String consumer, String screen, String action, String element) throws NoSuchEventException, IOException, InterruptedException {
-
         TimeUnit.SECONDS.sleep(1);
-        WebElement webElement = pageStore.get(GenericPage.class).buildElement(screen, element, "");
-        tapster().useDriver(pageStore.getDriver())
-                .onScreen(screen)
-                .asConsumer(consumer)
-                .onElement(element)
-                .doAction(action)
-                .serveWithElement(webElement);
+        webElement = pageStore.get(GenericPage.class).buildElement(screen, element, "");
+        pageStore.get(GenericPage.class).tapsterServesActionWithElement(consumer, screen, action, "", webElement);
     }
 
     @And("^(\\w+)\\s+on\\s+(\\w+)\\sscreen verifies\\s+(\\w+)\\s+is\\s+(.*)$")
     public void assertElement(String consumer, String screen, String element, String action) throws NoSuchEventException, IOException, InterruptedException {
-
-        TimeUnit.SECONDS.sleep(1);
-        WebElement element1 = pageStore.get(GenericPage.class).buildElement(screen,element,"");
-        tapster().useDriver(pageStore.getDriver())
-                .onScreen(screen)
-                .asConsumer(consumer)
-                .onElement(element)
-                .doAction(action)
-                .serveWithElement(element1);
+        webElement = pageStore.get(GenericPage.class).buildElement(screen, element, "");
+        pageStore.get(GenericPage.class).tapsterServesActionWithElement(consumer, screen, action, "", webElement);
     }
 
     @And("^(\\w+)\\s+on\\s+(\\w+)\\sscreen verifies\\s+(\\w+)\\s+has\\s+(\\w+)\\s+value\\s+(.*)$")
     public void assertElementWithValue(String consumer, String screen, String element, String action, String value) throws NoSuchEventException, IOException, InterruptedException {
-        TimeUnit.SECONDS.sleep(1);
         if (copyValues.containsKey(value)) {
             value = copyValues.get(value);
-            WebElement webElement = pageStore.get(GenericPage.class).buildElement(screen,element,value);
-            tapster().useDriver(pageStore.getDriver())
-                    .onScreen(screen)
-                    .asConsumer(consumer)
-                    .onElement(element)
-                    .doAction(action)
-                    .withValue(value)
-                    .serveWithElement(webElement);
+            webElement = pageStore.get(GenericPage.class).buildElement(screen, element, value);
+            pageStore.get(GenericPage.class).tapsterServesActionWithElement(consumer, screen, action, value, webElement);
         }
         else{
-            WebElement webElement = pageStore.get(GenericPage.class).buildElement(screen,element,value);
-            tapster().useDriver(pageStore.getDriver())
-                    .onScreen(screen)
-                    .asConsumer(consumer)
-                    .onElement(element)
-                    .doAction(action)
-                    .withValue(value)
-                    .serveWithElement(webElement);
+            webElement = pageStore.get(GenericPage.class).buildElement(screen, element, value);
+            pageStore.get(GenericPage.class).tapsterServesActionWithElement(consumer, screen, action, value, webElement);
         }
     }
 
@@ -190,32 +148,17 @@ public class GenericSteps extends BaseSteps {
         if (copyValues.containsKey(value))
             value = copyValues.get(value);
         if (action.equals("opens")) {
-            tapster().useDriver(pageStore.getDriver())
-                    .onScreen(screen)
-                    .asConsumer(consumer)
-                    .onElement(element)
-                    .doAction("types")
-                    .withValue(value)
-                    .serve();
-
-            TimeUnit.SECONDS.sleep(1);
+            pageStore.get(GenericPage.class).tapsterServesAction(consumer, screen, element, "types", value);
             pageStore.get(GenericPage.class).openApplication(value).click();
         }
         else {
-        WebElement webElement = pageStore.get(GenericPage.class).buildElement(screen, element, value);
-            tapster().useDriver(pageStore.getDriver())
-                    .onScreen(screen)
-                    .asConsumer(consumer)
-                    .onElement(element)
-                    .doAction(action)
-                    .withValue(value)
-                    .serveWithElement(webElement);
+            webElement = pageStore.get(GenericPage.class).buildElement(screen, element, value);
+            pageStore.get(GenericPage.class).tapsterServesActionWithElement(consumer, screen, action, value, webElement);
         }
     }
 
     @And("^(\\w+)\\s+on (\\w+) screen selects (\\w+) with value as (.*)$")
     public void selectsDropdownWithValue(String consumer, String screen, String element, String value) throws Throwable {
-        TimeUnit.SECONDS.sleep(1);
         if (copyValues.containsKey(value))
             value = copyValues.get(value);
         WebElement webElement = pageStore.get(GenericPage.class).buildElement(screen, element, value);
@@ -224,7 +167,6 @@ public class GenericSteps extends BaseSteps {
 
     @And("^(\\w+)\\s+on (\\w+) screen types on (\\w+) suggestion box with value (.*)$")
     public void selectsSuggestionBoxWithValue(String consumer,String screen, String element, String value) throws Throwable {
-        TimeUnit.SECONDS.sleep(1);
         if (copyValues.containsKey(value))
             value = copyValues.get(value);
         WebElement webElement = pageStore.get(GenericPage.class).buildElement(screen, element, "");
@@ -238,21 +180,23 @@ public class GenericSteps extends BaseSteps {
 
     @And("^user on (\\w+) screen force clicks on (\\w+)$")
     public void userPerformsForceClicks(String screen, String element) throws Throwable {
-        TimeUnit.SECONDS.sleep(1);
         WebElement webElement = pageStore.get(GenericPage.class).buildElement(screen, element, "");
         ((JavascriptExecutor) pageStore.getDriver()).executeScript("arguments[0].click();", webElement);
     }
 
     @And("^user on (\\w+) screen clicks radio button or checkbox on (\\w+)")
     public void userClicksOnRadioButtonOrCheckBox(String screen, String element) throws Throwable {
-        TimeUnit.SECONDS.sleep(1);
         WebElement webElement = pageStore.get(GenericPage.class).buildElement(screen, element, "");
         webElement.click();
     }
 
     @And("^(\\w+) on (\\w+) screen refresh's the webpage$")
     public void userOnHomeScreenRefreshSTheWebpage(String user, String s) throws Throwable {
-        TimeUnit.SECONDS.sleep(2);
         pageStore.getDriver().navigate().refresh();
+    }
+
+    @And("^(\\w+) on (\\w+) screen will wait until the page loads$")
+    public void userOnHomeScreenWillWaitUntilThePageLoads(String user, String screen) throws Throwable {
+        pageStore.get(GenericPage.class).buildElement("Home", "background", "");
     }
 }

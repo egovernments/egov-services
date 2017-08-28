@@ -357,11 +357,12 @@ class Login extends Component {
    }
 
    searchGrievance = (e) => {
-     let {setRoute, setHome} = this.props;
+     /*let {setRoute, setHome} = this.props;
      if((this.state.srn).trim()) {
         setRoute("/pgr/viewGrievance/"+(this.state.srn).trim());
         setHome(true);
-     }
+     }*/
+     this.props.toggleSnackbarAndSetText(true, "Feature Coming Soon. . .");
    }
 
    validateOTP() {
@@ -489,7 +490,7 @@ class Login extends Component {
               User: user
             }).then(function(response){
               self.props.setLoadingStatus('hide');
-              
+
               self.setState({
                 open3: false,
                 signUpErrorMsg: "",
@@ -508,9 +509,11 @@ class Login extends Component {
    }
 
    openAnonymousComplaint = () => {
-     let {setRoute, setHome} = this.props;
+     /*let {setRoute, setHome} = this.props;
      setRoute('/pgr/createGrievance');
-     setHome(true);
+     setHome(true);*/
+
+     this.props.toggleSnackbarAndSetText(true, "Feature Coming Soon. . .");
    }
 
    isAllFields = () => {
@@ -732,8 +735,8 @@ class Login extends Component {
                             <i className="material-icons">mode_edit</i>
                         </IconButton>
                         <div style={{"float": "left", "cursor": "pointer"}}>
-                          <h4>{translate('pgr.lbl.register.grievance')}</h4>
-                          <p>{translate('pgr.lbl.register.grievance')}</p>
+                          <h4>{translate("pgr.lbl.apply.service")}</h4>
+                          <p>{translate('pgr.lbl.apply.servicetag')}</p>
                         </div>
                       </Col>
                       <Col xs={12} md={12} style={styles.buttonTopMargin}>
@@ -741,24 +744,24 @@ class Login extends Component {
                             <i className="material-icons">search</i>
                         </IconButton>
                         <div style={styles.floatLeft}>
-                          <h4>{translate('pgr.msg.complaintstatus.anytime')}</h4>
+                          <h4>{translate('pgr.msg.complaintstatus.application')}</h4>
                           <TextField
-                            hintText={translate('pgr.lbl.complaintnumber')}
+                            hintText={translate('pgr.lbl.applicationnumber')}
                             value={srn}
                             onChange={(e) => {handleStateChange(e, "srn")}}
                           />
                           <RaisedButton label={translate('core.lbl.search')} onClick={(e)=>{searchGrievance(e)}} secondary={true} className="searchButton"/>
                         </div>
                       </Col>
-                      <Col xs={12} md={12} style={styles.buttonTopMargin}>
-                        <IconButton  style={styles.floatingIconButton}>
-                            <i className="material-icons">phone</i>
-                        </IconButton>
-                        <div style={styles.floatLeft}>
-                          <h4>{translate('pgr.lbl.grievancecell')}</h4>
-                          <p>{translate("ui.login.call") + " " + (tenantInfo && tenantInfo.length && tenantInfo[0] ? (tenantInfo[0].helpLineNumber || "-") : "-") + " " + translate("ui.login.registerGrievance")}</p>
-                        </div>
-                      </Col>
+                      {/*<Col xs={12} md={12} style={styles.buttonTopMargin}>
+                                              <IconButton  style={styles.floatingIconButton}>
+                                                  <i className="material-icons">phone</i>
+                                              </IconButton>
+                                              <div style={styles.floatLeft}>
+                                                <h4>{translate('pgr.lbl.grievancecell')}</h4>
+                                                <p>{translate("ui.login.call") + " " + (tenantInfo && tenantInfo.length && tenantInfo[0] ? (tenantInfo[0].helpLineNumber || "-") : "-") + " " + translate("ui.login.registerGrievance")}</p>
+                                              </div>
+                                            </Col>*/}
                     </Row>
                   </Col>
               </Row>

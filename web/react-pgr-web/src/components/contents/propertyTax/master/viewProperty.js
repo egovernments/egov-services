@@ -164,6 +164,8 @@ class ViewProperty extends Component {
 				  }
 			  }
 			  
+			  console.log(res)
+			  
 			  res.properties[0].propertyDetail.floors = units;
 			  
 			  currentThis.setState({
@@ -621,7 +623,7 @@ class ViewProperty extends Component {
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.floorDetails.fields.buildingPermissionDate')}</div>
-													{item.propertyDetail.bpaDate || translate('pt.search.searchProperty.fields.na')}
+													{item.propertyDetail.bpaDate ? item.propertyDetail.bpaDate.split(' ')[0] : translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											</Row>
 										 
@@ -717,7 +719,7 @@ class ViewProperty extends Component {
 													<td>{i.occupancyCertiNumber || translate('pt.search.searchProperty.fields.na')}</td>
 													<td>{i.buildingCost || translate('pt.search.searchProperty.fields.na')}</td>
 													<td>{i.landCost || translate('pt.search.searchProperty.fields.na')}</td>
-                                                    <td>{i.isAuthorised ? 'True' : 'False'}</td>  
+                                                    <td>{i.isAuthorised ? 'Yes' : 'No'}</td>  
                                                   </tr>) 
                                                 }
                                             })}
@@ -734,43 +736,43 @@ class ViewProperty extends Component {
 										<Row>
 										  <Col xs={4} md={3} style={styles.bold}>
 											   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.currentAssessmentDate')}</div>
-												{item.propertyDetail.hasOwnProperty('assessmentDates')  ? (item.propertyDetail.assessmentDates[1] != undefined ? (item.propertyDetail.assessmentDates[1].date || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na'))  : translate('pt.search.searchProperty.fields.na')}
+												{(item.propertyDetail.hasOwnProperty('assessmentDates') && item.propertyDetail.assessmentDates !=null) ? (item.propertyDetail.assessmentDates[1] != undefined ? (item.propertyDetail.assessmentDates[1].date || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na'))  : translate('pt.search.searchProperty.fields.na')}
 										  </Col>
 										  <Col xs={4} md={3} style={styles.bold}>
 											   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.firstAssessmentDate')}</div>
-												{item.propertyDetail.hasOwnProperty('assessmentDates') ? (item.propertyDetail.assessmentDates[0] != undefined ? (item.propertyDetail.assessmentDates[0].date || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')}										  
+												{(item.propertyDetail.hasOwnProperty('assessmentDates') && item.propertyDetail.assessmentDates !=null)  ? (item.propertyDetail.assessmentDates[0] != undefined ? (item.propertyDetail.assessmentDates[0].date || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')}										  
 										  </Col>
 										  <Col xs={4} md={3} style={styles.bold}>
 											   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.revisedAssessmentDate')}</div>
-											   {item.propertyDetail.hasOwnProperty('assessmentDates') ? (item.propertyDetail.assessmentDates[2] != undefined ? (item.propertyDetail.assessmentDates[2].date || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na'))  : translate('pt.search.searchProperty.fields.na')}
+											   {(item.propertyDetail.hasOwnProperty('assessmentDates') && item.propertyDetail.assessmentDates !=null)  ? (item.propertyDetail.assessmentDates[2] != undefined ? (item.propertyDetail.assessmentDates[2].date || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na'))  : translate('pt.search.searchProperty.fields.na')}
 										  </Col>
 										  <Col xs={4} md={3} style={styles.bold}>
 											   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.lastAssessmentDate')}</div>
-											   {item.propertyDetail.hasOwnProperty('assessmentDates') ? (item.propertyDetail.assessmentDates[3] != undefined ? (item.propertyDetail.assessmentDates[3].date || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')}
+											   {(item.propertyDetail.hasOwnProperty('assessmentDates') && item.propertyDetail.assessmentDates !=null)  ? (item.propertyDetail.assessmentDates[3] != undefined ? (item.propertyDetail.assessmentDates[3].date || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')}
 										  </Col>
 										  <Col xs={4} md={3} style={styles.bold}>
 											   <div style={{fontWeight:500}}>{translate('pt.create.groups.constructionDetails.fields.certificateNumber')}</div>
-											   {item.propertyDetail.hasOwnProperty('builderDetails') ? (item.propertyDetail.builderDetails.certificateNumber || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')}
+											   {(item.propertyDetail.hasOwnProperty('builderDetails') && item.propertyDetail.builderDetails !=null) ? (item.propertyDetail.builderDetails.certificateNumber || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')}
 										  </Col>
 										  <Col xs={4} md={3} style={styles.bold}>
 											   <div style={{fontWeight:500}}>{translate('pt.create.groups.constructionDetails.fields.certificateCompletionDate')}</div>
-											   {item.propertyDetail.hasOwnProperty('builderDetails') ? (item.propertyDetail.builderDetails.certificateCompletionDate || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')}
+											   {(item.propertyDetail.hasOwnProperty('builderDetails') && item.propertyDetail.builderDetails !=null) ? (item.propertyDetail.builderDetails.certificateCompletionDate || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')}
 										  </Col>
 										  <Col xs={4} md={3} style={styles.bold}>
 											   <div style={{fontWeight:500}}>{translate('pt.create.groups.constructionDetails.fields.certificateReceivedDate')}</div>
-											   {item.propertyDetail.hasOwnProperty('builderDetails') ? (item.propertyDetail.builderDetails.certificateReceiveDate || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')}
+											   {(item.propertyDetail.hasOwnProperty('builderDetails') && item.propertyDetail.builderDetails !=null) ? (item.propertyDetail.builderDetails.certificateReceiveDate || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')}
 										  </Col>
 										  <Col xs={4} md={3} style={styles.bold}>
 											   <div style={{fontWeight:500}}>{translate('pt.create.groups.constructionDetails.fields.agencyName')}</div>
-											   {item.propertyDetail.hasOwnProperty('builderDetails') ? (item.propertyDetail.builderDetails.agencyName || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')}
+											   {(item.propertyDetail.hasOwnProperty('builderDetails') && item.propertyDetail.builderDetails !=null) ? (item.propertyDetail.builderDetails.agencyName || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')}
 										  </Col>
 										  <Col xs={4} md={3} style={styles.bold}>
 											   <div style={{fontWeight:500}}>{translate('pt.create.groups.constructionDetails.fields.licenseType')}</div>
-											   {item.propertyDetail.hasOwnProperty('builderDetails') ? (item.propertyDetail.builderDetails.licenseType || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')}
+											   {(item.propertyDetail.hasOwnProperty('builderDetails') && item.propertyDetail.builderDetails !=null) ? (item.propertyDetail.builderDetails.licenseType || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')}
 										  </Col>
 										  <Col xs={4} md={3} style={styles.bold}>
 											   <div style={{fontWeight:500}}>{translate('pt.create.groups.constructionDetails.fields.licenseNumber')}</div>
-											   {item.propertyDetail.hasOwnProperty('builderDetails') ? (item.propertyDetail.builderDetails.licenseNumber || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')}
+											   {(item.propertyDetail.hasOwnProperty('builderDetails') && item.propertyDetail.builderDetails !=null) ? (item.propertyDetail.builderDetails.licenseNumber || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')}
 										  </Col>
 										  
 										</Row> 

@@ -345,6 +345,8 @@ public class PropertyRepository {
 				ps.setDouble(32, getDouble(unit.getLandCost()));
 				ps.setDouble(33, getDouble(unit.getBuildingCost()));
 				ps.setString(34, unit.getSubUsage());
+				ps.setDouble(35, getDouble(unit.getCarpetArea()));
+				ps.setDouble(36, getDouble(unit.getExemptionArea()));
 				return ps;
 			}
 		};
@@ -381,7 +383,8 @@ public class PropertyRepository {
 				unit.getElectricMeterNo(), unit.getWaterMeterNo(), unit.getAuditDetails().getCreatedBy(),
 				unit.getAuditDetails().getLastModifiedBy(), unit.getAuditDetails().getCreatedTime(),
 				unit.getAuditDetails().getLastModifiedTime(), floorId, getLong(parent), unit.getIsAuthorised(),
-				unit.getConstructionStartDate(), unit.getLandCost(), unit.getBuildingCost(),unit.getSubUsage() };
+				unit.getConstructionStartDate(), unit.getLandCost(), unit.getBuildingCost(), unit.getSubUsage(),
+				unit.getCarpetArea(), unit.getExemptionArea() };
 
 		jdbcTemplate.update(UnitBuilder.INSERT_ROOM_QUERY, roomArgs);
 
@@ -531,7 +534,7 @@ public class PropertyRepository {
 			Integer pageSize, Integer pageNumber, String[] sort, String oldUpicNo, String mobileNumber,
 			String aadhaarNumber, String houseNoBldgApt, Integer revenueZone, Integer revenueWard, Integer locality,
 			String ownerName, Integer demandFrom, Integer demandTo, String propertyId, String applicationNo)
-					throws Exception {
+			throws Exception {
 
 		Map<String, Object> searchPropertyMap = new HashMap<>();
 		List<Object> preparedStatementValues = new ArrayList<Object>();
@@ -640,7 +643,7 @@ public class PropertyRepository {
 
 	private List<Property> getPropertyBYUpic(String upicNo, String oldUpicNo, String houseNoBldgApt, String propertyId,
 			String tenantId, Integer pageSize, Integer pageNumber, RequestInfo requestInfo, String applicationNo)
-					throws Exception {
+			throws Exception {
 
 		List<Object> preparedStatementvalues = new ArrayList<>();
 
@@ -1124,8 +1127,8 @@ public class PropertyRepository {
 				TimeStampUtil.getTimeStamp(unit.getConstCompletionDate()), unit.getManualArv(), unit.getArv(),
 				unit.getElectricMeterNo(), unit.getWaterMeterNo(), unit.getAuditDetails().getLastModifiedBy(),
 				unit.getAuditDetails().getLastModifiedTime(), unit.getParentId(), unit.getIsAuthorised(),
-				TimeStampUtil.getTimeStamp(unit.getConstructionStartDate()), unit.getLandCost(), unit.getBuildingCost(),unit.getSubUsage(),
-				unit.getId() };
+				TimeStampUtil.getTimeStamp(unit.getConstructionStartDate()), unit.getLandCost(), unit.getBuildingCost(),
+				unit.getSubUsage(), unit.getCarpetArea(), unit.getExemptionArea(), unit.getId() };
 
 		jdbcTemplate.update(unitUpdate, unitArgs);
 
@@ -1148,7 +1151,8 @@ public class PropertyRepository {
 				TimeStampUtil.getTimeStamp(unit.getConstCompletionDate()), unit.getManualArv(), unit.getArv(),
 				unit.getElectricMeterNo(), unit.getWaterMeterNo(), unit.getAuditDetails().getLastModifiedBy(),
 				unit.getAuditDetails().getLastModifiedTime(), unit.getParentId(), unit.getIsAuthorised(),
-				unit.getConstructionStartDate(), unit.getLandCost(), unit.getBuildingCost(),unit.getSubUsage(), unit.getId() };
+				unit.getConstructionStartDate(), unit.getLandCost(), unit.getBuildingCost(), unit.getSubUsage(),
+				unit.getCarpetArea(), unit.getExemptionArea(), unit.getId() };
 
 		jdbcTemplate.update(roomUpdate, roomArgs);
 

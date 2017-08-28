@@ -44,6 +44,7 @@ import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
 
+import org.egov.asset.repository.rowmapper.CurrentValueRowMapper;
 import org.egov.asset.service.AssetDepreciator;
 import org.egov.asset.service.AssetDepreciatorImpl;
 import org.egov.tracer.config.TracerConfiguration;
@@ -70,7 +71,6 @@ public class EgovAssetApplication {
         TimeZone.setDefault(TimeZone.getTimeZone(timeZone));
     }
 
-
     public static void main(final String[] args) {
         SpringApplication.run(EgovAssetApplication.class, args);
     }
@@ -84,20 +84,26 @@ public class EgovAssetApplication {
         return objectMapper;
     }
 
-	@Bean
-	public MappingJackson2HttpMessageConverter jacksonConverter() {
-		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-		mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
-		//mapper.setDateFormat(new SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH));
-		mapper.setTimeZone(TimeZone.getTimeZone(timeZone));
-		converter.setObjectMapper(mapper);
-		return converter;
-	}
-	
-	public AssetDepreciator getAssetDepreciator(){
-		return new AssetDepreciatorImpl();
-	}
-	
+    @Bean
+    public MappingJackson2HttpMessageConverter jacksonConverter() {
+        final MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+        final ObjectMapper mapper = new ObjectMapper();
+        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+        // mapper.setDateFormat(new SimpleDateFormat(DATE_FORMAT,
+        // Locale.ENGLISH));
+        mapper.setTimeZone(TimeZone.getTimeZone(timeZone));
+        converter.setObjectMapper(mapper);
+        return converter;
+    }
+
+    public AssetDepreciator getAssetDepreciator() {
+        return new AssetDepreciatorImpl();
+    }
+    
+    @Bean
+    public CurrentValueRowMapper getCurrentValueRowMapper() {
+        return new CurrentValueRowMapper();
+    }
+
 }

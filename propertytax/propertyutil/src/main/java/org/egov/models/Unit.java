@@ -138,6 +138,12 @@ public class Unit {
 
     @JsonProperty("buildingCost")
     private Double buildingCost = null;
+    
+    @JsonProperty("carpetArea")
+    private Double carpetArea = null;
+    
+    @JsonProperty("exemptionArea")
+    private Double exemptionArea = null;
 
     @JsonProperty("auditDetails")
     private AuditDetails auditDetails = null;

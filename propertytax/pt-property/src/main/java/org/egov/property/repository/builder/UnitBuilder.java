@@ -7,7 +7,8 @@ public class UnitBuilder {
 			+ "bpaBuiltupArea,bpaNo,bpaDate,usage,occupancytype,occupierName,firmName,rentCollected, structure, age,"
 			+ "exemptionReason, isStructured, occupancyDate, constCompletionDate, manualArv, arv,"
 			+ "electricMeterNo, waterMeterNo, createdBy, lastModifiedBy, createdTime, lastModifiedTime,"
-			+ "floor,isAuthorised,constructionStartDate,landCost,buildingCost,subusage) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			+ "floor,isAuthorised,constructionStartDate,landCost,buildingCost,subusage,carpetArea,exemptionArea)"
+			+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 	public static String updateUnitQuery() {
 
@@ -20,7 +21,8 @@ public class UnitBuilder {
 				.append(" exemptionReason = ?, isStructured = ?, occupancyDate = ?,")
 				.append(" constCompletionDate = ?, manualArv = ?, arv = ?,")
 				.append(" electricMeterNo = ?, waterMeterNo = ?, lastModifiedBy = ?, lastModifiedTime = ?,")
-				.append(" parentid = ?,isAuthorised = ?, constructionStartDate =  ?,landCost = ?,buildingCost = ?, subusage = ? WHERE id = ?");
+				.append(" parentid = ?,isAuthorised = ?, constructionStartDate =  ?,landCost = ?,buildingCost = ?, subusage = ?,"
+						+ "carpetArea = ?,exemptionArea=? WHERE id = ?");
 
 		return unitSql.toString();
 	}
@@ -32,7 +34,8 @@ public class UnitBuilder {
 			+ "bpaBuiltupArea,bpaNo,bpaDate,usage,occupancytype,occupierName,firmName,rentCollected, structure, age,"
 			+ "exemptionReason, isStructured, occupancyDate, constCompletionDate, manualArv, arv,"
 			+ "electricMeterNo, waterMeterNo, createdBy, lastModifiedBy, createdTime, lastModifiedTime,"
-			+ "floor,parentid,isAuthorised, constructionStartDate,landCost,buildingCost,subusage) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			+ "floor,parentid,isAuthorised, constructionStartDate,landCost,buildingCost,subusage,carpetArea,exemptionArea)"
+			+ " VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 	public static String updateRoomQuery() {
 
@@ -45,7 +48,8 @@ public class UnitBuilder {
 				.append(" exemptionReason = ?, isStructured = ?, occupancyDate = ?,")
 				.append(" constCompletionDate = ?, manualArv = ?, arv = ?,")
 				.append(" electricMeterNo = ?, waterMeterNo = ?, lastModifiedBy = ?, lastModifiedTime = ?,")
-				.append("  parentid = ?, isAuthorised = ?, constructionStartDate =  ?,landCost = ?,buildingCost = ?, subusage = ? WHERE id = ?");
+				.append("  parentid = ?, isAuthorised = ?, constructionStartDate =  ?,landCost = ?,buildingCost = ?, subusage = ?,"
+						+ "carpetArea = ?,exemptionArea = ? WHERE id = ?");
 
 		return unitSql.toString();
 	}

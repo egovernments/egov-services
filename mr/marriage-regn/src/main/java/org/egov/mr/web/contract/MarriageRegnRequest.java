@@ -2,6 +2,7 @@ package org.egov.mr.web.contract;
 
 import javax.validation.Valid;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.mr.model.MarriageRegn;
 import org.springframework.stereotype.Component;
 

@@ -3,6 +3,7 @@ package org.egov.mr.web.contract;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.mr.model.RegistrationUnit;
 import org.springframework.stereotype.Component;
 

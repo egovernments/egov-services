@@ -40,7 +40,9 @@
 
 package org.egov.mr.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
@@ -58,6 +60,8 @@ import lombok.Setter;
 @Setter
 @Getter
 public class PropertiesManager {
+	@Autowired
+	Environment environment;
 
 	@Value("${kafka.topics.update.fee}")
 	private String updateFeeTopicName;
@@ -115,4 +119,13 @@ public class PropertiesManager {
 	
 	@Value("${kafka.topics.update.marriagedocumenttype}")
 	private String updateMarriageDocumentTypeTopicName;
+	
+	public String getCreateMarriageFeeGenerated() {
+		
+		return environment.getProperty("egov.marriageregn.property.fee.generated");
+	}
+	
+	
+	
+	
 }

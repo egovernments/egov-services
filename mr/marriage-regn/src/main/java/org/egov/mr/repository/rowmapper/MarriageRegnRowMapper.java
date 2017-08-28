@@ -1,5 +1,6 @@
 package org.egov.mr.repository.rowmapper;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.Map;
 
 import org.egov.mr.model.ApprovalDetails;
 import org.egov.mr.model.AuditDetails;
+import org.egov.mr.model.Fee;
 import org.egov.mr.model.Location;
 import org.egov.mr.model.MarriageCertificate;
 import org.egov.mr.model.MarriageDocument;
@@ -54,6 +56,7 @@ public class MarriageRegnRowMapper implements ResultSetExtractor<List<MarriageRe
 			PriestInfo priest = new PriestInfo();
 			ApprovalDetails approvalDetails = new ApprovalDetails();
 			AuditDetails auditDetails = new AuditDetails();
+			Fee fee=new Fee();
 
 			// populate empInfo fields from result set
 			if (marriageRegnInfo == null) {
@@ -65,8 +68,7 @@ public class MarriageRegnRowMapper implements ResultSetExtractor<List<MarriageRe
 				marriageRegnInfo.setPlaceOfMarriage(rs.getString("mr_placeofmarriage"));
 				marriageRegnInfo.setCity(rs.getString("mr_city"));
 				marriageRegnInfo.setMarriagePhoto(rs.getString("mr_marriagePhoto"));
-				marriageRegnInfo.setFee(rs.getDouble("mr_fee"));
-				marriageRegnInfo.setSerialNo(rs.getString("mr_serialNo"));
+			    marriageRegnInfo.setSerialNo(rs.getString("mr_serialNo"));
 				marriageRegnInfo.setVolumeNo(rs.getString("mr_volumeNo"));
 				marriageRegnInfo.setApplicationNumber(rs.getString("mr_applicationNumber"));
 				marriageRegnInfo.setStatus(ApplicationStatus.fromValue(rs.getString("mr_status")));
@@ -80,6 +82,15 @@ public class MarriageRegnRowMapper implements ResultSetExtractor<List<MarriageRe
 				auditDetails.setLastModifiedBy(rs.getString("mr_lastmodifiedby"));
 				auditDetails.setLastModifiedTime(rs.getLong("mr_lastmodifiedtime"));
 				marriageRegnInfo.setAuditDetails(auditDetails);
+				
+				// fee
+				fee.setId(rs.getString("f_id"));
+				fee.setTenantId(rs.getString("f_tenantId"));
+				fee.setFee(rs.getBigDecimal("f_fee"));
+				fee.setFeeCriteria(rs.getString("f_feeCriteria"));
+				fee.setFromDate(rs.getLong("f_fromDate"));
+				fee.setToDate(rs.getLong("f_toDate"));
+				marriageRegnInfo.setFee(fee);
 				
 				location.setBlock(rs.getLong("ru_block"));
 				location.setDoorNo(rs.getString("ru_doorno"));
@@ -214,6 +225,7 @@ public class MarriageRegnRowMapper implements ResultSetExtractor<List<MarriageRe
 					certificateMap.put(certificateNo, marriageCertificate);
 				}
 			}
+			
 		}
 		return marriageRegnInfoMap;
 	}
@@ -227,7 +239,7 @@ public class MarriageRegnRowMapper implements ResultSetExtractor<List<MarriageRe
 			MarriageRegn marriageRegn = MarriageRegn.builder().regnUnit(marriageRegnInfo.regnUnit)
 					.marriageDate(marriageRegnInfo.marriageDate).street(marriageRegnInfo.street)
 					.placeOfMarriage(marriageRegnInfo.placeOfMarriage).locality(marriageRegnInfo.locality)
-					.city(marriageRegnInfo.city).marriagePhoto(marriageRegnInfo.marriagePhoto).fee(marriageRegnInfo.fee)
+					.city(marriageRegnInfo.city).marriagePhoto(marriageRegnInfo.marriagePhoto).fee(Fee.builder().fee(new BigDecimal(50)).build())
 					.bridegroom(marriageRegnInfo.bridegroom).bride(marriageRegnInfo.bride)
 					.priest(marriageRegnInfo.priest).serialNo(marriageRegnInfo.serialNo)
 					.volumeNo(marriageRegnInfo.volumeNo).applicationNumber(marriageRegnInfo.applicationNumber)
@@ -274,7 +286,7 @@ public class MarriageRegnRowMapper implements ResultSetExtractor<List<MarriageRe
 
 		private String marriagePhoto;
 
-		private Double fee;
+		private Fee fee;
 
 		private MarryingPerson bridegroom;
 

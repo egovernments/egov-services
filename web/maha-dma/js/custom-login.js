@@ -101,14 +101,17 @@ $(document).ready(function(){
 
           var ulb = ulbsList.find((ulb)=>ulb.tenantId === $('#ulb-dropdown').val());
 
-          if(service){
-            if(!service.slaTable){
-              var uniqueKeys = service.slaTable.columns.reduce(function (acc, obj) {
-                  return acc.concat(acc.indexOf(obj.key) === -1? obj.key : undefined);
-              }, []);
-              service['uniqueKeys'] = uniqueKeys;
-            }
+          if(service && service.redirectUrl){
+            // if(!service.slaTable){
+            //   var uniqueKeys = service.slaTable.columns.reduce(function (acc, obj) {
+            //       return acc.concat(acc.indexOf(obj.key) === -1? obj.key : undefined);
+            //   }, []);
+            //   service['uniqueKeys'] = uniqueKeys;
+            // }
 
+            console.log('service', service);
+
+            console.log('docs response', documentsTempalte(service));
 
             //documentsTempalte
             $('#apply-btn').attr('data-url', service.redirectUrl);
@@ -117,7 +120,7 @@ $(document).ready(function(){
           }
           else{
             //else TODO
-            alert('This service is not available for ' + ulb.ulbName);
+            alert('This service is not available');
           }
       });
 
@@ -178,8 +181,10 @@ $(document).ready(function(){
                 }
 
               },
-              error: function() {
-
+              error: function(response) {
+                waitingDialog.hide();
+                //console.log('response', response.responseJSON.error_description);
+                alert(response.responseJSON.error_description);
               }
             });
           }

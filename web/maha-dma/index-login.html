@@ -28,24 +28,24 @@
       <div class="service-details">
 
       {{#each .}}
-          <div class="col-md-12">
-            <h4>{{@key}}</h4>
+          <div class="col-md-12 toggle-header unselectable" data-target="#content{{@index}}">
+            <h4>{{@key}} <i class="material-icons toggle-icon">keyboard_arrow_down</i></h4>
           </div>
-          <ul>
+          <ul id="content{{@index}}" class="collapse">
             {{#each this}}
-            <li class="news-item">
-              <div class="col-md-6">
-                <a class="action-item" data-service-name="{{serviceName}}" data-module-name="{{moduleName}}" href="javascript:void(0);">{{serviceName}}</a>
-              </div>
-            </li>
+              <li class="news-item">
+                <div class="col-md-6">
+                  <a class="action-item" data-service-name="{{serviceName}}" data-module-name="{{moduleName}}" href="javascript:void(0);">{{serviceName}}</a>
+                </div>
+              </li>
             {{/each}}
           </ul>
       {{/each}}
 
-      <div class="col-md-12">
-        <h4>Trade License</h4>
+      <div class="col-md-12 toggle-header unselectable" data-target="#content-tl">
+        <h4>Trade License Related Services <i class="material-icons toggle-icon">keyboard_arrow_down</i></h4>
       </div>
-      <ul>
+      <ul class="collapse" id="content-tl">
         <li class="news-item">
           <div class="col-md-6">
             <a href="" data-toggle="modal" data-target="#license-issue">Issuance Of License</a>
@@ -88,11 +88,10 @@
         </li>
       </ul>
 
-     <div class="col-md-12">
-        <h4>Fire</h4>
+      <div class="col-md-12 toggle-header unselectable" data-target="#content-fire">
+        <h4>Fire<i class="material-icons toggle-icon">keyboard_arrow_down</i></h4>
       </div>
-
-     <ul>
+      <ul id="content-fire"  class="collapse">
        <li class="news-item">
          <div class="col-md-6">
            <a href="" data-toggle="modal" data-target="#provision-fire">Provisional Fire NOC</a>
@@ -116,11 +115,11 @@
        </li>
      </ul>
 
-      <div class="col-md-12">
-            <h4>Marriage  Registration</h4>
-          </div>
-          <ul>
-            <li class="news-item">
+     <div class="col-md-12 toggle-header unselectable" data-target="#content-marriage">
+       <h4>Marriage  Registration<i class="material-icons toggle-icon">keyboard_arrow_down</i></h4>
+     </div>
+     <ul id="content-marriage"  class="collapse">
+          <li class="news-item">
               <div class="col-md-6">
                 <a href="" data-toggle="modal" data-target="#marriage-reg">Marriage Registration And Certificate</a>
               </div>
@@ -139,11 +138,11 @@
             </li>
           </ul>
 
-          <div class="col-md-12">
-            <h4>Web Portal</h4>
-          </div>
 
-          <ul>
+          <div class="col-md-12 toggle-header unselectable" data-target="#content-portal">
+            <h4>Web Portal Related Services<i class="material-icons toggle-icon">keyboard_arrow_down</i></h4>
+          </div>
+          <ul id="content-portal" class="collapse">
             <li class="news-item">
               <div class="col-md-6">
                 <a href="" data-toggle="modal" data-target="#prop-num">Know Your Property No.</a>
@@ -183,10 +182,11 @@
             </li>
           </ul>
 
-          <div class="col-md-12">
-            <h4>NOC</h4>
+
+          <div class="col-md-12 toggle-header unselectable" data-target="#content-noc">
+            <h4>NOC Related Services<i class="material-icons toggle-icon">keyboard_arrow_down</i></h4>
           </div>
-          <ul>
+          <ul id="content-noc" class="collapse">
             <li class="news-item">
               <div class="col-md-6">
                 <a href="" data-toggle="modal" data-target="#noc-hording">NOC For Horading/Banner</a>
@@ -229,10 +229,10 @@
             </li>
           </ul>
 
-          <div class="col-md-12">
-            <h4>Tree Census</h4>
+          <div class="col-md-12 toggle-header unselectable" data-target="#content-tree">
+            <h4>Tree Census Related Services<i class="material-icons toggle-icon">keyboard_arrow_down</i></h4>
           </div>
-          <ul>
+          <ul id="content-tree" class="collapse">
             <li class="news-item">
               <div class="col-md-6">
                 <a href="" data-toggle="modal" data-target="#application-services">Application For Service Request</a>
@@ -240,10 +240,10 @@
             </li>
           </ul>
 
-          <div class="col-md-12">
-            <h4>Social Welfare</h4>
+          <div class="col-md-12 toggle-header unselectable" data-target="#content-social">
+            <h4>Social Welfare Related Services<i class="material-icons toggle-icon">keyboard_arrow_down</i></h4>
           </div>
-          <ul>
+          <ul id="content-social" class="collapse">
             <li class="news-item">
               <div class="col-md-6">
                 <a href="" data-toggle="modal" data-target="#app-for-scheme">Application For Scheme</a>
@@ -251,11 +251,10 @@
             </li>
           </ul>
 
-          <div class="col-md-12">
-            <h4>Land And Estate</h4>
+          <div class="col-md-12 toggle-header unselectable" data-target="#content-land">
+            <h4>Land And Estate Related Services<i class="material-icons toggle-icon">keyboard_arrow_down</i></h4>
           </div>
-
-          <ul>
+          <ul id="content-land" class="collapse">
             <li class="news-item">
               <div class="col-md-6">
                 <a href="" data-toggle="modal" data-target="#adv-agree">Advertising/Hoarding Agreement</a>
@@ -274,7 +273,6 @@
             </li>
           </ul>
 
-
         </div>
 
 
@@ -287,7 +285,6 @@
       <div class="alert alert-danger" role="alert">
          {{#if requiredDocuments}} Required Documents {{else}}  Documents are not required from citizen to avail this service {{/if}}
       </div>
-
       {{#each requiredDocuments}}
         <div class="panel panel-default">
           <div class="panel-heading">{{requiredDocumentName}}</div>
@@ -303,7 +300,6 @@
             </div>
           </div>
         </div>
-        <br/>
       <!-- SLA Table -->
       {{/each}}
 		</script>

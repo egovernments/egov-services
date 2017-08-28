@@ -1,42 +1,12 @@
 [
   {
     "serviceName":"No Due Certificate",
-    "moduleName":"Water Department",
+    "moduleName":"Water Department Related Services",
     "icon":"card_membership",
     "redirectUrl":"?link=waternodue",
     "url":"non-framework/citizenServices/no-dues/search/wc",
     "language_key":"",
-    "requiredDocuments":[
-      {
-        "requiredDocumentName":"ID Proof (Any one)",
-        "documents":[
-          {
-            "name":"Aadhaar Card"
-          },
-          {
-            "name":"Voter ID Card"
-          },
-          {
-            "name":"Passport"
-          }
-        ]
-      },
-
-      {
-        "requiredDocumentName":"ID Proof (Any one)",
-        "documents":[
-          {
-            "name":"Aadhaar Card"
-          },
-          {
-            "name":"Voter ID Card"
-          },
-          {
-            "name":"Passport"
-          }
-        ]
-      }
-    ],
+    "requiredDocuments":[],
     "slaTable":{
         "columns":[
           {
@@ -69,7 +39,7 @@
         {
           "sno":1,
           "lang_sno":"",
-          "sName":"No Due Certificate - Water Department",
+          "sName":"No Due Certificate - Water Department Related Services",
           "lang_sName":"",
           "time":"3",
           "officer1":"Sub-Divisional Officer",
@@ -83,18 +53,47 @@
 
   {
     "serviceName":"New Water Connection",
-    "moduleName":"Water Department",
+    "moduleName":"Water Department Related Services",
     "icon":"card_membership",
     "redirectUrl":"",
-    "url":"non-framework/citizenServices/no-dues/search/wc",
+    "url":"",
     "language_key":"",
-    "requiredDocuments":[],
+    "requiredDocuments":[
+      {
+        "requiredDocumentName":"ID Proof (Any one)",
+        "documents":[
+          {
+            "name":"Aadhaar Card"
+          },
+          {
+            "name":"Voter ID Card"
+          },
+          {
+            "name":"Passport"
+          }
+        ]
+      },
+      {
+        "requiredDocumentName":"Address Proof (Any one)",
+        "documents":[
+          {
+            "name":"Aadhaar Card"
+          },
+          {
+            "name":"Voter ID Card"
+          },
+          {
+            "name":"Passport"
+          }
+        ]
+      }
+    ],
     "slaTable":{}
   },
 
   {
     "serviceName":"Change Of Ownership",
-    "moduleName":"Water Department",
+    "moduleName":"Water Department Related Services",
     "icon":"card_membership",
     "redirectUrl":"",
     "url":"non-framework/citizenServices/no-dues/search/wc",
@@ -105,7 +104,7 @@
 
   {
     "serviceName":"Change Of Connection Size",
-    "moduleName":"Water Department",
+    "moduleName":"Water Department Related Services",
     "icon":"card_membership",
     "redirectUrl":"",
     "url":"",
@@ -116,7 +115,7 @@
 
   {
     "serviceName":"Temporary/Permanent Disconnection",
-    "moduleName":"Water Department",
+    "moduleName":"Water Department Related Services",
     "icon":"card_membership",
     "redirectUrl":"",
     "url":"",
@@ -127,7 +126,7 @@
 
   {
     "serviceName":"Reconnection",
-    "moduleName":"Water Department",
+    "moduleName":"Water Department Related Services",
     "icon":"card_membership",
     "redirectUrl":"",
     "url":"",
@@ -138,7 +137,7 @@
 
   {
     "serviceName":"Change Of Usage",
-    "moduleName":"Water Department",
+    "moduleName":"Water Department Related Services",
     "icon":"card_membership",
     "redirectUrl":"",
     "url":"",
@@ -149,7 +148,7 @@
 
   {
     "serviceName":"Plumber License",
-    "moduleName":"Water Department",
+    "moduleName":"Water Department Related Services",
     "icon":"card_membership",
     "redirectUrl":"",
     "url":"",
@@ -160,7 +159,7 @@
 
   {
     "serviceName":"Renewal Of Plumber License",
-    "moduleName":"Water Department",
+    "moduleName":"Water Department Related Services",
     "icon":"card_membership",
     "redirectUrl":"",
     "url":"",
@@ -172,7 +171,7 @@
   {
     "serviceName":"No Due Certificate",
     "icon":"card_membership",
-    "moduleName":"Property Tax",
+    "moduleName":"Property Tax Related Services",
     "redirectUrl":"?link=propertytaxdue",
     "url":"non-framework/citizenServices/no-dues/search/pt",
     "language_key":"",
@@ -209,7 +208,7 @@
         {
           "sno":1,
           "lang_sno":"",
-          "sName":"No Due Certificate - Property Tax",
+          "sName":"No Due Certificate - Property Tax Related Services",
           "lang_sName":"",
           "time":"4",
           "officer1":"Sub-Divisional Officer",
@@ -224,7 +223,7 @@
   {
     "serviceName":"Extract Of Property",
     "icon":"card_membership",
-    "moduleName":"Property Tax",
+    "moduleName":"Property Tax Related Services",
     "redirectUrl":"?link=propertytaxextract",
     "url":"non-framework/citizenServices/no-dues/extract/pt",
     "language_key":"",
@@ -275,7 +274,7 @@
 
   {
       "serviceName":"New Assessment",
-      "moduleName":"Property Tax",
+      "moduleName":"Property Tax Related Services",
       "icon":"card_membership",
       "redirectUrl":"",
       "url":"",
@@ -286,7 +285,7 @@
 
   {
       "serviceName":"ReAssessment",
-      "moduleName":"Property Tax",
+      "moduleName":"Property Tax Related Services",
       "icon":"card_membership",
       "redirectUrl":"",
       "url":"",
@@ -297,7 +296,7 @@
 
   {
       "serviceName":"Exemption For Vacancy Of Property",
-      "moduleName":"Property Tax",
+      "moduleName":"Property Tax Related Services",
       "icon":"card_membership",
       "redirectUrl":"",
       "url":"",
@@ -308,7 +307,7 @@
 
   {
       "serviceName":"Self Assessment",
-      "moduleName":"Property Tax",
+      "moduleName":"Property Tax Related Services",
       "icon":"card_membership",
       "redirectUrl":"",
       "url":"",
@@ -319,7 +318,7 @@
 
   {
       "serviceName":"Objection Registration",
-      "moduleName":"Property Tax",
+      "moduleName":"Property Tax Related Services",
       "icon":"card_membership",
       "redirectUrl":"",
       "url":"",
@@ -330,7 +329,7 @@
 
   {
       "serviceName":"Property Transfer by heredity/Other Modes",
-      "moduleName":"Property Tax",
+      "moduleName":"Property Tax Related Services",
       "icon":"card_membership",
       "redirectUrl":"",
       "url":"",
@@ -341,7 +340,7 @@
 
   {
       "serviceName":"Subdivision/Bifurcation Of Properties",
-      "moduleName":"Property Tax",
+      "moduleName":"Property Tax Related Services",
       "icon":"card_membership",
       "redirectUrl":"",
       "url":"",

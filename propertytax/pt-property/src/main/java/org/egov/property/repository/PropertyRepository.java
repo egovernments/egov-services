@@ -344,6 +344,7 @@ public class PropertyRepository {
 				ps.setTimestamp(31, TimeStampUtil.getTimeStamp(unit.getConstructionStartDate()));
 				ps.setDouble(32, getDouble(unit.getLandCost()));
 				ps.setDouble(33, getDouble(unit.getBuildingCost()));
+				ps.setString(34, unit.getSubUsage());
 				return ps;
 			}
 		};
@@ -380,7 +381,7 @@ public class PropertyRepository {
 				unit.getElectricMeterNo(), unit.getWaterMeterNo(), unit.getAuditDetails().getCreatedBy(),
 				unit.getAuditDetails().getLastModifiedBy(), unit.getAuditDetails().getCreatedTime(),
 				unit.getAuditDetails().getLastModifiedTime(), floorId, getLong(parent), unit.getIsAuthorised(),
-				unit.getConstructionStartDate(), unit.getLandCost(), unit.getBuildingCost() };
+				unit.getConstructionStartDate(), unit.getLandCost(), unit.getBuildingCost(),unit.getSubUsage() };
 
 		jdbcTemplate.update(UnitBuilder.INSERT_ROOM_QUERY, roomArgs);
 
@@ -1123,7 +1124,7 @@ public class PropertyRepository {
 				TimeStampUtil.getTimeStamp(unit.getConstCompletionDate()), unit.getManualArv(), unit.getArv(),
 				unit.getElectricMeterNo(), unit.getWaterMeterNo(), unit.getAuditDetails().getLastModifiedBy(),
 				unit.getAuditDetails().getLastModifiedTime(), unit.getParentId(), unit.getIsAuthorised(),
-				TimeStampUtil.getTimeStamp(unit.getConstructionStartDate()), unit.getLandCost(), unit.getBuildingCost(),
+				TimeStampUtil.getTimeStamp(unit.getConstructionStartDate()), unit.getLandCost(), unit.getBuildingCost(),unit.getSubUsage(),
 				unit.getId() };
 
 		jdbcTemplate.update(unitUpdate, unitArgs);
@@ -1147,7 +1148,7 @@ public class PropertyRepository {
 				TimeStampUtil.getTimeStamp(unit.getConstCompletionDate()), unit.getManualArv(), unit.getArv(),
 				unit.getElectricMeterNo(), unit.getWaterMeterNo(), unit.getAuditDetails().getLastModifiedBy(),
 				unit.getAuditDetails().getLastModifiedTime(), unit.getParentId(), unit.getIsAuthorised(),
-				unit.getConstructionStartDate(), unit.getLandCost(), unit.getBuildingCost(), unit.getId() };
+				unit.getConstructionStartDate(), unit.getLandCost(), unit.getBuildingCost(),unit.getSubUsage(), unit.getId() };
 
 		jdbcTemplate.update(roomUpdate, roomArgs);
 

@@ -75,16 +75,22 @@ public class CitizenPersistService {
 	private ServiceReqRepository serviceReqRepository;
 	 
 	
-	public Map<String, Object> serach(ServiceRequestSearchCriteria serviceRequestSearchCriteria, RequestInfo requestInfo){
+	public Map<String, Object> search(ServiceRequestSearchCriteria serviceRequestSearchCriteria, RequestInfo requestInfo){
 		List<Map<String, Object>> maps = serviceReqRepository.search(serviceRequestSearchCriteria);
-		
+		LOGGER.info("Result receieved from db is: "+maps);
 		List<Object> response = new ArrayList<>();
+		Map<String, Object> responeMap = new HashMap<>();
+
 		//Map<String, Object> 
 		
 		for(Map<String, Object> map : maps){
 
-			System.out.println("map.get()"+map.get("serviceReq"));
+			LOGGER.info("Map: "+map);
+		
 			String s = (String)map.get("serviceReq");
+			if(s == null){
+				s = (String)map.get("comment");
+			}
 			ObjectMapper objectMapper = new ObjectMapper();
 			try {
 				Map<String, Object> m= objectMapper.readValue(s, Map.class);
@@ -98,54 +104,68 @@ public class CitizenPersistService {
 				
 				System.out.println("m:"+m);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				LOGGER.info("Exception: ",e);
+
+				
+				List<Object> comments = new ArrayList<>();
+				List<Object> documents = new ArrayList<>();
+
+				comments.add("comment: "+map.get("comment"));
+				comments.add("commentfrom: "+map.get("commentfrom"));
+				comments.add("commentaddressedto: "+map.get("commentaddressedto"));
+				comments.add("commentdate: "+map.get("commentdate"));
+
+				documents.add("fileStoreId: "+map.get("fileStoreId"));
+				
+				responeMap.put("comments", comments);
+				responeMap.put("documents", documents);
 			}
 
 		}
 		System.out.println("response:"+response);
 		
-		Map<String, Object> map = new HashMap<>();
-		map.put("serviceReq", response);
-		map.put("ResponseInfo", responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true));
-		return map;
+		responeMap.put("serviceReq", response);
+		responeMap.put("ResponseInfo", responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true));
+		return responeMap;
 	}
 	
 	public ServiceReqResponse create(String serviceReqJson) {
-		
+
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 		ServiceReqRequest serviceReqRequest = null;
 		try {
-			serviceReqRequest = objectMapper.readValue(serviceReqJson, ServiceReqRequest.class);
+		serviceReqRequest = objectMapper.readValue(serviceReqJson, ServiceReqRequest.class);
+		LOGGER.info("parsed value: "+serviceReqRequest);
 		} catch (JsonParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		// TODO Auto-generated catch block
+		e.printStackTrace();
 		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		// TODO Auto-generated catch block
+		e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		// TODO Auto-generated catch block
+		e.printStackTrace();
 		}
 		String id = getServiceReqId();
+
 		serviceReqRequest.getServiceReq().setServiceRequestId(id);
 		serviceReqRequest.getServiceReq().setAuditDetails(getAuditDetaisl(serviceReqRequest.getRequestInfo(), true));
-		log.info("serviceReqRequest:"+serviceReqRequest);
+		LOGGER.info("serviceReqRequest:"+serviceReqRequest);
 		ObjectMapper mapper = new ObjectMapper();
 		try{
-			//String request = mapper.writeValueAsString(serviceReqRequest);
-			//kafkaTemplate.send(createServiceTopic, serviceReqRequest);
-			serviceReqRepository.persistServiceReq(serviceReqRequest);
+		//String request = mapper.writeValueAsString(serviceReqRequest);
+		//kafkaTemplate.send(createServiceTopic, serviceReqRequest);
+		serviceReqRepository.persistServiceReq(serviceReqRequest);
 		} catch (Exception ex){
-			log.error("failed to send kafka"+ex);
-			ex.printStackTrace();
+			LOGGER.error("failed to send kafka"+ex);
+		ex.printStackTrace();
 		}
 		return getResponse(serviceReqRequest);
-	}
+		}
 
 	public String getServiceReqId() {
-		String req = "{\"RequestInfo\":{\"apiId\":\"org.egov.ptis\",\"ver\":\"1.0\",\"ts\":\"20934234234234\",\"action\":\"asd\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\":\"f18a09ec-77e7-4a1d-9934-0201a3dd979d\"},\"idRequests\":[{\"idName\":\"CS.ServiceRequest\",\"tenantId\":\"default\",\"format\":\"SRN-[cy:MM]/[fy:yyyy-yy]-[d{4}]\"}]}";
+		String req = "{\"RequestInfo\":{\"apiId\":\"org.egov.ptis\",\"ver\":\"1.0\",\"ts\":\"20934234234234\",\"action\":\"asd\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\":\"0b2ebb0d-cb60-4710-9e80-96a926e2a011\"},\"idRequests\":[{\"idName\":\"CS.ServiceRequest\",\"tenantId\":\"default\",\"format\":\"SRN-[cy:MM]/[fy:yyyy-yy]-[d{4}]\"}]}";
 		String url = idGenHost+idGenGetIdUrl;
 		log.info("url:"+url);
 		log.info("req: "+req);

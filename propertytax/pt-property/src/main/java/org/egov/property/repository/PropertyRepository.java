@@ -818,7 +818,7 @@ public class PropertyRepository {
 
 				propertyDetail.setTaxCalculations(getString(row.get("taxcalculations")));
 
-				if (row.get("assessmentdates") != null) {
+				if (row.get("assessmentdates") !=null) {
 					List<AssessmentDate> assessmentDates = new ArrayList<>();
 					TypeReference<List<AssessmentDate>> typeReference = new TypeReference<List<AssessmentDate>>() {
 					};
@@ -846,6 +846,7 @@ public class PropertyRepository {
 				if (row.get("builderdetails") != null) {
 					BuilderDetail builderDetail = new ObjectMapper().readValue(row.get("builderdetails").toString(),
 							BuilderDetail.class);
+					if(builderDetail!=null){
 					if (builderDetail.getCertificateCompletionDate() != null) {
 						builderDetail
 								.setCertificateCompletionDate(getString(builderDetail.getCertificateCompletionDate()));
@@ -854,6 +855,7 @@ public class PropertyRepository {
 						builderDetail.setCertificateReceiveDate(getString(builderDetail.getCertificateReceiveDate()));
 					}
 					propertyDetail.setBuilderDetails(builderDetail);
+					}
 
 				} else {
 					BuilderDetail builderDetail = new BuilderDetail();

@@ -1,0 +1,1 @@
+update eg_action set enabled=true where url in ('/property/report/demandBalanceCollectionReport/_get', '/property/report/outstandingRegister/_get', '/property/report/assessmentRegister/_get', '/property/report/collectionRegister/_get', '/property/report/demandRegister/_get');

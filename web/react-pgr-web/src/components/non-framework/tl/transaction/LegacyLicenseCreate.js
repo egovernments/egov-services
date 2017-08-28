@@ -649,27 +649,23 @@ this.setState({openLicense: false});
 
 
 
-//Start Point of API Call to Populate Validity Year and UOMID
-populateValidtyYear = (categoryId) => {
-  let self = this;
+  //Start Point of API Call to Populate Validity Year and UOMID
+  populateValidtyYear = (categoryId) => {
+    let self = this;
 
-Api.commonApiPost("/tl-masters/category/v1/_search",{"ids":categoryId, "type":"subcategory"}).then(function(response)
-{
-  // handleChange (e, "" )
-  console.log(response);
-  //console.log(response.categories[0].validityYears);
-  self.handleChange({target:{value:null}}, "licenses[0].validityYears");
+  Api.commonApiPost("/tl-masters/category/v1/_search",{"ids":categoryId, "type":"subcategory"}).then(function(response)
+  {
 
+    self.handleChange({target:{value:null}}, "licenses[0].validityYears");
+    self.handleChange({target:{value:null}}, "licenses[0].uomName");
+    self.handleChange({target:{value:null}}, "licenses[0].uomId", true);
 
-  self.handleChange({target:{value:null}}, "licenses[0].uomName");
-  self.handleChange({target:{value:null}}, "licenses[0].uomId", true);
+  },function(err) {
+      console.log(err);
 
-},function(err) {
-    console.log(err);
-
-});
-}
-//End Point of API Call to Populate Validity Year and UOMID
+  });
+  }
+  //End Point of API Call to Populate Validity Year and UOMID
 
 //***Start Fee Details Calculations***
 calculateFeeDetails = (licenseValidFromDate, validityYear) => {
@@ -726,9 +722,12 @@ calculateFeeDetails = (licenseValidFromDate, validityYear) => {
 
   yesCatChange = () => {
     let self = this;
+
+
     this.setState({open: false});
     flag = 1;
     tradeCatVal = this.props.formData.licenses[0].categoryId;
+
   }
 
     noSubChange = () => {
@@ -819,8 +818,10 @@ handlePopUpLicense = (type , jsonPath, value) => {
 
       console.log(e)
 
-      if (property == "licenses[0].categoryId" && flag1==0) {
+      if (property == "licenses[0].categoryId" && getVal("licenses[0].feeDetails") && flag1==0) {
         this.handlePopUp("tradeCategory", "licenses[0].categoryId", e.target.value);
+        this.populateValidtyYear();
+        this.calculateFeeDetails();
       }
       if (property == "licenses[0].subCategoryId" && flag2==0) {
         this.handlePopUpsub("tradeSubCategory", "licenses[0].subCategoryId", e.target.value);
@@ -829,17 +830,21 @@ handlePopUpLicense = (type , jsonPath, value) => {
         this.handlePopUpLicense("tradeLicense", "licenses[0].licenseValidFromDate", e.target.value);
       }
 
+
       flag1=0;
       flag2=0;
       flag3=0;
+
+if(property == "licenses[0].categoryId" && ("licenses[0].subCategoryId" == "" || "licenses[0].subCategoryId" == null)){
+  self.props.handleChange({target:{value:null}}, self.props.formData.licenses[0].subCategoryId);
+  this.populateValidtyYear();
+}
 
     if (property == "licenses[0].subCategoryId") {
       console.log(e.target.value);
       Api.commonApiPost("/tl-masters/category/v1/_search",{"ids":e.target.value, "type":"subcategory"}).then(function(response)
      {
-        // handleChange (e, "" )
-        console.log(response);
-        //console.log(response.categories[0].validityYears);
+
         handleChange({target:{value:response.categories[0].validityYears}}, "licenses[0].validityYears");
         self.setState({
           validityYear: response.categories[0].validityYears
@@ -848,11 +853,13 @@ handlePopUpLicense = (type , jsonPath, value) => {
         handleChange({target:{value:_.filter(response.categories[0].details,{feeType:"LICENSE"})[0].uomName}}, "licenses[0].uomName");
         handleChange({target:{value:_.filter(response.categories[0].details,{feeType:"LICENSE"})[0].uomId}}, "licenses[0].uomId", true);
 
+
+
         if(self.props.formData.licenses[0].licenseValidFromDate && (self.props.formData.licenses[0].licenseValidFromDate+"").length == 12 ||(self.props.formData.licenses[0].licenseValidFromDate+"").length == 13){
           self.calculateFeeDetails(self.props.formData.licenses[0].licenseValidFromDate, response.categories[0].validityYears)
         }
 
-        console.log(self.props.formData);
+
       },function(err) {
           console.log(err);
 
@@ -864,7 +871,7 @@ handlePopUpLicense = (type , jsonPath, value) => {
      if ((property == "licenses[0].licenseValidFromDate" || property=="licenses[0].subCategoryId") && getVal("licenses[0].licenseValidFromDate") && self.state.validityYear) {
        if((e.target.value+"").length == 12 || (e.target.value+"").length == 13){
           console.log(e.target.value);
-         self.calculateFeeDetails(e.target.value, self.state.validityYear)
+         self.calculateFeeDetails(e.target.value, self.state.validityYear);
         }
        }
 //***End Point To Populate Fee Details Section***

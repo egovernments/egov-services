@@ -140,7 +140,7 @@ var dat = {
             "jsonPath": "licenses[0].ownerAddress",
             "label": "tl.create.licenses.groups.TradeOwnerDetails.TradeOwnerAddress",
             "pattern": "^.{4,250}$",
-            "type": "textarea",
+            "type": "text",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -212,16 +212,16 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": "",
             "defaultValue": [{
-                "key": "STATE GOVERNMENT OWNED",
-                "value": "STATE_GOVERNMENT_OWNED"
+                "key": "STATE_GOVERNMENT_OWNED",
+                "value": "STATE GOVERNMENT OWNED"
               },
               {
                 "key": "RENTED",
                 "value": "RENTED"
               },
               {
-                "key": "CENTRAL GOVERNMENT OWNED",
-                "value": "CENTRAL_GOVERNMENT_OWNED"
+                "key": "CENTRAL_GOVERNMENT_OWNED",
+                "value": "CENTRAL GOVERNMENT OWNED"
               },
               {
                 "key": "ULB",
@@ -234,7 +234,7 @@ var dat = {
             "jsonPath": "licenses[0].tradeAddress",
             "label": "tl.create.licenses.groups.TradeLocationDetails.TradeAddress",
             "pattern": "^.{4,250}$",
-            "type": "textarea",
+            "type": "text",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -307,7 +307,23 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+            "depedants": [
+              {
+              "jsonPath": "licenses[0].uomName",
+              "type": "text",
+              "isRequired": true,
+              "isDisabled": true,
+              "pattern": ""
+            },
+          {
+          "jsonPath": "licenses[0].validityYears",
+          "type": "text",
+          "isRequired": true,
+          "isDisabled": true,
+          "pattern": ""
+        }
+          ]
           },
           {
             "name": "UOM",

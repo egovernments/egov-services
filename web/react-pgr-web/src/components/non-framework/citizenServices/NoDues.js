@@ -673,7 +673,7 @@ class NoDues extends Component {
             self.props.setLoadingStatus('hide');
             self.getProperty(function(property) {
               self.setState({
-                Receipt: "",
+                Receipt: res2.Receipt,
                 ReceiptOne: res1.Receipt,
                 Property: property
               });
@@ -916,9 +916,13 @@ class NoDues extends Component {
       return iter('', 0, get_first(String(int)), get_rest(String(int)));
   }
 
+  goBackToDashboard = () => {
+    this.props.setRoute("/prd/dashboard");
+  }
+
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid,match} = this.props;
-    let {search,cancel,pay, handleChange, getVal, addNewCard, removeCard, rowClickHandler,handleClose,handleOpen,generatePdf,getTotal,int_to_words} = this;
+    let {search,cancel,pay, handleChange, getVal, addNewCard, removeCard, rowClickHandler,handleClose,handleOpen,generatePdf,getTotal,int_to_words, goBackToDashboard} = this;
     let {showResult, resultList,open,demands,Receipt, ReceiptOne,applicationFeeDemand} = this.state;
     const {finished, stepIndex} = this.state;
     const contentStyle = {margin: '0 16px'};
@@ -1015,7 +1019,7 @@ class NoDues extends Component {
                   <div style={{"textAlign": "center"}}>
                     <br/>
 
-                    <UiButton handler={cancel} item={{"label": "Cancel", "uiType":"button", "isDisabled": isFormValid ? false : true}} ui="google"/>{"  "}
+                    <UiButton handler={goBackToDashboard} item={{"label": "Cancel", "uiType":"button", "isDisabled": isFormValid ? false : true}} ui="google"/>{"  "}
                     <UiButton handler={handleOpen} item={{"label": "Pay", "uiType":"button", "isDisabled": isFormValid ? false : true}} ui="google"/>
 
                       <Dialog
@@ -1045,7 +1049,7 @@ class NoDues extends Component {
             {showResult &&
               <Grid >
                 {(Receipt || ReceiptOne ) &&  <Row id="allCertificates">
-                      {Receipt && <Col md={6} >
+                      {Receipt && Receipt[0] && this.state.demands && this.state.demands.length ? <Col md={6} >
                       <Card>
                         <CardHeader title={<strong>Receipt for: {this.props.match.params.id == "pt"?"Property Tax":"Water Charge"}</strong>}/>
                         <CardText>
@@ -1209,8 +1213,8 @@ class NoDues extends Component {
                         </CardText>
                       </Card>
                       <div className="page-break"></div>
-                      </Col>}
-                                            {ReceiptOne && <Col md={6} >
+                      </Col> : ""}
+                                            {ReceiptOne && ReceiptOne[0] && <Col md={6} >
                       <Card>
                         <CardHeader title={<strong>Receipt for: Application Fee</strong>}/>
                         <CardText>
@@ -1236,7 +1240,7 @@ class NoDues extends Component {
                                             Receipt For : Application Fee
                                           </td>
                                           <td style={{textAlign:"right"}}>
-                                            Receipt Date: {getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate)}
+                                            Receipt Date: {getFullDate(ReceiptOne[0].Bill[0].billDetails[0].receiptDate)}
                                           </td>
                                       </tr>
                                       <tr>
@@ -1263,22 +1267,22 @@ class NoDues extends Component {
                                       </tr>
                                       <tr>
                                           <td >
-
+                                            
                                           </td>
                                           <td >
-
+                                            
                                           </td>
                                           <td >
-
+                                            
                                           </td>
                                           <td >
-
+                                            
                                           </td>
                                           <td >
-
+                                            
                                           </td>
                                           <td >
-
+                                           
                                           </td>
                                       </tr>
                                       <tr>
@@ -1344,7 +1348,7 @@ class NoDues extends Component {
                       <div className="page-break"></div>
                       </Col>}
                       <Col md={6} id="DownloadReceipt">
-                      {(this.props.match.params.status != "extract") ? <Card>
+                      {(this.props.match.params.status != "extract" && Receipt && Receipt[0]) ? <Card>
                         <CardHeader title={<strong>Certificate for: No due</strong>}/>
                         <CardText>
                             <Table id="CertificateForWc" responsive style={{fontSize:"bold"}}  bordered condensed>
@@ -1419,7 +1423,7 @@ class NoDues extends Component {
 
 
                         </CardText>
-                      </Card> : <Card>
+                        </Card> : Receipt && Receipt[0] && <Card>
             <CardHeader title={<strong>Certificate for Extract</strong>}/>
             <CardText>
                   <Table responsive style={{fontSize:"bold", "marginBottom": "20px"}} id="CertificateForWc" bordered condensed>

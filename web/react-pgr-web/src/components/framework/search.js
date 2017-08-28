@@ -134,7 +134,11 @@ class Report extends Component {
         for(var i=0; i<values.length; i++) {
           var tmp = [i+1];
           for(var j=0; j<specsValuesList.length; j++) {
-            tmp.push(_.get(values[i], specsValuesList[j]));
+            // if ((resultList.resultHeader[j].label.search("Date")>-1 || resultList.resultHeader[j].label.search("date")>-1)  && !(specsValuesList[j].search("-")>-1)) {
+            //   tmp.push(new Date(_.get(values[i],specsValuesList[j])).getDate()+"/"+new Date(_.get(values[i],specsValuesList[j])).getMonth()+"/"+new Date(_.get(values[i],specsValuesList[j])).getFullYear());
+            // } else {
+              tmp.push(_.get(values[i], specsValuesList[j]));
+            // }
           }
           resultList.resultValues.push(tmp);
         }

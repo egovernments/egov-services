@@ -61,6 +61,14 @@ const menuConvention={
   "Collection.Collection Reports.CollectionSummaryAccountHead":"/report/collection/CollectionSummaryAccountHeadWise",
   "Collection.Collection Reports.ChequeCollection":"/report/collection/ChequeCollection",
 
+  "Property Tax.PTIS Reports.Demand Register":"/report/property/DemandRegister",
+  "Property Tax.PTIS Reports.Collection Register":"/report/property/CollectionRegister",
+  "Property Tax.PTIS Reports.Balance Register":"/report/property/BalanceRegister",
+  "Property Tax.PTIS Reports.Demand Balance CollectionReport":"/report/property/DemandBalanceCollectionReport",
+  "Property Tax.PTIS Reports.Assessment Register":"/report/property/AssessmentRegister",
+
+
+
   "Grievance Redressal.Masters.Escalation Time.Create Escalation Time Type":"/pgr/defineEscalationTime",
   "Grievance Redressal.Masters.Escalation Time.Search Escalation Time":"/pgr/searchEscalationTime",
 

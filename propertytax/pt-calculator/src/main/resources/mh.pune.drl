@@ -118,7 +118,7 @@ System.out.println("in calculate tax"+taxwrapper.getTaxPeriods());
      then   
      $propertyType=$taxCalculation.getProperty().getPropertyDetail().getPropertyType();
     System.out.println("property type is"+ $propertyType);
-     if(!$propertyType.equalsIgnoreCase("VACANT_LAND")){
+     if(!$propertyType.equalsIgnoreCase("PTYPE_OPEN_LAND")){
      calculateTax($taxCalculation) ;
      }else{
      calculateVacantLandTax($taxCalculation);

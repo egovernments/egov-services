@@ -2,15 +2,22 @@ package org.egov.citizen.service;
 
 import java.io.IOException;
 
+import org.egov.citizen.config.ApplicationProperties;
+import org.egov.citizen.config.CitizenServiceConstants;
+import org.egov.citizen.exception.CustomException;
 import org.egov.citizen.model.ServiceReqRequest;
 import org.egov.citizen.model.ServiceReqResponse;
 import org.egov.citizen.model.ServiceResponse;
+import org.egov.citizen.producer.CitizenProducer;
 import org.egov.citizen.web.contract.factory.ResponseInfoFactory;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -28,6 +35,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CitizenPersistService {
 
+	public static final Logger LOGGER = LoggerFactory
+			.getLogger(CitizenPersistService.class);
+	
+	@Autowired
+	private CitizenProducer citizenProducer; 
+	
+	@Autowired
+	private ApplicationProperties applicationProperties;
+	
 	@Autowired
 	private RestTemplate restTemplate;
 	
@@ -63,17 +79,18 @@ public class CitizenPersistService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		String id = getServiceReqId();
+	//	String id = getServiceReqId();
 		
-		serviceReqRequest.getServiceReq().setServiceRequestId(id);
+		serviceReqRequest.getServiceReq().setServiceRequestId("ABC");
 		log.info("serviceReqRequest:"+serviceReqRequest);
-		ObjectMapper mapper = new ObjectMapper();
-		try{
-			//String request = mapper.writeValueAsString(serviceReqRequest);
-			kafkaTemplate.send(createServiceTopic, serviceReqRequest);
-		} catch (Exception ex){
-			log.error("failed to send kafka"+ex);
-			ex.printStackTrace();
+		try {
+			LOGGER.info("Object being pushed to kafka queue for save........: "+serviceReqRequest.toString());
+			citizenProducer.producer(applicationProperties.getCreateServiceTopic(),
+					applicationProperties.getCreateServiceTopicKey(), serviceReqRequest);
+		} catch (Exception e) {
+			LOGGER.error("Error while pushing to kafka queue. ", e);
+			/*throw new CustomException(Integer.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
+					CitizenServiceConstants.KAFKA_PUSH_FAIL_MSG, CitizenServiceConstants.KAFKA_PUSH_FAIL_DESC); */
 		}
 		return getResponse(serviceReqRequest);
 	}

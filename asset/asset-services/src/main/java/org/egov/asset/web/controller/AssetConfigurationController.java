@@ -35,7 +35,7 @@ public class AssetConfigurationController {
     @PostMapping("/_search")
     @ResponseBody
     public ResponseEntity<?> assetConfigurationSearch(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
-            @ModelAttribute final AssetConfigurationCriteria assetConfigurationCriteria,
+            @ModelAttribute @Valid final AssetConfigurationCriteria assetConfigurationCriteria,
             final BindingResult bindingResult) {
 
         log.debug("assetConfigurationSearch assetConfigurationCriteria:" + assetConfigurationCriteria);

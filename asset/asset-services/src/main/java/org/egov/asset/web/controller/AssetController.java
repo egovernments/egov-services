@@ -177,7 +177,7 @@ public class AssetController {
     @PostMapping("revaluation/_search")
     @ResponseBody
     public ResponseEntity<?> reevaluateSearch(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
-            @ModelAttribute final RevaluationCriteria revaluationCriteria, final BindingResult bindingResult) {
+            @ModelAttribute @Valid final RevaluationCriteria revaluationCriteria, final BindingResult bindingResult) {
 
         log.debug("reevaluateSearch revaluationCriteria:" + revaluationCriteria);
         if (bindingResult.hasErrors()) {

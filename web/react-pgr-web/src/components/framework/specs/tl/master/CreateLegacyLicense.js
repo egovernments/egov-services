@@ -87,7 +87,7 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Enter Valid Aadhar Number (14 Digit Number)"
+            "patternErrMsg": "Enter Valid Aadhar Number (12 Digit Number)"
           },
           {
             "name": "MobileNumber",

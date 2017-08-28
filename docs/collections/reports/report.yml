@@ -80,14 +80,17 @@ ReportDefinitions:
     label: reports.collection.cashamount
     type: string
     source: collection
+    total: true
   - name: CHEQUEDD_AMOUNT
     label: reports.collection.chequedd_amount
     type: string
-    source: collection   
+    source: collection
+    total: true   
   - name: ONLINE_AMOUNT
     label: reports.collection.online.amount
     type: string
-    source: collection   
+    source: collection
+    total: true   
   - name: STATUS_DESCRIPTION
     label: reports.collection.status.description
     type: string

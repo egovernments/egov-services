@@ -2,7 +2,7 @@
   {
     "district": "dev",
     "ulbName": "Development-Default",
-    "tenantId" : "Default",
+    "tenantId" : "default",
     "url": "http://egov-micro-qa.egovernments.org/app/v1/#/mh.roha"
   },
   {

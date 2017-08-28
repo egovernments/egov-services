@@ -80,6 +80,9 @@ public class ServiceCharge {
     private String description;
 
     @NotNull
+    private Boolean active;
+
+    @NotNull
     private Long effectiveFrom;
 
     @NotNull

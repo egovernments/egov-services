@@ -61,20 +61,19 @@ class CreateReceivingCenter extends Component {
       e.preventDefault()
       this.props.setLoadingStatus('loading');
       var current = this;
-
+      let {createReceivingCenter} = this.props;
       var body = {
           "ReceivingCenterType":{
             "id": this.props.createReceivingCenter.id,
            "name" :this.props.createReceivingCenter.name,
            "code" :this.props.createReceivingCenter.code,
            "description" :this.props.createReceivingCenter.description,
-           "active" : !this.props.createReceivingCenter.active ? false : this.props.createReceivingCenter.active,
+           "active" : createReceivingCenter.active !== undefined ? createReceivingCenter.active : true,
            "iscrnrequired" : !this.props.createReceivingCenter.iscrnrequired ? false : this.props.createReceivingCenter.iscrnrequired,
            "orderno" :this.props.createReceivingCenter.orderno,
            "tenantId":localStorage.getItem("tenantId")
           }
       }
-
       if(this.props.match.params.id){
           Api.commonApiPost("/pgr-master/receivingcenter/v1/_update",{},body).then(function(response){
               current.setState({

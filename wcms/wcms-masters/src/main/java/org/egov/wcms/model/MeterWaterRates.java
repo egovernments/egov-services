@@ -91,8 +91,14 @@ public class MeterWaterRates {
     @NotNull
     private Long pipeSizeId;
 
+    private String subUsageType;
+
+    private String subUsageTypeId;
+
     @NotNull
     private Boolean active;
+
+    private Boolean outsideUlb;
 
     @NotNull
     private Long fromDate;

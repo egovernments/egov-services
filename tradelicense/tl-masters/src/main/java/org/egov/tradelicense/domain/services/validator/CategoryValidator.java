@@ -31,8 +31,8 @@ public class CategoryValidator {
 
 	@Autowired
 	PropertiesManager propertiesManager;
-	
- 	@Autowired
+
+	@Autowired
 	NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	public void validateCategoryRequest(CategoryRequest categoryRequest, Boolean isNewCategory, String type) {
@@ -75,14 +75,14 @@ public class CategoryValidator {
 				throw new DuplicateNameException(propertiesManager.getCategoryNameDuplicate(), requestInfo);
 			}
 
-			if ( type != null && type.equals(ConstantUtility.SUB_CATEGORY_TYPE)) {
-				if( parentId == null){
+			if (type != null && type.equals(ConstantUtility.SUB_CATEGORY_TYPE)) {
+				if (parentId == null) {
 					throw new InvalidInputException(propertiesManager.getInvalidParentIdMsg(), requestInfo);
-				}else{
+				} else {
 					validateSubCategory(category, requestInfo, isNewCategory);
 				}
-				
-			}else{
+
+			} else {
 				category.setValidityYears(0l);
 				category.setParentId(null);
 				category.setDetails(null);

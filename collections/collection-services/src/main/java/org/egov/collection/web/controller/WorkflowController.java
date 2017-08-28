@@ -47,15 +47,14 @@ import org.egov.collection.config.CollectionServiceConstants;
 import org.egov.collection.model.PositionSearchCriteriaWrapper;
 import org.egov.collection.service.WorkflowService;
 import org.egov.collection.web.contract.WorkflowDetailsRequest;
-import org.egov.collection.web.errorhandlers.Error;
-import org.egov.collection.web.errorhandlers.ErrorResponse;
+import org.egov.common.contract.response.Error;
+import org.egov.common.contract.response.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -75,11 +74,6 @@ public class WorkflowController {
 	@ResponseBody
 	public ResponseEntity<?> startWorkflow(
 			@RequestBody @Valid final WorkflowDetailsRequest workflowDetails, BindingResult errors) {
-
-		if (errors.hasFieldErrors()) {
-			ErrorResponse errRes = populateErrors(errors);
-			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
-		}
 		if(!validator(workflowDetails.getTenantId(), workflowDetails.getReceiptHeaderId())){
 			LOGGER.info("Invalid TenantId");
 			Error error = new Error();
@@ -118,10 +112,6 @@ public class WorkflowController {
 	public ResponseEntity<?> updateWorkflow(
 			@RequestBody @Valid final WorkflowDetailsRequest workflowDetails, BindingResult errors) {
 
-		if (errors.hasFieldErrors()) {
-			ErrorResponse errRes = populateErrors(errors);
-			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
-		}
 		if(!validator(workflowDetails.getTenantId(), workflowDetails.getReceiptHeaderId())){
 			LOGGER.info("Invalid TenantId");
 			Error error = new Error();
@@ -148,21 +138,6 @@ public class WorkflowController {
 		return new ResponseEntity<>(workflowDetailsObj, HttpStatus.OK);				
 	}
 			
-	private ErrorResponse populateErrors(BindingResult errors) {
-		ErrorResponse errRes = new ErrorResponse();		
-		Error error = new Error();
-		error.setCode(1);
-		error.setDescription("Error while binding request");
-		if (errors.hasFieldErrors()) {
-			for (FieldError errs : errors.getFieldErrors()) {
-				error.getFields()
-						.put(errs.getField(), errs.getDefaultMessage());
-			}
-		}
-		errRes.setError(error);
-		return errRes;
-	}
-	
 	private boolean validator(String tenantId, long receiptHeaderId){
 		boolean isTenantValid = true;
 		if(null == tenantId || tenantId.isEmpty())

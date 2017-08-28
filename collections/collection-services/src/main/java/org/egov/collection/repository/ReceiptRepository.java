@@ -59,6 +59,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -399,4 +400,20 @@ public class ReceiptRepository {
     	return isReceiptNumberValid;
     } */
 
+    public ReceiptReq insertOnlinePayments(ReceiptReq receiptReq) {
+        String onlineReceiptsInsertQuery = receiptDetailQueryBuilder.insertOnlinePayments();
+        List<Map<String, Object>> onlineReceiptBatchValues = new ArrayList<>(receiptReq.getReceipt().size());
+
+        for (Receipt receipt : receiptReq.getReceipt()) {
+            OnlinePayment onlinePayment = receipt.getOnlinePayment();
+            onlineReceiptBatchValues.add(new MapSqlParameterSource("receiptheader", receipt.getId()).addValue("paymentgatewayname", onlinePayment.getPaymentGatewayName())
+                    .addValue("transactionnumber", onlinePayment.getTransactionnumber()).addValue("transactionamount", onlinePayment.getTransactionAmount()).addValue("transactiondate", onlinePayment.getTransactionDate())
+                    .addValue("authorisation_statuscode", onlinePayment.getAuthorisationStatusCode()).addValue("status", onlinePayment.getStatus())
+                    .addValue("remarks", onlinePayment.getRemarks()).addValue("createdby", receiptReq.getRequestInfo().getUserInfo().getId()).addValue("tenantId",onlinePayment.getTenantId())
+                    .addValue("lastmodifiedby", receiptReq.getRequestInfo().getUserInfo().getId()).addValue("createddate", new Date().getTime()).addValue("lastmodifieddate",new Date().getTime())
+                    .getValues());
+        }
+        namedParameterJdbcTemplate.batchUpdate(onlineReceiptsInsertQuery, onlineReceiptBatchValues.toArray(new Map[receiptReq.getReceipt().size()]));
+        return receiptReq;
+    }
 }

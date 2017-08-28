@@ -29,11 +29,11 @@ public class User {
 	private Long id = null;
 
 	@JsonProperty("userName")
-	@Size(min=1,max=64)
+	@Size(min = 1, max = 64)
 	private String userName = null;
 
 	@JsonProperty("password")
-	@Size(max=64)
+	@Size(max = 64)
 	private String password = null;
 
 	@JsonProperty("salutation")
@@ -50,7 +50,6 @@ public class User {
 	private String gender = null;
 
 	@JsonProperty("mobileNumber")
-	@NotNull
 	@Size(max = 10)
 	private String mobileNumber = null;
 
@@ -162,10 +161,8 @@ public class User {
 	@JsonProperty("ownerType")
 	@Size(min = 4, max = 32)
 	private String ownerType = null;
-	
-	
+
 	@JsonProperty("owner")
 	private Long owner = null;
-	
 
 }

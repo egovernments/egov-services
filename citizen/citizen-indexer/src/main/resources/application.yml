@@ -4,7 +4,8 @@ ServiceMaps:
   - version: 1.0.0
     indexName: cs_index
     indexType: cs_type
-    fromTopic: save-service-db
+    fromTopicSave: save-service-db
+    fromTopicUpdate: update-service-db
     indexID: $.serviceReq.serviceRequestId
     jsonPath:
     indexMap:

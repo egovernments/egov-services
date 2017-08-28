@@ -2,11 +2,10 @@ package org.egov.common.domain.model;
 
 import java.util.Date;
 
-import javax.validation.constraints.Size;
-
-import org.hibernate.validator.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import org.egov.common.contract.request.User;
+import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,8 +23,9 @@ public class Auditable {
 	 * represents the client for which the transaction is created.
 	 * 
 	 */
-	
-	@Size(max = 50, min = 5)
+
+	@NotNull
+	@Length(max = 50, min = 5)
 	protected String tenantId;
 	/**
 	 * createdBy is the logged in use who is conducting transaction

@@ -39,7 +39,7 @@ class searchUserRole extends Component {
     initForm();
     let tenantId = localStorage.getItem('tenantId') || 'default';
     _this.props.setLoadingStatus('loading');
-    Api.commonApiPost("/user/v1/_search",{},{tenantId : tenantId, userType : constants.ROLE_EMPLOYEE}).then(function(response) {
+    Api.commonApiPost("/user/v1/_search",{},{tenantId : tenantId, userType : constants.ROLE_EMPLOYEE, pageSize : 500}).then(function(response) {
       _this.props.setLoadingStatus('loading');
       const newDataSource = response.user.map(item => {
         return Object.assign({fullName:item.userName+ " (" +item.name+ ")"},item)});

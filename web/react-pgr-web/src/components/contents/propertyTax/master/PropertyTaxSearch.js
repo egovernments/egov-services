@@ -49,7 +49,7 @@ const styles = {
 
 
 const getNameById = function(object, id, property = "") {
-  if (id == "" || id == null) {
+  if (id == "" || id == null || typeof(object) !== 'object') {
         return "";
     }
     for (var i = 0; i < object.length; i++) {
@@ -71,7 +71,7 @@ const getNameById = function(object, id, property = "") {
 }
 
 const getNameByCode = function(object, code, property = "") {
-  if (code == "" || code == null) {
+  if (code == "" || code == null || typeof(object) !== 'object') {
         return "";
     }
     for (var i = 0; i < object.length; i++) {
@@ -209,7 +209,7 @@ class PropertyTaxSearch extends Component {
 			})
 		} else {
 			
-			if(res.properties.length !=0 && res.properties[0].channel == 'DATA_ENTRY') {
+			if(res.hasOwnProperty('properties') && res.properties.length !=0 && res.properties[0].channel == 'DATA_ENTRY') {
 				current.setState({
 					showDcb: true
 				})
@@ -226,7 +226,7 @@ class PropertyTaxSearch extends Component {
 				resultList:res.properties
 			})
 			
-			if(res.properties.length !=0){
+			if(res.hasOwnProperty('properties') && res.properties.length !=0){
 				var tQuery = {
 					businessService :'PT',
 					consumerCode: res.properties[0].upicNumber || res.properties[0].propertyDetail.applicationNo
@@ -241,14 +241,12 @@ class PropertyTaxSearch extends Component {
 				})
 			}
 			
-			
-			
 			showTable(true);
 		}
 	
       }).catch((err)=> {
 			setLoadingStatus('hide');
-			toggleSnackbarAndSetText(true, err.message);
+//toggleSnackbarAndSetText(true, err.message);
 			current.setState({
 				resultList:[]
 			})
@@ -258,14 +256,11 @@ class PropertyTaxSearch extends Component {
   }
 
   componentWillUpdate() {
-    if(flag == 1) {
-      flag = 0;
       $('#propertyTaxTable').dataTable().fnDestroy();
-    }
   }
 
   componentDidUpdate(prevProps, prevState) {
-      if (true) {
+ 
           $('#propertyTaxTable').DataTable({
             dom: 'lBfrtip',
             buttons: [
@@ -275,10 +270,11 @@ class PropertyTaxSearch extends Component {
              bDestroy: true,
 
           });
-      }
   }
 
   render() {
+	  
+	  console.log(this.state.resultList);
 	  
 	  const renderOption = function(list,listName="") {
         if(list)
@@ -337,7 +333,7 @@ class PropertyTaxSearch extends Component {
 					  <td style={{color:'blue'}} onClick={() => {
 						   history.push(`/propertyTax/view-property/${item.upicNumber}`);
 					  }}>{item.upicNumber || ''}</td>
-					  <td>{(item.owners.length != 0) &&  item.owners.map((item, index)=>{
+					  <td>{(item.hasOwnProperty('owners') && item.owners.length != 0) &&  item.owners.map((item, index)=>{
 						  return(<span>{item.name}</span>)
 					  })}</td>
 					  <td>{item.address.addressNumber || ''}</td>
@@ -383,7 +379,6 @@ class PropertyTaxSearch extends Component {
           <Card className="uiCard">
             <CardHeader title={< span style = {{ color: 'rgb(53, 79, 87)',fontSize: 18, margin: '8px 0px', fontWeight: 500,}} >{translate('pt.search.searchProperty')}< /span>}/>
             <CardText>
-             
                   <Grid>
 					<Row>
 						<Col xs={12} md={6}>
@@ -396,7 +391,7 @@ class PropertyTaxSearch extends Component {
                       <Col xs={12} md={6}>
                         <TextField errorText={fieldErrors.houseNoBldgApt
                           ? fieldErrors.houseNoBldgApt
-                          : ""} id="houseNoBldgApt" floatingLabelFixed={true} value={propertyTaxSearch.houseNoBldgApt?propertyTaxSearch.houseNoBldgApt:""} onChange={(e) => handleChange(e, "houseNoBldgApt", false, /^\d{1,10}$/g)} hintText="654654" floatingLabelText={translate('pt.create.groups.propertyAddress.fields.doorNo')}/>
+                          : ""} id="houseNoBldgApt" maxLength={12} floatingLabelFixed={true} value={propertyTaxSearch.houseNoBldgApt?propertyTaxSearch.houseNoBldgApt:""} onChange={(e) => handleChange(e, "houseNoBldgApt", false, "")} hintText="654654" floatingLabelText={translate('pt.create.groups.propertyAddress.fields.doorNo')}/>
                       </Col>
 
                       <Col xs={12} md={6}>
@@ -410,13 +405,13 @@ class PropertyTaxSearch extends Component {
                       <Col xs={12} md={6}>
                         <TextField errorText={fieldErrors.mobileNumber
                           ? fieldErrors.mobileNumber
-                          : ""} floatingLabelFixed={true} value={propertyTaxSearch.mobileNumber?propertyTaxSearch.mobileNumber:""} onChange={(e) => handleChange(e, "mobileNumber", false, /^\d{10}$/g)} hintText="9584323454" floatingLabelText={translate('pt.create.groups.propertyAddress.mobileNumber')} />
+                          : ""} floatingLabelFixed={true} maxLength={10} value={propertyTaxSearch.mobileNumber?propertyTaxSearch.mobileNumber:""} onChange={(e) => handleChange(e, "mobileNumber", false, /^\d{10}$/g)} hintText="9584323454" floatingLabelText={translate('pt.create.groups.propertyAddress.mobileNumber')} />
                       </Col>
 
                       <Col xs={12} md={6}>
                         <TextField errorText={fieldErrors.aadhaarNumber
                           ? fieldErrors.aadhaarNumber
-                          : ""} floatingLabelFixed={true} value={propertyTaxSearch.aadhaarNumber?propertyTaxSearch.aadhaarNumber:""} onChange={(e) => handleChange(e, "aadhaarNumber", false, /^\d{12}$/g)} hintText={translate('pt.create.groups.ownerDetails.fields.aadhaarNumber')} floatingLabelText={translate('pt.create.groups.ownerDetails.fields.aadhaarNumber')} />
+                          : ""} floatingLabelFixed={true} maxLength={12} value={propertyTaxSearch.aadhaarNumber?propertyTaxSearch.aadhaarNumber:""} onChange={(e) => handleChange(e, "aadhaarNumber", false, /^\d{12}$/g)} hintText={translate('pt.create.groups.ownerDetails.fields.aadhaarNumber')} floatingLabelText={translate('pt.create.groups.ownerDetails.fields.aadhaarNumber')} />
                       </Col>
                     </Row>
                   </Grid>
@@ -436,7 +431,7 @@ class PropertyTaxSearch extends Component {
                       <Col xs={12} md={6}>
                         <TextField errorText={fieldErrors.oldUpicNo
                           ? fieldErrors.oldUpicNo
-                          : ""} floatingLabelFixed={true} value={propertyTaxSearch.oldUpicNo?propertyTaxSearch.oldUpicNo:""} onChange={(e) => handleChange(e, "oldUpicNo", false, /^\d{3,15}$/g)} hintText={translate('pt.create.groups.propertyDetails.oldAssessmentNumber')} floatingLabelText={translate('pt.create.groups.propertyDetails.oldAssessmentNumber')} />
+                          : ""} floatingLabelFixed={true} maxLength={10} value={propertyTaxSearch.oldUpicNo?propertyTaxSearch.oldUpicNo:""} onChange={(e) => handleChange(e, "oldUpicNo", false, /^[a-zA-Z0-9]{10}$/g)} hintText={translate('pt.create.groups.propertyDetails.oldAssessmentNumber')} floatingLabelText={translate('pt.create.groups.propertyDetails.oldAssessmentNumber')} />
                       </Col>
 					  <Col xs={12} md={6}>
 							<SelectField errorText={fieldErrors.usage

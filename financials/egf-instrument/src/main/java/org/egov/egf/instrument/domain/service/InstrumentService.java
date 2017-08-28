@@ -231,8 +231,8 @@ public class InstrumentService {
 					}
 					instrument.setInstrumentType(response.getPagedData().get(0));
 				}
-				if (instrument.getBank() != null && instrument.getBank().getCode() != null) {
-					BankContract bank = bankContractRepository.findByCode(instrument.getBank());
+				if (instrument.getBank() != null && instrument.getBank().getId() != null) {
+					BankContract bank = bankContractRepository.findById(instrument.getBank());
 					if (bank == null) {
 						throw new InvalidDataException("bank", "bank.invalid", " Invalid bank");
 					}

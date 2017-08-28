@@ -50,8 +50,7 @@ class ShowField extends Component {
                'copy', 'csv', 'excel', 'pdf', 'print'
        ],
        ordering: false,
-       bDestroy: true,
-
+       bDestroy: true
     });
   }
 

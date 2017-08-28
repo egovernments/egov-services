@@ -39,7 +39,7 @@ public class FinancialYearContractRepository {
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
 
-		content.append("ids=" + id);
+		content.append("id=" + id);
 
 		if (tenantId != null) {
 			content.append("&tenantId=" + tenantId);

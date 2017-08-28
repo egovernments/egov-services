@@ -136,6 +136,7 @@ const menuConvention={
   "Trade License.License Masters.License Sub Category.ModifyTLSUBCATEGORY": "/search/tl/CreateLicenseSubCategory/update",
   "Trade License.License Transactions.CreateLegacyLicense": "/non-framework/tl/transaction/LegacyLicenseCreate",
   "Trade License.License Search.SearchLicense": "/search/tl/CreateLegacyLicense/view",
+  "Trade License.License Reports.License Register Report":"/report/tradelicense/licenseRegisterReport",
 
 
   "Water Charge.Water Transactions.LegacyCreateNewConnectionAPI":"/create/wc/legacy",
@@ -147,6 +148,9 @@ const menuConvention={
   "Employee Management.Employee Masters.Employee.CreateEmployee":"/employee/create",
   "Employee Management.Employee Masters.Employee.ViewEmployee":"/empsearch/view",
   "Employee Management.Employee Masters.Employee.UpdateEmployee":"/empsearch/update",
+  "Employee Management.HR Report.HR Employee History Report" : "/report/hr/EmployeeSearch",
+  "Employee Management.HR Report.HR Attendance Report": "/report/hr/AttendenceReport",
+  "Employee Management.HR Report.HR Employees Leave Report" : "/report/hr/employeeLeaveReport",
 
   //Administration
   "Administration.UpdateUserWithoutValidation":"/administration/searchUserRole"

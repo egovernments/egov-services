@@ -1,5 +1,10 @@
+// var store=require('../store');
+
 var common = require('../components/common/common');
 var axios = require('axios');
+
+// console.log(store.getState);
+
 // var store = require('configureStore').configure();
 
 var instance = axios.create({
@@ -31,7 +36,7 @@ var requestInfo = {
 var tenantId = localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default';
 
 module.exports = {
-    commonApiPost: (context, queryObject = {}, body = {}, doNotOverride = false, isTimeLong = false, noPageSize = false,authToken="") => {
+    commonApiPost: (context, queryObject = {}, body = {}, doNotOverride = false, isTimeLong = false, noPageSize = false, authToken="", userInfo = "") => {
         var url = context;
         if(url && url[url.length-1] === "/")
             url = url.substring(0, url.length-1);
@@ -61,6 +66,10 @@ module.exports = {
 
         body["RequestInfo"] = requestInfo;
 
+        if(userInfo) {
+            body["RequestInfo"]["userInfo"] = userInfo;
+        }
+
         return instance.post(url, body).then(function(response) {
             return response.data;
         }).catch(function(response) {
@@ -88,6 +97,7 @@ module.exports = {
                     var _tntId = localStorage.getItem("tenantId") || "default";
                     localStorage.clear();
                     localStorage.setItem('locale', locale);
+                    alert("Session got expired please login again")
                     localStorage.reload = true;
                     window.location.hash = "#/" + _tntId;
                 } else if(response){

@@ -1,0 +1,155 @@
+[
+  {
+    "serviceName":"No Due Certificate",
+    "moduleName":"Water Department",
+    "icon":"card_membership",
+    "redirectUrl":"?link=waternodue",
+    "language_key":"",
+    "requiredDocuments":[],
+    "slaTable":{
+        "columns":[
+          {
+            "name":"Sr.No",
+            "key":"sno",
+            "language_key":""
+          },
+          {
+            "name":"Service name",
+            "key":"sName",
+            "language_key":""
+          },
+          {
+            "name":"Time limit",
+            "key":"time",
+            "language_key":""
+          },
+          {
+            "name":"First Appellate Officer",
+            "key":"officer1",
+            "language_key":""
+          },
+          {
+            "name":"Second Appellate Officer",
+            "key":"officer2",
+            "language_key":""
+          }
+      ],
+      "data":[
+        {
+          "sno":1,
+          "lang_sno":"",
+          "sName":"No Due Certificate - Water Department",
+          "lang_sName":"",
+          "time":"3",
+          "officer1":"Sub-Divisional Officer",
+          "lang_officer1":"",
+          "officer2":"Additional Collector",
+          "lang_officer2":""
+        }
+      ]
+    }
+  },
+
+  {
+    "serviceName":"No Due Certificate",
+    "icon":"card_membership",
+    "moduleName":"Property Tax",
+    "redirectUrl":"?link=propertytaxdue",
+    "language_key":"",
+    "requiredDocuments":[],
+    "slaTable":{
+        "columns":[
+          {
+            "name":"Sr.No",
+            "key":"sno",
+            "language_key":""
+          },
+          {
+            "name":"Service name",
+            "key":"sName",
+            "language_key":""
+          },
+          {
+            "name":"Time limit",
+            "key":"time",
+            "language_key":""
+          },
+          {
+            "name":"First Appellate Officer",
+            "key":"officer1",
+            "language_key":""
+          },
+          {
+            "name":"Second Appellate Officer",
+            "key":"officer2",
+            "language_key":""
+          }
+      ],
+      "data":[
+        {
+          "sno":1,
+          "lang_sno":"",
+          "sName":"No Due Certificate - Property Tax",
+          "lang_sName":"",
+          "time":"4",
+          "officer1":"Sub-Divisional Officer",
+          "lang_officer1":"",
+          "officer2":"Additional Collector",
+          "lang_officer2":""
+        }
+      ]
+    }
+  },
+
+  {
+    "serviceName":"Extract Of Property",
+    "icon":"card_membership",
+    "moduleName":"Property Tax",
+    "redirectUrl":"?link=propertytaxextract",
+    "language_key":"",
+    "requiredDocuments":[],
+    "slaTable":{
+        "columns":[
+          {
+            "name":"Sr.No",
+            "key":"sno",
+            "language_key":""
+          },
+          {
+            "name":"Service name",
+            "key":"sName",
+            "language_key":""
+          },
+          {
+            "name":"Time limit",
+            "key":"time",
+            "language_key":""
+          },
+          {
+            "name":"First Appellate Officer",
+            "key":"officer1",
+            "language_key":""
+          },
+          {
+            "name":"Second Appellate Officer",
+            "key":"officer2",
+            "language_key":""
+          }
+      ],
+      "data":[
+        {
+          "sno":1,
+          "lang_sno":"",
+          "sName":"Extract Of Property",
+          "lang_sName":"",
+          "time":"14",
+          "officer1":"Sub-Divisional Officer",
+          "lang_officer1":"",
+          "officer2":"Additional Collector",
+          "lang_officer2":""
+        }
+      ]
+    }
+  }
+
+]

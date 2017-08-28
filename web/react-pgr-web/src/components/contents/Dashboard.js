@@ -38,6 +38,12 @@ require('datatables.net-buttons/js/buttons.html5.js'); // HTML 5 file export
 require('datatables.net-buttons/js/buttons.flash.js'); // Flash file export
 require('datatables.net-buttons/js/buttons.print.js'); // Print view button
 
+const nameMap = {
+  "PT_NODUES": "Property Tax No Dues",
+  "WC_NODUES": "Water Charges No Dues",
+  "CREATED": "Created"
+};
+
 const content=[
     // {
     //     icon: 'icon-class-name',
@@ -51,12 +57,12 @@ const content=[
             {
                 icon: 'icon-class-name',
                 label: 'Apply for No Dues',
-                to: '#/non-framework/citizenServices/no-dues/search/watercharge',
+                to: '#/non-framework/citizenServices/no-dues/search/wc',
             },
             {
                 icon: 'icon-class-name',
                 label: 'Apply for New Connection',
-                to: '#',
+                to: '#/coming/soon',
             }
         ],
     },
@@ -67,12 +73,12 @@ const content=[
             {
                 icon: 'icon-class-name',
                 label: 'Apply for No Dues',
-                to: '#/non-framework/citizenServices/no-dues/search/propertytax',
+                to: '#/non-framework/citizenServices/no-dues/search/pt',
             },
             {
                 icon: 'icon-class-name',
                 label: 'Apply for Extract',
-                to: '#',
+                to: '#/non-framework/citizenServices/no-dues/extract/pt',
             }
         ],
     },
@@ -83,7 +89,7 @@ const content=[
             {
                 icon: 'icon-class-name',
                 label: 'Apply for New License',
-                to: '#',
+                to: '#/coming/soon',
             }
         ],
     },
@@ -94,7 +100,7 @@ const content=[
             {
                 icon: 'icon-class-name',
                 label: 'Apply for Fire NOC',
-                to: '#',
+                to: '#/coming/soon',
             }
         ],
     },
@@ -140,6 +146,14 @@ const styles = {
 
   }
 };
+
+const getDate = function(val) {
+  var _date = new Date(Number(val));
+      return ('0' + _date.getDate()).slice(-2) + '/'
+               + ('0' + (_date.getMonth()+1)).slice(-2) + '/'
+               + _date.getFullYear();
+}
+
 const sR=
   [
         {
@@ -174,7 +188,7 @@ class Dashboard extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      serviceRequestsTwo:sR,
+      serviceRequestsTwo:[],
       slideIndexOne:0,
       slideIndex: 0,
       serviceRequests: [],
@@ -197,25 +211,37 @@ class Dashboard extends Component {
           language: {
              "emptyTable": "No Records"
           }
-    });
+   });
+
+   $('#requestTable').DataTable({
+         dom: 'lBfrtip',
+         buttons: [],
+          bDestroy: true,
+          language: {
+             "emptyTable": "No Records"
+          }
+   });
+
 
 	  let { setLoadingStatus} = this.props;
      setLoadingStatus("loading");
 
     let current = this;
-    let {currentUser}=this.props;
+    let currentUser=JSON.parse(localStorage.userRequest);
 
     if(currentUser.type === constants.ROLE_CITIZEN) {
       Promise.all([
           Api.commonApiPost("/pgr/seva/v1/_search",{userId:currentUser.id},{}),
-          Api.commonApiPost("/pgr-master/serviceGroup/v1/_search",{keywords:constants.CITIZEN_SERVICES_KEYWORD},{})
+          Api.commonApiPost("/pgr-master/serviceGroup/v1/_search",{keywords:constants.CITIZEN_SERVICES_KEYWORD},{}),
+          Api.commonApiPost("/citizen-services/v1/requests/_search", {userId:currentUser.id}, {}, null, true)
       ])
       .then((responses)=>{
         //if any error occurs
-        if(!responses || responses.length ===0 || !responses[0] || !responses[1]){
+        if(!responses || responses.length ===0 || !responses[0] || !responses[1] || !responses[2]){
           current.setState({
             serviceRequests: [],
             citizenServices:[],
+            serviceRequestsTwo: responses[2] && responses[2].serviceReq ? responses[2].serviceReq : [],
             localArray:[],
              hasData:false
           });
@@ -262,11 +288,11 @@ class Dashboard extends Component {
         //   });
         // })
 
-
         current.props.setLoadingStatus('hide');
-
+        localStorage.setItem("servReq", JSON.stringify(responses[2].serviceReq));
         current.setState({
           serviceRequests: inboxResponse.serviceRequests,
+          serviceRequestsTwo: responses[2].serviceReq,
           localArray: inboxResponse.serviceRequests,
           citizenServices,
           hasData:true
@@ -347,12 +373,30 @@ class Dashboard extends Component {
 
 
 
- componentWillUnmount(){
-     /*$('#searchTable')
-     .DataTable()
-     .destroy(true);*/
- };
+   componentWillUnmount(){
+       /*$('#searchTable')
+       .DataTable()
+       .destroy(true);*/
+   };
 
+   componentDidMount() {
+      let self = this;
+      if(localStorage.token && localStorage.userRequest && !localStorage.actions) {
+        this.props.login(false, localStorage.token, JSON.parse(localStorage.userRequest), true);
+        let roleCodes = [];
+        var UserRequest = JSON.parse(localStorage.userRequest);
+        for (var i = 0; i < UserRequest.roles.length; i++) {
+          roleCodes.push(UserRequest.roles[i].code);
+        }
+        Api.commonApiPost("access/v1/actions/_get",{},{tenantId:localStorage.tenantId, roleCodes, enabled:true}).then(function(response){
+          var actions = response.actions;
+          localStorage.setItem("actions", JSON.stringify(actions));
+          self.props.setActionList(actions);   
+        }, function(err) {
+            console.log(err);
+        });
+      }
+   }
 
    componentDidUpdate() {
     let self = this;
@@ -367,7 +411,16 @@ class Dashboard extends Component {
           language: {
              "emptyTable": "No Records"
           }
-     });
+       });
+
+       $('#requestTable').DataTable({
+         dom: 'lBfrtip',
+         buttons: [],
+          bDestroy: true,
+          language: {
+             "emptyTable": "No Records"
+          }
+       });
     }
   }
 
@@ -534,30 +587,32 @@ class Dashboard extends Component {
                           <Card>
                             <CardHeader title="My Service Requests"/>
                               <CardText>
-                                <Table>
+                                <Table id="requestTable">
                                     <thead>
                                         <tr>
                                           <th>
-                                            Type
+                                            Service Request No.
                                           </th>
                                           <th>
-                                            Name
+                                            Service Name
                                           </th>
                                           <th>
-                                            Date
+                                            Status
                                           </th>
                                           <th>
-
+                                            Applied On
                                           </th>
+                                          <th> </th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {serviceRequestsTwo.map((item,key)=>{
+                                        {serviceRequestsTwo.map((item, key)=>{
                                           return (<tr key={key}>
                                               <td>{item.serviceRequestId}</td>
-                                              <td>{item.serviceCode}</td>
-                                              <td>20-12-2017</td>
-                                              <td><i className="material-icons">cloud_download</i></td>
+                                              <td>{nameMap[item.serviceCode] || item.serviceCode}</td>
+                                              <td>{nameMap[item.status] || item.status}</td>
+                                              <td>{item.auditDetails ? getDate(item.auditDetails.createdDate) : "-"}</td>
+                                              {<td><i className="material-icons">cloud_download</i></td>}
 
                                           </tr>)
                                         }) }
@@ -748,7 +803,16 @@ const mapDispatchToProps = dispatch => ({
         setLoadingStatus: (loadingStatus) => {
       dispatch({type: "SET_LOADING_STATUS", loadingStatus});
     },
-    setRoute: (route) => dispatch({type: "SET_ROUTE", route})
+    setRoute: (route) => dispatch({type: "SET_ROUTE", route}),
+    login: (error, token, userRequest, doNotNavigate) =>{
+      let payload = {
+        "access_token": token, "UserRequest": userRequest, doNotNavigate: doNotNavigate
+      };
+      dispatch({type: "LOGIN", error, payload})
+    },
+    setActionList:(actionList)=>{
+      dispatch({type:"SET_ACTION_LIST",actionList});
+    },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

@@ -131,6 +131,18 @@ public class RestWaterExternalMasterService {
         return usageTypes;
 
     }
+    
+    public UsageTypeResponse getSubUsageNameFromPTModule(final Integer[] subUsageTypeId, final String service,final String tenantId) {
+        String url = propertiesManager.getPropertTaxServiceBasePathTopic()
+                + propertiesManager.getPropertyTaxServiceUsageTypeSearchByIdPathTopic();
+        final RequestInfo requestInfo = RequestInfo.builder().ts(123456789L).build();
+        final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
+        final UsageTypeResponse subUsageTypes = restTemplate.postForObject(url.toString(), request,
+                UsageTypeResponse.class, subUsageTypeId,service, tenantId);
+        return subUsageTypes;
+
+    }
 
     public BoundaryResponse getBoundaryNum(final String boundaryType, final String boundaryNum, final String tenantId) {
         String url = propertiesManager.getLocationServiceBasePathTopic()

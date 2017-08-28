@@ -23,7 +23,8 @@ public class IndexerService {
 	public void ElasticIndexer(String topic, String kafkaJson){
 		
 		String esIndex = null;
-		String kfkTopic = null;
+		String kfkTopicSave = null;
+		String kfkTopicUpdate = null;
 		String version = null;
 		String indexNode = null;
 		
@@ -32,8 +33,9 @@ public class IndexerService {
 			
 		for(Mapping mapping : mappings){
 			//String newKafkaJson = modifyKafkaJson(mapping, kafkaJson);
-			if(mapping.getFromTopic().equals(topic)){
-				
+			if(mapping.getFromTopicSave().equals(topic) || mapping.getFromTopicUpdate().equals(topic)){
+				System.out.println("save topic = " + mapping.getFromTopicSave());
+				System.out.println("Update topic = " + mapping.getFromTopicUpdate());
 				bulkindexer.indexCurrentValue(mapping, kafkaJson);
 			}
 		}

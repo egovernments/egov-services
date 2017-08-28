@@ -108,7 +108,7 @@ function validate2(isRequired, pattern, name, value, validatePropertyOwner) {
 			  return item != name
 			});
 
-			errorText = "Enter positive value";
+			errorText = "Invalid field data";
 
 	  }
   }

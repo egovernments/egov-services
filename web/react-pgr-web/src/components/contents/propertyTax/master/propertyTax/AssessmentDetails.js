@@ -138,7 +138,6 @@ class AssessmentDetails extends Component {
 	let {toggleSnackbarAndSetText} = this.props;
 
       Api.commonApiPost('pt-property/property/propertytypes/_search',{}, {},false, true).then((res)=>{
-		  res.propertyTypes.unshift({id:-1, name:'None'});
         console.log(res);
         currentThis.setState({propertytypes:res.propertyTypes})
       }).catch((err)=> {
@@ -202,7 +201,7 @@ handleDepartment = (e) => {
           currentThis.setState({propertySubType:res.propertyTypes})
       }).catch((err)=> {
         currentThis.setState({
-          propertytypes:[]
+          propertySubType:[]
         })
 		toggleSnackbarAndSetText(true, err.message);
         console.log(err)
@@ -216,7 +215,7 @@ handleDepartment = (e) => {
 		  })
 		setLoadingStatus('hide');
 		}).catch((err)=> {
-		  console.log(err)
+		    console.log(err)
 		  	toggleSnackbarAndSetText(true, err.message);
 			setLoadingStatus('hide');
 		})
@@ -378,7 +377,7 @@ handleAge = (year) => {
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-                                              >
+                                              ><MenuItem value={-1} primaryText="None"/>
                                                   {renderOption(this.state.propertytypes)}
                                               </SelectField>
                                           </Col>
@@ -487,7 +486,7 @@ handleAge = (year) => {
                                           <Col xs={12} md={3} sm={6}>
                                               <TextField  className="fullWidth"
                                                   floatingLabelText={<span>{translate('pt.create.groups.assessmentDetails.fields.extentOfSite')}<span style={{"color": "#FF0000"}}> *</span></span>}
-												  hintText="14"
+												  hintText="876"
                                                   errorText={fieldErrors.extentOfSite ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.extentOfSite}</span> : ""}
                                                   value={assessmentDetails.extentOfSite ? assessmentDetails.extentOfSite : ""}
 												  floatingLabelFixed={true}
@@ -518,10 +517,10 @@ handleAge = (year) => {
 										  <Col xs={12} md={3} sm={6}>
 												<TextField  className="fullWidth"
 												  floatingLabelText={translate('pt.create.groups.floorDetails.fields.buildingPermissionNumber')}
-												  errorText={fieldErrors.bpaNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.bpaNo}</span> : ""}
+												  errorText={fieldErrors.bpaNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.bpaNo}</span> : ""}
 												  value={assessmentDetails.bpaNo ? assessmentDetails.bpaNo : ""}
 												  floatingLabelFixed={true}
-												  onChange={(e) => {handleChange(e, "bpaNo", false, /^[a-z0-9]+$/i)}}
+												  onChange={(e) => {handleChange(e, "bpaNo", false, /^[0-9,<>!@#\$%\^\&*\)\(+=._-]+$/g)}}
 												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 												  underlineStyle={styles.underlineStyle}
 												  underlineFocusStyle={styles.underlineFocusStyle}
@@ -536,7 +535,22 @@ handleAge = (year) => {
 												  floatingLabelText={translate('pt.create.groups.floorDetails.fields.buildingPermissionDate')}
 												  errorText={fieldErrors.bpaDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.bpaDate}</span> : ""}
 												  value={assessmentDetails.bpaDate ? assessmentDetails.bpaDate : ""}
-												  onChange={(e) => {handleChange(e,"bpaDate", false, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
+												  onChange={(e,value) => {
+													  var val = value;
+													  if(value.length == 2 && !value.match('/')){
+														   val+='/';
+														  } else if(value.length == 5) {
+															  var a = value.split('/');
+															  if(a[1].length ==2 && !a[1].match('/')){
+																  val+='/';
+															  }
+														  } 
+													   var e = {
+														  target: {
+															  value: val
+														  }
+														}
+													  handleChange(e,"bpaDate", false, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
 												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 												  underlineStyle={styles.underlineStyle}
 												  underlineFocusStyle={styles.underlineFocusStyle}
@@ -558,21 +572,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  initForm: () => {
-    dispatch({
-      type: "RESET_STATE",
-      validationData: {
-        required: {
-          current: [],
-          required: ['reasonForCreation', 'propertyType', 'propertySubType', 'extentOfSite' ]
-        },
-        pattern: {
-          current: [],
-          required: []
-        }
-      }
-    });
-  },
+  
   handleChange: (e, property, isRequired, pattern) => {
     dispatch({type: "HANDLE_CHANGE", property, value: e.target.value, isRequired, pattern});
   },

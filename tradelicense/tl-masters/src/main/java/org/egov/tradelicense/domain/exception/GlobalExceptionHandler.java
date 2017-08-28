@@ -9,7 +9,9 @@ import java.util.Map;
 import org.egov.tl.commons.web.contract.Error;
 import org.egov.tl.commons.web.contract.ErrorRes;
 import org.egov.tl.commons.web.contract.ResponseInfo;
+import org.egov.tl.masters.web.adapters.error.DuplicateDocumentTypeAdapter;
 import org.egov.tradelicense.config.PropertiesManager;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -141,7 +143,63 @@ public class GlobalExceptionHandler {
 			List<Error> errorList = new ArrayList<Error>();
 			errorList.add(error);
 			return new ErrorRes(responseInfo, errorList);
-		} else {
+		} 
+		else if (ex instanceof DuplicateDocumentTypeException) {
+			List<Error> errorList = new ArrayList<Error>();
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setApiId(((DuplicateDocumentTypeException) ex).getRequestInfo().getApiId());
+			responseInfo.setVer(((DuplicateDocumentTypeException) ex).getRequestInfo().getVer());
+			responseInfo.setMsgId(((DuplicateDocumentTypeException) ex).getRequestInfo().getMsgId());
+			responseInfo.setTs(new Date().getTime());
+			responseInfo.setStatus(propertiesManager.getFailedStatus());
+			errorList.add(new DuplicateDocumentTypeAdapter().getErrorResponse(((DuplicateDocumentTypeException) ex).getCustomMsg(), ((DuplicateDocumentTypeException) ex).getRequestInfo()));
+			return new ErrorRes(responseInfo, errorList);
+		} 
+		else if (ex instanceof InvalidCategoryException) {
+
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getInvalidCategoryIdMsg(),
+					((InvalidCategoryException) ex).getCustomMsg(), null);
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setApiId(((InvalidCategoryException) ex).getRequestInfo().getApiId());
+			responseInfo.setVer(((InvalidCategoryException) ex).getRequestInfo().getVer());
+			responseInfo.setMsgId(((InvalidCategoryException) ex).getRequestInfo().getMsgId());
+			responseInfo.setTs(new Date().getTime());
+			responseInfo.setStatus(propertiesManager.getFailedStatus());
+			List<Error> errorList = new ArrayList<Error>();
+			errorList.add(error);
+			return new ErrorRes(responseInfo, errorList);
+		} 
+		else if (ex instanceof InvalidSubCategoryException) {
+
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getSubCategoryCustomMsg(),
+					((InvalidSubCategoryException) ex).getCustomMsg(), null);
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setApiId(((InvalidSubCategoryException) ex).getRequestInfo().getApiId());
+			responseInfo.setVer(((InvalidSubCategoryException) ex).getRequestInfo().getVer());
+			responseInfo.setMsgId(((InvalidSubCategoryException) ex).getRequestInfo().getMsgId());
+			responseInfo.setTs(new Date().getTime());
+			responseInfo.setStatus(propertiesManager.getFailedStatus());
+			List<Error> errorList = new ArrayList<Error>();
+			errorList.add(error);
+			return new ErrorRes(responseInfo, errorList);
+		} 
+	 
+	else if (ex instanceof InvalidDocumentTypeException) {
+
+		Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getInvalidDocumentTypeIdMsg(),
+				((InvalidSubCategoryException) ex).getCustomMsg(), null);
+		ResponseInfo responseInfo = new ResponseInfo();
+		responseInfo.setApiId(((InvalidDocumentTypeException) ex).getRequestInfo().getApiId());
+		responseInfo.setVer(((InvalidDocumentTypeException) ex).getRequestInfo().getVer());
+		responseInfo.setMsgId(((InvalidDocumentTypeException) ex).getRequestInfo().getMsgId());
+		responseInfo.setTs(new Date().getTime());
+		responseInfo.setStatus(propertiesManager.getFailedStatus());
+		List<Error> errorList = new ArrayList<Error>();
+		errorList.add(error);
+		return new ErrorRes(responseInfo, errorList);
+		
+	} 
+		else {
 
 			Error error = new Error(HttpStatus.INTERNAL_SERVER_ERROR.toString(), ex.getMessage(), null,
 					new HashMap<String, String>());

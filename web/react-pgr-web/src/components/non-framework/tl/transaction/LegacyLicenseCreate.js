@@ -5,6 +5,8 @@ import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import Checkbox from 'material-ui/Checkbox';
 import TextField from 'material-ui/TextField';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
 
 import _ from "lodash";
 import ShowFields from "../../../framework/showFields";
@@ -16,6 +18,16 @@ import UiButton from '../../../framework/components/UiButton';
 import {fileUpload, getInitiatorPosition} from '../../../framework/utility/utility';
 import $ from "jquery";
 
+var flag = 0;
+var flags = 0;
+var flag1 = 0;
+var flag2 = 0;
+var flag3 = 0;
+var tradeCatVal = "";
+var tradeSubVal = "";
+var tradeLicenseVal = "";
+
+
 var specifications={};
 let reqRequired = [];
 let baseUrl="https://raw.githubusercontent.com/abhiegov/test/master/specs/";
@@ -26,8 +38,33 @@ class LegacyLicenseCreate extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      validityYear: ""
+      validityYear: "",
     }
+
+    this.handleOpen = () => {
+   this.setState({open: true});
+ };
+
+ this.handleClose = () => {
+   this.setState({open: false});
+ };
+
+ this.handleOpenSub = () => {
+this.setState({openSub: true});
+};
+
+this.handleCloseSub = () => {
+this.setState({openSub: false});
+};
+
+this.handleOpenLicense = () => {
+this.setState({openLicense: true});
+};
+
+this.handleCloseLicense = () => {
+this.setState({openLicense: false});
+};
+
   }
 
   setLabelAndReturnRequired(configObject) {
@@ -227,7 +264,7 @@ class LegacyLicenseCreate extends Component {
           if(self.props.actionName == "update") {
             var hash = "/update/tl/CreateLegacyLicense/";
           } else {
-            var hash = "/view/tl/CreateLegacyLicense" + "/" + _.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath);
+            var hash = "/non-framework/tl/transaction/viewLegacyLicense" + "/" + encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
           }
           self.props.setRoute(hash);
         }
@@ -294,27 +331,27 @@ class LegacyLicenseCreate extends Component {
         var jPath = match.replace(/\{|}/g,"");
         _url = _url.replace(match, _.get(formData, jPath));
       }
-
       //Check if documents, upload and get fileStoreId
-      if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"] && formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"].length) {
-        let documents = [...formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"]];
+      if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][0]["supportDocuments"] && formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][0]["supportDocuments"].length) {
+        let supportDocuments = [...formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][0]["supportDocuments"]];
         let _docs = [];
-        let counter = documents.length, breakOut = 0;
-        for(let i=0; i<documents.length; i++) {
-          fileUpload(documents[i].fileStoreId, self.props.moduleName, function(err, res) {
+        let counter = supportDocuments.length, breakOut = 0;
+        for(let i=0; i<supportDocuments.length; i++) {
+          fileUpload(supportDocuments[i].fileStoreId, self.props.moduleName, function(err, res) {
             if(breakOut == 1) return;
             if(err) {
               breakOut = 1;
               self.props.setLoadingStatus('hide');
               self.props.toggleSnackbarAndSetText(true, err, false, true);
             } else {
-              _docs.push({
-                ...documents[i],
-                fileStoreId: res.files[0].fileStoreId
-              })
+              if(res.files[0].fileStoreId)
+                _docs.push({
+                  ...supportDocuments[i],
+                  fileStoreId: res.files[0].fileStoreId
+                })
               counter--;
               if(counter == 0 && breakOut == 0) {
-                formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"] = _docs;
+                formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][0]["supportDocuments"] = _docs;
                 self.makeAjaxCall(formData, _url);
               }
             }
@@ -610,6 +647,31 @@ class LegacyLicenseCreate extends Component {
     setMockData(_mockData);
   }
 
+
+
+//Start Point of API Call to Populate Validity Year and UOMID
+populateValidtyYear = (categoryId) => {
+  let self = this;
+
+Api.commonApiPost("/tl-masters/category/v1/_search",{"ids":categoryId, "type":"subcategory"}).then(function(response)
+{
+  // handleChange (e, "" )
+  console.log(response);
+  //console.log(response.categories[0].validityYears);
+  self.handleChange({target:{value:null}}, "licenses[0].validityYears");
+
+
+  self.handleChange({target:{value:null}}, "licenses[0].uomName");
+  self.handleChange({target:{value:null}}, "licenses[0].uomId", true);
+
+},function(err) {
+    console.log(err);
+
+});
+}
+//End Point of API Call to Populate Validity Year and UOMID
+
+//***Start Fee Details Calculations***
 calculateFeeDetails = (licenseValidFromDate, validityYear) => {
   var getStartYear = new Date(Number(licenseValidFromDate)).getFullYear();
   var curDate = new Date();
@@ -620,6 +682,8 @@ calculateFeeDetails = (licenseValidFromDate, validityYear) => {
   var startYear = getStartYear;
   var Validity = validityYear;
   let self = this;
+
+  console.log(self.getVal("licenses[0].licenseValidFromDate"));
 
   self.handleChange({target:{value:[]}},"licenses[0].feeDetails");
 
@@ -649,6 +713,101 @@ calculateFeeDetails = (licenseValidFromDate, validityYear) => {
      }
      self.handleChange({target:{value:FeeDetails}},"licenses[0].feeDetails");
 }
+//***End Fee Details Calculations***
+
+  noChange = () => {
+    let self = this;
+    this.setState({open: false});
+    flag1=1;
+    var e = {target:{value:tradeCatVal}}
+    console.log(tradeCatVal);
+    this.handleChange(e, "licenses[0].categoryId")
+  }
+
+  yesCatChange = () => {
+    let self = this;
+    this.setState({open: false});
+    flag = 1;
+    tradeCatVal = this.props.formData.licenses[0].categoryId;
+  }
+
+    noSubChange = () => {
+      let self = this;
+      this.setState({openSub: false});
+      flag2=1;
+      var e = {target:{value:tradeSubVal}}
+      console.log(tradeCatVal);
+      this.handleChange(e, "licenses[0].subCategoryId")
+
+    }
+
+    yesSubChange = () => {
+      let self = this;
+      this.setState({openSub: false});
+      flags = 1;
+      tradeSubVal = this.props.formData.licenses[0].subCategoryId;
+    }
+
+    noLicenseChange = () => {
+      let self = this;
+      this.setState({openLicense: false});
+      flag3=1;
+      var e = {target:{value:tradeLicenseVal}}
+      this.handleChange(e, "licenses[0].licenseValidFromDate")
+
+    }
+
+    yesLicenseChange = () => {
+      let self = this;
+      this.setState({openLicense: false});
+      flags = 1;
+      tradeLicenseVal = this.props.formData.licenses[0].licenseValidFromDate;
+    }
+
+handlePopUp = (type , jsonPath, value) => {
+  if(type == "tradeCategory") {
+    if(this.getVal("licenses[0].feeDetails") && flag != 0 && tradeCatVal !=  value) {
+      console.log("hello", value);
+      this.handleOpen();
+    } else {
+      console.log("hi", value);
+      flag = 1;
+      tradeCatVal = value;
+
+      console.log(value);
+    }
+  }
+}
+
+handlePopUpsub = (type , jsonPath, value) => {
+  if(type == "tradeSubCategory") {
+    if(this.getVal("licenses[0].feeDetails") && flags != 0 && tradeSubVal !=  value) {
+      console.log("hello", value);
+      this.handleOpenSub();
+    } else {
+      console.log("hi", value);
+      flags = 1;
+      tradeSubVal = value;
+
+      console.log(value);
+    }
+  }
+}
+
+handlePopUpLicense = (type , jsonPath, value) => {
+  if(type == "tradeLicense") {
+    if(this.getVal("licenses[0].feeDetails") && flag != 0 && tradeLicenseVal !=  value && ((value+"").length == 12 || (value+"").length == 13)) {
+      console.log("hello", value);
+      this.handleOpenLicense();
+    } else {
+      console.log("hi", value);
+      flag = 1;
+      tradeLicenseVal = value;
+
+      console.log(value);
+    }
+  }
+}
 
   handleChange = (e, property, isRequired=false, pattern="", requiredErrMsg="Required", patternErrMsg="Pattern Missmatch") => {
       let {getVal} = this;
@@ -658,41 +817,21 @@ calculateFeeDetails = (licenseValidFromDate, validityYear) => {
       let {validityYear}=this.state;
       let obj = specifications[`tl.create`];
 
+      console.log(e)
 
-    //   Api.commonApiPost("/tl-services/license/v1/_create").then(function(response)
-    //   {
-    //
-    //   console.log(response.responseInfo.status);
-    // //  self.handleChange({target:{value:response.categories[0].validityYears}}, , false, "");
-    //
-    //   },function(err) {
-    //     console.log(err);
-    //
-    //   });
+      if (property == "licenses[0].categoryId" && flag1==0) {
+        this.handlePopUp("tradeCategory", "licenses[0].categoryId", e.target.value);
+      }
+      if (property == "licenses[0].subCategoryId" && flag2==0) {
+        this.handlePopUpsub("tradeSubCategory", "licenses[0].subCategoryId", e.target.value);
+      }
+      if (property == "licenses[0].licenseValidFromDate" && flag3==0 && ((e.target.value+"").length == 12 || (e.target.value+"").length == 13)) {
+        this.handlePopUpLicense("tradeLicense", "licenses[0].licenseValidFromDate", e.target.value);
+      }
 
-
-      // if (property == "licenses[0].tradeCommencementDate") {
-      //   console.log(new Date(e.target.value));
-      //   var month = new Date(e.target.value).getMonth()+1;
-      //   var date = new Date(e.target.value).getDate()+'/'+month+'/'+new Date(e.target.value).getFullYear();
-      //   console.log(date);
-      //   self.handleChange({target:{value:date}}, "licenses[0].tradeCommencementDate", false, "");
-      // }
-
-
-    //   if (property == "licenses[0].subCategoryId") {
-    //   console.log(e.target.value);
-    //     Api.commonApiPost("/tl-masters/category/v1/_search",{"ids":e.target.value}).then(function(response)
-    //     {
-    //     var checkYear ;
-    //     console.log(checkYear);
-    //    self.handleChange({target:{value:response.categories[0].validityYears}}, , false, "");
-    //
-    //   },function(err) {
-    //       console.log(err);
-    //
-    //   });
-    // }
+      flag1=0;
+      flag2=0;
+      flag3=0;
 
     if (property == "licenses[0].subCategoryId") {
       console.log(e.target.value);
@@ -721,56 +860,14 @@ calculateFeeDetails = (licenseValidFromDate, validityYear) => {
     }
 
 
-
-    //console.log(this.formData.licenses[0].licenseValidFromDate);
+//***Start Point To Populate Fee Details Section***
      if ((property == "licenses[0].licenseValidFromDate" || property=="licenses[0].subCategoryId") && getVal("licenses[0].licenseValidFromDate") && self.state.validityYear) {
-console.log(e.target.value);
-console.log(self.state.validityYear);
-console.log((e.target.value+ "").length);
        if((e.target.value+"").length == 12 || (e.target.value+"").length == 13){
-         console.log(e.target.value);
-         console.log(self.state.validityYear);
+          console.log(e.target.value);
          self.calculateFeeDetails(e.target.value, self.state.validityYear)
         }
        }
-
-
-      //if (property == "licenses[0].agreementDate") {
-      //   console.log(new Date(e.target.value));
-      //   var month = new Date(e.target.value).getMonth()+1;
-      //   var date = new Date(e.target.value).getDate()+'/'+month+'/'+new Date(e.target.value).getFullYear();
-      //   console.log(date);
-      //   self.handleChange({target:{value:date}}, "licenses[0].agreementDate", false, "");
-      // }
-
-      //if (property == "licenses[0].tradeCommencementDate") {
-      //   console.log(new Date(e.target.value));
-      //   var month = new Date(e.target.value).getMonth()+1;
-      //   var date = new Date(e.target.value).getDate()+'/'+month+'/'+new Date(e.target.value).getFullYear();
-      //   console.log(date);
-      //   self.handleChange({target:{value:date}}, "licenses[0].tradeCommencementDate", false, "");
-      // }
-
-
-if(property == "licenses[0].categoryId"){
-  Api.commonApiPost("/tl-masters/category/v1/_search",{"ids":e.target.value, "type":"subcategory"}).then(function(response)
-  {
-    // handleChange (e, "" )
-    console.log(response);
-    //console.log(response.categories[0].validityYears);
-    handleChange({target:{value:null}}, "licenses[0].validityYears");
-
-
-    handleChange({target:{value:null}}, "licenses[0].uomName");
-    handleChange({target:{value:null}}, "licenses[0].uomId", true);
-
-  },function(err) {
-      console.log(err);
-
-  });
-}
-
-
+//***End Point To Populate Fee Details Section***
 
 
 
@@ -894,6 +991,7 @@ if(property == "licenses[0].categoryId"){
               //console.log(mockData[moduleName + "." + actionName].groups);
               setMockData(mockData);
               var temp = {...formData};
+
               self.setDefaultValues(mockData[moduleName + "." + actionName].groups, temp);
               setFormData(temp);
               break;
@@ -968,6 +1066,49 @@ if(property == "licenses[0].categoryId"){
   }
 
   render() {
+    const actions = [
+          <FlatButton
+            label="No"
+            primary={true}
+            onClick={this.noChange}
+          />,
+          <FlatButton
+            label="Yes"
+            primary={true}
+            keyboardFocused={true}
+            onClick={this.yesCatChange}
+          />,
+        ];
+
+        const actionsSub = [
+              <FlatButton
+                label="No"
+                primary={true}
+                onClick={this.noSubChange}
+              />,
+              <FlatButton
+                label="Yes"
+                primary={true}
+                keyboardFocused={true}
+                onClick={this.yesSubChange}
+              />,
+            ];
+
+            const actionsLicense = [
+                  <FlatButton
+                    label="No"
+                    primary={true}
+                    onClick={this.noLicenseChange}
+                  />,
+                  <FlatButton
+                    label="Yes"
+                    primary={true}
+                    keyboardFocused={true}
+                    onClick={this.yesLicenseChange}
+                  />,
+                ];
+
+
     let {resultList, rowClickHandler,showDataTable,showHeader} = this.props;
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler} = this;
@@ -1017,9 +1158,40 @@ if(property == "licenses[0].categoryId"){
                 })}
               </tbody>
               </Table>
+
   		      </CardText>
   		      </Card>
 
+
+            <Dialog
+              title="Dialog With Actions"
+              actions={actions}
+              modal={false}
+              open={this.state.open}
+              onRequestClose={this.handleClose}
+            >
+            This will reset Fee Details. Do you want to proceed?
+            </Dialog>
+
+            <Dialog
+              title="Dialog With Actions"
+              actions={actionsSub}
+              modal={false}
+              open={this.state.openSub}
+              onRequestClose={this.handleCloseSub}
+            >
+            This will reset Fee Details. Do you want to proceed?
+            </Dialog>
+
+            <Dialog
+              title="Dialog With Actions"
+              actions={actionsLicense}
+              modal={false}
+              open={this.state.openLicense}
+              onRequestClose={this.handleCloseLicense}
+            >
+            This will reset Fee Details. Do you want to proceed?
+            </Dialog>
 
 
             <br/>

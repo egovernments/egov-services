@@ -39,22 +39,29 @@
  */
 package org.egov.collection.repository.querybuilder;
 
+import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.StringUtils;
+import org.egov.collection.model.Instrument;
+import org.egov.collection.model.ReceiptSearchCriteria;
+import org.egov.collection.repository.InstrumentRepository;
+import org.egov.common.contract.request.RequestInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
-import lombok.EqualsAndHashCode;
-
-import org.apache.commons.lang3.StringUtils;
-import org.egov.collection.model.ReceiptSearchCriteria;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
+import java.util.stream.Collectors;
 
 @EqualsAndHashCode
 @Component
 public class ReceiptDetailQueryBuilder {
+
+    @Autowired
+    private InstrumentRepository instrumentRepository;
 
 	public static final Logger logger = LoggerFactory
 			.getLogger(ReceiptDetailQueryBuilder.class);
@@ -183,11 +190,15 @@ public class ReceiptDetailQueryBuilder {
 		}
 
         if(StringUtils.isNotBlank(searchCriteria.getPaymentType())) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
-                    selectQuery);
-            selectQuery.append(" rh.id in(select receiptheader from egcl_receiptinstrument receiptinstrument " +
-                    " inner join egf_instrument instrument on instrument.id=receiptinstrument.instrumentheader where instrument.instrumenttypeid = ?)  ");
-            preparedStatementValues.add(searchCriteria.getPaymentType());
+            List<Instrument> instruments = instrumentRepository.searchInstrumentsByPaymentMode(searchCriteria.getPaymentType(),searchCriteria.getTenantId(),new RequestInfo());
+            List<String> instrumentIds = instruments.stream()
+                    .map(Instrument::getId).collect(Collectors.toList());
+            if(!instrumentIds.isEmpty()) {
+                isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
+                        selectQuery);
+                selectQuery.append(" rh.id in(select receiptheader from egcl_receiptinstrument receiptinstrument " +
+                        "where receiptinstrument.instrumentheader IN " + getInstrumentIdQuery(instrumentIds) + ")");
+            }
         }
 
 		if (searchCriteria.getReceiptNumbers() != null) {
@@ -271,6 +282,17 @@ public class ReceiptDetailQueryBuilder {
 		}
 		return query.append(")").toString();
 	}
+
+    private static String getInstrumentIdQuery(List<String> instrumentIdList) {
+        StringBuilder query = new StringBuilder("(");
+        if (instrumentIdList.size() >= 1) {
+            query.append("'" +instrumentIdList.get(0).toString() + "'");
+            for (int i = 1; i < instrumentIdList.size(); i++) {
+                query.append(", '" + instrumentIdList.get(i) + "'");
+            }
+        }
+        return query.append(")").toString();
+    }
 
 	private void addOrderByClause(StringBuilder selectQuery,
 			ReceiptSearchCriteria criteria) {
@@ -373,4 +395,13 @@ public class ReceiptDetailQueryBuilder {
         return "select id from egcl_receiptheader where receiptnumber = ? and tenantId = ? ";
     } */
 
+
+    public static String insertOnlinePayments() {
+        logger.info("Returning Online payment query to the repository");
+
+        return "INSERT INTO egcl_onlinepayments(id, receiptheader, paymentgatewayname, transactionnumber, transactionamount, transactiondate, authorisation_statuscode, "
+                + " status, remarks, createdby, lastmodifiedby, createddate, lastmodifieddate, tenantId) "
+                + "VALUES (NEXTVAL('seq_egcl_onlinepayments'), :receiptheader, :paymentgatewayname, :transactionnumber, :transactionamount, :transactiondate, :authorisation_statuscode, "
+                + ":status, :remarks, :createdby, :lastmodifiedby, :createddate, :lastmodifieddate, :tenantId)";
+    }
 }

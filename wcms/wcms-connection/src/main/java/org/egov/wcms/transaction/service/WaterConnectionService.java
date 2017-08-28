@@ -46,6 +46,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.wcms.transaction.config.ConfigurationManager;
@@ -78,6 +79,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
 
 @Service
 public class WaterConnectionService {
@@ -134,18 +136,24 @@ public class WaterConnectionService {
         Long connectionAddressId = 0L ;
         Long connectionLocationId = 0L ;
         try {
+            if(waterConnectionRequest.getConnection()!=null && 
+                    waterConnectionRequest.getConnection().getIsLegacy())
+                waterConnectionRequest.getConnection().setConnectionStatus(WcmsConnectionConstants.CONNECTIONSTATUSACTIVE);
+            else
+                waterConnectionRequest.getConnection().setConnectionStatus(WcmsConnectionConstants.CONNECTIONSTATUSCREAED);
+          
         	if(waterConnectionRequest.getConnection().getWithProperty()){ 
         		waterConnectionRepository.persistConnection(waterConnectionRequest);
         	}
         	else { 
+        	        createUserId(waterConnectionRequest);
+                        logger.info("Updating Water Connection :: " );
+                        connectionLocationId = waterConnectionRepository.insertConnectionLocation(waterConnectionRequest);
+                        logger.info("Creating User Id :: " );
         		waterConnectionRepository.persistConnection(waterConnectionRequest);
         		logger.info("Creating Address Id :: " );
-        		connectionAddressId = waterConnectionRepository.insertConnectionAddress(waterConnectionRequest);
-        		logger.info("Creating Location Id :: " );
-        		connectionLocationId = waterConnectionRepository.insertConnectionLocation(waterConnectionRequest);
-        		logger.info("Creating User Id :: " );
-        		createUserId(waterConnectionRequest);
-        		logger.info("Updating Water Connection :: " );
+/*        		connectionAddressId = waterConnectionRepository.insertConnectionAddress(waterConnectionRequest);
+*/        		logger.info("Creating Location Id :: " );
         		waterConnectionRepository.updateValuesForNoPropertyConnections(waterConnectionRequest, connectionAddressId, connectionLocationId);
         	}
         	
@@ -169,6 +177,11 @@ public class WaterConnectionService {
         
         logger.info("User Service Search URL :: " + searchUrl.toString() + " \n userSearchRequestInfo  :: "
                 + userSearchRequestInfo);
+        if (StringUtils.isNotBlank(waterConnReq.getConnection().getConnectionOwner().getMobileNumber())
+                ||StringUtils.isNotBlank(waterConnReq.getConnection().getConnectionOwner().getEmailId() )
+                ||StringUtils.isNotBlank(waterConnReq.getConnection().getConnectionOwner().getAadhaarNumber())
+                ||StringUtils.isNotBlank(waterConnReq.getConnection().getConnectionOwner().getUserName())
+                ){
         userResponse = new RestTemplate().postForObject(searchUrl.toString(), userSearchRequestInfo, UserResponseInfo.class);
         logger.info("User Service Search Response :: " + userResponse);
         
@@ -191,6 +204,8 @@ public class WaterConnectionService {
                     + userSearchRequestInfo);
             userResponse = new RestTemplate().postForObject(searchUrl.toString(), userSearchRequestInfo,
                     UserResponseInfo.class);
+		}
+        }
             logger.info("User Service Search Response :: " + userResponse);
             if (null == userResponse || userResponse.getUser().size() == 0) { 
                 UserRequestInfo userRequestInfo = new UserRequestInfo();
@@ -207,7 +222,7 @@ public class WaterConnectionService {
                 user.setId(userCreateResponse.getUser().get(0).getId());
                 waterConnReq.getConnection().getConnectionOwner().setId(userCreateResponse.getUser().get(0).getId());
             }
-		}
+		
 		
 		if(userResponse != null){
 			logger.info("User Response after Create and Search :: " + userResponse);
@@ -220,15 +235,35 @@ public class WaterConnectionService {
     
     private User buildUserObjectFromConnection(WaterConnectionReq waterConnReq) { 
     	Connection conn= waterConnReq.getConnection(); 
+    	String userName = null;
+    	if(StringUtils.isNotBlank(waterConnReq.getConnection().getConnectionOwner().getMobileNumber()))
+    	userName=conn.getConnectionOwner().getMobileNumber();
+    	else if(userName ==null && StringUtils.isNotBlank(waterConnReq.getConnection().getConnectionOwner().getAadhaarNumber()))
+    	userName=conn.getConnectionOwner().getAadhaarNumber();
+    	else if(userName ==null && StringUtils.isNotBlank(waterConnReq.getConnection().getConnectionOwner().getEmailId()))
+            userName=conn.getConnectionOwner().getEmailId();
+    	else if(userName ==null && StringUtils.isNotBlank(waterConnReq.getConnection().getConnectionOwner().getUserName()))
+            userName=conn.getConnectionOwner().getUserName();
+    	else
+    	{
+    	userName=restConnectionService.generateRequestedDocumentNumber(waterConnReq.getConnection().getTenantId(),
+                configurationManager.getUserNameService(),configurationManager.getUserNameFormat(),waterConnReq.getRequestInfo());
+    	}
     	Role role = Role.builder().code(roleCode).name(roleName).build();
     	List<Role> roleList = new ArrayList<>();
     	roleList.add(role);
     	return User.builder().aadhaarNumber(conn.getConnectionOwner().getAadhaarNumber())
-    			.userName(conn.getConnectionOwner().getMobileNumber())
+    			.userName(userName)
+    			.mobileNumber(userName)
     			.name(conn.getConnectionOwner().getName())
     			.emailId(conn.getConnectionOwner().getEmailId())
-    			.permanentAddress(conn.getConnectionOwner().getPermanentAddress())
-    			.mobileNumber(conn.getConnectionOwner().getMobileNumber())
+    			.permanentAddress(conn.getAddress().getAddressLine1())
+    			.permanentPincode(conn.getAddress().getPinCode())
+    			.permanentCity(conn.getAddress().getCity())
+    			.correspondenceAddress(conn.getAddress().getAddressLine1())
+                        .correspondencePincode(conn.getAddress().getPinCode())
+                        .correspondenceCity(conn.getAddress().getCity())
+    			//.mobileNumber(conn.getConnectionOwner().getMobileNumber())
     			.gender(conn.getConnectionOwner().getGender())
     			.isPrimaryOwner(conn.getConnectionOwner().getIsPrimaryOwner())
     			.isSecondaryOwner(conn.getConnectionOwner().getIsSecondaryOwner())

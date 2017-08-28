@@ -7,6 +7,7 @@ import org.egov.tl.commons.web.response.CategoryResponse;
 import org.egov.tl.commons.web.response.LicenseStatusResponse;
 import org.egov.tl.commons.web.response.UOMResponse;
 import org.egov.tl.indexer.config.PropertiesManager;
+import org.egov.tl.indexer.domain.exception.EndPointException;
 import org.egov.tl.indexer.web.requests.TlMasterRequestInfo;
 import org.egov.tl.indexer.web.requests.TlMasterRequestInfoWrapper;
 import org.modelmapper.ModelMapper;
@@ -23,7 +24,7 @@ public class CategoryContractRepository {
 	private RestTemplate restTemplate;
 
 	@Autowired
-	private PropertiesManager propertiesManger;
+	private PropertiesManager propertiesManager;
 
 	public CategoryContractRepository(RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
@@ -31,9 +32,9 @@ public class CategoryContractRepository {
 	}
 
 	public CategoryResponse findByCategoryIds(String tenantId, String ids, RequestInfoWrapper requestInfoWrapper) {
-		String hostUrl = propertiesManger.getTradeLicenseMasterServiceHostName()
-				+ propertiesManger.getTradeLicenseMasterServiceBasePath();
-		String searchUrl = propertiesManger.getCategoryServiceSearchPath();
+		String hostUrl = propertiesManager.getTradeLicenseMasterServiceHostName()
+				+ propertiesManager.getTradeLicenseMasterServiceBasePath();
+		String searchUrl = propertiesManager.getCategoryServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
 		if (ids != null) {
@@ -51,7 +52,8 @@ public class CategoryContractRepository {
 
 			categoryResponse = restTemplate.postForObject(url, tlMasterRequestInfoWrapper, CategoryResponse.class);
 		} catch (Exception e) {
-			log.error("Error while connecting to the category end point");
+			throw new EndPointException(propertiesManager.getEndPointError() + url,
+					requestInfoWrapper.getRequestInfo());
 		}
 		if (categoryResponse != null && categoryResponse.getCategories() != null
 				&& categoryResponse.getCategories().size() > 0) {
@@ -64,9 +66,9 @@ public class CategoryContractRepository {
 
 	public UOMResponse findByUomIds(String tenantId, String ids, RequestInfoWrapper requestInfoWrapper) {
 
-		String hostUrl = propertiesManger.getTradeLicenseMasterServiceHostName()
-				+ propertiesManger.getTradeLicenseMasterServiceBasePath();
-		String searchUrl = propertiesManger.getUomServiceSearchPath();
+		String hostUrl = propertiesManager.getTradeLicenseMasterServiceHostName()
+				+ propertiesManager.getTradeLicenseMasterServiceBasePath();
+		String searchUrl = propertiesManager.getUomServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
 		if (ids != null) {
@@ -84,7 +86,8 @@ public class CategoryContractRepository {
 
 			uomResponse = restTemplate.postForObject(url, tlMasterRequestInfoWrapper, UOMResponse.class);
 		} catch (Exception e) {
-			log.error("Error while connecting to the category end point");
+			throw new EndPointException(propertiesManager.getEndPointError() + url,
+					requestInfoWrapper.getRequestInfo());
 		}
 		if (uomResponse != null && uomResponse.getUoms() != null && uomResponse.getUoms().size() > 0) {
 			return uomResponse;
@@ -96,9 +99,9 @@ public class CategoryContractRepository {
 
 	public LicenseStatusResponse findByStatusIds(String tenantId, String ids, RequestInfoWrapper requestInfoWrapper) {
 
-		String hostUrl = propertiesManger.getTradeLicenseMasterServiceHostName()
-				+ propertiesManger.getTradeLicenseMasterServiceBasePath();
-		String searchUrl = propertiesManger.getStatusServiceSearchPath();
+		String hostUrl = propertiesManager.getTradeLicenseMasterServiceHostName()
+				+ propertiesManager.getTradeLicenseMasterServiceBasePath();
+		String searchUrl = propertiesManager.getStatusServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
 		if (ids != null) {
@@ -117,7 +120,8 @@ public class CategoryContractRepository {
 			licenseStatusResponse = restTemplate.postForObject(url, tlMasterRequestInfoWrapper,
 					LicenseStatusResponse.class);
 		} catch (Exception e) {
-			log.error("Error while connecting to the category end point");
+			throw new EndPointException(propertiesManager.getEndPointError() + url,
+					requestInfoWrapper.getRequestInfo());
 		}
 		if (licenseStatusResponse != null && licenseStatusResponse.getLicenseStatuses() != null
 				&& licenseStatusResponse.getLicenseStatuses().size() > 0) {

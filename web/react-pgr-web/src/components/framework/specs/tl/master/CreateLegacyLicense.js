@@ -5,7 +5,7 @@ var dat = {
     "useTimestamp": true,
     "tenantIdRequired": false,
     "objectName": "licenses",
-    "idJsonPath": "licenses[0].id",
+    "idJsonPath": "licenses[0].licenseNumber",
     "groups": [{
         "label": "tl.create.licenses.groups.TradeDetailsTab",
         "name": "TradeDetailsTab",
@@ -364,7 +364,8 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+            "maxLength": "10"
           },
           {
             "name": "licenseValidFromDate",
@@ -375,7 +376,8 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+            "maxLength": "10"
           },
           {
             "name": "TradeOwner",
@@ -414,7 +416,7 @@ var dat = {
       },
 
       {
-        "label": "Agreement Details",
+        "label": "tl.create.licenses.groups.agreementDetails",
         "name": "createLicenseCategoryType",
         "hide": true,
         "fields": [{
@@ -426,7 +428,8 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+            "maxLength": "10"
           },
           {
             "name": "agreementNo",
@@ -448,15 +451,15 @@ var dat = {
           "fields": [
             {
               "name": "File",
-              "jsonPath": "licenses.supportDocuments",
+              "jsonPath": "licenses[0].supportDocuments",
               "type": "documentList",
               "pathToArray": "documentTypes",
               "displayNameJsonPath": "name",
-              "url": "/tl-masters/documenttype/v1/_search?applicationType=NEW",
+              "url": "/tl-masters/documenttype/v2/_search?applicationType=NEW",
               "autoFillFields": [
                 {
-                  "name": "document",
-                  "jsonPath": "documentTypeId"
+                  "name": "documentTypeId",
+                  "jsonPath": "id"
                 }
               ]
             }
@@ -524,6 +527,7 @@ var dat = {
              "type": "autoCompelete",
              "isRequired": false,
              "isDisabled": false,
+             "allowWrite":true,
              "requiredErrMsg": "",
              "patternErrMsg": "",
              "url":"/tl-services/license/v1/_search?|$..applicationNumber|$..applicationNumber",
@@ -532,15 +536,16 @@ var dat = {
               }
            },
            {
-             "name": "showInactiveLicense",
+             "name": "showActiveLicense",
              "jsonPath": "active",
-             "label": "tl.search.groups.showInactiveLicense",
+             "label": "tl.search.groups.showActiveLicense",
              "pattern": "",
              "type": "checkbox",
              "isRequired": false,
              "isDisabled": false,
              "requiredErrMsg": "",
-             "patternErrMsg": ""
+             "patternErrMsg": "",
+             "defaultValue":true
            },
            {
              "name": "status",
@@ -564,6 +569,7 @@ var dat = {
              "isRequired": false,
              "isDisabled": false,
              "requiredErrMsg": "",
+              "allowWrite":true,
              "patternErrMsg": "",
              "url":"/tl-services/license/v1/_search?|$..licenseNumber|$..licenseNumber",
              "autoCompleteDependancy": {
@@ -579,6 +585,7 @@ var dat = {
              "isRequired": false,
              "isDisabled": false,
              "requiredErrMsg": "",
+              "allowWrite":true,
              "patternErrMsg": "",
              "url":"/tl-services/license/v1/_search?|$..oldLicenseNumber|$..oldLicenseNumber",
              "autoCompleteDependancy": {
@@ -629,12 +636,12 @@ var dat = {
              "name": "ownerName",
              "jsonPath": "ownerName",
              "label": "tl.search.groups.tradeOwnerName",
-             "pattern": "^.{10,10}$",
+             "pattern": "^.[a-zA-Z. ]{3,99}$",
              "type": "text",
              "isRequired": false,
              "isDisabled": false,
              "requiredErrMsg": "",
-             "patternErrMsg": ""
+             "patternErrMsg": "Enter Valid Father/Spouse Name (Min:4, Max:100)"
            },
            {
              "name": "propertyAssesmentNo",
@@ -653,7 +660,7 @@ var dat = {
              "label": "tl.search.groups.adminWardName",
              "pattern": "",
              "type": "singleValueList",
-             "url": "tl-services/license/v1/_search?tenantId=default|$..adminWardId|$..adminWardName",
+             "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=Ward&hierarchyTypeName=ADMINISTRATION|$..boundaryNum|$..name",
              "isRequired": false,
              "isDisabled": false,
              "requiredErrMsg": "",
@@ -676,6 +683,8 @@ var dat = {
        }],
        "result": {
          "header": [{
+           label: "tl.search.result.groups.applicationNumber"
+         }, {
            label: "tl.search.result.groups.tlNumber"
          }, {
            label: "tl.search.result.groups.oldTLNumber"
@@ -702,7 +711,7 @@ var dat = {
          }, {
            label: "tl.search.result.groups.workflowOwnerName"
          }],
-         "values": ["licenseNumber", "oldLicenseNumber", "category", "subCategory", "tradeTitle", "ownerName", "mobileNumber", "propertyAssesmentNo", "adminWardName", "validityYears","active","statusName",""],
+         "values": ["applicationNumber","licenseNumber", "oldLicenseNumber", "category", "subCategory", "tradeTitle", "ownerName", "mobileNumber", "propertyAssesmentNo", "adminWardName", "validityYears","active","statusName",""],
          "resultPath": "licenses",
          "rowClickUrlUpdate": "/update/tl/CreateLegacyLicense/{licenseNumber}",
          "rowClickUrlView": "/non-framework/tl/transaction/viewLegacyLicense/{licenseNumber}"
@@ -733,7 +742,7 @@ var dat = {
               },
               {
                 "name": "OldLicenseNumber",
-                "jsonPath": "licenses[0].OldLicenseNumber",
+                "jsonPath": "licenses[0].oldLicenseNumber",
                 "label": "tl.create.licenses.groups.TradeDetails.OldLicenseNumber",
                 "pattern": "",
                 "type": "text",
@@ -1015,48 +1024,10 @@ var dat = {
                 "isDisabled": false,
                 "requiredErrMsg": "",
                 "patternErrMsg": ""
-              },
-              {
-                "name": "TradeOwner",
-                "jsonPath": "licenses[0].active",
-                "label": "tl.view.licenses.groups.TraderOwnerProperty",
-                "pattern": "",
-                "type": "checkbox",
-                "isRequired": false,
-                "isDisabled": false,
-                "requiredErrMsg": "",
-                "patternErrMsg": "",
-                "defaultValue": false
               }
             ]
-          },
-                    {
-                      "label": "tl.view.licenses.groups.agreement",
-                      "name": "agreement",
-                      "fields": [{
-                          "name": "agreementNo",
-                          "jsonPath": "licenses[0].agreementNo",
-                          "label": "tl.view.licenses.groups.agreementNo",
-                          "pattern": "",
-                          "type": "text",
-                          "isRequired": false,
-                          "isDisabled": false,
-                          "requiredErrMsg": "",
-                          "patternErrMsg": ""
-                        },
-                        {
-                            "name": "agreementDate",
-                            "jsonPath": "licenses[0].agreementDate",
-                            "label": "tl.view.licenses.groups.agreementDate",
-                            "pattern": "",
-                            "type": "text",
-                            "isRequired": false,
-                            "isDisabled": false,
-                            "requiredErrMsg": "",
-                            "patternErrMsg": ""
-                          }
-                      ]
-                    }
+          }
+
         ]
       },
 

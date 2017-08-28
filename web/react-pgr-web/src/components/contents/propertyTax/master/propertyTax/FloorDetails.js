@@ -130,6 +130,7 @@ class FloorDetails extends Component {
 		structureclasses:[],
 		occupancies:[],
 		usages:[],
+		subUsage:[],
 		hasLengthWidth: false,
 		roomInFlat:[{code:1, name:'Yes'}, {code:2, name:'No'}],
 		newFloorError : false,
@@ -604,6 +605,24 @@ deleteOccupantName = (index) =>{
 	
 }
  
+ 
+handleUsage = (value) => {
+	
+		let current = this;
+	
+		let query = { 
+			parent: value
+		}
+	
+	   Api.commonApiPost('pt-property/property/usages/_search', query).then((res)=>{
+			console.log(res);
+			current.setState({subUsage : res.usageMasters})
+        }).catch((err)=> {
+			current.setState({subUsage : []})
+			console.log(err)
+        })
+}   
+ 
   
    render(){
 	  
@@ -639,7 +658,7 @@ deleteOccupantName = (index) =>{
 		  noOfFloors
 				} = this.props;
 
-		let {calcAssessableArea, handleAge, checkFloors} = this;
+		let {calcAssessableArea, handleAge, checkFloors, handleUsage} = this;
 		let cThis = this;
 		
 		const occupantNames = () => {
@@ -853,7 +872,7 @@ deleteOccupantName = (index) =>{
 														  hintText="102"
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.unitNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.unitNo}</span> :""): ""}
 														  value={floorDetails.floor ? floorDetails.floor.unitNo : ""}
-														  onChange={(e) => {handleChangeFloor(e,"floor" ,"unitNo", true, /^\d{0,3}$/g)}}
+														  onChange={(e) => {handleChangeFloor(e,"floor" ,"unitNo", true, /^[a-zA-Z0-9]*$/g)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -899,7 +918,9 @@ deleteOccupantName = (index) =>{
 																  value: value
 																}
 															  };
-															  handleChangeFloor(e,"floor" ,"usage", true, "")}
+															  handleUsage(e.target.value)
+															  handleChangeFloor(e,"floor" ,"usage", true, "")
+															  }
 														  }
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
@@ -931,7 +952,7 @@ deleteOccupantName = (index) =>{
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														>
-															{renderOption(this.state.usages)}
+															{renderOption(this.state.subUsage)}
 														</SelectField>
 													</Col>
 													<Col xs={12} md={3} sm={6}>
@@ -1026,12 +1047,12 @@ deleteOccupantName = (index) =>{
 														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.Arv')}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.arv?<span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.arv}</span>:"") : ""}
 														  value={floorDetails.floor ? floorDetails.floor.arv : ""}
-														  onChange={(e) => {handleChangeFloor(e,"floor" , "arv", false,'')}}
-														  type="number"
+														  onChange={(e) => {handleChangeFloor(e,"floor" , "arv", false, /^[0-9]*$/g)}}
+														  
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 														  underlineFocusStyle={styles.underlineFocusStyle}
-														  maxLength={9}
+														  maxLength={10}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														/>
 													</Col>}
@@ -1040,12 +1061,11 @@ deleteOccupantName = (index) =>{
 														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.manualArv')}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.manualArv?<span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.manualArv}</span>:"") : ""}
 														  value={floorDetails.floor ? floorDetails.floor.manualArv : ""}
-														  onChange={(e) => {handleChangeFloor(e,"floor" , "manualArv", false, '')}}
+														  onChange={(e) => {handleChangeFloor(e,"floor" , "manualArv", false, /^[0-9]*$/g)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 														  underlineFocusStyle={styles.underlineFocusStyle}
-														  maxLength={9}
-														  type="number"
+														  maxLength={10}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														/>
 													</Col>
@@ -1056,7 +1076,23 @@ deleteOccupantName = (index) =>{
 														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.constructionStartDate')}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.constructionStartDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.constructionStartDate}</span> :""): ""}
 														  value={floorDetails.floor ? floorDetails.floor.constructionStartDate : ""}
-														  onChange={(e) => {handleChangeFloor(e,"floor" ,"constructionStartDate", false, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
+														  onChange={(e, value) => {
+															   var val = value;
+																  if(value.length == 2 && !value.match('/')){
+																	  val+='/';
+																  } else if(value.length == 5) {
+																	  var a = value.split('/');
+																	  if(!a[1].match('/')){
+																		  val+='/';
+																	  }
+																  }
+																  
+																   var e = {
+																	  target: {
+																		  value: val
+																	  }
+																	}
+														  handleChangeFloor(e,"floor" ,"constructionStartDate", false, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -1069,7 +1105,23 @@ deleteOccupantName = (index) =>{
 														  floatingLabelText={<span>{translate('pt.create.groups.floorDetails.fields.constructionEndDate')}<span style={{"color": "#FF0000"}}> *</span></span>}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.constCompletionDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.constCompletionDate}</span> :""): ""}
 														  value={floorDetails.floor ? floorDetails.floor.constCompletionDate : ""}
-														  onChange={(e) => { this.handleAge(e.target.value);
+														  onChange={(e, value) => {
+																 var val = value;
+																  if(value.length == 2 && !value.match('/')){
+																	  val+='/';
+																  } else if(value.length == 5) {
+																	  var a = value.split('/');
+																	  if(!a[1].match('/')){
+																		  val+='/';
+																	  }
+																  }
+																  
+																   var e = {
+																	  target: {
+																		  value: val
+																	  }
+																	}
+																handleAge(e.target.value);
 																handleChangeFloor(e,"floor" ,"constCompletionDate", true,  /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
@@ -1083,7 +1135,23 @@ deleteOccupantName = (index) =>{
 														  floatingLabelText={<span>{translate('pt.create.groups.floorDetails.fields.effectiveFromDate')}<span style={{"color": "#FF0000"}}> *</span></span>}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.occupancyDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.occupancyDate}</span> :""): ""}
 														  value={floorDetails.floor ? floorDetails.floor.occupancyDate : ""}
-														  onChange={(e) => {handleChangeFloor(e,"floor" ,"occupancyDate", true, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
+														  onChange={(e, value) => {
+															   var val = value;
+															  if(value.length == 2 && !value.match('/')){
+																  val+='/';
+															  } else if(value.length == 5) {
+																  var a = value.split('/');
+																  if(!a[1].match('/')){
+																	  val+='/';
+																  }
+															  }
+															  
+															   var e = {
+																  target: {
+																	  value: val
+																  }
+																}
+															  handleChangeFloor(e,"floor" ,"occupancyDate", true, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -1219,7 +1287,7 @@ deleteOccupantName = (index) =>{
 														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.occupancyCertificateNumber')}
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.occupancyCertiNumber? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.occupancyCertiNumber}</span>:"" ): ""}
 														  value={floorDetails.floor ? floorDetails.floor.occupancyCertiNumber : ""}
-														  onChange={(e) => {handleChangeFloor(e,"floor" ,"occupancyCertiNumber", false, /^[a-z0-9]+$/i)}}
+														  onChange={(e) => {handleChangeFloor(e,"floor" ,"occupancyCertiNumber", false, /^[0-9,<>!@#\$%\^\&*\)\(+=._-]+$/g)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -1304,6 +1372,7 @@ deleteOccupantName = (index) =>{
 																  
 																  setTimeout(()=>{
 																	_this.createFloorObject();
+																	_this.getFloors();
 																	}, 300);
 																}
 															}/>
@@ -1311,7 +1380,7 @@ deleteOccupantName = (index) =>{
 													</Col>
 													
 												</Row>
-												{ floorDetails.floors &&
+												{(floorDetails.floors && floorDetails.floors.length!=0)  &&
                                             <div className="col-md-12 col-xs-12"> <br/>
                                           <Table id="floorDetailsTable" style={{color:"black",fontWeight: "normal", marginBottom:0}} bordered responsive>
                                           <thead style={{backgroundColor:"#607b84",color:"white"}}>
@@ -1319,7 +1388,7 @@ deleteOccupantName = (index) =>{
                                               <th>#</th>
 											  <th>{translate('pt.create.groups.floorDetails.fields.floorNumber')}</th>
                                               <th>{translate('pt.create.groups.floorDetails.fields.unitType')}</th>
-                                              <th>{translate('pt.create.groups.floorDetails.fields.unitType')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.unitNumber')}</th>
                                               <th>{translate('pt.create.groups.floorDetails.fields.constructionClass')}</th>
                                               <th>{translate('pt.create.groups.floorDetails.fields.usageType')}</th>
                                               <th>{translate('pt.create.groups.floorDetails.fields.usageSubType')}</th>
@@ -1328,6 +1397,7 @@ deleteOccupantName = (index) =>{
                                               <th>{translate('pt.create.groups.floorDetails.fields.occupantName')}</th>
                                               <th>{translate('pt.create.groups.floorDetails.fields.annualRent')}</th>
                                               <th>{translate('pt.create.groups.floorDetails.fields.manualArv')}</th>
+											  <th>{translate('pt.create.groups.floorDetails.fields.constructionStartDate')}</th>
                                               <th>{translate('pt.create.groups.floorDetails.fields.constructionEndDate')}</th>
                                               <th>{translate('pt.create.groups.floorDetails.fields.effectiveFromDate')}</th>
                                               <th>{translate('pt.create.groups.floorDetails.fields.unstructuredLand')}</th>
@@ -1339,7 +1409,7 @@ deleteOccupantName = (index) =>{
 											  <th>{translate('pt.create.groups.propertyAddress.fields.landCost')}</th>
                                               <th>{translate('pt.create.groups.floorDetails.fields.plinthArea')}</th>
                                               <th>{translate('pt.create.groups.floorDetails.fields.occupancyCertificateNumber')}</th>
-                                              <th>{translate('pt.create.groups.floorDetails.fields.buildingPermissionNumber')}</th>
+                                              <th>{translate('pt.create.groups.assessmentDetails.fields.isLegal')}</th>
                                               <th style={{minWidth:70}}></th>
                                             </tr>
                                           </thead>
@@ -1351,17 +1421,18 @@ deleteOccupantName = (index) =>{
                                                     <td>{getNameById(_this.state.floorNumber ,i.floorNo) || translate('pt.search.searchProperty.fields.na')}</td>
 													<td>{getNameById(_this.state.unitType ,i.unitType)  || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.unitNo || translate('pt.search.searchProperty.fields.na')}</td>
-                                                    <td>{i.structure || translate('pt.search.searchProperty.fields.na')}</td>
-                                                    <td>{i.usage || translate('pt.search.searchProperty.fields.na')}</td>
-                                                    <td>{i.usageSubType || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{getNameById(_this.state.structureclasses, i.structure) || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{getNameById(_this.state.usages, i.usage) || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{getNameById(_this.state.subUsage,i.usageSubType) || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.firmName || translate('pt.search.searchProperty.fields.na')}</td>
-                                                    <td>{i.occupancyType || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{getNameById(_this.state.occupancies ,i.occupancyType) || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.occupierName || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.annualRent || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.manualArv || translate('pt.search.searchProperty.fields.na')}</td>
+													<td>{i.constructionStartDate || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.constCompletionDate || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.occupancyDate || translate('pt.search.searchProperty.fields.na')}</td>
-                                                    <td>{i.isStructured || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{i.isStructured ? 'Yes' : 'No'}</td>
                                                     <td>{i.length || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.width || translate('pt.search.searchProperty.fields.na')}</td>
 													<td>{i.carpetArea || translate('pt.search.searchProperty.fields.na')}</td>
@@ -1370,7 +1441,7 @@ deleteOccupantName = (index) =>{
 													<td>{i.landCost || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.builtupArea || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.occupancyCertiNumber || translate('pt.search.searchProperty.fields.na')}</td>
-                                                    <td>{i.bpaNo || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{i.isAuthorised ? 'Yes': 'No'}</td>
                                                     <td>
 														<i className="material-icons" style={styles.iconFont} onClick={ () => {
 															if(i.isStructured){
@@ -1518,6 +1589,12 @@ initForm : () => {
   },
 
   resetObject: (object, isSectionValid) => {
+	  var ownerRequired = [];
+	  if(window.location.href.match('dataEntry')){
+		 ownerRequired = ['name', 'gender' ];
+	  } else {
+		 ownerRequired = ['mobileNumber', 'name', 'gender' ];
+	  }
     dispatch({
       type: "RESET_OBJECT",
       object,
@@ -1525,7 +1602,7 @@ initForm : () => {
 	    validatePropertyOwner: {
         required: {
           current: [],
-          required: ['mobileNumber', 'name', 'gender' ]
+          required: ownerRequired
         },
         pattern: {
           current: [],

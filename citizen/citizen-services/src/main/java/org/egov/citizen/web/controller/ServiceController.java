@@ -1,8 +1,8 @@
 package org.egov.citizen.web.controller;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -10,14 +10,11 @@ import org.egov.citizen.config.ApplicationProperties;
 import org.egov.citizen.config.CitizenServiceConstants;
 import org.egov.citizen.exception.CustomException;
 import org.egov.citizen.model.RequestInfoWrapper;
-import org.egov.citizen.model.SearchDemand;
 import org.egov.citizen.model.ServiceCollection;
-import org.egov.citizen.model.ServiceConfig;
 import org.egov.citizen.model.ServiceConfigs;
 import org.egov.citizen.model.ServiceReq;
 import org.egov.citizen.model.ServiceReqResponse;
 import org.egov.citizen.model.ServiceResponse;
-import org.egov.citizen.model.Value;
 import org.egov.citizen.service.CitizenPersistService;
 import org.egov.citizen.service.CitizenService;
 import org.egov.citizen.web.contract.ReceiptRequest;
@@ -42,10 +39,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.Configuration;
-import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -85,16 +78,35 @@ public class ServiceController {
 		return new ResponseEntity<>(serviceRes, HttpStatus.OK);
 	}
 
+	@PostMapping(value = "/requests/_search")
+	public ResponseEntity<?> getServiceReq(@RequestBody @Valid RequestInfoWrapper requestInfo,
+											@ModelAttribute ServiceRequestSearchCriteria serviceRequestSearchCriteria){
+		log.info("serviceRequestSearchCriteria:"+serviceRequestSearchCriteria);
+		Map<String, Object> maps = citizenPersistService.serach(serviceRequestSearchCriteria, requestInfo.getRequestInfo());
+		
+		return new ResponseEntity<>(maps ,HttpStatus.OK);
+		
+	}
+	
 	@PostMapping(value = "/requests/_create")
 	public ResponseEntity<?> createService(HttpEntity<String> httpEntity) {
-
+		
 		String serviceReqJson = httpEntity.getBody();
 		log.info("serviceReqJson:"+serviceReqJson);
 		ServiceReqResponse serviceReqResponse = citizenPersistService.create(serviceReqJson);
 		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);
 	}
-
+	
 	@PostMapping(value = "/requests/_update")
+	public ResponseEntity<?> updateService(HttpEntity<String> httpEntity) {
+
+		String serviceReqJson = httpEntity.getBody();
+		log.info("update serviceReqJson:"+serviceReqJson);
+		ServiceReqResponse serviceReqResponse = citizenPersistService.update(serviceReqJson);
+		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);
+	}
+
+/*	@PostMapping(value = "/requests/_update")
 	public ResponseEntity<?> updateService(HttpEntity<String> httpEntity) {
 
 		String json = httpEntity.getBody();
@@ -176,7 +188,7 @@ public class ServiceController {
 		serviceReqResponse.setServiceReq(servcieReq);
 		serviceReqResponse.setResponseInfo(responseInfoFactory
 				.createResponseInfoFromRequestInfo(citizenService.getRequestInfo(config).getRequestInfo(), true));
-		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);	}
+		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);	}*/
 
 	@PostMapping(value = "/requests/receipt/_create")
 	public ResponseEntity<?> createReceipt(@RequestBody @Valid ReceiptRequest receiptReq, BindingResult errors) {
@@ -225,7 +237,7 @@ public class ServiceController {
 		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);
 	}
 
-	@PostMapping(value = "/requests/_search")
+	/*@PostMapping(value = "/requests/_search")
 	@ResponseBody
 	public ResponseEntity<?> getServiceRequests(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
 			BindingResult requestInfoerrors,
@@ -258,7 +270,7 @@ public class ServiceController {
 		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfoWrapper.getRequestInfo(), true);
 		serviceRes.setResponseInfo(responseInfo);
 		return new ResponseEntity<>(serviceRes, HttpStatus.OK);
-	}
+	}*/
 
 	private ErrorResponse populateErrors(BindingResult errors) {
 		ErrorResponse errRes = new ErrorResponse();

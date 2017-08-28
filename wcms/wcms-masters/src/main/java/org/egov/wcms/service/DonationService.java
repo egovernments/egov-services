@@ -108,9 +108,16 @@ public class DonationService {
         }
         if (donationGetRequest.getUsageType() != null) {
             final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModuleByCode(
-                    donationGetRequest.getUsageType(),WcmsConstants.WC, donationGetRequest.getTenantId());
+                    donationGetRequest.getUsageType(), WcmsConstants.WC, donationGetRequest.getTenantId());
             if (usageType != null && usageType.getUsageTypesSize())
                 donationGetRequest.setUsageTypeId(usageType.getUsageMasters().get(0).getId());
+
+        }
+        if (donationGetRequest.getSubUsageType() != null) {
+            final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModuleByCode(
+                    donationGetRequest.getSubUsageType(), WcmsConstants.WC, donationGetRequest.getTenantId());
+            if (usageType != null && usageType.getUsageTypesSize())
+                donationGetRequest.setSubUsageTypeId(usageType.getUsageMasters().get(0).getId());
 
         }
         return donationRepository.findForCriteria(donationGetRequest);
@@ -136,7 +143,7 @@ public class DonationService {
     public Boolean getUsageTypeByName(final Donation donation) {
         Boolean isValidUsage = Boolean.FALSE;
         final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModule(
-                donation.getUsageType(),WcmsConstants.WC,
+                donation.getUsageType(), WcmsConstants.WC,
                 donation.getTenantId());
         if (usageType.getUsageTypesSize()) {
             isValidUsage = Boolean.TRUE;
@@ -152,10 +159,25 @@ public class DonationService {
     public boolean checkDonationsExist(final Donation donation) {
         getPropertyTypeByName(donation);
         getUsageTypeByName(donation);
+        getSubUsageType(donation);
         return donationRepository.checkDonationsExist(donation.getCode(), donation.getPropertyTypeId(),
-                donation.getUsageTypeId(),
+                donation.getUsageTypeId(), donation.getSubUsageTypeId(),
                 donation.getCategory(), donation.getMaxPipeSize(), donation.getMinPipeSize(),
                 donation.getTenantId());
+    }
+
+    public Boolean getSubUsageType(final Donation donation) {
+        Boolean isValidSubUsageType = Boolean.FALSE;
+        final UsageTypeResponse subUsageType = restExternalMasterService.getUsageIdFromPTModuleByCode(
+                donation.getSubUsageType(), WcmsConstants.WC,
+                donation.getTenantId());
+        if (subUsageType != null && subUsageType.getUsageMasters() != null && !subUsageType.getUsageMasters().isEmpty()
+                && subUsageType.getUsageMasters().get(0).getId() != null) {
+            donation
+                    .setSubUsageTypeId(subUsageType.getUsageMasters().get(0).getId().toString());
+            isValidSubUsageType = Boolean.TRUE;
+        }
+        return isValidSubUsageType;
     }
 
 }

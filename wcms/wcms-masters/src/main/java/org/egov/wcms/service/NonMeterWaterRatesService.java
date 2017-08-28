@@ -110,11 +110,20 @@ public class NonMeterWaterRatesService {
 
         if (nonMeterWaterRatesGetRequest.getUsageTypeName() != null) {
             final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModule(
-                    nonMeterWaterRatesGetRequest.getUsageTypeName(),WcmsConstants.WC, nonMeterWaterRatesGetRequest.getTenantId());
+                    nonMeterWaterRatesGetRequest.getUsageTypeName(), WcmsConstants.WC,
+                    nonMeterWaterRatesGetRequest.getTenantId());
             if (usageType.getUsageTypesSize())
                 nonMeterWaterRatesGetRequest.setUsageTypeId(usageType.getUsageMasters().get(0).getId());
 
         }
+        if (nonMeterWaterRatesGetRequest.getSubUsageType() != null)
+            if (nonMeterWaterRatesGetRequest.getSubUsageType() != null) {
+                final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModuleByCode(
+                        nonMeterWaterRatesGetRequest.getSubUsageType(), WcmsConstants.WC,
+                        nonMeterWaterRatesGetRequest.getTenantId());
+                if (usageType != null && usageType.getUsageTypesSize())
+                    nonMeterWaterRatesGetRequest.setSubUsageTypeId(usageType.getUsageMasters().get(0).getId());
+            }
         return nonMeterWaterRatesRepository.findForCriteria(nonMeterWaterRatesGetRequest);
     }
 
@@ -129,7 +138,7 @@ public class NonMeterWaterRatesService {
     public Boolean getUsageTypeByName(final NonMeterWaterRates nonMeterWaterRates) {
         Boolean isValidUsage = Boolean.FALSE;
         final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModule(
-                nonMeterWaterRates.getUsageTypeName(),WcmsConstants.WC,
+                nonMeterWaterRates.getUsageTypeName(), WcmsConstants.WC,
                 nonMeterWaterRates.getTenantId());
         if (usageType.getUsageTypesSize()) {
             isValidUsage = Boolean.TRUE;
@@ -141,6 +150,20 @@ public class NonMeterWaterRatesService {
 
         return isValidUsage;
 
+    }
+
+    public Boolean getSubUsageType(final NonMeterWaterRates nonMeterWaterRates) {
+        Boolean isValidSubUsageType = Boolean.FALSE;
+        final UsageTypeResponse subUsageType = restExternalMasterService.getUsageIdFromPTModuleByCode(
+                nonMeterWaterRates.getSubUsageType(), WcmsConstants.WC,
+                nonMeterWaterRates.getTenantId());
+        if (subUsageType != null && subUsageType.getUsageMasters() != null && !subUsageType.getUsageMasters().isEmpty()
+                && subUsageType.getUsageMasters().get(0).getId() != null) {
+            nonMeterWaterRates
+                    .setSubUsageTypeId(subUsageType.getUsageMasters().get(0).getId().toString());
+            isValidSubUsageType = Boolean.TRUE;
+        }
+        return isValidSubUsageType;
     }
 
     public boolean checkPipeSizeExists(final Double pipeSize, final String tenantId) {

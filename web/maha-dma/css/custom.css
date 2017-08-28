@@ -7,11 +7,11 @@ body{
 	padding-top: 15px;
 	padding-bottom:15px;
 	background:url("../images/header-bg-1.jpg") no-repeat;
-	background-size: 100% 100%; 
+	background-size: 100% 100%;
     border: 1px solid;
 }
 .service-table ul li{
-	margin-left:-55px;
+	margin-left:-40px;
 	list-style: none;
 }
 .right-sction{
@@ -98,13 +98,11 @@ body{
     border-color: #31708f;
     padding: 10px;
 }
+
 .modal-title{
-	font-weight: 700;
-	text-align: center;
-	background-color: rgba(63, 132, 181, 0.54);
-	padding: 10px;
-	color: #fff;
+	display: inline-block;
 }
+
 .log-section{
 	float: right;
 	padding: 15px 115px;
@@ -122,7 +120,7 @@ body{
 	border-radius: 0px;
 }
 .navbar-right{
-	margin-right: 100px;
+	margin-right: 5px;
 }
 .navbar-inverse {
     background-color: rgb(22, 40, 56);
@@ -166,7 +164,7 @@ body{
 }
 
 .more-option .btn{
-	
+
    /* background: #f78d1d;
     background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#848383));*/
 }
@@ -202,4 +200,117 @@ body{
 	background-size: 25px;
 	padding-right: 30px;
 
+}
+
+.ulb-dropdown{
+	width: auto;
+	display: inline-block;
+	vertical-align: top;
+	height: 38px;
+	margin-right: 10px;
+}
+
+
+@media print
+{
+  /* on modal open bootstrap adds class "modal-open" to body, so you can handle that case and hide body */
+  body.modal-open {
+      visibility: hidden;
+  }
+
+  body.modal-open .modal .modal-header,
+  body.modal-open .modal .modal-body {
+      visibility: visible; /* make visible modal body and header */
+  }
+
+  .modal {
+        position: absolute;
+        left: 0;
+        top: 0;
+        margin: 0;
+        padding: 0;
+        overflow: visible!important;
+    }
+
+}
+
+.popover{
+	background: #e40c0c;
+}
+
+.popover.bottom>.arrow:after{
+	border-bottom-color: #e20c0c;
+}
+
+.popover-content{
+	color:white;
+}
+
+.no-background{
+	background: transparent;
+}
+
+.services-title{
+	color: #fff;
+  margin: 0;
+}
+
+.login-box{
+	width: 100%;
+  padding: 5px 15px 20px;
+  background: white;
+	box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px;
+}
+
+.login-box h4{
+	background: transparent;
+	color:black;
+	cursor: auto;
+	padding: 15px 0px;
+  margin: 0;
+}
+
+.login-box input{
+	display: block;
+width: 100%;
+margin-bottom: 15px;
+border: 0;
+border-bottom: 1px solid #d4d4d4;
+padding: 8px 0;
+outline: 0;
+font-size: 16px;
+}
+
+.login-box button{
+	border: 10px;
+    box-sizing: border-box;
+    display: inline-block;
+    font-family: Roboto, sans-serif;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    cursor: pointer;
+    text-decoration: none;
+    margin: 0px;
+    padding: 0px;
+    outline: none;
+    font-size: inherit;
+    font-weight: inherit;
+    position: relative;
+    z-index: 1;
+    height: 36px;
+    line-height: 36px;
+    width: 100%;
+    border-radius: 2px;
+    transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+    background-color: rgb(0, 188, 212);
+    text-align: center;
+		text-transform: uppercase;
+		color: white;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px;
+}
+
+.login-box p{
+	padding-top: 15px;
+font-size: 15px;
+padding-bottom: 15px;
+margin:0;
 }

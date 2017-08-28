@@ -48,11 +48,13 @@ public class FunctionServiceTest {
 
 	@Test
 	public final void testCreate() {
+		when(functionRepository.findById(any(Function.class))).thenReturn(getParentFunction());
 		functionService.create(getFunctions(), errors, requestInfo);
 	}
 
 	@Test
 	public final void testUpdate() {
+		when(functionRepository.findById(any(Function.class))).thenReturn(getParentFunction());
 		functionService.update(getFunctions(), errors, requestInfo);
 	}
 
@@ -115,7 +117,7 @@ public class FunctionServiceTest {
 
 	private List<Function> getFunctions() {
 		List<Function> functions = new ArrayList<Function>();
-		Function function = Function.builder().id("1").name("name").code("code").level(1).active(true).build();
+		Function function = Function.builder().id("1").name("name").code("code").level(1).parentId(getParentFunction()).active(true).build();
 		function.setTenantId("default");
 		functions.add(function);
 		return functions;
@@ -132,6 +134,7 @@ public class FunctionServiceTest {
 	private Function getFunction() {
 		Function function = Function.builder().id("1").name("function").code("001").active(true)
 				.parentId(getParentFunction()).level(1).build();
+		function.setTenantId("default");
 		return function;
 	}
 

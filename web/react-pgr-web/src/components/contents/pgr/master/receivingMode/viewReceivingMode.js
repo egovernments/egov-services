@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Grid, Row, Col, DropdownButton, ListGroup, ListGroupItem} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
-import {List, ListItem} from 'material-ui/List';
 import TextField from 'material-ui/TextField';
 import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
@@ -11,6 +10,7 @@ import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
+import {List, ListItem} from 'material-ui/List';
 import Api from '../../../../../api/api';
 import styles from '../../../../../styles/material-ui';
 import {translate} from '../../../../common/common';
@@ -67,42 +67,40 @@ class viewReceivingSet extends Component {
                  {translate("pgr.lbl.view")} {translate("pgr.lbl.receivingmode")}
                < /div>}/>
                <CardText style={{padding:'8px 16px 0'}}>
-                 <Row>
-                   <Col xs={6} md={3}>
-                    {translate("core.lbl.add.name")}
-                   </Col>
-                   <Col xs={6} md={3}>
-                    {viewReceivingSet.name ? viewReceivingSet.name : ''}
-                   </Col>
-                   <Col xs={6} md={3}>
-                     {translate("core.lbl.code")}
-                   </Col>
-                   <Col xs={6} md={3}>
-                    {viewReceivingSet.code ? viewReceivingSet.code : ''}
-                   </Col>
-                 </Row>
-                 <Row>
-                   <Col xs={6} md={3}>
-                    {translate("core.lbl.description")}
-                   </Col>
-                   <Col xs={6} md={3}>
-                    {viewReceivingSet.description? viewReceivingSet.description : ''}
-                   </Col>
-                   <Col xs={6} md={3}>
-                     {translate("pgr.lbl.active")}
-                   </Col>
-                   <Col xs={6} md={3}>
-                    {viewReceivingSet.active? "Yes" : "No"}
-                   </Col>
-                 </Row>
-                 <Row>
-                   <Col xs={6} md={3}>
-                    {translate('pgr.lbl.channel')}
-                   </Col>
-                   <Col xs={6} md={3}>
-                    {viewReceivingSet.channels ? viewReceivingSet.channels.join(", ") : ''}
-                   </Col>
-                 </Row>
+                <List>
+                  <Row>
+                    <Col xs={12} sm={6} md={4} lg={3}>
+                      <ListItem
+                        primaryText={translate("core.lbl.add.name")}
+                        secondaryText={<p style={styles.customColumnStyle}>{viewReceivingSet.name ? viewReceivingSet.name : ''}</p>}
+                      />
+                    </Col>
+                    <Col xs={12} sm={6} md={4} lg={3}>
+                      <ListItem
+                        primaryText={translate("core.lbl.code")}
+                        secondaryText={<p style={styles.customColumnStyle}>{viewReceivingSet.code ? viewReceivingSet.code : ''}</p>}
+                      />
+                    </Col>
+                    <Col xs={12} sm={6} md={4} lg={3}>
+                      <ListItem
+                        primaryText={translate("core.lbl.description")}
+                        secondaryText={<p style={styles.customColumnStyle}>{viewReceivingSet.description? viewReceivingSet.description : ''}</p>}
+                      />
+                    </Col>
+                    <Col xs={12} sm={6} md={4} lg={3}>
+                      <ListItem
+                        primaryText={translate("pgr.lbl.active")}
+                        secondaryText={<p style={styles.customColumnStyle}>{viewReceivingSet.active? "Yes" : "No"}</p>}
+                      />
+                    </Col>
+                    <Col xs={12} sm={6} md={4} lg={3}>
+                      <ListItem
+                        primaryText={translate('pgr.lbl.channel')}
+                        secondaryText={<p style={styles.customColumnStyle}>{viewReceivingSet.channels ? viewReceivingSet.channels.join(", ") : ''}</p>}
+                      />
+                    </Col>
+                  </Row>
+                </List>
                </CardText>
             </Card>
           </Grid>

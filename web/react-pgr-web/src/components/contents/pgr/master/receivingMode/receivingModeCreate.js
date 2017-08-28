@@ -87,11 +87,12 @@ class receivingModeCreate extends Component {
          name :receivingmodeSet.name,
          code :receivingmodeSet.code,
          description :receivingmodeSet.description,
-         active :receivingmodeSet.active?receivingmodeSet.active:false,
+         active : receivingmodeSet.active !== undefined ? receivingmodeSet.active : true,
          tenantId :localStorage.getItem("tenantId"),
          channels :receivingmodeSet.channels
        }
     }
+    receivingmodeSet.active !== undefined ? receivingmodeSet.active : true
       if(_this.props.match.params.id){
 
             Api.commonApiPost("pgr-master/receivingmode/v1/_update", {},body).then(function(response) {
@@ -117,10 +118,7 @@ class receivingModeCreate extends Component {
           _this.props.toggleSnackbarAndSetText(true, err.message);
       	});
       }
-
-
   }
-
 
   render() {
    // this.callOnRender()

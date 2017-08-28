@@ -515,6 +515,8 @@ definitions:
         $ref: '#/definitions/BillInfo'
       workflowDetails:
         $ref: '#/definitions/WorkflowDetails'
+      onlinePayment:
+        $ref: '#/definitions/OnlinePayment'    
         
         
   WorkflowDetails:
@@ -570,6 +572,44 @@ definitions:
      - designation
      - approver
   
+  OnlinePayment:
+    type: object
+    description: Details captured during during online payment 
+    properties: 
+      id: 
+        type: number
+        description: primary key id
+      receiptHeader:
+        type: string
+        description: Foreign key references of the receipt header
+      paymentGatewayName:
+        type: string
+        description: Payment Gateway Name which is received from the third party
+      transactionAmount:
+        type: number
+        format: bigdecimal
+        description: Transaction Amount for which payment is made
+      transactionDate: 
+        type: int
+        description: Transaction Date on which payment was done
+      authorisationStatusCode:
+        type: string
+        description: Authorisation Status code received from the payment gateway
+      status:
+        type: string
+        description: status from the payment gateway
+      remarks:
+        type: string
+        description: Authorisation Status Description whether success or failure or any other status
+      callbackurl:
+        type: string
+        description: Call back URL that needs to be sent to payment gateway to be invoked after the payment is done
+      tenantId:
+        type: string
+        description: Tenant Id.
+      auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+          
         
 parameters:
   pageSize:

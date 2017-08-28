@@ -72,10 +72,16 @@ public class DonationGetRequest {
     private String categoryType;
 
     private Long categoryTypeId;
+    
+    private Boolean outSideUlb;
 
     private String usageType;
 
     private String usageTypeId;
+    
+    private String subUsageType;
+
+    private String subUsageTypeId;
 
     private Double minPipeSize;
 

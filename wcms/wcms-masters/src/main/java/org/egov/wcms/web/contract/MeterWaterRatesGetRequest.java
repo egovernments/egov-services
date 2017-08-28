@@ -68,6 +68,10 @@ public class MeterWaterRatesGetRequest {
     private String usageTypeName;
 
     private String usageTypeId;
+    
+    private String subUsageType;
+
+    private String subUsageTypeId;
 
     private String sourceTypeName;
 
@@ -76,6 +80,8 @@ public class MeterWaterRatesGetRequest {
     private Double pipeSize;
 
     private Long pipeSizeId;
+    
+    private Boolean outsideUlb;
 
     private Boolean active;
 

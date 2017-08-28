@@ -20,7 +20,8 @@ html, body{
 
   bottom: 0;
   left: 0;
-  top: 65px;
+  top: 0px;
+  padding-top: 65px;
 }
 
 
@@ -918,4 +919,12 @@ span.errorMsg{
 .rating{
 	color: #F58720;
   font-size: 25px;
+}
+
+@media all {
+	.page-break	{ display: none; }
+}
+
+@media print {
+	.page-break	{ display: block; page-break-after: always; }
 }

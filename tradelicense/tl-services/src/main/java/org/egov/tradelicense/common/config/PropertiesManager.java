@@ -52,6 +52,9 @@ public class PropertiesManager {
 
 	@Value("${egov.services.tl-masters_v1.documenttype.searchpath}")
 	private String documentServiceSearchPath;
+	
+	@Value("${egov.services.tl-masters_v2.documenttype.searchpath}")
+	private String documentServiceV2SearchPath;
 
 	@Value("${egov.services.tl-masters_v1.category.searchpath}")
 	private String categoryServiceSearchPath;
@@ -70,9 +73,6 @@ public class PropertiesManager {
 
 	@Value("${egov.services.egov-location.searchpath}")
 	private String locationServiceSearchPath;
-
-	@Value("${egov.services.tl-services.create.legacy.tradelicense.validated}")
-	private String createLegacyTradeValidated;
 
 	@Value("${egov.services.egf-masters.hostname}")
 	private String financialYearServiceHostName;
@@ -184,5 +184,61 @@ public class PropertiesManager {
 	@Value("${legacy.trade.create.success.status.message}")
     private String legacyCreateSuccessMessage;
 
+	@Value("${new.trade.create.success.status.message}")
+    private String newTradeLicenseCreateSuccessMessage;
 	
+	//IdNotFound Exception Related
+	@Value("${id.notFound.field}")
+	private String idField;
+	
+	@Value("${oldLicense.id.notFound.customMsg}")
+	private String oldLicenseIdNotFoundCustomMsg;
+	
+	@Value("${oldLicense.id.notValid.customMsg}")
+	private String oldLicenseIdNotValidCustomMsg;
+	
+	@Value("${supporting.document.id.notFound.customMsg}")
+	private String supportDocumentIdNotFoundCustomMsg;
+	
+	@Value("${supporting.document.id.notValid.customMsg}")
+	private String supportDocumentIdNotValidCustomMsg;
+	
+	@Value("${feedetail.id.notFound.customMsg}")
+	private String feeDetailIdNotFoundCustomMsg;
+	
+	@Value("${feedetail.id.notValid.customMsg}")
+	private String feeDetailIdNotValidCustomMsg;
+	
+	
+	@Value("${applicationfee.applicable}")
+	private String applicatonFeeApplicable;
+	
+	//mandatory document exception message
+	@Value("${mandatory.document.notfound.customMsg}")
+	private String mandatoryDocumentNotFoundCustomMsg;
+	
+	@Value("${nonlegacy.update.customMsg}")
+	private String nonLegacyUpdateCustomMsg;
+	
+	//kafka topics and keys
+	@Value("${egov.services.tl-services.tradelicense.validated.topic}")
+	private String tradeLicenseValidatedTopic;
+
+	
+	@Value("${egov.services.tl-services.tradelicense.legacy.validated.key}")
+	private String legacyTradeLicenseValidatedKey;
+
+	
+	@Value("${egov.services.tl-services.tradelicense.new.validated.key}")
+	private String newTradeLicenseValidatedKey;
+
+	@Value("${egov.services.tl-services.tradelicense.workflow.populated.topic}")
+	private String tradeLicenseWorkFlowPopulatedTopic;
+	
+	@Value("${egov.services.tl-services.tradelicense.persisted.topic}")
+	private String tradeLicensePersistedTopic;
+	
+	@Value("${egov.services.tl-services.tradelicense.persisted.key}")
+	private String tradeLicensePersistedKey;
+
 }

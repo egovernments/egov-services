@@ -8,6 +8,8 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.egov.tl.commons.web.requests.DocumentTypeRequest;
+import org.egov.tl.commons.web.requests.DocumentTypeV2Request;
+import org.egov.tl.masters.domain.service.DocumentTypeV2Service;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.services.DocumentTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +46,8 @@ public class DocumentTypeConsumer {
 	@Autowired
 	DocumentTypeService documentTypeService;
 
+	@Autowired
+	DocumentTypeV2Service documentTypeV2Service;
 	@Autowired
 	private ObjectMapper objectMapper;
 
@@ -116,4 +120,29 @@ public class DocumentTypeConsumer {
 		}
 		latch.countDown();
 	}
+
+	/**
+	 * receive method
+	 * 
+	 * @param CategoryRequest
+	 *            This method is listened whenever category is created and
+	 *            updated
+	 */
+	@KafkaListener(topics = { "#{propertiesManager.getCreateDocumentTypeV2Validated()}",
+			"#{propertiesManager.getUpdateDocumentTypeV2Validated()}" })
+	public void receiveV2(ConsumerRecord<String, Object> consumerRecord) throws Exception {
+
+		DocumentTypeV2Request objectReceived = objectMapper.convertValue(consumerRecord.value(),
+				DocumentTypeV2Request.class);
+
+		if (consumerRecord.topic().equalsIgnoreCase(propertiesManager.getCreateDocumentTypeV2Validated())) {
+			documentTypeV2Service.save(objectReceived.getDocumentTypes());
+		}
+
+		else if (consumerRecord.topic().equalsIgnoreCase(propertiesManager.getUpdateDocumentTypeV2Validated())) {
+			documentTypeV2Service.update(objectReceived.getDocumentTypes());
+		}
+		latch.countDown();
+	}
+
 }

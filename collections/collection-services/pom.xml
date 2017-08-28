@@ -37,7 +37,7 @@
 		<dependency>
 			<groupId>org.egov.services</groupId>
 			<artifactId>services-common</artifactId>
-			<version>0.5.0</version>
+			<version>0.12.0</version>
 		</dependency>
         <dependency>
 			<groupId>org.egov.services</groupId>

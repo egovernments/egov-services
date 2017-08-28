@@ -1265,6 +1265,74 @@
             description: Invalid input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+  # Gapcode Master API
+    /gapcode/_create:
+      post:
+        summary: Create new Gapcode.
+        description: API to Create new Gapcode
+        tags:
+          - Gapcode
+        parameters:
+          - name: GapcodeReq
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/GapcodeReq'
+        responses:
+          '201':
+            description: Gapcode created successfully.
+            schema:
+              $ref: "#/definitions/GapcodeRes"
+          '400':
+            description: Gapcode creation failed.
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /gapcode/_update:
+      post:
+        summary:  while updating in request body code is required and updates existing values based on code
+        description: bulk updates existing values
+        tags:
+          - Gapcode
+        parameters:
+          - name: Gapcode
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/GapcodeReq'
+        responses:
+          '200':
+            description: Gapcode updated successfully.
+            schema:
+              $ref: "#/definitions/GapcodeRes"
+          '400':
+            description: Request failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /gapcode/_search:
+      post:
+        summary: searches existing values
+        tags:
+          - Gapcode
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - $ref: "#/parameters/id"
+          - $ref: "#/parameters/code"
+        responses:
+          200: 
+            description: Successful response
+            schema:
+              $ref: '#/definitions/GapcodeRes'
+          400:
+            description: Invalid input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
   parameters:
     id:
       name: id
@@ -2030,6 +2098,9 @@
         usageTypeId:
           type: string
           description: unique identifier of property usage type object
+        subUsageTypeId:
+          type: string
+          description: unique identifier of property sub usage type object
         maxPipeSizeId:
           type: integer
           format: int64
@@ -2067,6 +2138,7 @@
         - code
         - propertyTypeId
         - usageTypeId
+        - subUsageTypeId
         - maxPipeSizeId
         - minPipeSizeId
         - categoryTypeId
@@ -2566,6 +2638,9 @@
         usageTypeId:
           type: string
           description: unique identifier of property usage type object
+        subUsageTypeId:
+          type: string
+          description: unique identifier of property sub usage type object
         sourceTypeId:
           type: string
           description: unique identifier of property usage type object
@@ -2594,6 +2669,7 @@
         - connectionType
         - sourceTypeId
         - usageTypeId
+        - subUsageTypeId
         - pipeSizeId
         - fromDate
         - amount
@@ -2727,9 +2803,80 @@
         - amountOrpercentage
         - serviceCharge
         - tenantId
-          
-          
-          
-        
-          
 
+  # Gapcode definitions
+    GapcodeReq:
+      type: object
+      properties:
+        RequestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        Gapcodes:
+          type: array
+          maximum: 20
+          items:
+           $ref: '#/definitions/Gapcode'
+      required:
+        - RequestInfo
+        - Gapcodes
+    
+    GapcodeRes:
+      type: object
+      properties:
+        ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        Gapcodes:
+          type: array
+          maximum: 20
+          items:
+           $ref: '#/definitions/Gapcode'
+    
+    Gapcode:
+      type: object
+      properties:
+        id:
+         type: integer
+         format: int64
+         description : id is gapcodeid and Unique identifier, typically defined by system and readonly.
+        code : 
+          type: string
+          description: human readable code is gapcodename..
+          maxLength: 100 
+        name : 
+          type: string
+          description: human readable code is gapcodename..
+          maxLength: 100  
+        outSideUlb:
+          type: boolean
+          format: varchar
+          description: TRUE for outSideUlb and FALSE for NotoutSideUlb.
+        active:
+          type: boolean
+          format: varchar
+          description: TRUE for active and FALSE for inactive.  
+        noOfLastMonths:
+          type: string
+          description: number of last months
+          maximum: 100
+        logic:
+          type: string
+          description: logic of formula
+          maximum: 100
+        description: 
+          type: string
+          description: human readable description should be assigned by user.
+          maximum: 250  
+        tenantId:
+          type: string
+          description: Unique Identifier of the tenant 
+          maxLength: 250
+      required:
+        - name
+        - code        
+        - logic
+        - noOfLastMonths
+        - tenantId
+        
+    
+
+          
+          

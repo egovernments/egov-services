@@ -43,9 +43,9 @@ public interface CategoryService {
 	 * @param offSet
 	 * @return CategoryResponse
 	 */
-	public CategorySearchResponse getCategoryMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
-			String code, String active, String type, String businessNature, Integer categoryId, String rateType, String feeType, Integer uomId,
-			Integer pageSize, Integer offSet);
+	public CategorySearchResponse getCategoryMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
+			String name, String code, String active, String type, String businessNature, Integer categoryId,
+			String rateType, String feeType, Integer uomId, Integer pageSize, Integer offSet);
 
 	/**
 	 * Description : service method for creating category master

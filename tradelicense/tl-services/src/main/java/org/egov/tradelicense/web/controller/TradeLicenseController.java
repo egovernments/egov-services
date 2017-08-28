@@ -23,9 +23,7 @@ import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.domain.service.TradeLicenseService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.validation.SmartValidator;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,21 +45,6 @@ public class TradeLicenseController {
 
 	@Autowired
 	PropertiesManager propertiesManager;
-
-	private BindingResult validate(List<TradeLicenseContract> tradeLicenses, BindingResult errors) {
-
-		try {
-			Assert.notNull(tradeLicenses, "tradeLicenses to create must not be null");
-			for (TradeLicenseContract tradeLicense : tradeLicenses) {
-				validator.validate(tradeLicense, errors);
-			}
-		} catch (IllegalArgumentException e) {
-			errors.addError(new ObjectError("Missing data", e.getMessage()));
-		}
-
-		return errors;
-
-	}
 
 	@RequestMapping(path = "/license/v1/_create", method = RequestMethod.POST)
 	public TradeLicenseResponse createTradelicense(@Valid @RequestBody TradeLicenseRequest tradeLicenseRequest,
@@ -89,8 +72,10 @@ public class TradeLicenseController {
 
 			tradeLicense = new TradeLicense();
 			model.map(tradeLicenseContract, tradeLicense);
+			//preparing audit details
 			AuditDetails auditDetails = new AuditDetails();
 			auditDetails.setCreatedTime(new Date().getTime());
+			auditDetails.setLastModifiedTime(new Date().getTime());
 			if (requestInfo != null && requestInfo.getUserInfo() != null && requestInfo.getUserInfo().getId() != null) {
 				auditDetails.setCreatedBy(requestInfo.getUserInfo().getId().toString());
 				auditDetails.setLastModifiedBy(requestInfo.getUserInfo().getId().toString());
@@ -113,29 +98,118 @@ public class TradeLicenseController {
 		}
 
 		tradeLicenseRequest.setLicenses(tradeLicenseContracts);
-		tradeLicenseService.addToQue(tradeLicenseRequest);
+		tradeLicenseService.addToQue(tradeLicenseRequest, true);
 		tradeLicenseResponse.setLicenses(tradeLicenseContracts);
 
-		// creating success message with the license numbers
+		// creating the success message for license create
 		if (tradeLicenseResponse.getResponseInfo() != null && tradeLicenseResponse.getLicenses() != null
 				&& tradeLicenseResponse.getLicenses().size() > 0) {
 
-			String statusMessage = propertiesManager.getLegacyCreateSuccessMessage();
-			String licenseNumbers = "";
-			int licenseCount = tradeLicenseResponse.getLicenses().size();
+			List<TradeLicenseContract> licenses = tradeLicenseResponse.getLicenses();
+			int licenseCount = licenses.size();
+			String legacyText = "";
+			String newTradeText = "";
+			String licenseNumbers = " ";
+			String applicationNumbers = " ";
+
 			for (int i = 0; i < licenseCount; i++) {
-				if (tradeLicenseResponse.getLicenses().get(i).getLicenseNumber() != null) {
-					licenseNumbers = licenseNumbers.concat(tradeLicenseRequest.getLicenses().get(i).getLicenseNumber());
-					if (i != (licenseCount - 1)) {
-						licenseNumbers = licenseNumbers.concat(", ");
+
+				if (licenses.get(i).getIsLegacy()) {
+
+					if (legacyText.isEmpty()) {
+						legacyText = propertiesManager.getLegacyCreateSuccessMessage();
+					}
+
+					if (licenses.get(i).getLicenseNumber() != null) {
+						licenseNumbers = licenseNumbers.concat(licenses.get(i).getLicenseNumber());
+						if (i != (licenseCount - 1)) {
+							licenseNumbers = licenseNumbers.concat(", ");
+						}
+					}
+				} else {
+
+					if (newTradeText.isEmpty()) {
+						newTradeText = propertiesManager.getNewTradeLicenseCreateSuccessMessage();
+					}
+
+					if (licenses.get(i).getApplicationNumber() != null) {
+						applicationNumbers = applicationNumbers.concat(licenses.get(i).getApplicationNumber());
+						if (i != (licenseCount - 1)) {
+							applicationNumbers = applicationNumbers.concat(", ");
+						}
 					}
 				}
 			}
-			if (statusMessage != null) {
-				statusMessage = statusMessage.replace("{licenseNumbers}", licenseNumbers);
+
+			if (legacyText != null && !legacyText.isEmpty()) {
+
+				legacyText = legacyText + licenseNumbers;
 			}
-			tradeLicenseResponse.getResponseInfo().setStatus(statusMessage);
+
+			if (newTradeText != null && !newTradeText.isEmpty()) {
+
+				newTradeText = newTradeText + applicationNumbers;
+			}
+
+			tradeLicenseResponse.getResponseInfo().setStatus(legacyText + newTradeText);
 		}
+
+		return tradeLicenseResponse;
+	}
+
+	@RequestMapping(path = "/license/v1/_update", method = RequestMethod.POST)
+	public TradeLicenseResponse updateTradelicense(@Valid @RequestBody TradeLicenseRequest tradeLicenseRequest,
+			BindingResult errors) throws Exception {
+
+		RequestInfo requestInfo = tradeLicenseRequest.getRequestInfo();
+		if (errors.hasErrors()) {
+			throw new CustomBindException(errors, requestInfo);
+		}
+		// check for existence of licenses
+		if (tradeLicenseRequest.getLicenses() == null) {
+			throw new TradeLicensesNotFoundException(propertiesManager.getTradeLicensesNotFoundMsg(), requestInfo);
+		} else if (tradeLicenseRequest.getLicenses().size() == 0) {
+			throw new TradeLicensesNotEmptyException(propertiesManager.getTradeLicensesNotEmptyMsg(), requestInfo);
+		}
+
+		ModelMapper model = new ModelMapper();
+		TradeLicenseResponse tradeLicenseResponse = new TradeLicenseResponse();
+		tradeLicenseResponse.setResponseInfo(getResponseInfo(requestInfo));
+		List<TradeLicense> tradeLicenses = new ArrayList<>();
+		TradeLicense tradeLicense;
+
+		for (TradeLicenseContract tradeLicenseContract : tradeLicenseRequest.getLicenses()) {
+
+			tradeLicense = new TradeLicense();
+			model.map(tradeLicenseContract, tradeLicense);
+			AuditDetails auditDetails = tradeLicense.getAuditDetails();
+			if (auditDetails == null) {
+				auditDetails = new AuditDetails();
+			}
+			auditDetails.setLastModifiedTime(new Date().getTime());
+			if (requestInfo != null && requestInfo.getUserInfo() != null && requestInfo.getUserInfo().getId() != null) {
+				auditDetails.setLastModifiedBy(requestInfo.getUserInfo().getId().toString());
+			}
+
+			tradeLicense.setAuditDetails(auditDetails);
+
+			tradeLicenses.add(tradeLicense);
+		}
+
+		tradeLicenses = tradeLicenseService.update(tradeLicenses, requestInfo, errors);
+
+		List<TradeLicenseContract> tradeLicenseContracts = new ArrayList<>();
+		TradeLicenseContract contract;
+
+		for (TradeLicense f : tradeLicenses) {
+			contract = new TradeLicenseContract();
+			model.map(f, contract);
+			tradeLicenseContracts.add(contract);
+		}
+
+		tradeLicenseRequest.setLicenses(tradeLicenseContracts);
+		tradeLicenseService.addToQue(tradeLicenseRequest, false);
+		tradeLicenseResponse.setLicenses(tradeLicenseContracts);
 
 		return tradeLicenseResponse;
 	}
@@ -143,9 +217,6 @@ public class TradeLicenseController {
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
 
 		return responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-		// return
-		// ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
-		// .resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
 	}
 
 	@RequestMapping(path = "/license/v1/_search", method = RequestMethod.POST)

@@ -116,6 +116,8 @@ public class MeterWaterRatesRepository {
                             .addValue("code", meterWaterRates.getCode())
                             .addValue("billingtype", meterWaterRates.getBillingType())
                             .addValue("usagetypeid", meterWaterRates.getUsageTypeId())
+                            .addValue("subusagetypeid", meterWaterRates.getSubUsageTypeId())
+                            .addValue("outsideulb", meterWaterRates.getOutsideUlb())
                             .addValue("sourcetypeid", sourcetypeId).addValue("pipesizeid", pipesizeId)
                             .addValue("fromdate", meterWaterRates.getFromDate())
                             .addValue("todate", meterWaterRates.getToDate()).addValue("active", meterWaterRates.getActive())
@@ -182,6 +184,8 @@ public class MeterWaterRatesRepository {
             batchValues.add(
                     new MapSqlParameterSource("billingtype", meterWaterRates.getBillingType())
                             .addValue("usagetypeid", meterWaterRates.getUsageTypeId())
+                            .addValue("subusagetypeid", meterWaterRates.getSubUsageTypeId())
+                            .addValue("outsideulb", meterWaterRates.getOutsideUlb())
                             .addValue("sourcetypeid", sourcetypeId).addValue("pipesizeid", pipesizeId)
                             .addValue("fromdate", meterWaterRates.getFromDate())
                             .addValue("todate", meterWaterRates.getToDate()).addValue("active", meterWaterRates.getActive())
@@ -219,6 +223,7 @@ public class MeterWaterRatesRepository {
     public List<MeterWaterRates> findForCriteria(final MeterWaterRatesGetRequest meterWaterRatesGetRequest) {
         final List<Object> preparedStatementValues = new ArrayList<>();
         final List<Integer> usageTypeIdsList = new ArrayList<>();
+        final List<Integer> subUsageTypeIdsList = new ArrayList<>();
         final String queryStr = meterWaterRatesQueryBuilder.getQuery(meterWaterRatesGetRequest, preparedStatementValues);
         final List<MeterWaterRates> meterWaterRatesList = jdbcTemplate.query(queryStr,
                 preparedStatementValues.toArray(), meterWaterRatesRowMapper);
@@ -228,16 +233,26 @@ public class MeterWaterRatesRepository {
             usageTypeIdsList.add(Integer.valueOf(meterWaterRates.getUsageTypeId()));
         final Integer[] usageTypeIds = usageTypeIdsList.toArray(new Integer[usageTypeIdsList.size()]);
         final UsageTypeResponse usageResponse = restExternalMasterService.getUsageNameFromPTModule(
-                usageTypeIds,WcmsConstants.WC, meterWaterRatesGetRequest.getTenantId());
+                usageTypeIds, WcmsConstants.WC, meterWaterRatesGetRequest.getTenantId());
         for (final MeterWaterRates meterWaterRatesObj : meterWaterRatesList)
             for (final PropertyTaxResponseInfo propertyResponse : usageResponse.getUsageMasters())
                 if (propertyResponse.getId().equals(meterWaterRatesObj.getUsageTypeId()))
                     meterWaterRatesObj.setUsageTypeName(propertyResponse.getName());
+        // fetch sub usage type Id and set the usage type name here
+        for (final MeterWaterRates meterWaterRates : meterWaterRatesList)
+            subUsageTypeIdsList.add(Integer.valueOf(meterWaterRates.getSubUsageTypeId()));
+        final Integer[] subUsageTypeIds = subUsageTypeIdsList.toArray(new Integer[subUsageTypeIdsList.size()]);
+        final UsageTypeResponse subUsageResponse = restExternalMasterService.getSubUsageNameFromPTModule(
+                subUsageTypeIds, WcmsConstants.WC, meterWaterRatesGetRequest.getTenantId());
+        for (final MeterWaterRates meterWaterRatesObj : meterWaterRatesList)
+            for (final PropertyTaxResponseInfo propertyResponse : subUsageResponse.getUsageMasters())
+                if (propertyResponse.getId().equals(meterWaterRatesObj.getSubUsageTypeId()))
+                    meterWaterRatesObj.setSubUsageType(propertyResponse.getName());
         return meterWaterRatesList;
     }
 
     public boolean checkMeterWaterRatesExists(final String code, final String usageTypeId,
-            final String sourceTypeName, final Double pipeSize, final String tenantId) {
+            final String subUsageTypeId, final String sourceTypeName, final Double pipeSize, final String tenantId) {
         final List<Object> preparedStatementValues = new ArrayList<>();
         final String pipesizeQuery = PropertyPipeSizeQueryBuilder.getPipeSizeIdQuery();
         Long pipesizeId = 0L;
@@ -262,6 +277,7 @@ public class MeterWaterRatesRepository {
         if (pipesizeId == null)
             log.info("Invalid input.");
         preparedStatementValues.add(usageTypeId);
+        preparedStatementValues.add(subUsageTypeId);
         preparedStatementValues.add(sourcetypeId);
         preparedStatementValues.add(pipesizeId);
         preparedStatementValues.add(tenantId);

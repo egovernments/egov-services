@@ -48,6 +48,7 @@ import org.egov.eis.model.Department;
 import java.util.ArrayList;
 import java.util.List;
 
+@Builder
 @AllArgsConstructor
 @EqualsAndHashCode
 @Getter

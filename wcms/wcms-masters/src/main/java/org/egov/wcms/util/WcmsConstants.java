@@ -351,8 +351,8 @@ public class WcmsConstants {
     public static final String SOURCE_TYPE_NAME_INVALID_FIELD_NAME = "source Type";
 
     public static final String METER_WATER_RATES_UNIQUE_CODE = "wcms.0064";
-    public static final String METER_WATER_RATES_UNQ_FIELD_NAME = "usageTypeName ,sourceTypeName and pipeSize";
-    public static final String METER_WATER_RATES_UNQ_ERROR_MESSAGE = "Entered combination of UsageType ,SourceType and PipeSize Inmm has already been mapped";
+    public static final String METER_WATER_RATES_UNQ_FIELD_NAME = "usageTypeName,SubUsageType,sourceTypeName and pipeSize";
+    public static final String METER_WATER_RATES_UNQ_ERROR_MESSAGE = "Entered combination of UsageType ,subUsageType,SourceType and PipeSize Inmm has already been mapped";
 
     public static final String PIPESIZE_INMM_INVALID_CODE = "wcms.0065";
     public static final String PIPESIZE_INMM_FIELD_NAME = "pipeSize";
@@ -395,8 +395,8 @@ public class WcmsConstants {
     public static final String NON_METER_WATER_RATES_UNQ_ERROR_MESSAGE = "Entered combination of ConnectionType,UsageType ,SourceType ,PipeSize and fromDate has already been mapped";
     
     public static final String DONATION_UNIQUE_CODE = "wcms.0076";
-    public static final String DONATION_UNQ_FIELD_NAME = "peopertyType,usageTypeName ,catgeory ,maxPipeSize and minPipeSize";
-    public static final String DONATION_UNQ_ERROR_MESSAGE = "Entered combination of PropertyType ,UsageType ,CategoryType ,MaxPipeSize and MinPipeSize Inmm has already been mapped";
+    public static final String DONATION_UNQ_FIELD_NAME = "peopertyType,usageTypeName,subUsageType,catgeory ,maxPipeSize and minPipeSize";
+    public static final String DONATION_UNQ_ERROR_MESSAGE = "Entered combination of PropertyType ,UsageType ,subUsageType,CategoryType ,MaxPipeSize and MinPipeSize Inmm has already been mapped";
 
     public static final String SERVICETYPE_MANDATORY_CODE = "wcms.0076";
     public static final String SERVICETYPE_MANADATORY_FIELD_NAME = "serviceType";
@@ -417,6 +417,23 @@ public class WcmsConstants {
     public static final String SERVICECHARGEEFFECTIVETO_MANDATORY_CODE = "wcms.0080";
     public static final String SERVICECHARGEEFFECTIVETO_MANADATORY_FIELD_NAME = "effectiveTo";
     public static final String SERVICECHARGEEFFECTIVETO_MANADATORY_ERROR_MESSAGE = "effectiveTo is Required";
+    
+    public static final String SUB_USAGETYPE_INVALID_CODE = "wcms.0081";
+    public static final String SUB_USAGETYPE_INVALID_ERROR_MESSAGE = "Please provide valid Sub Usage Type";
+    public static final String SUB_USAGETYPE_INVALID_FIELD_NAME = "subUsage Type";
+    
+    
+    public static final String GAPCODE_NAME_MANDATORY_CODE = "wcms.0082";
+    public static final String GAPCODE_NAME_MANDATORY_FIELD_NAME = "name";
+    public static final String GAPCODE_NAME_MANDATORY_ERROR_MESSAGE = "name is required";
+    
+    public static final String NO_OF_MONTHS_MANDATORY_CODE = "wcms.0083";
+    public static final String NO_OF_MONTHS_MANADATORY_FIELD_NAME = "noOfMonths";
+    public static final String NO_OF_MONTHS_MANADATORY_ERROR_MESSAGE = "noOfMonths is required";
+    
+    public static final String LOGIC_MANDATORY_CODE = "wcms.0084";
+    public static final String LOGIC_MANADATORY_FIELD_NAME = "logic";
+    public static final String LOGIC_MANADATORY_ERROR_MESSAGE = "logic is required";
     
     public static final String ZONE = "Zone";
     public static final String REVENUE = "REVENUE";

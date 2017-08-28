@@ -204,20 +204,20 @@ class Login extends Component {
             if(query[i].indexOf("link") > -1) {
               switch(query[i].split("=")[1]) {
                 case 'waternodue':
-                  self.props.setRoute("/non-framework/citizenServices/no-dues/search/watercharge");
+                  self.props.setRoute("/non-framework/citizenServices/no-dues/search/wc");
                   break;
                 case  'propertytaxextract':
-                  self.props.setRoute("/non-framework/citizenServices/no-dues/extract/watercharge");
+                  self.props.setRoute("/non-framework/citizenServices/no-dues/extract/pt");
                   break;
                 case 'propertytaxdue':
-                  self.props.setRoute("/non-framework/citizenServices/no-dues/search/propertytax");
+                  self.props.setRoute("/non-framework/citizenServices/no-dues/search/pt");
                   break;
               }
             }
           }
-        } else 
+        } else
           props.login(false, response.data.access_token, response.data.UserRequest);
-          
+
 
         let roleCodes=[];
         for (var i = 0; i < response.data.UserRequest.roles.length; i++) {
@@ -254,7 +254,7 @@ class Login extends Component {
       }).catch(function(response) {
 		    current.props.setLoadingStatus('hide');
         self.setState({
-          errorMsg: "Please check your username and password"
+          errorMsg: translate("login.error.msg")
         });
       });
 
@@ -658,7 +658,7 @@ class Login extends Component {
                         className="pull-right"
                       >
                         <MenuItem value={"en_IN"} primaryText="English" />
-                        <MenuItem value={"mr_IN"} primaryText="Marathi" />
+                        <MenuItem value={"mr_IN"} primaryText="मराठी" />
                       </SelectField>
                   </Col>
               </Row>

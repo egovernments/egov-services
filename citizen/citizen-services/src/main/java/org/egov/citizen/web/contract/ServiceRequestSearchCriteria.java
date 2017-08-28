@@ -1,5 +1,7 @@
 package org.egov.citizen.web.contract;
 
+import javax.validation.constraints.NotNull;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -9,14 +11,15 @@ import lombok.ToString;
 @ToString
 public class ServiceRequestSearchCriteria {
 	
-	private String serviceRequestId;
-	
-	private String userId;
-	
+	@NotNull
 	private String tenantId;
-	
+	private String serviceRequestId;
+	private Long userId;
+	private String serviceCode;
+	private String consumerCode;
+	private String assignedTo;
+	private String status;
 	private String sortBy;
-	
 	private String sortOrder;
 
 }

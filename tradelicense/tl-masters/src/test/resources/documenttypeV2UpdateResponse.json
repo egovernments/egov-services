@@ -1,0 +1,19 @@
+{
+	"responseInfo": null,
+	"documentTypes": [{
+		"id": 4,
+		"tenantId": "default",
+		"name": "Environmen11",
+		"mandatory": false,
+		"enabled": true,
+		"applicationType": "NEW",
+		"auditDetails": {
+			"createdBy": null,
+			"lastModifiedBy": null,
+			"createdTime": null,
+			"lastModifiedTime": null
+		},
+		"categoryId": 1,
+		"subCategoryId": 2
+	}]
+}

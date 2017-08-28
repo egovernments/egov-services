@@ -45,13 +45,16 @@ public class SupportDocumentEntity {
 
 		supportDocument.setDocumentTypeId(this.documentTypeId);
 
-		supportDocument.setFileStoreId(Long.valueOf(this.fileStoreId));
+		supportDocument.setFileStoreId(this.fileStoreId);
 
 		supportDocument.setComments(this.comments);
 
 		auditDetails.setCreatedBy(this.createdBy);
+
 		auditDetails.setCreatedTime(this.createdTime);
+
 		auditDetails.setLastModifiedBy(this.lastModifiedBy);
+
 		auditDetails.setLastModifiedTime(this.lastModifiedTime);
 
 		supportDocument.setAuditDetails(auditDetails);
@@ -69,9 +72,7 @@ public class SupportDocumentEntity {
 
 		this.documentTypeId = supportDocument.getDocumentTypeId();
 
-		if (supportDocument.getFileStoreId() != null) {
-			this.fileStoreId = supportDocument.getFileStoreId().toString();
-		}
+		this.fileStoreId = supportDocument.getFileStoreId();
 
 		this.comments = supportDocument.getComments();
 

@@ -8,6 +8,7 @@ import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
 import org.egov.pgrrest.read.persistence.repository.ServiceRequestRepository;
 import org.egov.pgrrest.read.web.contract.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class ServiceRequestService {
     private List<ServiceRequestValidator> validators;
     private ServiceRequestCustomFieldService customFieldService;
     private DraftService draftService;
+    private boolean postgresEnabled;
 
     @Autowired
     public ServiceRequestService(ServiceRequestRepository serviceRequestRepository,
@@ -32,7 +34,9 @@ public class ServiceRequestService {
                                  ServiceRequestTypeService serviceRequestTypeService,
                                  List<ServiceRequestValidator> validators,
                                  ServiceRequestCustomFieldService customFieldService,
-                                 DraftService draftService) {
+                                 DraftService draftService, @Value("${postgres.enabled}") boolean postgresEnabled)
+
+    {
         this.serviceRequestRepository = serviceRequestRepository;
         this.sevaNumberGeneratorService = sevaNumberGeneratorService;
         this.userRepository = userRepository;
@@ -40,12 +44,13 @@ public class ServiceRequestService {
         this.validators = validators;
         this.customFieldService = customFieldService;
         this.draftService = draftService;
+        this.postgresEnabled = postgresEnabled;
     }
 
     public List<ServiceRequest> findAll(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
         List<ServiceRequest> serviceRequestList;
-        serviceRequestList = serviceRequestRepository.find(serviceRequestSearchCriteria);
-        isRecordsPresent(serviceRequestSearchCriteria, serviceRequestList);
+        serviceRequestList = postgresEnabled ? serviceRequestRepository.findFromDb(serviceRequestSearchCriteria) :
+            getRecordFromES(serviceRequestSearchCriteria);
         maskCitizenDetailsForAnonymousRequest(serviceRequestSearchCriteria, serviceRequestList);
         return serviceRequestList;
     }
@@ -134,10 +139,13 @@ public class ServiceRequestService {
         draftService.delete(draftId);
     }
 
-    private void isRecordsPresent(ServiceRequestSearchCriteria serviceRequestSearchCriteria, List<ServiceRequest> serviceRequestList) {
+    private List<ServiceRequest> getRecordFromES(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
+        List<ServiceRequest> serviceRequestList;
+        serviceRequestList = serviceRequestRepository.find(serviceRequestSearchCriteria);
         if (serviceRequestList.isEmpty()) {
-            serviceRequestRepository.findFromDb(serviceRequestSearchCriteria);
+            serviceRequestList = serviceRequestRepository.findFromDb(serviceRequestSearchCriteria);
         }
+        return serviceRequestList;
     }
 
 }

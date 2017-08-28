@@ -53,11 +53,8 @@ public class IdGenRepository {
 		idGenReq.setDid(requestInfo.getDid());
 		idGenReq.setKey(requestInfo.getKey());
 		idGenReq.setMsgId(requestInfo.getMsgId());
-		idGenReq.setRequesterId(requestInfo.getRequesterId());
-		idGenReq.setTs(requestInfo.getTs().getTime()); // this
-														// is
-														// the
-														// difference.
+        //idGenReq.setRequesterId(requestInfo.getRequesterId());
+		idGenReq.setTs(requestInfo.getTs().getTime()); 
 		idGenReq.setUserInfo(requestInfo.getUserInfo());
 		idGenReq.setVer(requestInfo.getVer());
 
@@ -112,11 +109,8 @@ public class IdGenRepository {
         idGenReq.setDid(requestInfo.getDid());
         idGenReq.setKey(requestInfo.getKey());
         idGenReq.setMsgId(requestInfo.getMsgId());
-        idGenReq.setRequesterId(requestInfo.getRequesterId());
-        idGenReq.setTs(requestInfo.getTs().getTime()); // this
-        // is
-        // the
-        // difference.
+        //idGenReq.setRequesterId(requestInfo.getRequesterId());
+        idGenReq.setTs(requestInfo.getTs().getTime()); 
         idGenReq.setUserInfo(requestInfo.getUserInfo());
         idGenReq.setVer(requestInfo.getVer());
         IdRequest idRequest = new IdRequest();

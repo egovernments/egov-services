@@ -22,12 +22,6 @@ public class LicenseFeeDetailSearch {
 
 	private Boolean paid;
 
-	private String createdBy;
-
-	private String lastModifiedBy;
-
-	private Long createdTime;
-
-	private Long lastModifiedTime;
+	private AuditDetails auditDetails;
 
 }

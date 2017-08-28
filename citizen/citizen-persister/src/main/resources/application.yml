@@ -155,7 +155,7 @@ serviceMaps:
        - jsonPath: $.serviceReq.tenantId
          type: STRING
        
-       - jsonPath: $.requestInfo.userInfo.id
+       - jsonPath: $.RequestInfo.userInfo.id
          type: LONG
 
        - jsonPath: $.serviceReq.serviceCode
@@ -181,10 +181,10 @@ serviceMaps:
          type: CURRENTDATE
          dbType: LONG        
 
-       - jsonPath: $.requestInfo.userInfo.id
+       - jsonPath: $.RequestInfo.userInfo.id
          type: LONG
          
-       - jsonPath: $.requestInfo.userInfo.id
+       - jsonPath: $.RequestInfo.userInfo.id
          type: LONG
   
        - jsonPath: $.serviceReq
@@ -198,7 +198,7 @@ serviceMaps:
     - query: UPDATE egov_citizen_service_req SET  userid=?, servicecode=?, consumercode=?, email=?, mobilenumber=?, assignedto=?,  lastmodifiedddate=?, lastmodifiedby=?, jsonvalue=? WHERE id=? and tenantid=?;
       jsonMaps:
        
-       - jsonPath: $.requestInfo.userInfo.id
+       - jsonPath: $.RequestInfo.userInfo.id
          type: LONG
 
        - jsonPath: $.serviceReq.serviceCode
@@ -220,7 +220,7 @@ serviceMaps:
          type: CURRENTDATE
          dbType: LONG        
          
-       - jsonPath: $.requestInfo.userInfo.id
+       - jsonPath: $.RequestInfo.userInfo.id
          type: LONG
   
        - jsonPath: $.serviceReq

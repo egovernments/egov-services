@@ -3,13 +3,13 @@ package org.egov.egf.master.domain.service;
 import java.util.List;
 
 import org.egov.common.constants.Constants;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.model.BankSearch;
 import org.egov.egf.master.domain.repository.BankRepository;
 import org.egov.egf.master.domain.repository.FundRepository;
-import org.egov.egf.master.web.requests.BankRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +30,53 @@ public class BankService {
 	@Autowired
 	private FundRepository fundRepository;
 
+	@Transactional
+	public List<Bank> create(List<Bank> banks, BindingResult errors, RequestInfo requestInfo) {
+
+		try {
+
+			banks = fetchRelated(banks);
+
+			validate(banks, Constants.ACTION_CREATE, errors);
+
+			if (errors.hasErrors()) {
+				throw new CustomBindException(errors);
+			}
+			for (Bank b : banks) {
+				b.setId(bankRepository.getNextSequence());
+			}
+
+		} catch (CustomBindException e) {
+
+			throw new CustomBindException(errors);
+		}
+
+		return bankRepository.save(banks, requestInfo);
+
+	}
+
+	@Transactional
+	public List<Bank> update(List<Bank> banks, BindingResult errors, RequestInfo requestInfo) {
+
+		try {
+
+			banks = fetchRelated(banks);
+
+			validate(banks, Constants.ACTION_UPDATE, errors);
+
+			if (errors.hasErrors()) {
+				throw new CustomBindException(errors);
+			}
+
+		} catch (CustomBindException e) {
+
+			throw new CustomBindException(errors);
+		}
+
+		return bankRepository.update(banks, requestInfo);
+
+	}
+
 	private BindingResult validate(List<Bank> banks, String method, BindingResult errors) {
 
 		try {
@@ -46,8 +93,8 @@ public class BankService {
 			case Constants.ACTION_UPDATE:
 				Assert.notNull(banks, "Banks to update must not be null");
 				for (Bank bank : banks) {
-				    Assert.notNull(bank.getId(), "Bank ID to update must not be null");
-				    validator.validate(bank, errors);
+					Assert.notNull(bank.getId(), "Bank ID to update must not be null");
+					validator.validate(bank, errors);
 				}
 				break;
 			default:
@@ -61,22 +108,8 @@ public class BankService {
 	}
 
 	public List<Bank> fetchRelated(List<Bank> banks) {
-		for (Bank bank : banks) {
-		}
 
 		return banks;
-	}
-
-	@Transactional
-	public List<Bank> add(List<Bank> banks, BindingResult errors) {
-		banks = fetchRelated(banks);
-		validate(banks, Constants.ACTION_CREATE, errors);
-		if (errors.hasErrors()) {
-			throw new CustomBindException(errors);
-		}
-		for(Bank b:banks)b.setId(bankRepository.getNextSequence());
-		return banks;
-
 	}
 
 	@Transactional
@@ -88,10 +121,6 @@ public class BankService {
 		}
 		return banks;
 
-	}
-
-	public void addToQue(BankRequest request) {
-		bankRepository.add(request);
 	}
 
 	public Pagination<Bank> search(BankSearch bankSearch) {

@@ -108,6 +108,9 @@ public class ApplicationProperties {
     
     @Value("${search.instrument.uri}")
     private String searchInstrument;
+
+    @Value("${search.instrumentbypaymentmode.uri}")
+    private String searchInstrumentByPaymentMode;
     
     @Value("${egov.services.billing_service.hostname}")
     private String billingServiceHostName;

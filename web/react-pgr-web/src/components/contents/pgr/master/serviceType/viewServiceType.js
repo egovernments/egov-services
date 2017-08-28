@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Grid, Row, Col, DropdownButton, ListGroup, ListGroupItem} from 'react-bootstrap';
+import {List, ListItem} from 'material-ui/List';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
 import Checkbox from 'material-ui/Checkbox';
@@ -104,8 +105,6 @@ class ViewServiceType extends Component {
 
       let {submitForm} = this;
 
-      console.log(isFormValid);
-
       return(
         <div className="viewServiceType">
           <Grid style={{width:'100%'}}>
@@ -114,56 +113,52 @@ class ViewServiceType extends Component {
                  View Grievance Type
                < /div>}/>
                <CardText style={{padding:'8px 16px 0'}}>
-                 <Row>
-                   <Col xs={6} md={3}>
-                    {translate("core.lbl.add.name")}
-                   </Col>
-                   <Col xs={6} md={3}>
-                    {viewServiceType.serviceName ? viewServiceType.serviceName : ''}
-                   </Col>
-                   <Col xs={6} md={3}>
-                     {translate("core.lbl.code")}
-                   </Col>
-                   <Col xs={6} md={3}>
-                    {viewServiceType.serviceCode ? viewServiceType.serviceCode : ''}
-                   </Col>
-                 </Row>
-                 <Row>
-                   <Col xs={6} md={3}>
-                    {translate("core.lbl.description")}
-                   </Col>
-                   <Col xs={6} md={3}>
-                    {viewServiceType.description? viewServiceType.description : ''}
-                   </Col>
-                   <Col xs={6} md={3}>
-                     {translate("pgr.lbl.active")}
-                   </Col>
-                   <Col xs={6} md={3}>
-                    {viewServiceType.active? 'Yes' : 'No'}
-                   </Col>
-                 </Row>
-                 <Row>
-                   <Col xs={6} md={3}>
-                    Category
-                   </Col>
-                   <Col xs={6} md={3}>
-                    {getNameById(categorySource,viewServiceType.category) ? getNameById(categorySource,viewServiceType.category) : ''}
-                   </Col>
-                   <Col xs={6} md={3}>
-                     SLA Hours
-                   </Col>
-                   <Col xs={6} md={3}>
-                    {viewServiceType.slaHours? viewServiceType.slaHours : ''}
-                   </Col>
-                 </Row>
-                 <Row>
-                   <Col xs={6} md={3}>
-                    Has Financial Impact
-                   </Col>
-                   <Col xs={6} md={3}>
-                    {viewServiceType.hasFinancialImpact? 'Yes' : 'No'}
-                   </Col>
-                 </Row>
+                 <List>
+                   <Row>
+                     <Col xs={12} sm={6} md={4} lg={3}>
+                       <ListItem
+                         primaryText={translate("core.lbl.add.name")}
+                         secondaryText={<p style={styles.customColumnStyle}>{viewServiceType.serviceName ? viewServiceType.serviceName : ''}</p>}
+                       />
+                     </Col>
+                     <Col xs={12} sm={6} md={4} lg={3}>
+                       <ListItem
+                         primaryText={translate("core.lbl.code")}
+                         secondaryText={<p style={styles.customColumnStyle}>{viewServiceType.serviceCode ? viewServiceType.serviceCode : ''}</p>}
+                       />
+                     </Col>
+                     <Col xs={12} sm={6} md={4} lg={3}>
+                       <ListItem
+                         primaryText={translate("core.lbl.description")}
+                         secondaryText={<p style={styles.customColumnStyle}>{viewServiceType.description? viewServiceType.description : ''}</p>}
+                       />
+                     </Col>
+                     <Col xs={12} sm={6} md={4} lg={3}>
+                       <ListItem
+                         primaryText={translate("pgr.lbl.active")}
+                         secondaryText={<p style={styles.customColumnStyle}>{viewServiceType.active? 'Yes' : 'No'}</p>}
+                       />
+                     </Col>
+                     <Col xs={12} sm={6} md={4} lg={3}>
+                       <ListItem
+                         primaryText={translate('core.category')}
+                         secondaryText={<p style={styles.customColumnStyle}>{getNameById(categorySource,viewServiceType.category) ? getNameById(categorySource,viewServiceType.category) : ''}</p>}
+                       />
+                     </Col>
+                     <Col xs={12} sm={6} md={4} lg={3}>
+                       <ListItem
+                         primaryText={translate('pgr.lbl.slahour')}
+                         secondaryText={<p style={styles.customColumnStyle}>{viewServiceType.slaHours? viewServiceType.slaHours : ''}</p>}
+                       />
+                     </Col>
+                     <Col xs={12} sm={6} md={4} lg={3}>
+                       <ListItem
+                         primaryText={translate('pgr.lbl.finimpact')}
+                         secondaryText={<p style={styles.customColumnStyle}>{viewServiceType.hasFinancialImpact? 'Yes' : 'No'}</p>}
+                       />
+                     </Col>
+                   </Row>
+                 </List>
                </CardText>
             </Card>
           </Grid>

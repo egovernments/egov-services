@@ -48,6 +48,7 @@ import org.egov.wcms.service.CategoryTypeService;
 import org.egov.wcms.service.DocumentTypeApplicationTypeService;
 import org.egov.wcms.service.DocumentTypeService;
 import org.egov.wcms.service.DonationService;
+import org.egov.wcms.service.GapcodeService;
 import org.egov.wcms.service.MeterCostService;
 import org.egov.wcms.service.MeterStatusService;
 import org.egov.wcms.service.MeterWaterRatesService;
@@ -65,6 +66,7 @@ import org.egov.wcms.web.contract.CategoryTypeRequest;
 import org.egov.wcms.web.contract.DocumentTypeApplicationTypeReq;
 import org.egov.wcms.web.contract.DocumentTypeReq;
 import org.egov.wcms.web.contract.DonationRequest;
+import org.egov.wcms.web.contract.GapcodeRequest;
 import org.egov.wcms.web.contract.MeterCostReq;
 import org.egov.wcms.web.contract.MeterStatusReq;
 import org.egov.wcms.web.contract.MeterWaterRatesRequest;
@@ -148,6 +150,9 @@ public class WaterMasterConsumer {
 
     @Autowired
     private NonMeterWaterRatesService nonMeterWaterRatesService;
+    
+    @Autowired
+    private GapcodeService gapcodeService;
 
     @KafkaListener(topics = { "${kafka.topics.usagetype.create.name}", "${kafka.topics.usagetype.update.name}",
             "${kafka.topics.category.create.name}", "${kafka.topics.category.update.name}",
@@ -167,7 +172,8 @@ public class WaterMasterConsumer {
             "${kafka.topics.metercost.update.name}", "${kafka.topics.meterstatus.create.name}",
             "${kafka.topics.meterstatus.update.name}", "${kafka.topics.nonmeterwaterrates.create.name}",
             "${kafka.topics.nonmeterwaterrates.update.name}", "${kafka.topics.servicecharge.create.name}",
-            "${kafka.topics.servicecharge.update.name}" })
+            "${kafka.topics.servicecharge.update.name}","${kafka.topics.gapcode.create.name}",
+            "${kafka.topics.gapcode.update.name}" })
 
     public void processMessage(final Map<String, Object> consumerRecord,
             @Header(KafkaHeaders.RECEIVED_TOPIC) final String topic) {
@@ -260,6 +266,10 @@ public class WaterMasterConsumer {
             else if (applicationProperties.getUpdateNonMeterWaterRatesTopicName().equals(topic))
                 nonMeterWaterRatesService
                         .update(objectMapper.convertValue(consumerRecord, NonMeterWaterRatesReq.class));
+            else if (applicationProperties.getCreateGapcodeTopicName().equals(topic))
+            	System.out.println(gapcodeService.create(objectMapper.convertValue(consumerRecord, GapcodeRequest.class)));
+            else if (applicationProperties.getUpdateGapcodeTopicName().equals(topic))
+            	System.out.println(gapcodeService.update(objectMapper.convertValue(consumerRecord, GapcodeRequest.class)));
         } catch (final Exception exception) {
             log.debug("processMessage:" + exception);
             throw exception;

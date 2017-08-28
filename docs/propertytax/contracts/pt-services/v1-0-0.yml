@@ -772,6 +772,14 @@ definitions:
         type: number
         format: double
         description: builtup area given during the Building plan approval of the Floor
+      carpetArea:  
+        type: number
+        format: double
+        description: carpet area given during the Building plan approval of the Floor
+      exemptionArea:  
+        type: number
+        format: double
+        description: exemption area given during the Building plan approval of the Floor  
       bpaNo:
         type: string
         description: Buidling plan approval no for the Floor

@@ -42,9 +42,13 @@ package org.egov.egf.voucher.persistence.queue;
 import java.util.HashMap;
 
 import org.egov.egf.voucher.domain.model.Voucher;
+import org.egov.egf.voucher.domain.model.VoucherSubType;
 import org.egov.egf.voucher.domain.service.VoucherService;
+import org.egov.egf.voucher.domain.service.VoucherSubTypeService;
 import org.egov.egf.voucher.web.contract.VoucherContract;
+import org.egov.egf.voucher.web.contract.VoucherSubTypeContract;
 import org.egov.egf.voucher.web.requests.VoucherRequest;
+import org.egov.egf.voucher.web.requests.VoucherSubTypeRequest;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,6 +65,9 @@ public class FinancialVoucherServiceListener {
 
 	@Value("${kafka.topics.egf.voucher.completed.key}")
 	private String voucherCompletedKey;
+	
+	@Value("${kafka.topics.egf.voucher.vouchersubtype.completed.key}")
+	private String voucherSubTypeCompletedKey;
 
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -72,6 +79,9 @@ public class FinancialVoucherServiceListener {
 
 	@Autowired
 	private VoucherService voucherService;
+
+	@Autowired
+	private VoucherSubTypeService voucherSubTypeService;
 
 	@KafkaListener(id = "${kafka.topics.egf.voucher.validated.id}", topics = "${kafka.topics.egf.voucher.validated.topic}", group = "${kafka.topics.egf.voucher.validated.group}")
 	public void process(final HashMap<String, Object> mastersMap) {
@@ -108,6 +118,36 @@ public class FinancialVoucherServiceListener {
 			mastersMap.clear();
 			mastersMap.put("voucher_persisted", request);
 			financialProducer.sendMessage(completedTopic, voucherCompletedKey, mastersMap);
+		}
+		
+		if (mastersMap.get("vouchersubtype_create") != null) {
+			
+			final VoucherSubTypeRequest request = objectMapperFactory.create().convertValue(mastersMap.get("vouchersubtype_create"),
+					VoucherSubTypeRequest.class);
+			
+			for (final VoucherSubTypeContract voucherSubTypeContract : request.getVoucherSubTypes()) {
+				final VoucherSubType domain = mapper.map(voucherSubTypeContract, VoucherSubType.class);
+				voucherSubTypeService.save(domain);
+			}
+			
+			mastersMap.clear();
+			mastersMap.put("vouchersubtype_persisted", request);
+			financialProducer.sendMessage(completedTopic, voucherSubTypeCompletedKey, mastersMap);
+		}
+		
+		if (mastersMap.get("vouchersubtype_update") != null) {
+			
+			final VoucherSubTypeRequest request = objectMapperFactory.create().convertValue(mastersMap.get("vouchersubtype_update"),
+					VoucherSubTypeRequest.class);
+			
+			for (final VoucherSubTypeContract voucherSubTypeContract : request.getVoucherSubTypes()) {
+				final VoucherSubType domain = mapper.map(voucherSubTypeContract, VoucherSubType.class);
+				voucherSubTypeService.update(domain);
+			}
+			
+			mastersMap.clear();
+			mastersMap.put("vouchersubtype_persisted", request);
+			financialProducer.sendMessage(completedTopic, voucherSubTypeCompletedKey, mastersMap);
 		}
 
 	}

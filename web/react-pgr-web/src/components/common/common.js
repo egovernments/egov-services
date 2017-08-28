@@ -564,13 +564,6 @@ var localization_EN_Data = {
   "reports.property.receiptdate":"Receipt Date",
   "reports.property.total":"Total",
   "reports.property.arv":"ARV",
-  "":"",
-  "":"",
-  "":"",
-  "":"",
-  "":"",
-  "":"",
-  "":"",
 
     //employee Object
     "employee.Employee.fields.code": "Code",
@@ -2127,6 +2120,26 @@ var localization_MR_Data = {
             "tl.create.licenses.groups.TradeDetails.tradeValueForUOM": "Trade Value for the UOM - Marathi",
             "tl.create.licenses.groups.TradeDetails.licenseValidFromDate": "License Valid From Date - Marathi",
             "tl.create.licenses.groups.TradeDetails.UOM": " UOM - Marathi",
+
+            //report Lables Property Tax
+            "reports.property.revenueboundary":"Revenue Boundary - Marathi",
+            "reports.property.adminboundary":"Admin Boundary - Marathi",
+            "reports.property.locationboundary":"Location Boundary - Marathi",
+            "reports.property.upicnumber":"Property No. - Marathi",
+            "reports.property.address":"Address - Marathi",
+            "reports.property.state":"CURRENT/ARREAR - Marathi",
+            "reports.property.pttax":"Pt Tax - Marathi",
+            "reports.property.libcess":"Lib Cess - Marathi",
+            "reports.property.educess":"Education Cess - Marathi",
+            "reports.property.vacanttax":"Vacant Tax - Marathi",
+            "reports.property.empguacess":"Emp Gua Cess - Marathi",
+            "reports.property.latepenalty":"Late Penalty - Marathi",
+            "reports.property.advance":"Advance - Marathi",
+            "reports.property.Total":"Total - Marathi",
+            "reports.property.receiptnumber":"Receipt Number - Marathi",
+            "reports.property.receiptdate":"Receipt Date - Marathi",
+            "reports.property.total":"Total - Marathi",
+            "reports.property.arv":"ARV - Marathi",
 
 
     "wc.create.groups.applicationParticular.title": "अर्जाचे विशेष",

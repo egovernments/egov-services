@@ -117,6 +117,30 @@ public class AssetCategoryControllerTest {
                 .andExpect(content().json(getFileContents("errorresponse.json")));
     }
 
+    @Test
+    public void test_error_assetCategoryCreate() throws IOException, Exception {
+        final ErrorResponse errorResponse = getErrorResponse();
+
+        when(assetCommonService.populateErrors(any(BindingResult.class))).thenReturn(errorResponse);
+
+        mockMvc.perform(post("/assetCategories/_create").contentType(MediaType.APPLICATION_JSON)
+                .content(getFileContents("assetcategoryerrorrequest.json"))).andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(getFileContents("errorresponse.json")));
+    }
+
+    @Test
+    public void test_error_assetCategoryUpdate() throws IOException, Exception {
+        final ErrorResponse errorResponse = getErrorResponse();
+
+        when(assetCommonService.populateErrors(any(BindingResult.class))).thenReturn(errorResponse);
+
+        mockMvc.perform(post("/assetCategories/_update").contentType(MediaType.APPLICATION_JSON)
+                .content(getFileContents("assetcategoryerrorrequest.json"))).andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(getFileContents("errorresponse.json")));
+    }
+
     private ErrorResponse getErrorResponse() {
         final ErrorResponse errorResponse = new ErrorResponse();
         final org.egov.asset.exception.Error error = new org.egov.asset.exception.Error();

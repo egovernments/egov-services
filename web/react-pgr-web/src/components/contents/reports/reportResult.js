@@ -47,7 +47,19 @@ class ShowField extends Component {
     $('#reportTable').DataTable({
       dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
       buttons: [
-               'copy', 'csv', 'excel', 'pdf', 'print'
+               'copy', 'csv', 'excel', { extend: 'pdf', text: 'Pdf', orientation: 'landscape', pageSize: 'legal',
+        customize: function ( doc ) {
+            content: [ {
+                alignment: 'justify',
+                columns: [
+                        { width: 'auto' },
+                        { width: '*' },
+                        { width: '*' }
+                ],
+                table: { widths: [ 'auto', '*', '*' ] }
+            } ]
+        }
+    }, 'print'
        ],
        ordering: false,
        bDestroy: true
@@ -253,7 +265,7 @@ class ShowField extends Component {
         <Card>
           <CardHeader title={< strong > Result < /strong>}/>
           <CardText>
-          <Table id="reportTable" style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
+          <Table id="reportTable" style={{color:"black",fontWeight: "normal",padding:"0 !important"}} bordered responsive>
             {this.renderHeader()}
             {this.renderBody()}
             {this.renderFooter()}

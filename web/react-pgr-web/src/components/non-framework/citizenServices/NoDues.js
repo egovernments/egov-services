@@ -48,14 +48,22 @@ var specifications={};
 
 let reqRequired = [];
 
-const getFullDate = function(dat) {
+const getFullDate = function(dat,isTimeStamp=false) {
   var _date = new Date(dat);
-  return ('0' + _date.getDate()).slice(-2) + '/'
-               + ('0' + (_date.getMonth()+1)).slice(-2) + '/'
-               + _date.getFullYear() + " "
-               + ('0' + _date.getHours()).slice(-2) + ":"
-               + ('0' + _date.getMinutes()).slice(-2) + ":"
-               + ('0' + _date.getSeconds()).slice(-2)
+  if (isTimeStamp) {
+    return ('0' + _date.getDate()).slice(-2) + '/'
+                 + ('0' + (_date.getMonth()+1)).slice(-2) + '/'
+                 + _date.getFullYear() + " "
+                 + ('0' + _date.getHours()).slice(-2) + ":"
+                 + ('0' + _date.getMinutes()).slice(-2) + ":"
+                 + ('0' + _date.getSeconds()).slice(-2)
+  } else {
+    return ('0' + _date.getDate()).slice(-2) + '/'
+                 + ('0' + (_date.getMonth()+1)).slice(-2) + '/'
+                 + _date.getFullYear()
+  }
+
+
 }
 
 const getAmount = function(demands, arrearsBool) {
@@ -76,11 +84,11 @@ const getAmount = function(demands, arrearsBool) {
 
 const getAddress = function(property) {
   if(property && property.address)
-  return (property.address.addressNumber ? (property.address.addressNumber + ", ") : "") + 
-         (property.address.addressLine1 ? (property.address.addressLine1 + ", ") : "") + 
-         (property.address.addressLine2 ? (property.address.addressLine2 + ". ") : "") + 
-         (property.address.landmark ? ("Landmark: " + property.address.landmark) : "") + 
-         (property.address.city ? ("City: " + property.address.city) : "") + 
+  return (property.address.addressNumber ? (property.address.addressNumber + ", ") : "") +
+         (property.address.addressLine1 ? (property.address.addressLine1 + ", ") : "") +
+         (property.address.addressLine2 ? (property.address.addressLine2 + ". ") : "") +
+         (property.address.landmark ? ("Landmark: " + property.address.landmark) : "") +
+         (property.address.city ? ("City: " + property.address.city) : "") +
          (property.address.pincode ? ("- " + property.address.pincode) : "");
   else return "NA";
 }
@@ -156,7 +164,7 @@ class NoDues extends Component {
          demandReq["Demands"][0].taxPeriodTo=1522540799000;
          demandReq["Demands"][0].demandDetails[0].taxHeadMasterCode=(this.props.match.params.status == "extract" ? "PT_EXT_OF_PROP_COPY_CHAR" : (this.props.match.params.id == "pt" ? "PT_NO_DUE_CERT_CHAR" : "WC_NO_DUE_CERT_CHAR"));
 
-  
+
           Api.commonApiPost("/billing-service/demand/_create", {}, demandReq, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp"), JSON.parse(localStorage["request-temp"])).then(function(res){
             setTimeout(function(){
               Api.commonApiPost("/billing-service/bill/_generate", {businessService: "CS" , consumerCode:formData.consumerCode}, {}, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp"), JSON.parse(localStorage["request-temp"])).then(function(res){
@@ -416,7 +424,7 @@ class NoDues extends Component {
                demandReq["Demands"][0].taxPeriodFrom=1491004800000;
                demandReq["Demands"][0].taxPeriodTo=1522540799000;
                demandReq["Demands"][0].demandDetails[0].taxHeadMasterCode=(self.props.match.params.status == "extract" ? "PT_EXT_OF_PROP_COPY_CHAR" : (self.props.match.params.id == "pt" ? "PT_NO_DUE_CERT_CHAR" : "WC_NO_DUE_CERT_CHAR"));
-        
+
                Api.commonApiPost("/billing-service/demand/_create", {}, demandReq, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp"), JSON.parse(localStorage["request-temp"])).then(function(res){
 
                }, function(err) {
@@ -497,7 +505,7 @@ class NoDues extends Component {
       try {
         serviceReq = JSON.parse(localStorage.servReq);
       } catch(e) {}
-      
+
       Api.commonApiPost("/citizen-services/v1/requests/_search", {userId: JSON.parse(localStorage.getItem("userRequest")).id}, {}, null, true).then(function(ress) {
           let SID = "", _servReq;
           let SC = (self.props.match.params.status == "extract" ? "PT_NODUES" : (self.props.match.params.id == "pt" ? "PT_NODUES" : "WC_NODUES"));
@@ -554,7 +562,7 @@ class NoDues extends Component {
               }, function(err) {
                 self.props.toggleSnackbarAndSetText(true, err.message, false, true);
                 self.props.setLoadingStatus('hide');
-            })        
+            })
           } else {
             console.log("HERE4");
             self.setState({
@@ -565,7 +573,7 @@ class NoDues extends Component {
       }, function(err) {
 
       })
-      
+
 
         }).catch(function(response) {
           self.props.setLoadingStatus('hide');
@@ -1039,47 +1047,52 @@ class NoDues extends Component {
                 {(Receipt || ReceiptOne ) &&  <Row id="allCertificates">
                       {Receipt && <Col md={6} >
                       <Card>
-                        <CardHeader title="Receipt"/>
+                        <CardHeader title={<strong>Receipt for: {this.props.match.params.id == "pt"?"Property Tax":"Water Charge"}</strong>}/>
                         <CardText>
-                              <Table responsive style={{fontSize:"bold"}} id="ReceiptForWcAPartOne" striped bordered condensed>
+                              <Table responsive style={{fontSize:"bold"}} id="ReceiptForWcAPartOne" bordered condensed>
                                   <tbody>
                                       <tr>
                                           <td style={{textAlign:"left"}}>
-											  <img src="./temp/images/headerLogo.png" height="30" width="30"/>
+											  <img src="./temp/images/headerLogo.png" height="60" width="60"/>
                                           </td>
                                           <td style={{textAlign:"center"}}>
                                               <b>Roha Municipal Council</b><br/>
 											                         {this.props.match.params.id == "pt" ? <span>Property Tax Department / करनिर्धारण विभाग</span> : <span>Water Charges Department</span>}
                                           </td>
                                           <td style={{textAlign:"right"}}>
-											<img src="./temp/images/AS.png" height="30" width="30"/>
+											<img src="./temp/images/AS.png" height="60" width="60"/>
                                           </td>
                                       </tr>
                                       <tr>
                                           <td style={{textAlign:"left"}}>
-                                            Receipt Number : {Receipt[0].Bill[0].billDetails[0].receiptNumber}
+                                            Receipt Number : {Receipt[0].Bill[0].billDetails[0].receiptNumber?Receipt[0].Bill[0].billDetails[0].receiptNumber:"NA"}
                                           </td>
+                                          {this.props.match.params.id=="wc" &&
                                           <td style={{textAlign:"center"}}>
                                             Receipt For : {this.props.match.params.id=="wc" ? 'Water Charges' : 'Property Tax'}
-                                          </td>
+                                          </td>}
+                                          {this.props.match.params.id=="pt" &&
+                                          <td>
+
+                                          </td>}
                                           <td style={{textAlign:"right"}}>
-                                            Receipt Date: {new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getDate()+"/"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getMonth()+"/"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getFullYear()}
+                                            Receipt Date: {getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate)}
                                           </td>
                                       </tr>
                                       <tr>
                                           <td colSpan={3} style={{textAlign:"left"}}>
                                             Consumer Code : {Receipt[0].Bill[0].billDetails[0].consumerCode}<br/>
-                                            Consumer Owner Name : {Receipt[0].Bill[0].payeeName}<br/>
-                                            Amount :{Receipt[0].Bill[0].billDetails[0].totalAmount}<br/>
-                                            Consumer Address :{Receipt[0].Bill[0].payeeAddress?Receipt[0].Bill[0].payeeAddress:"Roha"}<br/>
-                                            Received From : {Receipt[0].Bill[0].paidBy}<br/>
+                                            Consumer Name : {Receipt[0].Bill[0].payeeName}<br/>
+                                            Amount : {Receipt[0].Bill[0].billDetails[0].totalAmount?("RS."+Receipt[0].Bill[0].billDetails[0].totalAmount+"/-"):"NA"}<br/>
+                                            {this.props.match.params.id=="wc" && (<div>"Consumer Address: "+Receipt[0].Bill[0].payeeAddress?Receipt[0].Bill[0].payeeAddress:"Roha"<br/>
+                                            "Received From:"+ Receipt[0].Bill[0].paidBy<br/></div>)}
                                           </td>
                                       </tr>
 
                                   </tbody>
                               </Table>
 
-                              <Table id="ReceiptForWcAPartTwo" responsive striped bordered condensed>
+                              <Table id="ReceiptForWcAPartTwo" responsive bordered condensed>
                                   <tbody>
                                       <tr>
                                           <td rowSpan={2}>
@@ -1120,34 +1133,34 @@ class NoDues extends Component {
                                       </tr>
                                       <tr>
                                           <td >
-                                            {Receipt[0].Bill[0].billDetails[0].billNumber +" "+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getDate()+"/"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getMonth()+"/"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getFullYear()}
+                                            {Receipt[0].Bill[0].billDetails[0].billNumber +" "+getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate)}
 
                                           </td>
                                           <td >
                                             {match.params.id=="wc"?"Water":"Property"} No dues
                                           </td>
                                           <td >
-                                            {getAmount(this.state.demands, true)}
+                                            {parseInt(getAmount(this.state.demands, true))?getAmount(this.state.demands, true):"NA"}
                                           </td>
                                           <td >
-                                            {getAmount(this.state.demands, false)}
+                                            {parseInt(getAmount(this.state.demands, false))?getAmount(this.state.demands, true):"NA"}
                                           </td>
                                           <td >
-                                            {getAmount(this.state.demands, true)}
+                                            {parseInt(getAmount(this.state.demands, true))?getAmount(this.state.demands, true):"NA"}
                                           </td>
                                           <td >
-                                            {getAmount(this.state.demands, false)}
+                                            {parseInt(getAmount(this.state.demands, false))?getAmount(this.state.demands, true):"NA"}
                                           </td>
                                           <td>
-                                            00
+                                            NA
                                           </td>
                                           <td>
-                                            00
+                                            NA
                                           </td>
                                       </tr>
 
                                       <tr>
-                                          <td colSpan={4}>Amount in words: Rs. {int_to_words(getTotal(demands))} only</td>
+                                          <td colSpan={4}>Amount in words: Rs. {int_to_words(getTotal(demands)).charAt(0).toUpperCase() + int_to_words(getTotal(demands)).slice(1)} only</td>
                                           <td colSpan={4}></td>
                                       </tr>
                                       <tr>
@@ -1171,23 +1184,25 @@ class NoDues extends Component {
 										{false && <td colSpan={2}>
                                           Bank Name
                                         </td>}
+                                        <td colSpan={2}></td>
                                       </tr>
                                       <tr>
                                         <td>
-											Online
+											                    Online
                                         </td>
                                         <td>
                                           {getTotal(demands)}
                                         </td>
-                                        {Receipt[0].instrument.instrumentType.name=="Cash"? "" : <td colSpan={2}>
+                                        {Receipt[0].instrument.instrumentType.name=="Cash"? <td colSpan={2}></td> : <td colSpan={2}>
                                           {this.state.serviceRequest.serviceRequestId}
                                         </td>}
                                         <td colSpan={2}>
-                                          {Receipt[0].instrument.instrumentType.name=="Cash"?"":(new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getDate()+"/"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getMonth()+"/"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getFullYear())}
+                                          {Receipt[0].instrument.instrumentType.name=="Cash"?<td colSpan={2}></td>:(getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate))}
                                         </td>
                                         {false && <td colSpan={2}>
-                                          {Receipt[0].instrument.instrumentType.name=="Cash"?"":Receipt[0].instrument.bank.name}
+                                          {Receipt[0].instrument.instrumentType.name=="Cash"?<td colSpan={2}></td>:Receipt[0].instrument.bank.name}
                                         </td>}
+                                        <td colSpan={2}></td>
                                       </tr>
                                   </tbody>
                               </Table>
@@ -1197,109 +1212,92 @@ class NoDues extends Component {
                       </Col>}
                                             {ReceiptOne && <Col md={6} >
                       <Card>
-                        <CardHeader title="Receipt"/>
+                        <CardHeader title={<strong>Receipt for: Application Fee</strong>}/>
                         <CardText>
-                              <Table responsive style={{fontSize:"bold"}} id="ReceiptForWcAPartOne1" striped bordered condensed>
+                              <Table responsive style={{fontSize:"bold"}} id="ReceiptForWcAPartOne1" bordered condensed>
                                   <tbody>
                                       <tr>
                                           <td style={{textAlign:"left"}}>
-                        <img src="./temp/images/headerLogo.png" height="30" width="30"/>
+                        <img src="./temp/images/headerLogo.png" height="60" width="60"/>
                                           </td>
                                           <td style={{textAlign:"center"}}>
                                               <b>Roha Municipal Council</b><br/>
                                               {this.props.match.params.id == "pt" ? <span>Property Tax Department / करनिर्धारण विभाग</span> : <span>Water Charges Department</span>}
                                           </td>
                                           <td style={{textAlign:"right"}}>
-                      <img src="./temp/images/AS.png" height="30" width="30"/>
+                      <img src="./temp/images/AS.png" height="60" width="60"/>
                                           </td>
                                       </tr>
                                       <tr>
                                           <td style={{textAlign:"left"}}>
-                                            Receipt Number : {ReceiptOne[0].Bill[0].billDetails[0].receiptNumber}
+                                            Receipt Number : {ReceiptOne[0].Bill[0].billDetails[0].receiptNumber?ReceiptOne[0].Bill[0].billDetails[0].receiptNumber:"NA"}
                                           </td>
                                           <td style={{textAlign:"center"}}>
                                             Receipt For : Application Fee
                                           </td>
                                           <td style={{textAlign:"right"}}>
-                                            Receipt Date: {new Date(ReceiptOne[0].Bill[0].billDetails[0].receiptDate).getDate()+"/"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getMonth()+"/"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getFullYear()}
+                                            Receipt Date: {getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate)}
                                           </td>
                                       </tr>
                                       <tr>
                                           <td colSpan={3} style={{textAlign:"left"}}>
-                                            Consumer Code : {ReceiptOne[0].Bill[0].billDetails[0].consumerCode}<br/>
-                                            Consumer Owner Name : {ReceiptOne[0].Bill[0].payeeName}<br/>
-                                            Amount :{ReceiptOne[0].Bill[0].billDetails[0].totalAmount}<br/>
-                                            Consumer Address :{ReceiptOne[0].Bill[0].payeeAddress?ReceiptOne[0].Bill[0].payeeAddress:"Roha"}<br/>
-                                            Received From : {ReceiptOne[0].Bill[0].paidBy}<br/>
+                                            Service Request Number : {ReceiptOne[0].Bill[0].billDetails[0].consumerCode}<br/>
+                                            Applicant Name : {ReceiptOne[0].Bill[0].payeeName}<br/>
+                                            Amount : {Receipt[0].Bill[0].billDetails[0].totalAmount?("RS."+Receipt[0].Bill[0].billDetails[0].totalAmount+"/-"):"NA"}<br/>
+
                                           </td>
                                       </tr>
 
                                   </tbody>
                               </Table>
 
-                              <Table id="ReceiptForWcAPartTwo" responsive striped bordered condensed>
+                              <Table id="ReceiptForWcAPartTwo" responsive bordered condensed>
                                   <tbody>
                                       <tr>
-                                          <td rowSpan={2}>
+                                          <td colSpan={2}>
                                             Bill Reference No.& Date
                                           </td>
-                                          <td rowSpan={2}>
+                                          <td colSpan={4}>
                                             Details
                                           </td>
                                       </tr>
                                       <tr>
                                           <td >
-                                            
+
                                           </td>
                                           <td >
-                                            
+
                                           </td>
                                           <td >
-                                            
+
                                           </td>
                                           <td >
-                                            
+
                                           </td>
                                           <td >
-                                            
+
                                           </td>
                                           <td >
-                                           
+
                                           </td>
                                       </tr>
                                       <tr>
-                                          <td >
-                                            {ReceiptOne[0].Bill[0].billDetails[0].billNumber +" "+new Date(ReceiptOne[0].Bill[0].billDetails[0].receiptDate).getDate()+"/"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getMonth()+"/"+new Date(Receipt[0].Bill[0].billDetails[0].receiptDate).getFullYear()}
+                                          <td colSpan={2}>
+                                            {ReceiptOne[0].Bill[0].billDetails[0].billNumber +" "+getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate)}
 
                                           </td>
-                                          <td >
-                                            Application Fee for {(match.params.id=="wc"?"Water":"Property")} {match.params.status == "extract" ? "Extract" : "no dues"}
+                                          <td colSpan={4}>
+                                            Application for {(match.params.id=="wc"?"Water":"Property")} {match.params.status == "extract" ? "Extract" : "No Dues"}
                                           </td>
-                                          <td >
-                                          </td>
-                                          <td >
 
-                                          </td>
-                                          <td >
-
-                                          </td>
-                                          <td >
-
-                                          </td>
-                                          <td>
-
-                                          </td>
-                                          <td>
-
-                                          </td>
                                       </tr>
 
                                       <tr>
-                                          <td colSpan={4}>Amount in words: Rs. {int_to_words(applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount)} only</td>
-                                          <td colSpan={4}></td>
+                                          <td colSpan={6}>Amount in words: Rs. { int_to_words(applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount).charAt(0).toUpperCase() + int_to_words(applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount).slice(1)} only</td>
+
                                       </tr>
                                       <tr>
-                                        <td colSpan={8}>
+                                        <td colSpan={6}>
                                           Payment Mode
                                         </td>
                                       </tr>
@@ -1310,32 +1308,34 @@ class NoDues extends Component {
                                         <td>
                                           Amount
                                         </td>
-                                          <td colSpan={2}>
+                                          <td >
                                            Transaction No
                                         </td>
-                                          <td colSpan={2}>
+                                          <td>
                                             Transaction Date
-                                        </td>
+                                          </td>
                                         {false && <td colSpan={2}>
                                                               Bank Name
                                                             </td>}
+                                                        <td colSpan={2}></td>
                                       </tr>
                                       <tr>
                                         <td>
                                           Online
                                         </td>
                                         <td>
-                                          {(applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount)}
+                                          {(applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount)?(applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount):"NA"}
                                         </td>
-                                        {ReceiptOne[0].instrument.instrumentType.name=="Cash"? "" : <td colSpan={2}>
+                                        {ReceiptOne[0].instrument.instrumentType.name=="Cash"? <td ></td> : <td >
                                           {ReceiptOne[0].transactionId}
                                         </td>}
-                                        <td colSpan={2}>
-                                          {ReceiptOne[0].instrument.instrumentType.name=="Cash"?"":(new Date(ReceiptOne[0].Bill[0].billDetails[0].receiptDate).getDate()+"/"+new Date(ReceiptOne[0].Bill[0].billDetails[0].receiptDate).getMonth()+"/"+new Date(ReceiptOne[0].Bill[0].billDetails[0].receiptDate).getFullYear())}
-                                        </td>
+
+                                          {ReceiptOne[0].instrument.instrumentType.name=="Cash"?<td ></td>:<td >getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate)</td>}
+
                                         {false && <td colSpan={2}>
                                           {ReceiptOne[0].instrument.instrumentType.name=="Cash"?"":ReceiptOne[0].instrument.bank.name}
                                         </td>}
+                                        <td colSpan={2}></td>
                                       </tr>
                                   </tbody>
                               </Table>
@@ -1345,20 +1345,20 @@ class NoDues extends Component {
                       </Col>}
                       <Col md={6} id="DownloadReceipt">
                       {(this.props.match.params.status != "extract") ? <Card>
-                        <CardHeader title="Certificate"/>
+                        <CardHeader title={<strong>Certificate for: No due</strong>}/>
                         <CardText>
-                            <Table id="CertificateForWc" responsive style={{fontSize:"bold"}}  striped bordered condensed>
+                            <Table id="CertificateForWc" responsive style={{fontSize:"bold"}}  bordered condensed>
                                   <tbody>
                                       <tr>
                                           <td style={{textAlign:"left"}}>
-                                             <img src="./temp/images/headerLogo.png" height="30" width="30"/>
+                                             <img src="./temp/images/headerLogo.png" height="60" width="60"/>
                                           </td>
                                           <td style={{textAlign:"center"}}>
                                               <b>Roha Municipal Council</b><br/>
 											                         {this.props.match.params.id == "pt" ? <span>Property Tax Department / करनिर्धारण विभाग</span> : <span>Water Charges Department</span>}
                                           </td>
                                           <td style={{textAlign:"right"}}>
-                                            <img src="./temp/images/AS.png" height="30" width="30"/>
+                                            <img src="./temp/images/AS.png" height="60" width="60"/>
                                           </td>
                                       </tr>
                                       <tr>
@@ -1369,7 +1369,7 @@ class NoDues extends Component {
                                             </div>
                                             <br/>
                                             <div style={{textAlign:"right"}}>
-                                                  Date / दिनांक :{getFullDate(Receipt[0].Bill[0].billDetails[0].billDate)} <br/>
+                                                  Date / दिनांक :{getFullDate(Receipt[0].Bill[0].billDetails[0].billDate,true)} <br/>
                                                   Certificate No. / प्रमाणपत्र क्रं : {this.state.serviceRequest.serviceRequestId}
 
                                             </div>
@@ -1384,7 +1384,7 @@ class NoDues extends Component {
                                             <br/>
                                             <div style={{textAlign:"center"}}>
                                               Subject /विषय :  सन 2017 - 18 थकबाकी नसल्याचे प्रमाणपत्र मिळणेबाबत.<br/>
-                                              Reference / संदर्भ : आपला अर्ज क्रमांक {Receipt[0].Bill[0].billDetails[0].applicationNo} दिनांक {new Date(Receipt[0].Bill[0].billDetails[0].billDate).getDate()+"/"+new Date(Receipt[0].Bill[0].billDetails[0].billDate).getMonth()+"/"+new Date(Receipt[0].Bill[0].billDetails[0].billDate).getFullYear()}
+                                              Reference / संदर्भ : आपला अर्ज क्रमांक {Receipt[0].Bill[0].billDetails[0].applicationNo} दिनांक {getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate)}
 
 
                                             </div>
@@ -1420,26 +1420,26 @@ class NoDues extends Component {
 
                         </CardText>
                       </Card> : <Card>
-            <CardHeader title="Certificate"/>
+            <CardHeader title={<strong>Certificate for Extract</strong>}/>
             <CardText>
-                  <Table responsive style={{fontSize:"bold", "marginBottom": "20px"}} id="CertificateForWc" striped bordered condensed>
+                  <Table responsive style={{fontSize:"bold", "marginBottom": "20px"}} id="CertificateForWc" bordered condensed>
                       <tbody>
                           <tr>
                               <td style={{textAlign:"left"}} colSpan={2}>
-                                <img src="./temp/images/headerLogo.png" height="30" width="30"/>
+                                <img src="./temp/images/headerLogo.png" height="60" width="60"/>
                               </td>
                               <td style={{textAlign:"center"}} colSpan={4}>
                                 <b>Roha Municipal Council</b><br/>
                                 {this.props.match.params.id == "pt" ? <span>Property Tax Department / करनिर्धारण विभाग</span> : <span>Water Charges Department</span>}
                               </td>
                               <td style={{textAlign:"right"}} colSpan={2}>
-                                <img src="./temp/images/AS.png" height="30" width="30"/>
+                                <img src="./temp/images/AS.png" height="60" width="60"/>
                               </td>
                           </tr>
                           <tr>
                             <td colSpan={8}>
                                 <div style={{textAlign:"center"}}>
-                                  <b>Extract of Property</b> / मालमत्तेचा उतारा
+                                  <b>Extract Property</b> / मालमत्तेचा उतारा
                                 </div>
                             </td>
                           </tr>

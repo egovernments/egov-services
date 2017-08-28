@@ -3,6 +3,7 @@ package org.egov.tl.workflow.service;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tl.workflow.model.ProcessInstanceRequest;
 import org.egov.tl.workflow.model.ProcessInstanceResponse;
+import org.egov.tl.workflow.model.TaskRequest;
 import org.egov.tl.workflow.model.TaskResponse;
 import org.egov.tl.workflow.model.TradeLicenseContract;
 import org.egov.tl.workflow.repository.WorkflowRepository;
@@ -28,7 +29,7 @@ public class WorkflowService {
 
 			request.setRequestInfo(requestInfo);
 
-			processInstanceResponse = workflowRepository.start(tradeLicense.getProcessInstanceRequest());
+			processInstanceResponse = workflowRepository.start(request);
 
 			if (processInstanceResponse != null)
 				tradeLicense.update(processInstanceResponse);
@@ -36,8 +37,10 @@ public class WorkflowService {
 		} else {
 
 			TaskResponse taskResponse = new TaskResponse();
-
-			taskResponse = workflowRepository.update(tradeLicense.getTaskRequest());
+			TaskRequest taskRequest = tradeLicense.getTaskRequest();
+			taskRequest.setRequestInfo(requestInfo);
+			
+			taskResponse = workflowRepository.update(taskRequest);
 
 			if (taskResponse != null)
 				tradeLicense.update(taskResponse);

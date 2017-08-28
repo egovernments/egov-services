@@ -6,6 +6,7 @@ import org.egov.common.contract.response.ResponseInfo;
 import org.egov.pgr.config.ApplicationProperties;
 import org.egov.pgr.domain.model.ServiceGroup;
 import org.egov.pgr.service.ServiceGroupService;
+import org.egov.pgr.util.CommonValidation;
 import org.egov.pgr.web.contract.ServiceGroupGetRequest;
 import org.egov.pgr.web.contract.ServiceGroupRequest;
 import org.egov.pgr.web.contract.factory.ResponseInfoFactory;
@@ -60,6 +61,9 @@ public class ServiceGroupControllerTest {
 
     @InjectMocks
     private ServiceGroupController serviceGroupController;
+
+    @MockBean
+    private CommonValidation commonValidation;
 
     @Test
     public void test_should_fetch_service_group_list() throws Exception {

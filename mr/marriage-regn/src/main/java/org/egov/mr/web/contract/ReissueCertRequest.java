@@ -1,5 +1,6 @@
 package org.egov.mr.web.contract;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.mr.model.ReissueCertAppl;
 import org.springframework.stereotype.Component;
 

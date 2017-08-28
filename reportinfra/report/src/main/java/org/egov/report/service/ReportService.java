@@ -91,7 +91,7 @@ public class ReportService {
 		metadataResponse.setReportDetails(rmt);
 		metadataResponse.setTenantId(metaDataRequest.getTenantId());
 		try {
-			integrationService.getData(reportDefinition, metadataResponse, metaDataRequest.getRequestInfo());
+			integrationService.getData(reportDefinition, metadataResponse, metaDataRequest.getRequestInfo(),moduleName);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

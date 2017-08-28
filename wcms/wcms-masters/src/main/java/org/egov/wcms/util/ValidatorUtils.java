@@ -1452,44 +1452,44 @@ public class ValidatorUtils {
     }
 
     public List<ErrorResponse> validateGapcodeRequest(final GapcodeRequest categoryRequest, final Boolean isUpdate) {
-    	final List<ErrorResponse> errorResponses = new ArrayList<>();
-    	final ErrorResponse errorResponse = new ErrorResponse();
-    	final Error error = getError(categoryRequest, isUpdate);
-    	errorResponse.setError(error);
-    	if (!errorResponse.getErrorFields().isEmpty())
-    		errorResponses.add(errorResponse);
-    	return errorResponses;
+        final List<ErrorResponse> errorResponses = new ArrayList<>();
+        final ErrorResponse errorResponse = new ErrorResponse();
+        final Error error = getError(categoryRequest, isUpdate);
+        errorResponse.setError(error);
+        if (!errorResponse.getErrorFields().isEmpty())
+            errorResponses.add(errorResponse);
+        return errorResponses;
     }
 
     private Error getError(final GapcodeRequest gapcodeRequest, final Boolean isUpdate) {
-    	gapcodeRequest.getGapcode();
-    	final List<ErrorField> errorFields = getErrorFields(gapcodeRequest, isUpdate);
-    	return Error.builder().code(HttpStatus.BAD_REQUEST.value())
-    			.message(WcmsConstants.INVALID_CATEGORY_REQUEST_MESSAGE).errorFields(errorFields).build();
+        gapcodeRequest.getGapcode();
+        final List<ErrorField> errorFields = getErrorFields(gapcodeRequest, isUpdate);
+        return Error.builder().code(HttpStatus.BAD_REQUEST.value())
+                .message(WcmsConstants.INVALID_CATEGORY_REQUEST_MESSAGE).errorFields(errorFields).build();
     }
 
     private List<ErrorField> getErrorFields(final GapcodeRequest gapcodeRequest, final Boolean isUpdate) {
-    	final List<ErrorField> errorFields = new ArrayList<>();
-    	for (final Gapcode gapcode : gapcodeRequest.getGapcode()) {
-    		addGapcodeNameValidationErrors(gapcode, errorFields,isUpdate);
-    		addTenantIdValidationErrors(gapcode.getTenantId(), errorFields);
-    		addNoOfMonthsValidationErrors(gapcode.getNoOfMonths(), errorFields);
-    		addLogicValidationErrors(gapcode.getLogic(), errorFields);
-    	}
-    	return errorFields;
+        final List<ErrorField> errorFields = new ArrayList<>();
+        for (final Gapcode gapcode : gapcodeRequest.getGapcode()) {
+            addGapcodeNameValidationErrors(gapcode, errorFields, isUpdate);
+            addTenantIdValidationErrors(gapcode.getTenantId(), errorFields);
+            addNoOfMonthsValidationErrors(gapcode.getNoOfMonths(), errorFields);
+            addLogicValidationErrors(gapcode.getLogic(), errorFields);
+        }
+        return errorFields;
     }
 
     private void addGapcodeNameValidationErrors(final Gapcode gapcode,
-    		final List<ErrorField> errorFields, boolean isUpdate) {
-    	if (gapcode.getName() == null || gapcode.getName().isEmpty()) {
-    		final ErrorField errorField = ErrorField.builder().code(WcmsConstants.GAPCODE_NAME_MANDATORY_CODE)
-    				.message(WcmsConstants.GAPCODE_NAME_MANDATORY_ERROR_MESSAGE)
-    				.field(WcmsConstants.GAPCODE_NAME_MANDATORY_FIELD_NAME).build();
-    		errorFields.add(errorField);
-    	}
+            final List<ErrorField> errorFields, final boolean isUpdate) {
+        if (gapcode.getName() == null || gapcode.getName().isEmpty()) {
+            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.GAPCODE_NAME_MANDATORY_CODE)
+                    .message(WcmsConstants.GAPCODE_NAME_MANDATORY_ERROR_MESSAGE)
+                    .field(WcmsConstants.GAPCODE_NAME_MANDATORY_FIELD_NAME).build();
+            errorFields.add(errorField);
+        }
     }
 
-    private void addNoOfMonthsValidationErrors(final String noOfMonths, final List<ErrorField> errorFields){
+    private void addNoOfMonthsValidationErrors(final String noOfMonths, final List<ErrorField> errorFields) {
         if (noOfMonths == null || noOfMonths.isEmpty()) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.NO_OF_MONTHS_MANDATORY_CODE)
                     .message(WcmsConstants.NO_OF_MONTHS_MANADATORY_ERROR_MESSAGE)
@@ -1499,7 +1499,7 @@ public class ValidatorUtils {
             return;
     }
 
-    private void addLogicValidationErrors(final String logic, final List<ErrorField> errorFields){
+    private void addLogicValidationErrors(final String logic, final List<ErrorField> errorFields) {
         if (logic == null || logic.isEmpty()) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.LOGIC_MANDATORY_CODE)
                     .message(WcmsConstants.LOGIC_MANADATORY_ERROR_MESSAGE)

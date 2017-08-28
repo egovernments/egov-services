@@ -22,10 +22,6 @@ ReportDefinitions:
     label: reports.tradelicense.licenseholder
     type: string
     source: tradelicense
-  - name: patners
-    label: reports.tradelicense.partners
-    type: string
-    source: tradelicense
   - name: businessName
     label: reports.tradelicense.businessname
     type: string
@@ -121,7 +117,7 @@ ReportDefinitions:
   - name: licenseSubType
     label: reports.tradelicense.licensesubtype
     type: url
-    pattern: /tl-masters/category/v1/_search?tenantId=$tenantid&type=SUBCATEGORY&categoryId={licenseType}&pageSize=500|$..id|$..name
+    pattern: /tl-masters/category/v1/_search?tenantId=$tenantid&categoryId={licenseType}&pageSize=500|$..id|$..name
     source: tradelicense
     isMandatory: false
     searchClause : AND tl.subcategoryid = $licenseSubType
@@ -144,9 +140,9 @@ ReportDefinitions:
     source: tradelicense
     isMandatory: false
     searchClause : AND tl.propertyassesmentno = $propertyNo
-  query: select ward.name as ward, tl.licensenumber as licenseNumber, tl.tradetype as tradeType, tl.ownername as licenseHolder,
-    tl.owneraddress as license_holder_address, tl.tradetitle as businessName, tl.tradeaddress as businessAddress,
-    locality.name as businessArea, tl.licensevalidfromdate as licenseValidFromDate, tl.expirydate as licenseValidToDate,
+  query: select ward.name as ward, tl.licensenumber as licenseNumber, tl.tradetype as tradeType, tl.ownername || ' / ' || tl.owneraddress as licenseHolder,
+    tl.tradetitle as businessName, tl.tradeaddress as businessAddress,
+    locality.name as businessArea, to_char(tl.licensevalidfromdate, 'dd-mm-yyyy') || ' / ' || to_char(tl.expirydate, 'dd-mm-yyyy') as licenseValidity,
     category.name as licenseType, subcategory.name as licenseSubType, tl.status as licenseStatus, tl.adhaarnumber as aadharNo,
     tl.propertyassesmentno as propertyNo from egtl_license as tl, eg_boundary as ward, eg_boundary as locality,
     egtl_mstr_category as category, egtl_mstr_category as subcategory where ward.id = tl.adminwardid and locality.id = tl.localityid

@@ -5,10 +5,10 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.mr.service.ServiceConfigurationService;
-import org.egov.mr.web.contract.RequestInfo;
 import org.egov.mr.web.contract.RequestInfoWrapper;
-import org.egov.mr.web.contract.ResponseInfo;
 import org.egov.mr.web.contract.ServiceConfigResponse;
 import org.egov.mr.web.contract.ServiceConfigurationSearchCriteria;
 import org.egov.mr.web.errorhandler.ErrorHandler;
@@ -70,10 +70,10 @@ public class ServiceConfigurationController {
 		// Setting ResponseInfo
 		ResponseInfo responseInfo = new ResponseInfo();
 		responseInfo.setApiId(requestInfo.getApiId());
-		responseInfo.setKey(requestInfo.getKey());
+		//responseInfo.setKey(requestInfo.getKey());
 		responseInfo.setResMsgId(requestInfo.getMsgId());
 		responseInfo.setStatus(HttpStatus.OK.toString());
-		responseInfo.setTenantId(requestInfo.getTenantId());
+		//responseInfo.setTenantId(requestInfo.getTenantId());
 		responseInfo.setTs(requestInfo.getTs());
 		responseInfo.setVer(requestInfo.getVer());
 		ServiceConfigResponse serviceConfigResponse = new ServiceConfigResponse();

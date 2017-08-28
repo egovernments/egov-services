@@ -345,7 +345,7 @@ class PropertyTaxSearch extends Component {
 					  <td>{this.state.demands.hasOwnProperty('consolidatedTax') ? this.state.demands.consolidatedTax.currentDemand : ''}</td>
 					  <td>{this.state.demands.hasOwnProperty('consolidatedTax') ? this.state.demands.consolidatedTax.arrearsDemand : ''}</td>
 					  <td>{getNameByCode(this.state.propertytypes, item.propertyDetail.propertyType) || ''}</td>
-					  <td>{item.propertyDetail.category || ''}</td>
+					  <td>{getNameByCode(this.state.propertytypes, item.propertyDetail.category) || ''}</td>
 					  <td>
 						<DropdownButton title="Action" id="dropdown-3" pullRight>
 							{this.state.showDcb ? 
@@ -431,7 +431,7 @@ class PropertyTaxSearch extends Component {
                       <Col xs={12} md={6}>
                         <TextField errorText={fieldErrors.oldUpicNo
                           ? fieldErrors.oldUpicNo
-                          : ""} floatingLabelFixed={true} maxLength={10} value={propertyTaxSearch.oldUpicNo?propertyTaxSearch.oldUpicNo:""} onChange={(e) => handleChange(e, "oldUpicNo", false, /^[a-zA-Z0-9]{10}$/g)} hintText={translate('pt.create.groups.propertyDetails.oldAssessmentNumber')} floatingLabelText={translate('pt.create.groups.propertyDetails.oldAssessmentNumber')} />
+                          : ""} floatingLabelFixed={true} maxLength={15} value={propertyTaxSearch.oldUpicNo?propertyTaxSearch.oldUpicNo:""} onChange={(e) => handleChange(e, "oldUpicNo", false, /^[a-zA-Z0-9]{3,}$/g)} hintText={translate('pt.create.groups.propertyDetails.oldAssessmentNumber')} floatingLabelText={translate('pt.create.groups.propertyDetails.oldAssessmentNumber')} />
                       </Col>
 					  <Col xs={12} md={6}>
 							<SelectField errorText={fieldErrors.usage

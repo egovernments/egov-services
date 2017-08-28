@@ -1,9 +1,12 @@
 package org.egov.mr.service;
 
 import java.util.ArrayList;
+
 import java.util.Date;
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.mr.config.PropertiesManager;
 import org.egov.mr.model.MarriageCertificate;
 import org.egov.mr.model.MarriageDocument;
@@ -18,8 +21,6 @@ import org.egov.mr.web.contract.MarriageCertCriteria;
 import org.egov.mr.web.contract.MarriageRegnCriteria;
 import org.egov.mr.web.contract.ReissueCertRequest;
 import org.egov.mr.web.contract.ReissueCertResponse;
-import org.egov.mr.web.contract.RequestInfo;
-import org.egov.mr.web.contract.ResponseInfo;
 import org.egov.mr.web.contract.ResponseInfoFactory;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +58,7 @@ public class MarriageCertService {
 	@Value("${egov.mr.services.reissueApp_sequence}")
 	private String reisuueIdSeq;
 
-	public ReissueCertResponse getMarriageCerts(MarriageCertCriteria marriageCertCriteria, RequestInfo requestInfo) {
+	public ReissueCertResponse getMarriageCerts(MarriageCertCriteria marriageCertCriteria,RequestInfo requestInfo) {
 
 		return getSuccessResponseForSearch(marriageCertRepository.findForCriteria(marriageCertCriteria), requestInfo);
 	}
@@ -68,7 +69,7 @@ public class MarriageCertService {
 		Page page = new Page();
 		reissueCertResponse.setReissueApplications(marriageCertList);
 		log.info("marriageCertList=" + marriageCertList);
-		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		ResponseInfo responseInfo =new ResponseInfo();
 		reissueCertResponse.setResponseInfo(responseInfo);
 		int totalresults = marriageCertList.size();
 		page.setTotalResults(totalresults);
@@ -160,7 +161,7 @@ public class MarriageCertService {
 		return marriageCertResponse;
 	}
 	
-	/*private void getMarriageCertificate(ReissueCertAppl reIssueApp,MarriageRegn marraigeRegn){
+	private void getMarriageCertificate(ReissueCertAppl reIssueApp,MarriageRegn marraigeRegn){
 		
 		MarriageCertificate marriageCertificate=new MarriageCertificate();
 		
@@ -184,6 +185,6 @@ public class MarriageCertService {
 		marriageCertificate.setCertificateDate(new Date().getTime());
 		
 		reIssueApp.setCertificate(marraigeRegn.getCertificates().get(0));
-	}*/
+	}
 	
 }

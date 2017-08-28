@@ -161,11 +161,13 @@ class Header extends Component {
   }
 
   signOut = (e) => {
-    Api.commonApiPost("/user/_logout", {access_token : localStorage.getItem('auth')}).then(function(response) {
+    var locale = localStorage.getItem('locale');
+    var token = localStorage.getItem('token');
+    localStorage.clear();
+    localStorage.setItem('locale', locale);
+    
+    Api.commonApiPost("/user/_logout", {access_token : token}).then(function(response) {
       document.title = "Dashboard";
-      var locale = localStorage.getItem('locale');
-      localStorage.clear();
-      localStorage.setItem('locale',locale);
     }, function(err) {
 
     });

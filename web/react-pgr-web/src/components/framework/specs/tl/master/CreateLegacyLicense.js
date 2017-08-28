@@ -87,7 +87,7 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Enter Valid Aadhar Number (14 Digit Number)"
+            "patternErrMsg": "Enter Valid Aadhar Number (12 Digit Number)"
           },
           {
             "name": "MobileNumber",
@@ -140,7 +140,7 @@ var dat = {
             "jsonPath": "licenses[0].ownerAddress",
             "label": "tl.create.licenses.groups.TradeOwnerDetails.TradeOwnerAddress",
             "pattern": "^.{4,250}$",
-            "type": "textarea",
+            "type": "text",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -213,7 +213,7 @@ var dat = {
             "patternErrMsg": "",
             "defaultValue": [{
                 "key": "STATE_GOVERNMENT_OWNED",
-                "value": "STATE_GOVERNMENT_OWNED"
+                "value": "STATE GOVERNMENT OWNED"
               },
               {
                 "key": "RENTED",
@@ -221,7 +221,7 @@ var dat = {
               },
               {
                 "key": "CENTRAL_GOVERNMENT_OWNED",
-                "value": "CENTRAL_GOVERNMENT_OWNED"
+                "value": "CENTRAL GOVERNMENT OWNED"
               },
               {
                 "key": "ULB",
@@ -234,7 +234,7 @@ var dat = {
             "jsonPath": "licenses[0].tradeAddress",
             "label": "tl.create.licenses.groups.TradeLocationDetails.TradeAddress",
             "pattern": "^.{4,250}$",
-            "type": "textarea",
+            "type": "text",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -307,7 +307,23 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+            "depedants": [
+              {
+              "jsonPath": "licenses[0].uomName",
+              "type": "text",
+              "isRequired": true,
+              "isDisabled": true,
+              "pattern": ""
+            },
+          {
+          "jsonPath": "licenses[0].validityYears",
+          "type": "text",
+          "isRequired": true,
+          "isDisabled": true,
+          "pattern": ""
+        }
+          ]
           },
           {
             "name": "UOM",
@@ -364,7 +380,7 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "",
+            "patternErrMsg": "Enter in dd/mm/yyyy Format",
             "maxLength": "10"
           },
           {
@@ -376,7 +392,7 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "",
+            "patternErrMsg": "Enter in dd/mm/yyyy Format",
             "maxLength": "10"
           },
           {
@@ -428,7 +444,7 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "",
+            "patternErrMsg": "Enter in dd/mm/yyyy Format",
             "maxLength": "10"
           },
           {

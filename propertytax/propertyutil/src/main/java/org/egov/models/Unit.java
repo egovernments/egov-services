@@ -64,8 +64,12 @@ public class Unit {
 
     @JsonProperty("usage")
     @NotNull
-    @Size(min = 1, max = 16)
+    @Size(min = 1, max = 128)
     private String usage = null;
+    
+    @JsonProperty("subUsage")
+    @Size(min = 1, max = 128)
+    private String subUsage = null;
 
     @JsonProperty("occupancyType")
     @NotNull
@@ -134,6 +138,12 @@ public class Unit {
 
     @JsonProperty("buildingCost")
     private Double buildingCost = null;
+    
+    @JsonProperty("carpetArea")
+    private Double carpetArea = null;
+    
+    @JsonProperty("exemptionArea")
+    private Double exemptionArea = null;
 
     @JsonProperty("auditDetails")
     private AuditDetails auditDetails = null;

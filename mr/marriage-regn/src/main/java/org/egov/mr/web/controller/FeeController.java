@@ -2,11 +2,11 @@ package org.egov.mr.web.controller;
 
 import javax.validation.Valid;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.mr.service.FeeService;
 import org.egov.mr.web.contract.FeeCriteria;
 import org.egov.mr.web.contract.FeeRequest;
 import org.egov.mr.web.contract.FeeResponse;
-import org.egov.mr.web.contract.RequestInfo;
 import org.egov.mr.web.contract.RequestInfoWrapper;
 import org.egov.mr.web.errorhandler.ErrorHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ public class FeeController {
 	public ResponseEntity<?> search(@ModelAttribute @Valid FeeCriteria feeCriteria,
 			BindingResult modelAttributeBindingResult, @RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
 			BindingResult requestBodyBindingResult) {
-		log.info("marriageCertCriteria: " + feeCriteria.getTenantId());
+
 		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
 		ResponseEntity<?> errorResponseEntity = errorHandler.handleBindingErrorsForSearch(requestInfo,

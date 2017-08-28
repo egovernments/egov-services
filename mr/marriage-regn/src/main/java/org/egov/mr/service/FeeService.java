@@ -2,6 +2,8 @@ package org.egov.mr.service;
 
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.mr.config.PropertiesManager;
 import org.egov.mr.model.Fee;
 import org.egov.mr.repository.FeeRepository;
@@ -9,8 +11,6 @@ import org.egov.mr.util.SequenceIdGenService;
 import org.egov.mr.web.contract.FeeCriteria;
 import org.egov.mr.web.contract.FeeRequest;
 import org.egov.mr.web.contract.FeeResponse;
-import org.egov.mr.web.contract.RequestInfo;
-import org.egov.mr.web.contract.ResponseInfo;
 import org.egov.mr.web.contract.ResponseInfoFactory;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;

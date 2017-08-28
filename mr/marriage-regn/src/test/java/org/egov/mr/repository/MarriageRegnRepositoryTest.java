@@ -5,14 +5,16 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.validation.constraints.AssertTrue;
-
 import org.apache.commons.lang3.StringUtils;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.mr.model.ApprovalDetails;
 import org.egov.mr.model.AuditDetails;
+import org.egov.mr.model.Demand;
+import org.egov.mr.model.Fee;
 import org.egov.mr.model.Location;
 import org.egov.mr.model.MarriageCertificate;
 import org.egov.mr.model.MarriageDocument;
@@ -32,16 +34,12 @@ import org.egov.mr.repository.rowmapper.MarriageRegnIdsRowMapper;
 import org.egov.mr.repository.rowmapper.MarriageRegnRowMapper;
 import org.egov.mr.web.contract.MarriageRegnCriteria;
 import org.egov.mr.web.contract.MarriageRegnRequest;
-import org.egov.mr.web.contract.RequestInfo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.jdbc.core.JdbcTemplate;
-
-import ch.qos.logback.core.boolex.Matcher;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MarriageRegnRepositoryTest {
@@ -84,7 +82,7 @@ public class MarriageRegnRepositoryTest {
 		marriageRegnRequest.setMarriageRegn(marriageRegns.get(0));
 		marriageRegnRequest.setRequestInfo(requestInfo);
 		when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
-//		donwhen(witnessRepository.save(Matchers.anyString(), Matchers.anyString(), Matchers.any(Witness.class)))getClass().;
+	//Mockdonwhen(witnessRepository.save(Matchers.anyString(), Matchers.anyString(), Matchers.any(Witness.class)))getClass().;
 		
 		
 	}
@@ -128,9 +126,9 @@ public class MarriageRegnRepositoryTest {
 				.relatedTo(RelatedTo.BRIDEGROOM).relationForIdentification("uncle").witnessNo(1).build();
 		List<Witness> witnesses = new ArrayList<>();
 		witnesses.add(witness);
-		List<Long> demands = new ArrayList<>();
-		demands.add(1503056473884l);
-
+		List<Demand> demands = new ArrayList<>();
+	
+       
 		List<String> actions = new ArrayList<>();
 		actions.add("action");
 
@@ -156,7 +154,7 @@ public class MarriageRegnRepositoryTest {
 
 		MarriageRegn marriageRegn = MarriageRegn.builder().applicationNumber("8").approvalDetails(approvalDetails)
 				.auditDetails(auditDetails).bride(bride).bridegroom(bridegroom).certificates(marriageCertificates)
-				.city("bangalore").demands(demands).documents(documentsList).fee(50.0).isActive(true)
+				.city("bangalore").demands(demands).documents(documentsList).fee(Fee.builder().fee(new BigDecimal(50)).build()).isActive(true)
 				.locality("locality").actions(actions).marriageDate(214335l).marriagePhoto("photo")
 				.placeOfMarriage("RESIDENCE").placeOfMarriage("bangalore").priest(priest).street("street")
 				.regnDate(121231l).regnNumber("regnno").regnUnit(regnunit).rejectionReason("inappropriate document")

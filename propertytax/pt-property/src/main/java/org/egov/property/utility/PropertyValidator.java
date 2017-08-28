@@ -319,6 +319,14 @@ public class PropertyValidator {
 					throw new InvalidCodeException(propertiesManager.getInvalidPropertyUsageCode(), requestInfo);
 				}
 			}
+			
+			if (unit.getSubUsage() != null) {
+				Boolean subUsageExists = propertyMasterRepository.checkWhetherRecordExits(tenantId, unit.getSubUsage(),
+						ConstantUtility.USAGE_TYPE_TABLE_NAME, null);
+				if (!subUsageExists) {
+					throw new InvalidCodeException(propertiesManager.getInvalidPropertySubUsageCode(), requestInfo);
+				}
+			}
 
 			if (unit.getOccupancyType() != null) {
 				Boolean occupancyTypeExists = propertyMasterRepository.checkWhetherRecordExits(tenantId,

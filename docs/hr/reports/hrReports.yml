@@ -12,19 +12,19 @@ ReportDefinitions:
     source: egeis_employee
   - name: name
     label: reports.hr.employee.Employee_Name
-    type: String
+    type: string
     source: eg_user
   - name: designation
     label: reports.hr.employee.Designation
-    type: String
+    type: string
     source: egeis_assignment
   - name: department
     label: reports.hr.employee.Department
-    type: String
+    type: string
     source: egeis_assignment
   - name: reports
     label: reports.hr.employee.reportsUrl
-    type: String
+    type: string
     source: hr    
     linkedReport:
       reportName: DrillDownforemployeeview
@@ -46,7 +46,7 @@ ReportDefinitions:
     searchClause: and assign.designationid=$designationid
   - name: code
     label: reports.hr.Employee_Code/Name  
-    type: String
+    type: string
     source: hr 
     isMandatory: false
     searchClause: and emp.code=$code
@@ -75,7 +75,6 @@ ReportDefinitions:
     and usr.tenantid=emp.tenantid
     and assign.tenantid=dept.tenantid
     and assign.tenantid=desig.tenantid 
-    order by usr.name ;
     
     #employee search drilldown
 - reportName: DrillDownReportforemployeeview
@@ -89,15 +88,15 @@ ReportDefinitions:
     source: egeis_employee
   - name: name
     label: reports.hr.employee.Employee_Name
-    type: String
+    type: string
     source: eg_user
   - name: designation
     label: reports.hr.employee.Designation
-    type: String
+    type: string
     source: egeis_assignment
   - name: department
     label: reports.hr.employee.Department
-    type: String
+    type: string
     source: egeis_assignment
   - name: fromdate
     label: reports.hr.employee.fromdate
@@ -149,7 +148,6 @@ ReportDefinitions:
     and usr.tenantid=emp.tenantid
     and assign.tenantid=dept.tenantid
     and assign.tenantid=desig.tenantid 
-    order by usr.name  ;
     
    #attendance Report 
 - reportName: AttendenceReport
@@ -163,19 +161,19 @@ ReportDefinitions:
     source: egeis_employee
   - name: presentDays
     label: reports.hr.Attendence.presentDays
-    type: String
+    type: string
     source: egeis_assignment
   - name: absentDays
     label: reports.hr.Attendence.absentDays
-    type: String
+    type: string
     source: egeis_assignment
   - name: leaveDays
     label: reports.hr.Attendence.leaveDays
-    type: String
+    type: string
     source: egeis_assignment
   - name: noOfOTs
     label: reports.hr.Attendence.noOfOTs
-    type: String
+    type: string
     source: egeis_assignment
   searchParams:
   - name: month
@@ -206,7 +204,7 @@ ReportDefinitions:
     searchClause: and desig.id=$designation
   - name: code
     label: reports.hr.Employee_Code/Name  
-    type: String
+    type: string
     source: egeis_employee 
     isMandatory: false
     searchClause: and emp.code=$code
@@ -238,7 +236,7 @@ ReportDefinitions:
     and assign.tenantid = desig.tenantid
     and assign.tenantid = dept.tenantid
     and usr.tenantid=emp.tenantid
-  groupBy: ORDER BY usr.name,emp.code;
+  groupBy: group by emp.code,usr.name ;
   
  # employee Leave Report
 - reportName: employeeLeaveReport
@@ -252,27 +250,27 @@ ReportDefinitions:
     source: egeis_employee
   - name: applicationno
     label: reports.hr.ApplicationNo
-    type: String
+    type: string
     source: egeis_leaveApplication
   - name: leaveType
     label: reports.hr.leaveType
-    type: String
+    type: string
     source: egeis_leaveType
   - name: dateRange
     label: reports.hr.dateRange
-    type: String
+    type: string
     source: hr
   - name: noOfDays
     label: reports.hr.noOfDays
-    type: String
+    type: string
     source: hr
   - name: status
     label: reports.hr.status
-    type: String
+    type: string
     source: hr
   - name: comment
     label: reports.hr.comments
-    type: String
+    type: string
     source: hr
   searchParams:
   - name: departmentId
@@ -291,7 +289,7 @@ ReportDefinitions:
     searchClause: and desig.id=$designation
   - name: employeeCode/Name
     label: reports.hr.Employee_Code/Name  
-    type: String
+    type: string
     source: hr 
     isMandatory: false
     searchClause: and emp.code=$employeeCode/Name
@@ -355,7 +353,11 @@ ReportDefinitions:
     and hrstatus.tenantid=leaveapp.tenantid 
     and assign.tenantid=emp.tenantid
     and emp.tenantid=emptyp.tenantid
-    and assign.tenantid=dept.tenantid;
+    and assign.tenantid=dept.tenantid
+
+
+
+
 
 
 

@@ -201,6 +201,7 @@ public class NonMeterWaterRatesRepository {
         final String queryStr = nonMeterWaterRatesQueryBuilder.getQuery(nonMeterWaterRatesGetRequest, preparedStatementValues);
         final List<NonMeterWaterRates> nonMeterWaterRatesList = namedParameterJdbcTemplate.query(queryStr,
                 preparedStatementValues, nonMeterWaterRatesRowMapper);
+        log.info("NonMeterWaterRatesListFromDB"+nonMeterWaterRatesList);
         // fetch usage type Id and set the usage type name here
         for (final NonMeterWaterRates nonMeterWaterRates : nonMeterWaterRatesList)
             usageTypeIdsList.add(Integer.valueOf(nonMeterWaterRates.getUsageTypeId()));

@@ -41,7 +41,6 @@
 
 package org.egov.asset.repository.builder;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -61,7 +60,8 @@ public class AssetQueryBuilder {
 
     private static final String BASE_QUERY = "SELECT *," + "asset.id AS assetId,assetcategory.id AS assetcategoryId,"
             + "asset.name as assetname,asset.code as assetcode,"
-            + "assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode,ywd.id as ywd_id,ywd.depreciationrate as ywd_depreciationrate,assetcategory.depreciationrate as assetcategory_depreciationrate"
+            + "assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode,ywd.id as ywd_id,ywd.depreciationrate as "
+            + "ywd_depreciationrate,assetcategory.depreciationrate as assetcategory_depreciationrate"
             + " FROM egasset_asset asset " + "INNER JOIN egasset_assetcategory assetcategory "
             + "ON asset.assetcategory = assetcategory.id " + "LEFT OUTER JOIN egasset_yearwisedepreciation ywd "
             + "ON asset.id = ywd.assetid";
@@ -72,15 +72,13 @@ public class AssetQueryBuilder {
         log.info("get query");
         addWhereClause(selectQuery, preparedStatementValues, searchAsset);
         addPagingClause(selectQuery, preparedStatementValues, searchAsset);
-        log.info("Query from asset querybuilde for search : " + selectQuery);
+        log.debug("Query from asset querybuilder for search : " + selectQuery);
         return selectQuery.toString();
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
             final AssetCriteria searchAsset) {
-        new SimpleDateFormat("dd/MM/yyyy");
-
         if (searchAsset.getId() == null && searchAsset.getName() == null && searchAsset.getCode() == null
                 && searchAsset.getDepartment() == null && searchAsset.getAssetCategory() == null
                 && searchAsset.getTenantId() == null && searchAsset.getDoorNo() == null)

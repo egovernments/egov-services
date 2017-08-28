@@ -45,7 +45,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.wcms.transaction.model.CommonDataObject;
 import org.egov.wcms.transaction.model.Connection;
 import org.egov.wcms.transaction.model.ConnectionOwner;
 import org.egov.wcms.transaction.model.Meter;
@@ -63,8 +62,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-
-import com.google.gson.Gson;
 
 @Component
 public class WaterConnectionRowMapper {
@@ -109,14 +106,16 @@ public class WaterConnectionRowMapper {
 			prop.setPropertyidentifier(rs.getString("conn_propid"));
 			resolvePropertyUsageTypeNames(rs, prop);
 			connection.setProperty(prop);
-			ConnectionOwner connOwner = ConnectionOwner.builder()
-					.name(rs.getString("name"))
-					.userName(rs.getString("username"))
-					.mobileNumber(rs.getString("mobilenumber"))
-					.emailId(rs.getString("emailid"))
-					.gender((rs.getString("gender").equals("1"))?"Male" : "Female")
-					.aadhaarNumber(rs.getString("aadhaarnumber")).build();
-			connection.setConnectionOwner(connOwner);
+			ConnectionOwner cOwner = new ConnectionOwner(); 
+			cOwner.setName(rs.getString("name"));
+			cOwner.setUserName(rs.getString("username"));
+			cOwner.setMobileNumber(rs.getString("mobilenumber"));
+			cOwner.setEmailId(rs.getString("emailid"));
+			cOwner.setAadhaarNumber(rs.getString("aadhaarnumber"));
+			if(null != rs.getString("gender") && !rs.getString("gender").isEmpty()) {
+				cOwner.setGender(rs.getString("gender").equals("1") ? "Male" : "Female");
+			}
+			connection.setConnectionOwner(cOwner);
 			ConnectionLocation connLoc = ConnectionLocation.builder()
 					.revenueBoundary(new Boundary(rs.getLong("revenueboundary"), null))
 					.locationBoundary(new Boundary(rs.getLong("locationboundary"), null))
@@ -176,7 +175,8 @@ public class WaterConnectionRowMapper {
 			if (null != execDate) {
 				connection.setExecutionDate(execDate);
 			}
-			connection.setSubUsageTypeId(rs.getString("subusagetype"));
+			if(null != rs.getString("subusagetype") && !rs.getString("subusagetype").isEmpty())
+					connection.setSubUsageTypeId(Long.parseLong(rs.getString("subusagetype")));
 			/*if (null != rs.getString("subusagename") && !rs.getString("subusagename").isEmpty()) {
 				try { 
 					Gson g = new Gson(); 

@@ -74,8 +74,6 @@ class grievanceSearch extends Component {
        this.setInitialState = this.setInitialState.bind(this);
        this.handleOpenNClose = this.handleOpenNClose.bind(this);
        this.resetAndSearch = this.resetAndSearch.bind(this);
-      //  this.handlePageClick = this.handlePageClick.bind(this);
-       this.handleNavigation = this.handleNavigation.bind(this);
        this.handleRequestClose = this.handleRequestClose.bind(this);
        this.resetSearch = this.resetSearch.bind(this);
   }
@@ -88,11 +86,6 @@ class grievanceSearch extends Component {
       resultList: [],
       isSearchClicked: false
     })
-  }
-
-  handleNavigation(serviceId) {
-    this.props.history.push('/pgr/viewGrievance/' + serviceId);
-		window.location.reload();
   }
 
   handleOpenNClose() {
@@ -172,7 +165,20 @@ class grievanceSearch extends Component {
   createReportData = (resultList) => {
     var self = this;
     if(resultList.length > 0){
-      var reportData = [];
+      var reportData = {}, reportActionData = [], reportReponseData = [];
+
+      //Row action for each column
+      var reportActionObj = {};
+      reportActionObj['Grievance Number'] = '/pgr/viewGrievance/';
+      reportActionObj[`${translate("pgr.lbl.grievance.type")}`]='';
+      reportActionObj[`${translate("core.lbl.add.name")}`]='';
+      reportActionObj[`${translate("core.lbl.location")}`]='';
+      reportActionObj[`${translate("core.lbl.status")}`]='';
+      reportActionObj[`${translate("core.lbl.department")}`]='';
+      reportActionObj[`${translate("pgr.lbl.registered.date")}`]='';
+      reportActionData.push(reportActionObj);
+
+      //Row data
       resultList.map(function(val, i) {
         var reportObj= {};
         // var triColor = "#fff";
@@ -201,8 +207,10 @@ class grievanceSearch extends Component {
         reportObj[`${translate("core.lbl.status")}`]=getNameByProperty(val.attribValues, "systemStatus");
         reportObj[`${translate("core.lbl.department")}`]=getNameById(self.state.departmentList, getNameByProperty(val.attribValues, "systemDepartmentId"));
         reportObj[`${translate("pgr.lbl.registered.date")}`]=val.requestedDatetime;
-        reportData.push(reportObj);
+        reportReponseData.push(reportObj);
       });
+      reportData['reportReponseData'] = reportReponseData;
+      reportData['reportActionData'] = reportActionData;
       self.setState({
         resultList : reportData,
         isSearchClicked: true
@@ -314,7 +322,7 @@ class grievanceSearch extends Component {
 
   render() {
 
-  	let {search, resetAndSearch, handleNavigation, resetSearch} = this;
+  	let {search, resetAndSearch, resetSearch} = this;
   	let {
   		complaintTypeList,
   		statusList,
@@ -334,108 +342,6 @@ class grievanceSearch extends Component {
 		isFormValid,
 		fieldErrors
   	} = this.props;
-
-  	// const displayTableCard = function() {
-  	// 	if(isSearchClicked) {
-  	// 		return (
-    //       <Grid style={{width:'100%'}}>
-  	//   			<Card style={styles.marginStyle}>
-    //         	<CardHeader style={{paddingBottom: 0}} title={<div style = {styles.headerStyle} > {translate("pgr.searchresult")} </div>}/>
-    //             <CardText style={{paddingTop:0}}>
-    //                 <Row>
-    //                   {showTable()}
-    //                   {showPagination()}
-    //                 </Row>
-    //             </CardText>
-  	//   			</Card>
-    //       </Grid>
-	  // 		)
-  	// 	}
-  	// }
-
-  	// const showTable = function() {
-		// 	return (
-    //     <div>
-    //       <Col mdOffset={9} md={3}>
-    //         <input type="text" className="form-control"/>
-    //       </Col>
-    //       <Col md={12}>
-    //         <Table style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
-    //           <thead >
-    //             <tr>
-    //               <th>Grievance Number</th>
-    //               <th>{translate("pgr.lbl.grievance.type")}</th>
-    //               <th>{translate("core.lbl.add.name")}</th>
-    //               <th>{translate("core.lbl.location")}</th>
-    //               <th>{translate("core.lbl.status")}</th>
-    //               <th>{translate("core.lbl.department")}</th>
-    //               <th>{translate("pgr.lbl.registered.date")}</th>
-    //             </tr>
-    //           </thead>
-    //           <tbody>
-    //             {renderBody()}
-    //           </tbody>
-    //         </Table>
-    //       </Col>
-    //     </div>
-		// 	);
-  	// }
-
-    // const renderBody = function() {
-  	// 	if(resultList.length) {
-  	// 		return resultList.map(function(val, i) {
-    //       var triColor = "#fff";
-    //       val.attribValues.map((item,index)=>{
-    //         if(item.key =="PRIORITY"){
-    //           if(item.key =="PRIORITY"){
-    //             switch(item.name) {
-    //               case 'PRIORITY-1':
-    //                 triColor = "#ff0000";
-    //                 break;
-    //               case 'PRIORITY-2':
-    //                 triColor = "#00ff00";
-    //                 break;
-    //               case 'PRIORITY-3':
-    //                 triColor = "#ffff00";
-    //                 break;
-    //             }
-    //           }
-    //         }
-    //       });
-    //
-  	// 			return (
-  	// 				<tr key={i} onClick={()=>{handleNavigation(val.serviceRequestId)}} style={{"cursor": "pointer"}}>
-  	// 					<td style={{minWidth:120}}><span style={{width:6, height:6, borderRadius:50, backgroundColor:triColor, display:"inline-block", marginRight:5}}></span>{val.serviceRequestId}</td>
-  	// 					<td>{val.serviceName}</td>
-  	// 					<td>{val.firstName}</td>
-  	// 					<td>{(getNameById(boundaryList, getNameByProperty(val.attribValues, "systemLocationId"))) + " - " + (getNameById(boundaryList, getNameByProperty(val.attribValues, "systemChildLocationId")))}</td>
-  	// 					<td>{getNameByProperty(val.attribValues, "systemStatus")}</td>
-  	// 					<td>{getNameById(departmentList, getNameByProperty(val.attribValues, "systemDepartmentId"))}</td>
-  	// 					<td>{val.requestedDatetime ? /*toLocalTime(*/val.requestedDatetime/*)*/ : val.requestedDatetime}</td>
-  	// 				</tr>
-  	// 			)
-  	// 		})
-  	// 	}
-  	// }
-
-  	// const showPagination = function() {
-		// 	return (
-    //     <Col md={12}>
-    //       <div style={{"textAlign": "center"}}>
-    //         <ReactPaginate previousLabel={translate("pgr.lbl.previous")}
-    //              nextLabel={translate("pgr.lbl.next")}
-    //              breakLabel={<a href="">...</a>}
-    //              pageCount={pageCount}
-    //              marginPagesDisplayed={2}
-    //              pageRangeDisplayed={5}
-    //              onPageChange={handlePageClick}
-    //              containerClassName={"pagination"}
-    //              subContainerClassName={"pages pagination"}
-    //              activeClassName={"active"} />
-    //       </div>
-    //     </Col>
-		// )
-  	// }
 
   	const showOtherFields = function() {
   		if(buttonText == translate("core.lbl.less")) {
@@ -568,7 +474,6 @@ class grievanceSearch extends Component {
             </div>
 	        </form>
           {isSearchClicked ? <ServerSideTable resultSet={this.state.resultList} pageCount={this.state.pageCount} search={this.search}/> : ""}
-	        {/*displayTableCard()*/}
 	        <Dialog
 	          title={translate("core.msg.criteria.required")}
 	          open={this.state.open}

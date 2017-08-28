@@ -104,7 +104,7 @@ public class MarriageCertServiceTest {
 
 	@Test
 	public void testForcreateAsync() {
-		ResponseInfo responseInfo = ResponseInfo.builder().apiId("uief87324").resMsgId("String").status("200")
+		org.egov.common.contract.response.ResponseInfo responseInfo = org.egov.common.contract.response.ResponseInfo.builder().apiId("uief87324").resMsgId("String").status("200")
 				.key("successful").ts("string").ver("string").tenantId("ap.kurnool").build();
 
 		ReissueCertResponse reissueCertResp = ReissueCertResponse.builder()

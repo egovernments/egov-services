@@ -114,7 +114,7 @@ public class Connection {
     @NotNull
     private String subUsageType;
 
-    private String subUsageTypeId;
+    private Long subUsageTypeId;
 
     private int numberOfFamily;
 

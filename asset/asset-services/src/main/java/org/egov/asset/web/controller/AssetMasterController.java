@@ -112,7 +112,7 @@ public class AssetMasterController {
     @PostMapping("/assetstatuses/_search")
     @ResponseBody
     public ResponseEntity<?> assetStatusSearch(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
-            @ModelAttribute final AssetStatusCriteria assetStatusCriteria, final BindingResult bindingResult) {
+            @ModelAttribute @Valid final AssetStatusCriteria assetStatusCriteria, final BindingResult bindingResult) {
 
         log.debug("assetStatusSearch assetStatusCriteria:" + assetStatusCriteria);
         if (bindingResult.hasErrors()) {

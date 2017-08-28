@@ -2,10 +2,10 @@ package org.egov.mr.web.controller;
 
 import javax.validation.Valid;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.mr.service.MarriageDocumentTypeService;
 import org.egov.mr.web.contract.MarriageDocTypeRequest;
 import org.egov.mr.web.contract.MarriageDocumentTypeSearchCriteria;
-import org.egov.mr.web.contract.RequestInfo;
 import org.egov.mr.web.contract.RequestInfoWrapper;
 import org.egov.mr.web.errorhandler.ErrorHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +49,7 @@ public class MarriageDocumentTypeController {
 		log.info("requestInfoWrapper : " + requestInfoWrapper);
 		log.info("regnDocumentTypeSearchCriteria : " + marriageDocumentTypeSearchCriteria);
 
-		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+		org.egov.common.contract.request.RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
 		ResponseEntity<?> errorResponseEntity = errorHandler.handleBindingErrorsForSearch(requestInfo,
 				bindingResultsForRequestInfoWrapper, bindingResultForRegnDocumentTypeSearchCriteria);

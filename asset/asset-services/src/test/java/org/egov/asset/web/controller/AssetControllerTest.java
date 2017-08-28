@@ -24,6 +24,7 @@ import org.egov.asset.contract.DisposalRequest;
 import org.egov.asset.contract.DisposalResponse;
 import org.egov.asset.contract.RevaluationRequest;
 import org.egov.asset.contract.RevaluationResponse;
+import org.egov.asset.exception.ErrorResponse;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.AssetCriteria;
@@ -59,9 +60,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.validation.BindingResult;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(AssetController.class)
@@ -270,12 +273,84 @@ public class AssetControllerTest {
         final ResponseInfo responseInfo = getResponseInfo();
         depreciationResponse.setResponseInfo(responseInfo);
         depreciationResponse.setDepreciation(depreciation);
-        when(depreciationService.depreciateAsset(any(DepreciationRequest.class),any(HttpHeaders.class)))
+        when(depreciationService.depreciateAsset(any(DepreciationRequest.class), any(HttpHeaders.class)))
                 .thenReturn(depreciationResponse);
         mockMvc.perform(post("/assets/depreciations/_create").contentType(MediaType.APPLICATION_JSON)
-                .content(getFileContents("depreciation/depreciationscreaterequest.json"))).andExpect(status().isCreated())
+                .content(getFileContents("depreciation/depreciationscreaterequest.json")))
+                .andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(getFileContents("depreciation/depreciationscreateresponse.json")));
+    }
+
+    @Test
+    public void test_error_assetsSearch() throws IOException, Exception {
+        final ErrorResponse errorResponse = getErrorResponse();
+
+        when(assetCommonService.populateErrors(any(BindingResult.class))).thenReturn(errorResponse);
+
+        mockMvc.perform(post("/assets/_search").contentType(MediaType.APPLICATION_JSON)
+                .content(getFileContents("requestinfowrapper.json"))).andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(getFileContents("errorresponse.json")));
+    }
+
+    @Test
+    public void test_error_revaluationSearch() throws IOException, Exception {
+        final ErrorResponse errorResponse = getErrorResponse();
+
+        when(assetCommonService.populateErrors(any(BindingResult.class))).thenReturn(errorResponse);
+
+        mockMvc.perform(post("/assets/revaluation/_search").contentType(MediaType.APPLICATION_JSON)
+                .content(getFileContents("requestinfowrapper.json"))).andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(getFileContents("errorresponse.json")));
+    }
+
+    @Test
+    public void test_error_disposalSearch() throws IOException, Exception {
+        final ErrorResponse errorResponse = getErrorResponse();
+
+        when(assetCommonService.populateErrors(any(BindingResult.class))).thenReturn(errorResponse);
+
+        mockMvc.perform(post("/assets/dispose/_search").contentType(MediaType.APPLICATION_JSON)
+                .content(getFileContents("requestinfowrapper.json"))).andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(getFileContents("errorresponse.json")));
+    }
+
+    @Test
+    public void test_error_currentValueSearch() throws IOException, Exception {
+        final ErrorResponse errorResponse = getErrorResponse();
+
+        when(assetCommonService.populateErrors(any(BindingResult.class))).thenReturn(errorResponse);
+
+        mockMvc.perform(post("/assets/currentvalue/_search").contentType(MediaType.APPLICATION_JSON)
+                .content(getFileContents("requestinfowrapper.json"))).andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(getFileContents("currentvalue/currentvalueerrorresponse.json")));
+    }
+    
+    @Test
+    public void test_error_assetCreate() throws IOException, Exception {
+        final ErrorResponse errorResponse = getErrorResponse();
+
+        when(assetCommonService.populateErrors(any(BindingResult.class))).thenReturn(errorResponse);
+
+        mockMvc.perform(post("/assets/_create").contentType(MediaType.APPLICATION_JSON)
+                .content(getFileContents("asseterrorrequest.json"))).andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(getFileContents("errorresponse.json")));
+    }
+    
+    private ErrorResponse getErrorResponse() {
+        final ErrorResponse errorResponse = new ErrorResponse();
+        final org.egov.asset.exception.Error error = new org.egov.asset.exception.Error();
+        error.setCode(400);
+        error.setMessage(HttpStatus.BAD_REQUEST.getReasonPhrase());
+        error.setDescription(HttpStatus.BAD_REQUEST.toString());
+        errorResponse.setResponseInfo(new ResponseInfo());
+        errorResponse.setError(error);
+        return errorResponse;
     }
 
     private Depreciation getAssetDepreciation() {

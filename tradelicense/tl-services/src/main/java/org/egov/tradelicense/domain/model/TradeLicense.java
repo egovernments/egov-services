@@ -6,6 +6,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import org.egov.tl.commons.web.contract.WorkFlowDetails;
 import org.egov.tradelicense.domain.enums.ApplicationType;
 import org.egov.tradelicense.domain.enums.BusinessNature;
 import org.egov.tradelicense.domain.enums.OwnerShipType;
@@ -169,4 +170,6 @@ public class TradeLicense {
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;
 
+	@JsonProperty("workFlowDetails")
+	private WorkFlowDetails workFlowDetails;
 }

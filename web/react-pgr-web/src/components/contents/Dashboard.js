@@ -395,6 +395,25 @@ class Dashboard extends Component {
         }, function(err) {
             console.log(err);
         });
+
+        if(window.location.href.indexOf("?") > -1 && window.location.href.indexOf("link") > -1) {
+          var query = window.location.href.split("?")[1].split("&");
+          for(var i=0; i<query.length; i++) {
+            if(query[i].indexOf("link") > -1) {
+              switch(query[i].split("=")[1]) {
+                case 'waternodue':
+                  self.props.setRoute("/non-framework/citizenServices/no-dues/search/wc");
+                  break;
+                case  'propertytaxextract':
+                  self.props.setRoute("/non-framework/citizenServices/no-dues/extract/pt");
+                  break;
+                case 'propertytaxdue':
+                  self.props.setRoute("/non-framework/citizenServices/no-dues/search/pt");
+                  break;
+              }
+            }
+          }
+        }
       }
    }
 

@@ -150,7 +150,7 @@ public class WaterConnectionRepository {
                     waterConnectionRequest.getConnection().setStatus(NewConnectionStatus.VERIFIED.name());
                 }
                 statement.setDouble(27, waterConnectionRequest.getConnection().getNumberOfFamily());
-                statement.setString(28, waterConnectionRequest.getConnection().getSubUsageTypeId());
+                statement.setLong(28, waterConnectionRequest.getConnection().getSubUsageTypeId());
                 statement.setString(29,waterConnectionRequest.getConnection().getPlumberName());
                 statement.setLong(30, waterConnectionRequest.getConnection().getBillSequenceNumber()!=null?
                         waterConnectionRequest.getConnection().getBillSequenceNumber():0l);

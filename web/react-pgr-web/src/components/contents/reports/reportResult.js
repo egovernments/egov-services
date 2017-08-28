@@ -7,14 +7,13 @@ import Api from '../../../api/api';
 import {translate} from '../../common/common';
 import _ from 'lodash';
 
-const $ = require('jquery');
-$.DataTable = require('datatables.net');
-const dt = require('datatables.net-bs');
-const buttons = require('datatables.net-buttons-bs');
-require('datatables.net-buttons/js/buttons.colVis.js'); // Column visibility
-require('datatables.net-buttons/js/buttons.html5.js'); // HTML 5 file export
-require('datatables.net-buttons/js/buttons.flash.js'); // Flash file export
-require('datatables.net-buttons/js/buttons.print.js'); // Print view button
+import $ from 'jquery';
+import 'datatables.net-buttons/js/buttons.html5.js';// HTML 5 file export
+import 'datatables.net-buttons/js/buttons.flash.js';// Flash file export
+import jszip from 'jszip/dist/jszip';
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 var sumColumn = [];
 
@@ -39,15 +38,31 @@ class ShowField extends Component {
     }
   }
 
-  componentWillReceiveProps(nextprops){
+  componentDidMount(){
+    this.setState({reportName : this.props.match.params.reportName});
   }
+
+  componentWillReceiveProps(nextprops){
+    if((this.props.match.params.moduleName !== nextprops.match.params.moduleName) || (this.props.match.params.reportName !== nextprops.match.params.reportName))
+    this.setState({reportName : nextprops.match.params.reportName});
+  }
+
 
   componentDidUpdate() {
     // console.log('did update');
     $('#reportTable').DataTable({
       dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
       buttons: [
-               'copy', 'csv', 'excel', 'pdf', 'print'
+               'excel',
+               {
+                  extend: 'pdf',
+                  filename : this.state.reportName,
+                  title : this.state.reportName,
+                  orientation: 'landscape',
+                  pageSize: 'TABLOID',
+                  footer : true
+              },
+             'print'
        ],
        ordering: false,
        bDestroy: true
@@ -155,10 +170,10 @@ class ShowField extends Component {
                 var columnObj = {};
                 //array for particular row
                 var respHeader = reportHeaderObj[itemIndex];
-                // console.log(respHeader.total);
                 if(respHeader.showColumn){
                   columnObj = {};
                   if(respHeader.total){
+                    columnObj['showColumn'] = respHeader.showColumn;
                     columnObj['total'] = respHeader.total;
                     columnObj['value'] = sumColumn[itemIndex] == undefined ? item : (sumColumn[itemIndex].value)+item;
                     if(sumColumn[itemIndex]){
@@ -171,6 +186,7 @@ class ShowField extends Component {
                     }
                     // console.log(itemIndex,':',item,':',sumColumn[itemIndex]);
                   }else{
+                    columnObj['showColumn'] = respHeader.showColumn;
                     columnObj['total'] = respHeader.total;
                     columnObj['value'] = 0;
                     if(sumColumn[itemIndex]){
@@ -188,6 +204,17 @@ class ShowField extends Component {
                     </td>
                   )
                 }else{
+                  columnObj['showColumn'] = respHeader.showColumn;
+                  columnObj['total'] = respHeader.total;
+                  columnObj['value'] = 0;
+                  if(sumColumn[itemIndex]){
+                    //remove the object from that itemIndex
+                    sumColumn.splice(itemIndex, 1);
+                    //add that object in that index
+                    sumColumn.splice(itemIndex,0,columnObj)
+                  }else{
+                    sumColumn.push(columnObj)
+                  }
                   return null;
                 }
               }
@@ -213,9 +240,13 @@ class ShowField extends Component {
         <tfoot>
         <tr>
           {sumColumn.map((columnObj, index) => {
-            return(
-              <td key={index}>{columnObj.total ? columnObj.value : ''}</td>
-            )
+            if(columnObj.showColumn){
+              return(
+                <td key={index}>{columnObj.total ? columnObj.value : ''}</td>
+              )
+            }else{
+              return null;
+            }
           })}
         </tr>
         </tfoot>

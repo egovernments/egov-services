@@ -298,72 +298,86 @@ this.setState({openLicense: false});
     let isFormValid=true;
     let self = this, _url;
     var formData = {...this.props.formData};
-
-    if(formData.licenses[0].isPropertyOwner)
-    {
-        if (!formData.licenses[0].agreementDate || !formData.licenses[0].agreementNo) {
-          isFormValid=false;
-        }
+    var feeCheck=true;
+    console.log();
+    for (var i = 0; i < formData.licenses[0].feeDetails.length; i++) {
+      if(formData.licenses[0].feeDetails[i].amount == 0 ||  formData.licenses[0].feeDetails[i].amount == ""){
+        feeCheck=false;
+      }
     }
 
-    if (isFormValid) {
-
-
-      self.props.setLoadingStatus('loading');
-
-      formData.licenses[0]["tenantId"]  = localStorage.getItem("tenantId") || "default";
-
-      if(self.props.moduleName && self.props.actionName && self.props.metaData && self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].tenantIdRequired) {
-        if(!formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName])
-          formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName] = {};
-
-        if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName].constructor == Array) {
-          for(var i=0; i< formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName].length; i++) {
-            formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][i]["tenantId"] = localStorage.getItem("tenantId") || "default";
+    if (feeCheck) {
+      if(formData.licenses[0].isPropertyOwner)
+      {
+          if (!formData.licenses[0].agreementDate || !formData.licenses[0].agreementNo) {
+            isFormValid=false;
           }
-        } else
-          formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["tenantId"] = localStorage.getItem("tenantId") || "default";
       }
 
-      if(/\{.*\}/.test(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url)) {
-        _url = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url;
-        var match = _url.match(/\{.*\}/)[0];
-        var jPath = match.replace(/\{|}/g,"");
-        _url = _url.replace(match, _.get(formData, jPath));
-      }
-      //Check if documents, upload and get fileStoreId
-      if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][0]["supportDocuments"] && formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][0]["supportDocuments"].length) {
-        let supportDocuments = [...formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][0]["supportDocuments"]];
-        let _docs = [];
-        let counter = supportDocuments.length, breakOut = 0;
-        for(let i=0; i<supportDocuments.length; i++) {
-          fileUpload(supportDocuments[i].fileStoreId, self.props.moduleName, function(err, res) {
-            if(breakOut == 1) return;
-            if(err) {
-              breakOut = 1;
-              self.props.setLoadingStatus('hide');
-              self.props.toggleSnackbarAndSetText(true, err, false, true);
-            } else {
-              if(res.files[0].fileStoreId)
-                _docs.push({
-                  ...supportDocuments[i],
-                  fileStoreId: res.files[0].fileStoreId
-                })
-              counter--;
-              if(counter == 0 && breakOut == 0) {
-                formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][0]["supportDocuments"] = _docs;
-                self.makeAjaxCall(formData, _url);
-              }
+      if (isFormValid) {
+
+
+        self.props.setLoadingStatus('loading');
+
+        formData.licenses[0]["tenantId"]  = localStorage.getItem("tenantId") || "default";
+
+        if(self.props.moduleName && self.props.actionName && self.props.metaData && self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].tenantIdRequired) {
+          if(!formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName])
+            formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName] = {};
+
+          if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName].constructor == Array) {
+            for(var i=0; i< formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName].length; i++) {
+              formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][i]["tenantId"] = localStorage.getItem("tenantId") || "default";
             }
-          })
+          } else
+            formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["tenantId"] = localStorage.getItem("tenantId") || "default";
         }
-      } else {
-        self.makeAjaxCall(formData, _url);
+
+        if(/\{.*\}/.test(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url)) {
+          _url = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url;
+          var match = _url.match(/\{.*\}/)[0];
+          var jPath = match.replace(/\{|}/g,"");
+          _url = _url.replace(match, _.get(formData, jPath));
+        }
+        //Check if documents, upload and get fileStoreId
+        if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][0]["supportDocuments"] && formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][0]["supportDocuments"].length) {
+          let supportDocuments = [...formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][0]["supportDocuments"]];
+          let _docs = [];
+          let counter = supportDocuments.length, breakOut = 0;
+          for(let i=0; i<supportDocuments.length; i++) {
+            fileUpload(supportDocuments[i].fileStoreId, self.props.moduleName, function(err, res) {
+              if(breakOut == 1) return;
+              if(err) {
+                breakOut = 1;
+                self.props.setLoadingStatus('hide');
+                self.props.toggleSnackbarAndSetText(true, err, false, true);
+              } else {
+                if(res.files[0].fileStoreId)
+                  _docs.push({
+                    ...supportDocuments[i],
+                    fileStoreId: res.files[0].fileStoreId
+                  })
+                counter--;
+                if(counter == 0 && breakOut == 0) {
+                  formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][0]["supportDocuments"] = _docs;
+                  self.makeAjaxCall(formData, _url);
+                }
+              }
+            })
+          }
+        } else {
+           feeCheck=false;
+          self.makeAjaxCall(formData, _url);
+        }
       }
+      else {
+        self.props.toggleSnackbarAndSetText(true, "Please enter required field", false, true);
+      }
+    } else {
+      self.props.toggleSnackbarAndSetText(true, "Please enter amount greater than 0", false, true);
+
     }
-    else {
-      self.props.toggleSnackbarAndSetText(true, "Please enter required field", false, true);
-    }
+
 
 
 
@@ -649,27 +663,23 @@ this.setState({openLicense: false});
 
 
 
-//Start Point of API Call to Populate Validity Year and UOMID
-populateValidtyYear = (categoryId) => {
-  let self = this;
+  //Start Point of API Call to Populate Validity Year and UOMID
+  populateValidtyYear = (categoryId) => {
+    let self = this;
 
-Api.commonApiPost("/tl-masters/category/v1/_search",{"ids":categoryId, "type":"subcategory"}).then(function(response)
-{
-  // handleChange (e, "" )
-  console.log(response);
-  //console.log(response.categories[0].validityYears);
-  self.handleChange({target:{value:null}}, "licenses[0].validityYears");
+  Api.commonApiPost("/tl-masters/category/v1/_search",{"ids":categoryId, "type":"subcategory"}).then(function(response)
+  {
 
+    self.handleChange({target:{value:null}}, "licenses[0].validityYears");
+    self.handleChange({target:{value:null}}, "licenses[0].uomName");
+    self.handleChange({target:{value:null}}, "licenses[0].uomId", true);
 
-  self.handleChange({target:{value:null}}, "licenses[0].uomName");
-  self.handleChange({target:{value:null}}, "licenses[0].uomId", true);
+  },function(err) {
+      console.log(err);
 
-},function(err) {
-    console.log(err);
-
-});
-}
-//End Point of API Call to Populate Validity Year and UOMID
+  });
+  }
+  //End Point of API Call to Populate Validity Year and UOMID
 
 //***Start Fee Details Calculations***
 calculateFeeDetails = (licenseValidFromDate, validityYear) => {
@@ -687,7 +697,7 @@ calculateFeeDetails = (licenseValidFromDate, validityYear) => {
 
   self.handleChange({target:{value:[]}},"licenses[0].feeDetails");
 
-  if(new Date(Number(licenseValidFromDate)).getMonth()>3)
+  if(new Date(Number(licenseValidFromDate)).getMonth() >= 3)
      {
          for(var i = startYear; i <= fixedDate; i = (i + validityYear))
           {
@@ -726,9 +736,12 @@ calculateFeeDetails = (licenseValidFromDate, validityYear) => {
 
   yesCatChange = () => {
     let self = this;
+
+
     this.setState({open: false});
     flag = 1;
     tradeCatVal = this.props.formData.licenses[0].categoryId;
+
   }
 
     noSubChange = () => {
@@ -819,8 +832,10 @@ handlePopUpLicense = (type , jsonPath, value) => {
 
       console.log(e)
 
-      if (property == "licenses[0].categoryId" && flag1==0) {
+      if (property == "licenses[0].categoryId" && getVal("licenses[0].feeDetails") && flag1==0) {
         this.handlePopUp("tradeCategory", "licenses[0].categoryId", e.target.value);
+        this.populateValidtyYear();
+        this.calculateFeeDetails();
       }
       if (property == "licenses[0].subCategoryId" && flag2==0) {
         this.handlePopUpsub("tradeSubCategory", "licenses[0].subCategoryId", e.target.value);
@@ -829,17 +844,25 @@ handlePopUpLicense = (type , jsonPath, value) => {
         this.handlePopUpLicense("tradeLicense", "licenses[0].licenseValidFromDate", e.target.value);
       }
 
+
       flag1=0;
       flag2=0;
       flag3=0;
+
+if(property == "licenses[0].categoryId"){
+console.log(getVal("licenses[0].categoryId"));
+if(self.props.formData.licenses[0].categoryId == "" || self.props.formData.licenses[0].categoryId == null){
+console.log(getVal("licenses[0].categoryId"));
+  self.props.handleChange({target:{value:null}}, self.props.formData.licenses[0].subCategoryId);
+  this.populateValidtyYear();
+}
+}
 
     if (property == "licenses[0].subCategoryId") {
       console.log(e.target.value);
       Api.commonApiPost("/tl-masters/category/v1/_search",{"ids":e.target.value, "type":"subcategory"}).then(function(response)
      {
-        // handleChange (e, "" )
-        console.log(response);
-        //console.log(response.categories[0].validityYears);
+
         handleChange({target:{value:response.categories[0].validityYears}}, "licenses[0].validityYears");
         self.setState({
           validityYear: response.categories[0].validityYears
@@ -848,11 +871,13 @@ handlePopUpLicense = (type , jsonPath, value) => {
         handleChange({target:{value:_.filter(response.categories[0].details,{feeType:"LICENSE"})[0].uomName}}, "licenses[0].uomName");
         handleChange({target:{value:_.filter(response.categories[0].details,{feeType:"LICENSE"})[0].uomId}}, "licenses[0].uomId", true);
 
+
+
         if(self.props.formData.licenses[0].licenseValidFromDate && (self.props.formData.licenses[0].licenseValidFromDate+"").length == 12 ||(self.props.formData.licenses[0].licenseValidFromDate+"").length == 13){
           self.calculateFeeDetails(self.props.formData.licenses[0].licenseValidFromDate, response.categories[0].validityYears)
         }
 
-        console.log(self.props.formData);
+
       },function(err) {
           console.log(err);
 
@@ -864,12 +889,15 @@ handlePopUpLicense = (type , jsonPath, value) => {
      if ((property == "licenses[0].licenseValidFromDate" || property=="licenses[0].subCategoryId") && getVal("licenses[0].licenseValidFromDate") && self.state.validityYear) {
        if((e.target.value+"").length == 12 || (e.target.value+"").length == 13){
           console.log(e.target.value);
-         self.calculateFeeDetails(e.target.value, self.state.validityYear)
+         self.calculateFeeDetails(e.target.value, self.state.validityYear);
         }
        }
 //***End Point To Populate Fee Details Section***
 
 
+// if("licenses[0].feeDetails[0].amount" != "" && "licenses[0].feeDetails[0].amount" != 0 && "licenses[0].feeDetails[0].amount" != null){
+//   self.props.handleChange({target:{value: self.props.formData.licenses[0].feeDetails[0].amount}}, "licenses[0].amount");
+// }
 
 
 
@@ -1116,7 +1144,7 @@ handlePopUpLicense = (type , jsonPath, value) => {
 
     return (
       <div className="Report">
-      <h3 style={{"textAlign": "center"}}>Create Legacy Trade License</h3>
+      <h3 style={{"textAlign": "center"}}>{translate("tl.create.legacyTradeLicense")}</h3>
         <form onSubmit={(e) => {
           create(e)
         }}>
@@ -1151,7 +1179,7 @@ handlePopUpLicense = (type , jsonPath, value) => {
                   return (
                     <tr key={index}>
                       <td>{item.financialYear}</td>
-                      <td><TextField value={getVal("licenses[0].feeDetails["+index+"].amount")} errorText={fieldErrors["licenses[0].feeDetails["+index+"].amount"]} onChange= {(e) => handleChange (e, "licenses[0].feeDetails["+index+"].amount", true, "^[0-9]{1,10}(\\.[0-9]{0,2})?$","","Number max 10 degits with 2 decimal")}/></td>
+                      <td><TextField inputStyle={{"textAlign": "right"}} value={getVal("licenses[0].feeDetails["+index+"].amount")} errorText={fieldErrors["licenses[0].feeDetails["+index+"].amount"]} onChange= {(e) => handleChange (e, "licenses[0].feeDetails["+index+"].amount", true, "^[0-9]{1,10}(\\.[0-9]{0,2})?$","","Number max 10 degits with 2 decimal")}/></td>
                       <td><Checkbox checked={getVal("licenses[0].feeDetails["+index+"].paid")}   onCheck = {(obj, bol) => handleChange ({target:{value:bol}}, "licenses[0].feeDetails["+index+"].paid", true, "") }/></td>
                     </tr>
                   )

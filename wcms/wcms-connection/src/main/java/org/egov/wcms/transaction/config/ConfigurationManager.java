@@ -219,4 +219,10 @@ public class ConfigurationManager {
     @Value("${default.password}")
     private String defaultPassword;
     
+    @Value("${egov.services.tenant.host}")
+    private String tenantServiceBasePath;
+    
+    @Value("${egov.services.tenant.searchpath}")
+    private String tenantServiceSearchPath;
+    
 }

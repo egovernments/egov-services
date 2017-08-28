@@ -50,7 +50,7 @@ public class User {
 	private String gender = null;
 
 	@JsonProperty("mobileNumber")
-	@Size(max = 10)
+	@Size(min=10,max = 10)
 	private String mobileNumber = null;
 
 	@JsonProperty("emailId")
@@ -67,7 +67,7 @@ public class User {
 
 	@JsonProperty("aadhaarNumber")
 	@Pattern(regexp = "[0-9]{12}")
-	@Size(max = 12)
+	@Size(min=12,max = 12)
 	private String aadhaarNumber = null;
 
 	@JsonProperty("permanentAddress")

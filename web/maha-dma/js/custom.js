@@ -72,7 +72,6 @@ $(document).ready(function(){
   			  success: function(response){
             servicesList = response;
             groupByModuleServices = arrayGroupByKey(servicesList, "moduleName");
-            console.log('groupByModuleServices', groupByModuleServices);
             loadServiceMenus();
   			  },
   			  cache: false
@@ -107,7 +106,7 @@ $(document).ready(function(){
                     && service.moduleName === moduleName);
           var ulb = ulbsList.find((ulb)=>ulb.ulbName === $('.ulb-dropdown').val());
 
-          if(service){
+          if(service && ulb.url){
             var uniqueKeys = service.slaTable.columns.reduce(function (acc, obj) {
                 return acc.concat(acc.indexOf(obj.key) === -1? obj.key : undefined);
             }, []);
@@ -123,6 +122,7 @@ $(document).ready(function(){
           }
           else{
             //else TODO
+            alert('This service is not available for ' + ulb.ulbName);
           }
       });
 

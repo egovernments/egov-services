@@ -1,6 +1,7 @@
 var ulbsList=[];
 var servicesList=[];
 var groupByModuleServices=[];
+var redirectUrl="";
 
 Handlebars.registerHelper('eq', function(arg1, arg2, options) {
    return arg1 === arg2;
@@ -82,13 +83,13 @@ $(document).ready(function(){
       }
 
       function loadServiceMenus(){
-        console.log('calling!');
-        console.log('output', servicesMenuTempalte(groupByModuleServices));
         $('.service-table').html(servicesMenuTempalte(groupByModuleServices));
       }
 
       $(document).on('click', 'a.action-item', function(e){
           //console.log('serviceName', $(this).data('service-name'));
+
+          console.log('redirectUrl', redirectUrl);
 
           if(!$('#ulb-dropdown').val()){
             $('#ulb-dropdown').popover('show');
@@ -104,19 +105,18 @@ $(document).ready(function(){
 
           var service = servicesList.find((service) => service.serviceName === serviceName
                     && service.moduleName === moduleName);
-          var ulb = ulbsList.find((ulb)=>ulb.ulbName === $('.ulb-dropdown').val());
+
+          var ulb = ulbsList.find((ulb)=>ulb.tenantId === $('#ulb-dropdown').val());
 
           if(service && ulb.url){
             var uniqueKeys = service.slaTable.columns.reduce(function (acc, obj) {
                 return acc.concat(acc.indexOf(obj.key) === -1? obj.key : undefined);
             }, []);
 
-            console.log('uniqueKeys', uniqueKeys);
-
             service['uniqueKeys'] = uniqueKeys;
 
             //documentsTempalte
-            $('#apply-btn').attr('data-url', ulb.url+service.redirectUrl);
+            $('#apply-btn').attr('data-url', service.url);
             $('#documents-body').html(documentsTempalte(service));
             $('#servicesDetailModal').modal('show');
           }
@@ -127,16 +127,29 @@ $(document).ready(function(){
       });
 
       $('#apply-btn').click(function(e){
-          var serviceRedirectUrl=$(this).attr('data-url');
-          if(serviceRedirectUrl){
-            $('#servicesDetailModal').modal('hide');
-            window.open(serviceRedirectUrl);
-          }
+          redirectUrl = $(this).attr('data-url');
+          alert('Please register yourself and then login.');
+          $('#servicesDetailModal').modal('hide');
+
+          // var serviceRedirectUrl=$(this).attr('data-url');
+          // if(serviceRedirectUrl){
+          //   $('#servicesDetailModal').modal('hide');
+          //   window.open(serviceRedirectUrl);
+          // }
+
+
+      });
+
+      $('#create-account').click(function(e){
+          window.location = window.location.origin + '/app/v1/#/mh.roha?signup=true';
       });
 
       $('#loginBtn').click(function(e) {
+
+          console.log('redirectUrl', window.location.origin + "/"+ redirectUrl);
+
           if($("#mobileNumber").val() && $("#password").val()) {
-            var tenantId = $("#ulb-dropdown2").val() || "default";
+            var tenantId = $("#ulb-dropdown").val() || "default";
             $.ajax({
               url: window.location.origin + "/user/oauth/token?tenantId=" + tenantId + "&username=" + $("#mobileNumber").val() + "&password=" + $("#password").val() + "&grant_type=password&scope=read",
               type: 'POST',
@@ -154,8 +167,13 @@ $(document).ready(function(){
                 localStorage.setItem("type", response.UserRequest.type);
                 localStorage.setItem("id", response.UserRequest.id);
                 localStorage.setItem("tenantId", response.UserRequest.tenantId);
+                if(!redirectUrl){
+                    window.location.href = window.location.origin + "/app/v1/#/prd/dashboard";
+                }
+                else{
+                  window.location.href = window.location.origin + "/"+ redirectUrl;
+                }
 
-                window.location.href = window.location.origin + "/app/v1/#/prd/dashboard";
               },
               error: function() {
 

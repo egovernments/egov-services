@@ -687,7 +687,7 @@ calculateFeeDetails = (licenseValidFromDate, validityYear) => {
 
   self.handleChange({target:{value:[]}},"licenses[0].feeDetails");
 
-  if(new Date(Number(licenseValidFromDate)).getMonth()>3)
+  if(new Date(Number(licenseValidFromDate)).getMonth() >= 3)
      {
          for(var i = startYear; i <= fixedDate; i = (i + validityYear))
           {
@@ -1151,7 +1151,7 @@ handlePopUpLicense = (type , jsonPath, value) => {
                   return (
                     <tr key={index}>
                       <td>{item.financialYear}</td>
-                      <td><TextField value={getVal("licenses[0].feeDetails["+index+"].amount")} errorText={fieldErrors["licenses[0].feeDetails["+index+"].amount"]} onChange= {(e) => handleChange (e, "licenses[0].feeDetails["+index+"].amount", true, "^[0-9]{1,10}(\\.[0-9]{0,2})?$","","Number max 10 degits with 2 decimal")}/></td>
+                      <td><TextField inputStyle={{"textAlign": "right"}} value={getVal("licenses[0].feeDetails["+index+"].amount")} errorText={fieldErrors["licenses[0].feeDetails["+index+"].amount"]} onChange= {(e) => handleChange (e, "licenses[0].feeDetails["+index+"].amount", true, "^[0-9]{1,10}(\\.[0-9]{0,2})?$","","Number max 10 degits with 2 decimal")}/></td>
                       <td><Checkbox checked={getVal("licenses[0].feeDetails["+index+"].paid")}   onCheck = {(obj, bol) => handleChange ({target:{value:bol}}, "licenses[0].feeDetails["+index+"].paid", true, "") }/></td>
                     </tr>
                   )

@@ -1,5 +1,4 @@
-﻿﻿﻿
-insert into eg_wf_types (id, module, type, link, createdby, createddate, lastmodifiedby, lastmodifieddate, typefqn, displayname, version, tenantid)
+﻿﻿﻿insert into eg_wf_types (id, module, type, link, createdby, createddate, lastmodifiedby, lastmodifieddate, typefqn, displayname, version, tenantid)
  values (nextval('seq_eg_wf_types'),NULL, 'MarriageRegn', '/mr-web/app/search-marriageRegn/view-create-marriageRegn.html?view=inbox&state=:ID', 1, now(), 1, now(), 'org.egov.mr.models.MarriageRegn', 'Create MarriageRegn', 0, 'default');
 
 INSERT INTO eg_wf_matrix (id,department,objecttype,currentstate,currentstatus,pendingactions,currentdesignation,additionalrule,nextstate,nextaction,nextdesignation,nextstatus,validactions,fromqty,toqty,fromdate,todate,tenantId)

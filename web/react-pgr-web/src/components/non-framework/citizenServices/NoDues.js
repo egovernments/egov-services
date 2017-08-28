@@ -1287,7 +1287,7 @@ class NoDues extends Component {
                                       </tr>
                                       <tr>
                                           <td colSpan={2}>
-                                            {ReceiptOne[0].Bill[0].billDetails[0].billNumber +" "+getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate)}
+                                            {ReceiptOne[0].Bill[0].billDetails[0].billNumber +"-"+getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate)}
 
                                           </td>
                                           <td colSpan={4}>

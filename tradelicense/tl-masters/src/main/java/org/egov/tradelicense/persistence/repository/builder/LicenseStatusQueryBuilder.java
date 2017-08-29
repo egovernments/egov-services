@@ -16,7 +16,7 @@ public class LicenseStatusQueryBuilder {
 			+ " moduleType = :moduleType ,lastModifiedBy = :lastModifiedBy, lastModifiedTime = :lastModifiedTime"
 			+ " WHERE id = :id";
 
-	public static String buildSearchQuery(String tenantId, Integer[] ids, String name, String code, String active,
+	public static String buildSearchQuery(String tenantId, Integer[] ids, String name, String code, String moduleType ,String active,
 			Integer pageSize, Integer offSet, MapSqlParameterSource parameters) {
 
 		StringBuffer searchSql = new StringBuffer();
@@ -43,6 +43,11 @@ public class LicenseStatusQueryBuilder {
 		if (code != null && !code.isEmpty()) {
 			searchSql.append(" AND code = :code ");
 			parameters.addValue("code",code);
+		}
+		
+		if (moduleType != null && !moduleType.isEmpty()) {
+			searchSql.append(" AND moduleType = :moduleType ");
+			parameters.addValue("moduleType", moduleType);
 		}
 
 		if (name != null && !name.isEmpty()) {

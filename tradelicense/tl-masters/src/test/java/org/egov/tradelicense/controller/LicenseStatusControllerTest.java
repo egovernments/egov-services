@@ -159,7 +159,7 @@ public class LicenseStatusControllerTest {
 		try {
 
 			when(licenseStatusService.getLicenseStatusMaster(any(RequestInfo.class), any(String.class),
-					any(Integer[].class), any(String.class), any(String.class), any(String.class), any(Integer.class),
+					any(Integer[].class), any(String.class),any(String.class), any(String.class), any(String.class), any(Integer.class),
 					any(Integer.class))).thenReturn(licenseStatusResponse);
 
 			mockMvc.perform(post("/status/v1/_search").param("tenantId", "default").contentType(MediaType.APPLICATION_JSON)

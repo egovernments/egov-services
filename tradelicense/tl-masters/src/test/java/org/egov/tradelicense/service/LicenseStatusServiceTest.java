@@ -65,6 +65,7 @@ public class LicenseStatusServiceTest {
 	public String NameToupdate = "shubhamPratap";
 	public String CodeToUpdate = "nitin";
 	public String active = "True";
+	public String moduleType = "2342567";
 
 	@Before
 	public void setUp() throws Exception {
@@ -117,7 +118,7 @@ public class LicenseStatusServiceTest {
 				Integer pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize());
 				Integer offset = Integer.valueOf(propertiesManager.getDefaultOffset());
 				licenseStatusResponse = licenseStatusService.getLicenseStatusMaster(requestInfo, tenantId, null, name,
-						code, active, pageSize, offset);
+						code, moduleType, active, pageSize, offset);
 
 				if (licenseStatusResponse.getLicenseStatuses().size() == 0) {
 					assertTrue(false);
@@ -147,7 +148,7 @@ public class LicenseStatusServiceTest {
 
 		try {
 			LicenseStatusResponse licenseStatusResponse = licenseStatusService.getLicenseStatusMaster(requestInfo,
-					tenantId, new Integer[] { licenseId.intValue() }, name, code, active, pageSize, offset);
+					tenantId, new Integer[] { licenseId.intValue() }, name, code, moduleType, active, pageSize, offset);
 
 			if (licenseStatusResponse.getLicenseStatuses().size() == 0)
 				assertTrue(false);
@@ -277,7 +278,7 @@ public class LicenseStatusServiceTest {
 
 		try {
 			LicenseStatusResponse licenseStatusResponse = licenseStatusService.getLicenseStatusMaster(requestInfo,
-					tenantId, new Integer[] { licenseId.intValue() }, NameToupdate, code, active, pageSize, offset);
+					tenantId, new Integer[] { licenseId.intValue() }, NameToupdate, code, moduleType, active, pageSize, offset);
 
 			if (licenseStatusResponse.getLicenseStatuses().size() == 0) {
 				assertTrue(false);
@@ -405,7 +406,7 @@ public class LicenseStatusServiceTest {
 
 		try {
 			LicenseStatusResponse licenseStatusResponse = licenseStatusService.getLicenseStatusMaster(requestInfo,
-					tenantId, new Integer[] { licenseId.intValue() }, NameToupdate, CodeToUpdate, active, pageSize,
+					tenantId, new Integer[] { licenseId.intValue() }, NameToupdate, CodeToUpdate, moduleType, active, pageSize,
 					offset);
 			if (licenseStatusResponse.getLicenseStatuses().size() == 0) {
 				assertTrue(false);

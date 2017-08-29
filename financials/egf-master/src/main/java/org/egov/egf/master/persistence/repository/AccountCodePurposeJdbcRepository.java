@@ -159,5 +159,9 @@ public class AccountCodePurposeJdbcRepository extends JdbcRepository {
 		}
 
 	}
+	
+	public Boolean uniqueCheck(String fieldName, AccountCodePurposeEntity accountCodePurpose) {
+		return super.uniqueCheck(fieldName,accountCodePurpose);
+	}
 
 }

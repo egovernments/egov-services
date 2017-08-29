@@ -9,13 +9,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class InvalidDataException extends RuntimeException {
+public class ValidationException extends RuntimeException {
 	private static final long serialVersionUID = -1509069993620266971L;
-	public static final String code = "001";
 	private String fieldName;
 	private String messageKey;
-	private String fieldValue; 
- 
+	private String fieldValue;
 	
 
 }

@@ -1,11 +1,14 @@
 package org.egov.egf.master.domain.service;
 
+import static org.egov.common.constants.Constants.ACTION_VIEW;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.constants.Constants;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.exception.CustomBindException;
+import org.egov.common.domain.exception.ErrorCode;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.Fund;
@@ -16,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.SmartValidator;
 
@@ -35,7 +39,6 @@ public class FundService {
 		try {
 
 			funds = fetchRelated(funds);
-
 			validate(funds, Constants.ACTION_CREATE, errors);
 
 			if (errors.hasErrors()) {
@@ -47,8 +50,7 @@ public class FundService {
 			}
 
 		} catch (CustomBindException e) {
-
-			throw new CustomBindException(errors);
+			throw e;
 		}
 
 		return fundRepository.save(funds, requestInfo);
@@ -84,20 +86,42 @@ public class FundService {
 
 		try {
 			switch (method) {
-			case Constants.ACTION_VIEW:
+			case ACTION_VIEW:
 				// validator.validate(fundContractRequest.getFund(), errors);
 				break;
 			case Constants.ACTION_CREATE:
 				Assert.notNull(funds, "Funds to create must not be null");
 				for (Fund fund : funds) {
 					validator.validate(fund, errors);
+					if (!fundRepository.uniqueCheck("name", fund))
+						errors.addError(new FieldError("fund", "name", fund.getName(), false,
+								new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+					if (!fundRepository.uniqueCheck("code", fund))
+						errors.addError(new FieldError("fund", "code", fund.getName(), false,
+								new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+					if (!fundRepository.uniqueCheck("identifier", fund))
+						errors.addError(new FieldError("fund", "identifier", fund.getName(), false,
+								new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+
 				}
 				break;
 			case Constants.ACTION_UPDATE:
 				Assert.notNull(funds, "Funds to update must not be null");
 				for (Fund fund : funds) {
-					Assert.notNull(fund.getId(), "Fund ID to update must not be null");
+					if (fund.getId() == null) {
+						throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), fund.getId());
+					}
 					validator.validate(fund, errors);
+					if (!fundRepository.uniqueCheck("name", fund))
+						errors.addError(new FieldError("fund", "name", fund.getName(), false,
+								new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+					if (!fundRepository.uniqueCheck("code", fund))
+						errors.addError(new FieldError("fund", "code", fund.getName(), false,
+								new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+					if (!fundRepository.uniqueCheck("identifier", fund))
+						errors.addError(new FieldError("fund", "identifier", fund.getName(), false,
+								new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+
 				}
 				break;
                         case Constants.ACTION_SEARCH:
@@ -124,7 +148,8 @@ public class FundService {
 					fund.getParent().setTenantId(fund.getTenantId());
 					Fund parentId = fundRepository.findById(fund.getParent());
 					if (parentId == null) {
-						throw new InvalidDataException("parentId", "parentId.invalid", " Invalid parentId");
+						throw new InvalidDataException("parentId", ErrorCode.INVALID_REF_VALUE.getCode(),
+								fund.getParent().getId());
 					}
 					fund.setParent(parentId);
 				}

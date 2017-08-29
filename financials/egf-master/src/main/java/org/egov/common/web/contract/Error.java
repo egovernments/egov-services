@@ -37,72 +37,47 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.egf.master.domain.model;
+package org.egov.common.web.contract;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.egov.common.domain.model.Auditable;
+import org.springframework.validation.FieldError;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-/**
- * 
- * @author mani
- *
- */
+import lombok.Data;
 
-/*
- * Every ULB need to maintain bank accounts information . May be it is collection information 
- * or the payment. This is the master list of banks operated by ULB
- * 
- */
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
-@Builder
-public class Bank extends Auditable {
+@JsonPropertyOrder({ "code", "message", "description" ,"params"})
+public @Data class Error {
 
-	/**
-	 * id is unique identifier . It is generated internally
-	 */
-	private String id;
+	private String code    ;
 
-	/**
-	 * code is the code of the bank
-	 */
-	@NotNull
-	@Size(max = 50, min = 1)
-	private String code;
+	private String message  ;
 
-	/**
-	 * name is the Bank Name .
-	 */
-	@NotNull
-	@Size(max = 100, min = 2)
-	private String name;
+	private String description  ;
+	
+	private List<String> params=new ArrayList<>();
 
-	/**
-	 * description more detailed description of the bank
-	 */
+	public Error(String code, String message, String description) {
+		super();
+		this.code = code;
+		this.message = message;
+		this.description = description;
+	}
 
-	@Size(max = 250)
-	private String description;
-	/**
-	 * active states whether the bank is active in the system or not .
-	 */
-	@NotNull
-	private Boolean active;
+	public Error() {
+		// TODO Auto-generated constructor stub
+	}
 
-	@NotNull
-	@Size(max = 50)
-	private String type;
+	public Error(String code, String message, String description, List<String> params) {
+		super();
+		this.code = code;
+		this.message = message;
+		this.description = description;
+		this.params = params;
+	}
 	
 	
-
+	 
 }

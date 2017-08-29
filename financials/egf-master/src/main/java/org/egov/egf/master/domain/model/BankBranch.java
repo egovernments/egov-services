@@ -52,7 +52,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
+/**
+ * 
+ * @author mani
+ *
+ */
+/*
+ * 
+ * 
+ *This is the master list of bankbranches  operated by ULB
+ */
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
@@ -63,51 +72,97 @@ import lombok.ToString;
 
 public class BankBranch extends Auditable {
 
+	/**
+	 * id is the unique identifier
+	 */
 	private String id;
-
+	/**
+	 * bank is the bank of the branch
+	 */
 	@NotNull
 	private Bank bank;
 
+	/**
+	 * code is the branch code
+	 */
 	@NotNull
 	@Length(max = 50, min = 1)
 	private String code;
-
+    /**
+     * name is the branch name
+     */
 	@NotNull
 	@Length(max = 50, min = 1)
 	@Pattern(regexp = "^[a-zA-Z0-9_]*$")
 	private String name;
 
+	/**
+	 * address is the address of the branch
+	 */
 	@NotNull
 	@Length(max = 50, min = 1)
 	private String address;
 
+	/**
+	 * address2 is the secondary address of the branch
+	 */
 	@Length(max = 50)
 	private String address2;
 
+	/**
+	 * city is the name of the bank branches city
+	 */
+	
 	@Length(max = 50)
 	private String city;
+	
+	/**
+	 * state is the name of the state
+	 */
 
 	@Length(max = 50)
 	private String state;
 
+	/**
+	 * pincode is the pincode of the branch
+	 */
 	@Length(max = 50)
 	private String pincode;
 
+	/**
+	 * phone is the phone number of the branch
+	 */
 	@Length(max = 15)
 	private String phone;
 
+	/**
+	 * fax is the fax number of the branch
+	 */
 	@Length(max = 15)
 	private String fax;
 
+	/**
+	 * contactPerson is the name of the person in contact 
+	 */
 	@Length(max = 50)
 	private String contactPerson;
 
+	/**
+	 * active states whether branch is active. i.e is usable by the system or not 
+	 * if not active it cannot be used 
+	 */
 	@NotNull
 	private Boolean active;
 
+	/**
+	 * description is the more detailed description of the branch
+	 */
 	@Length(max = 256)
 	private String description;
 
+	/**
+	 * micr is the micr code of the bank branch
+	 */
 	@Length(max = 50)
 	private String micr;
 

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.egov.common.constants.Constants;
+import org.egov.common.domain.annotation.Unique;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.AccountCodePurpose;
 import org.egov.egf.master.domain.model.AccountCodePurposeSearch;
@@ -80,5 +81,18 @@ public class AccountCodePurposeRepository {
             }
 
         }
+
+	public void uniqueCheck(AccountCodePurpose accountCodePurpose) {
+		if(accountCodePurpose.getClass().isAnnotationPresent(Unique.class)==true)
+			{
+			//accountCodePurpose.getClass().geta
+			}
+		}
+
+	public Boolean uniqueCheck(String fieldName, AccountCodePurpose accountCodePurpose) {
+		return accountCodePurposeJdbcRepository.uniqueCheck(fieldName,new AccountCodePurposeEntity().toEntity(accountCodePurpose));  
+	}
+		
+	
 
 }

@@ -41,6 +41,7 @@ package org.egov.egf.master.domain.model;
 
 import javax.validation.constraints.NotNull;
 
+import org.egov.common.domain.annotation.Unique;
 import org.egov.common.domain.model.Auditable;
 import org.hibernate.validator.constraints.Length;
 
@@ -63,6 +64,7 @@ public class AccountCodePurpose extends Auditable {
 
 	private String id;
 
+	@Unique
 	@NotNull
 	@Length(max = 256, min = 3)
 	private String name;

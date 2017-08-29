@@ -20,7 +20,16 @@ var meterReading = {
      "isRequired": false,
      "isDisabled": false,
      "requiredErrMsg": "",//Remove required messages
-     "patternErrMsg": ""
+     "patternErrMsg": "",
+     "depedants":[{
+         "jsonPath":"Connection.meter[0].meterReadings[0].consumption",
+         "type":"textField",
+         "pattern":"`${getVal('Connection.meter[0].meterReadings[0].reading')!='' && getVal('Connection.meter[0].meterReadings[1].reading')!='' ? getVal('Connection.meter[0].meterReadings[1].reading')-getVal('Connection.meter[0].meterReadings[0].reading'):getVal('Connection.meter[0].meterReadings[1].reading')}`",
+         "rg":"",
+         "isRequired": false,
+         "requiredErrMsg": "",
+         "patternErrMsg": ""
+       }]
     },
 	{
      "name": "Reading2",
@@ -31,7 +40,26 @@ var meterReading = {
      "isRequired": false,
      "isDisabled": false,
      "requiredErrMsg": "",//Remove required messages
-     "patternErrMsg": ""
+     "patternErrMsg": "",
+     "depedants":[
+          {
+           "jsonPath":"Connection.meter[0].meterReadings[0].consumption",
+           "type":"textField",
+           "pattern":"`${getVal('Connection.meter[0].meterReadings[0].reading')!='' && getVal('Connection.meter[0].meterReadings[1].reading')!='' ? getVal('Connection.meter[0].meterReadings[1].reading')-getVal('Connection.meter[0].meterReadings[0].reading'):getVal('Connection.meter[0].meterReadings[1].reading')}`",
+           "rg":"",
+           "isRequired": false,
+           "requiredErrMsg": "",
+           "patternErrMsg": ""
+         },
+          {
+           "jsonPath":"Connection.meter[0].meterReadings[1].consumption",
+           "type":"number",
+           "pattern":"`${getVal('Connection.meter[0].meterReadings[1].reading')!='' && getVal('Connection.meter[0].meterReadings[2].reading')!='' ? getVal('Connection.meter[0].meterReadings[2].reading')-getVal('Connection.meter[0].meterReadings[1].reading'):getVal('Connection.meter[0].meterReadings[2].reading')}`",
+           "rg":"",
+           "isRequired": false,
+           "requiredErrMsg": "",
+           "patternErrMsg": ""
+         }]
     },
   	{
        "name": "Reading3",
@@ -42,10 +70,19 @@ var meterReading = {
        "isRequired": false,
        "isDisabled": false,
        "requiredErrMsg": "",//Remove required messages
-       "patternErrMsg": ""
+       "patternErrMsg": "",
+       "depedants":[{
+           "jsonPath":"Connection.meter[0].meterReadings[1].consumption",
+           "type":"textField",
+           "pattern":"`${getVal('Connection.meter[0].meterReadings[1].reading')!='' && getVal('Connection.meter[0].meterReadings[2].reading')!='' ? getVal('Connection.meter[0].meterReadings[2].reading')-getVal('Connection.meter[0].meterReadings[1].reading'):getVal('Connection.meter[0].meterReadings[2].reading')}`",
+           "rg":"",
+           "isRequired": false,
+           "requiredErrMsg": "",
+           "patternErrMsg": ""
+         }]
       },
     {
-     "name": "Reading1",
+     "name": "Reading1Date",
      "jsonPath": "Connection.meter[0].meterReadings[0].readingDate",
      "label": "wc.group.reading1Date",
      "pattern": "",
@@ -56,7 +93,7 @@ var meterReading = {
      "patternErrMsg": ""
     },
     {
-     "name": "Reading2",
+     "name": "Reading2Date",
      "jsonPath": "Connection.meter[0].meterReadings[1].readingDate",
      "label": "wc.group.reading2Date",
      "pattern": "",
@@ -67,7 +104,7 @@ var meterReading = {
      "patternErrMsg": ""
     },
     {
-     "name": "Reading3",
+     "name": "Reading3Date",
      "jsonPath": "Connection.meter[0].meterReadings[2].readingDate",
      "label": "wc.group.reading3Date",
      "pattern": "",
@@ -78,8 +115,41 @@ var meterReading = {
      "patternErrMsg": ""
    },
    {
+    "name": "FirstMonthConsumption",
+    "jsonPath": "Connection.meter[0].meterReadings[0].consumption",
+    "label": "wc.group.consumption1",
+    "pattern": "",
+    "type": "number",
+    "isRequired": false,
+    "isDisabled": true,
+    "requiredErrMsg": "",//Remove required messages
+    "patternErrMsg": ""
+   },
+ {
+    "name": "SecondMonthConsumption",
+    "jsonPath": "Connection.meter[0].meterReadings[1].consumption",
+    "label": "wc.group.consumption2",
+    "pattern": "",
+    "type": "number",
+    "isRequired": false,
+    "isDisabled": true,
+    "requiredErrMsg": "",//Remove required messages
+    "patternErrMsg": ""
+   },
+   {
+      "name": "ThirdMonthConsumption",
+      "jsonPath": "Connection.meter[0].meterReadings[2].consumption",
+      "label": "wc.group.consumption3",
+      "pattern": "",
+      "type": "number",
+      "isRequired": false,
+      "isDisabled": true,
+      "requiredErrMsg": "",//Remove required messages
+      "patternErrMsg": ""
+    },
+   {
      "name": "GapCode1",
-     "jsonPath": "",
+     "jsonPath": "Connection.meter[0].meterReadings[0].gapCode",
      "label": "wc.create.groups.gapCode1",
      "pattern": "",
      "type": "singleValueList",
@@ -91,7 +161,7 @@ var meterReading = {
    },
    {
      "name": "GapCode2",
-     "jsonPath": "",
+     "jsonPath": "Connection.meter[0].meterReadings[1].gapCode",
      "label": "wc.create.groups.gapCode2",
      "pattern": "",
      "type": "singleValueList",
@@ -103,11 +173,11 @@ var meterReading = {
    },
    {
      "name": "GapCode3",
-     "jsonPath": "",
+     "jsonPath": "Connection.meter[0].meterReadings[2].gapCode",
      "label": "wc.create.groups.gapCode3",
      "pattern": "",
      "type": "singleValueList",
-      "url": "/wcms/masters/gapcode/_search?|$..code|$..name",
+     "url": "/wcms/masters/gapcode/_search?|$..code|$..name",
      "isRequired": false,
      "isDisabled": false,
      "requiredErrMsg": "",
@@ -117,6 +187,197 @@ var meterReading = {
   }
  ]
 }
+
+
+var meterReadingView = {
+ "name": "MeterReading",
+ "version": "v1",
+ "level": 2,
+ "jsonPath": "Connection.meter[0].meterReadings",
+ "groups": [
+  {
+   "label": "wc.group.meterReading",
+   "name": "MeterReading",
+   "multiple": false,
+   "hide":false,
+   "children": [],
+   "fields": [
+    {
+     "name": "Reading1",
+     "jsonPath": "Connection[0].meter[0].meterReadings[0].reading",
+     "label": "wc.group.reading1",
+     "pattern": "",
+     "type": "number",
+     "isRequired": false,
+     "isDisabled": false,
+     "requiredErrMsg": "",//Remove required messages
+     "patternErrMsg": "",
+     "depedants":[{
+         "jsonPath":"Connection[0].meter[0].meterReadings[0].consumption",
+         "type":"number",
+         "pattern":"`${getVal('Connection.meter[0].meterReadings[0].reading')!='' && getVal('Connection.meter[0].meterReadings[1].reading')!='' ? getVal('Connection.meter[0].meterReadings[1].reading')-getVal('Connection.meter[0].meterReadings[0].reading'):getVal('Connection.meter[0].meterReadings[1].reading')}`",
+         "rg":"",
+         "isRequired": false,
+         "requiredErrMsg": "",
+         "patternErrMsg": ""
+       }]
+    },
+	{
+     "name": "Reading2",
+     "jsonPath": "Connection[0].meter[0].meterReadings[1].reading",
+     "label": "wc.group.reading2",
+     "pattern": "",
+     "type": "number",
+     "isRequired": false,
+     "isDisabled": false,
+     "requiredErrMsg": "",//Remove required messages
+     "patternErrMsg": "",
+     "depedants":[{
+         "jsonPath":"Connection[0].meter[0].meterReadings[0].consumption",
+         "type":"textField",
+         "pattern":"`${getVal('Connection.meter[0].meterReadings[0].reading')!='' && getVal('Connection.meter[0].meterReadings[1].reading')!='' ? getVal('Connection.meter[0].meterReadings[1].reading') - getVal('Connection.meter[0].meterReadings[0].reading'):getVal('Connection.meter[0].meterReadings[1].reading')}`",
+         "rg":"",
+         "isRequired": false,
+         "requiredErrMsg": "",
+         "patternErrMsg": ""
+       },
+       {
+         "jsonPath":"Connection[0].meter[0].meterReadings[1].consumption",
+         "type":"textField",
+         "pattern":"`${getVal('Connection.meter[0].meterReadings[2].reading')!='' && getVal('Connection.meter[0].meterReadings[1].reading')!='' ? getVal('Connection.meter[0].meterReadings[2].reading') - getVal('Connection.meter[0].meterReadings[1].reading') : getVal('Connection.meter[0].meterReadings[2].reading')}`",
+         "rg":"",
+         "isRequired": false,
+         "requiredErrMsg": "",
+         "patternErrMsg": ""
+        }
+    ]
+    },
+  	{
+       "name": "Reading3",
+       "jsonPath": "Connection[0].meter[0].meterReadings[2].reading",
+       "label": "wc.group.reading3",
+       "pattern": "",
+       "type": "number",
+       "isRequired": false,
+       "isDisabled": false,
+       "requiredErrMsg": "",//Remove required messages
+       "patternErrMsg": "",
+       "depedants":[{
+           "jsonPath":"Connection[0].meter[0].meterReadings[1].consumption",
+           "type":"number",
+           "pattern":"`${getVal('Connection.meter[0].meterReadings[2].reading')!='' && getVal('Connection.meter[0].meterReadings[1].reading')!='' ? getVal('Connection.meter[0].meterReadings[2].reading')- getVal('Connection.meter[0].meterReadings[1].reading') : getVal('Connection.meter[0].meterReadings[2].reading')}`",
+           "rg":"",
+           "isRequired": false,
+           "requiredErrMsg": "",
+           "patternErrMsg": ""
+           }]
+      },
+    {
+     "name": "Reading1Date",
+     "jsonPath": "Connection[0].meter[0].meterReadings[0].readingDate",
+     "label": "wc.group.reading1Date",
+     "pattern": "",
+     "type": "datePicker",
+     "isRequired": false,
+     "isDisabled": false,
+     "requiredErrMsg": "",//Remove required messages
+     "patternErrMsg": ""
+    },
+    {
+     "name": "Reading2Date",
+     "jsonPath": "Connection[0].meter[0].meterReadings[1].readingDate",
+     "label": "wc.group.reading2Date",
+     "pattern": "",
+     "type": "datePicker",
+     "isRequired": false,
+     "isDisabled": false,
+     "requiredErrMsg": "",//Remove required messages
+     "patternErrMsg": ""
+    },
+    {
+     "name": "Reading3Date",
+     "jsonPath": "Connection[0].meter[0].meterReadings[2].readingDate",
+     "label": "wc.group.reading3Date",
+     "pattern": "",
+     "type": "datePicker",
+     "isRequired": false,
+     "isDisabled": false,
+     "requiredErrMsg": "",//Remove required messages
+     "patternErrMsg": ""
+   },
+   {
+    "name": "FirstMonthConsumption",
+    "jsonPath": "Connection[0].meter[0].meterReadings[0].consumption",
+    "label": "wc.group.consumption1",
+    "pattern": "",
+    "type": "number",
+    "isRequired": false,
+    "isDisabled": true,
+    "requiredErrMsg": "",//Remove required messages
+    "patternErrMsg": ""
+   },
+ {
+    "name": "SecondMonthConsumption",
+    "jsonPath": "Connection[0].meter[0].meterReadings[1].consumption",
+    "label": "wc.group.consumption2",
+    "pattern": "",
+    "type": "number",
+    "isRequired": false,
+    "isDisabled": true,
+    "requiredErrMsg": "",//Remove required messages
+    "patternErrMsg": ""
+   },
+   {
+      "name": "ThirdMonthConsumption",
+      "jsonPath": "Connection[0].meter[0].meterReadings[2].consumption",
+      "label": "wc.group.consumption3",
+      "pattern": "",
+      "type": "number",
+      "isRequired": false,
+      "isDisabled": true,
+      "requiredErrMsg": "",//Remove required messages
+      "patternErrMsg": ""
+    },
+   {
+     "name": "GapCode1",
+     "jsonPath": "Connection[0].meter[0].meterReadings[0].gapCode",
+     "label": "wc.create.groups.gapCode1",
+     "pattern": "",
+     "type": "singleValueList",
+     "url": "/wcms/masters/gapcode/_search?|$..code|$..name",
+     "isRequired": false,
+     "isDisabled": false,
+     "requiredErrMsg": "",
+     "patternErrMsg": ""
+   },
+   {
+     "name": "GapCode2",
+     "jsonPath": "Connection[0].meter[0].meterReadings[1].gapCode",
+     "label": "wc.create.groups.gapCode2",
+     "pattern": "",
+     "type": "singleValueList",
+     "url": "/wcms/masters/gapcode/_search?|$..code|$..name",
+     "isRequired": false,
+     "isDisabled": false,
+     "requiredErrMsg": "",
+     "patternErrMsg": ""
+   },
+   {
+     "name": "GapCode3",
+     "jsonPath": "Connection[0].meter[0].meterReadings[2].gapCode",
+     "label": "wc.create.groups.gapCode3",
+     "pattern": "",
+     "type": "singleValueList",
+     "url": "/wcms/masters/gapcode/_search?|$..code|$..name",
+     "isRequired": false,
+     "isDisabled": false,
+     "requiredErrMsg": "",
+     "patternErrMsg": ""
+   }]
+  }
+ ]
+}
+
 
 
 
@@ -710,7 +971,7 @@ var dat = {
             "isDisabled": false,
             "url": "/wcms/masters/treatmentplant/_search?|$..name|$..name",
             "requiredErrMsg": "",
-			"isKeyValuePair":true,
+			       "isKeyValuePair":true,
             "patternErrMsg": ""
           },
           {
@@ -885,7 +1146,7 @@ var dat = {
                     "requiredErrMsg": "",
                     "patternErrMsg": ""
                   },
-        		  {
+        		      {
                     "name": "initialMeterReading",
                     "jsonPath": "Connection.meter[0].initialMeterReading",
                     "label": "wc.group.initialMeterReading",
@@ -895,7 +1156,18 @@ var dat = {
                     "isDisabled": false,
                     "requiredErrMsg": "",
                     "patternErrMsg": ""
-                  }]
+                  },
+                  {
+                     "name": "maximumMeterReading",
+                     "jsonPath": "Connection.meter[0].maximumMeterReading",
+                     "label": "wc.group.maximumReading",
+                     "pattern": "^\\d{8}$",
+                     "type": "text",
+                     "isRequired": false,
+                     "isDisabled": false,
+                     "requiredErrMsg": "",
+                     "patternErrMsg": ""
+                     }]
               },
 	  {
         "label": "wc.create.donation.subtitle",
@@ -1600,7 +1872,7 @@ var dat = {
           "label": "wc.create.meter.title",
           "name": "Metered",
           "hide":true,
-              "children":[meterReading],
+              "children":[meterReadingView],
                   "fields": [{
                       "name": "meterOwner",
                       "jsonPath": "Connection[0].meter[0].meterOwner",
@@ -1666,7 +1938,18 @@ var dat = {
                       "isDisabled": false,
                       "requiredErrMsg": "",
                       "patternErrMsg": ""
-                    }]
+                    },
+                    {
+                       "name": "maximumMeterReading",
+                       "jsonPath": "Connection[0].meter[0].maximumMeterReading",
+                       "label": "wc.group.maximumReading",
+                       "pattern": "^\\d{1,8}$",
+                       "type": "text",
+                       "isRequired": false,
+                       "isDisabled": false,
+                       "requiredErrMsg": "",
+                       "patternErrMsg": ""
+                       }]
                 },
       // {
       //   "label": "wc.create.groups.fileDetails.title",

@@ -314,7 +314,9 @@ var localization_EN_Data = {
     "wc.group.consumption2": "2nd month Consumption",
     "wc.group.consumption1": "1st month Consumption",
     "wc.group.maximumReading":"Maximum Reading",
-    "wc.group.consumptionAdjustment":"Consumption Adjustment",
+    "wc.group.consumptionAdjustment1":"Consumption Adjustment 1",
+    "wc.group.consumptionAdjustment2":"Consumption Adjustment 2",
+    "wc.group.consumptionAdjustment3":"Consumption Adjustment 3",
     "wc.craete.file.Download":"Download",
 
 
@@ -2449,6 +2451,9 @@ var localization_MR_Data = {
 "collection.create.currentLatePayment": "Current Late Payment-Marathi",
 "collection.create.checkLatePayment": "Cheque bounce Penalty  Rebate-Marathi",
 "collection.create.total": "Total-Marathi",
+"wc.group.consumptionAdjustment1":"Consumption Adjustment 1-Marathi",
+"wc.group.consumptionAdjustment2":"Consumption Adjustment 2-Marathi",
+"wc.group.consumptionAdjustment3":"Consumption Adjustment 3-Marathi",
 
 ﻿﻿"pgr.0001":"अक्षांश / रेखांश किंवा क्रॉस हायरारकी संकेतांक आवश्यक आहे",
 "pgr.0002":"अक्षांश / रेखांश किंवा क्रॉस हायरारकी संकेतांक आवश्यक आहे",

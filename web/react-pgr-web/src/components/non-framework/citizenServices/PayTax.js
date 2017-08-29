@@ -560,7 +560,7 @@ class NoDues extends Component {
           self.setState({
             demands: []
           })
-        self.handleNext();
+          self.handleNext();
         }
       }, function(err) {
 

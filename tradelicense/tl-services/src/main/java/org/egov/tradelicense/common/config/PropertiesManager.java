@@ -240,5 +240,17 @@ public class PropertiesManager {
 	
 	@Value("${egov.services.tl-services.tradelicense.persisted.key}")
 	private String tradeLicensePersistedKey;
+	
+	@Value("${egov.services.billing_service.hostname}")
+        private String billingServiceHostName;
+	
+	@Value("${egov.services.billing_service.createbill}")
+        private String billingServiceCreatedBill;
+	
+	@Value("${businessService}")
+        private String billBusinessService;
+	
+	@Value("${tl.tax.head.master.code}")
+        private String taxHeadMasterCode;
 
 }

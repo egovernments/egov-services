@@ -198,5 +198,7 @@ public class TradeLicenseContract {
 	private AuditDetails auditDetails;
 
 	private WorkFlowDetails workFlowDetails;
+	
+	private String billId;
 
 }

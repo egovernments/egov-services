@@ -1010,7 +1010,7 @@ var dat = {
               },
               {
                 "name": "validity",
-                "jsonPath": "categories[0].validityYears",
+                "jsonPath": "licenses[0].validityYears",
                 "label": "tl.view.licenses.groups.validity",
                 "pattern": "",
                 "type": "text",

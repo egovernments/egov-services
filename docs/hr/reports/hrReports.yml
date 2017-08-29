@@ -40,7 +40,7 @@ ReportDefinitions:
   - name: designationid
     label: reports.hr.Designation
     type: singlevaluelist
-    pattern: http://hr-master:8080/hr-master/designations/_search?tenantId=$tenantid|$..id|$..name 
+    pattern: http://hr-master:8080/hr-masters/designations/_search?tenantId=$tenantid|$..id|$..name 
     source: egeis_designation
     isMandatory: false
     searchClause: and assign.designationid=$designationid
@@ -53,14 +53,14 @@ ReportDefinitions:
   - name: employeeType
     label: reports.hr.EmployeeType
     type: singlevaluelist
-    pattern: http://hr-master:8080/hr-master/employeetypes/_search?tenantId=$tenantid|$..id|$..name
+    pattern: http://hr-master:8080/hr-masters/employeetypes/_search?tenantId=$tenantid|$..id|$..name
     source: egeis_employeetype  
     isMandatory: false
     searchClause: and emp.employeetypeid=$employeeType
   - name: status
     label: reports.hr.employee.Status
     type: singlevaluelist
-    pattern: http://hr-master:8080/hr-master/hrstatuses/_search?tenantId=$tenantid|$..id|$..name
+    pattern: http://hr-master:8080/hr-masters/hrstatuses/_search?tenantId=$tenantid|$..id|$..name
     source: egeis_hrstatus
     searchClause: and emp.employeestatus=$status
   query: select  emp.code as code ,usr.name as name,dept.name as department,desig.name as designation 
@@ -380,11 +380,13 @@ ReportDefinitions:
     source: hr
     isMandatory: true
   query: select emp.code as employeecode ,usr.name as employeename
-    from egeis_employee  emp,eg_user usr
-    where emp.id not in (select id from egeis_assignment where $date between fromdate and todate)
+    from egeis_employee  emp,eg_user usr, egeis_assignment assign
+    where emp.id not in (select assign.employeeid  from egeis_assignment where $date between fromdate and todate)
     and emp.id=usr.id
     and emp.tenantid=usr.tenantid
     and emp.tenantid=$tenantid
+    
+
 
 
 

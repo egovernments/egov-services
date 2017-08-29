@@ -271,6 +271,7 @@ const menuConvention={
   "Employee Management.HR Report.HR Employee History Report" : "/report/hr/EmployeeSearch",
   "Employee Management.HR Report.HR Attendance Report": "/report/hr/AttendenceReport",
   "Employee Management.HR Report.HR Employees Leave Report" : "/report/hr/employeeLeaveReport",
+  "Employee Management.HR Report.Employee without assignments":"/report/hr/employeewithoutassignments",
 
   //Administration
   "Administration.UpdateUserWithoutValidation":"/administration/searchUserRole"

@@ -226,7 +226,7 @@ public class PropertyServiceImpl implements PropertyService {
 			Integer pageSize, Integer pageNumber, String[] sort, String oldUpicNo, String mobileNumber,
 			String aadhaarNumber, String houseNoBldgApt, Integer revenueZone, Integer revenueWard, Integer locality,
 			String ownerName, Integer demandFrom, Integer demandTo, String propertyId, String applicationNo)
-			throws Exception {
+					throws Exception {
 
 		List<Property> updatedPropety = null;
 
@@ -648,9 +648,10 @@ public class PropertyServiceImpl implements PropertyService {
 		specialNoticeResponse.setNotice(notice);
 
 		WorkFlowDetails workFlowDetails = specialNoticeRequest.getWorkFlowDetails();
-
-		workFlowRepository.updateWorkFlowDetails(workFlowDetails, specialNoticeRequest.getRequestInfo(), tenantId,
-				specialNoticeRequest.getStateId());
+		if (workFlowDetails != null) {
+			workFlowRepository.updateWorkFlowDetails(workFlowDetails, specialNoticeRequest.getRequestInfo(), tenantId,
+					property.getPropertyDetail().getStateId());
+		}
 		specialNoticeResponse.setResponseInfo(
 				responseInfoFactory.createResponseInfoFromRequestInfo(specialNoticeRequest.getRequestInfo(), true));
 

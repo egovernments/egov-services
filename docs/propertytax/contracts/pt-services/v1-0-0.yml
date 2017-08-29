@@ -1185,10 +1185,7 @@ definitions:
       requestInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
       upicNo:
-       type: string
-      stateId:
-        type: string
-        description: Work flow ref id.          
+       type: string        
       tenantId:
         type: string
         description: tenant id of the Property
@@ -1199,7 +1196,7 @@ definitions:
     required:
        - upicNo
        - tenantId
-       - stateId
+       
   
        
   SpecialNoticeResponse:

@@ -3620,6 +3620,34 @@
 											"postman.setNextRequest(\"Search guidance value\");"
 										]
 									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"if(environment.url.has(\"http://egov-micro-dev.egovernments.org\")){",
+											"    postman.setEnvironmentVariable(\"username\",\"narasappa\");",
+											"    postman.setEnvironmentVariable(\"password\",\"demo\");",
+											"}",
+											"",
+											"if(environment.url.has(\"http://egov-micro-qa.egovernments.org\") && environment.tenantId.has(\"default\")){",
+											"    postman.setEnvironmentVariable(\"username\",\"narasappa\");",
+											"    postman.setEnvironmentVariable(\"password\",\"demo\");",
+											"}",
+											"",
+											"",
+											"if(environment.url.has(\"http://egov-micro-qa.egovernments.org\") && environment.tenantId.has(\"mh.roha\")){",
+											"    postman.setEnvironmentVariable(\"username\",\"kartik\");",
+											"    postman.setEnvironmentVariable(\"password\",\"12345678\");",
+											"}",
+											"",
+											"if(environment.url.has(\"http://egov-micro-qa.egovernments.org\") && environment.tenantId.has(\"mh.rohatest\")){",
+											"    postman.setEnvironmentVariable(\"username\",\"uday\");",
+											"    postman.setEnvironmentVariable(\"password\",\"12345678\");",
+											"}"
+										]
+									}
 								}
 							],
 							"request": {
@@ -3642,12 +3670,12 @@
 									"urlencoded": [
 										{
 											"key": "username",
-											"value": "narasappa",
+											"value": "{{username}}",
 											"type": "text"
 										},
 										{
 											"key": "password",
-											"value": "demo",
+											"value": "{{password}}",
 											"type": "text"
 										},
 										{
@@ -3685,13 +3713,21 @@
 											"",
 											"tests[\"Status is success\"] = jsonData.responseInfo.status.has(\"SUCCESSFUL\");",
 											"",
-											"postman.setEnvironmentVariable(\"structureType\", jsonData.guidanceValues[0].structure);",
+											"var max = jsonData.guidanceValues.length - 1;",
 											"",
-											"postman.setEnvironmentVariable(\"occupancyType\", jsonData.guidanceValues[0].occupancy);",
+											"var rand = 0;",
 											"",
-											"postman.setEnvironmentVariable(\"usageType\", jsonData.guidanceValues[0].usage);",
+											"if(max > 0){",
+											"    rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
+											"}",
 											"",
-											"postman.setNextRequest(\"Search AgeCodes\");"
+											"postman.setEnvironmentVariable(\"structureType\", jsonData.guidanceValues[rand].structure);",
+											"",
+											"postman.setEnvironmentVariable(\"occupancyType\", jsonData.guidanceValues[rand].occupancy);",
+											"",
+											"postman.setEnvironmentVariable(\"usageType\", jsonData.guidanceValues[rand].usage);",
+											"",
+											"postman.setNextRequest(\"Search Depreciation AgeCodes\");"
 										]
 									}
 								}
@@ -3748,7 +3784,7 @@
 							"response": []
 						},
 						{
-							"name": "Search AgeCodes",
+							"name": "Search Depreciation AgeCodes",
 							"event": [
 								{
 									"listen": "test",
@@ -3757,11 +3793,19 @@
 										"exec": [
 											"var jsonData = JSON.parse(responseBody);",
 											"",
-											"postman.setEnvironmentVariable(\"ageCode\", jsonData.calculationFactors[0].factorCode);",
-											"",
 											"tests[\"Status code is 200\"] = responseCode.code === 200;",
 											"",
 											"tests[\"Check status success\"] = jsonData.responseInfo.status.has(\"SUCCESSFUL\");",
+											"",
+											"var max = jsonData.depreciations.length - 1;",
+											"",
+											"var rand = 0;",
+											"",
+											"if(max > 0){",
+											"    rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
+											"}",
+											"",
+											"postman.setEnvironmentVariable(\"ageCode\", jsonData.depreciations[rand].code);",
 											"",
 											"postman.setNextRequest(\"Search PropertyType Code\");"
 										]
@@ -3770,33 +3814,20 @@
 							],
 							"request": {
 								"url": {
-									"raw": "{{url}}/pt-calculator/properties/taxes/factor/_search?tenantId={{tenantId}}&factorType=age&validDate=20/08/2017",
+									"raw": "{{url}}/pt-property/property/depreciations/_search?tenantId={{tenantId}}",
 									"host": [
 										"{{url}}"
 									],
 									"path": [
-										"pt-calculator",
-										"properties",
-										"taxes",
-										"factor",
+										"pt-property",
+										"property",
+										"depreciations",
 										"_search"
 									],
 									"query": [
 										{
 											"key": "tenantId",
 											"value": "{{tenantId}}",
-											"equals": true,
-											"description": ""
-										},
-										{
-											"key": "factorType",
-											"value": "age",
-											"equals": true,
-											"description": ""
-										},
-										{
-											"key": "validDate",
-											"value": "20/08/2017",
 											"equals": true,
 											"description": ""
 										}
@@ -3833,7 +3864,15 @@
 											"",
 											"tests[\"Check status success\"] = jsonData.responseInfo.status.has(\"SUCCESSFUL\");",
 											"",
-											"postman.setEnvironmentVariable(\"propertyType\",jsonData.propertyTypes[0].code);",
+											"var max = jsonData.propertyTypes.length - 1;",
+											"",
+											"var rand = 0;",
+											"",
+											"if(max > 0){",
+											"    rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
+											"}",
+											"",
+											"postman.setEnvironmentVariable(\"propertyType\",jsonData.propertyTypes[rand].code);",
 											"",
 											"postman.setNextRequest(\"Search Boundary Values\");",
 											""
@@ -3893,9 +3932,17 @@
 											"",
 											"tests[\"Check status success\"] = jsonData.ResponseInfo.status.has(\"200\");",
 											"",
-											"postman.setEnvironmentVariable(\"boundaryValue\", jsonData.Boundary[0].id);",
+											"var max = jsonData.Boundary.length - 1;",
 											"",
-											"postman.setNextRequest(\"Create data entry for property tax\")"
+											"var rand = 0;",
+											"",
+											"if(max > 0){",
+											"    rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
+											"}",
+											"",
+											"postman.setEnvironmentVariable(\"boundaryValue\", jsonData.Boundary[rand].id);",
+											"",
+											"postman.setNextRequest(\"Create data entry for others\");"
 										]
 									}
 								}
@@ -3950,7 +3997,7 @@
 							"response": []
 						},
 						{
-							"name": "Create data entry for property tax",
+							"name": "Create data entry for others",
 							"event": [
 								{
 									"listen": "test",
@@ -3961,13 +4008,20 @@
 											"",
 											"var jsonData = JSON.parse(responseBody);",
 											"",
-											"tests[\"Check status\"] = jsonData.responseInfo.status.has(\"SUCCESSFUL\");",
-											"",
-											"postman.setEnvironmentVariable(\"upicNumber\", jsonData.properties[0].upicNumber);",
-											"",
+											"if(environment.propertyType.has(\"PTYPE_OPEN_LAND\")){",
+											"    tests[\"status is failed\"] = jsonData.ResponseInfo.status.has(\"FAILED\");",
+											"    tests[\"code is 400\"] = jsonData.Errors[0].code.has(\"400\");",
+											"    postman.setNextRequest(\"Create data entry with open land\")",
+											"}",
+											"else{",
+											"tests[\"status is successful\"] = jsonData.responseInfo.status.has(\"SUCCESSFUL\");",
+											"postman.setEnvironmentVariable(\"upicnumber\", jsonData.properties[0].upicNumber);",
+											"tests[\"Property Type matches\"] = environment.propertyType.has(jsonData.properties[0].propertyDetail.propertyType);",
+											"tests[\"Structure Type matches\"] = environment.structureType.has(jsonData.properties[0].propertyDetail.floors[0].units[0].structure);",
+											"tests[\"Usage Type matches\"] = environment.usageType.has(jsonData.properties[0].propertyDetail.usage);",
+											"tests[\"Age Code matches\"] = environment.ageCode.has(jsonData.properties[0].propertyDetail.floors[0].units[0].age);",
 											"postman.setNextRequest(\"Search Property\");",
-											"",
-											""
+											"}"
 										]
 									}
 								}
@@ -4003,7 +4057,67 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n   \"properties\":[\n      {\n         \"occupancyDate\":\"04/08/2017\",\n         \"tenantId\":\"{{tenantId}}\",\n         \"oldUpicNumber\":\"1012000001\",\n         \"vltUpicNumber\":null,\n         \"sequenceNo\":\"1\",\n         \"creationReason\":\"NEWPROPERTY\",\n         \"address\":{\n            \"tenantId\":\"{{tenantId}}\",\n            \"longitude\":null,\n            \"addressNumber\":\"10001\",\n            \"addressLine1\":\"967\",\n            \"addressLine2\":null,\n            \"landmark\":null,\n            \"city\":\"Banglore\",\n            \"pincode\":\"560037\",\n            \"detail\":null,\n            \"auditDetails\":{\n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1503468313146,\n               \"lastModifiedTime\":1503468313146\n            }\n         },\n         \"owners\":[\n            {\n               \"aadhaarNumber\":\"202422314421\",\n               \"mobileNumber\":\"9967231546\",\n               \"name\":\"Sunil\",\n               \"gender\":\"MALE\",\n               \"emailId\":\"sunil@gmail.com\",\n               \"pan\":null,\n               \"gaurdianRelation\":\"FATHER\",\n               \"fatherOrHusbandName\":\"P Sunil\",\n               \"ownerShipPercentage\":\"100\",\n               \"isPrimaryOwner\":true,\n               \"locale\":\"en_IN\",\n               \"type\":\"CITIZEN\",\n               \"active\":true,\n               \"tenantId\":\"{{tenantId}}\",\n               \"salutation\":null,\n               \"roles\":[\n                  {\n                     \"code\":\"CITIZEN\",\n                     \"name\":\"Citizen\"\n                  }\n               ],\n               \"issecondaryowner\":false,\n               \"ownershippercentage\":null,\n               \"ownerType\":null\n            }\n         ],\n         \"propertyDetail\":{\n            \"source\":\"MUNICIPAL_RECORDS\",\n            \"regdDocNo\":\"rdn2\",\n            \"regdDocDate\":\"15/02/2017\",\n            \"reason\":\"CREATE\",\n            \"status\":\"ACTIVE\",\n            \"isVerified\":true,\n            \"verificationDate\":\"25/05/2017\",\n            \"isExempted\":false,\n            \"propertyType\":\"PRIVATE\",\n            \"category\":1,\n            \"usage\":\"{{usageType}}\",\n            \"department\":null,\n            \"apartment\":null,\n            \"siteLength\":12,\n            \"siteBreadth\":15,\n            \"sitalArea\":\"5000\",\n            \"totalBuiltupArea\":\"01000\",\n            \"undividedShare\":null,\n            \"noOfFloors\":1,\n            \"isSuperStructure\":null,\n            \"bpaNo\":\"RO1\",\n            \"bpaDate\":\"01/08/2017\",\n            \"landOwner\":null,\n            \"floorType\":null,\n            \"woodType\":null,\n            \"roofType\":null,\n            \"wallType\":null,\n            \"floors\":[\n               {\n                  \"floorNo\":5,\n                  \"units\":[\n                     {\n                        \"floorNo\":5,\n                        \"electricMeterNo\":null,\n                        \"waterMeterNo\":null,\n                        \"exemptionReason\":null,\n                        \"rentCollected\":null,\n                        \"age\":\"{{ageCode}}\",\n                        \"unitType\":\"ROOM\",\n                        \"unitNo\":\"102\",\n                        \"structure\":\"{{structureType}}\",\n                        \"usage\":\"{{usageType}}\",\n                        \"usageSubType\":\"\",\n                        \"firmName\":\"firm\",\n                        \"occupancyType\":\"{{occupancyType}}\",\n                        \"occupierName\":\"Naresh\",\n                        \"arv\":\"1000\",\n                        \"manualArv\":\"1000\",\n                        \"constStartDate\":\"02/08/2017\",\n                        \"constCompletionDate\":\"03/08/2017\",\n                        \"occupancyDate\":\"04/08/2017\",\n                        \"isStructured\":true,\n                        \"width\":\"\",\n                        \"length\":\"\",\n                        \"builtupArea\":\"1000\",\n                        \"assessableArea\":400,\n                        \"carpetArea\":\"500\",\n                        \"exemptedArea\":\"100\",\n                        \"occupancyCertiNumber\":\"10005\",\n                        \"buildingCost\":\"200000\",\n                        \"landCost\":\"50000\",\n                        \"isAuthorised\":true\n                     }\n                  ]\n               }\n            ],\n            \"factors\":[\n               null\n            ],\n            \"documents\":[\n\n            ],\n            \"stateId\":null,\n            \"builderDetails\":{\n               \"certificateNumber\":\"10005\",\n               \"certificateCompletionDate\":\"10/08/2017\",\n               \"certificateReceiveDate\":\"11/08/2017\",\n               \"agencyName\":\"AO1\",\n               \"licenseType\":\"A1\",\n               \"licenseNumber\":\"44225\"\n            },\n            \"workFlowDetails\":{\n               \"department\":null,\n               \"designation\":null,\n               \"assignee\":null,\n               \"action\":\"no\",\n               \"status\":null\n            },\n            \"auditDetails\":{\n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1503468313146,\n               \"lastModifiedTime\":1503468313146\n            }\n         },\n         \"vacantLand\":null,\n         \"gisRefNo\":null,\n         \"isAuthorised\":null,\n         \"boundary\":{\n            \"revenueBoundary\":{\n               \"id\":\"{{boundaryValue}}\",\n               \"name\":\"Zone A\"\n            },\n            \"locationBoundary\":{\n               \"id\":\"{{boundaryValue}}\",\n               \"name\":\"AndharAli\"\n            },\n            \"adminBoundary\":{\n               \"id\":\"{{boundaryValue}}\",\n               \"name\":\"Prabhag 1\"\n            },\n            \"northBoundedBy\":null,\n            \"eastBoundedBy\":null,\n            \"westBoundedBy\":null,\n            \"southBoundedBy\":null,\n            \"auditDetails\":{\n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1503468313146,\n               \"lastModifiedTime\":1503468313146\n            }\n         },\n         \"channel\":\"DATA_ENTRY\",\n         \"auditDetails\":{\n            \"createdBy\":\"1\",\n            \"lastModifiedBy\":\"1\",\n            \"createdTime\":1503468313146,\n            \"lastModifiedTime\":1503468313146\n         }\n      }\n   ],\n   \"RequestInfo\":{\n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":1503468313146,\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"{{access_token}}\"\n   }\n}"
+									"raw": "{\n   \"properties\":[\n      {\n         \"occupancyDate\":\"04/08/2017\",\n         \"tenantId\":\"{{tenantId}}\",\n         \"oldUpicNumber\":\"1012000001\",\n         \"vltUpicNumber\":null,\n         \"sequenceNo\":\"1\",\n         \"creationReason\":\"NEWPROPERTY\",\n         \"address\":{\n            \"tenantId\":\"{{tenantId}}\",\n            \"longitude\":null,\n            \"addressNumber\":\"10001\",\n            \"addressLine1\":\"967\",\n            \"addressLine2\":null,\n            \"landmark\":null,\n            \"city\":\"Banglore\",\n            \"pincode\":\"560037\",\n            \"detail\":null,\n            \"auditDetails\":{\n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1503468313146,\n               \"lastModifiedTime\":1503468313146\n            }\n         },\n         \"owners\":[\n            {\n               \"aadhaarNumber\":\"202422314421\",\n               \"mobileNumber\":\"9885052763\",\n               \"name\":\"Karthik\",\n               \"gender\":\"MALE\",\n               \"emailId\":\"karthik@gmail.com\",\n               \"pan\":null,\n               \"gaurdianRelation\":\"FATHER\",\n               \"fatherOrHusbandName\":\"P Sunil\",\n               \"ownerShipPercentage\":\"100\",\n               \"isPrimaryOwner\":true,\n               \"locale\":\"en_IN\",\n               \"type\":\"CITIZEN\",\n               \"active\":true,\n               \"tenantId\":\"{{tenantId}}\",\n               \"salutation\":null,\n               \"roles\":[\n                  {\n                     \"code\":\"CITIZEN\",\n                     \"name\":\"Citizen\"\n                  }\n               ],\n               \"issecondaryowner\":false,\n               \"ownershippercentage\":null,\n               \"ownerType\":null\n            }\n         ],\n         \"propertyDetail\":{\n            \"source\":\"MUNICIPAL_RECORDS\",\n            \"regdDocNo\":\"rdn2\",\n            \"regdDocDate\":\"15/02/2017\",\n            \"reason\":\"CREATE\",\n            \"status\":\"ACTIVE\",\n            \"isVerified\":true,\n            \"verificationDate\":\"25/05/2017\",\n            \"isExempted\":false,\n            \"propertyType\":\"{{propertyType}}\",\n            \"category\":\"{{propertyType}}\",\n            \"usage\":\"{{usageType}}\",\n            \"department\":null,\n            \"apartment\":null,\n            \"siteLength\":12,\n            \"siteBreadth\":15,\n            \"sitalArea\":\"5000\",\n            \"totalBuiltupArea\":\"01000\",\n            \"undividedShare\":null,\n            \"noOfFloors\":1,\n            \"isSuperStructure\":null,\n            \"bpaNo\":\"RO1\",\n            \"bpaDate\":\"01/08/2017\",\n            \"landOwner\":null,\n            \"floorType\":null,\n            \"woodType\":null,\n            \"roofType\":null,\n            \"wallType\":null,\n            \"floors\":[\n               {\n                  \"floorNo\":5,\n                  \"units\":[\n                     {\n                        \"floorNo\":5,\n                        \"electricMeterNo\":null,\n                        \"waterMeterNo\":null,\n                        \"exemptionReason\":null,\n                        \"rentCollected\":null,\n                        \"age\":\"{{ageCode}}\",\n                        \"unitType\":\"ROOM\",\n                        \"unitNo\":\"102\",\n                        \"structure\":\"{{structureType}}\",\n                        \"usage\":\"{{usageType}}\",\n                        \"usageSubType\":\"\",\n                        \"firmName\":\"firm\",\n                        \"occupancyType\":\"{{occupancyType}}\",\n                        \"occupierName\":\"Naresh\",\n                        \"arv\":\"1000\",\n                        \"manualArv\":\"1000\",\n                        \"constStartDate\":\"02/08/2017\",\n                        \"constCompletionDate\":\"03/08/2017\",\n                        \"occupancyDate\":\"04/08/2017\",\n                        \"isStructured\":true,\n                        \"width\":\"\",\n                        \"length\":\"\",\n                        \"builtupArea\":\"1000\",\n                        \"assessableArea\":400,\n                        \"carpetArea\":\"500\",\n                        \"exemptedArea\":\"100\",\n                        \"occupancyCertiNumber\":\"10005\",\n                        \"buildingCost\":\"200000\",\n                        \"landCost\":\"50000\",\n                        \"isAuthorised\":true\n                     }\n                  ]\n               }\n            ],\n            \"factors\":[\n               null\n            ],\n            \"documents\":[\n\n            ],\n            \"stateId\":null,\n            \"builderDetails\":{\n               \"certificateNumber\":\"10005\",\n               \"certificateCompletionDate\":\"10/08/2017\",\n               \"certificateReceiveDate\":\"11/08/2017\",\n               \"agencyName\":\"AO1\",\n               \"licenseType\":\"A1\",\n               \"licenseNumber\":\"44225\"\n            },\n            \"workFlowDetails\":{\n               \"department\":null,\n               \"designation\":null,\n               \"assignee\":null,\n               \"action\":\"no\",\n               \"status\":null\n            },\n            \"auditDetails\":{\n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1503468313146,\n               \"lastModifiedTime\":1503468313146\n            }\n         },\n         \"vacantLand\":null,\n         \"gisRefNo\":null,\n         \"isAuthorised\":null,\n         \"boundary\":{\n            \"revenueBoundary\":{\n               \"id\":\"{{boundaryValue}}\",\n               \"name\":\"Zone A\"\n            },\n            \"locationBoundary\":{\n               \"id\":\"{{boundaryValue}}\",\n               \"name\":\"AndharAli\"\n            },\n            \"adminBoundary\":{\n               \"id\":\"{{boundaryValue}}\",\n               \"name\":\"Prabhag 1\"\n            },\n            \"northBoundedBy\":null,\n            \"eastBoundedBy\":null,\n            \"westBoundedBy\":null,\n            \"southBoundedBy\":null,\n            \"auditDetails\":{\n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1503468313146,\n               \"lastModifiedTime\":1503468313146\n            }\n         },\n         \"channel\":\"DATA_ENTRY\",\n         \"auditDetails\":{\n            \"createdBy\":\"1\",\n            \"lastModifiedBy\":\"1\",\n            \"createdTime\":1503468313146,\n            \"lastModifiedTime\":1503468313146\n         }\n      }\n   ],\n   \"RequestInfo\":{\n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":1503468313146,\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"{{access_token}}\"\n   }\n}"
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Create data entry with open land",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"tests[\"Status code is 200\"] = responseCode.code === 200;",
+											"",
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"tests[\"Check status\"] = jsonData.responseInfo.status.has(\"SUCCESSFUL\");",
+											"",
+											"postman.setEnvironmentVariable(\"upicnumber\", jsonData.properties[0].upicNumber);",
+											"",
+											"tests[\"Property Type matches\"] = environment.propertyType.has(jsonData.properties[0].propertyDetail.propertyType);",
+											"",
+											"postman.setNextRequest(\"Search Property\");"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": {
+									"raw": "{{url}}/pt-property/properties/_create?tenantId={{tenantId}}",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"pt-property",
+										"properties",
+										"_create"
+									],
+									"query": [
+										{
+											"key": "tenantId",
+											"value": "{{tenantId}}",
+											"equals": true,
+											"description": ""
+										}
+									],
+									"variable": []
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n   \"properties\":[\n      {\n         \"occupancyDate\":\"04/08/2017\",\n         \"tenantId\":\"{{tenantId}}\",\n         \"oldUpicNumber\":\"1012000001\",\n         \"vltUpicNumber\":null,\n         \"sequenceNo\":\"1\",\n         \"creationReason\":\"NEWPROPERTY\",\n         \"address\":{\n            \"tenantId\":\"{{tenantId}}\",\n            \"longitude\":null,\n            \"addressNumber\":\"10001\",\n            \"addressLine1\":\"967\",\n            \"addressLine2\":null,\n            \"landmark\":null,\n            \"city\":\"Banglore\",\n            \"pincode\":\"560037\",\n            \"detail\":null,\n            \"auditDetails\":{\n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1503468313146,\n               \"lastModifiedTime\":1503468313146\n            }\n         },\n         \"owners\":[\n            {\n               \"aadhaarNumber\":\"202422314421\",\n               \"mobileNumber\":\"9885052763\",\n               \"name\":\"Karthik\",\n               \"gender\":\"MALE\",\n               \"emailId\":\"karthik@gmail.com\",\n               \"pan\":null,\n               \"gaurdianRelation\":\"FATHER\",\n               \"fatherOrHusbandName\":\"P Sunil\",\n               \"ownerShipPercentage\":\"100\",\n               \"isPrimaryOwner\":true,\n               \"locale\":\"en_IN\",\n               \"type\":\"CITIZEN\",\n               \"active\":true,\n               \"tenantId\":\"{{tenantId}}\",\n               \"salutation\":null,\n               \"roles\":[\n                  {\n                     \"code\":\"CITIZEN\",\n                     \"name\":\"Citizen\"\n                  }\n               ],\n               \"issecondaryowner\":false,\n               \"ownershippercentage\":null,\n               \"ownerType\":null\n            }\n         ],\n         \"propertyDetail\":{\n            \"source\":\"MUNICIPAL_RECORDS\",\n            \"regdDocNo\":\"rdn2\",\n            \"regdDocDate\":\"15/02/2017\",\n            \"reason\":\"CREATE\",\n            \"status\":\"ACTIVE\",\n            \"isVerified\":true,\n            \"verificationDate\":\"25/05/2017\",\n            \"isExempted\":false,\n            \"propertyType\":\"PTYPE_OPEN_LAND\",\n            \"category\":\"PTYPE_OPEN_LAND\",\n            \"usage\":\"{{usageType}}\",\n            \"department\":null,\n            \"apartment\":null,\n            \"siteLength\":12,\n            \"siteBreadth\":15,\n            \"sitalArea\":\"5000\",\n            \"totalBuiltupArea\":\"01000\",\n            \"undividedShare\":null,\n            \"noOfFloors\":1,\n            \"isSuperStructure\":null,\n            \"bpaNo\":\"RO1\",\n            \"bpaDate\":\"01/08/2017\",\n            \"landOwner\":null,\n            \"floorType\":null,\n            \"woodType\":null,\n            \"roofType\":null,\n            \"wallType\":null,\n            \"factors\":[\n               null\n            ],\n            \"documents\":[\n\n            ],\n            \"stateId\":null,\n            \"builderDetails\":{\n               \"certificateNumber\":\"10005\",\n               \"certificateCompletionDate\":\"10/08/2017\",\n               \"certificateReceiveDate\":\"11/08/2017\",\n               \"agencyName\":\"AO1\",\n               \"licenseType\":\"A1\",\n               \"licenseNumber\":\"44225\"\n            },\n            \"workFlowDetails\":{\n               \"department\":null,\n               \"designation\":null,\n               \"assignee\":null,\n               \"action\":\"no\",\n               \"status\":null\n            },\n            \"auditDetails\":{\n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1503468313146,\n               \"lastModifiedTime\":1503468313146\n            }\n         },\n         \"vacantLand\": {\n           \"surveyNumber\": \"surveynumber2\",\n           \"pattaNumber\": \"pattano1\",\n           \"marketValue\": 10748,\n           \"capitalValue\": 4522,\n           \"layoutApprovedAuth\": \"laa2\",\n           \"layoutPermissionNo\": \"lpn2\",\n           \"layoutPermissionDate\": \"10/05/2017\",\n           \"resdPlotArea\": 475,\n           \"nonResdPlotArea\": 658,\n           \"auditDetails\": {\n               \"createdBy\": \"1\",\n               \"lastModifiedBy\": \"1\",\n               \"createdTime\": 1503468313146,\n               \"lastModifiedTime\": 1503468313146\n           }\n           },\n         \"gisRefNo\":null,\n         \"isAuthorised\":null,\n         \"boundary\":{\n            \"revenueBoundary\":{\n               \"id\":\"{{boundaryValue}}\",\n               \"name\":\"Zone A\"\n            },\n            \"locationBoundary\":{\n               \"id\":\"{{boundaryValue}}\",\n               \"name\":\"AndharAli\"\n            },\n            \"adminBoundary\":{\n               \"id\":\"{{boundaryValue}}\",\n               \"name\":\"Prabhag 1\"\n            },\n            \"northBoundedBy\":null,\n            \"eastBoundedBy\":null,\n            \"westBoundedBy\":null,\n            \"southBoundedBy\":null,\n            \"auditDetails\":{\n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1503468313146,\n               \"lastModifiedTime\":1503468313146\n            }\n         },\n         \"channel\":\"DATA_ENTRY\",\n         \"auditDetails\":{\n            \"createdBy\":\"1\",\n            \"lastModifiedBy\":\"1\",\n            \"createdTime\":1503468313146,\n            \"lastModifiedTime\":1503468313146\n         }\n      }\n   ],\n   \"RequestInfo\":{\n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":1503468313146,\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"{{access_token}}\"\n   }\n}"
 								},
 								"description": ""
 							},
@@ -4023,15 +4137,18 @@
 											"",
 											"tests[\"Check status\"] = jsonData.responseInfo.status.has(\"SUCCESSFUL\");",
 											"",
-											"tests[\"Body matches string\"] = jsonData.properties[0].upicNumber.has(environment.upicNumber);",
-											""
+											"tests[\"Body matches string\"] = environment.upicnumber.has(jsonData.properties[0].upicNumber);",
+											"",
+											"postman.setEnvironmentVariable(\"userId\", jsonData.properties[0].owners[0].id);",
+											"",
+											"postman.setNextRequest(\"Create Demand\");"
 										]
 									}
 								}
 							],
 							"request": {
 								"url": {
-									"raw": "{{url}}/pt-property/properties/_search?tenantId={{tenantId}}&upicNumber={{upicNumber}}",
+									"raw": "{{url}}/pt-property/properties/_search?tenantId={{tenantId}}&upicNumber={{upicnumber}}",
 									"host": [
 										"{{url}}"
 									],
@@ -4049,7 +4166,7 @@
 										},
 										{
 											"key": "upicNumber",
-											"value": "{{upicNumber}}",
+											"value": "{{upicnumber}}",
 											"equals": true,
 											"description": ""
 										}
@@ -4067,6 +4184,109 @@
 								"body": {
 									"mode": "raw",
 									"raw": "{\n\t\"RequestInfo\": {\n\t\t\"apiId\": \"emp\",\n\t\t\"ver\": \"1.0\",\n\t\t\"ts\": \"10032017\",\n\t\t\"action\": \"create\",\n\t\t\"did\": \"1\",\n\t\t\"key\": \"abcdkey\",\n\t\t\"msgId\": \"20170310130900\",\n\t\t\"requesterId\": \"rajesh\",\n\t\t\"authToken\": \"{{access_token}}\"\n\t}\n}"
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Create Demand",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"tests[\"Status code is 201\"] = responseCode.code === 201;",
+											"",
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"tests[\"Check status is success\"] = jsonData.ResponseInfo.status.has(\"201\");",
+											"",
+											"tests[\"Consumer code is correct\"] = jsonData.Demands[0].consumerCode.has(environment.upicnumber);",
+											"",
+											"postman.setNextRequest(\"Search Demand\");"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": "{{url}}/billing-service/demand/_update",
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n   \"Demands\":[\n      {\n         \"id\":null,\n         \"tenantId\":\"{{tenantId}}\",\n         \"consumerCode\":\"{{upicnumber}}\",\n         \"consumerType\":\"{{propertyType}}\",\n         \"businessService\":\"PT\",\n         \"owner\":{\n            \"tenantId\":null,\n            \"id\":{{userId}},\n            \"userName\":null,\n            \"name\":null,\n            \"permanentAddress\":null,\n            \"mobileNumber\":null,\n            \"emailId\":null,\n            \"aadhaarNumber\":null\n         },\n         \"taxPeriodFrom\":1475260200000,\n         \"taxPeriodTo\":1490984999000,\n         \"demandDetails\":[\n            {\n               \"id\":null,\n               \"demandId\":null,\n               \"taxHeadMasterCode\":\"CHQ_BOUNCE_PENALTY\",\n               \"taxAmount\":\"100\",\n               \"collectionAmount\":0,\n               \"auditDetail\":null,\n               \"tenantId\":\"{{tenantId}}\"\n            },\n            {\n               \"id\":null,\n               \"demandId\":null,\n               \"taxHeadMasterCode\":\"VACANT_TAX\",\n               \"taxAmount\":\"80\",\n               \"collectionAmount\":0,\n               \"auditDetail\":null,\n               \"tenantId\":\"{{tenantId}}\"\n            },\n            {\n               \"id\":null,\n               \"demandId\":null,\n               \"taxHeadMasterCode\":\"PT_TAX\",\n               \"taxAmount\":\"60\",\n               \"collectionAmount\":0,\n               \"auditDetail\":null,\n               \"tenantId\":\"{{tenantId}}\"\n            },\n            {\n               \"id\":null,\n               \"demandId\":null,\n               \"taxHeadMasterCode\":\"EMP_GUA_CESS\",\n               \"taxAmount\":\"40\",\n               \"collectionAmount\":0,\n               \"auditDetail\":null,\n               \"tenantId\":\"{{tenantId}}\"\n            },\n            {\n               \"id\":null,\n               \"demandId\":null,\n               \"taxHeadMasterCode\":\"EDU_CESS\",\n               \"taxAmount\":\"20\",\n               \"collectionAmount\":0,\n               \"auditDetail\":null,\n               \"tenantId\":\"{{tenantId}}\"\n            },\n            {\n               \"id\":null,\n               \"demandId\":null,\n               \"taxHeadMasterCode\":\"LIB_CESS\",\n               \"taxAmount\":\"10\",\n               \"collectionAmount\":0,\n               \"auditDetail\":null,\n               \"tenantId\":\"{{tenantId}}\"\n            },\n            {\n               \"id\":null,\n               \"demandId\":null,\n               \"taxHeadMasterCode\":\"LATE_PENALTY\",\n               \"taxAmount\":\"05\",\n               \"collectionAmount\":0,\n               \"auditDetail\":null,\n               \"tenantId\":\"{{tenantId}}\"\n            }\n         ],\n         \"minimumAmountPayable\":1,\n         \"auditDetail\":null\n      }\n   ],\n   \"RequestInfo\":{\n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":1503742267841,\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"{{access_token}}\"\n   }\n}"
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Search Demand",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"tests[\"Status code is 200\"] = responseCode.code === 200;",
+											"",
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"tests[\"Check status is success\"] = jsonData.ResponseInfo.status.has(\"200\");",
+											"",
+											"tests[\"Consumer code is correct\"] = jsonData.Demands[0].consumerCode.has(environment.upicnumber);",
+											"",
+											"postman.setNextRequest(\"Logout\");"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": {
+									"raw": "{{url}}/billing-service/demand/_search?tenantId={{tenantId}}&consumerCode={{upicnumber}}",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"billing-service",
+										"demand",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "tenantId",
+											"value": "{{tenantId}}",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "consumerCode",
+											"value": "{{upicnumber}}",
+											"equals": true,
+											"description": ""
+										}
+									],
+									"variable": []
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n   \"RequestInfo\":{\n      \"authToken\":\"{{access_token}}\",\n      \"ts\":\"10032017\",\n      \"ver\":\"1.0\",\n      \"requesterId\":\"rajesh\",\n      \"action\":\"create\",\n      \"msgId\":\"20170310130900\",\n      \"apiId\":\"emp\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\"\n   }\n}"
 								},
 								"description": ""
 							},
@@ -4125,11 +4345,11 @@
 					"_postman_isSubFolder": true
 				},
 				{
-					"name": "Create New Property",
+					"name": "PTIS",
 					"description": "",
 					"item": [
 						{
-							"name": "Login PTIS",
+							"name": "Login as Employee",
 							"event": [
 								{
 									"listen": "test",
@@ -4144,7 +4364,30 @@
 											"",
 											"tests[\"Username is valid\"] = jsonData.UserRequest.userName.has(request.data[\"username\"]);",
 											"",
-											"postman.setNextRequest(\"Search guidance value PTIS\");"
+											"postman.setNextRequest(\"Get Guidance Values\");"
+										]
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"if(environment.url.has(\"http://egov-micro-dev.egovernments.org\")){",
+											"    postman.setEnvironmentVariable(\"username\",\"narasappa\");",
+											"    postman.setEnvironmentVariable(\"password\",\"demo\");",
+											"}",
+											"",
+											"if(environment.url.has(\"http://egov-micro-qa.egovernments.org\") && environment.tenantId.has(\"default\")){",
+											"    postman.setEnvironmentVariable(\"username\",\"narasappa\");",
+											"    postman.setEnvironmentVariable(\"password\",\"demo\");",
+											"}",
+											"",
+											"",
+											"if(environment.url.has(\"http://egov-micro-qa.egovernments.org\") && environment.tenantId.has(\"mh.roha\")){",
+											"    postman.setEnvironmentVariable(\"username\",\"kartik\");",
+											"    postman.setEnvironmentVariable(\"password\",\"12345678\");",
+											"}"
 										]
 									}
 								}
@@ -4190,6 +4433,7 @@
 										{
 											"key": "tenantId",
 											"value": "{{tenantId}}",
+											"description": "",
 											"type": "text"
 										}
 									]
@@ -4199,7 +4443,7 @@
 							"response": []
 						},
 						{
-							"name": "Search guidance value PTIS",
+							"name": "Get Guidance Values",
 							"event": [
 								{
 									"listen": "test",
@@ -4212,13 +4456,21 @@
 											"",
 											"tests[\"Status is success\"] = jsonData.responseInfo.status.has(\"SUCCESSFUL\");",
 											"",
-											"postman.setEnvironmentVariable(\"structureType\", jsonData.guidanceValues[0].structure);",
+											"var max = jsonData.guidanceValues.length - 1;",
 											"",
-											"postman.setEnvironmentVariable(\"occupancyType\", jsonData.guidanceValues[0].occupancy);",
+											"var rand = 0;",
 											"",
-											"postman.setEnvironmentVariable(\"usageType\", jsonData.guidanceValues[0].usage);",
+											"if(max > 0){",
+											"    rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
+											"}",
 											"",
-											"postman.setNextRequest(\"Search AgeCodes PTIS\");"
+											"postman.setEnvironmentVariable(\"structureType\", jsonData.guidanceValues[rand].structure);",
+											"",
+											"postman.setEnvironmentVariable(\"occupancyType\", jsonData.guidanceValues[rand].occupancy);",
+											"",
+											"postman.setEnvironmentVariable(\"usageType\", jsonData.guidanceValues[rand].usage);",
+											"",
+											"postman.setNextRequest(\"Get Age Codes\");"
 										]
 									}
 								}
@@ -4275,7 +4527,7 @@
 							"response": []
 						},
 						{
-							"name": "Search AgeCodes PTIS",
+							"name": "Get Age Codes",
 							"event": [
 								{
 									"listen": "test",
@@ -4284,13 +4536,21 @@
 										"exec": [
 											"var jsonData = JSON.parse(responseBody);",
 											"",
-											"postman.setEnvironmentVariable(\"ageCode\", jsonData.calculationFactors[0].factorCode);",
+											"var max = jsonData.calculationFactors.length - 1;",
+											"",
+											"var rand = 0;",
+											"",
+											"if(max > 0){",
+											"    rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
+											"}",
+											"",
+											"postman.setEnvironmentVariable(\"ageCode\", jsonData.calculationFactors[rand].factorCode);",
 											"",
 											"tests[\"Status code is 200\"] = responseCode.code === 200;",
 											"",
 											"tests[\"Check status success\"] = jsonData.responseInfo.status.has(\"SUCCESSFUL\");",
 											"",
-											"postman.setNextRequest(\"Search PropertyType Code PTIS\");"
+											"postman.setNextRequest(\"Get Property Type Codes\");"
 										]
 									}
 								}
@@ -4347,7 +4607,7 @@
 							"response": []
 						},
 						{
-							"name": "Search PropertyType Code PTIS",
+							"name": "Get Property Type Codes",
 							"event": [
 								{
 									"listen": "test",
@@ -4358,12 +4618,19 @@
 											"",
 											"var jsonData = JSON.parse(responseBody);",
 											"",
-											"tests[\"Check status success\"] = jsonData.responseInfo.status.has(\"SUCCESSFUL\");",
+											"var max = jsonData.propertyTypes.length - 1;",
 											"",
-											"postman.setEnvironmentVariable(\"propertyType\",jsonData.propertyTypes[0].code);",
+											"var rand = 0;",
 											"",
-											"postman.setNextRequest(\"Search Boundary Values PTIS\");",
-											""
+											"if(max > 0){",
+											"    rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
+											"}",
+											"",
+											"tests[\"Check status\"] = jsonData.responseInfo.status.has(\"SUCCESSFUL\");",
+											"",
+											"postman.setEnvironmentVariable(\"propertyType\", jsonData.propertyTypes[rand].code);",
+											"",
+											"postman.setNextRequest(\"Get Boundary Values\");"
 										]
 									}
 								}
@@ -4407,7 +4674,7 @@
 							"response": []
 						},
 						{
-							"name": "Search Boundary Values PTIS",
+							"name": "Get Boundary Values",
 							"event": [
 								{
 									"listen": "test",
@@ -4420,7 +4687,15 @@
 											"",
 											"tests[\"Check status success\"] = jsonData.ResponseInfo.status.has(\"200\");",
 											"",
-											"postman.setEnvironmentVariable(\"boundaryValue\", jsonData.Boundary[0].id);",
+											"var max = jsonData.Boundary.length - 1;",
+											"",
+											"var rand = 0;",
+											"",
+											"if(max > 0){",
+											"    rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
+											"}",
+											"",
+											"postman.setEnvironmentVariable(\"boundaryValue\", jsonData.Boundary[rand].id);",
 											"",
 											"postman.setNextRequest(\"Search DocumentType Codes\");"
 										]
@@ -4477,7 +4752,7 @@
 							"response": []
 						},
 						{
-							"name": "Search DocumentType Codes",
+							"name": "Get DocumentType Codes",
 							"event": [
 								{
 									"listen": "test",
@@ -4490,7 +4765,15 @@
 											"",
 											"tests[\"Status is success\"] = jsonData.responseInfo.status.has(\"SUCCESSFUL\");",
 											"",
-											"postman.setEnvironmentVariable(\"documentType\", jsonData.documentType[0].code);",
+											"var max = jsonData.documentType.length - 1;",
+											"",
+											"var rand = 0;",
+											"",
+											"if(max > 0){",
+											"    rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
+											"}",
+											"",
+											"postman.setEnvironmentVariable(\"documentType\", jsonData.documentType[rand].code);",
 											"",
 											"postman.setNextRequest(\"Create New Property\");"
 										]
@@ -4536,7 +4819,7 @@
 							"response": []
 						},
 						{
-							"name": "Create New Property",
+							"name": "Create New Property for Others",
 							"event": [
 								{
 									"listen": "test",
@@ -4545,13 +4828,23 @@
 										"exec": [
 											"var jsonData = JSON.parse(responseBody);",
 											"",
-											"postman.setEnvironmentVariable(\"id\", jsonData.properties[0].propertyDetail.applicationNo);",
-											"",
 											"tests[\"Status code is 200\"] = responseCode.code === 200;",
 											"",
-											"tests[\"Status is success\"] = jsonData.responseInfo.status.has(\"SUCCESSFUL\");",
 											"",
-											"postman.setNextRequest(\"Search Property PTIS\");"
+											"if(environment.propertyType.has(\"PTYPE_OPEN_LAND\")){",
+											"    tests[\"Status is Failed\"] = jsonData.responseInfo.status.has(\"FAILED\");",
+											"    tests[\"code is 400\"] = jsonData.Errors[0].code.has(\"400\");",
+											"    postman.setNextRequest(\"Create New Property for OpenSpace\");",
+											"}",
+											"else{",
+											"postman.setEnvironmentVariable(\"id\", jsonData.properties[0].propertyDetail.applicationNo);",
+											"tests[\"Status is success\"] = jsonData.responseInfo.status.has(\"SUCCESSFUL\");",
+											"tests[\"Property Type matches\"] = environment.propertyType.has(jsonData.properties[0].propertyDetail.propertyType);",
+											"tests[\"Structure Type matches\"] = environment.structureType.has(jsonData.properties[0].propertyDetail.floors[0].units[0].structure);",
+											"tests[\"Usage Type matches\"] = environment.usageType.has(jsonData.properties[0].propertyDetail.usage);",
+											"tests[\"Age Code matches\"] = environment.ageCode.has(jsonData.properties[0].propertyDetail.floors[0].units[0].age);",
+											"postman.setNextRequest(\"Get Property Details\");",
+											"}"
 										]
 									}
 								}
@@ -4568,14 +4861,61 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n   \"properties\":[\n      {\n         \"occupancyDate\":\"05/08/2017\",\n         \"tenantId\":\"{{tenantId}}\",\n         \"oldUpicNumber\":null,\n         \"vltUpicNumber\":null,\n         \"sequenceNo\":\"8\",\n         \"creationReason\":\"NEWPROPERTY\",\n         \"address\":{\n            \"tenantId\":\"{{tenantId}}\",\n            \"longitude\":null,\n            \"addressNumber\":\"1003\",\n            \"addressLine1\":\"22\",\n            \"addressLine2\":null,\n            \"landmark\":null,\n            \"city\":\"Roha\",\n            \"pincode\":\"445566\",\n            \"detail\":null,\n            \"auditDetails\":{\n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1503556873061,\n               \"lastModifiedTime\":1503556873061\n            }\n         },\n         \"owners\":[\n            {\n               \"aadhaarNumber\":\"202456789012\",\n               \"mobileNumber\":\"7777777777\",\n               \"name\":\"Tester\",\n               \"gender\":\"MALE\",\n               \"emailId\":\"test@testing.com\",\n               \"pan\":null,\n               \"gaurdianRelation\":\"FATHER\",\n               \"fatherOrHusbandName\":\"Testing\",\n               \"ownerShipPercentage\":\"90\",\n               \"isPrimaryOwner\":true,\n               \"locale\":\"en_IN\",\n               \"type\":\"CITIZEN\",\n               \"active\":true,\n               \"tenantId\":\"{{tenantId}}\",\n               \"salutation\":null,\n               \"roles\":[\n                  {\n                     \"code\":\"CITIZEN\",\n                     \"name\":\"Citizen\"\n                  }\n               ],\n               \"issecondaryowner\":false,\n               \"ownershippercentage\":null,\n               \"ownerType\":null\n            }\n         ],\n         \"propertyDetail\":{\n            \"source\":\"MUNICIPAL_RECORDS\",\n            \"regdDocNo\":\"rdn2\",\n            \"regdDocDate\":\"15/02/2017\",\n            \"reason\":\"CREATE\",\n            \"status\":\"ACTIVE\",\n            \"isVerified\":true,\n            \"verificationDate\":\"25/05/2017\",\n            \"isExempted\":false,\n            \"propertyType\":\"{{propertyType}}\",\n            \"category\":null,\n            \"usage\":\"{{usageType}}\",\n            \"department\":null,\n            \"apartment\":null,\n            \"siteLength\":12,\n            \"siteBreadth\":15,\n            \"sitalArea\":\"3500\",\n            \"totalBuiltupArea\":\"03500\",\n            \"undividedShare\":null,\n            \"noOfFloors\":1,\n            \"isSuperStructure\":null,\n            \"bpaNo\":\"AO1\",\n            \"bpaDate\":\"02/08/2017\",\n            \"landOwner\":null,\n            \"floorType\":null,\n            \"woodType\":null,\n            \"roofType\":null,\n            \"wallType\":null,\n            \"floors\":[\n               {\n                  \"floorNo\":6,\n                  \"units\":[\n                     {\n                        \"floorNo\":6,\n                        \"electricMeterNo\":null,\n                        \"waterMeterNo\":null,\n                        \"exemptionReason\":null,\n                        \"rentCollected\":null,\n                        \"unitType\":\"ROOM\",\n                        \"unitNo\":\"103\",\n                        \"structure\":\"{{structureType}}\",\n                        \"usage\":\"{{usageType}}\",\n                        \"firmName\":\"form1\",\n                        \"occupancyType\":\"{{occupancyType}}\",\n                        \"occupierName\":\"Sree\",\n                        \"manualArv\":\"3500\",\n                        \"constructionStartDate\":\"03/08/2017\",\n                        \"constCompletionDate\":\"04/08/2017\",\n                        \"age\":\"{{ageCode}}\",\n                        \"occupancyDate\":\"05/08/2017\",\n                        \"isStructured\":true,\n                        \"width\":\"\",\n                        \"length\":\"\",\n                        \"builtupArea\":\"3500\",\n                        \"assessableArea\":400,\n                        \"carpetArea\":\"500\",\n                        \"exemptedArea\":\"100\",\n                        \"occupancyCertiNumber\":\"RO1\",\n                        \"buildingCost\":\"200000\",\n                        \"landCost\":\"50000\",\n                        \"isAuthorised\":true\n                     }\n                  ]\n               }\n            ],\n            \"factors\":[\n               {\n                  \"name\":\"TOILET\",\n                  \"value\":5\n               },\n               {\n                  \"name\":\"ROAD\",\n                  \"value\":5\n               },\n               {\n                  \"name\":\"LIFT\",\n                  \"value\":5\n               },\n               {\n                  \"name\":\"PARKING\",\n                  \"value\":5\n               }\n            ],\n            \"documents\":[\n\n            ],\n            \"stateId\":null,\n            \"workFlowDetails\":{\n               \"department\":8,\n               \"designation\":844,\n               \"assignee\":9,\n               \"initiatorPosition\":9,\n               \"action\":\"no\",\n               \"status\":null\n            },\n            \"auditDetails\":{\n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1503556873061,\n               \"lastModifiedTime\":1503556873061\n            }\n         },\n         \"vacantLand\":null,\n         \"gisRefNo\":null,\n         \"isAuthorised\":null,\n         \"boundary\":{\n            \"revenueBoundary\":{\n               \"id\":\"{{boundaryValue}}\",\n               \"name\":\"Zone-1\"\n            },\n            \"locationBoundary\":{\n               \"id\":\"{{boundaryValue}}\",\n               \"name\":\"Gedda Veedi\"\n            },\n            \"adminBoundary\":{\n               \"id\":\"{{boundaryValue}}\",\n               \"name\":\"Election Ward No 1\"\n            },\n            \"northBoundedBy\":null,\n            \"eastBoundedBy\":null,\n            \"westBoundedBy\":null,\n            \"southBoundedBy\":null,\n            \"auditDetails\":{\n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1503556873061,\n               \"lastModifiedTime\":1503556873061\n            }\n         },\n         \"channel\":\"SYSTEM\",\n         \"auditDetails\":{\n            \"createdBy\":\"1\",\n            \"lastModifiedBy\":\"1\",\n            \"createdTime\":1503556873061,\n            \"lastModifiedTime\":1503556873061\n         }\n      }\n   ],\n   \"RequestInfo\":{\n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":1503556873061,\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"{{access_token}}\"\n   }\n}"
+									"raw": "{\n   \"properties\":[\n      {\n         \"occupancyDate\":\"05/08/2017\",\n         \"tenantId\":\"{{tenantId}}\",\n         \"oldUpicNumber\":null,\n         \"vltUpicNumber\":null,\n         \"sequenceNo\":\"8\",\n         \"creationReason\":\"NEWPROPERTY\",\n         \"address\":{\n            \"tenantId\":\"{{tenantId}}\",\n            \"longitude\":null,\n            \"addressNumber\":\"1003\",\n            \"addressLine1\":\"22\",\n            \"addressLine2\":null,\n            \"landmark\":null,\n            \"city\":\"Roha\",\n            \"pincode\":\"445566\",\n            \"detail\":null,\n            \"auditDetails\":{\n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1503556873061,\n               \"lastModifiedTime\":1503556873061\n            }\n         },\n         \"owners\":[\n            {\n               \"aadhaarNumber\":\"202422314421\",\n               \"mobileNumber\":\"9885052763\",\n               \"name\":\"Karthik\",\n               \"gender\":\"MALE\",\n               \"emailId\":\"karthik@gmail.com\",\n               \"pan\":null,\n               \"gaurdianRelation\":\"FATHER\",\n               \"fatherOrHusbandName\":\"P Sunil\",\n               \"ownerShipPercentage\":\"90\",\n               \"isPrimaryOwner\":true,\n               \"locale\":\"en_IN\",\n               \"type\":\"CITIZEN\",\n               \"active\":true,\n               \"tenantId\":\"{{tenantId}}\",\n               \"salutation\":null,\n               \"roles\":[\n                  {\n                     \"code\":\"CITIZEN\",\n                     \"name\":\"Citizen\"\n                  }\n               ],\n               \"issecondaryowner\":false,\n               \"ownershippercentage\":null,\n               \"ownerType\":null\n            }\n         ],\n         \"propertyDetail\":{\n            \"source\":\"MUNICIPAL_RECORDS\",\n            \"regdDocNo\":\"rdn2\",\n            \"regdDocDate\":\"15/02/2017\",\n            \"reason\":\"CREATE\",\n            \"status\":\"ACTIVE\",\n            \"isVerified\":true,\n            \"verificationDate\":\"25/05/2017\",\n            \"isExempted\":false,\n            \"propertyType\":\"PTYPE_OPEN_LAND\",\n            \"category\":null,\n            \"usage\":\"{{usageType}}\",\n            \"department\":null,\n            \"apartment\":null,\n            \"siteLength\":12,\n            \"siteBreadth\":15,\n            \"sitalArea\":\"3500\",\n            \"totalBuiltupArea\":\"03500\",\n            \"undividedShare\":null,\n            \"noOfFloors\":1,\n            \"isSuperStructure\":null,\n            \"bpaNo\":\"AO1\",\n            \"bpaDate\":\"02/08/2017\",\n            \"landOwner\":null,\n            \"floorType\":null,\n            \"woodType\":null,\n            \"roofType\":null,\n            \"wallType\":null,\n            \"floors\":[\n               {\n                  \"floorNo\":6,\n                  \"units\":[\n                     {\n                        \"floorNo\":6,\n                        \"electricMeterNo\":null,\n                        \"waterMeterNo\":null,\n                        \"exemptionReason\":null,\n                        \"rentCollected\":null,\n                        \"unitType\":\"ROOM\",\n                        \"unitNo\":\"103\",\n                        \"structure\":\"{{structureType}}\",\n                        \"usage\":\"{{usageType}}\",\n                        \"firmName\":\"form1\",\n                        \"occupancyType\":\"{{occupancyType}}\",\n                        \"occupierName\":\"Sree\",\n                        \"manualArv\":\"3500\",\n                        \"constructionStartDate\":\"03/08/2017\",\n                        \"constCompletionDate\":\"04/08/2017\",\n                        \"age\":\"{{ageCode}}\",\n                        \"occupancyDate\":\"05/08/2017\",\n                        \"isStructured\":true,\n                        \"width\":\"\",\n                        \"length\":\"\",\n                        \"builtupArea\":\"3500\",\n                        \"assessableArea\":400,\n                        \"carpetArea\":\"500\",\n                        \"exemptedArea\":\"100\",\n                        \"occupancyCertiNumber\":\"RO1\",\n                        \"buildingCost\":\"200000\",\n                        \"landCost\":\"50000\",\n                        \"isAuthorised\":true\n                     }\n                  ]\n               }\n            ],\n            \"factors\":[],\n            \"documents\":[\n\n            ],\n            \"stateId\":null,\n            \"workFlowDetails\":{\n               \"department\":8,\n               \"designation\":844,\n               \"assignee\":9,\n               \"initiatorPosition\":9,\n               \"action\":\"no\",\n               \"status\":null\n            },\n            \"auditDetails\":{\n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1503556873061,\n               \"lastModifiedTime\":1503556873061\n            }\n         },\n         \"vacantLand\":null,\n         \"gisRefNo\":null,\n         \"isAuthorised\":null,\n         \"boundary\":{\n            \"revenueBoundary\":{\n               \"id\":\"{{boundaryValue}}\",\n               \"name\":\"Zone-1\"\n            },\n            \"locationBoundary\":{\n               \"id\":\"{{boundaryValue}}\",\n               \"name\":\"Gedda Veedi\"\n            },\n            \"adminBoundary\":{\n               \"id\":\"{{boundaryValue}}\",\n               \"name\":\"Election Ward No 1\"\n            },\n            \"northBoundedBy\":null,\n            \"eastBoundedBy\":null,\n            \"westBoundedBy\":null,\n            \"southBoundedBy\":null,\n            \"auditDetails\":{\n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1503556873061,\n               \"lastModifiedTime\":1503556873061\n            }\n         },\n         \"channel\":\"SYSTEM\",\n         \"auditDetails\":{\n            \"createdBy\":\"1\",\n            \"lastModifiedBy\":\"1\",\n            \"createdTime\":1503556873061,\n            \"lastModifiedTime\":1503556873061\n         }\n      }\n   ],\n   \"RequestInfo\":{\n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":1503556873061,\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"{{access_token}}\"\n   }\n}"
 								},
 								"description": ""
 							},
 							"response": []
 						},
 						{
-							"name": "Search Property PTIS",
+							"name": "Create New Property for Open Space",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"tests[\"Status code is 200\"] = responseCode.code === 200;",
+											"",
+											"postman.setEnvironmentVariable(\"id\", jsonData.properties[0].propertyDetail.applicationNo);",
+											"",
+											"tests[\"Status is success\"] = jsonData.responseInfo.status.has(\"SUCCESSFUL\");",
+											"",
+											"tests[\"Property Type matches\"] = environment.propertyType.has(jsonData.properties[0].propertyDetail.propertyType);",
+											"",
+											"tests[\"Structure Type matches\"] = environment.structureType.has(jsonData.properties[0].propertyDetail.floors[0].units[0].structure);",
+											"",
+											"tests[\"Usage Type matches\"] = environment.usageType.has(jsonData.properties[0].propertyDetail.usage);",
+											"",
+											"tests[\"Age Code matches\"] = environment.ageCode.has(jsonData.properties[0].propertyDetail.floors[0].units[0].age);",
+											"",
+											"postman.setNextRequest(\"Get Property Details\");"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": "{{url}}/pt-property/properties/_create",
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n   \"properties\":[\n      {\n         \"occupancyDate\":\"05/08/2017\",\n         \"tenantId\":\"{{tenantId}}\",\n         \"oldUpicNumber\":null,\n         \"vltUpicNumber\":null,\n         \"sequenceNo\":\"8\",\n         \"creationReason\":\"NEWPROPERTY\",\n         \"address\":{\n            \"tenantId\":\"{{tenantId}}\",\n            \"longitude\":null,\n            \"addressNumber\":\"1003\",\n            \"addressLine1\":\"22\",\n            \"addressLine2\":null,\n            \"landmark\":null,\n            \"city\":\"Roha\",\n            \"pincode\":\"445566\",\n            \"detail\":null,\n            \"auditDetails\":{\n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1503556873061,\n               \"lastModifiedTime\":1503556873061\n            }\n         },\n         \"owners\":[\n            {\n               \"aadhaarNumber\":\"202422314421\",\n               \"mobileNumber\":\"9885052763\",\n               \"name\":\"Karthik\",\n               \"gender\":\"MALE\",\n               \"emailId\":\"karthik@gmail.com\",\n               \"pan\":null,\n               \"gaurdianRelation\":\"FATHER\",\n               \"fatherOrHusbandName\":\"P Sunil\",\n               \"ownerShipPercentage\":\"90\",\n               \"isPrimaryOwner\":true,\n               \"locale\":\"en_IN\",\n               \"type\":\"CITIZEN\",\n               \"active\":true,\n               \"tenantId\":\"{{tenantId}}\",\n               \"salutation\":null,\n               \"roles\":[\n                  {\n                     \"code\":\"CITIZEN\",\n                     \"name\":\"Citizen\"\n                  }\n               ],\n               \"issecondaryowner\":false,\n               \"ownershippercentage\":null,\n               \"ownerType\":null\n            }\n         ],\n         \"propertyDetail\":{\n            \"source\":\"MUNICIPAL_RECORDS\",\n            \"regdDocNo\":\"rdn2\",\n            \"regdDocDate\":\"15/02/2017\",\n            \"reason\":\"CREATE\",\n            \"status\":\"ACTIVE\",\n            \"isVerified\":true,\n            \"verificationDate\":\"25/05/2017\",\n            \"isExempted\":false,\n            \"propertyType\":\"{{propertyType}}\",\n            \"category\":null,\n            \"usage\":\"{{usageType}}\",\n            \"department\":null,\n            \"apartment\":null,\n            \"siteLength\":12,\n            \"siteBreadth\":15,\n            \"sitalArea\":\"3500\",\n            \"totalBuiltupArea\":\"03500\",\n            \"undividedShare\":null,\n            \"noOfFloors\":1,\n            \"isSuperStructure\":null,\n            \"bpaNo\":\"AO1\",\n            \"bpaDate\":\"02/08/2017\",\n            \"landOwner\":null,\n            \"floorType\":null,\n            \"woodType\":null,\n            \"roofType\":null,\n            \"wallType\":null,\n            \"factors\":[\n               null\n            ],\n            \"documents\":[],\n            \"stateId\":null,\n            \"workFlowDetails\":{\n               \"department\":8,\n               \"designation\":844,\n               \"assignee\":9,\n               \"initiatorPosition\":9,\n               \"action\":\"no\",\n               \"status\":null\n            },\n            \"auditDetails\":{\n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1503556873061,\n               \"lastModifiedTime\":1503556873061\n            }\n         },\n         \"vacantLand\":null,\n         \"gisRefNo\":null,\n         \"isAuthorised\":null,\n         \"boundary\":{\n            \"revenueBoundary\":{\n               \"id\":\"{{boundaryValue}}\",\n               \"name\":\"Zone-1\"\n            },\n            \"locationBoundary\":{\n               \"id\":\"{{boundaryValue}}\",\n               \"name\":\"Gedda Veedi\"\n            },\n            \"adminBoundary\":{\n               \"id\":\"{{boundaryValue}}\",\n               \"name\":\"Election Ward No 1\"\n            },\n            \"northBoundedBy\":null,\n            \"eastBoundedBy\":null,\n            \"westBoundedBy\":null,\n            \"southBoundedBy\":null,\n            \"auditDetails\":{\n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1503556873061,\n               \"lastModifiedTime\":1503556873061\n            }\n         },\n         \"channel\":\"SYSTEM\",\n         \"auditDetails\":{\n            \"createdBy\":\"1\",\n            \"lastModifiedBy\":\"1\",\n            \"createdTime\":1503556873061,\n            \"lastModifiedTime\":1503556873061\n         }\n      }\n   ],\n   \"RequestInfo\":{\n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":1503556873061,\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"{{access_token}}\"\n   }\n}"
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Get Property Details",
 							"event": [
 								{
 									"listen": "test",
@@ -4590,7 +4930,15 @@
 											"",
 											"tests[\"Check the applicationNumber\"] = jsonData.properties[0].propertyDetail.applicationNo.has(environment.id);",
 											"",
-											"postman.setNextRequest(\"Logout\");"
+											"tests[\"Property Type matches\"] = environment.propertyType.has(jsonData.properties[0].propertyDetail.propertyType);",
+											"",
+											"tests[\"Structure Type matches\"] = environment.structureType.has(jsonData.properties[0].propertyDetail.floors[0].units[0].structure);",
+											"",
+											"tests[\"Usage Type matches\"] = environment.usageType.has(jsonData.properties[0].propertyDetail.usage);",
+											"",
+											"tests[\"Age Code matches\"] = environment.ageCode.has(jsonData.properties[0].propertyDetail.floors[0].units[0].age);",
+											"",
+											"postman.setNextRequest(\"Logout as Employee\");"
 										]
 									}
 								}
@@ -4639,7 +4987,7 @@
 							"response": []
 						},
 						{
-							"name": "Logout",
+							"name": "Logout as Employee",
 							"event": [
 								{
 									"listen": "test",
@@ -4681,7 +5029,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": " {\"RequestInfo\":{\"apiId\":\"org.egov.pgr\",\"ver\":\"1.0\",\"ts\":\"13-04-2017 12:13:30\",\"action\":\"POST\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\": \"{{access_token}}\"\n }}"
+									"raw": " {\n   \"RequestInfo\":{\n      \"apiId\":\"org.egov.pgr\",\n      \"ver\":\"1.0\",\n      \"ts\":\"13-04-2017 12:13:30\",\n      \"action\":\"POST\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"{{access_token}}\"\n   }\n}"
 								},
 								"description": ""
 							},
@@ -4707,6 +5055,66 @@
 							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"emp\",\n    \"ver\": \"1.0\",\n    \"ts\": \"10032017\",\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"key\": \"abcdkey\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"rajesh\",\n    \"authToken\": \"{{access_token}}\"\n  },\n  \"properties\": [{\n    \"id\": 45953,\n    \"tenantId\": \"default\",\n    \"upicNumber\": null,\n    \"oldUpicNumber\": null,\n    \"vltUpicNumber\": null,\n    \"creationReason\": \"NEWPROPERTY\",\n    \"address\": {\n      \"tenantId\": \"default\",\n      \"latitude\": 0,\n      \"longitude\": 0,\n      \"addressNumber\": \"6-2-5\",\n      \"addressLine1\": \"KPHP\",\n      \"addressLine2\": \"JNTU\",\n      \"landmark\": \"Near Manjiramall\",\n      \"city\": \"Hyderabad\",\n      \"pincode\": \"500082\",\n      \"detail\": null\n    },\n    \"owners\": [{\n      \"userName\": \"Sujana\",\n      \"password\": \"demo\",\n      \"salutation\": \"Ms\",\n      \"name\": \"naren\",\n      \"gender\": \"FEMALE\",\n      \"mobileNumber\": \"9573011121\",\n      \"emailId\": \"naren@test2.com\",\n      \"altContactNumber\": null,\n      \"pan\": null,\n      \"aadhaarNumber\": \"317927710501\",\n      \"permanentAddress\": \"6-5-5\",\n      \"permanentCity\": \"Hyderabad\",\n      \"permanentPincode\": \"500082\",\n      \"correspondenceCity\": \"Hyderabad\",\n      \"correspondencePincode\": \"500082\",\n      \"correspondenceAddress\": \"Hyderabad\",\n      \"active\": true,\n      \"dob\": \"25/09/1989\",\n      \"locale\": \"en_IN\",\n      \"type\": \"CITIZEN\",\n      \"signature\": null,\n      \"accountLocked\": true,\n      \"roles\": [{\n        \"code\": \"CITIZEN\",\n        \"name\": \"Citizen\",\n        \"description\": null,\n        \"createdBy\": 0,\n        \"createdDate\": null,\n        \"lastModifiedBy\": 0,\n        \"lastModifiedDate\": null,\n        \"tenantId\": \"default\"\n      }],\n      \"fatherOrHusbandName\": \"Singh\",\n      \"bloodGroup\": \"O+\",\n      \"identificationMark\": null,\n      \"photo\": null,\n      \"createdBy\": 0,\n      \"createdDate\": null,\n      \"lastModifiedBy\": 0,\n      \"lastModifiedDate\": null,\n      \"otpReference\": null,\n      \"tenantId\": \"default\",\n      \"isPrimaryOwner\": true,\n      \"isSecondaryOwner\": true,\n      \"ownerShipPercentage\": 0,\n      \"ownerType\": \"Sujana\"\n    }],\n    \"propertyDetail\": {\n      \"id\": 45953,\n      \"source\": \"MUNICIPAL_RECORDS\",\n      \"regdDocNo\": \"519/2016\",\n      \"regdDocDate\": \"05/02/2016\",\n      \"reason\": \"CREATE\",\n      \"status\": \"ACTIVE\",\n      \"isVerified\": true,\n      \"verificationDate\": \"19/03/2016\",\n      \"isExempted\": false,\n      \"exemptionReason\": null,\n      \"propertyType\": \"PRIVATE\",\n      \"category\": \"RESIDENTIAl\",\n      \"usage\": null,\n      \"department\": null,\n      \"apartment\": null,\n      \"siteLength\": 0,\n      \"siteBreadth\": 0,\n      \"sitalArea\": 0,\n      \"totalBuiltupArea\": 0,\n      \"undividedShare\": 0,\n      \"noOfFloors\": 0,\n      \"isSuperStructure\": false,\n      \"landOwner\": null,\n      \"floorType\": \"CEMENT\",\n      \"woodType\": \"MIXED_WOOD\",\n      \"roofType\": \"RCC_POSH\",\n      \"wallType\": \"BRICKS_CEMENT\",\n      \"floors\": [{\n        \"id\": 45953,\n        \"floorNo\": \"string\",\n        \"units\": [{\n            \"id\": 45953,\n            \"unitNo\": 0,\n            \"unitType\": \"FLAT\",\n            \"units\": [\n              \n            ],\n            \"length\": 0,\n            \"width\": 0,\n            \"builtupArea\": 0,\n            \"assessableArea\": 0,\n            \"bpaBuiltupArea\": 114,\n            \"bpaNo\": \"492/g1/15\",\n            \"bpaDate\": \"21/08/2015\",\n            \"usage\": \"RESD\",\n            \"occupancyType\": \"OWNER\",\n            \"occupierName\": null,\n            \"firmName\": null,\n            \"rentCollected\": 0,\n            \"structure\": \"RCCORDINARYBUILDING\",\n            \"age\": \"0TO20\",\n            \"exemptionReason\": null,\n            \"isStructured\": true,\n            \"occupancyDate\": \"01/07/2017\",\n            \"constructionStartDate\": \"10/06/2016\",\n            \"constCompletionDate\": null,\n            \"manualArv\": 0,\n            \"arv\": 0,\n            \"electricMeterNo\": null,\n            \"waterMeterNo\": null,\n            \"landCost\": 0,\n            \"buildingCost\": 0,\n            \"isAuthorised\": true\n          },\n          {\n            \"id\": 45953,\n            \"unitNo\": 0,\n            \"unitType\": \"FLAT\",\n            \"units\": [\n              \n            ],\n            \"length\": 0,\n            \"width\": 0,\n            \"builtupArea\": 0,\n            \"assessableArea\": 0,\n            \"bpaBuiltupArea\": 215,\n            \"bpaNo\": \"492/g1/16\",\n            \"bpaDate\": \"21/08/2016\",\n            \"usage\": \"RESD\",\n            \"occupancyType\": \"OWNER\",\n            \"occupierName\": null,\n            \"firmName\": null,\n            \"rentCollected\": 0,\n            \"structure\": \"RCCORDINARYBUILDING\",\n            \"age\": \"0TO20\",\n            \"exemptionReason\": null,\n            \"isStructured\": true,\n            \"occupancyDate\": \"01/07/2017\",\n            \"constStartDate\": \"10/06/2016\",\n            \"constCompletionDate\": null,\n            \"manualArv\": 0,\n            \"arv\": 0,\n            \"electricMeterNo\": null,\n            \"waterMeterNo\": null,\n            \"landCost\": 0,\n            \"buildingCost\": 0,\n            \"isAuthorised\": true\n          }\n        ]\n      }],\n      \"documents\": [{\n        \"id\": 45953,\n        \"documentType\": \"PHOTO_OF_ASSESSMENT\",\n        \"fileStore\": null\n      }],\n      \"stateId\": null,\n      \"applicationNo\": \"{{id}}\",\n      \"taxCalculations\": null,\n      \"factors\": [{\n        \"name\": \"TOILET\",\n        \"value\": 1\n      }],\n      \"assessmentDates\": {\n        \"name\": \"FIRSTASSESSMENT\",\n        \"date\": \"10/06/2017\"\n      },\n      \"builderDetails\": {\n        \"certifiCatenumber\": \"certificateNumber\",\n        \"certificateCompletionDate\": \"certificateCompletionDate\",\n        \"certificateReceiveDate\": \"certificateReceiveDate\",\n        \"agencyName\": \"agencyName\",\n        \"licenseType\": \"licenseType\",\n        \"licenseNumber\": \"licenseNumber\"\n      },\n      \"workFlowDetails\": {\n        \"department\": \"ADMINISTRATION\",\n        \"designation\": \"Commissioner\",\n        \"assignee\": 1165,\n        \"action\": \"Approve\",\n        \"status\": \"Commissioner approved\"\n      }\n    },\n    \"assessmentDate\": null,\n    \"occupancyDate\": 0,\n    \"gisRefNo\": null,\n    \"isAuthorised\": true,\n    \"isUnderWorkflow\": false,\n    \"boundary\": {\n      \"revenueBoundary\": {\n        \"id\": 2,\n        \"name\": \"Zone-1\"\n      },\n      \"locationBoundary\": {\n        \"id\": 21,\n        \"name\": \"Ganagalla Veedhi\"\n      },\n      \"adminBoundary\": {\n        \"id\": 178,\n        \"name\": \"Election Ward No 6\"\n      },\n      \"northBoundedBy\": null,\n      \"eastBoundedBy\": null,\n      \"westBoundedBy\": null,\n      \"southBoundedBy\": null\n    },\n    \"sequenceNo\": 0,\n    \"bpaNo\": null,\n    \"bpaDate\": null,\n    \"active\": true,\n    \"channel\": \"SYSTEM\",\n    \"demands\": [{\n      \"id\": \"524\"\n    }]\n  }]\n}"
 						},
 						"description": "Commissioner approved"
+					},
+					"response": []
+				},
+				{
+					"name": "UserSearch",
+					"request": {
+						"url": "{{url}}/user/_search",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"RequestInfo\":{\n      \"authToken\":\"{{access_token}}\",\n      \"ts\":\"2017-07-10 00:00:00\",\n      \"ver\":\"1.0\",\n      \"requesterId\":\"rajesh\",\n      \"action\":\"create\",\n      \"msgId\":\"20170310130900\",\n      \"apiId\":\"emp\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\"\n   },\n    \"tenantId\" : \"{{tenantId}}\",\n    \"id\":[3137\n    \t]\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Depreciation Values",
+					"request": {
+						"url": {
+							"raw": "{{url}}/pt-property/property/depreciations/_search?tenantId={{tenantId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"pt-property",
+								"property",
+								"depreciations",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n \"RequestInfo\": {\n   \"action\": \"create\",\n   \"did\": \"1\",\n   \"msgId\": \"20170310130900\",\n   \"requesterId\": \"yosadhara\",\n   \"authToken\": \"{{access_token}}\",\n   \"apiId\": \"\",\n   \"ver\": \"1.0\",\n   \"ts\": \"1234567890\",\n   \"key\": \"abcdkey\"\n \t }\n }"
+						},
+						"description": ""
 					},
 					"response": []
 				}

@@ -7,8 +7,11 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import steps.GenericSteps;
+import utils.FileExtension;
+import utils.FileFinder;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
@@ -58,11 +61,12 @@ public class GenericPage extends BasePage {
 
     private String getRandomCharacters(int noOfCharacters) {
         Random random = new Random();
-        String[] alphabet = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", " ", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
+        String[] alphabet = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
+                "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
         String required = "";
 
         for (int i = 0; i < noOfCharacters; i++) {
-            required = required + alphabet[random.nextInt(27 - 0)];
+            required = required + alphabet[random.nextInt(52 - 0)];
         }
 
         return required;
@@ -74,8 +78,10 @@ public class GenericPage extends BasePage {
 
     public WebElement buildElement(String screen, String element, String value) throws IOException {
         WebElement webElement = null;
-        String path = "src/test/resources/elements/Egov/" + screen + ".elements";
-        BufferedReader in = new BufferedReader(new FileReader(path));
+
+        FileFinder p = FileFinder.fileFinder("src/test/resources/elements/");
+        File f = p.find(screen, FileExtension.ELEMENTS);
+        BufferedReader in = new BufferedReader(new FileReader(f));
         String str = "";
         StringBuilder json = new StringBuilder();
 

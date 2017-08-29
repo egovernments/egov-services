@@ -10,7 +10,8 @@ Feature: Creating a Grievance Type
     And user on Login screen clicks on signIn
 
     ### On Homepage Screen ###
-    And user on Home screen verifies myTasks has visible value My Tasks
+    And user on Home screen will wait until the page loads
+    And user on Home screen will see the menu
     And user on Home screen clicks on menu
     And user on Home screen types on menuSearch value Create Category
     And user on Home screen clicks on firstMenuItem
@@ -24,6 +25,7 @@ Feature: Creating a Grievance Type
     And user on Grievance screen clicks on close
 
     ### On Homepage Screen ###
+    And user on Home screen will wait until the page loads
     And user on Home screen will see the menu
     And user on Home screen clicks on menu
     And user on Home screen types on menuSearch value Search Category
@@ -35,6 +37,7 @@ Feature: Creating a Grievance Type
 
     ####### Create A GrievanceType #######
     ### On Homepage Screen ###
+    And user on Home screen will wait until the page loads
     And user on Home screen will see the menu
     And user on Home screen clicks on menu
     And user on Home screen types on menuSearch value Create Grievance Type
@@ -45,12 +48,13 @@ Feature: Creating a Grievance Type
     And user on Grievance screen types on grievanceTypeName value --"Grievance Type ", 5 random characters
     And user on Grievance screen copies the grievanceTypeName to grievanceTypeName
     And user on Grievance screen types on grievanceTypeCode value --5 random numbers
-    And user on Grievance screen types on slaHours value --4 random numbers
+    And user on Grievance screen types on slaHours value --1 random numbers
     And user on Grievance screen selects on grievanceTypeCategorySelect value categoryName
     And user on Grievance screen clicks on createButton
     And user on Grievance screen clicks on close
 
     ### On Homepage Screen ###
+    And user on Home screen will wait until the page loads
     And user on Home screen will see the menu
     And user on Home screen clicks on menu
     And user on Home screen types on menuSearch value View Grievance
@@ -62,6 +66,7 @@ Feature: Creating a Grievance Type
 
     ####### Creating a Router with Above Created GrievanceType #######
     ### On Homepage Screen ###
+    And user on Home screen will wait until the page loads
     And user on Home screen will see the menu
     And user on Home screen clicks on menu
     And user on Home screen types on menuSearch value Create Router
@@ -78,6 +83,7 @@ Feature: Creating a Grievance Type
 
     ####### Register A Complaint with Above Created GrievanceType & Grievance Category #######
     ### On Homepage Screen ###
+    And user on Home screen will wait until the page loads
     And user on Home screen will see the menu
     And user on Home screen clicks on menu
     And user on Home screen types on menuSearch value Officials Register Grievance
@@ -103,7 +109,7 @@ Feature: Creating a Grievance Type
     ### On Create Complaint Grievance Screen verifying the details ###
     And user on Grievance screen copies the complaintNum to applicationNumber
     And user on Grievance screen clicks on view
-    And user on Grievance screen will see the complaintDetails
+    And user on Home screen will wait until the page loads
     And user on Grievance screen copies the userName to user
 
     ### Logout ###
@@ -119,15 +125,16 @@ Feature: Creating a Grievance Type
     And user on Home screen opens on dashBoardSearch with above applicationNumber
 
     ### On Grievance Screen ###
-    And user on Grievance screen will see the complaintDetails
+    And user on Home screen will wait until the page loads
     And user on Grievance screen selects on changeStatus value <status>
     And user on Grievance screen types on comments value Comments
     And user on Grievance screen clicks on submitButton
     And user on Grievance screen clicks on okButton
-    And user on Grievance screen will see the complaintDetails
+    And user on Home screen will wait until the page loads
     And user on Grievance screen clicks on homeButton
 
     ### On HomePage Screen ###
+    And user on Home screen will wait until the page loads
     And user on Home screen will see the myTasks
     And user on Home screen clicks on menu
     And user on Home screen types on menuSearch value Search Grievance

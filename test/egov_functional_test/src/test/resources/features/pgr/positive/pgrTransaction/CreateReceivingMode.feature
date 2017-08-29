@@ -9,6 +9,7 @@ Feature: Creating a Receiving Mode
     And user on Login screen clicks on signIn
 
     ### On Homepage Screen ###
+    And user on Home screen will wait until the page loads
     And user on Home screen will see the menu
     And user on Home screen clicks on menu
     And user on Home screen types on menuSearch value Create Receiving Mode
@@ -18,7 +19,7 @@ Feature: Creating a Receiving Mode
     And user on Grievance screen types on receicingModeName value --"RMode ", 4 random characters
     And user on Grievance screen copies the receicingModeName to receicingModeName
     And user on Grievance screen types on receicingModeCode value --5 digit number
-    And user on Grievance screen clicks radio button or checkbox on receivingModeActive
+#    And user on Grievance screen clicks radio button or checkbox on receivingModeActive
     And user on Grievance screen selects on receivingModeChannel value WEB
     And user on Grievance screen clicks on text value MOBILE
     And user on Grievance screen force clicks on createButton
@@ -27,6 +28,7 @@ Feature: Creating a Receiving Mode
 
     ####### Registering A Complaint on behalf of Citizen #######
     ### On Homepage Screen ###
+    And user on Home screen will wait until the page loads
     And user on Home screen will see the menu
     And user on Home screen clicks on menu
     And user on Home screen types on menuSearch value Officials Register Grievance
@@ -52,7 +54,7 @@ Feature: Creating a Receiving Mode
     ### On Create Complaint Grievance Screen verifying the details ###
     And user on Grievance screen copies the complaintNum to applicationNumber
     And user on Grievance screen clicks on view
-    And user on Grievance screen will see the complaintDetails
+    And user on Home screen will wait until the page loads
     And user on Grievance screen copies the userName to user
 
     ### Logout ###
@@ -68,16 +70,17 @@ Feature: Creating a Receiving Mode
     And user on Home screen opens on dashBoardSearch with above applicationNumber
 
     ### On Grievance Screen ###
-    And user on Grievance screen will see the complaintDetails
+    And user on Home screen will wait until the page loads
     And user on Grievance screen selects on changeStatus value <status>
     And user on Grievance screen types on comments value Comments
     And user on Grievance screen clicks on submitButton
     And user on Grievance screen clicks on okButton
-    And user on Grievance screen will see the complaintDetails
+    And user on Home screen will wait until the page loads
     And user on Grievance screen clicks on homeButton
 
     ### On HomePage Screen ###
-    And user on Home screen will see the myTasks
+    And user on Home screen will wait until the page loads
+    And user on Home screen will see the menu
     And user on Home screen clicks on menu
     And user on Home screen types on menuSearch value Search Grievance
     And user on Home screen clicks on firstMenuItem

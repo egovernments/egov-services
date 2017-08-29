@@ -1,12 +1,12 @@
 package org.egov.egf.master.domain.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.model.Fund;
 import org.egov.egf.master.domain.model.Scheme;
 import org.egov.egf.master.domain.model.SchemeSearch;
@@ -54,6 +54,12 @@ public class SchemeService {
 					validator.validate(scheme, errors);
 				}
 				break;
+                        case Constants.ACTION_SEARCH:
+                                Assert.notNull(schemes, "Schemes to search must not be null");
+                                for (Scheme scheme : schemes) {
+                                        Assert.notNull(scheme.getTenantId(), "TenantID must not be null for search");
+                                }
+                                break;
 			default:
 
 			}
@@ -107,10 +113,25 @@ public class SchemeService {
 		schemeRepository.add(request);
 	}
 
-	public Pagination<Scheme> search(SchemeSearch schemeSearch) {
-	        Assert.notNull(schemeSearch.getTenantId(), "tenantId is mandatory for scheme search");
-		return schemeRepository.search(schemeSearch);
-	}
+        public Pagination<Scheme> search(SchemeSearch schemeSearch, BindingResult errors) {
+            
+            try {
+                
+                List<Scheme> schemes = new ArrayList<>();
+                schemes.add(schemeSearch);
+                validate(schemes, Constants.ACTION_SEARCH, errors);
+    
+                if (errors.hasErrors()) {
+                    throw new CustomBindException(errors);
+                }
+            
+            } catch (CustomBindException e) {
+    
+                throw new CustomBindException(errors);
+            }
+    
+            return schemeRepository.search(schemeSearch);
+        }
 
 	@Transactional
 	public Scheme save(Scheme scheme) {

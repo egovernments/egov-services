@@ -1,5 +1,6 @@
 package org.egov.egf.master.domain.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.constants.Constants;
@@ -97,6 +98,12 @@ public class BankService {
 					validator.validate(bank, errors);
 				}
 				break;
+                        case Constants.ACTION_SEARCH:
+                                Assert.notNull(banks, "Banks to search must not be null");
+                                for (Bank bank : banks) {
+                                        Assert.notNull(bank.getTenantId(), "TenantID must not be null for search");
+                                }
+                                break;
 			default:
 
 			}
@@ -123,10 +130,25 @@ public class BankService {
 
 	}
 
-	public Pagination<Bank> search(BankSearch bankSearch) {
-	        Assert.notNull(bankSearch.getTenantId(), "tenantId is mandatory for bank search");
-		return bankRepository.search(bankSearch);
-	}
+        public Pagination<Bank> search(BankSearch bankSearch, BindingResult errors) {
+            
+            try {
+                
+                List<Bank> banks = new ArrayList<>();
+                banks.add(bankSearch);
+                validate(banks, Constants.ACTION_SEARCH, errors);
+    
+                if (errors.hasErrors()) {
+                    throw new CustomBindException(errors);
+                }
+            
+            } catch (CustomBindException e) {
+    
+                throw new CustomBindException(errors);
+            }
+    
+            return bankRepository.search(bankSearch);
+        }
 
 	@Transactional
 	public Bank save(Bank bank) {

@@ -79,7 +79,7 @@ public class FundServiceTest {
 		Pagination<Fund> expectedResult = new Pagination<>();
 		expectedResult.setPagedData(search);
 		when(fundRepository.search(any(FundSearch.class))).thenReturn(expectedResult);
-		Pagination<Fund> actualResult = fundService.search(getFundSearch());
+		Pagination<Fund> actualResult = fundService.search(getFundSearch(), errors);
 		assertEquals(expectedResult, actualResult);
 
 	}

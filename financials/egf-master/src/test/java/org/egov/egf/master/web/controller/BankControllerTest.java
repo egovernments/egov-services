@@ -103,7 +103,7 @@ public class BankControllerTest {
 		page.setPagedData(getBanks());
 		page.getPagedData().get(0).setId("1");
 
-		when(bankService.search(any(BankSearch.class))).thenReturn(page);
+		when(bankService.search(any(BankSearch.class), any(BindingResult.class))).thenReturn(page);
 
 		mockMvc.perform(
 				post("/banks/_search").content(resources.getRequestInfo()).contentType(MediaType.APPLICATION_JSON_UTF8))

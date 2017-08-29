@@ -135,7 +135,7 @@ public class FinancialYearController {
 		ModelMapper model = new ModelMapper();
 		List<FinancialYearContract> financialYearContracts = new ArrayList<>();
 
-		Pagination<FinancialYear> financialyears = financialYearService.search(domain);
+		Pagination<FinancialYear> financialyears = financialYearService.search(domain, errors);
 
 		for (FinancialYear financialYear : financialyears.getPagedData()) {
 			contract = new FinancialYearContract();

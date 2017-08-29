@@ -124,7 +124,7 @@ public class RecoveryController {
         RecoveryContract contract;
         ModelMapper model = new ModelMapper();
         List<RecoveryContract> recoveryContracts = new ArrayList<>();
-        Pagination<Recovery> recoverys = recoveryService.search(domain);
+        Pagination<Recovery> recoverys = recoveryService.search(domain, errors);
 
         if (recoverys.getPagedData() != null) {
             for (Recovery recovery : recoverys.getPagedData()) {

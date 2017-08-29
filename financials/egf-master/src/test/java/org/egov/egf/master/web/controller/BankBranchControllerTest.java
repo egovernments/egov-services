@@ -108,7 +108,7 @@ public class BankBranchControllerTest {
 		page.setPagedData(getBankBranches());
 		page.getPagedData().get(0).setId("1");
 
-		when(bankBranchService.search(any(BankBranchSearch.class))).thenReturn(page);
+		when(bankBranchService.search(any(BankBranchSearch.class), any(BindingResult.class))).thenReturn(page);
 
 		mockMvc.perform(post("/bankbranches/_search").content(resources.getRequestInfo())
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(200))

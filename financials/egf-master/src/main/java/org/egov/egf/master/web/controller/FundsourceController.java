@@ -130,7 +130,7 @@ public class FundsourceController {
 		FundsourceContract contract;
 		ModelMapper model = new ModelMapper();
 		List<FundsourceContract> fundsourceContracts = new ArrayList<>();
-		Pagination<Fundsource> fundsources = fundsourceService.search(domain);
+		Pagination<Fundsource> fundsources = fundsourceService.search(domain, errors);
 
 		for (Fundsource fundsource : fundsources.getPagedData()) {
 			contract = new FundsourceContract();

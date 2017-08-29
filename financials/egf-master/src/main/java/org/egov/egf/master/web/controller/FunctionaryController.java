@@ -130,7 +130,7 @@ public class FunctionaryController {
 		FunctionaryContract contract;
 		ModelMapper model = new ModelMapper();
 		List<FunctionaryContract> functionaryContracts = new ArrayList<>();
-		Pagination<Functionary> functionaries = functionaryService.search(domain);
+		Pagination<Functionary> functionaries = functionaryService.search(domain, errors);
 
 		for (Functionary functionary : functionaries.getPagedData()) {
 			contract = new FunctionaryContract();

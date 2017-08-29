@@ -91,7 +91,7 @@ public class BankServiceTest {
 		Pagination<Bank> expectedResult = new Pagination<>();
 		expectedResult.setPagedData(search);
 		when(bankRepository.search(any(BankSearch.class))).thenReturn(expectedResult);
-		Pagination<Bank> actualResult = bankService.search(getBankSearch());
+		Pagination<Bank> actualResult = bankService.search(getBankSearch(), errors);
 		assertEquals(expectedResult, actualResult);
 	}
 

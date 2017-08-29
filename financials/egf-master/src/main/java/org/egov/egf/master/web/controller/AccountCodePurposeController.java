@@ -135,7 +135,7 @@ public class AccountCodePurposeController {
 		AccountCodePurposeContract contract;
 		ModelMapper model = new ModelMapper();
 		List<AccountCodePurposeContract> accountCodePurposeContracts = new ArrayList<>();
-		Pagination<AccountCodePurpose> accountcodepurposes = accountCodePurposeService.search(domain);
+		Pagination<AccountCodePurpose> accountcodepurposes = accountCodePurposeService.search(domain, errors);
 
 		for (AccountCodePurpose accountCodePurpose : accountcodepurposes.getPagedData()) {
 			contract = new AccountCodePurposeContract();

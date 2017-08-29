@@ -80,7 +80,7 @@ public class FunctionServiceTest {
 		Pagination<Function> expectedResult = new Pagination<>();
 		expectedResult.setPagedData(search);
 		when(functionRepository.search(any(FunctionSearch.class))).thenReturn(expectedResult);
-		Pagination<Function> actualResult = functionService.search(getFunctionSearch());
+		Pagination<Function> actualResult = functionService.search(getFunctionSearch(), errors);
 		assertEquals(expectedResult, actualResult);
 
 	}

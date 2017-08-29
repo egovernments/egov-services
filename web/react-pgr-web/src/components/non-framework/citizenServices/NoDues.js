@@ -79,7 +79,7 @@ const getAmount = function(demands, arrearsBool) {
       for(var i=0; i<collectionAmountArr.length; i++)
         collSum += collectionAmountArr[i];
       return taxSum - collSum;
-    } else return "00";
+    } else return "NA";
 }
 
 const getAddress = function(property) {
@@ -388,6 +388,7 @@ class NoDues extends Component {
   }
 
   createDemand = (SID, finalObject, response) => {
+    
     let self = this;
     let {formData} = this.props;
     finalObject["businessService"] = (self.props.match.params.status == "extract" ? "PT" : (self.props.match.params.id == "pt" ? "PT" : "WC"));
@@ -1144,16 +1145,16 @@ class NoDues extends Component {
                                             {match.params.id=="wc"?"Water":"Property"} No dues
                                           </td>
                                           <td >
-                                            {parseInt(getAmount(this.state.demands, true))?getAmount(this.state.demands, true):"NA"}
+                                            {getAmount(this.state.demands, true)}
                                           </td>
                                           <td >
-                                            {parseInt(getAmount(this.state.demands, false))?getAmount(this.state.demands, true):"NA"}
+                                            {getAmount(this.state.demands, false)}
                                           </td>
                                           <td >
-                                            {parseInt(getAmount(this.state.demands, true))?getAmount(this.state.demands, true):"NA"}
+                                            {getAmount(this.state.demands, true)}
                                           </td>
                                           <td >
-                                            {parseInt(getAmount(this.state.demands, false))?getAmount(this.state.demands, true):"NA"}
+                                            {getAmount(this.state.demands, false)}
                                           </td>
                                           <td>
                                             NA
@@ -1179,16 +1180,16 @@ class NoDues extends Component {
                                         <td>
                                           Amount
                                         </td>
-										<td colSpan={2}>
+										                     <td colSpan={2}>
                                            Transaction No
                                         </td>
-										<td colSpan={2}>
-											Transaction Date
+                      										<td colSpan={2}>
+                      											Transaction Date
                                         </td>
-										{false && <td colSpan={2}>
+										                    <td colSpan={2}>
                                           Bank Name
-                                        </td>}
-                                        <td colSpan={2}></td>
+                                        </td>
+
                                       </tr>
                                       <tr>
                                         <td>
@@ -1197,16 +1198,16 @@ class NoDues extends Component {
                                         <td>
                                           {getTotal(demands)}
                                         </td>
-                                        {Receipt[0].instrument.instrumentType.name=="Cash"? <td colSpan={2}></td> : <td colSpan={2}>
+                                        {Receipt[0].instrument.instrumentType.name=="Cash"? <td colSpan={2}>NA</td> : <td colSpan={2}>
                                           {this.state.serviceRequest.serviceRequestId}
                                         </td>}
-                                        <td colSpan={2}>
-                                          {Receipt[0].instrument.instrumentType.name=="Cash"?<td colSpan={2}></td>:(getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate))}
-                                        </td>
-                                        {false && <td colSpan={2}>
-                                          {Receipt[0].instrument.instrumentType.name=="Cash"?<td colSpan={2}></td>:Receipt[0].instrument.bank.name}
-                                        </td>}
-                                        <td colSpan={2}></td>
+
+                                          {Receipt[0].instrument.instrumentType.name=="Cash"?<td colSpan={2}>NA</td>:<td colSpan={2}>(getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate))</td>}
+
+
+                                          {Receipt[0].instrument.instrumentType.name=="Cash"?<td colSpan={2}>NA</td>:<td colSpan={2}>Receipt[0].instrument.bank.name</td>}
+
+
                                       </tr>
                                   </tbody>
                               </Table>
@@ -1267,22 +1268,22 @@ class NoDues extends Component {
                                       </tr>
                                       <tr>
                                           <td >
-                                            
+
                                           </td>
                                           <td >
-                                            
+
                                           </td>
                                           <td >
-                                            
+
                                           </td>
                                           <td >
-                                            
+
                                           </td>
                                           <td >
-                                            
+
                                           </td>
                                           <td >
-                                           
+
                                           </td>
                                       </tr>
                                       <tr>
@@ -1318,10 +1319,10 @@ class NoDues extends Component {
                                           <td>
                                             Transaction Date
                                           </td>
-                                        {false && <td colSpan={2}>
+                                      <td colSpan={2}>
                                                               Bank Name
-                                                            </td>}
-                                                        <td colSpan={2}></td>
+                                                            </td>
+
                                       </tr>
                                       <tr>
                                         <td>
@@ -1330,16 +1331,16 @@ class NoDues extends Component {
                                         <td>
                                           {(applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount)?(applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount):"NA"}
                                         </td>
-                                        {ReceiptOne[0].instrument.instrumentType.name=="Cash"? <td ></td> : <td >
+                                        {ReceiptOne[0].instrument.instrumentType.name=="Cash"? <td >NA</td> : <td >
                                           {ReceiptOne[0].transactionId}
                                         </td>}
 
-                                          {ReceiptOne[0].instrument.instrumentType.name=="Cash"?<td ></td>:<td >getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate)</td>}
+                                          {ReceiptOne[0].instrument.instrumentType.name=="Cash"?<td >NA</td>:<td >getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate)</td>}
 
-                                        {false && <td colSpan={2}>
-                                          {ReceiptOne[0].instrument.instrumentType.name=="Cash"?"":ReceiptOne[0].instrument.bank.name}
-                                        </td>}
-                                        <td colSpan={2}></td>
+                                      <td colSpan={2}>
+                                          {ReceiptOne[0].instrument.instrumentType.name=="Cash"?<td >NA</td>:ReceiptOne[0].instrument.bank.name}
+                                        </td>
+
                                       </tr>
                                   </tbody>
                               </Table>

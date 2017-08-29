@@ -1292,7 +1292,7 @@ var localization_EN_Data = {
     "pgr.0060": "Applicant Details",
     "pgr.0061": "Complainant Details",
     "wc.create.groups.applicantDetails.addressNumber":"House Number",
-    
+
 "reports.collection.amount":"Amount",
 "reports.collection.bank":"Bank",
 "reports.collection.branch":"Branch",
@@ -1324,6 +1324,7 @@ var localization_EN_Data = {
 "reports.collection.todate":"To Date",
 "reports.collection.total.count":"Total Count",
 
+    "noDues.citizenService.assessmentNumber":"Assessment Number"
 };
 
 var localization_MR_Data = {

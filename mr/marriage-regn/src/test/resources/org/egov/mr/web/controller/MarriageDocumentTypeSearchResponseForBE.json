@@ -1,19 +1,15 @@
 {
-    "responseInfo": {
-        "resMsgId": "search with from and to values",
-        "status": "400",
-        "apiId": "mr-services",
-        "ver": null,
-        "ts": null,
-        "key": null,
-        "tenantId": null
-    },
-    "error": {
-        "code": 400,
-        "message": "[isActive] : Required Query Parameter Missing ",
-        "description": "Error While Binding Results",
-        "fields": [
-            
-        ]
-    }
+	"responseInfo": {
+		"resMsgId": "search with from and to values",
+		"status": "400",
+		"apiId": "mr-services",
+		"ver": null,
+		"ts": 987456321
+	},
+	"error": {
+		"code": 400,
+		"message": "[isActive] : Required Query Parameter Missing ",
+		"description": "Error While Binding Results",
+		"fields": []
+	}
 }

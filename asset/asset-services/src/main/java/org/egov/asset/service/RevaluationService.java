@@ -12,7 +12,6 @@ import org.egov.asset.contract.RevaluationResponse;
 import org.egov.asset.contract.VoucherRequest;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCategory;
-import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.AssetCurrentValue;
 import org.egov.asset.model.ChartOfAccountDetailContract;
 import org.egov.asset.model.Function;
@@ -24,7 +23,6 @@ import org.egov.asset.model.enums.AssetConfigurationKeys;
 import org.egov.asset.model.enums.KafkaTopicName;
 import org.egov.asset.model.enums.TransactionType;
 import org.egov.asset.model.enums.TypeOfChangeEnum;
-import org.egov.asset.repository.AssetRepository;
 import org.egov.asset.repository.RevaluationRepository;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
@@ -48,7 +46,7 @@ public class RevaluationService {
     private ApplicationProperties applicationProperties;
 
     @Autowired
-    private AssetRepository assetRepository;
+    private AssetService assetService;
 
     @Autowired
     private VoucherService voucherService;
@@ -124,12 +122,9 @@ public class RevaluationService {
 
     public String createVoucherForRevaluation(final RevaluationRequest revaluationRequest, final HttpHeaders headers) {
         final Revaluation revaluation = revaluationRequest.getRevaluation();
-        final List<Long> assetIds = new ArrayList<>();
         final RequestInfo requestInfo = revaluationRequest.getRequestInfo();
         final String tenantId = revaluation.getTenantId();
-        assetIds.add(revaluation.getAssetId());
-        final Asset asset = assetRepository
-                .findForCriteria(AssetCriteria.builder().tenantId(tenantId).id(assetIds).build()).get(0);
+        final Asset asset = assetService.getAsset(tenantId, revaluation.getAssetId(), requestInfo);
         log.debug("asset for revaluation :: " + asset);
 
         final AssetCategory assetCategory = asset.getAssetCategory();

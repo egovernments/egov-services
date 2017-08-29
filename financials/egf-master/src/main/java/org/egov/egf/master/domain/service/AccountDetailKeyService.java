@@ -110,6 +110,7 @@ public class AccountDetailKeyService {
 	}
 
 	public Pagination<AccountDetailKey> search(AccountDetailKeySearch accountDetailKeySearch) {
+	        Assert.notNull(accountDetailKeySearch.getTenantId(), "tenantId is mandatory for accountDetailKey search");
 		return accountDetailKeyRepository.search(accountDetailKeySearch);
 	}
 

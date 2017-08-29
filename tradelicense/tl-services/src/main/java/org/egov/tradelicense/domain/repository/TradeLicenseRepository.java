@@ -1,5 +1,6 @@
 package org.egov.tradelicense.domain.repository;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import org.egov.tradelicense.domain.model.LicenseFeeDetail;
 import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.domain.model.TradeLicenseSearch;
+import org.egov.tradelicense.domain.repository.builder.LicenseBillQueryBuilder;
 import org.egov.tradelicense.persistence.entity.LicenseFeeDetailEntity;
 import org.egov.tradelicense.persistence.entity.SupportDocumentEntity;
 import org.egov.tradelicense.persistence.entity.TradeLicenseEntity;
@@ -21,6 +23,7 @@ import org.egov.tradelicense.persistence.repository.LicenseFeeDetailJdbcReposito
 import org.egov.tradelicense.persistence.repository.SupportDocumentJdbcRepository;
 import org.egov.tradelicense.persistence.repository.TradeLicenseJdbcRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -49,6 +52,9 @@ public class TradeLicenseRepository {
 
 	@Autowired
 	NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
 
 	public Long getNextSequence() {
 
@@ -317,6 +323,16 @@ public class TradeLicenseRepository {
 				}
 			}
 		}
+		
+		if(tradeLicense.getLicenseBills() != null && !tradeLicense.getLicenseBills().isEmpty())
+	        {
+	            final Object[] objValue = new Object[] { tradeLicense.getId(),
+	                    tradeLicense.getBillId(),tradeLicense.getTenantId(), Long.valueOf(tradeLicense.getAuditDetails().getCreatedBy()),
+	                    new Date(new java.util.Date().getTime()),
+	                    Long.valueOf(tradeLicense.getAuditDetails().getLastModifiedBy()),
+	                    new Date(new java.util.Date().getTime())};
+	            jdbcTemplate.update(LicenseBillQueryBuilder.insertLicenseBill(), objValue);
+	        }
 
 		return entity.toDomain();
 	}

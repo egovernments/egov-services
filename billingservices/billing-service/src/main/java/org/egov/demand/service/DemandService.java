@@ -42,6 +42,7 @@ package org.egov.demand.service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -375,6 +376,9 @@ public class DemandService {
 		}
 		if (demands!=null && !demands.isEmpty())
 			demands = demandEnrichmentUtil.enrichOwners(demands, owners);
+		for(Demand demand:demands){
+			demand.getDemandDetails().sort(Comparator.comparing(DemandDetail::getTaxHeadMasterCode));
+		}
 		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK), demands);
 	}
 

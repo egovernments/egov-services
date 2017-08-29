@@ -12,7 +12,6 @@ import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.TestConfiguration;
 import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.model.BankSearch;
-import org.egov.egf.master.domain.model.Function;
 import org.egov.egf.master.domain.repository.BankRepository;
 import org.egov.egf.master.domain.repository.FundRepository;
 import org.junit.Before;
@@ -121,6 +120,7 @@ public class BankServiceTest {
 		bankSearch.setPageSize(0);
 		bankSearch.setOffset(0);
 		bankSearch.setSortBy("Sort");
+		bankSearch.setTenantId("default");
 		return bankSearch;
 	}
 }

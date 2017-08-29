@@ -321,7 +321,7 @@ public class DemandConnectionService {
         url.append("?service=").append(taxperiodcriteria.getService()).append("&tenantId=")
                 .append(taxperiodcriteria.getTenantId());
                        url.append("&fromDate=").append(date);
-                       url.append("&toDate=").append(1506729600000l);
+                       url.append("&toDate=").append(1522454400000l);
         url.append("&periodCycle=").append(taxperiodcriteria.getPeriodCycle());
         return getTaxPeriodServiceResponse(url);
     }

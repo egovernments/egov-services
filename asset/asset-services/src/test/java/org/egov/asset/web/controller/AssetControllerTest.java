@@ -182,7 +182,7 @@ public class AssetControllerTest {
         revaluationResponse.setRevaluations(revaluations);
         when(revaluationService.createAsync(any(RevaluationRequest.class), any(HttpHeaders.class)))
                 .thenReturn(revaluationResponse);
-        mockMvc.perform(post("/assets/revaluation" + "/_create").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/assets/revaluation/_create").contentType(MediaType.APPLICATION_JSON)
                 .content(getFileContents("revaluation/revaluationcreaterequest.json"))).andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(getFileContents("revaluation/revaluationcreateresponse.json")));
@@ -338,6 +338,42 @@ public class AssetControllerTest {
 
         mockMvc.perform(post("/assets/_create").contentType(MediaType.APPLICATION_JSON)
                 .content(getFileContents("asseterrorrequest.json"))).andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(getFileContents("errorresponse.json")));
+    }
+    
+    @Test
+    public void test_error_revaluationCreate() throws IOException, Exception {
+        final ErrorResponse errorResponse = getErrorResponse();
+
+        when(assetCommonService.populateErrors(any(BindingResult.class))).thenReturn(errorResponse);
+
+        mockMvc.perform(post("/assets/revaluation/_create").contentType(MediaType.APPLICATION_JSON)
+                .content(getFileContents("revaluation/revaluationerrorrequest.json"))).andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(getFileContents("errorresponse.json")));
+    }
+    
+    @Test
+    public void test_error_disposalCreate() throws IOException, Exception {
+        final ErrorResponse errorResponse = getErrorResponse();
+
+        when(assetCommonService.populateErrors(any(BindingResult.class))).thenReturn(errorResponse);
+
+        mockMvc.perform(post("/assets/dispose/_create").contentType(MediaType.APPLICATION_JSON)
+                .content(getFileContents("disposal/disposalerrorrequest.json"))).andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(getFileContents("errorresponse.json")));
+    }
+    
+    @Test
+    public void test_error_depreciationCreate() throws IOException, Exception {
+        final ErrorResponse errorResponse = getErrorResponse();
+
+        when(assetCommonService.populateErrors(any(BindingResult.class))).thenReturn(errorResponse);
+
+        mockMvc.perform(post("/assets/depreciations/_create").contentType(MediaType.APPLICATION_JSON)
+                .content(getFileContents("depreciation/depreciationerrorrequest.json"))).andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(content().json(getFileContents("errorresponse.json")));
     }

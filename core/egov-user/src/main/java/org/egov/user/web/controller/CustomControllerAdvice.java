@@ -1,8 +1,36 @@
 package org.egov.user.web.controller;
 
 import org.egov.common.contract.response.ErrorResponse;
-import org.egov.user.domain.exception.*;
-import org.egov.user.web.adapters.errors.*;
+import org.egov.user.domain.exception.AtleastOneRoleCodeException;
+import org.egov.user.domain.exception.DuplicateUserNameException;
+import org.egov.user.domain.exception.InvalidAccessTokenException;
+import org.egov.user.domain.exception.InvalidLoggedInUserUpdatePasswordRequestException;
+import org.egov.user.domain.exception.InvalidNonLoggedInUserUpdatePasswordRequestException;
+import org.egov.user.domain.exception.InvalidRoleCodeException;
+import org.egov.user.domain.exception.InvalidUserCreateException;
+import org.egov.user.domain.exception.InvalidUserSearchCriteriaException;
+import org.egov.user.domain.exception.InvalidUserUpdateException;
+import org.egov.user.domain.exception.OtpValidationPendingException;
+import org.egov.user.domain.exception.PasswordMismatchException;
+import org.egov.user.domain.exception.UserDetailsException;
+import org.egov.user.domain.exception.UserIdMandatoryException;
+import org.egov.user.domain.exception.UserNotFoundException;
+import org.egov.user.domain.exception.UserProfileUpdateDeniedException;
+import org.egov.user.web.adapters.errors.AtleastOneRoleCodeErrorHandler;
+import org.egov.user.web.adapters.errors.DuplicateUserNameErrorHandler;
+import org.egov.user.web.adapters.errors.InvalidAccessTokenErrorHandler;
+import org.egov.user.web.adapters.errors.InvalidLoggedInUserUpdatePasswordRequestErrorHandler;
+import org.egov.user.web.adapters.errors.InvalidNonLoggedInUserUpdatePasswordRequestErrorHandler;
+import org.egov.user.web.adapters.errors.InvalidRoleCodeErrorHandler;
+import org.egov.user.web.adapters.errors.InvalidUserSearchRequestErrorHandler;
+import org.egov.user.web.adapters.errors.OtpValidationErrorAdapter;
+import org.egov.user.web.adapters.errors.PasswordMissMatchErrorHandler;
+import org.egov.user.web.adapters.errors.UserDetailsErrorHandler;
+import org.egov.user.web.adapters.errors.UserIdMandatoryErrorHandler;
+import org.egov.user.web.adapters.errors.UserNotFoundErrorHandler;
+import org.egov.user.web.adapters.errors.UserProfileUpdateDeniedErrorHandler;
+import org.egov.user.web.adapters.errors.UserRequestErrorAdapter;
+import org.egov.user.web.adapters.errors.UserUpdateErrorAdapter;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -65,6 +93,12 @@ public class CustomControllerAdvice {
 	@ExceptionHandler(InvalidRoleCodeException.class)
 	public ErrorResponse handleInvalidRoleCodeException(InvalidRoleCodeException ex) {
 		return new InvalidRoleCodeErrorHandler().adapt(ex.getRoleCode());
+	}
+	
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(AtleastOneRoleCodeException.class)
+	public ErrorResponse handleAtleastOneRoleCodeException(AtleastOneRoleCodeException ex) {
+		return new AtleastOneRoleCodeErrorHandler().adapt();
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)

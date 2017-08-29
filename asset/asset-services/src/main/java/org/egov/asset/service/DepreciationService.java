@@ -186,6 +186,7 @@ public class DepreciationService {
                         final Long dEAccount = cad.getDepreciationExpenseAccount();
                         log.debug("Depreciation Expense Account :: " + dEAccount);
                         VouchercreateAccountCodeDetails adAccountCodeDetails = ledgerMap.get(aDAccount);
+                        log.debug("Accumulated Depreciation Account Code Details :: " + adAccountCodeDetails);
                         if (adAccountCodeDetails != null)
                             adAccountCodeDetails.setDebitAmount(adAccountCodeDetails.getDebitAmount().add(amount));
                         else {
@@ -195,6 +196,7 @@ public class DepreciationService {
                         }
 
                         VouchercreateAccountCodeDetails deAccountCodeDetails = ledgerMap.get(dEAccount);
+                        log.debug("Depreciation Expense Account Code Details :: " + deAccountCodeDetails);
                         if (deAccountCodeDetails != null)
                             deAccountCodeDetails.setCreditAmount(deAccountCodeDetails.getCreditAmount().add(amount));
                         else {

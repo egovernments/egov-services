@@ -111,8 +111,11 @@ import EmployeeSearch from './components/non-framework/employee/search';
 import SearchLegacyWc from './components/non-framework/wc/search';
 import updateConnection from './components/non-framework/wc/connection-workflow';
 import NoDues from './components/non-framework/citizenServices/NoDues';
+import PayTax from './components/non-framework/citizenServices/PayTax';
+
 import ComingSoon from './components/non-framework/citizenServices/ComingSoon.js';
-//import CS_WaterConnection from './components/non-framework/citizenServices/wc/create.js';
+import CS_WaterConnection from './components/non-framework/citizenServices/wc/create.js';
+import CS_VIEW_WaterConnection from './components/non-framework/citizenServices/wc/view.js';
 import ViewWc from './components/non-framework/wc/viewWc';
 
 const base = "";
@@ -237,6 +240,8 @@ const Main = () => {
       <Route exact path= {base + '/non-framework/collection/master/paytax/PayTaxCreate'} component={PayTaxCreate}/>
       <Route exact path= {base + '/non-framework/collection/receipt/view/:id'} component={ReceiptView}/>
       <Route exact path= {base + '/non-framework/citizenServices/no-dues/:status/:id'} component={NoDues}/>
+      <Route exact path= {base + '/non-framework/citizenServices/paytax/:status/:id'} component={PayTax}/>
+
 
       <Route exact path={base + '/empsearch/:actionName'} component={EmployeeSearch}/>
       <Route exact path={base+'/legacy/view/:id'} component={ViewLegacy}/>
@@ -244,7 +249,8 @@ const Main = () => {
       <Route exact path={base+'/searchconnection/wc'} component={SearchLegacyWc}/>
       <Route exact path={base+'/wc/application/update/:stateId'} component={updateConnection}/>
 	  <Route exact path={base+'/waterConnection/view/:id'} component={ViewWc}/>
-      {/*<Route exact path={base + '/non-framework/citizenServices/wc'} component={CS_WaterConnection}/>*/}
+      <Route exact path={base + '/non-framework/citizenServices/wc/create'} component={CS_WaterConnection}/>
+      <Route exact path={base + '/non-framework/citizenServices/wc/view/:ackNo'} component={CS_VIEW_WaterConnection}/>
     </Switch>
   </main>
 )}

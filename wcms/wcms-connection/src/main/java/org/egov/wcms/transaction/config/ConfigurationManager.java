@@ -225,4 +225,7 @@ public class ConfigurationManager {
     @Value("${egov.services.tenant.searchpath}")
     private String tenantServiceSearchPath;
     
+    @Value("${id.hscNumberOfChar}")
+    private Integer hscNumberOfChar; 
+    
 }

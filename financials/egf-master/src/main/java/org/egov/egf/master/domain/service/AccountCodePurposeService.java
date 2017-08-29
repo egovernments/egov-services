@@ -96,6 +96,7 @@ public class AccountCodePurposeService {
 	}
 
 	public Pagination<AccountCodePurpose> search(AccountCodePurposeSearch accountCodePurposeSearch) {
+	        Assert.notNull(accountCodePurposeSearch.getTenantId(), "tenantId is mandatory for accountCodePurpose search");
 		return accountCodePurposeRepository.search(accountCodePurposeSearch);
 	}
 

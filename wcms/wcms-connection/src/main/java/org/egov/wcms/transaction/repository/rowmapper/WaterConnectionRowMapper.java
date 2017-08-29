@@ -144,6 +144,7 @@ public class WaterConnectionRowMapper {
 			connection.setNumberOfPersons(rs.getInt("conn_noofperson"));
 			connection.setStateId(rs.getLong("conn_stateid"));
 			connection.setParentConnectionId(rs.getLong("conn_parentconnectionid"));
+			connection.setHouseNumber(rs.getString("housenumber"));
 			connection.setWaterTreatmentId(rs.getString("conn_watertreatmentid"));
 			connection.setWaterTreatment(
 					(null != rs.getString("watertreatmentname") && rs.getString("watertreatmentname") != "")

@@ -134,6 +134,7 @@ public class BankBranchServiceTest {
 		bankBranchSearch.setPageSize(0);
 		bankBranchSearch.setOffset(0);
 		bankBranchSearch.setSortBy("Sort");
+		bankBranchSearch.setTenantId("default");
 		return bankBranchSearch;
 	}
 }

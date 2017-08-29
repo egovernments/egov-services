@@ -140,6 +140,7 @@ public class BankBranchService {
 	}
 
 	public Pagination<BankBranch> search(BankBranchSearch bankBranchSearch) {
+	        Assert.notNull(bankBranchSearch.getTenantId(), "tenantId is mandatory for bankBranch search");
 		return bankBranchRepository.search(bankBranchSearch);
 	}
 

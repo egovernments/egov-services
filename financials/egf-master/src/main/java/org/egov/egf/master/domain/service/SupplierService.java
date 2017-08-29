@@ -118,6 +118,7 @@ public class SupplierService {
 	}
 
 	public Pagination<Supplier> search(SupplierSearch supplierSearch) {
+	        Assert.notNull(supplierSearch.getTenantId(), "tenantId is mandatory for supplier search");
 		return supplierRepository.search(supplierSearch);
 	}
 

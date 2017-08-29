@@ -33,7 +33,6 @@ import org.egov.asset.model.enums.AssetStatusObjectName;
 import org.egov.asset.model.enums.Status;
 import org.egov.asset.model.enums.TransactionType;
 import org.egov.asset.model.enums.TypeOfChangeEnum;
-import org.egov.asset.repository.AssetRepository;
 import org.egov.asset.service.AssetCommonService;
 import org.egov.asset.service.AssetConfigurationService;
 import org.egov.asset.service.AssetMasterService;
@@ -59,9 +58,6 @@ public class AssetValidator {
 
     @Autowired
     private CurrentValueService currentValueService;
-
-    @Autowired
-    private AssetRepository assetRepository;
 
     @Autowired
     private AssetConfigurationService assetConfigurationService;
@@ -162,11 +158,9 @@ public class AssetValidator {
 
     public void validateDisposal(final DisposalRequest disposalRequest) {
         final Disposal disposal = disposalRequest.getDisposal();
-        final List<Long> assetIds = new ArrayList<>();
-        assetIds.add(disposal.getAssetId());
         final String tenantId = disposal.getTenantId();
-        final Asset asset = assetRepository
-                .findForCriteria(AssetCriteria.builder().tenantId(tenantId).id(assetIds).build()).get(0);
+        final Asset asset = assetService.getAsset(tenantId, disposal.getAssetId(), disposalRequest.getRequestInfo());
+        log.debug("Asset For Disposal :: " + asset);
         validateAssetForCapitalizedStatus(asset);
         if (StringUtils.isEmpty(disposal.getBuyerName()))
             throw new RuntimeException("Buyer Name should be present for disposing asset : " + asset.getName());
@@ -231,11 +225,10 @@ public class AssetValidator {
 
     public void validateRevaluation(final RevaluationRequest revaluationRequest) {
         final Revaluation revaluation = revaluationRequest.getRevaluation();
-        final List<Long> assetIds = new ArrayList<>();
-        assetIds.add(revaluation.getAssetId());
         final String tenantId = revaluation.getTenantId();
-        final Asset asset = assetRepository
-                .findForCriteria(AssetCriteria.builder().tenantId(tenantId).id(assetIds).build()).get(0);
+        final Asset asset = assetService.getAsset(tenantId, revaluation.getAssetId(),
+                revaluationRequest.getRequestInfo());
+        log.debug("Asset For Revaluation :: " + asset);
         validateAssetForCapitalizedStatus(asset);
         final boolean enableVoucherGeneration = getEnableYearWiseDepreciation(tenantId);
         if (enableVoucherGeneration) {
@@ -341,11 +334,8 @@ public class AssetValidator {
 
     public void validateAssetForUpdate(final AssetRequest assetRequest) {
         final Asset assetFromReq = assetRequest.getAsset();
-        final List<Long> ids = new ArrayList<>();
-        ids.add(assetFromReq.getId());
-        final AssetCriteria assetCriteria = AssetCriteria.builder().id(ids).tenantId(assetFromReq.getTenantId())
-                .build();
-        final Asset asset = assetService.getAssets(assetCriteria, assetRequest.getRequestInfo()).getAssets().get(0);
+        final Asset asset = assetService.getAsset(assetFromReq.getTenantId(), assetFromReq.getId(),
+                assetRequest.getRequestInfo());
         if (!assetFromReq.getCode().equalsIgnoreCase(asset.getCode()))
             throw new RuntimeException("Invalid Asset Code for Asset :: " + asset.getName());
         else
@@ -370,14 +360,13 @@ public class AssetValidator {
 
         if (finacialYear == null && fromDate == null && toDate == null)
             throw new RuntimeException(
-                    "financialyear and (time period)fromdate,todate both cannot be null please provide atleast one value");
+                    "financialyear and (time period)fromdate,todate both cannot be null please provide atleast one value.");
+        if (finacialYear == null && fromDate != null && toDate == null)
+            throw new RuntimeException("If From Date is selected then To date is mandatory.");
         if (finacialYear == null && fromDate != null && toDate != null)
             assetCriteria = AssetCriteria.builder().id(new ArrayList<Long>(assetIds)).status(status)
                     .fromCapitalizedValue(depreciationMinimumValue).tenantId(tenantId).fromDate(fromDate).toDate(toDate)
                     .build();
-        if (finacialYear == null && fromDate != null && toDate == null)
-            assetCriteria = AssetCriteria.builder().id(new ArrayList<Long>(assetIds)).status(status)
-                    .fromCapitalizedValue(depreciationMinimumValue).tenantId(tenantId).fromDate(fromDate).build();
         if (finacialYear == null && fromDate == null && toDate != null)
             assetCriteria = AssetCriteria.builder().id(new ArrayList<Long>(assetIds)).status(status)
                     .fromCapitalizedValue(depreciationMinimumValue).tenantId(tenantId).toDate(toDate).build();

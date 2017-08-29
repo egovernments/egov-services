@@ -95,6 +95,7 @@ public class FinancialYearService {
 	}
 
 	public Pagination<FinancialYear> search(FinancialYearSearch financialYearSearch) {
+	        Assert.notNull(financialYearSearch.getTenantId(), "tenantId is mandatory for financialYear search");
 		return financialYearRepository.search(financialYearSearch);
 	}
 

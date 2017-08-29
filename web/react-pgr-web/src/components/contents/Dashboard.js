@@ -63,6 +63,11 @@ const content=[
                 icon: 'icon-class-name',
                 label: 'Apply for New Connection',
                 to: '#/coming/soon',
+            },
+            {
+                icon: 'icon-class-name',
+                label: 'Pay My Dues',
+                to: '#/non-framework/citizenServices/paytax/search/wc',
             }
         ],
     },
@@ -79,6 +84,11 @@ const content=[
                 icon: 'icon-class-name',
                 label: 'Apply for Extract',
                 to: '#/non-framework/citizenServices/no-dues/extract/pt',
+            },
+            {
+                icon: 'icon-class-name',
+                label: 'Pay My Dues',
+                to: '#/non-framework/citizenServices/paytax/search/pt',
             }
         ],
     },
@@ -391,7 +401,7 @@ class Dashboard extends Component {
         Api.commonApiPost("access/v1/actions/_get",{},{tenantId:localStorage.tenantId, roleCodes, enabled:true}).then(function(response){
           var actions = response.actions;
           localStorage.setItem("actions", JSON.stringify(actions));
-          self.props.setActionList(actions);   
+          self.props.setActionList(actions);
         }, function(err) {
             console.log(err);
         });

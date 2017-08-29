@@ -6,12 +6,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.mr.TestConfiguration;
 import org.egov.mr.model.ApprovalDetails;
 import org.egov.mr.model.AuditDetails;
+import org.egov.mr.model.Demand;
+import org.egov.mr.model.Fee;
 import org.egov.mr.model.Location;
 import org.egov.mr.model.MarriageCertificate;
 import org.egov.mr.model.MarriageDocument;
@@ -32,8 +37,6 @@ import org.egov.mr.utils.FileUtils;
 import org.egov.mr.web.contract.MarriageRegnCriteria;
 import org.egov.mr.web.contract.MarriageRegnRequest;
 import org.egov.mr.web.contract.MarriageRegnResponse;
-import org.egov.mr.web.contract.RequestInfo;
-import org.egov.mr.web.contract.ResponseInfo;
 import org.egov.mr.web.contract.ResponseInfoFactory;
 import org.junit.After;
 import org.junit.Before;
@@ -78,8 +81,8 @@ public class MarriageRegnControllerTest {
 	public void testForCreate() {
 
 		MarriageRegn marriageregn = getMarriageRegnFromDB().get(0);
-		ResponseInfo responseInfo = ResponseInfo.builder().apiId("string").status("201").tenantId("ap.kurnool")
-				.ver("string").key("successful").ts("string").resMsgId("string").build();
+		ResponseInfo responseInfo = ResponseInfo.builder().apiId("string").status("201").ver("string")
+				.ts(Long.valueOf("987456321")).resMsgId("string").build();
 		when(responseInfoFactory.createResponseInfoFromRequestInfo(Matchers.any(RequestInfo.class),
 				Matchers.any(Boolean.class))).thenReturn(responseInfo);
 		when(marriageRegnService.createAsync(Matchers.any(MarriageRegnRequest.class))).thenReturn(marriageregn);
@@ -99,8 +102,8 @@ public class MarriageRegnControllerTest {
 	@Test
 	public void testForUpdate() {
 		MarriageRegn marriageRegn = getMarriageRegnFromDB().get(0);
-		ResponseInfo responseInfo = ResponseInfo.builder().apiId("string").status("200").tenantId("ap.kurnool")
-				.ver("string").key("successful").ts("string").resMsgId("string").build();
+		ResponseInfo responseInfo = ResponseInfo.builder().apiId("string").status("200").ver("string")
+				.ts(Long.valueOf("987456321")).resMsgId("string").build();
 		when(responseInfoFactory.createResponseInfoFromRequestInfo(Matchers.any(RequestInfo.class),
 				Matchers.any(Boolean.class))).thenReturn(responseInfo);
 		when(marriageRegnService.updateAsync(Matchers.any(MarriageRegnRequest.class))).thenReturn(marriageRegn);
@@ -120,13 +123,12 @@ public class MarriageRegnControllerTest {
 	@Test
 	public void testForSearch() {
 		MarriageRegn marriageRegn = getMarriageRegnFromDB().get(0);
-		ResponseInfo responseInfo = ResponseInfo.builder().apiId("string").status("200").tenantId("ap.kurnool")
-				.ver("string").key("successful").ts("string").resMsgId("string").build();
+		ResponseInfo responseInfo = ResponseInfo.builder().apiId("string").status("200").ver("string")
+				.ts(Long.valueOf("987456321")).resMsgId("string").build();
 		when(responseInfoFactory.createResponseInfoFromRequestInfo(Matchers.any(RequestInfo.class),
 				Matchers.any(Boolean.class))).thenReturn(responseInfo);
-		when(marriageRegnService.getMarriageRegns(Matchers.any(MarriageRegnCriteria.class), Matchers.any(RequestInfo.class))).
-		thenReturn(getmarriageregnForSearch().getMarriageRegns());
-		
+		when(marriageRegnService.getMarriageRegns(Matchers.any(MarriageRegnCriteria.class),
+				Matchers.any(RequestInfo.class))).thenReturn(getmarriageregnForSearch().getMarriageRegns());
 
 		try {
 			mockMvc.perform(
@@ -144,19 +146,39 @@ public class MarriageRegnControllerTest {
 		return new FileUtils().getFileContents("org/egov/mr/web/controller/" + filePath);
 	}
 
+	/**
+	 * @Creating_Object
+	 * 
+	 * @return
+	 */
 	public List<MarriageRegn> getMarriageRegnFromDB() {
 		AuditDetails auditDetails = AuditDetails.builder().createdBy("asish").createdTime(1503056473884l)
 				.lastModifiedBy("asish").lastModifiedTime(1503056473884l).build();
+		/**
+		 * @RegnUnit_HelperMethod
+		 */
+		RegistrationUnit regnunit = RegistrationUnit.builder().id(33L).code("AP").name("kurnool")
+				.address(Location.builder().locality(60L).zone(147896325L).revenueWard(150L).block(14788L)
+						.street(159632478L).electionWard(123456789L).doorNo("132").pinCode(560103).build())
+				.isActive(true).tenantId("ap.kurnool").auditDetails(auditDetails).build();
 
+		/**
+		 * @Certificates_HelperMethod
+		 */
 		MarriageCertificate marriageCertificate = MarriageCertificate.builder().applicationNumber("applnno")
 				.bridePhoto("photo").bridegroomPhoto("photo").certificateDate(1496430744825L).certificateNo("certno")
 				.certificatePlace("certplace").certificateType(CertificateType.REISSUE).husbandAddress("hus address")
-				.husbandName("husname").wifeName("wife name").wifeAddress("wife address").marriageDate(1496430744825L)
-				.marriageVenueAddress("venu address").regnDate(1496430744825L).regnNumber("regnnumber")
-				.regnSerialNo("serialno").regnVolumeNo("volumeno").templateVersion("v2").tenantId("ap.kurnool").build();
+				.husbandName("husname").wifeName("wife name").wifeAddress("wife address")
+				.marriageDate(Long.valueOf("214335")).marriageVenueAddress("FUNCTION_HALL")
+				.regnDate(Long.valueOf("214335")).regnNumber("regnnumber").regnSerialNo("serialno")
+				.regnVolumeNo("volumeno").templateVersion("v2").tenantId("ap.kurnool").build();
+
 		List<MarriageCertificate> marriageCertificates = new ArrayList<>();
 		marriageCertificates.add(marriageCertificate);
 
+		/**
+		 * @Documents_HelperMethod
+		 */
 		MarriageDocument marriageDocument = MarriageDocument.builder().location("location").id("1")
 				.auditDetails(auditDetails).documentType("documenttype").reissueCertificateId("1234")
 				.tenantId("ap.kurnool").build();
@@ -166,25 +188,46 @@ public class MarriageRegnControllerTest {
 		ApprovalDetails approvalDetails = ApprovalDetails.builder().action("action").assignee(1496430744825L)
 				.comments("comments").department(1496430744825L).designation(1496430744825L).status("Approved").build();
 
+		/**
+		 * @witnesses_HelperMethod
+		 */
 		Witness witness = Witness.builder().name("name").occupation("doctor").age(50).aadhaar("2134567896")
 				.email("name@gmail.com").address("full address").mobileNo("7654331890").relationship("uncle")
 				.relatedTo(RelatedTo.BRIDEGROOM).relationForIdentification("uncle").witnessNo(1).build();
 		List<Witness> witnesses = new ArrayList<>();
 		witnesses.add(witness);
-		List<Long> demands = new ArrayList<>();
-		demands.add(1503056473884l);
+
+		/**
+		 * @demands_HelperMethod
+		 */
+		List<Demand> demands = new ArrayList<>();
+		Demand demand = new Demand();
+		demand.setId("2");
+		demands.add(demand);
 
 		List<String> actions = new ArrayList<>();
 		actions.add("action");
 
+		/**
+		 * @Fee_HelperMethod
+		 */
+		Fee fee = new Fee();
+		fee.setId("2");
+		fee.setTenantId("ap.kurnool");
+		fee.setFee(BigDecimal.valueOf(10.5));
+		fee.setFeeCriteria("100.1");
+		fee.setFromDate(Long.valueOf("9874563210"));
+		fee.setToDate(Long.valueOf("9874563210"));
+
+		/**
+		 * @Priest_HelperMethod
+		 */
 		PriestInfo priest = PriestInfo.builder().aadhaar("32425365675").address("addreee").email("email")
 				.mobileNo("459876799").religion(0l).name("string").build();
 
-		RegistrationUnit regnunit = RegistrationUnit.builder().id(33L).code("AP").name("kurnool")
-				.address(Location.builder().locality(60L).zone(147896325L).revenueWard(150L).block(14788L)
-						.street(159632478L).electionWard(123456789L).doorNo("132").pinCode(560103).build())
-				.isActive(true).tenantId("ap.kurnool").auditDetails(auditDetails).build();
-
+		/**
+		 * @MarryingPerson_HelperMethod
+		 */
 		MarryingPerson bridegroom = MarryingPerson.builder().aadhaar("23546576878").city("bangalore").dob(121234l)
 				.education("BE").email("email").id(10l).mobileNo("9246745333").name("bridegroom name1")
 				.locality("locality").nationality("INDIAN").parentName("parentname").photo("photo")
@@ -197,31 +240,39 @@ public class MarriageRegnControllerTest {
 				.street("street").religion(1l).locality("locality").religionPractice("hindu")
 				.residenceAddress("rewsidential address").handicapped("no").build();
 
-		MarriageRegn marriageRegn = MarriageRegn.builder().applicationNumber("8").approvalDetails(approvalDetails)
-				.auditDetails(auditDetails).bride(bride).bridegroom(bridegroom).certificates(marriageCertificates)
-				.city("bangalore").demands(demands).documents(documentsList).fee(50.0).isActive(true)
-				.locality("locality").actions(actions).marriageDate(214335l).marriagePhoto("photo")
-				.placeOfMarriage("RESIDENCE").placeOfMarriage("bangalore").priest(priest).street("street")
-				.regnDate(121231l).regnNumber("regnno").regnUnit(regnunit).rejectionReason("inappropriate document")
-				.remarks("remarks").serialNo("serino").source(Source.SYSTEM).tenantId("ap.kurnool")
-				.status(ApplicationStatus.APPROVED).stateId("stateid").venue(Venue.FUNCTION_HALL).volumeNo("volno")
-				.witnesses(witnesses).remarks("remarks").build();
+		/**
+		 * @marriageRegns_OBJECT_integration
+		 */
+		MarriageRegn marriageRegn = MarriageRegn.builder().regnUnit(regnunit).marriageDate(Long.valueOf("214335"))
+				.venue(Venue.FUNCTION_HALL).street("street").placeOfMarriage("RESIDENCE").locality("locality")
+				.city("bangalore").marriagePhoto("photo").fee(fee).bridegroom(bridegroom).bride(bride)
+				.witnesses(witnesses).priest(priest).documents(documentsList).serialNo("serino").volumeNo("volno")
+				.applicationNumber("8").regnNumber("regnno").regnDate(Long.valueOf("121231"))
+				.status(ApplicationStatus.APPROVED).source(Source.SYSTEM).stateId("stateid")
+				.approvalDetails(approvalDetails).rejectionReason("inappropriate document").remarks("remarks")
+				.certificates(marriageCertificates).demands(demands).actions(actions).auditDetails(auditDetails)
+				.isActive(true).tenantId("ap.kurnool").build();
+
 		List<MarriageRegn> marriageRegns = new ArrayList<>();
 		marriageRegns.add(marriageRegn);
 		return marriageRegns;
 
 	}
-	
-	public  MarriageRegnResponse getmarriageregnForSearch(){
-		List<MarriageRegn> marriageRegnList=getMarriageRegnFromDB();
-		Page page= Page.builder().build();
-		ResponseInfo responseInfo = ResponseInfo.builder().apiId("string").status("200").tenantId("ap.kurnool")
-				.ver("string").key("successful").ts("string").resMsgId("string").build();
-		MarriageRegnResponse marriageRegnResponse=MarriageRegnResponse.builder()
-				.marriageRegns(marriageRegnList).page(page).responseInfo(responseInfo).build();
+
+	/**
+	 * @getMR_For_Search
+	 * 
+	 * @return
+	 */
+	public MarriageRegnResponse getmarriageregnForSearch() {
+		List<MarriageRegn> marriageRegnList = getMarriageRegnFromDB();
+		Page page = Page.builder().build();
+		ResponseInfo responseInfo = ResponseInfo.builder().apiId("string").status("200").ver("string")
+				.ts(Long.valueOf("987456321")).resMsgId("string").build();
+		MarriageRegnResponse marriageRegnResponse = MarriageRegnResponse.builder().marriageRegns(marriageRegnList)
+				.page(page).responseInfo(responseInfo).build();
 		return marriageRegnResponse;
-		
+
 	}
-	
 
 }

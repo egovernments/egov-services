@@ -96,6 +96,7 @@ public class AccountDetailTypeService {
 	}
 
 	public Pagination<AccountDetailType> search(AccountDetailTypeSearch accountDetailTypeSearch) {
+	        Assert.notNull(accountDetailTypeSearch.getTenantId(), "tenantId is mandatory for accountDetailType search");
 		return accountDetailTypeRepository.search(accountDetailTypeSearch);
 	}
 

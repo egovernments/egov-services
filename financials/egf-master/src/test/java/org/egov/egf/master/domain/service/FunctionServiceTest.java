@@ -128,6 +128,7 @@ public class FunctionServiceTest {
 		functionSearch.setPageSize(0);
 		functionSearch.setOffset(0);
 		functionSearch.setSortBy("Sort");
+		functionSearch.setTenantId("default");
 		return functionSearch;
 	}
 

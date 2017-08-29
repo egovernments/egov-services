@@ -110,6 +110,7 @@ public class AccountEntityService {
 	}
 
 	public Pagination<AccountEntity> search(AccountEntitySearch accountEntitySearch) {
+	        Assert.notNull(accountEntitySearch.getTenantId(), "tenantId is mandatory for accountEntity search");
 		return accountEntityRepository.search(accountEntitySearch);
 	}
 

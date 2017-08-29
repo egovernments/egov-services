@@ -42,6 +42,7 @@ package org.egov.wcms.transaction.validator;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.wcms.transaction.config.ConfigurationManager;
 import org.egov.wcms.transaction.model.DocumentOwner;
@@ -71,6 +72,7 @@ public class ConnectionValidator {
     private WaterConnectionService waterConnectionService; 
 
     public static final Logger LOGGER = LoggerFactory.getLogger(ConnectionValidator.class);
+    public static final String consumerNumberPrefix = "0000000000"; 
     
     @Autowired
     private ConfigurationManager  configurationManager;
@@ -402,14 +404,20 @@ public class ConnectionValidator {
         
         return errorFields;
     }
-    public String generateAcknowledgementNumber(final WaterConnectionReq waterConnectionRequest)
-    {
-        return restConnectionService.generateRequestedDocumentNumber(waterConnectionRequest.getConnection().getTenantId(),
-                configurationManager.getIdGenNameServiceTopic(),configurationManager.getIdGenFormatServiceTopic(),waterConnectionRequest.getRequestInfo());
-    }
-    public String generateConsumerNumber(final WaterConnectionReq waterConnectionRequest)
-    {
-        return restConnectionService.generateRequestedDocumentNumber(waterConnectionRequest.getConnection().getTenantId(), configurationManager.getHscGenNameServiceTopic(),
-                configurationManager.getHscGenFormatServiceTopic(),waterConnectionRequest.getRequestInfo());
-    }
+
+	public String generateAcknowledgementNumber(final WaterConnectionReq waterConnectionRequest) {
+		return restConnectionService.generateRequestedDocumentNumber(
+				waterConnectionRequest.getConnection().getTenantId(), configurationManager.getIdGenNameServiceTopic(),
+				configurationManager.getIdGenFormatServiceTopic(), waterConnectionRequest.getRequestInfo());
+	}
+
+	public String generateConsumerNumber(final WaterConnectionReq waterConnectionRequest) {
+		Long nextConsumerNumber = waterConnectionService.generateNextConsumerNumber(); 
+		Integer format = configurationManager.getHscNumberOfChar();
+		String ulbName = restConnectionService.getULBNameFromTenant(waterConnectionRequest.getConnection().getTenantId(), waterConnectionRequest.getRequestInfo());
+		String completeConsumerNumber = ulbName.substring(0, 4).concat(StringUtils.right(consumerNumberPrefix + String.valueOf(nextConsumerNumber), format));
+		return completeConsumerNumber; 
+	}
+	
 }
+

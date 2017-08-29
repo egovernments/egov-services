@@ -179,13 +179,13 @@ ReportDefinitions:
     label: reports.property.revenueboundary
     type: singlevaluelist
     source: property
-    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name 
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name 
     isMandatory: false
     searchClause: and loc.revenueboundary = $revenueboundary
   - name: adminboundary
     label: reports.property.adminboundary
     type: singlevaluelist
-    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=WARD&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=WARD&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name
     isMandatory: false
     searchClause: And loc.adminboundary =$adminboundary
     source: collection
@@ -193,7 +193,7 @@ ReportDefinitions:
     label: reports.property.locationboundary
     type: singlevaluelist
     source: property
-    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION&pageSize=500|$..id|$..name
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION&pageSize=500|$..id|$..name
     isMandatory: false
     searchClause: and loc.locationboundary = $locationboundary
   query: select * from ((select prop.upicnumber as upicnumber,address.addressnumber||', '||address.addressline1||', '||address.addressline2||' - '||address.pincode as propertyaddress, 
@@ -212,7 +212,7 @@ ReportDefinitions:
          from egpt_property prop, egpt_propertydetails pd, egpt_address address, egbs_demand demand, egbs_demanddetail dd, egpt_propertylocation loc where prop.id=pd.property
          and prop.id=address.property and loc.property = prop.id 
          and demand.consumercode=prop.upicnumber
-         and demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service = 'PT' and todate>=(select extract ('epoch' from (select * from now()))*1000)) 
+         and demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service = 'PT' and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid) 
          UNION 
         (select prop.upicnumber as upicnumber,address.addressnumber||', '||address.addressline1||', '||address.addressline2||' - '||address.pincode as propertyaddress, 
         'ARREAR' as STATE,
@@ -230,7 +230,7 @@ ReportDefinitions:
          from egpt_property prop, egpt_propertydetails pd, egpt_address address, egbs_demand demand, egbs_demanddetail dd, egpt_propertylocation loc where prop.id=pd.property
          and prop.id=address.property and loc.property = prop.id 
          and demand.consumercode=prop.upicnumber
-         and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service = 'PT' and todate>=(select extract ('epoch' from (select * from now()))*1000)) 
+         and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service = 'PT' and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid) 
   groupBy: group by upicnumber,propertyaddress,state) 
   orderBy: )result order by upicnumber asc,state desc;
   
@@ -306,13 +306,13 @@ ReportDefinitions:
     label: reports.property.revenueboundary
     type: singlevaluelist
     source: property
-    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name 
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name 
     isMandatory: false
     searchClause: and loc.revenueboundary = $revenueboundary
   - name: adminboundary
     label: reports.property.adminboundary
     type: singlevaluelist
-    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=WARD&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=WARD&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name
     isMandatory: false
     searchClause: And loc.adminboundary =$adminboundary
     source: collection
@@ -320,7 +320,7 @@ ReportDefinitions:
     label: reports.property.locationboundary
     type: singlevaluelist
     source: property
-    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION&pageSize=500|$..id|$..name
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION&pageSize=500|$..id|$..name
     isMandatory: false
     searchClause: and loc.locationboundary = $locationboundary
   query: select * from ((select prop.upicnumber as upicnumber,address.addressnumber||', '||address.addressline1||', '||address.addressline2||' - '||address.pincode as propertyaddress, 
@@ -334,12 +334,12 @@ ReportDefinitions:
          SUM((CASE WHEN dd.taxheadcode = 'SEWERAGE_TAX' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS SEWERAGE_TAX_BAL,
          SUM((CASE WHEN dd.taxheadcode = 'LATE_PENALTY' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS LATE_PENALTY_BAL,
          SUM((CASE WHEN dd.taxheadcode = 'ADVANCE' THEN dd.collectionamount ELSE NULL END)) AS ADVANCE,
-         (select receiptnumber from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber order by receiptdate desc limit 1) as receiptnumber,
-         (select (SELECT to_timestamp( TRUNC( CAST(receiptdate AS bigint  ) / 1000 ) )) from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber order by receiptdate desc limit 1) as receiptdate 
+         (select receiptnumber from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber and tenantid=$tenantid order by receiptdate desc limit 1) as receiptnumber,
+         (select (SELECT to_timestamp( TRUNC( CAST(receiptdate AS bigint  ) / 1000 ) )) from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber and tenantid=$tenantid order by receiptdate desc limit 1) as receiptdate 
          from egpt_property prop, egpt_propertydetails pd, egpt_address address, egbs_demand demand, egbs_demanddetail dd, egpt_propertylocation loc where prop.id=pd.property
          and prop.id=address.property and loc.property = prop.id 
          and demand.consumercode=prop.upicnumber
-         and demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='PT' and todate>=(select extract ('epoch' from (select * from now()))*1000)) 
+         and demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='PT' and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid) 
          UNION 
          (select prop.upicnumber as upicnumber,address.addressnumber||', '||address.addressline1||', '||address.addressline2||' - '||address.pincode as propertyaddress, 
          'ARREAR' as STATE,
@@ -352,12 +352,12 @@ ReportDefinitions:
          SUM((CASE WHEN dd.taxheadcode = 'SEWERAGE_TAX' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS SEWERAGE_TAX_BAL,
          SUM((CASE WHEN dd.taxheadcode = 'LATE_PENALTY' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS LATE_PENALTY_BAL,
          SUM((CASE WHEN dd.taxheadcode = 'ADVANCE' THEN dd.collectionamount ELSE NULL END)) AS ADVANCE,
-         (select receiptnumber from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber order by receiptdate desc limit 1) as receiptnumber,
-         (select (SELECT to_timestamp( TRUNC( CAST(receiptdate AS bigint  ) / 1000 ) )) from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber order by receiptdate desc limit 1) as receiptdate 
+         (select receiptnumber from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber and tenantid=$tenantid order by receiptdate desc limit 1) as receiptnumber,
+         (select (SELECT to_timestamp( TRUNC( CAST(receiptdate AS bigint  ) / 1000 ) )) from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber and tenantid=$tenantid order by receiptdate desc limit 1) as receiptdate 
          from egpt_property prop, egpt_propertydetails pd, egpt_address address, egbs_demand demand, egbs_demanddetail dd, egpt_propertylocation loc where prop.id=pd.property
          and prop.id=address.property and loc.property = prop.id 
          and demand.consumercode=prop.upicnumber
-         and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service = 'PT'and todate>=(select extract ('epoch' from (select * from now()))*1000))
+         and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service = 'PT'and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid)
   groupBy: group by upicnumber,propertyaddress,state) 
   orderBy: )result order by upicnumber asc,state desc;
  
@@ -493,13 +493,13 @@ ReportDefinitions:
     label: reports.property.revenueboundary
     type: singlevaluelist
     source: property
-    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name 
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name 
     isMandatory: false
     searchClause: and loc.revenueboundary = $revenueboundary
   - name: adminboundary
     label: reports.property.adminboundary
     type: singlevaluelist
-    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=WARD&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=WARD&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name
     isMandatory: false
     searchClause: And loc.adminboundary =$adminboundary
     source: collection
@@ -507,7 +507,7 @@ ReportDefinitions:
     label: reports.property.locationboundary
     type: singlevaluelist
     source: property
-    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION&pageSize=500|$..id|$..name
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION&pageSize=500|$..id|$..name
     isMandatory: false
     searchClause: and loc.locationboundary = $locationboundary
   query: select * from ((select prop.upicnumber as upicnumber,address.addressnumber||', '||address.addressline1||', '||address.addressline2||' - '||address.pincode as propertyaddress, 
@@ -537,12 +537,12 @@ ReportDefinitions:
          SUM((CASE WHEN dd.taxheadcode = 'SEWERAGE_TAX' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS SEWERAGE_TAX_BAL,
          SUM((CASE WHEN dd.taxheadcode = 'LATE_PENALTY' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS LATE_PENALTY_BAL,
          SUM((CASE WHEN dd.taxheadcode = 'ADVANCE' THEN dd.collectionamount ELSE NULL END)) AS ADVANCE,
-         (select receiptnumber from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber order by receiptdate desc limit 1) as receiptnumber,
-         (select (SELECT to_timestamp( TRUNC( CAST(receiptdate AS bigint  ) / 1000 ) )) from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber order by receiptdate desc limit 1) as receiptdate 
+         (select receiptnumber from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber and tenantid=$tenantid order by receiptdate desc limit 1) as receiptnumber,
+         (select (SELECT to_timestamp( TRUNC( CAST(receiptdate AS bigint  ) / 1000 ) )) from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber and tenantid=$tenantid order by receiptdate desc limit 1) as receiptdate 
          from egpt_property prop, egpt_propertydetails pd, egpt_address address, egbs_demand demand, egbs_demanddetail dd, egpt_propertylocation loc where prop.id=pd.property
          and prop.id=address.property and loc.property = prop.id 
          and demand.consumercode=prop.upicnumber
-         and demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service = 'PT' and todate>=(select extract ('epoch' from (select * from now()))*1000)) 
+         and demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service = 'PT' and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid) 
          UNION 
          (select prop.upicnumber as upicnumber,address.addressnumber||', '||address.addressline1||', '||address.addressline2||' - '||address.pincode as propertyaddress, 
          'ARREAR' as STATE,
@@ -571,12 +571,12 @@ ReportDefinitions:
           SUM((CASE WHEN dd.taxheadcode = 'SEWERAGE_TAX' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS SEWERAGE_TAX_BAL,
           SUM((CASE WHEN dd.taxheadcode = 'LATE_PENALTY' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS LATE_PENALTY_BAL,
           SUM((CASE WHEN dd.taxheadcode = 'ADVANCE' THEN dd.collectionamount ELSE NULL END)) AS ADVANCE,
-          (select receiptnumber from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber order by receiptdate desc limit 1) as receiptnumber,
-          (select (SELECT to_timestamp( TRUNC( CAST(receiptdate AS bigint  ) / 1000 ) )) from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber order by receiptdate desc limit 1) as receiptdate 
+          (select receiptnumber from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber and tenantid=$tenantid order by receiptdate desc limit 1) as receiptnumber,
+          (select (SELECT to_timestamp( TRUNC( CAST(receiptdate AS bigint  ) / 1000 ) )) from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber and tenantid=$tenantid order by receiptdate desc limit 1) as receiptdate 
           from egpt_property prop, egpt_propertydetails pd, egpt_address address, egbs_demand demand, egbs_demanddetail dd, egpt_propertylocation loc where prop.id=pd.property
           and prop.id=address.property and loc.property = prop.id 
           and demand.consumercode=prop.upicnumber
-          and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service = 'PT' and todate>=(select extract ('epoch' from (select * from now()))*1000))
+          and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service = 'PT' and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid)
   groupBy: group by upicnumber,propertyaddress,state) 
   orderBy: )result order by upicnumber asc,state desc;
   
@@ -659,13 +659,13 @@ ReportDefinitions:
     label: reports.property.revenueboundary
     type: singlevaluelist
     source: property
-    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name 
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name 
     isMandatory: false
     searchClause: and loc.revenueboundary = $revenueboundary
   - name: adminboundary
     label: reports.property.adminboundary
     type: singlevaluelist
-    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=WARD&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=WARD&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name
     isMandatory: false
     searchClause: And loc.adminboundary =$adminboundary
     source: collection
@@ -679,13 +679,13 @@ ReportDefinitions:
          SUM((CASE WHEN dd.taxheadcode = 'TREE_TAX' THEN dd.taxamount ELSE NULL END)) AS TREE_TAX,
          SUM((CASE WHEN dd.taxheadcode = 'SEWERAGE_TAX' THEN dd.taxamount ELSE NULL END)) AS SEWERAGE_TAX,
          SUM((CASE WHEN dd.taxheadcode = 'LATE_PENALTY' THEN dd.taxamount ELSE NULL END)) AS LATE_PENALTY,
-         (select receiptnumber from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber order by receiptdate desc limit 1) as receiptnumber,
-         (select (SELECT to_timestamp( TRUNC( CAST(receiptdate AS bigint  ) / 1000 ) )) from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber order by receiptdate desc limit 1) as receiptdate 
+         (select receiptnumber from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber and tenantid=$tenantid order by receiptdate desc limit 1) as receiptnumber,
+         (select (SELECT to_timestamp( TRUNC( CAST(receiptdate AS bigint  ) / 1000 ) )) from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber and tenantid=$tenantid order by receiptdate desc limit 1) as receiptdate 
          from egpt_property prop, egpt_propertydetails pd, egpt_mstr_propertytype ptype, egpt_address address, egpt_property_owner owner, eg_user u, egbs_demand demand, egbs_demanddetail dd, egpt_propertylocation loc, egpt_unit unit, egpt_floors flr where prop.id=pd.property
          and prop.id=address.property and loc.property = prop.id and prop.id=owner.property and owner.owner=u.id and pd.propertytype=ptype.code 
          and unit.floor=flr.id and flr.propertydetails=pd.id
          and demand.consumercode=prop.upicnumber
-         and demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service = 'PT' and todate>=(select extract ('epoch' from (select * from now()))*1000)) 
+         and demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service = 'PT' and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid) 
   groupBy: group by upicnumber, ptype.code, u.name , propertyaddress, receiptnumber, receiptdate; 
   
 

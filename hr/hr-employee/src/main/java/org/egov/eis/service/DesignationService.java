@@ -38,32 +38,46 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.web.contract;
+package org.egov.eis.service;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.egov.common.contract.request.RequestInfo;
-import org.egov.eis.model.Employee;
+import lombok.extern.slf4j.Slf4j;
+import org.egov.eis.config.PropertiesManager;
+import org.egov.eis.model.bulk.Designation;
+import org.egov.eis.web.contract.DesignationResponse;
+import org.egov.eis.web.contract.RequestInfoWrapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import java.net.URI;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class EmployeeRequest {
+import static org.springframework.util.ObjectUtils.isEmpty;
 
-	@NotNull
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo;
+@Slf4j
+@Service
+public class DesignationService {
 
-	@Valid
-	@NotNull
-	@JsonProperty("Employee")
-	private Employee employee;
+	@Autowired
+	private RestTemplate restTemplate;
 
+	@Autowired
+	private PropertiesManager propertiesManager;
+
+	public Designation getDesignation(String code, String tenantId, RequestInfoWrapper requestInfoWrapper) {
+		URI url = null;
+		DesignationResponse designationResponse = null;
+		try {
+			url = new URI(propertiesManager.getHrMastersServiceHostName()
+					+ propertiesManager.getHrMastersServiceBasePath()
+					+ propertiesManager.getHrMastersServiceDesignationsSearchPath()
+					+ "?tenantId=" + tenantId + "&code=" + code);
+			log.debug(url.toString());
+			designationResponse = restTemplate.postForObject(url, requestInfoWrapper, DesignationResponse.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error("Following exception occurred while accessing Department API : " + e.getMessage());
+			return null;
+		}
+		return isEmpty(designationResponse.getDesignation()) ? null : designationResponse.getDesignation().get(0);
+	}
 }

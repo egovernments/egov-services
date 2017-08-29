@@ -38,32 +38,35 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.web.contract;
+package org.egov.eis.model.bulk;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.egov.common.contract.request.RequestInfo;
-import org.egov.eis.model.Employee;
+import lombok.*;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-@Data
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class EmployeeRequest {
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class Designation {
+
+	private Long id;
+
+	private String name;
 
 	@NotNull
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo;
+	@Size(max=20)
+	private String code;
 
-	@Valid
-	@NotNull
-	@JsonProperty("Employee")
-	private Employee employee;
+	private String description;
+
+	private String chartOfAccounts;
+
+	private Boolean active;
+
+	private String tenantId;
 
 }

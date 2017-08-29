@@ -54,18 +54,11 @@ import org.egov.eis.service.EmployeeService;
 import org.egov.eis.service.exception.EmployeeIdNotFoundException;
 import org.egov.eis.service.exception.IdGenerationException;
 import org.egov.eis.service.exception.UserException;
-import org.egov.eis.web.contract.EmployeeCriteria;
-import org.egov.eis.web.contract.EmployeeGetRequest;
-import org.egov.eis.web.contract.EmployeeInfoResponse;
-import org.egov.eis.web.contract.EmployeeRequest;
-import org.egov.eis.web.contract.EmployeeResponse;
-import org.egov.eis.web.contract.RequestInfoWrapper;
+import org.egov.eis.web.contract.*;
 import org.egov.eis.web.contract.factory.ResponseEntityFactory;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.eis.web.errorhandler.ErrorHandler;
 import org.egov.eis.web.validator.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -244,6 +237,25 @@ public class EmployeeController {
             return errorHandler.getResponseEntityForUnexpectedErrors(employeeRequest.getRequestInfo());
         }
         return getSuccessResponseForCreate(employee, employeeRequest.getRequestInfo());
+    }
+
+    /**
+     * Maps Post Requests for _bulkcreate & returns ResponseEntity of either EmployeeResponse type or ErrorResponse type
+     *
+     * @param employeeBulkRequest
+     * @param bindingResult
+     * @return ResponseEntity<?>
+     */
+    @PostMapping(value = "/_bulkcreate")
+    @ResponseBody
+    public ResponseEntity<?> bulkCreate(@RequestBody @Valid EmployeeBulkRequest employeeBulkRequest, BindingResult bindingResult) {
+        // validate input params that can be handled by annotations
+        log.info("employeeBulkCreateRequest :: " + employeeBulkRequest);
+        if (bindingResult.hasErrors()) {
+            return errorHandler.getErrorResponseEntityForInvalidRequest(bindingResult, employeeBulkRequest.getRequestInfo());
+        }
+
+        return employeeService.bulkCreate(employeeBulkRequest);
     }
 
     /**

@@ -45,25 +45,30 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.model.Employee;
+import org.egov.eis.web.errorhandler.Error;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmployeeRequest {
+public class EmployeeEntityResponse {
 
 	@NotNull
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo;
+	@JsonProperty("ResponseInfo")
+	private ResponseInfo responseInfo;
 
 	@Valid
 	@NotNull
 	@JsonProperty("Employee")
 	private Employee employee;
+
+	@JsonProperty("Error")
+	private Error error;
 
 }

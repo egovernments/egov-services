@@ -41,21 +41,21 @@
 package org.egov.eis.web.contract;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.eis.model.Employee;
+import org.egov.eis.model.bulk.Employee;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
-@Data
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class EmployeeRequest {
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class EmployeeBulkRequest {
 
 	@NotNull
 	@JsonProperty("RequestInfo")
@@ -64,6 +64,6 @@ public class EmployeeRequest {
 	@Valid
 	@NotNull
 	@JsonProperty("Employee")
-	private Employee employee;
+	private List<Employee> employees;
 
 }

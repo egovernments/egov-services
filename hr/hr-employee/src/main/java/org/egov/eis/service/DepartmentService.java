@@ -38,32 +38,46 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.web.contract;
+package org.egov.eis.service;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.egov.common.contract.request.RequestInfo;
-import org.egov.eis.model.Employee;
+import lombok.extern.slf4j.Slf4j;
+import org.egov.eis.config.PropertiesManager;
+import org.egov.eis.model.bulk.Department;
+import org.egov.eis.web.contract.DepartmentResponse;
+import org.egov.eis.web.contract.RequestInfoWrapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import java.net.URI;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class EmployeeRequest {
+import static org.springframework.util.ObjectUtils.isEmpty;
 
-	@NotNull
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo;
+@Slf4j
+@Service
+public class DepartmentService {
 
-	@Valid
-	@NotNull
-	@JsonProperty("Employee")
-	private Employee employee;
+	@Autowired
+	private RestTemplate restTemplate;
 
+	@Autowired
+	private PropertiesManager propertiesManager;
+
+	public Department getDepartment(String code, String tenantId, RequestInfoWrapper requestInfoWrapper) {
+		URI url = null;
+		DepartmentResponse departmentResponse = null;
+		try {
+			url = new URI(propertiesManager.getCommonMastersServiceHostName()
+					+ propertiesManager.getCommonMastersServiceBasePath()
+					+ propertiesManager.getCommonMastersServiceDepartmentsSearchPath()
+					+ "?tenantId=" + tenantId + "&code=" + code);
+			log.debug(url.toString());
+			departmentResponse = restTemplate.postForObject(url, requestInfoWrapper, DepartmentResponse.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error("Following exception occurred while accessing Department API : " + e.getMessage());
+			return null;
+		}
+		return isEmpty(departmentResponse.getDepartment()) ? null : departmentResponse.getDepartment().get(0);
+	}
 }

@@ -442,8 +442,8 @@ class AddDemand extends Component {
 									<thead>
 										<tr>
 											<th style={{textAlign:'center'}}>{translate('pt.create.groups.addDemand.period')}</th>
-											<th colSpan={(this.state.hasOwnProperty('demands') && this.state.demands.length !=0) && this.state.demands[0].demandDetails.length} style={{textAlign:'center'}}>{translate('pt.create.groups.addDemand.demand')}</th>
-											<th colSpan={(this.state.hasOwnProperty('demands') && this.state.demands.length !=0) && this.state.demands[0].demandDetails.length} style={{textAlign:'center'}}>{translate('pt.create.groups.addDemand.collection')}</th>
+											<th colSpan={(this.state.demands.length !=0 && this.state.demands[0].hasOwnProperty('demandDetails')) && this.state.demands[0].demandDetails.length} style={{textAlign:'center'}}>{translate('pt.create.groups.addDemand.demand')}</th>
+											<th colSpan={(this.state.demands.length !=0 && this.state.demands[0].hasOwnProperty('demandDetails')) && this.state.demands[0].demandDetails.length} style={{textAlign:'center'}}>{translate('pt.create.groups.addDemand.collection')}</th>
 										</tr>
 									</thead>
 									<tbody>

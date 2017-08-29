@@ -565,6 +565,10 @@ public class WaterConnectionService {
         }
     }
     
+    public Long generateNextConsumerNumber()  {
+    	return waterConnectionRepository.generateNextConsumerNumber();
+    }
+    
     private WaterConnectionReq getWaterConnectionRequest(Connection connection) { 
     	RequestInfo rInfo = new RequestInfo();
     	return new WaterConnectionReq(rInfo, connection);

@@ -617,6 +617,10 @@ public class WaterConnectionRepository {
         return false;
     }
     
+    public Long generateNextConsumerNumber() { 
+    	return jdbcTemplate.queryForObject(WaterConnectionQueryBuilder.getNextConsumerNumberFromSequence(), Long.class);
+    }
+    
 	public Map<String, Object> getObjectForInsertEstimationNotice(EstimationNotice estimationNotice, long connectionId,
 			String tenantId) {
 		Long createdBy = 1L;

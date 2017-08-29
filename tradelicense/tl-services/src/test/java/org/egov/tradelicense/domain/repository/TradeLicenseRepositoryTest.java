@@ -77,7 +77,7 @@ public class TradeLicenseRepositoryTest {
 		Mockito.verify(tradeLicenseQueueRepository).add(request);
 	}
 
-	@Test
+	/*@Test
 	public void testSave() {
 		TradeLicenseEntity tradeLicenseEntity = getTradeLicenseEntity();
 		TradeLicense expectedResult = tradeLicenseEntity.toDomain();
@@ -86,7 +86,7 @@ public class TradeLicenseRepositoryTest {
 		assertEquals(expectedResult.getId(), actualResult.getId());
 		assertEquals(expectedResult.getActive(), actualResult.getActive());
 		assertEquals(expectedResult.getTenantId(), actualResult.getTenantId());
-	}
+	}*/
 
 	private TradeLicenseEntity getTradeLicenseEntity() {
 		TradeLicenseEntity tradeLicenseEntity = new TradeLicenseEntity();

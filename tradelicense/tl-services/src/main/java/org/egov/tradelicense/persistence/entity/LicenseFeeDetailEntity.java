@@ -17,8 +17,10 @@ public class LicenseFeeDetailEntity {
 
 	private Long id;
 
-	private Long licenseId;
+//	private Long licenseId;
 
+	private String tenantId;
+	
 	private String financialYear;
 
 	private Double amount;
@@ -33,6 +35,8 @@ public class LicenseFeeDetailEntity {
 
 	private Long lastModifiedTime;
 
+	private Long applicationId;
+	
 	public LicenseFeeDetail toDomain() {
 
 		LicenseFeeDetail licenseFeeDetail = new LicenseFeeDetail();
@@ -41,8 +45,12 @@ public class LicenseFeeDetailEntity {
 
 		licenseFeeDetail.setId(this.id);
 
-		licenseFeeDetail.setLicenseId(this.licenseId);
-
+//		licenseFeeDetail.setLicenseId(this.licenseId);
+		
+		licenseFeeDetail.setTeantId( this.tenantId);
+		
+		licenseFeeDetail.setApplicationId(this.applicationId);
+		
 		licenseFeeDetail.setFinancialYear(this.financialYear);
 
 		licenseFeeDetail.setPaid(this.paid);
@@ -69,8 +77,12 @@ public class LicenseFeeDetailEntity {
 		this.amount = licenseFeeDetail.getAmount();
 
 		this.id = licenseFeeDetail.getId();
+		
+		this.tenantId = licenseFeeDetail.getTeantId();
+		
+		this.applicationId = licenseFeeDetail.getApplicationId();
 
-		this.licenseId = licenseFeeDetail.getLicenseId();
+//		this.licenseId = licenseFeeDetail.getLicenseId();
 
 		this.financialYear = licenseFeeDetail.getFinancialYear();
 

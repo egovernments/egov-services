@@ -587,11 +587,11 @@ public class TradeLicenseServiceValidator {
 				}
 				if (supportDocument.getId() != null) {
 					// check id existence in database
-					supportDocument.setLicenseId(tradeLicense.getId());
+//					supportDocument.setLicenseId(tradeLicense.getId());
 					tradeLicenseRepository.validateTradeLicenseSupportDocumentId(supportDocument, requestInfo);
 				} else {
 					// get the next sequence of support document id and set it
-					supportDocument.setLicenseId(tradeLicense.getId());
+//					supportDocument.setLicenseId(tradeLicense.getId());
 					supportDocument.setId(tradeLicenseRepository.getSupportDocumentNextSequence());
 				}
 			}
@@ -609,11 +609,11 @@ public class TradeLicenseServiceValidator {
 				}
 				if (licenseFeeDetail.getId() != null) {
 					// check id existence in database
-					licenseFeeDetail.setLicenseId(tradeLicense.getId());
+//					licenseFeeDetail.setLicenseId(tradeLicense.getId());
 					tradeLicenseRepository.validateTradeLicenseFeeDetailId(licenseFeeDetail, requestInfo);
 				} else {
 					// get the next sequence of fee detail id and set it
-					licenseFeeDetail.setLicenseId(tradeLicense.getId());
+//					licenseFeeDetail.setLicenseId(tradeLicense.getId());
 					licenseFeeDetail.setId(tradeLicenseRepository.getFeeDetailNextSequence());
 				}
 			}

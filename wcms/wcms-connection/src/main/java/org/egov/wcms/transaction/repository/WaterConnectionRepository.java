@@ -167,7 +167,7 @@ public class WaterConnectionRepository {
                         waterConnectionRequest.getConnection().getMeterOwner():"");
                 statement.setString(32, waterConnectionRequest.getConnection().getMeterModel()!=null?
                         waterConnectionRequest.getConnection().getMeterModel():"");
-                statement.setBoolean(33, Boolean.FALSE);
+                statement.setBoolean(33, waterConnectionRequest.getConnection().getOutsideULB());
 
                 if (waterConnectionRequest.getConnection().getIsLegacy()
                         ) {

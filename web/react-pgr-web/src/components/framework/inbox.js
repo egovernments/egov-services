@@ -460,6 +460,8 @@ class Inbox extends Component {
   
   updateInbox = (actionName, status) => {
 	  	  
+		  console.log(actionName);
+		  
 	  var currentThis = this;
 	  
 	  let {workflow, setLoadingStatus, toggleSnackbarAndSetText} = this.props;
@@ -490,7 +492,24 @@ class Inbox extends Component {
 	  } else if(actionName == 'Reject') {
 		  
 		  workFlowDetails.assignee = this.state.process.initiatorPosition || null
-		  localStorage.setItem('inboxStatus', 'Rejected') 
+		  localStorage.setItem('inboxStatus', 'Rejected')
+		  
+	  } else if( actionName == 'Print Notice'){
+		  
+		  var body = {
+		   upicNumber: data[0].upicNumber
+	   } 
+	  
+	   Api.commonApiPost('pt-property/properties/specialnotice/_generate', {},body, false, true).then((res)=>{
+			setLoadingStatus('hide');
+			console.log(res)
+		  }).catch((err)=> {
+			console.log(err)
+			setLoadingStatus('hide');
+			toggleSnackbarAndSetText(true, err.message);
+		  })
+		  
+		  return false;
 	  }
 	  
 		data[0].owners[0].tenantId = "default";

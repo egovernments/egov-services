@@ -338,20 +338,20 @@ class PropertyTaxSearch extends Component {
 					  <td>{index+1}</td> 
 					  <td style={{color:'blue'}} onClick={() => {
 						   history.push(`/propertyTax/view-property/${item.upicNumber}`);
-					  }}>{item.upicNumber || ''}</td>
+					  }}>{item.upicNumber ? <span style={{color:'rgb(81, 186, 217)'}}>{item.upicNumber}</span> : translate('pt.search.searchProperty.fields.na')}</td>
 					  <td>{(item.hasOwnProperty('owners') && item.owners.length != 0) &&  item.owners.map((item, index)=>{
 						  return(<span>{item.name}</span>)
 					  })}</td>
-					  <td>{item.address.addressNumber || ''}</td>
-					  <td>{getNameById(this.state.location,item.address.addressLine1) || ''}</td>
-					  <td>{item.address.addressNumber? item.address.addressNumber+', ' : ''} {item.address.addressLine1 ? item.address.addressLine1+', ' : ''} 
-						  {item.address.addressLine2 ? item.address.addressLine2+', ':''}{item.address.landmark ? item.address.landmark+',':''}
-						  {item.address.city ? item.address.city : ''}
+					  <td>{item.address.addressNumber || translate('pt.search.searchProperty.fields.na')}</td>
+					  <td>{getNameById(this.state.location,item.address.addressLine1) || translate('pt.search.searchProperty.fields.na')}</td>
+					  <td>{item.address.addressNumber? item.address.addressNumber+', ' : translate('pt.search.searchProperty.fields.na')} {item.address.addressLine1 ? item.address.addressLine1+', ' : translate('pt.search.searchProperty.fields.na')} 
+						  {item.address.addressLine2 ? item.address.addressLine2+', ':translate('pt.search.searchProperty.fields.na')}{item.address.landmark ? item.address.landmark+',':translate('pt.search.searchProperty.fields.na')}
+						  {item.address.city ? item.address.city : translate('pt.search.searchProperty.fields.na')}
 						  </td>
-					  <td>{this.state.demands.hasOwnProperty('consolidatedTax') ? this.state.demands.consolidatedTax.currentDemand : ''}</td>
-					  <td>{this.state.demands.hasOwnProperty('consolidatedTax') ? this.state.demands.consolidatedTax.arrearsDemand : ''}</td>
-					  <td>{getNameByCode(this.state.propertytypes, item.propertyDetail.propertyType) || ''}</td>
-					  <td>{getNameByCode(this.state.propertytypes, item.propertyDetail.category) || ''}</td>
+					  <td>{this.state.demands.hasOwnProperty('consolidatedTax') ? this.state.demands.consolidatedTax.currentDemand : translate('pt.search.searchProperty.fields.na')}</td>
+					  <td>{this.state.demands.hasOwnProperty('consolidatedTax') ? this.state.demands.consolidatedTax.arrearsDemand : translate('pt.search.searchProperty.fields.na')}</td>
+					  <td>{getNameByCode(this.state.propertytypes, item.propertyDetail.propertyType) || translate('pt.search.searchProperty.fields.na')}</td>
+					  <td>{getNameByCode(this.state.propertytypes, item.propertyDetail.category) || translate('pt.search.searchProperty.fields.na')}</td>
 					  <td>
 						<DropdownButton title="Action" id="dropdown-3" pullRight>
 							{this.state.showDcb ? 

@@ -406,7 +406,7 @@ class PropertyTaxSearch extends Component {
                         <TextField errorText={fieldErrors.upicNumber
                           ? fieldErrors.upicNumber
                           : ""} maxLength={12}                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
- floatingLabelFixed={true} value={propertyTaxSearch.upicNumber?propertyTaxSearch.upicNumber:""} onChange={(e) => handleChange(e, "upicNumber", false, /^[a-zA-Z0-9]+$/g)} hintText="1000120015" floatingLabelText={translate('pt.create.groups.propertyDetails.assessmentNumber')}  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}/>
+ floatingLabelFixed={true} value={propertyTaxSearch.upicNumber?propertyTaxSearch.upicNumber:""} onChange={(e) => handleChange(e, "upicNumber", false, /^[a-zA-Z0-9,/<>!@#\$%\^\&*\)\(+=._-]+$/g)} hintText="1000120015" floatingLabelText={translate('pt.create.groups.propertyDetails.assessmentNumber')}  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}/>
                       </Col>
                     </Row>
 
@@ -444,7 +444,7 @@ class PropertyTaxSearch extends Component {
                         <TextField errorText={fieldErrors.oldUpicNo
                           ? fieldErrors.oldUpicNo
                           : ""} floatingLabelFixed={true}                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
- maxLength={15} value={propertyTaxSearch.oldUpicNo?propertyTaxSearch.oldUpicNo:""} onChange={(e) => handleChange(e, "oldUpicNo", false, /^[a-zA-Z0-9]{3,}$/g)} hintText={translate('pt.create.groups.propertyDetails.oldAssessmentNumber')} floatingLabelText={translate('pt.create.groups.propertyDetails.oldAssessmentNumber')}  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}/>
+ maxLength={15} value={propertyTaxSearch.oldUpicNo?propertyTaxSearch.oldUpicNo:""} onChange={(e) => handleChange(e, "oldUpicNo", false, /^[a-zA-Z0-9,/<>!@#\$%\^\&*\)\(+=._-]+$/g)} hintText={translate('pt.create.groups.propertyDetails.oldAssessmentNumber')} floatingLabelText={translate('pt.create.groups.propertyDetails.oldAssessmentNumber')}  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}/>
                       </Col>
 					  <Col xs={12} md={6}>
 							<SelectField errorText={fieldErrors.usage

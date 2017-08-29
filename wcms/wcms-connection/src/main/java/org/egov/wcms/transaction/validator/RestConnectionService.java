@@ -75,6 +75,7 @@ import org.egov.wcms.transaction.web.contract.Tenant;
 import org.egov.wcms.transaction.web.contract.TenantResponse;
 import org.egov.wcms.transaction.web.contract.TreatmentPlantResponse;
 import org.egov.wcms.transaction.web.contract.UsageMasterResponse;
+import org.egov.wcms.transaction.web.contract.WaterChargesConfigRes;
 import org.egov.wcms.transaction.web.contract.WaterConnectionReq;
 import org.egov.wcms.transaction.web.contract.WaterSourceResponseInfo;
 import org.egov.wcms.transaction.web.errorhandler.Error;
@@ -417,20 +418,20 @@ public class RestConnectionService {
                 }
         }
         
-        /*if(nameServiceTopic.equals(configurationManager.getHscGenNameServiceTopic())) {
+        if(nameServiceTopic.equals(configurationManager.getHscGenNameServiceTopic())) {
         	//Enable the below method call to get financial year from the Finance Service
             // String finYear = getFinancialYear(tenantId);
-            String finYear = getFiscalYear();
+            /*String finYear = getFiscalYear();
             if(null!=finYear && !finYear.isEmpty()) { 
             	return ackNumber=tenantId.substring(0,4).concat(ackNumber);
-            }	
+            }	*/
         	String ulbName = getULBNameFromTenant(tenantId, requestInfo);
         	if(!ulbName.equals("")){ 
         		return ackNumber = ulbName.substring(0,4).concat(ackNumber);
         	} else {
         		return ackNumber = tenantId.substring(0,4).concat(ackNumber);
         	}
-        }*/
+        }
 
         return ackNumber;
     }
@@ -449,7 +450,7 @@ public class RestConnectionService {
         	if(null != tr.getTenant()){ 
         		for(Tenant tenant : tr.getTenant()) { 
         			if(null != tenant.getCity()) { 
-        				ulbCode = tenant.getCity().getCode();  
+        				ulbCode = tenant.getCity().getName();  
         			}
         		}
         	}
@@ -544,4 +545,24 @@ public class RestConnectionService {
         String finYear = Integer.toString(value)+ "-"+Integer.toString(value+1).substring(2, 4);
         return finYear;
     }
+    
+    
+    public WaterChargesConfigRes getWaterChargesConfig(final String name, final String tenantId) {
+        String url = configurationManager.getWaterMasterServiceBasePathTopic()
+                + configurationManager.getWaterMasterServiceWaterChargesConfigSearchPathTopic();
+        url = url.replace("{name}", name);
+        url = url.replace("{tenantId}", tenantId);
+        final WaterChargesConfigRes waterChargesConfig = getWaterConfigValues(url);
+        return waterChargesConfig;
+    }
+    
+    public WaterChargesConfigRes getWaterConfigValues(final String url) {
+        final RequestInfo requestInfo = RequestInfo.builder().ts(11111L).build();
+        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
+        final WaterChargesConfigRes waterConfig = new RestTemplate().postForObject(url.toString(), request,
+                WaterChargesConfigRes.class);
+        return waterConfig;
+    }
+    
 }

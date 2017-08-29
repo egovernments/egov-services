@@ -71,6 +71,7 @@ import org.egov.wcms.transaction.web.contract.RequestInfoWrapper;
 import org.egov.wcms.transaction.web.contract.Task;
 import org.egov.wcms.transaction.web.contract.UserRequestInfo;
 import org.egov.wcms.transaction.web.contract.UserResponseInfo;
+import org.egov.wcms.transaction.web.contract.WaterChargesConfigRes;
 import org.egov.wcms.transaction.web.contract.WaterConnectionGetReq;
 import org.egov.wcms.transaction.web.contract.WaterConnectionReq;
 import org.egov.wcms.transaction.workflow.service.TransanctionWorkFlowService;
@@ -309,8 +310,10 @@ public class WaterConnectionService {
     public Connection create(final WaterConnectionReq waterConnectionRequest) {
         logger.info("Service API entry for update with initiate workflow Connection");
         try {
+
             if (waterConnectionRequest.getConnection().getIsLegacy() != null &&
-                    waterConnectionRequest.getConnection().getIsLegacy().equals(Boolean.FALSE)) {
+                               waterConnectionRequest.getConnection().getIsLegacy().equals(Boolean.FALSE)
+                               && getWaterChargeConfigValues(waterConnectionRequest.getConnection().getTenantId())){
                 initiateWorkFow(waterConnectionRequest);
                 waterConnectionRepository.updateConnectionWorkflow(waterConnectionRequest,null);
             }
@@ -643,6 +646,20 @@ public class WaterConnectionService {
         		waterConnectionReq.getConnection().getAddress().getLocality(),
         		waterConnectionReq.getConnection().getTenantId());
         return boundaryRespose != null && !boundaryRespose.getBoundarys().isEmpty();
+    }
+    
+    public Boolean getWaterChargeConfigValues(String tenantId) {
+        Boolean isWaterConfigValues = Boolean.FALSE;
+      
+       WaterChargesConfigRes waterChargesConfigRes = null;
+       waterChargesConfigRes = restConnectionService.getWaterChargesConfig(
+                        WcmsConnectionConstants.WORKFLOW_REQUIRED_CONFIG_KEY,
+                        tenantId);
+       if(waterChargesConfigRes!=null && !waterChargesConfigRes.getWaterConfigurationValue().isEmpty()
+               && waterChargesConfigRes.getWaterConfigurationValue().get(0).getValue().equals("YES"))
+           isWaterConfigValues = Boolean.TRUE;
+       
+        return isWaterConfigValues;
     }
     
  }

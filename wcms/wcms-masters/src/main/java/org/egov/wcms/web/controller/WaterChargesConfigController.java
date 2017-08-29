@@ -40,7 +40,6 @@
 package org.egov.wcms.web.controller;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -50,6 +49,7 @@ import org.egov.wcms.service.WaterChargesConfigService;
 import org.egov.wcms.web.contract.RequestInfoWrapper;
 import org.egov.wcms.web.contract.WaterChargesConfigGetRequest;
 import org.egov.wcms.web.contract.WaterChargesConfigResponse;
+import org.egov.wcms.web.contract.WaterConfigurationValue;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,31 +86,25 @@ public class WaterChargesConfigController {
             final BindingResult requestBodyBindingResult) {
 
         // Call service
-        final Map<String, List<String>> waterchargesConfigKeyValMap = waterchargesConfigService
+        final List<WaterConfigurationValue> waterchargesConfigValues = waterchargesConfigService
                 .getWaterChargesConfiguration(waterchargesConfigGetRequest);
-        LOGGER.info("Search Config Map::::::" + waterchargesConfigKeyValMap);
-        return getSuccessResponse(waterchargesConfigKeyValMap,
+        LOGGER.info("Search Config Map::::::" + waterchargesConfigValues);
+        return getSuccessResponse(waterchargesConfigValues,
                 requestInfoWrapper.getRequestInfo());
     }
 
-    /**
-     * Populate Response object and return collectionConfigKeyValMap
-     *
-     * @param collectionConfigKeyValMap
-     * @return
-     */
     private ResponseEntity<?> getSuccessResponse(
-            final Map<String, List<String>> collectionConfigKeyValMap,
+            final List<WaterConfigurationValue> waterConfig,
             final RequestInfo requestInfo) {
-        final WaterChargesConfigResponse collectionConfigResponse = new WaterChargesConfigResponse();
-        collectionConfigResponse
-                .setWaterChargesConfiguration(collectionConfigKeyValMap);
+        final WaterChargesConfigResponse waterConfigResponse = new WaterChargesConfigResponse();
+        waterConfigResponse.setWaterChargesConfigValue(waterConfig);
+
         final ResponseInfo responseInfo = responseInfoFactory
                 .createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
-        collectionConfigResponse.setResponseInfo(responseInfo);
+        waterConfigResponse.setResponseInfo(responseInfo);
 
-        return new ResponseEntity<>(collectionConfigResponse, HttpStatus.OK);
+        return new ResponseEntity<>(waterConfigResponse, HttpStatus.OK);
 
     }
 }

@@ -37,39 +37,34 @@
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.repository;
+package org.egov.wcms.web.contract;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-import org.egov.wcms.repository.builder.WaterChargesConfigQueryBuilder;
-import org.egov.wcms.repository.rowmapper.WaterChargesConfigRowMapper;
-import org.egov.wcms.web.contract.WaterChargesConfigGetRequest;
-import org.egov.wcms.web.contract.WaterConfiguration;
-import org.egov.wcms.web.contract.WaterConfigurationValue;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.stereotype.Repository;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-@Repository
-public class WaterChargesConfigRepository {
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
+public class WaterConfiguration {
 
-    @Autowired
-    private NamedParameterJdbcTemplate jdbcTemplate;
+    private Long id;
 
-    @Autowired
-    private WaterChargesConfigRowMapper waterChargesConfigRowMapper;
+    @Size(min = 3, max = 50)
+    private String name;
 
-    @Autowired
-    private WaterChargesConfigQueryBuilder waterChargesConfigQueryBuilder;
+    private String description;
 
-    public List<WaterConfigurationValue> findForCriteria(final WaterChargesConfigGetRequest waterChargesConfigGetRequest) {
-        final Map<String, Object> preparedStatementValues = new HashMap<>();
-        final String queryStr = waterChargesConfigQueryBuilder.getQuery(waterChargesConfigGetRequest, preparedStatementValues);
-        final List<WaterConfigurationValue> waterConfigValues = jdbcTemplate.query(queryStr,
-                preparedStatementValues, waterChargesConfigRowMapper);
-        return waterConfigValues;
-    }
+    @NotNull
+    private String tenantId;
 
 }

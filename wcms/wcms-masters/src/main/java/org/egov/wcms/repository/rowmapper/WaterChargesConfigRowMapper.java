@@ -41,32 +41,25 @@ package org.egov.wcms.repository.rowmapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.ResultSetExtractor;
+import org.egov.wcms.web.contract.WaterConfiguration;
+import org.egov.wcms.web.contract.WaterConfigurationValue;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class WaterChargesConfigRowMapper implements ResultSetExtractor<Map<String, List<String>>> {
-
+public class WaterChargesConfigRowMapper implements RowMapper<WaterConfigurationValue> {
     @Override
-    public Map<String, List<String>> extractData(final ResultSet rs) throws SQLException, DataAccessException {
-        final Map<String, List<String>> collectionConfigKeyValMap = new HashMap<>();
+    public WaterConfigurationValue mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+        final WaterConfigurationValue waterConfigurationValue = new WaterConfigurationValue();
 
-        while (rs.next()) {
-            final String collectionConfigKey = rs.getString("key");
+        final WaterConfiguration waterConfiguration = new WaterConfiguration();
+        waterConfigurationValue.setValue(rs.getString("value"));
+        waterConfiguration .setName(rs.getString("key"));
+        waterConfigurationValue.setWaterConfiguration(waterConfiguration);
+      
 
-            if (!collectionConfigKeyValMap.containsKey(collectionConfigKey))
-                collectionConfigKeyValMap.put(collectionConfigKey, new ArrayList<>());
-
-            final List<String> lamsConfKeyVal = collectionConfigKeyValMap.get(collectionConfigKey);
-            lamsConfKeyVal.add(rs.getString("value"));
-        }
-
-        return collectionConfigKeyValMap;
+        return waterConfigurationValue;
     }
+
 }

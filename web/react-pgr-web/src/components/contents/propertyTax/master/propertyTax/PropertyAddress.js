@@ -236,7 +236,7 @@ class PropertyAddress extends Component {
                                           <Col xs={12} md={3} sm={6}>
                                               <TextField  className="fullWidth"
                                                   floatingLabelText={translate('pt.create.groups.propertyAddress.fields.referancePropertyNumber')}
-												  hintText="000001111122222"
+												                          hintText="000001111122222"
                                                   errorText={fieldErrors.refPropertyNumber ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.refPropertyNumber}</span> : ""}
                                                   value={propertyAddress.refPropertyNumber ? propertyAddress.refPropertyNumber : ""}
                                                   onChange={(e) => handleChange(e, "refPropertyNumber", false, /^[a-zA-Z0-9]*$/g)}
@@ -253,7 +253,7 @@ class PropertyAddress extends Component {
                                                   errorText={fieldErrors.appComplexName ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.appComplexName}</span>: ""}
                                                   value={propertyAddress.appComplexName ? propertyAddress.appComplexName:""}
                                                   onChange={(event, index, value) => {
-													  (value == -1) ? value = '' : '';
+													                               (value == -1) ? value = '' : '';
                                                       var e = {
                                                         target: {
                                                           value: value
@@ -265,7 +265,7 @@ class PropertyAddress extends Component {
                                                   underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-												  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
+												                          dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                               ><MenuItem value={-1} primaryText="None"/>
                                                     {renderOption(this.state.apartments)}
                                               </SelectField>
@@ -516,19 +516,18 @@ class PropertyAddress extends Component {
                                                 <Col xs={12} md={3} sm={6}>
                                                     <TextField  className="fullWidth"
                                                         floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.doorNo')}<span style={{"color": "#FF0000"}}> *</span></span>}
-														hintText="302"
+														                            hintText="302"
                                                         errorText={fieldErrors.cDoorno ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.cDoorno}</span> : ""}
                                                         value={propertyAddress.cDoorno ? propertyAddress.cDoorno : ""}
                                                         onChange={(e) => handleChange(e, "cDoorno", true, '')}
-                                                        multiLine={true}
-                                                         rows={2}
-                                                         rowsMax={4}
+                                            
+      
                                                         floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                         underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                         underlineFocusStyle={styles.underlineFocusStyle}
                                                         maxLength={12}
                                                         floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-														maxLength={6}
+														
                                                     />
                                                 </Col>
                                                 <Col xs={12} md={3} sm={6}>
@@ -537,9 +536,7 @@ class PropertyAddress extends Component {
                                                         errorText={fieldErrors.addressTwo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.addressTwo}</span> : ""}
                                                         value={propertyAddress.addressTwo ? propertyAddress.addressTwo : ""}
                                                         onChange={(e) => handleChange(e, "addressTwo", true, '')}
-                                                        multiLine={true}
-                                                         rows={2}
-                                                         rowsMax={4}
+                                                        hintText="Address"
                                                         floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                         underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                         underlineFocusStyle={styles.underlineFocusStyle}

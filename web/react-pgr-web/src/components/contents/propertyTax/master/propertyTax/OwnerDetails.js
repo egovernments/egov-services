@@ -156,7 +156,7 @@ constructor(props) {
                             errorText={fieldErrors.owner ? (fieldErrors.owner.aadhaarNumber ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.aadhaarNumber}</span>: "") : ""}
                             value={ownerDetails.owner ? ownerDetails.owner.aadhaarNumber:""}
                             onChange={(e) => {
-								handleChangeOwner(e,"owner", "aadhaarNumber", false, /^\d{12}$/g);
+								            handleChangeOwner(e,"owner", "aadhaarNumber", false, /^\d{12}$/g);
                               }
                             }
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -195,7 +195,7 @@ constructor(props) {
                             errorText={fieldErrors.owner ? (fieldErrors.owner.name ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.name}</span>:""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.name:""}
                             onChange={(e) => {
-								handleChangeOwner(e,"owner" ,"name", true, /^[a-zA-Z ]*$/g);
+								handleChangeOwner(e,"owner" ,"name", true, /^[^-\s][a-zA-Z_\s-]+$/g);
                                 //handleChangeNextOne(e,"owner" ,"name", false, "");
                               }
                             }
@@ -247,8 +247,8 @@ constructor(props) {
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                           />
                         </Col>
-						 <Col xs={12} md={3} sm={6}>
-                          <TextField  className="fullWidth"
+						            <Col xs={12} md={3} sm={6}>
+                          <TextField  className="fullWidth panUppercase"
                             hintText="BTKPM5492G"
                             floatingLabelText={translate('pt.create.groups.ownerDetails.fields.pan')}
                             errorText={fieldErrors.owner ? (fieldErrors.owner.pan? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.pan}</span>:""): ""}

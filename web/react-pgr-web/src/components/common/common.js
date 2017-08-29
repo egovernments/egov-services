@@ -348,7 +348,7 @@ var localization_EN_Data = {
     "pt.create.groups.propertyAddress.fields.revenueCircle": "Revenue Circle",
     "pt.create.groups.propertyAddress.fields.pin": "Pin",
     "pt.create.groups.propertyAddress.fields.readyReckoner": "Ready Reckoner",
-    "pt.create.groups.propertyAddress.fields.isCorrespondanceAddressDifferentFromAddress": "Is Correspondance Address Different From Address",
+    "pt.create.groups.propertyAddress.fields.isCorrespondanceAddressDifferentFromAddress": "Is correspondence address different from property address?",
     "pt.create.groups.propertyAddress.fields.address1": "Address 1",
 
     "pt.create.groups.assessmentDetails": "Assessment details",

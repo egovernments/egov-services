@@ -595,19 +595,44 @@ class Transaction extends Component {
     e.preventDefault();
     self.props.setLoadingStatus('loading');
     var formData = {...this.props.formData};
-    Api.commonApiPost("/collection-services/receipts/_create", "", formData, "", true).then(function(response){
-      self.props.setLoadingStatus('hide');
-      self.initData();
-      self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "transaction" ? "wc.create.message.success" : "wc.update.message.success"), true);
-      setTimeout(function() {
-        self.props.setRoute("/non-framework/collection/receipt/view/"+response.Receipt[0].transactionId);
-      }, 1500);
+    var amountValidation=true;
+    var amountValidationMsg="";
 
-    }, function(err) {
-      self.props.setLoadingStatus('hide');
-      self.props.toggleSnackbarAndSetText(true, err.message);
-    })
-  }
+    for (var i = 0; i < formData.Receipt[0].Bill[0].billDetails.length; i++) {
+      if (formData.Receipt[0].Bill[0].billDetails[i].hasOwnProperty("amountPaid")) {
+        if (formData.Receipt[0].Bill[0].billDetails[i].amountPaid>formData.Receipt[0].Bill[0].billDetails[i].totalAmount || formData.Receipt[0].Bill[0].billDetails[i].amountPaid<formData.Receipt[0].Bill[0].billDetails[i].minimumAmount) {
+          amountValidationMsg+="Consumer code - "+formData.Receipt[0].Bill[0].billDetails[i].consumerCode +" amount should greater than equal "+formData.Receipt[0].Bill[0].billDetails[i].minimumAmount +" and less than equal "+ formData.Receipt[0].Bill[0].billDetails[i].totalAmount+"\n";
+          amountValidation=false;
+        }
+
+      } else {
+        amountValidationMsg+="Consumer code - "+formData.Receipt[0].Bill[0].billDetails[i].consumerCode +" please enter the amount \n";
+        amountValidation=false;
+
+      }
+
+
+    }
+
+    if (amountValidation) {
+            Api.commonApiPost("/collection-services/receipts/_create", "", formData, "", true).then(function(response){
+              self.props.setLoadingStatus('hide');
+              self.initData();
+              self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "transaction" ? "wc.create.message.success" : "wc.update.message.success"), true);
+              setTimeout(function() {
+                self.props.setRoute("/non-framework/collection/receipt/view/"+response.Receipt[0].transactionId);
+              }, 1500);
+
+            }, function(err) {
+              self.props.setLoadingStatus('hide');
+              self.props.toggleSnackbarAndSetText(true, err.message);
+            })
+          } else {
+            self.props.toggleSnackbarAndSetText(true,amountValidationMsg,false,true);
+            self.props.setLoadingStatus('hide');
+          }
+
+     }
 
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors,isFormValid} = this.props;

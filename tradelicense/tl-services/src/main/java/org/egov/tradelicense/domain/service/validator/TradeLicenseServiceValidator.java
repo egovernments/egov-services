@@ -568,7 +568,8 @@ public class TradeLicenseServiceValidator {
 							tradeLicense.setExpiryDate(feeDetailFYResponse.getEndingDate().getTime());
 						}
 					}
-
+					//reset the date to license valid from date
+					today.setTimeInMillis(tradeValidFromDate.getTime());
 				}
 			}
 		}

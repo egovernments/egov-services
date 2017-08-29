@@ -135,6 +135,7 @@ public class RecoveryService {
     }
 
     public Pagination<Recovery> search(RecoverySearch recoverySearch) {
+        Assert.notNull(recoverySearch.getTenantId(), "tenantId is mandatory for voucher search");
         return recoveryRepository.search(recoverySearch);
     }
 

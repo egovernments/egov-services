@@ -422,7 +422,7 @@ public class WaterConnectionService {
         return task;
     }
 
-	public List<Connection> getConnectionDetails(final WaterConnectionGetReq waterConnectionGetReq) {
+	public List<Connection> getConnectionDetails(final WaterConnectionGetReq waterConnectionGetReq, RequestInfo requestInfo) {
 		RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(RequestInfo.builder().ts(111111111L).build()).build();
 		List<Long> propertyIdentifierList = new ArrayList<>();
 		String urlToInvoke = buildUrlToInvoke(waterConnectionGetReq);
@@ -440,7 +440,7 @@ public class WaterConnectionService {
 		if(null != propertyIdentifierList) { 
 			waterConnectionGetReq.setPropertyIdentifierList(propertyIdentifierList);
 		}
-		List<Connection> connectionList = waterConnectionRepository.getConnectionDetails(waterConnectionGetReq);
+		List<Connection> connectionList = waterConnectionRepository.getConnectionDetails(waterConnectionGetReq, requestInfo);
 		if(connectionList.size() == 1) { 
 			for(Connection conn : connectionList){ 
 				List<DocumentOwner> documentList = getDocumentForConnection(conn);
@@ -458,8 +458,8 @@ public class WaterConnectionService {
     }
     
     @SuppressWarnings("static-access")
-	public EstimationNotice getEstimationNotice(String topic, String key, WaterConnectionGetReq waterConnectionGetReq) {
-		List<Connection> connectionList = waterConnectionRepository.getConnectionDetails(waterConnectionGetReq);
+	public EstimationNotice getEstimationNotice(String topic, String key, WaterConnectionGetReq waterConnectionGetReq, RequestInfo requestInfo) {
+		List<Connection> connectionList = waterConnectionRepository.getConnectionDetails(waterConnectionGetReq, requestInfo);
 		EstimationNotice estimationNotice = null;
 		Connection connection = null;
 		for (int i = 0; i < connectionList.size(); i++) {
@@ -506,9 +506,9 @@ public class WaterConnectionService {
 		return new EstimationNotice();
 	}
     
-    public WorkOrderFormat getWorkOrder(String topic, String key, WaterConnectionGetReq waterConnectionGetReq) {
+    public WorkOrderFormat getWorkOrder(String topic, String key, WaterConnectionGetReq waterConnectionGetReq, RequestInfo requestInfo) {
     	// Fetch Connection Details using the Ack Number 
-		List<Connection> connectionList = waterConnectionRepository.getConnectionDetails(waterConnectionGetReq);
+		List<Connection> connectionList = waterConnectionRepository.getConnectionDetails(waterConnectionGetReq, requestInfo);
 		logger.info("Fetched the List of Connection Objects for the Ack Number : " + connectionList.size());
 		WorkOrderFormat workOrder = null;
 		Connection connection = null;

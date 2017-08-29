@@ -2,6 +2,8 @@ package org.egov.asset.model;
 
 import java.math.BigDecimal;
 
+import javax.validation.constraints.NotNull;
+
 import org.egov.asset.model.enums.TypeOfChangeEnum;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -26,6 +28,7 @@ import lombok.ToString;
 public class Revaluation {
 
     @JsonProperty("tenantId")
+    @NotNull
     private String tenantId = null;
 
     @JsonProperty("id")

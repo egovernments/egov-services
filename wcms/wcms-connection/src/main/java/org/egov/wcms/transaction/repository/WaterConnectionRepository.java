@@ -60,22 +60,31 @@ import org.egov.wcms.transaction.repository.builder.WaterConnectionQueryBuilder;
 import org.egov.wcms.transaction.repository.rowmapper.ConnectionDocumentRowMapper;
 import org.egov.wcms.transaction.repository.rowmapper.UpdateWaterConnectionRowMapper;
 import org.egov.wcms.transaction.repository.rowmapper.WaterConnectionRowMapper;
+import org.egov.wcms.transaction.web.contract.PropertyTaxResponseInfo;
+import org.egov.wcms.transaction.web.contract.PropertyTypeResponse;
+import org.egov.wcms.transaction.web.contract.RequestInfoWrapper;
+import org.egov.wcms.transaction.web.contract.UsageTypeResponse;
 import org.egov.wcms.transaction.web.contract.WaterConnectionGetReq;
 import org.egov.wcms.transaction.web.contract.WaterConnectionReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.client.RestTemplate;
 
 @Repository
 public class WaterConnectionRepository {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(WaterConnectionRepository.class);
+    public static final String baseUrl = "http://pt-property:8080" ;
+	public static final String usageTypeSearch = "/pt-property/property/usages/_search?tenantId={tenantId}" ; 
+	public static final String propertyTypeSearch = "/pt-property/property/propertytypes/_search?tenantId={tenantId}";
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -501,7 +510,7 @@ public class WaterConnectionRepository {
     }
 
 
-	public List<Connection> getConnectionDetails(final WaterConnectionGetReq waterConnectionGetReq) {
+	public List<Connection> getConnectionDetails(final WaterConnectionGetReq waterConnectionGetReq, RequestInfo requestInfo) {
 		final List<Object> preparedStatementValues = new ArrayList<>();
 		final String fetchQuery = waterConnectionQueryBuilder.getQuery(waterConnectionGetReq, preparedStatementValues);
 		LOGGER.info("Get Connection Details Query : " + fetchQuery);
@@ -524,7 +533,70 @@ public class WaterConnectionRepository {
 		} catch (Exception ex) {
 			LOGGER.error("Exception encountered while fetching the Connection list without Property : " + ex);
 		}
+		resolvePropertyUsageTypeNames(waterConnectionGetReq.getTenantId(), connectionList, requestInfo);
 		return connectionList;
+	}
+	
+	private void resolvePropertyUsageTypeNames(String tenantId, List<Connection> connectionList, RequestInfo requestInfo) {
+		PropertyTaxResponseInfo prop = new PropertyTaxResponseInfo(); 
+		try {
+			Map<String, PropertyTaxResponseInfo> propTypeMap = getPropertyNameFromPTModule(tenantId, requestInfo); 
+			Map<String, PropertyTaxResponseInfo> usagTypeMap = getUsageNameFromPTModule(tenantId, requestInfo);
+			for(Connection conn : connectionList) { 
+				if(null != conn.getProperty()) { 
+					prop = propTypeMap.get(conn.getProperty().getPropertyTypeId()); 
+					if(null != prop) { 
+						conn.getProperty().setPropertyType(prop.getName());
+					}
+					prop = usagTypeMap.get(conn.getProperty().getUsageTypeId()); 
+					if(null != prop) { 
+						conn.getProperty().setUsageType(prop.getName());
+					}
+					prop = usagTypeMap.get(String.valueOf(conn.getSubUsageTypeId())); 
+					if(null != prop) { 
+						conn.setSubUsageType(prop.getName());
+					}
+				}
+			}
+		} catch(Exception e) {
+			LOGGER.error("Exception Encountered while fetching the name for Property or Usage Type ID" + e);
+		}
+	}
+	
+	public Map<String, PropertyTaxResponseInfo> getPropertyNameFromPTModule(final String tenantId, RequestInfo requestInfo) {
+		String url = baseUrl + propertyTypeSearch;
+		Map<String, PropertyTaxResponseInfo> propTypeMap = new HashMap<>();
+		final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+		final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
+		final PropertyTypeResponse propertyTypes = new RestTemplate().postForObject(url.toString(), request,
+				PropertyTypeResponse.class, tenantId);
+		if(null != propertyTypes) { 
+			LOGGER.info("Property Types fetched from the Property Module : " + propertyTypes);
+			if(null != propertyTypes.getPropertyTypes()) { 
+				for(PropertyTaxResponseInfo prop : propertyTypes.getPropertyTypes()) { 
+					propTypeMap.put(prop.getId(), prop); 
+				}
+			}
+		}
+		return propTypeMap;
+	}
+
+	public Map<String, PropertyTaxResponseInfo> getUsageNameFromPTModule(final String tenantId, RequestInfo requestInfo) {
+		String url = baseUrl + usageTypeSearch;
+		Map<String, PropertyTaxResponseInfo> usagTypeMap = new HashMap<>();
+		final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+		final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
+		final UsageTypeResponse usageTypes = new RestTemplate().postForObject(url.toString(), request,
+				UsageTypeResponse.class, tenantId);
+		if(null != usageTypes) { 
+			LOGGER.info("Usage Types fetched from the Property Module : " + usageTypes);
+			if(null != usageTypes.getUsageMasters()) { 
+				for(PropertyTaxResponseInfo usage : usageTypes.getUsageMasters()) { 
+					usagTypeMap.put(usage.getId(), usage);
+				}
+			}
+		}
+		return usagTypeMap;
 	}
     
     public boolean persistEstimationNoticeLog(EstimationNotice estimationNotice, long connectionId, String tenantId) { 

@@ -314,3 +314,22 @@ font-size: 15px;
 padding-bottom: 15px;
 margin:0;
 }
+
+.toggle-icon{
+	vertical-align: middle;
+	float: right;
+	margin-top: -2px;
+}
+
+*.unselectable {
+   -moz-user-select: none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+
+   /*
+     Introduced in IE 10.
+     See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
+   */
+   -ms-user-select: none;
+   user-select: none;
+}

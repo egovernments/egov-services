@@ -534,7 +534,7 @@ public class PropertyRepository {
 			Integer pageSize, Integer pageNumber, String[] sort, String oldUpicNo, String mobileNumber,
 			String aadhaarNumber, String houseNoBldgApt, Integer revenueZone, Integer revenueWard, Integer locality,
 			String ownerName, Integer demandFrom, Integer demandTo, String propertyId, String applicationNo)
-			throws Exception {
+					throws Exception {
 
 		Map<String, Object> searchPropertyMap = new HashMap<>();
 		List<Object> preparedStatementValues = new ArrayList<Object>();
@@ -549,72 +549,87 @@ public class PropertyRepository {
 
 				if (mobileNumber != null || aadhaarNumber != null || ownerName != null) {
 					if (mobileNumber != null && aadhaarNumber != null && ownerName != null) {
-						int count = property.getOwners().stream()
-								.filter(User -> User.getMobileNumber().equalsIgnoreCase(mobileNumber)
-										&& User.getAadhaarNumber().equalsIgnoreCase(aadhaarNumber)
-										&& User.getName().contains(ownerName))
-								.collect(Collectors.toList()).size();
-						if (count == 0) {
-							nonMatchingProperties.add(property);
+						if (!mobileNumber.isEmpty() && !aadhaarNumber.isEmpty() && !ownerName.isEmpty()) {
+							int count = property.getOwners().stream()
+									.filter(User -> User.getMobileNumber().equalsIgnoreCase(mobileNumber)
+											&& User.getAadhaarNumber().equalsIgnoreCase(aadhaarNumber)
+											&& User.getName().contains(ownerName))
+									.collect(Collectors.toList()).size();
+							if (count == 0) {
+								nonMatchingProperties.add(property);
+							}
 						}
 					} else if (mobileNumber != null && aadhaarNumber != null && ownerName == null) {
-						int count = property.getOwners().stream()
-								.filter(User -> User.getMobileNumber().equalsIgnoreCase(mobileNumber)
-										&& User.getAadhaarNumber().equalsIgnoreCase(aadhaarNumber)
-										&& User.getName().contains(ownerName))
-								.collect(Collectors.toList()).size();
-						if (count == 0) {
-							nonMatchingProperties.add(property);
+						if (!mobileNumber.isEmpty() && !aadhaarNumber.isEmpty()) {
+							int count = property.getOwners().stream()
+									.filter(User -> User.getMobileNumber().equalsIgnoreCase(mobileNumber)
+											&& User.getAadhaarNumber().equalsIgnoreCase(aadhaarNumber)
+											&& User.getName().contains(ownerName))
+									.collect(Collectors.toList()).size();
+							if (count == 0) {
+								nonMatchingProperties.add(property);
+							}
 						}
 					} else if (mobileNumber != null && aadhaarNumber == null && ownerName != null) {
-						int count = property.getOwners().stream()
-								.filter(User -> User.getMobileNumber().equalsIgnoreCase(mobileNumber)
-										&& User.getAadhaarNumber().equalsIgnoreCase(aadhaarNumber)
-										&& User.getName().contains(ownerName))
-								.collect(Collectors.toList()).size();
-						if (count == 0) {
-							nonMatchingProperties.add(property);
+						if (!mobileNumber.isEmpty() && !ownerName.isEmpty()) {
+							int count = property.getOwners().stream()
+									.filter(User -> User.getMobileNumber().equalsIgnoreCase(mobileNumber)
+											&& User.getAadhaarNumber().equalsIgnoreCase(aadhaarNumber)
+											&& User.getName().contains(ownerName))
+									.collect(Collectors.toList()).size();
+							if (count == 0) {
+								nonMatchingProperties.add(property);
+							}
 						}
 					}
 
 					else if (mobileNumber == null && aadhaarNumber != null && ownerName != null) {
-						int count = property.getOwners().stream()
-								.filter(User -> User.getMobileNumber().equalsIgnoreCase(mobileNumber)
-										&& User.getAadhaarNumber().equalsIgnoreCase(aadhaarNumber)
-										&& User.getName().contains(ownerName))
-								.collect(Collectors.toList()).size();
-						if (count == 0) {
-							nonMatchingProperties.add(property);
+						if (!aadhaarNumber.isEmpty() && !ownerName.isEmpty()) {
+							int count = property.getOwners().stream()
+									.filter(User -> User.getMobileNumber().equalsIgnoreCase(mobileNumber)
+											&& User.getAadhaarNumber().equalsIgnoreCase(aadhaarNumber)
+											&& User.getName().contains(ownerName))
+									.collect(Collectors.toList()).size();
+							if (count == 0) {
+								nonMatchingProperties.add(property);
+							}
 						}
 					} else if (mobileNumber != null) {
-						int count = property.getOwners().stream()
-								.filter(User -> User.getMobileNumber().equalsIgnoreCase(mobileNumber))
-								.collect(Collectors.toList()).size();
-						if (count == 0) {
-							nonMatchingProperties.add(property);
+						if (!mobileNumber.isEmpty()) {
+							int count = property.getOwners().stream()
+									.filter(User -> User.getMobileNumber().equalsIgnoreCase(mobileNumber))
+									.collect(Collectors.toList()).size();
+							if (count == 0) {
+								nonMatchingProperties.add(property);
+							}
 						}
 
 					} else if (aadhaarNumber != null) {
-						int count = property.getOwners().stream()
-								.filter(User -> User.getAadhaarNumber().equalsIgnoreCase(aadhaarNumber))
-								.collect(Collectors.toList()).size();
-						if (count == 0) {
-							nonMatchingProperties.add(property);
+						if (!aadhaarNumber.isEmpty()) {
+							int count = property.getOwners().stream()
+									.filter(User -> User.getAadhaarNumber().equalsIgnoreCase(aadhaarNumber))
+									.collect(Collectors.toList()).size();
+							if (count == 0) {
+								nonMatchingProperties.add(property);
+							}
 						}
 
 					} else if (ownerName != null) {
-						int count = property.getOwners().stream().filter(User -> User.getName().contains(ownerName))
-								.collect(Collectors.toList()).size();
-						if (count == 0) {
-							nonMatchingProperties.add(property);
+						if (!ownerName.isEmpty()) {
+							int count = property.getOwners().stream().filter(User -> User.getName().contains(ownerName))
+									.collect(Collectors.toList()).size();
+							if (count == 0) {
+								nonMatchingProperties.add(property);
+							}
 						}
-
 					}
 				}
 
 			}
 
-			if (nonMatchingProperties.size() > 0) {
+			if (nonMatchingProperties.size() > 0)
+
+			{
 				properties.removeAll(nonMatchingProperties);
 			}
 			searchPropertyMap.put("properties", properties);
@@ -627,10 +642,14 @@ public class PropertyRepository {
 					revenueZone, revenueWard, locality, ownerName, demandFrom, demandTo, propertyId, applicationNo,
 					preparedStatementValues);
 			List<Property> properties = getProperty(propertyMap.get("Sql").toString(), preparedStatementValues);
-			if (propertyMap.get("users") != null) {
+			if (propertyMap.get("users") != null)
+
+			{
 				searchPropertyMap.put("properties", properties);
 				searchPropertyMap.put("users", propertyMap.get("users"));
-			} else {
+			} else
+
+			{
 				searchPropertyMap.put("properties", null);
 				searchPropertyMap.put("users", null);
 			}
@@ -643,7 +662,7 @@ public class PropertyRepository {
 
 	private List<Property> getPropertyBYUpic(String upicNo, String oldUpicNo, String houseNoBldgApt, String propertyId,
 			String tenantId, Integer pageSize, Integer pageNumber, RequestInfo requestInfo, String applicationNo)
-			throws Exception {
+					throws Exception {
 
 		List<Object> preparedStatementvalues = new ArrayList<>();
 
@@ -846,14 +865,17 @@ public class PropertyRepository {
 				if (row.get("builderdetails") != null) {
 					BuilderDetail builderDetail = new ObjectMapper().readValue(row.get("builderdetails").toString(),
 							BuilderDetail.class);
-					if (builderDetail.getCertificateCompletionDate() != null) {
-						builderDetail
-								.setCertificateCompletionDate(getString(builderDetail.getCertificateCompletionDate()));
+					if (builderDetail != null) {
+						if (builderDetail.getCertificateCompletionDate() != null) {
+							builderDetail.setCertificateCompletionDate(
+									getString(builderDetail.getCertificateCompletionDate()));
+						}
+						if (builderDetail.getCertificateReceiveDate() != null) {
+							builderDetail
+									.setCertificateReceiveDate(getString(builderDetail.getCertificateReceiveDate()));
+						}
+						propertyDetail.setBuilderDetails(builderDetail);
 					}
-					if (builderDetail.getCertificateReceiveDate() != null) {
-						builderDetail.setCertificateReceiveDate(getString(builderDetail.getCertificateReceiveDate()));
-					}
-					propertyDetail.setBuilderDetails(builderDetail);
 
 				} else {
 					BuilderDetail builderDetail = new BuilderDetail();
@@ -873,6 +895,7 @@ public class PropertyRepository {
 		}
 
 		return propertyDetail;
+
 	}
 
 	public VacantLandDetail getVacantLandByProperty(Long propertyId) {

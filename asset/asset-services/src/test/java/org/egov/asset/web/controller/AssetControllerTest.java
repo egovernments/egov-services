@@ -329,7 +329,19 @@ public class AssetControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(content().json(getFileContents("currentvalue/currentvalueerrorresponse.json")));
     }
+    
+    @Test
+    public void test_error_assetCreate() throws IOException, Exception {
+        final ErrorResponse errorResponse = getErrorResponse();
 
+        when(assetCommonService.populateErrors(any(BindingResult.class))).thenReturn(errorResponse);
+
+        mockMvc.perform(post("/assets/_create").contentType(MediaType.APPLICATION_JSON)
+                .content(getFileContents("asseterrorrequest.json"))).andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(getFileContents("errorresponse.json")));
+    }
+    
     private ErrorResponse getErrorResponse() {
         final ErrorResponse errorResponse = new ErrorResponse();
         final org.egov.asset.exception.Error error = new org.egov.asset.exception.Error();

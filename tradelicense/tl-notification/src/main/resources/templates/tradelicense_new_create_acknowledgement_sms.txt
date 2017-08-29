@@ -1,0 +1,1 @@
+Dear {{Owner}}, New Trade License Application request is accepted with Acknowledgement No.{{Application Number}}. The application Fee to be paid is Rs. {{Application Fee}}

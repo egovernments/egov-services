@@ -97,6 +97,22 @@ public class AgreementNotificationAdapter {
 			emailRequest.setSubject(notificationService.getCancelSubject(agreement));
 			emailRequest.setEmail(allottee.getEmailId());
 			log.info("agreementCancelInitSMS------------" + smsRequest);
+		} else if (Action.OBJECTION.equals(agreement.getAction())) {
+			smsRequest.setMessage(notificationService.getObjectionInitiateMessage(agreement, asset, allottee, tenant));
+			smsRequest.setMobileNumber(allottee.getMobileNumber().toString());
+
+			emailRequest.setBody(notificationService.getObjectionInitiateMessage(agreement, asset, allottee, tenant));
+			emailRequest.setSubject(notificationService.getObjectionSubject(agreement));
+			emailRequest.setEmail(allottee.getEmailId());
+			log.info("agreementObjectionCreateSMS------------" + smsRequest);
+		} else if (Action.JUDGEMENT.equals(agreement.getAction())) {
+			smsRequest.setMessage(notificationService.getJudgementnInitiateMessage(agreement, asset, allottee, tenant));
+			smsRequest.setMobileNumber(allottee.getMobileNumber().toString());
+
+			emailRequest.setBody(notificationService.getJudgementnInitiateMessage(agreement, asset, allottee, tenant));
+			emailRequest.setSubject(notificationService.getJudgementSubject(agreement));
+			emailRequest.setEmail(allottee.getEmailId());
+			log.info("agreementJudgementCreateSMS------------" + smsRequest);
 		}
 
 		try {
@@ -142,7 +158,24 @@ public class AgreementNotificationAdapter {
 			emailRequest.setSubject(notificationService.getCancelSubject(agreement));
 			emailRequest.setEmail(allottee.getEmailId());
 			log.info("cancelApprovalSMS------------" + smsRequest);
+		} else if (Action.OBJECTION.equals(agreement.getAction())) {
+			smsRequest.setMessage(notificationService.getObjectionApproveMessage(agreement, asset, allottee, tenant));
+			smsRequest.setMobileNumber(allottee.getMobileNumber().toString());
+
+			emailRequest.setBody(notificationService.getObjectionApproveMessage(agreement, asset, allottee, tenant));
+			emailRequest.setSubject(notificationService.getObjectionSubject(agreement));
+			emailRequest.setEmail(allottee.getEmailId());
+			log.info("objectionApprovalSMS------------" + smsRequest);
+		} else if (Action.JUDGEMENT.equals(agreement.getAction())) {
+			smsRequest.setMessage(notificationService.getJudgementApproveMessage(agreement, asset, allottee, tenant));
+			smsRequest.setMobileNumber(allottee.getMobileNumber().toString());
+
+			emailRequest.setBody(notificationService.getJudgementApproveMessage(agreement, asset, allottee, tenant));
+			emailRequest.setSubject(notificationService.getJudgementSubject(agreement));
+			emailRequest.setEmail(allottee.getEmailId());
+			log.info("agreementJudgementApprovalSMS------------" + smsRequest);
 		}
+
 		try {
 			kafkaTemplate.send(propertiesManager.getSmsNotificationTopic(), smsRequest);
 		} catch (Exception ex) {
@@ -187,6 +220,22 @@ public class AgreementNotificationAdapter {
 			emailRequest.setSubject(notificationService.getCancelSubject(agreement));
 			emailRequest.setEmail(allottee.getEmailId());
 			log.info("cancelRejectedSMS------------" + smsRequest);
+		} else if (Action.OBJECTION.equals(agreement.getAction())) {
+			smsRequest.setMessage(notificationService.getObjectionRejectMessage(agreement, asset, allottee, tenant));
+			smsRequest.setMobileNumber(allottee.getMobileNumber().toString());
+
+			emailRequest.setBody(notificationService.getObjectionRejectMessage(agreement, asset, allottee, tenant));
+			emailRequest.setSubject(notificationService.getObjectionSubject(agreement));
+			emailRequest.setEmail(allottee.getEmailId());
+			log.info("objectionRejectedSMS------------" + smsRequest);
+		} else if (Action.JUDGEMENT.equals(agreement.getAction())) {
+			smsRequest.setMessage(notificationService.getJudgementRejectMessage(agreement, asset, allottee, tenant));
+			smsRequest.setMobileNumber(allottee.getMobileNumber().toString());
+
+			emailRequest.setBody(notificationService.getJudgementRejectMessage(agreement, asset, allottee, tenant));
+			emailRequest.setSubject(notificationService.getJudgementSubject(agreement));
+			emailRequest.setEmail(allottee.getEmailId());
+			log.info("agreementJudgementRejectSMS------------" + smsRequest);
 		}
 		try {
 			kafkaTemplate.send(propertiesManager.getSmsNotificationTopic(), smsRequest);

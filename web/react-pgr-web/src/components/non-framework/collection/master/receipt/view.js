@@ -465,7 +465,7 @@ class Report extends Component {
               <CardText >
               <Grid>
 
-                    <Row><Col style={{textAlign:"center"}} xs={12} md={12}><h4><strong> {translate(tenantInfo[0].city.name)} </strong></h4><br/><span>{translate("Receipt")}</span></Col> </Row>
+                    <Row><Col style={{textAlign:"center"}} xs={12} md={12}><h4><strong> {translate(tenantInfo[0].city.name)} </strong></h4><br/><span>{translate("collection.pay.receipt")}</span></Col> </Row>
 
                     <br/>
 
@@ -477,8 +477,8 @@ class Report extends Component {
 
 
 
-                            <th>Key</th>
-                              <th>Value</th>
+                            <th>{translate("collection.pay.key")}</th>
+                              <th>{translate("collection.pay.value")}</th>
                               {/*<th>Address</th>
                               <th>Transaction Id</th>*/}
 
@@ -487,18 +487,18 @@ class Report extends Component {
                     </thead>
                     <tbody>
                         <tr>
-                        <td><strong>Transaction Id</strong> - {getVal("Receipt[0].transactionId")}</td>
+                        <td><strong>{translate("collection.reciept.id")}</strong> - {getVal("Receipt[0].transactionId")}</td>
 
-                          <td><strong>Receipt Date</strong> - { getVal("Receipt[0].Bill[0].billDetails[0].receiptDate")}</td>
+                          <td><strong>{translate("wc.create.receiptDate")}</strong> - { getVal("Receipt[0].Bill[0].billDetails[0].receiptDate")}</td>
 
                           {/*<td></td>
                           <td></td>*/}
 
                         </tr>
                         <tr>
-                        <td><strong>Payee Name</strong> - {getVal("Receipt[0].Bill[0].paidBy")}</td>
+                        <td><strong>{translate("collection.reciept.name")}</strong> - {getVal("Receipt[0].Bill[0].paidBy")}</td>
 
-                        <td><strong>Address</strong> - {getVal("Receipt[0].Bill[0].payeeAddress")}</td>
+                        <td><strong>{translate("wc.create.groups.applicantDetails.address")}</strong> - {getVal("Receipt[0].Bill[0].payeeAddress")}</td>
 
 
                             {/*<td></td>
@@ -527,11 +527,11 @@ class Report extends Component {
 
                     </Row>
                     <Row>
-                    <Col xs={12} md={3}><strong>Payee Name - </strong>{getVal("Receipt[0].Bill[0].payeeName")} </Col>
+                    <Col xs={12} md={3}><strong>{translate("collection.reciept.name")} - </strong>{getVal("Receipt[0].Bill[0].payeeName")} </Col>
                     {/*<Col xs={12} md={3}><strong>Receipt Date - </strong>{getVal("Receipt[0].instrument") && getVal("Receipt[0].instrument.transactionDate").split("-")[2]+"-"+getVal("Receipt[0].instrument.transactionDate").split("-")[1]+"-"+getVal("Receipt[0].instrument.transactionDate").split("-")[0]} </Col>*/}
-                    <Col xs={12} md={3}><strong>Receipt Date - </strong>{getVal("Receipt[0].Bill[0].billDetails[0].receiptDate")} </Col>
-                    <Col xs={12} md={3}><strong>Address - </strong>{getVal("Receipt[0].Bill[0].payeeAddress")} </Col>
-                    <Col xs={12} md={3}><strong>Transaction Id - </strong>{getVal("Receipt[0].transactionId")} </Col>
+                    <Col xs={12} md={3}><strong>{translate("wc.create.receiptDate")} - </strong>{getVal("Receipt[0].Bill[0].billDetails[0].receiptDate")} </Col>
+                    <Col xs={12} md={3}><strong>{translate("wc.create.groups.applicantDetails.address")} - </strong>{getVal("Receipt[0].Bill[0].payeeAddress")} </Col>
+                    <Col xs={12} md={3}><strong>{translate("collection.reciept.id")} - </strong>{getVal("Receipt[0].transactionId")} </Col>
                     </Row>
                     <br/>
 
@@ -628,7 +628,7 @@ class Report extends Component {
                     </thead>
                     <tbody>
                         <tr>
-                            <td>Amount in words - <strong>{int_to_words(getGrandTotal("",formData.Receipt[0].Bill[0].billDetails)).toUpperCase()+" ONLY"}</strong></td>
+                            <td>{translate("collection.reciept.amount")} - <strong>{int_to_words(getGrandTotal("",formData.Receipt[0].Bill[0].billDetails)).toUpperCase()+" ONLY"}</strong></td>
                         </tr>
                         {formData.Receipt[0].instrument && formData.Receipt[0].instrument.instrumentType.name!="Cash" && <tr>
                             <td >Cheque/DD No <strong>{formData.Receipt[0].instrument.transactionNumber}</strong> drawn on <strong>{formData.Receipt[0].instrument.bank.name}</strong>, <strong>{formData.Receipt[0].instrument.branchName}</strong> Dated <strong>{formData.Receipt[0].instrument.transactionDate}</strong><br/>

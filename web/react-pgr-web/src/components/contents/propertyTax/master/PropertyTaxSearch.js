@@ -200,14 +200,13 @@ class PropertyTaxSearch extends Component {
 	  
 	var query = propertyTaxSearch;
 
-  for(var key in query){
-    if(query[key] == '' || obj[key] === null || obj[key] === undefined){
+    for(var key in query){
+    if(query[key] == '' || query[key] === null || query[key] === undefined){
       delete query[key];
     }
   }
 	  
       Api.commonApiPost('pt-property/properties/_search', query,{}, false, true).then((res)=>{   
-  }
 		setLoadingStatus('hide');
 		if(res.hasOwnProperty('Errors')){
 			toggleSnackbarAndSetText(true, "Something went wrong. Please try again.")

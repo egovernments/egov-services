@@ -1,7 +1,6 @@
 package org.egov.citizen.web.controller;
 
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -22,8 +21,6 @@ import org.egov.citizen.web.contract.ServiceRequestSearchCriteria;
 import org.egov.citizen.web.contract.factory.ResponseInfoFactory;
 import org.egov.citizen.web.errorhandlers.Error;
 import org.egov.citizen.web.errorhandlers.ErrorResponse;
-import org.egov.common.contract.response.ResponseInfo;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,14 +33,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@Slf4j
+
 public class ServiceController {
 	public static final Logger LOGGER = LoggerFactory.getLogger(ServiceController.class);
 
@@ -81,8 +77,8 @@ public class ServiceController {
 	@PostMapping(value = "/requests/_search")
 	public ResponseEntity<?> getServiceReq(@RequestBody @Valid RequestInfoWrapper requestInfo,
 											@ModelAttribute ServiceRequestSearchCriteria serviceRequestSearchCriteria){
-		log.info("serviceRequestSearchCriteria:"+serviceRequestSearchCriteria);
-		Map<String, Object> maps = citizenPersistService.serach(serviceRequestSearchCriteria, requestInfo.getRequestInfo());
+		LOGGER.info("serviceRequestSearchCriteria:"+serviceRequestSearchCriteria);
+		Map<String, Object> maps = citizenPersistService.search(serviceRequestSearchCriteria, requestInfo.getRequestInfo());
 		
 		return new ResponseEntity<>(maps ,HttpStatus.OK);
 		
@@ -92,7 +88,7 @@ public class ServiceController {
 	public ResponseEntity<?> createService(HttpEntity<String> httpEntity) {
 		
 		String serviceReqJson = httpEntity.getBody();
-		log.info("serviceReqJson:"+serviceReqJson);
+		LOGGER.info("serviceReqJson:"+serviceReqJson);
 		ServiceReqResponse serviceReqResponse = citizenPersistService.create(serviceReqJson);
 		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);
 	}
@@ -101,7 +97,7 @@ public class ServiceController {
 	public ResponseEntity<?> updateService(HttpEntity<String> httpEntity) {
 
 		String serviceReqJson = httpEntity.getBody();
-		log.info("update serviceReqJson:"+serviceReqJson);
+		LOGGER.info("update serviceReqJson:"+serviceReqJson);
 		ServiceReqResponse serviceReqResponse = citizenPersistService.update(serviceReqJson);
 		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);
 	}
@@ -271,6 +267,34 @@ public class ServiceController {
 		serviceRes.setResponseInfo(responseInfo);
 		return new ResponseEntity<>(serviceRes, HttpStatus.OK);
 	}*/
+	
+/*	@PostMapping(value = "/v2/requests/_search")
+	public ResponseEntity<?> getServiceReqv2(@RequestBody @Valid RequestInfoWrapper requestInfo,
+											@ModelAttribute ServiceRequestSearchCriteria serviceRequestSearchCriteria){
+		log.info("serviceRequestSearchCriteria:"+serviceRequestSearchCriteria);
+		Map<String, Object> maps = citizenPersistService.search(serviceRequestSearchCriteria, requestInfo.getRequestInfo());
+		
+		return new ResponseEntity<>(maps ,HttpStatus.OK);
+		
+	}
+	
+	@PostMapping(value = "/v2/requests/_create")
+	public ResponseEntity<?> createServicev2(HttpEntity<String> httpEntity) {
+		
+		String serviceReqJson = httpEntity.getBody();
+		log.info("serviceReqJson:"+serviceReqJson);
+		ServiceReqResponse serviceReqResponse = citizenPersistService.create(serviceReqJson);
+		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);
+	}
+	
+	@PostMapping(value = "/v2/requests/_update")
+	public ResponseEntity<?> updateServicev2(HttpEntity<String> httpEntity) {
+
+		String serviceReqJson = httpEntity.getBody();
+		log.info("update serviceReqJson:"+serviceReqJson);
+		ServiceReqResponse serviceReqResponse = citizenPersistService.update(serviceReqJson);
+		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);
+	} */
 
 	private ErrorResponse populateErrors(BindingResult errors) {
 		ErrorResponse errRes = new ErrorResponse();

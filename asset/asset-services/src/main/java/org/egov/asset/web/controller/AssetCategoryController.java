@@ -64,7 +64,7 @@ public class AssetCategoryController {
     public ResponseEntity<?> create(@RequestBody @Valid final AssetCategoryRequest assetCategoryRequest,
             final BindingResult bindingResult) {
 
-        log.info("AssetCategory create::" + assetCategoryRequest);
+        log.debug("AssetCategory create::" + assetCategoryRequest);
         if (bindingResult.hasErrors()) {
             final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
@@ -80,7 +80,7 @@ public class AssetCategoryController {
     public ResponseEntity<?> update(@RequestBody @Valid final AssetCategoryRequest assetCategoryRequest,
             final BindingResult bindingResult) {
 
-        log.info("AssetCategory update::" + assetCategoryRequest);
+        log.debug("AssetCategory update::" + assetCategoryRequest);
         if (bindingResult.hasErrors()) {
             final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);

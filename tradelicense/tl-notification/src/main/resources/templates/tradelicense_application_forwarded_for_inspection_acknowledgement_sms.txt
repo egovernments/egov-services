@@ -1,0 +1,1 @@
+Dear {{Owner}}, The application with No : {{Application Number}} for New license has been verified and forwarded to the Inspection Authority. The authorized person will be visiting shortly.

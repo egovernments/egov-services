@@ -67,8 +67,6 @@ public class NotificationService {
 			propertyMessage.put("Application Number", applicationNumber);
 			propertyMessage.put("Application Fee", amount);
 			propertyMessage.put("Application Date", applicationDate);
-			propertyMessage.put("Link", propertiesManager.getLinkForEmailBody() + "/" + applicationNumber);
-
 			String message = notificationUtil.buildSmsMessage(propertiesManager.getLicenseAcknowledgementSms(),
 					propertyMessage);
 			SmsMessage smsMessage = new SmsMessage(message, mobileNumber);
@@ -236,7 +234,7 @@ public class NotificationService {
 		}
 	}
 
-	private String getULB(String tenantId,RequestInfo requestInfo) {
+	private String getULB(String tenantId, RequestInfo requestInfo) {
 
 		String hostUrl = propertiesManager.getTenantServiceHostName() + propertiesManager.getTenantServiceBasePath();
 		String searchUrl = propertiesManager.getTenantServiceSearchPath();
@@ -258,7 +256,8 @@ public class NotificationService {
 			log.debug("Error connecting to Tenant service end point " + url);
 		}
 
-		if (tenantResponse != null && tenantResponse.getTenant()!= null && tenantResponse.getTenant().size() != 0) {
+		if (tenantResponse != null && tenantResponse.getTenant() != null && tenantResponse.getTenant().size() != 0
+				&& tenantResponse.getTenant().get(0).getCity() != null) {
 			return tenantResponse.getTenant().get(0).getCity().getName();
 		} else {
 			return null;

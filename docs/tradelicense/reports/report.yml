@@ -117,7 +117,7 @@ ReportDefinitions:
   - name: licenseSubType
     label: reports.tradelicense.licensesubtype
     type: url
-    pattern: /tl-masters/category/v1/_search?tenantId=$tenantid&type=SUBCATEGORY&categoryId={licenseType}&pageSize=500|$.categories..id|$.categories..name
+    pattern: /tl-masters/category/v1/_search?tenantId=$tenantid&categoryId={licenseType}&pageSize=500|$.categories..id|$.categories..name
     source: tradelicense
     isMandatory: false
     searchClause : AND tl.subcategoryid = $licenseSubType

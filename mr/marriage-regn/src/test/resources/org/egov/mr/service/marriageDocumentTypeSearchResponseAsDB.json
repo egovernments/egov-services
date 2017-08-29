@@ -1,79 +1,77 @@
 {
-    "responseInfo": {
-        "resMsgId": null,
-        "status": "200",
-        "apiId": null,
-        "ver": null,
-        "ts": null,
-        "key": null,
-        "tenantId": null
-    },
-    "marriageDocTypes": [
-        {
-            "id": 1,
-            "name": "ADDRESSPROOF",
-            "code": "00015",
-            "proof": "ADDRESS_PROOF",
-            "applicationType": "REGISTRATION",
-            "isActive": true,
-            "isIndividual": true,
-            "isRequired": true,
-            "tenantId": "ap.kurnool"
-        },
-        {
-            "id": 2,
-            "name": "ADDRESSPROOF",
-            "code": "00015",
-            "proof": "ADDRESS_PROOF",
-            "applicationType": "REISSUE",
-            "isActive": true,
-            "isIndividual": false,
-            "isRequired": true,
-            "tenantId": "ap.kurnool"
-        },
-        {
-            "id": 3,
-            "name": "AGEPROOF",
-            "code": "00015",
-            "proof": "AGE",
-            "applicationType": "REGISTRATION",
-            "isActive": true,
-            "isIndividual": true,
-            "isRequired": false,
-            "tenantId": "ap.kurnool"
-        },
-        {
-            "id": 4,
-            "name": "AGEPROOF",
-            "code": "00015",
-            "proof": "AGE",
-            "applicationType": "REISSUE",
-            "isActive": false,
-            "isIndividual": false,
-            "isRequired": false,
-            "tenantId": "ap.kurnool"
-        },
-        {
-            "id": 5,
-            "name": "COMMONPROOF",
-            "code": "00015",
-            "proof": "COMMON",
-            "applicationType": "REGISTRATION",
-            "isActive": false,
-            "isIndividual": true,
-            "isRequired": false,
-            "tenantId": "ap.kurnool"
-        },
-        {
-            "id": 6,
-            "name": "COMMONPROOF",
-            "code": "00015",
-            "proof": "COMMON",
-            "applicationType": "REISSUE",
-            "isActive": false,
-            "isIndividual": false,
-            "isRequired": true,
-            "tenantId": "ap.kurnool"
-        }
-    ]
+	"responseInfo": {
+		"resMsgId": null,
+		"status": "200",
+		"apiId": null,
+		"ver": null,
+		"ts": 987456321
+	},
+	"marriageDocTypes": [
+		{
+			"id": 1,
+			"name": "ADDRESSPROOF",
+			"code": "00015",
+			"proof": "ADDRESS_PROOF",
+			"applicationType": "REGISTRATION",
+			"isActive": true,
+			"isIndividual": true,
+			"isRequired": true,
+			"tenantId": "ap.kurnool"
+		},
+		{
+			"id": 2,
+			"name": "ADDRESSPROOF",
+			"code": "00015",
+			"proof": "ADDRESS_PROOF",
+			"applicationType": "REISSUE",
+			"isActive": true,
+			"isIndividual": false,
+			"isRequired": true,
+			"tenantId": "ap.kurnool"
+		},
+		{
+			"id": 3,
+			"name": "AGEPROOF",
+			"code": "00015",
+			"proof": "AGE",
+			"applicationType": "REGISTRATION",
+			"isActive": true,
+			"isIndividual": true,
+			"isRequired": false,
+			"tenantId": "ap.kurnool"
+		},
+		{
+			"id": 4,
+			"name": "AGEPROOF",
+			"code": "00015",
+			"proof": "AGE",
+			"applicationType": "REISSUE",
+			"isActive": false,
+			"isIndividual": false,
+			"isRequired": false,
+			"tenantId": "ap.kurnool"
+		},
+		{
+			"id": 5,
+			"name": "COMMONPROOF",
+			"code": "00015",
+			"proof": "COMMON",
+			"applicationType": "REGISTRATION",
+			"isActive": false,
+			"isIndividual": true,
+			"isRequired": false,
+			"tenantId": "ap.kurnool"
+		},
+		{
+			"id": 6,
+			"name": "COMMONPROOF",
+			"code": "00015",
+			"proof": "COMMON",
+			"applicationType": "REISSUE",
+			"isActive": false,
+			"isIndividual": false,
+			"isRequired": true,
+			"tenantId": "ap.kurnool"
+		}
+	]
 }

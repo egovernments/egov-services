@@ -165,8 +165,8 @@ public class WaterConnectionRowMapper {
 				connection.setBillSequenceNumber(Double.parseDouble(df.format(rs.getDouble("sequencenumber"))));
 			}
 			connection.setOutsideULB(rs.getBoolean("outsideulb"));
-			connection.setMeterOwner(rs.getString("meterowner"));
-			connection.setMeterModel(rs.getString("metermodel"));
+			//connection.setMeterOwner(rs.getString("meterowner"));
+			//connection.setMeterModel(rs.getString("metermodel"));
 			Long execDate = rs.getLong("execdate");
 			if (null != execDate) {
 				connection.setExecutionDate(execDate);

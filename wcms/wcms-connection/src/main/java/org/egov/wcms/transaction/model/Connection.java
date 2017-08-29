@@ -220,12 +220,9 @@ public class Connection {
     private String manualConsumerNumber;
 
     private String houseNumber;
-
     
     private Boolean outsideULB;
 
-    private String meterOwner;
 
-    private String meterModel;
 
 }

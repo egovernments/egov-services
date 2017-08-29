@@ -219,32 +219,58 @@ class AddDemand extends Component {
 
   submitDemand = () => {
 
-	  var data = this.state.demands;
+	  var data = this.state.demands.slice();
 
 	  let { addDemand } = this.props;
 	  
 	  let current = this;
-
-	  data.map((demand, index)=> {
-		  demand.businessService = 'PT'
-		  demand.demandDetails.map((item, i)=> {
-			  item.taxAmount = (addDemand['demands'+index] ? addDemand['demands'+index]['demand'+i] :  item.taxAmount)|| item.taxAmount;
-			  item.collectionAmount = (addDemand['collections'+index] ? addDemand['collections'+index]['collection'+i] :  item.collectionAmount)|| item.collectionAmount;
-		  })
-	  })
-
-	  console.log(data);
-
-	  var body = {
-		  Demands : data
+	  
+	  for(var key in addDemand) {
+	  		for(var demand in addDemand[key]){
+	  			if(addDemand[key][demand] == null){
+	  				delete addDemand[key][demand]
+	  			}
+	  		}
+	  		if(Object.keys(addDemand[key]).length === 0 && addDemand[key].constructor === Object){
+	  			delete addDemand[key]
+	  		}
 	  }
 
-
-	Api.commonApiPost('billing-service/demand/_update', {}, body, false, true).then((res)=>{
-		current.props.history.replace('/propertyTax/demand-acknowledgement');
-	}).catch((err)=> {
-		console.log(err)
+	data.map((demand, index)=> {
+		  		if(addDemand.hasOwnProperty('demands'+index)) {
+		  			   demand.businessService = 'PT'
+					   demand.demandDetails.map((item, i)=> {
+					  		if(addDemand['demands'+index].hasOwnProperty('demand'+i)) {
+					  				item.taxAmount = addDemand['demands'+index]['demand'+i];
+						  			item.collectionAmount = addDemand['collections'+index]['collection'+i];
+					  		} else {
+					  			 delete data[index].demandDetails[i]
+					  		}
+					})
+		  		} else {
+		  			delete data[index]
+		  		}
 	})
+
+	  data = data.filter(function( element ) {
+   		return element !== undefined;
+		});
+
+	  for(var i = 0; i<data.length;i++){
+	  		data[i].demandDetails = data[i].demandDetails.filter(function( element ) {
+   			return element !== undefined;
+			});
+	  }
+
+	  var body = {
+		  Demands : data	  
+		}	
+
+		Api.commonApiPost('billing-service/demand/_update', {}, body, false, true).then((res)=>{
+			current.props.history.replace('/propertyTax/demand-acknowledgement');
+		}).catch((err)=> {
+			console.log(err)
+		})
 
   }
 
@@ -292,7 +318,6 @@ class AddDemand extends Component {
 			return(
 				<tr key={index}>
 					<td style={{width:100}} className="lastTdBorder">{(this.state.taxPeriod.length !=0) && this.state.taxPeriod.map((code, index)=>{
-						console.log(demand, code)
 						if(demand.taxPeriodFrom == code.fromDate && demand.taxPeriodTo == code.toDate){
 							return(<span>{code.code}</span>)
 						}
@@ -417,8 +442,8 @@ class AddDemand extends Component {
 									<thead>
 										<tr>
 											<th style={{textAlign:'center'}}>{translate('pt.create.groups.addDemand.period')}</th>
-											<th colSpan={this.state.demands.length !=0 && this.state.demands[0].demandDetails.length} style={{textAlign:'center'}}>{translate('pt.create.groups.addDemand.demand')}</th>
-											<th colSpan={this.state.demands.length !=0 && this.state.demands[0].demandDetails.length} style={{textAlign:'center'}}>{translate('pt.create.groups.addDemand.collection')}</th>
+											<th colSpan={(this.state.hasOwnProperty('demands') && this.state.demands.length !=0) && this.state.demands[0].demandDetails.length} style={{textAlign:'center'}}>{translate('pt.create.groups.addDemand.demand')}</th>
+											<th colSpan={(this.state.hasOwnProperty('demands') && this.state.demands.length !=0) && this.state.demands[0].demandDetails.length} style={{textAlign:'center'}}>{translate('pt.create.groups.addDemand.collection')}</th>
 										</tr>
 									</thead>
 									<tbody>

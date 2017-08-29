@@ -60,7 +60,7 @@ ReportDefinitions:
   - name: status
     label: reports.hr.employee.Status
     type: singlevaluelist
-    pattern: http://hr-masters:8080/hr-masters/hrstatuses/_search?tenantId=$tenantid|$..id|$..name
+    pattern: http://hr-masters:8080/hr-masters/hrstatuses/_search?tenantId=$tenantid|$..id|$..code
     source: egeis_hrstatus
     searchClause: and emp.employeestatus=$status
   query: select  emp.code as code ,usr.name as name,dept.name as department,desig.name as designation 

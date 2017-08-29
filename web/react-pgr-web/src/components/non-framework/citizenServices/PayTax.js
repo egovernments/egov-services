@@ -401,6 +401,7 @@ class NoDues extends Component {
           self.setState({
             demands:[]
           });
+
         }
         // finalObject["businessService"]= "CS";
         // finalObject["consumerCode"]= SID;

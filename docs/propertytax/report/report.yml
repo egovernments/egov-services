@@ -243,7 +243,6 @@ ReportDefinitions:
     label: reports.property.upicnumber
     type: number
     source: collection
-    showColumn: false
   - name: propertyaddress
     label: reports.property.address
     type: number
@@ -593,12 +592,10 @@ ReportDefinitions:
     label: reports.property.code
     type: number
     source: collection
-    showColumn: false
   - name: propertyowner
     label: reports.property.propertyowner
     type: number
     source: collection
-    showColumn: false
   - name: propertyaddress
     label: reports.property.address
     type: number

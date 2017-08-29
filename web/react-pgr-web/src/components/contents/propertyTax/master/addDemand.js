@@ -424,8 +424,8 @@ class AddDemand extends Component {
 									<tbody>
 										<tr>
 										  <td className="lastTdBorder"></td>
-										{showSubHeading()}
-										{showSubHeading()}
+										  {showSubHeading()}
+										  {showSubHeading()}
 										</tr>
 										{showfields()}
 									</tbody>

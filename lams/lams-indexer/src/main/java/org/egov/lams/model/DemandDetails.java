@@ -15,6 +15,7 @@ public class DemandDetails {
 	private BigDecimal collectionAmount;
 	private BigDecimal rebateAmount;
 	private String taxReason;
+	private String taxReasonCode;
 	private String taxPeriod;
 	private String glCode;
 	private Integer isActualDemand;

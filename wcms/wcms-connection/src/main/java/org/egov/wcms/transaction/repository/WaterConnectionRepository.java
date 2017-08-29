@@ -161,7 +161,7 @@ public class WaterConnectionRepository {
                 statement.setDouble(27, waterConnectionRequest.getConnection().getNumberOfFamily());
                 statement.setLong(28, waterConnectionRequest.getConnection().getSubUsageTypeId());
                 statement.setString(29,waterConnectionRequest.getConnection().getPlumberName());
-                statement.setLong(30, waterConnectionRequest.getConnection().getBillSequenceNumber()!=null?
+                statement.setDouble(30, waterConnectionRequest.getConnection().getBillSequenceNumber()!=null?
                         waterConnectionRequest.getConnection().getBillSequenceNumber():0l);
                 statement.setString(31, waterConnectionRequest.getConnection().getMeterOwner()!=null?
                         waterConnectionRequest.getConnection().getMeterOwner():"");

@@ -215,7 +215,7 @@ public class Connection {
 
     private String plumberName;
 
-    private Long billSequenceNumber;
+    private Double billSequenceNumber;
     
     private String manualConsumerNumber;
 

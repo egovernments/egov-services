@@ -122,6 +122,7 @@ public class RecoveryServiceTest {
         recoverySearch.setPageSize(0);
         recoverySearch.setOffset(0);
         recoverySearch.setSortBy("Sort");
+        recoverySearch.setTenantId("default");
         return recoverySearch;
     }
 

@@ -22,9 +22,9 @@ public class AgreementQueryBuilder {
 	public static final String BASE_SEARCH_QUERY =  "SELECT *,agreement.id as lamsagreementid FROM eglams_agreement agreement "
 			+ "LEFT OUTER JOIN eglams_demand demand ON agreement.id=demand.agreementid "
 			+ "LEFT OUTER JOIN eglams_rentincrementtype rent ON agreement.rent_increment_method=rent.id";
-	
-	public static final String INSERT_AGREEMENT_QUERY = "INSERT INTO eglams_agreement values "
-				+ "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
+	public static final String INSERT_AGREEMENT_QUERY = "INSERT INTO eglams_agreement (id,Agreement_Date,Agreement_No,Bank_Guarantee_Amount,Bank_Guarantee_Date,Case_No,Commencement_Date,Council_Date,Council_Number,Expiry_Date,Nature_Of_Allotment,Order_Date,Order_Details,Order_No,Payment_Cycle,Registration_Fee,Remarks,Rent,Rr_Reading_No,Security_Deposit,Security_Deposit_Date,solvency_certificate_date,solvency_certificate_no,status,tin_number,Tender_Date,Tender_Number,Trade_license_Number,created_by,last_modified_by,created_date,last_modified_date,allottee,asset,Rent_Increment_Method,AcknowledgementNumber,stateid,Tenant_id,goodwillamount,timeperiod,collectedsecuritydeposit,collectedgoodwillamount,source,reason,terminationDate,courtReferenceNumber,action)"
+			+ " values (:agreementID,:agreementDate,:agreementNo,:bankGuaranteeAmount,:bankGuaranteeDate,:caseNo,:commencementDate,:councilDate,:councilNumber,:expiryDate,:natureOfAllotment,:orderDate,:orderDetails,:orderNumber,:paymentCycle,:registrationFee,:remarks,:rent,:rrReadingNo,:securityDeposit,:securityDepositDate,:solvencyCertificateDate,:solvencyCertificateNo,:status,:tinNumber,:tenderDate,:tenderNumber,:tradelicenseNumber,:createdBy,:lastmodifiedBy,:createdDate,:lastmodifiedDate,:allottee,:asset,:rentIncrement,:acknowledgementNumber,:stateId,:tenantId,:goodWillAmount,:timePeriod,:collectedSecurityDeposit,:collectedGoodWillAmount,:source,:reason,:terminationDate,:courtReferenceNumber,:action)";
 
 	public static String updateAgreementQuery() {
 

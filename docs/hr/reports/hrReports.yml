@@ -302,7 +302,7 @@ ReportDefinitions:
     isMandatory: false
     searchClause: and dept.id=$departmentId
   - name: leavetype
-    label: reports.hr.leavetype
+    label: reports.hr.leaveType
     type: singlevaluelist
     pattern: http://hr-leave:8080/hr-leave/leavetypes/_search?tenantId=$tenantid|$..id|$..name
     source: hr
@@ -355,11 +355,11 @@ ReportDefinitions:
   moduleName: hr
   sourceColumns:
   - name: code
-    label: reports.hr.Employee_code         
+    label: reports.hr.employee.Employee_Code         
     type: string
     source: hr
   - name: name
-    label: reports.hr.Employee_name         
+    label: reports.hr.employee.Employee_Name         
     type: string
     source: hr
   - name: assign
@@ -380,15 +380,6 @@ ReportDefinitions:
     between fromdate and todate and tenantid = $tenantid ) 
     and emp.id=usr.id and emp.tenantid=usr.tenantid and assign.employeeid = emp.id and emp.tenantid=$tenantid
   groupBy: group by employeecode ,employeename;
-    
-
-
-
-
-
-
-
-
 
 
 

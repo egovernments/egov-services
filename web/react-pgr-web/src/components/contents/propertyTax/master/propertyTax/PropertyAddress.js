@@ -276,7 +276,7 @@ class PropertyAddress extends Component {
 												  hintText="301"
                                                   errorText={fieldErrors.doorNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.doorNo}</span> : ""}
                                                   value={propertyAddress.doorNo ? propertyAddress.doorNo : ""}
-                                                  onChange={(e) => handleChange(e, "doorNo", true, '')}
+                                                  onChange={(e) => handleChange(e, "doorNo", true, /^[^-\s]+$/g)}
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}

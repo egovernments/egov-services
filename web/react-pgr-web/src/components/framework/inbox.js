@@ -497,7 +497,8 @@ class Inbox extends Component {
 	  } else if( actionName == 'Print Notice'){
 		  
 		  var body = {
-		   upicNumber: data[0].upicNumber
+		   upicNumber: data[0].upicNumber,
+       tenantId: localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default'
 	   } 
 	  
 	   Api.commonApiPost('pt-property/properties/specialnotice/_generate', {},body, false, true).then((res)=>{

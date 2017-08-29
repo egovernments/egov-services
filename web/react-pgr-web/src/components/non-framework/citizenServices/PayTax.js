@@ -462,24 +462,6 @@ class NoDues extends Component {
         count++;
       }
     }
-    // delete formData['mobileNumber'];
-    // console.log(formData);
-    // for(var key in formData) {
-    //   if(formData[key] !== "" && typeof formData[key] == "undefined")
-    //     delete formData[key];
-    // }
-    // this.handleNext();
-    //   var resultList = {
-    //     resultHeader: [{label: "#"}, ...self.props.metaData["noDues.search"].result.header],
-    //     resultValues: []
-    //   };
-    //   resultList.resultValues.push(["1","murali","2016-17","100"]);
-    //   resultList.resultValues.push(["2","abhishek","2016-17","200"]);
-    //
-    //   self.setState({
-    //     resultList,
-    //     showResult: true
-    //   });
    if(count>1)
    {
     var instance = axios.create({
@@ -500,86 +482,88 @@ class NoDues extends Component {
     instance.post('/user/oauth/token', params).then(function(response) {
       localStorage.setItem("request-temp", JSON.stringify(response.data.UserRequest));
       localStorage.setItem("auth-token-temp", response.data.access_token);
-      let serviceReq = []
-      try {
-        serviceReq = JSON.parse(localStorage.servReq);
-      } catch(e) {}
+      finalObject["businessService"] = (self.props.match.params.status == "extract" ? "PT" : (self.props.match.params.id == "pt" ? "PT" : "WC"));
+      Api.commonApiPost(self.props.metaData["noDues.search"].url, finalObject, {}, null, self.props.metaData["noDues.search"].useTimestamp,false,response.data.access_token).then(function(res){
+        self.props.setLoadingStatus('hide');
+        if(jp.query(res,`$..demandDetails[?(@.taxAmount > @.collectionAmount)]`).length>0) {
+          self.setState({
+            demands: res.Demands
+          }, function() {
+              Api.commonApiPost("/citizen-services/v1/requests/_search", {userId: JSON.parse(localStorage.getItem("userRequest")).id}, {}, null, true).then(function(ress) {
+              let SID = "", _servReq;
+              let SC = (self.props.match.params.status == "extract" ? "PT_NODUES" : (self.props.match.params.id == "pt" ? "PT_NODUES" : "WC_NODUES"));
+              for(let i=0; i<ress.serviceReq.length; i++) {
+                //Status needs to be changed
+                if(SC == ress.serviceReq[i].serviceCode && ress.serviceReq[i].status == "CREATED") {
+                  SID = ress.serviceReq[i].serviceRequestId;
+                  _servReq = ress.serviceReq[i];
+                  break;
+                }
+              }
 
-      Api.commonApiPost("/citizen-services/v1/requests/_search", {userId: JSON.parse(localStorage.getItem("userRequest")).id}, {}, null, true).then(function(ress) {
-          let SID = "", _servReq;
-          let SC = (self.props.match.params.status == "extract" ? "PT_NODUES" : (self.props.match.params.id == "pt" ? "PT_NODUES" : "WC_NODUES"));
-          console.log(SC);
-          for(let i=0; i<ress.serviceReq.length; i++) {
-            //Status needs to be changed
-            if(SC == ress.serviceReq[i].serviceCode && ress.serviceReq[i].status == "CREATED") {
-              SID = ress.serviceReq[i].serviceRequestId;
-              _servReq = ress.serviceReq[i];
-              break;
-            }
-          }
+              if(!SID) {
+                let request = {
+                   "tenantId": localStorage.getItem("tenantId"),
+                   "serviceRequestId": null,
+                   "serviceCode": (self.props.match.params.id == "pt") ? "PT_NODUES" : "WC_NODUES",
+                   "lat": 12,
+                   "lang": 23,
+                   "address": "address",
+                   "addressId": "addressId",
+                   "email": "email",
+                   "deviceId": "deviceId",
+                   "accountId": "accountId",
+                   "firstName": "",
+                   "lastName": "firstName",
+                   "phone": "phone",
+                   "description": "",
+                   "consumerCode" : formData.consumerCode,
+                   "attributeValues": [
+                     {
+                       "key": "tenantId",
+                       "value": localStorage.getItem("tenantId")
+                     }
+                   ],
+                   "status": "CREATED",
+                   "assignedTo": "assignedTo",
+                   "comments": [
+                     "",
+                     ""
+                   ],
+                   "backendServiceDetails": {}
+                };
 
-          if(!SID) {
-            console.log("HERE22");
-            let request = {
-               "tenantId": localStorage.getItem("tenantId"),
-               "serviceRequestId": null,
-               "serviceCode": (self.props.match.params.id == "pt") ? "PT_NODUES" : "WC_NODUES",
-               "lat": 12,
-               "lang": 23,
-               "address": "address",
-               "addressId": "addressId",
-               "email": "email",
-               "deviceId": "deviceId",
-               "accountId": "accountId",
-               "firstName": "",
-               "lastName": "firstName",
-               "phone": "phone",
-               "description": "",
-               "consumerCode" : formData.consumerCode,
-               "attributeValues": [
-                 {
-                   "key": "tenantId",
-                   "value": localStorage.getItem("tenantId")
-                 }
-               ],
-               "status": "CREATED",
-               "assignedTo": "assignedTo",
-               "comments": [
-                 "",
-                 ""
-               ],
-               "backendServiceDetails": {}
-            };
-
-            console.log("HERE1");
-            Api.commonApiPost("/citizen-services/v1/requests/_create", {}, {"serviceReq":request}, null, self.props.metaData["noDues.search"].useTimestamp, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
-                console.log("HERE2");
+                Api.commonApiPost("/citizen-services/v1/requests/_create", {}, {"serviceReq":request}, null, self.props.metaData["noDues.search"].useTimestamp, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
+                    self.setState({
+                      serviceRequest: res.serviceReq
+                    });
+                    
+                  }, function(err) {
+                    self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+                    self.props.setLoadingStatus('hide');
+                })
+              } else {
                 self.setState({
-                  serviceRequest: res.serviceReq
+                      serviceRequest: _servReq
                 });
-                self.createDemand(res.serviceReq.serviceRequestId, finalObject, response);
-              }, function(err) {
-                self.props.toggleSnackbarAndSetText(true, err.message, false, true);
-                self.props.setLoadingStatus('hide');
-            })
-          } else {
-            console.log("HERE4");
-            self.setState({
-                  serviceRequest: _servReq
-            });
-            self.createDemand(SID, finalObject, response);
-          }
+              }
+          }, function(err) {
+
+          })
+          });
+        }
+        else {
+          //NO PAY DUE! RETURN SUCCESS!
+          self.setState({
+            demands: []
+          })
+        }
       }, function(err) {
 
       })
-
-
-        }).catch(function(response) {
-          self.props.setLoadingStatus('hide');
-          // self.setState({
-          //   errorMsg: "Please check your username and password"
-          // });
-        });
+    }).catch(function(response) {
+      self.props.setLoadingStatus('hide');
+    });
        }
        else {
          self.props.setLoadingStatus('hide');

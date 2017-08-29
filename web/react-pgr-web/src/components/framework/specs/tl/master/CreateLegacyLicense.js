@@ -732,7 +732,7 @@ var dat = {
          "rowClickUrlUpdate": "/update/tl/CreateLegacyLicense/{licenseNumber}",
          "rowClickUrlView": "/non-framework/tl/transaction/viewLegacyLicense/{licenseNumber}"
        }
-     },
+     }, 
 
 
      "tl.view": {

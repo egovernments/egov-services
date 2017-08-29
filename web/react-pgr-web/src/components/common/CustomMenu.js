@@ -146,9 +146,12 @@ const menuConvention={
   "Trade License.License Search.SearchLicense": "/search/tl/CreateLegacyLicense/view",
   "Trade License.License Reports.License Register Report":"/report/tradelicense/licenseRegisterReport",
 
+  "Water Charge.Wcms Reports.WCOutstandingReport":"/report/wcms-connection/OutstandingRegister",
+  "Water Charge.Wcms Reports.WCDemandRegister":"/report/wcms-connection/DemandRegister",
+  "Water Charge.Wcms Reports.WCDCBReport":"/report/wcms-connection/DCBReport",
 
 
- 
+
   "Water Charge.Water Transactions.LegacyCreateNewConnectionAPI":"/create/wc/legacy",
 
   //employee Master,

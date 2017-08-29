@@ -304,7 +304,7 @@ ReportDefinitions:
   - name: leavetype
     label: reports.hr.leavetype
     type: singlevaluelist
-    pattern: http://egov-common-masters:8080/hr-leave/leavetypes/_search?tenantId=$tenantid|$..id|$..name
+    pattern: http://hr-leave:8080/hr-leave/leavetypes/_search?tenantId=$tenantid|$..id|$..name
     source: hr
     isMandatory: false
     searchClause: and leavetype.id=$leavetype

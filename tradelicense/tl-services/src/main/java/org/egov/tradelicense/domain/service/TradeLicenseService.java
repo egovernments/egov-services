@@ -8,22 +8,21 @@ import java.util.Map;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.ResponseInfo;
 import org.egov.tl.commons.web.contract.TradeLicenseSearchContract;
+import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tl.commons.web.requests.ResponseInfoFactory;
 import org.egov.tl.commons.web.requests.TradeLicenseRequest;
+import org.egov.tl.commons.web.response.LicenseStatusResponse;
 import org.egov.tl.commons.web.response.TradeLicenseSearchResponse;
 import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.common.domain.exception.CustomBindException;
+import org.egov.tradelicense.domain.enums.ApplicationStatus;
 import org.egov.tradelicense.domain.model.LicenseFeeDetail;
 import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.domain.model.TradeLicenseSearch;
 import org.egov.tradelicense.domain.repository.TradeLicenseRepository;
 import org.egov.tradelicense.domain.service.validator.TradeLicenseServiceValidator;
-import org.egov.tradelicense.web.repository.BoundaryContractRepository;
-import org.egov.tradelicense.web.repository.CategoryContractRepository;
-import org.egov.tradelicense.web.repository.DocumentTypeContractRepository;
-import org.egov.tradelicense.web.repository.FinancialYearContractRepository;
-import org.egov.tradelicense.web.repository.PropertyContractRespository;
+import org.egov.tradelicense.web.repository.StatusRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,32 +46,19 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 public class TradeLicenseService {
 
-	@Autowired
-	TradeLicenseServiceValidator tradeLicenseServiceValidator;
+	public static final String APPLICATION_MODULE_TYPE = "Application";
 
 	@Autowired
-	TradeLicenseRepository tradeLicenseRepository;
+	private TradeLicenseServiceValidator tradeLicenseServiceValidator;
 
 	@Autowired
-	BoundaryContractRepository boundaryContractRepository;
+	private TradeLicenseRepository tradeLicenseRepository;
 
 	@Autowired
-	CategoryContractRepository categoryContractRepository;
+	private TradeLicenseNumberGeneratorService licenseNumberGenerationService;
 
 	@Autowired
-	DocumentTypeContractRepository documentTypeContractRepository;
-
-	@Autowired
-	PropertyContractRespository propertyContractRepository;
-
-	@Autowired
-	TradeLicenseNumberGeneratorService licenseNumberGenerationService;
-
-	@Autowired
-	ApplicationNumberGeneratorService applNumberGenrationService;
-
-	@Autowired
-	FinancialYearContractRepository financialYearContractRepository;
+	private ApplicationNumberGeneratorService applNumberGenrationService;
 
 	@Autowired
 	private SmartValidator validator;
@@ -85,6 +71,9 @@ public class TradeLicenseService {
 
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
+
+	@Autowired
+	private StatusRepository statusRepository;
 
 	private BindingResult validate(List<TradeLicense> tradeLicenses, BindingResult errors) {
 
@@ -118,15 +107,15 @@ public class TradeLicenseService {
 			license.setId(tradeLicenseRepository.getNextSequence());
 
 			if (!license.getIsLegacy()) {
-				// TODO: identify the proper ids for the two status and add it
-				// here, for now used 2 and 3
-				if (propertiesManager.getApplicatonFeeApplicable().equalsIgnoreCase("Y")) {
-					license.setStatus(new Long(2)); // "Pending for Application
-													// Fee payment" status id 2
-				} else if (propertiesManager.getApplicatonFeeApplicable().equalsIgnoreCase("N")) {
-					license.setStatus(new Long(3)); // "Pending for scrutiny"
-													// status id 3
-				}
+
+				RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+				requestInfoWrapper.setRequestInfo(requestInfo);
+
+				LicenseStatusResponse currentStatus = statusRepository.findByModuleTypeAndCode(license.getTenantId(),
+						APPLICATION_MODULE_TYPE, ApplicationStatus.ACKNOWLEDGED.getName(), requestInfoWrapper);
+
+				if (null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty())
+					license.setStatus(currentStatus.getLicenseStatuses().get(0).getId());
 
 			} else {
 				license.setStatus(new Long(1)); // Approved status id 1
@@ -213,8 +202,8 @@ public class TradeLicenseService {
 		for (TradeLicense license : tradeLicenses) {
 
 			if (!license.getIsLegacy()) {
-				// TODO: identify the proper ids for the two status and add it
-				// here, for now used 2 and 3
+
+				populateStatus(license, requestInfo);
 
 			} else {
 				license.setStatus(new Long(1)); // Approved status id 1
@@ -223,6 +212,54 @@ public class TradeLicenseService {
 		}
 
 		return tradeLicenses;
+	}
+
+	private void populateStatus(TradeLicense license, RequestInfo requestInfo) {
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		LicenseStatusResponse currentStatus = null;
+		LicenseStatusResponse nextStatus = null;
+
+		if (null != license.getStatus())
+			currentStatus = statusRepository.findByIds(license.getTenantId(), license.getStatus().toString(),
+					requestInfoWrapper);
+
+		if (null != license.getWorkFlowDetails() && null != license.getWorkFlowDetails().getAction()
+				&& null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty()
+				&& license.getWorkFlowDetails().getAction().equalsIgnoreCase("Forward") && currentStatus
+						.getLicenseStatuses().get(0).getCode() == ApplicationStatus.APPLICATION_FEE_PAID.getName()) {
+
+			nextStatus = statusRepository.findByModuleTypeAndCode(license.getTenantId(), APPLICATION_MODULE_TYPE,
+					ApplicationStatus.SCRUTINY_COMPLETED.getName(), requestInfoWrapper);
+
+			if (null != nextStatus && !nextStatus.getLicenseStatuses().isEmpty())
+				license.setStatus(nextStatus.getLicenseStatuses().get(0).getId());
+		}
+
+		if (null != license.getWorkFlowDetails() && null != license.getWorkFlowDetails().getAction()
+				&& null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty()
+				&& license.getWorkFlowDetails().getAction().equalsIgnoreCase("Forward") && currentStatus
+						.getLicenseStatuses().get(0).getCode() == ApplicationStatus.SCRUTINY_COMPLETED.getName()) {
+
+			nextStatus = statusRepository.findByModuleTypeAndCode(license.getTenantId(), APPLICATION_MODULE_TYPE,
+					ApplicationStatus.INSPECTION_COMPLETED.getName(), requestInfoWrapper);
+
+			if (null != nextStatus && !nextStatus.getLicenseStatuses().isEmpty())
+				license.setStatus(nextStatus.getLicenseStatuses().get(0).getId());
+		}
+
+		if (null != license.getWorkFlowDetails() && null != license.getWorkFlowDetails().getAction()
+				&& null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty()
+				&& license.getWorkFlowDetails().getAction().equalsIgnoreCase("Approve") && currentStatus
+						.getLicenseStatuses().get(0).getCode() == ApplicationStatus.INSPECTION_COMPLETED.getName()) {
+
+			nextStatus = statusRepository.findByModuleTypeAndCode(license.getTenantId(), APPLICATION_MODULE_TYPE,
+					ApplicationStatus.FINAL_APPROVAL_COMPLETED.getName(), requestInfoWrapper);
+
+			if (null != nextStatus && !nextStatus.getLicenseStatuses().isEmpty())
+				license.setStatus(nextStatus.getLicenseStatuses().get(0).getId());
+		}
+
 	}
 
 	@Transactional

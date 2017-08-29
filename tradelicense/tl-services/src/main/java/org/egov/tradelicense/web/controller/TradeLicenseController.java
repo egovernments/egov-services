@@ -24,7 +24,6 @@ import org.egov.tradelicense.domain.service.TradeLicenseService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.SmartValidator;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -39,9 +38,6 @@ public class TradeLicenseController {
 
 	@Autowired
 	ResponseInfoFactory responseInfoFactory;
-
-	@Autowired
-	private SmartValidator validator;
 
 	@Autowired
 	PropertiesManager propertiesManager;

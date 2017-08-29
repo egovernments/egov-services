@@ -52,7 +52,7 @@ public class DemandService {
 		for (DemandDetails demandDetail : demand.getDemandDetails()) {
 			if (demandDetail.getTaxAmount() != null && demandDetail.getTaxReason() != null
 					&& !demandDetail.getTaxPeriod().isEmpty()) {
-				demandReason = demandReasonService.findByCodeInstModule(demandDetail.getTaxReason(),
+				demandReason = demandReasonService.findByCodeInstModule(demandDetail.getTaxReasonCode(),
 						demandDetail.getTaxPeriod(), demand.getModuleName(), demand.getTenantId());
 				if (demandReason != null) {
 					egDemandDetails = EgDemandDetails.fromReasonAndAmounts(demandDetail.getTaxAmount(), demandReason,
@@ -111,7 +111,7 @@ public class DemandService {
 			}
 			// adding to demand if demanddetails does not exists
 			if (!isDemandDetailExists) {
-				demandReason = demandReasonService.findByCodeInstModule(demandDetails.getTaxReason(),
+				demandReason = demandReasonService.findByCodeInstModule(demandDetails.getTaxReasonCode(),
 						demandDetails.getTaxPeriod(), demand.getModuleName(), demand.getTenantId());
 				
 				LOGGER.info("new demand reason :" + demandReason);

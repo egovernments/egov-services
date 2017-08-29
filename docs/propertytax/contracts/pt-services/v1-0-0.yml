@@ -1185,15 +1185,18 @@ definitions:
       requestInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
       upicNo:
-       type: string
+       type: string        
       tenantId:
         type: string
         description: tenant id of the Property
         maxLength: 128
         minLength: 4
+      workFlowDetails:
+        $ref: '#/definitions/WorkFlowDetails'  
     required:
        - upicNo
        - tenantId
+       
   
        
   SpecialNoticeResponse:

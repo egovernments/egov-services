@@ -176,6 +176,7 @@ public class DemandConnectionController {
                             tax.getCode(),demandDet.getId(),demandId);
                 }
                 }
+                if(null !=dmdDtl && dmdDtl.getTaxPeriod() !=null)
                 dmdDetailBeanList.add(dmdDtl);
             }
             

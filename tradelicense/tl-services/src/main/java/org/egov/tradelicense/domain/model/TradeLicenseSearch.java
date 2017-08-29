@@ -180,6 +180,9 @@ public class TradeLicenseSearch {
 
 	@JsonProperty("supportDocuments")
 	private List<SupportDocumentSearch> supportDocuments;
+	
+	@JsonProperty("applications")
+	private List<LicenseApplicationSearch> applications;
 
 	@JsonProperty("status")
 	private Long status;

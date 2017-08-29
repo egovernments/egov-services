@@ -42,6 +42,7 @@
             }
          ],
          "supportDocuments":null,
-         "auditDetails":null
+         "auditDetails":null,
+         "workFlowDetails": null
       }
    ]

@@ -348,7 +348,7 @@ var localization_EN_Data = {
     "pt.create.groups.propertyAddress.fields.revenueCircle": "Revenue Circle",
     "pt.create.groups.propertyAddress.fields.pin": "Pin",
     "pt.create.groups.propertyAddress.fields.readyReckoner": "Ready Reckoner",
-    "pt.create.groups.propertyAddress.fields.isCorrespondanceAddressDifferentFromAddress": "Is Correspondance Address Different From Address",
+    "pt.create.groups.propertyAddress.fields.isCorrespondanceAddressDifferentFromAddress": "Is correspondence address different from property address?",
     "pt.create.groups.propertyAddress.fields.address1": "Address 1",
 
     "pt.create.groups.assessmentDetails": "Assessment details",
@@ -1292,6 +1292,14 @@ var localization_EN_Data = {
     "pgr.0060": "Applicant Details",
     "pgr.0061": "Complainant Details",
     "wc.create.groups.applicantDetails.addressNumber":"House Number",
+
+       //pay reciept
+    "collection.reciept.id":"Transaction Id",
+    "collection.reciept.name":"Payee Name",
+    "collection.reciept.amount":"Amount in words",
+    "collection.pay.receipt":"Receipt",
+    "collection.pay.key":"Key",
+    "collection.pay.value":"Value",
 
 "reports.collection.amount":"Amount",
 "reports.collection.bank":"Bank",
@@ -2310,6 +2318,12 @@ var localization_MR_Data = {
 "wc.group.maximumReading":"कमाल रीडिंग",
 "wc.group.consumptionAdjustment":"वापर समायोजन",
 "wc.craete.file.Download":"डाउनलोड करा",
+"collection.reciept.id":"Transaction Id-Marathi",
+"collection.reciept.name":"Payee Name-Marathi",
+"collection.reciept.amount":"Amount in words-Marathi",
+"collection.pay.receipt":"Receipt-Marathi",
+"collection.pay.key":"Key-marathi",
+"collection.pay.value":"Value-Marathi",
 
 ﻿﻿"pgr.0001":"अक्षांश / रेखांश किंवा क्रॉस हायरारकी संकेतांक आवश्यक आहे",
 "pgr.0002":"अक्षांश / रेखांश किंवा क्रॉस हायरारकी संकेतांक आवश्यक आहे",

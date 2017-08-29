@@ -39,26 +39,26 @@ public class MarriageCertService {
 
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
-	
+
 	@Autowired
 	private PropertiesManager propertiesManager;
-	
+
 	@Autowired
 	private SequenceIdGenService sequenceGenUtil;
-	
+
 	@Autowired
 	private MarriageRegnService marriageRegnService;
-	
+
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
-	
+
 	@Value("${egov.mr.services.reissueCertificate_sequence}")
 	private String certSeq;
-	
+
 	@Value("${egov.mr.services.reissueApp_sequence}")
 	private String reisuueIdSeq;
 
-	public ReissueCertResponse getMarriageCerts(MarriageCertCriteria marriageCertCriteria,RequestInfo requestInfo) {
+	public ReissueCertResponse getMarriageCerts(MarriageCertCriteria marriageCertCriteria, RequestInfo requestInfo) {
 
 		return getSuccessResponseForSearch(marriageCertRepository.findForCriteria(marriageCertCriteria), requestInfo);
 	}
@@ -69,19 +69,24 @@ public class MarriageCertService {
 		Page page = new Page();
 		reissueCertResponse.setReissueApplications(marriageCertList);
 		log.info("marriageCertList=" + marriageCertList);
-		ResponseInfo responseInfo =new ResponseInfo();
+		ResponseInfo responseInfo = new ResponseInfo();
+		responseInfo.setApiId(requestInfo.getApiId());
+		responseInfo.setMsgId(requestInfo.getMsgId());
+		responseInfo.setStatus(HttpStatus.OK.toString());
+		responseInfo.setTs(requestInfo.getTs());
+		responseInfo.setVer(requestInfo.getVer());
 		reissueCertResponse.setResponseInfo(responseInfo);
 		int totalresults = marriageCertList.size();
 		page.setTotalResults(totalresults);
 		reissueCertResponse.setPage(page);
 		return reissueCertResponse;
 	}
-	
-	public ReissueCertResponse createAsync(ReissueCertRequest reissueCertRequest){
-		
+
+	public ReissueCertResponse createAsync(ReissueCertRequest reissueCertRequest) {
+
 		List<MarriageDocument> marriageDocuments = reissueCertRequest.getReissueApplication().getDocuments();
 		ReissueCertAppl reIssueApp = reissueCertRequest.getReissueApplication();
-		List<ReissueCertAppl> reissueCertAppl=new ArrayList<ReissueCertAppl>();
+		List<ReissueCertAppl> reissueCertAppl = new ArrayList<ReissueCertAppl>();
 		int docsSize = marriageDocuments.size();
 		List<String> docIds = sequenceGenUtil.getIds(docsSize, "egmr_documents_id");
 		reIssueApp.setId(sequenceGenUtil.getIds(1, reisuueIdSeq).get(0));
@@ -91,7 +96,7 @@ public class MarriageCertService {
 			docs.setId(docIds.get(index++));
 			docs.setReissueCertificateId(reIssueApp.getId());
 		}
-		
+
 		try {
 			kafkaTemplate.send(propertiesManager.getCreateReissueMarriageRegnTopicName(),
 					propertiesManager.getCreateReissueMarriageRegnKey(), reissueCertRequest);
@@ -100,14 +105,14 @@ public class MarriageCertService {
 			e.printStackTrace();
 		}
 		reissueCertAppl.add(reIssueApp);
-		return getMarriageCertResponse(reissueCertAppl,reissueCertRequest.getRequestInfo());
+		return getMarriageCertResponse(reissueCertAppl, reissueCertRequest.getRequestInfo());
 	}
-	
-	public ReissueCertResponse updateAsync(ReissueCertRequest reissueCertRequest){
-		
+
+	public ReissueCertResponse updateAsync(ReissueCertRequest reissueCertRequest) {
+
 		ReissueCertAppl reIssueApp = reissueCertRequest.getReissueApplication();
-		List<ReissueCertAppl> reissueCertAppl=new ArrayList<ReissueCertAppl>();
-		
+		List<ReissueCertAppl> reissueCertAppl = new ArrayList<ReissueCertAppl>();
+
 		try {
 			kafkaTemplate.send(propertiesManager.getUpdateReissueMarriageRegnTopicName(),
 					propertiesManager.getUpdateReissueMarriageRegnKey(), reissueCertRequest);
@@ -115,56 +120,57 @@ public class MarriageCertService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		if(reIssueApp.getReissueApplStatus().equals(ApplicationStatus.APPROVED))
+
+		if (reIssueApp.getReissueApplStatus().equals(ApplicationStatus.APPROVED))
 			certificateCreateAsync(reIssueApp);
-		
+
 		reissueCertAppl.add(reIssueApp);
-		
-		return getMarriageCertResponse(reissueCertAppl,reissueCertRequest.getRequestInfo());
+
+		return getMarriageCertResponse(reissueCertAppl, reissueCertRequest.getRequestInfo());
 	}
-	
-	public void certificateCreateAsync(ReissueCertAppl reIssueApp){
-		
-		MarriageRegnCriteria marriageRegnCriteria=MarriageRegnCriteria.builder().regnNo(reIssueApp.getRegnNo())
+
+	public void certificateCreateAsync(ReissueCertAppl reIssueApp) {
+
+		MarriageRegnCriteria marriageRegnCriteria = MarriageRegnCriteria.builder().regnNo(reIssueApp.getRegnNo())
 				.tenantId(reIssueApp.getTenantId()).build();
-		
-		MarriageRegn marraigeRegn=  marriageRegnService.getMarriageRegns(marriageRegnCriteria,new RequestInfo()).get(0);
+
+		MarriageRegn marraigeRegn = marriageRegnService.getMarriageRegns(marriageRegnCriteria, new RequestInfo())
+				.get(0);
 
 		reIssueApp.setCertificate(marraigeRegn.getCertificates().get(0));
 		reIssueApp.getCertificate().setCertificateType(CertificateType.REISSUE);
 		reIssueApp.getCertificate().setCertificateDate(new Date().getTime());
-		reIssueApp.getCertificate().setCertificateNo(sequenceGenUtil.getIds(1,certSeq).get(0));
-		
+		reIssueApp.getCertificate().setCertificateNo(sequenceGenUtil.getIds(1, certSeq).get(0));
+
 		kafkaTemplate.send(propertiesManager.getCreateReissueCertificateTopicName(), reIssueApp);
-		
+
 	}
-	
-	public void createCert(ReissueCertAppl reIssueApp){
+
+	public void createCert(ReissueCertAppl reIssueApp) {
 		marriageCertRepository.createCert(reIssueApp);
 	}
-	
-	public void create(ReissueCertRequest reissueCertRequest){
+
+	public void create(ReissueCertRequest reissueCertRequest) {
 		marriageCertRepository.createReissue(reissueCertRequest);
 		marriageCertRepository.createDoc(reissueCertRequest);
 	}
-	
-	public void update(ReissueCertRequest reissueCertRequest){
+
+	public void update(ReissueCertRequest reissueCertRequest) {
 		marriageCertRepository.updateReissue(reissueCertRequest);
 		marriageCertRepository.updateDoc(reissueCertRequest);
 	}
-	
+
 	private ReissueCertResponse getMarriageCertResponse(List<ReissueCertAppl> reissuCert, RequestInfo requestInfo) {
 		ReissueCertResponse marriageCertResponse = new ReissueCertResponse();
 		marriageCertResponse.setReissueApplications(reissuCert);
 		marriageCertResponse.setResponseInfo(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK));
 		return marriageCertResponse;
 	}
-	
-	private void getMarriageCertificate(ReissueCertAppl reIssueApp,MarriageRegn marraigeRegn){
-		
-		MarriageCertificate marriageCertificate=new MarriageCertificate();
-		
+
+	private void getMarriageCertificate(ReissueCertAppl reIssueApp, MarriageRegn marraigeRegn) {
+
+		MarriageCertificate marriageCertificate = new MarriageCertificate();
+
 		marriageCertificate.setBridegroomPhoto(marraigeRegn.getBridegroom().getPhoto());
 		marriageCertificate.setBridePhoto(marraigeRegn.getBride().getPhoto());
 		marriageCertificate.setHusbandAddress(marraigeRegn.getBridegroom().getResidenceAddress());
@@ -181,10 +187,10 @@ public class MarriageCertService {
 		marriageCertificate.setTemplateVersion(marraigeRegn.getCertificates().get(0).getTemplateVersion());
 		marriageCertificate.setCertificateType(CertificateType.valueOf("REISSUE"));
 		marriageCertificate.setCertificatePlace(marraigeRegn.getCertificates().get(0).getCertificatePlace());
-		marriageCertificate.setCertificateNo(sequenceGenUtil.getIds(1,"seq_egmr_marriage_certificate").get(0));
+		marriageCertificate.setCertificateNo(sequenceGenUtil.getIds(1, "seq_egmr_marriage_certificate").get(0));
 		marriageCertificate.setCertificateDate(new Date().getTime());
-		
+
 		reIssueApp.setCertificate(marraigeRegn.getCertificates().get(0));
 	}
-	
+
 }

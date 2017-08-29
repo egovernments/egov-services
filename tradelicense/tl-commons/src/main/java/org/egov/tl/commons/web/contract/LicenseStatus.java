@@ -41,6 +41,10 @@ public class LicenseStatus {
 	@Length(min = 1, max = 20, message = "{error.code.empty}")
 	private String code = null;
 
+	@JsonProperty("moduleType")
+	private String moduleType ;
+	
+	
 	@JsonProperty("active")
 	private Boolean active = true;
 

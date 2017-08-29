@@ -569,6 +569,10 @@ ul{list-style-type: none; padding: 0; margin: 0;}
 		display:none;
 	}
 
+.panUppercase input{
+	text-transform: uppercase;
+}	
+
 /*-- Media Query --*/
 @media screen and (max-width: 768px) {
 

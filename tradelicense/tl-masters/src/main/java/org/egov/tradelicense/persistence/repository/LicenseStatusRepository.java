@@ -49,6 +49,7 @@ public class LicenseStatusRepository {
 		parameters.addValue("name", statuses.getName());
 		parameters.addValue("code", statuses.getCode());
 		parameters.addValue("active", statuses.getActive() == null ? true : statuses.getActive());
+		parameters.addValue("moduleType", statuses.getModuleType());
 		parameters.addValue("createdBy", auditDetails.getCreatedBy());
 		parameters.addValue("lastModifiedBy", auditDetails.getLastModifiedBy());
 		parameters.addValue("createdTime", auditDetails.getCreatedTime());
@@ -74,6 +75,7 @@ public class LicenseStatusRepository {
 		parameters.addValue("tenantId", statuses.getTenantId());
 		parameters.addValue("code", statuses.getCode());
 		parameters.addValue("name", statuses.getName());
+		parameters.addValue("moduleType", statuses.getModuleType());
 		parameters.addValue("active", statuses.getActive() == null ? true : statuses.getActive());
 		parameters.addValue("lastModifiedBy", auditDetails == null ? null : auditDetails.getLastModifiedBy());
 		parameters.addValue("lastModifiedTime", updatedTime);
@@ -134,6 +136,7 @@ public class LicenseStatusRepository {
 			status.setCode(getString(row.get("code")));
 			status.setName(getString(row.get("name")));
 			status.setActive((Boolean) row.get("active"));
+			status.setModuleType(getString(row.get("moduleType")));
 			AuditDetails auditDetails = new AuditDetails();
 			auditDetails.setCreatedBy(getString(row.get("createdby")));
 			auditDetails.setLastModifiedBy(getString(row.get("lastmodifiedby")));

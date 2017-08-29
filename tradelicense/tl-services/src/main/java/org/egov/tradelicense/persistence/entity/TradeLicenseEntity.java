@@ -27,15 +27,15 @@ public class TradeLicenseEntity {
 
 	private String tenantId;
 
-	private String applicationType;
+	protected String applicationType;
 
-	private String applicationNumber;
+	protected String applicationNumber;
 
 	private String licenseNumber;
 
 	private String oldLicenseNumber;
 
-	private Timestamp applicationDate;
+	protected Timestamp applicationDate;
 
 	private String adhaarNumber;
 
@@ -106,6 +106,8 @@ public class TradeLicenseEntity {
 	private Long createdTime;
 
 	private Long lastModifiedTime;
+	
+	
 
 	public TradeLicense toDomain() {
 
@@ -339,6 +341,14 @@ public class TradeLicenseEntity {
 		this.lastModifiedTime = (auditDetails == null) ? null : auditDetails.getLastModifiedTime();
 
 		return this;
+	}
+	
+	public LicenseApplicationEntity getLicenseApplicationEntity(){
+		LicenseApplicationEntity applicationEntity = new LicenseApplicationEntity();
+		
+		return applicationEntity.toEntity( this);
+		
+		
 	}
 
 }

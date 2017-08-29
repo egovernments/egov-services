@@ -1034,7 +1034,7 @@ handleUsage = (value) => {
 														  hintText="15000"
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.annualRent ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.annualRent}</span>:""): ""}
 														  value={floorDetails.floor ? floorDetails.floor.annualRent : ""}
-														  onChange={(e) => {handleChangeFloor(e,"floor" , "annualRent", false, /^\d{3,64}$/g)}}
+														  onChange={(e) => {handleChangeFloor(e,"floor" , "annualRent", false, /^\d{1,64}$/g)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -1287,7 +1287,7 @@ handleUsage = (value) => {
 														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.occupancyCertificateNumber')}
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.occupancyCertiNumber? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.occupancyCertiNumber}</span>:"" ): ""}
 														  value={floorDetails.floor ? floorDetails.floor.occupancyCertiNumber : ""}
-														  onChange={(e) => {handleChangeFloor(e,"floor" ,"occupancyCertiNumber", false, /^[0-9,<>!@#\$%\^\&*\)\(+=._-]+$/g)}}
+														  onChange={(e) => {handleChangeFloor(e,"floor" ,"occupancyCertiNumber", false, /^[0-9,/<>!@#\$%\^\&*\)\(+=._-]+$/g)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 														  underlineFocusStyle={styles.underlineFocusStyle}

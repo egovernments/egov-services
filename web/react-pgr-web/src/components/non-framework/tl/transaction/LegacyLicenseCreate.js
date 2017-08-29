@@ -667,6 +667,13 @@ this.setState({openLicense: false});
   populateValidtyYear = (categoryId) => {
     let self = this;
 
+    console.log(self.props.formData.licenses[0].categoryId);
+    if(self.props.formData.licenses[0].categoryId == "" || self.props.formData.licenses[0].categoryId == null){
+    //console.log(getVal("licenses[0].categoryId"));
+      self.props.handleChange({target:{value:null}}, "licenses[0].subCategoryId");
+
+      }
+
   Api.commonApiPost("/tl-masters/category/v1/_search",{"ids":categoryId, "type":"subcategory"}).then(function(response)
   {
 
@@ -850,12 +857,7 @@ handlePopUpLicense = (type , jsonPath, value) => {
       flag3=0;
 
 if(property == "licenses[0].categoryId"){
-console.log(getVal("licenses[0].categoryId"));
-if(self.props.formData.licenses[0].categoryId == "" || self.props.formData.licenses[0].categoryId == null){
-console.log(getVal("licenses[0].categoryId"));
-  self.props.handleChange({target:{value:null}}, self.props.formData.licenses[0].subCategoryId);
   this.populateValidtyYear();
-}
 }
 
     if (property == "licenses[0].subCategoryId") {
@@ -894,10 +896,6 @@ console.log(getVal("licenses[0].categoryId"));
        }
 //***End Point To Populate Fee Details Section***
 
-
-// if("licenses[0].feeDetails[0].amount" != "" && "licenses[0].feeDetails[0].amount" != 0 && "licenses[0].feeDetails[0].amount" != null){
-//   self.props.handleChange({target:{value: self.props.formData.licenses[0].feeDetails[0].amount}}, "licenses[0].amount");
-// }
 
 
 

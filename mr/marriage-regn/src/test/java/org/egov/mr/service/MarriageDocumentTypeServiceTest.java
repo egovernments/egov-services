@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.swing.text.Document;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.mr.config.PropertiesManager;
 import org.egov.mr.model.MarriageDocumentType;
 import org.egov.mr.model.enums.ApplicationType;
@@ -20,7 +21,6 @@ import org.egov.mr.utils.FileUtils;
 import org.egov.mr.web.contract.MarriageDocTypeRequest;
 import org.egov.mr.web.contract.MarriageDocTypeResponse;
 import org.egov.mr.web.contract.MarriageDocumentTypeSearchCriteria;
-import org.egov.mr.web.contract.RequestInfo;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -83,7 +83,9 @@ public class MarriageDocumentTypeServiceTest {
 		 */
 		MarriageDocTypeRequest marriageDocTypeRequest = new MarriageDocTypeRequest();
 		marriageDocTypeRequest.setMarriageDocTypes(marriageDocumentType);
-		marriageDocTypeRequest.setRequestInfo(new RequestInfo());
+		RequestInfo requestInfo = new RequestInfo();
+		requestInfo.setTs(Long.valueOf("987456321"));
+		marriageDocTypeRequest.setRequestInfo(requestInfo);
 
 		when(genService.idSeqGen(Matchers.anyInt(), Matchers.anyString())).thenReturn(getIds());
 		when(prosManager.getCreateMarriageDocumentTypeTopicName())
@@ -118,7 +120,9 @@ public class MarriageDocumentTypeServiceTest {
 				.tenantId("ap.kurnool").build();
 		when(marriageDocumentTypeRepository.search(mdtSearchCriteria)).thenReturn(marriageDocumentTypes);
 
-		ResponseEntity<?> resEntity = marriageDocumentTypeService.search(mdtSearchCriteria, new RequestInfo());
+		RequestInfo requestInfo = new RequestInfo();
+		requestInfo.setTs(Long.valueOf("987456321"));
+		ResponseEntity<?> resEntity = marriageDocumentTypeService.search(mdtSearchCriteria, requestInfo);
 		assertEquals(Long.valueOf("200").toString(), resEntity.getStatusCode().toString());
 		assertEquals(mdtResponse, resEntity.getBody());
 	}
@@ -142,7 +146,9 @@ public class MarriageDocumentTypeServiceTest {
 		List<MarriageDocumentType> marriageDocumentTypes = getMarriageDocumentTypesForUpdate();
 
 		MarriageDocTypeRequest marriageDocTypeRequest = new MarriageDocTypeRequest();
-		marriageDocTypeRequest.setRequestInfo(new RequestInfo());
+		RequestInfo requestInfo = new RequestInfo();
+		requestInfo.setTs(Long.valueOf("987456321"));
+		marriageDocTypeRequest.setRequestInfo(requestInfo);
 		marriageDocTypeRequest.setMarriageDocTypes(marriageDocumentTypes);
 
 		/* createAsync */

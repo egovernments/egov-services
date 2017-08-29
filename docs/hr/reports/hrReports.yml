@@ -1,6 +1,5 @@
 ---
 ReportDefinitions:
-# Employee Search Report
 - reportName: EmployeeSearch
   summary: Employee Search
   version: 1.0.0
@@ -23,12 +22,12 @@ ReportDefinitions:
     type: string
     source: egeis_assignment
   - name: reports
-    label: reports.hr.employee.reportsUrl
+    label: reports.hr.employee.reports
     type: string
     source: hr    
     linkedReport:
       reportName: DrillDownReportforemployeeview
-      linkedColumn: _parent?reportName={reportName}&status={currentColumnName}&code={code}  
+      linkedColumn: _parent?reportName={reportName}&code={code}  
   searchParams:
   - name: departmentid
     label: reports.hr.Department
@@ -40,7 +39,7 @@ ReportDefinitions:
   - name: designationid
     label: reports.hr.Designation
     type: singlevaluelist
-    pattern: http://hr-master:8080/hr-master/designations/_search?tenantId=$tenantid|$..id|$..name 
+    pattern: http://hr-masters:8080/hr-masters/designations/_search?tenantId=$tenantid|$..id|$..name 
     source: egeis_designation
     isMandatory: false
     searchClause: and assign.designationid=$designationid
@@ -53,17 +52,17 @@ ReportDefinitions:
   - name: employeeType
     label: reports.hr.EmployeeType
     type: singlevaluelist
-    pattern: http://hr-master:8080/hr-master/employeetypes/_search?tenantId=$tenantid|$..id|$..name
+    pattern: http://hr-masters:8080/hr-masters/employeetypes/_search?tenantId=$tenantid|$..id|$..name
     source: egeis_employeetype  
     isMandatory: false
     searchClause: and emp.employeetypeid=$employeeType
   - name: status
     label: reports.hr.employee.Status
     type: singlevaluelist
-    pattern: http://hr-master:8080/hr-master/hrstatuses/_search?tenantId=$tenantid|$..id|$..name
+    pattern: http://hr-masters:8080/hr-masters/hrstatuses/_search?tenantId=$tenantid|$..id|$..code
     source: egeis_hrstatus
     searchClause: and emp.employeestatus=$status
-  query: select  emp.code as code ,usr.name as name,dept.name as department,desig.name as designation 
+  query: select  emp.code as code ,usr.name as name,dept.name as department,desig.name as designation ,'employee_History' as reports
     from egeis_employee emp, egeis_assignment assign,eg_user usr, eg_department dept,egeis_designation desig
     where   emp.tenantid=$tenantid
     and usr.type='EMPLOYEE'
@@ -75,8 +74,6 @@ ReportDefinitions:
     and usr.tenantid=emp.tenantid
     and assign.tenantid=dept.tenantid
     and assign.tenantid=desig.tenantid 
-    
-    #employee search drilldown
 - reportName: DrillDownReportforemployeeview
   summary: DrillDown report for employee view
   version: 1.0.0 
@@ -131,11 +128,6 @@ ReportDefinitions:
     source: egeis_employeetype  
     isMandatory: true
     searchClause: and emp.employeetypeid=$employeeType
-  - name: status
-    label: reports.hr.employee.Status
-    type: string
-    source: egeis_hrstatus
-    searchClause: and emp.employeestatus=$status
   query: select  emp.code as code ,usr.name as name,dept.name as department,desig.name as designation ,assign.fromdate as fromdate, assign.todate as todate
     from egeis_employee emp, egeis_assignment assign,eg_user usr, eg_department dept,egeis_designation desig
     where   emp.tenantid=$tenantid
@@ -148,8 +140,6 @@ ReportDefinitions:
     and usr.tenantid=emp.tenantid
     and assign.tenantid=dept.tenantid
     and assign.tenantid=desig.tenantid 
-    
-   #attendance Report 
 - reportName: AttendenceReport
   summary: Attendence Report
   version: 1.0.0
@@ -198,7 +188,7 @@ ReportDefinitions:
   - name: designation
     label: reports.hr.Designation
     type: singlevaluelist
-    pattern: http://hr-master:8080/hr-master/designations/_search?tenantId=$tenantId|$..id|$..name  
+    pattern: http://hr-masters:8080/hr-masters/designations/_search?tenantId=$tenantId|$..id|$..name  
     source: hr
     isMandatory: false
     searchClause: and desig.id=$designation
@@ -211,7 +201,7 @@ ReportDefinitions:
   - name: employeeType
     label: reports.hr.EmployeeType
     type: singlevaluelist
-    pattern: http://hr-master:8080/hr-master/employeetypes/_search?tenantId=$tenantId|$..id|$..name
+    pattern: http://hr-masters:8080/hr-masters/employeetypes/_search?tenantId=$tenantId|$..id|$..name
     source: egeis_employee  
     isMandatory: false
     searchClause: and emp.employeetypeid=$employeeType
@@ -237,8 +227,6 @@ ReportDefinitions:
     and assign.tenantid = dept.tenantid
     and usr.tenantid=emp.tenantid
   groupBy: group by emp.code,usr.name ;
-  
- # employee Leave Report
 - reportName: employeeLeaveReport
   summary: employee Leave Report
   version: 1.0.0
@@ -283,7 +271,7 @@ ReportDefinitions:
   - name: designation
     label: reports.hr.Designation
     type: singlevaluelist
-    pattern: http://hr-master:8080/hr-master/designations/_search?tenantId=$tenantId|$..id|$..name  
+    pattern: http://hr-masters:8080/hr-masters/designations/_search?tenantId=$tenantId|$..id|$..name  
     source: hr
     isMandatory: false
     searchClause: and desig.id=$designation
@@ -296,7 +284,7 @@ ReportDefinitions:
   - name: employeeType
     label: reports.hr.EmployeeType
     type: singlevaluelist
-    pattern: http://hr-master:8080/hr-master/employeetypes/_search?tenantId=default|$..id|$..name
+    pattern: http://hr-masters:8080/hr-masters/employeetypes/_search?tenantId=default|$..id|$..name
     source: hr  
     isMandatory: false
     searchClause: and emptyp.id=$employeeType
@@ -354,8 +342,6 @@ ReportDefinitions:
     and assign.tenantid=emp.tenantid
     and emp.tenantid=emptyp.tenantid
     and assign.tenantid=dept.tenantid
-    
-   #employee without Assignment
 - reportName: employeewithoutassignments
   summary: employee without assignments
   version: 1.0.0
@@ -380,11 +366,13 @@ ReportDefinitions:
     source: hr
     isMandatory: true
   query: select emp.code as employeecode ,usr.name as employeename
-    from egeis_employee  emp,eg_user usr
-    where emp.id not in (select id from egeis_assignment where $date between fromdate and todate)
+    from egeis_employee  emp,eg_user usr, egeis_assignment assign
+    where emp.id not in (select assign.employeeid  from egeis_assignment where $date between fromdate and todate)
     and emp.id=usr.id
     and emp.tenantid=usr.tenantid
     and emp.tenantid=$tenantid
+    
+
 
 
 

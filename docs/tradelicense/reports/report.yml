@@ -97,13 +97,13 @@ ReportDefinitions:
     searchClause : AND tl.tradetitle = $businessName
   - name: licenseValidFromDate
     label: reports.tradelicense.licensevalidfromdate
-    type: string
+    type: epoch
     source: tradelicense
     isMandatory: false
     searchClause : AND tl.licensevalidfromdate = $licenseValidFromDate
   - name: licenseValidToDate
     label: reports.tradelicense.licensevalidtodate
-    type: string
+    type: epoch
     source: tradelicense
     isMandatory: false
     searchClause : AND tl.expirydate = $licenseValidToDate

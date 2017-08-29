@@ -531,7 +531,7 @@ class Report extends Component {
                     {/*<Col xs={12} md={3}><strong>Receipt Date - </strong>{getVal("Receipt[0].instrument") && getVal("Receipt[0].instrument.transactionDate").split("-")[2]+"-"+getVal("Receipt[0].instrument.transactionDate").split("-")[1]+"-"+getVal("Receipt[0].instrument.transactionDate").split("-")[0]} </Col>*/}
                     <Col xs={12} md={3}><strong>{translate("wc.create.receiptDate")} - </strong>{getVal("Receipt[0].Bill[0].billDetails[0].receiptDate")} </Col>
                     <Col xs={12} md={3}><strong>{translate("wc.create.groups.applicantDetails.address")} - </strong>{getVal("Receipt[0].Bill[0].payeeAddress")} </Col>
-                    <Col xs={12} md={3}><strong>{translate("collection.reciept.id")} - </strong>{getVal("Receipt[0].transactionId")} </Col>
+                    <Col xs={12} md={3} style={{textAlign:"right"}}><strong>{translate("collection.reciept.id")} - </strong>{getVal("Receipt[0].transactionId")} </Col>
                     </Row>
                     <br/>
 
@@ -545,15 +545,15 @@ class Report extends Component {
                         <th>{translate("collection.create.receiptNumber")}</th>
                         <th>{translate("collection.create.consumerCode")}</th>
                         {/*<th>{translate("collection.search.period")}</th>*/}
-                        {getGrandTotal("ARREAR_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 && <th>{translate("collection.search.arrears")}</th>}
-                        {getGrandTotal("CURRENT_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 &&<th>{translate("collection.search.current")}</th>}
-                        {getGrandTotal("OTHERS",formData.Receipt[0].Bill[0].billDetails)>0 &&<th>{translate("collection.search.interest")}</th>}
-                        {getGrandTotal("REBATE",formData.Receipt[0].Bill[0].billDetails)>0 &&<th>{translate("collection.search.rebate")}</th>}
-                        {getGrandTotal("ADVANCE_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 &&<th>{translate("collection.create.advance")}</th>}
-                        {getGrandTotal("ARREAR_LATEPAYMENT_CHARGES",formData.Receipt[0].Bill[0].billDetails)>0 &&<th>{translate("collection.create.arrearLatePayment")}</th>}
-                        {getGrandTotal("CURRENT_LATEPAYMENT_CHARGES",formData.Receipt[0].Bill[0].billDetails)>0 &&<th>{translate("collection.create.currentLatePayment")}</th>}
-                        {getGrandTotal("CHEQUE_BOUNCE_PENALTY",formData.Receipt[0].Bill[0].billDetails)>0 &&<th>{translate("collection.create.checkLatePayment")}</th>}
-                        <th>{translate("collection.create.total")}</th>
+                        {getGrandTotal("ARREAR_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 && <th style={{textAlign:"right"}}>{translate("collection.search.arrears")}</th>}
+                        {getGrandTotal("CURRENT_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 &&<th style={{textAlign:"right"}}>{translate("collection.search.current")}</th>}
+                        {getGrandTotal("OTHERS",formData.Receipt[0].Bill[0].billDetails)>0 &&<th style={{textAlign:"right"}}>{translate("collection.search.interest")}</th>}
+                        {getGrandTotal("REBATE",formData.Receipt[0].Bill[0].billDetails)>0 &&<th style={{textAlign:"right"}}>{translate("collection.search.rebate")}</th>}
+                        {getGrandTotal("ADVANCE_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 &&<th style={{textAlign:"right"}}>{translate("collection.create.advance")}</th>}
+                        {getGrandTotal("ARREAR_LATEPAYMENT_CHARGES",formData.Receipt[0].Bill[0].billDetails)>0 &&<th style={{textAlign:"right"}}>{translate("collection.create.arrearLatePayment")}</th>}
+                        {getGrandTotal("CURRENT_LATEPAYMENT_CHARGES",formData.Receipt[0].Bill[0].billDetails)>0 &&<th style={{textAlign:"right"}}>{translate("collection.create.currentLatePayment")}</th>}
+                        {getGrandTotal("CHEQUE_BOUNCE_PENALTY",formData.Receipt[0].Bill[0].billDetails)>0 &&<th style={{textAlign:"right"}}>{translate("collection.create.checkLatePayment")}</th>}
+                        <th style={{textAlign:"right"}}>{translate("collection.create.total")}</th>
 
 
 
@@ -573,15 +573,15 @@ class Report extends Component {
                                     <td>{item.receiptNumber} </td>
                                     <td>{item.consumerCode} </td>
                                     {/*<td>{item.period} </td>*/}
-                                    {getGrandTotal("ARREAR_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 &&<td>{getPurposeTotal("ARREAR_AMOUNT",item.billAccountDetails)}</td>}
-                                    {getGrandTotal("CURRENT_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 &&<td>{getPurposeTotal("CURRENT_AMOUNT",item.billAccountDetails)}</td>}
-                                    {getGrandTotal("OTHERS",formData.Receipt[0].Bill[0].billDetails)>0 &&<td>{getPurposeTotal("OTHERS",item.billAccountDetails)}</td>}
-                                    {getGrandTotal("REBATE",formData.Receipt[0].Bill[0].billDetails)>0 &&<td>{getPurposeTotal("REBATE",item.billAccountDetails)}</td>}
-                                    {getGrandTotal("ADVANCE_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 &&<td>{getPurposeTotal("ADVANCE_AMOUNT",item.billAccountDetails)}</td>}
-                                    {getGrandTotal("ARREAR_LATEPAYMENT_CHARGES",formData.Receipt[0].Bill[0].billDetails)>0 &&<td>{getPurposeTotal("ARREAR_LATEPAYMENT_CHARGES",item.billAccountDetails)}</td>}
-                                    {getGrandTotal("CURRENT_LATEPAYMENT_CHARGES",formData.Receipt[0].Bill[0].billDetails)>0 &&<td>{getPurposeTotal("CURRENT_LATEPAYMENT_CHARGES",item.billAccountDetails)}</td>}
-                                    {getGrandTotal("CHEQUE_BOUNCE_PENALTY",formData.Receipt[0].Bill[0].billDetails)>0 &&<td>{getPurposeTotal("CHEQUE_BOUNCE_PENALTY",item.billAccountDetails)}</td>}
-                                    <td>{getTotal(item.billAccountDetails)}</td>
+                                    {getGrandTotal("ARREAR_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 &&<td style={{textAlign:"right"}}>{getPurposeTotal("ARREAR_AMOUNT",item.billAccountDetails)}</td>}
+                                    {getGrandTotal("CURRENT_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 &&<td style={{textAlign:"right"}}>{getPurposeTotal("CURRENT_AMOUNT",item.billAccountDetails)}</td>}
+                                    {getGrandTotal("OTHERS",formData.Receipt[0].Bill[0].billDetails)>0 &&<td style={{textAlign:"right"}}>{getPurposeTotal("OTHERS",item.billAccountDetails)}</td>}
+                                    {getGrandTotal("REBATE",formData.Receipt[0].Bill[0].billDetails)>0 &&<td style={{textAlign:"right"}}>{getPurposeTotal("REBATE",item.billAccountDetails)}</td>}
+                                    {getGrandTotal("ADVANCE_AMOUNT",formData.Receipt[0].Bill[0].billDetails)>0 &&<td style={{textAlign:"right"}}>{getPurposeTotal("ADVANCE_AMOUNT",item.billAccountDetails)}</td>}
+                                    {getGrandTotal("ARREAR_LATEPAYMENT_CHARGES",formData.Receipt[0].Bill[0].billDetails)>0 &&<td style={{textAlign:"right"}}>{getPurposeTotal("ARREAR_LATEPAYMENT_CHARGES",item.billAccountDetails)}</td>}
+                                    {getGrandTotal("CURRENT_LATEPAYMENT_CHARGES",formData.Receipt[0].Bill[0].billDetails)>0 &&<td style={{textAlign:"right"}}>{getPurposeTotal("CURRENT_LATEPAYMENT_CHARGES",item.billAccountDetails)}</td>}
+                                    {getGrandTotal("CHEQUE_BOUNCE_PENALTY",formData.Receipt[0].Bill[0].billDetails)>0 &&<td style={{textAlign:"right"}}>{getPurposeTotal("CHEQUE_BOUNCE_PENALTY",item.billAccountDetails)}</td>}
+                                    <td style={{textAlign:"right"}}>{getTotal(item.billAccountDetails)}</td>
 
 
                                 </tr>
@@ -600,7 +600,7 @@ class Report extends Component {
                               {getGrandTotal("ARREAR_LATEPAYMENT_CHARGES",formData.Receipt[0].Bill[0].billDetails)>0 &&<td></td>}
                               {getGrandTotal("CURRENT_LATEPAYMENT_CHARGES",formData.Receipt[0].Bill[0].billDetails)>0 &&<td></td>}
                               {getGrandTotal("CHEQUE_BOUNCE_PENALTY",formData.Receipt[0].Bill[0].billDetails)>0 &&<td></td>}
-                              <td><strong>{getGrandTotal("",formData.Receipt[0].Bill[0].billDetails)}</strong></td>
+                              <td style={{textAlign:"right"}}><strong>{getGrandTotal("",formData.Receipt[0].Bill[0].billDetails)}</strong></td>
                           </tr>
 
                           {/*resultList.hasOwnProperty("resultValues") && resultList.resultValues.map((item, i) => {

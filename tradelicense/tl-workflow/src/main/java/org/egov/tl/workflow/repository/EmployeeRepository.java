@@ -39,6 +39,7 @@
  */
 package org.egov.tl.workflow.repository;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -68,6 +69,7 @@ public class EmployeeRepository {
 	public EmployeeResponse getEmployeeByDeptIdAndDesgId(final String departmentId, final String designationId,
 			final String tenantId) {
 
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		final RequestInfo requestInfo = new RequestInfo();
 		requestInfo.setTs(new Date());
 
@@ -75,7 +77,7 @@ public class EmployeeRepository {
 		wrapper.setRequestInfo(requestInfo);
 
 		return restTemplate.postForObject(employeeByDeptIdAndDesgIdUrl, wrapper, EmployeeResponse.class, tenantId,
-				departmentId, designationId);
+				departmentId, designationId, sdf.format(new Date()));
 
 	}
 }

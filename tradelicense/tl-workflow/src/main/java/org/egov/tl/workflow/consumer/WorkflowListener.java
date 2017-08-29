@@ -102,13 +102,15 @@ public class WorkflowListener {
 			request = objectMapper.convertValue(tlRequestMap.get("tradelicense-new-create"), TradeLicenseRequest.class);
 
 			for (final TradeLicenseContract tradeLicense : request.getLicenses()) {
-				
-				
-				//Need to enable this if license is creating from citizen service
-				
-				/*if (tradeLicense != null && tradeLicense.getWorkFlowDetails() != null
-						&& tradeLicense.getWorkFlowDetails().getAssignee() == null)
-					populateAssigneeForCitizen(tradeLicense);*/
+
+				// Need to enable this if license is creating from citizen
+				// service
+
+				/*
+				 * if (tradeLicense != null && tradeLicense.getWorkFlowDetails()
+				 * != null && tradeLicense.getWorkFlowDetails().getAssignee() ==
+				 * null) populateAssigneeForCitizen(tradeLicense);
+				 */
 
 				workflowService.enrichWorkflow(tradeLicense, request.getRequestInfo());
 
@@ -154,8 +156,9 @@ public class WorkflowListener {
 		List<Employee> employees = employeeService.getByDeptIdAndDesgId(departmentId, designationId,
 				tradeLicense.getTenantId());
 
-		if (employees != null && !employees.isEmpty() && employees.get(0).getId() != null)
-			tradeLicense.getWorkFlowDetails().setAssignee(employees.get(0).getId());
+		if (employees != null && !employees.isEmpty() && employees.get(0).getId() != null
+				&& employees.get(0).getAssignments() != null && !employees.get(0).getAssignments().isEmpty())
+			tradeLicense.getWorkFlowDetails().setAssignee(employees.get(0).getAssignments().get(0).getPosition());
 
 	}
 

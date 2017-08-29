@@ -100,13 +100,13 @@ ReportDefinitions:
     type: epoch
     source: tradelicense
     isMandatory: false
-    searchClause : AND tl.licensevalidfromdate = to_date(to_char(to_timestamp(Trunc(CAST($licenseValidFromDate as bigint)/1000 )), 'YYYY/MM/DD'), 'YYYY-MM-DD')
+    searchClause : AND tl.licensevalidfromdate >= to_date(to_char(to_timestamp(Trunc(CAST($licenseValidFromDate as bigint)/1000 )), 'YYYY/MM/DD'), 'YYYY-MM-DD')
   - name: licenseValidToDate
     label: reports.tradelicense.licensevalidtodate
     type: epoch
     source: tradelicense
     isMandatory: false
-    searchClause : AND tl.expirydate = to_date(to_char(to_timestamp(Trunc(CAST($licenseValidToDate as bigint)/1000 )), 'YYYY/MM/DD'), 'YYYY-MM-DD')
+    searchClause : AND tl.expirydate <= to_date(to_char(to_timestamp(Trunc(CAST($licenseValidToDate as bigint)/1000 )), 'YYYY/MM/DD'), 'YYYY-MM-DD')
   - name: licenseType
     label: reports.tradelicense.licensetype
     type: singlevaluelist
@@ -143,8 +143,8 @@ ReportDefinitions:
   query: select ward.name as ward, tl.licensenumber as licenseNumber, tl.tradetype as tradeType, tl.ownername || ' / ' || tl.owneraddress as licenseHolder,
     tl.tradetitle as businessName, tl.tradeaddress as businessAddress,
     locality.name as businessArea, to_char(tl.licensevalidfromdate, 'dd-mm-yyyy') || ' / ' || to_char(tl.expirydate, 'dd-mm-yyyy') as licenseValidity,
-    category.name as licenseType, subcategory.name as licenseSubType, tl.status as licenseStatus, tl.adhaarnumber as aadharNo,
+    category.name as licenseType, subcategory.name as licenseSubType, status.name as licenseStatus, tl.adhaarnumber as aadharNo,
     tl.propertyassesmentno as propertyNo from egtl_license as tl, eg_boundary as ward, eg_boundary as locality,
-    egtl_mstr_category as category, egtl_mstr_category as subcategory where ward.id = tl.adminwardid and locality.id = tl.localityid
-    and tl.categoryid = category.id and tl.subcategoryid = subcategory.id and tl.tenantid = $tenantid
+    egtl_mstr_category as category, egtl_mstr_category as subcategory, egtl_mstr_status as status where ward.id = tl.adminwardid and locality.id = tl.localityid
+    and tl.categoryid = category.id and tl.subcategoryid = subcategory.id and tl.tenantid = $tenantid and tl.status=status.id and status.tenantid = $tenantid
   orderBy: order by tl.id;

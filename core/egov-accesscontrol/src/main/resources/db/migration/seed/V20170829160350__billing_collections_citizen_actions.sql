@@ -1,0 +1,5 @@
+insert into eg_roleaction(roleCode, actionid, tenantId) select code, (select id from eg_action where url='/billing-service/bill/_generate'), 'default' from eg_ms_role where code in ('CITIZEN');
+insert into eg_roleaction(roleCode, actionid, tenantId) select code, (select id from eg_action where url='/billing-service/demand/_search'), 'default'from eg_ms_role where code in ('CITIZEN');
+insert into eg_roleaction(roleCode, actionid, tenantId) select code, (select id from eg_action where url='/billing-service/demand/_create'), 'default' from eg_ms_role where code in ('CITIZEN');
+insert into eg_roleaction(roleCode, actionid, tenantId) select code, (select id from eg_action where url='/collection-services/receipts/_create'), 'default' from eg_ms_role where code in ('CITIZEN');
+insert into eg_roleaction(roleCode, actionid, tenantId) select code, (select id from eg_action where url='/collection-services/receipts/_search'), 'default' from eg_ms_role where code in ('CITIZEN');

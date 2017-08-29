@@ -3,9 +3,11 @@ package org.egov.pgrrest.read.domain.service.validator;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.pgrrest.common.domain.model.AttributeEntry;
 import org.egov.pgrrest.read.domain.exception.InvalidServiceRequestFieldException;
+import org.egov.pgrrest.read.domain.model.RouterResponse;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
 import org.egov.pgrrest.read.domain.service.ServiceRequestValidator;
+import org.egov.pgrrest.read.persistence.repository.RouterRestRepository;
 import org.egov.pgrrest.read.persistence.repository.ServiceRequestRepository;
 import org.springframework.stereotype.Service;
 
@@ -119,6 +121,11 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
     public static final String ADDRESS_LENGTH_MESSAGE = "Address must be less than 250 characters";
     public static final String ADDRESS_FIELD = "serviceRequest.address";
 
+
+    public static final String ROUTER_NOT_DEFINED_MESSAGE = "Router data does not exists. Cannot Create Grievance";
+    public static final String ROUTER_NOT_DEFINED_CODE = "pgr.0068";
+    public static final String ROUTER_NOT_DEFINED_FIELD = "router";
+
     public static final String SYSTEM_STATUS = "systemStatus";
     public static final String MANUAL = "MANUAL";
     public static final String EXTERNAL_CRN = "systemExternalCRN";
@@ -133,11 +140,17 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
     public static final String REOPENED = "REOPENED";
     public static final String WITHDRAWN = "WITHDRAWN";
     public static final String SYSTEM_STATE_ID = "systemStateId";
+    public static final String ADMINISTRATION = "ADMINISTRATION";
 
     private ServiceRequestRepository serviceRequestRepository;
 
-    public ServiceRequestFieldValidator(ServiceRequestRepository serviceRequestRepository) {
+    private RouterRestRepository routerRestRepository;
+
+
+    public ServiceRequestFieldValidator(ServiceRequestRepository serviceRequestRepository,
+                                        RouterRestRepository routerRestRepository) {
         this.serviceRequestRepository = serviceRequestRepository;
+        this.routerRestRepository = routerRestRepository;
     }
 
     @Override
@@ -196,6 +209,7 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
             addLocationIdValidationErrors(model, errorFields);
             addExternalCrnNotPresentValidationErrors(model, errorFields);
             addReceivingModeEmployeePresentValidationErrors(model, errorFields);
+            addRouterDefinitionErrors(model, errorFields);
         }
     }
 
@@ -537,5 +551,16 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
         }
     }
 
+    private void addRouterDefinitionErrors(ServiceRequest model, List<ErrorField> errorFields) {
+        RouterResponse router = routerRestRepository.getRouter(model.getTenantId(), ADMINISTRATION);
+        if (!router.routerPresent()) {
+            final ErrorField errorField = ErrorField.builder()
+                .code(ROUTER_NOT_DEFINED_CODE)
+                .message(ROUTER_NOT_DEFINED_MESSAGE)
+                .field(ROUTER_NOT_DEFINED_FIELD)
+                .build();
+            errorFields.add(errorField);
+        }
+    }
 }
 

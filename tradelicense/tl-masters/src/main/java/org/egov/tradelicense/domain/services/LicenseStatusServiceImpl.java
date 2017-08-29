@@ -105,13 +105,13 @@ public class LicenseStatusServiceImpl implements LicenseStatusService {
 
 	@Override
 	public LicenseStatusResponse getLicenseStatusMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
-			String name, String code, String active, Integer pageSize, Integer offSet) {
+			String name, String code, String moduleType, String active, Integer pageSize, Integer offSet) {
 
 		LicenseStatusResponse licenseStatusResponse = new LicenseStatusResponse();
 
 		try {
 			List<LicenseStatus> licenseStatuslst = licenseStatusRepository.searchLicenseStatus(tenantId, ids, name,
-					code, active, pageSize, offSet);
+					code, moduleType, active, pageSize, offSet);
 			ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 			licenseStatusResponse.setLicenseStatuses(licenseStatuslst);
 			licenseStatusResponse.setResponseInfo(responseInfo);

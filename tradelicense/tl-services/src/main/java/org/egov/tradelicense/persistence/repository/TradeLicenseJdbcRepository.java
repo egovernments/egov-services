@@ -1,5 +1,6 @@
 package org.egov.tradelicense.persistence.repository;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +17,7 @@ import org.egov.tl.commons.web.response.LicenseStatusResponse;
 import org.egov.tl.commons.web.response.UOMResponse;
 import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.common.persistense.repository.JdbcRepository;
-import org.egov.tradelicense.common.util.TimeStampUtil;
+import org.egov.tradelicense.persistence.entity.LicenseApplicationSearchEntity;
 import org.egov.tradelicense.persistence.entity.LicenseFeeDetailSearchEntity;
 import org.egov.tradelicense.persistence.entity.SupportDocumentSearchEntity;
 import org.egov.tradelicense.persistence.entity.TradeLicenseEntity;
@@ -55,6 +56,8 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 
 	@Autowired
 	DocumentTypeContractRepository documentTypeRepository;
+	
+	
 
 	private static final Logger LOG = LoggerFactory.getLogger(TradeLicenseJdbcRepository.class);
 	static {
@@ -66,14 +69,14 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 	public TradeLicenseEntity create(TradeLicenseEntity entity) {
 
 		super.create(entity);
-
+		
 		return entity;
 	}
 
 	public TradeLicenseEntity update(TradeLicenseEntity entity) {
 
 		super.update(entity);
-
+		
 		return entity;
 	}
 
@@ -153,9 +156,21 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 
 			license.setId(getLong(row.get("id")));
 			license.setTenantId(getString(row.get("tenantId")));
-			license.setApplicationType(getString(row.get("applicationType")));
-			license.setApplicationDate(TimeStampUtil.getTimeStampFromDB(getString(row.get("applicationDate"))));
-			license.setApplicationNumber(getString(row.get("applicationNumber")));
+			
+//			license.setApplicationType(getString(row.get("applicationType")));
+//			license.setApplicationDate(TimeStampUtil.getTimeStampFromDB(getString(row.get("applicationDate"))));
+//			license.setApplicationNumber(getString(row.get("applicationNumber")));
+			
+			if( getBoolean(row.get("isLegacy"))){
+				Long applicationId = this.getLicenseApplication(license, requestInfo);
+				license.setFeeDetailEntitys(getFeeDetails( applicationId,license.getTenantId(), requestInfo));
+				license.setSupportDocumentEntitys(getSupportDocuments(applicationId,license.getTenantId(), requestInfo));
+			}
+			
+			license.setLicenseApplicationSearchEntitys(this.getLicenseApplicationEntitys( license.getId(), requestInfo));
+			
+			
+			
 			license.setLicenseNumber(getString(row.get("licenseNumber")));
 			license.setOldLicenseNumber(getString(row.get("oldLicenseNumber")));
 			license.setAdhaarNumber(getString(row.get("adhaarNumber")));
@@ -186,36 +201,33 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			license.setQuantity(getDouble(row.get("quantity")));
 			license.setRemarks(getString(row.get("remarks")));
 			license.setValidityYears(getLong(row.get("validityyears")));
-			license.setTradeCommencementDate(
-					TimeStampUtil.getTimeStampFromDB(getString(row.get("tradeCommencementDate"))));
+			license.setTradeCommencementDate(((Timestamp)row.get("tradeCommencementDate")));
 			license.setLicenseValidFromDate(
-					TimeStampUtil.getTimeStampFromDB(getString(row.get("licenseValidFromDate"))));
-			license.setAgreementDate(TimeStampUtil.getTimeStampFromDB(getString(row.get("agreementDate"))));
+					((Timestamp)row.get("licenseValidFromDate")));
+			license.setAgreementDate(((Timestamp)row.get("agreementDate")));
 			license.setAgreementNo(getString(row.get("agreementNo")));
 			license.setIsLegacy(getBoolean(row.get("isLegacy")));
 			license.setActive(getBoolean(row.get("active")));
-			license.setExpiryDate(TimeStampUtil.getTimeStampFromDB(getString(row.get("expiryDate"))));
+			license.setExpiryDate(((Timestamp)row.get("expiryDate")));
 			license.setCreatedBy(getString(row.get("createdBy")));
 			license.setLastModifiedBy(getString(row.get("lastModifiedBy")));
 			license.setLastModifiedTime(getLong(row.get("lastModifiedTime")));
 			license.setCreatedTime(getLong(row.get("createdTime")));
-			license.setFeeDetailEntitys(getFeeDetails(license, requestInfo));
-			license.setSupportDocumentEntitys(getSupportDocuments(license, requestInfo));
 			tradeLicenses.add(license);
 		}
 
 		return tradeLicenses;
 	}
 
-	public List<LicenseFeeDetailSearchEntity> getFeeDetails(TradeLicenseSearchEntity license, RequestInfo requestInfo) {
+	public List<LicenseFeeDetailSearchEntity> getFeeDetails(Long applicationId,String tenantId, RequestInfo requestInfo) {
 
-		String query = buildFeeDetailsSearchQuery(license.getId().intValue());
-		List<LicenseFeeDetailSearchEntity> licenses = executeFeeDetailsQuery(query, license, requestInfo);
+		String query = buildFeeDetailsSearchQuery(applicationId.intValue());
+		List<LicenseFeeDetailSearchEntity> licenses = executeFeeDetailsQuery(query, tenantId, requestInfo);
 
 		return licenses;
 	}
 
-	private List<LicenseFeeDetailSearchEntity> executeFeeDetailsQuery(String query, TradeLicenseSearchEntity license,
+	private List<LicenseFeeDetailSearchEntity> executeFeeDetailsQuery(String query, String tenantId,
 			RequestInfo requestInfo) {
 
 		// preparing request info wrapper for the rest api calls
@@ -228,16 +240,18 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 		for (Map<String, Object> row : rows) {
 			LicenseFeeDetailSearchEntity feeDetail = new LicenseFeeDetailSearchEntity();
 			feeDetail.setId(getLong(row.get("id")));
+			feeDetail.setApplicationId( getLong(row.get("applicationId")));
 			feeDetail.setAmount(getDouble(row.get("amount")));
+			feeDetail.setTenantId( getString(row.get("tenantId")));
 			feeDetail.setPaid(getBoolean(row.get("paid")));
-			feeDetail.setLicenseId(getLong(row.get("licenseid")));
+//			feeDetail.setLicenseId(getLong(row.get("licenseid")));
 			feeDetail.setFinancialYear(getString(row.get("financialyear")));
 			feeDetail.setCreatedBy(getString(row.get("createdby")));
 			feeDetail.setCreatedTime(getLong(row.get("createdtime")));
 			feeDetail.setLastModifiedBy(getString(row.get("lastmodifiedby")));
 			feeDetail.setLastModifiedTime(getLong(row.get("lastmodifiedtime")));
 
-			finYearContract = financialYearRepository.findFinancialYearById(license.getTenantId(),
+			finYearContract = financialYearRepository.findFinancialYearById(tenantId,
 					getString(row.get("financialyear")), requestInfoWrapper);
 			if (finYearContract != null) {
 				feeDetail.setFinancialYear(finYearContract.getFinYearRange());
@@ -251,22 +265,84 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 
 	private String buildFeeDetailsSearchQuery(Integer licenseId) {
 		StringBuilder builder = new StringBuilder("select * from egtl_fee_details where ");
-		builder.append("licenseid = ");
+		builder.append("applicationid = ");
 		builder.append(licenseId);
 		return builder.toString();
 	}
 
-	public List<SupportDocumentSearchEntity> getSupportDocuments(TradeLicenseSearchEntity license,
+	public Long getLicenseApplication(TradeLicenseSearchEntity license,
+			RequestInfo requestInfo){
+		
+		StringBuilder builder = new StringBuilder("select * from egtl_license_application where ");
+		builder.append("licenseid = ");
+		builder.append(license.getId().intValue());
+		MapSqlParameterSource parameter = new MapSqlParameterSource();
+		List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(builder.toString(), parameter);
+		for (Map<String, Object> row : rows) {
+			
+			license.setApplicationDate(((Timestamp)row.get("applicationDate")));
+			license.setApplicationNumber( getString( row.get("applicationNumber")));
+			license.setApplicationType( getString(row.get("applicationType")));
+		}
+		
+		return (getLong(rows.get(0).get("id")));
+	}
+	
+	public Long getLegacyLicenseApplicationId(Long licenseId){
+		
+		StringBuilder builder = new StringBuilder("select * from egtl_license_application where ");
+		builder.append("licenseid = ");
+		if( licenseId == null){
+			return null;
+		}
+		builder.append(licenseId.intValue());
+		MapSqlParameterSource parameter = new MapSqlParameterSource();
+		List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(builder.toString(), parameter);
+		
+		
+		return (getLong(rows.get(0).get("id")));
+	}
+	
+	public List<LicenseApplicationSearchEntity> getLicenseApplicationEntitys(Long licenseId,
+			RequestInfo requestInfo){
+		
+		StringBuilder builder = new StringBuilder("select * from egtl_license_application where ");
+		builder.append("licenseid = ");
+		builder.append(licenseId.intValue());
+		
+		MapSqlParameterSource parameter = new MapSqlParameterSource();
+		List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(builder.toString(), parameter);
+		List<LicenseApplicationSearchEntity> licenseApplications = new ArrayList<LicenseApplicationSearchEntity>();
+		for (Map<String, Object> row : rows) {
+			
+			LicenseApplicationSearchEntity licenseApplication = new LicenseApplicationSearchEntity(); 
+			licenseApplication.setId( getLong(row.get("id")));
+			licenseApplication.setTenantId(getString(row.get("tenantId")));
+			licenseApplication.setApplicationDate(((Timestamp)row.get("applicationDate")));
+			licenseApplication.setApplicationNumber( getString( row.get("applicationNumber")));
+			licenseApplication.setApplicationType( getString(row.get("applicationType")));
+			licenseApplication.setCreatedBy( getString(row.get("createdBy")));
+			licenseApplication.setCreatedTime( getLong(row.get("createdTime")));
+			licenseApplication.setLastModifiedBy(getString(row.get("lastModifiedBy")));
+			licenseApplication.setLastModifiedTime( getLong(row.get("lastModifiedTime")));
+			licenseApplication.setFeeDetailEntitys(getFeeDetails(licenseApplication.getId(),licenseApplication.getTenantId(), requestInfo));
+			licenseApplication.setSupportDocumentEntitys(getSupportDocuments(licenseApplication.getId(),licenseApplication.getTenantId(), requestInfo));
+			licenseApplications.add(licenseApplication);
+		}
+		
+		return licenseApplications;
+	}
+	public List<SupportDocumentSearchEntity> getSupportDocuments(Long applicationId, String tenantId,
 			RequestInfo requestInfo) {
 
-		String query = buildSupportedSearchQuery(license.getId().intValue());
-		List<SupportDocumentSearchEntity> supportedDocs = executeSupportedDocumentQuery(query, license, requestInfo);
+		String query = buildSupportedSearchQuery(applicationId.intValue());
+		List<SupportDocumentSearchEntity> supportedDocs = executeSupportedDocumentQuery(query, tenantId, requestInfo);
 
 		return supportedDocs;
 	}
 
 	private List<SupportDocumentSearchEntity> executeSupportedDocumentQuery(String query,
-			TradeLicenseSearchEntity license, RequestInfo requestInfo) {
+			String tenatId, RequestInfo requestInfo) {
 
 		// preparing request info wrapper for the rest api calls
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
@@ -278,16 +354,18 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 		for (Map<String, Object> row : rows) {
 			SupportDocumentSearchEntity supportedDocument = new SupportDocumentSearchEntity();
 			supportedDocument.setId(getLong(row.get("id")));
+			supportedDocument.setTenantId(getString(row.get("tenantId")));
+			supportedDocument.setApplicationId( getLong(row.get("applicationid")));
 			supportedDocument.setDocumentTypeId(getLong(row.get("documenttypeid")));
 			supportedDocument.setFileStoreId(getString(row.get("filestoreid")));
 			supportedDocument.setComments(getString(row.get("comments")));
-			supportedDocument.setLicenseId(getLong(row.get("licenseid")));
+//			supportedDocument.setLicenseId(getLong(row.get("licenseid")));
 			supportedDocument.setCreatedBy(getString(row.get("createdby")));
 			supportedDocument.setCreatedTime(getLong(row.get("createdtime")));
 			supportedDocument.setLastModifiedBy(getString(row.get("lastmodifiedby")));
 			supportedDocument.setLastModifiedTime(getLong(row.get("lastmodifiedtime")));
 
-			documentTypeResponse = documentTypeRepository.findById(requestInfoWrapper, license.getTenantId(),
+			documentTypeResponse = documentTypeRepository.findById(requestInfoWrapper, tenatId,
 					supportedDocument.getDocumentTypeId());
 			if (documentTypeResponse != null && documentTypeResponse.getDocumentTypes().size() > 0) {
 				supportedDocument.setDocumentTypeName(documentTypeResponse.getDocumentTypes().get(0).getName());
@@ -301,7 +379,7 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 	private String buildSupportedSearchQuery(Integer licenseId) {
 
 		StringBuilder builder = new StringBuilder("select * from egtl_support_document where ");
-		builder.append("licenseid = ");
+		builder.append("applicationid = ");
 		builder.append(licenseId);
 
 		return builder.toString();

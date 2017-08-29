@@ -99,6 +99,24 @@ public class TradeLicenseSearchContract {
 	@JsonProperty("adminWardName")
 	private String adminWardName;
 
+	@JsonProperty("cityCode")
+    private String cityCode;
+
+    @JsonProperty("cityDistrictCode")
+    private String cityDistrictCode;
+
+    @JsonProperty("cityDistrictName")
+    private String cityDistrictName;
+
+    @JsonProperty("cityGrade")
+    private String cityGrade;
+
+    @JsonProperty("cityRegionName")
+    private String cityRegionName;
+
+    @JsonProperty("cityName")
+    private String cityName;
+	
 	@NotNull
 	@JsonProperty("tradeAddress")
 	@Size(max = 256)
@@ -180,6 +198,9 @@ public class TradeLicenseSearchContract {
 
 	@JsonProperty("supportDocuments")
 	private List<SupportDocumentSearchContract> supportDocuments;
+	
+	@JsonProperty("applications")
+	private List<LicenseApplicationSearchContract> applications;
 
 	@JsonProperty("status")
 	private Long status;

@@ -16,10 +16,10 @@ public class PropertiesManager {
 
 	@Value("${error.license.licenses.notfound}")
 	private String tradeLicensesNotFoundMsg;
-	
+
 	@Value("${error.license.licenses.size.not.empty}")
 	private String tradeLicensesNotEmptyMsg;
-	
+
 	@Value("${egov.services.tl-masters_v1.hostname}")
 	private String tradeLicenseMasterServiceHostName;
 
@@ -52,16 +52,16 @@ public class PropertiesManager {
 
 	@Value("${egov.services.tl-masters_v1.documenttype.searchpath}")
 	private String documentServiceSearchPath;
-	
+
 	@Value("${egov.services.tl-masters_v2.documenttype.searchpath}")
 	private String documentServiceV2SearchPath;
 
 	@Value("${egov.services.tl-masters_v1.category.searchpath}")
 	private String categoryServiceSearchPath;
-	
+
 	@Value("${egov.services.tl-masters_v1.uom.searchpath}")
 	private String uomServiceSearchPath;
-	
+
 	@Value("${egov.services.tl-masters_v1.status.searchpath}")
 	private String statusServiceSearchPath;
 
@@ -106,151 +106,156 @@ public class PropertiesManager {
 
 	@Value("${id.anFormat}")
 	private String idApplicationNumberGenFormatServiceTopic;
-	
+
 	@Value("${error.license.locationendpoint}")
 	private String locationEndPointError;
-	
+
 	@Value("${error.oldLicense.duplicate}")
 	private String duplicateOldTradeLicenseMsg;
-	
+
 	@Value("${error.license.categoryendpoint}")
 	private String catEndPointError;
-	
+
 	@Value("${error.license.documentendpoint}")
 	private String documentEndPointErrormsg;
-	
+
 	@Value("${error.license.propertyendpoint}")
 	private String propertyEndPointErrormsg;
-	
-	
+
 	@Value("${error.license.oldLicenseNumber}")
 	private String oldLicenseNumberErrorMsg;
-	
+
 	@Value("${error.license.agreementdate}")
 	private String agreementDateErrorMsg;
-	
+
 	@Value("${error.license.agreementno.notfound}")
 	private String agreementNotFoundErrorMsg;
-	
+
 	@Value("${error.license.agreementno}")
 	private String agreementNoErrorMsg;
-	
+
 	@Value("${error.license.propertyAssesmentNo.notvalid}")
 	private String propertyAssesmentNoInvalidErrorMsg;
-	
+
 	@Value("${error.license.propertyAssesmentNo.notfound}")
 	private String propertyAssesmentNotFoundMsg;
-	
+
 	@Value("${error.license.aadhaarnumber}")
 	private String aadhaarNumberErrorMsg;
-	
+
 	@Value("${error.license.locality}")
 	private String localityErrorMsg;
-	
+
 	@Value("${error.license.revenueward}")
 	private String revenueWardErrorMsg;
-	
+
 	@Value("${error.license.adminward}")
 	private String adminWardErrorMsg;
-	
-	
+
 	@Value("${error.license.category}")
 	private String categoryErrorMsg;
-	
+
 	@Value("${error.license.subcategory}")
 	private String subCategoryErrorMsg;
-	
+
 	@Value("${error.license.uom}")
 	private String uomErrorMsg;
-	
+
 	@Value("${error.license.documenttype}")
 	private String documentTypeErrorMsg;
-	
+
 	@Value("${error.license.validityyears}")
 	private String validtyYearsErrorMsg;
-	
+
 	@Value("${error.license.validityyearsMatch}")
 	private String validatiyYearsMatch;
-	
+
 	@Value("${error.license.feedetails}")
 	private String feeDetailsErrorMsg;
-	
+
 	@Value("${error.license.legacy.feedetails.notfound}")
 	private String legacyFeeDetailsNotFoundMsg;
-	
+
 	@Value("${error.license.feeDetailYearNotFound}")
 	private String feeDetailYearNotFound;
-	
+
 	@Value("${legacy.trade.create.success.status.message}")
-    private String legacyCreateSuccessMessage;
+	private String legacyCreateSuccessMessage;
 
 	@Value("${new.trade.create.success.status.message}")
-    private String newTradeLicenseCreateSuccessMessage;
-	
-	//IdNotFound Exception Related
+	private String newTradeLicenseCreateSuccessMessage;
+
+	// IdNotFound Exception Related
 	@Value("${id.notFound.field}")
 	private String idField;
-	
+
 	@Value("${oldLicense.id.notFound.customMsg}")
 	private String oldLicenseIdNotFoundCustomMsg;
-	
+
 	@Value("${oldLicense.id.notValid.customMsg}")
 	private String oldLicenseIdNotValidCustomMsg;
-	
+
 	@Value("${supporting.document.id.notFound.customMsg}")
 	private String supportDocumentIdNotFoundCustomMsg;
-	
+
 	@Value("${supporting.document.id.notValid.customMsg}")
 	private String supportDocumentIdNotValidCustomMsg;
-	
+
 	@Value("${feedetail.id.notFound.customMsg}")
 	private String feeDetailIdNotFoundCustomMsg;
-	
+
 	@Value("${feedetail.id.notValid.customMsg}")
 	private String feeDetailIdNotValidCustomMsg;
-	
-	
+
 	@Value("${applicationfee.applicable}")
 	private String applicatonFeeApplicable;
-	
-	//mandatory document exception message
+
+	// mandatory document exception message
 	@Value("${mandatory.document.notfound.customMsg}")
 	private String mandatoryDocumentNotFoundCustomMsg;
-	
+
 	@Value("${nonlegacy.update.customMsg}")
 	private String nonLegacyUpdateCustomMsg;
-	
-	//kafka topics and keys
+
+	// kafka topics and keys
 	@Value("${egov.services.tl-services.tradelicense.validated.topic}")
 	private String tradeLicenseValidatedTopic;
 
-	
 	@Value("${egov.services.tl-services.tradelicense.legacy.validated.key}")
 	private String legacyTradeLicenseValidatedKey;
 
-	
 	@Value("${egov.services.tl-services.tradelicense.new.validated.key}")
 	private String newTradeLicenseValidatedKey;
 
 	@Value("${egov.services.tl-services.tradelicense.workflow.populated.topic}")
 	private String tradeLicenseWorkFlowPopulatedTopic;
-	
+
 	@Value("${egov.services.tl-services.tradelicense.persisted.topic}")
 	private String tradeLicensePersistedTopic;
-	
+
 	@Value("${egov.services.tl-services.tradelicense.persisted.key}")
 	private String tradeLicensePersistedKey;
-	
+
 	@Value("${egov.services.billing_service.hostname}")
-        private String billingServiceHostName;
-	
+	private String billingServiceHostName;
+
 	@Value("${egov.services.billing_service.createbill}")
-        private String billingServiceCreatedBill;
-	
+	private String billingServiceCreatedBill;
+
 	@Value("${businessService}")
-        private String billBusinessService;
-	
+	private String billBusinessService;
+
 	@Value("${tl.tax.head.master.code}")
-        private String taxHeadMasterCode;
+	private String taxHeadMasterCode;
+
+	// tenant service
+	@Value("${egov.services.tenant.service.hostname}")
+	private String tenantServiceHostName;
+
+	@Value("${egov.services.tenant.service.basepath}")
+	private String tenantServiceBasePath;
+
+	@Value("${egov.services.tenant.service.searchpath}")
+	private String tenantServiceSearchPath;
 
 }

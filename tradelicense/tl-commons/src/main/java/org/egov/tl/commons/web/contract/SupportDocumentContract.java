@@ -23,6 +23,9 @@ public class SupportDocumentContract {
 	@JsonProperty("licenseId")
 	private Long licenseId;
 
+	@JsonProperty("tenantId")
+	private String tenantId;
+	
 	@NotNull(message = "{error.license.documenttype}")
 	@JsonProperty("documentTypeId")
 	private Long documentTypeId;

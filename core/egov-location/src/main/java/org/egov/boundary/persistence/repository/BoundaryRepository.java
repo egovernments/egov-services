@@ -46,7 +46,6 @@ import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
 import org.hibernate.type.LongType;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,9 +57,6 @@ import java.util.List;
 public class BoundaryRepository {
 
     private EntityManager entityManager;
-
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(BoundaryRepository.class);
-
 
     @Autowired
     public BoundaryRepository(EntityManager entityManager) {
@@ -131,7 +127,6 @@ public class BoundaryRepository {
             boundary.setParent(new Boundary());
             boundary.getParent().setId(b[5] != null ? Long.valueOf(b[5].toString()) : null);
             boundary.setTenantId(b[6] != null ? b[6].toString() : "");
-            logger.info("BoundaryId:   " +  boundary.getId() + "  Boundary name: " + boundary.getName() + "  BoundaryType ID:  " + boundary.getBoundaryType().getId() +  "   Boundary Type Name:   " + boundary.getBoundaryType()) ;
 
             boundaryList.add(boundary);
         }

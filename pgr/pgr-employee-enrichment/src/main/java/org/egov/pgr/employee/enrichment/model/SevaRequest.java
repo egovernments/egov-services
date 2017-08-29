@@ -14,13 +14,10 @@ import org.egov.pgr.employee.enrichment.repository.contract.TaskRequest;
 import org.egov.pgr.employee.enrichment.repository.contract.TaskResponse;
 import org.egov.pgr.employee.enrichment.repository.contract.WorkflowRequest;
 import org.egov.pgr.employee.enrichment.repository.contract.WorkflowResponse;
-import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
 public class SevaRequest {
-
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(SevaRequest.class);
 
     public final static String SERVICE_REQUEST = "serviceRequest";
     public final static String WF_TYPE_SERVICE_REQUEST = "Service Request";
@@ -113,7 +110,6 @@ public class SevaRequest {
         final String departmentId = getDynamicSingleValue(DEPARTMENT_ID);
         Map<String, Attribute> valuesToSet = new HashMap<>();
         valuesToSet.put(VALUES_COMLAINT_TYPE_CODE, Attribute.asStringAttr(VALUES_COMLAINT_TYPE_CODE, complaintType));
-        logger.info("LocationId::" + locationId);
         valuesToSet.put(BOUNDARY_ID, Attribute.asStringAttr(BOUNDARY_ID, locationId));
         valuesToSet.put(STATE_DETAILS, Attribute.asStringAttr(STATE_DETAILS, StringUtils.EMPTY));
         valuesToSet.put(USER_ROLE, Attribute.asStringAttr(USER_ROLE, getUserType()));

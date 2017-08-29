@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.hibernate.internal.util.StringHelper.isEmpty;
+
 @Configuration
 public class CommonValidation {
 
@@ -40,7 +42,7 @@ public class CommonValidation {
     }
 
     public void validateCodeLength(String code) {
-        if (!code.isEmpty() && null != code && code.length() > 100) {
+        if (!isEmpty(code)&& code.length() > 100) {
             error.put(CODE, "pgr.0065");
             error.put(FIELD, "code");
             error.put(MESSAGE, "Code must be below 20 characters");
@@ -49,7 +51,7 @@ public class CommonValidation {
     }
 
     public void validateNameLength(String name) {
-        if (!name.isEmpty() && null != name && name.length() > 150) {
+        if (!isEmpty(name) && name.length() > 150) {
             error.put(CODE, "pgr.0066");
             error.put(FIELD, "name");
             error.put(MESSAGE, "Name must be below 100 characters");
@@ -58,7 +60,7 @@ public class CommonValidation {
     }
 
     public void validateDescriptionLength(String description) {
-        if (!description.isEmpty() && null != description && description.length() > 250) {
+        if (!isEmpty(description) && description.length() > 250) {
             error.put(CODE, "pgr.0067");
             error.put(FIELD, "description");
             error.put(MESSAGE, "Description must be below 250 characters");

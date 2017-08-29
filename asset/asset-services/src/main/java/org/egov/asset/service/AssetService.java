@@ -160,4 +160,16 @@ public class AssetService {
             asset.setDepreciationRate(depreciationRate);
         }
     }
+
+    public Asset getAsset(final String tenantId, final Long assetId, final RequestInfo requestInfo) {
+        final List<Long> assetIds = new ArrayList<>();
+        assetIds.add(assetId);
+        final AssetCriteria assetCriteria = AssetCriteria.builder().tenantId(tenantId).id(assetIds).build();
+        final List<Asset> assets = getAssets(assetCriteria, requestInfo).getAssets();
+        if (assets != null && !assets.isEmpty())
+            return assets.get(0);
+        else
+            throw new RuntimeException(
+                    "There is no asset exists for id ::" + assetId + " for tenant id :: " + tenantId);
+    }
 }

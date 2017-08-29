@@ -1,0 +1,1 @@
+insert into eg_roleaction(roleCode, actionid, tenantId) select code, (select id from eg_action where name='Delete Token' and url='/user/_logout'), 'default' from eg_ms_role where code in ('EMPLOYEE','CITIZEN');

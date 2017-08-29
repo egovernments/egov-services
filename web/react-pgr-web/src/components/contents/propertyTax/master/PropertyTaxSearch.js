@@ -199,6 +199,12 @@ class PropertyTaxSearch extends Component {
 	  let current = this;
 	  
 	var query = propertyTaxSearch;
+
+    for(var key in query){
+    if(query[key] == '' || query[key] === null || query[key] === undefined){
+      delete query[key];
+    }
+  }
 	  
       Api.commonApiPost('pt-property/properties/_search', query,{}, false, true).then((res)=>{   
 		setLoadingStatus('hide');

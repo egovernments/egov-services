@@ -27,7 +27,7 @@ ReportDefinitions:
     type: string
     source: hr    
     linkedReport:
-      reportName: DrillDownforemployeeview
+      reportName: DrillDownReportforemployeeview
       linkedColumn: _parent?reportName={reportName}&status={currentColumnName}&code={code}  
   searchParams:
   - name: departmentid
@@ -354,6 +354,39 @@ ReportDefinitions:
     and assign.tenantid=emp.tenantid
     and emp.tenantid=emptyp.tenantid
     and assign.tenantid=dept.tenantid
+    
+   #employee without Assignment
+- reportName: employeewithoutassignments
+  summary: employee without assignments
+  version: 1.0.0
+  moduleName: hr
+  sourceColumns:
+  - name: code
+    label: reports.hr.Employee_name         
+    type: string
+    source: hr
+  - name: name
+    label: reports.hr.Employee_name         
+    type: string
+    source: hr
+  - name: assign
+    label: reports.hr.assign_url         
+    type: string
+    source: hr
+  searchParams:
+  - name: date
+    label: reports.hr.enter_date
+    type: epoch
+    source: hr
+    isMandatory: true
+  query: select emp.code as employeecode ,usr.name as employeename
+    from egeis_employee  emp,eg_user usr
+    where emp.id not in (select id from egeis_assignment where $date between fromdate and todate)
+    and emp.id=usr.id
+    and emp.tenantid=usr.tenantid
+    and emp.tenantid=$tenantid
+
+
 
 
 

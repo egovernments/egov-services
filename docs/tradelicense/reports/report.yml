@@ -97,13 +97,13 @@ ReportDefinitions:
     searchClause : AND tl.tradetitle = $businessName
   - name: licenseValidFromDate
     label: reports.tradelicense.licensevalidfromdate
-    type: epoch
+    type: string
     source: tradelicense
     isMandatory: false
     searchClause : AND tl.licensevalidfromdate = $licenseValidFromDate
   - name: licenseValidToDate
     label: reports.tradelicense.licensevalidtodate
-    type: epoch
+    type: string
     source: tradelicense
     isMandatory: false
     searchClause : AND tl.expirydate = $licenseValidToDate
@@ -117,7 +117,7 @@ ReportDefinitions:
   - name: licenseSubType
     label: reports.tradelicense.licensesubtype
     type: url
-    pattern: /tl-masters/category/v1/_search?tenantId=$tenantid&categoryId={licenseType}&pageSize=500|$..id|$..name
+    pattern: /tl-masters/category/v1/_search?tenantId=$tenantid&categoryId={licenseType}&pageSize=500|$.categories[*].id|$.categories..name
     source: tradelicense
     isMandatory: false
     searchClause : AND tl.subcategoryid = $licenseSubType

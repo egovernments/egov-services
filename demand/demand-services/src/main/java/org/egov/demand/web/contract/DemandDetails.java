@@ -20,6 +20,7 @@ public class DemandDetails {
 	private BigDecimal collectionAmount;
 	private BigDecimal rebateAmount;
 	private String taxReason;
+	private String taxReasonCode;
 	private String taxPeriod;
 	@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss", timezone = "IST")
 	private Date periodStartDate;

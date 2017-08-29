@@ -1,0 +1,28 @@
+{
+	"RequestInfo": null,
+	"Revaluation": 
+	{
+		"assetId": 31,
+		"currentCapitalizedValue": 100.68,
+		"typeOfChange": "DECREASED",
+		"revaluationAmount": 10.0,
+		"valueAfterRevaluation": 90.68,
+		"revaluationDate": 1496430744825,
+		"reevaluatedBy": "5",
+		"reasonForRevaluation": "reasonForRevaluation",
+		"fixedAssetsWrittenOffAccount": 1,
+		"function": 2,
+		"fund": 3,
+		"scheme": 4,
+		"subScheme": 5,
+		"comments": "coments",
+		"status": "APPROVED",
+		"auditDetails": 
+		{
+			"createdBy": "5",
+			"createdDate": 1495978422356,
+			"lastModifiedBy": "5",
+			"lastModifiedDate": 1495978422356
+		}
+	}
+}

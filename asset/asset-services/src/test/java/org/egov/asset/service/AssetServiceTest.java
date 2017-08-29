@@ -49,6 +49,9 @@ public class AssetServiceTest {
 
     @Mock
     private LogAwareKafkaTemplate<String, Object> logAwareKafkaTemplate;
+    
+    @Mock
+    private AssetCommonService assetCommonService;
 
     @Test
     public void testSearch() {
@@ -92,6 +95,8 @@ public class AssetServiceTest {
         final AssetResponse assetResponse = new AssetResponse();
         assetResponse.setResponseInfo(null);
         assetResponse.setAssets(assets);
+        
+        when(assetCommonService.getDepreciationRate(any(Double.class))).thenReturn(Double.valueOf("13.17"));
 
         assertTrue(assetResponse.equals(assetService.createAsync(assetRequest)));
     }
@@ -108,7 +113,7 @@ public class AssetServiceTest {
         final AssetResponse assetResponse = new AssetResponse();
         assetResponse.setResponseInfo(null);
         assetResponse.setAssets(assets);
-
+        
         when(assetRepository.update(any(AssetRequest.class))).thenReturn(asset);
 
         assertTrue(assetResponse.equals(assetService.update(assetRequest)));
@@ -120,24 +125,43 @@ public class AssetServiceTest {
         final Asset asset = getAsset();
         final AssetRequest assetRequest = new AssetRequest();
         assetRequest.setAsset(asset);
+        final AssetResponse assetResponse = getAssetResponse(asset);
+        
+        when(assetCommonService.getDepreciationRate(any(Double.class))).thenReturn(Double.valueOf("13.17"));
+        assertTrue(assetResponse.equals(assetService.updateAsync(assetRequest)));
+    }
 
+    @Test
+    public void testGetAsset() {
+
+        final Asset expectedAsset = getAsset();
+        final List<Asset> assets = new ArrayList<>();
+        assets.add(expectedAsset);
+        when(assetRepository.findForCriteria(any(AssetCriteria.class))).thenReturn(assets);
+        final Asset actualAsset = assetService.getAsset("ap.kurnool", Long.valueOf("552"), new RequestInfo());
+
+        assertEquals(expectedAsset, actualAsset);
+
+    }
+
+    private AssetResponse getAssetResponse(final Asset asset) {
         final List<Asset> assets = new ArrayList<>();
         assets.add(asset);
         final AssetResponse assetResponse = new AssetResponse();
         assetResponse.setResponseInfo(null);
         assetResponse.setAssets(assets);
-
-        assertTrue(assetResponse.equals(assetService.updateAsync(assetRequest)));
+        return assetResponse;
     }
 
     private Asset getAsset() {
         final Asset asset = new Asset();
         asset.setTenantId("ap.kurnool");
-        asset.setId(null);
+        asset.setId(Long.valueOf("552"));
         asset.setName("asset name");
         asset.setStatus(Status.CREATED.toString());
         asset.setModeOfAcquisition(ModeOfAcquisition.ACQUIRED);
-        asset.setEnableYearWiseDepreciation(true);
+        asset.setEnableYearWiseDepreciation(false);
+        asset.setDepreciationRate(Double.valueOf("13.17"));
 
         final Location location = new Location();
         location.setLocality(4l);

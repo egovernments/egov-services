@@ -379,6 +379,7 @@ public class AgreementService {
 				demandDetail.setCollectionAmount(BigDecimal.ZERO);
 				demandDetail.setRebateAmount(BigDecimal.ZERO);
 				demandDetail.setTaxReason(demandReason.getName());
+				demandDetail.setTaxReasonCode(demandReason.getName());
 				demandDetail.setTaxPeriod(demandReason.getTaxPeriod());
 				demandDetail.setTenantId(agreement.getTenantId());
 				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getRent()));

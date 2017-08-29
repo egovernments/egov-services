@@ -276,7 +276,7 @@ class AddDemand extends Component {
                     <td data-label={translate("wc.create.demands.taxHeadMasterCode")}>{item.taxHeadMasterCode}</td>
                     <td data-label={translate("wc.create.demands.taxAmount")}>
                     <TextField type="number" id={item.id} name="taxAmount"  value={item.taxAmount}
-                      onChange={(e)=>{handleChangeSrchRslt(e, "taxAmount", index)}} />
+                      onChange={(e)=>{handleChangeSrchRslt(e, "taxAmount", index)}} disabled={item.taxAmount>0} />
                     </td>
                     <td data-label={translate("wc.create.demands.collectionAmount")}>
                     <TextField type="number" id={item.id} name="collectionAmount"  value={item.collectionAmount}

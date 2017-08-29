@@ -388,6 +388,7 @@ class NoDues extends Component {
   }
 
   createDemand = (SID, finalObject, response) => {
+    
     let self = this;
     let {formData} = this.props;
     finalObject["businessService"] = (self.props.match.params.status == "extract" ? "PT" : (self.props.match.params.id == "pt" ? "PT" : "WC"));

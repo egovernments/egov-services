@@ -37,30 +37,30 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.workflow.web.contract;
+package org.egov.pgrrest.read.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import org.egov.common.contract.response.ResponseInfo;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @EqualsAndHashCode
-public class RouterTypeGetReq {
-    private List<Long> id;
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class RouterResponse {
 
-    private List<Long> boundaryid;
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
 
-    private List<Long> serviceid;
+    @JsonProperty("RouterTypRes")
+    private List<RouterType> routerTypes;
 
-    private Long position;
+    public boolean routerPresent() {
+        return !routerTypes.isEmpty() && routerTypes.size() > 0;
+    }
 
-    @NotNull
-    private String tenantId;
-
-    private String hierarchyType;
 }

@@ -37,30 +37,24 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.workflow.web.contract;
+package org.egov.pgrrest.read.domain.model;
 
 import lombok.*;
 
-import javax.validation.constraints.NotNull;
-import java.util.List;
-
-@Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @EqualsAndHashCode
-public class RouterTypeGetReq {
-    private List<Long> id;
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+@Builder
+public class RouterType {
 
-    private List<Long> boundaryid;
+    private Long id;
 
-    private List<Long> serviceid;
+    private Integer position;
 
-    private Long position;
-
-    @NotNull
     private String tenantId;
 
-    private String hierarchyType;
+
 }

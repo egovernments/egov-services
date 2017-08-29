@@ -460,33 +460,22 @@ class PropertyAddress extends Component {
                                               />
                                           </Col>
 										  <Col xs={12} md={3} sm={6}>
-                                              <SelectField  className="fullWidth selectOption"
+                                              <TextField  className="fullWidth"
                                                   floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.totalFloors')}<span style={{"color": "#FF0000"}}> *</span></span>}
-                                                  errorText={fieldErrors.totalFloors ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.totalFloors}</span> : ""}
+                                                  errorText={fieldErrors.totalFloors ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.totalFloors}</span> : ""}
                                                   value={propertyAddress.totalFloors ? propertyAddress.totalFloors : ""}
-                                                  onChange={(event, index, value) => {
-													  (value == -1) ? value = '' : '';
-                                                      var e = {
-                                                        target: {
-                                                          value: value
-                                                        }
-                                                      };
+                                                  onChange={(e, value) => {
 													  addFloors(value);
-                                                      handleChange(e, "totalFloors", true, "")}
+                                                      handleChange(e, "totalFloors", true, /^\d+$/g)}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-												  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
-												>
-												<MenuItem value={-1} primaryText="None"/>
-												<MenuItem value={1} primaryText="1 Floor"/>
-												<MenuItem value={2} primaryText="2 Floors"/>
-												<MenuItem value={3} primaryText="3 Floors"/>
-												<MenuItem value={4} primaryText="4 Floors"/>
-												<MenuItem value={5} primaryText="5 Floors"/>
-                                              </SelectField>
+												  maxLength={2}
+												/>
+										
+                                             
                                           </Col>
                                           <Col xs={12} md={12}>
                                               <Checkbox

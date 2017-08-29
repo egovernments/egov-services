@@ -2643,7 +2643,7 @@ var localization_MR_Data = {
 "pgr.lbl.updatedby":"द्वारे अद्यवत ",
 "pgr.lbl.validemailid":" वैध ईमेल संकेतांक प्रविष्ट करा",
 "pgr.lbl.verify":" सत्यापित करा",
-"pgr.lbl.view":" पहा",
+"pgr.lbl.view":" पहा", 
 "pgr.lbl.view.grievance":" तक्रार पहा",
 "pgr.lbl.view.router":" तक्रार राउटर पहा",
 "pgr.lbl.ward":" प्रभाग",

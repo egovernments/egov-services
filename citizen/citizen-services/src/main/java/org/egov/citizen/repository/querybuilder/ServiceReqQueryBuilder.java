@@ -3,7 +3,6 @@ package org.egov.citizen.repository.querybuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.citizen.service.CitizenPersistService;
 import org.egov.citizen.web.contract.ServiceRequestSearchCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -154,6 +153,9 @@ public class ServiceReqQueryBuilder {
 		if(!srnList.isEmpty()){
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" ec.srn ilike any "+getNumberQuery(srnList));
+		}else{
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" ec.srn = 'invalidSrn' ");
 		}
 	}
 

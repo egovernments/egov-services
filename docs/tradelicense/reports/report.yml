@@ -97,16 +97,16 @@ ReportDefinitions:
     searchClause : AND tl.tradetitle = $businessName
   - name: licenseValidFromDate
     label: reports.tradelicense.licensevalidfromdate
-    type: epoch
+    type: string
     source: tradelicense
     isMandatory: false
-    searchClause : AND tl.licensevalidfromdate = to_timestamp($licenseValidFromDate)
+    searchClause : AND tl.licensevalidfromdate = $licenseValidFromDate
   - name: licenseValidToDate
     label: reports.tradelicense.licensevalidtodate
-    type: epoch
+    type: string
     source: tradelicense
     isMandatory: false
-    searchClause : AND tl.expirydate = to_timestamp($licenseValidToDate)
+    searchClause : AND tl.expirydate = $licenseValidToDate
   - name: licenseType
     label: reports.tradelicense.licensetype
     type: singlevaluelist

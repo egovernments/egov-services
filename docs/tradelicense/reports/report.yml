@@ -66,7 +66,7 @@ ReportDefinitions:
   - name: ward
     label: reports.tradelicense.adminward
     type: singlevaluelist
-    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION&pageSize=500|$..id|$..name
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=Ward&hierarchyTypeName=ADMINISTRATION&pageSize=500|$..id|$..name
     source: tradelicense
     isMandatory: false
     searchClause : AND tl.adminwardid = $ward

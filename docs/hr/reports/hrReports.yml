@@ -27,7 +27,7 @@ ReportDefinitions:
     source: hr    
     linkedReport:
       reportName: DrillDownReportforemployeeview
-      linkedColumn: _parent?reportName={reportName}&code={code}  
+      linkedColumn: _parent?reportName={reportName}&code={code}&department={department} 
   searchParams:
   - name: departmentid
     label: reports.hr.Department
@@ -74,6 +74,7 @@ ReportDefinitions:
     and usr.tenantid=emp.tenantid
     and assign.tenantid=dept.tenantid
     and assign.tenantid=desig.tenantid 
+    
 - reportName: DrillDownReportforemployeeview
   summary: DrillDown report for employee view
   version: 1.0.0 
@@ -109,25 +110,27 @@ ReportDefinitions:
     type: string
     source: eg_department
     isMandatory: true
-    searchClause: and assign.departmentid=$departmentid
   - name: designationid
     label: reports.hr.employee.Designation
     type: string
     source: reports.hr.Designation
     isMandatory: true
-    searchClause: and assign.designationid=$designationid
   - name: code
     label: reports.hr.Employee_Code/Name  
     type: string
     source: hr 
     isMandatory: true
-    searchClause: and emp.code=$code
   - name: employeeType
     label: reports.hr.EmployeeType
     type: string
     source: egeis_employeetype  
     isMandatory: true
-    searchClause: and emp.employeetypeid=$employeeType
+  - name: status
+    label: reports.hr.employee.Status
+    type: singlevaluelist
+    source: egeis_hrstatus
+    isMandatory: true
+    
   query: select  emp.code as code ,usr.name as name,dept.name as department,desig.name as designation ,assign.fromdate as fromdate, assign.todate as todate
     from egeis_employee emp, egeis_assignment assign,eg_user usr, eg_department dept,egeis_designation desig
     where   emp.tenantid=$tenantid
@@ -140,6 +143,9 @@ ReportDefinitions:
     and usr.tenantid=emp.tenantid
     and assign.tenantid=dept.tenantid
     and assign.tenantid=desig.tenantid 
+    and emp.code=$code
+    and dept.id=$department
+    
 - reportName: AttendenceReport
   summary: Attendence Report
   version: 1.0.0
@@ -175,20 +181,20 @@ ReportDefinitions:
   - name: Year
     label: reports.hr.Attendence.calenderYear
     type: singlevaluelist
-    pattern: http://egov-common-masters:8080/egov-common-masters/calendaryears/_search?tenantId=$tenantId|$..id|$..name
+    pattern: http://egov-common-masters:8080/egov-common-masters/calendaryears/_search?tenantId=$tenantid|$..id|$..name
     source: eg_calendarYear
     isMandatory: true
   - name: departmentId
     label: reports.hr.Department
     type: singlevaluelist
-    pattern: http://egov-common-masters:8080/egov-common-masters/departments/_search?tenantId=$tenantId|$..id|$..name
+    pattern: http://egov-common-masters:8080/egov-common-masters/departments/_search?tenantId=$tenantid|$..id|$..name
     source: hr
     isMandatory: false
     searchClause: and dept.id=$departmentId
   - name: designation
     label: reports.hr.Designation
     type: singlevaluelist
-    pattern: http://hr-masters:8080/hr-masters/designations/_search?tenantId=$tenantId|$..id|$..name  
+    pattern: http://hr-masters:8080/hr-masters/designations/_search?tenantId=$tenantid|$..id|$..name  
     source: hr
     isMandatory: false
     searchClause: and desig.id=$designation
@@ -201,7 +207,7 @@ ReportDefinitions:
   - name: employeeType
     label: reports.hr.EmployeeType
     type: singlevaluelist
-    pattern: http://hr-masters:8080/hr-masters/employeetypes/_search?tenantId=$tenantId|$..id|$..name
+    pattern: http://hr-masters:8080/hr-masters/employeetypes/_search?tenantId=$tenantid|$..id|$..name
     source: egeis_employee  
     isMandatory: false
     searchClause: and emp.employeetypeid=$employeeType
@@ -226,7 +232,8 @@ ReportDefinitions:
     and assign.tenantid = desig.tenantid
     and assign.tenantid = dept.tenantid
     and usr.tenantid=emp.tenantid
-  groupBy: group by emp.code,usr.name ;
+  groupBy: group by emp.code,usr.name;
+  
 - reportName: employeeLeaveReport
   summary: employee Leave Report
   version: 1.0.0
@@ -264,14 +271,14 @@ ReportDefinitions:
   - name: departmentId
     label: reports.hr.Department
     type: singlevaluelist
-    pattern: http://egov-common-masters:8080/egov-common-masters/departments/_search?tenantId=$tenantId|$..id|$..name
+    pattern: http://egov-common-masters:8080/egov-common-masters/departments/_search?tenantId=$tenantid|$..id|$..name
     source: hr
     isMandatory: false
     searchClause: and dept.id=$departmentId
   - name: designation
     label: reports.hr.Designation
     type: singlevaluelist
-    pattern: http://hr-masters:8080/hr-masters/designations/_search?tenantId=$tenantId|$..id|$..name  
+    pattern: http://hr-masters:8080/hr-masters/designations/_search?tenantId=$tenantid|$..id|$..name  
     source: hr
     isMandatory: false
     searchClause: and desig.id=$designation
@@ -284,21 +291,21 @@ ReportDefinitions:
   - name: employeeType
     label: reports.hr.EmployeeType
     type: singlevaluelist
-    pattern: http://hr-masters:8080/hr-masters/employeetypes/_search?tenantId=default|$..id|$..name
+    pattern: http://hr-masters:8080/hr-masters/employeetypes/_search?tenantId=$tenantid|$..id|$..name
     source: hr  
     isMandatory: false
     searchClause: and emptyp.id=$employeeType
   - name: employeeStatus
     label: reports.hr.employeeStatus
     type: singlevaluelist
-    pattern: http://egov-common-masters:8080/egov-common-masters/departments/_search?tenantId=$tenantId|$..id|$..name
+    pattern: http://egov-common-masters:8080/egov-common-masters/departments/_search?tenantId=$tenantid|$..id|$..name
     source: hr
     isMandatory: false
     searchClause: and dept.id=$departmentId
   - name: leavetype
     label: reports.hr.calenderYear
     type: singlevaluelist
-    pattern: http://egov-common-masters:8080/hr-leave/leavetypes/_search?tenantId=$tenantId|$..id|$..name
+    pattern: http://egov-common-masters:8080/hr-leave/leavetypes/_search?tenantId=$tenantid|$..id|$..name
     source: hr
     isMandatory: false
     searchClause: and leavetype.id=$leavetype
@@ -317,7 +324,7 @@ ReportDefinitions:
   - name: leaveStatus
     label: reports.hr.leaveStatus
     type: epoch
-    pattern: http://egov-common-masters:8080/egov-common-masters/calendaryears/_search?tenantId=$tenantId|$..id|$..name
+    pattern: http://egov-common-masters:8080/egov-common-masters/calendaryears/_search?tenantId=$tenantid|$..id|$..name
     source: eg_calendarYear
     isMandatory: false
     searchClause: and hrstatus.id = $leaveStatus
@@ -342,6 +349,7 @@ ReportDefinitions:
     and assign.tenantid=emp.tenantid
     and emp.tenantid=emptyp.tenantid
     and assign.tenantid=dept.tenantid
+    
 - reportName: employeewithoutassignments
   summary: employee without assignments
   version: 1.0.0
@@ -367,7 +375,7 @@ ReportDefinitions:
     isMandatory: true
   query: select emp.code as employeecode ,usr.name as employeename
     from egeis_employee  emp,eg_user usr, egeis_assignment assign
-    where emp.id not in (select assign.employeeid  from egeis_assignment where $date between fromdate and todate)
+    where emp.id not in (select assign.employeeid  from egeis_assignment where to_date(to_char(to_timestamp(Trunc(CAST($date as bigint)/1000 )), 'YYYY/MM/DD'), 'YYYY-MM-DD') between fromdate and todate)
     and emp.id=usr.id
     and emp.tenantid=usr.tenantid
     and emp.tenantid=$tenantid

@@ -179,6 +179,7 @@ public class DemandRepository {
 			demandDetail.setCollectionAmount(BigDecimal.ZERO);
 			demandDetail.setRebateAmount(BigDecimal.ZERO);
 			demandDetail.setTaxReason(demandReason.getName());
+			demandDetail.setTaxReasonCode(demandReason.getName());
 			demandDetail.setTaxPeriod(demandReason.getTaxPeriod());
 			
 			LOGGER.info("the demand reason object in the loop : " + demandReason);

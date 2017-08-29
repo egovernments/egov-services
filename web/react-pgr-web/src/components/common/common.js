@@ -123,7 +123,7 @@ var localization_EN_Data = {
     "ui.table.title": "Search Result",
     "wc.search.result.usageType": "Usage Type",
     "wc.search.result.connectionStatus": "Connection Status",
-    "wc.search.result.propertyidentifier": "Property Identifier",
+    "wc.search.result.propertyidentifier": "Property ID",
     "wc.search.searchnewconnection.title": "Search New Connection",
     "wc.search.result.applicationType": "Application Type",
     "wc.search.categorytype.title": "Search Category Type",

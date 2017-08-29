@@ -7,10 +7,11 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.net.ssl.SSLEngineResult.Status;
-
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.mr.model.ApprovalDetails;
 import org.egov.mr.model.AuditDetails;
+import org.egov.mr.model.Demand;
+import org.egov.mr.model.Fee;
 import org.egov.mr.model.MarriageCertificate;
 import org.egov.mr.model.MarriageRegn;
 import org.egov.mr.model.MarryingPerson;
@@ -24,7 +25,6 @@ import org.egov.mr.repository.rowmapper.MarriageCertRowMapper;
 import org.egov.mr.service.CertificateNumberService;
 import org.egov.mr.web.contract.MarriageCertCriteria;
 import org.egov.mr.web.contract.ReissueCertRequest;
-import org.egov.mr.web.contract.RequestInfo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -256,9 +256,12 @@ public class MarriageCertRepositoryTest {
 		auditDetails.setLastModifiedBy("5");
 		auditDetails.setLastModifiedTime(Long.valueOf("1593234786"));
 
-		List<Long> demands = new ArrayList<>();
-		demands.add(Long.valueOf(6));
-		demands.add(Long.valueOf(2));
+		List<Demand> demands = new ArrayList<>();
+		Demand demand = new Demand();
+		demand.setAuditDetail(auditDetails);
+		demand.setId("6");
+		demand.setTenantId("ap.kurnool");
+		demands.add(demand);
 
 		MarryingPerson marryingPerson = new MarryingPerson();
 		marryingPerson.setAadhaar("ZXASD12WW12");
@@ -266,9 +269,12 @@ public class MarriageCertRepositoryTest {
 		marryingPerson.setEmail("xyz@gmail.com");
 		marryingPerson.setId(Long.valueOf("00024"));
 		marryingPerson.setStatus(MaritalStatus.UNMARRIED);
-		
+
 		List<MarriageCertificate> mc = new ArrayList<>();
-		
+		Fee fee = new Fee();
+		fee.setId("6");
+		fee.setFee(BigDecimal.valueOf(10.1));
+
 		MarriageRegn marriageRegn = new MarriageRegn();
 		marriageRegn.setActions(actions);
 		marriageRegn.setApplicationNumber("00015");
@@ -280,7 +286,7 @@ public class MarriageCertRepositoryTest {
 		marriageRegn.setCity("Bangalore");
 		marriageRegn.setDemands(demands);
 		marriageRegn.setDocuments(null);
-		marriageRegn.setFee(Double.valueOf(10.0));
+		marriageRegn.setFee(fee);
 		marriageRegn.setIsActive(true);
 		marriageRegn.setLocality("Belandur");
 		marriageRegn.setMarriageDate(Long.valueOf("161947"));

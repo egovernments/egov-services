@@ -279,10 +279,13 @@ public class DepreciationService {
             final int to = calendar.get(Calendar.YEAR);
             log.debug("Financial Year From :: " + from);
             log.debug("Financial Year To :: " + to);
-            depreciationCriteria.setFinancialYear(from + "-" + Integer.toString(to).substring(2, 4));
+            if (from != to)
+                depreciationCriteria.setFinancialYear(from + "-" + Integer.toString(to).substring(2, 4));
+            else
+                depreciationCriteria.setFinancialYear(from + "-" + Integer.toString(to + 1).substring(2, 4));
         } else if (depreciationCriteria.getFromDate() == null && depreciationCriteria.getToDate() == null) {
 
-            final String url = applicationProperties.getEgfServiceHostName()
+            final String url = applicationProperties.getEgfMasterHost()
                     + applicationProperties.getEgfFinancialYearSearchPath() + "?tenantId ="
                     + depreciationCriteria.getTenantId() + "&finYearRange=" + financialYear;
 

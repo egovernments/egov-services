@@ -207,40 +207,6 @@ public class CategoryContractRepository {
 
 	}
 
-	public LicenseStatusResponse findByStatusIds(String tenantId, String ids, RequestInfoWrapper requestInfoWrapper) {
-
-		String hostUrl = propertiesManger.getTradeLicenseMasterServiceHostName()
-				+ propertiesManger.getTradeLicenseMasterServiceBasePath();
-		String searchUrl = propertiesManger.getStatusServiceSearchPath();
-		String url = String.format("%s%s", hostUrl, searchUrl);
-		StringBuffer content = new StringBuffer();
-		if (ids != null) {
-			content.append("ids=" + ids);
-		}
-
-		if (tenantId != null) {
-			content.append("&tenantId=" + tenantId);
-		}
-		url = url + content.toString();
-		TlMasterRequestInfoWrapper tlMasterRequestInfoWrapper = getTlMasterRequestInfoWrapper(requestInfoWrapper);
-		LicenseStatusResponse licenseStatusResponse = null;
-
-		try {
-
-			licenseStatusResponse = restTemplate.postForObject(url, tlMasterRequestInfoWrapper,
-					LicenseStatusResponse.class);
-		} catch (Exception e) {
-			log.error(propertiesManger.getCatEndPointError());
-		}
-		if (licenseStatusResponse != null && licenseStatusResponse.getLicenseStatuses() != null
-				&& licenseStatusResponse.getLicenseStatuses().size() > 0) {
-			return licenseStatusResponse;
-		} else {
-			return null;
-		}
-
-	}
-
 	public TlMasterRequestInfoWrapper getTlMasterRequestInfoWrapper(RequestInfoWrapper requestInfoWrapper) {
 
 		TlMasterRequestInfoWrapper tlMasterRequestInfoWrapper = new TlMasterRequestInfoWrapper();

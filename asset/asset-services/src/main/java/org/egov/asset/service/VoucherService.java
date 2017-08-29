@@ -181,7 +181,7 @@ public class VoucherService {
 
     public List<ChartOfAccountContract> getChartOfAccounts(final RequestInfo requestInfo, final String tenantId,
             final Long accountId) {
-        final String url = applicationProperties.getEgfServiceHostName()
+        final String url = applicationProperties.getEgfMastersHost()
                 + applicationProperties.getEgfServiceChartOfAccountsSearchPath() + "?tenantId=" + tenantId + "&id="
                 + accountId;
         log.debug("Chart of Account URL ::" + url);
@@ -196,7 +196,7 @@ public class VoucherService {
 
     public List<ChartOfAccountDetailContract> getSubledgerDetails(final RequestInfo requestInfo, final String tenantId,
             final Long accountId) {
-        final String url = applicationProperties.getEgfServiceHostName()
+        final String url = applicationProperties.getEgfMastersHost()
                 + applicationProperties.getEgfServiceChartOfAccountsDetailsSearchPath() + "?tenantId=" + tenantId
                 + "&id=" + accountId;
         log.debug("subledger details check URL :: " + url);
@@ -215,7 +215,7 @@ public class VoucherService {
     }
 
     public FundResponse getFundData(final RequestInfo requestInfo, final String tenantId, final Long fundId) {
-        final String url = applicationProperties.getEgfServiceHostName()
+        final String url = applicationProperties.getEgfMastersHost()
                 + applicationProperties.getEgfServiceFundsSearchPath() + "?&tenantId=" + tenantId + "&id=" + fundId;
         log.debug("fund search url :: " + url);
         final FundResponse fundResponse = restTemplate.postForObject(url, requestInfo, FundResponse.class);
@@ -225,7 +225,7 @@ public class VoucherService {
 
     public FunctionResponse getFunctionData(final RequestInfo requestInfo, final String tenantId,
             final Long functionId) {
-        final String url = applicationProperties.getEgfServiceHostName()
+        final String url = applicationProperties.getEgfMastersHost()
                 + applicationProperties.getEgfServiceFunctionsSearchPath() + "?&tenantId=" + tenantId + "&id="
                 + functionId;
         log.debug("function search url :: " + url);
@@ -242,7 +242,7 @@ public class VoucherService {
             e.printStackTrace();
         }
         final String fundCode = voucherParamsMap.get(AssetFinancialParams.FUND.toString());
-        final String url = applicationProperties.getEgfServiceHostName()
+        final String url = applicationProperties.getEgfMastersHost()
                 + applicationProperties.getEgfServiceFundsSearchPath() + "?&tenantId=" + tenantId + "&code=" + fundCode;
         log.debug("fund search url :: " + url);
         final FundResponse fundResponse = restTemplate.postForObject(url, requestInfo, FundResponse.class);
@@ -264,7 +264,7 @@ public class VoucherService {
         }
 
         final String functionCode = voucherParamsMap.get(AssetFinancialParams.FUNCTION.toString());
-        final String url = applicationProperties.getEgfServiceHostName()
+        final String url = applicationProperties.getEgfMastersHost()
                 + applicationProperties.getEgfServiceFunctionsSearchPath() + "?&tenantId=" + tenantId + "&code="
                 + functionCode;
         log.debug("function search url :: " + url);

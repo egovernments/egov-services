@@ -732,7 +732,7 @@ var dat = {
          "rowClickUrlUpdate": "/update/tl/CreateLegacyLicense/{licenseNumber}",
          "rowClickUrlView": "/non-framework/tl/transaction/viewLegacyLicense/{licenseNumber}"
        }
-     },
+     }, 
 
 
      "tl.view": {
@@ -1010,7 +1010,7 @@ var dat = {
               },
               {
                 "name": "validity",
-                "jsonPath": "categories[0].validityYears",
+                "jsonPath": "licenses[0].validityYears",
                 "label": "tl.view.licenses.groups.validity",
                 "pattern": "",
                 "type": "text",

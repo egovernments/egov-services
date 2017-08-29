@@ -162,7 +162,7 @@ class Report extends Component {
 
   handleChange=(e, property, isRequired, pattern, requiredErrMsg="Required",patternErrMsg="Pattern Missmatch") => {
       let {getVal} = this;
-      let {handleChange,mockData,setDropDownData} = this.props;
+      let {handleChange,mockData,setDropDownData, formData} = this.props;
       let hashLocation = window.location.hash;
       let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
       // console.log(obj);
@@ -192,6 +192,14 @@ class Report extends Component {
                       id[queryStringObject[i].split("=")[0]]=queryStringObject[i].split("=")[1];
                     }
                   }
+                }
+
+                if(id.categoryId == "" || id.categoryId == null){
+                  formData.tradeSubCategory = "";
+                  setDropDownData(value.jsonPath, []);
+                  console.log(value.jsonPath);
+                  console.log("helo", formData);
+                  return false;
                 }
 
                 Api.commonApiPost(context,id).then(function(response) {
@@ -308,6 +316,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch({type: "SET_FORM_DATA", data});
   },
   setDropDownData:(fieldName,dropDownData)=>{
+    console.log(fieldName,dropDownData)
     dispatch({type:"SET_DROPDWON_DATA",fieldName,dropDownData})
   },
 });

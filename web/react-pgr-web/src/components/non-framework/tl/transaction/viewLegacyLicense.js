@@ -393,7 +393,7 @@ class Report extends Component {
                           <tr key={index}>
                             <td>{item.financialYear}</td>
                             <td>{item.amount}</td>
-                            <td>{item.paid+""? "Yes": 'No'}</td>
+                            <td>{item.paid? "Yes": 'No'}</td>
                           </tr>
                         )
                       })}

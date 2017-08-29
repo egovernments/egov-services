@@ -28,6 +28,7 @@ import org.egov.tradelicense.web.repository.BoundaryContractRepository;
 import org.egov.tradelicense.web.repository.CategoryContractRepository;
 import org.egov.tradelicense.web.repository.DocumentTypeContractRepository;
 import org.egov.tradelicense.web.repository.FinancialYearContractRepository;
+import org.egov.tradelicense.web.repository.StatusRepository;
 import org.egov.tradelicense.web.response.BoundaryResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,16 +47,19 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Autowired
-	CategoryContractRepository categoryContractRepository;
+	private CategoryContractRepository categoryContractRepository;
+	
+	@Autowired
+	private StatusRepository statusRepository;
 
 	@Autowired
-	BoundaryContractRepository boundaryContractRepository;
+	private	BoundaryContractRepository boundaryContractRepository;
 
 	@Autowired
-	FinancialYearContractRepository financialYearRepository;
+	private	FinancialYearContractRepository financialYearRepository;
 
 	@Autowired
-	DocumentTypeContractRepository documentTypeRepository;
+	private	DocumentTypeContractRepository documentTypeRepository;
 	
 	
 
@@ -437,7 +441,7 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 		}
 
 		if (applicationNumber != null && !applicationNumber.trim().isEmpty()) {
-			searchSql.append(" AND upper(applicationNumber)  like :applicationNumber");
+			searchSql.append(" AND id in ( SELECT licenseId FROM egtl_license_application WHERE upper(applicationNumber)  like :applicationNumber)");
 			parameter.addValue("applicationNumber", '%' + applicationNumber.toUpperCase() + '%');
 		}
 
@@ -616,7 +620,7 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 
 			String ids = uniqueIds.get("statusIds").toString();
 			ids = ids.replace("[", "").replace("]", "");
-			LicenseStatusResponse licenseStatusResponse = categoryContractRepository.findByStatusIds(tenantId, ids,
+			LicenseStatusResponse licenseStatusResponse = statusRepository.findByIds(tenantId, ids,
 					requestInfoWrapper);
 			if (licenseStatusResponse != null && licenseStatusResponse.getLicenseStatuses() != null
 					&& licenseStatusResponse.getLicenseStatuses().size() > 0) {

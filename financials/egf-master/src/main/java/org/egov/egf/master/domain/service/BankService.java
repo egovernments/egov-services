@@ -28,9 +28,7 @@ public class BankService {
 
 	@Autowired
 	private SmartValidator validator;
-	@Autowired
-	private FundRepository fundRepository;
-
+ 
 	@Transactional
 	public List<Bank> create(List<Bank> banks, BindingResult errors, RequestInfo requestInfo) {
 

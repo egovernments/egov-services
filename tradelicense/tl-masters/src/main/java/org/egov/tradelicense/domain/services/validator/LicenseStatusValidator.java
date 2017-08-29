@@ -43,6 +43,15 @@ public class LicenseStatusValidator {
 					throw new InvalidInputException(propertiesManager.getInvalidLicenseStatusIdMsg(), requestInfo);
 				}
 			}
+			
+			Boolean duplicatExistsWithModuleType = utilityHelper.checkWhetherLicenseStatusDuplicateWithModuleType(licenseStatus.getTenantId(),
+					 licenseStatus.getCode(), licenseStatus.getModuleType(),
+					ConstantUtility.LICENSE_STATUS_TABLE_NAME);
+			
+			if (duplicatExistsWithModuleType) {
+				throw new DuplicateIdException(propertiesManager.getLicenseStatusCustomMsg(), requestInfo);
+			}
+			
 
 			Boolean isExists = utilityHelper.checkWhetherLicenseStatusExists(licenseStatus.getTenantId(),
 					licenseStatus.getName(), licenseStatus.getCode(), licenseStatusId,

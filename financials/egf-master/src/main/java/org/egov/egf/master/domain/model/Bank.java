@@ -50,6 +50,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * 
+ * @author mani
+ *
+ */
+
+/*
+ * Every ULB need to maintain bank accounts information . May be it is collection information 
+ * or the payment. This is the master list of banks operated by ULB
+ * 
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -57,19 +68,34 @@ import lombok.Setter;
 @Builder
 public class Bank extends Auditable {
 
+	/**
+	 * id is unique identifier . It is generated internally
+	 */
 	private String id;
 
+	/**
+	 * code is the code of the bank
+	 */
 	@NotNull
 	@Size(max = 50, min = 1)
 	private String code;
 
+	/**
+	 * name is the Bank Name .
+	 */
 	@NotNull
 	@Size(max = 100, min = 2)
 	private String name;
 
+	/**
+	 * description more detailed description of the bank
+	 */
+
 	@Size(max = 250)
 	private String description;
-
+	/**
+	 * active states whether the bank is active in the system or not .
+	 */
 	@NotNull
 	private Boolean active;
 

@@ -40,10 +40,10 @@
 package org.egov.wcms.service;
 
 import java.util.List;
-import java.util.Map;
 
 import org.egov.wcms.repository.WaterChargesConfigRepository;
 import org.egov.wcms.web.contract.WaterChargesConfigGetRequest;
+import org.egov.wcms.web.contract.WaterConfigurationValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,7 +53,7 @@ public class WaterChargesConfigService {
     @Autowired
     private WaterChargesConfigRepository waterchargesConfigRepository;
 
-    public Map<String, List<String>> getWaterChargesConfiguration(
+    public List<WaterConfigurationValue> getWaterChargesConfiguration(
             final WaterChargesConfigGetRequest waterchargesConfigGetRequest) {
         return waterchargesConfigRepository.findForCriteria(waterchargesConfigGetRequest);
     }

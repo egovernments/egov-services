@@ -49,24 +49,48 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
+/**
+ * 
+ * @author mani
+ *
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
+/*
+ * In the government set-up, demands for expenditure are drawn by the department
+discharging the functions and become the responsibility center for the assigned functions.
+Functionary group represents this. Each sub-level within this group typically can represent the
+organisational structure within the ULB. This level is used only for the internal control of the
+ULB. It is therefore not proposed to prescribe any codification structure for the same.
+ */
 public class Functionary extends Auditable {
 
+	/**
+	 * id is the unique identifier and it is generated internally
+	 */
 	private String id;
 
+	/**
+	 * code is uniue identifier and ULB may refer this for short name.
+	 */
 	@NotNull
 	@Length(max = 16, min = 1)
 	private String code;
 
+	/**
+	 * name is the name of the functionary
+	 */
 	@NotNull
 	@Length(max = 256, min = 1)
 	private String name;
 
+	/**
+	 * active states whether the functionary is active or not .
+	 * Only active functionaries will be used in transaction
+	 */
 	@NotNull
 	private Boolean active;
 

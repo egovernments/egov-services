@@ -23,7 +23,7 @@ public abstract class ESRepository {
 					&& (!s.toLowerCase().trim().endsWith("asc") && !s.toLowerCase().trim().endsWith("desc"))) {
 				invalidDataException.setFieldName(s.split(" ")[0]);
 				invalidDataException
-						.setDefaultMessage("Please send the proper sortBy order for the field " + s.split(" ")[0]);
+						.setMessageKey("Please send the proper sortBy order for the field " + s.split(" ")[0]);
 				throw invalidDataException;
 			}
 		}
@@ -50,7 +50,7 @@ public abstract class ESRepository {
 			}
 			if (!isFieldExist) {
 				invalidDataException.setFieldName(s.contains(" ") ? s.split(" ")[0] : s);
-				invalidDataException.setDefaultMessage("Please send the proper Field Names ");
+				invalidDataException.setMessageKey("Please send the proper Field Names ");
 				throw invalidDataException;
 			}
 		}

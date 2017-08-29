@@ -67,6 +67,7 @@ public class LicenseStatusControllerTest {
 		licenseStatus.setName("shubham");
 		licenseStatus.setCode("babu");
 		licenseStatus.setActive(true);
+		licenseStatus.setModuleType("License");
 
 		LicenseStatusResponse licenseStatusResponse = new LicenseStatusResponse();
 		LicenseStatulst.add(licenseStatus);
@@ -108,7 +109,7 @@ public class LicenseStatusControllerTest {
 		licenseStatus.setName("shubham");
 		licenseStatus.setCode("babu");
 		licenseStatus.setActive(true);
-
+		licenseStatus.setModuleType("License");
 		LicenseStatusResponse licenseStatusResponse = new LicenseStatusResponse();
 		LicenseStatulst.add(licenseStatus);
 

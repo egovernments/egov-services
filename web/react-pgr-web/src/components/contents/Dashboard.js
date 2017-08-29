@@ -238,9 +238,73 @@ class Dashboard extends Component {
 
     let current = this;
     let currentUser=JSON.parse(localStorage.userRequest);
+    let count = 4, _state = {};
+    const checkCountAndSetState = function(key, res) {
+      _state[key] = res;
+      count--;
+      if(count == 0) {
+        setLoadingStatus("hide");
+        current.setState({
+          ..._state,
+          hasData: true
+        })
+      }
+    }
 
     if(currentUser.type === constants.ROLE_CITIZEN) {
-      Promise.all([
+      Api.commonApiPost("/pgr/seva/v1/_search",{userId:currentUser.id},{}).then(function(res1){
+        let inboxResponse = res1;
+
+        if(inboxResponse && inboxResponse.serviceRequests) {
+          for(var i=0; i<inboxResponse.serviceRequests.length; i++) {
+            var d1 = inboxResponse.serviceRequests[i].requestedDatetime.split(" ")[0].split("-");
+            var d11 = inboxResponse.serviceRequests[i].requestedDatetime.split(" ")[1].split(":");
+            inboxResponse.serviceRequests[i].clientTime = new Date(d1[2], d1[1]-1, d1[0], d11[0], d11[1], d11[2]).getTime();
+          }
+
+          inboxResponse.serviceRequests.sort(function(s1, s2) {
+              var d1 = s1.requestedDatetime.split(" ")[0].split("-");
+              var d11 = s1.requestedDatetime.split(" ")[1].split(":");
+              var d2 = s2.requestedDatetime.split(" ")[0].split("-");
+              var d22 = s2.requestedDatetime.split(" ")[1].split(":");
+              if(new Date(d1[2], d1[1]-1, d1[0], d11[0], d11[1], d11[2]).getTime() < new Date(d2[2], d2[1]-1, d2[0], d22[0], d22[1], d22[2]).getTime()) {
+                return 1;
+              } else if(new Date(d1[2], d1[1]-1, d1[0], d11[0], d11[1], d11[2]).getTime() > new Date(d2[2], d2[1]-1, d2[0], d22[0], d22[1], d22[2]).getTime()) {
+                return -1;
+              }
+              return 0;
+          });
+
+          checkCountAndSetState("serviceRequests", inboxResponse.serviceRequests);
+          checkCountAndSetState("localArray", inboxResponse.serviceRequests);
+        } else {
+          checkCountAndSetState("serviceRequests", []);
+          checkCountAndSetState("localArray", []);
+        }
+
+      }, function(err) {
+          checkCountAndSetState("serviceRequests", []);
+          checkCountAndSetState("localArray", []);
+      })
+
+      Api.commonApiPost("/pgr-master/serviceGroup/v1/_search",{keywords:constants.CITIZEN_SERVICES_KEYWORD},{}).then(function(res2){
+        let citizenServices = res2 && res2.ServiceGroups ? res2.ServiceGroups : [];
+        checkCountAndSetState("citizenServices", citizenServices);
+      }, function(err) {
+        checkCountAndSetState("citizenServices", []);
+      })
+
+      Api.commonApiPost("/citizen-services/v1/requests/_search", {userId:currentUser.id}, {}, null, true).then(function(res3){
+        if(res3 && res3.serviceReq && res3.serviceReq) {
+          checkCountAndSetState("serviceRequestsTwo", res3.serviceReq);
+        } else {
+          checkCountAndSetState("serviceRequestsTwo", []);
+        }
+      }, function(err) {
+        checkCountAndSetState("serviceRequestsTwo", []);
+      })
+
+      /*Promise.all([
           Api.commonApiPost("/pgr/seva/v1/_search",{userId:currentUser.id},{}),
           Api.commonApiPost("/pgr-master/serviceGroup/v1/_search",{keywords:constants.CITIZEN_SERVICES_KEYWORD},{}),
           Api.commonApiPost("/citizen-services/v1/requests/_search", {userId:currentUser.id}, {}, null, true)
@@ -311,7 +375,7 @@ class Dashboard extends Component {
       }).catch(function(err){
          current.props.setLoadingStatus("hide");
          console.log('error', err);
-      });
+      });*/
 
     } else {
       Api.commonApiPost("/hr-employee/employees/_search", {id: currentUser.id}, {}).then(function(res) {

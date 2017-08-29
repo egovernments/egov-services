@@ -330,6 +330,8 @@ public class WcmsConnectionConstants {
     public static final String CONNECTIONSTATUSACTIVE="ACTIVE";
     public static final String CONNECTIONSTATUSINPROGRESS="INPROGRESS";
     public static final String CONNECTIONSTATUSCREAED="CREATED";
+    
+    public static final String WORKFLOW_REQUIRED_CONFIG_KEY="WORKFLOW_REQUIRED_OR_NOT";
 
 
     

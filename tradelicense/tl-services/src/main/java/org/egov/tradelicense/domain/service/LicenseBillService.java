@@ -65,10 +65,13 @@ import org.springframework.web.client.RestTemplate;;
 public class LicenseBillService {
 
     @Autowired
-    PropertiesManager propertiesManager;
+    private PropertiesManager propertiesManager;
     
     @Autowired
     private FinancialYearService financialYearService;
+    
+    @Autowired
+    private RestTemplate restTemplate;
     
     public DemandResponse createBill(final TradeLicenseRequest tradeLicenseRequest) {
 
@@ -132,6 +135,6 @@ public class LicenseBillService {
         final String url = propertiesManager.getBillingServiceHostName() +
                 propertiesManager.getBillingServiceCreatedBill();
 
-        return new RestTemplate().postForObject(url, demandRequest, DemandResponse.class);
+        return restTemplate.postForObject(url, demandRequest, DemandResponse.class);
     }
 }

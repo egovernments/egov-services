@@ -226,8 +226,8 @@ public class TradeLicenseService {
 	}
 
 	@Transactional
-	public TradeLicense update(TradeLicense tradeLicense) {
-		return tradeLicenseRepository.update(tradeLicense);
+	public TradeLicense update(TradeLicense tradeLicense, RequestInfo requestInfo) {
+		return tradeLicenseRepository.update(tradeLicense, requestInfo);
 	}
 
 	public TradeLicenseSearchResponse getTradeLicense(RequestInfo requestInfo, String tenantId, Integer pageSize,

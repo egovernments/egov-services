@@ -57,13 +57,13 @@ import lombok.ToString;
 @ToString
 @Builder
 
-public class LicenseBill {
+public class LicenseApplicationBill {
 
     @NotNull
     private long id;
 
     @NotNull
-    private long licenseId;
+    private long applicationId;
 
 
     private String billId;

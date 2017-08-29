@@ -75,7 +75,7 @@ public class TradeLicenseListener {
 			ModelMapper mapper = new ModelMapper();
 			for (TradeLicenseContract tradeLicenseContract : request.getLicenses()) {
 				TradeLicense domain = mapper.map(tradeLicenseContract, TradeLicense.class);
-				tradeLicenseService.update(domain);
+				tradeLicenseService.update(domain, request.getRequestInfo());
 			}
 			mastersMap.clear();
 			mastersMap.put("tradelicense-persisted", request);
@@ -89,7 +89,7 @@ public class TradeLicenseListener {
 			ModelMapper mapper = new ModelMapper();
 			for (TradeLicenseContract tradeLicenseContract : request.getLicenses()) {
 				TradeLicense domain = mapper.map(tradeLicenseContract, TradeLicense.class);
-				tradeLicenseService.update(domain);
+				tradeLicenseService.update(domain, request.getRequestInfo());
 			}
 			mastersMap.clear();
 			mastersMap.put("tradelicense-persisted", request);

@@ -52,7 +52,7 @@ public class LicenseBillQueryBuilder {
     public static String insertLicenseBill() {
 
         return "INSERT INTO egtl_tradelicense_bill("
-                + "id,licenseid,billid,"
+                + "id,applicationid,billid,"
                 + "tenantid,createdby,createdtime,lastmodifiedby,lastmodifiedtime)"
                 + " values(nextval('seq_egtl_tradelicense_bill'),?,?,?,?,?,?,?)";
     }

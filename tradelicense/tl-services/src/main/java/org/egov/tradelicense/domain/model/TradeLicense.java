@@ -165,7 +165,7 @@ public class TradeLicense {
 	private List<SupportDocument> supportDocuments;
 	
 	@JsonProperty("licenseDemands")
-	private List<LicenseBill> licenseBills;
+	private List<LicenseApplicationBill> applicationLicenseBills;
 
 	@JsonProperty("status")
 	private Long status;

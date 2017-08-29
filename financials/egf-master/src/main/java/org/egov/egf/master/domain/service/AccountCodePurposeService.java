@@ -1,5 +1,6 @@
 package org.egov.egf.master.domain.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.constants.Constants;
@@ -7,7 +8,6 @@ import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.AccountCodePurpose;
 import org.egov.egf.master.domain.model.AccountCodePurposeSearch;
-import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.repository.AccountCodePurposeRepository;
 import org.egov.egf.master.web.requests.AccountCodePurposeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +49,12 @@ public class AccountCodePurposeService {
 					validator.validate(accountCodePurpose, errors);
 				}
 				break;
+                        case Constants.ACTION_SEARCH:
+                            Assert.notNull(accountcodepurposes, "Accountcodepurposes to search must not be null");
+                            for (AccountCodePurpose accountcodepurpose : accountcodepurposes) {
+                                    Assert.notNull(accountcodepurpose.getTenantId(), "TenantID must not be null for search");
+                            }
+                                break;                              
 			default:
 
 			}
@@ -95,10 +101,25 @@ public class AccountCodePurposeService {
 		accountCodePurposeRepository.add(request);
 	}
 
-	public Pagination<AccountCodePurpose> search(AccountCodePurposeSearch accountCodePurposeSearch) {
-	        Assert.notNull(accountCodePurposeSearch.getTenantId(), "tenantId is mandatory for accountCodePurpose search");
-		return accountCodePurposeRepository.search(accountCodePurposeSearch);
-	}
+        public Pagination<AccountCodePurpose> search(AccountCodePurposeSearch accountCodePurposeSearch, BindingResult errors) {
+            
+            try {
+                
+                List<AccountCodePurpose> accountCodePurposes = new ArrayList<>();
+                accountCodePurposes.add(accountCodePurposeSearch);
+                validate(accountCodePurposes, Constants.ACTION_SEARCH, errors);
+    
+                if (errors.hasErrors()) {
+                    throw new CustomBindException(errors);
+                }
+            
+            } catch (CustomBindException e) {
+    
+                throw new CustomBindException(errors);
+            }
+    
+            return accountCodePurposeRepository.search(accountCodePurposeSearch);
+        }
 
 	@Transactional
 	public AccountCodePurpose save(AccountCodePurpose accountCodePurpose) {

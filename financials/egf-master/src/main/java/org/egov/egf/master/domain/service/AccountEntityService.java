@@ -1,5 +1,6 @@
 package org.egov.egf.master.domain.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.constants.Constants;
@@ -9,7 +10,6 @@ import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.AccountDetailType;
 import org.egov.egf.master.domain.model.AccountEntity;
 import org.egov.egf.master.domain.model.AccountEntitySearch;
-import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.repository.AccountDetailTypeRepository;
 import org.egov.egf.master.domain.repository.AccountEntityRepository;
 import org.egov.egf.master.web.requests.AccountEntityRequest;
@@ -54,6 +54,12 @@ public class AccountEntityService {
 					validator.validate(accountEntity, errors);
 				}
 				break;
+                        case Constants.ACTION_SEARCH:
+                                Assert.notNull(accountentities, "Accountentities to search must not be null");
+                                for (AccountEntity accountEntity : accountentities) {
+                                        Assert.notNull(accountEntity.getTenantId(), "TenantID must not be null for search");
+                                }
+                                break;
 			default:
 
 			}
@@ -109,10 +115,25 @@ public class AccountEntityService {
 		accountEntityRepository.add(request);
 	}
 
-	public Pagination<AccountEntity> search(AccountEntitySearch accountEntitySearch) {
-	        Assert.notNull(accountEntitySearch.getTenantId(), "tenantId is mandatory for accountEntity search");
-		return accountEntityRepository.search(accountEntitySearch);
-	}
+        public Pagination<AccountEntity> search(AccountEntitySearch accountEntitySearch, BindingResult errors) {
+            
+            try {
+                
+                List<AccountEntity> accountentities = new ArrayList<>();
+                accountentities.add(accountEntitySearch);
+                validate(accountentities, Constants.ACTION_SEARCH, errors);
+    
+                if (errors.hasErrors()) {
+                    throw new CustomBindException(errors);
+                }
+            
+            } catch (CustomBindException e) {
+    
+                throw new CustomBindException(errors);
+            }
+    
+            return accountEntityRepository.search(accountEntitySearch);
+        }
 
 	@Transactional
 	public AccountEntity save(AccountEntity accountEntity) {

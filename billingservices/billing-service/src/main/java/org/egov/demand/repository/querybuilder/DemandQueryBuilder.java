@@ -81,7 +81,7 @@ public class DemandQueryBuilder {
 					+ "INNER JOIN egbs_demand demand ON demanddetail.demandid=demand.id AND "
 					+ "demanddetail.tenantid=demand.tenantid WHERE ";
 
-	public static final String DEMAND_QUERY_ORDER_BY_CLAUSE = "demand.id";
+	public static final String DEMAND_QUERY_ORDER_BY_CLAUSE = "demand.taxperiodfrom";
 
 	public static final String BASE_DEMAND_DETAIL_QUERY_ORDER_BY_CLAUSE = "demanddetail.id";
 

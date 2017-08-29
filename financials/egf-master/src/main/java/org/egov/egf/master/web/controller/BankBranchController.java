@@ -126,7 +126,7 @@ public class BankBranchController {
 		BankBranchContract contract;
 		ModelMapper model = new ModelMapper();
 		List<BankBranchContract> bankBranchContracts = new ArrayList<>();
-		Pagination<BankBranch> bankbranches = bankBranchService.search(domain);
+		Pagination<BankBranch> bankbranches = bankBranchService.search(domain, errors);
 
 		for (BankBranch bankBranch : bankbranches.getPagedData()) {
 			contract = new BankBranchContract();

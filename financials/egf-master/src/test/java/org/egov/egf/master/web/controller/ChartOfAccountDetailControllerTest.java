@@ -97,7 +97,7 @@ public class ChartOfAccountDetailControllerTest {
 
 	@Test
 	public void testSearch() throws IOException, Exception {
-		when(chartOfAccountDetailService.search(any(ChartOfAccountDetailSearch.class)))
+		when(chartOfAccountDetailService.search(any(ChartOfAccountDetailSearch.class), any(BindingResult.class)))
 		.thenReturn((getPagination()));
 		
 		mockMvc.perform(

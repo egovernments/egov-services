@@ -577,7 +577,7 @@ ReportDefinitions:
           and demand.consumercode=prop.upicnumber
           and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service = 'PT' and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid)
   groupBy: group by upicnumber,propertyaddress,state) 
-  orderBy: )result order by upicnumber asc,state desc;
+  orderBy: )result order by upicnumber asc,state desc limit 20;
   
 - reportName: AssessmentRegister
   summary:  Assessment Register Report

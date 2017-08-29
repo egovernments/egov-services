@@ -1,12 +1,12 @@
 package org.egov.egf.master.domain.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.model.Scheme;
 import org.egov.egf.master.domain.model.SubScheme;
 import org.egov.egf.master.domain.model.SubSchemeSearch;
@@ -54,6 +54,12 @@ public class SubSchemeService {
 					validator.validate(subScheme, errors);
 				}
 				break;
+                        case Constants.ACTION_SEARCH:
+                                Assert.notNull(subschemes, "subschemes to search must not be null");
+                                for (SubScheme subscheme : subschemes) {
+                                        Assert.notNull(subscheme.getTenantId(), "TenantID must not be null for search");
+                                }
+                                break;
 			default:
 
 			}
@@ -107,10 +113,25 @@ public class SubSchemeService {
 		subSchemeRepository.add(request);
 	}
 
-	public Pagination<SubScheme> search(SubSchemeSearch subSchemeSearch) {
-	        Assert.notNull(subSchemeSearch.getTenantId(), "tenantId is mandatory for subScheme search");
-		return subSchemeRepository.search(subSchemeSearch);
-	}
+        public Pagination<SubScheme> search(SubSchemeSearch subSchemeSearch, BindingResult errors) {
+            
+            try {
+                
+                List<SubScheme> subSchemes = new ArrayList<>();
+                subSchemes.add(subSchemeSearch);
+                validate(subSchemes, Constants.ACTION_SEARCH, errors);
+    
+                if (errors.hasErrors()) {
+                    throw new CustomBindException(errors);
+                }
+            
+            } catch (CustomBindException e) {
+    
+                throw new CustomBindException(errors);
+            }
+    
+            return subSchemeRepository.search(subSchemeSearch);
+        }
 
 	@Transactional
 	public SubScheme save(SubScheme subScheme) {

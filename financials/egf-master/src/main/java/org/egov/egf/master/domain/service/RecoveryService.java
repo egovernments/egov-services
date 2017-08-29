@@ -1,5 +1,8 @@
 package org.egov.egf.master.domain.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.egov.common.constants.Constants;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.exception.CustomBindException;
@@ -18,8 +21,6 @@ import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.SmartValidator;
-
-import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -105,6 +106,12 @@ public class RecoveryService {
                         validator.validate(recovery, errors);
                     }
                     break;
+                case Constants.ACTION_SEARCH:
+                    Assert.notNull(recoveries, "Recoveries to search must not be null");
+                    for (Recovery recovery : recoveries) {
+                            Assert.notNull(recovery.getTenantId(), "TenantID must not be null for search");
+                    }
+                    break;
                 default:
 
             }
@@ -134,8 +141,23 @@ public class RecoveryService {
 
     }
 
-    public Pagination<Recovery> search(RecoverySearch recoverySearch) {
-        Assert.notNull(recoverySearch.getTenantId(), "tenantId is mandatory for recovery search");
+    public Pagination<Recovery> search(RecoverySearch recoverySearch, BindingResult errors) {
+        
+        try {
+            
+            List<Recovery> recoveries = new ArrayList<>();
+            recoveries.add(recoverySearch);
+            validate(recoveries, Constants.ACTION_SEARCH, errors);
+
+            if (errors.hasErrors()) {
+                throw new CustomBindException(errors);
+            }
+        
+        } catch (CustomBindException e) {
+
+            throw new CustomBindException(errors);
+        }
+
         return recoveryRepository.search(recoverySearch);
     }
 

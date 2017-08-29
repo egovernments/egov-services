@@ -126,7 +126,7 @@ public class BankController {
 		BankContract contract;
 		ModelMapper model = new ModelMapper();
 		List<BankContract> bankContracts = new ArrayList<>();
-		Pagination<Bank> banks = bankService.search(domain);
+		Pagination<Bank> banks = bankService.search(domain, errors);
 
 		for (Bank bank : banks.getPagedData()) {
 			contract = new BankContract();

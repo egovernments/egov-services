@@ -1,11 +1,11 @@
 package org.egov.egf.master.domain.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.model.Functionary;
 import org.egov.egf.master.domain.model.FunctionarySearch;
 import org.egov.egf.master.domain.repository.FunctionaryRepository;
@@ -49,6 +49,12 @@ public class FunctionaryService {
 					validator.validate(functionary, errors);
 				}
 				break;
+                        case Constants.ACTION_SEARCH:
+                                Assert.notNull(functionaries, "Functionaries to search must not be null");
+                                for (Functionary functionary : functionaries) {
+                                        Assert.notNull(functionary.getTenantId(), "TenantID must not be null for search");
+                                }
+                                break;
 			default:
 
 			}
@@ -95,10 +101,25 @@ public class FunctionaryService {
 		functionaryRepository.add(request);
 	}
 
-	public Pagination<Functionary> search(FunctionarySearch functionarySearch) {
-	        Assert.notNull(functionarySearch.getTenantId(), "tenantId is mandatory for functionary search");
-		return functionaryRepository.search(functionarySearch);
-	}
+        public Pagination<Functionary> search(FunctionarySearch functionarySearch, BindingResult errors) {
+            
+            try {
+                
+                List<Functionary> functionaries = new ArrayList<>();
+                functionaries.add(functionarySearch);
+                validate(functionaries, Constants.ACTION_SEARCH, errors);
+    
+                if (errors.hasErrors()) {
+                    throw new CustomBindException(errors);
+                }
+            
+            } catch (CustomBindException e) {
+    
+                throw new CustomBindException(errors);
+            }
+    
+            return functionaryRepository.search(functionarySearch);
+        }
 
 	@Transactional
 	public Functionary save(Functionary functionary) {

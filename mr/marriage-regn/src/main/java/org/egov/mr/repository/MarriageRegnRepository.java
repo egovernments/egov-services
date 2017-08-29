@@ -96,7 +96,7 @@ public class MarriageRegnRepository {
 				marriageRegn.getAuditDetails().getCreatedBy(), marriageRegn.getAuditDetails().getCreatedTime(),
 				marriageRegn.getAuditDetails().getLastModifiedBy(),
 				marriageRegn.getAuditDetails().getLastModifiedTime(), marriageRegn.getTenantId(),
-				marriageRegn.getFee().getId(), "10" };
+				marriageRegn.getFee().getId(), marriageRegn.getDemands().get(0).getId()};
 		System.err.println("INSERT_MARRIAGE_REGN_QUERY" + INSERT_MARRIAGE_REGN_QUERY);
 		jdbcTemplate.update(INSERT_MARRIAGE_REGN_QUERY, obj);
 
@@ -133,7 +133,7 @@ public class MarriageRegnRepository {
 				marriageRegn.getAuditDetails().getCreatedBy(), marriageRegn.getAuditDetails().getCreatedTime(),
 				marriageRegn.getAuditDetails().getLastModifiedBy(),
 				marriageRegn.getAuditDetails().getLastModifiedTime(), marriageRegn.getTenantId(),
-				marriageRegn.getFee().getId(), "10" };
+				marriageRegn.getFee().getId(), marriageRegn.getDemands().get(0).getId()};
 		jdbcTemplate.update(UPDATE_MARRIAGE_REGN_QUERY, obj);
 
 		if (marriageRegn.getWitnesses() != null)

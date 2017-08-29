@@ -130,7 +130,7 @@ public class SchemeController {
 		SchemeContract contract;
 		ModelMapper model = new ModelMapper();
 		List<SchemeContract> schemeContracts = new ArrayList<>();
-		Pagination<Scheme> schemes = schemeService.search(domain);
+		Pagination<Scheme> schemes = schemeService.search(domain, errors);
 
 		for (Scheme scheme : schemes.getPagedData()) {
 			contract = new SchemeContract();

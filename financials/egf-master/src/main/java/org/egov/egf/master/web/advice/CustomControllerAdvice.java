@@ -38,7 +38,7 @@ public class CustomControllerAdvice {
 		errRes.setResponseInfo(responseInfo);
 		Error error = new Error();
 		if (errors.getGlobalError() != null) {
-			error.setCode(Integer.valueOf(errors.getGlobalError().getCode()));
+			error.setCode(errors.getGlobalError().getCode()!=null ? Integer.valueOf(errors.getGlobalError().getCode()):0);
 			error.setMessage(errors.getGlobalError().getObjectName());
 			error.setDescription(errors.getGlobalError().getDefaultMessage());
 		} else {

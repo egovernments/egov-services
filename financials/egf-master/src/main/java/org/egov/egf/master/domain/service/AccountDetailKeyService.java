@@ -1,5 +1,6 @@
 package org.egov.egf.master.domain.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.constants.Constants;
@@ -9,7 +10,6 @@ import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.AccountDetailKey;
 import org.egov.egf.master.domain.model.AccountDetailKeySearch;
 import org.egov.egf.master.domain.model.AccountDetailType;
-import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.repository.AccountDetailKeyRepository;
 import org.egov.egf.master.domain.repository.AccountDetailTypeRepository;
 import org.egov.egf.master.web.requests.AccountDetailKeyRequest;
@@ -54,6 +54,12 @@ public class AccountDetailKeyService {
 					validator.validate(accountDetailKey, errors);
 				}
 				break;
+                        case Constants.ACTION_SEARCH:
+                                Assert.notNull(accountdetailkeys, "Accountdetailkeys to search must not be null");
+                                for (AccountDetailKey accountdetailkey : accountdetailkeys) {
+                                        Assert.notNull(accountdetailkey.getTenantId(), "TenantID must not be null for search");
+                                }
+                                break;
 			default:
 
 			}
@@ -109,10 +115,25 @@ public class AccountDetailKeyService {
 		accountDetailKeyRepository.add(request);
 	}
 
-	public Pagination<AccountDetailKey> search(AccountDetailKeySearch accountDetailKeySearch) {
-	        Assert.notNull(accountDetailKeySearch.getTenantId(), "tenantId is mandatory for accountDetailKey search");
-		return accountDetailKeyRepository.search(accountDetailKeySearch);
-	}
+        public Pagination<AccountDetailKey> search(AccountDetailKeySearch accountDetailKeySearch, BindingResult errors) {
+            
+            try {
+                
+                List<AccountDetailKey> accountDetailKeys = new ArrayList<>();
+                accountDetailKeys.add(accountDetailKeySearch);
+                validate(accountDetailKeys, Constants.ACTION_SEARCH, errors);
+    
+                if (errors.hasErrors()) {
+                    throw new CustomBindException(errors);
+                }
+            
+            } catch (CustomBindException e) {
+    
+                throw new CustomBindException(errors);
+            }
+    
+            return accountDetailKeyRepository.search(accountDetailKeySearch);
+        }
 
 	@Transactional
 	public AccountDetailKey save(AccountDetailKey accountDetailKey) {

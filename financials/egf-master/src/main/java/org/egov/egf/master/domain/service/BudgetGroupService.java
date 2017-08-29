@@ -1,12 +1,12 @@
 package org.egov.egf.master.domain.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.model.BudgetGroup;
 import org.egov.egf.master.domain.model.BudgetGroupSearch;
 import org.egov.egf.master.domain.model.ChartOfAccount;
@@ -54,6 +54,12 @@ public class BudgetGroupService {
 					validator.validate(budgetGroup, errors);
 				}
 				break;
+                        case Constants.ACTION_SEARCH:
+                                Assert.notNull(budgetgroups, "Budgetgroups to search must not be null");
+                                for (BudgetGroup budgetgroup : budgetgroups) {
+                                        Assert.notNull(budgetgroup.getTenantId(), "TenantID must not be null for search");
+                                }
+                                break;
 			default:
 
 			}
@@ -121,10 +127,25 @@ public class BudgetGroupService {
 		budgetGroupRepository.add(request);
 	}
 
-	public Pagination<BudgetGroup> search(BudgetGroupSearch budgetGroupSearch) {
-	        Assert.notNull(budgetGroupSearch.getTenantId(), "tenantId is mandatory for budgetGroup search");
-		return budgetGroupRepository.search(budgetGroupSearch);
-	}
+        public Pagination<BudgetGroup> search(BudgetGroupSearch budgetGroupSearch, BindingResult errors) {
+            
+            try {
+                
+                List<BudgetGroup> budgetGroups = new ArrayList<>();
+                budgetGroups.add(budgetGroupSearch);
+                validate(budgetGroups, Constants.ACTION_SEARCH, errors);
+    
+                if (errors.hasErrors()) {
+                    throw new CustomBindException(errors);
+                }
+            
+            } catch (CustomBindException e) {
+    
+                throw new CustomBindException(errors);
+            }
+    
+            return budgetGroupRepository.search(budgetGroupSearch);
+        }
 
 	@Transactional
 	public BudgetGroup save(BudgetGroup budgetGroup) {

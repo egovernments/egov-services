@@ -548,7 +548,7 @@ public class PropertyServiceImpl implements PropertyService {
 		String tenantId = specialNoticeRequest.getTenantId();
 
 		PropertyResponse propertyRespone = searchProperty(specialNoticeRequest.getRequestInfo(), tenantId, null, upicNo,
-				10000, -1, null, null, null, null, null, 0, 0, 0, null, 0, 0, null, null);
+				null, null, null, null, null, null, null, 0, 0, 0, null, 0, 0, null, null);
 
 		Property property = propertyRespone.getProperties().get(0);
 		notice.setUpicNo(specialNoticeRequest.getUpicNo());

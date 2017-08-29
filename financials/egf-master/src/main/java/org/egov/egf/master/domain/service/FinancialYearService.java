@@ -1,11 +1,11 @@
 package org.egov.egf.master.domain.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.model.FinancialYear;
 import org.egov.egf.master.domain.model.FinancialYearSearch;
 import org.egov.egf.master.domain.repository.FinancialYearRepository;
@@ -49,6 +49,12 @@ public class FinancialYearService {
 					validator.validate(financialYear, errors);
 				}
 				break;
+                        case Constants.ACTION_SEARCH:
+                                Assert.notNull(financialyears, "Financialyears to search must not be null");
+                                for (FinancialYear financialyear : financialyears) {
+                                        Assert.notNull(financialyear.getTenantId(), "TenantID must not be null for search");
+                                }
+                                break;
 			default:
 
 			}
@@ -94,10 +100,25 @@ public class FinancialYearService {
 		financialYearRepository.add(request);
 	}
 
-	public Pagination<FinancialYear> search(FinancialYearSearch financialYearSearch) {
-	        Assert.notNull(financialYearSearch.getTenantId(), "tenantId is mandatory for financialYear search");
-		return financialYearRepository.search(financialYearSearch);
-	}
+        public Pagination<FinancialYear> search(FinancialYearSearch financialYearSearch, BindingResult errors) {
+            
+            try {
+                
+                List<FinancialYear> financialYears = new ArrayList<>();
+                financialYears.add(financialYearSearch);
+                validate(financialYears, Constants.ACTION_SEARCH, errors);
+    
+                if (errors.hasErrors()) {
+                    throw new CustomBindException(errors);
+                }
+            
+            } catch (CustomBindException e) {
+    
+                throw new CustomBindException(errors);
+            }
+    
+            return financialYearRepository.search(financialYearSearch);
+        }
 
 	@Transactional
 	public FinancialYear save(FinancialYear financialYear) {

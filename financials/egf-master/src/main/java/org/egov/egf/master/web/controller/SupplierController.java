@@ -130,7 +130,7 @@ public class SupplierController {
 		SupplierContract contract;
 		ModelMapper model = new ModelMapper();
 		List<SupplierContract> supplierContracts = new ArrayList<>();
-		Pagination<Supplier> suppliers = supplierService.search(domain);
+		Pagination<Supplier> suppliers = supplierService.search(domain, errors);
 
 		for (Supplier supplier : suppliers.getPagedData()) {
 			contract = new SupplierContract();

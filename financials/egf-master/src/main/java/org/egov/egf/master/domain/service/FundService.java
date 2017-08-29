@@ -1,5 +1,6 @@
 package org.egov.egf.master.domain.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.constants.Constants;
@@ -99,6 +100,12 @@ public class FundService {
 					validator.validate(fund, errors);
 				}
 				break;
+                        case Constants.ACTION_SEARCH:
+                            Assert.notNull(funds, "Funds to search must not be null");
+                            for (Fund fund : funds) {
+                                    Assert.notNull(fund.getTenantId(), "TenantID must not be null for search");
+                            }
+                            break;				
 			default:
 
 			}
@@ -127,10 +134,25 @@ public class FundService {
 		return funds;
 	}
 
-	public Pagination<Fund> search(FundSearch fundSearch) {
-	        Assert.notNull(fundSearch.getTenantId(), "tenantId is mandatory for fund search");
-		return fundRepository.search(fundSearch);
-	}
+        public Pagination<Fund> search(FundSearch fundSearch, BindingResult errors) {
+            
+            try {
+                
+                List<Fund> funds = new ArrayList<>();
+                funds.add(fundSearch);
+                validate(funds, Constants.ACTION_SEARCH, errors);
+    
+                if (errors.hasErrors()) {
+                    throw new CustomBindException(errors);
+                }
+            
+            } catch (CustomBindException e) {
+    
+                throw new CustomBindException(errors);
+            }
+    
+            return fundRepository.search(fundSearch);
+        }
 
 	@Transactional
 	public Fund save(Fund fund) {

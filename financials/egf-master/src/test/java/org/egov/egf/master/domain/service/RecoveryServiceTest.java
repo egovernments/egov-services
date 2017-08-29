@@ -84,7 +84,7 @@ public class RecoveryServiceTest {
         Pagination<Recovery> expectedResult = new Pagination<>();
         expectedResult.setPagedData(search);
         when(recoveryRepository.search(any(RecoverySearch.class))).thenReturn(expectedResult);
-        Pagination<Recovery> actualResult = recoveryService.search(getRecoverySearch());
+        Pagination<Recovery> actualResult = recoveryService.search(getRecoverySearch(), errors);
         assertEquals(expectedResult, actualResult);
 
     }

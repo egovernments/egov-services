@@ -1,5 +1,6 @@
 package org.egov.egf.master.domain.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.constants.Constants;
@@ -53,6 +54,12 @@ public class FinancialConfigurationService {
 					validator.validate(financialConfiguration, errors);
 				}
 				break;
+                        case Constants.ACTION_SEARCH:
+                                Assert.notNull(financialconfigurations, "Financialconfigurations to search must not be null");
+                                for (FinancialConfiguration financialconfiguration : financialconfigurations) {
+                                        Assert.notNull(financialconfiguration.getTenantId(), "TenantID must not be null for search");
+                                }
+                                break;
 			default:
 
 			}
@@ -100,10 +107,25 @@ public class FinancialConfigurationService {
 		financialConfigurationRepository.add(request);
 	}
 
-	public Pagination<FinancialConfiguration> search(FinancialConfigurationSearch financialConfigurationSearch) {
-	        Assert.notNull(financialConfigurationSearch.getTenantId(), "tenantId is mandatory for financialConfiguration search");
-		return financialConfigurationRepository.search(financialConfigurationSearch);
-	}
+        public Pagination<FinancialConfiguration> search(FinancialConfigurationSearch financialConfigurationSearch, BindingResult errors) {
+            
+            try {
+                
+                List<FinancialConfiguration> financialConfigurations = new ArrayList<>();
+                financialConfigurations.add(financialConfigurationSearch);
+                validate(financialConfigurations, Constants.ACTION_SEARCH, errors);
+    
+                if (errors.hasErrors()) {
+                    throw new CustomBindException(errors);
+                }
+            
+            } catch (CustomBindException e) {
+    
+                throw new CustomBindException(errors);
+            }
+    
+            return financialConfigurationRepository.search(financialConfigurationSearch);
+        }
 
 	@Transactional
 	public FinancialConfiguration save(FinancialConfiguration financialConfiguration) {

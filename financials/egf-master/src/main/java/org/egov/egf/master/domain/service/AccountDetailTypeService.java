@@ -1,5 +1,6 @@
 package org.egov.egf.master.domain.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.constants.Constants;
@@ -7,7 +8,6 @@ import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.AccountDetailType;
 import org.egov.egf.master.domain.model.AccountDetailTypeSearch;
-import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.repository.AccountDetailTypeRepository;
 import org.egov.egf.master.web.requests.AccountDetailTypeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +49,12 @@ public class AccountDetailTypeService {
 					validator.validate(accountDetailType, errors);
 				}
 				break;
+                        case Constants.ACTION_SEARCH:
+                                Assert.notNull(accountdetailtypes, "Accountdetailtypes to search must not be null");
+                                for (AccountDetailType accountdetailtype : accountdetailtypes) {
+                                        Assert.notNull(accountdetailtype.getTenantId(), "TenantID must not be null for search");
+                                }
+                                break;
 			default:
 
 			}
@@ -95,10 +101,25 @@ public class AccountDetailTypeService {
 		accountDetailTypeRepository.add(request);
 	}
 
-	public Pagination<AccountDetailType> search(AccountDetailTypeSearch accountDetailTypeSearch) {
-	        Assert.notNull(accountDetailTypeSearch.getTenantId(), "tenantId is mandatory for accountDetailType search");
-		return accountDetailTypeRepository.search(accountDetailTypeSearch);
-	}
+        public Pagination<AccountDetailType> search(AccountDetailTypeSearch accountDetailTypeSearch, BindingResult errors) {
+            
+            try {
+                
+                List<AccountDetailType> accountDetailTypes = new ArrayList<>();
+                accountDetailTypes.add(accountDetailTypeSearch);
+                validate(accountDetailTypes, Constants.ACTION_SEARCH, errors);
+    
+                if (errors.hasErrors()) {
+                    throw new CustomBindException(errors);
+                }
+            
+            } catch (CustomBindException e) {
+    
+                throw new CustomBindException(errors);
+            }
+    
+            return accountDetailTypeRepository.search(accountDetailTypeSearch);
+        }
 
 	@Transactional
 	public AccountDetailType save(AccountDetailType accountDetailType) {

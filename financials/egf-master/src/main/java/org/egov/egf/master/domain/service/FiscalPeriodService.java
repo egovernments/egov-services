@@ -1,12 +1,12 @@
 package org.egov.egf.master.domain.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.model.FinancialYear;
 import org.egov.egf.master.domain.model.FiscalPeriod;
 import org.egov.egf.master.domain.model.FiscalPeriodSearch;
@@ -54,6 +54,12 @@ public class FiscalPeriodService {
 					validator.validate(fiscalPeriod, errors);
 				}
 				break;
+                        case Constants.ACTION_SEARCH:
+                                Assert.notNull(fiscalperiods, "Fiscalperiods to search must not be null");
+                                for (FiscalPeriod fiscalperiod : fiscalperiods) {
+                                        Assert.notNull(fiscalperiod.getTenantId(), "TenantID must not be null for search");
+                                }
+                                break;
 			default:
 
 			}
@@ -107,10 +113,25 @@ public class FiscalPeriodService {
 		fiscalPeriodRepository.add(request);
 	}
 
-	public Pagination<FiscalPeriod> search(FiscalPeriodSearch fiscalPeriodSearch) {
-	        Assert.notNull(fiscalPeriodSearch.getTenantId(), "tenantId is mandatory for fiscalPeriod search");
-		return fiscalPeriodRepository.search(fiscalPeriodSearch);
-	}
+        public Pagination<FiscalPeriod> search(FiscalPeriodSearch fiscalPeriodSearch, BindingResult errors) {
+            
+            try {
+                
+                List<FiscalPeriod> fiscalPeriods = new ArrayList<>();
+                fiscalPeriods.add(fiscalPeriodSearch);
+                validate(fiscalPeriods, Constants.ACTION_SEARCH, errors);
+    
+                if (errors.hasErrors()) {
+                    throw new CustomBindException(errors);
+                }
+            
+            } catch (CustomBindException e) {
+    
+                throw new CustomBindException(errors);
+            }
+    
+            return fiscalPeriodRepository.search(fiscalPeriodSearch);
+        }
 
 	@Transactional
 	public FiscalPeriod save(FiscalPeriod fiscalPeriod) {

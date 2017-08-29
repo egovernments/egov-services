@@ -108,7 +108,7 @@ public class FundControllerTest {
         page.setPagedData(getFunds());
         page.getPagedData().get(0).setId("1");
 
-        when(fundService.search(any(FundSearch.class))).thenReturn(page);
+        when(fundService.search(any(FundSearch.class), any(BindingResult.class))).thenReturn(page);
 
         mockMvc.perform(
                 post("/funds/_search").content(resources.getRequestInfo()).contentType(MediaType.APPLICATION_JSON_UTF8))

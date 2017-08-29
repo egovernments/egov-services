@@ -1,5 +1,6 @@
 package org.egov.egf.master.domain.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.constants.Constants;
@@ -100,6 +101,12 @@ public class FunctionService {
 					validator.validate(function, errors);
 				}
 				break;
+	                case Constants.ACTION_SEARCH:
+                                Assert.notNull(functions, "Functions to search must not be null");
+                                for (Function function : functions) {
+                                        Assert.notNull(function.getTenantId(), "TenantID must not be null for search");
+                                }
+                                break;
 			default:
 
 			}
@@ -128,10 +135,25 @@ public class FunctionService {
 		return functions;
 	}
 
-	public Pagination<Function> search(FunctionSearch functionSearch) {
-	        Assert.notNull(functionSearch.getTenantId(), "tenantId is mandatory for function search");
-		return functionRepository.search(functionSearch);
-	}
+        public Pagination<Function> search(FunctionSearch functionSearch, BindingResult errors) {
+            
+            try {
+                
+                List<Function> functions = new ArrayList<>();
+                functions.add(functionSearch);
+                validate(functions, Constants.ACTION_SEARCH, errors);
+    
+                if (errors.hasErrors()) {
+                    throw new CustomBindException(errors);
+                }
+            
+            } catch (CustomBindException e) {
+    
+                throw new CustomBindException(errors);
+            }
+    
+            return functionRepository.search(functionSearch);
+        }
 
 	@Transactional
 	public Function save(Function function) {

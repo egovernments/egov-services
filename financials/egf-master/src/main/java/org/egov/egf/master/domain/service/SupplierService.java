@@ -1,5 +1,6 @@
 package org.egov.egf.master.domain.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.constants.Constants;
@@ -57,6 +58,12 @@ public class SupplierService {
 					validator.validate(supplier, errors);
 				}
 				break;
+                        case Constants.ACTION_SEARCH:
+                                Assert.notNull(suppliers, "suppliers to search must not be null");
+                                for (Supplier supplier : suppliers) {
+                                        Assert.notNull(supplier.getTenantId(), "TenantID must not be null for search");
+                                }
+                                break;
 			default:
 
 			}
@@ -117,10 +124,25 @@ public class SupplierService {
 		supplierRepository.add(request);
 	}
 
-	public Pagination<Supplier> search(SupplierSearch supplierSearch) {
-	        Assert.notNull(supplierSearch.getTenantId(), "tenantId is mandatory for supplier search");
-		return supplierRepository.search(supplierSearch);
-	}
+        public Pagination<Supplier> search(SupplierSearch supplierSearch, BindingResult errors) {
+            
+            try {
+                
+                List<Supplier> suppliers = new ArrayList<>();
+                suppliers.add(supplierSearch);
+                validate(suppliers, Constants.ACTION_SEARCH, errors);
+    
+                if (errors.hasErrors()) {
+                    throw new CustomBindException(errors);
+                }
+            
+            } catch (CustomBindException e) {
+    
+                throw new CustomBindException(errors);
+            }
+    
+            return supplierRepository.search(supplierSearch);
+        }
 
 	@Transactional
 	public Supplier save(Supplier supplier) {

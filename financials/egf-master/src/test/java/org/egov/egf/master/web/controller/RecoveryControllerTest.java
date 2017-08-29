@@ -1,11 +1,20 @@
 package org.egov.egf.master.web.controller;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.utils.RequestJsonReader;
 import org.egov.egf.master.TestConfiguration;
 import org.egov.egf.master.domain.model.ChartOfAccount;
-import org.egov.egf.master.domain.model.Function;
 import org.egov.egf.master.domain.model.Recovery;
 import org.egov.egf.master.domain.model.RecoverySearch;
 import org.egov.egf.master.domain.service.RecoveryService;
@@ -21,18 +30,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.validation.BindingResult;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(RecoveryController.class)
@@ -94,7 +91,7 @@ public class RecoveryControllerTest {
         page.setPagedData(getRecoverys());
         page.getPagedData().get(0).setId("1");
 
-        when(recoveryService.search(any(RecoverySearch.class))).thenReturn(page);
+        when(recoveryService.search(any(RecoverySearch.class), any(BindingResult.class))).thenReturn(page);
 
         mockMvc.perform(
                 post("/recoverys/_search").content(resources.getRequestInfo()).contentType(MediaType.APPLICATION_JSON_UTF8))

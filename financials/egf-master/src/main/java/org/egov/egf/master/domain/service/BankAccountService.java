@@ -1,12 +1,12 @@
 package org.egov.egf.master.domain.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.model.BankAccount;
 import org.egov.egf.master.domain.model.BankAccountSearch;
 import org.egov.egf.master.domain.model.BankBranch;
@@ -62,6 +62,12 @@ public class BankAccountService {
 					validator.validate(bankAccount, errors);
 				}
 				break;
+			case Constants.ACTION_SEARCH:
+                                Assert.notNull(bankaccounts, "Bankaccounts to search must not be null");
+                                for (BankAccount bankaccount : bankaccounts) {
+                                        Assert.notNull(bankaccount.getTenantId(), "TenantID must not be null for search");
+                                }
+                                break;
 			default:
 
 			}
@@ -130,10 +136,25 @@ public class BankAccountService {
 		bankAccountRepository.add(request);
 	}
 
-	public Pagination<BankAccount> search(BankAccountSearch bankAccountSearch) {
-	        Assert.notNull(bankAccountSearch.getTenantId(), "tenantId is mandatory for bankAccount search");
-		return bankAccountRepository.search(bankAccountSearch);
-	}
+        public Pagination<BankAccount> search(BankAccountSearch bankAccountSearch, BindingResult errors) {
+            
+            try {
+                
+                List<BankAccount> bankAccounts = new ArrayList<>();
+                bankAccounts.add(bankAccountSearch);
+                validate(bankAccounts, Constants.ACTION_SEARCH, errors);
+    
+                if (errors.hasErrors()) {
+                    throw new CustomBindException(errors);
+                }
+            
+            } catch (CustomBindException e) {
+    
+                throw new CustomBindException(errors);
+            }
+    
+            return bankAccountRepository.search(bankAccountSearch);
+        }
 
 	@Transactional
 	public BankAccount save(BankAccount bankAccount) {

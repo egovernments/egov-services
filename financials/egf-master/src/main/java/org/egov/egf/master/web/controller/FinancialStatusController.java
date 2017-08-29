@@ -132,7 +132,7 @@ public class FinancialStatusController {
 		FinancialStatusContract contract;
 		ModelMapper model = new ModelMapper();
 		List<FinancialStatusContract> financialStatusContracts = new ArrayList<>();
-		Pagination<FinancialStatus> financialstatuses = financialStatusService.search(domain);
+		Pagination<FinancialStatus> financialstatuses = financialStatusService.search(domain, errors);
 
 		for (FinancialStatus financialStatus : financialstatuses.getPagedData()) {
 			contract = new FinancialStatusContract();

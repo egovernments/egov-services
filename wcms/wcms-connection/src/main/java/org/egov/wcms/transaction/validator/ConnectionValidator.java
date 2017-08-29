@@ -415,7 +415,7 @@ public class ConnectionValidator {
 		Long nextConsumerNumber = waterConnectionService.generateNextConsumerNumber(); 
 		Integer format = configurationManager.getHscNumberOfChar();
 		String ulbName = restConnectionService.getULBNameFromTenant(waterConnectionRequest.getConnection().getTenantId(), waterConnectionRequest.getRequestInfo());
-		String completeConsumerNumber = ulbName.substring(0, 4).concat(StringUtils.right(consumerNumberPrefix + String.valueOf(nextConsumerNumber), format));
+		String completeConsumerNumber = ulbName.concat(StringUtils.right(consumerNumberPrefix + String.valueOf(nextConsumerNumber), format));
 		return completeConsumerNumber; 
 	}
 	

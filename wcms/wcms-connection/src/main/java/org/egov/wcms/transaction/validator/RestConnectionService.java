@@ -449,7 +449,7 @@ public class RestConnectionService {
         	if(null != tr.getTenant()){ 
         		for(Tenant tenant : tr.getTenant()) { 
         			if(null != tenant.getCity()) { 
-        				ulbCode = tenant.getCity().getName();  
+        				ulbCode = tenant.getCity().getCode();  
         			}
         		}
         	}

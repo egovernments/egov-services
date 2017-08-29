@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +18,8 @@ import org.egov.citizen.web.contract.ServiceRequestSearchCriteria;
 import org.egov.citizen.web.contract.factory.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +32,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
@@ -124,6 +129,7 @@ public class CitizenPersistService {
 	
 	public ServiceReqResponse create(String serviceReqJson) {
 
+		serviceReqJson = makeServiceCall(serviceReqJson);
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 		ServiceReqRequest serviceReqRequest = null;
@@ -158,7 +164,9 @@ public class CitizenPersistService {
 		}
 
 	public String getServiceReqId() {
-		String req = "{\"RequestInfo\":{\"apiId\":\"org.egov.ptis\",\"ver\":\"1.0\",\"ts\":\"20934234234234\",\"action\":\"asd\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\":\"05dd0b7a-484a-47be-a831-5585cc2b5af8\"},\"idRequests\":[{\"idName\":\"CS.ServiceRequest\",\"tenantId\":\"default\",\"format\":\"SRN-[cy:MM]/[fy:yyyy-yy]-[d{4}]\"}]}";
+
+		String req = "{\"RequestInfo\":{\"apiId\":\"org.egov.ptis\",\"ver\":\"1.0\",\"ts\":\"20934234234234\",\"action\":\"asd\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\":\"d1feb52b-fb61-4066-be09-398de105e472\"},\"idRequests\":[{\"idName\":\"CS.ServiceRequest\",\"tenantId\":\"default\",\"format\":\"SRN-[cy:MM]/[fy:yyyy-yy]-[d{4}]\"}]}";
+
 		String url = idGenHost+idGenGetIdUrl;
 		log.info("url:"+url);
 		log.info("req: "+req);
@@ -216,6 +224,44 @@ public class CitizenPersistService {
 		}
 		return getResponse(serviceReqRequest);
 	}
+    
+    public String makeServiceCall(String serviceReqJson){
+    	log.info("serviceReqJson1:"+serviceReqJson);
+    	DocumentContext documentContext = JsonPath.parse(serviceReqJson);
+    	Object serviceCall = JsonPath.read(serviceReqJson, "$.serviceReq.backendServiceDetails");
+    	if(serviceCall != null){
+    		List<LinkedHashMap<String, Object>> list =(List<LinkedHashMap<String, Object>>) serviceCall;
+    		log.info("list:"+list);
+    		for(int i=0; i<list.size(); i++){
+    			LinkedHashMap<String, Object> map = list.get(i);
+    			String url = (String)map.get("url");
+    			LinkedHashMap<String, Object> requestMap = (LinkedHashMap<String, Object>)map.get("request");
+    			
+    			log.info("url:"+url+","+"requestStr:"+requestMap);
+    			HttpHeaders headers = new HttpHeaders();
+    			headers.setContentType(MediaType.APPLICATION_JSON);
+    			
+    			HttpEntity<LinkedHashMap<String, Object>> entity = new HttpEntity<LinkedHashMap<String, Object>>(requestMap, headers);
+    			ResponseEntity<String> res = null;
+    			try{
+    				res = restTemplate.postForEntity(url, entity, String.class);
+    			} catch (Exception ex){
+    				ex.printStackTrace();
+    			}
+    			System.out.println("res:"+res);
+    			String resBody = res.getBody();
+    			System.out.println("resBody:"+resBody);
+    			DocumentContext documentContext2 = JsonPath.parse(resBody);
+    			String responsePath = "$.serviceReq.backendServiceDetails["+i+"]";
+    			System.out.println("responsePath:"+responsePath);
+    			//documentContext.set(responsePath, resBody);
+    			documentContext.put(responsePath, "response", documentContext2.json());
+    	    	serviceReqJson = documentContext.jsonString();
+    	    	log.info("serviceReqJson2:"+serviceReqJson);
+    		}
+    	}
+    	return serviceReqJson;
+    }
     
     private AuditDetails getAuditDetaisl(RequestInfo requestInfo, boolean isCreate){
 		AuditDetails auditDetails = new AuditDetails();

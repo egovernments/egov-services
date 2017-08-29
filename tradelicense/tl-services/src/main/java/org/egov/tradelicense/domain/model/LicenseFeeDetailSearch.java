@@ -14,7 +14,11 @@ public class LicenseFeeDetailSearch {
 
 	private Long id;
 
-	private Long licenseId;
+//	private Long licenseId;
+	
+	private Long applicationId;
+	
+	private String tenantId;
 
 	private String financialYear;
 

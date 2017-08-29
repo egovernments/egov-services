@@ -94,6 +94,7 @@ public class FinancialStatusService {
 	}
 
 	public Pagination<FinancialStatus> search(FinancialStatusSearch financialStatusSearch) {
+	        Assert.notNull(financialStatusSearch.getTenantId(), "tenantId is mandatory for financialStatus search");
 		return financialStatusRepository.search(financialStatusSearch);
 	}
 

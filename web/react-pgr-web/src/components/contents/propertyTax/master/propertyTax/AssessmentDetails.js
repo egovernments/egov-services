@@ -156,6 +156,7 @@ class AssessmentDetails extends Component {
         })	
   } 
   
+
   
 handleUsage = (value) => {
 	
@@ -520,7 +521,7 @@ handleAge = (year) => {
 												  errorText={fieldErrors.bpaNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.bpaNo}</span> : ""}
 												  value={assessmentDetails.bpaNo ? assessmentDetails.bpaNo : ""}
 												  floatingLabelFixed={true}
-												  onChange={(e) => {handleChange(e, "bpaNo", false, /^[0-9,<>!@#\$%\^\&*\)\(+=._-]+$/g)}}
+												  onChange={(e) => {handleChange(e, "bpaNo", false, /^[0-9,/<>!@#\$%\^\&*\)\(+=._-]+$/g)}}
 												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 												  underlineStyle={styles.underlineStyle}
 												  underlineFocusStyle={styles.underlineFocusStyle}

@@ -63,7 +63,8 @@ public abstract class JdbcRepository {
 	public static List<String> fetchFields(Class ob) {
 		List<String> fields = new ArrayList<>();
 		for (Field f : ob.getDeclaredFields()) {
-			if (java.lang.reflect.Modifier.isStatic(f.getModifiers())) {
+			if (java.lang.reflect.Modifier.isStatic(f.getModifiers()) ||
+					java.lang.reflect.Modifier.isProtected(f.getModifiers())) { 
 				continue;
 			}
 			fields.add(f.getName());

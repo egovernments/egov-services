@@ -1,41 +1,43 @@
 {
-   "RequestInfo":{
-      "apiId":null,
-      "ver":null,
-      "ts":null,
-      "action":null,
-      "did":null,
-      "key":null
-   
-   },
-   "MarriageDocumentType": [{
-   	  "id":9,
-      "name":null,
-      "code":"00015",
-      "proof":"ADDRESS_PROOF",
-      "applicationType":"REGISTRATION",
-      "isActive":true,
-      "isIndividual":true,
-      "isRequired":false,
-      "tenantId":"ap.kurnool"
-   },{
-      "id":10,
-      "name":"DOCTYPEPROOF",
-      "code":"00020",
-      "proof":"ADDRESS_PROOF",
-      "applicationType":"REGISTRATION",
-      "isActive":true,
-      "isIndividual":true,
-      "isRequired":false,
-      "tenantId":"ap.kurnool"
-   },{
-      "name":"AGEPROOF",
-      "code":"00065",
-      "proof":"ADDRESS_PROOF",
-      "applicationType":"REISSUE",
-      "isActive":true,
-      "isIndividual":false,
-      "isRequired":false,
-      "tenantId":"ap.kurnool"
-   }]
+	"RequestInfo": {
+		"apiId": null,
+		"ver": null,
+		"ts": 987456321,
+		"action": null,
+		"did": null
+	},
+	"MarriageDocumentType": [
+		{
+			"id": 9,
+			"name": null,
+			"code": "00015",
+			"proof": "ADDRESS_PROOF",
+			"applicationType": "REGISTRATION",
+			"isActive": true,
+			"isIndividual": true,
+			"isRequired": false,
+			"tenantId": "ap.kurnool"
+		},
+		{
+			"id": 10,
+			"name": "DOCTYPEPROOF",
+			"code": "00020",
+			"proof": "ADDRESS_PROOF",
+			"applicationType": "REGISTRATION",
+			"isActive": true,
+			"isIndividual": true,
+			"isRequired": false,
+			"tenantId": "ap.kurnool"
+		},
+		{
+			"name": "AGEPROOF",
+			"code": "00065",
+			"proof": "ADDRESS_PROOF",
+			"applicationType": "REISSUE",
+			"isActive": true,
+			"isIndividual": false,
+			"isRequired": false,
+			"tenantId": "ap.kurnool"
+		}
+	]
 }

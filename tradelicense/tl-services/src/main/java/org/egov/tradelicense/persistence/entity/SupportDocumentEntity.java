@@ -17,9 +17,11 @@ public class SupportDocumentEntity {
 
 	private Long id;
 
-	private Long licenseId;
+//	private Long licenseId;
 
 	private Long documentTypeId;
+	
+	private String tenantId;
 
 	private String fileStoreId;
 
@@ -32,6 +34,8 @@ public class SupportDocumentEntity {
 	private Long createdTime;
 
 	private Long lastModifiedTime;
+	
+	private Long applicationId;
 
 	public SupportDocument toDomain() {
 
@@ -41,7 +45,11 @@ public class SupportDocumentEntity {
 
 		supportDocument.setId(this.id);
 
-		supportDocument.setLicenseId(this.licenseId);
+//		supportDocument.setLicenseId(this.licenseId);
+		
+		supportDocument.setApplicationId(this.applicationId);
+		
+		supportDocument.setTeantId(this.tenantId);
 
 		supportDocument.setDocumentTypeId(this.documentTypeId);
 
@@ -68,8 +76,12 @@ public class SupportDocumentEntity {
 
 		this.id = supportDocument.getId();
 
-		this.licenseId = supportDocument.getLicenseId();
+//		this.licenseId = supportDocument.getLicenseId();
 
+		this.tenantId = supportDocument.getTeantId();
+		
+		this.applicationId = supportDocument.getApplicationId();
+		
 		this.documentTypeId = supportDocument.getDocumentTypeId();
 
 		this.fileStoreId = supportDocument.getFileStoreId();

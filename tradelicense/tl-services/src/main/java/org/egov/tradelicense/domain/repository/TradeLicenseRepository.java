@@ -1,5 +1,6 @@
 package org.egov.tradelicense.domain.repository;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,15 +13,19 @@ import org.egov.tradelicense.domain.model.LicenseFeeDetail;
 import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.domain.model.TradeLicenseSearch;
+import org.egov.tradelicense.domain.repository.builder.LicenseBillQueryBuilder;
+import org.egov.tradelicense.persistence.entity.LicenseApplicationEntity;
 import org.egov.tradelicense.persistence.entity.LicenseFeeDetailEntity;
 import org.egov.tradelicense.persistence.entity.SupportDocumentEntity;
 import org.egov.tradelicense.persistence.entity.TradeLicenseEntity;
 import org.egov.tradelicense.persistence.entity.TradeLicenseSearchEntity;
 import org.egov.tradelicense.persistence.queue.TradeLicenseQueueRepository;
+import org.egov.tradelicense.persistence.repository.LicenseApplicationJdbcRepository;
 import org.egov.tradelicense.persistence.repository.LicenseFeeDetailJdbcRepository;
 import org.egov.tradelicense.persistence.repository.SupportDocumentJdbcRepository;
 import org.egov.tradelicense.persistence.repository.TradeLicenseJdbcRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -49,6 +54,12 @@ public class TradeLicenseRepository {
 
 	@Autowired
 	NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
+
+	@Autowired
+	LicenseApplicationJdbcRepository licenseApplicationJdbcRepository;
 
 	public Long getNextSequence() {
 
@@ -232,22 +243,22 @@ public class TradeLicenseRepository {
 			if (isNewRecord) {
 
 				if (request.getLicenses().get(0).getIsLegacy()) {
-					
+
 					request.getRequestInfo().setAction("legacy-create");
-					
+
 				} else {
-					
+
 					request.getRequestInfo().setAction("new-create");
 				}
 
 			} else {
 
 				if (request.getLicenses().get(0).getIsLegacy()) {
-					
+
 					request.getRequestInfo().setAction("legacy-update");
-					
+
 				} else {
-					
+
 					request.getRequestInfo().setAction("new-update");
 				}
 			}
@@ -261,20 +272,33 @@ public class TradeLicenseRepository {
 	public TradeLicense save(TradeLicense tradeLicense) {
 
 		TradeLicenseEntity entity = tradeLicenseJdbcRepository.create(new TradeLicenseEntity().toEntity(tradeLicense));
+		// TODO : Application Id is fetched assuming there will be only one
+		// applicaiton for given license
+		LicenseApplicationEntity applicationEntity = entity.getLicenseApplicationEntity();
+		applicationEntity.setId(
+				Long.valueOf(licenseApplicationJdbcRepository.getSequence(LicenseApplicationEntity.SEQUENCE_NAME)));
+		licenseApplicationJdbcRepository.create(applicationEntity);
 
+		SupportDocumentEntity supportDocumentEntity;
 		if (tradeLicense.getSupportDocuments() != null && tradeLicense.getSupportDocuments().size() > 0) {
 
 			for (SupportDocument supportDocument : tradeLicense.getSupportDocuments()) {
-
-				supportDocumentJdbcRepository.create(new SupportDocumentEntity().toEntity(supportDocument));
+				supportDocument.setTeantId(tradeLicense.getTenantId());
+				supportDocumentEntity = new SupportDocumentEntity().toEntity(supportDocument);
+				supportDocumentEntity.setApplicationId(applicationEntity.getId());
+				supportDocumentJdbcRepository.create(supportDocumentEntity);
 			}
 		}
 
+		LicenseFeeDetailEntity licenseFeeDetailEntity;
 		if (tradeLicense.getFeeDetails() != null && tradeLicense.getFeeDetails().size() > 0) {
 
 			for (LicenseFeeDetail feeDetail : tradeLicense.getFeeDetails()) {
+				feeDetail.setTeantId(tradeLicense.getTenantId());
+				licenseFeeDetailEntity = new LicenseFeeDetailEntity().toEntity(feeDetail);
+				licenseFeeDetailEntity.setApplicationId(applicationEntity.getId());
 
-				licenseFeeDetailJdbcRepository.create(new LicenseFeeDetailEntity().toEntity(feeDetail));
+				licenseFeeDetailJdbcRepository.create(licenseFeeDetailEntity);
 			}
 		}
 
@@ -285,16 +309,21 @@ public class TradeLicenseRepository {
 	public TradeLicense update(TradeLicense tradeLicense) {
 
 		TradeLicenseEntity entity = tradeLicenseJdbcRepository.update(new TradeLicenseEntity().toEntity(tradeLicense));
-
 		if (tradeLicense.getSupportDocuments() != null && tradeLicense.getSupportDocuments().size() > 0) {
 
 			for (SupportDocument supportDocument : tradeLicense.getSupportDocuments()) {
 
 				Boolean isDocumentExists = validateUpdateTradeSupportDocumentId(supportDocument);
+				supportDocument.setTeantId(tradeLicense.getTenantId());
+				// TODO : Application Id is fetched assuming there will be only
+				// one applicaiton for given license
+				Long applicationId = tradeLicenseJdbcRepository.getLegacyLicenseApplicationId(tradeLicense.getId());
+				supportDocument.setApplicationId(applicationId);
 
 				if (isDocumentExists) {
 
 					supportDocumentJdbcRepository.update(new SupportDocumentEntity().toEntity(supportDocument));
+
 				} else {
 
 					supportDocumentJdbcRepository.create(new SupportDocumentEntity().toEntity(supportDocument));
@@ -307,7 +336,11 @@ public class TradeLicenseRepository {
 			for (LicenseFeeDetail feeDetail : tradeLicense.getFeeDetails()) {
 
 				Boolean isFeeDetailExists = validateUpdateTradeLicenseFeeDetailId(feeDetail);
-
+				feeDetail.setTeantId(tradeLicense.getTenantId());
+				// TODO : Application Id is fetched assuming there will be only
+				// one applicaiton for given license
+				Long applicationId = tradeLicenseJdbcRepository.getLegacyLicenseApplicationId(tradeLicense.getId());
+				feeDetail.setApplicationId(applicationId);
 				if (isFeeDetailExists) {
 
 					licenseFeeDetailJdbcRepository.update(new LicenseFeeDetailEntity().toEntity(feeDetail));
@@ -316,6 +349,15 @@ public class TradeLicenseRepository {
 					licenseFeeDetailJdbcRepository.create(new LicenseFeeDetailEntity().toEntity(feeDetail));
 				}
 			}
+		}
+
+		if (tradeLicense.getLicenseBills() != null && !tradeLicense.getLicenseBills().isEmpty()) {
+			final Object[] objValue = new Object[] { tradeLicense.getId(), tradeLicense.getBillId(),
+					tradeLicense.getTenantId(), Long.valueOf(tradeLicense.getAuditDetails().getCreatedBy()),
+					new Date(new java.util.Date().getTime()),
+					Long.valueOf(tradeLicense.getAuditDetails().getLastModifiedBy()),
+					new Date(new java.util.Date().getTime()) };
+			jdbcTemplate.update(LicenseBillQueryBuilder.insertLicenseBill(), objValue);
 		}
 
 		return entity.toDomain();

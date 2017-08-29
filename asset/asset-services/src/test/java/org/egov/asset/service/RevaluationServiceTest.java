@@ -19,7 +19,6 @@ import org.egov.asset.contract.RevaluationResponse;
 import org.egov.asset.contract.VoucherRequest;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCategory;
-import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.AuditDetails;
 import org.egov.asset.model.ChartOfAccountDetailContract;
 import org.egov.asset.model.Department;
@@ -34,7 +33,6 @@ import org.egov.asset.model.enums.ModeOfAcquisition;
 import org.egov.asset.model.enums.Status;
 import org.egov.asset.model.enums.TypeOfChangeEnum;
 import org.egov.asset.model.enums.VoucherType;
-import org.egov.asset.repository.AssetRepository;
 import org.egov.asset.repository.RevaluationRepository;
 import org.egov.asset.util.FileUtils;
 import org.egov.common.contract.request.RequestInfo;
@@ -72,7 +70,7 @@ public class RevaluationServiceTest {
     private RestTemplate restTemplate;
 
     @Mock
-    private AssetRepository assetRepository;
+    private AssetService assetService;
 
     @Mock
     private RevaluationRequest revaluationRequest;
@@ -128,12 +126,12 @@ public class RevaluationServiceTest {
         final RevaluationRequest revaluationRequest = getRevaluationRequest();
         final HttpHeaders headers = getHttpHeaders();
         final Asset asset = getAsset();
-        final List<Asset> assets = new ArrayList<>();
-        assets.add(asset);
+
         final FunctionResponse functionResponse = getFunctionResponse();
         final FundResponse fundResponse = getFundResponse();
         final VoucherRequest voucherRequest = getVoucherRequest();
-        when(assetRepository.findForCriteria(any(AssetCriteria.class))).thenReturn(assets);
+
+        when(assetService.getAsset(any(String.class), any(Long.class), any(RequestInfo.class))).thenReturn(asset);
         when(voucherService.getFunctionData(any(RequestInfo.class), any(String.class), any(Long.class)))
                 .thenReturn(functionResponse);
         when(voucherService.getFundData(any(RequestInfo.class), any(String.class), any(Long.class)))

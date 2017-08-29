@@ -182,9 +182,9 @@ class Report extends Component {
 
   handleNavigation = (row) => {
     if (row.isLegacy) {
-        this.props.setRoute("/legacy/view" +"/" + row.consumerNumber);
+        this.props.setRoute("/legacy/view" +"/" + encodeURIComponent(row.consumerNumber));
     } else {
-      this.props.setRoute("/view/wc" +"/" + row.acknowledgementNumber);
+      this.props.setRoute("/view/wc" +"/" + encodeURIComponent(row.acknowledgementNumber));
     }
 
   }

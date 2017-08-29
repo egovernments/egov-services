@@ -108,6 +108,7 @@ public class SchemeService {
 	}
 
 	public Pagination<Scheme> search(SchemeSearch schemeSearch) {
+	        Assert.notNull(schemeSearch.getTenantId(), "tenantId is mandatory for scheme search");
 		return schemeRepository.search(schemeSearch);
 	}
 

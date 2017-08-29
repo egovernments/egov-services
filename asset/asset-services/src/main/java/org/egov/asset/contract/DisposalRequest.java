@@ -1,5 +1,7 @@
 package org.egov.asset.contract;
 
+import javax.validation.Valid;
+
 import org.egov.asset.model.Disposal;
 import org.egov.common.contract.request.RequestInfo;
 
@@ -25,10 +27,12 @@ import lombok.ToString;
 public class DisposalRequest   {
 	
   @JsonProperty("RequestInfo")
-  private RequestInfo requestInfo = null;
+  @Valid
+  private RequestInfo requestInfo;
 
   @JsonProperty("Disposal")
-  private Disposal disposal = null;
+  @Valid
+  private Disposal disposal;
 
 }
 

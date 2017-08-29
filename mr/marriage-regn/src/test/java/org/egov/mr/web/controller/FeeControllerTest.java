@@ -10,6 +10,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.mr.TestConfiguration;
 import org.egov.mr.model.Fee;
 import org.egov.mr.model.Page;
@@ -18,8 +20,6 @@ import org.egov.mr.utils.FileUtils;
 import org.egov.mr.web.contract.FeeCriteria;
 import org.egov.mr.web.contract.FeeRequest;
 import org.egov.mr.web.contract.FeeResponse;
-import org.egov.mr.web.contract.RequestInfo;
-import org.egov.mr.web.contract.ResponseInfo;
 import org.egov.mr.web.errorhandler.ErrorHandler;
 import org.junit.After;
 import org.junit.Before;
@@ -44,10 +44,10 @@ public class FeeControllerTest {
 
 	@MockBean
 	private ErrorHandler errorHandler;
-	
+
 	@MockBean
 	private FeeService feeService;
-	
+
 	@Before
 	public void setUp() throws Exception {
 	}
@@ -55,35 +55,33 @@ public class FeeControllerTest {
 	@After
 	public void tearDown() throws Exception {
 	}
-	
+
 	@Test
 	public void testShouldSearchFee() throws IOException, Exception {
-		ResponseInfo responseinfo = ResponseInfo.builder().tenantId("ap.kurnool").apiId("uief87324").resMsgId("string")
-				.key("successful").status("200").ver("string").ts("string").build();
+		ResponseInfo responseinfo = ResponseInfo.builder().apiId("uief87324").msgId("msgId").resMsgId("requesterId")
+				.status("200").ver("string").ts(Long.valueOf("987456321")).build();
 
-		FeeResponse FeeResponseList = FeeResponse.builder()
-				.fees(getFees()).responseInfo(responseinfo).build();
-		
-		when(feeService.getFee(Matchers.any(FeeCriteria.class),
-				Matchers.any(RequestInfo.class))).thenReturn(FeeResponseList);
+		FeeResponse FeeResponseList = FeeResponse.builder().fees(getFees()).responseInfo(responseinfo).build();
 
-			mockMvc.perform(post("/fees/_search").content(getFileContents("ReissueCertRequest.json"))
-					.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isOk())
-					.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-					.andExpect(content().json(getFileContents("FeeResponse.json")));
-	
+		when(feeService.getFee(Matchers.any(FeeCriteria.class), Matchers.any(RequestInfo.class)))
+				.thenReturn(FeeResponseList);
+
+		mockMvc.perform(post("/fees/_search").content(getFileContents("ReissueCertRequest.json"))
+				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(content().json(getFileContents("FeeResponse.json")));
+
 	}
-	
+
 	@Test
-	public void testShouldCreateFee() throws IOException, Exception{
-		ResponseInfo responseinfo = ResponseInfo.builder().tenantId("ap.kurnool").apiId("uief87324").resMsgId("string")
-				.key("successful").status("200").ver("string").ts("string").build();
+	public void testShouldCreateFee() throws IOException, Exception {
+		ResponseInfo responseinfo = ResponseInfo.builder().apiId("uief87324").resMsgId("requesterId").status("200")
+				.ver("string").ts(Long.valueOf("987456321")).build();
 		Page page = Page.builder().totalResults(1).currentPage(null).pageSize(null).totalPages(null).offSet(null)
 				.build();
-		
-		FeeResponse FeeResponseList = FeeResponse.builder()
-				.fees(getFees()).responseInfo(responseinfo).build();
-		
+
+		FeeResponse FeeResponseList = FeeResponse.builder().fees(getFees()).responseInfo(responseinfo).build();
+
 		when(feeService.createAsync(Matchers.any(FeeRequest.class))).thenReturn(FeeResponseList);
 
 		mockMvc.perform(post("/fees/_create").contentType(MediaType.APPLICATION_JSON)
@@ -91,17 +89,16 @@ public class FeeControllerTest {
 				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 				.andExpect(content().json(getFileContents("FeeResponse.json")));
 	}
-	
+
 	@Test
-	public void testShouldUpdateFee() throws IOException, Exception{
-		ResponseInfo responseinfo = ResponseInfo.builder().tenantId("ap.kurnool").apiId("uief87324").resMsgId("string")
-				.key("successful").status("200").ver("string").ts("string").build();
+	public void testShouldUpdateFee() throws IOException, Exception {
+		ResponseInfo responseinfo = ResponseInfo.builder().apiId("uief87324").resMsgId("requesterId").status("200")
+				.ver("string").ts(Long.valueOf("987456321")).build();
 		Page page = Page.builder().totalResults(1).currentPage(null).pageSize(null).totalPages(null).offSet(null)
 				.build();
-		
-		FeeResponse FeeResponseList = FeeResponse.builder()
-				.fees(getFees()).responseInfo(responseinfo).build();
-		
+
+		FeeResponse FeeResponseList = FeeResponse.builder().fees(getFees()).responseInfo(responseinfo).build();
+
 		when(feeService.updateAsync(Matchers.any(FeeRequest.class))).thenReturn(FeeResponseList);
 
 		mockMvc.perform(post("/fees/_update").contentType(MediaType.APPLICATION_JSON)
@@ -109,7 +106,7 @@ public class FeeControllerTest {
 				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 				.andExpect(content().json(getFileContents("FeeResponse.json")));
 	}
-	
+
 	private String getFileContents(String filePath) throws IOException {
 		return new FileUtils().getFileContents("org/egov/mr/web/controller/" + filePath);
 	}

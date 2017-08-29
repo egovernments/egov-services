@@ -2,7 +2,6 @@ package org.egov.egf.master.domain.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -169,6 +168,7 @@ public class ChartOfAccountServiceTest {
 		chartOfAccountSearch.setPageSize(0);
 		chartOfAccountSearch.setOffset(0);
 		chartOfAccountSearch.setSortBy("Sort");
+		chartOfAccountSearch.setTenantId("default");
 		return chartOfAccountSearch;
 	}
 

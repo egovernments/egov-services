@@ -41,6 +41,7 @@ package org.egov.wcms.transaction.repository.rowmapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -144,6 +145,7 @@ public class WaterConnectionRowMapper {
 			connection.setNumberOfPersons(rs.getInt("conn_noofperson"));
 			connection.setStateId(rs.getLong("conn_stateid"));
 			connection.setParentConnectionId(rs.getLong("conn_parentconnectionid"));
+			connection.setHouseNumber(rs.getString("housenumber"));
 			connection.setWaterTreatmentId(rs.getString("conn_watertreatmentid"));
 			connection.setWaterTreatment(
 					(null != rs.getString("watertreatmentname") && rs.getString("watertreatmentname") != "")
@@ -156,7 +158,12 @@ public class WaterConnectionRowMapper {
 			connection.setPropertyIdentifier(rs.getString("conn_propid"));
 			connection.setCreatedDate(rs.getString("createdtime"));
 			connection.setPlumberName(rs.getString("plumbername"));
-			connection.setBillSequenceNumber(rs.getLong("sequencenumber"));
+			
+			if(rs.getDouble("sequencenumber") > 0) {
+				DecimalFormat df = new DecimalFormat("####0.0000");
+				df.format(rs.getDouble("sequencenumber"));
+				connection.setBillSequenceNumber(Double.parseDouble(df.format(rs.getDouble("sequencenumber"))));
+			}
 			connection.setOutsideULB(rs.getBoolean("outsideulb"));
 			connection.setMeterOwner(rs.getString("meterowner"));
 			connection.setMeterModel(rs.getString("metermodel"));

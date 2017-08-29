@@ -20,9 +20,12 @@ public class SupportDocumentSearchContract {
 	@JsonProperty("id")
 	private Long id;
 
-	@JsonProperty("licenseId")
-	private Long licenseId;
-
+	@JsonProperty("teantId")
+	private String tenantId;
+	
+	@JsonProperty("applicationId")
+	private Long applicationId;
+	
 	@NotNull(message = "{error.license.documenttype}")
 	@JsonProperty("documentTypeId")
 	private Long documentTypeId;
@@ -34,9 +37,9 @@ public class SupportDocumentSearchContract {
 	@JsonProperty("comments")
 	private String comments;
 
-	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails;
-
 	@JsonProperty("documentTypeName")
-	private String documentTypeName;;
+	private String documentTypeName;
+    
+    @JsonProperty("auditDetails")
+	private AuditDetails auditDetails;
 }

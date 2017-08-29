@@ -17,7 +17,11 @@ public class LicenseFeeDetailSearchEntity {
 
 	private Long id;
 
-	private Long licenseId;
+//	private Long licenseId;
+	
+	private Long applicationId;
+
+	private String tenantId;
 
 	private String financialYear;
 
@@ -41,7 +45,11 @@ public class LicenseFeeDetailSearchEntity {
 
 		licenseFeeDetail.setId(this.id);
 
-		licenseFeeDetail.setLicenseId(this.licenseId);
+//		licenseFeeDetail.setLicenseId(this.licenseId);
+		
+		licenseFeeDetail.setTenantId( this.tenantId);
+		
+		licenseFeeDetail.setApplicationId( this.applicationId);
 
 		licenseFeeDetail.setFinancialYear(this.financialYear);
 
@@ -70,7 +78,11 @@ public class LicenseFeeDetailSearchEntity {
 
 		this.id = licenseFeeDetail.getId();
 
-		this.licenseId = licenseFeeDetail.getLicenseId();
+		this.tenantId = licenseFeeDetail.getTenantId();
+		
+		this.applicationId = licenseFeeDetail.getApplicationId();
+		
+//		this.licenseId = licenseFeeDetail.getLicenseId();
 
 		this.financialYear = licenseFeeDetail.getFinancialYear();
 

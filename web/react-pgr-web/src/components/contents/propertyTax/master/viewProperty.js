@@ -784,6 +784,7 @@ class ViewProperty extends Component {
 							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>{translate('pt.create.groups.propertyAddress.taxDetails')}</div>} />
                               <CardText>
 									<Col  xs={4} md={12}>
+									{currentThis.state.demands.length == 0 ? <p style={{textAlign:'center'}}>No demand available</p> : 
 										<Table id="TaxCalculationTable" style={{color:"black",fontWeight: "normal", marginBottom:0}} bordered responsive>
 											<thead>
 												<tr>
@@ -845,7 +846,7 @@ class ViewProperty extends Component {
 												)
 											})}
 											</tbody>
-										</Table>
+										</Table>}
 										<div className="clearfix"></div>
 									</Col>
 									<div className="clearfix"></div>

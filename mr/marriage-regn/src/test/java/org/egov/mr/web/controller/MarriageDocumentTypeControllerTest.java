@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.mr.model.MarriageDocumentType;
 import org.egov.mr.model.enums.ApplicationType;
 import org.egov.mr.model.enums.DocumentProof;
@@ -19,8 +21,6 @@ import org.egov.mr.utils.FileUtils;
 import org.egov.mr.web.contract.MarriageDocTypeRequest;
 import org.egov.mr.web.contract.MarriageDocTypeResponse;
 import org.egov.mr.web.contract.MarriageDocumentTypeSearchCriteria;
-import org.egov.mr.web.contract.RequestInfo;
-import org.egov.mr.web.contract.ResponseInfo;
 import org.egov.mr.web.errorhandler.Error;
 import org.egov.mr.web.errorhandler.ErrorHandler;
 import org.egov.mr.web.errorhandler.ErrorResponse;
@@ -90,6 +90,7 @@ public class MarriageDocumentTypeControllerTest {
 		marriageDocTypeResponse.setMarriageDocTypes(marriageDocumentTypes);
 
 		ResponseInfo responseInfo = new ResponseInfo();
+		responseInfo.setTs(Long.valueOf("987456321"));
 		responseInfo.setStatus(HttpStatus.OK.toString());
 
 		marriageDocTypeResponse.setResponseInfo(responseInfo);
@@ -120,7 +121,7 @@ public class MarriageDocumentTypeControllerTest {
 		error.setCode(400);
 		error.setDescription("Error While Binding Results");
 		error.setMessage("[marriageDocTypes[0].name] : Required Query Parameter Missing ");
-		ResponseInfo responseInfo = ResponseInfo.builder().status("400").build();
+		ResponseInfo responseInfo = ResponseInfo.builder().ts(Long.valueOf("987456321")).status("400").build();
 		ErrorResponse errorResponse = new ErrorResponse(responseInfo, error);
 
 		when(errorHandler.handleBindingErrorsForCreate(Matchers.any(), Matchers.any()))
@@ -156,6 +157,7 @@ public class MarriageDocumentTypeControllerTest {
 		marriageDocTypeResponse.setMarriageDocTypes(marriageDocumentTypes);
 
 		ResponseInfo responseInfo = new ResponseInfo();
+		responseInfo.setTs(Long.valueOf("987456321"));
 		responseInfo.setStatus(HttpStatus.OK.toString());
 		marriageDocTypeResponse.setResponseInfo(responseInfo);
 
@@ -183,8 +185,8 @@ public class MarriageDocumentTypeControllerTest {
 		error.setCode(400);
 		error.setDescription("Error While Binding Results");
 		error.setMessage("[isActive] : Required Query Parameter Missing ");
-		ResponseInfo responseInfo = ResponseInfo.builder().status("400").resMsgId("search with from and to values")
-				.apiId("mr-services").build();
+		ResponseInfo responseInfo = ResponseInfo.builder().status("400").ts(Long.valueOf("987456321"))
+				.resMsgId("search with from and to values").apiId("mr-services").build();
 		ErrorResponse errorResponse = new ErrorResponse(responseInfo, error);
 
 		when(errorHandler.handleBindingErrorsForSearch(Matchers.any(), Matchers.any(), Matchers.any()))
@@ -209,6 +211,7 @@ public class MarriageDocumentTypeControllerTest {
 		MarriageDocTypeResponse marriageDocTypeResponse = new MarriageDocTypeResponse();
 		marriageDocTypeResponse.setMarriageDocTypes(marriageDocumentTypes);
 		ResponseInfo responseInfo = new ResponseInfo();
+		responseInfo.setTs(Long.valueOf("987456321"));
 		responseInfo.setStatus(HttpStatus.OK.toString());
 		marriageDocTypeResponse.setResponseInfo(responseInfo);
 		when(marriageDocumentTypeService.updateAsync(Matchers.any(MarriageDocTypeRequest.class)))
@@ -232,7 +235,7 @@ public class MarriageDocumentTypeControllerTest {
 		error.setCode(400);
 		error.setDescription("Error While Binding Results");
 		error.setMessage("[marriageDocTypes[0].name] : Required Query Parameter Missing ");
-		ResponseInfo responseInfo = ResponseInfo.builder().status("400").build();
+		ResponseInfo responseInfo = ResponseInfo.builder().status("400").ts(Long.valueOf("987456321")).build();
 		ErrorResponse errorResponse = new ErrorResponse(responseInfo, error);
 
 		when(errorHandler.handleBindingErrorsForCreate(Matchers.any(), Matchers.any()))

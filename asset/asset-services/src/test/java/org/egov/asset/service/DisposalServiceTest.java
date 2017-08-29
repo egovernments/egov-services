@@ -153,8 +153,6 @@ public class DisposalServiceTest {
             fail();
         }
         final Asset asset = getAsset();
-        final List<Asset> assets = new ArrayList<>();
-        assets.add(asset);
         final AssetStatus assetStatus = getAssetStatus();
         final List<AssetStatus> assetStatuses = new ArrayList<>();
         assetStatuses.add(assetStatus);
@@ -163,7 +161,7 @@ public class DisposalServiceTest {
 
         doNothing().when(disposalRepository).create(any(DisposalRequest.class));
         assertEquals(disposalResponse.getDisposals().get(0).toString(), disposalRequest.getDisposal().toString());
-        when(assetRepository.findForCriteria(any(AssetCriteria.class))).thenReturn(assets);
+        when(assetService.getAsset(any(String.class), any(Long.class), any(RequestInfo.class))).thenReturn(asset);
         when(assetMasterService.getStatuses(any(AssetStatusObjectName.class), any(Status.class), any(String.class)))
                 .thenReturn(assetStatuses);
         disposalService.setStatusOfAssetToDisposed(disposalRequest);

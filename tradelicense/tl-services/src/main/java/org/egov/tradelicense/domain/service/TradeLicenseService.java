@@ -133,44 +133,56 @@ public class TradeLicenseService {
 			}
 
 			if (license.getSupportDocuments() != null && license.getSupportDocuments().size() > 0) {
-				
+
 				for (SupportDocument supportDocument : license.getSupportDocuments()) {
-					
-					supportDocument.setLicenseId(license.getId());
+
+					// supportDocument.setLicenseId(license.getId());
 					supportDocument.setId(tradeLicenseRepository.getSupportDocumentNextSequence());
-					if(license.getAuditDetails() != null){
+					if (license.getAuditDetails() != null) {
 						supportDocument.setAuditDetails(license.getAuditDetails());
 					}
-					
+
 				}
 			}
-			if (license.getIsLegacy()){
-				
+			if (license.getIsLegacy()) {
+
 				if (license.getFeeDetails() != null && license.getFeeDetails().size() > 0) {
-					
+
 					for (LicenseFeeDetail feeDetail : license.getFeeDetails()) {
-						
-						feeDetail.setLicenseId(license.getId());
+
+						// feeDetail.setLicenseId(license.getId());
 						feeDetail.setId(tradeLicenseRepository.getFeeDetailNextSequence());
-						if(license.getAuditDetails() != null){
+						if (license.getAuditDetails() != null) {
 							feeDetail.setAuditDetails(license.getAuditDetails());
 						}
 					}
 				}
 			} else {
-				//clearing the unnecessary details for new trade license
+				// clearing the unnecessary details for new trade license
 				license.setFeeDetails(new ArrayList<>());
 				license.setOldLicenseNumber(null);
 				license.setLicenseNumber(null);
 			}
-			
 
 			if (license.getIsLegacy()) {
 
 				license.setLicenseNumber(licenseNumberGenerationService.generate(license.getTenantId(), requestInfo));
+
 			} else {
 
-				license.setApplicationNumber(applNumberGenrationService.generate(license.getTenantId(), requestInfo));
+				if (license.getApplicationNumber() == null
+						|| (license.getApplicationNumber() != null && license.getApplicationNumber().isEmpty())) {
+
+					requestInfo.setMsgId("tl-module-workflow-action");
+					license.setApplicationNumber(
+							applNumberGenrationService.generate(license.getTenantId(), requestInfo));
+				}
+
+				if (license.getApplicationDate() == null) {
+
+					license.setApplicationDate(System.currentTimeMillis());
+				}
+
 			}
 
 		}
@@ -209,7 +221,7 @@ public class TradeLicenseService {
 			}
 
 		}
-		
+
 		return tradeLicenses;
 	}
 

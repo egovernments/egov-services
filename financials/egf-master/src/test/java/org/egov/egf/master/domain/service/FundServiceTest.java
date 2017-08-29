@@ -121,6 +121,7 @@ public class FundServiceTest {
 		fundSearch.setPageSize(0);
 		fundSearch.setOffset(0);
 		fundSearch.setSortBy("Sort");
+		fundSearch.setTenantId("default");
 		return fundSearch;
 	}
 }

@@ -124,6 +124,7 @@ public class ChartOfAccountDetailService {
 	}
 
 	public Pagination<ChartOfAccountDetail> search(ChartOfAccountDetailSearch chartOfAccountDetailSearch) {
+	        Assert.notNull(chartOfAccountDetailSearch.getTenantId(), "tenantId is mandatory for chartOfAccountDetail search");
 		return chartOfAccountDetailRepository.search(chartOfAccountDetailSearch);
 	}
 

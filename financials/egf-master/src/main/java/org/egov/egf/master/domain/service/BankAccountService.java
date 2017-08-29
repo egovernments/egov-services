@@ -131,6 +131,7 @@ public class BankAccountService {
 	}
 
 	public Pagination<BankAccount> search(BankAccountSearch bankAccountSearch) {
+	        Assert.notNull(bankAccountSearch.getTenantId(), "tenantId is mandatory for bankAccount search");
 		return bankAccountRepository.search(bankAccountSearch);
 	}
 

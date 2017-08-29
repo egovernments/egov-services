@@ -417,20 +417,20 @@ public class RestConnectionService {
                 }
         }
         
-        if(nameServiceTopic.equals(configurationManager.getHscGenNameServiceTopic())) {
+        /*if(nameServiceTopic.equals(configurationManager.getHscGenNameServiceTopic())) {
         	//Enable the below method call to get financial year from the Finance Service
             // String finYear = getFinancialYear(tenantId);
-            /*String finYear = getFiscalYear();
+            String finYear = getFiscalYear();
             if(null!=finYear && !finYear.isEmpty()) { 
             	return ackNumber=tenantId.substring(0,4).concat(ackNumber);
-            }	*/
+            }	
         	String ulbName = getULBNameFromTenant(tenantId, requestInfo);
         	if(!ulbName.equals("")){ 
         		return ackNumber = ulbName.substring(0,4).concat(ackNumber);
         	} else {
         		return ackNumber = tenantId.substring(0,4).concat(ackNumber);
         	}
-        }
+        }*/
 
         return ackNumber;
     }
@@ -449,7 +449,7 @@ public class RestConnectionService {
         	if(null != tr.getTenant()){ 
         		for(Tenant tenant : tr.getTenant()) { 
         			if(null != tenant.getCity()) { 
-        				ulbCode = tenant.getCity().getName();  
+        				ulbCode = tenant.getCity().getCode();  
         			}
         		}
         	}

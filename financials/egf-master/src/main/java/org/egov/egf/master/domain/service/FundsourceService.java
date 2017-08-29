@@ -105,6 +105,7 @@ public class FundsourceService {
 	}
 
 	public Pagination<Fundsource> search(FundsourceSearch fundsourceSearch) {
+	        Assert.notNull(fundsourceSearch.getTenantId(), "tenantId is mandatory for fundsource search");
 		return fundsourceRepository.search(fundsourceSearch);
 	}
 

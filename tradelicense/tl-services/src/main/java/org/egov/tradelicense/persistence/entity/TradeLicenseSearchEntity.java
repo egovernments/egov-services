@@ -8,6 +8,7 @@ import org.egov.tradelicense.domain.enums.ApplicationType;
 import org.egov.tradelicense.domain.enums.BusinessNature;
 import org.egov.tradelicense.domain.enums.OwnerShipType;
 import org.egov.tradelicense.domain.model.AuditDetails;
+import org.egov.tradelicense.domain.model.LicenseApplicationSearch;
 import org.egov.tradelicense.domain.model.LicenseFeeDetailSearch;
 import org.egov.tradelicense.domain.model.SupportDocumentSearch;
 import org.egov.tradelicense.domain.model.TradeLicenseSearch;
@@ -117,6 +118,10 @@ public class TradeLicenseSearchEntity {
 	private List<LicenseFeeDetailSearchEntity> feeDetailEntitys;
 
 	private List<SupportDocumentSearchEntity> supportDocumentEntitys;
+
+	private static List<LicenseApplicationSearch> applications;
+
+	private List<LicenseApplicationSearchEntity> licenseApplicationSearchEntitys;
 
 	private String createdBy;
 
@@ -242,29 +247,43 @@ public class TradeLicenseSearchEntity {
 			tradeLicenseSearch.setExpiryDate((this.expiryDate.getTime()));
 		}
 
-		this.feeDetails = new ArrayList<LicenseFeeDetailSearch>();
+		if (this.getIsLegacy()) {
 
-		if (this.feeDetailEntitys != null) {
+			feeDetails = new ArrayList<LicenseFeeDetailSearch>();
 
-			for (LicenseFeeDetailSearchEntity feeDetailEntity : this.feeDetailEntitys) {
+			if (this.feeDetailEntitys != null) {
 
-				this.feeDetails.add(feeDetailEntity.toDomain());
+				for (LicenseFeeDetailSearchEntity feeDetailEntity : this.feeDetailEntitys) {
+
+					feeDetails.add(feeDetailEntity.toDomain());
+				}
 			}
+
+			tradeLicenseSearch.setFeeDetails(feeDetails);
+
+			supportDocuments = new ArrayList<SupportDocumentSearch>();
+
+			if (this.supportDocumentEntitys != null) {
+
+				for (SupportDocumentSearchEntity supportDocumentEntity : this.supportDocumentEntitys) {
+
+					supportDocuments.add(supportDocumentEntity.toDomain());
+				}
+			}
+
+			tradeLicenseSearch.setSupportDocuments(supportDocuments);
 		}
 
-		tradeLicenseSearch.setFeeDetails(this.feeDetails);
+		applications = new ArrayList<LicenseApplicationSearch>();
 
-		this.supportDocuments = new ArrayList<SupportDocumentSearch>();
+		if (this.licenseApplicationSearchEntitys != null) {
 
-		if (this.supportDocumentEntitys != null) {
+			for (LicenseApplicationSearchEntity licenseAppSearchEntity : this.licenseApplicationSearchEntitys) {
 
-			for (SupportDocumentSearchEntity supportDocumentEntity : this.supportDocumentEntitys) {
-
-				this.supportDocuments.add(supportDocumentEntity.toDomain());
+				applications.add(licenseAppSearchEntity.toDomain());
 			}
 		}
-
-		tradeLicenseSearch.setSupportDocuments(this.supportDocuments);
+		tradeLicenseSearch.setApplications(applications);
 
 		auditDetails.setCreatedBy(this.createdBy);
 
@@ -393,9 +412,9 @@ public class TradeLicenseSearchEntity {
 			this.expiryDate = new Timestamp(tradeLicenseSearch.getExpiryDate());
 		}
 
-		this.feeDetails = tradeLicenseSearch.getFeeDetails();
+		feeDetails = tradeLicenseSearch.getFeeDetails();
 
-		this.supportDocuments = tradeLicenseSearch.getSupportDocuments();
+		supportDocuments = tradeLicenseSearch.getSupportDocuments();
 
 		this.createdBy = (auditDetails == null) ? null : auditDetails.getCreatedBy();
 

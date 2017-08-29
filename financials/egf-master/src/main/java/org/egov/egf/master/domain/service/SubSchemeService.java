@@ -108,6 +108,7 @@ public class SubSchemeService {
 	}
 
 	public Pagination<SubScheme> search(SubSchemeSearch subSchemeSearch) {
+	        Assert.notNull(subSchemeSearch.getTenantId(), "tenantId is mandatory for subScheme search");
 		return subSchemeRepository.search(subSchemeSearch);
 	}
 

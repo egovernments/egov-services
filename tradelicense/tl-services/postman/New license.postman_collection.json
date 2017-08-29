@@ -1,0 +1,108 @@
+{
+	"variables": [],
+	"info": {
+		"name": "new license",
+		"_postman_id": "3221c55d-f6b7-111d-389a-32bfdd876268",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "New Trade License Create",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"9bb3bbc2-2275-4d06-b843-b09f66772a01\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n},\r\n\"licenses\": [\r\n        {\r\n            \"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"applicationNumber\":\"TL/000091/2017\", \r\n            \"applicationDate\": \"1499625000000\",\r\n            \"adhaarNumber\": \"081208020070\",\r\n            \"mobileNumber\": \"9987876565\",\r\n            \"ownerName\": \"Test Kumar\",\r\n            \"fatherSpouseName\": \"hhhdsksk\",\r\n            \"emailId\": \"pshubhamtechi@gmail.com\",\r\n            \"ownerAddress\": \"uuhkdsh\",\r\n            \"propertyAssesmentNo\": \"bjajdgjdg\",\r\n            \"localityId\": 20,\r\n            \"localityName\": \"Panda Veedhi\",\r\n            \"revenueWardId\": 7,\r\n            \"revenueWardName\": \"Revenue Ward No 2\",\r\n            \"adminWardId\": 7,\r\n            \"adminWardName\": \"Revenue Ward No 2\",\r\n            \"tradeAddress\": \"984789\",\r\n            \"ownerShipType\": \"RENTED\",\r\n            \"tradeTitle\": \"juice\",\r\n            \"tradeType\": \"PERMANENT\",\r\n            \"categoryId\": 1,\r\n            \"category\": \"Flammables updated\",\r\n            \"subCategoryId\": 2,\r\n            \"subCategory\": \"Flammables sub updated\",\r\n            \"uomId\": 1,\r\n            \"uom\": \"prasdad update\",\r\n            \"quantity\": 10,\r\n            \"validityYears\": 1,\r\n            \"remarks\": \"test\",\r\n            \"tradeCommencementDate\": \"1472063400000\",\r\n            \"licenseValidFromDate\": \"1472063400000\",\r\n            \"agreementDate\": \"1472063400000\",\r\n            \"agreementNo\": \"123456789\",\r\n            \"isLegacy\": false,\r\n            \"isPropertyOwner\": false,\r\n            \"active\": true,\r\n            \"expiryDate\": \"1522434600000\",\r\n            \"supportDocuments\": [\r\n                {\r\n                    \"documentTypeId\": 1,\r\n                    \"fileStoreId\": \"1\",\r\n                    \"comments\": \"\",\r\n                    \"auditDetails\": null,\r\n                    \"documentTypeName\": \"pavan\"\r\n                },\r\n                {\r\n                   \"documentTypeId\": 3,\r\n                    \"fileStoreId\": \"1\",\r\n                    \"comments\": \"\",\r\n                    \"auditDetails\": null,\r\n                    \"documentTypeName\": \"pavan\"\r\n                }\r\n            ],\r\n            \"auditDetails\": {\r\n                \"createdBy\": \"73\",\r\n                \"lastModifiedBy\": \"73\",\r\n                \"createdTime\": 1502788142025,\r\n                \"lastModifiedTime\": 1503666952474\r\n            },\r\n            \"status\": 1\r\n        }\r\n    ]\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "New license search",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_search?tenantId=default&ids=280&applicationNumber=TL/000091/2017",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"tl-services",
+						"license",
+						"v1",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "ids",
+							"value": "280",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "applicationNumber",
+							"value": "TL/000091/2017",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"9bb3bbc2-2275-4d06-b843-b09f66772a01\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n}\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

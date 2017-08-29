@@ -537,7 +537,7 @@ class NoDues extends Component {
                     self.setState({
                       serviceRequest: res.serviceReq
                     });
-                    
+
                   }, function(err) {
                     self.props.toggleSnackbarAndSetText(true, err.message, false, true);
                     self.props.setLoadingStatus('hide');
@@ -547,6 +547,8 @@ class NoDues extends Component {
                       serviceRequest: _servReq
                 });
               }
+              self.handleNext();
+
           }, function(err) {
 
           })
@@ -554,9 +556,11 @@ class NoDues extends Component {
         }
         else {
           //NO PAY DUE! RETURN SUCCESS!
+
           self.setState({
             demands: []
           })
+        self.handleNext();
         }
       }, function(err) {
 

@@ -47,7 +47,6 @@
          "feeDetails":[  
             {  
                "id":null,
-               "licenseId":null,
                "financialYear":null,
                "amount":null,
                "paid":false,
@@ -56,7 +55,8 @@
          ],
          "supportDocuments":null,
          "status":null,
-         "auditDetails":null
+         "auditDetails":null,
+         "workFlowDetails": null
       }
    ]
 }

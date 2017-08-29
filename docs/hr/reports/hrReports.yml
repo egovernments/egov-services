@@ -23,7 +23,7 @@ ReportDefinitions:
     type: string
     source: egeis_assignment
   - name: reports
-    label: reports.hr.employee.reportsUrl
+    label: reports.hr.employee.reports
     type: string
     source: hr    
     linkedReport:
@@ -63,7 +63,7 @@ ReportDefinitions:
     pattern: http://hr-masters:8080/hr-masters/hrstatuses/_search?tenantId=$tenantid|$..id|$..code
     source: egeis_hrstatus
     searchClause: and emp.employeestatus=$status
-  query: select  emp.code as code ,usr.name as name,dept.name as department,desig.name as designation 
+  query: select  emp.code as code ,usr.name as name,dept.name as department,desig.name as designation ,'employee_History' as reports
     from egeis_employee emp, egeis_assignment assign,eg_user usr, eg_department dept,egeis_designation desig
     where   emp.tenantid=$tenantid
     and usr.type='EMPLOYEE'

@@ -98,11 +98,11 @@ ReportDefinitions:
     source: egeis_assignment
   - name: fromdate
     label: reports.hr.employee.fromdate
-    type: epoch
+    type: string
     source: hr
   - name: todate
     label: reports.hr.employee.todate
-    type: epoch
+    type: string
     source: hr    
   searchParams:
   - name: departmentid
@@ -297,12 +297,12 @@ ReportDefinitions:
   - name: employeeStatus
     label: reports.hr.employeeStatus
     type: singlevaluelist
-    pattern: http://egov-common-masters:8080/egov-common-masters/departments/_search?tenantId=$tenantid|$..id|$..name
+    pattern: http://hr-masters:8080/hr-masters/hrstatuses/_search?tenantId=$tenantid|$..id|$..code
     source: hr
     isMandatory: false
     searchClause: and dept.id=$departmentId
   - name: leavetype
-    label: reports.hr.calenderYear
+    label: reports.hr.leavetype
     type: singlevaluelist
     pattern: http://egov-common-masters:8080/hr-leave/leavetypes/_search?tenantId=$tenantid|$..id|$..name
     source: hr
@@ -322,9 +322,9 @@ ReportDefinitions:
     searchClause: and lvtapp.todate <=$dateTo
   - name: leaveStatus
     label: reports.hr.leaveStatus
-    type: string
-    pattern: http://egov-common-masters:8080/egov-common-masters/calendaryears/_search?tenantId=$tenantid|$..id|$..name
-    source: eg_calendarYear
+    type: singlevaluelist
+    pattern: http://hr-masters:8080/hr-masters/hrstatuses/_search?tenantId=$tenantid|$..id|$..code
+    source: hr
     isMandatory: false
     searchClause: and hrstatus.id = $leaveStatus
   query: select leaveapp.applicationnumber as applicationnumber,emp.code||'-'||usr.name  as name, leavetype.name as leavetype , hrstatus.code as status,
@@ -377,7 +377,7 @@ ReportDefinitions:
     where emp.id not in (
     select assign.employeeid  from egeis_assignment 
     where to_date(to_char(to_timestamp(Trunc(CAST($date as bigint)/1000 )), 'YYYY/MM/DD'), 'YYYY-MM-DD') 
-    between fromdate and todate and tenantid = 'default' ) 
+    between fromdate and todate and tenantid = $tenantid ) 
     and emp.id=usr.id and emp.tenantid=usr.tenantid and assign.employeeid = emp.id and emp.tenantid=$tenantid
   groupBy: group by employeecode ,employeename;
     

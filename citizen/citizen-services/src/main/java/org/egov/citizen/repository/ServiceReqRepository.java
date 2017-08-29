@@ -2,17 +2,22 @@ package org.egov.citizen.repository;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
+import static java.util.Comparator.comparingLong;
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toCollection;
 
-import org.egov.citizen.model.AuditDetails;
 import org.egov.citizen.model.Comment;
+import org.egov.citizen.model.CommentResponse;
 import org.egov.citizen.model.Document;
 import org.egov.citizen.model.ServiceReq;
 import org.egov.citizen.model.ServiceReqRequest;
 import org.egov.citizen.repository.querybuilder.ServiceReqQueryBuilder;
+import org.egov.citizen.repository.rowmapper.CommentsAndDocsRowMapper;
 import org.egov.citizen.web.contract.ServiceRequestSearchCriteria;
-import org.egov.citizen.web.controller.ServiceController;
 import org.egov.common.contract.request.RequestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +27,7 @@ import org.springframework.stereotype.Repository;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,6 +43,7 @@ public class ServiceReqRepository {
 	@Autowired
 	private ServiceReqQueryBuilder serviceReqQueryBuilder;
 	
+	
 	public List<Map<String, Object>> search(ServiceRequestSearchCriteria serviceRequestSearchCriteria){
 		LOGGER.info("ServiceReqRepository");
 		final List<Object> preparedStatementValues = new ArrayList<>();
@@ -46,22 +53,53 @@ public class ServiceReqRepository {
         final String detailsQueryStr = serviceReqQueryBuilder.getDetailsQuery(serviceRequestSearchCriteria, preparedStatementValuesForDetailsSearch);
 
         List<Map<String, Object>> maps = null;
-        List<Map<String, Object>> detailsMap = null;
-
-      //  List<Asset> assets = new ArrayList<Asset>();
         try {
-        	LOGGER.info("queryStr::" + queryStr + "preparedStatementValues::" + preparedStatementValues.toString());
+        	    LOGGER.info("queryStr::" + queryStr + "preparedStatementValues::" + preparedStatementValues.toString());
 	            maps = jdbcTemplate.queryForList(queryStr, preparedStatementValues.toArray());
-	            detailsMap = jdbcTemplate.queryForList(detailsQueryStr, preparedStatementValues.toArray());
+	        	LOGGER.info("comment search queryStr::" + detailsQueryStr + " preparedStatementValuesForDetailsSearch::" + preparedStatementValuesForDetailsSearch.toString());    
+	            List<CommentResponse> commentRes = jdbcTemplate.query(detailsQueryStr, preparedStatementValuesForDetailsSearch.toArray(), new CommentsAndDocsRowMapper());
 	            LOGGER.info("maps::" + maps);
-	            LOGGER.info("detailsMap::" + detailsMap);
-	            maps.addAll(detailsMap);
+	            LOGGER.info("comments::" + commentRes);
+	            List<Comment> comments = new ArrayList<>();
+	            List<Document> documents = new ArrayList<>();
+	            for(CommentResponse commentResponse: commentRes){
+	            	Comment comment = new Comment();
+	            	Document document = new Document();
+	            	
+	            	comment.setSrn(commentResponse.getSrn());
+	            	comment.setFrom(commentResponse.getFrom());
+	            	comment.setText(commentResponse.getText());
+	            	comment.setTimeStamp(commentResponse.getTimeStamp());
+	            	
+	            	document.setSrn(commentResponse.getSrn());
+	            	document.setFilePath(commentResponse.getFilePath());
+	            	document.setFrom(commentResponse.getDocFrom());
+	            	document.setTimeStamp(commentResponse.getDocTimeStamp());
+	            	
+	            	comments.add(comment);	          
+	            	documents.add(document);
+	         
+	            }
+	            Map<String, Object> map = new HashMap<String, Object>();
+	            
+	            List<Comment> commentList = comments.stream()
+                        .collect(collectingAndThen(toCollection(() -> new TreeSet<>(comparingLong(Comment :: getTimeStamp))),
+                                                   ArrayList::new));
+	            List<Document> documentList = documents.stream()
+                        .collect(collectingAndThen(toCollection(() -> new TreeSet<>(comparingLong(Document :: getTimeStamp))),
+                                                   ArrayList::new));
+
+	            map.put("comments", commentList);
+	            map.put("documents", documentList);
+	            
+	            maps.add(map);
             } catch (final Exception ex) {
             	LOGGER.info("the exception from findforcriteria : ", ex);
         }
         return maps;
 		
 	}
+
 
 	public void persistServiceReq(ServiceReqRequest serviceReqRequest) {
 		RequestInfo requestInfo = serviceReqRequest.getRequestInfo();
@@ -141,15 +179,15 @@ public class ServiceReqRepository {
 			LOGGER.info("Exception while parsing the json: ", e);
 		}
 		String query = "INSERT INTO egov_citizen_service_req_comments(id, srn, tenantid, commentfrom, "
-				+ "commentaddressedto, comment, commentdate, createddate, "
+				+ "comment, commentdate, createddate, "
 				+ "lastmodifiedddate, createdby, lastmodifiedby) VALUES "
-				+ "(NEXTVAL('seq_citizen_service_comments'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+				+ "(NEXTVAL('seq_citizen_service_comments'), ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		
 		List<Object[]> batchArgs = new ArrayList<>();
 		for(Comment comment: serviceReq.getComments()){
 		
 			Object[] obj = new Object[] { serviceReq.getServiceRequestId(), serviceReq.getTenantId(),
-					comment.getFrom(), comment.getTo(), comment.getText(), comment.getTimeStamp(), new Date().getTime(),
+					comment.getFrom(), comment.getText(), comment.getTimeStamp(), new Date().getTime(),
 					new Date().getTime(), requestInfo.getUserInfo().getId(), requestInfo.getUserInfo().getId()};
 			
 			batchArgs.add(obj);
@@ -171,15 +209,15 @@ public class ServiceReqRepository {
 		} catch (JsonProcessingException e) {
 			LOGGER.info("Exception while parsing the json: ", e);
 		}
-		String query = "INSERT INTO egov_citizen_service_req_documents(id, srn, tenantid, filestoreid"
+		String query = "INSERT INTO egov_citizen_service_req_documents(id, srn, tenantid, filestoreid, uploadedby, uploaddate"
 				+ ", isactive, createddate, lastmodifiedddate, createdby, lastmodifiedby) VALUES "
-				+ "(NEXTVAL('seq_citizen_service_documents'), ?, ?, ?, ?, ?, ?, ?, ?);";
+				+ "(NEXTVAL('seq_citizen_service_documents'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		List<Object[]> batchArgs = new ArrayList<>();
 		for(Document document: serviceReq.getDocuments()){
 		
 			Object[] obj = new Object[] { serviceReq.getServiceRequestId(), serviceReq.getTenantId(),
-					document.getFileStoreId(), true, new Date().getTime(), new Date().getTime(), requestInfo.getUserInfo().getId(), 
-					requestInfo.getUserInfo().getId()};
+					document.getFilePath(), document.getFrom(), document.getTimeStamp(), true, new Date().getTime(), new Date().getTime(), 
+					requestInfo.getUserInfo().getId(), requestInfo.getUserInfo().getId()};
 			
 			batchArgs.add(obj);
 		}

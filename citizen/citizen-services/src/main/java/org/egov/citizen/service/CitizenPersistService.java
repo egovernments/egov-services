@@ -76,8 +76,15 @@ public class CitizenPersistService {
 	 
 	
 	public Map<String, Object> search(ServiceRequestSearchCriteria serviceRequestSearchCriteria, RequestInfo requestInfo){
-		List<Map<String, Object>> maps = serviceReqRepository.search(serviceRequestSearchCriteria);
-		LOGGER.info("Result receieved from db is: "+maps);
+		List<Map<String, Object>> mapsRes = serviceReqRepository.search(serviceRequestSearchCriteria);
+		LOGGER.info("Result from db for search: "+mapsRes);
+		List<Map<String, Object>> maps = new ArrayList<>();
+		for(int i = 0; i< mapsRes.size() - 1; i++){
+			Map<String, Object> serviceReqMap = new HashMap<>();
+			serviceReqMap = mapsRes.get(i);
+			maps.add(serviceReqMap);
+
+		}
 		List<Object> response = new ArrayList<>();
 		Map<String, Object> responeMap = new HashMap<>();
 
@@ -88,9 +95,6 @@ public class CitizenPersistService {
 			LOGGER.info("Map: "+map);
 		
 			String s = (String)map.get("serviceReq");
-			if(s == null){
-				s = (String)map.get("comment");
-			}
 			ObjectMapper objectMapper = new ObjectMapper();
 			try {
 				Map<String, Object> m= objectMapper.readValue(s, Map.class);
@@ -105,26 +109,15 @@ public class CitizenPersistService {
 				System.out.println("m:"+m);
 			} catch (IOException e) {
 				LOGGER.info("Exception: ",e);
-
-				
-				List<Object> comments = new ArrayList<>();
-				List<Object> documents = new ArrayList<>();
-
-				comments.add("comment: "+map.get("comment"));
-				comments.add("commentfrom: "+map.get("commentfrom"));
-				comments.add("commentaddressedto: "+map.get("commentaddressedto"));
-				comments.add("commentdate: "+map.get("commentdate"));
-
-				documents.add("fileStoreId: "+map.get("fileStoreId"));
-				
-				responeMap.put("comments", comments);
-				responeMap.put("documents", documents);
 			}
 
 		}
 		System.out.println("response:"+response);
 		
 		responeMap.put("serviceReq", response);
+		responeMap.put("comments", mapsRes.get(mapsRes.size() - 1).get("comments"));
+		responeMap.put("documents", mapsRes.get(mapsRes.size() - 1).get("documents"));
+
 		responeMap.put("ResponseInfo", responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true));
 		return responeMap;
 	}
@@ -165,7 +158,7 @@ public class CitizenPersistService {
 		}
 
 	public String getServiceReqId() {
-		String req = "{\"RequestInfo\":{\"apiId\":\"org.egov.ptis\",\"ver\":\"1.0\",\"ts\":\"20934234234234\",\"action\":\"asd\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\":\"0b2ebb0d-cb60-4710-9e80-96a926e2a011\"},\"idRequests\":[{\"idName\":\"CS.ServiceRequest\",\"tenantId\":\"default\",\"format\":\"SRN-[cy:MM]/[fy:yyyy-yy]-[d{4}]\"}]}";
+		String req = "{\"RequestInfo\":{\"apiId\":\"org.egov.ptis\",\"ver\":\"1.0\",\"ts\":\"20934234234234\",\"action\":\"asd\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\":\"05dd0b7a-484a-47be-a831-5585cc2b5af8\"},\"idRequests\":[{\"idName\":\"CS.ServiceRequest\",\"tenantId\":\"default\",\"format\":\"SRN-[cy:MM]/[fy:yyyy-yy]-[d{4}]\"}]}";
 		String url = idGenHost+idGenGetIdUrl;
 		log.info("url:"+url);
 		log.info("req: "+req);
@@ -208,6 +201,7 @@ public class CitizenPersistService {
 			e.printStackTrace();
 		}
 		AuditDetails auditDetails = getAuditDetaisl(serviceReqRequest.getRequestInfo(), false);
+		LOGGER.info("serviceReqRequest: "+serviceReqRequest);
 		serviceReqRequest.getServiceReq().getAuditDetails().setLastModifiedBy(auditDetails.getLastModifiedBy());
 		serviceReqRequest.getServiceReq().getAuditDetails().setLastModifiedDate(auditDetails.getLastModifiedDate());
 		

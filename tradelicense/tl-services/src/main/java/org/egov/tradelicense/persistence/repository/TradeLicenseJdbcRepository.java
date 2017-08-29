@@ -441,7 +441,7 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 		}
 
 		if (applicationNumber != null && !applicationNumber.trim().isEmpty()) {
-			searchSql.append(" AND upper(applicationNumber)  like :applicationNumber");
+			searchSql.append(" AND id in ( SELECT licenseId FROM egtl_license_application WHERE upper(applicationNumber)  like :applicationNumber)");
 			parameter.addValue("applicationNumber", '%' + applicationNumber.toUpperCase() + '%');
 		}
 

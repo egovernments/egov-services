@@ -805,7 +805,7 @@ handlePopUpsub = (type , jsonPath, value) => {
       console.log("hello", value);
       this.handleOpenSub();
     } else {
-      console.log("hi", value);
+
       flags = 1;
       tradeSubVal = value;
 
@@ -832,7 +832,7 @@ handlePopUpLicense = (type , jsonPath, value) => {
   handleChange = (e, property, isRequired=false, pattern="", requiredErrMsg="Required", patternErrMsg="Pattern Missmatch") => {
       let {getVal} = this;
       let self = this;
-      let {handleChange,mockData,setDropDownData} = this.props;
+      let {handleChange,mockData,setDropDownData, formData} = this.props;
       let hashLocation = window.location.hash;
       let {validityYear}=this.state;
       let obj = specifications[`tl.create`];
@@ -930,6 +930,14 @@ if(property == "licenses[0].categoryId"){
                     }
           				}
           			}
+
+                if(id.categoryId == "" || id.categoryId == null){
+                  formData.tradeSubCategory = "";
+                  setDropDownData(value.jsonPath, []);
+                  console.log(value.jsonPath);
+                  console.log("helo", formData);
+                  return false;
+                }
 
                 Api.commonApiPost(context,id).then(function(response)
                 {

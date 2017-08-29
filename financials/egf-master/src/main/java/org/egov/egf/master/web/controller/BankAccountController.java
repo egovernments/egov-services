@@ -130,7 +130,7 @@ public class BankAccountController {
 		BankAccountContract contract;
 		ModelMapper model = new ModelMapper();
 		List<BankAccountContract> bankAccountContracts = new ArrayList<>();
-		Pagination<BankAccount> bankaccounts = bankAccountService.search(domain);
+		Pagination<BankAccount> bankaccounts = bankAccountService.search(domain, errors);
 
 		for (BankAccount bankAccount : bankaccounts.getPagedData()) {
 			contract = new BankAccountContract();

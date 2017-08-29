@@ -41,6 +41,11 @@ public class FundJdbcRepository extends JdbcRepository {
 		return entity;
 
 	}
+	public boolean delete(FundEntity entity,String reason) {
+		super.delete(entity, reason);
+		return true;
+
+	}
 
 	public Pagination<Fund> search(FundSearch domain) {
 		FundSearchEntity fundSearchEntity = new FundSearchEntity();

@@ -133,7 +133,7 @@ public class AccountDetailTypeController {
 		AccountDetailTypeContract contract;
 		ModelMapper model = new ModelMapper();
 		List<AccountDetailTypeContract> accountDetailTypeContracts = new ArrayList<>();
-		Pagination<AccountDetailType> accountdetailtypes = accountDetailTypeService.search(domain);
+		Pagination<AccountDetailType> accountdetailtypes = accountDetailTypeService.search(domain, errors);
 
 		for (AccountDetailType accountDetailType : accountdetailtypes.getPagedData()) {
 			contract = new AccountDetailTypeContract();

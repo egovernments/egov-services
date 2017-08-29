@@ -105,7 +105,7 @@ public class FunctionControllerTest {
 		page.setPagedData(getFunctions());
 		page.getPagedData().get(0).setId("1");
 
-		when(functionService.search(any(FunctionSearch.class))).thenReturn(page);
+		when(functionService.search(any(FunctionSearch.class), any(BindingResult.class))).thenReturn(page);
 
 		mockMvc.perform(post("/functions/_search").content(resources.getRequestInfo())
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(200))

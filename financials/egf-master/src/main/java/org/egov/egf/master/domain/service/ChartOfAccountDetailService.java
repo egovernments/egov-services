@@ -1,5 +1,6 @@
 package org.egov.egf.master.domain.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.constants.Constants;
@@ -7,7 +8,6 @@ import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.AccountDetailType;
-import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.model.ChartOfAccount;
 import org.egov.egf.master.domain.model.ChartOfAccountDetail;
 import org.egov.egf.master.domain.model.ChartOfAccountDetailSearch;
@@ -59,6 +59,12 @@ public class ChartOfAccountDetailService {
 					validator.validate(chartOfAccountDetail, errors);
 				}
 				break;
+                        case Constants.ACTION_SEARCH:
+                                Assert.notNull(chartofaccountdetails, "Chartofaccountdetails to search must not be null");
+                                for (ChartOfAccountDetail chartofaccountdetail : chartofaccountdetails) {
+                                        Assert.notNull(chartofaccountdetail.getTenantId(), "TenantID must not be null for search");
+                                }
+                                break;
 			default:
 
 			}
@@ -123,10 +129,25 @@ public class ChartOfAccountDetailService {
 		chartOfAccountDetailRepository.add(request);
 	}
 
-	public Pagination<ChartOfAccountDetail> search(ChartOfAccountDetailSearch chartOfAccountDetailSearch) {
-	        Assert.notNull(chartOfAccountDetailSearch.getTenantId(), "tenantId is mandatory for chartOfAccountDetail search");
-		return chartOfAccountDetailRepository.search(chartOfAccountDetailSearch);
-	}
+        public Pagination<ChartOfAccountDetail> search(ChartOfAccountDetailSearch chartOfAccountDetailSearch, BindingResult errors) {
+            
+            try {
+                
+                List<ChartOfAccountDetail> chartOfAccountDetails = new ArrayList<>();
+                chartOfAccountDetails.add(chartOfAccountDetailSearch);
+                validate(chartOfAccountDetails, Constants.ACTION_SEARCH, errors);
+    
+                if (errors.hasErrors()) {
+                    throw new CustomBindException(errors);
+                }
+            
+            } catch (CustomBindException e) {
+    
+                throw new CustomBindException(errors);
+            }
+    
+            return chartOfAccountDetailRepository.search(chartOfAccountDetailSearch);
+        }
 
 	@Transactional
 	public ChartOfAccountDetail save(ChartOfAccountDetail chartOfAccountDetail) {

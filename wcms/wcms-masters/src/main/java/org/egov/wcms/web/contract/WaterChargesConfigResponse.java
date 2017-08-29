@@ -39,9 +39,7 @@
  */
 package org.egov.wcms.web.contract;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.egov.common.contract.response.ResponseInfo;
 
@@ -65,6 +63,6 @@ public class WaterChargesConfigResponse {
     @JsonProperty("ResponseInfo")
     private ResponseInfo responseInfo;
 
-    @JsonProperty("WaterChargesConfiguration")
-    private Map<String, List<String>> waterChargesConfiguration = new HashMap<>();
+    @JsonProperty("WaterConfigurationValue")
+    private List<WaterConfigurationValue> waterChargesConfigValue;
 }

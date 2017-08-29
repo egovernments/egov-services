@@ -3,25 +3,30 @@ package org.egov.common.persistence.repository;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.LongStream;
 
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.persistence.entity.AuditableEntity;
+import org.egov.egf.master.persistence.entity.ChartOfAccountEntity;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+
 @Repository
 public abstract class JdbcRepository {
-
+	private static final Logger LOG = LoggerFactory.getLogger(JdbcRepository.class);
 	@Autowired
 	public JdbcTemplate jdbcTemplate;
 	@Autowired
@@ -173,6 +178,12 @@ public abstract class JdbcRepository {
 		return uQuery;
 	}
 
+	/** this api is not used 
+	 * 
+	 * @param tableName
+	 * @param obj
+	 * @return
+	 */
 	public static String getBasicSearchQuery(String tableName, Object obj) {
 		String uQuery = "select * from  :tableName where  :searchFields ";
 		StringBuilder fieldNameAndParams = new StringBuilder();
@@ -354,7 +365,7 @@ public abstract class JdbcRepository {
 					&& (!s.toLowerCase().trim().endsWith("asc") && !s.toLowerCase().trim().endsWith("desc"))) {
 				invalidDataException.setFieldName(s.split(" ")[0]);
 				invalidDataException
-						.setDefaultMessage("Please send the proper sortBy order for the field " + s.split(" ")[0]);
+						.setMessageKey("Please send the proper sortBy order for the field " + s.split(" ")[0]);
 				throw invalidDataException;
 			}
 		}
@@ -378,14 +389,125 @@ public abstract class JdbcRepository {
 				} else {
 					isFieldExist = Boolean.FALSE;
 				}
-			}
+			}  
 			if (!isFieldExist) {
 				invalidDataException.setFieldName(s.contains(" ") ? s.split(" ")[0] : s);
-				invalidDataException.setDefaultMessage("Please send the proper Field Names ");
+				invalidDataException.setMessageKey("Please send the proper Field Names ");
 				throw invalidDataException;
 			}
 		}
 
+	}
+
+	public Boolean uniqueCheck(String fieldName, Object ob) {
+		LOG.info("Unique Checking for field "+fieldName);
+		
+		String obName = ob.getClass().getSimpleName();
+		List<String> identifierFields = allIdentitiferFields.get(obName);
+		List<Map<String, Object>> batchValues = new ArrayList<>();
+		
+		//batchValues.get(0).putAll(paramValues(ob, allIdentitiferFields.get(obName)));   
+		Map<String, Object> paramValues = new HashMap<>();
+		String table="";
+		try {
+			table = FieldUtils.readDeclaredField(ob, "TABLE_NAME").toString();
+		} catch (IllegalAccessException e) {
+		    throw new RuntimeException("Not able to get Table_name from entity"+obName);
+		}
+		StringBuffer uniqueQuery=new StringBuffer("select count(*) as count from "+table+" where "+fieldName+ "=:fieldValue");
+		paramValues.put("fieldValue", getValue(getField(ob,fieldName ), ob));
+	    int i=0;
+		for (String s : identifierFields) {		
+			  
+				if(s.equalsIgnoreCase("tenantId"))
+			    {
+			    	uniqueQuery.append(" and ");
+					uniqueQuery.append(s).append("=").append(":").append(s);
+					//implement fallback here 
+					paramValues.put(s,getValue(getField(ob,s ), ob));
+					continue;
+			    }
+			   if( getValue(getField(ob,s ), ob)!=null)
+			   {
+				uniqueQuery.append(" and ");
+				uniqueQuery.append(s).append("!=").append(":").append(s);
+				paramValues.put(s,getValue(getField(ob,s ), ob));
+			   }
+			}
+		
+		 
+		 
+		 
+	 
+		
+		Long count = namedParameterJdbcTemplate.queryForObject(uniqueQuery.toString(), paramValues, Long.class);
+		LOG.info("Record Count for  field "+count);
+		return count>=1?false:true;
+				
+	}
+
+	public void delete(Object entity,String reason) {
+	
+		String backupTable="eg_deletedtxn";
+
+		String obName = entity.getClass().getSimpleName();
+		List<String> identifierFields = allIdentitiferFields.get(obName);
+		List<Map<String, Object>> batchValues = new ArrayList<>();
+		batchValues.get(0).putAll(paramValues(entity, allIdentitiferFields.get(obName)));   
+		Map<String, Object> paramValues = new LinkedHashMap<>();
+		Collection<Object> values = batchValues.get(0).values(); 
+		for(Object value:values)
+		{
+			if(value==null)
+				throw new RuntimeException("id field is null . Delete cannot be performed");
+		}
+		
+		String table="";
+		try {
+			table = FieldUtils.readDeclaredField(entity, "TABLE_NAME").toString();
+		} catch (IllegalAccessException e) {
+		    throw new RuntimeException("Not able to get Table_name from entity"+obName);
+		}
+		paramValues.put("tablename", table);
+		paramValues.put("reason", reason);
+		
+		batchValues.get(0).putAll(paramValues);  
+		StringBuffer backupQuery=new StringBuffer();
+		StringBuffer deleteQuery=new StringBuffer();
+		backupQuery.append("insert into eg_failedtxn select '1',:tablename,id,tenantid,:reason,row_to_json(:tablename),now() "
+				+ " from :tablename where tenantid=:tenantid and id=:id ");
+		namedParameterJdbcTemplate.batchUpdate(backupQuery.toString(), batchValues.toArray(new Map[batchValues.size()]));  
+		deleteQuery.append("delete from  :tablename where ");
+		int i=0;
+		for (String s : identifierFields) {		
+			  if(i!=0)
+				  deleteQuery.append(" and ");
+			if(s.equalsIgnoreCase("tenantId"))
+		    {
+				 
+				deleteQuery.append(s).append("=").append(":").append(s);
+				//implement fallback here 
+				paramValues.put(s,getValue(getField(entity,s ), entity));
+				continue;
+		    }
+		   if( getValue(getField(entity,s ), entity)!=null)
+		   {
+			  
+			   deleteQuery.append(s).append("!=").append(":").append(s);
+			paramValues.put(s,getValue(getField(entity,s ), entity));
+		   }
+		 i++;
+		}
+	
+		batchValues.get(0).putAll(paramValues);
+		
+		namedParameterJdbcTemplate.batchUpdate(deleteQuery.toString(), batchValues.toArray(new Map[batchValues.size()]));  
+		
+		
+		
+		
+		//paramValues.put("fieldValue", getValue(getField(ob,fieldName ), ob));  
+		
 	}
 
 }

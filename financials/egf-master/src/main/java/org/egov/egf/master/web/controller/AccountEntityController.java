@@ -130,7 +130,7 @@ public class AccountEntityController {
 		AccountEntityContract contract;
 		ModelMapper model = new ModelMapper();
 		List<AccountEntityContract> accountEntityContracts = new ArrayList<>();
-		Pagination<AccountEntity> accountentities = accountEntityService.search(domain);
+		Pagination<AccountEntity> accountentities = accountEntityService.search(domain, errors);
 
 		for (AccountEntity accountEntity : accountentities.getPagedData()) {
 			contract = new AccountEntityContract();

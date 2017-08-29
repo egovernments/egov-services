@@ -37,40 +37,34 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.tradelicense.domain.model;
+package org.egov.wcms.web.contract;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@AllArgsConstructor
-@EqualsAndHashCode
 @Getter
-@NoArgsConstructor
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString
-@Builder
+@EqualsAndHashCode
+public class WaterConfigurationValue {
 
-public class LicenseBill {
+    private Long id;
 
-    @NotNull
-    private long id;
+    @Size(min = 3, max = 50)
+    private String value;
 
-    @NotNull
-    private long licenseId;
+    private WaterConfiguration waterConfiguration;
 
-
-    private String billId;
-
-
-    @NotNull
-    private AuditDetails auditDetails;
+    private Long effectiveFrom;
 
     @NotNull
     private String tenantId;

@@ -306,7 +306,7 @@ public class TradeLicenseRepository {
 	}
 
 	@Transactional
-	public TradeLicense update(TradeLicense tradeLicense) {
+	public TradeLicense update(TradeLicense tradeLicense, RequestInfo requestInfo) {
 
 		TradeLicenseEntity entity = tradeLicenseJdbcRepository.update(new TradeLicenseEntity().toEntity(tradeLicense));
 		if (tradeLicense.getSupportDocuments() != null && tradeLicense.getSupportDocuments().size() > 0) {
@@ -351,9 +351,11 @@ public class TradeLicenseRepository {
 			}
 		}
 
-		if (tradeLicense.getLicenseBills() != null && !tradeLicense.getLicenseBills().isEmpty()) {
-			final Object[] objValue = new Object[] { tradeLicense.getId(), tradeLicense.getBillId(),
-					tradeLicense.getTenantId(), Long.valueOf(tradeLicense.getAuditDetails().getCreatedBy()),
+		if (tradeLicense.getBillId() != null) {
+		        TradeLicenseSearch tradeLicenseSearch = getByLicenseId(tradeLicense, requestInfo);
+			final Object[] objValue = new Object[] { tradeLicenseSearch.getApplications().get(0).getId(),
+			                tradeLicense.getBillId(), tradeLicense.getTenantId(),
+			                Long.valueOf(tradeLicense.getAuditDetails().getCreatedBy()),
 					new Date(new java.util.Date().getTime()),
 					Long.valueOf(tradeLicense.getAuditDetails().getLastModifiedBy()),
 					new Date(new java.util.Date().getTime()) };

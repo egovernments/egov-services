@@ -250,7 +250,7 @@ var dat = {
             "name": "TradeTitle",
             "jsonPath": "licenses[0].tradeTitle",
             "label": "tl.create.licenses.groups.TradeDetails.TradeTitle",
-            "pattern": "^.[a-zA-Z./ -]{3,100}$",
+            "pattern": "^.[a-zA-Z0-9&:@./ -]{3,100}$",
             "type": "text",
             "isRequired": true,
             "isDisabled": false,
@@ -1010,7 +1010,7 @@ var dat = {
               },
               {
                 "name": "validity",
-                "jsonPath": "categories[0].validityYears",
+                "jsonPath": "licenses[0].validityYears",
                 "label": "tl.view.licenses.groups.validity",
                 "pattern": "",
                 "type": "text",

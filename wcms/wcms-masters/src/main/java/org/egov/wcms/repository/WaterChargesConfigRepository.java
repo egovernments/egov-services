@@ -46,6 +46,8 @@ import java.util.Map;
 import org.egov.wcms.repository.builder.WaterChargesConfigQueryBuilder;
 import org.egov.wcms.repository.rowmapper.WaterChargesConfigRowMapper;
 import org.egov.wcms.web.contract.WaterChargesConfigGetRequest;
+import org.egov.wcms.web.contract.WaterConfiguration;
+import org.egov.wcms.web.contract.WaterConfigurationValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -62,11 +64,12 @@ public class WaterChargesConfigRepository {
     @Autowired
     private WaterChargesConfigQueryBuilder waterChargesConfigQueryBuilder;
 
-    public Map<String, List<String>> findForCriteria(final WaterChargesConfigGetRequest waterChargesConfigGetRequest) {
+    public List<WaterConfigurationValue> findForCriteria(final WaterChargesConfigGetRequest waterChargesConfigGetRequest) {
         final Map<String, Object> preparedStatementValues = new HashMap<>();
         final String queryStr = waterChargesConfigQueryBuilder.getQuery(waterChargesConfigGetRequest, preparedStatementValues);
-        return jdbcTemplate.query(queryStr,
+        final List<WaterConfigurationValue> waterConfigValues = jdbcTemplate.query(queryStr,
                 preparedStatementValues, waterChargesConfigRowMapper);
+        return waterConfigValues;
     }
 
 }

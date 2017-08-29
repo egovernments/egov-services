@@ -138,6 +138,17 @@ public class UtilityBuilder {
 		return uniqueQuery.toString();
 	}
 
+	
+	
+	public static String getUniqueLicenseStatusValidationQuerywithModuleType(String tenantId,  String code, String moduleType,
+			String tableName) {
+
+		StringBuffer uniqueQuery = new StringBuffer("select count(*) from " + tableName);
+		uniqueQuery.append(" where LOWER(moduleType) = '" + moduleType.toLowerCase() + "'");
+		uniqueQuery.append(" AND LOWER(tenantId) = '" + tenantId.toLowerCase() + "'");
+		uniqueQuery.append(" AND LOWER(code) = '" + code.toLowerCase() + "'");
+		return uniqueQuery.toString();
+	}
 	public static String getUniqueTenantNameCodeQuery(String tableName, String code, String name, String tenantId,
 			Long id) {
 

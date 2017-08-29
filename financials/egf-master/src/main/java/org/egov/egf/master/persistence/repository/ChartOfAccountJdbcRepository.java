@@ -42,7 +42,8 @@ public class ChartOfAccountJdbcRepository extends JdbcRepository {
 		return entity;
 
 	}
-
+	
+	 
 	public Pagination<ChartOfAccount> search(ChartOfAccountSearch domain) {
 		ChartOfAccountSearchEntity chartOfAccountSearchEntity = new ChartOfAccountSearchEntity();
 		chartOfAccountSearchEntity.toEntity(domain);

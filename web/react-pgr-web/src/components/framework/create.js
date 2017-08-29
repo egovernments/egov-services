@@ -584,7 +584,7 @@ class Report extends Component {
 
   handleChange = (e, property, isRequired, pattern, requiredErrMsg="Required", patternErrMsg="Pattern Missmatch") => {
       let {getVal} = this;
-      let {handleChange,mockData,setDropDownData} = this.props;
+      let {handleChange,mockData,setDropDownData, formData} = this.props;
       let hashLocation = window.location.hash;
       let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
       // console.log(obj);
@@ -617,6 +617,14 @@ class Report extends Component {
                     }
           				}
           			}
+
+                if(id.categoryId == "" || id.categoryId == null){
+                  formData.tradeSubCategory = "";
+                  setDropDownData(value.jsonPath, []);
+                  console.log(value.jsonPath);
+                  console.log("helo", formData);
+                  return false;
+                }
 
                 Api.commonApiPost(context,id).then(function(response) {
                   if(response) {
@@ -786,7 +794,7 @@ class Report extends Component {
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler} = this;
-    
+
     return (
       <div className="Report">
         <form onSubmit={(e) => {

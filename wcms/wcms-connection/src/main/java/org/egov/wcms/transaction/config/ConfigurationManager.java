@@ -228,4 +228,7 @@ public class ConfigurationManager {
     @Value("${id.hscNumberOfChar}")
     private Integer hscNumberOfChar; 
     
+    @Value("${egov.services.wcms_masters.waterChargesConfig.searchpath}")
+    private String waterMasterServiceWaterChargesConfigSearchPathTopic;
+    
 }

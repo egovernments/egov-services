@@ -47,7 +47,7 @@ public class DemandQueryBuilderTest {
 				+ "demanddetail.lastModifiedtime AS dllastModifiedtime,demanddetail.tenantid AS "
 				+ "dltenantid FROM egbs_demand demand INNER JOIN egbs_demanddetail demanddetail "
 				+ "ON demand.id=demanddetail.demandid AND demand.tenantid=demanddetail.tenantid "
-				+ "WHERE demand.tenantid=? ORDER BY demand.id LIMIT ? OFFSET ?";
+				+ "WHERE demand.tenantid=? ORDER BY demand.taxperiodfrom LIMIT ? OFFSET ?";
 		
 		assertEquals(query,
 				demandQueryBuilder.getDemandQuery(demandCriteria, new HashSet<>(),preparedStatementValues));

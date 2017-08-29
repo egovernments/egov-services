@@ -2,8 +2,6 @@ Dear {{Owner}},
 New Trade License Application request has been accepted with Acknowledgement No.{{Application Number}}.  Dated {{Application Date}} 
 The application Fee to be paid is Rs.{{Application Fee}} 
 
-Click on below link to view the application and take necessary action. 
-{{Link}}
 
 Thanks,
 {{ULB Name}}

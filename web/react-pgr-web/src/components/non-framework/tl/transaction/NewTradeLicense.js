@@ -41,7 +41,7 @@ const tradeOwnerDetailsCardFields = [
 
 const tradeLocationDetails = [
   {label : "Property Assessment No", type:"text", code:"propertyAssesmentNo", isMandatory:false, maxLength:20, pattern:/^[+-]?\d+$/, errorMsg:"Invalid Assessment Number"},
-  {label : "Locality", type:"autocomplete", code:"localityId", codeName:"localityName", isMandatory:true, maxLength:50, pattern:""},
+  {label : "Locality", type:"dropdown", code:"localityId", codeName:"localityName", isMandatory:true, maxLength:50, pattern:""},
   {label : "Admin Ward", type:"dropdown", code:"adminWardId", codeName:"adminWardName", isMandatory:true, maxLength:50, pattern:""},
   {label : "Revenue Ward", type:"dropdown", code:"revenueWardId", codeName:"revenueWardName", isMandatory:true, maxLength:100, pattern:""},
   {label : "Ownership Type", code:"ownerShipType", type:"dropdown", isMandatory:true, maxLength:50, pattern:""},
@@ -53,10 +53,10 @@ const tradeDetails = [
   {label : "Trade Type", type:"dropdown", code:"tradeType", isMandatory:true, maxLength:50, pattern:""},
   {label : "Trade Category", type:"dropdown", code:"categoryId", codeName:'category', codeName:"adminWardName", isMandatory:true, maxLength:50, pattern:""},
   {label : "Trade Sub-Category", type:"dropdown", code:"subCategoryId", codeName:"subCategory", isMandatory:true, maxLength:100, pattern:""},
-  {label : "UOM", code:"uomId", codeName:"uom", type:"text", isMandatory:true, maxLength:50, pattern:""},
+  {label : "UOM", code:"uomId", codeName:"uom", type:"text", isMandatory:true, maxLength:50, pattern:"", isDisabled:true},
   {label : "Trade Value for the UOM", type:"text", code:"quantity", isMandatory:true, maxLength:50, pattern:/^[+-]?\d+(\.\d{2})?$/, errorMsg:"UOM accepts only numbers"},
-  {label : "Validity Years", type:"text", code:"validityYears", isMandatory:true, maxLength:50, pattern:""},
-  {label : "Remarks", type:"textarea", code:"validityYears", isMandatory:false, maxLength:1000, pattern:""},
+  {label : "Validity Years", type:"text", code:"validityYears", isMandatory:true, maxLength:50, pattern:"", isDisabled:true},
+  {label : "Remarks", type:"textarea", code:"remarks", isMandatory:false, maxLength:1000, pattern:""},
   {label : "Trade Commencement Date", type:"date", code:"tradeCommencementDate", isMandatory:true, maxLength:1000, pattern:patterns.date, errorMsg:"Invalid Date"},
   {label : "Trader is not the owner of the Property", type:"checkbox", code:"isPropertyOwner", isMandatory:false}
 ]
@@ -75,6 +75,21 @@ const customStyles={
   }
 }
 
+function compareStrings(a, b) {
+  // Assuming you want case-insensitive comparison
+  a = a.toLowerCase();
+  b = b.toLowerCase();
+
+  return (a < b) ? -1 : (a > b) ? 1 : 0;
+}
+
+function sortArrayByAlphabetically(arry, keyToSort){
+  return arry.sort(function(a, b) {
+    return compareStrings(a[keyToSort], b[keyToSort]);
+  });
+}
+
+
 
 class NewTradeLicense extends Component {
 
@@ -82,20 +97,170 @@ class NewTradeLicense extends Component {
     super();
     this.customHandleChange = this.customHandleChange.bind(this);
     this.state={
+      isPropertyOwner:false,
+      documentTypes:[], //supporting documents
       autocompleteDataSource:{
         localityId:[], //assigning datasource by field code
+        localityIdConfig: { //autocomplete config
+         text: 'name',
+         value: 'id'
+        }
+      },
+      dropdownDataSource:{
+        adminWardId:[],
+        adminWardIdConfig: {
+          text: 'name',
+          value: 'id'
+        },
+        revenueWardId:[],
+        revenueWardIdConfig: {
+          text: 'name',
+          value: 'id'
+        },
+        categoryId:[],
+        categoryIdConfig: {
+          text: 'name',
+          value: 'id'
+        },
+        subCategoryId:[],
+        subCategoryIdConfig:{
+          text: 'name',
+          value: 'id'
+        },
+        tradeType:[{
+          id:"PERMANENT",
+          name:"PERMANENT"
+        },
+        {
+          id:"TEMPORARY",
+          name:"TEMPORARY"
+        }],
+        tradeTypeConfig: {
+          text: 'name',
+          value: 'id'
+        },
+        ownerShipType:[{
+          id:"STATE GOVERNMENT OWNED",
+          name:"STATE GOVERNMENT OWNED"
+        },
+        {
+          id:"RENTED",
+          name:"RENTED"
+        },
+        {
+          id:"CENTER GOVERNMENT OWNED",
+          name:"CENTER GOVERNMENT OWNED"
+        },
+        {
+          id:"ULB",
+          name:"ULB"
+        }],
+        ownerShipTypeConfig: {
+          text: 'name',
+          value: 'id'
+        },
+        localityId:[],
+        localityIdConfig:{
+          text: 'name',
+          value: 'id'
+        }
       }
-
     }
   }
+
+
 
   componentWillMount(){
     let requiredFields = [];
     this.props.initForm(requiredFields);
+    //?tenantId=default&boundaryTypeName=WARD&hierarchyTypeName=REVENUE
+
+    var tenantId = localStorage.getItem("tenantId") || "default";
+
+    this.props.setLoadingStatus('loading');
+    Promise.all([
+      Api.commonApiPost("/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName",{boundaryTypeName:"WARD", hierarchyTypeName:"REVENUE"},{tenantId:tenantId}),
+      Api.commonApiPost("/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName",{boundaryTypeName:"Ward", hierarchyTypeName:"ADMINISTRATION"},{tenantId:tenantId}),
+      Api.commonApiPost("/tl-masters/category/v1/_search",{type:"category"},{tenantId:tenantId, pageSize:"500"}, false, true),
+      Api.commonApiPost("/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName",{boundaryTypeName:"LOCALITY", hierarchyTypeName:"LOCATION"},{tenantId:tenantId}),
+      Api.commonApiPost("/tl-masters/documenttype/v2/_search",{applicationType:"NEW"},{tenantId:tenantId})
+    ])
+    .then((responses)=>{
+      //if any error occurs
+      // if(!responses || responses.length ===0 || !responses[0] || !responses[1]){
+      //   return;
+      // }
+      this.props.setLoadingStatus('hide');
+      try{
+        let revenueWardId = responses[0].Boundary.sort(function(a, b) {
+            return parseFloat(a.name) - parseFloat(b.price);
+        });
+        let adminWardId = sortArrayByAlphabetically(responses[1].Boundary, "name");
+        let categoryId = sortArrayByAlphabetically(responses[2].categories, "name");
+        let localityId = sortArrayByAlphabetically(responses[3].Boundary, "name");
+        let documentTypes = sortArrayByAlphabetically(responses[4].documentTypes, "name");
+        let dropdownDataSource = {...this.state.dropdownDataSource};
+        dropdownDataSource = {...dropdownDataSource, revenueWardId, adminWardId, categoryId, localityId};
+        this.setState({dropdownDataSource, documentTypes});
+      }
+      catch(e){
+        console.log('error', e);
+      }
+
+    });
+
   }
 
   customHandleChange = (value, field)=>{
-    this.props.handleChange(value, field.code, field.isMandatory, field.pattern, field.errorMsg || "");
+
+    var tenantId = localStorage.getItem("tenantId") || "default";
+    var _this=this;
+
+    if(field.type === "dropdown"){
+      var values=value.split("~");
+      var id = value.indexOf("~") > -1 ? values[0] : value;
+      this.props.handleChange(id, field.code, field.isMandatory, "", "");
+      if(values.length > 1){
+        if(field.hasOwnProperty("codeName"))
+          this.props.handleChange(values[1], field.codeName, field.isMandatory, "", "");
+      }
+
+      if(field.code === "categoryId"){
+        const dropdownDataSource = {...this.state.dropdownDataSource, subCategoryId:[]}
+        this.setState({dropdownDataSource});
+        this.props.handleChange("", "subCategoryId", field.isMandatory, "", "");
+        this.props.handleChange("", "validityYears", field.isMandatory, "", "");
+        this.props.handleChange("", "uomId", field.isMandatory, "", "");
+
+        Api.commonApiPost("tl-masters/category/v1/_search",{type:"subcategory", categoryId:id},{tenantId:tenantId}, false, true).then(function(response){
+          const dropdownDataSource = {..._this.state.dropdownDataSource, subCategoryId:sortArrayByAlphabetically(response.categories, "name")};
+          _this.setState({dropdownDataSource});
+        }, function(err) {
+            console.log(err);
+        });
+      }
+      else if(field.code === "subCategoryId"){
+        // /tl-masters/category/v1/_search
+        this.props.handleChange("", "validityYears", field.isMandatory, "", "");
+        this.props.handleChange("", "uomId", field.isMandatory, "", "");
+
+        Api.commonApiPost("tl-masters/category/v1/_search",{type:"subcategory", ids:id},{tenantId:tenantId}, false, true).then(function(response){
+          var category=response.categories[0];
+          _this.props.handleChange(category.validityYears, "validityYears", field.isMandatory, "", "");
+          _this.props.handleChange(category.details[0].uomName, "uomId", field.isMandatory, "", "");
+        }, function(err) {
+            console.log(err);
+        });
+      }
+
+    }
+    else{
+      this.props.handleChange(value, field.code, field.isMandatory || false, field.pattern || "", field.errorMsg || "");
+      if(field.code === 'isPropertyOwner'){
+        this.setState({isPropertyOwner:value});
+      }
+    }
+
   }
 
   customAutoCompleteKeyUpEvent = (e, field) =>{
@@ -104,10 +269,10 @@ class NewTradeLicense extends Component {
     //reset autocomplete value
     this.props.handleChange("", field.code, field.isMandatory, field.pattern, field.errorMsg || "");
 
-    if(e.target.value){
+    if(e.target.value && field.code === 'localityId'){
       Api.commonApiGet("/egov-location/boundarys/getLocationByLocationName", {locationName : e.target.value}).then(function(response)
       {
-        const autocompleteDataSource  = this.state.autocompleteDataSource;
+        const autocompleteDataSource  = _this.state.autocompleteDataSource;
         autocompleteDataSource[field.code]=response;
         _this.setState({autocompleteDataSource});
       },function(err) {
@@ -118,6 +283,19 @@ class NewTradeLicense extends Component {
   }
 
   render(){
+
+    var agreementCard=null;
+    var brElement=null;
+
+    if(this.state["isPropertyOwner"]){
+      console.log('coming inside');
+      agreementCard=<CustomCard title={labels.agreementDetailsSection} form={this.props.form}
+        fields={agreementDetailsSection}
+        fieldErrors = {this.props.fieldErrors}
+        handleChange={this.customHandleChange}></CustomCard>;
+      brElement=<br/>;
+    }
+
     return(
       <Grid fluid={true}>
         <h2 className="application-title">{translate(labels.applyNewTradeLicense)}</h2>
@@ -130,20 +308,21 @@ class NewTradeLicense extends Component {
             fields={tradeLocationDetails}
             fieldErrors = {this.props.fieldErrors}
             autocompleteDataSource={this.state.autocompleteDataSource}
-            autoCompleteDataKeyUp = {this.customAutoCompleteKeyUpEvent}
+            autoCompleteKeyUp = {this.customAutoCompleteKeyUpEvent}
+            dropdownDataSource={this.state.dropdownDataSource}
             handleChange={this.customHandleChange}></CustomCard>
         <br/>
         <CustomCard title={labels.tradeDetails} form={this.props.form}
             fields={tradeDetails}
             fieldErrors = {this.props.fieldErrors}
+            dropdownDataSource={this.state.dropdownDataSource}
             handleChange={this.customHandleChange}></CustomCard>
         <br/>
-        <CustomCard title={labels.agreementDetailsSection} form={this.props.form}
-          fields={agreementDetailsSection}
-          fieldErrors = {this.props.fieldErrors}
-          handleChange={this.customHandleChange}></CustomCard>
-        <br/>
-        <SupportingDocuments title={labels.supportingDocuments}>
+
+        {agreementCard}
+        {brElement}
+
+        <SupportingDocuments title={labels.supportingDocuments} docs={this.state.documentTypes}>
         </SupportingDocuments>
         <br/>
         <div style={{textAlign: 'center'}}>
@@ -162,21 +341,24 @@ class CustomCard extends Component {
     super()
   }
 
-  shouldComponentUpdate(nextProps, nextState){
-    console.log('customCard should update', !(_.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState)));
-    return !(_.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState));
-  }
-
   render(){
 
     const renderedFields = this.props.fields.map((field, index)=>{
       if(field.type === "autocomplete")
         return <CustomField key={index} field={field} error={this.props.fieldErrors[field.code] || ""}
            autocompleteDataSource = {this.props.autocompleteDataSource[field.code] || []}
+           autocompleteDataSourceConfig = {this.props.autocompleteDataSource[field.code+"Config"]}
+           autocompleteKeyUp = {this.props.autoCompleteKeyUp}
            value={this.props.form[field.code] || ""} handleChange={this.props.handleChange}></CustomField>
+      if(field.type === "dropdown")
+         return <CustomField key={index} field={field} error={this.props.fieldErrors[field.code] || ""}
+                dropdownDataSource = {this.props.dropdownDataSource[field.code] || []}
+                nameValue = {field.codeName ? this.props.form[field.codeName] || "" : ""}
+                dropdownDataSourceConfig = {this.props.dropdownDataSource[field.code+"Config"]}
+                value={this.props.form[field.code] || ""} handleChange={this.props.handleChange}></CustomField>
       else
-        return <CustomField key={index} field={field} error={this.props.fieldErrors[field.code] || ""}
-           value={this.props.form[field.code] || ""} handleChange={this.props.handleChange}></CustomField>
+         return <CustomField key={index} field={field} error={this.props.fieldErrors[field.code] || ""}
+                value={this.props.form[field.code] || ""} handleChange={this.props.handleChange}></CustomField>
 
     });
 
@@ -202,11 +384,11 @@ class CustomField extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState){
-    console.log('customField should update', !(_.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState)));
+    //console.log('customField should update', !(_.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState)));
     return !(_.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState));
   }
 
-  renderCustomField = ({field, handleChange, error, value, autocompleteDataSource})=>{
+  renderCustomField = ({field, handleChange, error, value, nameValue, autocompleteDataSource, autocompleteKeyUp, autocompleteDataSourceConfig, dropdownDataSourceConfig, dropdownDataSource})=>{
 
     switch(field.type)
     {
@@ -219,6 +401,7 @@ class CustomField extends Component {
               maxLength={field.maxLength}
               value={value || ""}
               errorText={error ||  ""}
+              disabled={field.isDisabled || false}
               onChange={(event, value) => handleChange(value, field)} />
           </Col>
         )
@@ -229,6 +412,7 @@ class CustomField extends Component {
                 floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                 floatingLabelText={translate(field.label) + (field.isMandatory ? " *":"")} multiLine={true}
                 value={value || ""}
+                disabled={field.isDisabled || false}
                 errorText={error ||  ""}
                 maxLength={field.maxLength}
                 onChange={(event, value) => handleChange(value, field)}/>
@@ -240,6 +424,7 @@ class CustomField extends Component {
                <TextField fullWidth={true}
                  fullWidth={true}
                  hintText="DD/MM/YYYY"
+                 disabled={field.isDisabled || false}
                  floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                  floatingLabelText={translate(field.label) + (field.isMandatory ? " *":"")} multiLine={true}
                  value={value || ""}
@@ -253,22 +438,38 @@ class CustomField extends Component {
            <Col xs={12} sm={4} md={4} lg={4}>
              <AutoComplete
               fullWidth={true}
+              disabled={field.isDisabled || false}
               floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
+              dataSourceConfig={autocompleteDataSourceConfig}
               dataSource={autocompleteDataSource}
+              onKeyUp={(e)=> autocompleteKeyUp(e, field)}
               floatingLabelText={translate(field.label) + (field.isMandatory ? " *":"")}/>
            </Col>
          )
         case "dropdown":
+         value = value + (nameValue ? "~" + nameValue : "");
+         //console.log('value for ', field.code, value);
          return(
            <Col xs={12} sm={4} md={4} lg={4}>
              <SelectField
                fullWidth={true}
+               disabled={field.isDisabled || false}
                floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                floatingLabelText={translate(field.label) + (field.isMandatory ? " *":"")}
                value={value || ""}
                onChange={(event, key, value) => {
-                 handleChange(value, field.code, field.isMandatory, "")
+                 handleChange(value, field)
                }}>
+               {dropdownDataSource && dropdownDataSource.map((item, index) =>{
+                 if(field.codeName){
+                   return (<MenuItem value={`${item[dropdownDataSourceConfig.value]}~${translate(item[dropdownDataSourceConfig.text])}`} key={index} primaryText={translate(item[dropdownDataSourceConfig.text])} />)
+                 }
+                 else{
+                   return (<MenuItem value={item[dropdownDataSourceConfig.value]} key={index} primaryText={translate(item[dropdownDataSourceConfig.text])} />)
+                 }
+
+               })
+              }
             </SelectField>
            </Col>
          )
@@ -278,7 +479,7 @@ class CustomField extends Component {
               <Checkbox label={translate(field.label) + (field.isMandatory ? " *":"")}
                 checked={value || false}
                 onCheck={(e, isChecked)=>{
-                handleChange((isChecked? true : ""), field.code, field.isMandatory, '');
+                handleChange(isChecked? true : false, field);
               }} />
             </Col>
           )
@@ -298,6 +499,7 @@ class CustomField extends Component {
 
 
   const SupportingDocuments = (props) => {
+    console.log('docs', props.docs);
     return(
       <Card>
         <CardTitle style={customStyles.cardTitle} title={translate(props.title)}></CardTitle>
@@ -315,35 +517,22 @@ class CustomField extends Component {
                    </tr>
                  </thead>
                  <tbody>
-                   <tr>
-                     <td>1</td>
-                     <td>Document Name1</td>
-                     <td>
-                       <RaisedButton label="Browse Files" />
-                     </td>
-                     <td>
-                       <TextField
-                          hintText="Comments"
-                          multiLine={true}
-                          fullWidth={true}
-                        />
-                     </td>
-                   </tr>
-
-                   <tr>
-                     <td>2</td>
-                     <td>Document Name2</td>
-                     <td>
-                       <RaisedButton label="Browse Files" />
-                     </td>
-                     <td>
-                       <TextField
-                          hintText="Comments"
-                          multiLine={true}
-                          fullWidth={true}
-                        />
-                     </td>
-                   </tr>
+                   {props.docs && props.docs.map((doc, index)=>{
+                     return (<tr>
+                       <td>{index+1}</td>
+                       <td>{`${doc.name} ${doc.mandatory ? " *":""}`}</td>
+                       <td>
+                         <RaisedButton label="Browse Files" />
+                       </td>
+                       <td>
+                         <TextField
+                            hintText="Comments"
+                            multiLine={true}
+                            fullWidth={true}
+                          />
+                       </td>
+                     </tr>);
+                   })}
                  </tbody>
                </Table>
               </Col>

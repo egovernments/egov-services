@@ -110,7 +110,7 @@ public class ChartOfAccountServiceTest {
 		Pagination<ChartOfAccount> expectedResult = new Pagination<>();
 		expectedResult.setPagedData(search);
 		when(chartOfAccountRepository.search(any(ChartOfAccountSearch.class))).thenReturn(expectedResult);
-		Pagination<ChartOfAccount> actualResult = chartOfAccountService.search(getChartOfAccountSearch());
+		Pagination<ChartOfAccount> actualResult = chartOfAccountService.search(getChartOfAccountSearch(), errors);
 		assertEquals(expectedResult, actualResult);
 	}
 

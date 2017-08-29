@@ -130,7 +130,7 @@ public class FiscalPeriodController {
 		FiscalPeriodContract contract;
 		ModelMapper model = new ModelMapper();
 		List<FiscalPeriodContract> fiscalPeriodContracts = new ArrayList<>();
-		Pagination<FiscalPeriod> fiscalperiods = fiscalPeriodService.search(domain);
+		Pagination<FiscalPeriod> fiscalperiods = fiscalPeriodService.search(domain, errors);
 
 		for (FiscalPeriod fiscalPeriod : fiscalperiods.getPagedData()) {
 			contract = new FiscalPeriodContract();

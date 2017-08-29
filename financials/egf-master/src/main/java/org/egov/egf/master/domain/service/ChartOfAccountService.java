@@ -1,5 +1,6 @@
 package org.egov.egf.master.domain.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.constants.Constants;
@@ -7,7 +8,6 @@ import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.AccountCodePurpose;
-import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.model.ChartOfAccount;
 import org.egov.egf.master.domain.model.ChartOfAccountSearch;
 import org.egov.egf.master.domain.repository.AccountCodePurposeRepository;
@@ -55,6 +55,12 @@ public class ChartOfAccountService {
 					validator.validate(chartOfAccount, errors);
 				}
 				break;
+                        case Constants.ACTION_SEARCH:
+                                Assert.notNull(chartofaccounts, "Chartofaccounts to search must not be null");
+                                for (ChartOfAccount chartofaccount : chartofaccounts) {
+                                        Assert.notNull(chartofaccount.getTenantId(), "TenantID must not be null for search");
+                                }
+                                break;
 			default:
 
 			}
@@ -117,10 +123,25 @@ public class ChartOfAccountService {
 		chartOfAccountRepository.add(request);
 	}
 
-	public Pagination<ChartOfAccount> search(ChartOfAccountSearch chartOfAccountSearch) {
-	        Assert.notNull(chartOfAccountSearch.getTenantId(), "tenantId is mandatory for chartOfAccount search");
-		return chartOfAccountRepository.search(chartOfAccountSearch);
-	}
+        public Pagination<ChartOfAccount> search(ChartOfAccountSearch chartOfAccountSearch, BindingResult errors) {
+            
+            try {
+                
+                List<ChartOfAccount> chartOfAccounts = new ArrayList<>();
+                chartOfAccounts.add(chartOfAccountSearch);
+                validate(chartOfAccounts, Constants.ACTION_SEARCH, errors);
+    
+                if (errors.hasErrors()) {
+                    throw new CustomBindException(errors);
+                }
+            
+            } catch (CustomBindException e) {
+    
+                throw new CustomBindException(errors);
+            }
+    
+            return chartOfAccountRepository.search(chartOfAccountSearch);
+        }
 
 	@Transactional
 	public ChartOfAccount save(ChartOfAccount chartOfAccount) {

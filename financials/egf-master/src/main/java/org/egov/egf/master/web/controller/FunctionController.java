@@ -125,7 +125,7 @@ public class FunctionController {
 		FunctionContract contract;
 		ModelMapper model = new ModelMapper();
 		List<FunctionContract> functionContracts = new ArrayList<>();
-		Pagination<Function> functions = functionService.search(domain);
+		Pagination<Function> functions = functionService.search(domain, errors);
 
 		for (Function function : functions.getPagedData()) {
 			contract = new FunctionContract();

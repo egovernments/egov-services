@@ -61,50 +61,96 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode(exclude = { "parent" }, callSuper = false)
 
+/**
+ * 
+ * @author mani . The Fund is a defining concept in municipal accounting – where
+ *         it is required to segregate all accounting transactions into
+ *         designated funds. Each fund needs to be treated as an independent
+ *         accounting entity – in other words, all vouchers within a fund must
+ *         be self-balancing and balance sheets and Income/Expenditure reports
+ *         must be generated for each fund. A hierarchy of funds may be defined
+ *         – i.e. each fund can have multiple sub-funds and so on.
+ */
+
 public class Fund extends Auditable {
 
+	/**
+	 * id is the unique identifier .
+	 */
 	protected String id;
 
+	/**
+	 * name is the name of the fund . Example :Municipal Fund,Capital Fund
+	 */
 	@Length(max = 50, min = 2)
 	@NotNull
 	protected String name;
 
+	/**
+	 * code is a unique number given to each fund . ULB may refer this for the
+	 * short name
+	 */
 	@Length(max = 50, min = 2)
 	@NotNull
 	protected String code;
+	/**
+	 * identifier appears as prefix in all the vouchers accounted in the books
+	 * of the Fund. Each fund must have an identifier – each voucher belonging
+	 * to a fund must have the identifier embedded in the voucher number for
+	 * easy identification. Fund is taken at a voucher head level for each
+	 * voucher transaction.
+	 */
 	@NotNull
 	protected Character identifier;
 
+	/**
+	 * parent adding a parent will create the fund as a sub-fund (child) of a
+	 * fund already created (parent fund).
+	 * 
+	 */
 	protected Fund parent;
-
+	/**
+	 * active is a boolean value which says whether fund is in use or not . If Fund
+	 * is active, then accounting of transactions under the fund is enabled.
+	 * If  Fund becomes inactive, and no transactions can be
+	 * accounted under the Fund.
+	 */
 	@NotNull
 	protected Boolean active;
 
+	/**
+	 * isParent is updated internally so that system can identify whether the
+	 * fund is parent or child. Only child which is not parent for any other
+	 * fund can only participate in transaction .
+	 */
+
+	protected Boolean isParent;
+
+	/**
+	 * level identifies what is the level of the fund in the tree structure. Top
+	 * most parent will have level 0 and its child will have level as 1
+	 * 
+	 */
+
 	@NotNull
 	protected Long level;
-	
-	public void add()
-	{
-	    if(parent==null)
-	    {
-	        level=0l;
-	        
-	    }else
-	    {
-	        level=parent.getLevel()+1;
-	    }
+
+	public void add() {
+		if (parent == null) {
+			level = 0l;
+
+		} else {
+			level = parent.getLevel() + 1;
+		}
 	}
-	
-	public void update()
-	{
-	    if(parent==null)
-	    {
-	        level=0l;
-	        
-	    }else
-	    {
-	        level=parent.getLevel()+1;
-	    }
+
+	public void update() {
+		if (parent == null) {
+			level = 0l;
+
+		} else {
+			level = parent.getLevel() + 1;
+		}
 	}
 
 }

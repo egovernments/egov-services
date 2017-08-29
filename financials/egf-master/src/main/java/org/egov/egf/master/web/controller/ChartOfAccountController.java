@@ -132,7 +132,7 @@ public class ChartOfAccountController {
 		ChartOfAccountContract contract;
 		ModelMapper model = new ModelMapper();
 		List<ChartOfAccountContract> chartOfAccountContracts = new ArrayList<>();
-		Pagination<ChartOfAccount> chartofaccounts = chartOfAccountService.search(domain);
+		Pagination<ChartOfAccount> chartofaccounts = chartOfAccountService.search(domain, errors);
 
 		for (ChartOfAccount chartOfAccount : chartofaccounts.getPagedData()) {
 			contract = new ChartOfAccountContract();

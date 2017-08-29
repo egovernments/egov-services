@@ -135,7 +135,7 @@ public class FinancialConfigurationController {
 		FinancialConfigurationContract contract;
 		ModelMapper model = new ModelMapper();
 		List<FinancialConfigurationContract> financialConfigurationContracts = new ArrayList<>();
-		Pagination<FinancialConfiguration> financialconfigurations = financialConfigurationService.search(domain);
+		Pagination<FinancialConfiguration> financialconfigurations = financialConfigurationService.search(domain, errors);
 
 		for (FinancialConfiguration financialConfiguration : financialconfigurations.getPagedData()) {
 			contract = new FinancialConfigurationContract();

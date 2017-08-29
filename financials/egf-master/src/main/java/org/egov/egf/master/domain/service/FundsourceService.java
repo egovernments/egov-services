@@ -1,12 +1,12 @@
 package org.egov.egf.master.domain.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.model.Fundsource;
 import org.egov.egf.master.domain.model.FundsourceSearch;
 import org.egov.egf.master.domain.repository.FundsourceRepository;
@@ -51,6 +51,12 @@ public class FundsourceService {
 					validator.validate(fundsource, errors);
 				}
 				break;
+	                case Constants.ACTION_SEARCH:
+        	                    Assert.notNull(fundsources, "Fundsources to search must not be null");
+        	                    for (Fundsource fundsource : fundsources) {
+        	                            Assert.notNull(fundsource.getTenantId(), "TenantID must not be null for search");
+        	                    }
+        	                    break;
 			default:
 
 			}
@@ -104,10 +110,25 @@ public class FundsourceService {
 		fundsourceRepository.add(request);
 	}
 
-	public Pagination<Fundsource> search(FundsourceSearch fundsourceSearch) {
-	        Assert.notNull(fundsourceSearch.getTenantId(), "tenantId is mandatory for fundsource search");
-		return fundsourceRepository.search(fundsourceSearch);
-	}
+        public Pagination<Fundsource> search(FundsourceSearch fundsourceSearch, BindingResult errors) {
+            
+            try {
+                
+                List<Fundsource> fundsources = new ArrayList<>();
+                fundsources.add(fundsourceSearch);
+                validate(fundsources, Constants.ACTION_SEARCH, errors);
+    
+                if (errors.hasErrors()) {
+                    throw new CustomBindException(errors);
+                }
+            
+            } catch (CustomBindException e) {
+    
+                throw new CustomBindException(errors);
+            }
+    
+            return fundsourceRepository.search(fundsourceSearch);
+        }
 
 	@Transactional
 	public Fundsource save(Fundsource fundsource) {

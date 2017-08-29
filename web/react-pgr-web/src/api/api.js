@@ -86,10 +86,10 @@ module.exports = {
                 }else if(response && response.response && response.response.data && response.response.data.error){
                   // let _err = common.translate(response.response.data.error.fields[0].code);
                   let _err = "";
-                  _err=response.response.data.error.message +" \n";
+                  _err=response.response.data.error.message?"a)."+response.response.data.error.message+".":"";
                   let fields=response.response.data.error.fields;
                   for (var i = 0; i < fields.length; i++) {
-                    _err=+common.translate(fields[i].code) +" \n";
+                    _err+=(i+1)+")." +common.translate(fields[i].code) +".";
                   }
                   throw new Error(_err);
                 }else if(response && response.response && !response.response.data && response.response.status === 400) {

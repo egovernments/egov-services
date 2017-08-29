@@ -9,5 +9,8 @@ import lombok.ToString;
 @ToString
 public class Document {
 
-	private String fileStoreId;
+	private String srn;
+	private String from;
+	private Long timeStamp;
+	private String filePath;
 }

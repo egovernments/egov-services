@@ -1,11 +1,13 @@
 package org.egov.citizen.repository.querybuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.citizen.service.CitizenPersistService;
 import org.egov.citizen.web.contract.ServiceRequestSearchCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -17,8 +19,11 @@ public class ServiceReqQueryBuilder {
 	public static final Logger LOGGER = LoggerFactory
 			.getLogger(ServiceReqQueryBuilder.class);
 	
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
+	
 	private static final String BASE_QUERY = "SELECT jsonvalue as serviceReq, tenantid, id FROM egov_citizen_service_req";
-	private static final String SEARCH_DETAILS_BASE_QUERY = "SELECT comment, commentfrom, commentaddressedto, commentdate, filestoreid "
+	private static final String SEARCH_DETAILS_BASE_QUERY = "SELECT ec.srn as srn, comment, commentfrom, commentdate, uploadedby, uploaddate, filestoreid "
 			+ "FROM egov_citizen_service_req_comments ec JOIN egov_citizen_service_req_documents ed ON ec.srn = ed.srn ";
 
 
@@ -36,9 +41,9 @@ public class ServiceReqQueryBuilder {
 	}
 	
 	@SuppressWarnings("rawtypes")
-	public String getDetailsQuery(ServiceRequestSearchCriteria serviceRequestSearchCriteria, List preparedStatementValues) {
+	public String getDetailsQuery(ServiceRequestSearchCriteria serviceRequestSearchCriteria, List preparedStatementValuesForDetailsSearch) {
 		StringBuilder selectQuery = new StringBuilder(SEARCH_DETAILS_BASE_QUERY);
-		addWhereClauseForDetailsSearch(selectQuery, preparedStatementValues, serviceRequestSearchCriteria);
+		addWhereClauseForDetailsSearch(selectQuery, preparedStatementValuesForDetailsSearch, serviceRequestSearchCriteria);
 		log.info("Query : " + selectQuery);
 		return selectQuery.toString();
 	}
@@ -59,7 +64,6 @@ public class ServiceReqQueryBuilder {
 			isAppendAndClause = true;			
 			selectQuery.append(" tenantid = ?");
 			preparedStatementValues.add(serviceRequestSearchCriteria.getTenantId());
-			LOGGER.info("tenantd id appended");
 
 		}
 
@@ -67,7 +71,30 @@ public class ServiceReqQueryBuilder {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" id = ?");
 			preparedStatementValues.add(serviceRequestSearchCriteria.getServiceRequestId());
-			LOGGER.info("svc req id appended");
+		}
+		
+		if (serviceRequestSearchCriteria.getConsumerCode() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" consumercode = ?");
+			preparedStatementValues.add(serviceRequestSearchCriteria.getConsumerCode());
+		}
+		
+		if (serviceRequestSearchCriteria.getServiceCode() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" servicecode = ?");
+			preparedStatementValues.add(serviceRequestSearchCriteria.getServiceCode());
+		}
+		
+		if (serviceRequestSearchCriteria.getStatus() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" status = ?");
+			preparedStatementValues.add(serviceRequestSearchCriteria.getStatus());
+		}
+		
+		if (serviceRequestSearchCriteria.getAssignedTo() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" assignedto = ?");
+			preparedStatementValues.add(serviceRequestSearchCriteria.getAssignedTo());
 		}
 		System.out.println("serviceRequestSearchCriteria.getUserId():"+serviceRequestSearchCriteria.getUserId());
 		if (serviceRequestSearchCriteria.getUserId() != null) {
@@ -80,9 +107,9 @@ public class ServiceReqQueryBuilder {
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void addWhereClauseForDetailsSearch(StringBuilder selectQuery, List preparedStatementValues,
+	private void addWhereClauseForDetailsSearch(StringBuilder selectQuery, List preparedStatementValuesForDetailsSearch,
 			ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
-
+		List<String> srnList = new ArrayList<>();
 		if (serviceRequestSearchCriteria.getTenantId() == null)
 			return;
 
@@ -92,14 +119,43 @@ public class ServiceReqQueryBuilder {
 		if (serviceRequestSearchCriteria.getTenantId() != null) {
 			isAppendAndClause = true;			
 			selectQuery.append(" ec.tenantid = ?");
-			preparedStatementValues.add(serviceRequestSearchCriteria.getTenantId());
+			preparedStatementValuesForDetailsSearch.add(serviceRequestSearchCriteria.getTenantId());
 		}
-
+		
 		if (serviceRequestSearchCriteria.getServiceRequestId() != null) {
+			srnList.add(serviceRequestSearchCriteria.getServiceRequestId());
+		}
+				
+		if (serviceRequestSearchCriteria.getConsumerCode() != null) {
+			List<String> srNos = jdbcTemplate.queryForList("select id from egov_citizen_service_req where consumercode = ? ", 
+					new Object[]{serviceRequestSearchCriteria.getConsumerCode()}, String.class);
+			srnList.addAll(srNos);
+		}
+		
+		if (serviceRequestSearchCriteria.getServiceCode() != null) {
+			List<String> srNos = jdbcTemplate.queryForList("select id from egov_citizen_service_req where servicecode = ? ", 
+					new Object[]{serviceRequestSearchCriteria.getServiceCode()}, String.class);
+			srnList.addAll(srNos);
+		}
+		
+		if (serviceRequestSearchCriteria.getStatus()!= null) {
+			List<String> srNos = jdbcTemplate.queryForList("select id from egov_citizen_service_req where status = ? ", 
+					new Object[]{serviceRequestSearchCriteria.getStatus()}, String.class);
+			srnList.addAll(srNos);
+		}
+		
+		if (serviceRequestSearchCriteria.getAssignedTo()!= null) {
+			List<String> srNos = jdbcTemplate.queryForList("select id from egov_citizen_service_req where assignedto = ? ", 
+					new Object[]{serviceRequestSearchCriteria.getAssignedTo()}, String.class);
+			srnList.addAll(srNos);
+		}
+		LOGGER.info("SRNs to be searched for: "+srnList);
+		if(!srnList.isEmpty()){
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" ec.srn = ?");
-			preparedStatementValues.add(serviceRequestSearchCriteria.getServiceRequestId());
-
+			selectQuery.append(" ec.srn ilike any "+getNumberQuery(srnList));
+		}else{
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" ec.srn = 'invalidSrn' ");
 		}
 	}
 
@@ -124,6 +180,18 @@ public class ServiceReqQueryBuilder {
 			queryString.append(" AND");
 
 		return true;
+	}
+	
+	private static String getNumberQuery(List<String> srnList) {
+		StringBuilder query = new StringBuilder("(array [");
+
+		if (srnList.size() >= 1) {
+			query.append("'%").append(srnList.get(0).toString()).append("%'");
+			for (int i = 1; i < srnList.size(); i++) {
+				query.append(", '%" + srnList.get(i) + "%'");
+			}
+		}
+		return query.append("])").toString();
 	}
 
 }

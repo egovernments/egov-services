@@ -1,6 +1,9 @@
-CREATE TABLE egov_citizen_service_req(
+DROP TABLE IF EXISTS egov_citizen_service_req;
+
+CREATE TABLE egov_citizen_service_req
+(
  id character varying(50) NOT NULL,
- tenantid character varying(40),
+ tenantid character varying(40) NOT NULL,
  userid bigint,
  servicecode character varying(40),
  consumercode character varying(50),
@@ -12,8 +15,6 @@ CREATE TABLE egov_citizen_service_req(
  createdby bigint,
  lastmodifiedby bigint,
  jsonvalue character varying(50000),
- 
- CONSTRAINT egov_citizen_service_req_pkey PRIMARY KEY (id)
- );
-
-CREATE SEQUENCE seq_citizen_service;
+ status character varying(20),
+ CONSTRAINT egov_citizen_service_req_pkey PRIMARY KEY (id, tenantid)
+);

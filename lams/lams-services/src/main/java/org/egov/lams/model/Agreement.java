@@ -123,6 +123,9 @@ public class Agreement {
 	private Cancellation cancellation;
 	private Renewal renewal;
 	private Eviction eviction;
+	private Objection objection;
+	private Judgement judgement;
+
 	
 	
 	@JsonFormat(pattern="dd/MM/yyyy")

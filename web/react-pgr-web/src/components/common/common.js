@@ -1311,6 +1311,7 @@ var localization_EN_Data = {
     "pgr.0060": "Applicant Details",
     "pgr.0061": "Complainant Details",
     "wc.create.groups.applicantDetails.addressNumber":"House Number",
+    "noDues.citizenService.assessmentNumber":"Assessment Number"
 };
 
 var localization_MR_Data = {

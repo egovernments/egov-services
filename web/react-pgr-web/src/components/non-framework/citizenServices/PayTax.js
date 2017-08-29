@@ -40,8 +40,6 @@ import jp from "jsonpath";
 
 
 
-
-
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 var specifications={};
@@ -197,29 +195,29 @@ class NoDues extends Component {
           })
       }
       else {*/
-        Api.commonApiPost("/billing-service/bill/_generate", {businessService: "CS" , consumerCode: self.state.serviceRequest.serviceRequestId}, {}, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res){
-          let Receipt=[];
-          Receipt[0]={"Bill":[]};
-          Receipt[0]["Bill"]=res.Bill;
-          Receipt[0]["Bill"][0]["paidBy"]=Receipt[0]["Bill"][0].payeeName;
-          Receipt[0]["tenantId"]=window.localStorage.getItem("tenantId")
-          Receipt[0]["instrument"]={"tenantId":window.localStorage.getItem("tenantId"),"amount":self.getTotal(applicationFeeDemand),"instrumentType":{"name":"Cash"}}
-
-          Receipt[0]["Bill"][0]["billDetails"][0]["amountPaid"]=self.getTotal(applicationFeeDemand);
-          self.setState({
-            paidBy: Receipt[0]["Bill"][0].payeeName
-          })
-          console.log(Receipt);
-          // Receipt.push(res.Bill);
-          self.setState({
-            ReceiptOne:Receipt
-          });
-          console.log(Receipt);
-          self.setState({open: true});
-        }, function(err) {
-          self.props.toggleSnackbarAndSetText(true, err.message, false, true);
-          self.props.setLoadingStatus('hide');
-        });
+        // Api.commonApiPost("/billing-service/bill/_generate", {businessService: "CS" , consumerCode: self.state.serviceRequest.serviceRequestId}, {}, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res){
+        //   let Receipt=[];
+        //   Receipt[0]={"Bill":[]};
+        //   Receipt[0]["Bill"]=res.Bill;
+        //   Receipt[0]["Bill"][0]["paidBy"]=Receipt[0]["Bill"][0].payeeName;
+        //   Receipt[0]["tenantId"]=window.localStorage.getItem("tenantId")
+        //   Receipt[0]["instrument"]={"tenantId":window.localStorage.getItem("tenantId"),"amount":self.getTotal(applicationFeeDemand),"instrumentType":{"name":"Cash"}}
+        //
+        //   Receipt[0]["Bill"][0]["billDetails"][0]["amountPaid"]=self.getTotal(applicationFeeDemand);
+        //   self.setState({
+        //     paidBy: Receipt[0]["Bill"][0].payeeName
+        //   })
+        //   console.log(Receipt);
+        //   // Receipt.push(res.Bill);
+        //   self.setState({
+        //     ReceiptOne:Receipt
+        //   });
+        //   console.log(Receipt);
+        //   self.setState({open: true});
+        // }, function(err) {
+        //   self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+        //   self.props.setLoadingStatus('hide');
+        // });
       //}
 
       self.setState({open: true});
@@ -359,7 +357,7 @@ class NoDues extends Component {
     // error: function (results) {
     //   //Should pick our configObject
     // }})
-    specifications = require(`../../framework/specs/citizenService/${this.props.match.params.id}/noDues`).default;
+    specifications = require(`../../framework/specs/citizenService/${this.props.match.params.id}/payTax`).default;
     let { setMetaData, setModuleName, setActionName, initForm, setMockData, setFormData } = this.props;
     let obj = specifications["noDues.search"];
     reqRequired = [];
@@ -392,7 +390,7 @@ class NoDues extends Component {
     let {formData} = this.props;
     finalObject["businessService"] = (self.props.match.params.status == "extract" ? "PT" : (self.props.match.params.id == "pt" ? "PT" : "WC"));
     Api.commonApiPost(self.props.metaData["noDues.search"].url, finalObject, {}, null, self.props.metaData["noDues.search"].useTimestamp,false,response.data.access_token).then(function(res){
-        // self.props.setLoadingStatus('hide');
+        self.props.setLoadingStatus('hide');
         if(jp.query(res,`$..demandDetails[?(@.taxAmount > @.collectionAmount)]`).length>0)
         {
           self.setState({
@@ -404,46 +402,46 @@ class NoDues extends Component {
             demands:[]
           });
         }
-        finalObject["businessService"]= "CS";
-        finalObject["consumerCode"]= SID;
-        Api.commonApiPost(self.props.metaData["noDues.search"].url, finalObject, {}, null, self.props.metaData["noDues.search"].useTimestamp,false,response.data.access_token).then(function(res1){
-          self.props.setLoadingStatus('hide');
-          if(jp.query(res1,`$..demandDetails[?(@.taxAmount > @.collectionAmount)]`).length>0) {
-            self.setState({
-              applicationFeeDemand:res1.Demands
-            });
-          } else {
-            self.setState({
-              applicationFeeDemand: self.props.metaData["noDues.search"].feeDetails
-            }, function() {
-               let demandReq = {};
-               demandReq["Demands"] =self.state.applicationFeeDemand;
-               demandReq["Demands"][0].tenantId=localStorage.getItem("tenantId");
-               demandReq["Demands"][0].consumerCode=SID;
-               demandReq["Demands"][0].owner.id=JSON.parse(localStorage.userRequest).id;
-               demandReq["Demands"][0].taxPeriodFrom=1491004800000;
-               demandReq["Demands"][0].taxPeriodTo=1522540799000;
-               demandReq["Demands"][0].demandDetails[0].taxHeadMasterCode=(self.props.match.params.status == "extract" ? "PT_EXT_OF_PROP_COPY_CHAR" : (self.props.match.params.id == "pt" ? "PT_NO_DUE_CERT_CHAR" : "WC_NO_DUE_CERT_CHAR"));
+        // finalObject["businessService"]= "CS";
+        // finalObject["consumerCode"]= SID;
+        // Api.commonApiPost(self.props.metaData["noDues.search"].url, finalObject, {}, null, self.props.metaData["noDues.search"].useTimestamp,false,response.data.access_token).then(function(res1){
+        //   self.props.setLoadingStatus('hide');
+        //   if(jp.query(res1,`$..demandDetails[?(@.taxAmount > @.collectionAmount)]`).length>0) {
+        //     self.setState({
+        //       applicationFeeDemand:res1.Demands
+        //     });
+        //   } else {
+        //     self.setState({
+        //       applicationFeeDemand: self.props.metaData["noDues.search"].feeDetails
+        //     }, function() {
+        //        let demandReq = {};
+        //        demandReq["Demands"] =self.state.applicationFeeDemand;
+        //        demandReq["Demands"][0].tenantId=localStorage.getItem("tenantId");
+        //        demandReq["Demands"][0].consumerCode=SID;
+        //        demandReq["Demands"][0].owner.id=JSON.parse(localStorage.userRequest).id;
+        //        demandReq["Demands"][0].taxPeriodFrom=1491004800000;
+        //        demandReq["Demands"][0].taxPeriodTo=1522540799000;
+        //        demandReq["Demands"][0].demandDetails[0].taxHeadMasterCode=(self.props.match.params.status == "extract" ? "PT_EXT_OF_PROP_COPY_CHAR" : (self.props.match.params.id == "pt" ? "PT_NO_DUE_CERT_CHAR" : "WC_NO_DUE_CERT_CHAR"));
+        //
+        //        Api.commonApiPost("/billing-service/demand/_create", {}, demandReq, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp"), JSON.parse(localStorage["request-temp"])).then(function(res){
+        //
+        //        }, function(err) {
+        //
+        //        })
+        //     });
+        //   }
+        //   if (res1.Demands.length>0 || res.Demands.length>0) {
+        //     self.handleNext();
+        //
+        //   } else {
+        //      self.props.toggleSnackbarAndSetText(true, "No demands for given criteria", false, true);
+        //   }
+        // }, function(err) {
+        //   self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+        //   self.props.setLoadingStatus('hide');
+        // })
 
-               Api.commonApiPost("/billing-service/demand/_create", {}, demandReq, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp"), JSON.parse(localStorage["request-temp"])).then(function(res){
-
-               }, function(err) {
-
-               })
-            });
-          }
-          if (res1.Demands.length>0 || res.Demands.length>0) {
-            self.handleNext();
-
-          } else {
-             self.props.toggleSnackbarAndSetText(true, "No demands for given criteria", false, true);
-          }
-        }, function(err) {
-          self.props.toggleSnackbarAndSetText(true, err.message, false, true);
-          self.props.setLoadingStatus('hide');
-        })
-
-        // self.handleNext();
+        self.handleNext();
       }, function(err) {
         self.props.toggleSnackbarAndSetText(true, err.message, false, true);
         self.props.setLoadingStatus('hide');
@@ -641,6 +639,26 @@ class NoDues extends Component {
       self.props.toggleSnackbarAndSetText(true, err.message, false, true);
       self.props.setLoadingStatus('hide');
     })
+
+
+    Api.commonApiPost("/collection-services/receipts/_create", {}, {"Receipt":Receipt}, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res2){
+    self.props.setLoadingStatus('hide');
+
+    self.getProperty(function(property) {
+      self.setState({
+        Receipt:res2.Receipt,
+        ReceiptOne: [],
+        Property: property
+      });
+      console.log(res2);
+      self.handleNext();
+    })
+
+   }, function(err) {
+    self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+    self.props.setLoadingStatus('hide');
+  })
+
     // var appFeeRec = Object.assign([], Receipt);
     // console.log(appFeeRec);
     // appFeeRec[0]["Bill"] = Object.assign([], self.state.appRec);
@@ -648,48 +666,48 @@ class NoDues extends Component {
     // console.log(appFeeRec);
     // appFeeRec[0]["Bill"][0]["billDetails"][0]["amountPaid"] = applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount;
     // appFeeRec[0]["Bill"][0]["paidBy"] = self.state.paidBy;
-    Api.commonApiPost("/collection-services/receipts/_create", {}, {"Receipt":ReceiptOne}, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res1){
-      if (demands.length>0) {
-            Api.commonApiPost("/collection-services/receipts/_create", {}, {"Receipt":Receipt}, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res2){
-            self.props.setLoadingStatus('hide');
-
-            self.getProperty(function(property) {
-              self.setState({
-                Receipt:res2.Receipt,
-                ReceiptOne: res1.Receipt,
-                Property: property
-              });
-              console.log(res2);
-              self.handleNext();
-            })
-
-          }, function(err) {
-            self.props.toggleSnackbarAndSetText(true, err.message, false, true);
-            self.props.setLoadingStatus('hide');
-          })
-      }
-      else {
-            Api.commonApiPost("/collection-services/receipts/_search", {consumerCode:formData.consumerCode,businessService:formData.businessService}, {}, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res2){
-            self.props.setLoadingStatus('hide');
-            self.getProperty(function(property) {
-              self.setState({
-                Receipt: res2.Receipt,
-                ReceiptOne: res1.Receipt,
-                Property: property
-              });
-              console.log(res2);
-              self.handleNext();
-            })
-
-          }, function(err) {
-            self.props.toggleSnackbarAndSetText(true, err.message, false, true);
-            self.props.setLoadingStatus('hide');
-          })
-      }
-    }, function(err) {
-      self.props.toggleSnackbarAndSetText(true, err.message, false, true);
-      self.props.setLoadingStatus('hide');
-    })
+    // Api.commonApiPost("/collection-services/receipts/_create", {}, {"Receipt":ReceiptOne}, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res1){
+    //       if (demands.length>0) {
+    //             Api.commonApiPost("/collection-services/receipts/_create", {}, {"Receipt":Receipt}, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res2){
+    //             self.props.setLoadingStatus('hide');
+    //
+    //             self.getProperty(function(property) {
+    //               self.setState({
+    //                 Receipt:res2.Receipt,
+    //                 ReceiptOne: res1.Receipt,
+    //                 Property: property
+    //               });
+    //               console.log(res2);
+    //               self.handleNext();
+    //             })
+    //
+    //           }, function(err) {
+    //             self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+    //             self.props.setLoadingStatus('hide');
+    //           })
+    //       }
+    //       else {
+    //             Api.commonApiPost("/collection-services/receipts/_search", {consumerCode:formData.consumerCode,businessService:formData.businessService}, {}, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res2){
+    //             self.props.setLoadingStatus('hide');
+    //             self.getProperty(function(property) {
+    //               self.setState({
+    //                 Receipt: res2.Receipt,
+    //                 ReceiptOne: res1.Receipt,
+    //                 Property: property
+    //               });
+    //               console.log(res2);
+    //               self.handleNext();
+    //             })
+    //
+    //           }, function(err) {
+    //             self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+    //             self.props.setLoadingStatus('hide');
+    //           })
+    //       }
+    //     }, function(err) {
+    //       self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+    //       self.props.setLoadingStatus('hide');
+    //     })
   }
 
   generatePdf=(id)=>{
@@ -1002,14 +1020,14 @@ class NoDues extends Component {
 
                       <thead>
 
-                          <tr>
+                          {/*<tr>
                              <th colSpan={3} style={{textAlign:"left"}}><strong>Application Fees (Rs)</strong></th>
                              <th style={{textAlign:"right"}}><strong>{(applicationFeeDemand && applicationFeeDemand.length>0 && applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount)} </strong></th>
-                          </tr>
-                          <tr>
+                          </tr>*/}
+                          {demands.length>0 && <tr>
                              <th colSpan={3} style={{textAlign:"left"}}><strong>Total (Rs) </strong></th>
-                             <th style={{textAlign:"right"}}><strong>{getTotal(demands)+(applicationFeeDemand && applicationFeeDemand.length>0 && applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount)}</strong></th>
-                          </tr>
+                             <th style={{textAlign:"right"}}><strong>{getTotal(demands)}</strong></th>
+                          </tr>}
                       </thead>
                   </Table>
               </CardText>
@@ -1020,7 +1038,7 @@ class NoDues extends Component {
                     <br/>
 
                     <UiButton handler={goBackToDashboard} item={{"label": "Cancel", "uiType":"button", "isDisabled": isFormValid ? false : true}} ui="google"/>{"  "}
-                    <UiButton handler={handleOpen} item={{"label": "Pay", "uiType":"button", "isDisabled": isFormValid ? false : true}} ui="google"/>
+                    {demands.length>0 && <UiButton handler={handleOpen} item={{"label": "Pay", "uiType":"button", "isDisabled": isFormValid ? false : true}} ui="google"/>}
 
                       <Dialog
                           title="Payment Gateway - Mock"
@@ -1049,7 +1067,7 @@ class NoDues extends Component {
             {showResult &&
               <Grid >
                 {(Receipt || ReceiptOne ) &&  <Row id="allCertificates">
-                      {Receipt && Receipt[0] && this.state.demands && this.state.demands.length ? <Col md={6} >
+                      {Receipt && Receipt[0] && this.state.demands && this.state.demands.length ? <Col md={12} >
                       <Card>
                         <CardHeader title={<strong>Receipt for: {this.props.match.params.id == "pt"?"Property Tax":"Water Charge"}</strong>}/>
                         <CardText>
@@ -1179,16 +1197,15 @@ class NoDues extends Component {
                                         <td>
                                           Amount
                                         </td>
-										                     <td colSpan={2}>
+										<td colSpan={2}>
                                            Transaction No
                                         </td>
-                      										<td colSpan={2}>
-                      											Transaction Date
+										<td colSpan={2}>
+											Transaction Date
                                         </td>
-										                    <td colSpan={2}>
+										             <td colSpan={2}>
                                           Bank Name
                                         </td>
-
                                       </tr>
                                       <tr>
                                         <td>
@@ -1201,10 +1218,10 @@ class NoDues extends Component {
                                           {this.state.serviceRequest.serviceRequestId}
                                         </td>}
 
-                                          {Receipt[0].instrument.instrumentType.name=="Cash"?<td colSpan={2}>NA</td>:<td colSpan={2}>(getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate))</td>}
+                                          {Receipt[0].instrument.instrumentType.name=="Cash"?<td colSpan={2}>NA</td>: <td colSpan={2}>(getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate))</td>}
 
 
-                                          {Receipt[0].instrument.instrumentType.name=="Cash"?<td colSpan={2}>NA</td>:<td colSpan={2}>Receipt[0].instrument.bank.name</td>}
+                                          {Receipt[0].instrument.instrumentType.name=="Cash"?<td colSpan={2}>NA</td>: <td colSpan={2}>Receipt[0].instrument.bank.name</td>}
 
 
                                       </tr>
@@ -1214,288 +1231,7 @@ class NoDues extends Component {
                       </Card>
                       <div className="page-break"></div>
                       </Col> : ""}
-                                            {ReceiptOne && ReceiptOne[0] && <Col md={6} >
-                      <Card>
-                        <CardHeader title={<strong>Receipt for: Application Fee</strong>}/>
-                        <CardText>
-                              <Table responsive style={{fontSize:"bold"}} id="ReceiptForWcAPartOne1" bordered condensed>
-                                  <tbody>
-                                      <tr>
-                                          <td style={{textAlign:"left"}}>
-                        <img src="./temp/images/headerLogo.png" height="60" width="60"/>
-                                          </td>
-                                          <td style={{textAlign:"center"}}>
-                                              <b>Roha Municipal Council</b><br/>
-                                              {this.props.match.params.id == "pt" ? <span>Property Tax Department / करनिर्धारण विभाग</span> : <span>Water Charges Department</span>}
-                                          </td>
-                                          <td style={{textAlign:"right"}}>
-                      <img src="./temp/images/AS.png" height="60" width="60"/>
-                                          </td>
-                                      </tr>
-                                      <tr>
-                                          <td style={{textAlign:"left"}}>
-                                            Receipt Number : {ReceiptOne[0].Bill[0].billDetails[0].receiptNumber?ReceiptOne[0].Bill[0].billDetails[0].receiptNumber:"NA"}
-                                          </td>
-                                          <td style={{textAlign:"center"}}>
-                                            Receipt For : Application Fee
-                                          </td>
-                                          <td style={{textAlign:"right"}}>
-                                            Receipt Date: {getFullDate(ReceiptOne[0].Bill[0].billDetails[0].receiptDate)}
-                                          </td>
-                                      </tr>
-                                      <tr>
-                                          <td colSpan={3} style={{textAlign:"left"}}>
-                                            Service Request Number : {ReceiptOne[0].Bill[0].billDetails[0].consumerCode}<br/>
-                                            Applicant Name : {ReceiptOne[0].Bill[0].payeeName}<br/>
-                                            Amount : {Receipt[0].Bill[0].billDetails[0].totalAmount?("RS."+ReceiptOne[0].Bill[0].billDetails[0].totalAmount+"/-"):"NA"}<br/>
 
-                                          </td>
-                                      </tr>
-
-                                  </tbody>
-                              </Table>
-
-                              <Table id="ReceiptForWcAPartTwo" responsive bordered condensed>
-                                  <tbody>
-                                      <tr>
-                                          <td colSpan={2}>
-                                            Bill Reference No.& Date
-                                          </td>
-                                          <td colSpan={4}>
-                                            Details
-                                          </td>
-                                      </tr>
-                                      <tr>
-                                          <td >
-
-                                          </td>
-                                          <td >
-
-                                          </td>
-                                          <td >
-
-                                          </td>
-                                          <td >
-
-                                          </td>
-                                          <td >
-
-                                          </td>
-                                          <td >
-
-                                          </td>
-                                      </tr>
-                                      <tr>
-                                          <td colSpan={2}>
-                                            {ReceiptOne[0].Bill[0].billDetails[0].billNumber +"-"+getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate)}
-
-                                          </td>
-                                          <td colSpan={4}>
-                                            Application for {(match.params.id=="wc"?"Water":"Property")} {match.params.status == "extract" ? "Extract" : "No Dues"}
-                                          </td>
-
-                                      </tr>
-
-                                      <tr>
-                                          <td colSpan={6}>Amount in words: Rs. { int_to_words(applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount).charAt(0).toUpperCase() + int_to_words(applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount).slice(1)} only</td>
-
-                                      </tr>
-                                      <tr>
-                                        <td colSpan={6}>
-                                          Payment Mode
-                                        </td>
-                                      </tr>
-                                      <tr>
-                                        <td>
-                                          Mode
-                                        </td>
-                                        <td>
-                                          Amount
-                                        </td>
-                                          <td >
-                                           Transaction No
-                                        </td>
-                                          <td>
-                                            Transaction Date
-                                          </td>
-                                      <td colSpan={2}>
-                                                              Bank Name
-                                                            </td>
-
-                                      </tr>
-                                      <tr>
-                                        <td>
-                                          Online
-                                        </td>
-                                        <td>
-                                          {(applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount)?(applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount):"NA"}
-                                        </td>
-                                        {ReceiptOne[0].instrument.instrumentType.name=="Cash"? <td >NA</td> : <td >
-                                          {ReceiptOne[0].transactionId}
-                                        </td>}
-
-                                          {ReceiptOne[0].instrument.instrumentType.name=="Cash"?<td >NA</td>:<td >getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate)</td>}
-
-                                      <td colSpan={2}>
-                                          {ReceiptOne[0].instrument.instrumentType.name=="Cash"?<td >NA</td>:ReceiptOne[0].instrument.bank.name}
-                                        </td>
-
-                                      </tr>
-                                  </tbody>
-                              </Table>
-                        </CardText>
-                      </Card>
-                      <div className="page-break"></div>
-                      </Col>}
-                      <Col md={6} id="DownloadReceipt">
-                      {(this.props.match.params.status != "extract" && Receipt && Receipt[0]) ? <Card>
-                        <CardHeader title={<strong>Certificate for: No due</strong>}/>
-                        <CardText>
-                            <Table id="CertificateForWc" responsive style={{fontSize:"bold"}}  bordered condensed>
-                                  <tbody>
-                                      <tr>
-                                          <td style={{textAlign:"left"}}>
-                                             <img src="./temp/images/headerLogo.png" height="60" width="60"/>
-                                          </td>
-                                          <td style={{textAlign:"center"}}>
-                                              <b>Roha Municipal Council</b><br/>
-											                         {this.props.match.params.id == "pt" ? <span>Property Tax Department / करनिर्धारण विभाग</span> : <span>Water Charges Department</span>}
-                                          </td>
-                                          <td style={{textAlign:"right"}}>
-                                            <img src="./temp/images/AS.png" height="60" width="60"/>
-                                          </td>
-                                      </tr>
-                                      <tr>
-                                          <td colSpan={3}>
-                                            <div style={{textAlign:"center"}}>
-                                               No Due Certificate / थकबाकी नसल्याचे प्रमाणपत्र<br/>
-                                              (मुवंई प्रांतिक महानगरपालिका अधिनियम 1949 चे अनुसूचीतील प्रकरण 8 अधिनियम 44, 45 व 46 अन्वये )
-                                            </div>
-                                            <br/>
-                                            <div style={{textAlign:"right"}}>
-                                                  Date / दिनांक :{getFullDate(Receipt[0].Bill[0].billDetails[0].billDate,true)} <br/>
-                                                  Certificate No. / प्रमाणपत्र क्रं : {this.state.serviceRequest.serviceRequestId}
-
-                                            </div>
-                                            <br/>
-                                            <div style={{textAlign:"left"}}>
-                                              प्रती,<br/>
-                                              {Receipt[0].Bill[0].payeeName}<br/>
-                                              {Receipt[0].Bill[0].payeeAddress?Receipt[0].Bill[0].payeeAddress:"Roha"}
-
-
-                                            </div>
-                                            <br/>
-                                            <div style={{textAlign:"center"}}>
-                                              Subject /विषय :  सन 2017 - 18 थकबाकी नसल्याचे प्रमाणपत्र मिळणेबाबत.<br/>
-                                              Reference / संदर्भ : आपला अर्ज क्रमांक {Receipt[0].Bill[0].billDetails[0].applicationNo} दिनांक {getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate)}
-
-
-                                            </div>
-                                            <br/>
-                                            <div style={{textAlign:"left"}}>
-                                              महोद्य / महोद्या ,
-
-
-                                            </div>
-                                            <br/>
-                                            <div style={{textAlign:"center"}}>
-                                              संदर्भिय विषयांन्वये प्रमाणित करण्यात येते की, पाणी क्रमांक Consumer No,
-                                              {Receipt[0].Bill[0].billDetails[0].consumerCode} यांच्या नावे नोंद असून, सन 2017-18  पर्यंतचा संपुर्ण
-                                              पाणी रक्कम भरलेली असून, कोणतीही थकबाकी येणे नाही.
-
-
-                                            </div>
-                                            <br/>
-                                            <div style={{textAlign:"right"}}>
-                                                                      कर अधिक्षक,<br/>
-                                                                      Roha Municipal Council
-
-
-                                            </div>
-
-                                          </td>
-                                      </tr>
-
-
-                                  </tbody>
-                              </Table>
-
-
-                        </CardText>
-                        </Card> : Receipt && Receipt[0] && <Card>
-            <CardHeader title={<strong>Certificate for Extract</strong>}/>
-            <CardText>
-                  <Table responsive style={{fontSize:"bold", "marginBottom": "20px"}} id="CertificateForWc" bordered condensed>
-                      <tbody>
-                          <tr>
-                              <td style={{textAlign:"left"}} colSpan={2}>
-                                <img src="./temp/images/headerLogo.png" height="60" width="60"/>
-                              </td>
-                              <td style={{textAlign:"center"}} colSpan={4}>
-                                <b>Roha Municipal Council</b><br/>
-                                {this.props.match.params.id == "pt" ? <span>Property Tax Department / करनिर्धारण विभाग</span> : <span>Water Charges Department</span>}
-                              </td>
-                              <td style={{textAlign:"right"}} colSpan={2}>
-                                <img src="./temp/images/AS.png" height="60" width="60"/>
-                              </td>
-                          </tr>
-                          <tr>
-                            <td colSpan={8}>
-                                <div style={{textAlign:"center"}}>
-                                  <b>Extract Property</b> / मालमत्तेचा उतारा
-                                </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td colSpan={8}>
-                              <div style={{"whiteSpace": "pre"}}>
-                                <b>Ward:</b>   Election Ward 1                                 <b>Zone: -</b>                                                         <b>Revenue Circle</b>:
-                                <br/>
-                                <b>Apartment Name: Vars Apt</b>
-                              </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td colSpan={8}>
-                              <div>
-                                <b>Property No:</b> {Receipt[0].Bill[0].billDetails[0].consumerCode}<br/>
-                                <b>Property Usage / Sub Usage:</b> {this.state.Property && this.state.Property.usage ? this.state.Property.usage : ""}
-                              </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td colSpan={8}>
-                              <div style={{"whiteSpace": "pre"}}>
-                                <b>Property Owner Name</b>: {this.state.Property && this.state.Property.owners ? this.state.Property.owners[0].name : ""}<br/>
-                                <b>& Address: </b> {getAddress(this.state.Property)}                                                                                        <b>Age of Property</b>
-                              </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td colSpan={8}>
-                              <div>
-                                <b>Billing Name</b>: {Receipt[0].Bill[0].payeeName}<br/>
-                                <b>& Address:</b> {Receipt[0].Bill[0].payeeAddress?Receipt[0].Bill[0].payeeAddress:""}
-                              </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td><b>Unit No</b></td>
-                            <td><b>Floor</b></td>
-                            <td><b>Owner</b></td>
-                            <td><b>Usage</b></td>
-                            <td><b>Occupancy</b></td>
-                            <td><b>ALV</b></td>
-                            <td><b>RV</b></td>
-                            <td><b>Total Tax</b></td>
-                          </tr>
-                          {this.state.Property && this.state.Property.propertyDetail && this.state.Property.propertyDetail.floors ? renderProperty(this.state.Property.propertyDetail.floors) : "No Data Available"}
-                      </tbody>
-                  </Table>
-            </CardText>
-        </Card>}
-                      </Col>
 
                   </Row>}
 
@@ -1522,7 +1258,7 @@ class NoDues extends Component {
 
       </div>*/}
         <div style={{textAlign:"center"}}>
-            <h3> {match.params.status != "extract" ? <span>No Dues Certificate for {match.params.id=="wc"?"Water Charge":"Property Tax"}</span> : "Property Extract"}</h3>
+            <h3> {match.params.status != "extract" ? <span>Pay My Dues for {match.params.id=="wc"?"Water Charge":"Property Tax"}</span> : "Property Extract"}</h3>
         </div>
         <Stepper activeStep={stepIndex}>
            <Step>

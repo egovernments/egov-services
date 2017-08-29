@@ -1,7 +1,33 @@
 package org.egov.user.domain.service;
 
-import org.egov.user.domain.exception.*;
-import org.egov.user.domain.model.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import org.egov.user.domain.exception.AtleastOneRoleCodeException;
+import org.egov.user.domain.exception.DuplicateUserNameException;
+import org.egov.user.domain.exception.InvalidUserCreateException;
+import org.egov.user.domain.exception.OtpValidationPendingException;
+import org.egov.user.domain.exception.PasswordMismatchException;
+import org.egov.user.domain.exception.UserIdMandatoryException;
+import org.egov.user.domain.exception.UserNotFoundException;
+import org.egov.user.domain.exception.UserProfileUpdateDeniedException;
+import org.egov.user.domain.model.LoggedInUserUpdatePasswordRequest;
+import org.egov.user.domain.model.NonLoggedInUserUpdatePasswordRequest;
+import org.egov.user.domain.model.OtpValidationRequest;
+import org.egov.user.domain.model.Role;
+import org.egov.user.domain.model.User;
+import org.egov.user.domain.model.UserSearchCriteria;
 import org.egov.user.domain.model.enums.Gender;
 import org.egov.user.domain.model.enums.UserType;
 import org.egov.user.persistence.repository.OtpRepository;
@@ -12,15 +38,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceTest {
@@ -201,18 +218,21 @@ public class UserServiceTest {
 		assertEquals(expectedUser, returnedUser);
 	}
 
-	@Test
+	@Test(expected= AtleastOneRoleCodeException.class)
 	public void test_should_validate_user_on_update() {
 		User domainUser = mock(User.class);
+		Role role = Role.builder().code("EMPLOYEE").build();
+		List<Role> roles = new ArrayList<Role>();
+		roles.add(role);
+		domainUser.setRoles(roles);
 		User user = User.builder().build();
 		final User expectedUser = User.builder().build();
+		expectedUser.setRoles(roles);
 		when(userRepository.update(any(org.egov.user.domain.model.User.class)))
 				.thenReturn(expectedUser);
 		when(userRepository.getUserById(any(Long.class), anyString())).thenReturn(user);
 		when(userRepository.isUserPresent(any(String.class), any(Long.class), any(String.class))).thenReturn(false);
-
-		userService.updateWithoutOtpValidation(1L, domainUser);
-
+	    userService.updateWithoutOtpValidation(1L, domainUser);
 		verify(domainUser).validateUserModification();
 	}
 

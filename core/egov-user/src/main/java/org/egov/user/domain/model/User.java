@@ -26,6 +26,7 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 public class User {
 	@Setter
 	private Long id;
+	@Setter
 	private String tenantId;
 	private String username;
 	private String title;
@@ -43,6 +44,7 @@ public class User {
 	private Address permanentAddress;
 	private Address correspondenceAddress;
 	private Boolean active;
+	@Setter
 	private List<Role> roles = new ArrayList<>();
 	private Date dob;
 	private Date passwordExpiryDate;

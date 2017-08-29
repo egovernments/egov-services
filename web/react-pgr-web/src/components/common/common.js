@@ -1311,6 +1311,15 @@ var localization_EN_Data = {
     "pgr.0060": "Applicant Details",
     "pgr.0061": "Complainant Details",
     "wc.create.groups.applicantDetails.addressNumber":"House Number",
+
+    //pay reciept
+    "collection.reciept.id":"Transaction Id",
+    "collection.reciept.name":"Payee Name",
+    "collection.reciept.amount":"Amount in words",
+    "collection.pay.receipt":"Receipt",
+    "collection.pay.key":"Key",
+    "collection.pay.value":"Value",
+
 };
 
 var localization_MR_Data = {
@@ -2282,6 +2291,12 @@ var localization_MR_Data = {
 "wc.group.maximumReading":"Maximum Reading-Marathi",
 "wc.group.consumptionAdjustment":"Consumption Adjustment-Marathi",
 "wc.craete.file.Download":"Download-Marathi",
+"collection.reciept.id":"Transaction Id-Marathi",
+"collection.reciept.name":"Payee Name-Marathi",
+"collection.reciept.amount":"Amount in words-Marathi",
+"collection.pay.receipt":"Receipt-Marathi",
+"collection.pay.key":"Key-marathi",
+"collection.pay.value":"Value-Marathi",
 
 ﻿﻿"pgr.0001":"अक्षांश / रेखांश किंवा क्रॉस हायरारकी संकेतांक आवश्यक आहे",
 "pgr.0002":"अक्षांश / रेखांश किंवा क्रॉस हायरारकी संकेतांक आवश्यक आहे",

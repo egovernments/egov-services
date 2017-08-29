@@ -84,10 +84,7 @@ public class DisposalService {
     public void setStatusOfAssetToDisposed(final DisposalRequest disposalRequest) {
         final Disposal disposal = disposalRequest.getDisposal();
         final String tenantId = disposal.getTenantId();
-        final List<Long> assetIds = new ArrayList<>();
-        assetIds.add(disposal.getAssetId());
-        final Asset asset = assetRepository
-                .findForCriteria(AssetCriteria.builder().tenantId(tenantId).id(assetIds).build()).get(0);
+        final Asset asset = assetService.getAsset(tenantId, disposal.getAssetId(), disposalRequest.getRequestInfo());
         final List<AssetStatus> assetStatuses = assetMasterService.getStatuses(AssetStatusObjectName.ASSETMASTER,
                 Status.DISPOSED, tenantId);
         asset.setStatus(assetStatuses.get(0).getStatusValues().get(0).getCode());

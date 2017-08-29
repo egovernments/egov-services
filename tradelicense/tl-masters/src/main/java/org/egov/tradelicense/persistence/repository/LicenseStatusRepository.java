@@ -100,7 +100,7 @@ public class LicenseStatusRepository {
 	 * @return List<LicenseStatus>
 	 */
 	public List<LicenseStatus> searchLicenseStatus(String tenantId, Integer[] ids, String name, String code,
-			String active, Integer pageSize, Integer offSet) {
+			String moduleType, String active, Integer pageSize, Integer offSet) {
 
 		MapSqlParameterSource parameters = new MapSqlParameterSource();
 		if (pageSize == null) {
@@ -109,7 +109,7 @@ public class LicenseStatusRepository {
 		if (offSet == null) {
 			offSet = Integer.valueOf(propertiesManager.getDefaultOffset());
 		}
-		String searchQueryLicense = LicenseStatusQueryBuilder.buildSearchQuery(tenantId, ids, name, code, active,
+		String searchQueryLicense = LicenseStatusQueryBuilder.buildSearchQuery(tenantId, ids, name, code, moduleType, active,
 				pageSize, offSet, parameters);
 		List<LicenseStatus> licenseStatuses = getLicenseStatusSearchQuery(searchQueryLicense.toString(), parameters);
 

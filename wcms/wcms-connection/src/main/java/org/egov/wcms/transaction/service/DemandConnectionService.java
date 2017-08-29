@@ -194,16 +194,18 @@ public class DemandConnectionService {
         PropertyOwnerInfo prop=new PropertyOwnerInfo();
         if(connection.getPropertyIdentifier()!=null){
             PropertyResponse propResp=getPropertyDetailsByUpicNo(connection.getPropertyIdentifier(),tenantId,requestInfo);
-           if(propResp!=null && propResp.getProperties().isEmpty() &&
-                   propResp.getProperties().get(0)!=null)
+           if(propResp!=null && !propResp.getProperties().isEmpty() &&
+                   propResp.getProperties().get(0)!=null){
                prop=propResp.getProperties().get(0).getOwners().get(0);;
                ownerobj=new Owner();
                ownerobj.setId(prop.getId());
                ownerobj.setTenantId(prop.getTenantId());
+           }
 
         }
         else
         {
+            
             if(connection.getPropertyIdentifier() ==null &&  connection.getUserid()!=null){
                 ownerobj=new Owner();
             ownerobj.setId(connection.getUserid());

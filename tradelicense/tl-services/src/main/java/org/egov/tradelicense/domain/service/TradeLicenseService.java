@@ -16,6 +16,7 @@ import org.egov.tl.commons.web.response.TradeLicenseSearchResponse;
 import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.common.domain.exception.CustomBindException;
 import org.egov.tradelicense.domain.enums.ApplicationStatus;
+import org.egov.tradelicense.domain.enums.LicenseStatus;
 import org.egov.tradelicense.domain.model.LicenseFeeDetail;
 import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
@@ -47,6 +48,8 @@ import lombok.extern.slf4j.Slf4j;
 public class TradeLicenseService {
 
 	public static final String APPLICATION_MODULE_TYPE = "Application";
+	
+	public static final String LICENSE_MODULE_TYPE = "LICENSE";
 
 	@Autowired
 	private TradeLicenseServiceValidator tradeLicenseServiceValidator;
@@ -118,7 +121,15 @@ public class TradeLicenseService {
 					license.setStatus(currentStatus.getLicenseStatuses().get(0).getId());
 
 			} else {
-				license.setStatus(new Long(1)); // Approved status id 1
+				RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+				requestInfoWrapper.setRequestInfo(requestInfo);
+
+				LicenseStatusResponse currentStatus = statusRepository.findByModuleTypeAndCode(license.getTenantId(),
+						LICENSE_MODULE_TYPE, LicenseStatus.APPROVED.getName(), requestInfoWrapper);
+
+				if (null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty())
+					license.setStatus(currentStatus.getLicenseStatuses().get(0).getId());
+
 			}
 
 			if (license.getSupportDocuments() != null && license.getSupportDocuments().size() > 0) {

@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.mr.TestConfiguration;
 import org.egov.mr.model.AuditDetails;
 import org.egov.mr.model.Location;
@@ -18,7 +19,6 @@ import org.egov.mr.utils.FileUtils;
 import org.egov.mr.web.contract.RegistrationUnitSearchCriteria;
 import org.egov.mr.web.contract.RegnUnitRequest;
 import org.egov.mr.web.contract.RegnUnitResponse;
-import org.egov.mr.web.contract.ResponseInfo;
 import org.egov.mr.web.errorhandler.ErrorHandler;
 import org.junit.After;
 import org.junit.Before;
@@ -156,8 +156,8 @@ public class RegistrationUnitControllerTest {
 		Location location = Location.builder().locality(60L).zone(147896325L).revenueWard(150L).block(14788L)
 				.street(159632478L).electionWard(123456789L).doorNo("132").pinCode(560103).build();
 
-		expectedRegistrationUnitList.add(RegistrationUnit.builder().id(33L).code("AP").name("hyderabad").address(location)
-				.isActive(true).tenantId("AP.HYDERABAD").auditDetails(auditDetails).build());
+		expectedRegistrationUnitList.add(RegistrationUnit.builder().id(33L).code("AP").name("hyderabad")
+				.address(location).isActive(true).tenantId("AP.HYDERABAD").auditDetails(auditDetails).build());
 		return expectedRegistrationUnitList;
 	}
 

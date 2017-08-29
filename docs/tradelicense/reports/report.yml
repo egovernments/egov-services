@@ -100,13 +100,13 @@ ReportDefinitions:
     type: epoch
     source: tradelicense
     isMandatory: false
-    searchClause : AND tl.licensevalidfromdate = to_timestamp(Trunc(CAST($licenseValidFromDate as bigint)/1000 ))
+    searchClause : AND tl.licensevalidfromdate = to_char(to_timestamp(Trunc(CAST($licenseValidFromDate as bigint)/1000 )),'yyyy-mm-dd')
   - name: licenseValidToDate
     label: reports.tradelicense.licensevalidtodate
     type: epoch
     source: tradelicense
     isMandatory: false
-    searchClause : AND tl.expirydate = to_timestamp(Trunc(CAST($licenseValidToDate as bigint)/1000 ))
+    searchClause : AND tl.expirydate = to_char(to_timestamp(Trunc(CAST($licenseValidToDate as bigint)/1000 )),'yyyy-mm-dd')
   - name: licenseType
     label: reports.tradelicense.licensetype
     type: singlevaluelist

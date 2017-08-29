@@ -122,6 +122,7 @@ public class BudgetGroupService {
 	}
 
 	public Pagination<BudgetGroup> search(BudgetGroupSearch budgetGroupSearch) {
+	        Assert.notNull(budgetGroupSearch.getTenantId(), "tenantId is mandatory for budgetGroup search");
 		return budgetGroupRepository.search(budgetGroupSearch);
 	}
 

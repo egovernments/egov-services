@@ -101,6 +101,7 @@ public class FinancialConfigurationService {
 	}
 
 	public Pagination<FinancialConfiguration> search(FinancialConfigurationSearch financialConfigurationSearch) {
+	        Assert.notNull(financialConfigurationSearch.getTenantId(), "tenantId is mandatory for financialConfiguration search");
 		return financialConfigurationRepository.search(financialConfigurationSearch);
 	}
 

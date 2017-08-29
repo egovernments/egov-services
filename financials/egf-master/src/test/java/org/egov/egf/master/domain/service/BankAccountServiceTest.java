@@ -163,6 +163,7 @@ public class BankAccountServiceTest {
         bankAccountSearch.setPageSize(0);
         bankAccountSearch.setOffset(0);
         bankAccountSearch.setSortBy("Sort");
+        bankAccountSearch.setTenantId("default");
         return bankAccountSearch;
     }
 }

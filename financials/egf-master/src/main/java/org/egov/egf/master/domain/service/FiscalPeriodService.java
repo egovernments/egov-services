@@ -108,6 +108,7 @@ public class FiscalPeriodService {
 	}
 
 	public Pagination<FiscalPeriod> search(FiscalPeriodSearch fiscalPeriodSearch) {
+	        Assert.notNull(fiscalPeriodSearch.getTenantId(), "tenantId is mandatory for fiscalPeriod search");
 		return fiscalPeriodRepository.search(fiscalPeriodSearch);
 	}
 

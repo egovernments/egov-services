@@ -129,6 +129,7 @@ public class FunctionService {
 	}
 
 	public Pagination<Function> search(FunctionSearch functionSearch) {
+	        Assert.notNull(functionSearch.getTenantId(), "tenantId is mandatory for function search");
 		return functionRepository.search(functionSearch);
 	}
 

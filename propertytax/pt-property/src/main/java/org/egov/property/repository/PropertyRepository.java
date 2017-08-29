@@ -1828,7 +1828,7 @@ public class PropertyRepository {
 				@Override
 				public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
 					final PreparedStatement ps = connection.prepareStatement(SpecialNoticeBuilder.INSERT_NOTICE_OWNERS,
-							new String[] { "sno" });
+							new String[] { "id" });
 					ps.setLong(1, Long.valueOf(String.valueOf(noticeId)));
 					ps.setLong(2, owner.getId());
 					return ps;

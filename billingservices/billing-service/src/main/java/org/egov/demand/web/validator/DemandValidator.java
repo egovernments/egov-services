@@ -274,7 +274,7 @@ public class DemandValidator implements Validator {
 									+ demand.getTaxPeriodTo() + "'in Demand is invalid, please give a valid taxPeriod");
 			} else {
 				errors.rejectValue("Demands", "", "no taxperiods found for value of Demand.businessService : "
-						+ demand.getBusinessService() + "please give a valid businessService code");
+						+ demand.getBusinessService() + " please give a valid businessService code");
 			}
 		}
 	}

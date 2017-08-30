@@ -14,9 +14,8 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.persistence.entity.AuditableEntity;
-import org.egov.egf.master.persistence.entity.ChartOfAccountEntity;
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -434,11 +433,6 @@ public abstract class JdbcRepository {
 				paramValues.put(s,getValue(getField(ob,s ), ob));
 			   }
 			}
-		
-		 
-		 
-		 
-	 
 		
 		Long count = namedParameterJdbcTemplate.queryForObject(uniqueQuery.toString(), paramValues, Long.class);
 		LOG.info("Record Count for  field "+count);

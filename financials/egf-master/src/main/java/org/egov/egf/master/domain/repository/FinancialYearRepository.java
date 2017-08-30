@@ -75,4 +75,8 @@ public class FinancialYearRepository {
 
     }
 
+    public boolean uniqueCheck(String fieldName, FinancialYear financialYear) {
+        return financialYearJdbcRepository.uniqueCheck(fieldName, new FinancialYearEntity().toEntity(financialYear));
+    }
+
 }

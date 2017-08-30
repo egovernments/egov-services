@@ -92,4 +92,8 @@ public class FinancialConfigurationRepository {
 
     }
 
+    public boolean uniqueCheck(String fieldName, FinancialConfiguration financialConfiguration) {
+        return financialConfigurationJdbcRepository.uniqueCheck(fieldName, new FinancialConfigurationEntity().toEntity(financialConfiguration));
+    }
+
 }

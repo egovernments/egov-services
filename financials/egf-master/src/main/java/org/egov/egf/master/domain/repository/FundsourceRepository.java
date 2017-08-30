@@ -79,4 +79,8 @@ public class FundsourceRepository {
 
     }
 
+    public boolean uniqueCheck(String fieldName, Fundsource fundsource) {
+        return fundsourceJdbcRepository.uniqueCheck(fieldName, new FundsourceEntity().toEntity(fundsource));
+    }
+
 }

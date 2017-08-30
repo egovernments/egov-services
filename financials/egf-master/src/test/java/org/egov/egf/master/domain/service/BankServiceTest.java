@@ -14,6 +14,7 @@ import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.model.BankSearch;
 import org.egov.egf.master.domain.repository.BankRepository;
 import org.egov.egf.master.domain.repository.FundRepository;
+import org.egov.egf.master.persistence.repository.BankJdbcRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,6 +38,9 @@ public class BankServiceTest {
 
 	@Mock
 	private BankRepository bankRepository;
+	
+	@Mock
+	private BankJdbcRepository bankJdbcRepository;
 
 	@Mock
 	private FundRepository fundRepository;
@@ -54,12 +58,14 @@ public class BankServiceTest {
 	@Test
 	public final void testCreate() {
 		banks.add(getBank());
+		when(bankRepository.uniqueCheck(any(String.class), any(Bank.class))).thenReturn(true);
 		bankService.create(banks, errors, requestInfo);
 	}
 
 	@Test
 	public final void testUpdate() {
 		banks.add(getBank());
+		when(bankRepository.uniqueCheck(any(String.class), any(Bank.class))).thenReturn(true);
 		bankService.update(banks, errors, requestInfo);
 	}
 
@@ -67,6 +73,7 @@ public class BankServiceTest {
 	public final void testCreateInvalid() {
 		Bank bank = Bank.builder().id("a").code("code").name("name").active(true).build();
 		banks.add(bank);
+		when(bankRepository.uniqueCheck(any(String.class), any(Bank.class))).thenReturn(true);
 		bankService.create(banks, errors, requestInfo);
 	}
 
@@ -112,7 +119,7 @@ public class BankServiceTest {
 	}
 
 	private Bank getBank() {
-		return Bank.builder().id("1").code("code").description("description").build();
+		return Bank.builder().id("12212heuu").code("codeeeeee").name("nameeeee").description("description").build();
 	}
 
 	private BankSearch getBankSearch() {

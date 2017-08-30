@@ -114,4 +114,8 @@ public class ChartOfAccountRepository {
 
 	}
 
+    public boolean uniqueCheck(String fieldName, ChartOfAccount chartOfAccount) {
+        return chartOfAccountJdbcRepository.uniqueCheck(fieldName, new ChartOfAccountEntity().toEntity(chartOfAccount));
+    }
+
 }

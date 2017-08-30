@@ -80,4 +80,8 @@ public class FunctionaryRepository {
 
     }
 
+    public boolean uniqueCheck(String fieldName, Functionary functionary) {
+        return functionaryJdbcRepository.uniqueCheck(fieldName, new FunctionaryEntity().toEntity(functionary));
+    }
+
 }

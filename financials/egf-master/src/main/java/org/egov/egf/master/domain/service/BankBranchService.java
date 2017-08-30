@@ -6,6 +6,7 @@ import java.util.List;
 import org.egov.common.constants.Constants;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.exception.CustomBindException;
+import org.egov.common.domain.exception.ErrorCode;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.Bank;
@@ -16,8 +17,8 @@ import org.egov.egf.master.domain.repository.BankRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.SmartValidator;
 
@@ -82,39 +83,65 @@ public class BankBranchService {
 
 	private BindingResult validate(List<BankBranch> bankbranches, String method, BindingResult errors) {
 
-		try {
-			switch (method) {
-			case Constants.ACTION_VIEW:
-				// validator.validate(bankBranchContractRequest.getBankBranch(),
-				// errors);
-				break;
-			case Constants.ACTION_CREATE:
-				Assert.notNull(bankbranches, "BankBranches to create must not be null");
-				for (BankBranch bankBranch : bankbranches) {
-					validator.validate(bankBranch, errors);
-				}
-				break;
-			case Constants.ACTION_UPDATE:
-				Assert.notNull(bankbranches, "BankBranches to update must not be null");
-				for (BankBranch bankBranch : bankbranches) {
-					Assert.notNull(bankBranch.getId(), "Bank Branch ID to update must not be null");
-					validator.validate(bankBranch, errors);
-				}
-				break;
-                        case Constants.ACTION_SEARCH:
-                                Assert.notNull(bankbranches, "Bankbranches to search must not be null");
-                                for (BankBranch bankbranch : bankbranches) {
-                                        Assert.notNull(bankbranch.getTenantId(), "TenantID must not be null for search");
-                                }
-                                break;
-			default:
-
-			}
-		} catch (IllegalArgumentException e) {
+                try {
+                    switch (method) {
+                    case Constants.ACTION_VIEW:
+                        // validator.validate(bankBranchContractRequest.getBankBranch(),
+                        // errors);
+                        break;
+                    case Constants.ACTION_CREATE:
+                        if (bankbranches == null) {
+                            throw new InvalidDataException("bankbranches", ErrorCode.NOT_NULL.getCode(), bankbranches.toString());
+                        }
+                        for (BankBranch bankBranch : bankbranches) {
+                            validator.validate(bankBranch, errors);
+                            if (!bankBranchRepository.uniqueCheck("name", bankBranch)) {
+                                errors.addError(new FieldError("bankBranch", "name", bankBranch.getName(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                            }
+                            if (!bankBranchRepository.uniqueCheck("code", bankBranch)) {
+                                errors.addError(new FieldError("bankBranch", "code", bankBranch.getCode(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                            }
+                        }
+                        break;
+                    case Constants.ACTION_UPDATE:
+                        if (bankbranches == null) {
+                            throw new InvalidDataException("bankbranches", ErrorCode.NOT_NULL.getCode(), bankbranches.toString());
+                        }
+                        for (BankBranch bankBranch : bankbranches) {
+                            if (bankBranch.getId() == null) {
+                                throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), bankBranch.getId());
+                            }
+                            validator.validate(bankBranch, errors);
+                            if (!bankBranchRepository.uniqueCheck("name", bankBranch)) {
+                                errors.addError(new FieldError("bankBranch", "name", bankBranch.getName(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                            }
+                            if (!bankBranchRepository.uniqueCheck("code", bankBranch)) {
+                                errors.addError(new FieldError("bankBranch", "code", bankBranch.getCode(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                            }
+                        }
+                        break;
+                    case Constants.ACTION_SEARCH:
+                        if (bankbranches == null) {
+                            throw new InvalidDataException("bankbranches", ErrorCode.NOT_NULL.getCode(), bankbranches.toString());
+                        }
+                        for (BankBranch bankbranch : bankbranches) {
+                            if (bankbranch.getTenantId() == null) {
+                                throw new InvalidDataException("tenantId", ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
+                                        bankbranch.getTenantId());
+                            }
+                        }
+                        break;
+                    default:
+        
+                    }
+                } catch (IllegalArgumentException e) {
 			errors.addError(new ObjectError("Missing data", e.getMessage()));
 		}
 		return errors;
-
 	}
 
 	public List<BankBranch> fetchRelated(List<BankBranch> bankbranches) {

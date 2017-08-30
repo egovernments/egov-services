@@ -80,4 +80,8 @@ public class SchemeRepository {
 
     }
 
+    public boolean uniqueCheck(String fieldName, Scheme scheme) {
+        return schemeJdbcRepository.uniqueCheck(fieldName, new SchemeEntity().toEntity(scheme));
+    }
+
 }

@@ -53,12 +53,14 @@ public class RecoveryServiceTest {
     @Test
     public final void test_create() {
         when(chartOfAccountRepository.search(any(ChartOfAccountSearch.class))).thenReturn(getPagination());
+        when(recoveryRepository.uniqueCheck(any(String.class), any(Recovery.class))).thenReturn(true);
         recoveryService.create(getRecoverys(), errors, requestInfo);
     }
 
     @Test
     public final void test_update() {
         when(chartOfAccountRepository.search(any(ChartOfAccountSearch.class))).thenReturn(getPagination());
+        when(recoveryRepository.uniqueCheck(any(String.class), any(Recovery.class))).thenReturn(true);
         recoveryService.update(getRecoverys(), errors, requestInfo);
     }
 
@@ -66,6 +68,7 @@ public class RecoveryServiceTest {
     public final void test_createinvalid() {
         Recovery recovery1 = Recovery.builder().name("name").code("code").type("M").mode('M').remittanceMode('M').active(true).build();
         recoverys.add(recovery1);
+        when(recoveryRepository.uniqueCheck(any(String.class), any(Recovery.class))).thenReturn(true);
         recoveryService.create(recoverys, errors, requestInfo);
     }
 

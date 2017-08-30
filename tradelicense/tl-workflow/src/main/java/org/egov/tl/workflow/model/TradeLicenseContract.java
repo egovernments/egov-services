@@ -27,16 +27,17 @@ public class TradeLicenseContract {
 		ProcessInstanceRequest request = new ProcessInstanceRequest();
 		ProcessInstance processInstance = new ProcessInstance();
 
-		processInstance.setBusinessKey(workFlowDetails.getBusinessKey());
-		processInstance.setType(workFlowDetails.getType());
-		processInstance.setComments(workFlowDetails.getComments());
-		processInstance.setTenantId(getTenantId());
-		processInstance.setAssignee(new Position());
-		processInstance.getAssignee().setId(workFlowDetails.getAssignee());
-		processInstance.setSenderName(workFlowDetails.getSenderName());
-		processInstance.setDetails(workFlowDetails.getDetails());
-		processInstance.setStatus(workFlowDetails.getStatus());
-
+		if (workFlowDetails != null) {
+			processInstance.setBusinessKey(workFlowDetails.getBusinessKey());
+			processInstance.setType(workFlowDetails.getType());
+			processInstance.setComments(workFlowDetails.getComments());
+			processInstance.setTenantId(getTenantId());
+			processInstance.setAssignee(new Position());
+			processInstance.getAssignee().setId(workFlowDetails.getAssignee());
+			processInstance.setSenderName(workFlowDetails.getSenderName());
+			processInstance.setDetails(workFlowDetails.getDetails());
+			processInstance.setStatus(workFlowDetails.getStatus());
+		}
 		request.setProcessInstance(processInstance);
 
 		return request;
@@ -47,16 +48,17 @@ public class TradeLicenseContract {
 		TaskRequest request = new TaskRequest();
 		Task task = new Task();
 
-		task.setId(workFlowDetails.getStateId());
-		task.setBusinessKey(workFlowDetails.getBusinessKey());
-		task.setType(workFlowDetails.getType());
-		task.setComments(workFlowDetails.getComments());
-		task.setAction(workFlowDetails.getAction());
-		task.setStatus(workFlowDetails.getStatus());
-		task.setTenantId(getTenantId());
-		task.setAssignee(new Position());
-		task.getAssignee().setId(workFlowDetails.getAssignee());
-
+		if (workFlowDetails != null) {
+			task.setId(workFlowDetails.getStateId());
+			task.setBusinessKey(workFlowDetails.getBusinessKey());
+			task.setType(workFlowDetails.getType());
+			task.setComments(workFlowDetails.getComments());
+			task.setAction(workFlowDetails.getAction());
+			task.setStatus(workFlowDetails.getStatus());
+			task.setTenantId(getTenantId());
+			task.setAssignee(new Position());
+			task.getAssignee().setId(workFlowDetails.getAssignee());
+		}
 		request.setTask(task);
 
 		return request;
@@ -72,12 +74,16 @@ public class TradeLicenseContract {
 	}
 
 	public void update(ProcessInstanceResponse processInstanceResponse) {
-		workFlowDetails.setAssignee(processInstanceResponse.getProcessInstance().getOwner().getId());
-		workFlowDetails.setStateId(processInstanceResponse.getProcessInstance().getValueForKey(STATE_ID));
+		if (workFlowDetails != null) {
+			workFlowDetails.setAssignee(processInstanceResponse.getProcessInstance().getOwner().getId());
+			workFlowDetails.setStateId(processInstanceResponse.getProcessInstance().getValueForKey(STATE_ID));
+		}
 	}
 
 	public void update(TaskResponse taskResponse) {
-		workFlowDetails.setAssignee(taskResponse.getTask().getOwner().getId());
-		workFlowDetails.setStateId(taskResponse.getTask().getValueForKey(STATE_ID));
+		if (workFlowDetails != null) {
+			workFlowDetails.setAssignee(taskResponse.getTask().getOwner().getId());
+			workFlowDetails.setStateId(taskResponse.getTask().getValueForKey(STATE_ID));
+		}
 	}
 }

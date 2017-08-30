@@ -223,8 +223,10 @@ public class CitizenPersistService {
     	log.info("serviceReqJson1:"+serviceReqJson);
     	DocumentContext documentContext = JsonPath.parse(serviceReqJson);
     	
-    	if(isCreate)
-    	documentContext.put("$.serviceReq", "serviceRequestId", id);
+		if (isCreate) {
+			documentContext.put("$.serviceReq", "serviceRequestId", id);
+			documentContext.put("$.serviceReq", "consumerCode", id);
+		}
     	
     	if(documentContext.read("$.serviceReq.serviceCode").toString().equals("WATER_NEWCONN") && isCreate){
     		documentContext.put("$.serviceReq.backendServiceDetails[0].request.Demands[0]", "consumerCode", id);
@@ -235,6 +237,7 @@ public class CitizenPersistService {
     	}
     	log.info("documentContext:"+documentContext.jsonString());
     	Object serviceCall = JsonPath.read(serviceReqJson, "$.serviceReq.backendServiceDetails");
+    	System.out.println(serviceCall instanceof List);
     	//if(serviceCall instanceof List)
     	if(serviceCall != null){
     		List<LinkedHashMap<String, Object>> list =(List<LinkedHashMap<String, Object>>) serviceCall;

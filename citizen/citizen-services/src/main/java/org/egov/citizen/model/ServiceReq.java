@@ -35,6 +35,7 @@ public class ServiceReq {
 	private List<Comment> comments;	
 	private List<Document> documents;	
 	private String status;	
+	private Object moduleObject;
 	private String moduleStatus;	
 	private BigDecimal additionalFee;
 

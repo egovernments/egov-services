@@ -370,7 +370,7 @@ getSmallestDate = (DateArray) => {
 		{	
 			var TempDate = new Date(DateArray[i]);
 			if(TempDate < SmallestDate)
-			SmallestDate  = TempDate ;
+			SmallestDate  = TempDate;
 		}
 		
 		var date = (new Date(SmallestDate).getDate() < 10) ? ('0'+new Date(SmallestDate).getDate()) : new Date(SmallestDate).getDate();

@@ -588,7 +588,7 @@ ReportDefinitions:
     label: reports.property.upicnumber
     type: number
     source: collection
-  - name: code
+  - name: proptype
     label: reports.property.code
     type: number
     source: collection

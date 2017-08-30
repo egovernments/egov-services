@@ -111,7 +111,18 @@ public class WaterConnectionQueryBuilder {
                        + " left join egwtr_water_source_type watersource ON NULLIF(conndetails.sourcetype, '')::int=watersource.id  left join egwtr_supply_type supplytype "
                        + " ON NULLIF(conndetails.supplytype, '')::int=supplytype.id left join egwtr_pipesize pipesize on NULLIF(conndetails.hscpipesizetype, '')::int=pipesize.id " 
                        + " left join egwtr_treatment_plant plant ON NULLIF(conndetails.watertreatmentid, '')::int = plant.id left join egwtr_meter meter ON meter.connectionid = conndetails.id  "
-                       + " where useraddress.type='PERMANENT' " ; 		
+                       + " where useraddress.type='PERMANENT' " ; 	
+	       
+	public static String getConnectionMeterQueryForSearch() {
+		return "select conn.id as connectionid, conn.acknowledgmentnumber, conn.consumernumber, conn.tenantid, "
+				+ " meter.id as meterid, meter.metermake, meter.initialmeterreading, meter.meterslno, meter.metercost, meter.meterowner, meter.metermodel, meter.maximummeterreading, meter.meterstatus, meter.tenantid as metertenant, "
+				+ " meterreading.reading, meterreading.readingdate, meterreading.gapcode, meterreading.consumption, meterreading.consumptionadjusted, meterreading.numberofdays, meterreading.resetflag "
+				+ " from egwtr_waterconnection conn left join egwtr_meter meter on conn.id = meter.connectionid "
+				+ " left join egwtr_meterreading meterreading on meter.id = meterreading.meterid "
+				+ " where conn.id =  ? ";
+	}
+	       
+	       
     public static String insertDocumentQuery() {
         return "INSERT INTO egwtr_documentowner(id,document,name,filestoreid,connectionid,tenantid) values "
                 + "(nextval('seq_egwtr_documentowner'),?,?,?,?,?)";

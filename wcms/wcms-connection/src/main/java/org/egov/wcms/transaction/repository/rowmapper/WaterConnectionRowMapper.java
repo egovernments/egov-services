@@ -43,11 +43,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.wcms.transaction.model.Connection;
 import org.egov.wcms.transaction.model.ConnectionOwner;
 import org.egov.wcms.transaction.model.Meter;
+import org.egov.wcms.transaction.model.MeterReading;
 import org.egov.wcms.transaction.model.Property;
 import org.egov.wcms.transaction.web.contract.Address;
 import org.egov.wcms.transaction.web.contract.Boundary;
@@ -62,6 +65,70 @@ public class WaterConnectionRowMapper {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(WaterConnectionRowMapper.class);
 	public static final String METERED = "METERED";
+	
+	public class ConnectionMeterRowMapper implements RowMapper<Meter> {
+		public Map<Long, Map<Long, Meter>> meterReadingMap = new HashMap<>();
+		@Override
+		public Meter mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+			if(meterReadingMap.containsKey(rs.getLong("connectionid"))) { 
+				Map<Long, Meter> innerMap = meterReadingMap.get(rs.getLong("connectionid")); 
+				if(innerMap.containsKey(rs.getLong("meterid"))) { 
+					Meter meter= innerMap.get(rs.getLong("meterid"));
+					List<MeterReading> meterReadingList = meter.getMeterReadings(); 
+					MeterReading reading = prepareMeterReadingObject(rs);
+					meterReadingList.add(reading);
+				} else { 
+					Meter meter = prepareMeterObject(rs);
+					innerMap.put(rs.getLong("meterid"), meter); 
+				}
+			} else { 
+				Meter meter = prepareMeterObject(rs);
+				Map<Long, Meter> innerMap = new HashMap<>();
+				innerMap.put(rs.getLong("meterid"), meter);
+				meterReadingMap.put(rs.getLong("connectionid"), innerMap);
+			}
+			return null; 
+		}
+		
+		private Meter prepareMeterObject(ResultSet rs) {
+			Meter meter = new Meter();
+			try {
+				meter.setId(rs.getLong("meterid"));
+				meter.setMeterMake(rs.getString("metermake"));
+				meter.setInitialMeterReading(rs.getString("initialmeterreading"));
+				meter.setMeterSlNo(rs.getString("meterslno"));
+				meter.setMeterCost(rs.getString("metercost"));
+				meter.setMeterModel(rs.getString("metermodel"));
+				meter.setMaximumMeterReading(rs.getString("maximummeterreading"));
+				meter.setMeterStatus(rs.getString("meterstatus"));
+				meter.setTenantId(rs.getString("metertenant")); 
+				MeterReading reading = prepareMeterReadingObject(rs);
+				List<MeterReading> meterReadingList = new ArrayList<>(); 
+				meterReadingList.add(reading);
+				meter.setMeterReadings(meterReadingList);
+			} catch (Exception e) {
+				LOGGER.error("Encountered Exception while creating Meter Object : " + e.getMessage());
+			}
+			return meter;
+		}
+		
+		private MeterReading prepareMeterReadingObject(ResultSet rs) {
+			MeterReading reading = new MeterReading();
+			try {
+				reading.setMeterId(rs.getLong("meterid"));
+				reading.setReading(rs.getLong("reading"));
+				reading.setReadingDate(rs.getLong("readingdate"));
+				reading.setGapCode(rs.getString("gapcode"));
+				reading.setConsumption(Long.parseLong(rs.getString("consumption")));
+				reading.setConsumptionAdjusted(Long.parseLong(rs.getString("consumptionadjusted")));
+				reading.setNumberOfDays(Long.parseLong(rs.getString("numberofdays")));
+				reading.setResetFlag(rs.getBoolean("resetflag"));
+			} catch (Exception e) {
+				LOGGER.error("Encountered Exception while creating Meter Reading Object : " + e.getMessage());
+			}
+			return reading; 
+		}
+	}
 	
 	public class WaterConnectionPropertyRowMapper implements RowMapper<Connection> {
 		@Override

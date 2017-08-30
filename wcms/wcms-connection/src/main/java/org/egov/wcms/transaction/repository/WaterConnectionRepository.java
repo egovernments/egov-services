@@ -44,8 +44,10 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.wcms.transaction.model.Connection;
@@ -53,6 +55,7 @@ import org.egov.wcms.transaction.model.DocumentOwner;
 import org.egov.wcms.transaction.model.EstimationCharge;
 import org.egov.wcms.transaction.model.EstimationNotice;
 import org.egov.wcms.transaction.model.Material;
+import org.egov.wcms.transaction.model.Meter;
 import org.egov.wcms.transaction.model.MeterReading;
 import org.egov.wcms.transaction.model.WorkOrderFormat;
 import org.egov.wcms.transaction.model.enums.NewConnectionStatus;
@@ -60,6 +63,7 @@ import org.egov.wcms.transaction.repository.builder.WaterConnectionQueryBuilder;
 import org.egov.wcms.transaction.repository.rowmapper.ConnectionDocumentRowMapper;
 import org.egov.wcms.transaction.repository.rowmapper.UpdateWaterConnectionRowMapper;
 import org.egov.wcms.transaction.repository.rowmapper.WaterConnectionRowMapper;
+import org.egov.wcms.transaction.repository.rowmapper.WaterConnectionRowMapper.ConnectionMeterRowMapper;
 import org.egov.wcms.transaction.web.contract.PropertyTaxResponseInfo;
 import org.egov.wcms.transaction.web.contract.PropertyTypeResponse;
 import org.egov.wcms.transaction.web.contract.RequestInfoWrapper;
@@ -548,8 +552,46 @@ public class WaterConnectionRepository {
 			LOGGER.error("Exception encountered while fetching the Connection list without Property : " + ex);
 		}
 		resolvePropertyUsageTypeNames(waterConnectionGetReq.getTenantId(), connectionList, requestInfo);
+		// This condition is added to fetch the Meter Details only in single view case. Not in fetch all case 
+		if(connectionList.size() == 1) { 
+			getConnectionMeterDetails(connectionList);
+		}
 		return connectionList;
 	}
+	
+	private void getConnectionMeterDetails(List<Connection> connectionList) {
+		String meterDetailsQuery = WaterConnectionQueryBuilder.getConnectionMeterQueryForSearch();
+		for(Connection conn : connectionList) { 
+			final List<Object> preparedStatementValues = new ArrayList<>();
+			preparedStatementValues.add(conn.getId());
+			LOGGER.info("Get Meter Details Query : " + meterDetailsQuery);
+			ConnectionMeterRowMapper mapper = new WaterConnectionRowMapper().new ConnectionMeterRowMapper(); 
+			jdbcTemplate.query(meterDetailsQuery, preparedStatementValues.toArray(),
+					mapper);
+			sortMeterDetailsToConnection(conn, mapper);
+		}
+	}
+	
+	private void sortMeterDetailsToConnection(Connection conn, ConnectionMeterRowMapper mapper) { 
+		Map<Long, Map<Long, Meter>> meterReadingMap = mapper.meterReadingMap; 
+		Iterator<Entry<Long, Map<Long, Meter>>> itr = meterReadingMap.entrySet().iterator(); 
+		while(itr.hasNext()) { 
+			Entry<Long, Map<Long, Meter>> entry = itr.next();
+			long connectionId = entry.getKey();
+			if(conn.getId() == connectionId) { 
+				Map<Long, Meter> innerMap = entry.getValue();
+				Iterator<Entry<Long, Meter>> innerItr = innerMap.entrySet().iterator();
+				List<Meter> meterList = new ArrayList<>(); 
+				while(innerItr.hasNext()) { 
+					Entry<Long, Meter> innerEntry = innerItr.next();
+					Meter meter = innerEntry.getValue();
+					meterList.add(meter); 
+				}
+				conn.setMeter(meterList);
+			}
+		}
+	}
+	
 	
 	private void resolvePropertyUsageTypeNames(String tenantId, List<Connection> connectionList, RequestInfo requestInfo) {
 		PropertyTaxResponseInfo prop = new PropertyTaxResponseInfo(); 

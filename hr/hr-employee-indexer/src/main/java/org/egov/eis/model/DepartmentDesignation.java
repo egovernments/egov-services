@@ -44,19 +44,12 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
+@Data
+@Builder
 @AllArgsConstructor
-@EqualsAndHashCode
-@Getter
 @NoArgsConstructor
-@Setter
-@ToString
 public class DepartmentDesignation {
 
 	private Long id;

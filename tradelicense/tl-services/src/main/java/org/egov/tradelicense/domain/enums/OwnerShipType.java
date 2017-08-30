@@ -5,11 +5,13 @@ package org.egov.tradelicense.domain.enums;
  */
 public enum OwnerShipType {
 
-	STATE_GOVERNMENT_OWNED,
+	STATE_GOVERNMENT,
 
+	OWNED,
+	
 	RENTED,
 
-	CENTRAL_GOVERNMENT_OWNED,
+	CENTRAL_GOVERNMENT,
 
 	ULB
 }

@@ -1454,7 +1454,7 @@ ReportDefinitions:
           and boundarytype =  (select id from eg_boundary_type where hierarchytype =(select id  from eg_hierarchy_type where code = 'ADMIN' and tenantid = $tenantid)
           and name = 'Ward' and tenantid = $tenantid))
           and cs.tenantid=$tenantid
-          and dept.name = $deptname and ctype.code = (select code from egpgr_complainttype where name=$complainttype and cs.tenantid=$tenantid) and us.username = $username ;
+          and dept.name = $deptname and ctype.code = (select code from egpgr_complainttype where name=$complainttype and tenantid=$tenantid) and us.username = $username ;
 
 - reportName: AgeingByDepartment
   summary: Ageing report by department

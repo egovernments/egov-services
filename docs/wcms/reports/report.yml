@@ -42,8 +42,8 @@ ReportDefinitions:
     isMandatory: false
   query: select  boundary.name as boundaryName, dcbinfo.hscno as consumerno,dcbinfo.username as consumerName,
          dcbinfo.pipesize as pipesize,null as usage, (dcbinfo.curr_balance+dcbinfo.arr_balance) as  outstanding
-         from egwtr_connection_view dcbinfo,eg_boundary boundary  where  dcbinfo.wardid=boundary.id and 
-          dcbinfo.zoneid in (1) and dcbinfo.connectionstatus = 'ACTIVE' order by boundary.name;
+         from egwtr_connection_view dcbinfo,eg_boundary boundary  where  dcbinfo.wardid=boundary.id 
+         and dcbinfo.connectionstatus = 'ACTIVE' order by boundary.name;
 
 - reportName: DemandRegister
   summary: Demand Register Report
@@ -159,12 +159,12 @@ ReportDefinitions:
     label: reports.wcms.ward
     type: singlevaluelist
     source: wcms
-    pattern: 
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=WARD&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name
     isMandatory: false
   - name: connectiontype
     label: reports.wcms.connectiontype
     type: singlevaluelist
-    pattern: 'list://METERED:METERED,NON-METERED:NON-METERED'
+    pattern: 'list://METERED:METERED,NONMETERED:NON-METERED'
     source: wcms
     isMandatory: false  
   query: select  distinct cast(dcbinfo.zoneid as integer) as zoneid,boundary.name as boundaryName, count(hscno) as countofconsumerno,

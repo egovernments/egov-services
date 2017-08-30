@@ -228,4 +228,8 @@ public class BankBranchRepository {
 		bankBranchQueueRepository.addToSearch(message);
 	}
 
+    public boolean uniqueCheck(String fieldName, BankBranch bankBranch) {
+        return bankBranchJdbcRepository.uniqueCheck(fieldName, new BankBranchEntity().toEntity(bankBranch));
+    }
+
 }

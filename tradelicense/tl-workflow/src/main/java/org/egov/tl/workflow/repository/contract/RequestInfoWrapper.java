@@ -39,7 +39,7 @@
  */
 package org.egov.tl.workflow.repository.contract;
 
-import org.egov.common.contract.request.RequestInfo;
+import org.egov.tl.commons.web.contract.RequestInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

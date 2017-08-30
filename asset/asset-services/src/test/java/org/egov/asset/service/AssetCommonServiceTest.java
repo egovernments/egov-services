@@ -1,20 +1,27 @@
 package org.egov.asset.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
 
 import java.beans.PropertyEditor;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.egov.asset.exception.Error;
 import org.egov.asset.exception.ErrorResponse;
+import org.egov.asset.model.enums.Sequence;
 import org.egov.common.contract.response.ResponseInfo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.beans.PropertyEditorRegistry;
 import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
@@ -26,8 +33,14 @@ public class AssetCommonServiceTest {
     @InjectMocks
     private AssetCommonService assetCommonService;
 
+    @Mock
+    private SequenceGenService sequenceGenService;
+
+    @Mock
+    private JdbcTemplate jdbcTemplate;
+
     @Test
-    public void test_populateErrors() {
+    public void testPopulateErrors() {
         final ErrorResponse expectedErrResponse = getErrorResponse();
         final BindingResult errors = getBindingResultError();
         final ErrorResponse actualErrResponse = assetCommonService.populateErrors(errors);
@@ -36,9 +49,32 @@ public class AssetCommonServiceTest {
     }
 
     @Test
-    public void test_getDepreciationRate() {
+    public void testGetDepreciationRate() {
         final Double depreciationRate = assetCommonService.getDepreciationRate(Double.valueOf("18.9745"));
         assertEquals(Double.valueOf("18.97"), depreciationRate);
+    }
+
+    @Test
+    public void testGetCode() {
+        final String expectedCode = "006";
+        final List<Long> seqNumber = new ArrayList<Long>();
+        seqNumber.add(Long.valueOf("6"));
+
+        when(sequenceGenService.getIds(any(Integer.class), any(String.class))).thenReturn(seqNumber);
+        final String actualCode = assetCommonService.getCode("%03d", Sequence.ASSETCATEGORYCODESEQUENCE);
+
+        assertEquals(expectedCode, actualCode);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGetNextId() {
+        final Long expectedId = Long.valueOf("6");
+
+        when(jdbcTemplate.queryForObject(any(String.class), any(Class.class))).thenReturn(6);
+        final Long actualId = assetCommonService.getNextId(Sequence.ASSETCATEGORYSEQUENCE);
+
+        assertEquals(expectedId, actualId);
     }
 
     private ErrorResponse getErrorResponse() {
@@ -48,10 +84,14 @@ public class AssetCommonServiceTest {
         responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
         errRes.setResponseInfo(responseInfo);
 
+        final Map<String, Object> fields = new LinkedHashMap<String, Object>();
+        fields.put("name", null);
+
         final Error error = new Error();
         error.setCode(1);
         error.setDescription("Error while binding request");
         error.setMessage(null);
+        error.setFields(fields);
         errRes.setError(error);
         return errRes;
     }
@@ -183,7 +223,7 @@ public class AssetCommonServiceTest {
         @Override
         public boolean hasFieldErrors() {
             // TODO Auto-generated method stub
-            return false;
+            return true;
         }
 
         @Override
@@ -194,14 +234,15 @@ public class AssetCommonServiceTest {
 
         @Override
         public List<FieldError> getFieldErrors() {
-            // TODO Auto-generated method stub
-            return null;
+            final List<FieldError> fieldErrors = new ArrayList<FieldError>();
+            fieldErrors.add(getFieldError());
+            return fieldErrors;
         }
 
         @Override
         public FieldError getFieldError() {
-            // TODO Auto-generated method stub
-            return null;
+            final FieldError fieldError = new FieldError("name", "name", "name is mandatory");
+            return fieldError;
         }
 
         @Override

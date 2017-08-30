@@ -42,7 +42,7 @@ package org.egov.tl.workflow.repository;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.egov.common.contract.request.RequestInfo;
+import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.workflow.repository.contract.EmployeeResponse;
 import org.egov.tl.workflow.repository.contract.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +70,6 @@ public class EmployeeRepository {
 			final String tenantId, final RequestInfo requestInfo) {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		requestInfo.setTs(new Date());
 
 		final RequestInfoWrapper wrapper = new RequestInfoWrapper();
 		wrapper.setRequestInfo(requestInfo);

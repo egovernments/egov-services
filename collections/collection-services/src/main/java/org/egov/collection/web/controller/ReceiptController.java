@@ -103,6 +103,7 @@ public class ReceiptController {
 				.fromDate(receiptGetRequest.getFromDate())
 				.toDate(receiptGetRequest.getToDate())
 				.paymentType(receiptGetRequest.getPaymentType())
+				.isLegacy(receiptGetRequest.getIsLegacy())
 				.receiptNumbers(receiptGetRequest.getReceiptNumbers())
 				.status(receiptGetRequest.getStatus())
 				.tenantId(receiptGetRequest.getTenantId())
@@ -117,7 +118,7 @@ public class ReceiptController {
 			receiptReqValidator.validateSearchReceiptRequest(receiptGetRequest);
 		}
 		List<Receipt> receipts = receiptService.getReceipts(searchCriteria,
-				requestInfo).toDomainContract();
+				requestInfo);
 		return getSuccessResponse(receipts, requestInfo);
 	}
 
@@ -142,8 +143,7 @@ public class ReceiptController {
 
 		List<Receipt> receipts = new ArrayList<>();
 		try {
-			receipts = receiptService.getReceipts(searchCriteria, null)
-					.toDomainContract();
+			receipts = receiptService.getReceipts(searchCriteria, null);
 		} catch (final Exception exception) {
 			LOGGER.error("Error while processing request " + receiptGetRequest,
 					exception);

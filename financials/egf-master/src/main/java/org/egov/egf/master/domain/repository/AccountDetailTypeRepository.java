@@ -81,4 +81,8 @@ public class AccountDetailTypeRepository {
 
     }
 
+    public boolean uniqueCheck(String fieldName, AccountDetailType accountDetailType) {
+        return accountDetailTypeJdbcRepository.uniqueCheck(fieldName, new AccountDetailTypeEntity().toEntity(accountDetailType));
+    }
+
 }

@@ -142,7 +142,7 @@ public class CommonMasterService {
 	}
 
 	private String getIdsAsCSV(List<Long> ids) {
-		return ids.toString().replace("[", "").replace("]", "");
+		return ids.toString().replaceAll(" ", "").replace("[", "").replace("]", "");
 	}
 
 	private HttpEntity<RequestInfoWrapper> getRequestInfoAsHttpEntity(RequestInfoWrapper requestInfoWrapper) {

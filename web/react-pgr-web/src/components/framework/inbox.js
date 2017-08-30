@@ -26,7 +26,10 @@ import jp from "jsonpath";
 import UiButton from './components/UiButton';
 import {fileUpload} from './utility/utility';
 import UiTable from './components/UiTable';
+import jsPDF from 'jspdf';
 import Workflow from './specs/pt/Workflow';
+import "jspdf-autotable";
+import html2canvas from "html2canvas";
 
 var specifications={};
 
@@ -120,16 +123,17 @@ function getPosition(objArray, id){
 class Inbox extends Component {
   constructor(props) {
     super(props);
-	this.state = {
-		searchResult : [],
-		buttons : [],
-		employee : [],
-		designation:[],
-		workflowDepartment: [],
-		process: [],
-		forward: false
-		
-	}
+  	this.state = {
+  		searchResult : [],
+  		buttons : [],
+  		employee : [],
+  		designation:[],
+  		workflowDepartment: [],
+  		process: [],
+  		forward: false,
+      specialNotice: {},
+      hasNotice: false
+  	}
   }
   
   componentWillMount() {
@@ -495,17 +499,25 @@ class Inbox extends Component {
 		  localStorage.setItem('inboxStatus', 'Rejected')
 		  
 	  } else if( actionName == 'Print Notice'){
-		  
+		 
 		  var body = {
 		   upicNo: data[0].upicNumber,
        tenantId: localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default'
 	   } 
-	  
-	   Api.commonApiPost('pt-property/properties/specialnotice/_generate', {},body, false, true).then((res)=>{
-			setLoadingStatus('hide');
+
+	    Api.commonApiPost('pt-property/properties/specialnotice/_generate', {},body, false, true).then((res)=>{
+  			setLoadingStatus('hide');
+        currentThis.setState({
+          specialNotice: res.notice,
+          hasNotice: true
+        })
+        currentThis.generatePDF();
 			console.log(res)
 		  }).catch((err)=> {
-			console.log(err)
+			currentThis.setState({
+          specialNotice: {},
+          hasNotice: false
+        })
 			setLoadingStatus('hide');
 			toggleSnackbarAndSetText(true, err.message);
 		  })
@@ -527,13 +539,13 @@ class Inbox extends Component {
 		   "properties": data
 	   } 
 	  
-	     Api.commonApiPost('pt-property/properties/_update', {},body, false, true).then((res)=>{
-			setLoadingStatus('hide');
-			currentThis.props.history.push('/propertyTax/inbox-acknowledgement')
+	    Api.commonApiPost('pt-property/properties/_update', {},body, false, true).then((res)=>{
+			   setLoadingStatus('hide');
+			   currentThis.props.history.push('/propertyTax/inbox-acknowledgement')
 		  }).catch((err)=> {
-			console.log(err)
-			setLoadingStatus('hide');
-			toggleSnackbarAndSetText(true, err.message);
+			   console.log(err)
+			   setLoadingStatus('hide');
+			   toggleSnackbarAndSetText(true, err.message);
 		  })
   }
 
@@ -542,8 +554,31 @@ class Inbox extends Component {
     return  typeof val != "undefined" && (typeof val == "string" || typeof val == "number" || typeof val == "boolean") ? (val + "") : "";
   }
 
-  printer = () => {
-    window.print();
+  generatePDF = () => {
+
+  var mywindow = window.open('', 'PRINT', 'height=400,width=600');
+
+    var cdn = `
+      <!-- Latest compiled and minified CSS -->
+      <link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+      <!-- Optional theme -->
+      <link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">  `;
+    mywindow.document.write('<html><head><title> </title>');
+    mywindow.document.write(cdn);
+    mywindow.document.write('</head><body>');
+    mywindow.document.write(document.getElementById('speicalNotice').innerHTML);
+    mywindow.document.write('</body></html>');
+
+    mywindow.document.close(); // necessary for IE >= 10
+    mywindow.focus(); // necessary for IE >= 10*/
+
+   setTimeout(function(){
+      mywindow.print();
+      mywindow.close();
+    }, 1000);
+
+    return true;
   }
   
   render() {
@@ -661,7 +696,7 @@ class Inbox extends Component {
                                                     {renderOption(this.state.approver)}
                                               </SelectField>
                                         </Col>
-										<Col xs={12} md={3} sm={6}>
+										                    <Col xs={12} md={3} sm={6}>
                                               <TextField  className="fullWidth"
                                                   floatingLabelText={translate('pt.create.groups.workflow.comment')}
                                                   errorText={fieldErrors.comments ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.comments}</span>: ""}
@@ -672,8 +707,7 @@ class Inbox extends Component {
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-                                                  />
-                                                   
+                                                  />     
                                         </Col>
                                     </Row>
                                 </Grid>
@@ -682,7 +716,112 @@ class Inbox extends Component {
 		  <br/>
         </form>
         <div style={{"textAlign": "center"}}>
-	
+	          {this.state.hasNotice && <Card className="uiCard" id="speicalNotice">
+              <CardText>
+                <Table  responsive style={{fontSize:"bold", width:'100%'}} bordered condensed>
+                  <tbody>
+                    <tr>
+                        <td style={{textAlign:"left"}}>
+                           ULB Logo
+                        </td>
+                        <td style={{textAlign:"center"}}>
+                            <b>Roha Municipal Council</b><br/>
+                        </td>
+                        <td style={{textAlign:"right"}}>
+                          MAHA Logo
+                        </td>
+                    </tr>
+                    <tr>
+                      <td style={{textAlign:'center'}} colSpan={3}>
+                        <b>Special Notice</b>
+                        <p>(मुवंई प्रांतिक महानगरपालिका अधिनियम 1949 चे अनुसूचीतील प्रकरण 8 अधिनियम 44, 45 व 46 अन्वये )</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style={{textAlign:"right"}}  colSpan={3}>
+                          Date / दिनांक: {this.state.specialNotice.hasOwnProperty('noticeDate') && this.state.specialNotice.noticeDate}<br/>
+                          Notice No. / नोटीस क्रं : {this.state.specialNotice.hasOwnProperty('noticeNumber') && this.state.specialNotice.noticeNumber}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style={{textAlign:"left"}}  colSpan={3}>प्रती,</td>
+                    </tr>
+                    <tr>
+                      <td style={{textAlign:"left"}}  colSpan={3}>{this.state.specialNotice.hasOwnProperty('owners') && this.state.specialNotice.owners.map((owner, index)=>{
+                        return(<span key={index}>{owner.name}</span>)
+                      })}<br/>
+                         {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.addressNumber ? <span>{this.state.specialNotice.address.addressNumber}</span> : '') : ''}
+                         {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.addressLine1 ? <span>, {this.state.specialNotice.address.addressLine1}</span> : '') : ''}
+                         {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.addressLine2 ? <span>, {this.state.specialNotice.address.addressLine2}</span> : '' ): ''}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colSpan={3} style={{textAlign:"center"}}>Subject /विषय : Special Notice – New Assessment / Special Notice – Reassessment
+                          Reference / संदर्भ : आपला अर्ज क्रमांक {this.state.specialNotice.hasOwnProperty('applicationNo') && this.state.specialNotice.applicationNo} दिनांक {this.state.specialNotice.hasOwnProperty('applicationDate') && this.state.specialNotice.applicationDate}</td>
+                    </tr>
+                    <tr>
+                      <td colSpan={3}>
+                      महोद्य / महोद्या ,<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;संदर्भिय विषयांन्वये कळविण्यात येते की, आपल्या मालमत्तेची नवीन / सुधारीत कर आकारणी
+                        करण्यात आलेली आहे. मालमत्ता क्रमांक {this.state.specialNotice.hasOwnProperty('upicNo') && this.state.specialNotice.upicNo}, {this.state.specialNotice.hasOwnProperty('owners') && this.state.specialNotice.owners.map((owner, index)=>{
+                        return(<span key={index}>{owner.name}</span>)
+                      })} यांच्या
+                        नावे नोंद असून, मालमत्ता कर आकारणीचा तपशील खालीलप्रमाणे आहे.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colSpan={3}>
+                        <Table responsive style={{fontSize:"bold", width:'100%'}} bordered condensed>
+                          <thead>
+                            <tr>
+                              <th>Floor</th>
+                              <th>Unit Details</th>
+                              <th>Usage</th>
+                              <th>Construction</th>
+                              <th>Assessable Area</th>
+                              <th>ALV</th>
+                              <th>RV</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                            </tr>
+                          </tbody>
+                        </Table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colSpan={3}>Tax Details</td>
+                    </tr>
+                    <tr>
+                      <td>Tax Description</td>
+                      <td colSpan={2}>Amount</td>
+                    </tr>
+                    <tr>
+                      <td colSpan={3}>
+                          सदर आकारणी जर तुम्हाला मान्य नसेल तर ही नोटीस मिळाल्या पासून 1 महिन्याचे मुदतीचे आत
+                          मुख्यधिकारी यांचकडे फेर तपासणी करता अर्ज करावा. जर 1 महिन्याचे आत सदरहून आकारणी
+                          विरुध्द तक्रार अर्ज प्राप्त झाला नाही तर वर नमुद केल्या प्रमाणे आकारणी कायम करण्यात येईल, याची
+                          नोंद घ्यावी.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colSpan={3} style={{textAlign:"right"}}>
+                        कर अधिक्षक,<br/>
+                        ULB Name
+                      </td>
+                    </tr>
+                  </tbody>
+                </Table>
+              </CardText>
+            </Card>}
 			{(this.state.buttons.hasOwnProperty('attributes') && this.state.buttons.attributes.validActions.values.length > 0) && this.state.buttons.attributes.validActions.values.map((item,index)=> {
 				return(
 					<RaisedButton key={index} type="button" primary={true} label={item.name} style={{margin:'0 5px'}} onClick={()=> {

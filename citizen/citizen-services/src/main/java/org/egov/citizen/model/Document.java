@@ -13,4 +13,6 @@ public class Document {
 	private String from;
 	private Long timeStamp;
 	private String filePath;
+	private String name;
+	private String remarks;
 }

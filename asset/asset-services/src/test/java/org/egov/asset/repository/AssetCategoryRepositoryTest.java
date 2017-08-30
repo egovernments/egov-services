@@ -1,9 +1,7 @@
 package org.egov.asset.repository;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -55,7 +53,8 @@ public class AssetCategoryRepositoryTest {
         final AssetCategory assetCategory = getAssetCategory();
         assetCategories.add(assetCategory);
 
-        when(assetCategoryQueryBuilder.getQuery(any(AssetCategoryCriteria.class), any(List.class))).thenReturn(StringUtils.EMPTY);
+        when(assetCategoryQueryBuilder.getQuery(any(AssetCategoryCriteria.class), any(List.class)))
+                .thenReturn(StringUtils.EMPTY);
         when(jdbcTemplate.query(any(String.class), any(Object[].class), any(AssetCategoryRowMapper.class)))
                 .thenReturn(assetCategories);
 
@@ -79,7 +78,7 @@ public class AssetCategoryRepositoryTest {
 
         assertTrue(assetCategory.equals(assetCategoryRepository.create(assetCategoryRequest)));
     }
-    
+
     @Test
     public void testUpdate() {
 
@@ -96,16 +95,6 @@ public class AssetCategoryRepositoryTest {
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
 
         assertTrue(assetCategory.equals(assetCategoryRepository.update(assetCategoryRequest)));
-    }
-    
-    @Test
-    public void testGetAssetCategoryCode(){
-        final String expectedCode = "002";
-
-        when(jdbcTemplate.queryForObject(any(String.class), eq(Integer.class))).thenReturn(2);
-        final String actualCode = assetCategoryRepository.getAssetCategoryCode();
-
-        assertEquals(expectedCode, actualCode);
     }
 
     private AssetCategory getAssetCategory() {

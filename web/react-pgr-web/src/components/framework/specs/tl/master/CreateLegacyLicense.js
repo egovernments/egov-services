@@ -212,16 +212,20 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": "",
             "defaultValue": [{
-                "key": "STATE_GOVERNMENT_OWNED",
-                "value": "STATE GOVERNMENT OWNED"
+                "key": "STATE_GOVERNMENT",
+                "value": "STATE GOVERNMENT"
+              },
+		{
+                "key": "OWNED",
+                "value": "OWNED"
               },
               {
                 "key": "RENTED",
                 "value": "RENTED"
               },
               {
-                "key": "CENTRAL_GOVERNMENT_OWNED",
-                "value": "CENTRAL GOVERNMENT OWNED"
+                "key": "CENTRAL_GOVERNMENT",
+                "value": "CENTRAL GOVERNMENT"
               },
               {
                 "key": "ULB",
@@ -1049,7 +1053,7 @@ var dat = {
                 "jsonPath": "licenses[0].tradeCommencementDate",
                 "label": "tl.view.licenses.groups.TradeCommencementDate",
                 "pattern": "",
-                "type": "date",
+                "type": "datePicker",
                 "isRequired": false,
                 "isDisabled": false,
                 "requiredErrMsg": "",

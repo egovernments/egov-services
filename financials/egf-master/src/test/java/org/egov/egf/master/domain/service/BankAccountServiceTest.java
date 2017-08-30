@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.TestConfiguration;
@@ -76,6 +77,7 @@ public class BankAccountServiceTest {
         when(bankBranchRepository.findById(any(BankBranch.class))).thenReturn(getBankBranch());
         when(chartOfAccountRepository.findById(any(ChartOfAccount.class))).thenReturn(getChartOfAccount());
         when(fundRepository.findById(any(Fund.class))).thenReturn(getFund());
+        when(bankAccountRepository.uniqueCheck(any(String.class), any(BankAccount.class))).thenReturn(true);
         bankAccounts.add(getBankAccount());
         bankAccountService.add(bankAccounts, errors);
     }
@@ -85,6 +87,7 @@ public class BankAccountServiceTest {
         when(bankBranchRepository.findById(any(BankBranch.class))).thenReturn(getBankBranch());
         when(chartOfAccountRepository.findById(any(ChartOfAccount.class))).thenReturn(getChartOfAccount());
         when(fundRepository.findById(any(Fund.class))).thenReturn(getFund());
+        when(bankAccountRepository.uniqueCheck(any(String.class), any(BankAccount.class))).thenReturn(true);
         bankAccounts.add(getBankAccount());
         bankAccountService.update(bankAccounts, errors);
     }
@@ -154,7 +157,9 @@ public class BankAccountServiceTest {
     }
 
     private BankAccount getBankAccount() {
-        return BankAccount.builder().id("1").chartOfAccount(getChartOfAccount()).fund(getFund()).bankBranch(getBankBranch())
+        return BankAccount.builder().id(UUID.randomUUID().toString().replace("-", ""))
+                .chartOfAccount(getChartOfAccount()).fund(getFund()).bankBranch(getBankBranch())
+                .accountNumber(UUID.randomUUID().toString().replace("-", ""))
                 .build();
     }
 

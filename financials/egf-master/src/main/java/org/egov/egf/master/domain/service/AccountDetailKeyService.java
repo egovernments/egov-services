@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
+import org.egov.common.domain.exception.ErrorCode;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.AccountDetailKey;
@@ -35,35 +36,50 @@ public class AccountDetailKeyService {
 
 	private BindingResult validate(List<AccountDetailKey> accountdetailkeys, String method, BindingResult errors) {
 
-		try {
-			switch (method) {
-			case Constants.ACTION_VIEW:
-				// validator.validate(accountDetailKeyContractRequest.getAccountDetailKey(),
-				// errors);
-				break;
-			case Constants.ACTION_CREATE:
-				Assert.notNull(accountdetailkeys, "AccountDetailKeys to create must not be null");
-				for (AccountDetailKey accountDetailKey : accountdetailkeys) {
-					validator.validate(accountDetailKey, errors);
-				}
-				break;
-			case Constants.ACTION_UPDATE:
-				Assert.notNull(accountdetailkeys, "AccountDetailKeys to update must not be null");
-				for (AccountDetailKey accountDetailKey : accountdetailkeys) {
-				        Assert.notNull(accountDetailKey.getId(), "Account Detail Key ID to update must not be null");
-					validator.validate(accountDetailKey, errors);
-				}
-				break;
-                        case Constants.ACTION_SEARCH:
-                                Assert.notNull(accountdetailkeys, "Accountdetailkeys to search must not be null");
-                                for (AccountDetailKey accountdetailkey : accountdetailkeys) {
-                                        Assert.notNull(accountdetailkey.getTenantId(), "TenantID must not be null for search");
-                                }
-                                break;
-			default:
-
-			}
-		} catch (IllegalArgumentException e) {
+                try {
+                    switch (method) {
+                    case Constants.ACTION_VIEW:
+                        // validator.validate(accountDetailKeyContractRequest.getAccountDetailKey(),
+                        // errors);
+                        break;
+                    case Constants.ACTION_CREATE:
+                        if (accountdetailkeys == null) {
+                            throw new InvalidDataException("accountdetailkeys", ErrorCode.NOT_NULL.getCode(),
+                                    accountdetailkeys.toString());
+                        }
+                        for (AccountDetailKey accountDetailKey : accountdetailkeys) {
+                            validator.validate(accountDetailKey, errors);
+                        }
+                        break;
+                    case Constants.ACTION_UPDATE:
+                        if (accountdetailkeys == null) {
+                            throw new InvalidDataException("accountdetailkeys", ErrorCode.NOT_NULL.getCode(),
+                                    accountdetailkeys.toString());
+                        }
+                        for (AccountDetailKey accountDetailKey : accountdetailkeys) {
+                            if (accountDetailKey.getId() == null) {
+                                throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
+                                        accountDetailKey.getId());
+                            }
+                            validator.validate(accountDetailKey, errors);
+                        }
+                        break;
+                    case Constants.ACTION_SEARCH:
+                        if (accountdetailkeys == null) {
+                            throw new InvalidDataException("accountdetailkeys", ErrorCode.NOT_NULL.getCode(),
+                                    accountdetailkeys.toString());
+                        }
+                        for (AccountDetailKey accountdetailkey : accountdetailkeys) {
+                            if (accountdetailkey.getId() == null) {
+                                throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
+                                        accountdetailkey.getId());
+                            }
+                        }
+                        break;
+                    default:
+        
+                    }
+                } catch (IllegalArgumentException e) {
 			errors.addError(new ObjectError("Missing data", e.getMessage()));
 		}
 		return errors;

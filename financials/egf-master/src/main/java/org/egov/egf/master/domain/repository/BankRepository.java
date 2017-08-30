@@ -225,4 +225,8 @@ public class BankRepository {
 		bankQueueRepository.addToSearch(message);
 	}
 
+    public boolean uniqueCheck(String fieldName, Bank bank) {
+        return bankJdbcRepository.uniqueCheck(fieldName, new BankEntity().toEntity(bank));
+    }
+
 }

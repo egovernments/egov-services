@@ -99,12 +99,6 @@ public class RevaluationRepositoryTest {
         return assetStatus;
     }
 
-    @Test
-    public void getNextRevaluationIdTest() {
-        final Integer seqId = new Integer(6);
-        when(revaluationRepository.getNextRevaluationId()).thenReturn(seqId);
-    }
-
     private Revaluation getRevaluationFromDB() {
         final Revaluation revaluation = new Revaluation();
         revaluation.setAssetId(Long.valueOf("298"));

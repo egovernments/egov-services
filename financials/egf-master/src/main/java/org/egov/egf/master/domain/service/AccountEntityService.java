@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
+import org.egov.common.domain.exception.ErrorCode;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.AccountDetailType;
@@ -16,8 +17,8 @@ import org.egov.egf.master.web.requests.AccountEntityRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.SmartValidator;
 
@@ -35,39 +36,65 @@ public class AccountEntityService {
 
 	private BindingResult validate(List<AccountEntity> accountentities, String method, BindingResult errors) {
 
-		try {
-			switch (method) {
-			case Constants.ACTION_VIEW:
-				// validator.validate(accountEntityContractRequest.getAccountEntity(),
-				// errors);
-				break;
-			case Constants.ACTION_CREATE:
-				Assert.notNull(accountentities, "AccountEntities to create must not be null");
-				for (AccountEntity accountEntity : accountentities) {
-					validator.validate(accountEntity, errors);
-				}
-				break;
-			case Constants.ACTION_UPDATE:
-				Assert.notNull(accountentities, "AccountEntities to update must not be null");
-				for (AccountEntity accountEntity : accountentities) {
-				        Assert.notNull(accountEntity.getId(), "Account Entity ID to update must not be null");
-					validator.validate(accountEntity, errors);
-				}
-				break;
-                        case Constants.ACTION_SEARCH:
-                                Assert.notNull(accountentities, "Accountentities to search must not be null");
-                                for (AccountEntity accountEntity : accountentities) {
-                                        Assert.notNull(accountEntity.getTenantId(), "TenantID must not be null for search");
-                                }
-                                break;
-			default:
-
-			}
-		} catch (IllegalArgumentException e) {
+                try {
+                    switch (method) {
+                    case Constants.ACTION_VIEW:
+                        // validator.validate(accountEntityContractRequest.getAccountEntity(),
+                        // errors);
+                        break;
+                    case Constants.ACTION_CREATE:
+                        if (accountentities == null) {
+                            throw new InvalidDataException("accountentities", ErrorCode.NOT_NULL.getCode(), accountentities.toString());
+                        }
+                        for (AccountEntity accountEntity : accountentities) {
+                            validator.validate(accountEntity, errors);
+                            if (!accountEntityRepository.uniqueCheck("name", accountEntity)) {
+                                errors.addError(new FieldError("accountEntity", "name", accountEntity.getName(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                            }
+                            if (!accountEntityRepository.uniqueCheck("code", accountEntity)) {
+                                errors.addError(new FieldError("accountEntity", "code", accountEntity.getCode(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                            }
+                        }
+                        break;
+                    case Constants.ACTION_UPDATE:
+                        if (accountentities == null) {
+                            throw new InvalidDataException("accountentities", ErrorCode.NOT_NULL.getCode(), accountentities.toString());
+                        }
+                        for (AccountEntity accountEntity : accountentities) {
+                            if (accountEntity.getId() == null) {
+                                throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), accountEntity.getId());
+                            }
+                            validator.validate(accountEntity, errors);
+                            if (!accountEntityRepository.uniqueCheck("name", accountEntity)) {
+                                errors.addError(new FieldError("accountEntity", "name", accountEntity.getName(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                            }
+                            if (!accountEntityRepository.uniqueCheck("code", accountEntity)) {
+                                errors.addError(new FieldError("accountEntity", "code", accountEntity.getCode(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                            }
+                        }
+                        break;
+                    case Constants.ACTION_SEARCH:
+                        if (accountentities == null) {
+                            throw new InvalidDataException("accountentities", ErrorCode.NOT_NULL.getCode(), accountentities.toString());
+                        }
+                        for (AccountEntity accountEntity : accountentities) {
+                            if (accountEntity.getTenantId() == null) {
+                                throw new InvalidDataException("tenantId", ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
+                                        accountEntity.getTenantId());
+                            }
+                        }
+                        break;
+                    default:
+        
+                    }
+                } catch (IllegalArgumentException e) {
 			errors.addError(new ObjectError("Missing data", e.getMessage()));
 		}
 		return errors;
-
 	}
 
 	public List<AccountEntity> fetchRelated(List<AccountEntity> accountentities) {

@@ -39,9 +39,7 @@
  */
 package org.egov.tl.workflow.repository;
 
-import java.util.Date;
-
-import org.egov.common.contract.request.RequestInfo;
+import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.workflow.repository.contract.DepartmentResponse;
 import org.egov.tl.workflow.repository.contract.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,8 +65,6 @@ public class DepartmentRepository {
 
 	public DepartmentResponse getDepartmentByName(final String departmentName, final String tenantId,
 			final RequestInfo requestInfo) {
-
-		requestInfo.setTs(new Date());
 
 		final RequestInfoWrapper wrapper = new RequestInfoWrapper();
 		wrapper.setRequestInfo(requestInfo);

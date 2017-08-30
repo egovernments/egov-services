@@ -16,7 +16,7 @@ export default class UiLabel extends Component {
   setVal = () => {
     let {item, useTimestamp} = this.props;
     let self = this;
-    var val = this.props.getVal(item.jsonPath);
+    var val = this.props.getVal(item.jsonPath,item.isDate);
     if(val && item.hasOwnProperty("url") && item.url.search("\\|")>-1) {
       let splitArray = item.url.split("?");
       let context = "";
@@ -61,7 +61,7 @@ export default class UiLabel extends Component {
   }
 
   openLink(item) {
-    window.open(item.hyperLink + "/" + encodeURIComponent(this.state.value || this.props.getVal(item.jsonPath)), 'mywin', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0');
+    window.open(item.hyperLink + "/" + encodeURIComponent(this.state.value || this.props.getVal(item.jsonPath,item.isDate)), 'mywin', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0');
   }
 
  	renderLabel = (item) => {
@@ -71,12 +71,12 @@ export default class UiLabel extends Component {
             {!item.hasOwnProperty("isLabel")?<Col style={{textAlign:"left"}} xs={12}>
               <label><span style={{"fontWeight":500, "fontSize": "13px"}}>{translate(item.label)}</span></label>
             </Col>:""}
-            {item.hyperLink && (this.state.value || this.props.getVal(item.jsonPath)) ? 
+            {item.hyperLink && (this.state.value || this.props.getVal(item.jsonPath,item.isDate)) ?
               (<Col style={{textAlign:"left"}} xs={12}>
-                <FlatButton label={this.state.value || this.props.getVal(item.jsonPath)} primary={true}/>
-              </Col>) 
-              : 
-              <Col style={{textAlign:"left"}} xs={12}>{this.state.value || this.props.getVal(item.jsonPath) || "NA"}</Col>}
+                <FlatButton label={this.state.value || this.props.getVal(item.jsonPath,item.isDate)} primary={true}/>
+              </Col>)
+              :
+              <Col style={{textAlign:"left"}} xs={12}>{this.state.value || this.props.getVal(item.jsonPath,item.isDate) || "NA"}</Col>}
         </Row>
         <br/>
       </div>

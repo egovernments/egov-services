@@ -82,7 +82,7 @@ public class TradeLicenseControllerTest {
 	 * 
 	 */
 
-	@Test
+//	@Test
 	public void testCreateLegacyTrade() throws IOException, Exception {
 
 		try {

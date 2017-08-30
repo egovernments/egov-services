@@ -390,15 +390,6 @@ definitions:
       sequenceNo:
         type: integer
         description: This number used to generate bills or some other activities on a property in the order.
-      bpaNo:
-        type: string
-        description: Buidling plan approval no for the Property
-        maxLength: 16
-        minLength: 1
-      bpaDate:
-        type: string
-        format: date
-        description: Buidling plan approval date for the Property
       active:
         type: boolean
         description: True if the property is active and False if the property is inactive.
@@ -477,6 +468,15 @@ definitions:
         type: integer
         format: int64
         description: Unique Identifier of the PropertyDetail
+      bpaNo:
+        type: string
+        description: Buidling plan approval no for the Property
+        maxLength: 16
+        minLength: 1
+      bpaDate:
+        type: string
+        format: date
+        description: Buidling plan approval date for the Property
       source:
         type: string
         description: Source of a assessment data. The properties will be created in a system based on the data avaialble in their manual records or during field survey. There can be more from client to client.

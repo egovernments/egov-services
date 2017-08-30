@@ -17,7 +17,6 @@ import org.egov.egf.master.domain.repository.FundRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -84,60 +83,74 @@ public class FundService {
 
 	private BindingResult validate(List<Fund> funds, String method, BindingResult errors) {
 
-		try {
-			switch (method) {
-			case ACTION_VIEW:
-				// validator.validate(fundContractRequest.getFund(), errors);
-				break;
-			case Constants.ACTION_CREATE:
-				Assert.notNull(funds, "Funds to create must not be null");
-				for (Fund fund : funds) {
-					validator.validate(fund, errors);
-					if (!fundRepository.uniqueCheck("name", fund))
-						errors.addError(new FieldError("fund", "name", fund.getName(), false,
-								new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
-					if (!fundRepository.uniqueCheck("code", fund))
-						errors.addError(new FieldError("fund", "code", fund.getName(), false,
-								new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
-					if (!fundRepository.uniqueCheck("identifier", fund))
-						errors.addError(new FieldError("fund", "identifier", fund.getName(), false,
-								new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
-
-				}
-				break;
-			case Constants.ACTION_UPDATE:
-				Assert.notNull(funds, "Funds to update must not be null");
-				for (Fund fund : funds) {
-					if (fund.getId() == null) {
-						throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), fund.getId());
-					}
-					validator.validate(fund, errors);
-					if (!fundRepository.uniqueCheck("name", fund))
-						errors.addError(new FieldError("fund", "name", fund.getName(), false,
-								new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
-					if (!fundRepository.uniqueCheck("code", fund))
-						errors.addError(new FieldError("fund", "code", fund.getName(), false,
-								new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
-					if (!fundRepository.uniqueCheck("identifier", fund))
-						errors.addError(new FieldError("fund", "identifier", fund.getName(), false,
-								new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
-
-				}
-				break;
-                        case Constants.ACTION_SEARCH:
-                            Assert.notNull(funds, "Funds to search must not be null");
-                            for (Fund fund : funds) {
-                                    Assert.notNull(fund.getTenantId(), "TenantID must not be null for search");
+                try {
+                    switch (method) {
+                    case ACTION_VIEW:
+                        // validator.validate(fundContractRequest.getFund(), errors);
+                        break;
+                    case Constants.ACTION_CREATE:
+                        if (funds == null) {
+                            throw new InvalidDataException("funds", ErrorCode.NOT_NULL.getCode(), funds.toString());
+                        }
+                        for (Fund fund : funds) {
+                            validator.validate(fund, errors);
+                            if (!fundRepository.uniqueCheck("name", fund)) {
+                                errors.addError(new FieldError("fund", "name", fund.getName(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
                             }
-                            break;				
-			default:
-
-			}
-		} catch (IllegalArgumentException e) {
+                            if (!fundRepository.uniqueCheck("code", fund)) {
+                                errors.addError(new FieldError("fund", "code", fund.getName(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                            }
+                            if (!fundRepository.uniqueCheck("identifier", fund)) {
+                                errors.addError(new FieldError("fund", "identifier", fund.getName(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                            }
+        
+                        }
+                        break;
+                    case Constants.ACTION_UPDATE:
+                        if (funds == null) {
+                            throw new InvalidDataException("funds", ErrorCode.NOT_NULL.getCode(), funds.toString());
+                        }
+                        for (Fund fund : funds) {
+                            if (fund.getId() == null) {
+                                throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), fund.getId());
+                            }
+                            validator.validate(fund, errors);
+                            if (!fundRepository.uniqueCheck("name", fund)) {
+                                errors.addError(new FieldError("fund", "name", fund.getName(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                            }
+                            if (!fundRepository.uniqueCheck("code", fund)) {
+                                errors.addError(new FieldError("fund", "code", fund.getName(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                            }
+                            if (!fundRepository.uniqueCheck("identifier", fund)) {
+                                errors.addError(new FieldError("fund", "identifier", fund.getName(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                            }
+        
+                        }
+                        break;
+                    case Constants.ACTION_SEARCH:
+                        if (funds == null) {
+                            throw new InvalidDataException("funds", ErrorCode.NOT_NULL.getCode(), funds.toString());
+                        }
+                        for (Fund fund : funds) {
+                            if (fund.getTenantId() == null) {
+                                throw new InvalidDataException("tenantId", ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
+                                        fund.getTenantId());
+                            }
+                        }
+                        break;
+                    default:
+        
+                    }
+                } catch (IllegalArgumentException e) {
 			errors.addError(new ObjectError("Missing data", e.getMessage()));
 		}
 		return errors;
-
 	}
 
 	public List<Fund> fetchRelated(List<Fund> funds) {

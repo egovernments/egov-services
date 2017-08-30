@@ -43,38 +43,25 @@ package org.egov.commons.model;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
+@Data
 @Builder
 @AllArgsConstructor
-@EqualsAndHashCode
-@Getter
 @NoArgsConstructor
-@Setter
-@ToString
 public class Department {
 
-	@NotNull
 	private Long id;
 
-	@NotNull
-	@Size(min=8, max=64)
 	private String name;
 
-	@NotNull
-	@Size(min=1, max=10)
 	private String code;
 
-	@NotNull
+	@Getter(onMethod = @__(@JsonIgnore))
 	private Boolean active;
 
-	@NotNull
+	@Getter(onMethod = @__(@JsonIgnore))
 	private String tenantId;
 
 }

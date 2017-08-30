@@ -76,10 +76,10 @@ public class WaterConnectionQueryBuilder {
 			+ " supplytype.code as supplytype_code, supplytype.name as supplytype_name, supplytype.description as supplytype_description,supplytype.active as supplytype_active,  "
 			+ " supplytype.tenantId as supplytype_tenantId, pipesize.id as pipesize_id, pipesize.code as pipesize_code, pipesize.sizeinmilimeter as pipesize_sizeinmilimeter,  "
 			+ " pipesize.sizeininch as pipesize_sizeininch,pipesize.active as pipesize_active, pipesize.tenantId as pipesize_tenantId ,propertyuserdetail.property_owner as propertyowner, "
-			+ " propertyuserdetail.aadhaarnumber, propertyuserdetail.mobilenumber, propertyuserdetail.emailid, propertyuserdetail.propertylocation, " 
+			+ " propertyuserdetail.aadhaarnumber, propertyuserdetail.mobilenumber, propertyuserdetail.emailid, propertyuserdetail.propertylocation, propertyuserdetail.isprimaryowner as isprimaryowner, " 
 			+ " plant.name as watertreatmentname from egwtr_waterconnection connection , egwtr_category category,egwtr_water_source_type watersource,egwtr_supply_type supplytype, " 
 			+ " egwtr_pipesize pipesize, (select prop.id as property_id, prop.upicnumber as prop_upicnumber, eguser.name property_owner, " 
-			+ " eguser.aadhaarnumber as aadhaarnumber, eguser.mobilenumber as mobilenumber, eguser.emailid as emailid, proploc.locationboundary as propertylocation "   
+			+ " eguser.aadhaarnumber as aadhaarnumber, eguser.mobilenumber as mobilenumber, eguser.emailid as emailid, proploc.locationboundary as propertylocation, propowner.isprimaryowner as isprimaryowner "   
 			+ " from egpt_property prop, egpt_property_owner propowner, eg_user eguser, egpt_propertylocation proploc " 
 			+ " where prop.id = propowner.property AND propowner.owner = eguser.id AND prop.id = proploc.property ) propertyuserdetail, egwtr_treatment_plant plant WHERE NULLIF(connection.categorytype, '')::int = category.id AND NULLIF(connection.hscpipesizetype, '')::int=pipesize.id AND " 
 			+ " NULLIF(connection.sourcetype, '')::int=watersource.id AND NULLIF(connection.supplytype, '')::int=supplytype.id AND connection.propertyidentifier =propertyuserdetail.prop_upicnumber AND "  
@@ -94,7 +94,7 @@ public class WaterConnectionQueryBuilder {
                        + " conndetails.acknowledgmentnumber as conn_acknumber, conndetails.propertyidentifier as conn_propid, conndetails.usagetype as conn_usgtype, "
                        + " conndetails.propertytype as conn_proptype, conndetails.address as conn_propaddress, conndetails.islegacy as conn_islegacy, conndetails.donationcharge as conn_doncharge, " 
                        + " conndetails.executiondate as execdate, conndetails.stateid as conn_stateid, category.id as category_id, category.code as category_code, category.name as category_name, category.description as category_description,category.active as category_active, "
-                       + " conndetails.housenumber as housenumber, conndetails.manualconsumernumber as manualconsumernumber, conndetails.subusagetype as subusagetype, conndetails.numberoffamily as numberoffamily, conndetails.plumbername as plumbername, conndetails.billsequencenumber as sequencenumber, conndetails.outsideulb as outsideulb, "
+                       + " conndetails.isprimaryowner as isprimaryowner, conndetails.housenumber as housenumber, conndetails.manualconsumernumber as manualconsumernumber, conndetails.subusagetype as subusagetype, conndetails.numberoffamily as numberoffamily, conndetails.plumbername as plumbername, conndetails.billsequencenumber as sequencenumber, conndetails.outsideulb as outsideulb, conndetails.meterowner as meterowner, conndetails.metermodel as metermodel, "
                        + " category.tenantId as category_tenantId, watersource.id as watersource_id, watersource.code as watersource_code, watersource.name as watersource_name, "
                        + " watersource.description as watersource_description,watersource.active as watersource_active, watersource.tenantId as watersource_tenantId, supplytype.id as supplytype_id, " 
                        + " supplytype.code as supplytype_code, supplytype.name as supplytype_name, supplytype.description as supplytype_description,supplytype.active as supplytype_active,  "
@@ -246,7 +246,7 @@ public class WaterConnectionQueryBuilder {
     }
     
     public static String updateValuesForNoPropertyConnections() { 
-    	return "UPDATE egwtr_waterconnection SET userid = ?, addressid = ? , locationid = ? WHERE acknowledgmentnumber = ? " ; 
+    	return "UPDATE egwtr_waterconnection SET userid = ?, addressid = ? , locationid = ?, isprimaryowner = ?  WHERE acknowledgmentnumber = ? and tenantid = ? " ; 
     }
 
     public static String persistEstimationNoticeQuery() {

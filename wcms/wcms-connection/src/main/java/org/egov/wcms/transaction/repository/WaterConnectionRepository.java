@@ -366,12 +366,15 @@ public class WaterConnectionRepository {
         
     }
     
-    public void updateValuesForNoPropertyConnections(WaterConnectionReq waterConnectionReq, long addressId, long locationId) {
-        String updateQuery=waterConnectionQueryBuilder.updateValuesForNoPropertyConnections();
-        Object[] obj = new Object[] { 
-                waterConnectionReq.getConnection().getConnectionOwner().getId(), addressId, locationId, waterConnectionReq.getConnection().getAcknowledgementNumber()};
-        jdbcTemplate.update(updateQuery, obj);
-    }
+	public void updateValuesForNoPropertyConnections(WaterConnectionReq waterConnectionReq, long addressId,
+			long locationId) {
+		String updateQuery = waterConnectionQueryBuilder.updateValuesForNoPropertyConnections();
+		Object[] obj = new Object[] { waterConnectionReq.getConnection().getConnectionOwner().getId(), addressId,
+				locationId, waterConnectionReq.getConnection().getConnectionOwner().getIsPrimaryOwner(),
+				waterConnectionReq.getConnection().getAcknowledgementNumber(),
+				waterConnectionReq.getConnection().getTenantId() };
+		jdbcTemplate.update(updateQuery, obj);
+	}
 
     public WaterConnectionReq updateConnectionWorkflow(final WaterConnectionReq waterConnectionReq,Connection connectiondemand)
     {

@@ -232,8 +232,13 @@ public class WaterConnectionService {
                 logger.info("User Object to create User : "+ userRequestInfo); 
                 logger.info("User Service Create URL :: " + createUrl.toString() + " \n userRequestInfo :: "
                         + userRequestInfo);
-                UserResponseInfo userCreateResponse = new RestTemplate().postForObject(createUrl.toString(), userRequestInfo,
-                        UserResponseInfo.class);
+                UserResponseInfo userCreateResponse = new UserResponseInfo();
+                try { 
+                	userCreateResponse = new RestTemplate().postForObject(createUrl.toString(), userRequestInfo,
+                            UserResponseInfo.class);
+                } catch (Exception ex) { 
+                	logger.error("Exception encountered while creating user ID : " + ex.getMessage());
+                }
                 logger.info("User Service Create User Response :: " + userCreateResponse);
                 user.setId(userCreateResponse.getUser().get(0).getId());
                 waterConnReq.getConnection().getConnectionOwner().setId(userCreateResponse.getUser().get(0).getId());

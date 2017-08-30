@@ -215,11 +215,11 @@ public class TradeLicenseService {
 
 	private void populateWorkFlowDetails(TradeLicense license,RequestInfo requestInfo) {
 		
-		if(null != license) {
+		if(null != license && null != license.getWorkFlowDetails()) {
 			
-			if(license.getWorkFlowDetails() == null){
+			/*if(license.getWorkFlowDetails() == null){
 				license.setWorkFlowDetails(new WorkFlowDetails());
-			}
+			}*/
 			
 			license.getWorkFlowDetails().setType(NEW_TRADE_LICENSE_WF_TYPE);
 			license.getWorkFlowDetails().setBusinessKey(NEW_TRADE_LICENSE_BUSINESSKEY);

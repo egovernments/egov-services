@@ -162,12 +162,18 @@ public class ServiceReqRepository {
 				serviceReq.getModuleStatus(), serviceReq.getAdditionalFee(), serviceReq.getServiceRequestId(), serviceReq.getTenantId() };
 		try {
 			jdbcTemplate.update(query, obj);
-			if(null != serviceReqRequest.getServiceReq().getComments() || !serviceReqRequest.getServiceReq().getComments().isEmpty()){
+			if(null != serviceReqRequest.getServiceReq().getComments()){
+				if(!serviceReqRequest.getServiceReq().getComments().isEmpty()){
+				LOGGER.info("Persisting comments");
 				persistComments(serviceReqRequest);
+			   }
 			}
-			if(null != serviceReqRequest.getServiceReq().getDocuments() || !serviceReqRequest.getServiceReq().getDocuments().isEmpty()){
+			if(null != serviceReqRequest.getServiceReq().getDocuments()){
+				if(!serviceReqRequest.getServiceReq().getDocuments().isEmpty()){
+				LOGGER.info("Persisting documents");
 				persistDocuments(serviceReqRequest);
-			}
+				}
+		  }
 		} catch (final Exception ex) {
 			log.info("the exception from insert query : ", ex);
 		}

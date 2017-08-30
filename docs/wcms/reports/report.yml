@@ -159,7 +159,7 @@ ReportDefinitions:
     label: reports.wcms.ward
     type: singlevaluelist
     source: wcms
-    pattern: 
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=WARD&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name
     isMandatory: false
   - name: connectiontype
     label: reports.wcms.connectiontype

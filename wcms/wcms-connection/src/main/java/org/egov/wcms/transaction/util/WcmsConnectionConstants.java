@@ -341,6 +341,11 @@ public class WcmsConnectionConstants {
     public static final String CONNECTION_METERED_METERREADINGDATE_INVALID_ERROR_MESSAGE = "Required valid meter ReadingDate";
     public static final String CONNECTION_METERED_METERREADINGDATE_INVALID_FIELD_NAME = "readingDate";
     
+    public static final String CONNECTION_METERED_METERREADINGDETAILS_INVALID_CODE = "wcms.0059";
+    public static final String CONNECTION_METERED_METERREADINGDETAILS_INVALID_ERROR_MESSAGE = "Required meterReadings Deatils for Metered Connection";
+    public static final String CONNECTION_METERED_METERREADINGDETAILS_INVALID_FIELD_NAME = "meterReadings";
+    
+    
     public static final String ZONE = "Zone";
     public static final String REVENUE = "REVENUE";
     public static final String WARD = "Ward";

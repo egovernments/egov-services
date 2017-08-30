@@ -4,6 +4,7 @@ html, body{
 	line-height: 18px;
 	top: 0px !important;
 	background-color: #f2f2f2 !important;
+	overflow-x: hidden !important;
 }
 
 /* fallback */

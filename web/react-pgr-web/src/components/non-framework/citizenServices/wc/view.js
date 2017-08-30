@@ -9,7 +9,7 @@ import {translate} from '../../../common/common';
 import Api from '../../../../api/api';
 import jp from "jsonpath";
 import UiButton from '../../../framework/components/UiButton';
-import {fileUpload} from '../../../framework/utility/utility';
+import {fileUpload, getFullDate, int_to_words} from '../../../framework/utility/utility';
 import UiTable from '../../../framework/components/UiTable';
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
@@ -17,6 +17,8 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
+import $ from 'jquery'
+import axios from "axios";
 
 var specifications={};
 
@@ -26,7 +28,16 @@ class Report extends Component {
     super(props);
     this.state = {
       openAddFee: false,
-      openPayFee: false
+      openPayFee: false,
+      feeAmount: 0,
+      stateFieldErrors: {},
+      role: "",
+      showReceipt: false,
+      ServiceRequest: {},
+      status: "",
+      documents: [],
+      comments: "",
+      RequestInfo: {}
     }
   }
 
@@ -194,29 +205,77 @@ class Report extends Component {
 
     let { setMetaData, setModuleName, setActionName, setMockData } = this.props;
     let self = this;
-    let obj = specifications["wc.create"];
+    let obj = specifications["wc.view"];
     self.setLabelAndReturnRequired(obj);
     setMetaData(specifications);
     setMockData(JSON.parse(JSON.stringify(specifications)));
     setModuleName("wc");
     setActionName("create");
     //Get view form data
-    var url = specifications["wc.create"].url.split("?")[0];
+    var url = specifications["wc.view"].url.split("?")[0];
     var hash = window.location.hash.split("/");
     var query = {
       acknowledgementNumber: this.props.match.params.ackNo
     };
 
-    Api.commonApiPost("/wcms-connection/connection/_search", query, {}, false, specifications["wc.create"].useTimestamp).then(function(res){
-      self.props.setFormData(res);
-      self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), "wc", "create", specifications["wc.create"].objectName);
-    }, function(err){
-
+    this.setState({
+        RequestInfo: {
+          "apiId": "org.egov.pt",
+          "ver": "1.0",
+          "ts": new Date().getTime(),
+          "action": "asd",
+          "did": "4354648646",
+          "key": "xyz",
+          "msgId": "654654",
+          "requesterId": "61",
+          "authToken": localStorage.token,
+          "userInfo": JSON.parse(localStorage.userRequest)
+        }
     })
+
+    var instance = axios.create({
+      baseURL: window.location.origin,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': 'Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0',
+      }
+    });
+
+    var params = new URLSearchParams();
+    params.append('username', "murali");
+    params.append('password', "12345678");
+    params.append('grant_type', 'password');
+    params.append('scope', 'read');
+    params.append('tenantId', window.localStorage.getItem("tenantId"));
+
+    instance.post('/user/oauth/token', params).then(function(response) {
+      localStorage.setItem("request-temp", JSON.stringify(response.data.UserRequest));
+      localStorage.setItem("auth-token-temp", response.data.access_token);
+      Api.commonApiPost("/wcms-connection/connection/_search", query, {}, false, specifications["wc.view"].useTimestamp, false, localStorage.getItem("auth-token-temp")).then(function(res){
+        self.props.setFormData(res);
+        self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), "wc", "view", specifications["wc.view"].objectName);
+      }, function(err){
+
+      })
+
+      //Fetch service request
+      Api.commonApiPost("/citizen-services/v1/requests/_search", {consumerCode: this.props.match.params.ackNo.id}, {}, null, true).then(function(res2) {
+        self.setState({
+          ServiceRequest: res2.serviceReq[0]
+        })
+      }, function(err) {
+
+      })
+    }).catch(function(response) {
+          
+    });
   }
 
   componentDidMount() {
       this.initData();
+      this.setState({
+        role: localStorage.type
+      })
   }
 
   getVal = (path) => {
@@ -248,6 +307,212 @@ class Report extends Component {
     })
   }
 
+  addFee = () => {
+    let self = this;
+    if(!self.state.feeAmount)
+      return self.setState({
+        stateFieldErrors: {
+          ...self.state.stateFieldErrors,
+          "feeAmount": "Fee amount cannot be 0."
+        }
+      })
+
+    self.setState({
+      stateFieldErrors: {
+        ...self.state.stateFieldErrors,
+        "feeAmount": ""
+      }
+    })    
+
+    //Update service request with additional fee and create demand
+    var ServiceRequest = {...this.state.ServiceRequest};
+    ServiceRequest.additionalFee = self.state.feeAmount;
+    let DemandRequest = {};
+    DemandRequest["Demands"] = self.props.metaData["wc.create"].feeDetails;
+    DemandRequest["Demands"][0].tenantId = localStorage.getItem("tenantId");
+    DemandRequest["Demands"][0].consumerCode = "";
+    DemandRequest["Demands"][0].owner.id = JSON.parse(localStorage.userRequest).id;
+    DemandRequest["Demands"][0].taxPeriodFrom = 1491004800000;
+    DemandRequest["Demands"][0].taxPeriodTo = 1522540799000;
+    DemandRequest["Demands"][0].demandDetails[0].taxHeadMasterCode = "WC_NO_DUE_CERT_CHAR";
+    DemandRequest["Demands"][0].demandDetails[0].taxAmount = self.state.feeAmount;
+    ServiceRequest.backendServiceDetails = [{
+      url: "/billing-service/demand/_create?tenantId=" + localStorage.tenantId,
+      request: {
+        RequestInfo: self.state.RequestInfo,
+        ...DemandRequest
+      }
+    }];
+
+    self.props.setLoadingStatus("loading");
+    Api.commonApiPost("/citizen-services/v1/requests/_update", {}, {"serviceReq": ServiceRequest}, null, true, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
+      self.props.setLoadingStatus("hide");
+      self.openAddFeeModal();
+      self.props.toggleSnackbarAndSetText(true, "Fee added successfully.", true, false);
+      self.setState({
+        ServiceRequest: res.serviceReq
+      });
+    }, function(err){
+      self.props.setLoadingStatus("hide");
+      self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+    })
+  }
+
+  payFee = () => {
+    //Update service request and generate bill and create receipt
+    let self = this;
+    var ServiceRequest = {...this.state.ServiceRequest};
+    var DemandBillQuery = `?businessService=CS&tenantId=${localStorage.getItem("tenantId")}&consumerCode=` + ServiceRequest.consumerCode;
+    var fee = ServiceRequest.additionalFee;
+    ServiceRequest.additionalFee = 0;
+    ServiceRequest.backendServiceDetails = [{
+      url: "/billing-service/bill/_generate" + DemandBillQuery,
+      request: {
+        RequestInfo: self.state.RequestInfo
+      }
+    }];
+
+    self.props.setLoadingStatus("loading");
+    Api.commonApiPost("/citizen-services/v1/requests/_update", {}, {"serviceReq": ServiceRequest}, null, true, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
+      ServiceRequest.additionalFee = 0;
+      if(res.serviceReq && res.serviceReq.backendServiceDetails && res.serviceReq.backendServiceDetails[0] && res.serviceReq.backendServiceDetails[0].Bill) {
+        let Receipt = [];
+        Receipt[0] = {"Bill":[]};
+        Receipt[0]["Bill"] = res.Bill;
+        Receipt[0]["Bill"][0]["paidBy"] = Receipt[0]["Bill"][0].payeeName;
+        Receipt[0]["tenantId"] = window.localStorage.getItem("tenantId")
+        Receipt[0]["instrument"] = {"tenantId":window.localStorage.getItem("tenantId"),"amount": fee,"instrumentType":{"name":"Cash"}}
+        Receipt[0]["Bill"][0]["billDetails"][0]["amountPaid"] = fee;
+        setTimeout(function(){
+          ServiceRequest.backendServiceDetails = [{
+            "url": "/collection-services/receipts/_create",
+            "request": {
+              RequestInfo: self.state.RequestInfo,
+              Receipt: Receipt
+            }
+          }];
+
+          Api.commonApiPost("/citizen-services/v1/requests/_update", {}, {"serviceReq": ServiceRequest}, null, true, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
+            self.props.setLoadingStatus("hide");
+            self.openPayFeeModal();
+            self.setState({
+              showReceipt: true,
+              Receipt: res.serviceReq && res.serviceReq.backendServiceDetails ? res.serviceReq.backendServiceDetails[0].Receipt : []
+            });
+            $('html, body').animate({ scrollTop: 0 }, 'fast');
+          }, function(err){
+            self.props.setLoadingStatus("hide");
+            self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+          })
+        }, 3000);
+      } else {
+        self.props.setLoadingStatus("hide");
+        self.props.toggleSnackbarAndSetText(true, "Oops! Something isn't right. Please try again later.", false, true);  
+      }
+    }, function(err){
+      self.props.setLoadingStatus("hide");
+      self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+    })
+  }
+
+  generatePDF = () => {
+    var mywindow = window.open('', 'PRINT', 'height=400,width=600');
+    var cdn = `
+      <!-- Latest compiled and minified CSS -->
+      <link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+      <!-- Optional theme -->
+      <link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">  `;
+    mywindow.document.write('<html><head><title> </title>');
+    mywindow.document.write(cdn);
+    mywindow.document.write('</head><body>');
+    mywindow.document.write(document.getElementById('DownloadReceipt').innerHTML);
+    mywindow.document.write('</body></html>');
+
+    mywindow.document.close(); // necessary for IE >= 10
+    mywindow.focus(); // necessary for IE >= 10*/
+
+    setTimeout(function(){
+      mywindow.print();
+      mywindow.close();
+    }, 1000);
+
+    return true;
+  }
+
+  updateStatusAndComments = (ServiceRequest) => {
+    let self = this;
+    let formData = {...this.props.formData};
+    let ConnectionObject = formData.Connection[0];
+    if(this.state.comments) {
+      if(!ServiceRequest.comments) ServiceRequest.comments = [];
+      ServiceRequest.comments.push({
+        from: JSON.parse(localStorage.userRequest).userName,
+        to: "",
+        text: this.state.comments,
+        timeStamp: new Date().getTime()
+      })
+    }
+
+    if(this.state.status) {
+      ServiceRequest.status = this.state.status;
+      ConnectionObject.status = this.state.status;
+      ServiceRequest.backendServiceDetails = [{
+        "url": "/wcms-connection/connection/_update",
+        "request": {
+            RequestInfo: self.state.RequestInfo,
+            Connection: ConnectionObject
+          }
+      }];
+    }
+
+    //Make Update Service Request Call passing water connection object
+    self.props.setLoadingStatus("loading");
+    Api.commonApiPost("/citizen-services/v1/requests/_update", {}, {"serviceReq": ServiceRequest}, null, true, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
+      self.props.setLoadingStatus("hide");
+      self.props.toggleSnackbarAndSetText(true, "Updated successfully.", true, false);
+      self.setState({
+        ServiceRequest: res.serviceReq
+      });
+    }, function(err){
+      self.props.setLoadingStatus("hide");
+      self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+    })
+  }
+
+  update = () => {
+    let self = this, ServiceRequest = {...this.state.ServiceRequest};
+    self.props.setLoadingStatus('loading');
+    if(self.state.documents && self.state.documents.length) {
+      let _docs = [];
+      let documents = JSON.parse(JSON.stringify(self.state.documents));
+      let counter = documents.length, breakOut = 0;
+      for(let i=0; i<documents.length; i++) {
+        fileUpload(documents[i].fileStoreId, "wc", function(err, res) {
+          if(breakOut == 1) return;
+          if(err) {
+            breakOut = 1;
+            self.props.setLoadingStatus('hide');
+            self.props.toggleSnackbarAndSetText(true, err, false, true);
+          } else {
+            _docs.push({
+              from: JSON.parse(localStorage.userRequest).userName,
+              timeStamp: new Date().getTime(),
+              filePath: res.files[0].fileStoreId
+            })
+            counter--;
+            if(counter == 0 && breakOut == 0) {
+                if(!ServiceRequest.documents) ServiceRequest.documents = [];
+                ServiceRequest.documents = ServiceRequest.documents.concat(_docs);
+            }
+          }
+        })
+      }
+    } else {
+
+    }
+  }
+
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors} = this.props;
     let {handleChange, getVal, addNewCard, removeCard, printer} = this;
@@ -255,15 +520,17 @@ class Report extends Component {
 
     return (
       <div className="Report">
-        <form id="printable">
-          {!_.isEmpty(mockData) && mockData["wc.create"] && <ShowFields groups={mockData["wc.create"].groups} noCols={mockData["wc.create"].numCols} ui="google" handler={""} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData["wc.create"].useTimestamp || false} addNewCard={""} removeCard={""} screen="view"/>}
-          <br/>
+        <div style={{textAlign:"center"}}>
+            <h3> New Water Connection </h3>
+        </div>
+        {self.state.showReceipt ? <br/> : ""}
+        {!self.state.showReceipt ? <form id="printable">
           <Card className="uiCard">
-            <CardHeader style={{paddingTop:4,paddingBottom:0}} title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Workflow Details</div>}/>
+            <CardHeader style={{paddingTop:4,paddingBottom:0}} title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Process Application</div>}/>
             <CardText style={{paddingTop:0,paddingBottom:0}}>
               <Grid style={{paddingTop:0}}>
                 <Row>
-                  <Col xs={12} md={3}>
+                  {self.state.role != "CITIZEN" ? <Col xs={12} md={6}>
                     <SelectField
                       floatingLabelStyle={{"color": "#696969", "fontSize": "20px", "white-space": "nowrap"}}
                       labelStyle={{"color": "#5F5C57"}}
@@ -272,35 +539,238 @@ class Report extends Component {
                       errorStyle={{"float":"left"}}
                       fullWidth={true}
                       floatingLabelText={<span>Status <span style={{"color": "#FF0000"}}>{" *"}</span></span>} 
-                      value={"SUCCESS"}
+                      value={self.state.status}
                       onChange={(event, key, value) =>{
-                        
+                        self.setState({
+                          status: value
+                        })
                       }}
                       maxHeight={200}>
-                              <MenuItem value={"SUCCESS"} primaryText={"SUCCESS"} />
+                              <MenuItem value={"CREATED"} primaryText={"Created"} />
+                              <MenuItem value={"VERIFIED"} primaryText={"Verified"} />
+                              <MenuItem value={"ESTIMATIONNOTICEGENERATED"} primaryText={"Estimation Notice Generated"} />
+                              <MenuItem value={"ESTIMATIONAMOUNTCOLLECTED"} primaryText={"Estimation Amount Collected"} />
+                              <MenuItem value={"APPROVED"} primaryText={"Approved"} />
+                              <MenuItem value={"WORKORDERGENERATED"} primaryText={"WorkOrder Generated"} />
+                              <MenuItem value={"REJECTED"} primaryText={"Rejected"} />
+                              <MenuItem value={"SANCTIONED"} primaryText={"Sanctioned"} />
                     </SelectField>
-                  </Col>
-                  <Col xs={12} md={3}>
+                  </Col> : ""}
+                  <Col xs={12} md={6}>
                     <RaisedButton
                       floatingLabelStyle={{"color": "#696969"}}
                       style={{"marginTop": "26px"}}
                       containerElement='label'
                       fullWidth={true} 
                       label={"Upload Files"}>
-                        <input type="file" style={{ display: 'none' }} onChange={(e) => {}}/>
+                        <input type="file" style={{ display: 'none' }} onChange={(e) => {
+                          self.setState({
+                            documents: e.target.files || []
+                          })
+                        }}/>
                     </RaisedButton>
+                  </Col>
+                  <Col xs={12} md={6}>
+                    <TextField
+                      floatingLabelStyle={{"color": "#696969", "fontSize": "20px", "white-space": "nowrap"}}
+                      fullWidth={true}
+                      floatingLabelText={"Add Comments"}
+                      floatingLabelFixed={true} 
+                      value={self.state.comments}
+                      inputStyle={{"color": "#5F5C57"}}
+                      errorStyle={{"float":"left"}}
+                      onChange={(e) => {
+                        self.setState({
+                          comments: e.target.value
+                        })
+                      }}/>
                   </Col>
                 </Row>
               </Grid>
             </CardText>
           </Card>
-          <br/>
           <div style={{"textAlign": "center"}}>
-            <RaisedButton primary={true} label={"Add Fee"} onClick={self.openAddFeeModal}/>&nbsp;&nbsp;
-            <RaisedButton primary={true} label={"Pay Fee"} onClick={self.openPayFeeModal}/>
+            <RaisedButton primary={true} label={"Update"} onClick={() => {}}/>&nbsp;&nbsp;
+            {self.state.role != "CITIZEN" && self.state.ServiceRequest && (!self.state.ServiceRequest.additionalFee || self.state.ServiceRequest.additionalFee == 0) ? <RaisedButton primary={true} label={"Add Fee"} onClick={self.openAddFeeModal}/> : ""}&nbsp;&nbsp;
+            {self.state.role == "CITIZEN" && self.state.ServiceRequest && (self.state.ServiceRequest.additionalFee > 0) ? <RaisedButton primary={true} label={"Pay Fee"} onClick={self.openPayFeeModal}/> : ""}
           </div>
+          <Card className="uiCard">
+            <CardHeader style={{paddingTop:4,paddingBottom:0}} title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Comments & Documents</div>}/>
+              <CardText style={{paddingTop:0,paddingBottom:0}}>
+              <Grid>
+                  <Row>
+                    <Col md={6} xs={12}>
+                      <Table responsive style={{fontSize:"bold"}} bordered condensed>
+                          <thead>
+                            <tr>
+                              <th>By</th>
+                              <th>Date</th>
+                              <th>Comments</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {
+                              self.state.ServiceRequest && 
+                              self.state.ServiceRequest.comments && 
+                              self.state.ServiceRequest.comments.length ? 
+                              self.state.ServiceRequest.comments.map(function(v, i) {
+                                return (
+                                  <tr key={i} style={{"backgroundColor": v.from == JSON.parse(localStorage.userRequest).userName ? "#EEE" : "#FFFFFF"}}>
+                                    <td>{v.from}</td>
+                                    <td>{getFullDate(v.timeStamp)}</td>
+                                    <td>{v.text}</td>
+                                  </tr>
+                                )
+                              }) : <tr colSpan={3} style={{"textAlign": "center"}}><td>No comments yet!</td></tr>
+                            }
+                          </tbody>
+                      </Table>
+                    </Col>
+                    <Col md={6} xs={12}>
+                      <Table responsive style={{fontSize:"bold"}} bordered condensed>
+                          <thead>
+                            <tr>
+                              <th>By</th>
+                              <th>Date</th>
+                              <th>Action</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {
+                              self.state.ServiceRequest && 
+                              self.state.ServiceRequest.documents && 
+                              self.state.ServiceRequest.documents.length ? 
+                              self.state.ServiceRequest.documents.map(function(v, i) {
+                                return (
+                                  <tr key={i}>
+                                    <td>{v.from + (v.from == JSON.parse(localStorage.userRequest).userName ? " (You)" : "")}</td>
+                                    <td>{getFullDate(v.timeStamp)}</td>
+                                    <td><a href={"/filestore/v1/files/id?tenantId=" + localStorage.getItem("tenantId") + "&fileStoreId=" + v.filePath}>Download</a></td>
+                                  </tr>
+                                )
+                              }) : <tr colSpan={3} style={{"textAlign": "center"}}><td>No comments yet!</td></tr>
+                            }
+                          </tbody>
+                      </Table>
+                    </Col>
+                  </Row>
+              </Grid>
+            </CardText>
+          </Card>
+          {!_.isEmpty(mockData) && mockData["wc.view"] && <ShowFields groups={mockData["wc.view"].groups} noCols={mockData["wc.view"].numCols} ui="google" handler={""} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData["wc.view"].useTimestamp || false} addNewCard={""} removeCard={""} screen="view"/>}
+        </form> : self.state.Receipt && self.state.Receipt[0] ? <Row id="allCertificates">
+                <Col md={10} mdOffset={1}>
+                      <Card id="DownloadReceipt">
+                        <CardHeader title={<strong>Receipt for: Application Fee</strong>}/>
+                        <CardText>
+                              <Table responsive style={{fontSize:"bold"}} id="ReceiptForWcAPartOne1" bordered condensed>
+                                  <tbody>
+                                      <tr>
+                                          <td style={{textAlign:"left"}}>
+                                            <img src="./temp/images/headerLogo.png" height="60" width="60"/>
+                                          </td>
+                                          <td style={{textAlign:"center"}}>
+                                              <b>Roha Municipal Council</b><br/>
+                                              Water Charges Department
+                                          </td>
+                                          <td style={{textAlign:"right"}}>
+                                            <img src="./temp/images/AS.png" height="60" width="60"/>
+                                          </td>
+                                      </tr>
+                                      <tr>
+                                          <td style={{textAlign:"left"}}>
+                                            Receipt Number : {self.state.Receipt[0].Bill[0].billDetails[0].receiptNumber ? self.state.Receipt[0].Bill[0].billDetails[0].receiptNumber : "NA"}
+                                          </td>
+                                          <td style={{textAlign:"center"}}>
+                                            Receipt For : Application Fee
+                                          </td>
+                                          <td style={{textAlign:"right"}}>
+                                            Receipt Date: {getFullDate(self.state.Receipt[0].Bill[0].billDetails[0].receiptDate)}
+                                          </td>
+                                      </tr>
+                                      <tr>
+                                          <td colSpan={3} style={{textAlign:"left"}}>
+                                            Service Request Number : {self.state.Receipt[0].Bill[0].billDetails[0].consumerCode}<br/>
+                                            Applicant Name : {self.state.Receipt[0].Bill[0].payeeName}<br/>
+                                            Amount : {self.state.Receipt[0].Bill[0].billDetails[0].totalAmount ? ("Rs." + self.state.Receipt[0].Bill[0].billDetails[0].totalAmount + "/-") : "NA"}<br/>
+                                          </td>
+                                      </tr>
 
-        </form>
+                                  </tbody>
+                              </Table>
+
+                              <Table id="ReceiptForWcAPartTwo" responsive bordered condensed>
+                                  <tbody>
+                                      <tr>
+                                          <td colSpan={2}>
+                                            Bill Reference No.& Date
+                                          </td>
+                                          <td colSpan={6}>
+                                            Details
+                                          </td>
+                                      </tr>
+                                      <tr>
+                                          <td colSpan={2}>
+                                            {self.state.Receipt[0].Bill[0].billDetails[0].billNumber + "-" + getFullDate(self.state.Receipt[0].Bill[0].billDetails[0].receiptDate)}
+                                          </td>
+                                          <td colSpan={6}>
+                                            Application for New Water Connection
+                                          </td>
+
+                                      </tr>
+
+                                      <tr>
+                                          <td colSpan={8}>Amount in words: Rs. {int_to_words(self.state.Receipt[0].Bill[0].billDetails[0].totalAmount)}</td>
+
+                                      </tr>
+                                      <tr>
+                                        <td colSpan={8}>
+                                          Payment Mode
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td>
+                                          Mode
+                                        </td>
+                                        <td>
+                                          Amount
+                                        </td>
+                                          <td >
+                                           Transaction No
+                                        </td>
+                                          <td>
+                                            Transaction Date
+                                          </td>
+                                        {true && <td colSpan={4}>
+                                                              Bank Name
+                                                            </td>}
+                                      </tr>
+                                      <tr>
+                                        <td>
+                                          Online
+                                        </td>
+                                        <td>
+                                          {self.state.Receipt[0].Bill[0].billDetails[0].totalAmount}
+                                        </td>
+                                        {self.state.Receipt[0].instrument.instrumentType.name=="Cash" ? <td> NA </td> : <td> {self.state.Receipt[0].transactionId} </td>}
+
+                                        {self.state.Receipt[0].instrument.instrumentType.name=="Cash" ? <td> NA </td> : <td> {getFullDate(self.state.Receipt[0].Bill[0].billDetails[0].receiptDate)}</td>}
+
+                                        <td colSpan={4}>
+                                          {self.state.Receipt[0].instrument.instrumentType.name == "Cash" ? <td>NA</td> : self.state.Receipt[0].instrument.bank.name}
+                                        </td>
+                                      </tr>
+                                  </tbody>
+                              </Table>
+                        </CardText>
+                      </Card>
+                      <br/>
+                      <div style={{"textAlign": "center"}}>
+                        <RaisedButton primary={true} label="Download" onClick={self.generatePDF}/>
+                      </div>
+                      <div className="page-break"></div>
+                      </Col>
+            </Row> : ""}
         <Dialog
                 title="Add Fee Amount"
                 modal={false}
@@ -310,19 +780,53 @@ class Report extends Component {
               >
               <div style={{textAlign:"center"}}>
                 <Row>
-                  <Col xs={12} md={4}>
+                  <Col xs={12} md={12}>
                     <TextField
                       type="number"
+                      value={self.state.feeAmount}
+                      fullWidth={true}
+                      value={self.state.feeAmount}
+                      errorText={self.state.stateFieldErrors.feeAmount}
                       inputStyle={{"color": "#5F5C57"}}
                       errorStyle={{"float":"left"}}
-                      fullWidth={false}
-                      onChange={(e) => {}}/>
+                      onChange={(e) => {
+                        self.setState({
+                          feeAmount: e.target.value
+                        })
+
+                        if(e.target.value) {
+                          self.setState({
+                              stateFieldErrors: {
+                              ...self.state.stateFieldErrors,
+                              "feeAmount": ""
+                            }
+                          })
+                        }
+                      }}/>
+                      <br/>
+                      <br/>
                   </Col>
                 </Row>
               </div>
 
               <UiButton handler={self.openAddFeeModal} item={{"label": "Cancel", "uiType":"button"}} ui="google"/>&nbsp;&nbsp;
               <UiButton handler={self.addFee} item={{"label": "Add", "uiType":"button"}} ui="google"/>
+
+        </Dialog>
+        <Dialog
+                title="Pay Fee Amount"
+                modal={false}
+                open={self.state.openPayFee}
+                onRequestClose={self.openPayFeeModal}
+                autoScrollBodyContent={true}
+              >
+              <div style={{textAlign:"center"}}>
+                <h4>Amount to be paid: Rs 20</h4>
+                <br/>
+              </div>
+
+              <UiButton handler={self.openPayFeeModal} item={{"label": "Cancel", "uiType":"button"}} ui="google"/>&nbsp;&nbsp;
+              <UiButton handler={self.payFee} item={{"label": "Pay", "uiType":"button"}} ui="google"/>
 
         </Dialog>
       </div>

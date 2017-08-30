@@ -10,7 +10,6 @@ import Api from '../../../../api/api';
 import jp from "jsonpath";
 import UiButton from '../../../framework/components/UiButton';
 import {fileUpload, getInitiatorPosition} from '../../../framework/utility/utility';
-import $ from "jquery";
 import Dialog from 'material-ui/Dialog';
 import axios from "axios";
 import {
@@ -21,6 +20,7 @@ import {
 } from 'material-ui/Stepper';
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
+import $ from 'jquery'
 
 var specifications={};
 let reqRequired = [];
@@ -35,7 +35,8 @@ class Report extends Component {
     this.state = {
       open: false,
       serviceRequest: {},
-      stepIndex: 0
+      stepIndex: 0,
+      RequestInfo: {}
     }
   }
 
@@ -180,6 +181,20 @@ class Report extends Component {
 
   componentDidMount() {
       this.initData();
+      this.setState({
+        RequestInfo: {
+          "apiId": "org.egov.pt",
+          "ver": "1.0",
+          "ts": new Date().getTime(),
+          "action": "asd",
+          "did": "4354648646",
+          "key": "xyz",
+          "msgId": "654654",
+          "requesterId": "61",
+          "authToken": localStorage.token,
+          "userInfo": JSON.parse(localStorage.userRequest)
+        }
+      })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -797,6 +812,40 @@ class Report extends Component {
     this.setState({open: true});
   }
 
+  generateReceipt = (response) => {
+    let ServiceRequest = response.serviceReq, self = this;
+    var AllResponses = [...ServiceRequest.backendServiceDetails];
+    ServiceRequest.status = "CREATED";
+    var BillReceiptObject = [];
+    BillReceiptObject[0] = {"Bill":[]};
+    BillReceiptObject[0]["Bill"] = AllResponses[2].Receipt.Bill;
+    BillReceiptObject[0]["Bill"][0]["paidBy"] = BillReceiptObject[0]["Bill"][0].payeeName;
+    BillReceiptObject[0]["tenantId"] = localStorage.getItem("tenantId")
+    BillReceiptObject[0]["instrument"] = {"tenantId": localStorage.getItem("tenantId"),"amount": 20,"instrumentType":{"name":"Cash"}}
+
+    BillReceiptObject[0]["Bill"][0]["billDetails"][0]["amountPaid"] = 20;
+    ServiceRequest.backendServiceDetails = [{
+      "url": "http://egov-micro-dev.egovernments.org/collection-services/receipts/_create",
+      "request": {
+        RequestInfo: self.state.RequestInfo,
+        Receipt: BillReceiptObject
+      }
+    }];
+
+    Api.commonApiPost("/citizen-services/v1/requests/_update", {}, {"serviceReq": ServiceRequest}, null, true, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
+      self.props.setLoadingStatus("hide");
+      self.handleClose();
+      self.setState({
+        stepIndex: 1,
+        Receipt: res.serviceReq.backendServiceDetails[0].Receipt
+      });
+      $('html, body').animate({ scrollTop: 0 }, 'fast');
+    }, function(err){
+      self.props.setLoadingStatus("hide");
+      self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+    })
+  }
+
   pay = () => {
 
     //Create SR
@@ -806,83 +855,104 @@ class Report extends Component {
     //Create receipt
     //Update SR
     //Update WC
+    let self = this;
 
-    /*let self = this;
-    var instance = axios.create({
-      baseURL: window.location.origin,
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': 'Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0',
-      }
-    });
+    var ConnectionObject = {...self.state.formData};
+    var DemandBillQuery = `?businessService=CS&tenantId=${localStorage.getItem("tenantId")}&consumerCode=`;
+    let DemandRequest = {};
+    DemandRequest["Demands"] = self.props.metaData["wc.create"].feeDetails;
+    DemandRequest["Demands"][0].tenantId = localStorage.getItem("tenantId");
+    DemandRequest["Demands"][0].consumerCode = "";
+    DemandRequest["Demands"][0].owner.id = JSON.parse(localStorage.userRequest).id;
+    DemandRequest["Demands"][0].taxPeriodFrom = 1491004800000;
+    DemandRequest["Demands"][0].taxPeriodTo = 1522540799000;
+    DemandRequest["Demands"][0].demandDetails[0].taxHeadMasterCode = "WC_NO_DUE_CERT_CHAR";
+    var ServiceRequest = {
+       "tenantId": localStorage.getItem("tenantId"),
+       "serviceRequestId": null,
+       "serviceCode": "WATER_NEWCONN",
+       "lat": 12,
+       "lang": 23,
+       "address": "address",
+       "addressId": "addressId",
+       "email": "email",
+       "deviceId": "deviceId",
+       "accountId": "accountId",
+       "firstName": "",
+       "lastName": "firstName",
+       "phone": "phone",
+       "description": "",
+       "consumerCode" : "",
+       "attributeValues": [
+         {
+           "key": "tenantId",
+           "value": localStorage.getItem("tenantId")
+         }
+       ],
+       "status": "CREATED",
+       "assignedTo": "assignedTo",
+       "comments": [],
+       "backendServiceDetails": [{
+          "url": "http://egov-micro-dev.egovernments.org/billing-service/demand/_create?tenantId=" + localStorage.tenantId,
+          "request": {
+            RequestInfo: self.state.RequestInfo,
+            ...DemandRequest
+          }
+       }, {
+          "url": "http://egov-micro-dev.egovernments.org/wcms-connection/connection/_create",
+          "request": {
+            RequestInfo: self.state.RequestInfo,
+            Connection: ConnectionObject.Connection
+          }
+       }, {
+          "url": "http://egov-micro-dev.egovernments.org/billing-service/bill/_generate" + DemandBillQuery,
+          "request": {
+            RequestInfo: self.state.RequestInfo
+          }
+       }]
+    };
 
-    var params = new URLSearchParams();
-    params.append('username', "murali");
-    params.append('password', "12345678");
-    params.append('grant_type', 'password');
-    params.append('scope', 'read');
-    params.append('tenantId', window.localStorage.getItem("tenantId"));
-
-    instance.post('/user/oauth/token', params).then(function(response) {
-      localStorage.setItem("request-temp", JSON.stringify(response.data.UserRequest));
-      localStorage.setItem("auth-token-temp", response.data.access_token);
-      Api.commonApiPost('/wcms-connection/connection/_create').then(function(res){
-        let request = {
-           "tenantId": localStorage.getItem("tenantId"),
-           "serviceRequestId": null,
-           "serviceCode": "WC_NODUES",
-           "lat": 12,
-           "lang": 23,
-           "address": "address",
-           "addressId": "addressId",
-           "email": "email",
-           "deviceId": "deviceId",
-           "accountId": "accountId",
-           "firstName": "",
-           "lastName": "firstName",
-           "phone": "phone",
-           "description": "",
-           "consumerCode" : res.Connection[0].acknowledgementNumber,
-           "attributeValues": [
-             {
-               "key": "tenantId",
-               "value": localStorage.getItem("tenantId")
-             }
-           ],
-           "status": "CREATED",
-           "assignedTo": "assignedTo",
-           "comments": [
-             "",
-             ""
-           ],
-           "backendServiceDetails": {}
-        };
-
-        Api.commonApiPost("/citizen-services/v1/requests/_create", {}, {"serviceReq": request}, null, self.props.metaData["noDues.search"].useTimestamp, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
-            self.setState({
-              serviceRequest: res.serviceReq
-            }, function(){
-              
-            });
-        }, function(err) {
-            self.props.toggleSnackbarAndSetText(true, err.message, false, true);
-            self.props.setLoadingStatus('hide');
-        })   
-      }, function(err) {
-
-      })
-    }).catch(function(response) {
-          self.props.setLoadingStatus('hide');
-    });*/
+    self.props.setLoadingStatus("loading");
+    Api.commonApiPost("/citizen-services/v1/requests/_create", {}, {"serviceReq": ServiceRequest}, null, true, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
+      self.generateReceipt(res);
+    }, function(err){
+      self.props.setLoadingStatus("hide");
+      self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+    })
 
     //Mock Data
-    let self = this;
+    /*let self = this;
     self.handleClose();
     self.setState({
       stepIndex: 1
-    })
+    });
+    $('html, body').animate({ scrollTop: 0 }, 'fast');*/
   }
 
+  generatePDF = () => {
+    var mywindow = window.open('', 'PRINT', 'height=400,width=600');
+    var cdn = `
+      <!-- Latest compiled and minified CSS -->
+      <link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+      <!-- Optional theme -->
+      <link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">  `;
+    mywindow.document.write('<html><head><title> </title>');
+    mywindow.document.write(cdn);
+    mywindow.document.write('</head><body>');
+    mywindow.document.write(document.getElementById('DownloadReceipt').innerHTML);
+    mywindow.document.write('</body></html>');
+
+    mywindow.document.close(); // necessary for IE >= 10
+    mywindow.focus(); // necessary for IE >= 10*/
+
+    setTimeout(function(){
+      mywindow.print();
+      mywindow.close();
+    }, 1000);
+
+    return true;
+  }
 
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
@@ -917,7 +987,7 @@ class Report extends Component {
           return (
             <Row id="allCertificates">
                 <Col md={6} mdOffset={3}>
-                      <Card>
+                      <Card id="DownloadReceipt">
                         <CardHeader title={<strong>Receipt for: Application Fee</strong>}/>
                         <CardText>
                               <Table responsive style={{fontSize:"bold"}} id="ReceiptForWcAPartOne1" bordered condensed>
@@ -963,28 +1033,8 @@ class Report extends Component {
                                           <td colSpan={2}>
                                             Bill Reference No.& Date
                                           </td>
-                                          <td colSpan={4}>
+                                          <td colSpan={6}>
                                             Details
-                                          </td>
-                                      </tr>
-                                      <tr>
-                                          <td >
-                                            
-                                          </td>
-                                          <td >
-                                            
-                                          </td>
-                                          <td >
-                                            
-                                          </td>
-                                          <td >
-                                            
-                                          </td>
-                                          <td >
-                                            
-                                          </td>
-                                          <td >
-                                           
                                           </td>
                                       </tr>
                                       <tr>
@@ -992,18 +1042,18 @@ class Report extends Component {
                                             222222 - 21/12/2013
 
                                           </td>
-                                          <td colSpan={4}>
+                                          <td colSpan={6}>
                                             Application for New Water Connection
                                           </td>
 
                                       </tr>
 
                                       <tr>
-                                          <td colSpan={6}>Amount in words: Rs. Twenty only</td>
+                                          <td colSpan={8}>Amount in words: Rs. Twenty only</td>
 
                                       </tr>
                                       <tr>
-                                        <td colSpan={6}>
+                                        <td colSpan={8}>
                                           Payment Mode
                                         </td>
                                       </tr>
@@ -1020,10 +1070,9 @@ class Report extends Component {
                                           <td>
                                             Transaction Date
                                           </td>
-                                        {false && <td colSpan={2}>
+                                        {true && <td colSpan={4}>
                                                               Bank Name
                                                             </td>}
-                                                        <td colSpan={2}></td>
                                       </tr>
                                       <tr>
                                         <td>
@@ -1036,17 +1085,20 @@ class Report extends Component {
 
                                         <td>22/11/2018</td>
 
-                                        <td colSpan={2}>
+                                        <td colSpan={4}>
                                           IDBI
                                         </td>
-                                        <td colSpan={2}></td>
                                       </tr>
                                   </tbody>
                               </Table>
                         </CardText>
                       </Card>
-                      <div className="page-break"></div>
+                      <br/>
+                      <div style={{"textAlign": "center"}}>
+                        <RaisedButton primary={true} label="Download" onClick={self.generatePDF}/>
+                      </div>
                       </Col>
+                      <div className="page-break"></div>
             </Row>
           );
         case 2:
@@ -1058,6 +1110,9 @@ class Report extends Component {
 
     return (
       <div className="Report">
+        <div style={{textAlign:"center"}}>
+            <h3> New Water Connection </h3>
+        </div>
         <Stepper linear={false} activeStep={stepIndex}>
            <Step>
              <StepLabel>Create</StepLabel>

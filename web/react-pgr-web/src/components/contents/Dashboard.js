@@ -62,7 +62,7 @@ const content=[
             {
                 icon: 'icon-class-name',
                 label: 'Apply for New Connection',
-                to: '#/coming/soon',
+                to: '#/non-framework/citizenServices/wc/create',
             },
             {
                 icon: 'icon-class-name',

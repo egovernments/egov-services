@@ -84,6 +84,7 @@ $(document).ready(function(){
 
       function loadUlbsList(){
         $('#ulb-dropdown').html(ulbOptionTemplate(ulbsList));
+        $('#ulb-dropdownForSignup').html(ulbOptionTemplate(ulbsList));
       }
 
       function loadServiceMenus(){
@@ -141,7 +142,16 @@ $(document).ready(function(){
       });
 
       $('#create-account').click(function(e){
-          window.location = window.location.origin + '/app/v1/#/mh.roha?signup=true';
+          // window.location = window.location.origin + '/app/v1/#/mh.roha?signup=true';
+          if(!$('#ulb-dropdownForSignup').val()){
+            $('#ulb-dropdownForSignup').popover('show');
+            return;
+          }
+          else{
+            $('#ulb-dropdownForSignup').popover('hide');
+          }
+          var tenantId = $("#ulb-dropdownForSignup").val();
+          window.location = window.location.origin + '/app/v1/#/'+tenantId+'?signup=true';
       });
 
       $('#loginBtn').click(function(e) {

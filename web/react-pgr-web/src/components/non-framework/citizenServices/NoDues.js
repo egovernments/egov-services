@@ -924,7 +924,17 @@ class NoDues extends Component {
   }
 
   goBackToDashboard = () => {
-    this.props.setRoute("/prd/dashboard");
+    let self = this;
+    if(this.state.serviceRequest) {
+      var ServiceRequest = {...this.state.serviceRequest};
+      ServiceRequest.status = "CANCELLED";
+      Api.commonApiPost("/citizen-services/v1/requests/_update", {}, {"serviceReq": ServiceRequest}, null, self.props.metaData["noDues.search"].useTimestamp, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
+        self.props.setRoute("/prd/dashboard");
+      }, function(err) {
+        self.props.setRoute("/prd/dashboard");
+      })
+    } else
+      self.props.setRoute("/prd/dashboard");
   }
 
   render() {

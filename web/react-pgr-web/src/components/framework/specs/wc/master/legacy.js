@@ -1170,21 +1170,21 @@ var dat = {
                      "patternErrMsg": ""
                      }]
               },
-	  {
-        "label": "wc.create.donation.subtitle",
-        "name": "Donation",
-        "fields": [{
-            "name": "SpecialDonationCharges",
-            "jsonPath": "Connection.donationCharge",
-            "label": "wc.create.SpecialDonationCharges",
-            "pattern": "",
-            "type": "number",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
+  	          {
+                "label": "wc.create.donation.subtitle",
+                "name": "Donation",
+                "fields": [{
+                  "name": "SpecialDonationCharges",
+                  "jsonPath": "Connection.donationCharge",
+                  "label": "wc.create.SpecialDonationCharges",
+                  "pattern": "",
+                  "type": "number",
+                  "isRequired": false,
+                  "isDisabled": false,
+                  "requiredErrMsg": "",
+                  "patternErrMsg": ""
+                },
+                {
                 "name": "receiptNumber",
                 "jsonPath": "Connection.receiptNumber",
                 "label": "wc.create.receiptNumber",
@@ -1287,8 +1287,8 @@ var dat = {
               "patternErrMsg": ""
             },
             {
-                "name": "acknowledgementNumber",
-                "jsonPath": "Connection[0].acknowledgementNumber",
+                "name": "ConsumerNumber",
+                "jsonPath": "Connection[0].consumerNumber",
                 "label": "wc.create.groups.applicantDetails.consumerNumber",
                 "pattern": "",
                 "type": "text",
@@ -1446,9 +1446,9 @@ var dat = {
         "multiple": false,
         "hide":false,
         "fields": [{
-            "name": "acknowledgementNumber",
-            "jsonPath": "Connection[0].acknowledgementNumber",
-            "label": "wc.create.groups.applicantDetails.acknowledgementNumber",
+            "name": "ConsumerNumber",
+            "jsonPath": "Connection[0].consumerNumber",
+            "label": "wc.create.groups.applicantDetails.consumerNumber",
             "pattern": "",
             "type": "text",
             "isRequired": false,
@@ -1952,97 +1952,45 @@ var dat = {
                        "patternErrMsg": ""
                        }]
                 },
-      // {
-      //   "label": "wc.create.groups.fileDetails.title",
-      //   "name": "Documents",
-      //   "multiple": false,
-      //   "fields": [
-      //     // {
-      //     // 	"name": " ",
-      //     // 	"jsonPath": "Connection.documents[0].fileStoreId",
-      //     // 	"label": "wc.create.groups.fileDetails.fields.PTaxReciept",
-      //     // 	"pattern": "",
-      //     // 	"type": "singleFileUpload",
-      //     // 	"isRequired": true,
-      //     // 	"isDisabled": false,
-      //     // 	"requiredErrMsg": "",
-      //     // 	"patternErrMsg": "",
-      //     // 	"defaultValue": "4567"
-      //     // },
-      //     {
-      //       "name": " ",
-      //       "jsonPath": "Connection.documents[0].fileStoreId",
-      //       "label": "wc.create.groups.fileDetails.fields.PTaxReciept",
-      //       "pattern": "",
-      //       "type": "text",
-      //       "isRequired": true,
-      //       "isDisabled": false,
-      //       "requiredErrMsg": "",
-      //       "patternErrMsg": "",
-      //       "defaultValue": "4567",
-      //       "isHidden": true
-      //     },
-      //     {
-      //       "name": " ",
-      //       "jsonPath": "Connection.documents[0].document",
-      //       "label": "wc.create.groups.fileDetails.fields.PTaxReciept",
-      //       "pattern": "",
-      //       "isHidden": true,
-      //       "type": "singleFileUpload",
-      //       "isRequired": true,
-      //       "isDisabled": false,
-      //       "requiredErrMsg": "",
-      //       "patternErrMsg": "",
-      //       "defaultValue": "1"
-      //     },
-      //     {
-      //       "name": " ",
-      //       "jsonPath": "Connection.documents[0].name",
-      //       "label": "wc.create.groups.fileDetails.fields.PTaxReciept",
-      //       "pattern": "",
-      //       "type": "singleFileUpload",
-      //       "isRequired": true,
-      //       "isHidden": true,
-      //       "isDisabled": false,
-      //       "requiredErrMsg": "",
-      //       "patternErrMsg": "",
-      //       "defaultValue": "Test"
-      //     },
-      //     {
-      //       "name": " ",
-      //       "jsonPath": "Connection.documents[1]",
-      //       "label": "wc.create.groups.fileDetails.fields.DistributionLineLocationMap",
-      //       "pattern": "",
-      //       "type": "singleFileUpload",
-      //       "isRequired": true,
-      //       "isDisabled": false,
-      //       "requiredErrMsg": "",
-      //       "patternErrMsg": ""
-      //     },
-      //     {
-      //       "name": " ",
-      //       "jsonPath": "Connection.documents[2]",
-      //       "label": "wc.create.groups.fileDetails.fields.WhiteRationCard",
-      //       "pattern": "",
-      //       "type": "singleFileUpload",
-      //       "isRequired": true,
-      //       "isDisabled": false,
-      //       "requiredErrMsg": "",
-      //       "patternErrMsg": ""
-      //     },
-      //     {
-      //       "name": " ",
-      //       "jsonPath": "Connection.documents[3]",
-      //       "label": "wc.create.groups.fileDetails.fields.CourtFeeStamp",
-      //       "pattern": "",
-      //       "type": "singleFileUpload",
-      //       "isRequired": true,
-      //       "isDisabled": false,
-      //       "requiredErrMsg": "",
-      //       "patternErrMsg": ""
-      //     }
-      //   ]
-      // }
+                {
+                  "label": "wc.create.donation.subtitle",
+                  "name": "Donation",
+                  "fields": [{
+                    "name": "SpecialDonationCharges",
+                    "jsonPath": "Connection[0].donationCharge",
+                    "label": "wc.create.SpecialDonationCharges",
+                    "pattern": "",
+                    "type": "number",
+                    "isRequired": false,
+                    "isDisabled": false,
+                    "requiredErrMsg": "",
+                    "patternErrMsg": ""
+                  },
+                  {
+                  "name": "receiptNumber",
+                  "jsonPath": "Connection[0].receiptNumber",
+                  "label": "wc.create.receiptNumber",
+                  "pattern": "",
+                  "type": "text",
+                  "isRequired": false,
+                  "isDisabled": false,
+                  "requiredErrMsg": "",
+                  "patternErrMsg": ""
+              },
+              {
+               "name": "receiptDate",
+               "jsonPath": "Connection[0].receiptDate",
+               "maxDate": "today",
+               "label": "wc.create.receiptDate",
+               "pattern": "",
+               "type": "datePicker",
+               "isRequired": false,
+               "isDisabled": false,
+               "requiredErrMsg": "",//Remove required messages
+               "patternErrMsg": ""
+              },
+          ]
+        }
     ]
   }
 }

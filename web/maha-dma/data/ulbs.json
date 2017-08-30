@@ -3,12 +3,12 @@
     "district": "dev",
     "ulbName": "Development-Default",
     "tenantId" : "default",
-    "url": "http://egov-micro-qa.egovernments.org/app/v1/#/mh.roha"
+    "url": "http://egov-micro-qa.egovernments.org/app/v1/#/default"
   },
   {
     "district": "Raigad",
     "ulbName": "Roha Municipal Council",
-    "tenantId" : "mh.roha",
-    "url": "http://egov-micro-qa.egovernments.org/app/v1/#/mh.roha"
+    "tenantId" : "mh.rohatest",
+    "url": "http://egov-micro-qa.egovernments.org/app/v1/#/mh.rohatest"
   }
 ]

@@ -102,6 +102,7 @@ public class WaterConnectionRowMapper {
 				meter.setMaximumMeterReading(rs.getString("maximummeterreading"));
 				meter.setMeterStatus(rs.getString("meterstatus"));
 				meter.setTenantId(rs.getString("metertenant")); 
+				meter.setMeterOwner(rs.getString("meterowner"));
 				MeterReading reading = prepareMeterReadingObject(rs);
 				List<MeterReading> meterReadingList = new ArrayList<>(); 
 				meterReadingList.add(reading);

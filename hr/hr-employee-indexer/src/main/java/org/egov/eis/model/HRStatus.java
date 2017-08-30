@@ -40,55 +40,29 @@
 
 package org.egov.eis.model;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
-
-import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
+import javax.validation.constraints.Size;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Probation {
+public class HRStatus {
 
 	private Long id;
 
-	@NotNull
-	private Long designation;
+	@Getter(onMethod = @__(@JsonIgnore))
+	private String objectName;
 
-	@NotNull
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date declaredOn;
+	private String code;
 
-	private String orderNo;
+	@Getter(onMethod = @__(@JsonIgnore))
+	private String description;
 
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date orderDate;
-
-	private String remarks;
-
-	private List<String> documents = new ArrayList<String>();
-
-	private Long createdBy;
-
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date createdDate;
-
-	private Long lastModifiedBy;
-
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date lastModifiedDate;
-
+	@Getter(onMethod = @__(@JsonIgnore))
 	private String tenantId;
 
 }

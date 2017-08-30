@@ -43,35 +43,29 @@ package org.egov.eis.model;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
+@Data
 @Builder
 @AllArgsConstructor
-@EqualsAndHashCode
-@Getter
 @NoArgsConstructor
-@Setter
-@ToString
 public class Position {
 
 	private Long id;
 
-	@NotNull
-	@Size(min=3, max=100)
 	private String name;
 
+	@Getter(onMethod = @__(@JsonIgnore))
 	private DepartmentDesignation deptdesig;
 
+	@Getter(onMethod = @__(@JsonIgnore))
 	private Boolean isPostOutsourced;
 
+	@Getter(onMethod = @__(@JsonIgnore))
 	private Boolean active;
 
+	@Getter(onMethod = @__(@JsonIgnore))
 	private String tenantId;
 
 }

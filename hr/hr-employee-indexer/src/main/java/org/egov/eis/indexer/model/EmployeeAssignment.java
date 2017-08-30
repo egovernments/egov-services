@@ -38,57 +38,63 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model;
+package org.egov.eis.indexer.model;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.egov.commons.model.Department;
+import org.egov.egf.persistence.queue.contract.Function;
+import org.egov.egf.persistence.queue.contract.Functionary;
+import org.egov.egf.persistence.queue.contract.Fund;
+import org.egov.eis.model.Designation;
+import org.egov.eis.model.Grade;
+import org.egov.eis.model.Position;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.constraints.NotNull;
-
-import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Probation {
+public class EmployeeAssignment {
 
 	private Long id;
 
-	@NotNull
-	private Long designation;
+	private Position position;
 
-	@NotNull
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	private Fund fund;
+
+	private Function function;
+
+	private Functionary functionary;
+
+	private Department department;
+
+	private Designation designation;
+
+	private List<EmployeeHODDepartment> hod = new ArrayList<>();
+
+	private Boolean isPrimary;
+
 	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date declaredOn;
+	private Date fromDate;
 
-	private String orderNo;
-
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date orderDate;
+	private Date toDate;
 
-	private String remarks;
+	private Grade grade;
 
-	private List<String> documents = new ArrayList<String>();
+	private String govtOrderNumber;
 
-	private Long createdBy;
+	private List<String> documents = new ArrayList<>();
 
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date createdDate;
+	private AuditDetails auditDetails;
 
-	private Long lastModifiedBy;
-
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date lastModifiedDate;
-
-	private String tenantId;
+	private TenantDetails tenantDetails;
 
 }

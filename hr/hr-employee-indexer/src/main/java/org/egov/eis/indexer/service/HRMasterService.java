@@ -4,24 +4,9 @@ import java.net.URI;
 import java.util.Arrays;
 
 import org.egov.commons.web.contract.DepartmentResponse;
-import org.egov.eis.web.contract.RequestInfoWrapper;
+import org.egov.eis.model.*;
+import org.egov.eis.web.contract.*;
 import org.egov.eis.indexer.config.PropertiesManager;
-import org.egov.eis.model.Designation;
-import org.egov.eis.model.EmployeeType;
-import org.egov.eis.model.Grade;
-import org.egov.eis.model.Group;
-import org.egov.eis.model.Position;
-import org.egov.eis.model.RecruitmentMode;
-import org.egov.eis.model.RecruitmentQuota;
-import org.egov.eis.model.RecruitmentType;
-import org.egov.eis.web.contract.DesignationResponse;
-import org.egov.eis.web.contract.EmployeeTypeResponse;
-import org.egov.eis.web.contract.GradeResponse;
-import org.egov.eis.web.contract.GroupResponse;
-import org.egov.eis.web.contract.PositionResponse;
-import org.egov.eis.web.contract.RecruitmentModeResponse;
-import org.egov.eis.web.contract.RecruitmentQuotaResponse;
-import org.egov.eis.web.contract.RecruitmentTypeResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -194,6 +179,25 @@ public class HRMasterService {
 			return null;
 		}
 		return designationResponse.getDesignation().get(0);
+	}
+
+	// HRStatus
+	public HRStatus getEmployeeStatus(Long id, String tenantId, RequestInfoWrapper requestInfoWrapper) {
+		URI url = null;
+		HRStatusResponse hrStatusResponse = null;
+		try {
+			url = new URI(propertiesManager.getHrMastersServiceHost() + propertiesManager.getHrMastersServiceBasepath()
+					+ propertiesManager.getHrMastersServiceHRStatusSearchPath() + "?id=" + id + "&tenantId="
+					+ tenantId);
+			LOGGER.info(url.toString());
+			hrStatusResponse = restTemplate.postForObject(url, getRequestInfoAsHttpEntity(requestInfoWrapper),
+					HRStatusResponse.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+			LOGGER.error("Following exception occurred while generating URI : " + e.getMessage());
+			return null;
+		}
+		return hrStatusResponse.getHrStatus().get(0);
 	}
 
 	private HttpEntity<RequestInfoWrapper> getRequestInfoAsHttpEntity(RequestInfoWrapper requestInfoWrapper) {

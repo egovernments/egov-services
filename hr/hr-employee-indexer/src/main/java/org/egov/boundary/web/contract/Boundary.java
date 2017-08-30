@@ -38,57 +38,36 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model;
+package org.egov.boundary.web.contract;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.validation.constraints.NotNull;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Probation {
+public class Boundary {
 
-	private Long id;
+	private String id;
 
-	@NotNull
-	private Long designation;
+	private String name;
 
-	@NotNull
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date declaredOn;
+	@Getter(onMethod = @__(@JsonIgnore))
+	private Float longitude;
 
-	private String orderNo;
+	@Getter(onMethod = @__(@JsonIgnore))
+	private Float latitude;
 
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date orderDate;
+	@Getter(onMethod = @__(@JsonIgnore))
+	private Long boundaryNum;
 
-	private String remarks;
+	@Getter(onMethod = @__(@JsonIgnore))
+	private Boundary parent;
 
-	private List<String> documents = new ArrayList<String>();
-
-	private Long createdBy;
-
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date createdDate;
-
-	private Long lastModifiedBy;
-
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date lastModifiedDate;
-
+	@Getter(onMethod = @__(@JsonIgnore))
 	private String tenantId;
+
+	private BoundaryType boundaryType;
 
 }

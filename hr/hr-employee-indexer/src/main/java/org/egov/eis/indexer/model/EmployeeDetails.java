@@ -38,129 +38,168 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model;
+package org.egov.eis.indexer.model;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.egov.commons.model.Category;
+import org.egov.commons.model.Community;
+import org.egov.commons.model.Language;
+import org.egov.commons.model.Religion;
+import org.egov.egf.persistence.queue.contract.Bank;
+import org.egov.egf.persistence.queue.contract.BankBranch;
+import org.egov.eis.model.*;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class EmployeeDetails {
 
 	private Long id;
 
-	@Size(min=1, max=100)
+	private String code;
+
 	private String userName;
 
-	@Size(max=64)
-	private String password;
-
-	@Size(max=5)
 	private String salutation;
 
-	@NotNull
-	@Size(min=3, max=100)
 	private String name;
 
-	@Valid
-	@NotNull
 	private String gender;
 
-	@Size(max=10)
 	private String mobileNumber;
 
-	@Size(max=128)
-	private String emailId;
-
-	@Size(max=10)
 	private String altContactNumber;
 
-	@Size(max=10)
+	private String emailId;
+
 	private String pan;
 
-	@Size(max=12)
 	private String aadhaarNumber;
 
-	@Size(max=300)
 	private String permanentAddress;
 
-	@Size(max=50)
 	private String permanentCity;
 
-	@Size(max=6)
 	private String permanentPinCode;
 
-	@Size(max=50)
-	private String correspondenceCity;
-
-	@Size(max=6)
-	private String correspondencePinCode;
-
-	@Size(max=300)
 	private String correspondenceAddress;
 
-	@NotNull
+	private String correspondenceCity;
+
+	private String correspondencePinCode;
+
 	private Boolean active;
 
-	// FIXME : User service is expecting & sending dates in multiple formats. Fix a common standard for date formats.
-	@NotNull
 	private String dob;
 
-	// FIXME : User service is expecting & sending dates in multiple formats. Fix a common standard for date formats.
 	private String pwdExpiryDate;
 
-	@Size(max=5)
 	private String locale;
 
-	@Valid
-	@NotNull
 	private String type;
 
 	private Boolean accountLocked;
 
-	@Valid
-	@NotNull
-	private List<Role> roles = new ArrayList<Role>();
-
-	@Size(max=100)
-	private String fatherOrHusbandName;
-
 	private String bloodGroup;
 
-	@Size(max=36)
-	private String photo;
+	private String fatherOrHusbandName;
 
-	@Size(max=36)
-	private String signature;
-
-	@Size(max=300)
 	private String identificationMark;
 
-	private Long createdBy;
+	private String photo;
 
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd-MM-yyyy hh:mm:ss")
-	private Date createdDate;
+	private String signature;
 
-	private Long lastModifiedBy;
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date dateOfAppointment;
 
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd-MM-yyyy hh:mm:ss")
-	private Date lastModifiedDate;
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date dateOfJoining;
 
-	@Size(max=256)
-	private String tenantId;
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date dateOfRetirement;
+
+	private HRStatus employeeStatus;
+
+	private RecruitmentMode recruitmentMode;
+
+	private RecruitmentType recruitmentType;
+
+	private RecruitmentQuota recruitmentQuota;
+
+	private Short retirementAge;
+
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date dateOfResignation;
+
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date dateOfTermination;
+
+	private EmployeeType employeeType;
+
+	private List<EmployeeAssignment> assignments = new ArrayList<>();
+
+	private List<EmployeeJurisdiction> jurisdictions = new ArrayList<>();
+
+	private Language motherTongue;
+
+	private Religion religion;
+
+	private Community community;
+
+	private Category category;
+
+	private Boolean physicallyDisabled;
+
+	private Boolean medicalReportProduced;
+
+	private List<Language> languagesKnown = new ArrayList<>();
+
+	private String maritalStatus;
+
+	private String passportNo;
+
+	private String gpfNo;
+
+	private Bank bank;
+
+	private BankBranch bankBranch;
+
+	private String bankAccount;
+
+	private Group group;
+
+	private String placeOfBirth;
+
+	private List<EmployeeServiceHistory> serviceHistory = new ArrayList<>();
+
+	private List<EmployeeProbation> probation = new ArrayList<>();
+
+	private List<EmployeeRegularisation> regularisation = new ArrayList<>();
+
+	private List<EmployeeTechnical> technical = new ArrayList<>();
+
+	private List<EmployeeEducation> education = new ArrayList<>();
+
+	private List<EmployeeTest> test = new ArrayList<>();
+
+	@JsonProperty("APRDetails")
+	private List<EmployeeAPRDetail> aprDetails = new ArrayList<>();
+
+	private List<String> documents = new ArrayList<>();
+
+	private AuditDetails auditDetails;
+
+	private TenantDetails tenantDetails;
 
 }

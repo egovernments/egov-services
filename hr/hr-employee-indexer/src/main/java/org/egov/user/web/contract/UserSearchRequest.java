@@ -7,9 +7,8 @@ import org.egov.common.contract.request.RequestInfo;
 import java.util.Collections;
 import java.util.List;
 
+@Data
 @Builder
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserSearchRequest {

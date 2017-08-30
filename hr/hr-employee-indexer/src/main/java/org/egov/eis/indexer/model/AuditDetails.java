@@ -38,57 +38,30 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.validation.constraints.NotNull;
-
-import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
+package org.egov.eis.indexer.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.Date;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Probation {
+public class AuditDetails {
 
-	private Long id;
+	private UserDetails createdBy;
 
-	@NotNull
-	private Long designation;
-
-	@NotNull
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date declaredOn;
-
-	private String orderNo;
-
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date orderDate;
-
-	private String remarks;
-
-	private List<String> documents = new ArrayList<String>();
-
-	private Long createdBy;
-
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date createdDate;
 
-	private Long lastModifiedBy;
+	private UserDetails lastModifiedBy;
 
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date lastModifiedDate;
-
-	private String tenantId;
 
 }

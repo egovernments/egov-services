@@ -40,42 +40,39 @@
 
 package org.egov.eis.model;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.validation.constraints.NotNull;
-
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.util.Date;
+import java.util.List;
+
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Probation {
+public class APRDetail {
 
 	private Long id;
 
 	@NotNull
-	private Long designation;
+	private Integer yearOfSubmission;
 
 	@NotNull
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date declaredOn;
-
-	private String orderNo;
+	private Boolean detailsSubmitted;
 
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date orderDate;
+	private Date dateOfSubmission;
 
+	@Size(max=1024)
 	private String remarks;
 
-	private List<String> documents = new ArrayList<String>();
+	private List<String> documents;
 
 	private Long createdBy;
 

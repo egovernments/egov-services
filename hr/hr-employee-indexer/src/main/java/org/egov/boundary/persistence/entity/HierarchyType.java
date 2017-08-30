@@ -40,16 +40,16 @@
 
 package org.egov.boundary.persistence.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
-public class HierarchyType extends AbstractAuditable  {
-
-	private static final long serialVersionUID = -632869466288718895L;
-
-	public static final String SEQ_HIERARCHY_TYPE = "SEQ_EG_HIERARCHY_TYPE";
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class HierarchyType {
 
     private Long id;
 
@@ -59,5 +59,6 @@ public class HierarchyType extends AbstractAuditable  {
 
     private String localName;
 
-	
+    private String tenantId;
+
 }

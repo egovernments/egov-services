@@ -47,6 +47,9 @@ public class PropertiesManager {
 	@Value("${hr.masters.service.basepath}")
 	private String hrMastersServiceBasepath;
 
+	@Value("${hr.masters.service.hrstatus.search.path}")
+	private String hrMastersServiceHRStatusSearchPath;
+
 	@Value("${hr.masters.service.employeetype.search.path}")
 	private String hrMastersServiceEmployeeTypeSearchPath;
 

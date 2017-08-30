@@ -1450,7 +1450,30 @@ var localization_EN_Data = {
     "error.license.documentendpoint": " document end point error",
     "error.license.locationendpoint": " location end point error",
     "error.license.propertyendpoint ": " proeprty endpoint error",
-    "error.license.feeDetailYearNotFound ": "Financial Does not exists for Current/Future Year"
+    "error.license.feeDetailYearNotFound ": "Financial Does not exists for Current/Future Year",
+    "applicantDetails.title":"Application Details",
+    "fn.ApplicationDetails.applicantName":"Applicant Name",
+    "fn.ApplicationDetails.mobileNumber":"Mobile Number",
+    "fn.ApplicationDetails.email":"Email",
+    "fn.ApplicationDetails.aadharNo":"Aadhar Number",
+    "fn.ApplicationDetails.address":"Address",
+    "fn.ApplicationDetails.block":"Block",
+    "fn.ApplicationDetails.zone":"Zone",
+    "fn.ApplicationDetails.ward":"Ward",
+    "fn.serviceDetails.privisonalFireNOCNo":"Privisonal fire NOC Number",
+    "fn.serviceDetails.plotNo":"Plot Number",
+    "fn.serviceDetails.nocSubCategory":"NOC Sub Category",
+    "fn.serviceDetails.vikasPrastavNo":"Vikas Prastav Number",
+    "fn.serviceDetails.fileNo": "File Number",
+    "fn.serviceDetails.landOwnerName":"Land Owner Name",
+    "fn.serviceDetails.developerName":"Developer Name",
+    "fn.serviceDetails.surveyNo":"Plot survey No",
+    "fn.serviceDetails.talukaName":"Plot taluka name",
+    "fn.serviceDetails.architectName":"Architect Name",
+    "fn.serviceDetails.architectLicenseNo":"Architect License Number",
+    "fn.serviceDetails.locality":"Locality",
+    "fn.serviceDetails.buildingName":"Building Name",
+    "serviceDetails.title":"Service Details"
 };
 
 var localization_MR_Data = {

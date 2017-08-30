@@ -1,3 +1,4 @@
+delete from eg_business_accountdetails where businessdetails in (select id from eg_businessdetails where code in ('CS','PT','WT') and tenantid='default');
 delete from eg_businessdetails where code in ('CS','PT','WT') and tenantid='default';
 delete from eg_businesscategory where code in ('CS','PT','WT') and tenantid='default';
 

@@ -1053,7 +1053,7 @@ var dat = {
                 "jsonPath": "licenses[0].tradeCommencementDate",
                 "label": "tl.view.licenses.groups.TradeCommencementDate",
                 "pattern": "",
-                "type": "date",
+                "type": "datePicker",
                 "isRequired": false,
                 "isDisabled": false,
                 "requiredErrMsg": "",

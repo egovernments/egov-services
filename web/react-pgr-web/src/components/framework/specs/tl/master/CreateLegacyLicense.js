@@ -427,6 +427,20 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": "",
             "hide": "true"
+          },
+
+          {
+            "name": "expiryDate",
+            "jsonPath": "licenses[0].expiryDate",
+            "label": "tl.create.licenses.groups.TradeDetails.expiryDate",
+            "pattern": "",
+            "type": "datePicker",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "Enter in dd/mm/yyyy Format",
+            "maxLength": "10",
+            "hide": "true"
           }
         ]
       },
@@ -1040,6 +1054,30 @@ var dat = {
                 "isDisabled": false,
                 "requiredErrMsg": "",
                 "patternErrMsg": ""
+              },
+              {
+                "name": "licenseValidFromDate",
+                "jsonPath": "licenses[0].licenseValidFromDate",
+                "label": "tl.view.licenses.groups.TradeDetails.licenseValidFromDate",
+                "pattern": "",
+                "type": "datePicker",
+                "isRequired": true,
+                "isDisabled": false,
+                "requiredErrMsg": "",
+                "patternErrMsg": "Enter in dd/mm/yyyy Format",
+                "maxLength": "10"
+              },
+              {
+                "name": "expiryDate",
+                "jsonPath": "licenses[0].expiryDate",
+                "label": "tl.view.licenses.groups.TradeDetails.expiryDate",
+                "pattern": "",
+                "type": "datePicker",
+                "isRequired": true,
+                "isDisabled": false,
+                "requiredErrMsg": "",
+                "patternErrMsg": "Enter in dd/mm/yyyy Format",
+                "maxLength": "10"
               }
             ]
           }

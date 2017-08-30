@@ -952,6 +952,8 @@ var localization_EN_Data = {
   "tl.view.licenses.groups.validity": "Validity",
   "tl.view.licenses.groups.Remarks": "Remarks",
   "tl.view.licenses.groups.TradeCommencementDate": "Trade Commencement Date",
+  "tl.view.licenses.groups.TradeDetails.licenseValidFromDate": "License Valid From Date",
+  "tl.view.licenses.groups.TradeDetails.expiryDate": "License Expiry Date",
 
   "tl.search.groups.adminWardName":"Admin Ward",
   "tl.search.result.groups.validityYears":"Validity Years",
@@ -967,7 +969,7 @@ var localization_EN_Data = {
   "tl.view.licenses.groups.agreementDate":"Agreement Date",
   "tl.view.licenses.groups.agreementNo":"Agreement No",
   "tl.view.licenses.groups.agreement":"Agreement",
-  "tl.view.legacyTradeLicense":"View Legacy Trade License",
+  "tl.view.legacyTradeLicense":"Trade License Legacy View",
 
     "wc.create.groups.applicationParticular.title": "Application Particular",
     "wc.create.groups.applicationParticular.title": "Application Particular",
@@ -2659,7 +2661,7 @@ var localization_MR_Data = {
 "pgr.lbl.updatedby":"द्वारे अद्यवत ",
 "pgr.lbl.validemailid":" वैध ईमेल संकेतांक प्रविष्ट करा",
 "pgr.lbl.verify":" सत्यापित करा",
-"pgr.lbl.view":" पहा", 
+"pgr.lbl.view":" पहा",
 "pgr.lbl.view.grievance":" तक्रार पहा",
 "pgr.lbl.view.router":" तक्रार राउटर पहा",
 "pgr.lbl.ward":" प्रभाग",

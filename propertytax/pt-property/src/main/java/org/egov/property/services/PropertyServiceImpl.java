@@ -900,7 +900,14 @@ public class PropertyServiceImpl implements PropertyService {
 				// existing demands along with the new demands to the response
 				if (demandRespForSavedDemands.getDemands().size() < noOfPeriods) {
 					for (TaxPeriod taxPeriod : taxPeriodResponse.getTaxPeriods()) {
-						taxPeriodFromDate = dbDateFormat.parse(taxPeriod.getFromDate());
+						try {
+							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
+							taxPeriodFromDate = sdf.parse(taxPeriod.getFromDate());
+						} catch (Exception ex) {
+							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+							taxPeriodFromDate = sdf.parse(taxPeriod.getFromDate());
+						}
+
 						for (Demand demand : demandRespForSavedDemands.getDemands()) {
 							// If demand exists for a taxperiod, add it to the
 							// demandlist, else prepare new demand and add to
@@ -951,9 +958,9 @@ public class PropertyServiceImpl implements PropertyService {
 		StringBuffer taxPeriodSearchUrl = new StringBuffer();
 		taxPeriodSearchUrl.append(propertiesManager.getCalculatorHostName());
 		taxPeriodSearchUrl.append(propertiesManager.getCalculatorTaxperiodsSearch());
+		String todate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
 		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(taxPeriodSearchUrl.toString())
-				.queryParam("tenantId", tenantId).queryParam("fromDate", occupancyDateStr)
-				.queryParam("toDate", "30/09/2017");
+				.queryParam("tenantId", tenantId).queryParam("fromDate", occupancyDateStr).queryParam("toDate", todate);
 
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);

@@ -41,8 +41,8 @@ public class LicenseStatusQueryBuilder {
 		}
 
 		if (code != null && !code.isEmpty()) {
-			searchSql.append(" AND code = :code ");
-			parameters.addValue("code",code);
+			searchSql.append(" AND upper(code) = :code ");
+			parameters.addValue("code",code.toUpperCase());
 		}
 		
 		if (moduleType != null && !moduleType.isEmpty()) {

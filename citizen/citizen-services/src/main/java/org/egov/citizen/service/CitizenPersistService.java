@@ -129,12 +129,15 @@ public class CitizenPersistService {
 	
 	public ServiceReqResponse create(String serviceReqJson) {
 
-		serviceReqJson = makeServiceCall(serviceReqJson);
+		String id = getServiceReqId();
+		serviceReqJson = makeServiceCall(serviceReqJson, id, true);
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 		ServiceReqRequest serviceReqRequest = null;
 		try {
 		serviceReqRequest = objectMapper.readValue(serviceReqJson, ServiceReqRequest.class);
+		serviceReqRequest.getServiceReq().setServiceRequestId(id);
+		serviceReqRequest.getServiceReq().setAuditDetails(getAuditDetaisl(serviceReqRequest.getRequestInfo(), true));
 		LOGGER.info("parsed value: "+serviceReqRequest);
 		} catch (JsonParseException e) {
 		// TODO Auto-generated catch block
@@ -146,10 +149,9 @@ public class CitizenPersistService {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 		}
-		String id = getServiceReqId();
+		
 
-		serviceReqRequest.getServiceReq().setServiceRequestId(id);
-		serviceReqRequest.getServiceReq().setAuditDetails(getAuditDetaisl(serviceReqRequest.getRequestInfo(), true));
+		
 		LOGGER.info("serviceReqRequest:"+serviceReqRequest);
 		ObjectMapper mapper = new ObjectMapper();
 		try{
@@ -165,7 +167,7 @@ public class CitizenPersistService {
 
 	public String getServiceReqId() {
 
-		String req = "{\"RequestInfo\":{\"apiId\":\"org.egov.ptis\",\"ver\":\"1.0\",\"ts\":\"20934234234234\",\"action\":\"asd\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\":\"d1feb52b-fb61-4066-be09-398de105e472\"},\"idRequests\":[{\"idName\":\"CS.ServiceRequest\",\"tenantId\":\"default\",\"format\":\"SRN-[cy:MM]/[fy:yyyy-yy]-[d{4}]\"}]}";
+		String req = "{\"RequestInfo\":{\"apiId\":\"org.egov.ptis\",\"ver\":\"1.0\",\"ts\":\"20934234234234\",\"action\":\"asd\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\":\"439ae08b-2d5b-46e3-9a56-80f73aef52bc\"},\"idRequests\":[{\"idName\":\"CS.ServiceRequest\",\"tenantId\":\"default\",\"format\":\"SRN-[cy:MM]/[fy:yyyy-yy]-[d{4}]\"}]}";
 
 		String url = idGenHost+idGenGetIdUrl;
 		log.info("url:"+url);
@@ -192,7 +194,7 @@ public class CitizenPersistService {
 	}
 	
     public ServiceReqResponse update(String serviceReqJson) {
-		
+    	serviceReqJson = makeServiceCall(serviceReqJson, null, false);
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 		ServiceReqRequest serviceReqRequest = null;
@@ -225,10 +227,23 @@ public class CitizenPersistService {
 		return getResponse(serviceReqRequest);
 	}
     
-    public String makeServiceCall(String serviceReqJson){
+    public String makeServiceCall(String serviceReqJson, String id, boolean isCreate){
     	log.info("serviceReqJson1:"+serviceReqJson);
     	DocumentContext documentContext = JsonPath.parse(serviceReqJson);
+    	
+    	if(isCreate)
+    	documentContext.put("$.serviceReq", "serviceRequestId", id);
+    	
+    	if(documentContext.read("$.serviceReq.serviceCode").toString().equals("WATER_NEWCONN") && isCreate){
+    		documentContext.put("$.serviceReq.backendServiceDetails[0].request.Demands[0]", "consumerCode", id);
+    		String url = documentContext.read("$.serviceReq.backendServiceDetails[2].url");
+    		url = url.replaceAll("consumerCode=", "consumerCode="+id);
+    		documentContext.put("$.serviceReq.backendServiceDetails[2]","url", url);
+    		serviceReqJson = documentContext.jsonString();
+    	}
+    	log.info("documentContext:"+documentContext.jsonString());
     	Object serviceCall = JsonPath.read(serviceReqJson, "$.serviceReq.backendServiceDetails");
+    	//if(serviceCall instanceof List)
     	if(serviceCall != null){
     		List<LinkedHashMap<String, Object>> list =(List<LinkedHashMap<String, Object>>) serviceCall;
     		log.info("list:"+list);
@@ -237,7 +252,7 @@ public class CitizenPersistService {
     			String url = (String)map.get("url");
     			LinkedHashMap<String, Object> requestMap = (LinkedHashMap<String, Object>)map.get("request");
     			
-    			log.info("url:"+url+","+"requestStr:"+requestMap);
+    			log.info("url:"+url+","+"requestMap:"+requestMap);
     			HttpHeaders headers = new HttpHeaders();
     			headers.setContentType(MediaType.APPLICATION_JSON);
     			
@@ -256,12 +271,23 @@ public class CitizenPersistService {
     			System.out.println("responsePath:"+responsePath);
     			//documentContext.set(responsePath, resBody);
     			documentContext.put(responsePath, "response", documentContext2.json());
+    			
+    			if(i==1 && documentContext.read("$.serviceReq.serviceCode").toString().equals("WATER_NEWCONN")&&isCreate){
+    				String ackNum = documentContext2.read("$.Connection[0].acknowledgementNumber");
+    				documentContext.put("$.serviceReq", "consumerCode", ackNum);
+    			}
+    			
     	    	serviceReqJson = documentContext.jsonString();
     	    	log.info("serviceReqJson2:"+serviceReqJson);
+    	    	
     		}
     	}
     	return serviceReqJson;
     }
+    
+    /*public String populateNextServiceCallData(){
+    	
+    }*/
     
     private AuditDetails getAuditDetaisl(RequestInfo requestInfo, boolean isCreate){
 		AuditDetails auditDetails = new AuditDetails();

@@ -73,6 +73,15 @@ public class PropertiesManager {
     @Value("${kafka.topics.nominee.updatedb.key}")
     private String nomineeUpdateKey;
 
+    @Value("${egov.services.hr_employee_service.hostname}")
+    private String hrEmployeeServiceHostName;
+
+    @Value("${egov.services.hr_employee_service.basepath}")
+    private String hrEmployeeServiceBasePath;
+
+    @Value("${egov.services.hr_employee_service.employee.createpath}")
+    private String hrEmployeeServiceEmployeeCreatePath;
+
     @Value("${egov.services.users_service.hostname}")
     private String usersServiceHostName;
 
@@ -88,6 +97,15 @@ public class PropertiesManager {
     @Value("${egov.services.users_service.users.updatepath}")
     private String usersServiceUsersUpdatePath;
 
+    @Value("${egov.services.egov_common_masters_service.hostname}")
+    private String commonMastersServiceHostName;
+
+    @Value("${egov.services.egov_common_masters_service.basepath}")
+    private String commonMastersServiceBasePath;
+
+    @Value("${egov.services.egov_common_masters_service.departments.searchpath}")
+    private String commonMastersServiceDepartmentsSearchPath;
+
     @Value("${egov.services.hr_masters_service.hostname}")
     private String hrMastersServiceHostName;
 
@@ -96,6 +114,12 @@ public class PropertiesManager {
 
     @Value("${egov.services.hr_masters_service.positions.searchpath}")
     private String hrMastersServicePositionsSearchPath;
+
+    @Value("${egov.services.hr_masters_service.vacantpositions.searchpath}")
+    private String hrMastersServiceVacantPositionsSearchPath;
+
+    @Value("${egov.services.hr_masters_service.designations.searchpath}")
+    private String hrMastersServiceDesignationsSearchPath;
 
     @Value("${egov.services.hr_masters_service.hr_configurations.searchpath}")
     private String hrMastersServiceHRConfigurationsSearchPath;

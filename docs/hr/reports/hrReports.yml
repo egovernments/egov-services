@@ -300,7 +300,7 @@ ReportDefinitions:
     pattern: http://hr-masters:8080/hr-masters/hrstatuses/_search?tenantId=$tenantid|$..id|$..code
     source: hr
     isMandatory: false
-    searchClause: and dept.id=$departmentId
+    searchClause: and hrstatus.code=$employeeStatus
   - name: leavetype
     label: reports.hr.leaveType
     type: singlevaluelist
@@ -381,7 +381,87 @@ ReportDefinitions:
     and emp.id=usr.id and emp.tenantid=usr.tenantid and assign.employeeid = emp.id and emp.tenantid=$tenantid
   groupBy: group by employeecode ,employeename;
 
-
-
-
-    
+- reportName: employeeLeaveSummaryReport
+  summary: employeeLeave Summary Report
+  version: 1.0.0
+  sourceColumns:
+  - name: code
+    label: reports.hr.Attendence.Employee_Code_name         
+    type: string
+    source: egeis_employee
+  - name: leaveType
+    label: reports.hr.leaveType
+    type: String
+    source: hr
+  - name: openingBalance
+    label: reports.hr.openingBalance
+    type: String
+    source: hr
+  - name: leaveEligibleAsOn
+    label: reports.hr.leaveEligibleAsOn
+    type: String
+    source: hr
+  - name: totalLeavesEligible
+    label: reports.hr.totalLeavesEligible
+    type: String
+    source: hr
+  - name: approved
+    label: reports.hr.approved
+    type: String
+    source: hr
+  - name: balance
+    label: reports.hr.balance
+    type: String
+    source: hr
+  searchParams:
+  - name: department
+    label: reports.hr.Department
+    type: singlevaluelist
+    pattern: http://egov-common-masters:8080/egov-common-masters/departments/_search?tenantId=$tenantId|$..id|$..name
+    source: hr
+    isMandatory: false
+    searchClause: and dept.id=$department
+  - name: designation
+    label: reports.hr.Designation
+    type: singlevaluelist
+    pattern: http://hr-masters:8080/hr-masters/designations/_search?tenantId=$tenantId|$..id|$..name  
+    source: hr
+    isMandatory: false
+    searchClause: and desig.id=$designation
+  - name: employeeCode/Name
+    label: reports.hr.Employee_Code/Name
+    type: String
+    source: hr 
+    isMandatory: false
+    searchClause: and emp.code=$employeeCode/Name
+  - name: employeeType
+    label: reports.hr.EmployeeType
+    type: singlevaluelist
+    pattern: http://hr-masters:8080/hr-masters/employeetypes/_search?tenantId=$tenantid|$..id|$..name
+    source: hr  
+    isMandatory: false
+    searchClause: and emptyp.id=$employeeType
+  - name: employeeStatus
+    label: reports.hr.employeeStatus
+    type: singlevaluelist
+    pattern: http://hr-masters:8080/hr-masters/hrstatuses/_search?tenantId=$tenantid|$..id|$..code
+    source: hr
+    isMandatory: false
+    searchClause: and hrstatus.code=$employeeStatus
+  - name: leavetype
+    label: reports.hr.leaveType
+    type: singlevaluelist
+    pattern: http://hr-leave:8080/hr-leave/leavetypes/_search?tenantId=$tenantid|$..id|$..name
+    source: egeis_leaveType
+    isMandatory: false
+    searchClause: and leavetype.name=$leavetype
+  - name: asOnDtae
+    label: reports.hr.asOnDtae
+    type: epoc
+    source: hr
+    isMandatory: true
+  query: select emp.code ||'-'|| usr.name as employeecodename,levtyp.name as leavetype ,
+    opnbal.noofdays as openingbalance,opnbal.noofdays+opnbal.noofdays as totalleaveseligible
+    from egeis_employee  emp,eg_user usr,egeis_leavetype levtyp,egeis_leaveopeningbalance opnbal
+    where levtyp.tenantid=$tenantid
+    and emp.id=usr.id

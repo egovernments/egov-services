@@ -85,6 +85,8 @@ public class TradeLicenseEntity {
 
 	private Long status;
 
+	protected Long applicationStatus;
+	
 	private String agreementNo;
 
 	private Boolean isLegacy = false;
@@ -98,6 +100,8 @@ public class TradeLicenseEntity {
 	private static List<LicenseFeeDetail> feeDetails;
 
 	private static List<SupportDocument> supportDocuments;
+	
+	protected String stateId;
 
 	private String createdBy;
 
@@ -287,6 +291,8 @@ public class TradeLicenseEntity {
 		}
 
 		this.status = tradeLicense.getStatus();
+		
+		this.applicationStatus = tradeLicense.getApplicationStatus();
 
 		this.categoryId = tradeLicense.getCategoryId();
 
@@ -331,6 +337,8 @@ public class TradeLicenseEntity {
 		this.feeDetails = tradeLicense.getFeeDetails();
 
 		this.supportDocuments = tradeLicense.getSupportDocuments();
+		
+		this.stateId = tradeLicense.getWorkFlowDetails()!=null? tradeLicense.getWorkFlowDetails().getStateId():null;
 
 		this.createdBy = (auditDetails == null) ? null : auditDetails.getCreatedBy();
 

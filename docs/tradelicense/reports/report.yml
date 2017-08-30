@@ -66,7 +66,7 @@ ReportDefinitions:
   - name: ward
     label: reports.tradelicense.adminward
     type: singlevaluelist
-    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION&pageSize=500|$..id|$..name
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=Ward&hierarchyTypeName=ADMINISTRATION&pageSize=500|$..id|$..name
     source: tradelicense
     isMandatory: false
     searchClause : AND tl.adminwardid = $ward
@@ -106,7 +106,7 @@ ReportDefinitions:
     type: epoch
     source: tradelicense
     isMandatory: false
-    searchClause : AND tl.expirydate <= to_timestamp(Trunc(CAST($licenseValidToDate as bigint)/1000 ))::timestamp without time zone
+    searchClause : AND to_date(TO_CHAR(tl.expirydate, 'DD/MM/YYYY'),'DD/MM/YYYY') <= to_date(TO_CHAR(TO_TIMESTAMP($licenseValidToDate/1000), 'DD/MM/YYYY'),'DD/MM/YYYY')
   - name: licenseType
     label: reports.tradelicense.licensetype
     type: singlevaluelist

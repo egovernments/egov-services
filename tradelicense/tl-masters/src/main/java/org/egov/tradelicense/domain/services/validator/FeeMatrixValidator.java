@@ -262,6 +262,7 @@ public class FeeMatrixValidator {
 			FeeMatrixDetail feeMatrixDetail = new FeeMatrixDetail();
 			feeMatrixDetail.setId(getLong(row.get("id")));
 			feeMatrixDetail.setFeeMatrixId(getLong(row.get("feeMatrixId")));
+			feeMatrixDetail.setTenantId(getString(row.get("tenantId")));
 			feeMatrixDetail.setUomFrom(getLong(row.get("uomFrom")));
 			feeMatrixDetail.setUomTo(getLong(row.get("uomTo")));
 			feeMatrixDetail.setAmount(getDouble(row.get("amount")));

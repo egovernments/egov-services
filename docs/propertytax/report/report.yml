@@ -21,43 +21,43 @@ ReportDefinitions:
     label: reports.property.pttax
     type: string
     source: collection
-    columnTotal: true
+    total: true
   - name: LIB_CESS
     label: reports.property.libcess
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: EDU_CESS
     label: reports.property.educess
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: VACANT_TAX
     label: reports.property.vacanttax
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: EMP_GUA_CESS
     label: reports.property.empguacess
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: LATE_PENALTY
     label: reports.property.latepenalty
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: ADVANCE
     label: reports.property.advance
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: Total
     label: reports.property.Total
     type: number
     source: seva
     rowTotal: true
-    columnTotal: true
+    total: true
   searchParams:
   - name: revenueboundary
     label: reports.property.revenueboundary
@@ -80,7 +80,7 @@ ReportDefinitions:
     pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION&pageSize=500|$..id|$..name
     isMandatory: false
     searchClause: and loc.locationboundary = $locationboundary
-  query: select * from ((select prop.upicnumber as upicnumber,address.addressnumber||', '||address.addressline1||', '||address.addressline2||' - '||address.pincode as propertyaddress, 
+  query: select * from ((select prop.upicnumber as upicnumber,concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.pincode) as propertyaddress, 
          'CURRENT' as STATE,
           SUM((CASE WHEN dd.taxheadcode = 'PT_TAX' THEN dd.taxamount ELSE NULL END)) AS PT_TAX,
           SUM((CASE WHEN dd.taxheadcode = 'LIB_CESS' THEN dd.taxamount ELSE NULL END)) AS LIB_CESS,
@@ -97,7 +97,7 @@ ReportDefinitions:
           and demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and todate>=(select extract ('epoch' from (select * from now()))*1000) 
           and service = 'PT' and tenantid=$tenantid) 
           UNION 
-          (select prop.upicnumber as upicnumber,address.addressnumber||', '||address.addressline1||', '||address.addressline2||' - '||address.pincode as propertyaddress, 
+          (select prop.upicnumber as upicnumber, concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.pincode) as propertyaddress, 
           'ARREAR' as STATE,
            SUM((CASE WHEN dd.taxheadcode = 'PT_TAX' THEN dd.taxamount ELSE NULL END)) AS PT_TAX,
            SUM((CASE WHEN dd.taxheadcode = 'LIB_CESS' THEN dd.taxamount ELSE NULL END)) AS LIB_CESS,
@@ -114,7 +114,7 @@ ReportDefinitions:
            and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and todate>=(select extract ('epoch' from (select * from now()))*1000) 
            and service = 'PT' and tenantid=$tenantid)
   groupBy: group by upicnumber,propertyaddress,state)      
-  orderBy: )result order by upicnumber asc,state desc;
+  orderBy: )result order by upicnumber asc,state asc;
  
 - reportName: CollectionRegister
   summary: Collection Register Report
@@ -133,47 +133,47 @@ ReportDefinitions:
     label: reports.property.state
     type: number
     source: completed
-  - name: PT_TAX
+  - name: PT_COLL
     label: reports.property.pttax
     type: string
     source: collection
-    columnTotal: true
-  - name: LIB_CESS
+    total: true
+  - name: LIB_CESS_COLL
     label: reports.property.libcess
     type: number
     source: seva
-    columnTotal: true
-  - name: EDU_CESS
+    total: true
+  - name: EDU_CESS_COLL
     label: reports.property.educess
     type: number
     source: seva
-    columnTotal: true
-  - name: VACANT_TAX
+    total: true
+  - name: VACANT_TAX_COLL
     label: reports.property.vacanttax
     type: number
     source: seva
-    columnTotal: true
-  - name: EMP_GUA_CESS
+    total: true
+  - name: EMP_GUA_CESS_COLL
     label: reports.property.empguacess
     type: number
     source: seva
-    columnTotal: true
-  - name: LATE_PENALTY
+    total: true
+  - name: LATE_PENALTY_COLL
     label: reports.property.latepenalty
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: ADVANCE
     label: reports.property.advance
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: Total
     label: reports.property.Total
     type: number
     source: seva
     rowTotal: true
-    columnTotal: true
+    total: true
   searchParams:
   - name: revenueboundary
     label: reports.property.revenueboundary
@@ -196,7 +196,7 @@ ReportDefinitions:
     pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION&pageSize=500|$..id|$..name
     isMandatory: false
     searchClause: and loc.locationboundary = $locationboundary
-  query: select * from ((select prop.upicnumber as upicnumber,address.addressnumber||', '||address.addressline1||', '||address.addressline2||' - '||address.pincode as propertyaddress, 
+  query: select * from ((select prop.upicnumber as upicnumber, concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.pincode) as propertyaddress, 
          'CURRENT' as STATE,
          SUM((CASE WHEN dd.taxheadcode = 'PT_TAX' THEN dd.collectionamount ELSE NULL END)) AS PT_COLL,
          SUM((CASE WHEN dd.taxheadcode = 'LIB_CESS' THEN dd.collectionamount ELSE NULL END)) AS LIB_CESS_COLL,
@@ -214,7 +214,7 @@ ReportDefinitions:
          and demand.consumercode=prop.upicnumber
          and demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service = 'PT' and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid) 
          UNION 
-        (select prop.upicnumber as upicnumber,address.addressnumber||', '||address.addressline1||', '||address.addressline2||' - '||address.pincode as propertyaddress, 
+        (select prop.upicnumber as upicnumber, concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.pincode) as propertyaddress, 
         'ARREAR' as STATE,
          SUM((CASE WHEN dd.taxheadcode = 'PT_TAX' THEN dd.collectionamount ELSE NULL END)) AS PT_COLL,
          SUM((CASE WHEN dd.taxheadcode = 'LIB_CESS' THEN dd.collectionamount ELSE NULL END)) AS LIB_CESS_COLL,
@@ -232,7 +232,7 @@ ReportDefinitions:
          and demand.consumercode=prop.upicnumber
          and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service = 'PT' and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid) 
   groupBy: group by upicnumber,propertyaddress,state) 
-  orderBy: )result order by upicnumber asc,state desc;
+  orderBy: )result order by upicnumber asc,state asc;
   
 - reportName: BalanceRegister
   summary: Balance Register Report
@@ -255,37 +255,37 @@ ReportDefinitions:
     label: reports.property.pttax
     type: string
     source: collection
-    columnTotal: true
+    total: true
   - name: LIB_CESS_BAL
     label: reports.property.libcess
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: EDU_CESS_BAL
     label: reports.property.educess
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: VACANT_TAX_BAL
     label: reports.property.vacanttax
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: EMP_GUA_CESS_BAL
     label: reports.property.empguacess
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: LATE_PENALTY_BAL
     label: reports.property.latepenalty
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: ADVANCE
     label: reports.property.advance
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: receiptnumber
     label: reports.property.receiptnumber
     type: number
@@ -298,7 +298,7 @@ ReportDefinitions:
     label: reports.property.total
     type: number
     source: seva
-    columnTotal: true
+    total: true
     rowTotal: true
   searchParams:
   - name: revenueboundary
@@ -322,7 +322,7 @@ ReportDefinitions:
     pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION&pageSize=500|$..id|$..name
     isMandatory: false
     searchClause: and loc.locationboundary = $locationboundary
-  query: select * from ((select prop.upicnumber as upicnumber,address.addressnumber||', '||address.addressline1||', '||address.addressline2||' - '||address.pincode as propertyaddress, 
+  query: select * from ((select prop.upicnumber as upicnumber, concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.pincode) as propertyaddress, 
          'CURRENT' as STATE,
          SUM((CASE WHEN dd.taxheadcode = 'PT_TAX' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS PT_BAL,
          SUM((CASE WHEN dd.taxheadcode = 'LIB_CESS' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS LIB_CESS_BAL,
@@ -340,7 +340,7 @@ ReportDefinitions:
          and demand.consumercode=prop.upicnumber
          and demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='PT' and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid) 
          UNION 
-         (select prop.upicnumber as upicnumber,address.addressnumber||', '||address.addressline1||', '||address.addressline2||' - '||address.pincode as propertyaddress, 
+         (select prop.upicnumber as upicnumber, concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.pincode) as propertyaddress, 
          'ARREAR' as STATE,
          SUM((CASE WHEN dd.taxheadcode = 'PT_TAX' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS PT_BAL,
          SUM((CASE WHEN dd.taxheadcode = 'LIB_CESS' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS LIB_CESS_BAL,
@@ -358,7 +358,7 @@ ReportDefinitions:
          and demand.consumercode=prop.upicnumber
          and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service = 'PT'and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid)
   groupBy: group by upicnumber,propertyaddress,state) 
-  orderBy: )result order by upicnumber asc,state desc;
+  orderBy: )result order by upicnumber asc,state asc;
  
 - reportName: DemandBalanceCollectionReport
   summary: Demand Balance Collection Report
@@ -369,110 +369,110 @@ ReportDefinitions:
     label: reports.property.upicnumber
     type: number
     source: collection
-    columnTotal: true
+    total: true
   - name: propertyaddress
     label: reports.property.address
     type: number
     source: completed
-    columnTotal: true
+    total: true
   - name: STATE
     label: reports.property.state
     type: number
     source: completed
-    columnTotal: true
+    total: true
   - name: PT_TAX
     label: reports.property.pttax
     type: string
     source: collection
-    columnTotal: true
+    total: true
   - name: LIB_CESS
     label: reports.property.libcess
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: EDU_CESS
     label: reports.property.educess
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: VACANT_TAX
     label: reports.property.vacanttax
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: EMP_GUA_CESS
     label: reports.property.empguacess
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: LATE_PENALTY
     label: reports.property.latepenalty
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: PT_COLL
-    label: reports.property.pttax
+    label: reports.property.pttaxcoll
     type: string
     source: collection
-    columnTotal: true
+    total: true
   - name: LIB_CESS_COLL
-    label: reports.property.libcess
+    label: reports.property.libcesscoll
     type: number
     source: seva
   - name: EDU_CESS_COLL
-    label: reports.property.educess
+    label: reports.property.educesscoll
     type: number
     source: seva
   - name: VACANT_TAX_COLL
-    label: reports.property.vacanttax
+    label: reports.property.vacanttaxcoll
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: EMP_GUA_CESS_COLL
-    label: reports.property.empguacess
+    label: reports.property.empguacesscoll
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: LATE_PENALTY_COLL
-    label: reports.property.latepenalty
+    label: reports.property.latepenaltycoll
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: PT_BAL
-    label: reports.property.pttax
+    label: reports.property.pttaxbal
     type: string
     source: collection
-    columnTotal: true
+    total: true
   - name: LIB_CESS_BAL
-    label: reports.property.libcess
+    label: reports.property.libcessbal
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: EDU_CESS_BAL
-    label: reports.property.educess
+    label: reports.property.educessbal
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: VACANT_TAX_BAL
-    label: reports.property.vacanttax
+    label: reports.property.vacanttaxbal
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: EMP_GUA_CESS_BAL
-    label: reports.property.empguacess
+    label: reports.property.empguacessbal
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: LATE_PENALTY_BAL
-    label: reports.property.latepenalty
+    label: reports.property.latepenaltybal
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: ADVANCE
     label: reports.property.advance
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: receiptnumber
     label: reports.property.receiptnumber
     type: number
@@ -485,7 +485,7 @@ ReportDefinitions:
     label: reports.property.total
     type: number
     source: seva
-    columnTotal: true
+    total: true
     rowTotal: true
   searchParams:
   - name: revenueboundary
@@ -509,7 +509,7 @@ ReportDefinitions:
     pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION&pageSize=500|$..id|$..name
     isMandatory: false
     searchClause: and loc.locationboundary = $locationboundary
-  query: select * from ((select prop.upicnumber as upicnumber,address.addressnumber||', '||address.addressline1||', '||address.addressline2||' - '||address.pincode as propertyaddress, 
+  query: select * from ((select prop.upicnumber as upicnumber, concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.pincode) as propertyaddress, 
          'CURRENT' as STATE,
          SUM((CASE WHEN dd.taxheadcode = 'PT_TAX' THEN dd.taxamount ELSE NULL END)) AS PT_TAX,
          SUM((CASE WHEN dd.taxheadcode = 'LIB_CESS' THEN dd.taxamount ELSE NULL END)) AS LIB_CESS,
@@ -543,7 +543,7 @@ ReportDefinitions:
          and demand.consumercode=prop.upicnumber
          and demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service = 'PT' and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid) 
          UNION 
-         (select prop.upicnumber as upicnumber,address.addressnumber||', '||address.addressline1||', '||address.addressline2||' - '||address.pincode as propertyaddress, 
+         (select prop.upicnumber as upicnumber, concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.pincode) as propertyaddress, 
          'ARREAR' as STATE,
           SUM((CASE WHEN dd.taxheadcode = 'PT_TAX' THEN dd.taxamount ELSE NULL END)) AS PT_TAX,
           SUM((CASE WHEN dd.taxheadcode = 'LIB_CESS' THEN dd.taxamount ELSE NULL END)) AS LIB_CESS,
@@ -577,7 +577,7 @@ ReportDefinitions:
           and demand.consumercode=prop.upicnumber
           and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service = 'PT' and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid)
   groupBy: group by upicnumber,propertyaddress,state) 
-  orderBy: )result order by upicnumber asc,state desc limit 20;
+  orderBy: )result order by upicnumber asc,state asc limit 20;
   
 - reportName: AssessmentRegister
   summary:  Assessment Register Report
@@ -588,7 +588,7 @@ ReportDefinitions:
     label: reports.property.upicnumber
     type: number
     source: collection
-  - name: code
+  - name: proptype
     label: reports.property.code
     type: number
     source: collection
@@ -608,37 +608,37 @@ ReportDefinitions:
     label: reports.property.pttax
     type: string
     source: collection
-    columnTotal: true
+    total: true
   - name: LIB_CESS
     label: reports.property.libcess
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: EDU_CESS
     label: reports.property.educess
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: VACANT_TAX
     label: reports.property.vacanttax
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: EMP_GUA_CESS
     label: reports.property.empguacess
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: LATE_PENALTY
     label: reports.property.latepenalty
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: ADVANCE
     label: reports.property.advance
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: receiptnumber
     label: reports.property.receiptnumber
     type: number
@@ -666,7 +666,7 @@ ReportDefinitions:
     isMandatory: false
     searchClause: And loc.adminboundary =$adminboundary
     source: collection
-  query: select prop.upicnumber as upicnumber, ptype.code, u.name propertyowner, address.addressnumber||', '||address.addressline1||', '||address.addressline2||' - '||address.pincode as propertyaddress, 
+  query: select prop.upicnumber as upicnumber, (ptype.data::jsonb->>'name') as proptype, u.name propertyowner, concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.pincode) as propertyaddress, 
          sum(unit.arv) as arv,
          SUM((CASE WHEN dd.taxheadcode = 'PT_TAX' THEN dd.taxamount ELSE NULL END)) AS PT_TAX,
          SUM((CASE WHEN dd.taxheadcode = 'LIB_CESS' THEN dd.taxamount ELSE NULL END)) AS LIB_CESS,
@@ -683,7 +683,7 @@ ReportDefinitions:
          and unit.floor=flr.id and flr.propertydetails=pd.id
          and demand.consumercode=prop.upicnumber
          and demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service = 'PT' and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid) 
-  groupBy: group by upicnumber, ptype.code, u.name , propertyaddress, receiptnumber, receiptdate; 
+  groupBy: group by upicnumber, proptype, u.name , propertyaddress, receiptnumber, receiptdate; 
   
 
   

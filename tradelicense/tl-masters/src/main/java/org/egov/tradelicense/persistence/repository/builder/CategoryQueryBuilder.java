@@ -26,11 +26,11 @@ public class CategoryQueryBuilder {
 			+ " lastModifiedTime = :lastModifiedTime" + " WHERE id = :id";
 
 	public static final String INSERT_CATEGORY_DETAIL_QUERY = "INSERT INTO " + categoryDetailTableName
-			+ " (categoryId, feeType, rateType, uomId, createdBy, lastModifiedBy, createdTime, lastModifiedTime)"
-			+ " VALUES(:categoryId, :feeType, :rateType, :uomId, :createdBy, :lastModifiedBy, :createdTime, :lastModifiedTime)";
+			+ " (categoryId, tenantId, feeType, rateType, uomId, createdBy, lastModifiedBy, createdTime, lastModifiedTime)"
+			+ " VALUES(:categoryId, :tenantId, :feeType, :rateType, :uomId, :createdBy, :lastModifiedBy, :createdTime, :lastModifiedTime)";
 
 	public static final String UPDATE_CATEGORY_DETAIL_QUERY = "UPDATE " + categoryDetailTableName
-			+ " SET categoryId = :categoryId, feeType = :feeType, rateType = :rateType," + " uomId = :uomId,"
+			+ " SET categoryId = :categoryId, tenantId = :tenantId, feeType = :feeType, rateType = :rateType," + " uomId = :uomId,"
 			+ " lastModifiedBy = :lastModifiedBy, lastModifiedTime = :lastModifiedTime" + " WHERE id = :id";
 
 	public static final String buildCategoryDetailSearchQuery(Long categoryId, Integer pageSize, Integer offSet,

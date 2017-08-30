@@ -65,9 +65,9 @@ public class DesignationRepository {
 		this.designationByNameUrl = designationServiceHostname + designationByNameUrl;
 	}
 
-	public DesignationResponse getDesignationByName(final String designationName, final String tenantId) {
+	public DesignationResponse getDesignationByName(final String designationName, final String tenantId,
+			RequestInfo requestInfo) {
 
-		final RequestInfo requestInfo = new RequestInfo();
 		requestInfo.setTs(new Date());
 
 		final RequestInfoWrapper wrapper = new RequestInfoWrapper();

@@ -2,6 +2,7 @@ package org.egov.tl.workflow.service;
 
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.tl.workflow.repository.DesignationRepository;
 import org.egov.tl.workflow.repository.contract.Designation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +18,9 @@ public class DesignationService {
 		this.designationRepository = designationRepository;
 	}
 
-	public List<Designation> getByName(final String designationName, final String tenantId) {
+	public List<Designation> getByName(final String designationName, final String tenantId,final RequestInfo requestInfo) {
 
-		return designationRepository.getDesignationByName(designationName, tenantId).getDesignation();
+		return designationRepository.getDesignationByName(designationName, tenantId,requestInfo ).getDesignation();
 	}
 
 }

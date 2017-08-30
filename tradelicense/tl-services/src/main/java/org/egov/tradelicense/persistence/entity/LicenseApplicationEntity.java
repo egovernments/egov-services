@@ -57,11 +57,11 @@ public class LicenseApplicationEntity {
 		
 		this.setApplicationType( license.getApplicationType().toString());
 		
-		this.setStatus( license.getStatus().toString());
+		this.setStatus( license.getApplicationStatus().toString());
 		
 //		this.setApplicationDate( license.getApplicationDate());
 		this.applicationDate = license.getApplicationDate();
-		
+		this.state_id = license.getStateId();
 		this.setLicenseId( license.getId());
 		
 		this.setCreatedBy( license.getCreatedBy());

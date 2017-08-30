@@ -68,6 +68,7 @@ public class WaterConnectionRowMapper {
 		public Connection mapRow(final ResultSet rs, final int rowNum) throws SQLException {
 			final Connection connection = prepareConnectionObject(rs);
 			Property prop = new Property();
+			ConnectionOwner cOwner = new ConnectionOwner(); 
 			prop.setUsageTypeId(rs.getString("conn_usgtype"));
 			prop.setPropertyTypeId(rs.getString("conn_proptype"));
 			prop.setAddress(rs.getString("conn_propaddress"));
@@ -78,8 +79,20 @@ public class WaterConnectionRowMapper {
 				prop.setAdharNumber(rs.getString("aadhaarnumber"));
 				prop.setMobileNumber(rs.getString("mobilenumber"));
 				prop.setEmail(rs.getString("emailid"));
+				cOwner.setName(rs.getString("propertyowner"));
+				cOwner.setAadhaarNumber(rs.getString("aadhaarnumber"));
+				cOwner.setEmailId(rs.getString("emailid"));
+				cOwner.setMobileNumber(rs.getString("mobilenumber")); 
+				cOwner.setIsPrimaryOwner(rs.getBoolean("isprimaryowner"));
+				if(rs.getBoolean("isprimaryowner")) { 
+					cOwner.setIsSecondaryOwner(Boolean.FALSE);
+				} else { 
+					cOwner.setIsSecondaryOwner(Boolean.TRUE);
+				}
 			}
+			
 			connection.setProperty(prop);
+			connection.setConnectionOwner(cOwner);
 			connection.setWithProperty(true);
 			return connection;
 		}
@@ -101,6 +114,12 @@ public class WaterConnectionRowMapper {
 			cOwner.setMobileNumber(rs.getString("mobilenumber"));
 			cOwner.setEmailId(rs.getString("emailid"));
 			cOwner.setAadhaarNumber(rs.getString("aadhaarnumber"));
+			cOwner.setIsPrimaryOwner(rs.getBoolean("isprimaryowner"));
+			if(rs.getBoolean("isprimaryowner")) { 
+				cOwner.setIsSecondaryOwner(Boolean.FALSE);
+			} else { 
+				cOwner.setIsSecondaryOwner(Boolean.TRUE);
+			}
 			if(null != rs.getString("gender") && !rs.getString("gender").isEmpty()) {
 				cOwner.setGender(rs.getString("gender").equals("1") ? "Male" : "Female");
 			}
@@ -165,8 +184,8 @@ public class WaterConnectionRowMapper {
 				connection.setBillSequenceNumber(Double.parseDouble(df.format(rs.getDouble("sequencenumber"))));
 			}
 			connection.setOutsideULB(rs.getBoolean("outsideulb"));
-			connection.setMeterOwner(rs.getString("meterowner"));
-			connection.setMeterModel(rs.getString("metermodel"));
+			//connection.setMeterOwner(rs.getString("meterowner"));
+			//connection.setMeterModel(rs.getString("metermodel"));
 			Long execDate = rs.getLong("execdate");
 			if (null != execDate) {
 				connection.setExecutionDate(execDate);

@@ -81,6 +81,7 @@ public class CategoryRepository {
 		AuditDetails auditDetails = categoryDetail.getAuditDetails();
 		MapSqlParameterSource parameters = new MapSqlParameterSource();
 		parameters.addValue("categoryId",  categoryDetail.getCategoryId());
+		parameters.addValue("tenantId",  categoryDetail.getTenantId());
 		parameters.addValue("feeType",  categoryDetail.getFeeType().toString());
 		parameters.addValue("rateType",  categoryDetail.getRateType().toString());
 		parameters.addValue("uomId",  categoryDetail.getUomId());
@@ -135,6 +136,7 @@ public class CategoryRepository {
 		
 		MapSqlParameterSource parameters = new MapSqlParameterSource();
 		parameters.addValue("categoryId",  categoryDetail.getCategoryId());
+		parameters.addValue("tenantId",  categoryDetail.getTenantId());
 		parameters.addValue("feeType",  categoryDetail.getFeeType().toString());
 		parameters.addValue("rateType",  categoryDetail.getRateType().toString());
 		parameters.addValue("uomId", categoryDetail.getUomId());
@@ -222,6 +224,7 @@ public class CategoryRepository {
 			CategoryDetailSearch categoryDetail = new CategoryDetailSearch();
 			categoryDetail.setId(getLong(row.get("id")));
 			categoryDetail.setCategoryId(getLong(row.get("categoryId")));
+			categoryDetail.setTenantId(getString(row.get("tenantId")));
 			categoryDetail.setFeeType(FeeTypeEnum.fromValue(getString(row.get("feeType"))));
 			categoryDetail.setRateType(RateTypeEnum.fromValue(getString(row.get("rateType"))));
 			categoryDetail.setUomId(getLong(row.get("uomId")));

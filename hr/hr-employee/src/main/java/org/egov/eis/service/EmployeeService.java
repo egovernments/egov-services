@@ -41,12 +41,16 @@
 package org.egov.eis.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.ArrayUtils;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.config.ApplicationProperties;
 import org.egov.eis.config.PropertiesManager;
 import org.egov.eis.model.*;
+import org.egov.eis.model.bulk.Department;
 import org.egov.eis.model.enums.BloodGroup;
 import org.egov.eis.repository.*;
 import org.egov.eis.service.exception.EmployeeIdNotFoundException;
@@ -55,16 +59,26 @@ import org.egov.eis.service.exception.UserException;
 import org.egov.eis.service.helper.EmployeeHelper;
 import org.egov.eis.service.helper.EmployeeUserMapper;
 import org.egov.eis.web.contract.*;
+import org.egov.eis.web.contract.factory.ResponseInfoFactory;
+import org.egov.eis.web.errorhandler.Error;
+import org.egov.eis.web.errorhandler.ErrorHandler;
+import org.egov.eis.web.errorhandler.ErrorResponse;
+import org.egov.eis.web.errorhandler.UserErrorResponse;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
 
+@Data
 @Slf4j
 @Service
 public class EmployeeService {
@@ -155,6 +169,24 @@ public class EmployeeService {
 
     @Autowired
     private IdGenService idGenService;
+
+    @Autowired
+    private DepartmentService departmentService;
+
+    @Autowired
+    private DesignationService designationService;
+
+    @Autowired
+    private VacantPositionsService vacantPositionsService;
+
+    @Autowired
+    private EmployeeCreateService employeeCreateService;
+
+    @Autowired
+    private ResponseInfoFactory responseInfoFactory;
+
+    @Autowired
+    private ErrorHandler errorHandler;
 
     @Autowired
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
@@ -438,4 +470,67 @@ public class EmployeeService {
 
         return getEmployees(employeeCriteria, requestInfo);
     }
+
+    public ResponseEntity<?> bulkCreate(EmployeeBulkRequest employeeBulkRequest) {
+        RequestInfo requestInfo = employeeBulkRequest.getRequestInfo();
+        RequestInfoWrapper requestInfoWrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+        List<org.egov.eis.model.bulk.Employee> bulkEmployees = employeeBulkRequest.getEmployees();
+
+        List<Employee> employees = new ArrayList<>();
+
+        for (int empIndex = 0; empIndex < bulkEmployees.size(); empIndex++) {
+            org.egov.eis.model.bulk.Employee bulkEmployee = bulkEmployees.get(empIndex);
+            List<org.egov.eis.model.bulk.Assignment> assignments = new ArrayList<>();
+            for (int assignIndex = 0; assignIndex < bulkEmployee.getAssignments().size(); assignIndex++) {
+                org.egov.eis.model.bulk.Assignment assignment = bulkEmployee.getAssignments().get(assignIndex);
+                Department department = departmentService.getDepartment(
+                        assignment.getDepartment().getCode(), bulkEmployee.getTenantId(), requestInfoWrapper);
+                org.egov.eis.model.bulk.Designation designation = designationService.getDesignation(
+                        assignment.getDesignation().getCode(), bulkEmployee.getTenantId(), requestInfoWrapper);
+
+                assignment.setDepartment(department);
+                assignment.setDesignation(designation);
+
+                List<Position> position = vacantPositionsService.getVacantPositions(department.getId(), designation.getId(),
+                        assignment.getFromDate(), bulkEmployee.getTenantId(), requestInfoWrapper);
+
+                if (isEmpty(position) || (position.size() < assignIndex + 1))
+                    return errorHandler.getErrorResponseEntityForNoVacantPositionAvailable(empIndex, department.getCode(),
+                            designation.getCode(), requestInfo);
+                assignment.setPosition(position.get(assignIndex).getId());
+
+                assignments.add(assignment);
+            }
+
+            bulkEmployee.setAssignments(assignments);
+
+            Employee employee = bulkEmployee.toDomain();
+            EmployeeRequest employeeRequest = EmployeeRequest.builder().employee(employee).requestInfo(requestInfo).build();
+
+            EmployeeEntityResponse employeeEntityResponse = employeeCreateService.createEmployee(employeeRequest);
+
+            if (isEmpty(employeeEntityResponse.getEmployee()) && !isEmpty(employeeEntityResponse.getError())) {
+                return getErrorResponseForBulkCreate(employeeEntityResponse);
+            }
+
+            employees.add(employeeEntityResponse.getEmployee());
+        }
+        return getSuccessResponseForBulkCreate(employees, requestInfo);
+    }
+
+    public ResponseEntity<?> getErrorResponseForBulkCreate(EmployeeEntityResponse employeeEntityResponse) {
+        ResponseInfo responseInfo = employeeEntityResponse.getResponseInfo();
+        Error error = employeeEntityResponse.getError();
+        ErrorResponse errorResponse = ErrorResponse.builder().error(error).responseInfo(responseInfo).build();
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    public ResponseEntity<?> getSuccessResponseForBulkCreate(List<Employee> employees, RequestInfo requestInfo) {
+        ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        responseInfo.setStatus(HttpStatus.OK.toString());
+        EmployeeBulkResponse employeeBulkResponse = EmployeeBulkResponse.builder()
+                .employees(employees).responseInfo(responseInfo).build();
+        return new ResponseEntity<>(employeeBulkResponse, HttpStatus.OK);
+    }
+
 }

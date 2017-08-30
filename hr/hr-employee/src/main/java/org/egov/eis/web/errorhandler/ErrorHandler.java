@@ -184,6 +184,23 @@ public class ErrorHandler {
 		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
 
+	public ResponseEntity<ErrorResponse> getErrorResponseEntityForNoVacantPositionAvailable(int index, String deptCode,
+																							String desigCode, RequestInfo requestInfo) {
+		Error error = new Error();
+		error.setCode(400);
+		error.setMessage("Sorry, Request For Employee " + (index + 1) + " Failed As Position Is Not Vacant" +
+				" For The Department " + deptCode + " & Designation " + desigCode);
+		error.setDescription("Error While Processing Bulk Employee Create");
+
+		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, false);
+
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setResponseInfo(responseInfo);
+		errorResponse.setError(error);
+
+		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+	}
+
 	/**
 	 * This method takes the error field as input for NotNull validated fields & returns the correct field names
 	 * for which the error has occurred. So that we can insert those names in field error messages

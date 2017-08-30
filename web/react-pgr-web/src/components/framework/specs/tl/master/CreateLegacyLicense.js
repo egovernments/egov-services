@@ -5,7 +5,7 @@ var dat = {
     "useTimestamp": true,
     "tenantIdRequired": false,
     "objectName": "licenses",
-    "idJsonPath": "licenses[0].licenseNumber",
+    "idJsonPath": "licenses[0].id",
     "groups": [{
         "label": "tl.create.licenses.groups.TradeDetailsTab",
         "name": "TradeDetailsTab",
@@ -182,7 +182,7 @@ var dat = {
             "label": "tl.create.licenses.groups.TradeLocationDetails.adminWardId",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=Ward&hierarchyTypeName=ADMINISTRATION|$..boundaryNum|$..name",
+            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=Ward&hierarchyTypeName=ADMINISTRATION|$..id|$..name",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -194,7 +194,7 @@ var dat = {
             "label": "tl.create.licenses.groups.TradeLocationDetails.revenueWardId",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=WARD&hierarchyTypeName=REVENUE|$..boundaryNum|$..name",
+            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=WARD&hierarchyTypeName=REVENUE|$..id|$..name",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -426,6 +426,20 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
+            "hide": "true"
+          },
+
+          {
+            "name": "expiryDate",
+            "jsonPath": "licenses[0].expiryDate",
+            "label": "tl.create.licenses.groups.TradeDetails.expiryDate",
+            "pattern": "",
+            "type": "datePicker",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "Enter in dd/mm/yyyy Format",
+            "maxLength": "10",
             "hide": "true"
           }
         ]
@@ -676,7 +690,7 @@ var dat = {
              "label": "tl.search.groups.adminWardName",
              "pattern": "",
              "type": "singleValueList",
-             "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=Ward&hierarchyTypeName=ADMINISTRATION|$..boundaryNum|$..name",
+             "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=Ward&hierarchyTypeName=ADMINISTRATION|$..id|$..name",
              "isRequired": false,
              "isDisabled": false,
              "requiredErrMsg": "",
@@ -729,15 +743,15 @@ var dat = {
          }],
          "values": ["applicationNumber","licenseNumber", "oldLicenseNumber", "category", "subCategory", "tradeTitle", "ownerName", "mobileNumber", "propertyAssesmentNo", "adminWardName", "validityYears","active","statusName",""],
          "resultPath": "licenses",
-         "rowClickUrlUpdate": "/update/tl/CreateLegacyLicense/{licenseNumber}",
-         "rowClickUrlView": "/non-framework/tl/transaction/viewLegacyLicense/{licenseNumber}"
+         "rowClickUrlUpdate": "/update/tl/CreateLegacyLicense/{id}",
+         "rowClickUrlView": "/non-framework/tl/transaction/viewLegacyLicense/{id}"
        }
      },
 
 
      "tl.view": {
         "numCols": 12 / 3,
-        "url": "/tl-services/license/v1/_search?licenseNumber={licenseNumber}",
+        "url": "/tl-services/license/v1/_search?ids={id}",
         "tenantIdRequired": true,
         "useTimestamp": true,
         "objectName": "licenses",
@@ -873,7 +887,7 @@ var dat = {
                 "label": "tl.licenses.view.groups.adminWardId",
                 "pattern": "",
                 "type": "singleValueList",
-                "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=WARD&hierarchyTypeName=REVENUE|$..boundaryNum|$..name",
+                "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=WARD&hierarchyTypeName=REVENUE|$..id|$..name",
                 "isRequired": false,
                 "isDisabled": false,
                 "requiredErrMsg": "",
@@ -885,7 +899,7 @@ var dat = {
                 "label": "tl.licenses.view.groups.revenueWardId",
                 "pattern": "",
                 "type": "singleValueList",
-                "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=WARD&hierarchyTypeName=REVENUE|$..boundaryNum|$..name",
+                "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=WARD&hierarchyTypeName=REVENUE|$..id|$..name",
                 "isRequired": false,
                 "isDisabled": false,
                 "requiredErrMsg": "",
@@ -1040,6 +1054,30 @@ var dat = {
                 "isDisabled": false,
                 "requiredErrMsg": "",
                 "patternErrMsg": ""
+              },
+              {
+                "name": "licenseValidFromDate",
+                "jsonPath": "licenses[0].licenseValidFromDate",
+                "label": "tl.view.licenses.groups.TradeDetails.licenseValidFromDate",
+                "pattern": "",
+                "type": "datePicker",
+                "isRequired": true,
+                "isDisabled": false,
+                "requiredErrMsg": "",
+                "patternErrMsg": "Enter in dd/mm/yyyy Format",
+                "maxLength": "10"
+              },
+              {
+                "name": "expiryDate",
+                "jsonPath": "licenses[0].expiryDate",
+                "label": "tl.view.licenses.groups.TradeDetails.expiryDate",
+                "pattern": "",
+                "type": "datePicker",
+                "isRequired": true,
+                "isDisabled": false,
+                "requiredErrMsg": "",
+                "patternErrMsg": "Enter in dd/mm/yyyy Format",
+                "maxLength": "10"
               }
             ]
           }

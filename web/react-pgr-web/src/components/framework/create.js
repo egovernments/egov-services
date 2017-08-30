@@ -618,13 +618,13 @@ class Report extends Component {
           				}
           			}
 
-                if(id.categoryId == "" || id.categoryId == null){
-                  formData.tradeSubCategory = "";
-                  setDropDownData(value.jsonPath, []);
-                  console.log(value.jsonPath);
-                  console.log("helo", formData);
-                  return false;
-                }
+                // if(id.categoryId == "" || id.categoryId == null){
+                //   formData.tradeSubCategory = "";
+                //   setDropDownData(value.jsonPath, []);
+                //   console.log(value.jsonPath);
+                //   console.log("helo", formData);
+                //   return false;
+                // }
 
                 Api.commonApiPost(context,id).then(function(response) {
                   if(response) {

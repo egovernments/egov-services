@@ -278,6 +278,7 @@ public class CategoryServiceTest {
 
 			CategoryDetail details = new CategoryDetail();
 			details.setId(Long.valueOf(1));
+			details.setTenantId(tenantId);
 			details.setCategoryId(categoryId);
 			details.setFeeType(FeeTypeEnum.fromValue("License"));
 			details.setRateType(RateTypeEnum.fromValue("Flat_By_Percentage"));
@@ -382,6 +383,7 @@ public class CategoryServiceTest {
 		CategoryDetail details = new CategoryDetail();
 		details.setId(Long.valueOf(1));
 		details.setCategoryId(categoryId);
+		details.setTenantId(tenantId);
 		details.setFeeType(FeeTypeEnum.fromValue("License"));
 		details.setRateType(RateTypeEnum.fromValue("Flat_By_Percentage"));
 		details.setUomId(uomId);

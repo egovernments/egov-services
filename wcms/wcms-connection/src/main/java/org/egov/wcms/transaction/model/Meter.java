@@ -63,8 +63,11 @@ public class Meter {
     @NotNull
     private long id;
     
-
     @NotNull
+    private String meterOwner; //ulb or citizen
+
+    private String meterModel;
+    
     private String meterMake;
     
     @NotNull
@@ -78,6 +81,9 @@ public class Meter {
     @NotNull
     private String initialMeterReading;
 
+    
+    private String maximumMeterReading;
+
     @NotNull
     private AuditDetails auditDetails;
 
@@ -86,5 +92,6 @@ public class Meter {
     @NotNull
     private List<MeterReading> meterReadings;
     
+    private String meterStatus;
 
 }

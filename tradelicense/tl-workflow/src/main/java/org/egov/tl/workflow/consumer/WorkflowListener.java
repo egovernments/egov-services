@@ -42,6 +42,7 @@ package org.egov.tl.workflow.consumer;
 import java.util.HashMap;
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.tl.workflow.model.TradeLicenseContract;
 import org.egov.tl.workflow.model.TradeLicenseRequest;
 import org.egov.tl.workflow.repository.MessageQueueRepository;
@@ -136,15 +137,15 @@ public class WorkflowListener {
 
 	}
 
-	private void populateAssigneeForCitizen(TradeLicenseContract tradeLicense) {
+	private void populateAssigneeForCitizen(TradeLicenseContract tradeLicense, RequestInfo requestInfo) {
 
 		String departmentId = null, designationId = null;
 
 		List<Department> departments = departmentService.getByName(citizenWorkflowInitiatorDepartment,
-				tradeLicense.getTenantId());
+				tradeLicense.getTenantId(), requestInfo);
 
 		List<Designation> designations = designationService.getByName(citizenWorkflowInitiatorDesignation,
-				tradeLicense.getTenantId());
+				tradeLicense.getTenantId(), requestInfo);
 
 		if (departments != null && !departments.isEmpty() && departments.get(0).getId() != null
 				&& !departments.get(0).getId().isEmpty())
@@ -154,7 +155,7 @@ public class WorkflowListener {
 			designationId = designations.get(0).getId().toString();
 
 		List<Employee> employees = employeeService.getByDeptIdAndDesgId(departmentId, designationId,
-				tradeLicense.getTenantId());
+				tradeLicense.getTenantId(), requestInfo);
 
 		if (employees != null && !employees.isEmpty() && employees.get(0).getId() != null
 				&& employees.get(0).getAssignments() != null && !employees.get(0).getAssignments().isEmpty())

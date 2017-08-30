@@ -65,15 +65,16 @@ public class DepartmentRepository {
 		this.departmentByNameUrl = departmentServiceHostname + departmentByNameUrl;
 	}
 
-	public DepartmentResponse getDepartmentByName(final String departmentName, final String tenantId) {
+	public DepartmentResponse getDepartmentByName(final String departmentName, final String tenantId,
+			final RequestInfo requestInfo) {
 
-		final RequestInfo requestInfo = new RequestInfo();
 		requestInfo.setTs(new Date());
 
 		final RequestInfoWrapper wrapper = new RequestInfoWrapper();
 		wrapper.setRequestInfo(requestInfo);
 
-		return restTemplate.postForObject(departmentByNameUrl, wrapper, DepartmentResponse.class, departmentName, tenantId);
+		return restTemplate.postForObject(departmentByNameUrl, wrapper, DepartmentResponse.class, departmentName,
+				tenantId);
 
 	}
 }

@@ -67,10 +67,9 @@ public class EmployeeRepository {
 	}
 
 	public EmployeeResponse getEmployeeByDeptIdAndDesgId(final String departmentId, final String designationId,
-			final String tenantId) {
+			final String tenantId, final RequestInfo requestInfo) {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		final RequestInfo requestInfo = new RequestInfo();
 		requestInfo.setTs(new Date());
 
 		final RequestInfoWrapper wrapper = new RequestInfoWrapper();

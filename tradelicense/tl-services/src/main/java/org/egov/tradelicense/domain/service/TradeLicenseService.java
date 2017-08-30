@@ -15,7 +15,7 @@ import org.egov.tl.commons.web.response.LicenseStatusResponse;
 import org.egov.tl.commons.web.response.TradeLicenseSearchResponse;
 import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.common.domain.exception.CustomBindException;
-import org.egov.tradelicense.domain.enums.ApplicationStatus;
+import org.egov.tradelicense.domain.enums.NewLicenseStatus;
 import org.egov.tradelicense.domain.enums.LicenseStatus;
 import org.egov.tradelicense.domain.model.LicenseFeeDetail;
 import org.egov.tradelicense.domain.model.SupportDocument;
@@ -47,7 +47,7 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 public class TradeLicenseService {
 
-	public static final String APPLICATION_MODULE_TYPE = "Application";
+	public static final String NEW_LICENSE_MODULE_TYPE = "NEW LICENSE";
 	
 	public static final String LICENSE_MODULE_TYPE = "LICENSE";
 
@@ -115,7 +115,7 @@ public class TradeLicenseService {
 				requestInfoWrapper.setRequestInfo(requestInfo);
 
 				LicenseStatusResponse currentStatus = statusRepository.findByModuleTypeAndCode(license.getTenantId(),
-						APPLICATION_MODULE_TYPE, ApplicationStatus.ACKNOWLEDGED.getName(), requestInfoWrapper);
+						NEW_LICENSE_MODULE_TYPE, NewLicenseStatus.ACKNOWLEDGED.getName(), requestInfoWrapper);
 
 				if (null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty())
 					license.setStatus(currentStatus.getLicenseStatuses().get(0).getId());
@@ -238,10 +238,10 @@ public class TradeLicenseService {
 		if (null != license.getWorkFlowDetails() && null != license.getWorkFlowDetails().getAction()
 				&& null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty()
 				&& license.getWorkFlowDetails().getAction().equalsIgnoreCase("Forward") && currentStatus
-						.getLicenseStatuses().get(0).getCode() == ApplicationStatus.APPLICATION_FEE_PAID.getName()) {
+						.getLicenseStatuses().get(0).getCode() == NewLicenseStatus.APPLICATION_FEE_PAID.getName()) {
 
-			nextStatus = statusRepository.findByModuleTypeAndCode(license.getTenantId(), APPLICATION_MODULE_TYPE,
-					ApplicationStatus.SCRUTINY_COMPLETED.getName(), requestInfoWrapper);
+			nextStatus = statusRepository.findByModuleTypeAndCode(license.getTenantId(), NEW_LICENSE_MODULE_TYPE,
+					NewLicenseStatus.SCRUTINY_COMPLETED.getName(), requestInfoWrapper);
 
 			if (null != nextStatus && !nextStatus.getLicenseStatuses().isEmpty())
 				license.setStatus(nextStatus.getLicenseStatuses().get(0).getId());
@@ -250,10 +250,10 @@ public class TradeLicenseService {
 		if (null != license.getWorkFlowDetails() && null != license.getWorkFlowDetails().getAction()
 				&& null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty()
 				&& license.getWorkFlowDetails().getAction().equalsIgnoreCase("Forward") && currentStatus
-						.getLicenseStatuses().get(0).getCode() == ApplicationStatus.SCRUTINY_COMPLETED.getName()) {
+						.getLicenseStatuses().get(0).getCode() == NewLicenseStatus.SCRUTINY_COMPLETED.getName()) {
 
-			nextStatus = statusRepository.findByModuleTypeAndCode(license.getTenantId(), APPLICATION_MODULE_TYPE,
-					ApplicationStatus.INSPECTION_COMPLETED.getName(), requestInfoWrapper);
+			nextStatus = statusRepository.findByModuleTypeAndCode(license.getTenantId(), NEW_LICENSE_MODULE_TYPE,
+					NewLicenseStatus.INSPECTION_COMPLETED.getName(), requestInfoWrapper);
 
 			if (null != nextStatus && !nextStatus.getLicenseStatuses().isEmpty())
 				license.setStatus(nextStatus.getLicenseStatuses().get(0).getId());
@@ -262,10 +262,10 @@ public class TradeLicenseService {
 		if (null != license.getWorkFlowDetails() && null != license.getWorkFlowDetails().getAction()
 				&& null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty()
 				&& license.getWorkFlowDetails().getAction().equalsIgnoreCase("Approve") && currentStatus
-						.getLicenseStatuses().get(0).getCode() == ApplicationStatus.INSPECTION_COMPLETED.getName()) {
+						.getLicenseStatuses().get(0).getCode() == NewLicenseStatus.INSPECTION_COMPLETED.getName()) {
 
-			nextStatus = statusRepository.findByModuleTypeAndCode(license.getTenantId(), APPLICATION_MODULE_TYPE,
-					ApplicationStatus.FINAL_APPROVAL_COMPLETED.getName(), requestInfoWrapper);
+			nextStatus = statusRepository.findByModuleTypeAndCode(license.getTenantId(), NEW_LICENSE_MODULE_TYPE,
+					NewLicenseStatus.FINAL_APPROVAL_COMPLETED.getName(), requestInfoWrapper);
 
 			if (null != nextStatus && !nextStatus.getLicenseStatuses().isEmpty())
 				license.setStatus(nextStatus.getLicenseStatuses().get(0).getId());

@@ -5,7 +5,7 @@ var dat = {
     "useTimestamp": true,
     "tenantIdRequired": false,
     "objectName": "licenses",
-    "idJsonPath": "licenses[0].licenseNumber",
+    "idJsonPath": "licenses[0].id",
     "groups": [{
         "label": "tl.create.licenses.groups.TradeDetailsTab",
         "name": "TradeDetailsTab",
@@ -743,15 +743,15 @@ var dat = {
          }],
          "values": ["applicationNumber","licenseNumber", "oldLicenseNumber", "category", "subCategory", "tradeTitle", "ownerName", "mobileNumber", "propertyAssesmentNo", "adminWardName", "validityYears","active","statusName",""],
          "resultPath": "licenses",
-         "rowClickUrlUpdate": "/update/tl/CreateLegacyLicense/{licenseNumber}",
-         "rowClickUrlView": "/non-framework/tl/transaction/viewLegacyLicense/{licenseNumber}"
+         "rowClickUrlUpdate": "/update/tl/CreateLegacyLicense/{id}",
+         "rowClickUrlView": "/non-framework/tl/transaction/viewLegacyLicense/{id}"
        }
      },
 
 
      "tl.view": {
         "numCols": 12 / 3,
-        "url": "/tl-services/license/v1/_search?licenseNumber={licenseNumber}",
+        "url": "/tl-services/license/v1/_search?ids={id}",
         "tenantIdRequired": true,
         "useTimestamp": true,
         "objectName": "licenses",

@@ -120,6 +120,8 @@ var totalFloors = [];
 var temp = [];
 
 class FloorDetails extends Component {
+
+
 	
   constructor(props) {
     super(props);
@@ -143,6 +145,7 @@ class FloorDetails extends Component {
   componentDidMount() {
     //call boundary service fetch wards,location,zone data
     var currentThis = this;
+    this.props.initForm();
 
         Api.commonApiPost('pt-property/property/structureclasses/_search').then((res)=>{
           console.log(res);
@@ -192,8 +195,6 @@ class FloorDetails extends Component {
 			});
 	
 		this.createFloorObject();
-		
-		this.props.initForm();
   }
   
   createFloorObject = () => {
@@ -207,19 +208,30 @@ class FloorDetails extends Component {
 		if(!allRooms){
 			return false;
 		}
+
+		for(var i = 0; i<allRooms.length;i++){
+			for(var key in allRooms[i]){
+				if(allRooms[i].hasOwnProperty(key) && allRooms[i][key] == ''){
+					delete allRooms[i][key]
+				}
+			}
+
+			allRooms = allRooms.filter((item, index, array)=>{
+				return item != undefined;
+			})	
+		}
 		
 		if(allRooms) {
 			for(var i = 0; i<allRooms.length;i++){
-			if(!allRooms[i].hasOwnProperty('isAuthorised')){
-					allRooms[i].isAuthorised = true;
-			}	
-			if(allRooms[i].isStructured == 'YES'){
-				allRooms[i].isStructured = true;
-			} else {
-				allRooms[i].isStructured = false;
+				if(!allRooms[i].hasOwnProperty('isAuthorised')){
+						allRooms[i].isAuthorised = true;
+				}	
+				if(allRooms[i].isStructured == 'YES'){
+					allRooms[i].isStructured = true;
+				} else {
+					allRooms[i].isStructured = false;
+				}
 			}
-		}
-		
 		}
 		
 		var rooms = allRooms.filter(function(item, index, array){
@@ -655,12 +667,16 @@ handleUsage = (value) => {
 		  toggleSnackbarAndSetText,
 		  handleChangeFloor,
 		  isFloorValid,
-		  noOfFloors
+		  noOfFloors,
+		  validateDates,
+		  isDatesValid
 				} = this.props;
 
 		let {calcAssessableArea, handleAge, checkFloors, handleUsage} = this;
 		let cThis = this;
 		
+		console.log(isDatesValid);
+
 		const occupantNames = () => {
 								
 				return(
@@ -1074,7 +1090,7 @@ handleUsage = (value) => {
 														  hintText="dd/mm/yyyy"
 														  floatingLabelFixed={true}
 														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.constructionStartDate')}
-														  errorText={fieldErrors.floor ? (fieldErrors.floor.constructionStartDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.constructionStartDate}</span> :""): ""}
+														  errorText={fieldErrors.floor ? (fieldErrors.floor.constructionStartDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.constructionStartDate}</span> :  isDatesValid.error ? (isDatesValid.type == 'constructionStartDate' ? <span style={{position:"absolute", bottom:-13}}>This should be less/equal to const. end date</span>: "") : "" ):  isDatesValid.error ? (isDatesValid.type == 'constructionStartDate' ? <span style={{position:"absolute", bottom:-13}}>This should be less/equal to const. end date</span>: "") : ""}
 														  value={floorDetails.floor ? floorDetails.floor.constructionStartDate : ""}
 														  onChange={(e, value) => {
 															   var val = value;
@@ -1091,8 +1107,11 @@ handleUsage = (value) => {
 																	  target: {
 																		  value: val
 																	  }
-																	}
-														  handleChangeFloor(e,"floor" ,"constructionStartDate", false, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
+																	}	
+														  handleChangeFloor(e,"floor" ,"constructionStartDate", false, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)
+														  validateDates(e, 'floor', 'constructionStartDate')
+														}}
+														  
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -1103,7 +1122,7 @@ handleUsage = (value) => {
 														  hintText="dd/mm/yyyy"
 														  floatingLabelFixed={true}
 														  floatingLabelText={<span>{translate('pt.create.groups.floorDetails.fields.constructionEndDate')}<span style={{"color": "#FF0000"}}> *</span></span>}
-														  errorText={fieldErrors.floor ? (fieldErrors.floor.constCompletionDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.constCompletionDate}</span> :""): ""}
+														  errorText={fieldErrors.floor ? (fieldErrors.floor.constCompletionDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.constCompletionDate}</span> : isDatesValid.error ? (isDatesValid.type == 'constCompletionDate' ? <span style={{position:"absolute", bottom:-13}}>This should be more/equal to const. start date</span>: "") : "" ): isDatesValid.error ? (isDatesValid.type == 'constCompletionDate' ? <span style={{position:"absolute", bottom:-13}}>This should be more/equal to const start date</span>: "") : ""}
 														  value={floorDetails.floor ? floorDetails.floor.constCompletionDate : ""}
 														  onChange={(e, value) => {
 																 var val = value;
@@ -1122,7 +1141,9 @@ handleUsage = (value) => {
 																	  }
 																	}
 																handleAge(e.target.value);
-																handleChangeFloor(e,"floor" ,"constCompletionDate", true,  /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
+																handleChangeFloor(e,"floor" ,"constCompletionDate", true,  /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)
+																validateDates(e, 'floor', 'constCompletionDate')
+															}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -1133,7 +1154,7 @@ handleUsage = (value) => {
 														  hintText="dd/mm/yyyy"
 														  floatingLabelFixed={true}
 														  floatingLabelText={<span>{translate('pt.create.groups.floorDetails.fields.effectiveFromDate')}<span style={{"color": "#FF0000"}}> *</span></span>}
-														  errorText={fieldErrors.floor ? (fieldErrors.floor.occupancyDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.occupancyDate}</span> :""): ""}
+														  errorText={fieldErrors.floor ? (fieldErrors.floor.occupancyDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.occupancyDate}</span> :  isDatesValid.error ? (isDatesValid.type == 'occupancyDate' ? <span style={{position:"absolute", bottom:-13}}>This should be less/equal to const. start date</span>: "") : "" ):  isDatesValid.error ? (isDatesValid.type == 'occupancyDate' ? <span style={{position:"absolute", bottom:-13}}>This should be less/equal to const start date</span>: "") : ""}
 														  value={floorDetails.floor ? floorDetails.floor.occupancyDate : ""}
 														  onChange={(e, value) => {
 															   var val = value;
@@ -1151,7 +1172,9 @@ handleUsage = (value) => {
 																	  value: val
 																  }
 																}
-															  handleChangeFloor(e,"floor" ,"occupancyDate", true, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
+															  handleChangeFloor(e,"floor" ,"occupancyDate", true, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)
+															  validateDates(e, 'floor','occupancyDate')
+															}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -1350,7 +1373,7 @@ handleUsage = (value) => {
 													
 													<Col xs={12} md={12} style={{textAlign:"right", float:'right'}}>
 														<br/>
-														{(editIndex == -1 || editIndex == undefined) && <RaisedButton type="button" label={translate('pt.create.groups.propertyAddress.addRoom')} disabled={!isFloorValid || this.state.newFloorError || this.state.negativeValue}  primary={true} onClick={()=>{
+														{(editIndex == -1 || editIndex == undefined) && <RaisedButton type="button" label={translate('pt.create.groups.propertyAddress.addRoom')} disabled={!isFloorValid || this.state.newFloorError || this.state.negativeValue || isDatesValid.error}  primary={true} onClick={()=>{
 															 this.props.addNestedFormData("floors","floor");
 															
 															 this.props.resetObject("floor", false);
@@ -1363,7 +1386,7 @@ handleUsage = (value) => {
 															}	
 														}/>}
 														{ (editIndex > -1) &&
-															<RaisedButton type="button" label={translate('pt.create.groups.propertyAddress.updateRoom')} disabled={!isFloorValid || this.state.newFloorError || this.state.negativeValue} primary={true}  onClick={()=> {
+															<RaisedButton type="button" label={translate('pt.create.groups.propertyAddress.updateRoom')} disabled={!isFloorValid || this.state.newFloorError || this.state.negativeValue || isDatesValid.error} primary={true}  onClick={()=> {
 																  this.props.updateObject("floors","floor",  editIndex);
 																  this.props.resetObject("floor", false);
 																  this.props.resetObject("owner", false);
@@ -1490,7 +1513,8 @@ const mapStateToProps = state => ({
   editIndex: state.form.editIndex,
   addRoom : state.form.addRoom,
   isFloorValid: state.form.isFloorValid,
-  noOfFloors: state.form.noOfFloors
+  noOfFloors: state.form.noOfFloors,
+  isDatesValid: state.form.isDatesValid
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -1498,7 +1522,11 @@ const mapDispatchToProps = dispatch => ({
 initForm : () => {
 	dispatch({
 		type: "SET_FLOOR_NUMBER",
-		noOfFloors: 0
+		noOfFloors: 0,
+		isDatesValid: {
+			error:false,
+			type:''
+		}
 	})
 },
 
@@ -1658,6 +1686,15 @@ initForm : () => {
 		dispatch({
 			type: 'REMOVE_FLOOR_REQUIRED',
 			property
+		})
+	},
+
+	validateDates: (e, property, propertyOne) => {
+		dispatch({
+			type: 'VALIDATE_DATES',
+			value: e.target.value,
+			property,
+			propertyOne
 		})
 	},
   

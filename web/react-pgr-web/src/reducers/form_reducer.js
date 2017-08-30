@@ -20,7 +20,10 @@ const defaultState = {
   isOwnerValid: false,
   isFloorValid: false,
   noOfFloors: 0,
-  hasDemandError: false
+  hasDemandError: false,
+  isDatesValid : { type : '',
+                   error : false},
+
 };
 
 
@@ -160,9 +163,8 @@ function validate2(isRequired, pattern, name, value, validatePropertyOwner) {
 }
 
 
-function validate3(isRequired, pattern, name, value, validatePropertyFloor) {
+function validate3(isRequired, pattern, name, value, validatePropertyFloor, floordata) {
 
-console.log('Here', validatePropertyFloor);
 
   let errorText = "";
   if (isRequired) {
@@ -208,6 +210,7 @@ console.log('Here', validatePropertyFloor);
   if (!isRequired && value === "") {
     errorText = "";
   }
+
   // console.log(validationData.required.required)
   // console.log(validationData.required.current)
   // var isFormValid=false;
@@ -275,9 +278,45 @@ function validateCollection(addDemand) {
 	return hasError;
 }
 
+function validateDates(floordata, type) {
+
+  var error = false;
+
+  if(type == 'constructionStartDate' && floordata.hasOwnProperty('floor') && floordata.floor.hasOwnProperty('constructionStartDate') && (floordata.floor.hasOwnProperty('constCompletionDate') || floordata.floor.hasOwnProperty('occupancyDate'))){
+
+       if((floordata.floor.hasOwnProperty('constCompletionDate') && new Date(floordata.floor.constructionStartDate) > new Date(floordata.floor.constCompletionDate))) {
+          error = true;
+       } else if((floordata.floor.hasOwnProperty('occupancyDate') && new Date(floordata.floor.occupancyDate) > new Date(floordata.floor.constructionStartDate))) {
+          error = true;
+       }
+
+  } else if(type == 'constCompletionDate' && floordata.hasOwnProperty('floor') && floordata.floor.hasOwnProperty('constCompletionDate') && floordata.floor.hasOwnProperty('constructionStartDate')){
+
+       if(new Date(floordata.floor.constructionStartDate) > new Date(floordata.floor.constCompletionDate)) {
+          error = true;
+       }
+
+  } else if(type == 'occupancyDate' && floordata.hasOwnProperty('floor') && floordata.floor.hasOwnProperty('constructionStartDate') && floordata.floor.hasOwnProperty('occupancyDate')) {
+     if(new Date(floordata.floor.occupancyDate) > new Date(floordata.floor.constructionStartDate)) {
+          error = true;
+       }
+  }
+
+    return error = {
+      type : type,
+      error : error
+    };
+}
+
 export default(state = defaultState, action) => {
   switch (action.type) {
-	  
+
+  case "VALIDATE_DATES": 
+    var validationData = validateDates(state.form, action.propertyOne);
+	  return {
+      ...state,
+      isDatesValid:validationData
+   }
 	  
 	case "VALIDATE_COLLECTION":
 		var validationData = validateCollection(state.form);
@@ -677,7 +716,7 @@ export default(state = defaultState, action) => {
 
        let validatePropertyFloor;
 	   console.log('state', state);
-        validatePropertyFloor = validate3(action.isRequired, action.pattern, action.propertyOne, action.value, state.validatePropertyFloor);
+        validatePropertyFloor = validate3(action.isRequired, action.pattern, action.propertyOne, action.value, state.validatePropertyFloor, state.form);
 		console.log(validatePropertyFloor);
         return {
           ...state,
@@ -801,14 +840,18 @@ export default(state = defaultState, action) => {
         files :[],
         fieldErrors: {},
         validationData: action.validationData,
-		validatePropertyOwner: action.validatePropertyOwner,
-		validatePropertyFloor: action.validatePropertyFloor,
+		    validatePropertyOwner: action.validatePropertyOwner,
+		    validatePropertyFloor: action.validatePropertyFloor,
         msg: '',
         dialogOpen: false,
         snackbarOpen: false,
         isFormValid: false,
         showTable:false,
-        buttonText:"Search"
+        buttonText:"Search",
+        isDatesValid: {
+          error:false,
+          type:''
+        }
       }
       break;
 

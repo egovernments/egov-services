@@ -309,6 +309,10 @@ dataEntryTax = () => {
 			if(!dataEntry.owners[i].hasOwnProperty('ownershippercentage') || dataEntry.owners[i].ownershippercentage == ''){
 				dataEntry.owners[i].ownershippercentage = null;
 			}
+
+			if(dataEntry.owners[i].hasOwnProperty('aadhaarNumber') && dataEntry.owners[i].aadhaarNumber == ''){
+				dataEntry.owners[i].aadhaarNumber = null;
+			}
 			
 			if(!dataEntry.owners[i].hasOwnProperty('ownerType') || dataEntry.owners[i].ownerType == ''){
 				dataEntry.owners[i].ownerType = null;
@@ -317,8 +321,12 @@ dataEntryTax = () => {
 			if(!dataEntry.owners[i].hasOwnProperty('emailId') || dataEntry.owners[i].emailId == ''){
 				dataEntry.owners[i].emailId = null;
 			}
-			
-		
+		}
+
+	    for(var key in dataEntry.owners[i]){
+			if(dataEntry.owners[i].hasOwnProperty(key) && dataEntry.owners[i][key] == ''){
+				delete dataEntry.owners[i][key]
+			}
 		}
 	}
 	

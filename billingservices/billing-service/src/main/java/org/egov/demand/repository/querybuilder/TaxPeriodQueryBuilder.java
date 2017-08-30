@@ -103,9 +103,9 @@ public class TaxPeriodQueryBuilder {
 		if (taxPeriodCriteria.getFromDate() != null && taxPeriodCriteria.getToDate() != null) {
 			if ((service != null && !service.isEmpty() && service.size() == 1)) {
 				selectQuery.append(
-						" AND (fromdate >=  ( SELECT fromdate FROM egbs_taxperiod WHERE tenantId =? AND ( ? BETWEEN fromdate AND  todate)) "
+						" AND (fromdate >=  ( SELECT fromdate FROM egbs_taxperiod WHERE tenantId =? AND ( ? BETWEEN fromdate AND  todate) "
 								+ " AND service IN " + getQueryForCollection(service)
-								+ " AND todate IN ( SELECT todate FROM egbs_taxperiod WHERE tenantId = ? AND (? BETWEEN fromdate AND  todate) "
+								+ ") AND todate <= ( SELECT todate FROM egbs_taxperiod WHERE tenantId = ? AND (? BETWEEN fromdate AND  todate) "
 								+ " AND service IN " + getQueryForCollection(service) + "))");
 				preparedStatementValues.add(tenantId);
 				preparedStatementValues.add(taxPeriodCriteria.getFromDate());

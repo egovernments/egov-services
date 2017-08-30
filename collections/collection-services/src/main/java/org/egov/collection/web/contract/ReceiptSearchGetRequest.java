@@ -11,6 +11,8 @@ import java.util.List;
 @ToString
 public class ReceiptSearchGetRequest {
     private List<String> receiptNumbers;
+    
+    private Boolean isLegacy=false;
 
     private String consumerCode;
 

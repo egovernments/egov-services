@@ -56,9 +56,9 @@ import java.util.List;
 @EqualsAndHashCode
 public class ReceiptCommonModel {
 
-	private List<ReceiptHeader> receiptHeaders;
+	
 
-	public List<Receipt> toDomainContract() {
+	public List<Receipt> toDomainContract(List<ReceiptHeader> receiptHeaders) {
 		List<Receipt> receipts = new ArrayList<>();
 
 		for (ReceiptHeader receiptHeader : receiptHeaders) {

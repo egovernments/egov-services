@@ -112,6 +112,10 @@ public class Instrument{
 	 */
 	@NotNull	
 	private InstrumentType instrumentType;
+	
+	private Long instrumentDate;
+	
+	private String instrumentNumber;
 
 	/*
 	 * bank references to the bank from which the payment/Receipt is made.

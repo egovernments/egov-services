@@ -56,20 +56,6 @@ public class AssetCategoryRepository {
         return assetCategory;
     }
 
-    public String getAssetCategoryCode() {
-        final String query = "SELECT nextval('seq_egasset_categorycode')";
-        final Integer result = jdbcTemplate.queryForObject(query, Integer.class);
-        log.info("result:" + result);
-        // String code=String.format("%03d", result);
-        StringBuilder code = null;
-        try {
-            code = new StringBuilder(String.format("%03d", result));
-        } catch (final Exception ex) {
-            log.info("the exception in assetcategory code gen :" + ex);
-        }
-        return code.toString();
-    }
-
     public AssetCategory create(final AssetCategoryRequest assetCategoryRequest) {
 
         final RequestInfo requestInfo = assetCategoryRequest.getRequestInfo();
@@ -93,13 +79,13 @@ public class AssetCategoryRepository {
 
         try {
             customFields = mapper.writeValueAsString(assetCategory2);
-            log.info("customFields:::" + customFields);
+            log.debug("customFields:::" + customFields);
         } catch (final JsonProcessingException e) {
-            log.info("the exception in assetcategory customfileds mapping :" + e);
+            log.debug("the exception in assetcategory customfileds mapping :" + e);
         }
 
-        final Object[] obj = new Object[] { assetCategory.getName(), assetCategory.getCode(), assetCategory.getParent(),
-                assetCategoryType, depreciationMethod,
+        final Object[] obj = new Object[] { assetCategory.getId(), assetCategory.getName(), assetCategory.getCode(),
+                assetCategory.getParent(), assetCategoryType, depreciationMethod,
                 assetCommonService.getDepreciationRate(assetCategory.getDepreciationRate()),
                 assetCategory.getAssetAccount(), assetCategory.getAccumulatedDepreciationAccount(),
                 assetCategory.getRevaluationReserveAccount(), assetCategory.getDepreciationExpenseAccount(),
@@ -110,7 +96,7 @@ public class AssetCategoryRepository {
         try {
             jdbcTemplate.update(queryStr, obj);
         } catch (final Exception exception) {
-            log.info("the exception in assetcategory insert :" + exception);
+            log.debug("the exception in assetcategory insert :" + exception);
         }
 
         return assetCategory;

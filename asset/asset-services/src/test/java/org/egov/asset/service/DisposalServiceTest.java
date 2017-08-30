@@ -34,6 +34,7 @@ import org.egov.asset.model.Voucher;
 import org.egov.asset.model.VouchercreateAccountCodeDetails;
 import org.egov.asset.model.enums.AssetStatusObjectName;
 import org.egov.asset.model.enums.ModeOfAcquisition;
+import org.egov.asset.model.enums.Sequence;
 import org.egov.asset.model.enums.Status;
 import org.egov.asset.model.enums.TransactionType;
 import org.egov.asset.model.enums.VoucherType;
@@ -95,6 +96,9 @@ public class DisposalServiceTest {
 
     @Mock
     private AssetService assetService;
+    
+    @Mock
+    private AssetCommonService assetCommonService;
 
     @Test
     public void testSearch() {
@@ -117,8 +121,10 @@ public class DisposalServiceTest {
         final HttpHeaders headers = getHttpHeaders();
         final DisposalResponse expectedDisposalResponse = getDisposalResponse(
                 "disposal/disposalServiceResponse.disposal1.json");
+        
+        when(assetCommonService.getNextId(any(Sequence.class))).thenReturn(Long.valueOf("15"));
         final DisposalResponse actualDisposalResponse = disposalService.createAsync(disposalRequest, headers);
-        actualDisposalResponse.getDisposals().get(0).setId(Long.valueOf("15"));
+        
         assertEquals(expectedDisposalResponse.toString(), actualDisposalResponse.toString());
     }
 

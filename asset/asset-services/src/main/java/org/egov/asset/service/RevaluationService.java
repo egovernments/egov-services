@@ -21,6 +21,7 @@ import org.egov.asset.model.RevaluationCriteria;
 import org.egov.asset.model.VouchercreateAccountCodeDetails;
 import org.egov.asset.model.enums.AssetConfigurationKeys;
 import org.egov.asset.model.enums.KafkaTopicName;
+import org.egov.asset.model.enums.Sequence;
 import org.egov.asset.model.enums.TransactionType;
 import org.egov.asset.model.enums.TypeOfChangeEnum;
 import org.egov.asset.repository.RevaluationRepository;
@@ -64,7 +65,7 @@ public class RevaluationService {
         final Revaluation revaluation = revaluationRequest.getRevaluation();
         log.debug("RevaluationService createAsync revaluationRequest:" + revaluationRequest);
 
-        revaluation.setId(Long.valueOf(revaluationRepository.getNextRevaluationId().longValue()));
+        revaluation.setId(assetCommonService.getNextId(Sequence.REVALUATIONSEQUENCE));
 
         if (revaluation.getAuditDetails() == null)
             revaluation.setAuditDetails(assetCommonService.getAuditDetails(revaluationRequest.getRequestInfo()));

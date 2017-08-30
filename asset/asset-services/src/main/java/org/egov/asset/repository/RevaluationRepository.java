@@ -87,21 +87,4 @@ public class RevaluationRepository {
         return revaluations;
     }
 
-    public Integer getNextRevaluationId() {
-
-        final String query = "SELECT nextval('seq_egasset_revaluation')";
-        Integer result = null;
-        try {
-            result = jdbcTemplate.queryForObject(query, Integer.class);
-        } catch (final Exception ex) {
-            ex.printStackTrace();
-            log.info("getNextRevaluationId::" + ex.getMessage());
-            throw new RuntimeException("Can not fatch next RevaluationId");
-
-        }
-        log.info("result:" + result);
-
-        return result;
-    }
-
 }

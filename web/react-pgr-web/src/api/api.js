@@ -59,7 +59,7 @@ module.exports = {
             requestInfo.ts = new Date().getTime();
         }
 
-        if(authToken!="")
+        if(authToken)
         {
           requestInfo["authToken"]=authToken;
         }

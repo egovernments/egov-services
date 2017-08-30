@@ -59,12 +59,9 @@ import java.util.List;
 @AllArgsConstructor
 public class EmployeeEntityResponse {
 
-	@NotNull
 	@JsonProperty("ResponseInfo")
 	private ResponseInfo responseInfo;
 
-	@Valid
-	@NotNull
 	@JsonProperty("Employee")
 	private Employee employee;
 

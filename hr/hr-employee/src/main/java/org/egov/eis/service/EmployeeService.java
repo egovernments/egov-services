@@ -42,6 +42,7 @@ package org.egov.eis.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.ArrayUtils;
 import org.egov.common.contract.request.RequestInfo;
@@ -77,6 +78,7 @@ import java.util.stream.Collectors;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
 
+@Data
 @Slf4j
 @Service
 public class EmployeeService {
@@ -516,14 +518,14 @@ public class EmployeeService {
         return getSuccessResponseForBulkCreate(employees, requestInfo);
     }
 
-    private ResponseEntity<?> getErrorResponseForBulkCreate(EmployeeEntityResponse employeeEntityResponse) {
+    public ResponseEntity<?> getErrorResponseForBulkCreate(EmployeeEntityResponse employeeEntityResponse) {
         ResponseInfo responseInfo = employeeEntityResponse.getResponseInfo();
         Error error = employeeEntityResponse.getError();
         ErrorResponse errorResponse = ErrorResponse.builder().error(error).responseInfo(responseInfo).build();
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
-    private ResponseEntity<?> getSuccessResponseForBulkCreate(List<Employee> employees, RequestInfo requestInfo) {
+    public ResponseEntity<?> getSuccessResponseForBulkCreate(List<Employee> employees, RequestInfo requestInfo) {
         ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
         EmployeeBulkResponse employeeBulkResponse = EmployeeBulkResponse.builder()

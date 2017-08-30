@@ -384,6 +384,7 @@ ReportDefinitions:
 - reportName: employeeLeaveSummaryReport
   summary: employeeLeave Summary Report
   version: 1.0.0
+  moduleName: hr
   sourceColumns:
   - name: code
     label: reports.hr.Attendence.Employee_Code_name         

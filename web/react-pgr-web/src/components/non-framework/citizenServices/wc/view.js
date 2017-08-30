@@ -241,34 +241,32 @@ class Report extends Component {
       }
     });
 
-    var params = new URLSearchParams();
+    /*var params = new URLSearchParams();
     params.append('username', "murali");
     params.append('password', "12345678");
     params.append('grant_type', 'password');
     params.append('scope', 'read');
     params.append('tenantId', window.localStorage.getItem("tenantId"));
-
     instance.post('/user/oauth/token', params).then(function(response) {
       localStorage.setItem("request-temp", JSON.stringify(response.data.UserRequest));
-      localStorage.setItem("auth-token-temp", response.data.access_token);
-      Api.commonApiPost("/wcms-connection/connection/_search", query, {}, false, specifications["wc.view"].useTimestamp, false, localStorage.getItem("auth-token-temp")).then(function(res){
+      localStorage.setItem("auth-token-temp", response.data.access_token);*/
+      Api.commonApiPost("/wcms-connection/connection/_search", query, {}, false, specifications["wc.view"].useTimestamp, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
         self.props.setFormData(res);
         self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), "wc", "view", specifications["wc.view"].objectName);
       }, function(err){
 
       })
-
       //Fetch service request
-      Api.commonApiPost("/citizen-services/v1/requests/_search", {consumerCode: this.props.match.params.ackNo.id}, {}, null, true).then(function(res2) {
+      Api.commonApiPost("/citizen-services/v1/requests/_search", {consumerCode: self.props.match.params.ackNo}, {}, null, true).then(function(res2) {
         self.setState({
-          ServiceRequest: res2.serviceReq[0]
+          ServiceRequest: res2.serviceReq[0],
+          status: res2.serviceReq[0].status || ""
         })
       }, function(err) {
-
       })
-    }).catch(function(response) {
-          
-    });
+    /*}).catch(function(response) {
+
+    });*/
   }
 
   componentDidMount() {
@@ -330,14 +328,14 @@ class Report extends Component {
     let DemandRequest = {};
     DemandRequest["Demands"] = self.props.metaData["wc.create"].feeDetails;
     DemandRequest["Demands"][0].tenantId = localStorage.getItem("tenantId");
-    DemandRequest["Demands"][0].consumerCode = "";
+    DemandRequest["Demands"][0].consumerCode = self.state.ServiceRequest.serviceRequestId;
     DemandRequest["Demands"][0].owner.id = JSON.parse(localStorage.userRequest).id;
-    DemandRequest["Demands"][0].taxPeriodFrom = 1491004800000;
-    DemandRequest["Demands"][0].taxPeriodTo = 1522540799000;
-    DemandRequest["Demands"][0].demandDetails[0].taxHeadMasterCode = "WC_NO_DUE_CERT_CHAR";
+    DemandRequest["Demands"][0].taxPeriodFrom = 1301596200000;
+    DemandRequest["Demands"][0].taxPeriodTo = 1317321000000;
+    DemandRequest["Demands"][0].demandDetails[0].taxHeadMasterCode = "WATERCHARGE";
     DemandRequest["Demands"][0].demandDetails[0].taxAmount = self.state.feeAmount;
     ServiceRequest.backendServiceDetails = [{
-      url: "/billing-service/demand/_create?tenantId=" + localStorage.tenantId,
+      url: "http://billing-service:8080/billing-service/demand/_create?tenantId=" + localStorage.tenantId,
       request: {
         RequestInfo: self.state.RequestInfo,
         ...DemandRequest
@@ -362,11 +360,11 @@ class Report extends Component {
     //Update service request and generate bill and create receipt
     let self = this;
     var ServiceRequest = {...this.state.ServiceRequest};
-    var DemandBillQuery = `?businessService=CS&tenantId=${localStorage.getItem("tenantId")}&consumerCode=` + ServiceRequest.consumerCode;
+    var DemandBillQuery = `?businessService=WC&tenantId=${localStorage.getItem("tenantId")}&consumerCode=` + ServiceRequest.serviceRequestId;
     var fee = ServiceRequest.additionalFee;
     ServiceRequest.additionalFee = 0;
     ServiceRequest.backendServiceDetails = [{
-      url: "/billing-service/bill/_generate" + DemandBillQuery,
+      url: "http://billing-service:8080/billing-service/bill/_generate" + DemandBillQuery,
       request: {
         RequestInfo: self.state.RequestInfo
       }
@@ -375,17 +373,17 @@ class Report extends Component {
     self.props.setLoadingStatus("loading");
     Api.commonApiPost("/citizen-services/v1/requests/_update", {}, {"serviceReq": ServiceRequest}, null, true, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
       ServiceRequest.additionalFee = 0;
-      if(res.serviceReq && res.serviceReq.backendServiceDetails && res.serviceReq.backendServiceDetails[0] && res.serviceReq.backendServiceDetails[0].Bill) {
+      if(res.serviceReq && res.serviceReq.backendServiceDetails && res.serviceReq.backendServiceDetails[0] && res.serviceReq.backendServiceDetails[0].response.Bill) {
         let Receipt = [];
         Receipt[0] = {"Bill":[]};
-        Receipt[0]["Bill"] = res.Bill;
+        Receipt[0]["Bill"] = res.serviceReq.backendServiceDetails[0].response.Bill;
         Receipt[0]["Bill"][0]["paidBy"] = Receipt[0]["Bill"][0].payeeName;
         Receipt[0]["tenantId"] = window.localStorage.getItem("tenantId")
         Receipt[0]["instrument"] = {"tenantId":window.localStorage.getItem("tenantId"),"amount": fee,"instrumentType":{"name":"Cash"}}
         Receipt[0]["Bill"][0]["billDetails"][0]["amountPaid"] = fee;
         setTimeout(function(){
           ServiceRequest.backendServiceDetails = [{
-            "url": "/collection-services/receipts/_create",
+            "url": "http://collection-services:8080/collection-services/receipts/_create",
             "request": {
               RequestInfo: self.state.RequestInfo,
               Receipt: Receipt
@@ -443,7 +441,9 @@ class Report extends Component {
   updateStatusAndComments = (ServiceRequest) => {
     let self = this;
     let formData = {...this.props.formData};
+
     let ConnectionObject = formData.Connection[0];
+    ServiceRequest.backendServiceDetails = null;
     if(this.state.comments) {
       if(!ServiceRequest.comments) ServiceRequest.comments = [];
       ServiceRequest.comments.push({
@@ -456,14 +456,7 @@ class Report extends Component {
 
     if(this.state.status) {
       ServiceRequest.status = this.state.status;
-      ConnectionObject.status = this.state.status;
-      ServiceRequest.backendServiceDetails = [{
-        "url": "/wcms-connection/connection/_update",
-        "request": {
-            RequestInfo: self.state.RequestInfo,
-            Connection: ConnectionObject
-          }
-      }];
+      ConnectionObject.connectionStatus = this.state.status;
     }
 
     //Make Update Service Request Call passing water connection object
@@ -504,12 +497,13 @@ class Report extends Component {
             if(counter == 0 && breakOut == 0) {
                 if(!ServiceRequest.documents) ServiceRequest.documents = [];
                 ServiceRequest.documents = ServiceRequest.documents.concat(_docs);
+                self.updateStatusAndComments(ServiceRequest);
             }
           }
         })
       }
     } else {
-
+      self.updateStatusAndComments(ServiceRequest);
     }
   }
 
@@ -590,7 +584,7 @@ class Report extends Component {
             </CardText>
           </Card>
           <div style={{"textAlign": "center"}}>
-            <RaisedButton primary={true} label={"Update"} onClick={() => {}}/>&nbsp;&nbsp;
+            <RaisedButton primary={true} label={"Update"} onClick={() => {self.update()}}/>&nbsp;&nbsp;
             {self.state.role != "CITIZEN" && self.state.ServiceRequest && (!self.state.ServiceRequest.additionalFee || self.state.ServiceRequest.additionalFee == 0) ? <RaisedButton primary={true} label={"Add Fee"} onClick={self.openAddFeeModal}/> : ""}&nbsp;&nbsp;
             {self.state.role == "CITIZEN" && self.state.ServiceRequest && (self.state.ServiceRequest.additionalFee > 0) ? <RaisedButton primary={true} label={"Pay Fee"} onClick={self.openPayFeeModal}/> : ""}
           </div>
@@ -621,7 +615,7 @@ class Report extends Component {
                                     <td>{v.text}</td>
                                   </tr>
                                 )
-                              }) : <tr colSpan={3} style={{"textAlign": "center"}}><td>No comments yet!</td></tr>
+                              }) : <tr><td style={{"textAlign": "center"}} colSpan={3}>No comments yet!</td></tr>
                             }
                           </tbody>
                       </Table>
@@ -648,7 +642,7 @@ class Report extends Component {
                                     <td><a href={"/filestore/v1/files/id?tenantId=" + localStorage.getItem("tenantId") + "&fileStoreId=" + v.filePath}>Download</a></td>
                                   </tr>
                                 )
-                              }) : <tr colSpan={3} style={{"textAlign": "center"}}><td>No comments yet!</td></tr>
+                              }) : <tr><td style={{"textAlign": "center"}} colSpan={3}>No documents uploaded!</td></tr>
                             }
                           </tbody>
                       </Table>
@@ -821,7 +815,7 @@ class Report extends Component {
                 autoScrollBodyContent={true}
               >
               <div style={{textAlign:"center"}}>
-                <h4>Amount to be paid: Rs 20</h4>
+                <h4>Amount to be paid: Rs {self.state.ServiceRequest.additionalFee || 20}</h4>
                 <br/>
               </div>
 

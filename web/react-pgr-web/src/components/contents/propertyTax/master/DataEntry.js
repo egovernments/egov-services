@@ -309,6 +309,10 @@ dataEntryTax = () => {
 			if(!dataEntry.owners[i].hasOwnProperty('ownershippercentage') || dataEntry.owners[i].ownershippercentage == ''){
 				dataEntry.owners[i].ownershippercentage = null;
 			}
+
+			if(dataEntry.owners[i].hasOwnProperty('aadhaarNumber') && dataEntry.owners[i].aadhaarNumber == ''){
+				dataEntry.owners[i].aadhaarNumber = null;
+			}
 			
 			if(!dataEntry.owners[i].hasOwnProperty('ownerType') || dataEntry.owners[i].ownerType == ''){
 				dataEntry.owners[i].ownerType = null;

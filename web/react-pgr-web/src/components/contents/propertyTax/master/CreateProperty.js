@@ -308,6 +308,10 @@ createPropertyTax = () => {
 			if(!createProperty.owners[i].hasOwnProperty('ownershippercentage') || createProperty.owners[i].ownershippercentage == ''){
 				createProperty.owners[i].ownershippercentage = null;
 			}
+
+			if(createProperty.owners[i].hasOwnProperty('aadhaarNumber') && createProperty.owners[i].aadhaarNumber == ''){
+				createProperty.owners[i].aadhaarNumber = null;
+			}
 			
 			if(!createProperty.owners[i].hasOwnProperty('ownerType') || createProperty.owners[i].ownerType == ''){
 				createProperty.owners[i].ownerType = null;

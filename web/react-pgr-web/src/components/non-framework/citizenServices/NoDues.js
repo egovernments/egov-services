@@ -1275,7 +1275,7 @@ class NoDues extends Component {
 
                                       <tr>
                                           <td colSpan={2}>
-                                            {ReceiptOne[0].Bill[0].billDetails[0].billNumber +"-"+getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate)}
+                                            {ReceiptOne[0].Bill[0].billDetails[0].billNumber +"-"+getFullDate(ReceiptOne[0].Bill[0].billDetails[0].receiptDate)}
 
                                           </td>
                                           <td colSpan={4}>
@@ -1322,7 +1322,7 @@ class NoDues extends Component {
                                           {ReceiptOne[0].transactionId}
                                         </td>}
 
-                                          {ReceiptOne[0].instrument.instrumentType.name=="Cash"?<td >NA</td>:<td >getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate)</td>}
+                                          {ReceiptOne[0].instrument.instrumentType.name=="Cash"?<td >NA</td>:<td>{getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate)}</td>}
 
 
                                           {ReceiptOne[0].instrument.instrumentType.name=="Cash"?<td colSpan={2}>NA</td>:<td colSpan={2}>ReceiptOne[0].instrument.bank.name</td>}

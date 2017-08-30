@@ -1,0 +1,28 @@
+{
+    "elements":[
+        {
+        "elementName":"assessmentNumber",
+        "identifier":"css",
+        "value":"[id^='undefined-1000120015-AssessmentNumber']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"text",
+        "identifier":"xpath",
+        "value":".//*[text()='%s']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"action",
+        "identifier":"id",
+        "value":"dropdown-3",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"assessmentNumberInSearchTable",
+        "identifier":"css",
+        "value":"[role='row'][class='odd'] td:nth-child(2) span",
+        "waitFor":"visibility"
+        }
+    ]
+}

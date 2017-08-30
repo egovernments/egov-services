@@ -141,7 +141,7 @@
         {
         "elementName":"noOfFloors",
         "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[3]/div/div[2]/div/div/div[12]/div/div[1]",
+        "value":".//*[@id='root']/div/main/div/form/div[3]/div/div[2]/div/div/div[12]/div/input",
         "waitFor":"visibility"
         },
         {
@@ -502,6 +502,12 @@
         "elementName":"certificateReceivedDateQA",
         "identifier":"css",
         "value":"[id^='undefined-ddmmyyyy-CertificateReceivedDate']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"propertyTaxNumber",
+        "identifier":"css",
+        "value":"[class='row'] span",
         "waitFor":"visibility"
         }
     ]

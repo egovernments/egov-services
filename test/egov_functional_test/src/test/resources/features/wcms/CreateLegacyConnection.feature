@@ -4,7 +4,7 @@ Feature: Creating Legacy Connection
 
     ### On Login Screen ###
     Given user on Login screen verifies signInText has visible value Sign In
-    And user on Login screen types on username value avinay
+    And user on Login screen types on username value 1234
     And user on Login screen types on password value 12345678
     And user on Login screen clicks on signIn
 

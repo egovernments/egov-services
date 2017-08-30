@@ -184,6 +184,12 @@ public class GenericSteps extends BaseSteps {
         ((JavascriptExecutor) pageStore.getDriver()).executeScript("arguments[0].click();", webElement);
     }
 
+    @And("^user on (\\w+) screen force clicks on (\\w+) value (.*)$")
+    public void userPerformsForceClicks(String screen, String element, String value) throws Throwable {
+        WebElement webElement = pageStore.get(GenericPage.class).buildElement(screen, element, value);
+        ((JavascriptExecutor) pageStore.getDriver()).executeScript("arguments[0].click();", webElement);
+    }
+
     @And("^user on (\\w+) screen clicks radio button or checkbox on (\\w+)")
     public void userClicksOnRadioButtonOrCheckBox(String screen, String element) throws Throwable {
         WebElement webElement = pageStore.get(GenericPage.class).buildElement(screen, element, "");

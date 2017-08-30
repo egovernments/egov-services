@@ -904,11 +904,11 @@ public class PropertyServiceImpl implements PropertyService {
 					for (TaxPeriod taxPeriod : taxPeriodResponse.getTaxPeriods()) {
 						try {
 							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
-							sdf.setTimeZone(TimeZone.getTimeZone("GMT+5:30"));
+							sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 							taxPeriodFromDate = sdf.parse(taxPeriod.getFromDate());
 						} catch (Exception ex) {
 							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-							sdf.setTimeZone(TimeZone.getTimeZone("GMT+5:30"));
+							sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 							taxPeriodFromDate = sdf.parse(taxPeriod.getFromDate());
 						}
 

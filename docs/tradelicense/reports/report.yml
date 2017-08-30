@@ -106,7 +106,7 @@ ReportDefinitions:
     type: epoch
     source: tradelicense
     isMandatory: false
-    searchClause : AND tl.expirydate <= to_timestamp(Trunc(CAST($licenseValidToDate as bigint)/1000 ))::timestamp without time zone
+    searchClause : AND to_date(TO_CHAR(tl.expirydate, 'DD/MM/YYYY'),'DD/MM/YYYY') <= to_date(TO_CHAR(TO_TIMESTAMP($licenseValidToDate/1000), 'DD/MM/YYYY'),'DD/MM/YYYY')
   - name: licenseType
     label: reports.tradelicense.licensetype
     type: singlevaluelist

@@ -120,16 +120,16 @@ function getPosition(objArray, id){
 class Inbox extends Component {
   constructor(props) {
     super(props);
-	this.state = {
-		searchResult : [],
-		buttons : [],
-		employee : [],
-		designation:[],
-		workflowDepartment: [],
-		process: [],
-		forward: false
-		
-	}
+  	this.state = {
+  		searchResult : [],
+  		buttons : [],
+  		employee : [],
+  		designation:[],
+  		workflowDepartment: [],
+  		process: [],
+  		forward: false,
+      specialNotice: {}
+  	}
   }
   
   componentWillMount() {
@@ -495,14 +495,20 @@ class Inbox extends Component {
 		  localStorage.setItem('inboxStatus', 'Rejected')
 		  
 	  } else if( actionName == 'Print Notice'){
-		  
+		 
 		  var body = {
 		   upicNo: data[0].upicNumber,
        tenantId: localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default'
 	   } 
 	  
-	   Api.commonApiPost('pt-property/properties/specialnotice/_generate', {},body, false, true).then((res)=>{
-			setLoadingStatus('hide');
+     currentThis.generatePDF();
+
+	    Api.commonApiPost('pt-property/properties/specialnotice/_generate', {},body, false, true).then((res)=>{
+  			setLoadingStatus('hide');
+        currentThis.setState({
+          specialNotice: res.notice
+        })
+     // currentThis.generatePDF();
 			console.log(res)
 		  }).catch((err)=> {
 			console.log(err)
@@ -542,8 +548,31 @@ class Inbox extends Component {
     return  typeof val != "undefined" && (typeof val == "string" || typeof val == "number" || typeof val == "boolean") ? (val + "") : "";
   }
 
-  printer = () => {
-    window.print();
+  generatePDF = () => {
+
+    var mywindow = window.open('', 'PRINT', 'height=400,width=600');
+
+    var cdn = `
+      <!-- Latest compiled and minified CSS -->
+      <link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+      <!-- Optional theme -->
+      <link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">  `;
+    mywindow.document.write('<html><head><title> </title>');
+    mywindow.document.write(cdn);
+    mywindow.document.write('</head><body>');
+    mywindow.document.write(document.getElementById('speicalNotice').innerHTML);
+    mywindow.document.write('</body></html>');
+
+    mywindow.document.close(); // necessary for IE >= 10
+    mywindow.focus(); // necessary for IE >= 10*/
+
+    setTimeout(function(){
+      mywindow.print();
+      mywindow.close();
+    }, 1000);
+
+    return true;
   }
   
   render() {
@@ -682,7 +711,48 @@ class Inbox extends Component {
 		  <br/>
         </form>
         <div style={{"textAlign": "center"}}>
-	
+	          <Card className="uiCard" id="speicalNotice">
+              <CardText>
+                <table responsive style={{fontSize:"bold", width:'100%'}} bordered condensed>
+                  <tbody>
+                    <tr>
+                        <td style={{textAlign:"left"}}>
+                           ULB Logo
+                        </td>
+                        <td style={{textAlign:"center"}}>
+                            <b>Roha Municipal Council</b><br/>
+                        </td>
+                        <td style={{textAlign:"right"}}>
+                          MAHA Logo
+                        </td>
+                    </tr>
+                    <tr>
+                      <td style={{textAlign:'center'}} colSpan={3}>
+                        <b>Special Notice</b>
+                        <p>(मुवंई प्रांतिक महानगरपालिका अधिनियम 1949 चे अनुसूचीतील प्रकरण 8 अधिनियम 44, 45 व 46 अन्वये )</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style={{textAlign:"right"}}  colSpan={3}>
+                          Date / दिनांक: <br/>
+                          Notice No. / नोटीस क्रं :
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style={{textAlign:"left"}}  colSpan={3}>प्रती,</td>
+                    </tr>
+                    <tr>
+                      <td style={{textAlign:"left"}}  colSpan={3}>Property Owner Name<br/>
+                          &amp; Address
+                      </td>
+                    </tr>
+                    <tr>
+                      
+                    </tr>
+                  </tbody>
+                </table>
+              </CardText>
+            </Card>
 			{(this.state.buttons.hasOwnProperty('attributes') && this.state.buttons.attributes.validActions.values.length > 0) && this.state.buttons.attributes.validActions.values.map((item,index)=> {
 				return(
 					<RaisedButton key={index} type="button" primary={true} label={item.name} style={{margin:'0 5px'}} onClick={()=> {

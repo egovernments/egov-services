@@ -227,7 +227,7 @@ class AddDemand extends Component {
 	  
 	  for(var key in addDemand) {
 	  		for(var demand in addDemand[key]){
-	  			if(addDemand[key][demand] == null){
+	  			if(key.match('demand') && (addDemand[key][demand] == null || addDemand[key][demand]=='' || addDemand[key][demand]==0)){
 	  				delete addDemand[key][demand]
 	  			}
 	  		}

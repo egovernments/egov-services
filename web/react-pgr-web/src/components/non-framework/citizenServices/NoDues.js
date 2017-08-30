@@ -1219,7 +1219,7 @@ class NoDues extends Component {
                               </Table>
                         </CardText>
                       </Card>
-                      <div className="page-break"></div>
+                      <div style={{"page-break-after": "always"}}></div>
                       </Col> : ""}
                                             {ReceiptOne && ReceiptOne[0] && <Col md={6} >
                       <Card>
@@ -1333,7 +1333,7 @@ class NoDues extends Component {
                               </Table>
                         </CardText>
                       </Card>
-                      <div className="page-break"></div>
+                      <div style={{"page-break-after": "always"}}></div>
                       </Col>}
                       <Col md={6} id="DownloadReceipt">
                       {(this.props.match.params.status != "extract" && Receipt && Receipt[0]) ? <Card>

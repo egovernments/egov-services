@@ -100,27 +100,28 @@ public class TaxPeriodQueryBuilder {
              preparedStatementValues.add(taxPeriodCriteria.getPeriodCycle().toString());
         }
         
-        if (taxPeriodCriteria.getFromDate() != null && taxPeriodCriteria.getToDate() != null && (service != null &&  !service.isEmpty())) {
-        	
-        	selectQuery.append(" AND (fromdate >=  ( SELECT fromdate FROM egbs_taxperiod WHERE tenantId =? AND ( ? BETWEEN fromdate AND  todate)) "
-        			+ " AND service IN " + getQueryForCollection(service) 
-        			+ " AND todate IN ( SELECT todate FROM egbs_taxperiod WHERE tenantId = ? AND (? BETWEEN fromdate AND  todate) "
-        			+ " AND service IN "+ getQueryForCollection(service) +"))");
-        preparedStatementValues.add(tenantId);
-		preparedStatementValues.add(taxPeriodCriteria.getFromDate());
-		preparedStatementValues.add(tenantId);
-		preparedStatementValues.add(taxPeriodCriteria.getToDate());
-        }
-        
-       /* if(taxPeriodCriteria.getFromDate() != null){
-       	 selectQuery.append(" and taxperiod.fromdate >= ? ");
-            preparedStatementValues.add(taxPeriodCriteria.getFromDate());
-       }
-        
-        if(taxPeriodCriteria.getToDate() != null){
-       	 selectQuery.append(" and taxperiod.todate <= ? ");
-            preparedStatementValues.add(taxPeriodCriteria.getToDate());
-       }*/
+		if (taxPeriodCriteria.getFromDate() != null && taxPeriodCriteria.getToDate() != null) {
+			if ((service != null && !service.isEmpty() && service.size() == 1)) {
+				selectQuery.append(
+						" AND (fromdate >=  ( SELECT fromdate FROM egbs_taxperiod WHERE tenantId =? AND ( ? BETWEEN fromdate AND  todate)) "
+								+ " AND service IN " + getQueryForCollection(service)
+								+ " AND todate IN ( SELECT todate FROM egbs_taxperiod WHERE tenantId = ? AND (? BETWEEN fromdate AND  todate) "
+								+ " AND service IN " + getQueryForCollection(service) + "))");
+				preparedStatementValues.add(tenantId);
+				preparedStatementValues.add(taxPeriodCriteria.getFromDate());
+				preparedStatementValues.add(tenantId);
+				preparedStatementValues.add(taxPeriodCriteria.getToDate());
+			} else {
+				if (taxPeriodCriteria.getFromDate() != null) {
+					selectQuery.append(" and taxperiod.fromdate >= ? ");
+					preparedStatementValues.add(taxPeriodCriteria.getFromDate());
+				}
+				if (taxPeriodCriteria.getToDate() != null) {
+					selectQuery.append(" and taxperiod.todate <= ? ");
+					preparedStatementValues.add(taxPeriodCriteria.getToDate());
+				}
+			}
+		}
 
         if (StringUtils.isNotBlank(taxPeriodCriteria.getCode())) {
             selectQuery.append(" and taxperiod.code = ? ");

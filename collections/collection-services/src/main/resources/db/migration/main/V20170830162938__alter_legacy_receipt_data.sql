@@ -1,0 +1,1 @@
+alter table egcl_legacy_receipt_header alter instrumentDate drop NOT NULL;

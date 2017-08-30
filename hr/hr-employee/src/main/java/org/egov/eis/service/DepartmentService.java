@@ -38,29 +38,46 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.web.contract;
+package org.egov.eis.service;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
-import org.egov.common.contract.request.RequestInfo;
-import org.egov.eis.model.Position;
+import lombok.extern.slf4j.Slf4j;
+import org.egov.eis.config.PropertiesManager;
+import org.egov.eis.model.bulk.Department;
+import org.egov.eis.web.contract.DepartmentResponse;
+import org.egov.eis.web.contract.RequestInfoWrapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.net.URI;
 
-@Builder
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-public class PositionRequest {
+import static org.springframework.util.ObjectUtils.isEmpty;
 
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo;
+@Slf4j
+@Service
+public class DepartmentService {
 
-	@JsonProperty("Position")
-	private List<Position> position = new ArrayList<Position>();
+	@Autowired
+	private RestTemplate restTemplate;
 
+	@Autowired
+	private PropertiesManager propertiesManager;
+
+	public Department getDepartment(String code, String tenantId, RequestInfoWrapper requestInfoWrapper) {
+		URI url = null;
+		DepartmentResponse departmentResponse = null;
+		try {
+			url = new URI(propertiesManager.getCommonMastersServiceHostName()
+					+ propertiesManager.getCommonMastersServiceBasePath()
+					+ propertiesManager.getCommonMastersServiceDepartmentsSearchPath()
+					+ "?tenantId=" + tenantId + "&code=" + code);
+			log.debug(url.toString());
+			departmentResponse = restTemplate.postForObject(url, requestInfoWrapper, DepartmentResponse.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error("Following exception occurred while accessing Department API : " + e.getMessage());
+			return null;
+		}
+		return isEmpty(departmentResponse.getDepartment()) ? null : departmentResponse.getDepartment().get(0);
+	}
 }

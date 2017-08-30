@@ -68,128 +68,166 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 @Service
 public class PositionService {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(PositionService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PositionService.class);
 
-	@Value("${kafka.topics.position.db_persist.name}")
-	private String positionDBPersistTopic;
+    @Value("${kafka.topics.position.db_persist.name}")
+    private String positionDBPersistTopic;
 
-	@Value("${kafka.topics.position.create.name}")
-	private String positionCreateTopic;
+    @Value("${kafka.topics.position.create.name}")
+    private String positionCreateTopic;
 
-	@Value("${kafka.topics.position.update.name}")
-	private String positionUpdateTopic;
+    @Value("${kafka.topics.position.update.name}")
+    private String positionUpdateTopic;
 
-	@Autowired
-	private PositionRepository positionRepository;
+    @Autowired
+    private PositionRepository positionRepository;
 
-	@Autowired
-	private DepartmentDesignationService deptDesigService;
+    @Autowired
+    private DepartmentDesignationService deptDesigService;
 
-	@Autowired
-	private DepartmentService departmentService;
+    @Autowired
+    private DepartmentService departmentService;
 
-	@Autowired
-	private DesignationService designationService;
+    @Autowired
+    private DesignationService designationService;
 
-	@Autowired
-	private ResponseInfoFactory responseInfoFactory;
+    @Autowired
+    private ResponseInfoFactory responseInfoFactory;
 
-	@Autowired
-	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
-	
-	@Autowired
-	private ObjectMapper objectMapper;
+    @Autowired
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
-	public List<Position> getPositions(PositionGetRequest positionGetRequest) {
-		return positionRepository.findForCriteria(positionGetRequest);
-	}
+    @Autowired
+    private ObjectMapper objectMapper;
 
-	public ResponseEntity<?> createPosition(PositionRequest positionRequest) {
-		List<Position> positions = positionRequest.getPosition();
-		kafkaTemplate.send(positionDBPersistTopic, positionRequest);
-		return getSuccessResponseForCreate(positions, positionRequest.getRequestInfo());
-	}
+    public List<Position> getPositions(PositionGetRequest positionGetRequest) {
+        return positionRepository.findForCriteria(positionGetRequest);
+    }
 
-	public ResponseEntity<?> updatePosition(PositionRequest positionRequest) {
-		List<Position> positions = positionRequest.getPosition();
-		kafkaTemplate.send(positionUpdateTopic, positionRequest);
-		return getSuccessResponseForCreate(positions, positionRequest.getRequestInfo());
-	}
+    public ResponseEntity<?> createPosition(PositionRequest positionRequest) {
+        List<Position> positions = positionRequest.getPosition();
+        kafkaTemplate.send(positionDBPersistTopic, positionRequest);
+        return getSuccessResponseForCreate(positions, positionRequest.getRequestInfo());
+    }
 
-	/**
-	 * Populate PositionResponse object & returns ResponseEntity of type
-	 * PositionResponse containing ResponseInfo & array of Position objects
-	 * 
-	 * @param positionList
-	 * @param requestInfo
-	 * @return ResponseEntity<?>
-	 */
-	public ResponseEntity<?> getSuccessResponseForCreate(List<Position> positionList, RequestInfo requestInfo) {
-		PositionResponse positionResponse = new PositionResponse();
-		positionResponse.getPosition().addAll(positionList);
+    public ResponseEntity<?> createBulkPositions(PositionBulkRequest positionBulkRequest) {
+        PositionRequest positionRequest = getPositionRequest(positionBulkRequest);
+        return createPosition(positionRequest);
+    }
 
-		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-		responseInfo.setStatus(HttpStatus.OK.toString());
-		positionResponse.setResponseInfo(responseInfo);
-		return new ResponseEntity<PositionResponse>(positionResponse, HttpStatus.OK);
-	}
+    public ResponseEntity<?> updatePosition(PositionRequest positionRequest) {
+        List<Position> positions = positionRequest.getPosition();
+        kafkaTemplate.send(positionUpdateTopic, positionRequest);
+        return getSuccessResponseForCreate(positions, positionRequest.getRequestInfo());
+    }
 
-	@Transactional
-	public void create(PositionRequest positionRequest) {
-		populateCreatePositionDetails(positionRequest);
-		List<Long> ids = positionRequest.getPosition().stream().map(Position::getId).collect(Collectors.toList());
-		positionRepository.create(positionRequest);
-		PositionGetRequest positionGetRequest = new PositionGetRequest();
-		positionGetRequest.setId(ids);
-		// FIXME : Assuming request will come from same tenant & so, adding common tenantId for all positions search.
-		positionGetRequest.setTenantId(positionRequest.getRequestInfo().getUserInfo().getTenantId());
-		List<Position> positions = positionRepository.findForCriteria(positionGetRequest);
-		positionRequest.setPosition(positions);
-		kafkaTemplate.send(positionCreateTopic, positionRequest);
-	}
+    /**
+     * Populate PositionResponse object & returns ResponseEntity of type
+     * PositionResponse containing ResponseInfo & array of Position objects
+     *
+     * @param positionList
+     * @param requestInfo
+     * @return ResponseEntity<?>
+     */
+    public ResponseEntity<?> getSuccessResponseForCreate(List<Position> positionList, RequestInfo requestInfo) {
+        PositionResponse positionResponse = new PositionResponse();
+        positionResponse.getPosition().addAll(positionList);
 
-	@Transactional
-	public void update(PositionRequest positionRequest) {
-		positionRepository.update(positionRequest);
-	}
+        ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        responseInfo.setStatus(HttpStatus.OK.toString());
+        positionResponse.setResponseInfo(responseInfo);
+        return new ResponseEntity<PositionResponse>(positionResponse, HttpStatus.OK);
+    }
 
-	private void populateCreatePositionDetails(PositionRequest positionRequest) {
-		List<Position> positions = positionRequest.getPosition();
-		RequestInfo requestInfo = positionRequest.getRequestInfo();
-		RequestInfoWrapper requestInfoWrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+    @Transactional
+    public void create(PositionRequest positionRequest) {
+        populateCreatePositionDetails(positionRequest);
+        List<Long> ids = positionRequest.getPosition().stream().map(Position::getId).collect(Collectors.toList());
+        positionRepository.create(positionRequest);
+        PositionGetRequest positionGetRequest = new PositionGetRequest();
+        positionGetRequest.setId(ids);
+        // FIXME : Assuming request will come from same tenant & so, adding common tenantId for all positions search.
+        positionGetRequest.setTenantId(positionRequest.getRequestInfo().getUserInfo().getTenantId());
+        List<Position> positions = positionRepository.findForCriteria(positionGetRequest);
+        positionRequest.setPosition(positions);
+        kafkaTemplate.send(positionCreateTopic, positionRequest);
+    }
 
-		List<Position> positionsList = new ArrayList<>();
-		for (int i = 0; i < positions.size(); i++) {
-			DepartmentDesignation deptDesig = positions.get(i).getDeptdesig();
-			String tenantId = positions.get(i).getTenantId();
+    @Transactional
+    public void update(PositionRequest positionRequest) {
+        positionRepository.update(positionRequest);
+    }
 
-			Department department = departmentService.getDepartments(Arrays.asList(deptDesig.getDepartmentId()),
-					tenantId, requestInfoWrapper).get(0);
+    private void populateCreatePositionDetails(PositionRequest positionRequest) {
+        List<Position> positions = positionRequest.getPosition();
+        RequestInfo requestInfo = positionRequest.getRequestInfo();
+        RequestInfoWrapper requestInfoWrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
 
-			DesignationGetRequest designationGetRequest = DesignationGetRequest.builder()
-					.id(Arrays.asList(deptDesig.getDesignation().getId())).tenantId(tenantId).build();
-			Designation designation = designationService.getDesignations(designationGetRequest).get(0);
+        List<Position> positionsList = new ArrayList<>();
+        for (int i = 0; i < positions.size(); i++) {
+            DepartmentDesignation deptDesig = positions.get(i).getDeptdesig();
+            String tenantId = positions.get(i).getTenantId();
 
-			deptDesig = deptDesigService.getByDepartmentAndDesignation(department.getId(), designation.getId(), tenantId);
+            Department department = departmentService.getDepartments(Arrays.asList(deptDesig.getDepartmentId()),
+                    tenantId, requestInfoWrapper).get(0);
 
-			if (isEmpty(deptDesig)) {
-				deptDesig = DepartmentDesignation.builder()
-						.departmentId(department.getId()).designation(designation).tenantId(tenantId).build();
-				deptDesigService.create(deptDesig);
-			}
-			deptDesig = deptDesigService.getByDepartmentAndDesignation(department.getId(), designation.getId(), tenantId);
+            DesignationGetRequest designationGetRequest = DesignationGetRequest.builder()
+                    .id(Arrays.asList(deptDesig.getDesignation().getId())).tenantId(tenantId).build();
+            Designation designation = designationService.getDesignations(designationGetRequest).get(0);
 
-			List<Long> sequences = positionRepository.generateSequences(positions.get(i).getNoOfPositions());
+            deptDesig = deptDesigService.getByDepartmentAndDesignation(department.getId(), designation.getId(), tenantId);
 
-			for (int j = 0; j < positions.get(i).getNoOfPositions(); j++) {
-				String name = department.getCode().toUpperCase() + "_" + designation.getCode().toUpperCase() + "_";
-				Position pos = Position.builder().id(sequences.get(j)).name(name).active(true).deptdesig(deptDesig)
-						.isPostOutsourced(positions.get(i).getIsPostOutsourced()).tenantId(positions.get(i).getTenantId()).build();
-				positionsList.add(pos);
-			}
-		}
+            if (isEmpty(deptDesig)) {
+                deptDesig = DepartmentDesignation.builder()
+                        .departmentId(department.getId()).designation(designation).tenantId(tenantId).build();
+                deptDesigService.create(deptDesig);
+            }
+            deptDesig = deptDesigService.getByDepartmentAndDesignation(department.getId(), designation.getId(), tenantId);
 
-		positionRequest.setPosition(positionsList);
-	}
+            List<Long> sequences = positionRepository.generateSequences(positions.get(i).getNoOfPositions());
+
+            for (int j = 0; j < positions.get(i).getNoOfPositions(); j++) {
+                String name = department.getCode().toUpperCase() + "_" + designation.getCode().toUpperCase() + "_";
+                Position pos = Position.builder().id(sequences.get(j)).name(name).active(true).deptdesig(deptDesig)
+                        .isPostOutsourced(positions.get(i).getIsPostOutsourced()).tenantId(positions.get(i).getTenantId()).build();
+                positionsList.add(pos);
+            }
+        }
+
+        positionRequest.setPosition(positionsList);
+    }
+
+    private PositionRequest getPositionRequest(PositionBulkRequest positionBulkRequest) {
+        RequestInfo requestInfo = positionBulkRequest.getRequestInfo();
+        RequestInfoWrapper requestInfoWrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+
+        List<Position> positions = positionBulkRequest.getPosition().stream().map(position -> {
+            Department department = departmentService.getDepartmentByCode(position.getDeptdesig().getDepartmentCode(),
+                    position.getTenantId(), requestInfoWrapper);
+            DesignationGetRequest designationGetRequest = DesignationGetRequest.builder()
+                    .code(position.getDeptdesig().getDesignation().getCode())
+                    .tenantId(position.getTenantId())
+                    .build();
+            Designation designation = designationService.getDesignations(designationGetRequest).get(0);
+            DepartmentDesignation deptDesig = DepartmentDesignation.builder()
+                    .id(position.getDeptdesig().getId())
+                    .departmentId(department.getId())
+                    .designation(designation)
+                    .tenantId(position.getDeptdesig().getTenantId())
+                    .build();
+
+            return Position.builder()
+                    .id(position.getId())
+                    .name(position.getName())
+                    .active(position.getActive())
+                    .isPostOutsourced(position.getIsPostOutsourced())
+                    .noOfPositions(position.getNoOfPositions())
+                    .deptdesig(deptDesig)
+                    .tenantId(position.getTenantId())
+                    .build();
+        }).collect(Collectors.toList());
+
+        return PositionRequest.builder().position(positions).requestInfo(requestInfo).build();
+    }
 
 }

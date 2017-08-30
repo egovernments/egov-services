@@ -62,7 +62,7 @@ public class DesignationGetRequest {
 	@Size(min=3, max=100)
 	private String name;
 
-	@Size(min=3, max=20)
+	@Size(max=20)
 	private String code;
 
 	private Boolean active;

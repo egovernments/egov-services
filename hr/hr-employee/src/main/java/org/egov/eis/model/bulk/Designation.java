@@ -38,29 +38,35 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.web.contract;
+package org.egov.eis.model.bulk;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-import org.egov.common.contract.request.RequestInfo;
-import org.egov.eis.model.Position;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-@Builder
 @AllArgsConstructor
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
 @Setter
 @ToString
-public class PositionRequest {
+public class Designation {
 
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo;
+	private Long id;
 
-	@JsonProperty("Position")
-	private List<Position> position = new ArrayList<Position>();
+	private String name;
+
+	@NotNull
+	@Size(max=20)
+	private String code;
+
+	private String description;
+
+	private String chartOfAccounts;
+
+	private Boolean active;
+
+	private String tenantId;
 
 }

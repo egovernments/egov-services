@@ -43,24 +43,25 @@ package org.egov.eis.web.contract;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.eis.model.Position;
+import org.egov.eis.model.bulk.Position;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
-@Builder
 @AllArgsConstructor
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
 @Setter
 @ToString
-public class PositionRequest {
+public class PositionBulkRequest {
 
 	@JsonProperty("RequestInfo")
 	private RequestInfo requestInfo;
 
+	@Valid
 	@JsonProperty("Position")
-	private List<Position> position = new ArrayList<Position>();
+	private List<Position> position = new ArrayList<>();
 
 }

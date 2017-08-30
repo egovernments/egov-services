@@ -65,7 +65,6 @@ public class MeterReading {
     @NotNull
     private long meterId;
 
-    @NotNull
     private long reading;
     
     @NotNull
@@ -77,4 +76,14 @@ public class MeterReading {
     @NotNull
     private String tenantId;
 
+    private String gapCode;
+    
+    private Long consumption;
+    
+    private Long consumptionAdjusted;
+    
+    private Long numberOfDays;
+    
+    private Boolean resetFlag;
+    
 }

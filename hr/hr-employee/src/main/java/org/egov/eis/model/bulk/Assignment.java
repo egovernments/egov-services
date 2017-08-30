@@ -38,29 +38,79 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.web.contract;
+package org.egov.eis.model.bulk;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-import org.egov.common.contract.request.RequestInfo;
-import org.egov.eis.model.Position;
+import org.egov.eis.model.HODDepartment;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-@Builder
 @AllArgsConstructor
-@EqualsAndHashCode
+@Builder
 @Getter
 @NoArgsConstructor
 @Setter
 @ToString
-public class PositionRequest {
+public class Assignment {
 
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo;
+	private Long id;
 
-	@JsonProperty("Position")
-	private List<Position> position = new ArrayList<Position>();
+	private Long position;
+
+	private Long fund;
+
+	private Long functionary;
+
+	private Long function;
+
+	@Valid
+	@NotNull
+	private Department department;
+
+	@Valid
+	@NotNull
+	private Designation designation;
+
+	@Valid
+	private List<HODDepartment> hod = new ArrayList<>();
+
+	@NotNull
+	private Boolean isPrimary;
+
+	@NotNull
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date fromDate;
+
+	@NotNull
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date toDate;
+
+	private Long grade;
+
+	private String govtOrderNumber;
+
+	private List<String> documents = new ArrayList<>();
+
+	private Long createdBy;
+
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date createdDate;
+
+	private Long lastModifiedBy;
+
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date lastModifiedDate;
+
+	private String tenantId;
 
 }

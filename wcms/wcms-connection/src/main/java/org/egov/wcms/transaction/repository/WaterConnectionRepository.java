@@ -163,25 +163,22 @@ public class WaterConnectionRepository {
                 statement.setString(29,waterConnectionRequest.getConnection().getPlumberName());
                 statement.setDouble(30, waterConnectionRequest.getConnection().getBillSequenceNumber()!=null?
                         waterConnectionRequest.getConnection().getBillSequenceNumber():0l);
-                statement.setString(31, waterConnectionRequest.getConnection().getMeterOwner()!=null?
-                        waterConnectionRequest.getConnection().getMeterOwner():"");
-                statement.setString(32, waterConnectionRequest.getConnection().getMeterModel()!=null?
-                        waterConnectionRequest.getConnection().getMeterModel():"");
-                statement.setBoolean(33, waterConnectionRequest.getConnection().getOutsideULB());
+
+                statement.setBoolean(31, waterConnectionRequest.getConnection().getOutsideULB());
 
                 if (waterConnectionRequest.getConnection().getIsLegacy()
                         ) {
-                    statement.setString(34, waterConnectionRequest.getConnection().getLegacyConsumerNumber());
-                    statement.setString(35, waterConnectionRequest.getConnection().getConsumerNumber());
-                    statement.setLong(36, waterConnectionRequest.getConnection().getExecutionDate());
-                    statement.setInt(37, waterConnectionRequest.getConnection().getNoOfFlats());
-                   statement.setString(38, waterConnectionRequest.getConnection().getManualConsumerNumber());
-                   statement.setString(39, waterConnectionRequest.getConnection().getHouseNumber());
+                    statement.setString(32, waterConnectionRequest.getConnection().getLegacyConsumerNumber());
+                    statement.setString(33, waterConnectionRequest.getConnection().getConsumerNumber());
+                    statement.setLong(34, waterConnectionRequest.getConnection().getExecutionDate());
+                    statement.setInt(35, waterConnectionRequest.getConnection().getNoOfFlats());
+                   statement.setString(36, waterConnectionRequest.getConnection().getManualConsumerNumber());
+                   statement.setString(37, waterConnectionRequest.getConnection().getHouseNumber());
 
                 }
 
                 if (waterConnectionRequest.getConnection().getParentConnectionId() != 0)
-                    statement.setLong(38, waterConnectionRequest.getConnection().getParentConnectionId());
+                    statement.setLong(36, waterConnectionRequest.getConnection().getParentConnectionId());
                 
                 
                 // Please verify if there's proper validation on all these fields to avoid NPE.
@@ -225,23 +222,31 @@ public class WaterConnectionRepository {
             
                     final KeyHolder keyHolder = new GeneratedKeyHolder();
                     jdbcTemplate.update((PreparedStatementCreator) connectiontemp -> {
-                        final String[] returnValColumn = new String[] { "id" };
-                        final PreparedStatement statement = connectiontemp.prepareStatement(insertestQuery,
-                                returnValColumn);
-                        statement.setLong(1, waterConnectionRequest.getConnection().getId());
-                        statement.setString(2, waterConnectionRequest.getConnection().getMeter().get(0).getMeterMake());
-                        statement.setString(3, waterConnectionRequest.getConnection().getMeter().get(0).getInitialMeterReading());
-                        
-                        statement.setString(4, waterConnectionRequest.getConnection().getMeter().get(0).getMeterSlNo());
-                        statement.setString(5,  waterConnectionRequest.getConnection().getMeter().get(0).getMeterCost());  
-                        statement.setString(6, waterConnectionRequest.getConnection().getTenantId());
-                        statement.setLong(7, waterConnectionRequest.getRequestInfo().getUserInfo().getId());
-                        statement.setDate(8, new Date(new java.util.Date().getTime()));
+                    	final String[] returnValColumn = new String[] { "id" };
+                    	final PreparedStatement statement = connectiontemp.prepareStatement(insertestQuery,
+                    			returnValColumn);
+                    	statement.setLong(1, waterConnectionRequest.getConnection().getId());
+                    	statement.setString(2, waterConnectionRequest.getConnection().getMeter().get(0).getMeterMake());
+                    	statement.setString(3, waterConnectionRequest.getConnection().getMeter().get(0).getInitialMeterReading());
 
-                        statement.setLong(9, waterConnectionRequest.getRequestInfo().getUserInfo().getId());
-                        statement.setDate(10, new Date(new java.util.Date().getTime()));
-                        
-                        return statement;
+                    	statement.setString(4, waterConnectionRequest.getConnection().getMeter().get(0).getMeterSlNo());
+                    	statement.setString(5,  waterConnectionRequest.getConnection().getMeter().get(0).getMeterCost());  
+                    	statement.setString(6, waterConnectionRequest.getConnection().getTenantId());
+                    	statement.setLong(7, waterConnectionRequest.getRequestInfo().getUserInfo().getId());
+                    	statement.setDate(8, new Date(new java.util.Date().getTime()));
+
+                    	statement.setLong(9, waterConnectionRequest.getRequestInfo().getUserInfo().getId());
+                    	statement.setDate(10, new Date(new java.util.Date().getTime()));
+                    	statement.setString(11, waterConnectionRequest.getConnection().getMeter().get(0).getMeterOwner()!=null?
+                    			waterConnectionRequest.getConnection().getMeter().get(0).getMeterOwner():"");
+                    	statement.setString(12, waterConnectionRequest.getConnection().getMeter().get(0).getMeterModel()!=null?
+                    			waterConnectionRequest.getConnection().getMeter().get(0).getMeterModel():"");
+                    	statement.setString(13, waterConnectionRequest.getConnection().getMeter().get(0).getMaximumMeterReading()!=null?
+                    			waterConnectionRequest.getConnection().getMeter().get(0).getMaximumMeterReading():"");
+                    	statement.setString(14, waterConnectionRequest.getConnection().getMeter().get(0).getMeterStatus()!=null?
+                    			waterConnectionRequest.getConnection().getMeter().get(0).getMeterStatus():"");
+
+                    	return statement;
                     }, keyHolder);
 
                     meterId = keyHolder.getKey().longValue();
@@ -257,12 +262,18 @@ public class WaterConnectionRepository {
                 for (final MeterReading meterReading : waterConnectionRequest.getConnection().getMeter().get(0)
                         .getMeterReadings()) {
 
-                    final Object[] obj = { meterId,
-                            meterReading.getReading(),
-                            meterReading.getReadingDate(),waterConnectionRequest.getConnection().getTenantId(),
-                            waterConnectionRequest.getRequestInfo().getUserInfo().getId(), new Date(new java.util.Date().getTime()),
-                            waterConnectionRequest.getRequestInfo().getUserInfo().getId(), new Date(new java.util.Date().getTime()) };
-
+                	final Object[] obj = { meterId,
+                			meterReading.getReading(),
+                			meterReading.getReadingDate(),waterConnectionRequest.getConnection().getTenantId(),
+                			waterConnectionRequest.getRequestInfo().getUserInfo().getId(), new Date(new java.util.Date().getTime()),
+                			waterConnectionRequest.getRequestInfo().getUserInfo().getId(), new Date(new java.util.Date().getTime()),
+                			meterReading.getGapCode() != null ? meterReading.getGapCode() : "",
+                			meterReading.getGapCode() != null ? meterReading.getConsumption() : "",
+                			meterReading.getGapCode() != null ? meterReading.getConsumptionAdjusted() : "",
+                			meterReading.getGapCode() != null ? meterReading.getNumberOfDays() : "",
+                			meterReading.getGapCode() != null ? meterReading.getResetFlag() : false
+                	};
+                    
                     values.add(obj);
                 }
                 try {

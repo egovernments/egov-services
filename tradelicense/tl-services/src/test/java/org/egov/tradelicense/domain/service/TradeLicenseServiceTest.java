@@ -118,7 +118,7 @@ public class TradeLicenseServiceTest {
 		tradeLicenseServiceValidator.validateCreateTradeLicenseRelated(tradeLicenses, requestInfo);
 	}
 
-	@Test
+//	@Test
 	public final void testAdd() {
 		when(boundaryContractRepository.findByLocalityId(any(TradeLicense.class), any(RequestInfoWrapper.class)))
 				.thenReturn(getBoundaryResponse());

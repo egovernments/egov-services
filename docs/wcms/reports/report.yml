@@ -164,7 +164,7 @@ ReportDefinitions:
   - name: connectiontype
     label: reports.wcms.connectiontype
     type: singlevaluelist
-    pattern: 'list://METERED:METERED,NON-METERED:NON-METERED'
+    pattern: 'list://METERED:METERED,NONMETERED:NON-METERED'
     source: wcms
     isMandatory: false  
   query: select  distinct cast(dcbinfo.zoneid as integer) as zoneid,boundary.name as boundaryName, count(hscno) as countofconsumerno,

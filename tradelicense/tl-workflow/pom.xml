@@ -64,6 +64,12 @@
 			<artifactId>services-common</artifactId>
 			<version>0.11.1</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.egov.services</groupId>
+			<artifactId>tl-commons</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 
 	</dependencies>
 
@@ -73,6 +79,11 @@
 			<name>eGov ERP Releases Repository</name>
 			<url>http://repo.egovernments.org/nexus/content/repositories/releases/</url>
 		</repository>
+		<snapshotRepository>
+			<id>repo.egovernments.org</id>
+			<name>eGov ERP Snapshots Repository</name>
+			<url>http://repo.egovernments.org/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
 	</repositories>
 
 	<build>

@@ -42,9 +42,9 @@ package org.egov.tl.workflow.consumer;
 import java.util.HashMap;
 import java.util.List;
 
-import org.egov.common.contract.request.RequestInfo;
-import org.egov.tl.workflow.model.TradeLicenseContract;
-import org.egov.tl.workflow.model.TradeLicenseRequest;
+import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tl.commons.web.contract.TradeLicenseContract;
+import org.egov.tl.commons.web.requests.TradeLicenseRequest;
 import org.egov.tl.workflow.repository.MessageQueueRepository;
 import org.egov.tl.workflow.repository.contract.Department;
 import org.egov.tl.workflow.repository.contract.Designation;

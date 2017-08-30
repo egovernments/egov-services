@@ -182,8 +182,109 @@ var meterReading = {
      "isDisabled": false,
      "requiredErrMsg": "",
      "patternErrMsg": ""
-   }
-   ]
+   },
+   {
+	"name": "ConsumptionAdjustment1",
+	"jsonPath": "Connection.meter[0].meterReadings[0].consumptionAdjusted",
+	"label": "wc.group.consumptionAdjustment1",
+	"pattern": "^\\d{1,8}$",
+	"type": "number",
+	"isRequired": false,
+	"isDisabled": false,
+	"requiredErrMsg": "",
+	"patternErrMsg": ""
+    },
+  {
+  	"name": "ConsumptionAdjustment2",
+  	"jsonPath": "Connection.meter[0].meterReadings[1].consumptionAdjusted",
+  	"label": "wc.group.consumptionAdjustment2",
+  	"pattern": "^\\d{1,8}$",
+  	"type": "number",
+  	"isRequired": false,
+  	"isDisabled": false,
+  	"requiredErrMsg": "",
+  	"patternErrMsg": ""
+      },
+  {
+  	"name": "ConsumptionAdjustment3",
+  	"jsonPath": "Connection.meter[0].meterReadings[2].consumptionAdjusted",
+  	"label": "wc.group.consumptionAdjustment3",
+  	"pattern": "^\\d{1,8}$",
+  	"type": "number",
+  	"isRequired": false,
+  	"isDisabled": false,
+  	"requiredErrMsg": "",
+  	"patternErrMsg": ""
+  },
+  {
+   "name": "NumberOfDays1",
+   "jsonPath": "Connection.meter[0].meterReadings[0].numberOfDays",
+   "label": "wc.group.numberOfDays1",
+   "pattern": "^\\d{1,2}$",
+   "type": "number",
+   "isRequired": false,
+   "isDisabled": false,
+   "requiredErrMsg": "",
+   "patternErrMsg": ""
+   },
+ {
+   "name": "NumberOfDays2",
+   "jsonPath": "Connection.meter[0].meterReadings[1].numberOfDays",
+   "label": "wc.group.numberOfDays2",
+   "pattern": "^\\d{1,2}$",
+   "type": "number",
+   "isRequired": false,
+   "isDisabled": false,
+   "requiredErrMsg": "",
+   "patternErrMsg": ""
+     },
+ {
+   "name": "NumberOfDays3",
+   "jsonPath": "Connection.meter[0].meterReadings[2].numberOfDays",
+   "label": "wc.group.numberOfDays3",
+   "pattern": "^\\d{1,2}$",
+   "type": "number",
+   "isRequired": false,
+   "isDisabled": false,
+   "requiredErrMsg": "",
+   "patternErrMsg": ""
+ },
+  {
+    "name": "FirstMonthReset",
+    "jsonPath": "Connection.meter[0].meterReadings[0].resetFlag",
+    "label": "wc.create.groups.connectionDetails.fields.resetFlag1",
+    "pattern": "",
+    "type": "checkbox",
+    "isRequired": false,
+    "isDisabled": false,
+    "requiredErrMsg": "",
+    "patternErrMsg": "",
+    "defaultValue":false
+  },
+  {
+    "name": "SecondMonthReset",
+    "jsonPath": "Connection.meter[0].meterReadings[1].resetFlag",
+    "label": "wc.create.groups.connectionDetails.fields.resetFlag2",
+    "pattern": "",
+    "type": "checkbox",
+    "isRequired": false,
+    "isDisabled": false,
+    "requiredErrMsg": "",
+    "patternErrMsg": "",
+    "defaultValue":false
+  },
+  {
+    "name": "ThirdMonthReset",
+    "jsonPath": "Connection.meter[0].meterReadings[2].resetFlag",
+    "label": "wc.create.groups.connectionDetails.fields.resetFlag3",
+    "pattern": "",
+    "type": "checkbox",
+    "isRequired": false,
+    "isDisabled": false,
+    "requiredErrMsg": "",
+    "patternErrMsg": "",
+    "defaultValue":false
+  }]
   }
  ]
 }
@@ -373,7 +474,109 @@ var meterReadingView = {
      "isDisabled": false,
      "requiredErrMsg": "",
      "patternErrMsg": ""
-   }]
+   },
+   {
+  "name": "ConsumptionAdjustment1",
+  "jsonPath": "Connection[0].meter[0].meterReadings[0].consumptionAdjusted",
+  "label": "wc.group.consumptionAdjustment1",
+  "pattern": "^\\d{1,8}$",
+  "type": "number",
+  "isRequired": false,
+  "isDisabled": false,
+  "requiredErrMsg": "",
+  "patternErrMsg": ""
+    },
+  {
+    "name": "ConsumptionAdjustment2",
+    "jsonPath": "Connection[0].meter[0].meterReadings[1].consumptionAdjusted",
+    "label": "wc.group.consumptionAdjustment2",
+    "pattern": "^\\d{1,8}$",
+    "type": "number",
+    "isRequired": false,
+    "isDisabled": false,
+    "requiredErrMsg": "",
+    "patternErrMsg": ""
+      },
+  {
+    "name": "ConsumptionAdjustment3",
+    "jsonPath": "Connection[0].meter[0].meterReadings[2].consumptionAdjusted",
+    "label": "wc.group.consumptionAdjustment3",
+    "pattern": "^\\d{1,8}$",
+    "type": "number",
+    "isRequired": false,
+    "isDisabled": false,
+    "requiredErrMsg": "",
+    "patternErrMsg": ""
+  },
+  {
+   "name": "NumberOfDays1",
+   "jsonPath": "Connection[0].meter[0].meterReadings[0].numberOfDays",
+   "label": "wc.group.numberOfDays1",
+   "pattern": "^\\d{1,2}$",
+   "type": "number",
+   "isRequired": false,
+   "isDisabled": false,
+   "requiredErrMsg": "",
+   "patternErrMsg": ""
+   },
+  {
+   "name": "NumberOfDays2",
+   "jsonPath": "Connection[0].meter[0].meterReadings[1].numberOfDays",
+   "label": "wc.group.numberOfDays2",
+   "pattern": "^\\d{1,2}$",
+   "type": "number",
+   "isRequired": false,
+   "isDisabled": false,
+   "requiredErrMsg": "",
+   "patternErrMsg": ""
+     },
+  {
+   "name": "NumberOfDays3",
+   "jsonPath": "Connection[0].meter[0].meterReadings[2].numberOfDays",
+   "label": "wc.group.numberOfDays3",
+   "pattern": "^\\d{1,2}$",
+   "type": "number",
+   "isRequired": false,
+   "isDisabled": false,
+   "requiredErrMsg": "",
+   "patternErrMsg": ""
+ },
+ {
+   "name": "FirstMonthReset",
+   "jsonPath": "Connection[0].meter[0].meterReadings[0].resetFlag",
+   "label": "wc.create.groups.connectionDetails.fields.resetFlag1",
+   "pattern": "",
+   "type": "checkbox",
+   "isRequired": false,
+   "isDisabled": false,
+   "requiredErrMsg": "",
+   "patternErrMsg": "",
+   "defaultValue":false
+ },
+ {
+   "name": "SecondMonthReset",
+   "jsonPath": "Connection[0].meter[0].meterReadings[1].resetFlag",
+   "label": "wc.create.groups.connectionDetails.fields.resetFlag2",
+   "pattern": "",
+   "type": "checkbox",
+   "isRequired": false,
+   "isDisabled": false,
+   "requiredErrMsg": "",
+   "patternErrMsg": "",
+   "defaultValue":false
+ },
+ {
+   "name": "ThirdMonthReset",
+   "jsonPath": "Connection[0].meter[0].meterReadings[2].resetFlag",
+   "label": "wc.create.groups.connectionDetails.fields.resetFlag3",
+   "pattern": "",
+   "type": "checkbox",
+   "isRequired": false,
+   "isDisabled": false,
+   "requiredErrMsg": "",
+   "patternErrMsg": "",
+   "defaultValue":false
+ },]
   }
  ]
 }
@@ -1186,7 +1389,7 @@ var dat = {
                 },
                 {
                 "name": "receiptNumber",
-                "jsonPath": "Connection.receiptNumber",
+                "jsonPath": "Connection.manualReceiptNumber",
                 "label": "wc.create.receiptNumber",
                 "pattern": "",
                 "type": "text",
@@ -1197,7 +1400,7 @@ var dat = {
             },
             {
              "name": "receiptDate",
-             "jsonPath": "Connection.receiptDate",
+             "jsonPath": "Connection.manualReceiptDate",
              "maxDate": "today",
              "label": "wc.create.receiptDate",
              "pattern": "",
@@ -1968,7 +2171,7 @@ var dat = {
                   },
                   {
                   "name": "receiptNumber",
-                  "jsonPath": "Connection[0].receiptNumber",
+                  "jsonPath": "Connection[0].manualReceiptNumber",
                   "label": "wc.create.receiptNumber",
                   "pattern": "",
                   "type": "text",
@@ -1979,7 +2182,7 @@ var dat = {
               },
               {
                "name": "receiptDate",
-               "jsonPath": "Connection[0].receiptDate",
+               "jsonPath": "Connection[0].manualReceiptDate",
                "maxDate": "today",
                "label": "wc.create.receiptDate",
                "pattern": "",

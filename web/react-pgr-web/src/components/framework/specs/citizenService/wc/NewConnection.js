@@ -1026,6 +1026,7 @@ var dat = {
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
+            
             "isHidden": true,
             "defaultValue": "NEWCONNECTION",
             "requiredErrMsg": "",

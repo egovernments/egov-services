@@ -41,7 +41,9 @@ require('datatables.net-buttons/js/buttons.print.js'); // Print view button
 const nameMap = {
   "PT_NODUES": "Property Tax No Dues",
   "WC_NODUES": "Water Charges No Dues",
-  "CREATED": "Created"
+  "CREATED": "Created",
+  "WATER_NEWCONN": "New Water Connection",
+  "CANCELLED": "Request Cancelled"
 };
 
 const content=[
@@ -587,6 +589,14 @@ class Dashboard extends Component {
     this.setState({servicesFilter:"", selectedServiceCode:"", selectedServiceName:translate(constants.LABEL_SERVICES)});
   }
 
+  rowClickHandler = (item) => {
+    if(item.serviceCode == "WATER_NEWCONN") {
+      this.props.setRoute("/non-framework/citizenServices/wc/view/" + encodeURIComponent(item.serviceRequestId));
+    } else if(item.serviceCode == "BPA_FIRE_NOC") {
+      this.props.setRoute("/non-framework/citizenServices/fireNoc/view/" + encodeURIComponent(item.serviceRequestId));
+    }
+  }
+
   render() {
     //filter citizen services
     let servicesMenus=[];
@@ -700,7 +710,7 @@ class Dashboard extends Component {
                                     </thead>
                                     <tbody>
                                         {serviceRequestsTwo.map((item, key)=>{
-                                          return (<tr key={key}>
+                                          return (<tr key={key} onClick={() => {this.rowClickHandler(item)}}>
                                               <td>{item.serviceRequestId}</td>
                                               <td>{nameMap[item.serviceCode] || item.serviceCode}</td>
                                               <td>{nameMap[item.status] || item.status}</td>

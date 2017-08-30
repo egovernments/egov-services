@@ -324,8 +324,8 @@ ReportDefinitions:
   groupBy: GROUP BY source,CAO.NAME,CAO.GLCODE,EGF_INSTRUMENTTYPE.NAME
   orderBy: ) AS RESULT GROUP BY RESULT.SOURCE,RESULT.glCode order by source, glCod
 
-- reportName: CitizenService
-  summary: Citizen Services Report
+- reportName: LegacyReceipt
+  summary: Legacy Receipt Report
   version: 1.0.0
   moduleName: collection
   sourceColumns:

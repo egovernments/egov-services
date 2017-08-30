@@ -169,7 +169,7 @@ public class ServiceReqRepository {
 				persistDocuments(serviceReqRequest);
 			}
 		} catch (final Exception ex) {
-			log.info("the exception from insert query : " + ex);
+			log.info("the exception from insert query : ", ex);
 		}
 	}
 	

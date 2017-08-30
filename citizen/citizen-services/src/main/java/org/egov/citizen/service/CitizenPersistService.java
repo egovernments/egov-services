@@ -8,18 +8,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.citizen.config.ApplicationProperties;
 import org.egov.citizen.model.AuditDetails;
 import org.egov.citizen.model.ServiceReqRequest;
 import org.egov.citizen.model.ServiceReqResponse;
-import org.egov.citizen.producer.CitizenProducer;
 import org.egov.citizen.repository.ServiceReqRepository;
 import org.egov.citizen.web.contract.ServiceRequestSearchCriteria;
 import org.egov.citizen.web.contract.factory.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +28,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -48,13 +43,7 @@ public class CitizenPersistService {
 
 	public static final Logger LOGGER = LoggerFactory
 			.getLogger(CitizenPersistService.class);
-	
-	@Autowired
-	private CitizenProducer citizenProducer; 
-	
-	@Autowired
-	private ApplicationProperties applicationProperties;
-	
+		
 	@Autowired
 	private RestTemplate restTemplate;
 	
@@ -214,6 +203,7 @@ public class CitizenPersistService {
 		LOGGER.info("serviceReqRequest: "+serviceReqRequest);
 		serviceReqRequest.getServiceReq().getAuditDetails().setLastModifiedBy(auditDetails.getLastModifiedBy());
 		serviceReqRequest.getServiceReq().getAuditDetails().setLastModifiedDate(auditDetails.getLastModifiedDate());
+
 		
 		log.info("update serviceReqRequest:"+serviceReqRequest);
 		

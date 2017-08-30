@@ -54,6 +54,14 @@ export default class UiEmailField extends Component {
 						value={this.getDateFormat(this.props.getVal(item.jsonPath))}
 						onChange={(e) => {
 							var val = e.target.value;
+							if(e.target.value.length == 2 && !e.target.value.match('/')){
+								val+='/';
+							} else if(e.target.value.length == 5) {
+								var a = e.target.value.split('/');
+								if(!a[1].match('/')){
+									val+='/';
+								}
+							}
 							if(e.target.value) {
 								e.target.value = e.target.value.trim();
 								if(datePat.test(e.target.value)){

@@ -818,14 +818,14 @@ class Report extends Component {
     ServiceRequest.status = "CREATED";
     var BillReceiptObject = [];
     BillReceiptObject[0] = {"Bill":[]};
-    BillReceiptObject[0]["Bill"] = AllResponses[2].Receipt.Bill;
+    BillReceiptObject[0]["Bill"] = AllResponses[2].response.Bill;
     BillReceiptObject[0]["Bill"][0]["paidBy"] = BillReceiptObject[0]["Bill"][0].payeeName;
     BillReceiptObject[0]["tenantId"] = localStorage.getItem("tenantId")
     BillReceiptObject[0]["instrument"] = {"tenantId": localStorage.getItem("tenantId"),"amount": 20,"instrumentType":{"name":"Cash"}}
 
     BillReceiptObject[0]["Bill"][0]["billDetails"][0]["amountPaid"] = 20;
     ServiceRequest.backendServiceDetails = [{
-      "url": "http://egov-micro-dev.egovernments.org/collection-services/receipts/_create",
+      "url": "http://collection-services:8080/collection-services/receipts/_create",
       "request": {
         RequestInfo: self.state.RequestInfo,
         Receipt: BillReceiptObject
@@ -837,7 +837,7 @@ class Report extends Component {
       self.handleClose();
       self.setState({
         stepIndex: 1,
-        Receipt: res.serviceReq.backendServiceDetails[0].Receipt
+        Receipt: res.serviceReq.backendServiceDetails[0].response.Receipt
       });
       $('html, body').animate({ scrollTop: 0 }, 'fast');
     }, function(err){
@@ -857,16 +857,16 @@ class Report extends Component {
     //Update WC
     let self = this;
 
-    var ConnectionObject = {...self.state.formData};
-    var DemandBillQuery = `?businessService=CS&tenantId=${localStorage.getItem("tenantId")}&consumerCode=`;
+    var ConnectionObject = {...self.props.formData};
+    var DemandBillQuery = `?businessService=WC&tenantId=${localStorage.getItem("tenantId")}&consumerCode=`;
     let DemandRequest = {};
     DemandRequest["Demands"] = self.props.metaData["wc.create"].feeDetails;
     DemandRequest["Demands"][0].tenantId = localStorage.getItem("tenantId");
     DemandRequest["Demands"][0].consumerCode = "";
     DemandRequest["Demands"][0].owner.id = JSON.parse(localStorage.userRequest).id;
-    DemandRequest["Demands"][0].taxPeriodFrom = 1491004800000;
-    DemandRequest["Demands"][0].taxPeriodTo = 1522540799000;
-    DemandRequest["Demands"][0].demandDetails[0].taxHeadMasterCode = "WC_NO_DUE_CERT_CHAR";
+    DemandRequest["Demands"][0].taxPeriodFrom = 1301596200000;
+    DemandRequest["Demands"][0].taxPeriodTo = 1317321000000;
+    DemandRequest["Demands"][0].demandDetails[0].taxHeadMasterCode = "WATERCHARGE";
     var ServiceRequest = {
        "tenantId": localStorage.getItem("tenantId"),
        "serviceRequestId": null,
@@ -893,19 +893,19 @@ class Report extends Component {
        "assignedTo": "assignedTo",
        "comments": [],
        "backendServiceDetails": [{
-          "url": "http://egov-micro-dev.egovernments.org/billing-service/demand/_create?tenantId=" + localStorage.tenantId,
+          "url": "http://billing-service:8080/billing-service/demand/_create?tenantId=" + localStorage.tenantId,
           "request": {
             RequestInfo: self.state.RequestInfo,
             ...DemandRequest
           }
        }, {
-          "url": "http://egov-micro-dev.egovernments.org/wcms-connection/connection/_create",
+          "url": "http://wcms-connection:8080/wcms-connection/connection/_create",
           "request": {
             RequestInfo: self.state.RequestInfo,
             Connection: ConnectionObject.Connection
           }
        }, {
-          "url": "http://egov-micro-dev.egovernments.org/billing-service/bill/_generate" + DemandBillQuery,
+          "url": "http://billing-service:8080/billing-service/bill/_generate" + DemandBillQuery,
           "request": {
             RequestInfo: self.state.RequestInfo
           }
@@ -979,7 +979,7 @@ class Report extends Component {
                                               autoComHandler={autoComHandler}/>}
                     <div style={{"textAlign": "center"}}>
                       <br/>
-                      <RaisedButton label="Create" primary={true} onClick={() => {self.openPaymentPopup()}}/>
+                      <RaisedButton disabled={!isFormValid} label="Create" primary={true} onClick={() => {self.openPaymentPopup()}}/>
                       <br/>
                     </div>
                   </form>);

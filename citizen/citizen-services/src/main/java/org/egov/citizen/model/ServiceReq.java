@@ -32,7 +32,6 @@ public class ServiceReq {
 	private AuditDetails auditDetails;
 	private String action;
 	private String consumerCode;
-	
 	private List<Comment> comments;	
 	private List<Document> documents;	
 	private String status;	

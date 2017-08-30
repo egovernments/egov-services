@@ -63,7 +63,12 @@ public class TradeLicenseContract {
 	}
 
 	public boolean isWorkflowCreate() {
-		return workFlowDetails.getAction() != null && workFlowDetails.getAction().equalsIgnoreCase("create");
+		return workFlowDetails != null && workFlowDetails.getAction() != null
+				&& workFlowDetails.getAction().equalsIgnoreCase("create");
+	}
+
+	public boolean isWorkflowUpdate() {
+		return workFlowDetails != null && workFlowDetails.getAction() != null && !workFlowDetails.getAction().isEmpty();
 	}
 
 	public void update(ProcessInstanceResponse processInstanceResponse) {

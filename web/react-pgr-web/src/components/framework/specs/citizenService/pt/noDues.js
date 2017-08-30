@@ -78,13 +78,13 @@ var dat = {
       "fields": [{
           "name": "consumerCode",
           "jsonPath": "consumerCode",
-          "label": "noDues.citizenService.consumerCode",
-          "pattern": "^.{0,30}$",
+          "label": "noDues.citizenService.assessmentNumber",
+          "pattern": "^[-0-9a-zA-Z]{0,30}$",
           "type": "text",
           "isRequired": false,
           "isDisabled": false,
-          "requiredErrMsg": "Consumer code is mandatory",
-          "patternErrMsg": "Cosumer code max 30 charectors"
+          "requiredErrMsg": "Assessment Number is mandatory",
+          "patternErrMsg": "Assessment Number max 30 charectors"
         },
         {
           "name": "email",

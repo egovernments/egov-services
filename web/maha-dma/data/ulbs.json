@@ -10,5 +10,29 @@
     "ulbName": "Roha Municipal Council",
     "tenantId" : "mh.rohatest",
     "url": "http://egov-micro-qa.egovernments.org/app/v1/#/mh.rohatest"
+  },
+  {
+    "district": "Raigad",
+    "ulbName": "Khopoli Municipal Council",
+    "tenantId" : "mh.khop",
+    "url": "http://egov-micro-qa.egovernments.org/app/v1/#/mh.khop"
+  },
+  {
+    "district": "Raigad",
+    "ulbName": "Ambarnath Municipal Council",
+    "tenantId" : "mh.amba",
+    "url": "http://egov-micro-qa.egovernments.org/app/v1/#/mh.amba"
+  },
+  {
+    "district": "Raigad",
+    "ulbName": "Alibag Municipal Council",
+    "tenantId" : "mh.aliba",
+    "url": "http://egov-micro-qa.egovernments.org/app/v1/#/mh.aliba"
+  },
+  {
+    "district": "Raigad",
+    "ulbName": "Pen Municipal Council",
+    "tenantId" : "mh.pen0",
+    "url": "http://egov-micro-qa.egovernments.org/app/v1/#/mh.pen0"
   }
 ]

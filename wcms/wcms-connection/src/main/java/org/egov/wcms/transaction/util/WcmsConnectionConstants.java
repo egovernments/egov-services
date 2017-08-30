@@ -320,7 +320,27 @@ public class WcmsConnectionConstants {
     public static final String BOUNDARY_LOCATION_INVALID_CODE = "wcms.0053";
     public static final String BOUNDARY_LOCATION_INVALID_ERROR_MESSAGE = "Please provide valid Location";
     public static final String BOUNDARY_LOCATION_INVALID_FIELD_NAME = "location";
-  
+    
+    public static final String CONNECTION_METERED_OWNER_INVALID_CODE = "wcms.0054";
+    public static final String CONNECTION_METERED_OWNER_INVALID_ERROR_MESSAGE = "Required meter owner";
+    public static final String CONNECTION_METERED_OWNER_INVALID_FIELD_NAME = "meterOwner";
+    
+    public static final String CONNECTION_METERED_INITIALMETERREADING_INVALID_CODE = "wcms.0055";
+    public static final String CONNECTION_METERED_INITIALMETERREADING_INVALID_ERROR_MESSAGE = "Required initial meter reading";
+    public static final String CONNECTION_METERED_INITIALMETERREADING_INVALID_FIELD_NAME = "initialMeterReading";
+    
+    public static final String CONNECTION_METERED_MAXMETERREADING_INVALID_CODE = "wcms.0056";
+    public static final String CONNECTION_METERED_MAXMETERREADING_INVALID_ERROR_MESSAGE = "Required maximum meter reading";
+    public static final String CONNECTION_METERED_MAXMETERREADING_INVALID_FIELD_NAME = "maximumMeterReading";
+    
+    public static final String CONNECTION_METERED_METERREADING_INVALID_CODE = "wcms.0057";
+    public static final String CONNECTION_METERED_METERREADING_INVALID_ERROR_MESSAGE = "Required valid meter reading";
+    public static final String CONNECTION_METERED_METERREADING_INVALID_FIELD_NAME = "reading";
+    
+    public static final String CONNECTION_METERED_METERREADINGDATE_INVALID_CODE = "wcms.0058";
+    public static final String CONNECTION_METERED_METERREADINGDATE_INVALID_ERROR_MESSAGE = "Required valid meter ReadingDate";
+    public static final String CONNECTION_METERED_METERREADINGDATE_INVALID_FIELD_NAME = "readingDate";
+    
     public static final String ZONE = "Zone";
     public static final String REVENUE = "REVENUE";
     public static final String WARD = "Ward";

@@ -21,43 +21,43 @@ ReportDefinitions:
     label: reports.property.pttax
     type: string
     source: collection
-    columnTotal: true
+    total: true
   - name: LIB_CESS
     label: reports.property.libcess
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: EDU_CESS
     label: reports.property.educess
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: VACANT_TAX
     label: reports.property.vacanttax
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: EMP_GUA_CESS
     label: reports.property.empguacess
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: LATE_PENALTY
     label: reports.property.latepenalty
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: ADVANCE
     label: reports.property.advance
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: Total
     label: reports.property.Total
     type: number
     source: seva
     rowTotal: true
-    columnTotal: true
+    total: true
   searchParams:
   - name: revenueboundary
     label: reports.property.revenueboundary
@@ -114,7 +114,7 @@ ReportDefinitions:
            and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and todate>=(select extract ('epoch' from (select * from now()))*1000) 
            and service = 'PT' and tenantid=$tenantid)
   groupBy: group by upicnumber,propertyaddress,state)      
-  orderBy: )result order by upicnumber asc,state desc;
+  orderBy: )result order by upicnumber asc,state asc;
  
 - reportName: CollectionRegister
   summary: Collection Register Report
@@ -137,43 +137,43 @@ ReportDefinitions:
     label: reports.property.pttax
     type: string
     source: collection
-    columnTotal: true
+    total: true
   - name: LIB_CESS_COLL
     label: reports.property.libcess
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: EDU_CESS_COLL
     label: reports.property.educess
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: VACANT_TAX_COLL
     label: reports.property.vacanttax
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: EMP_GUA_CESS_COLL
     label: reports.property.empguacess
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: LATE_PENALTY_COLL
     label: reports.property.latepenalty
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: ADVANCE
     label: reports.property.advance
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: Total
     label: reports.property.Total
     type: number
     source: seva
     rowTotal: true
-    columnTotal: true
+    total: true
   searchParams:
   - name: revenueboundary
     label: reports.property.revenueboundary
@@ -232,7 +232,7 @@ ReportDefinitions:
          and demand.consumercode=prop.upicnumber
          and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service = 'PT' and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid) 
   groupBy: group by upicnumber,propertyaddress,state) 
-  orderBy: )result order by upicnumber asc,state desc;
+  orderBy: )result order by upicnumber asc,state asc;
   
 - reportName: BalanceRegister
   summary: Balance Register Report
@@ -255,37 +255,37 @@ ReportDefinitions:
     label: reports.property.pttax
     type: string
     source: collection
-    columnTotal: true
+    total: true
   - name: LIB_CESS_BAL
     label: reports.property.libcess
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: EDU_CESS_BAL
     label: reports.property.educess
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: VACANT_TAX_BAL
     label: reports.property.vacanttax
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: EMP_GUA_CESS_BAL
     label: reports.property.empguacess
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: LATE_PENALTY_BAL
     label: reports.property.latepenalty
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: ADVANCE
     label: reports.property.advance
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: receiptnumber
     label: reports.property.receiptnumber
     type: number
@@ -298,7 +298,7 @@ ReportDefinitions:
     label: reports.property.total
     type: number
     source: seva
-    columnTotal: true
+    total: true
     rowTotal: true
   searchParams:
   - name: revenueboundary
@@ -358,7 +358,7 @@ ReportDefinitions:
          and demand.consumercode=prop.upicnumber
          and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service = 'PT'and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid)
   groupBy: group by upicnumber,propertyaddress,state) 
-  orderBy: )result order by upicnumber asc,state desc;
+  orderBy: )result order by upicnumber asc,state asc;
  
 - reportName: DemandBalanceCollectionReport
   summary: Demand Balance Collection Report
@@ -369,52 +369,52 @@ ReportDefinitions:
     label: reports.property.upicnumber
     type: number
     source: collection
-    columnTotal: true
+    total: true
   - name: propertyaddress
     label: reports.property.address
     type: number
     source: completed
-    columnTotal: true
+    total: true
   - name: STATE
     label: reports.property.state
     type: number
     source: completed
-    columnTotal: true
+    total: true
   - name: PT_TAX
     label: reports.property.pttax
     type: string
     source: collection
-    columnTotal: true
+    total: true
   - name: LIB_CESS
     label: reports.property.libcess
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: EDU_CESS
     label: reports.property.educess
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: VACANT_TAX
     label: reports.property.vacanttax
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: EMP_GUA_CESS
     label: reports.property.empguacess
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: LATE_PENALTY
     label: reports.property.latepenalty
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: PT_COLL
     label: reports.property.pttax
     type: string
     source: collection
-    columnTotal: true
+    total: true
   - name: LIB_CESS_COLL
     label: reports.property.libcess
     type: number
@@ -427,52 +427,52 @@ ReportDefinitions:
     label: reports.property.vacanttax
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: EMP_GUA_CESS_COLL
     label: reports.property.empguacess
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: LATE_PENALTY_COLL
     label: reports.property.latepenalty
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: PT_BAL
     label: reports.property.pttax
     type: string
     source: collection
-    columnTotal: true
+    total: true
   - name: LIB_CESS_BAL
     label: reports.property.libcess
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: EDU_CESS_BAL
     label: reports.property.educess
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: VACANT_TAX_BAL
     label: reports.property.vacanttax
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: EMP_GUA_CESS_BAL
     label: reports.property.empguacess
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: LATE_PENALTY_BAL
     label: reports.property.latepenalty
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: ADVANCE
     label: reports.property.advance
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: receiptnumber
     label: reports.property.receiptnumber
     type: number
@@ -485,7 +485,7 @@ ReportDefinitions:
     label: reports.property.total
     type: number
     source: seva
-    columnTotal: true
+    total: true
     rowTotal: true
   searchParams:
   - name: revenueboundary
@@ -577,7 +577,7 @@ ReportDefinitions:
           and demand.consumercode=prop.upicnumber
           and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service = 'PT' and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid)
   groupBy: group by upicnumber,propertyaddress,state) 
-  orderBy: )result order by upicnumber asc,state desc limit 20;
+  orderBy: )result order by upicnumber asc,state asc limit 20;
   
 - reportName: AssessmentRegister
   summary:  Assessment Register Report
@@ -608,37 +608,37 @@ ReportDefinitions:
     label: reports.property.pttax
     type: string
     source: collection
-    columnTotal: true
+    total: true
   - name: LIB_CESS
     label: reports.property.libcess
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: EDU_CESS
     label: reports.property.educess
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: VACANT_TAX
     label: reports.property.vacanttax
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: EMP_GUA_CESS
     label: reports.property.empguacess
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: LATE_PENALTY
     label: reports.property.latepenalty
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: ADVANCE
     label: reports.property.advance
     type: number
     source: seva
-    columnTotal: true
+    total: true
   - name: receiptnumber
     label: reports.property.receiptnumber
     type: number

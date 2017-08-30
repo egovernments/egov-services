@@ -1,10 +1,10 @@
 package org.egov.egf.master.domain.service;
 
  
-import static org.egov.common.constants.Constants.ACTION_VIEW;
-import static org.egov.common.constants.Constants.ACTION_UPDATE;
 import static org.egov.common.constants.Constants.ACTION_CREATE;
- 
+import static org.egov.common.constants.Constants.ACTION_UPDATE;
+import static org.egov.common.constants.Constants.ACTION_VIEW;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,8 +20,8 @@ import org.egov.egf.master.web.requests.AccountCodePurposeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.SmartValidator;
 
@@ -39,57 +39,68 @@ public class AccountCodePurposeService {
 
 	private BindingResult validate(List<AccountCodePurpose> accountcodepurposes, String method, BindingResult errors) {
 
-		try {
-			switch (method) {
-			case ACTION_VIEW:
-				// validator.validate(accountCodePurposeContractRequest.getAccountCodePurpose(),
-				// errors);
-				break;
-			case ACTION_CREATE:
-				//Assert.notNull(accountcodepurposes, "AccountCodePurposes to create must not be null");
-				for (AccountCodePurpose accountCodePurpose : accountcodepurposes) {
-					validator.validate(accountCodePurpose, errors);
-					
-					if(!accountCodePurposeRepository.uniqueCheck("name", accountCodePurpose)); 
-					{
-						throw new InvalidDataException("name",ErrorCode.NON_UNIQUE_VALUE.getCode(),accountCodePurpose.getName());    
-					}
-					
-					
-
-				}
-				break;
-			case ACTION_UPDATE:
-				Assert.notNull(accountcodepurposes, "AccountCodePurposes to update must not be null");
-				for (AccountCodePurpose accountCodePurpose : accountcodepurposes) {
-					if(accountCodePurpose.getId()==null)
-					{
-						throw new InvalidDataException("id",ErrorCode.NULL_VALUE.getCode(),accountCodePurpose.getId());
-					}
-					validator.validate(accountCodePurpose, errors);
-					
-					if(!accountCodePurposeRepository.uniqueCheck("name", accountCodePurpose)); 
-					{
-						throw new InvalidDataException("name",ErrorCode.NON_UNIQUE_VALUE.getCode(),accountCodePurpose.getName());    
-					}
-					
-					
-				}
-				break;
-                        case Constants.ACTION_SEARCH:
-                            Assert.notNull(accountcodepurposes, "Accountcodepurposes to search must not be null");
-                            for (AccountCodePurpose accountcodepurpose : accountcodepurposes) {
-                                    Assert.notNull(accountcodepurpose.getTenantId(), "TenantID must not be null for search");
+                try {
+                    switch (method) {
+                    case ACTION_VIEW:
+                        // validator.validate(accountCodePurposeContractRequest.getAccountCodePurpose(),
+                        // errors);
+                        break;
+                    case ACTION_CREATE:
+                        if (accountcodepurposes == null) {
+                            throw new InvalidDataException("accountcodepurposes", ErrorCode.NOT_NULL.getCode(),
+                                    accountcodepurposes.toString());
+                        }
+                        for (AccountCodePurpose accountCodePurpose : accountcodepurposes) {
+                            validator.validate(accountCodePurpose, errors);
+        
+                            if (!accountCodePurposeRepository.uniqueCheck("name", accountCodePurpose))
+                            {
+                                errors.addError(new FieldError("accountCodePurpose", "name", accountCodePurpose.getName(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
                             }
-                                break;                              
-			default:
-
-			}
-		} catch (IllegalArgumentException e) {
+        
+                        }
+                        break;
+                    case ACTION_UPDATE:
+                        if (accountcodepurposes == null) {
+                            throw new InvalidDataException("accountcodepurposes", ErrorCode.NOT_NULL.getCode(),
+                                    accountcodepurposes.toString());
+                        }
+                        for (AccountCodePurpose accountCodePurpose : accountcodepurposes) {
+                            if (accountCodePurpose.getId() == null)
+                            {
+                                throw new InvalidDataException("id", ErrorCode.NULL_VALUE.getCode(), accountCodePurpose.getId());
+                            }
+                            validator.validate(accountCodePurpose, errors);
+        
+                            if (!accountCodePurposeRepository.uniqueCheck("name", accountCodePurpose))
+                            {
+                                errors.addError(new FieldError("accountCodePurpose", "name", accountCodePurpose.getName(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                            }
+        
+                        }
+                        break;
+                    case Constants.ACTION_SEARCH:
+                        if (accountcodepurposes == null) {
+                            throw new InvalidDataException("accountcodepurposes", ErrorCode.NOT_NULL.getCode(),
+                                    accountcodepurposes.toString());
+                        }
+                        for (AccountCodePurpose accountcodepurpose : accountcodepurposes) {
+                            if (accountcodepurpose.getTenantId() == null) {
+                                throw new InvalidDataException("tenantId", ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
+                                        accountcodepurpose.getTenantId());
+                            }
+        
+                        }
+                        break;
+                    default:
+        
+                    }
+                } catch (IllegalArgumentException e) {
 			errors.addError(new ObjectError("Missing data", e.getMessage()));
 		}
 		return errors;
-
 	}
 
 	public List<AccountCodePurpose> fetchRelated(List<AccountCodePurpose> accountcodepurposes) {

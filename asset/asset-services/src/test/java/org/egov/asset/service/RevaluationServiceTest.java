@@ -30,6 +30,7 @@ import org.egov.asset.model.RevaluationCriteria;
 import org.egov.asset.model.Voucher;
 import org.egov.asset.model.VouchercreateAccountCodeDetails;
 import org.egov.asset.model.enums.ModeOfAcquisition;
+import org.egov.asset.model.enums.Sequence;
 import org.egov.asset.model.enums.Status;
 import org.egov.asset.model.enums.TypeOfChangeEnum;
 import org.egov.asset.model.enums.VoucherType;
@@ -90,6 +91,9 @@ public class RevaluationServiceTest {
     @Mock
     private AssetConfigurationService assetConfigurationService;
 
+    @Mock
+    private AssetCommonService assetCommonService;
+
     @Test
     public void testCreate() {
         RevaluationResponse revaluationResponse = null;
@@ -115,6 +119,8 @@ public class RevaluationServiceTest {
         final RevaluationRequest revaluationRequest = getRevaluationRequest();
         final HttpHeaders headers = getHttpHeaders();
         final RevaluationResponse expectedRevaluationResponse = getRevaluationResponse();
+        
+        when(assetCommonService.getNextId(any(Sequence.class))).thenReturn(Long.valueOf("1"));
         final RevaluationResponse actualRevaluationResponse = revaluationService.createAsync(revaluationRequest,
                 headers);
         assertEquals(expectedRevaluationResponse.toString(), actualRevaluationResponse.toString());
@@ -312,7 +318,7 @@ public class RevaluationServiceTest {
     private Revaluation getRevaluationForCreateAsync() {
 
         final Revaluation revaluation = new Revaluation();
-        revaluation.setId(Long.valueOf("0"));
+        revaluation.setId(Long.valueOf("1"));
         revaluation.setTenantId("ap.kurnool");
         revaluation.setAssetId(Long.valueOf("31"));
         revaluation.setCurrentCapitalizedValue(new BigDecimal("100.68"));

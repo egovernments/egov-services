@@ -34,7 +34,7 @@ public class TradeLicense {
 
 	@NotNull
 	private ApplicationType applicationType;
-
+	
 	@JsonProperty("applicationNumber")
 	private String applicationNumber;
 
@@ -166,6 +166,9 @@ public class TradeLicense {
 	
 	@JsonProperty("licenseDemands")
 	private List<LicenseApplicationBill> applicationLicenseBills;
+	
+	@JsonProperty("application")
+	private LicenseApplication application;
 
 	@JsonProperty("status")
 	private Long status;

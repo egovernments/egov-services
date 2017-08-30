@@ -85,6 +85,20 @@ public class ReceiptDetailQueryBuilder {
 			+ "rh.createdBy as rh_createdBy,rh.createdDate as rh_createdDate,"
 			+ "rh.lastModifiedBy as rh_lastModifiedBy,rh.lastModifiedDate as rh_lastModifiedDate,rh.transactionid as rh_transactionid "
 			+ " from egcl_receiptheader rh ";
+	
+	private static final String LEGACY_RECEIPT_HEADER_QUERY = "Select lrh.id as lrh_id,"
+	        + "lrh.legacyreceiptid as lrh_legacyreceiptid,lrh.receiptNo as lrh_receiptNo,"
+	        + "lrh.receiptDate as lrh_receiptDate,lrh.department as lrh_department,"
+	        + "lrh.serviceName as lrh_serviceName,lrh.consumerNo as lrh_consumerNo,"
+	        + "lrh.consumerName as lrh_consumerName,lrh.totalAmount as lrh_totalAmount,"
+	        + "lrh.advanceAmount as lrh_advanceAmount,lrh.adjustmentAmount as lrh_adjustmentAmount,"
+	        + "lrh.consumerAddress as lrh_consumerAddress,lrh.payeeName as lrh_payeeName,"
+	        + "lrh.instrumentType as lrh_instrumentType,lrh.instrumentDate as lrh_instrumentDate,"
+	        + "lrh.instrumentNo as lrh_instrumentNo,lrh.bankName as lrh_bankName,"
+	        + "lrh.manualreceiptnumber as lrh_manualreceiptnumber,lrh.manualreceiptDate as"
+	        + " lrh_manualreceiptDate,lrh.tenantid as lrh_tenantid,lrh.remarks as lrh_remarks"
+	        + " from egcl_legacy_receipt_header lrh";
+	      
 
     private static final String RECEIPT_DETAILS_QUERY = "select rd.id as rd_id,rd.receiptHeader as rh_id, " +
             " rd.dramount as rd_dramount,rd.cramount as rd_cramount,rd.actualcramountToBePaid as " +
@@ -391,9 +405,6 @@ public class ReceiptDetailQueryBuilder {
         return "select instrumentheader from egcl_receiptinstrument where receiptheader = ? and tenantId = ? ";
     }
     
-  /*  public String searchReceiptOnRcptNo() {
-        return "select id from egcl_receiptheader where receiptnumber = ? and tenantId = ? ";
-    } */
 
 
     public static String insertOnlinePayments() {
@@ -403,5 +414,42 @@ public class ReceiptDetailQueryBuilder {
                 + " status, remarks, createdby, lastmodifiedby, createddate, lastmodifieddate, tenantId) "
                 + "VALUES (NEXTVAL('seq_egcl_onlinepayments'), :receiptheader, :paymentgatewayname, :transactionnumber, :transactionamount, :transactiondate, :authorisation_statuscode, "
                 + ":status, :remarks, :createdby, :lastmodifiedby, :createddate, :lastmodifieddate, :tenantId)";
+    }
+
+    public String getLegacyReceiptSearchQuery(ReceiptSearchCriteria receiptSearchCriteria, List<Object> preparedStatementValues) {
+        StringBuilder legacySelectQuery = new StringBuilder(LEGACY_RECEIPT_HEADER_QUERY);
+        addWhereClause(receiptSearchCriteria,legacySelectQuery,preparedStatementValues);
+        return legacySelectQuery.toString();
+    }
+
+
+    private void addWhereClause(ReceiptSearchCriteria receiptSearchCriteria, StringBuilder legacySelectQuery,
+            List<Object> preparedStatementValues) {
+        if(receiptSearchCriteria.getTenantId()== null)
+            return;
+        legacySelectQuery.append(" WHERE");
+        Boolean isAppendAndClause = false;
+        if(receiptSearchCriteria.getTenantId()!= null){
+            isAppendAndClause=true;
+            legacySelectQuery.append(" lrh.tenantid = ?");
+            preparedStatementValues.add(receiptSearchCriteria.getTenantId());
+          }
+        if(receiptSearchCriteria.getReceiptNumbers()!=null)
+        {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
+                    legacySelectQuery);
+            legacySelectQuery.append(" lrh.receiptNo ilike any  "
+                    + getNumberQuery(receiptSearchCriteria.getReceiptNumbers())); 
+        }
+                
+    }
+
+    public String getLegacyReceiptDetailByLegacyReceiptHeader() {
+        return "Select lrd.id as lrd_id,lrd.billNo as lrd_billNo,lrd.billId as lrd_billId,lrd.billYear as lrd_billYear,"
+                + "lrd.taxId as lrd_taxId,lrd.billDate as lrd_billDate,lrd.description as lrd_description,lrd.currDemand as lrd_currDemand,"
+                + "lrd.arrDemand as lrd_arrDemand,lrd.currCollection as lrd_currCollection,lrd.arrCollection as lrd_arrCollection,"
+                + "lrd.currBalance as lrd_currBalance,lrd.arrBalance as lrd_arrBalance,lrd.id_receipt_header as lrd_id_receipt_header,"
+                + "lrd.tenantid as lrd_tenantid from egcl_legacy_receipt_details lrd where lrd.tenantid =? and lrd.id_receipt_header =?";
+            
     }
 }

@@ -173,7 +173,10 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			
 			license.setLicenseApplicationSearchEntitys(this.getLicenseApplicationEntitys( license.getId(), requestInfo));
 			
-			
+			//FIXME : assuming there will be only one application for license
+			license.setApplicationType( license.getLicenseApplicationSearchEntitys().get(0).getApplicationType());
+			license.setApplicationDate(license.getLicenseApplicationSearchEntitys().get(0).getApplicationDate());
+			license.setApplicationNumber(license.getLicenseApplicationSearchEntitys().get(0).getApplicationNumber());			
 			
 			license.setLicenseNumber(getString(row.get("licenseNumber")));
 			license.setOldLicenseNumber(getString(row.get("oldLicenseNumber")));

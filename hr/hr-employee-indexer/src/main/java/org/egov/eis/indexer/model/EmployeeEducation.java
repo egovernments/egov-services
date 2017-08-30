@@ -38,33 +38,39 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.indexer.model.enums;
+package org.egov.eis.indexer.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-public enum EmployeeStatus {
-	EMPLOYED("EMPLOYED"), RETIRED("RETIRED"), SUSPENDED("SUSPENDED"), DECEASED("DECEASED");
+import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
-	private String value;
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class EmployeeEducation {
 
-	EmployeeStatus(String value) {
-		this.value = value;
-	}
+	private Long id;
 
-	@Override
-	@JsonValue
-    public String toString() {
-        return this.name();
-    }
+	private String qualification;
 
-	@JsonCreator
-	public static EmployeeStatus fromValue(String passedValue) {
-		for (EmployeeStatus obj : EmployeeStatus.values()) {
-			if (String.valueOf(obj.value).equals(passedValue.toUpperCase())) {
-				return obj;
-			}
-		}
-		return null;
-	}
+	private String majorSubject;
+
+	private Integer yearOfPassing;
+
+	private String university;
+
+	private List<String> documents = new ArrayList<>();
+
+	private AuditDetails auditDetails;
+
+	private TenantDetails tenantDetails;
+
 }

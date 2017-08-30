@@ -670,9 +670,10 @@ definitions:
   OwnerShipType:
     type: string
     enum:
-      - STATE_GOVERNMENT_OWNED
+      - STATE_GOVERNMENT
+      - OWNED
       - RENTED
-      - CENTRAL_GOVERNMENT_OWNED
+      - CENTRAL_GOVERNMENT
       - ULB
   TradeLicenseRequest:
       description: Contract class to receive request. Array of TradeLicense items are used in case of create, whereas single TradeLicense item is used for update

@@ -1,9 +1,7 @@
 package org.egov.asset.repository;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -114,26 +112,6 @@ public class AssetRepositoryTest {
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
 
         assertTrue(asset.equals(assetRepository.update(assetRequest)));
-    }
-
-    @Test
-    public void testGetAssetCode() {
-        final String expectedCode = "000002";
-
-        when(jdbcTemplate.queryForObject(any(String.class), eq(Integer.class))).thenReturn(2);
-        final String actualCode = assetRepository.getAssetCode();
-
-        assertEquals(expectedCode, actualCode);
-    }
-
-    @Test
-    public void testNextAssetId() {
-        final int expectedId = 2;
-
-        when(jdbcTemplate.queryForObject(any(String.class), eq(Integer.class))).thenReturn(2);
-        final int actualId = assetRepository.getNextAssetId();
-
-        assertEquals(expectedId, actualId);
     }
 
     private Asset getAsset() {

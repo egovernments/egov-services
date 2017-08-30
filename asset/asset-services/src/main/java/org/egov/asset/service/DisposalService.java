@@ -22,6 +22,7 @@ import org.egov.asset.model.VouchercreateAccountCodeDetails;
 import org.egov.asset.model.enums.AssetConfigurationKeys;
 import org.egov.asset.model.enums.AssetStatusObjectName;
 import org.egov.asset.model.enums.KafkaTopicName;
+import org.egov.asset.model.enums.Sequence;
 import org.egov.asset.model.enums.Status;
 import org.egov.asset.repository.AssetRepository;
 import org.egov.asset.repository.DisposalRepository;
@@ -96,7 +97,7 @@ public class DisposalService {
     public DisposalResponse createAsync(final DisposalRequest disposalRequest, final HttpHeaders headers) {
         final Disposal disposal = disposalRequest.getDisposal();
 
-        disposal.setId(Long.valueOf(disposalRepository.getNextDisposalId().longValue()));
+        disposal.setId(assetCommonService.getNextId(Sequence.DISPOSALSEQUENCE));
 
         if (disposal.getAuditDetails() == null)
             disposal.setAuditDetails(assetCommonService.getAuditDetails(disposalRequest.getRequestInfo()));

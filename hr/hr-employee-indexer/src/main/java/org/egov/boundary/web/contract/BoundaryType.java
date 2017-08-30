@@ -38,25 +38,45 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.boundary.persistence.entity;
+package org.egov.boundary.web.contract;
 
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
+import org.egov.boundary.persistence.entity.HierarchyType;
 
-import lombok.Getter;
-import lombok.Setter;
+import java.util.Set;
 
-@Getter
-@Setter
-public abstract class AbstractAuditable extends AbstractPersistable<Long> {
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class BoundaryType {
 
-	private static final long serialVersionUID = 4110674150668756126L;
+	private String id;
 
-	private Long createdBy;
+	private String name;
 
-	private Date createdDate;
+	private String code;
 
-	private Long lastModifiedBy;
+	@Getter(onMethod = @__(@JsonIgnore))
+	private HierarchyType hierarchyType;
 
-	private Date lastModifiedDate;
+	@Getter(onMethod = @__(@JsonIgnore))
+	private BoundaryType parent;
+
+	@Getter(onMethod = @__(@JsonIgnore))
+	private Long hierarchy;
+
+	@Getter(onMethod = @__(@JsonIgnore))
+	private String localName;
+
+	@Getter(onMethod = @__(@JsonIgnore))
+	private String parentName;
+
+	@Getter(onMethod = @__(@JsonIgnore))
+	private Set<BoundaryType> childBoundaryTypes;
+
+	@Getter(onMethod = @__(@JsonIgnore))
+	private String tenantId;
 
 }

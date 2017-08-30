@@ -58,7 +58,6 @@ import org.egov.collection.model.AuditDetails;
 import org.egov.collection.model.Instrument;
 import org.egov.collection.model.PositionSearchCriteria;
 import org.egov.collection.model.PositionSearchCriteriaWrapper;
-import org.egov.collection.model.ReceiptCommonModel;
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.model.TransactionType;
 import org.egov.collection.model.enums.CollectionType;
@@ -126,16 +125,16 @@ public class ReceiptService {
 	@Autowired
 	private CollectionConfigService collectionConfigService;
 
-	public ReceiptCommonModel getReceipts(
+	public List<Receipt> getReceipts(
 			ReceiptSearchCriteria receiptSearchCriteria, RequestInfo requestInfo) {
-		ReceiptCommonModel receiptCommonModel = null;
+	    List<Receipt> receipts =null;
 		try {
-			receiptCommonModel = receiptRepository.findAllReceiptsByCriteria(
+			receipts = receiptRepository.findAllReceiptsByCriteria(
 					receiptSearchCriteria, requestInfo);
 		} catch (ParseException e) {
 			LOGGER.error("Parse exception while parsing date" + e);
 		}
-		return receiptCommonModel;
+		return receipts;
 	}
 
 	public Receipt apportionAndCreateReceipt(ReceiptReq receiptReq) {
@@ -721,8 +720,8 @@ public class ReceiptService {
 		receiptSearchCriteria.setReceiptNumbers(receiptNumbers);
 		List<Receipt> receipts = new ArrayList<>();
 		try {
-			receipts = getReceipts(receiptSearchCriteria, requestInfo)
-					.toDomainContract();
+			receipts = getReceipts(receiptSearchCriteria, requestInfo);
+					
 		} catch (Exception e) {
 			throw new CustomException(
 					Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),

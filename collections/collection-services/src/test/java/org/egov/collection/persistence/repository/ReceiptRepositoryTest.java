@@ -36,7 +36,7 @@
  *         or trademarks of eGovernments Foundation.
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
- */
+ 
 package org.egov.collection.persistence.repository;
 
 import static org.junit.Assert.*;
@@ -149,7 +149,7 @@ public class ReceiptRepositoryTest {
 		
 	}
 	
-/*	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	@Test(expected = Exception.class)
 	public void test_should_persist_to_receiptheader_exception(){
 		Map<String, Object> parametersMap = new HashMap<>();
@@ -166,7 +166,7 @@ public class ReceiptRepositoryTest {
 		
 		receiptRepository.persistToReceiptHeader(parametersMap, receiptInfo);
 		
-	} */
+	} 
 	
 	@SuppressWarnings("unchecked")
 	@Test
@@ -180,7 +180,7 @@ public class ReceiptRepositoryTest {
 		
 	}
 	
-/*	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	@Test(expected = Exception.class)
 	public void test_should_persist_to_receiptdetails_exception(){
 		Map<String, Object>[] parametersReceiptDetails = new Map[100];	
@@ -190,7 +190,7 @@ public class ReceiptRepositoryTest {
 		Mockito.when(namedParameterJdbcTemplate.batchUpdate(queryReceiptDetails, parametersReceiptDetails)).thenReturn(result);
 		
 		receiptRepository.persistToReceiptDetails(parametersReceiptDetails, 1);
-	} */
+	} 
 	 
 	@Test
 	public void test_should_get_stateid(){
@@ -230,7 +230,7 @@ public class ReceiptRepositoryTest {
 		assertNotNull(receiptRepository.pushReceiptCancelDetailsToQueue(getReceiptRequest()));
 	}
 	
-	/*@Test
+	@Test
 	public void test_should_update_status_and_stateId_toDB(){
 	
 		when(receiptDetailQueryBuilder.getQueryForUpdate(2L,"CANCELLED", 1L, "default"))
@@ -244,7 +244,7 @@ public class ReceiptRepositoryTest {
 	public void test_should_be_able_to_push_update_status_request_to_kafka(){
 		receiptRepository.pushUpdateDetailsToQueque(getReceiptRequest());
 		verify(collectionProducer).producer(any(String.class), any(String.class), any(ReceiptReq.class));
-	}*/
+	}
 
 	private ReceiptReq getReceiptRequest() {
 
@@ -346,4 +346,4 @@ public class ReceiptRepositoryTest {
 
 		return Arrays.asList(header1, header2);
 	}
-}
+}*/

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
+import org.egov.common.domain.exception.ErrorCode;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.BankAccount;
@@ -20,8 +21,8 @@ import org.egov.egf.master.web.requests.BankAccountRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.SmartValidator;
 
@@ -43,39 +44,58 @@ public class BankAccountService {
 
 	private BindingResult validate(List<BankAccount> bankaccounts, String method, BindingResult errors) {
 
-		try {
-			switch (method) {
-			case Constants.ACTION_VIEW:
-				// validator.validate(bankAccountContractRequest.getBankAccount(),
-				// errors);
-				break;
-			case Constants.ACTION_CREATE:
-				Assert.notNull(bankaccounts, "BankAccounts to create must not be null");
-				for (BankAccount bankAccount : bankaccounts) {
-					validator.validate(bankAccount, errors);
-				}
-				break;
-			case Constants.ACTION_UPDATE:
-				Assert.notNull(bankaccounts, "BankAccounts to update must not be null");
-				for (BankAccount bankAccount : bankaccounts) {
-				        Assert.notNull(bankAccount.getId(), "Bank Account ID to update must not be null");
-					validator.validate(bankAccount, errors);
-				}
-				break;
-			case Constants.ACTION_SEARCH:
-                                Assert.notNull(bankaccounts, "Bankaccounts to search must not be null");
-                                for (BankAccount bankaccount : bankaccounts) {
-                                        Assert.notNull(bankaccount.getTenantId(), "TenantID must not be null for search");
-                                }
-                                break;
-			default:
-
-			}
-		} catch (IllegalArgumentException e) {
+                try {
+                    switch (method) {
+                    case Constants.ACTION_VIEW:
+                        // validator.validate(bankAccountContractRequest.getBankAccount(),
+                        // errors);
+                        break;
+                    case Constants.ACTION_CREATE:
+                        if (bankaccounts == null) {
+                            throw new InvalidDataException("bankaccounts", ErrorCode.NOT_NULL.getCode(), bankaccounts.toString());
+                        }
+                        for (BankAccount bankAccount : bankaccounts) {
+                            validator.validate(bankAccount, errors);
+                            boolean x = bankAccountRepository.uniqueCheck("accountNumber", bankAccount);
+                            if (!bankAccountRepository.uniqueCheck("accountNumber", bankAccount)) {
+                                errors.addError(new FieldError("bankAccount", "name", bankAccount.getAccountNumber(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                            }
+                        }
+                        break;
+                    case Constants.ACTION_UPDATE:
+                        if (bankaccounts == null) {
+                            throw new InvalidDataException("bankaccounts", ErrorCode.NOT_NULL.getCode(), bankaccounts.toString());
+                        }
+                        for (BankAccount bankAccount : bankaccounts) {
+                            if (bankAccount.getId() == null) {
+                                throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), bankAccount.getId());
+                            }
+                            validator.validate(bankAccount, errors);
+                            if (!bankAccountRepository.uniqueCheck("accountNumber", bankAccount)) {
+                                errors.addError(new FieldError("bankAccount", "name", bankAccount.getAccountNumber(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                            }
+                        }
+                        break;
+                    case Constants.ACTION_SEARCH:
+                        if (bankaccounts == null) {
+                            throw new InvalidDataException("bankaccounts", ErrorCode.NOT_NULL.getCode(), bankaccounts.toString());
+                        }
+                        for (BankAccount bankaccount : bankaccounts) {
+                            if (bankaccount.getTenantId() == null) {
+                                throw new InvalidDataException("tenantId", ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
+                                        bankaccount.getTenantId());
+                            }
+                        }
+                        break;
+                    default:
+        
+                    }
+                } catch (IllegalArgumentException e) {
 			errors.addError(new ObjectError("Missing data", e.getMessage()));
 		}
 		return errors;
-
 	}
 
 	public List<BankAccount> fetchRelated(List<BankAccount> bankaccounts) {

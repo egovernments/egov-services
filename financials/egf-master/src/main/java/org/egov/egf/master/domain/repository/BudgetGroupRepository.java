@@ -80,4 +80,8 @@ public class BudgetGroupRepository {
 
     }
 
+    public boolean uniqueCheck(String fieldName, BudgetGroup budgetGroup) {
+        return budgetGroupJdbcRepository.uniqueCheck(fieldName, new BudgetGroupEntity().toEntity(budgetGroup));
+    }
+
 }

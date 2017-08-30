@@ -101,6 +101,10 @@ public class TradeLicenseService {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors, requestInfo);
 		}
+		
+		
+		
+		
 		// external end point validations
 		tradeLicenseServiceValidator.validateCreateTradeLicenseRelated(tradeLicenses, requestInfo);
 
@@ -108,7 +112,9 @@ public class TradeLicenseService {
 		for (TradeLicense license : tradeLicenses) {
 
 			license.setId(tradeLicenseRepository.getNextSequence());
-
+			license.getApplication().setId( tradeLicenseRepository.getApplicationNextSequence());
+			license.getApplication().setLicenseId( license.getId() );
+			
 			if (!license.getIsLegacy()) {
 
 				RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
@@ -120,6 +126,7 @@ public class TradeLicenseService {
 				//checking the application status and setting to the application
 				if (null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty()){
 					license.setApplicationStatus(currentStatus.getLicenseStatuses().get(0).getId());
+					license.getApplication().setStatus(currentStatus.getLicenseStatuses().get(0).getId().toString());
 				}
 				
 			} else {
@@ -136,11 +143,12 @@ public class TradeLicenseService {
 
 			}
 
-			if (license.getSupportDocuments() != null && license.getSupportDocuments().size() > 0) {
+			if (license.getApplication().getSupportDocuments() != null && license.getApplication().getSupportDocuments().size() > 0) {
 
-				for (SupportDocument supportDocument : license.getSupportDocuments()) {
+				for (SupportDocument supportDocument : license.getApplication().getSupportDocuments()) {
 
 					// supportDocument.setLicenseId(license.getId());
+					supportDocument.setApplicationId( license.getApplication().getId() );
 					supportDocument.setId(tradeLicenseRepository.getSupportDocumentNextSequence());
 					if (license.getAuditDetails() != null) {
 						supportDocument.setAuditDetails(license.getAuditDetails());
@@ -150,11 +158,12 @@ public class TradeLicenseService {
 			}
 			if (license.getIsLegacy()) {
 
-				if (license.getFeeDetails() != null && license.getFeeDetails().size() > 0) {
+				if (license.getApplication().getFeeDetails() != null && license.getApplication().getFeeDetails().size() > 0) {
 
-					for (LicenseFeeDetail feeDetail : license.getFeeDetails()) {
+					for (LicenseFeeDetail feeDetail : license.getApplication().getFeeDetails()) {
 
 						// feeDetail.setLicenseId(license.getId());
+						feeDetail.setApplicationId( license.getApplication().getId() );
 						feeDetail.setId(tradeLicenseRepository.getFeeDetailNextSequence());
 						if (license.getAuditDetails() != null) {
 							feeDetail.setAuditDetails(license.getAuditDetails());
@@ -163,7 +172,7 @@ public class TradeLicenseService {
 				}
 			} else {
 				// clearing the unnecessary details for new trade license
-				license.setFeeDetails(new ArrayList<>());
+				license.getApplication().setFeeDetails(new ArrayList<>());
 				license.setOldLicenseNumber(null);
 				license.setLicenseNumber(null);
 			}
@@ -174,16 +183,17 @@ public class TradeLicenseService {
 
 			} else {
 
-				if (license.getApplicationNumber() == null
-						|| (license.getApplicationNumber() != null && license.getApplicationNumber().isEmpty())) {
+				if (license.getApplication().getApplicationNumber() == null
+						|| (license.getApplication().getApplicationNumber() != null && license.getApplication().getApplicationNumber().isEmpty())) {
 
-					license.setApplicationNumber(
-							applNumberGenrationService.generate(license.getTenantId(), requestInfo));
+
+//					requestInfo.setMsgId("tl-module-workflow-action");
+					license.getApplication().setApplicationNumber(applNumberGenrationService.generate(license.getTenantId(), requestInfo));
 				}
 
-				if (license.getApplicationDate() == null) {
+				if (license.getApplication().getApplicationDate() == null) {
 
-					license.setApplicationDate(System.currentTimeMillis());
+					license.getApplication().setApplicationDate(System.currentTimeMillis());
 				}
 
 			}

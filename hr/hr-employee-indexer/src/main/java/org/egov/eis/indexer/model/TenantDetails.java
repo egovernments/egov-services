@@ -38,33 +38,29 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.indexer.model.enums;
+package org.egov.eis.indexer.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-public enum UserType {
-	EMPLOYEE("EMPLOYEE"), CITIZEN("CITIZEN"), SYSTEM("SYSTEM");
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class TenantDetails {
 
-	private String value;
+	private String tenantId;
 
-	UserType(String value) {
-		this.value = value;
-	}
+	private String distName;
 
-	@Override
-	@JsonValue
-    public String toString() {
-        return this.name();
-    }
+	private String regName;
 
-	@JsonCreator
-	public static UserType fromValue(String passedValue) {
-		for (UserType obj : UserType.values()) {
-			if (String.valueOf(obj.value).equals(passedValue.toUpperCase())) {
-				return obj;
-			}
-		}
-		return null;
-	}
+	private String ulbName;
+
+	private String ulbCode;
+
+	private String ulbGrade;
+
 }

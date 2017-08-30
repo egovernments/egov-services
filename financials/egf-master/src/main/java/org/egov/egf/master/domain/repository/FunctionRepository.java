@@ -211,4 +211,8 @@ public class FunctionRepository {
 
 	}
 
+    public boolean uniqueCheck(String fieldName, Function function) {
+        return functionJdbcRepository.uniqueCheck(fieldName, new FunctionEntity().toEntity(function));
+    }
+
 }

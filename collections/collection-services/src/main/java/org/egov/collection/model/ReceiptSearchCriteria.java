@@ -56,6 +56,8 @@ import java.util.List;
 @NoArgsConstructor
 public class ReceiptSearchCriteria {
 	private List<Long> ids;
+	
+	private Boolean isLegacy;
 
     private List<String> receiptNumbers;
 

@@ -64,20 +64,4 @@ public class DisposalRepository {
         }
     }
 
-    public Integer getNextDisposalId() {
-
-        final String query = "SELECT nextval('seq_egasset_disposal')";
-        Integer result = null;
-        try {
-            result = jdbcTemplate.queryForObject(query, Integer.class);
-        } catch (final Exception ex) {
-            ex.printStackTrace();
-            log.info("getNextRevaluationId::" + ex.getMessage());
-            throw new RuntimeException("Can not fatch next RevaluationId");
-        }
-        log.info("result:" + result);
-
-        return result;
-    }
-
 }

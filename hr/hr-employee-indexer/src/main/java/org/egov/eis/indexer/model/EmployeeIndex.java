@@ -38,37 +38,20 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.boundary.persistence.entity;
+package org.egov.eis.indexer.model;
 
-import java.util.Set;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter
-public class BoundaryType extends AbstractAuditable {
-
-	private static final long serialVersionUID = 2733418425252960862L;
-
-	public static final String SEQ_BOUNDARY_TYPE = "SEQ_EG_BOUNDARY_TYPE";
-
-	private Long id;
-
-	private String name;
-
-	private String code;
-
-	private HierarchyType hierarchyType;
-
-	private BoundaryType parent;
-
-	private Long hierarchy;
-
-	private String localName;
-
-	private String parentName;
-
-	private Set<BoundaryType> childBoundaryTypes;
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class EmployeeIndex {
+	
+	private EmployeeDetails employee;
 
 }
+	

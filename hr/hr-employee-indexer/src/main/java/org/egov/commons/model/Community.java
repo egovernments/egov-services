@@ -43,37 +43,26 @@ package org.egov.commons.model;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
+@Data
 @Builder
 @AllArgsConstructor
-@EqualsAndHashCode
-@Getter
 @NoArgsConstructor
-@Setter
-@ToString
 public class Community {
 
-	@NotNull
 	private Long id;
 
-	@NotNull
-	@Size(min=2, max=100)
 	private String name;
 
-	@Size(max=250)
+	@Getter(onMethod = @__(@JsonIgnore))
 	private String description;
 
-	@NotNull
+	@Getter(onMethod = @__(@JsonIgnore))
 	private Boolean active;
 
-	@NotNull
+	@Getter(onMethod = @__(@JsonIgnore))
 	private String tenantId;
 
 }

@@ -62,7 +62,8 @@ public class TradeLicenseQueueRepository {
 
 		case "new-update":
 			
-			topic = propertiesManager.getTradeLicenseValidatedTopic();
+//			topic = propertiesManager.getTradeLicenseValidatedTopic();
+			topic = propertiesManager.getTradeLicenseWorkFlowPopulatedTopic();
 			key = propertiesManager.getNewTradeLicenseValidatedKey();
 
 			tlMap.put("tradelicense-new-update", request);

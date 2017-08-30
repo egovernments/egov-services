@@ -81,8 +81,13 @@ ReportDefinitions:
     type: string
     source: collection
     total: true
-  - name: CHEQUEDD_AMOUNT
-    label: reports.collection.chequedd_amount
+  - name: CHEQUE_AMOUNT
+    label: reports.collection.cheque_amount
+    type: string
+    source: collection
+    total: true
+  - name: DD_AMOUNT
+    label: reports.collection.dd_amount
     type: string
     source: collection
     total: true   

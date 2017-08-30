@@ -208,19 +208,30 @@ class FloorDetails extends Component {
 		if(!allRooms){
 			return false;
 		}
+
+		for(var i = 0; i<allRooms.length;i++){
+			for(var key in allRooms[i]){
+				if(allRooms[i].hasOwnProperty(key) && allRooms[i][key] == ''){
+					delete allRooms[i][key]
+				}
+			}
+
+			allRooms = allRooms.filter((item, index, array)=>{
+				return item != undefined;
+			})	
+		}
 		
 		if(allRooms) {
 			for(var i = 0; i<allRooms.length;i++){
-			if(!allRooms[i].hasOwnProperty('isAuthorised')){
-					allRooms[i].isAuthorised = true;
-			}	
-			if(allRooms[i].isStructured == 'YES'){
-				allRooms[i].isStructured = true;
-			} else {
-				allRooms[i].isStructured = false;
+				if(!allRooms[i].hasOwnProperty('isAuthorised')){
+						allRooms[i].isAuthorised = true;
+				}	
+				if(allRooms[i].isStructured == 'YES'){
+					allRooms[i].isStructured = true;
+				} else {
+					allRooms[i].isStructured = false;
+				}
 			}
-		}
-		
 		}
 		
 		var rooms = allRooms.filter(function(item, index, array){

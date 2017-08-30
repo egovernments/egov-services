@@ -320,8 +320,12 @@ createPropertyTax = () => {
 			if(!createProperty.owners[i].hasOwnProperty('emailId') || createProperty.owners[i].emailId == ''){
 				createProperty.owners[i].emailId = null;
 			}
-			
-		
+		}
+
+		for(var key in createProperty.owners[i]){
+			if(createProperty.owners[i].hasOwnProperty(key) && createProperty.owners[i][key] == ''){
+				delete createProperty.owners[i][key]
+			}
 		}
 	}
 	

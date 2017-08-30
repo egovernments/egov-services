@@ -321,8 +321,12 @@ dataEntryTax = () => {
 			if(!dataEntry.owners[i].hasOwnProperty('emailId') || dataEntry.owners[i].emailId == ''){
 				dataEntry.owners[i].emailId = null;
 			}
-			
-		
+		}
+
+	    for(var key in dataEntry.owners[i]){
+			if(dataEntry.owners[i].hasOwnProperty(key) && dataEntry.owners[i][key] == ''){
+				delete dataEntry.owners[i][key]
+			}
 		}
 	}
 	

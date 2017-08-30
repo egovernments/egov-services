@@ -32,6 +32,12 @@ public class LicenseApplicationSearchContract {
 	
 	private long licenseId;
 	
+	@JsonProperty("licenseFee")
+	private Double licenseFee;
+	
+	@JsonProperty("fieldInspectionReport")
+	private String fieldInspectionReport;
+	
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;
 	

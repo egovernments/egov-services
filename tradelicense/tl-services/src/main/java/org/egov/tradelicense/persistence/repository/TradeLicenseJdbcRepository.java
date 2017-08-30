@@ -333,6 +333,8 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			licenseApplication.setCreatedBy( getString(row.get("createdBy")));
 			licenseApplication.setCreatedTime( getLong(row.get("createdTime")));
 			licenseApplication.setLastModifiedBy(getString(row.get("lastModifiedBy")));
+			licenseApplication.setFieldInspectionReport(getString(row.get("fieldInspectionReport")));
+			licenseApplication.setLicenseFee(getDouble(row.get("licenseFee")));
 			licenseApplication.setLastModifiedTime( getLong(row.get("lastModifiedTime")));
 			licenseApplication.setFeeDetailEntitys(getFeeDetails(licenseApplication.getId(),licenseApplication.getTenantId(), requestInfo));
 			licenseApplication.setSupportDocumentEntitys(getSupportDocuments(licenseApplication.getId(),licenseApplication.getTenantId(), requestInfo));

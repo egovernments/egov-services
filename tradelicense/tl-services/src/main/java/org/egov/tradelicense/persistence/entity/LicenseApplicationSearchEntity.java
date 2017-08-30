@@ -44,6 +44,10 @@ public class LicenseApplicationSearchEntity {
 	private Long createdTime;
 
 	private Long lastModifiedTime;
+	
+	private Double licenseFee;
+	
+	private String fieldInspectionReport;
 
 	private static List<LicenseFeeDetailSearch> feeDetails;
 
@@ -71,6 +75,9 @@ public class LicenseApplicationSearchEntity {
 		auditDetails.setLastModifiedTime(this.lastModifiedTime);
 		licenseAppSearch.setAuditDetails(auditDetails);
 
+		licenseAppSearch.setFieldInspectionReport(this.fieldInspectionReport);
+		licenseAppSearch.setLicenseFee( this.licenseFee);
+		
 		feeDetails = new ArrayList<LicenseFeeDetailSearch>();
 
 		if (this.feeDetailEntitys != null) {
@@ -114,6 +121,9 @@ public class LicenseApplicationSearchEntity {
 		// this.setApplicationDate( license.getApplicationDate());
 		this.applicationDate = licenseApplicationSearch.getApplicationDate();
 
+		this.setFieldInspectionReport(licenseApplicationSearch.getFieldInspectionReport());
+		this.setLicenseId( licenseApplicationSearch.getLicenseId());
+		
 		this.setLicenseId(licenseApplicationSearch.getId());
 
 		this.createdBy = (auditDetails == null) ? null : auditDetails.getCreatedBy();

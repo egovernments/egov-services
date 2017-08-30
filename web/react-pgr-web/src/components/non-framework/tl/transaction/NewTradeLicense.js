@@ -11,9 +11,11 @@ import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import _ from "lodash";
-import {translate} from '../../../common/common';
+import {translate, validate_fileupload} from '../../../common/common';
 import Api from '../../../../api/api';
 import styles from '../../../../styles/material-ui';
+
+const constants = require('../../../common/constants');
 
 
 const patterns = {
@@ -72,6 +74,16 @@ const customStyles={
   },
   th:{
     padding:'15px 10px !important'
+  },
+  fileInput: {
+    cursor: 'pointer',
+     position: 'absolute',
+     top: 0,
+     bottom: 0,
+     right: 0,
+     left: 0,
+     width: '100%',
+     opacity: 0
   }
 }
 
@@ -322,7 +334,9 @@ class NewTradeLicense extends Component {
         {agreementCard}
         {brElement}
 
-        <SupportingDocuments title={labels.supportingDocuments} docs={this.state.documentTypes}>
+        <SupportingDocuments files={this.props.files} dialogOpener={this.props.toggleDailogAndSetText}
+           title={labels.supportingDocuments} docs={this.state.documentTypes}
+           addFile={this.props.addFile} removeFile={this.props.removeFile}>
         </SupportingDocuments>
         <br/>
         <div style={{textAlign: 'center'}}>
@@ -498,8 +512,44 @@ class CustomField extends Component {
 
 
 
-  const SupportingDocuments = (props) => {
-    console.log('docs', props.docs);
+class SupportingDocuments extends Component {
+
+  constructor(){
+    super()
+    this.fileInputOnChange = this.fileInputOnChange.bind(this);
+  }
+
+  fileInputOnChange(e, doc){
+    e.preventDefault();
+    var files;
+    if (e.dataTransfer) {
+      files = e.dataTransfer.files;
+    } else if (e.target) {
+      files = e.target.files;
+    }
+
+    if(!files)
+       return;
+
+    //validate file input
+    let validationResult = validate_fileupload(files, constants.TRADE_LICENSE_FILE_FORMATS_ALLOWED);
+
+    console.log('validationResult', validationResult);
+
+    if(typeof validationResult === "string" || !validationResult){
+        if(this.props.dialogOpener)
+          this.props.dialogOpener(true, validationResult);
+        return;
+    }
+    // this.populateFilePreviews([...files]);
+    this.props.addFile({isRequired:doc.mandatory, code:doc.id, files:[...files]});
+  }
+
+  render(){
+
+    const props=this.props;
+    console.log('files', this.props.files);
+
     return(
       <Card>
         <CardTitle style={customStyles.cardTitle} title={translate(props.title)}></CardTitle>
@@ -512,17 +562,21 @@ class CustomField extends Component {
                    <tr>
                      <th style={customStyles.th}>#</th>
                      <th style={customStyles.th}>Document Name</th>
-                     <th style={customStyles.th}></th>
+                     <th style={customStyles.th}>Attach Document</th>
                      <th style={customStyles.th}>Comments</th>
                    </tr>
                  </thead>
                  <tbody>
                    {props.docs && props.docs.map((doc, index)=>{
-                     return (<tr>
+
+                     var fileName = this.props.files.find((file)=>file.code === doc.id);
+
+                     return <tr key={index}>
                        <td>{index+1}</td>
                        <td>{`${doc.name} ${doc.mandatory ? " *":""}`}</td>
                        <td>
-                         <RaisedButton label="Browse Files" />
+                         <FileInput doc={doc} key={`file${index}`} file={fileName || null} 
+                           fileInputOnChange={this.fileInputOnChange} />
                        </td>
                        <td>
                          <TextField
@@ -531,7 +585,7 @@ class CustomField extends Component {
                             fullWidth={true}
                           />
                        </td>
-                     </tr>);
+                     </tr>
                    })}
                  </tbody>
                </Table>
@@ -542,7 +596,31 @@ class CustomField extends Component {
       </Card>
     )
   }
+}
 
+const FileInput = (props)=>{
+
+  const fileName = props.file ? props.file.name : "";
+
+  console.log('fileName', props.file);
+
+  return(
+    <div>
+      <RaisedButton
+        label="Browse"
+        labelPosition="before">
+        <input type="file" style={customStyles.fileInput} onChange={(e)=>{
+          props.fileInputOnChange(e, props.doc);
+        }} />
+      </RaisedButton>
+      &nbsp;&nbsp;&nbsp;&nbsp;
+      <label>
+        {fileName}
+      </label>
+    </div>
+  )
+
+}
 
 
 // class CustomSelectField extends Component{

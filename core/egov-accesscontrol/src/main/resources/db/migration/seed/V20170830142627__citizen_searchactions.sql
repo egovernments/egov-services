@@ -1,0 +1,7 @@
+insert into eg_roleaction(roleCode, actionid, tenantId) select code, (select id from eg_action where name='BS_SearchDemandDetail'), 'default' from eg_ms_role where code in ('CITIZEN');
+insert into eg_roleaction(roleCode, actionid, tenantId) select code, (select id from eg_action where name='SearchTaxHead'), 'default' from eg_ms_role where code in ('CITIZEN');
+insert into eg_roleaction(roleCode, actionid, tenantId) select code, (select id from eg_action where name='SearchBill'), 'default' from eg_ms_role where code in ('CITIZEN');
+insert into eg_roleaction(roleCode, actionid, tenantId) select code, (select id from eg_action where name='SearchBusinessService'), 'default' from eg_ms_role where code in ('CITIZEN');
+insert into eg_roleaction(roleCode, actionid, tenantId) select code, (select id from eg_action where name='SearchGlcodeMaster'), 'default' from eg_ms_role where code in ('CITIZEN');
+insert into eg_roleaction(roleCode, actionid, tenantId) select code, (select id from eg_action where name='BS_SearchTaxPeriod'), 'default' from eg_ms_role where code in ('CITIZEN');
+insert into eg_roleaction(roleCode, actionid, tenantId) select code, (select id from eg_action where name='BS_TaxPeriodSearch'), 'default' from eg_ms_role where code in ('CITIZEN');

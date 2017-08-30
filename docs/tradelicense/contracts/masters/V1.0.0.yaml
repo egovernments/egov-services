@@ -923,6 +923,11 @@ definitions:
           type: integer
           format: int64
           description: Unique Identifier of the SubCategoryDetail
+        tenantId:
+          type: string
+          description: tenant id of the DocumentType
+          maxLength: 128
+          minLength: 4
         categoryId:
           type: integer
           format: int64
@@ -936,6 +941,7 @@ definitions:
           format: int64
           description: Unique Identfier of the UOM
       required:
+      - tenantId
       - categoryId
       - feeType
       - rateType
@@ -947,6 +953,11 @@ definitions:
           type: integer
           format: int64
           description: Unique Identifier of the SubCategoryDetail
+        tenantId:
+          type: string
+          description: tenant id of the DocumentType
+          maxLength: 128
+          minLength: 4
         categoryId:
           type: integer
           format: int64
@@ -963,6 +974,7 @@ definitions:
           format: int64
           description: Unique Identfier of the UOM
       required:
+      - tenantId
       - categoryId
       - feeType
       - rateType
@@ -1275,6 +1287,11 @@ definitions:
           type: integer
           format: int64
           description: Unique Identifier of the FeeMatrix Detail
+        tenantId:
+          type: string
+          description: tenant id of the DocumentType
+          maxLength: 128
+          minLength: 4
         feeMatrixId:
           type: integer
           format: int64
@@ -1294,6 +1311,7 @@ definitions:
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
+      - tenantId
       - feeMatrixId
       - uomFrom
       - uomTo

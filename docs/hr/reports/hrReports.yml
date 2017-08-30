@@ -455,9 +455,9 @@ ReportDefinitions:
     source: egeis_leaveType
     isMandatory: false
     searchClause: and leavetype.name=$leavetype
-  - name: asOnDtae
-    label: reports.hr.asOnDtae
-    type: epoc
+  - name: asOnDate
+    label: reports.hr.asOnDate
+    type: epoch
     source: hr
     isMandatory: true
   query: select emp.code ||'-'|| usr.name as employeecodename,levtyp.name as leavetype ,

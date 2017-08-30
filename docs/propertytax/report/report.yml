@@ -411,60 +411,60 @@ ReportDefinitions:
     source: seva
     total: true
   - name: PT_COLL
-    label: reports.property.pttax
+    label: reports.property.pttaxcoll
     type: string
     source: collection
     total: true
   - name: LIB_CESS_COLL
-    label: reports.property.libcess
+    label: reports.property.libcesscoll
     type: number
     source: seva
   - name: EDU_CESS_COLL
-    label: reports.property.educess
+    label: reports.property.educesscoll
     type: number
     source: seva
   - name: VACANT_TAX_COLL
-    label: reports.property.vacanttax
+    label: reports.property.vacanttaxcoll
     type: number
     source: seva
     total: true
   - name: EMP_GUA_CESS_COLL
-    label: reports.property.empguacess
+    label: reports.property.empguacesscoll
     type: number
     source: seva
     total: true
   - name: LATE_PENALTY_COLL
-    label: reports.property.latepenalty
+    label: reports.property.latepenaltycoll
     type: number
     source: seva
     total: true
   - name: PT_BAL
-    label: reports.property.pttax
+    label: reports.property.pttaxbal
     type: string
     source: collection
     total: true
   - name: LIB_CESS_BAL
-    label: reports.property.libcess
+    label: reports.property.libcessbal
     type: number
     source: seva
     total: true
   - name: EDU_CESS_BAL
-    label: reports.property.educess
+    label: reports.property.educessbal
     type: number
     source: seva
     total: true
   - name: VACANT_TAX_BAL
-    label: reports.property.vacanttax
+    label: reports.property.vacanttaxbal
     type: number
     source: seva
     total: true
   - name: EMP_GUA_CESS_BAL
-    label: reports.property.empguacess
+    label: reports.property.empguacessbal
     type: number
     source: seva
     total: true
   - name: LATE_PENALTY_BAL
-    label: reports.property.latepenalty
+    label: reports.property.latepenaltybal
     type: number
     source: seva
     total: true

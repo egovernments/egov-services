@@ -1,0 +1,10 @@
+{
+    "elements":[
+        {
+        "elementName":"text",
+        "identifier":"xpath",
+        "value":"//*[text()='%s']",
+        "waitFor":"visibility"
+        }
+    ]
+}

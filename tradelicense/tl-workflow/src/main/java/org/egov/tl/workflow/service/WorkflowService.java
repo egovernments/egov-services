@@ -34,12 +34,12 @@ public class WorkflowService {
 			if (processInstanceResponse != null)
 				tradeLicense.update(processInstanceResponse);
 
-		} else {
+		} else if (tradeLicense.isWorkflowUpdate()) {
 
 			TaskResponse taskResponse = new TaskResponse();
 			TaskRequest taskRequest = tradeLicense.getTaskRequest();
 			taskRequest.setRequestInfo(requestInfo);
-			
+
 			taskResponse = workflowRepository.update(taskRequest);
 
 			if (taskResponse != null)

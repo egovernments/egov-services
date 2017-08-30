@@ -36,21 +36,16 @@ public class TradeLicenseQueueRepository {
 
 		case "new-create":
 			
-			topic = propertiesManager.getTradeLicenseWorkFlowPopulatedTopic();
-			key = propertiesManager.getNewTradeLicenseValidatedKey();
-			/* TODO assuming single application will be processed and citizen service will take care of workflow
-			 * and need to revisit for not depending on the application number
-			 * */
-			/*if(request.getRequestInfo().getMsgId() != null && request.getRequestInfo().getMsgId().equalsIgnoreCase("tl-module-workflow-action")){
+			if(request.getRequestInfo().getApiId() != null && request.getRequestInfo().getApiId().equalsIgnoreCase("org.egov.cs.tl")){
 				
-				topic = propertiesManager.getTradeLicenseValidatedTopic();
+				topic = propertiesManager.getTradeLicenseWorkFlowPopulatedTopic();
 				key = propertiesManager.getNewTradeLicenseValidatedKey();
 				
 			} else {
 				
-				topic = propertiesManager.getTradeLicenseWorkFlowPopulatedTopic();
-				key = propertiesManager.getLegacyTradeLicenseValidatedKey();
-			}*/
+				topic = propertiesManager.getTradeLicenseValidatedTopic();
+				key = propertiesManager.getNewTradeLicenseValidatedKey();
+			}
 
 			tlMap.put("tradelicense-new-create", request);
 

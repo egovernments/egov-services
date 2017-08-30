@@ -170,6 +170,9 @@ public class TradeLicense {
 	@JsonProperty("status")
 	private Long status;
 
+	@JsonProperty("applicationStatus")
+	private Long applicationStatus;
+	
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;
 

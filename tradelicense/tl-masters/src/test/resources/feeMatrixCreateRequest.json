@@ -21,6 +21,7 @@
             "effectiveFrom":1503149954000,
             "effectiveTo":1503149954000,
             "feeMatrixDetails": [{
+            	"tenantId": "default",
             	"uomFrom": 0,
                 "uomTo": 10,
                 "amount": 10

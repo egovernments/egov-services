@@ -117,9 +117,11 @@ public class TradeLicenseService {
 				LicenseStatusResponse currentStatus = statusRepository.findByModuleTypeAndCode(license.getTenantId(),
 						NEW_LICENSE_MODULE_TYPE, NewLicenseStatus.ACKNOWLEDGED.getName(), requestInfoWrapper);
 
-				if (null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty())
-					license.setStatus(currentStatus.getLicenseStatuses().get(0).getId());
-
+				//checking the application status and setting to the application
+				if (null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty()){
+					license.setApplicationStatus(currentStatus.getLicenseStatuses().get(0).getId());
+				}
+				
 			} else {
 				RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 				requestInfoWrapper.setRequestInfo(requestInfo);
@@ -127,7 +129,9 @@ public class TradeLicenseService {
 				LicenseStatusResponse currentStatus = statusRepository.findByModuleTypeAndCode(license.getTenantId(),
 						LICENSE_MODULE_TYPE, LicenseStatus.APPROVED.getName(), requestInfoWrapper);
 
-				if (null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty())
+				if (null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty()){
+					
+				}
 					license.setStatus(currentStatus.getLicenseStatuses().get(0).getId());
 
 			}
@@ -173,7 +177,6 @@ public class TradeLicenseService {
 				if (license.getApplicationNumber() == null
 						|| (license.getApplicationNumber() != null && license.getApplicationNumber().isEmpty())) {
 
-					requestInfo.setMsgId("tl-module-workflow-action");
 					license.setApplicationNumber(
 							applNumberGenrationService.generate(license.getTenantId(), requestInfo));
 				}

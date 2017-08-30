@@ -14,6 +14,7 @@
 		"parentId": 1,
 		"businessNature": "Permenant",
 		 "details": [{
+		 	"tenantId": "default",
            	"feeType": "License",
            	"rateType": "Flat_By_Range",
            	"uomId": 1

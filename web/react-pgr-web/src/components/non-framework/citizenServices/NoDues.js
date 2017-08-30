@@ -1095,8 +1095,8 @@ class NoDues extends Component {
                                             Consumer Code : {Receipt[0].Bill[0].billDetails[0].consumerCode}<br/>
                                             Consumer Name : {Receipt[0].Bill[0].payeeName}<br/>
                                             Amount : {Receipt[0].Bill[0].billDetails[0].totalAmount?("Rs. "+Receipt[0].Bill[0].billDetails[0].totalAmount+"/-"):"NA"}<br/>
-                                            {this.props.match.params.id=="wc" && <div>{"Consumer Address: "+(Receipt[0].Bill[0].payeeAddress?Receipt[0].Bill[0].payeeAddress:"Roha")}<br/>
-                                            {"Received From: "+ Receipt[0].Bill[0].paidBy}<br/></div>}
+                                            {/*this.props.match.params.id=="wc" && <div>{"Consumer Address: "+(Receipt[0].Bill[0].payeeAddress?Receipt[0].Bill[0].payeeAddress:"Roha")}<br/>
+                                            {"Received From: "+ Receipt[0].Bill[0].paidBy}<br/></div>*/}
                                           </td>
                                       </tr>
 

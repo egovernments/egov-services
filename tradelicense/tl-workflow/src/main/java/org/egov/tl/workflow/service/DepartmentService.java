@@ -2,7 +2,7 @@ package org.egov.tl.workflow.service;
 
 import java.util.List;
 
-import org.egov.common.contract.request.RequestInfo;
+import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.workflow.repository.DepartmentRepository;
 import org.egov.tl.workflow.repository.contract.Department;
 import org.springframework.beans.factory.annotation.Autowired;

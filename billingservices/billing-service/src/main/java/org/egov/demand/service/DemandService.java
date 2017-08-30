@@ -296,7 +296,7 @@ public class DemandService {
 			}
 		}
 		demandRequest.setDemands(existingDemands);
-		kafkaTemplate.send(applicationProperties.getUpdateDemandBillTopicName(), demandRequest);
+		kafkaTemplate.send(applicationProperties.getUpdateDemandTopic(), demandRequest);
 		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED),
 				existingDemands);
 	}

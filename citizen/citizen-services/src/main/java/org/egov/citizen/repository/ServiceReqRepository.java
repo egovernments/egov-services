@@ -70,6 +70,7 @@ public class ServiceReqRepository {
 	            	comment.setFrom(commentResponse.getFrom());
 	            	comment.setText(commentResponse.getText());
 	            	comment.setTimeStamp(commentResponse.getTimeStamp());
+	            
 	            	
 	            	document.setSrn(commentResponse.getSrn());
 	            	document.setFilePath(commentResponse.getFilePath());
@@ -124,13 +125,17 @@ public class ServiceReqRepository {
 				jsonValue, serviceReq.getStatus(), serviceReq.getModuleStatus(), serviceReq.getAdditionalFee()};
 		try {
 			jdbcTemplate.update(query, obj);
-			if(null != serviceReqRequest.getServiceReq().getComments() || !serviceReqRequest.getServiceReq().getComments().isEmpty()){
+			if(null != serviceReqRequest.getServiceReq().getComments()){
+				if(!serviceReqRequest.getServiceReq().getComments().isEmpty()){
 				LOGGER.info("Persisting comments");
 				persistComments(serviceReqRequest);
+			   }
 			}
-			if(null != serviceReqRequest.getServiceReq().getDocuments() || !serviceReqRequest.getServiceReq().getDocuments().isEmpty()){
+			if(null != serviceReqRequest.getServiceReq().getDocuments()){
+				if(!serviceReqRequest.getServiceReq().getDocuments().isEmpty()){
 				LOGGER.info("Persisting documents");
 				persistDocuments(serviceReqRequest);
+				}
 			}
 		} catch (final Exception e) {
 			LOGGER.info("Exception while trying to persist into svcreq table: ", e);

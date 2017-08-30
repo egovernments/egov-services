@@ -384,6 +384,7 @@ ReportDefinitions:
 - reportName: employeeLeaveSummaryReport
   summary: employeeLeave Summary Report
   version: 1.0.0
+  moduleName: hr
   sourceColumns:
   - name: code
     label: reports.hr.Attendence.Employee_Code_name         
@@ -391,27 +392,27 @@ ReportDefinitions:
     source: egeis_employee
   - name: leaveType
     label: reports.hr.leaveType
-    type: String
+    type: string
     source: hr
   - name: openingBalance
     label: reports.hr.openingBalance
-    type: String
+    type: string
     source: hr
   - name: leaveEligibleAsOn
     label: reports.hr.leaveEligibleAsOn
-    type: String
+    type: string
     source: hr
   - name: totalLeavesEligible
     label: reports.hr.totalLeavesEligible
-    type: String
+    type: string
     source: hr
   - name: approved
     label: reports.hr.approved
-    type: String
+    type: string
     source: hr
   - name: balance
     label: reports.hr.balance
-    type: String
+    type: string
     source: hr
   searchParams:
   - name: department
@@ -430,7 +431,7 @@ ReportDefinitions:
     searchClause: and desig.id=$designation
   - name: employeeCode/Name
     label: reports.hr.Employee_Code/Name
-    type: String
+    type: string
     source: hr 
     isMandatory: false
     searchClause: and emp.code=$employeeCode/Name
@@ -455,9 +456,9 @@ ReportDefinitions:
     source: egeis_leaveType
     isMandatory: false
     searchClause: and leavetype.name=$leavetype
-  - name: asOnDtae
-    label: reports.hr.asOnDtae
-    type: epoc
+  - name: asOnDate
+    label: reports.hr.asOnDate
+    type: epoch
     source: hr
     isMandatory: true
   query: select emp.code ||'-'|| usr.name as employeecodename,levtyp.name as leavetype ,

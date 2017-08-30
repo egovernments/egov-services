@@ -1,3 +1,9 @@
+var lodash=require("lodash");
+
+var isRoleCitizen=false;
+
+// Collection Legacy receipt creator
+
 var cashOrMops = {
   "name": "FloorDetailsComponent",
   "version": "v1", //Maps to parent version
@@ -334,6 +340,30 @@ var dat = {
           "isDisabled": false,
           "requiredErrMsg": "", //Remove required messages
           "patternErrMsg": ""
+        },
+        {
+          "name": "manualReceiptNumber",
+          "jsonPath": "Receipt[0].Bill[0].paidBy",
+          "label": "Manual receipt number",
+          "pattern": "",
+          "type": "text",
+          "isRequired": true,
+          "isDisabled": false,
+          "requiredErrMsg": "", //Remove required messages
+          "patternErrMsg": "",
+          "hide":isRoleCitizen
+        },
+        {
+          "name": "manualReceiptDate",
+          "jsonPath": "Receipt[0].Bill[0].paidBy",
+          "label": "Manual receipt date",
+          "pattern": "/^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/",
+          "type": "datePicker",
+          "isRequired": true,
+          "isDisabled": false,
+          "requiredErrMsg": "", //Remove required messages
+          "patternErrMsg": "",
+          "hide":isRoleCitizen
         }
       ]
     }]

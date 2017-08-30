@@ -3,7 +3,7 @@ package org.egov.tl.workflow.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.common.contract.request.RequestInfo;
+import org.egov.tl.commons.web.contract.RequestInfo;
 
 import lombok.Data;
 

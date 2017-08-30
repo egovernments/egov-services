@@ -142,7 +142,7 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			if (uniqueFieldsMap.get("uomIdAndNameMap") != null) {
 				uomName = uniqueFieldsMap.get("uomIdAndNameMap").get(getString(row.get("uomId")));
 			}
-			if (uniqueFieldsMap.get("statusIdAndNameMap") != null) {
+			if (uniqueFieldsMap.get("statusIdAndNameMap") != null && !getString(row.get("status")).isEmpty()) {
 				statusName = uniqueFieldsMap.get("statusIdAndNameMap").get(getString(row.get("status")));
 			}
 			if (uniqueFieldsMap.get("localityIdAndNameMap") != null) {
@@ -190,8 +190,9 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			license.setRevenueWardName(getString(revenueWardName));
 			license.setAdminWardId(Integer.valueOf((getString(row.get("adminWardId")))));
 			license.setAdminWardName(getString(adminWardName));
-			license.setStatus(Long.valueOf((getString(row.get("status")))));
-			license.setStatusName(getString(statusName));
+			if(row.get("status") != null){
+				license.setStatus(Long.valueOf((getString(row.get("status")))));
+			}
 			license.setTradeAddress(getString(row.get("tradeAddress")));
 			license.setOwnerShipType(getString(row.get("ownerShipType")));
 			license.setTradeTitle(getString(row.get("tradeTitle")));

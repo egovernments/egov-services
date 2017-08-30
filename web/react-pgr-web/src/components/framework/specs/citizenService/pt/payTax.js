@@ -79,7 +79,7 @@ var dat = {
           "name": "consumerCode",
           "jsonPath": "consumerCode",
           "label": "noDues.citizenService.assessmentNumber",
-          "pattern": "^.{0,30}$",
+          "pattern": "^[-0-9a-zA-Z]{0,30}$",
           "type": "text",
           "isRequired": false,
           "isDisabled": false,

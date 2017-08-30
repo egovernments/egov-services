@@ -60,7 +60,7 @@ export default class UiDocumentList extends Component {
 				}
 			}
 
-			Api.commonApiPost(context, query, {}, "", useTimestamp).then(function(res) {
+			Api.commonApiPost(context, query, {}, "", useTimestamp, false, null, item.appendUserInfo ? JSON.parse(localStorage.userRequest) : null).then(function(res) {
 				var documents = [];
 				var arr = _.get(res, item.pathToArray);
 				if(arr && arr.length) {

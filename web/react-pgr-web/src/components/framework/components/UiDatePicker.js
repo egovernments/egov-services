@@ -47,13 +47,21 @@ export default class UiEmailField extends Component {
 						inputStyle={{"color": "#5F5C57"}}
 						floatingLabelFixed={true}
 						disabled={item.isDisabled}
-						hintText="DD/MM/YYYY" 
+						hintText="DD/MM/YYYY"
 						maxLength={10}
-						floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>} 
+						floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>}
 						errorText={this.props.fieldErrors[item.jsonPath]}
 						value={this.getDateFormat(this.props.getVal(item.jsonPath))}
 						onChange={(e) => {
 							var val = e.target.value;
+							if(e.target.value.length == 2 && !e.target.value.match('/')){
+								val+='/';
+							} else if(e.target.value.length == 5) {
+								var a = e.target.value.split('/');
+								if(!a[1].match('/')){
+									val+='/';
+								}
+							}
 							if(e.target.value) {
 								e.target.value = e.target.value.trim();
 								if(datePat.test(e.target.value)){

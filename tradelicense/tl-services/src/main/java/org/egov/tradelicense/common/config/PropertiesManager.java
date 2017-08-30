@@ -257,5 +257,11 @@ public class PropertiesManager {
 
 	@Value("${egov.services.tenant.service.searchpath}")
 	private String tenantServiceSearchPath;
+	
+	@Value("${egov.services.application.detail.missing.error}")
+	private String applicationMissingErr;
+	
+	@Value("${egov.services.type.application.detail.missing.error}")
+	private String applicationTypeMissingErr;
 
 }

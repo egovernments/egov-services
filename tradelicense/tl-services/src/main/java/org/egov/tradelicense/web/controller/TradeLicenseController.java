@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.egov.tl.commons.web.contract.LicenseApplicationContract;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.ResponseInfo;
 import org.egov.tl.commons.web.contract.TradeLicenseContract;
@@ -67,6 +68,8 @@ public class TradeLicenseController {
 		for (TradeLicenseContract tradeLicenseContract : tradeLicenseRequest.getLicenses()) {
 
 			tradeLicense = new TradeLicense();
+			this.setApplicationContract(tradeLicenseContract);
+			model.getConfiguration().setAmbiguityIgnored(true);
 			model.map(tradeLicenseContract, tradeLicense);
 			//preparing audit details
 			AuditDetails auditDetails = new AuditDetails();
@@ -128,8 +131,8 @@ public class TradeLicenseController {
 						newTradeText = propertiesManager.getNewTradeLicenseCreateSuccessMessage();
 					}
 
-					if (licenses.get(i).getApplicationNumber() != null) {
-						applicationNumbers = applicationNumbers.concat(licenses.get(i).getApplicationNumber());
+					if (licenses.get(i).getApplication().getApplicationNumber() != null) {
+						applicationNumbers = applicationNumbers.concat(licenses.get(i).getApplication().getApplicationNumber());
 						if (i != (licenseCount - 1)) {
 							applicationNumbers = applicationNumbers.concat(", ");
 						}
@@ -169,6 +172,7 @@ public class TradeLicenseController {
 		}
 
 		ModelMapper model = new ModelMapper();
+		model.getConfiguration().setAmbiguityIgnored(true);
 		TradeLicenseResponse tradeLicenseResponse = new TradeLicenseResponse();
 		tradeLicenseResponse.setResponseInfo(getResponseInfo(requestInfo));
 		List<TradeLicense> tradeLicenses = new ArrayList<>();
@@ -177,6 +181,7 @@ public class TradeLicenseController {
 		for (TradeLicenseContract tradeLicenseContract : tradeLicenseRequest.getLicenses()) {
 
 			tradeLicense = new TradeLicense();
+			this.setApplicationContract(tradeLicenseContract);
 			model.map(tradeLicenseContract, tradeLicense);
 			AuditDetails auditDetails = tradeLicense.getAuditDetails();
 			if (auditDetails == null) {
@@ -210,6 +215,54 @@ public class TradeLicenseController {
 		return tradeLicenseResponse;
 	}
 
+	/**
+	 * Temporary method to populate applicationType, applicationNumber,applicationDate, feeDetails, supportDocuments from 
+	 * TradeLicenseContract to ApplicaitonContract.
+	 * @param license
+	 */
+	private void setApplicationContract( TradeLicenseContract license){
+		
+		LicenseApplicationContract applicationContract = license.getApplication();
+		if( applicationContract == null ){
+			 applicationContract = new LicenseApplicationContract();
+		}
+		
+		if( license.getApplicationType() != null && applicationContract.getApplicationType() == null){
+			applicationContract.setApplicationType( license.getApplicationType());
+		}
+		
+		if( license.getApplicationDate() != null && applicationContract.getApplicationDate() == null ){
+			applicationContract.setApplicationDate( license.getApplicationDate() );
+		}
+		
+		if( license.getApplicationNumber() != null && applicationContract.getApplicationNumber() == null ){
+			applicationContract.setApplicationNumber( license.getApplicationNumber() );
+		}
+		
+		if( license.getFeeDetails() != null && applicationContract.getFeeDetails() == null ){
+			applicationContract.setFeeDetails( license.getFeeDetails() );
+		}
+		
+		if( license.getSupportDocuments() != null && applicationContract.getSupportDocuments() == null ){
+			applicationContract.setSupportDocuments( license.getSupportDocuments() );
+		}
+		
+		if( license.getTenantId() != null && applicationContract.getTenantId() == null ){
+			applicationContract.setTenantId( license.getTenantId() );
+		}
+		
+		if( license.getApplicationStatus() != null && applicationContract.getStatus() != null){
+			applicationContract.setStatus( license.getApplicationStatus().toString());
+		}
+		
+		// for legacy license field inspection details should not be allowed to update
+		if( license.getIsLegacy()){
+			applicationContract.setLicenseFee(null);
+			applicationContract.setFieldInspectionReport(null);
+		}
+		license.setApplication(applicationContract);
+		
+	}
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
 
 		return responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);

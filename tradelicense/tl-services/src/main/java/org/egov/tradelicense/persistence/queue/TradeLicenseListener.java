@@ -45,6 +45,7 @@ public class TradeLicenseListener {
 					TradeLicenseRequest.class);
 
 			ModelMapper mapper = new ModelMapper();
+			mapper.getConfiguration().setAmbiguityIgnored(true);
 			for (TradeLicenseContract tradeLicenseContract : request.getLicenses()) {
 				TradeLicense domain = mapper.map(tradeLicenseContract, TradeLicense.class);
 				TradeLicense tradeLicense = tradeLicenseService.save(domain);
@@ -59,6 +60,7 @@ public class TradeLicenseListener {
 					TradeLicenseRequest.class);
 
 			ModelMapper mapper = new ModelMapper();
+			mapper.getConfiguration().setAmbiguityIgnored(true);
 			for (TradeLicenseContract tradeLicenseContract : request.getLicenses()) {
 				TradeLicense domain = mapper.map(tradeLicenseContract, TradeLicense.class);
 				tradeLicenseService.save(domain);
@@ -73,6 +75,7 @@ public class TradeLicenseListener {
 					TradeLicenseRequest.class);
 
 			ModelMapper mapper = new ModelMapper();
+			mapper.getConfiguration().setAmbiguityIgnored(true);
 			for (TradeLicenseContract tradeLicenseContract : request.getLicenses()) {
 				TradeLicense domain = mapper.map(tradeLicenseContract, TradeLicense.class);
 				tradeLicenseService.update(domain, request.getRequestInfo());
@@ -87,6 +90,7 @@ public class TradeLicenseListener {
 					TradeLicenseRequest.class);
 
 			ModelMapper mapper = new ModelMapper();
+			mapper.getConfiguration().setAmbiguityIgnored(true);
 			for (TradeLicenseContract tradeLicenseContract : request.getLicenses()) {
 				TradeLicense domain = mapper.map(tradeLicenseContract, TradeLicense.class);
 				tradeLicenseService.update(domain, request.getRequestInfo());

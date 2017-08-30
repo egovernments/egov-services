@@ -67,6 +67,10 @@ public class TradeLicenseRepository {
 		return Long.valueOf(id);
 	}
 
+	public Long getApplicationNextSequence(){
+		String id = licenseApplicationJdbcRepository.getSequence( LicenseApplicationEntity.SEQUENCE_NAME);
+		return Long.valueOf(id);
+	}
 	public void validateUniqueLicenseNumber(TradeLicense tradeLicense, Boolean isNewRecord, RequestInfo requestInfo) {
 
 		String sql = getUniqueTenantLicenseQuery(tradeLicense, isNewRecord);
@@ -274,18 +278,26 @@ public class TradeLicenseRepository {
 		TradeLicenseEntity entity = tradeLicenseJdbcRepository.create(new TradeLicenseEntity().toEntity(tradeLicense));
 		// TODO : Application Id is fetched assuming there will be only one
 		// applicaiton for given license
-		LicenseApplicationEntity applicationEntity = entity.getLicenseApplicationEntity();
-		applicationEntity.setId(
-				Long.valueOf(licenseApplicationJdbcRepository.getSequence(LicenseApplicationEntity.SEQUENCE_NAME)));
-		licenseApplicationJdbcRepository.create(applicationEntity);
+		LicenseApplicationEntity applicationEntity = new LicenseApplicationEntity();
+//		if( tradeLicense.getIsLegacy() ){
+//			applicationEntity = entity.getLicenseApplicationEntity();
+//		}else{
+//			applicationEntity = applicationEntity.toEntity(tradeLicense.getApplication());
+//		}
+		
+//		applicationEntity.setId(
+//				Long.valueOf(licenseApplicationJdbcRepository.getSequence(LicenseApplicationEntity.SEQUENCE_NAME)));
+		
+		tradeLicense.getApplication().setAuditDetails( tradeLicense.getAuditDetails());
+		licenseApplicationJdbcRepository.create(applicationEntity.toEntity( tradeLicense.getApplication()));
 
 		SupportDocumentEntity supportDocumentEntity;
 		if (tradeLicense.getSupportDocuments() != null && tradeLicense.getSupportDocuments().size() > 0) {
 
 			for (SupportDocument supportDocument : tradeLicense.getSupportDocuments()) {
 				supportDocument.setTeantId(tradeLicense.getTenantId());
+				supportDocument.setApplicationId(applicationEntity.getId());
 				supportDocumentEntity = new SupportDocumentEntity().toEntity(supportDocument);
-				supportDocumentEntity.setApplicationId(applicationEntity.getId());
 				supportDocumentJdbcRepository.create(supportDocumentEntity);
 			}
 		}
@@ -295,8 +307,8 @@ public class TradeLicenseRepository {
 
 			for (LicenseFeeDetail feeDetail : tradeLicense.getFeeDetails()) {
 				feeDetail.setTeantId(tradeLicense.getTenantId());
+				feeDetail.setApplicationId( applicationEntity.getId());
 				licenseFeeDetailEntity = new LicenseFeeDetailEntity().toEntity(feeDetail);
-				licenseFeeDetailEntity.setApplicationId(applicationEntity.getId());
 
 				licenseFeeDetailJdbcRepository.create(licenseFeeDetailEntity);
 			}
@@ -361,6 +373,8 @@ public class TradeLicenseRepository {
 					new Date(new java.util.Date().getTime()) };
 			jdbcTemplate.update(LicenseBillQueryBuilder.insertLicenseBill(), objValue);
 		}
+		
+		licenseApplicationJdbcRepository.update( new LicenseApplicationEntity().toEntity(tradeLicense.getApplication()));
 
 		return entity.toDomain();
 	}

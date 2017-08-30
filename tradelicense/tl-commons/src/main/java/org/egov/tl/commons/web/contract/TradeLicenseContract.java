@@ -186,6 +186,9 @@ public class TradeLicenseContract {
 	@JsonProperty("feeDetails")
 	@Valid
 	private List<LicenseFeeDetailContract> feeDetails;
+	
+	@JsonProperty("application")
+	private LicenseApplicationContract application;
 
 	@JsonProperty("supportDocuments")
 	@Valid

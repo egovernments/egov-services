@@ -23,6 +23,7 @@ import org.egov.tradelicense.common.domain.exception.InvalidAdminWardException;
 import org.egov.tradelicense.common.domain.exception.InvalidCategoryException;
 import org.egov.tradelicense.common.domain.exception.InvalidDocumentTypeException;
 import org.egov.tradelicense.common.domain.exception.InvalidFeeDetailException;
+import org.egov.tradelicense.common.domain.exception.InvalidInputException;
 import org.egov.tradelicense.common.domain.exception.InvalidLocalityException;
 import org.egov.tradelicense.common.domain.exception.InvalidPropertyAssesmentException;
 import org.egov.tradelicense.common.domain.exception.InvalidRevenueWardException;
@@ -122,10 +123,10 @@ public class TradeLicenseServiceValidator {
 
 		for (TradeLicense tradeLicense : tradeLicenses) {
 			
-			if (!tradeLicense.getIsLegacy()) {
-				
-				throw new NonLegacyLicenseUpdateException(propertiesManager.getNonLegacyUpdateCustomMsg(), requestInfo);
-			}
+//			if (!tradeLicense.getIsLegacy()) {
+//				
+//				throw new NonLegacyLicenseUpdateException(propertiesManager.getNonLegacyUpdateCustomMsg(), requestInfo);
+//			}
 			// checking the id existance of tradelicense in database
 			validateTradeLicenseIdExistance(tradeLicense, requestInfo);
 			// checking the eistance and uniqueness of licensenumber
@@ -180,8 +181,14 @@ public class TradeLicenseServiceValidator {
 			// check unique constraint
 			tradeLicenseRepository.validateUniqueLicenseNumber(tradeLicense, isNewRecord, requestInfo);
 		} else {
-			// TODO Application Number and Application Date shoudl be
-			// mandatory
+			if(tradeLicense.getApplication() == null){	
+				throw new InvalidInputException(propertiesManager.getApplicationMissingErr(), requestInfo);
+			}
+			else if(tradeLicense.getApplication().getApplicationType() == null){			
+				throw new InvalidInputException(propertiesManager.getApplicationTypeMissingErr(), requestInfo);
+			}
+			
+			
 		}
 	}
 

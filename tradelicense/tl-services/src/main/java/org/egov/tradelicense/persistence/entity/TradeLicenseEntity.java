@@ -354,7 +354,7 @@ public class TradeLicenseEntity {
 	public LicenseApplicationEntity getLicenseApplicationEntity(){
 		LicenseApplicationEntity applicationEntity = new LicenseApplicationEntity();
 		
-		return applicationEntity.toEntity( this);
+		return applicationEntity.toAppEntity( this);
 		
 		
 	}

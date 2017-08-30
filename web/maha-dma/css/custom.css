@@ -97,6 +97,7 @@ body{
 .docs-section {
     border-color: #31708f;
     padding: 10px;
+		overflow: auto;
 }
 
 .modal-title{

@@ -67,7 +67,9 @@ public class CitizenPersistService {
 	
 	@Autowired
 	private ServiceReqRepository serviceReqRepository;
-	 
+	
+	@Value("${egov.thread.sleep.time}")
+	private Long threadTimeOut;
 	
 	public Map<String, Object> search(ServiceRequestSearchCriteria serviceRequestSearchCriteria, RequestInfo requestInfo){
 		List<Map<String, Object>> mapsRes = serviceReqRepository.search(serviceRequestSearchCriteria);
@@ -226,9 +228,9 @@ public class CitizenPersistService {
     	
     	if(documentContext.read("$.serviceReq.serviceCode").toString().equals("WATER_NEWCONN") && isCreate){
     		documentContext.put("$.serviceReq.backendServiceDetails[0].request.Demands[0]", "consumerCode", id);
-    		String url = documentContext.read("$.serviceReq.backendServiceDetails[2].url");
+    		String url = documentContext.read("$.serviceReq.backendServiceDetails[1].url");
     		url = url.replaceAll("consumerCode=", "consumerCode="+id);
-    		documentContext.put("$.serviceReq.backendServiceDetails[2]","url", url);
+    		documentContext.put("$.serviceReq.backendServiceDetails[1]","url", url);
     		serviceReqJson = documentContext.jsonString();
     	}
     	log.info("documentContext:"+documentContext.jsonString());
@@ -262,13 +264,24 @@ public class CitizenPersistService {
     			//documentContext.set(responsePath, resBody);
     			documentContext.put(responsePath, "response", documentContext2.json());
     			
-    			if(i==1 && documentContext.read("$.serviceReq.serviceCode").toString().equals("WATER_NEWCONN")&&isCreate){
+    			/*if(i==1 && documentContext.read("$.serviceReq.serviceCode").toString().equals("WATER_NEWCONN")&&isCreate){
     				String ackNum = documentContext2.read("$.Connection[0].acknowledgementNumber");
     				documentContext.put("$.serviceReq", "consumerCode", ackNum);
-    			}
+    			}*/
     			
     	    	serviceReqJson = documentContext.jsonString();
     	    	log.info("serviceReqJson2:"+serviceReqJson);
+    	    	
+    	    	Thread currentThread = Thread.currentThread();
+    	    	if(list.size()>1){
+    	    		try {
+    	    			log.info("sleep");
+    	    			currentThread.sleep(threadTimeOut);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+    	    	}
     	    	
     		}
     	}

@@ -7,6 +7,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.egov.lams.config.ApplicationProperties;
 import org.egov.lams.config.PropertiesManager;
+import org.egov.lams.exceptions.CollectionExceedException;
 import org.egov.lams.web.contract.BillInfo;
 import org.egov.lams.web.contract.BillRequest;
 import org.egov.lams.web.contract.BillResponse;
@@ -38,11 +39,14 @@ public class BillRepository {
 		billRequest.setBillInfos(billInfos);
 
 		String url = propertiesManager.getDemandServiceHostName() + propertiesManager.getDemandBillCreateService();
-		System.out.println("billRequest url ++++++++++++ " + url);
+		LOGGER.info("billRequest url ++++++++++++ " + url);
 		BillResponse billResponse = restTemplate.postForObject(url, billRequest, BillResponse.class);
-		System.out.println("billResponse>>>>>>>>>>" + billResponse.getBillXmls());
-
-		return billResponse.getBillXmls().get(0);
+		LOGGER.info("billResponse>>>>>>>>>>" + billResponse.getBillXmls());
+		if (billResponse.getBillXmls().isEmpty()) {
+			LOGGER.info("exception occured while getting billInfo");
+			throw new CollectionExceedException();
+		} else
+			return billResponse.getBillXmls().get(0);
 	}
 
 	public BillInfo searchBill(BillSearchCriteria billSearchCriteria, RequestInfo requestInfo) {
@@ -76,12 +80,12 @@ public class BillRepository {
 		Map purpose = null;
 		try {
 			String url = applicationProperties.getHostNameForMonolith(tenantId) + propertiesManager.getPurposeService();
-			System.out.println("url>>>>>>>>>>" + url);
+			LOGGER.info("url>>>>>>>>>>" + url);
 			purpose = restTemplate.getForObject(url, Map.class);
 		} catch (RestClientException e) {
 			e.printStackTrace();
 		}
-		System.out.println("Purpose>>>>>>>>>>" + purpose);
+		LOGGER.info("Purpose>>>>>>>>>>" + purpose);
 
 		return purpose;
 	}

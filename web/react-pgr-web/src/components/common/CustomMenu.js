@@ -143,7 +143,7 @@ const menuConvention={
   "Trade License.License Masters.License Sub Category.ViewTLSUBCATEGORY": "/search/tl/CreateLicenseSubCategory/view",
   "Trade License.License Masters.License Sub Category.ModifyTLSUBCATEGORY": "/search/tl/CreateLicenseSubCategory/update",
   "Trade License.License Transactions.CreateLegacyLicense": "/non-framework/tl/transaction/LegacyLicenseCreate",
-  "Trade License.License Search.SearchLicense": "/search/tl/CreateLegacyLicense/view",
+  "Trade License.License Search.SearchLicense": "/non-framework/tl/transaction/LegacyLicenseSearch",
   "Trade License.License Reports.License Register Report":"/report/tradelicense/licenseRegisterReport",
 
   "Water Charge.Wcms Reports.WCOutstandingReport":"/report/wcms/OutstandingRegister",

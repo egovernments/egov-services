@@ -3,20 +3,21 @@ import {connect} from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
 
 import _ from "lodash";
-import ShowFields from "./showFields";
+import ShowFields from "../../../framework/showFields";
 
-import {translate} from '../common/common';
-import Api from '../../api/api';
-import UiButton from './components/UiButton';
-import UiDynamicTable from './components/UiDynamicTable';
-import {fileUpload} from './utility/utility';
-import UiTable from './components/UiTable';
+import {translate} from '../../../common/common';
+import Api from '../../../../api/api';
+import UiButton from '../../../framework/components/UiButton';
+import UiDynamicTable from '../../../framework/components/UiDynamicTable';
+import {fileUpload} from '../../../framework/utility/utility';
+import UiTable from '../../../framework/components/UiTable';
 import jp from "jsonpath";
+import $ from "jquery";
 
 var specifications={};
 
 let reqRequired = [];
-class Report extends Component {
+class LegacyLicenseSearch extends Component {
   state={
     pathname:""
   }
@@ -75,25 +76,28 @@ class Report extends Component {
   initData() {
 
     let hashLocation = window.location.hash;
-    try {
-      var hash = window.location.hash.split("/");
-      if(hash.length == 4 && hashLocation.split("/")[1]!="transaction") {
-        specifications = require(`./specs/${hash[2]}/${hash[2]}`).default;
-      } else if(hashLocation.split("/")[1]!="transaction"){
-        specifications = require(`./specs/${hash[2]}/master/${hash[3]}`).default;
-      } else {
-        specifications = require(`./specs/${hash[2]}/transaction/${hash[3]}`).default;
-      }
-    } catch(e) {}
+    // try {
+    //   var hash = window.location.hash.split("/");
+    //   if(hash.length == 4 && hashLocation.split("/")[1]!="transaction") {
+    //     specifications = require(`./specs/${hash[2]}/${hash[2]}`).default;
+    //   } else if(hashLocation.split("/")[1]!="transaction"){
+    //     specifications = require(`./specs/${hash[2]}/master/${hash[3]}`).default;
+    //   } else {
+    //     specifications = require(`./specs/${hash[2]}/transaction/${hash[3]}`).default;
+    //   }
+    // } catch(e) {}
+
+specifications = require(`../../../framework/specs/tl/master/CreateLegacyLicense`).default;
+
     let { setMetaData, setModuleName, setActionName, initForm, setMockData, setFormData } = this.props;
-    let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
+    let obj = specifications[`tl.search`];
     reqRequired = [];
     this.setLabelAndReturnRequired(obj);
     initForm(reqRequired);
     setMetaData(specifications);
     setMockData(JSON.parse(JSON.stringify(specifications)));
-    setModuleName(hashLocation.split("/")[2]);
-    setActionName(hashLocation.split("/")[1]);
+    setModuleName("tl");
+    setActionName("search");
     var formData = {};
     if(obj && obj.groups && obj.groups.length) this.setDefaultValues(obj.groups, formData);
     setFormData(formData);
@@ -162,9 +166,9 @@ class Report extends Component {
 
   handleChange=(e, property, isRequired, pattern, requiredErrMsg="Required",patternErrMsg="Pattern Missmatch") => {
       let {getVal} = this;
-      let {handleChange,mockData,setDropDownData} = this.props;
+      let {handleChange,mockData,setDropDownData, formData} = this.props;
       let hashLocation = window.location.hash;
-      let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
+      let obj = specifications[`tl.search`];
       // console.log(obj);
       let depedants=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
       handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
@@ -192,6 +196,14 @@ class Report extends Component {
                       id[queryStringObject[i].split("=")[0]]=queryStringObject[i].split("=")[1];
                     }
                   }
+                }
+
+                if(id.categoryId == "" || id.categoryId == null){
+                  formData.tradeSubCategory = "";
+                  setDropDownData(value.jsonPath, []);
+                  console.log(value.jsonPath);
+                  console.log("helo", formData);
+                  return false;
                 }
 
                 Api.commonApiPost(context,id).then(function(response) {
@@ -312,4 +324,4 @@ const mapDispatchToProps = dispatch => ({
     dispatch({type:"SET_DROPDWON_DATA",fieldName,dropDownData})
   },
 });
-export default connect(mapStateToProps, mapDispatchToProps)(Report);
+export default connect(mapStateToProps, mapDispatchToProps)(LegacyLicenseSearch);

@@ -103,6 +103,7 @@ import Inbox from './components/framework/inbox';
 
 import LegacyLicenseCreate from './components/non-framework/tl/transaction/LegacyLicenseCreate';
 import viewLegacyLicense from './components/non-framework/tl/transaction/viewLegacyLicense';
+import LegacyLicenseSearch from './components/non-framework/tl/transaction/LegacyLicenseSearch';
 
 import VisibleNewTradeLicense from './components/non-framework/tl/transaction/NewTradeLicense';
 
@@ -239,6 +240,7 @@ const Main = () => {
 
       <Route exact path= {base + '/non-framework/tl/transaction/LegacyLicenseCreate'} component={LegacyLicenseCreate}/>
       <Route exact path= {base + '/non-framework/tl/transaction/ApplyNewTradeLicense'} component={VisibleNewTradeLicense}/>
+      <Route exact path= {base + '/non-framework/tl/transaction/LegacyLicenseSearch'} component={LegacyLicenseSearch}/>
 
         <Route exact path= {base + '/non-framework/tl/transaction/viewLegacyLicense/:licenseNumber'} component={viewLegacyLicense}/>
 

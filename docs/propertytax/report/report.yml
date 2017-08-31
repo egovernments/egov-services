@@ -110,7 +110,7 @@ ReportDefinitions:
   orderBy: )result order by upicnumber asc,state asc;
  
 - reportName: CollectionRegister
-  summary: Collection Register Report
+  summary: Outstanding Register Report
   version: 1.0.0
   moduleName: property
   sourceColumns:

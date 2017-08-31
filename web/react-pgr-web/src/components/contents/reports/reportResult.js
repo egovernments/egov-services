@@ -245,7 +245,7 @@ class ShowField extends Component {
           {sumColumn.map((columnObj, index) => {
             if(columnObj.showColumn){
               return(
-                <td key={index}>{columnObj.total ? columnObj.value : ''}</td>
+                <td key={index}>{index === 0 ? 'Total for all records' : columnObj.total ? columnObj.value : ''}</td>
               )
             }else{
               return null;

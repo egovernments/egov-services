@@ -344,27 +344,31 @@ ReportDefinitions:
   - name: receiptNo
     label: reports.collection.receiptno
     type: string
-    source: citizen
+    source: legacy
   - name: receiptDate
     label: reports.collection.receiptdate
-    type: number
-    source: citizen
+    type: epoch
+    source: legacy
   - name: totalAmount
     label: reports.collection.totalamount
     type: number
-    source: citizen
+    source: legacy
+  - name: servicename
+    label: reports.collection.service.name
+    type: string
+    source: legacy
   - name: payeeName
     label: reports.collection.payeename
-    type: number
-    source: citizen
+    type: string
+    source: legacy
   - name: consumerAddress
     label: reports.collection.consumeraddress
-    type: number
-    source: citizen
+    type: string
+    source: legacy
   - name: print
     label: reports.collection.print
     type: number
-    source: citizen
+    source: legacy
     linkedReport:
       reportName: ReceiptDetail
       linkedColumn: _url?/pgr/viewGrievance/:srn
@@ -381,5 +385,23 @@ ReportDefinitions:
     source: collection
     isMandatory: false
     searchClause: and receiptno = $receiptno
-  query: select receiptNo,receiptDate,totalAmount,payeeName,consumerAddress,'print' as print from egcl_legacy_receipt_header where tenantid = $tenantid
+  - name: receiptno
+    label: reports.collection.service.names
+    type: string
+    source: collection
+    isMandatory: false
+    searchClause: and servicename = $servicename
+  - name: fromDate
+    label: reports.collection.fromdate
+    type: epoch
+    source: collection
+    isMandatory: false
+    searchClause: AND receiptDate >= $fromDate
+  - name: toDate
+    label: reports.collection.todate
+    type: epoch
+    source: collection
+    isMandatory: false
+    searchClause: AND receiptDate <= $toDate
+  query: select receiptNo,receiptDate,totalAmount,servicename,payeeName,consumerAddress,'print' as print from egcl_legacy_receipt_header where tenantid = $tenantid
 

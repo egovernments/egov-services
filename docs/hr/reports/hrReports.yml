@@ -313,13 +313,13 @@ ReportDefinitions:
     type: epoch
     source: hr
     isMandatory: false
-    searchClause: and leaveapp.todate >=$dateFrom
+    searchClause: and leaveapp.todate >=to_date(to_char(to_timestamp(Trunc(CAST($dateFrom as bigint)/1000 )), 'YYYY/MM/DD'), 'YYYY-MM-DD')
   - name: dateTo
     label: reports.hr.dateTo
     type: epoch
     source: hr
     isMandatory: false
-    searchClause: and lvtapp.todate <=$dateTo
+    searchClause: and leaveapp.todate <=to_date(to_char(to_timestamp(Trunc(CAST($dateTo as bigint)/1000 )), 'YYYY/MM/DD'), 'YYYY-MM-DD')
   - name: leaveStatus
     label: reports.hr.leaveStatus
     type: singlevaluelist

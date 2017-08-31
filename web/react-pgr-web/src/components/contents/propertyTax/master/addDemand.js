@@ -115,14 +115,6 @@ const getNameByCode = function(object, code, property = "") {
     return "";
 }
 
-const getHeadByCode = function(object, code) {
-	object.map((item, index)=>{
-		if(item.code == code){
-			console.log(item.name);
-			return item.name;
-		}
-	})
-}
 
 class AddDemand extends Component {
 

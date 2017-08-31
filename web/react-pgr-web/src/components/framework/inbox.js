@@ -120,6 +120,50 @@ function getPosition(objArray, id){
 	}
 }
 
+const getNameById = function(object, id, property = "") {
+  if (id == "" || id == null) {
+        return "";
+    }
+    for (var i = 0; i < object.length; i++) {
+        if (property == "") {
+            if (object[i].id == id) {
+                return object[i].name;
+            }
+        } else {
+            if (object[i].hasOwnProperty(property)) {
+                if (object[i].id == id) {
+                    return object[i][property];
+                }
+            } else {
+                return "";
+            }
+        }
+    }
+    return "";
+}
+
+const getNameByCode = function(object, code, property = "") {
+  if (code == "" || code == null) {
+        return "";
+    }
+    for (var i = 0; i < object.length; i++) {
+        if (property == "") {
+            if (object[i].code == code) {
+                return object[i].name;
+            }
+        } else {
+            if (object[i].hasOwnProperty(property)) {
+                if (object[i].code == code) {
+                    return object[i][property];
+                }
+            } else {
+                return "";
+            }
+        }
+    }
+    return "";
+}
+
 class Inbox extends Component {
   constructor(props) {
     super(props);
@@ -132,7 +176,11 @@ class Inbox extends Component {
   		process: [],
   		forward: false,
       specialNotice: {},
-      hasNotice: false
+      hasNotice: false,
+      locality:[],
+      usages:[],
+      structureclasses:[],
+      taxHeads: [],
   	}
   }
   
@@ -357,7 +405,7 @@ class Inbox extends Component {
     let hashLocation = window.location.hash;
     let self = this;
     let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
-	self.setLabelAndReturnRequired(obj);
+	  self.setLabelAndReturnRequired(obj);
     setMetaData(specifications);
     setMockData(JSON.parse(JSON.stringify(specifications)));
     setModuleName(hashLocation.split("/")[2]);
@@ -374,6 +422,7 @@ class Inbox extends Component {
 		current.setState({
 			searchResult: res.properties
 		})
+
 		var workflowDetails = res.properties[0].propertyDetail.workFlowDetails;
 		if(workflowDetails) {
 			workflow.workflowDepartment = workflowDetails.department || null;
@@ -419,7 +468,7 @@ class Inbox extends Component {
 					  console.log(err)
 					})
 					
-		res.processInstance.attributes.validActions.values.map((item)=>{
+		    res.processInstance.attributes.validActions.values.map((item)=>{
 				if(item.name == 'Forward'){
 					current.setState({
 						forward: true
@@ -446,57 +495,70 @@ class Inbox extends Component {
 
   componentDidMount() {
       this.initData();
-	  this.props.initForm();
+	    this.props.initForm();
 	  
-	  var current = this;
-	  
-	   Api.commonApiPost( 'egov-common-masters/departments/_search').then((res)=>{
-		  console.log(res);
-		  res.Department.unshift({id:-1, name:'None'});
-		  current.setState({workflowDepartment: res.Department})
-		}).catch((err)=> {
-		  current.setState({
-			workflowDepartment:[]
-		  })
-		  console.log(err)
-		})
+      var current = this;
+
+      Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"LOCALITY", hierarchyTypeName:"LOCATION"}).then((res)=>{
+         current.setState({locality : res.Boundary})
+      }).catch((err)=> {
+         current.setState({locality : []})
+      })
+
+      Api.commonApiPost('pt-property/property/structureclasses/_search').then((res)=>{
+        current.setState({structureclasses: res.structureClasses})
+      }).catch((err)=> {
+        current.setState({structureclasses:[]})
+      })
+
+      Api.commonApiPost('pt-property/property/usages/_search').then((res)=>{
+        current.setState({usages : res.usageMasters})
+      }).catch((err)=> {
+        current.setState({usages : []})
+      })
+  
+	    Api.commonApiPost( 'egov-common-masters/departments/_search').then((res)=>{
+  		  res.Department.unshift({id:-1, name:'None'});
+  		  current.setState({workflowDepartment: res.Department})
+		  }).catch((err)=> {
+		    current.setState({workflowDepartment:[]})           
+  		})
   }
   
   updateInbox = (actionName, status) => {
-	  	  
-		  console.log(actionName);
-		  
+	  			  
 	  var currentThis = this;
 	  
 	  let {workflow, setLoadingStatus, toggleSnackbarAndSetText} = this.props;
 	 
 	  var data = this.state.searchResult;
+
+    setLoadingStatus('loading');
 	  
 		var workFlowDetails = {
-				"department": workflow.workflowDepartment || 'department',
-				"designation":workflow.workflowDesignation || 'designation',
-				"initiatorPosition": workflow.initiatorPosition || null,
-				"assignee": null,
-				"action": actionName,
-				"status": status
+  				"department": workflow.workflowDepartment || 'department',
+  				"designation":workflow.workflowDesignation || 'designation',
+  				"initiatorPosition": workflow.initiatorPosition || null,
+  				"assignee": null,
+  				"action": actionName,
+  				"status": status
 			  }
 			  
 	  if(actionName == 'Forward') {
 		 
-			workFlowDetails.assignee = getPosition(this.state.approver, workflow.approver) || null;
-			workFlowDetails.initiatorPosition = this.state.process.initiatorPosition || null;
+			  workFlowDetails.assignee = getPosition(this.state.approver, workflow.approver) || null;
+			  workFlowDetails.initiatorPosition = this.state.process.initiatorPosition || null;
 		    localStorage.setItem('inboxStatus', 'Forwarded')
 		  
 	  } else if(actionName == 'Approve') {
-		  
-		  workFlowDetails.assignee = this.state.process.initiatorPosition || null
-		  workFlowDetails.initiatorPosition = this.state.process.initiatorPosition || null;
-		  localStorage.setItem('inboxStatus', 'Approved')
+  		  workFlowDetails.assignee = this.state.process.initiatorPosition || null
+  		  workFlowDetails.initiatorPosition = this.state.process.initiatorPosition || null;
+  		  localStorage.setItem('inboxStatus', 'Approved')
 		  
 	  } else if(actionName == 'Reject') {
 		  
-		  workFlowDetails.assignee = this.state.process.initiatorPosition || null
-		  localStorage.setItem('inboxStatus', 'Rejected')
+  		  workFlowDetails.assignee = this.state.process.initiatorPosition || null
+  		  localStorage.setItem('inboxStatus', 'Rejected')
 		  
 	  } else if( actionName == 'Print Notice'){
 		 
@@ -506,13 +568,42 @@ class Inbox extends Component {
 	   } 
 
 	    Api.commonApiPost('pt-property/properties/specialnotice/_generate', {},body, false, true).then((res)=>{
-  			setLoadingStatus('hide');
-        currentThis.setState({
-          specialNotice: res.notice,
-          hasNotice: true
-        })
-        currentThis.generatePDF();
-			console.log(res)
+
+              currentThis.setState({
+                  specialNotice: res.notice,
+                  hasNotice: true
+              })
+
+              var taxHeadsArray = [];  
+
+              if(res.notice.hasOwnProperty('taxDetails') && res.notice.taxDetails.hasOwnProperty('headWiseTaxes')){
+                  res.notice.taxDetails.headWiseTaxes.map((item, index)=>{
+                      taxHeadsArray.push(item.taxName);
+                  })
+              }
+
+             taxHeadsArray = taxHeadsArray.filter((item, index, array)=>{
+                return index == array.indexOf(item);
+             })
+
+             var query = {
+                service:'PT',
+                code:taxHeadsArray
+              }
+
+              Api.commonApiPost('/billing-service/taxheads/_search', query, {}, false, true).then((res)=>{
+                 currentThis.setState({
+                   taxHeads:res.TaxHeadMasters
+                 })
+                 setTimeout(()=>{
+                  currentThis.generatePDF();
+                }, 100)
+              }).catch((err)=> {
+               currentThis.setState({
+                   taxHeads:[]
+                 })
+              })
+        
 		  }).catch((err)=> {
 			currentThis.setState({
           specialNotice: {},
@@ -556,6 +647,8 @@ class Inbox extends Component {
 
   generatePDF = () => {
 
+    let {setLoadingStatus} = this.props;
+
   var mywindow = window.open('', 'PRINT', 'height=400,width=600');
 
     var cdn = `
@@ -563,17 +656,22 @@ class Inbox extends Component {
       <link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
       <!-- Optional theme -->
-      <link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">  `;
+      <link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">  
+      <style>
+        td {padding-top:15px !important;padding-bottom:15px !important;border-left:0px !important;border-right:0px !important;border-top:0px !important;border-bottom:0px !important;}
+      </style>
+      `;
     mywindow.document.write('<html><head><title> </title>');
     mywindow.document.write(cdn);
     mywindow.document.write('</head><body>');
-    mywindow.document.write(document.getElementById('speicalNotice').innerHTML);
+    mywindow.document.write(document.getElementById('specialNotice').innerHTML);
     mywindow.document.write('</body></html>');
 
     mywindow.document.close(); // necessary for IE >= 10
     mywindow.focus(); // necessary for IE >= 10*/
 
    setTimeout(function(){
+      setLoadingStatus('hide');
       mywindow.print();
       mywindow.close();
     }, 1000);
@@ -716,9 +814,9 @@ class Inbox extends Component {
 		  <br/>
         </form>
         <div style={{"textAlign": "center"}}>
-	          {this.state.hasNotice && <Card className="uiCard" id="speicalNotice">
+	          {this.state.hasNotice && <Card className="uiCard" id="specialNotice" style={{position:'absolute', display:'none'}}>
               <CardText>
-                <Table  responsive style={{fontSize:"bold", width:'100%'}} bordered condensed>
+                <Table  responsive style={{fontSize:"bold", width:'100%'}} condensed>
                   <tbody>
                     <tr>
                         <td style={{textAlign:"left"}}>
@@ -751,12 +849,14 @@ class Inbox extends Component {
                         return(<span key={index}>{owner.name}</span>)
                       })}<br/>
                          {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.addressNumber ? <span>{this.state.specialNotice.address.addressNumber}</span> : '') : ''}
-                         {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.addressLine1 ? <span>, {this.state.specialNotice.address.addressLine1}</span> : '') : ''}
+                         {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.addressLine1 ? <span>, {getNameById(this.state.locality, this.state.specialNotice.address.addressLine1)}</span> : '') : ''}
                          {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.addressLine2 ? <span>, {this.state.specialNotice.address.addressLine2}</span> : '' ): ''}
+                         {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.landmark ? <span>, {this.state.specialNotice.address.landmark}</span> : '' ): ''}
+                         {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.city ? <span>, {this.state.specialNotice.address.city}</span> : '' ): ''}
                       </td>
                     </tr>
                     <tr>
-                      <td colSpan={3} style={{textAlign:"center"}}>Subject /विषय : Special Notice – New Assessment / Special Notice – Reassessment
+                      <td colSpan={3} style={{textAlign:"center"}}>Subject /विषय : Special Notice – New Assessment / Special Notice – <br/>Reassessment
                           Reference / संदर्भ : आपला अर्ज क्रमांक {this.state.specialNotice.hasOwnProperty('applicationNo') && this.state.specialNotice.applicationNo} दिनांक {this.state.specialNotice.hasOwnProperty('applicationDate') && this.state.specialNotice.applicationDate}</td>
                     </tr>
                     <tr>
@@ -784,26 +884,51 @@ class Inbox extends Component {
                             </tr>
                           </thead>
                           <tbody>
-                            <tr>
-                              <td></td>
-                              <td></td>
-                              <td></td>
-                              <td></td>
-                              <td></td>
-                              <td></td>
-                              <td></td>
-                            </tr>
+                           {this.state.specialNotice.hasOwnProperty('floors') && this.state.specialNotice.floors.map((item, index)=>(
+                              <tr key={index}>
+                                <td>{item.floorNo || ''}</td>
+                                <td>{item.unitDetails || ''}</td>
+                                <td>{getNameByCode(this.state.usages,item.usage) || ''}</td>
+                                <td>{getNameByCode(this.state.structureclasses, item.construction) || ''}</td>
+                                <td>{item.assessableArea || ''}</td>
+                                <td>{item.alv || ''}</td>
+                                <td>{item.rv || ''}</td>
+                              </tr>
+                           ))}
                           </tbody>
                         </Table>
                       </td>
                     </tr>
                     <tr>
-                      <td colSpan={3}>Tax Details</td>
+                      <td colSpan={3}><b>Tax Details</b></td>
                     </tr>
-                    <tr>
-                      <td>Tax Description</td>
-                      <td colSpan={2}>Amount</td>
-                    </tr>
+                   <tr>
+                     <td colSpan={3}>
+                        <Table responsive style={{fontSize:"bold", width:'50%'}} bordered condensed>
+                          <thead>
+                            <tr>
+                              <th>Tax Description</th>
+                              <th>Amount</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                           {this.state.specialNotice.taxDetails.hasOwnProperty('headWiseTaxes') &&  this.state.specialNotice.taxDetails.headWiseTaxes.map((item, index)=>{
+                                return(
+                                  <tr key={index}>
+                                    <td>{(this.state.taxHeads.length != 0) && this.state.taxHeads.map((e,i)=>{
+                                      if(e.code == item.taxName){
+                                        return(<span key={i} style={{fontWeight:500}}>{e.name ? e.name : 'NA'}</span>);
+                                      }}
+                                    )}
+                                    </td>
+                                    <td>{item.taxValue}</td>
+                                  </tr>
+                                )
+                            })}
+                          </tbody>
+                        </Table>
+                     </td>
+                   </tr>
                     <tr>
                       <td colSpan={3}>
                           सदर आकारणी जर तुम्हाला मान्य नसेल तर ही नोटीस मिळाल्या पासून 1 महिन्याचे मुदतीचे आत

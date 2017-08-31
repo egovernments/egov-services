@@ -385,7 +385,7 @@ ReportDefinitions:
     source: collection
     isMandatory: false
     searchClause: and receiptno = $receiptno
-  - name: receiptno
+  - name: servicename
     label: reports.collection.servicename
     type: string
     source: collection

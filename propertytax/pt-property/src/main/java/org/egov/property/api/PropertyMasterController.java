@@ -1,5 +1,7 @@
 package org.egov.property.api;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.egov.models.ApartmentRequest;
@@ -502,7 +504,7 @@ public class PropertyMasterController {
 			@RequestParam(required = false) String nameLocal, @RequestParam(required = false) Boolean active,
 			@RequestParam(required = false) Boolean isResidential, @RequestParam(required = false) Integer orderNumber,
 			@RequestParam(required = false) Integer pageSize, @RequestParam(required = false) Integer offSet,
-			@RequestParam(required = false) String parent,@RequestParam(required = false) String service)
+			@RequestParam(required = false) String parent,@RequestParam(required = false) List<String> service)
 			throws Exception {
 
 		return masterService.getUsageMaster(requestInfo.getRequestInfo(), tenantId, ids, name, code, nameLocal, active,

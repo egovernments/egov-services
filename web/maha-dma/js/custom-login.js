@@ -177,7 +177,7 @@ $(document).ready(function(){
             params.append('scope', 'read');
             params.append('tenantId', tenantId);
             $.ajax({
-              url: window.location.origin + "/user/oauth/token"+params,
+              url: window.location.origin + "/user/oauth/token?"+params,
               type: 'POST',
               dataType: 'json',
               data:JSON.stringify({}),

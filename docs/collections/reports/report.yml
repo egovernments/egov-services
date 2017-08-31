@@ -342,27 +342,27 @@ ReportDefinitions:
   moduleName: collection
   sourceColumns:
   - name: receiptNo
-    label: reports.citizen.receiptno
+    label: reports.collection.receiptno
     type: string
     source: citizen
   - name: receiptDate
-    label: reports.citizen.receiptdate
+    label: reports.collection.receiptdate
     type: number
     source: citizen
   - name: totalAmount
-    label: reports.citizen.totalamount
+    label: reports.collection.totalamount
     type: number
     source: citizen
   - name: payeeName
-    label: reports.citizen.payeename
+    label: reports.collection.payeename
     type: number
     source: citizen
   - name: consumerAddress
-    label: reports.citizen.consumeraddress
+    label: reports.collection.consumeraddress
     type: number
     source: citizen
   - name: print
-    label: reports.citizen.print
+    label: reports.collection.print
     type: number
     source: citizen
     linkedReport:
@@ -370,15 +370,15 @@ ReportDefinitions:
       linkedColumn: _url?/pgr/viewGrievance/:srn
   searchParams:
   - name: consumerno
-    label: reports.citizen.consumerno
+    label: reports.collection.consumerno
     type: string
-    source: citizen
+    source: collection
     isMandatory: false
     searchClause: and consumerNo = $consumerno
   - name: receiptno
-    label: reports.citizen.receiptno
+    label: reports.collection.receiptno
     type: string
-    source: citizen
+    source: collection
     isMandatory: false
     searchClause: and receiptno = $receiptno
   query: select receiptNo,receiptDate,totalAmount,payeeName,consumerAddress,'print' as print from egcl_legacy_receipt_header where tenantid = $tenantid

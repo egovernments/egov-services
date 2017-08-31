@@ -13,7 +13,7 @@ var dat = {
             "name": "OldLicenseNumber",
             "jsonPath": "licenses[0].oldLicenseNumber",
             "label": "tl.create.licenses.groups.TradeDetails.OldLicenseNumber",
-            "pattern": "^[a-zA-Z0-9:#().-]*$",
+            "pattern": "^[a-zA-Z0-9:#()/.-]*$",
             "type": "text",
             "isRequired": true,
             "isDisabled": false,

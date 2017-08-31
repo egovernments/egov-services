@@ -19,6 +19,7 @@ import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 import $ from 'jquery'
 import axios from "axios";
+import CommentDoc from '../Components/CommentDoc';
 
 var specifications={};
 
@@ -588,69 +589,7 @@ class Report extends Component {
             {self.state.role != "CITIZEN" && self.state.ServiceRequest && (!self.state.ServiceRequest.additionalFee || self.state.ServiceRequest.additionalFee == 0) ? <RaisedButton primary={true} label={"Add Fee"} onClick={self.openAddFeeModal}/> : ""}&nbsp;&nbsp;
             {self.state.role == "CITIZEN" && self.state.ServiceRequest && (self.state.ServiceRequest.additionalFee > 0 && self.state.ServiceRequest.additionalFee != 12345) ? <RaisedButton primary={true} label={"Pay Fee"} onClick={self.openPayFeeModal}/> : ""}
           </div>
-          <Card className="uiCard">
-            <CardHeader style={{paddingTop:4,paddingBottom:0}} title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Comments & Documents</div>}/>
-              <CardText style={{paddingTop:0,paddingBottom:0}}>
-              <Grid>
-                  <Row>
-                    <Col md={6} xs={12}>
-                      <Table responsive style={{fontSize:"bold"}} bordered condensed>
-                          <thead>
-                            <tr>
-                              <th>By</th>
-                              <th>Date</th>
-                              <th>Comments</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {
-                              self.state.ServiceRequest && 
-                              self.state.ServiceRequest.comments && 
-                              self.state.ServiceRequest.comments.length ? 
-                              self.state.ServiceRequest.comments.map(function(v, i) {
-                                return (
-                                  <tr key={i} style={{"backgroundColor": v.from == JSON.parse(localStorage.userRequest).userName ? "#EEE" : "#FFFFFF"}}>
-                                    <td>{v.from}</td>
-                                    <td>{getFullDate(v.timeStamp)}</td>
-                                    <td>{v.text}</td>
-                                  </tr>
-                                )
-                              }) : <tr><td style={{"textAlign": "center"}} colSpan={3}>No comments yet!</td></tr>
-                            }
-                          </tbody>
-                      </Table>
-                    </Col>
-                    <Col md={6} xs={12}>
-                      <Table responsive style={{fontSize:"bold"}} bordered condensed>
-                          <thead>
-                            <tr>
-                              <th>By</th>
-                              <th>Date</th>
-                              <th>Action</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {
-                              self.state.ServiceRequest && 
-                              self.state.ServiceRequest.documents && 
-                              self.state.ServiceRequest.documents.length ? 
-                              self.state.ServiceRequest.documents.map(function(v, i) {
-                                return (
-                                  <tr key={i}>
-                                    <td>{v.from + (v.from == JSON.parse(localStorage.userRequest).userName ? " (You)" : "")}</td>
-                                    <td>{getFullDate(v.timeStamp)}</td>
-                                    <td><a target="_blank" href={"/filestore/v1/files/id?tenantId=" + localStorage.getItem("tenantId") + "&fileStoreId=" + v.filePath}>Download</a></td>
-                                  </tr>
-                                )
-                              }) : <tr><td style={{"textAlign": "center"}} colSpan={3}>No documents uploaded!</td></tr>
-                            }
-                          </tbody>
-                      </Table>
-                    </Col>
-                  </Row>
-              </Grid>
-            </CardText>
-          </Card>
+          <CommentDoc ServiceRequest={self.state.ServiceRequest} getFullDate={getFullDate}/>
           {!_.isEmpty(mockData) && mockData["wc.view"] && <ShowFields groups={mockData["wc.view"].groups} noCols={mockData["wc.view"].numCols} ui="google" handler={""} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData["wc.view"].useTimestamp || false} addNewCard={""} removeCard={""} screen="view"/>}
         </form> : self.state.Receipt && self.state.Receipt[0] ? <Row id="allCertificates">
                 <Col md={10} mdOffset={1}>

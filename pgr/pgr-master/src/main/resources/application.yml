@@ -353,7 +353,7 @@ ReportDefinitions:
     linkedReport:
       reportName: DrillDownComplaintDetailByFunctionary
       linkedColumn: _parent?reportName={reportName}&status=COMPLETED','WITHDRAWN','CLOSED&username={employeename}
-  - name: rejected
+  - name: reopened
     label: reports.pgr.status.reopened
     type: number
     source: seva

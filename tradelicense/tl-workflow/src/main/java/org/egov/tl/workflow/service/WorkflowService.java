@@ -113,8 +113,8 @@ public class WorkflowService {
 
 	private void update(ProcessInstanceResponse processInstanceResponse, WorkFlowDetails workFlowDetails) {
 		System.out.println("workFlowDetails 1 " + workFlowDetails );
-		System.out.println("processInstanceResponse.getProcessInstance().getOwner().getId() 1 " + workFlowDetails );
-		System.out.println("processInstanceResponse.getProcessInstance().getValueForKey(STATE_ID) 1 " + workFlowDetails );
+		System.out.println("processInstanceResponse.getProcessInstance().getOwner().getId():" + processInstanceResponse.getProcessInstance().getOwner().getId() );
+		System.out.println("processInstanceResponse.getProcessInstance().getValueForKey(STATE_ID):" + processInstanceResponse.getProcessInstance().getValueForKey(STATE_ID) );
 		if (workFlowDetails != null) {
 			workFlowDetails.setAssignee(processInstanceResponse.getProcessInstance().getOwner().getId());
 			workFlowDetails.setStateId(processInstanceResponse.getProcessInstance().getValueForKey(STATE_ID));

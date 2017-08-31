@@ -130,7 +130,7 @@ ReportDefinitions:
   - name: department
     label: reports.collection.department
     type: singlevaluelist
-    pattern: http://egov-common-masters:8080/egov-common-masters/departments/_search?tenantId=$tenantid|$..id|$..name 
+    pattern: http://egov-common-masters:8080/egov-common-masters/departments/_search?tenantId=$tenantid|$..code|$..name 
     source: collection 
     isMandatory: false
     searchClause: AND EGCL_RECEIPTHEADER.DEPARTMENT = $department
@@ -140,6 +140,12 @@ ReportDefinitions:
     pattern: 'list://Cash:Cash,Cheque:Cheque,DD:DD' 
     isMandatory: false
     searchClause: AND EGF_INSTRUMENT.INSTRUMENTTYPEID = $paymentmode
+  - name: servicename
+    label: reports.collection.service.name
+    type: singlevaluelist
+    pattern: http://collection-services:8080/collection-services/receipts/_getDistinctBusinessDetails?tenantId=$tenantid|$..code|$..name
+    isMandatory: false
+    searchClause: AND EGCL_RECEIPTHEADER.businessdetails = $servicename
   - name: collectedby
     label: reports.collection.collectedby
     type: singlevaluelist

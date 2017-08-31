@@ -298,9 +298,9 @@ public class TradeLicenseService {
 		LicenseStatusResponse currentStatus = null;
 		LicenseStatusResponse nextStatus = null;
 
-		if (null != license.getApplicationStatus()){
+		if (null != license.getApplication()){
 			
-			currentStatus = statusRepository.findByIds(license.getTenantId(), license.getStatus().toString(),
+			currentStatus = statusRepository.findByIds(license.getTenantId(), license.getApplication().getStatus().toString(),
 					requestInfoWrapper);
 		}
 			

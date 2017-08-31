@@ -44,7 +44,7 @@ public class AccountEntityService {
                         break;
                     case Constants.ACTION_CREATE:
                         if (accountentities == null) {
-                            throw new InvalidDataException("accountentities", ErrorCode.NOT_NULL.getCode(), accountentities.toString());
+                            throw new InvalidDataException("accountentities", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (AccountEntity accountEntity : accountentities) {
                             validator.validate(accountEntity, errors);
@@ -60,7 +60,7 @@ public class AccountEntityService {
                         break;
                     case Constants.ACTION_UPDATE:
                         if (accountentities == null) {
-                            throw new InvalidDataException("accountentities", ErrorCode.NOT_NULL.getCode(), accountentities.toString());
+                            throw new InvalidDataException("accountentities", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (AccountEntity accountEntity : accountentities) {
                             if (accountEntity.getId() == null) {
@@ -79,7 +79,7 @@ public class AccountEntityService {
                         break;
                     case Constants.ACTION_SEARCH:
                         if (accountentities == null) {
-                            throw new InvalidDataException("accountentities", ErrorCode.NOT_NULL.getCode(), accountentities.toString());
+                            throw new InvalidDataException("accountentities", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (AccountEntity accountEntity : accountentities) {
                             if (accountEntity.getTenantId() == null) {

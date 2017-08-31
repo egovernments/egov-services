@@ -153,10 +153,10 @@ public class ServiceReqRepository {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		String query = "UPDATE egov_citizen_service_req SET  userid=?, servicecode=?, consumercode=?, email=?,"
+		String query = "UPDATE egov_citizen_service_req SET  servicecode=?, consumercode=?, email=?,"
 				+ " mobilenumber=?, assignedto=?,  lastmodifiedddate=?, lastmodifiedby=?,"
 				+ " jsonvalue=?, status=?, modulestatus=?, additionalfee=? WHERE id=? and tenantid=?;";
-		final Object[] obj = new Object[] { requestInfo.getUserInfo().getId(), serviceReq.getServiceCode(),
+		final Object[] obj = new Object[] {serviceReq.getServiceCode(),
 				serviceReq.getConsumerCode(), serviceReq.getEmail(), serviceReq.getPhone(), serviceReq.getAssignedTo(),
 				new Date().getTime(), requestInfo.getUserInfo().getId(), jsonValue, serviceReq.getStatus(), 
 				serviceReq.getModuleStatus(), serviceReq.getAdditionalFee(), serviceReq.getServiceRequestId(), serviceReq.getTenantId() };

@@ -104,24 +104,24 @@ var dat = {
             "name": "TradeOwnerName",
             "jsonPath": "licenses[0].ownerName",
             "label": "tl.create.licenses.groups.TradeOwnerDetails.TradeOwnerName",
-            "pattern": "^.[a-zA-Z. ]{3,99}$",
+            "pattern": "^.[a-zA-Z. ]{2,99}$",
             "type": "text",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Enter Valid Trade Owner Name (Min:4, Max:100)",
+            "patternErrMsg": "Enter Valid Trade Owner Name (Min:3, Max:100)",
             "maxLength": "100"
           },
           {
             "name": "FatherSpouseName",
             "jsonPath": "licenses[0].fatherSpouseName",
             "label": "tl.create.licenses.groups.TradeOwnerDetails.FatherSpouseName",
-            "pattern": "^.[a-zA-Z. ]{3,99}$",
+            "pattern": "^.[a-zA-Z. ]{2,99}$",
             "type": "text",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Enter Valid Father/Spouse Name (Min:4, Max:100)",
+            "patternErrMsg": "Enter Valid Father/Spouse Name (Min:3, Max:100)",
             "maxLength": "100"
           },
           {
@@ -470,13 +470,13 @@ var dat = {
             "name": "agreementNo",
             "jsonPath": "licenses[0].agreementNo",
             "label": "tl.create.licenses.groups.agreementDetails.agreementNo",
-            "pattern": "^[a-zA-Z0-9&/()-]{4,128}$",
+            "pattern": "^[a-zA-Z0-9&/()-]$",
             "type": "text",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Enter Valid Agreement No (Min:4, Max:128, Alpha/Numeric)",
-            "maxLength": "128"
+            "patternErrMsg": "Enter Valid Agreement No (Max:30, Alpha/Numeric)",
+            "maxLength": "30"
           }
         ]
       },

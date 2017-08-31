@@ -46,12 +46,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.egov.tl.commons.web.contract.LicenseFeeDetailContract;
 import org.egov.tl.commons.web.contract.RequestInfo;
-import org.egov.tl.commons.web.contract.TradeLicenseContract;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
-import org.egov.tl.commons.web.requests.TradeLicenseRequest;
 import org.egov.tradelicense.common.config.PropertiesManager;
+import org.egov.tradelicense.domain.model.LicenseFeeDetail;
+import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.web.contract.Demand;
 import org.egov.tradelicense.web.contract.DemandDetail;
 import org.egov.tradelicense.web.contract.DemandRequest;
@@ -73,57 +72,55 @@ public class LicenseBillService {
     @Autowired
     private RestTemplate restTemplate;
     
-    public DemandResponse createBill(final TradeLicenseRequest tradeLicenseRequest) {
+    public DemandResponse createBill(final TradeLicense tradeLicense, final RequestInfo requestInfo) {
 
-        List<Demand> demands = prepareBill(tradeLicenseRequest);
-        DemandResponse demandRes = createBill(demands, tradeLicenseRequest.getRequestInfo());
+        List<Demand> demands = prepareBill(tradeLicense, requestInfo);
+        DemandResponse demandRes = createBill(demands, requestInfo);
         if (demandRes != null && demandRes.getDemands() != null && !demandRes.getDemands().isEmpty())
-            tradeLicenseRequest.getLicenses().get(0).setBillId(demandRes.getDemands().get(0).getId());
+            tradeLicense.setBillId(demandRes.getDemands().get(0).getId());
         return demandRes;
     }
 
-    private List<Demand> prepareBill(final TradeLicenseRequest tradeLicenseRequest) {
+    private List<Demand> prepareBill(final TradeLicense tradeLicense, final RequestInfo requestInfo) {
         List<Demand> demandList = new ArrayList<>();
         Date fromDate;
         Date toDate;
         Calendar date = Calendar.getInstance();
         Demand demand;
         DemandDetail demandDetail;
-        String tenantId = tradeLicenseRequest.getLicenses().get(0).getTenantId();
-        String tradeType = tradeLicenseRequest.getLicenses().get(0).getTradeType().toString();
+        String tenantId = tradeLicense.getTenantId();
+        String tradeType = tradeLicense.getTradeType().toString();
         List<DemandDetail> demandDetailsList;
         RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-        requestInfoWrapper.setRequestInfo(tradeLicenseRequest.getRequestInfo());
-        for (TradeLicenseContract tradeLicenseContract : tradeLicenseRequest.getLicenses()) {
-            demand = new Demand();
-            demand.setTenantId(tenantId);
-            demand.setBusinessService(propertiesManager.getBillBusinessService());
-            demand.setConsumerType(tradeType);
-            demand.setConsumerCode(tradeLicenseContract.getApplicationNumber());
-            demand.setMinimumAmountPayable(BigDecimal.ONE);
-            demandDetailsList = new ArrayList<>();
-            for (LicenseFeeDetailContract licenseFeeDetailContract : tradeLicenseContract.getFeeDetails()) {
-                demandDetail = new DemandDetail();
-                demandDetail.setTaxHeadMasterCode(propertiesManager.getTaxHeadMasterCode());
-                demandDetail.setTaxAmount(BigDecimal.valueOf(licenseFeeDetailContract.getAmount()));
-                demandDetail.setTenantId(tenantId);
-                demandDetailsList.add(demandDetail);
-            }
-            demand.setDemandDetails(demandDetailsList);
-            FinancialYearContract currentFYResponse = financialYearService
-                    .findFinancialYearIdByDate(tenantId, tradeLicenseContract.getTradeCommencementDate(), requestInfoWrapper);
-            fromDate = currentFYResponse.getStartingDate();
-            date.setTimeInMillis(currentFYResponse.getEndingDate().getTime());
-            date.add(Calendar.YEAR, tradeLicenseContract.getValidityYears().intValue() - 1);
-            toDate = date.getTime();
-            demand.setTaxPeriodFrom(fromDate.getTime());
-            demand.setTaxPeriodTo(toDate.getTime());
-
-            Owner owner = new Owner();
-            owner.setId(1L);
-            demand.setOwner(owner);
-            demandList.add(demand);
+        requestInfoWrapper.setRequestInfo(requestInfo);
+        demand = new Demand();
+        demand.setTenantId(tenantId);
+        demand.setBusinessService(propertiesManager.getBillBusinessService());
+        demand.setConsumerType(tradeType);
+        demand.setConsumerCode(tradeLicense.getApplicationNumber());
+        demand.setMinimumAmountPayable(BigDecimal.ONE);
+        demandDetailsList = new ArrayList<>();
+        for (LicenseFeeDetail licenseFeeDetail : tradeLicense.getFeeDetails()) {
+            demandDetail = new DemandDetail();
+            demandDetail.setTaxHeadMasterCode(propertiesManager.getTaxHeadMasterCode());
+            demandDetail.setTaxAmount(BigDecimal.valueOf(licenseFeeDetail.getAmount()));
+            demandDetail.setTenantId(tenantId);
+            demandDetailsList.add(demandDetail);
         }
+        demand.setDemandDetails(demandDetailsList);
+        FinancialYearContract currentFYResponse = financialYearService
+                .findFinancialYearIdByDate(tenantId, tradeLicense.getTradeCommencementDate(), requestInfoWrapper);
+        fromDate = currentFYResponse.getStartingDate();
+        date.setTimeInMillis(currentFYResponse.getEndingDate().getTime());
+        date.add(Calendar.YEAR, tradeLicense.getValidityYears().intValue() - 1);
+        toDate = date.getTime();
+        demand.setTaxPeriodFrom(fromDate.getTime());
+        demand.setTaxPeriodTo(toDate.getTime());
+
+        Owner owner = new Owner();
+        owner.setId(1L);
+        demand.setOwner(owner);
+        demandList.add(demand);
         return demandList;
     }
     

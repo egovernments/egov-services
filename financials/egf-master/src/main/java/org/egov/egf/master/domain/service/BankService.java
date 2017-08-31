@@ -90,7 +90,7 @@ public class BankService {
                         break;
                     case Constants.ACTION_CREATE:
                         if (banks == null) {
-                            throw new InvalidDataException("banks", ErrorCode.NOT_NULL.getCode(), banks.toString());
+                            throw new InvalidDataException("banks", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (Bank bank : banks) {
                             validator.validate(bank, errors);
@@ -106,7 +106,7 @@ public class BankService {
                         break;
                     case Constants.ACTION_UPDATE:
                         if (banks == null) {
-                            throw new InvalidDataException("banks", ErrorCode.NOT_NULL.getCode(), banks.toString());
+                            throw new InvalidDataException("banks", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (Bank bank : banks) {
                             if (bank.getId() == null) {
@@ -125,7 +125,7 @@ public class BankService {
                         break;
                     case Constants.ACTION_SEARCH:
                         if (banks == null) {
-                            throw new InvalidDataException("banks", ErrorCode.NOT_NULL.getCode(), banks.toString());
+                            throw new InvalidDataException("banks", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (Bank bank : banks) {
                             if (bank.getTenantId() == null) {

@@ -44,7 +44,7 @@ public class FiscalPeriodService {
                         break;
                     case Constants.ACTION_CREATE:
                         if (fiscalperiods == null) {
-                            throw new InvalidDataException("fiscalperiods", ErrorCode.NOT_NULL.getCode(), fiscalperiods.toString());
+                            throw new InvalidDataException("fiscalperiods", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (FiscalPeriod fiscalPeriod : fiscalperiods) {
                             validator.validate(fiscalPeriod, errors);
@@ -56,7 +56,7 @@ public class FiscalPeriodService {
                         break;
                     case Constants.ACTION_UPDATE:
                         if (fiscalperiods == null) {
-                            throw new InvalidDataException("fiscalperiods", ErrorCode.NOT_NULL.getCode(), fiscalperiods.toString());
+                            throw new InvalidDataException("fiscalperiods", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (FiscalPeriod fiscalPeriod : fiscalperiods) {
                             if (fiscalPeriod.getId() == null) {
@@ -71,7 +71,7 @@ public class FiscalPeriodService {
                         break;
                     case Constants.ACTION_SEARCH:
                         if (fiscalperiods == null) {
-                            throw new InvalidDataException("fiscalperiods", ErrorCode.NOT_NULL.getCode(), fiscalperiods.toString());
+                            throw new InvalidDataException("fiscalperiods", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (FiscalPeriod fiscalperiod : fiscalperiods) {
                             if (fiscalperiod.getTenantId() == null) {

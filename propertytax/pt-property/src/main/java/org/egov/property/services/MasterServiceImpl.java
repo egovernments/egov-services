@@ -1,5 +1,6 @@
 package org.egov.property.services;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -688,7 +689,7 @@ public class MasterServiceImpl implements Masterservice {
 								usageMasterRequest.getRequestInfo());
 				}
 			}
-			
+
 			if (usageMaster.getService() == null || usageMaster.getService().isEmpty()) {
 				usageMaster.setService(propertiesManager.getUsageMasterDefaultService());
 			}
@@ -696,7 +697,7 @@ public class MasterServiceImpl implements Masterservice {
 			try {
 				Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 				String data = gson.toJson(usageMaster);
-				
+
 				propertyMasterRepository.updateUsageMaster(usageMaster, data);
 
 			} catch (Exception e) {
@@ -715,12 +716,14 @@ public class MasterServiceImpl implements Masterservice {
 	@Override
 	public UsageMasterResponse getUsageMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
 			String code, String nameLocal, Boolean active, Boolean isResidential, Integer orderNumber, Integer pageSize,
-			Integer offSet, String parent, String service) throws Exception {
+			Integer offSet, String parent, List<String> service) throws Exception {
 
 		UsageMasterResponse usageMasterResponse = new UsageMasterResponse();
-		
+
 		if (service == null || service.isEmpty()) {
-			service=propertiesManager.getUsageMasterDefaultService();
+			List<String> services = new ArrayList<String>();
+			services.add(propertiesManager.getUsageMasterDefaultService());
+			service = services;
 		}
 
 		try {

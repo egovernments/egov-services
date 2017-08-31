@@ -45,13 +45,13 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.egov.collection.domain.model.StatusCriteria;
 import org.egov.collection.domain.service.StatusService;
-import org.egov.collection.web.contract.RequestInfo;
 import org.egov.collection.web.contract.RequestInfoWrapper;
-import org.egov.collection.web.contract.ResponseInfo;
 import org.egov.collection.web.contract.StatusGetRequest;
 import org.egov.collection.web.contract.StatusResponse;
 import org.egov.collection.web.contract.factory.ResponseInfoFactory;
-import org.egov.collection.web.errorhandlers.ErrorHandler;
+import org.egov.collection.web.errorhandler.ErrorHandler;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,7 +75,7 @@ public class StatusController {
 	@Autowired
 	ResponseInfoFactory responseInfoFactory;
 	@Autowired
-	ErrorHandler errHandler;
+    ErrorHandler errHandler;
 
 	@PostMapping(value = "/_search")
 	@ResponseStatus(HttpStatus.OK)

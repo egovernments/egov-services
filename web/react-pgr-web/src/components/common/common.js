@@ -927,7 +927,7 @@ var localization_EN_Data = {
 
     "tl.create.licenses.groups.FeeDetails": "Fee Details",
     "tl.create.license.table.financialYear": "Financial Year",
-    "tl.create.license.table.amount": "Amount",
+    "tl.create.license.table.amount": "Amount*", 
     "tl.create.license.table.isPaid": "Is Paid",
 
     "tl.search.groups.license.searchTradeLicense": "Search Trade License",
@@ -1082,7 +1082,7 @@ var localization_EN_Data = {
     "reports.collection.print": "Print",
     "reports.collection.consumerno": "Consumer No",
     "reports.collection.servicename": "Service Name",
-    
+
 
     "collection.create.consumerCode": "Consumer Code",
     "collection.search.period": "Period",

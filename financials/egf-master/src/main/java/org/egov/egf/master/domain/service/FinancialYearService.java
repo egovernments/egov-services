@@ -40,7 +40,7 @@ public class FinancialYearService {
                         break;
                     case Constants.ACTION_CREATE:
                         if (financialyears == null) {
-                            throw new InvalidDataException("financialyears", ErrorCode.NOT_NULL.getCode(), financialyears.toString());
+                            throw new InvalidDataException("financialyears", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (FinancialYear financialYear : financialyears) {
                             validator.validate(financialYear, errors);
@@ -60,7 +60,7 @@ public class FinancialYearService {
                         break;
                     case Constants.ACTION_UPDATE:
                         if (financialyears == null) {
-                            throw new InvalidDataException("financialyears", ErrorCode.NOT_NULL.getCode(), financialyears.toString());
+                            throw new InvalidDataException("financialyears", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (FinancialYear financialYear : financialyears) {
                             if (financialYear.getId() == null) {
@@ -83,7 +83,7 @@ public class FinancialYearService {
                         break;
                     case Constants.ACTION_SEARCH:
                         if (financialyears == null) {
-                            throw new InvalidDataException("financialyears", ErrorCode.NOT_NULL.getCode(), financialyears.toString());
+                            throw new InvalidDataException("financialyears", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (FinancialYear financialyear : financialyears) {
                             if (financialyear.getTenantId() == null) {

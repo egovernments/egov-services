@@ -41,7 +41,7 @@ public class FundsourceService {
                         break;
                     case Constants.ACTION_CREATE:
                         if (fundsources == null) {
-                            throw new InvalidDataException("fundsources", ErrorCode.NOT_NULL.getCode(), fundsources.toString());
+                            throw new InvalidDataException("fundsources", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (Fundsource fundsource : fundsources) {
                             validator.validate(fundsource, errors);
@@ -53,7 +53,7 @@ public class FundsourceService {
                         break;
                     case Constants.ACTION_UPDATE:
                         if (fundsources == null) {
-                            throw new InvalidDataException("fundsources", ErrorCode.NOT_NULL.getCode(), fundsources.toString());
+                            throw new InvalidDataException("fundsources", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (Fundsource fundsource : fundsources) {
                             if (fundsource.getId() == null) {
@@ -68,7 +68,7 @@ public class FundsourceService {
                         break;
                     case Constants.ACTION_SEARCH:
                         if (fundsources == null) {
-                            throw new InvalidDataException("fundsources", ErrorCode.NOT_NULL.getCode(), fundsources.toString());
+                            throw new InvalidDataException("fundsources", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (Fundsource fundsource : fundsources) {
                             if (fundsource.getTenantId() == null) {

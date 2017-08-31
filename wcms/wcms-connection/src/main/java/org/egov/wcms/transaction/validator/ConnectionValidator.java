@@ -172,7 +172,7 @@ public class ConnectionValidator {
         					.message(WcmsConnectionConstants.CONNECTION_METERED_OWNER_INVALID_ERROR_MESSAGE)
         					.field(WcmsConnectionConstants.CONNECTION_METERED_OWNER_INVALID_FIELD_NAME).build();
         			errorFields.add(errorField);
-        		}else if(waterConnectionRequest.getConnection().getMeter().get(0).getMeterModel() == null || waterConnectionRequest.getConnection().getMeter().get(0).getMeterModel().isEmpty()){
+        		}/*else if(waterConnectionRequest.getConnection().getMeter().get(0).getMeterModel() == null || waterConnectionRequest.getConnection().getMeter().get(0).getMeterModel().isEmpty()){
         			final ErrorField errorField = ErrorField.builder().code(WcmsConnectionConstants.CONNECTION_METERED_MODEL_INVALID_CODE)
         					.message(WcmsConnectionConstants.CONNECTION_METERED_MODEL_INVALID_ERROR_MESSAGE)
         					.field(WcmsConnectionConstants.CONNECTION_METERED_MODEL_INVALID_FIELD_NAME).build();
@@ -182,7 +182,7 @@ public class ConnectionValidator {
         					.message(WcmsConnectionConstants.CONNECTION_METERED_NUMBER_INVALID_ERROR_MESSAGE)
         					.field(WcmsConnectionConstants.CONNECTION_METERED_NUMBER_INVALID_FIELD_NAME).build();
         			errorFields.add(errorField);
-        		}else if (waterConnectionRequest.getConnection().getMeter().get(0).getMaximumMeterReading() == null || waterConnectionRequest.getConnection().getMeter().get(0).getMaximumMeterReading().isEmpty()){
+        		}*/else if (waterConnectionRequest.getConnection().getMeter().get(0).getMaximumMeterReading() == null || waterConnectionRequest.getConnection().getMeter().get(0).getMaximumMeterReading().isEmpty()){
         			final ErrorField errorField = ErrorField.builder().code(WcmsConnectionConstants.CONNECTION_METERED_MAXMETERREADING_INVALID_CODE)
         					.message(WcmsConnectionConstants.CONNECTION_METERED_MAXMETERREADING_INVALID_ERROR_MESSAGE)
         					.field(WcmsConnectionConstants.CONNECTION_METERED_MAXMETERREADING_INVALID_FIELD_NAME).build();

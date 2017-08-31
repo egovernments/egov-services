@@ -308,57 +308,44 @@ class Report extends Component {
     })
   }
 
-  addFee = () => {
+  /*addFee = () => {
     let self = this;
-    if(!self.state.feeAmount)
-      return self.setState({
-        stateFieldErrors: {
-          ...self.state.stateFieldErrors,
-          "feeAmount": "Fee amount cannot be 0."
+    if(self.state.feeAmount) {
+      //Update service request with additional fee and create demand
+      var ServiceRequest = {...this.state.ServiceRequest};
+      ServiceRequest.additionalFee = self.state.feeAmount;
+      let DemandRequest = {};
+      DemandRequest["Demands"] = self.props.metaData["wc.create"].feeDetails;
+      DemandRequest["Demands"][0].tenantId = localStorage.getItem("tenantId");
+      DemandRequest["Demands"][0].businessService = "WC";
+      DemandRequest["Demands"][0].consumerCode = self.state.ServiceRequest.serviceRequestId;
+      DemandRequest["Demands"][0].owner.id = JSON.parse(localStorage.userRequest).id;
+      DemandRequest["Demands"][0].taxPeriodFrom = 1301596200000;
+      DemandRequest["Demands"][0].taxPeriodTo = 1317321000000;
+      DemandRequest["Demands"][0].demandDetails[0].taxHeadMasterCode = "WATERCHARGE";
+      DemandRequest["Demands"][0].demandDetails[0].taxAmount = self.state.feeAmount;
+      ServiceRequest.backendServiceDetails = [{
+        url: "http://billing-service:8080/billing-service/demand/_create?tenantId=" + localStorage.tenantId,
+        request: {
+          RequestInfo: self.state.RequestInfo,
+          ...DemandRequest
         }
+      }];
+
+      //self.props.setLoadingStatus("loading");
+      Api.commonApiPost("/citizen-services/v1/requests/_update", {}, {"serviceReq": ServiceRequest}, null, true, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
+        //self.props.setLoadingStatus("hide");
+        //self.openAddFeeModal();
+        //self.props.toggleSnackbarAndSetText(true, "Fee added successfully.", true, false);
+        self.setState({
+          ServiceRequest: res.serviceReq
+        });
+      }, function(err){
+        self.props.setLoadingStatus("hide");
+        self.props.toggleSnackbarAndSetText(true, err.message, false, true);
       })
-
-    self.setState({
-      stateFieldErrors: {
-        ...self.state.stateFieldErrors,
-        "feeAmount": ""
-      }
-    })    
-
-    //Update service request with additional fee and create demand
-    var ServiceRequest = {...this.state.ServiceRequest};
-    ServiceRequest.additionalFee = self.state.feeAmount;
-    let DemandRequest = {};
-    DemandRequest["Demands"] = self.props.metaData["wc.create"].feeDetails;
-    DemandRequest["Demands"][0].tenantId = localStorage.getItem("tenantId");
-    DemandRequest["Demands"][0].businessService = "WC";
-    DemandRequest["Demands"][0].consumerCode = self.state.ServiceRequest.serviceRequestId;
-    DemandRequest["Demands"][0].owner.id = JSON.parse(localStorage.userRequest).id;
-    DemandRequest["Demands"][0].taxPeriodFrom = 1301596200000;
-    DemandRequest["Demands"][0].taxPeriodTo = 1317321000000;
-    DemandRequest["Demands"][0].demandDetails[0].taxHeadMasterCode = "WATERCHARGE";
-    DemandRequest["Demands"][0].demandDetails[0].taxAmount = self.state.feeAmount;
-    ServiceRequest.backendServiceDetails = [{
-      url: "http://billing-service:8080/billing-service/demand/_create?tenantId=" + localStorage.tenantId,
-      request: {
-        RequestInfo: self.state.RequestInfo,
-        ...DemandRequest
-      }
-    }];
-
-    self.props.setLoadingStatus("loading");
-    Api.commonApiPost("/citizen-services/v1/requests/_update", {}, {"serviceReq": ServiceRequest}, null, true, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
-      self.props.setLoadingStatus("hide");
-      self.openAddFeeModal();
-      self.props.toggleSnackbarAndSetText(true, "Fee added successfully.", true, false);
-      self.setState({
-        ServiceRequest: res.serviceReq
-      });
-    }, function(err){
-      self.props.setLoadingStatus("hide");
-      self.props.toggleSnackbarAndSetText(true, err.message, false, true);
-    })
-  }
+    }
+  }*/
 
   payFee = () => {
     //Update service request and generate bill and create receipt
@@ -456,6 +443,27 @@ class Report extends Component {
       })
     }
 
+    if(self.state.feeAmount) {
+      ServiceRequest.additionalFee = self.state.feeAmount;
+      let DemandRequest = {};
+      DemandRequest["Demands"] = self.props.metaData["wc.create"].feeDetails;
+      DemandRequest["Demands"][0].tenantId = localStorage.getItem("tenantId");
+      DemandRequest["Demands"][0].businessService = "WC";
+      DemandRequest["Demands"][0].consumerCode = self.state.ServiceRequest.serviceRequestId;
+      DemandRequest["Demands"][0].owner.id = JSON.parse(localStorage.userRequest).id;
+      DemandRequest["Demands"][0].taxPeriodFrom = 1301596200000;
+      DemandRequest["Demands"][0].taxPeriodTo = 1317321000000;
+      DemandRequest["Demands"][0].demandDetails[0].taxHeadMasterCode = "WATERCHARGE";
+      DemandRequest["Demands"][0].demandDetails[0].taxAmount = self.state.feeAmount;
+      ServiceRequest.backendServiceDetails = [{
+        url: "http://billing-service:8080/billing-service/demand/_create?tenantId=" + localStorage.tenantId,
+        request: {
+          RequestInfo: self.state.RequestInfo,
+          ...DemandRequest
+        }
+      }];
+    }
+
     if(this.state.status) {
       ServiceRequest.status = this.state.status;
     }
@@ -466,7 +474,9 @@ class Report extends Component {
       self.props.setLoadingStatus("hide");
       self.props.toggleSnackbarAndSetText(true, "Updated successfully.", true, false);
       self.setState({
-        ServiceRequest: res.serviceReq
+        ServiceRequest: res.serviceReq,
+        comments: "",
+        feeAmount: ""
       });
     }, function(err){
       self.props.setLoadingStatus("hide");
@@ -477,6 +487,7 @@ class Report extends Component {
   update = () => {
     let self = this, ServiceRequest = {...this.state.ServiceRequest};
     self.props.setLoadingStatus('loading');
+    //return console.log(self.state.documents[0]);
     if(self.state.documents && self.state.documents.length) {
       let _docs = [];
       let documents = self.state.documents;
@@ -492,7 +503,8 @@ class Report extends Component {
             _docs.push({
               from: JSON.parse(localStorage.userRequest).userName,
               timeStamp: new Date().getTime(),
-              filePath: res.files[0].fileStoreId
+              filePath: res.files[0].fileStoreId,
+              name: documents[i].name
             })
             counter--;
             if(counter == 0 && breakOut == 0) {
@@ -552,18 +564,11 @@ class Report extends Component {
                     </SelectField>
                   </Col> : ""}
                   <Col xs={12} md={6}>
-                    <RaisedButton
-                      floatingLabelStyle={{"color": "#696969"}}
-                      style={{"marginTop": "26px"}}
-                      containerElement='label'
-                      fullWidth={true} 
-                      label={"Upload Files"}>
-                        <input multiple type="file" style={{ display: 'none' }} onChange={(e) => {
+                    <input multiple type="file" style={{"marginTop":"40px"}} onChange={(e) => {
                           self.setState({
                             documents: e.target.files || []
                           })
-                        }}/>
-                    </RaisedButton>
+                    }}/>
                   </Col>
                   <Col xs={12} md={6}>
                     <TextField
@@ -580,13 +585,29 @@ class Report extends Component {
                         })
                       }}/>
                   </Col>
+                  {self.state.role != "CITIZEN" && self.state.ServiceRequest && (!self.state.ServiceRequest.additionalFee || self.state.ServiceRequest.additionalFee == 0) ? <Col xs={12} md={6}>
+                    <TextField
+                      floatingLabelStyle={{"color": "#696969", "fontSize": "20px", "white-space": "nowrap"}}
+                      fullWidth={true}
+                      type="number"
+                      floatingLabelText={"Add Fee"}
+                      floatingLabelFixed={true} 
+                      value={self.state.additionalFee}
+                      inputStyle={{"color": "#5F5C57"}}
+                      errorStyle={{"float":"left"}}
+                      onChange={(e) => {
+                        self.setState({
+                          feeAmount: e.target.value
+                        })
+                      }}/>
+                  </Col> : ""}
                 </Row>
               </Grid>
             </CardText>
           </Card>
           <div style={{"textAlign": "center"}}>
             <RaisedButton primary={true} label={"Update"} onClick={() => {self.update()}}/>&nbsp;&nbsp;
-            {self.state.role != "CITIZEN" && self.state.ServiceRequest && (!self.state.ServiceRequest.additionalFee || self.state.ServiceRequest.additionalFee == 0) ? <RaisedButton primary={true} label={"Add Fee"} onClick={self.openAddFeeModal}/> : ""}&nbsp;&nbsp;
+            {/*self.state.role != "CITIZEN" && self.state.ServiceRequest && (!self.state.ServiceRequest.additionalFee || self.state.ServiceRequest.additionalFee == 0) ? <RaisedButton primary={true} label={"Add Fee"} onClick={self.openAddFeeModal}/> : ""*/}&nbsp;&nbsp;
             {self.state.role == "CITIZEN" && self.state.ServiceRequest && (self.state.ServiceRequest.additionalFee > 0 && self.state.ServiceRequest.additionalFee != 12345) ? <RaisedButton primary={true} label={"Pay Fee"} onClick={self.openPayFeeModal}/> : ""}
           </div>
           <CommentDoc ServiceRequest={self.state.ServiceRequest} getFullDate={getFullDate}/>

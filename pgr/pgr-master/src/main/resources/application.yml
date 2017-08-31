@@ -246,6 +246,7 @@ ReportDefinitions:
         and sk.keyword='complaint'
         and cs.tenantid = $tenantid
         and ctype.tenantid =$tenantid
+        and sk.tenantid=$tenantid
 
 - reportName: DrillDownComplaintDetailByGrievanceTypeBeyondSLA
   summary: DrillDown ComplaintDetail By GrievanceType

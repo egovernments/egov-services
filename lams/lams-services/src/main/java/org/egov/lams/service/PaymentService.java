@@ -12,6 +12,7 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.egov.lams.config.PropertiesManager;
+import org.egov.lams.exceptions.CollectionExceedException;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.Allottee;
 import org.egov.lams.model.Demand;
@@ -210,6 +211,10 @@ public class PaymentService {
 			}
 			billInfo.setTotalAmount(totalAmount.doubleValue());
 			billInfo.setBillAmount(totalAmount.doubleValue());
+			if (billDetailInfos.isEmpty()) {
+				LOGGER.info("No bill details for collection");
+				throw new CollectionExceedException();
+			} else
 			billInfo.setBillDetailInfos(billDetailInfos);
 			LOGGER.info("billInfo before>>>>>>>" + billInfo);
 			billInfos.add(billInfo);

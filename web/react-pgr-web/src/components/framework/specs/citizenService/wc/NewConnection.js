@@ -198,7 +198,7 @@ var dat = {
                         "isDisabled": false,
                         "requiredErrMsg": "",
                         "patternErrMsg": "",
-                        "values": [{ "label": "pt.create.groups.ownerDetails.fields.primaryOwner", "value": true }, { "label": "pt.create.groups.ownerDetails.fields.secondaryOwner", "value": false }],
+                        "values": [{ "label": "pt.create.groups.ownerDetails.fields.primaryOwner", "value": true }],
                         "defaultValue": true
                     }
                 ]

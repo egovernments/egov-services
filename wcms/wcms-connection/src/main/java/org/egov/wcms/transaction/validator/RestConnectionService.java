@@ -52,6 +52,7 @@ import org.egov.wcms.transaction.exception.FinYearException;
 import org.egov.wcms.transaction.exception.IdGenerationException;
 import org.egov.wcms.transaction.exception.WaterConnectionException;
 import org.egov.wcms.transaction.model.Connection;
+import org.egov.wcms.transaction.util.WcmsConnectionConstants;
 import org.egov.wcms.transaction.web.contract.AckIdRequest;
 import org.egov.wcms.transaction.web.contract.AckNoGenerationRequest;
 import org.egov.wcms.transaction.web.contract.AckNoGenerationResponse;
@@ -228,7 +229,8 @@ public class RestConnectionService {
         url.append(configurationManager.getPropertyServiceHostNameTopic())
                 .append(configurationManager.getSerachSubUsageType())
                 .append("?code=").append(waterConnectionRequest.getConnection().getSubUsageType())
-                .append("&tenantId=").append(waterConnectionRequest.getConnection().getTenantId());
+                .append("&tenantId=").append(waterConnectionRequest.getConnection().getTenantId())
+        		.append("&service=").append(WcmsConnectionConstants.SERVICES_FOR_USAGETYPE_SEARCH); 
         final RequestInfo requestInfo = RequestInfo.builder().ts(1111111L).build();
         RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
         UsageMasterResponse usagesubtype = new RestTemplate().postForObject(url.toString(),

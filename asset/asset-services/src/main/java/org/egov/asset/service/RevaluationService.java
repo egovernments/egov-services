@@ -25,6 +25,7 @@ import org.egov.asset.model.enums.Sequence;
 import org.egov.asset.model.enums.TransactionType;
 import org.egov.asset.model.enums.TypeOfChangeEnum;
 import org.egov.asset.repository.RevaluationRepository;
+import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,14 +62,18 @@ public class RevaluationService {
     @Autowired
     private CurrentValueService currentValueService;
 
+    @Autowired
+    private ResponseInfoFactory responseInfoFactory;
+
     public RevaluationResponse createAsync(final RevaluationRequest revaluationRequest, final HttpHeaders headers) {
         final Revaluation revaluation = revaluationRequest.getRevaluation();
+        final RequestInfo requestInfo = revaluationRequest.getRequestInfo();
         log.debug("RevaluationService createAsync revaluationRequest:" + revaluationRequest);
 
         revaluation.setId(assetCommonService.getNextId(Sequence.REVALUATIONSEQUENCE));
 
         if (revaluation.getAuditDetails() == null)
-            revaluation.setAuditDetails(assetCommonService.getAuditDetails(revaluationRequest.getRequestInfo()));
+            revaluation.setAuditDetails(assetCommonService.getAuditDetails(requestInfo));
 
         if (assetConfigurationService.getEnabledVoucherGeneration(AssetConfigurationKeys.ENABLEVOUCHERGENERATION,
                 revaluation.getTenantId()))
@@ -87,7 +92,7 @@ public class RevaluationService {
 
         final List<Revaluation> revaluations = new ArrayList<Revaluation>();
         revaluations.add(revaluation);
-        return getRevaluationResponse(revaluations);
+        return getRevaluationResponse(revaluations, requestInfo);
     }
 
     public void create(final RevaluationRequest revaluationRequest) {
@@ -111,14 +116,14 @@ public class RevaluationService {
         currentValueService.createCurrentValueAsync(assetCurrentValueRequest);
     }
 
-    public RevaluationResponse search(final RevaluationCriteria revaluationCriteria) {
+    public RevaluationResponse search(final RevaluationCriteria revaluationCriteria, final RequestInfo requestInfo) {
         List<Revaluation> revaluations = new ArrayList<Revaluation>();
         try {
             revaluations = revaluationRepository.search(revaluationCriteria);
         } catch (final Exception ex) {
             ex.printStackTrace();
         }
-        return getRevaluationResponse(revaluations);
+        return getRevaluationResponse(revaluations, requestInfo);
     }
 
     public String createVoucherForRevaluation(final RevaluationRequest revaluationRequest, final HttpHeaders headers) {
@@ -189,9 +194,11 @@ public class RevaluationService {
         return accountCodeDetails;
     }
 
-    private RevaluationResponse getRevaluationResponse(final List<Revaluation> revaluations) {
+    private RevaluationResponse getRevaluationResponse(final List<Revaluation> revaluations,
+            final RequestInfo requestInfo) {
         final RevaluationResponse revaluationResponse = new RevaluationResponse();
         revaluationResponse.setRevaluations(revaluations);
+        revaluationResponse.setResposneInfo(responseInfoFactory.createResponseInfoFromRequestHeaders(requestInfo));
         return revaluationResponse;
     }
 

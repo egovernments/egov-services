@@ -28,7 +28,8 @@ ReportDefinitions:
   - name: WT_BAL
     label: reports.wcms.outstanding
     type: number
-    source: seva
+    source: wcms
+    total: true
   searchParams:
   - name: fromDate
     label: reports.wcms.fromdate
@@ -75,18 +76,25 @@ ReportDefinitions:
     label: reports.wcms.consumercount
     type: number
     source: wcms
-  - name: WT_DEMAND
-    label: reports.wcms.arreardemand
+  - name: STATE
+    label: reports.wcms.state
     type: number
     source: wcms
+  - name: WT_DEMAND
+    label: reports.wcms.demand
+    type: number
+    source: wcms
+    total: true
   - name: WT_COLL
-    label: reports.wcms.arrearcollection
+    label: reports.wcms.collection
     type: number
-    source: wcms  
+    source: wcms
+    total: true 
   - name: WT_BAL
-    label: reports.wcms.arrearbalance
+    label: reports.wcms.balance
     type: number
-    source: wcms  
+    source: wcms
+    total: true  
 
   searchParams:
   - name: zoneid
@@ -123,7 +131,7 @@ ReportDefinitions:
          prop.pipesize as pipesize,ut.data::jsonb->>'name'  as usage,
          'ARREAR' as STATE,SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount) ELSE NULL END)) AS WT_DEMAND,
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.collectionamount) ELSE NULL END)) AS WT_COLL,
-	 SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS WT_BAL
+         SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS WT_BAL
          from egwtr_connection_view prop, eg_boundary boundary,egpt_mstr_usage  ut ,egbs_demand demand, egbs_demanddetail dd where
          prop.wardid=boundary.id  
          and  NULLIF(prop.usagetype, '')::int  = ut.id and  demand.consumercode=prop.hscno 

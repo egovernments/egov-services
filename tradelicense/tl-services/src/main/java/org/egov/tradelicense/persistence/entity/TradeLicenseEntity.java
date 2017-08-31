@@ -78,6 +78,8 @@ public class TradeLicenseEntity {
 	private String remarks;
 
 	private Timestamp tradeCommencementDate;
+	
+	private Timestamp issuedDate;
 
 	private Timestamp agreementDate;
 
@@ -199,6 +201,11 @@ public class TradeLicenseEntity {
 
 			tradeLicense.setLicenseValidFromDate((this.licenseValidFromDate.getTime()));
 		}
+		
+		if(this.issuedDate != null){
+			
+			tradeLicense.setIssuedDate((this.issuedDate.getTime()));
+		}
 
 		tradeLicense.setAgreementNo(this.agreementNo);
 
@@ -309,6 +316,11 @@ public class TradeLicenseEntity {
 		if (tradeLicense.getTradeCommencementDate() != null) {
 
 			this.tradeCommencementDate = new Timestamp(tradeLicense.getTradeCommencementDate());
+		}
+		
+		if(tradeLicense.getIssuedDate() != null){
+			
+			this.issuedDate = new Timestamp(tradeLicense.getIssuedDate());
 		}
 
 		if (tradeLicense.getAgreementDate() != null) {

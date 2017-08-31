@@ -360,6 +360,7 @@ public class WcmsConnectionConstants {
     public static final String CONNECTIONSTATUSCREAED="CREATED";
     
     public static final String WORKFLOW_REQUIRED_CONFIG_KEY="WORKFLOW_REQUIRED_OR_NOT";
+    public static final String SERVICES_FOR_USAGETYPE_SEARCH = "wc,common" ; 
 
 
     

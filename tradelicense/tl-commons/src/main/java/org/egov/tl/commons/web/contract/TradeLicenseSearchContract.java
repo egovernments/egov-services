@@ -174,6 +174,9 @@ public class TradeLicenseSearchContract {
 	@NotNull
 	@JsonProperty("licenseValidFromDate")
 	private String licenseValidFromDate;
+	
+	@JsonProperty("issuedDate")
+	private String issuedDate;
 
 	@JsonProperty("agreementDate")
 	private String agreementDate;

@@ -195,7 +195,7 @@ public class AssetControllerTest {
         final RevaluationResponse revaluationResponse = new RevaluationResponse();
         revaluationResponse.setResposneInfo(null);
         revaluationResponse.setRevaluations(revaluations);
-        when(revaluationService.search(any(RevaluationCriteria.class))).thenReturn(revaluationResponse);
+        when(revaluationService.search(any(RevaluationCriteria.class),any(RequestInfo.class))).thenReturn(revaluationResponse);
         mockMvc.perform(post("/assets/revaluation/_search").contentType(MediaType.APPLICATION_JSON)
                 .param("tenantId", "ap.kurnool").content(getFileContents("requestinfowrapper.json")))
                 .andExpect(status().isOk()).andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))

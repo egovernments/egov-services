@@ -110,7 +110,7 @@ const content=[
             {
                 icon: 'icon-class-name',
                 label: 'Apply for Fire NOC',
-                to: '#/coming/soon',
+                to: '#/non-framework/citizenServices/fireNoc/create',
             }
         ],
     },

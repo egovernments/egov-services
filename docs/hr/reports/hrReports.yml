@@ -549,9 +549,9 @@ ReportDefinitions:
      egeis_leaveopeningbalance openbal
      LEFT OUTER JOIN 
     (select count(*) as approved_count,employeeid, status from egeis_leaveapplication where status in (select  id from egeis_hrstatus where
-    code='APPROVED' and objectname='LeaveApplication' and tenantid='$tenantid') group by employeeid,status,leavetypeid
+    code='APPROVED' and objectname='LeaveApplication' and tenantid=$tenantid) group by employeeid,status,leavetypeid
     )leaveappl ON leaveappl.employeeid = openbal.employeeid 
-    where  openbal.tenantid='$tenantid' 
+    where  openbal.tenantid=$tenantid
     and emp.id=usr.id 
     and openbal.employeeid=emp.id
     and levtyp.id=openbal.leavetypeid
@@ -563,6 +563,6 @@ ReportDefinitions:
     and levtyp.tenantid=openbal.tenantid
     and levapp.tenantid=emp.tenantid
     and assign.tenantid=emp.tenantid 
-  groupBy : group by emp.code ,usr.name ,levtyp.name,openbal.noofdays,leaveappl.approved_count
+  groupBy : ORDER BY emp.code ,usr.name ,levtyp.name,openbal.noofdays,leaveappl.approved_count
     
    

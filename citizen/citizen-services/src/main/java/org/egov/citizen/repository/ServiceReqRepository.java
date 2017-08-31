@@ -17,6 +17,8 @@ import org.egov.citizen.model.ServiceReq;
 import org.egov.citizen.model.ServiceReqRequest;
 import org.egov.citizen.repository.querybuilder.ServiceReqQueryBuilder;
 import org.egov.citizen.repository.rowmapper.CommentsAndDocsRowMapper;
+import org.egov.citizen.web.contract.PGPayload;
+import org.egov.citizen.web.contract.PGPayloadResponse;
 import org.egov.citizen.web.contract.ServiceRequestSearchCriteria;
 import org.egov.common.contract.request.RequestInfo;
 import org.slf4j.Logger;
@@ -236,6 +238,42 @@ public class ServiceReqRepository {
 			jdbcTemplate.batchUpdate(query, batchArgs);
 		} catch (final Exception e) {
 			LOGGER.info("Exception while inserting comments: ", e);
+		}
+	}
+	
+	public void persistPaymentData(PGPayload pgPayLoad, PGPayloadResponse pGPayLoadResponse, boolean isRequest){
+		if(isRequest){
+			String query = "INSERT INTO egov_citizen_service_payments(id, srn, userid, pgrequest,"
+					+ " amount, tenantid, createddate, lastmodifiedddate, createdby, lastmodifiedby)"
+					+ " VALUES(NEXTVAL('seq_citizen_payment'), ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			try{
+				
+			jdbcTemplate.update(query, new Object[] {
+					pgPayLoad.getServiceRequestId(),
+					pgPayLoad.getUid(),
+					pgPayLoad.toString(),
+					pgPayLoad.getAmountPaid(),
+					pgPayLoad.getTenantId(),
+					new Date().getTime(),
+					new Date().getTime(),
+					pgPayLoad.getRequestInfo().getUserInfo().getId(),
+					pgPayLoad.getRequestInfo().getUserInfo().getId()
+			});
+		}catch(Exception e){
+			LOGGER.error("Payment details failed to persist", e);
+		}
+		}else{
+			String query = "UPDATE egov_citizen_service_payments SET pgresponse = ?, transactionid = ? WHERE srn = ?";
+			try{
+				
+			jdbcTemplate.update(query, new Object[] {
+					pGPayLoadResponse.toString(),
+					pGPayLoadResponse.getTransactionId(),
+					pGPayLoadResponse.getServiceRequestId()
+			});
+		}catch(Exception e){
+			LOGGER.error("Payment details failed to persist", e);
+		}
 		}
 	}
 }

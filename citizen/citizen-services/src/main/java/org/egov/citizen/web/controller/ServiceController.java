@@ -16,7 +16,12 @@ import org.egov.citizen.model.ServiceReqResponse;
 import org.egov.citizen.model.ServiceResponse;
 import org.egov.citizen.service.CitizenPersistService;
 import org.egov.citizen.service.CitizenService;
+import org.egov.citizen.web.contract.PGPayLoadResWrapper;
+import org.egov.citizen.web.contract.PGPayload;
+import org.egov.citizen.web.contract.PGPayloadResponse;
+import org.egov.citizen.web.contract.PGPayloadWrapper;
 import org.egov.citizen.web.contract.ReceiptRequest;
+import org.egov.citizen.web.contract.ReceiptRequestWrapper;
 import org.egov.citizen.web.contract.ServiceRequestSearchCriteria;
 import org.egov.citizen.web.contract.factory.ResponseInfoFactory;
 import org.egov.citizen.web.errorhandlers.Error;
@@ -101,7 +106,43 @@ public class ServiceController {
 		ServiceReqResponse serviceReqResponse = citizenPersistService.update(serviceReqJson);
 		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);
 	}
+	
+	@PostMapping(value = "/pgrequest/_create")
+	public ResponseEntity<?> generatePGRequest(@RequestBody @Valid ReceiptRequestWrapper receiptRequestWrapper,
+			BindingResult bindingResult) {
+				LOGGER.info("Request on to controller: "+receiptRequestWrapper.toString());
+		if (bindingResult.hasFieldErrors()) {
+			ErrorResponse errRes = populateErrors(bindingResult);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		}
+		ReceiptRequest receiptRequest = receiptRequestWrapper.getReceiptRequest();
+		PGPayload pgPayLoad = citizenPersistService.generatePGPayload(receiptRequest);
+		PGPayloadWrapper pGPayloadWrapper = new PGPayloadWrapper();
+		pGPayloadWrapper.setPgPayLoad(pgPayLoad);
+		return new ResponseEntity<>(pGPayloadWrapper, HttpStatus.OK);
+	}
 
+	@PostMapping(value = "/pgresponse/_validate")
+	public ResponseEntity<?> validatePGResponse(@RequestBody @Valid PGPayLoadResWrapper pGPayloadResponseWrapper,
+			BindingResult bindingResult) {
+
+		LOGGER.info("Request on to controller: "+pGPayloadResponseWrapper.toString());
+		if (bindingResult.hasFieldErrors()) {
+			ErrorResponse errRes = populateErrors(bindingResult);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		}
+		PGPayloadResponse pGPayloadResponse = pGPayloadResponseWrapper.getPGPayloadResponse();
+		boolean isValid = citizenPersistService.validatingPGResponse(pGPayloadResponse);
+		if(isValid){
+			return new ResponseEntity<>(pGPayloadResponseWrapper, HttpStatus.OK);
+		}
+		Error error = new Error();
+		error.setCode(400);
+		error.setMessage(CitizenServiceConstants.FAIL_STATUS_MSG);
+		error.setDescription(CitizenServiceConstants.FAIL_STATUS_DESC);
+
+		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);	}
+	
 /*	@PostMapping(value = "/requests/_update")
 	public ResponseEntity<?> updateService(HttpEntity<String> httpEntity) {
 
@@ -186,7 +227,7 @@ public class ServiceController {
 				.createResponseInfoFromRequestInfo(citizenService.getRequestInfo(config).getRequestInfo(), true));
 		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);	}*/
 
-	@PostMapping(value = "/requests/receipt/_create")
+/*	@PostMapping(value = "/requests/receipt/_create")
 	public ResponseEntity<?> createReceipt(@RequestBody @Valid ReceiptRequest receiptReq, BindingResult errors) {
 
 		if (receiptReq.getStatus().get(0).equals("FAILURE") || receiptReq.getStatus().get(0).equals("CANCEL")) {
@@ -203,13 +244,6 @@ public class ServiceController {
 		serviceReq.setBackendServiceDetails(receiptReq);
 		serviceReqResponse.setServiceReq(serviceReq);
 
-		/*
-		 * String json = httpEntity.getBody(); Object config =
-		 * Configuration.defaultConfiguration().jsonProvider().parse(json);
-		 * List<String> results = null; final ObjectMapper objectMapper = new
-		 * ObjectMapper(); ReceiptRequest receiptReq =
-		 * objectMapper.convertValue(config, ReceiptRequest.class);
-		 */
 
 		if (errors.hasFieldErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
@@ -231,7 +265,7 @@ public class ServiceController {
 		serviceReqResponse.setServiceReq(serviceRequest);
 
 		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);
-	}
+	} */
 
 	/*@PostMapping(value = "/requests/_search")
 	@ResponseBody

@@ -99,6 +99,9 @@ public class ApplicationProperties {
 	
 	@Value("${egov.citizen.service.taxPeriodTo}")
 	private String taxPeriodTo;
+	
+	@Value("${egov.citizen.service.pgrequest.hash.key}")
+	private String hashKey;
 
 	public String commonsSearchPageSizeDefault() {
 		return environment.getProperty(SEARCH_PAGESIZE_DEFAULT);

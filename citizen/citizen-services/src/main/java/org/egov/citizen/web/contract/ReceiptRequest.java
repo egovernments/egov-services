@@ -24,39 +24,27 @@ public class ReceiptRequest {
 	@NotNull
 	private RequestInfo requestInfo;
 	
-	@JsonProperty("tenantId")
 	@NotNull
 	private String tenantId;
 	
-	@JsonProperty("amountPaid")
-	@NotNull
 	private BigDecimal amountPaid;
 	
-	@JsonProperty("status")
-	@NotNull
-	private List<String> status; //This should be an enum
-	
-	@JsonProperty("billNumber")
 	private String billNumber;
 	
-	@JsonProperty("responseHash")
-	@NotNull
-	private String responseHash;
+	private String returnUrl;
 	
-	@JsonProperty("transactionId")
+	private Long date;
+	
+	private String biller;
+	
 	private String transactionId;
 	
-	@JsonProperty("otherDetails")
 	private Object otherDetails;
 	
-	@JsonProperty("billService")
-	@NotNull
 	private String billService;
 	
-	@JsonProperty("consumerCode")
 	private String consumerCode;
 	
-	@JsonProperty("serviceRequestId")
 	private String serviceRequestId;
 	
 	

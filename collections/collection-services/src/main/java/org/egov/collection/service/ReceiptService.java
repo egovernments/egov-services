@@ -407,15 +407,13 @@ public class ReceiptService {
 						return receipt;
 					}
 					CollectionConfigGetRequest collectionConfigGetRequest = new CollectionConfigGetRequest();
-					List<Long> congigKeyIds = new ArrayList<>();
-					congigKeyIds.add(Long.valueOf(applicationProperties
-							.getRcptwflowConfigKey()));
-					collectionConfigGetRequest.setId(congigKeyIds);
+                    collectionConfigGetRequest
+                            .setName(CollectionServiceConstants.RECEIPT_PREAPPROVED_OR_APPROVED_CONFIG_KEY);
 					collectionConfigGetRequest.setTenantId(tenantId);
 
 					Map<String, List<String>> collectionConfiguration = collectionConfigService
 							.getCollectionConfiguration(collectionConfigGetRequest);
-					if (collectionConfiguration
+					if (!collectionConfiguration.isEmpty() && collectionConfiguration
 							.get(CollectionServiceConstants.RECEIPT_PREAPPROVED_OR_APPROVED_CONFIG_KEY)
 							.get(0)
 							.equals(CollectionServiceConstants.PREAPPROVED_CONFIG_VALUE)) {

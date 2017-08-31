@@ -3,6 +3,7 @@ package org.egov.tl.workflow.service;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.TradeLicenseContract;
 import org.egov.tl.commons.web.contract.WorkFlowDetails;
+import org.egov.tl.workflow.model.Attribute;
 import org.egov.tl.workflow.model.Position;
 import org.egov.tl.workflow.model.ProcessInstance;
 import org.egov.tl.workflow.model.ProcessInstanceRequest;
@@ -90,6 +91,9 @@ public class WorkflowService {
 			task.setTenantId(tenantId);
 			task.setAssignee(new Position());
 			task.getAssignee().setId(workFlowDetails.getAssignee());
+			task.getAttributes().put("department",
+					Attribute.asStringAttr("department", workFlowDetails.getDepartment()));
+
 		}
 		request.setTask(task);
 

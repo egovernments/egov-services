@@ -15,9 +15,9 @@ Setup your machine.
 3. Install cucumber for java plugin in intellij
 4. Install gradle
 
-Once setup, checkout the egov project from here ```https://github.com/egovernments/eGov.git```
-Switch to branch **test-automation**
-Create a new project using existing source from eGov/egov/egov_functional_test using build.gradle
+Once setup, checkout the egov project from here ```https://github.com/egovernments/egov-services```
+Switch to branch **egov-mr-functional-test-automation**
+Import project using existing source from test/egov_functional_test using build.gradle
 You should be all set.
 
 #### Running tests

@@ -55,7 +55,7 @@ class ShowField extends Component {
       dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
       buttons: [
          'copy', 'csv', 'excel',
-         { extend: 'pdf', text: 'Pdf', orientation: 'landscape', pageSize: 'legal',
+         { extend: 'pdf', text: 'Pdf', footer : true,  orientation: 'landscape', pageSize: 'TABLOID',
           customize: function ( doc ) {
               content: [ {
                   alignment: 'justify',

@@ -215,11 +215,14 @@ class ShowForm extends Component {
               :
         searchForm[variable]):(typeof(searchForm[variable])=="object"?new Date(searchForm[variable]).getTime():searchForm[variable])
 
-        searchParams.push({
-          name:variable,
-          // value:typeof(searchForm[variable])=="object"?new Date(searchForm[variable]).getTime():searchForm[variable]
-          input
-        });
+        console.log(variable , input);
+
+        if(input){
+          searchParams.push({
+            name:variable,
+            input
+          });
+        }
       }
 
       // searchParams.push(
@@ -243,7 +246,7 @@ class ShowForm extends Component {
       },function(err) {
           // console.log(err);
           showTable(false);
-          alert("Select all mandatory fields or try again later");
+          alert("Something went wrong or try again later");
 
       });
 

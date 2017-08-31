@@ -29,7 +29,7 @@ import org.springframework.stereotype.Repository;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import com.fasterxml.jackson.databind.ObjectWriter;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -242,16 +242,17 @@ public class ServiceReqRepository {
 	}
 	
 	public void persistPaymentData(PGPayload pgPayLoad, PGPayloadResponse pGPayLoadResponse, boolean isRequest){
+		ObjectWriter writer = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		if(isRequest){
 			String query = "INSERT INTO egov_citizen_service_payments(id, srn, userid, pgrequest,"
 					+ " amount, tenantid, createddate, lastmodifiedddate, createdby, lastmodifiedby)"
 					+ " VALUES(NEXTVAL('seq_citizen_payment'), ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			try{
-				
+			LOGGER.info("Json for payload: "+ writer.writeValueAsString(pgPayLoad));
 			jdbcTemplate.update(query, new Object[] {
 					pgPayLoad.getServiceRequestId(),
 					pgPayLoad.getUid(),
-					pgPayLoad.toString(),
+					writer.writeValueAsString(pgPayLoad),
 					pgPayLoad.getAmountPaid(),
 					pgPayLoad.getTenantId(),
 					new Date().getTime(),
@@ -265,9 +266,9 @@ public class ServiceReqRepository {
 		}else{
 			String query = "UPDATE egov_citizen_service_payments SET pgresponse = ?, transactionid = ? WHERE srn = ?";
 			try{
-				
+			LOGGER.info("Json for payloadresponse: "+ writer.writeValueAsString(pGPayLoadResponse));
 			jdbcTemplate.update(query, new Object[] {
-					pGPayLoadResponse.toString(),
+					writer.writeValueAsString(pGPayLoadResponse),
 					pGPayLoadResponse.getTransactionId(),
 					pGPayLoadResponse.getServiceRequestId()
 			});

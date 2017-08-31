@@ -1484,7 +1484,7 @@ ReportDefinitions:
       and name = 'Ward' and tenantid = $tenantid))
       and dept.name = $deptname
       and cs.positionid = ass.positionid and ass.employeeid=us.id and cs.createddate >= ass.fromdate and cs.createddate <= ass.todate and isprimary=true
-      and ctype.code = (select code from egpgr_complainttype where name=$complainttype and tenantid=$tenantid
+      and ctype.code = (select code from egpgr_complainttype where name=$complainttype and tenantid=$tenantid)
       and sa.tenantid  = $tenantid and cs.tenantid = $tenantid  and ctype.tenantid = $tenantid
       and us.tenantid = $tenantid   and pos.tenantid = $tenantid   and boundary.tenantid = $tenantid	  GROUP BY us.username,pos.name;
 

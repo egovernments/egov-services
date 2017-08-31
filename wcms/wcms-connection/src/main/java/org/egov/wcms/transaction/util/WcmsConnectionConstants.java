@@ -325,9 +325,9 @@ public class WcmsConnectionConstants {
     public static final String CONNECTION_METERED_OWNER_INVALID_ERROR_MESSAGE = "Required meter owner";
     public static final String CONNECTION_METERED_OWNER_INVALID_FIELD_NAME = "meterOwner";
     
-    public static final String CONNECTION_METERED_INITIALMETERREADING_INVALID_CODE = "wcms.0055";
-    public static final String CONNECTION_METERED_INITIALMETERREADING_INVALID_ERROR_MESSAGE = "Required initial meter reading";
-    public static final String CONNECTION_METERED_INITIALMETERREADING_INVALID_FIELD_NAME = "initialMeterReading";
+    public static final String CONNECTION_METERED_NUMBER_INVALID_CODE = "wcms.0055";
+    public static final String CONNECTION_METERED_NUMBER_INVALID_ERROR_MESSAGE = "Required meter serial number";
+    public static final String CONNECTION_METERED_NUMBER_INVALID_FIELD_NAME = "meterSlNo";
     
     public static final String CONNECTION_METERED_MAXMETERREADING_INVALID_CODE = "wcms.0056";
     public static final String CONNECTION_METERED_MAXMETERREADING_INVALID_ERROR_MESSAGE = "Required maximum meter reading";
@@ -345,6 +345,9 @@ public class WcmsConnectionConstants {
     public static final String CONNECTION_METERED_METERREADINGDETAILS_INVALID_ERROR_MESSAGE = "Required meterReadings Deatils for Metered Connection";
     public static final String CONNECTION_METERED_METERREADINGDETAILS_INVALID_FIELD_NAME = "meterReadings";
     
+    public static final String CONNECTION_METERED_MODEL_INVALID_CODE = "wcms.0060";
+    public static final String CONNECTION_METERED_MODEL_INVALID_ERROR_MESSAGE = "Required meter model";
+    public static final String CONNECTION_METERED_MODEL_INVALID_FIELD_NAME = "meterModel";    
     
     public static final String ZONE = "Zone";
     public static final String REVENUE = "REVENUE";

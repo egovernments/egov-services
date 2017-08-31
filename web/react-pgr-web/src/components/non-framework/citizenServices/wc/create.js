@@ -36,7 +36,8 @@ class Report extends Component {
       open: false,
       serviceRequest: {},
       stepIndex: 0,
-      RequestInfo: {}
+      RequestInfo: {},
+      documents: []
     }
   }
 
@@ -212,7 +213,7 @@ class Report extends Component {
     var query = {
         [autoObject.autoCompleteUrl.split("?")[1].split("=")[0]]: value
     };
-    Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].useTimestamp).then(function(res){
+    Api.commonApiPost(url, query, {}, false, specifications["wc.create"].useTimestamp).then(function(res){
         var formData = {...self.props.formData};
         for(var key in autoObject.autoFillFields) {
           _.set(formData, key, _.get(res, autoObject.autoFillFields[key]));
@@ -846,6 +847,17 @@ class Report extends Component {
     })
   }
 
+  updateRequest = (ServiceRequest) => {
+    let self = this;
+    self.props.setLoadingStatus("loading");
+    Api.commonApiPost("/citizen-services/v1/requests/_create", {}, {"serviceReq": ServiceRequest}, null, true, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
+      self.generateReceipt(res);
+    }, function(err){
+      self.props.setLoadingStatus("hide");
+      self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+    })
+  }
+
   pay = () => {
 
     //Create SR
@@ -858,6 +870,7 @@ class Report extends Component {
     let self = this;
 
     var ConnectionObject = {...self.props.formData};
+
     var DemandBillQuery = `?businessService=CS&tenantId=${localStorage.getItem("tenantId")}&consumerCode=`;
     let DemandRequest = {};
     DemandRequest["Demands"] = self.props.metaData["wc.create"].feeDetails;
@@ -907,21 +920,36 @@ class Report extends Component {
        }]
     };
 
-    self.props.setLoadingStatus("loading");
-    Api.commonApiPost("/citizen-services/v1/requests/_create", {}, {"serviceReq": ServiceRequest}, null, true, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
-      self.generateReceipt(res);
-    }, function(err){
-      self.props.setLoadingStatus("hide");
-      self.props.toggleSnackbarAndSetText(true, err.message, false, true);
-    })
-
-    //Mock Data
-    /*let self = this;
-    self.handleClose();
-    self.setState({
-      stepIndex: 1
-    });
-    $('html, body').animate({ scrollTop: 0 }, 'fast');*/
+    if(self.state.documents && self.state.documents.length) {
+      let _docs = [];
+      let documents = self.state.documents;
+      let counter = documents.length, breakOut = 0;
+      for(let i=0; i<documents.length; i++) {
+        fileUpload(documents[i], "wc", function(err, res) {
+          if(breakOut == 1) return;
+          if(err) {
+            breakOut = 1;
+            self.props.setLoadingStatus('hide');
+            self.props.toggleSnackbarAndSetText(true, err, false, true);
+          } else {
+            _docs.push({
+              from: JSON.parse(localStorage.userRequest).userName,
+              timeStamp: new Date().getTime(),
+              filePath: res.files[0].fileStoreId,
+              name: documents[i].name
+            })
+            counter--;
+            if(counter == 0 && breakOut == 0) {
+                if(!ServiceRequest.documents) ServiceRequest.documents = [];
+                ServiceRequest.documents = ServiceRequest.documents.concat(_docs);
+                self.updateRequest(ServiceRequest);
+            }
+          }
+        })
+      }
+    } else {
+      self.updateRequest(ServiceRequest);
+    }
   }
 
   generatePDF = () => {
@@ -972,6 +1000,22 @@ class Report extends Component {
                                               addNewCard={addNewCard}
                                               removeCard={removeCard}
                                               autoComHandler={autoComHandler}/>}
+                    <Card className="uiCard">
+                      <CardHeader style={{paddingTop:4,paddingBottom:0}} title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Documents Upload</div>}/>}
+                      <CardText>
+                        <Grid>
+                          <Row>
+                            <Col xs={12} md={4}>
+                              <input multiple type="file" style={{"marginTop":"40px"}} onChange={(e) => {
+                                    self.setState({
+                                      documents: e.target.files || []
+                                    })
+                              }}/>
+                            </Col>
+                          </Row>
+                        </Grid>
+                      </CardText>
+                    </Card>
                     <div style={{"textAlign": "center"}}>
                       <br/>
                       <RaisedButton disabled={!isFormValid} label="Create" primary={true} onClick={() => {self.openPaymentPopup()}}/>

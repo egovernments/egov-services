@@ -186,7 +186,8 @@ public class AssetController {
         }
         assetValidator.validateRevaluationCriteria(revaluationCriteria);
 
-        final RevaluationResponse revaluationResponse = revaluationService.search(revaluationCriteria);
+        final RevaluationResponse revaluationResponse = revaluationService.search(revaluationCriteria,
+                requestInfoWrapper.getRequestInfo());
 
         return new ResponseEntity<RevaluationResponse>(revaluationResponse, HttpStatus.OK);
     }
@@ -288,7 +289,7 @@ public class AssetController {
             final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
-        
+
         log.debug("Request Headers :: " + headers);
         assetValidator.validateDepreciation(depreciationRequest);
         final DepreciationResponse depreciationResponse = depreciationservice.depreciateAsset(depreciationRequest,

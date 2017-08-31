@@ -8,7 +8,7 @@ var meterReading = {
    "label": "wc.group.meterReading",
    "name": "MeterReading",
    "multiple": false,
-   "hide":false,
+   "hide":true,
    "children": [],
    "fields": [
     {
@@ -1058,7 +1058,7 @@ var dat = {
             "depedants": [{
                 "jsonPath": "Connection.subUsageType",
                 "type": "dropDown",
-                "pattern": "/pt-property/property/usages/_search?tenantId=default&parent={Connection.property.usageType}|$..code|$..name"
+                "pattern": "/pt-property/property/usages/_search?tenantId=default&parent={Connection.property.usageType}&service=wc,common|$..code|$..name"
               }]
           },
           {
@@ -1354,8 +1354,8 @@ var dat = {
                     "name": "initialMeterReading",
                     "jsonPath": "Connection.meter[0].initialMeterReading",
                     "label": "wc.group.initialMeterReading",
-                    "pattern": "",
-                    "type": "text",
+                    "pattern": "^\\d{1,8}$",
+                    "type": "number",
                     "isRequired": true,
                     "isDisabled": false,
                     "requiredErrMsg": "",
@@ -1366,7 +1366,7 @@ var dat = {
                      "jsonPath": "Connection.meter[0].maximumMeterReading",
                      "label": "wc.group.maximumReading",
                      "pattern": "^\\d{1,8}$",
-                     "type": "text",
+                     "type": "number",
                      "isRequired": true,
                      "isDisabled": false,
                      "requiredErrMsg": "",

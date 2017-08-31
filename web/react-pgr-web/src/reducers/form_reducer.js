@@ -286,18 +286,22 @@ function validateDates(floordata, type) {
 
        if((floordata.floor.hasOwnProperty('constCompletionDate') && new Date(floordata.floor.constructionStartDate) > new Date(floordata.floor.constCompletionDate))) {
           error = true;
-       } else if((floordata.floor.hasOwnProperty('occupancyDate') && new Date(floordata.floor.occupancyDate) > new Date(floordata.floor.constructionStartDate))) {
+       } else if((floordata.floor.hasOwnProperty('occupancyDate') && new Date(floordata.floor.occupancyDate) < new Date(floordata.floor.constructionStartDate))) {
           error = true;
        }
 
-  } else if(type == 'constCompletionDate' && floordata.hasOwnProperty('floor') && floordata.floor.hasOwnProperty('constCompletionDate') && floordata.floor.hasOwnProperty('constructionStartDate')){
+  } else if(type == 'constCompletionDate' && floordata.hasOwnProperty('floor') && floordata.floor.hasOwnProperty('constCompletionDate') && (floordata.floor.hasOwnProperty('constructionStartDate') || floordata.floor.hasOwnProperty('occupancyDate'))){
 
-       if(new Date(floordata.floor.constructionStartDate) > new Date(floordata.floor.constCompletionDate)) {
+       if(floordata.floor.hasOwnProperty('constructionStartDate') && new Date(floordata.floor.constructionStartDate) > new Date(floordata.floor.constCompletionDate)) {
+          error = true;
+       } else if((floordata.floor.hasOwnProperty('occupancyDate') && new Date(floordata.floor.occupancyDate) < new Date(floordata.floor.constCompletionDate))) {
           error = true;
        }
 
-  } else if(type == 'occupancyDate' && floordata.hasOwnProperty('floor') && floordata.floor.hasOwnProperty('constructionStartDate') && floordata.floor.hasOwnProperty('occupancyDate')) {
-     if(new Date(floordata.floor.occupancyDate) > new Date(floordata.floor.constructionStartDate)) {
+  } else if(type == 'occupancyDate' && floordata.hasOwnProperty('floor') && floordata.floor.hasOwnProperty('occupancyDate') && (floordata.floor.hasOwnProperty('constructionStartDate') || floordata.floor.hasOwnProperty('constCompletionDate'))) {
+     if(floordata.floor.hasOwnProperty('constructionStartDate') &&  new Date(floordata.floor.occupancyDate) < new Date(floordata.floor.constructionStartDate)) {
+          error = true;
+       } else if((floordata.floor.hasOwnProperty('constCompletionDate') && new Date(floordata.floor.occupancyDate) < new Date(floordata.floor.constCompletionDate))) {
           error = true;
        }
   }

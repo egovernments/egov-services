@@ -1109,6 +1109,10 @@ var dat = {
                     "name": "Metered",
                     "isGroup": true,
                     "isField": false
+                   }, {
+                    "name": "MeterReading",
+                    "isGroup": true,
+                    "isField": false
                    }]
                   }]
           },

@@ -37,6 +37,10 @@ public class WorkflowService {
 			request.setRequestInfo(requestInfo);
 
 			processInstanceResponse = workflowRepository.start(request);
+			
+			System.out.println("processInstanceResponse 1 " + processInstanceResponse );
+			
+			System.out.println("processInstanceResponse 2 "  + processInstanceResponse != null ? processInstanceResponse.getProcessInstance().getValueForKey(STATE_ID):"");
 
 			if (processInstanceResponse != null)
 				update(processInstanceResponse, tradeLicense.getWorkFlowDetails());

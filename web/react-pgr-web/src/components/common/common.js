@@ -1564,7 +1564,15 @@ var localization_EN_Data = {
     "fn.serviceDetails.architectLicenseNo":"Architect License Number",
     "fn.serviceDetails.locality":"Locality",
     "fn.serviceDetails.buildingName":"Building Name",
-    "serviceDetails.title":"Service Details"
+    "serviceDetails.title":"Service Details",
+
+    "Transaction ID":"Transaction ID",
+    "Cheque Amount":"Cheque Amount",
+    "DD Amount":"DD Amount",
+    "Created By":"Created By",
+    "Demand":"Demand",
+    "Collection":"Collection",
+    "Balance":"Balance",
 };
 
 var localization_MR_Data = {

@@ -1,4 +1,4 @@
-<pre align="center"><h4><b>Cucumber Syntax For UI Automation</b></h4></pre>
+<h4><p align="center">Cucumber Syntax For UI Automation</p></h4>
 
 This file explains about, how to write an English Statement in such a way that can be automated by following some simple conventions.
 

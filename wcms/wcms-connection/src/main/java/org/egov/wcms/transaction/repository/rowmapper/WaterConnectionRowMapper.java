@@ -252,7 +252,8 @@ public class WaterConnectionRowMapper {
 			connection.setPropertyIdentifier(rs.getString("conn_propid"));
 			connection.setCreatedDate(rs.getString("createdtime"));
 			connection.setPlumberName(rs.getString("plumbername"));
-			
+			connection.setManualReceiptNumber(rs.getString("manualreceiptnumber"));
+			connection.setManualReceiptDate(rs.getLong("manualreceiptdate"));
 			if(rs.getDouble("sequencenumber") > 0) {
 				DecimalFormat df = new DecimalFormat("####0.0000");
 				df.format(rs.getDouble("sequencenumber"));

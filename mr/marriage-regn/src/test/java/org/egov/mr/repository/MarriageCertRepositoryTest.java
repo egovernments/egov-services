@@ -17,6 +17,7 @@ import org.egov.mr.model.MarriageRegn;
 import org.egov.mr.model.MarryingPerson;
 import org.egov.mr.model.ReissueApplicantInfo;
 import org.egov.mr.model.ReissueCertAppl;
+import org.egov.mr.model.enums.Action;
 import org.egov.mr.model.enums.ApplicationStatus;
 import org.egov.mr.model.enums.MaritalStatus;
 import org.egov.mr.model.enums.Venue;
@@ -276,7 +277,7 @@ public class MarriageCertRepositoryTest {
 		fee.setFee(BigDecimal.valueOf(10.1));
 
 		MarriageRegn marriageRegn = new MarriageRegn();
-		marriageRegn.setActions(actions);
+		marriageRegn.setActions(Action.CREATE);
 		marriageRegn.setApplicationNumber("00015");
 		marriageRegn.setApprovalDetails(approvalDetails);
 		marriageRegn.setAuditDetails(auditDetails);

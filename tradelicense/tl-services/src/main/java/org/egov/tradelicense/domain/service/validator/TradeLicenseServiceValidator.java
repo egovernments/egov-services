@@ -17,6 +17,7 @@ import org.egov.tradelicense.common.domain.exception.AdhaarNotFoundException;
 import org.egov.tradelicense.common.domain.exception.AgreeMentDateNotFoundException;
 import org.egov.tradelicense.common.domain.exception.AgreeMentNotFoundException;
 import org.egov.tradelicense.common.domain.exception.AgreeMentNotValidException;
+import org.egov.tradelicense.common.domain.exception.CustomInvalidInputException;
 import org.egov.tradelicense.common.domain.exception.EndPointException;
 import org.egov.tradelicense.common.domain.exception.IdNotFoundException;
 import org.egov.tradelicense.common.domain.exception.InvalidAdminWardException;
@@ -32,7 +33,6 @@ import org.egov.tradelicense.common.domain.exception.InvalidUomException;
 import org.egov.tradelicense.common.domain.exception.InvalidValidityYearsException;
 import org.egov.tradelicense.common.domain.exception.LegacyFeeDetailNotFoundException;
 import org.egov.tradelicense.common.domain.exception.MandatoryDocumentNotFoundException;
-import org.egov.tradelicense.common.domain.exception.NonLegacyLicenseUpdateException;
 import org.egov.tradelicense.common.domain.exception.OldLicenseNotFoundException;
 import org.egov.tradelicense.common.domain.exception.PropertyAssesmentNotFoundException;
 import org.egov.tradelicense.domain.model.LicenseFeeDetail;
@@ -84,6 +84,10 @@ public class TradeLicenseServiceValidator {
 		Boolean isNewRecord = true;
 
 		for (TradeLicense tradeLicense : tradeLicenses) {
+			// checking the valid from date existance
+			if (tradeLicense.getIsLegacy()) {
+				validateTradeValidFromDate(tradeLicense, requestInfo);
+			}
 			// checking the eistance and uniqueness of licensenumber
 			validateLicenseNumber(tradeLicense, isNewRecord, requestInfo);
 			// checking the agreement details
@@ -110,7 +114,12 @@ public class TradeLicenseServiceValidator {
 			if (tradeLicense.getIsLegacy()) {
 				validateTradeFeeDetails(tradeLicense, requestInfo);
 			} else {
-				setTradeExpiryDate(tradeLicense, requestInfo);
+				// validate trade commencement date
+				setTradeExpiryDateByValidatingCommencementDate(tradeLicense, requestInfo);
+
+				// capturing the license valid from date from commencement date
+				setTradeValidFromDate(tradeLicense, requestInfo);
+
 			}
 		}
 	}
@@ -122,11 +131,11 @@ public class TradeLicenseServiceValidator {
 		Boolean isNewRecord = false;
 
 		for (TradeLicense tradeLicense : tradeLicenses) {
-			
-//			if (!tradeLicense.getIsLegacy()) {
-//				
-//				throw new NonLegacyLicenseUpdateException(propertiesManager.getNonLegacyUpdateCustomMsg(), requestInfo);
-//			}
+
+			// checking the valid from date existance
+			if (tradeLicense.getIsLegacy()) {
+				validateTradeValidFromDate(tradeLicense, requestInfo);
+			}
 			// checking the id existance of tradelicense in database
 			validateTradeLicenseIdExistance(tradeLicense, requestInfo);
 			// checking the eistance and uniqueness of licensenumber
@@ -160,6 +169,25 @@ public class TradeLicenseServiceValidator {
 		}
 	}
 
+	// validating trade valid from date
+	private void validateTradeValidFromDate(TradeLicense tradeLicense, RequestInfo requestInfo) {
+
+		if (tradeLicense.getLicenseValidFromDate() == null) {
+
+			throw new CustomInvalidInputException(propertiesManager.getLicenseValidFromDateNotNullCode(),
+					propertiesManager.getLicenseValidFromDateNotNullMsg(), requestInfo);
+		}
+	}
+
+	// setting the trade commencement date as license valid from date
+	private void setTradeValidFromDate(TradeLicense tradeLicense, RequestInfo requestInfo) {
+
+		if (tradeLicense.getTradeCommencementDate() != null) {
+
+			tradeLicense.setLicenseValidFromDate(tradeLicense.getTradeCommencementDate());
+		}
+	}
+
 	private void validateTradeLicenseIdExistance(TradeLicense tradeLicense, RequestInfo requestInfo) {
 
 		if (tradeLicense.getId() != null) {
@@ -181,14 +209,12 @@ public class TradeLicenseServiceValidator {
 			// check unique constraint
 			tradeLicenseRepository.validateUniqueLicenseNumber(tradeLicense, isNewRecord, requestInfo);
 		} else {
-			if(tradeLicense.getApplication() == null){	
+			if (tradeLicense.getApplication() == null) {
 				throw new InvalidInputException(propertiesManager.getApplicationMissingErr(), requestInfo);
-			}
-			else if(tradeLicense.getApplication().getApplicationType() == null){			
+			} else if (tradeLicense.getApplication().getApplicationType() == null) {
 				throw new InvalidInputException(propertiesManager.getApplicationTypeMissingErr(), requestInfo);
 			}
-			
-			
+
 		}
 	}
 
@@ -209,6 +235,18 @@ public class TradeLicenseServiceValidator {
 			if (tradeLicense.getAgreementDate() == null) {
 
 				throw new AgreeMentDateNotFoundException(propertiesManager.getAgreementDateErrorMsg(), requestInfo);
+
+			} else if (!tradeLicense.getIsLegacy()) {
+
+				if (tradeLicense.getTradeCommencementDate() != null) {
+
+					if ((tradeLicense.getTradeCommencementDate().compareTo(tradeLicense.getAgreementDate())) < 0) {
+
+						throw new CustomInvalidInputException(propertiesManager.getAgreementDateNotValidCode(),
+								propertiesManager.getAgreementDateNotValidMsg(), requestInfo);
+
+					}
+				}
 			}
 
 		}
@@ -575,7 +613,7 @@ public class TradeLicenseServiceValidator {
 							tradeLicense.setExpiryDate(feeDetailFYResponse.getEndingDate().getTime());
 						}
 					}
-					//reset the date to license valid from date
+					// reset the date to license valid from date
 					today.setTimeInMillis(tradeValidFromDate.getTime());
 				}
 			}
@@ -589,16 +627,16 @@ public class TradeLicenseServiceValidator {
 
 			for (SupportDocument supportDocument : tradeLicense.getSupportDocuments()) {
 
-				if(tradeLicense.getAuditDetails() != null){
+				if (tradeLicense.getAuditDetails() != null) {
 					supportDocument.setAuditDetails(tradeLicense.getAuditDetails());
 				}
 				if (supportDocument.getId() != null) {
 					// check id existence in database
-//					supportDocument.setLicenseId(tradeLicense.getId());
+					// supportDocument.setLicenseId(tradeLicense.getId());
 					tradeLicenseRepository.validateTradeLicenseSupportDocumentId(supportDocument, requestInfo);
 				} else {
 					// get the next sequence of support document id and set it
-//					supportDocument.setLicenseId(tradeLicense.getId());
+					// supportDocument.setLicenseId(tradeLicense.getId());
 					supportDocument.setId(tradeLicenseRepository.getSupportDocumentNextSequence());
 				}
 			}
@@ -611,42 +649,91 @@ public class TradeLicenseServiceValidator {
 
 			for (LicenseFeeDetail licenseFeeDetail : tradeLicense.getFeeDetails()) {
 
-				if(tradeLicense.getAuditDetails() != null){
+				if (tradeLicense.getAuditDetails() != null) {
 					licenseFeeDetail.setAuditDetails(tradeLicense.getAuditDetails());
 				}
 				if (licenseFeeDetail.getId() != null) {
 					// check id existence in database
-//					licenseFeeDetail.setLicenseId(tradeLicense.getId());
+					// licenseFeeDetail.setLicenseId(tradeLicense.getId());
 					tradeLicenseRepository.validateTradeLicenseFeeDetailId(licenseFeeDetail, requestInfo);
 				} else {
 					// get the next sequence of fee detail id and set it
-//					licenseFeeDetail.setLicenseId(tradeLicense.getId());
+					// licenseFeeDetail.setLicenseId(tradeLicense.getId());
 					licenseFeeDetail.setId(tradeLicenseRepository.getFeeDetailNextSequence());
 				}
 			}
 		}
 	}
 
-	private void setTradeExpiryDate(TradeLicense tradeLicense, RequestInfo requestInfo) {
+	private void setTradeExpiryDateByValidatingCommencementDate(TradeLicense tradeLicense, RequestInfo requestInfo) {
 
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
 
+		String tenantId = tradeLicense.getTenantId();
+		String currentFinancialYearRange = null;
+		String commencementFinancialYearRange = null;
+		Integer currentFinancialFromValue = null;
+		Integer previousFinancialFromValue = null;
+		Integer nextFinancialFromValue = null;
+		Integer commencementDateFinancialFromValue = null;
+		// get the trade commencement date
 		Long commencementDate = tradeLicense.getTradeCommencementDate();
+		// get the system current date
+		Long currenDate = (System.currentTimeMillis());
+		Calendar today = Calendar.getInstance();
 		Date tradeValidFromDate = new Date(commencementDate);
 		Integer validPeriod = null;
-		String tenantId = tradeLicense.getTenantId();
+
 		// get the license validity period
 		if (tradeLicense.getValidityYears() != null) {
 
 			validPeriod = Integer.valueOf(tradeLicense.getValidityYears().toString());
 		}
 
-		Calendar today = Calendar.getInstance();
 		today.setTimeInMillis(tradeValidFromDate.getTime());
+
+		// get the current financial year
+		FinancialYearContract currentFYResponse = financialYearContractRepository.findFinancialYearIdByDate(tenantId,
+				currenDate, requestInfoWrapper);
+
+		if (currentFYResponse != null) {
+
+			currentFinancialYearRange = currentFYResponse.getFinYearRange();
+			currentFinancialFromValue = Integer.valueOf(currentFinancialYearRange.split("-")[0]);
+			previousFinancialFromValue = currentFinancialFromValue - Integer.valueOf(1);
+			nextFinancialFromValue = currentFinancialFromValue + Integer.valueOf(1);
+		}
+
+		// get the trade commencement date financial year
 		FinancialYearContract commencementFYResponse = financialYearContractRepository
 				.findFinancialYearIdByDate(tenantId, commencementDate, requestInfoWrapper);
-		today.setTime(commencementFYResponse.getEndingDate());
+
+		if (commencementFYResponse != null) {
+
+			commencementFinancialYearRange = commencementFYResponse.getFinYearRange();
+			commencementDateFinancialFromValue = Integer.valueOf(commencementFinancialYearRange.split("-")[0]);
+
+			// validate trade commencement date
+			if ((commencementDateFinancialFromValue.equals(currentFinancialFromValue))
+					|| (commencementDateFinancialFromValue.equals(previousFinancialFromValue))
+					|| (commencementDateFinancialFromValue.equals(nextFinancialFromValue))) {
+
+				today.setTime(commencementFYResponse.getEndingDate());
+
+			} else {
+
+				throw new CustomInvalidInputException(propertiesManager.getTradeCommencementDateNotValidCode(),
+						propertiesManager.getTradeCommencementDateNotValidMsg(), requestInfo);
+			}
+
+		} else {
+
+			throw new CustomInvalidInputException(propertiesManager.getTradeCommencementDateNotValidCode(),
+					propertiesManager.getTradeCommencementDateNotValidMsg(), requestInfo);
+		}
+
+		// setting expire date
 		today.add(Calendar.YEAR, (validPeriod - 1));
 		commencementFYResponse = financialYearContractRepository.findFinancialYearIdByDate(tenantId,
 				(today.getTimeInMillis()), requestInfoWrapper);

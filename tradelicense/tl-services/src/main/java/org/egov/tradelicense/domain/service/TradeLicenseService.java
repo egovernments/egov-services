@@ -9,7 +9,6 @@ import java.util.Map;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.ResponseInfo;
 import org.egov.tl.commons.web.contract.TradeLicenseSearchContract;
-import org.egov.tl.commons.web.contract.WorkFlowDetails;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tl.commons.web.requests.ResponseInfoFactory;
 import org.egov.tl.commons.web.requests.TradeLicenseRequest;
@@ -17,8 +16,9 @@ import org.egov.tl.commons.web.response.LicenseStatusResponse;
 import org.egov.tl.commons.web.response.TradeLicenseSearchResponse;
 import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.common.domain.exception.CustomBindException;
-import org.egov.tradelicense.domain.enums.NewLicenseStatus;
 import org.egov.tradelicense.domain.enums.LicenseStatus;
+import org.egov.tradelicense.domain.enums.NewLicenseStatus;
+import org.egov.tradelicense.domain.model.AuditDetails;
 import org.egov.tradelicense.domain.model.LicenseFeeDetail;
 import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
@@ -121,6 +121,17 @@ public class TradeLicenseService {
 
 		// setting the id for the license and support document and fee details
 		for (TradeLicense license : tradeLicenses) {
+			
+			//preparing audit details
+			AuditDetails auditDetails = new AuditDetails();
+			auditDetails.setCreatedTime(new Date().getTime());
+			auditDetails.setLastModifiedTime(new Date().getTime());
+			if (requestInfo != null && requestInfo.getUserInfo() != null && requestInfo.getUserInfo().getId() != null) {
+				auditDetails.setCreatedBy(requestInfo.getUserInfo().getId().toString());
+				auditDetails.setLastModifiedBy(requestInfo.getUserInfo().getId().toString());
+			}
+
+			license.setAuditDetails(auditDetails);
 
 			license.setId(tradeLicenseRepository.getNextSequence());
 			license.getApplication().setId( tradeLicenseRepository.getApplicationNextSequence());
@@ -298,9 +309,9 @@ public class TradeLicenseService {
 		LicenseStatusResponse currentStatus = null;
 		LicenseStatusResponse nextStatus = null;
 
-		if (null != license.getApplicationStatus()){
+		if (null != license.getApplication() && null != license.getApplication().getStatus()){
 			
-			currentStatus = statusRepository.findByIds(license.getTenantId(), license.getStatus().toString(),
+			currentStatus = statusRepository.findByIds(license.getTenantId(), license.getApplication().getStatus().toString(),
 					requestInfoWrapper);
 		}
 			
@@ -349,6 +360,10 @@ public class TradeLicenseService {
 				
 				license.setApplicationStatus(nextStatus.getLicenseStatuses().get(0).getId());
 				license.getApplication().setStatus(nextStatus.getLicenseStatuses().get(0).getId().toString());
+				//generate license number and setting license number and license issued date
+				license.setLicenseNumber(licenseNumberGenerationService.generate(license.getTenantId(), requestInfo));
+				license.setIssuedDate(System.currentTimeMillis());
+				
 			}
 			
 		}
@@ -385,7 +400,7 @@ public class TradeLicenseService {
 			Integer pageNumber, String sort, String active, Integer[] ids, String applicationNumber,
 			String licenseNumber, String oldLicenseNumber, String mobileNumber, String aadhaarNumber, String emailId,
 			String propertyAssesmentNo, Integer adminWard, Integer locality, String ownerName, String tradeTitle,
-			String tradeType, Integer tradeCategory, Integer tradeSubCategory, String legacy, Integer status) {
+			String tradeType, Integer tradeCategory, Integer tradeSubCategory, String legacy, Integer status, Integer applicationStatus) {
 
 		TradeLicenseSearchResponse tradeLicenseSearchResponse = new TradeLicenseSearchResponse();
 		//
@@ -410,7 +425,7 @@ public class TradeLicenseService {
 		List<TradeLicenseSearch> licenses = tradeLicenseRepository.search(requestInfo, tenantId, pageSize, pageNumber,
 				sort, active, ids, applicationNumber, licenseNumber, oldLicenseNumber, mobileNumber, aadhaarNumber,
 				emailId, propertyAssesmentNo, adminWard, locality, ownerName, tradeTitle, tradeType, tradeCategory,
-				tradeSubCategory, legacy, status);
+				tradeSubCategory, legacy, status, applicationStatus);
 
 		List<TradeLicenseSearchContract> tradeLicenseSearchContracts = new ArrayList<TradeLicenseSearchContract>();
 

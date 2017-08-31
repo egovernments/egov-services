@@ -23,6 +23,7 @@ import org.egov.mr.model.MarryingPerson;
 import org.egov.mr.model.PriestInfo;
 import org.egov.mr.model.RegistrationUnit;
 import org.egov.mr.model.Witness;
+import org.egov.mr.model.enums.Action;
 import org.egov.mr.model.enums.ApplicationStatus;
 import org.egov.mr.model.enums.CertificateType;
 import org.egov.mr.model.enums.MaritalStatus;
@@ -155,7 +156,7 @@ public class MarriageRegnRepositoryTest {
 		MarriageRegn marriageRegn = MarriageRegn.builder().applicationNumber("8").approvalDetails(approvalDetails)
 				.auditDetails(auditDetails).bride(bride).bridegroom(bridegroom).certificates(marriageCertificates)
 				.city("bangalore").demands(demands).documents(documentsList).fee(Fee.builder().fee(new BigDecimal(50)).build()).isActive(true)
-				.locality("locality").actions(actions).marriageDate(214335l).marriagePhoto("photo")
+				.locality("locality").actions(Action.CREATE).marriageDate(214335l).marriagePhoto("photo")
 				.placeOfMarriage("RESIDENCE").placeOfMarriage("bangalore").priest(priest).street("street")
 				.regnDate(121231l).regnNumber("regnno").regnUnit(regnunit).rejectionReason("inappropriate document")
 				.remarks("remarks").serialNo("serino").source(Source.SYSTEM).tenantId("ap.kurnool")

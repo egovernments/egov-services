@@ -26,6 +26,7 @@ import org.egov.mr.model.Page;
 import org.egov.mr.model.PriestInfo;
 import org.egov.mr.model.RegistrationUnit;
 import org.egov.mr.model.Witness;
+import org.egov.mr.model.enums.Action;
 import org.egov.mr.model.enums.ApplicationStatus;
 import org.egov.mr.model.enums.CertificateType;
 import org.egov.mr.model.enums.MaritalStatus;
@@ -250,7 +251,7 @@ public class MarriageRegnControllerTest {
 				.applicationNumber("8").regnNumber("regnno").regnDate(Long.valueOf("121231"))
 				.status(ApplicationStatus.APPROVED).source(Source.SYSTEM).stateId("stateid")
 				.approvalDetails(approvalDetails).rejectionReason("inappropriate document").remarks("remarks")
-				.certificates(marriageCertificates).demands(demands).actions(actions).auditDetails(auditDetails)
+				.certificates(marriageCertificates).demands(demands).actions(Action.CREATE).auditDetails(auditDetails)
 				.isActive(true).tenantId("ap.kurnool").build();
 
 		List<MarriageRegn> marriageRegns = new ArrayList<>();

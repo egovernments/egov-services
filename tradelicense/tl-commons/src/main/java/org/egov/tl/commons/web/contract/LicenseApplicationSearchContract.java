@@ -38,6 +38,9 @@ public class LicenseApplicationSearchContract {
 	@JsonProperty("fieldInspectionReport")
 	private String fieldInspectionReport;
 	
+	@JsonProperty("statusName")
+	private String statusName;
+	
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;
 	

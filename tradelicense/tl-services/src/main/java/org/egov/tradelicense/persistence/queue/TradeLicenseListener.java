@@ -122,7 +122,7 @@ public class TradeLicenseListener {
 		for( TradeLicenseContract tradeLicenseContract : tradeLicenseContracts ){
 			TradeLicenseSearchResponse searchReponse = tradeLicenseService.getTradeLicense(request.getRequestInfo(), tradeLicenseContract.getTenantId(), 500, 1, 
 					null, null, new Integer[]{tradeLicenseContract.getId().intValue()},
-					null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+					null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,null);
 			tradeLicenseSarchContracts.addAll(searchReponse.getLicenses());
 		}
 		indexerRequest.setLicenses(tradeLicenseSarchContracts);

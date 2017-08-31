@@ -572,7 +572,7 @@ ul{list-style-type: none; padding: 0; margin: 0;}
 
 .panUppercase input{
 	text-transform: uppercase;
-}	
+}
 
 /*-- Media Query --*/
 @media screen and (max-width: 768px) {
@@ -689,8 +689,13 @@ ul{list-style-type: none; padding: 0; margin: 0;}
 }
 
 
-table th {
+table thead th, table tfoot th {
+	padding: 10px 15px !important;
+	border-bottom:none !important;
+	font-weight:500 !important;
+	font-size:12px !important;
 	background-color: #607d8b !important;
+	border: 1px solid rgba(0,0,0,0.12) !important;
 	color: #ffffff !important;
 	font-weight: 500;
 }
@@ -744,23 +749,14 @@ table td {
     visibility: visible;
 }
 
-table thead th {
-    padding: 15px 18px !important;
-	border-bottom:none !important;
-	font-weight:500 !important;
-	font-size:12px !important;
-	border-left:0 !important;
-	border-right:0 !important;
-}
-
  table tbody td {
 	  padding: 15px 10px !important;
 	  border-bottom: 1px solid rgba(0,0,0,0.12) !important;
+		border-right: 1px solid rgba(0,0,0,0.12) !important;
 	  border-top: none !important;
 	  font-weight:400 !important;
 	  color:rgba(0,0,0,0.87) !important;
 	  border-left:0 !important;
-	  border-right:0 !important;
 	  text-align: left;
  }
 

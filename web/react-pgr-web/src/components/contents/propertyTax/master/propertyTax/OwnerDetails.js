@@ -270,7 +270,7 @@ constructor(props) {
                             errorText={fieldErrors.owner ? (fieldErrors.owner.gaurdianRelation? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.owner.gaurdianRelation}</span>:""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.gaurdianRelation:""}
                             onChange={(event, index, value) => {
-								(value == -1) ? value = '' : '';
+								                (value == -1) ? value = '' : '';
                                 var e = {
                                   target: {
                                     value: value
@@ -285,18 +285,18 @@ constructor(props) {
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 							dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                             >
-							{renderOption(this.state.gaurdianRelation)}
-                          </SelectField>
-                        </Col>
-                        <Col xs={12} md={3} sm={6}>
-                          <TextField  className="fullWidth"
-                            hintText={translate('pt.create.groups.propertyAddress.guardianName')}
-                            floatingLabelText={translate('pt.create.groups.ownerDetails.fields.guardian')}
-                            errorText={fieldErrors.owner ?(fieldErrors.owner.fatherOrHusbandName? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.fatherOrHusbandName}</span>:""): ""}
-                            value={ownerDetails.owner ? ownerDetails.owner.fatherOrHusbandName:""}
-                            onChange={(e) => {
-								handleChangeOwner(e,  "owner",  "fatherOrHusbandName", false, "")
-							}}
+            							{renderOption(this.state.gaurdianRelation)}
+                                      </SelectField>
+                                    </Col>
+                                    <Col xs={12} md={3} sm={6}>
+                                      <TextField  className="fullWidth"
+                                        hintText={translate('pt.create.groups.propertyAddress.guardianName')}
+                                        floatingLabelText={translate('pt.create.groups.ownerDetails.fields.guardian')}
+                                        errorText={fieldErrors.owner ?(fieldErrors.owner.fatherOrHusbandName? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.fatherOrHusbandName}</span>:""): ""}
+                                        value={ownerDetails.owner ? ownerDetails.owner.fatherOrHusbandName:""}
+                                        onChange={(e) => {
+            								handleChangeOwner(e,  "owner",  "fatherOrHusbandName", false, "")
+            							}}
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                             underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                             underlineFocusStyle={styles.underlineFocusStyle}
@@ -346,7 +346,7 @@ constructor(props) {
                           <br/>
                           <RadioButtonGroup
                             name="ownerRadio"
-                            valueSelected={ownerDetails.owner ? ownerDetails.owner.isPrimaryOwner: ''}
+                            valueSelected={ownerDetails.owner ? ownerDetails.owner.isPrimaryOwner: 'PrimaryOwner'}
                             onChange={(e, v) =>{ 
                             var e = {
                             target: {
@@ -376,9 +376,12 @@ constructor(props) {
                           <br/>
                           { (editIndex == -1 || editIndex == undefined ) &&
                             <RaisedButton type="button" label={translate('pt.create.groups.ownerDetails.fields.add')} disabled={!isOwnerValid} primary={true} onClick={()=> {
+                                if(ownerDetails.hasOwnProperty('owner') &&  !ownerDetails.owner.hasOwnProperty('isPrimaryOwner')) {
+                                    ownerDetails.owner.isPrimaryOwner = true;
+                                }
                                 this.props.addNestedFormData("owners","owner");
                                 this.props.resetObject("owner", false);
-								 this.props.resetObject("floor", false);
+				                this.props.resetObject("floor", false);
                               }
                             }/>
                           }
@@ -386,7 +389,7 @@ constructor(props) {
                             <RaisedButton type="button" label={translate('pt.create.groups.ownerDetails.fields.save')} disabled={!isOwnerValid} primary={true} onClick={()=> {
                                 this.props.updateObject("owners","owner",  editIndex);
                                 this.props.resetObject("owner", false);
-								 this.props.resetObject("floor", false);
+				                this.props.resetObject("floor", false);
                                 isEditIndex(-1);
                               }
                             }/>

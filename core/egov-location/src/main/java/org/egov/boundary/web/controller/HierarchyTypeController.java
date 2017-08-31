@@ -108,6 +108,23 @@ public class HierarchyTypeController {
 		}
 		return new ResponseEntity<>(hierarchyTypeResponse, HttpStatus.OK);
 	}
+	
+	@PostMapping(value="/_search")
+	@ResponseBody
+	public ResponseEntity<?> searchHierachyTypes(@RequestBody @Valid HierarchyTypeRequest hierarchyTypeRequest) {
+
+		HierarchyTypeResponse hierarchyTypeResponse = new HierarchyTypeResponse();
+		if (hierarchyTypeRequest.getHierarchyType() != null
+				&& hierarchyTypeRequest.getHierarchyType().getTenantId() != null
+				&& !hierarchyTypeRequest.getHierarchyType().getTenantId().isEmpty()) {
+			List<HierarchyType> allHierarchyTypes = hierarchyTypeService.getAllHierarchyTypes(hierarchyTypeRequest);
+			hierarchyTypeResponse.getHierarchyTypes().addAll(allHierarchyTypes);
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setStatus(HttpStatus.CREATED.toString());
+			hierarchyTypeResponse.setResponseInfo(responseInfo);
+		}
+		return new ResponseEntity<>(hierarchyTypeResponse, HttpStatus.OK);
+	}
 
 	private ErrorResponse populateErrors(BindingResult errors) {
 		ErrorResponse errRes = new ErrorResponse();

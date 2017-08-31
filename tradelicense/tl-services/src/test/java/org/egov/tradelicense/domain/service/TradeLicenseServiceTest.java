@@ -49,7 +49,7 @@ import org.springframework.validation.SmartValidator;
 @RunWith(SpringRunner.class)
 public class TradeLicenseServiceTest {
 
-	@InjectMocks
+	@Mock
 	TradeLicenseService tradeLicenseService;
 
 	@Mock
@@ -118,7 +118,7 @@ public class TradeLicenseServiceTest {
 		tradeLicenseServiceValidator.validateCreateTradeLicenseRelated(tradeLicenses, requestInfo);
 	}
 
-//	@Test
+	@Test
 	public final void testAdd() {
 		when(boundaryContractRepository.findByLocalityId(any(TradeLicense.class), any(RequestInfoWrapper.class)))
 				.thenReturn(getBoundaryResponse());

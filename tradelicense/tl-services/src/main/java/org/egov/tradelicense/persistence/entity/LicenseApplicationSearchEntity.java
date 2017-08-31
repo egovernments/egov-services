@@ -9,6 +9,8 @@ import org.egov.tradelicense.domain.model.LicenseApplicationSearch;
 import org.egov.tradelicense.domain.model.LicenseFeeDetailSearch;
 import org.egov.tradelicense.domain.model.SupportDocumentSearch;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -48,6 +50,8 @@ public class LicenseApplicationSearchEntity {
 	private Double licenseFee;
 	
 	private String fieldInspectionReport;
+	
+	private String statusName;
 
 	private static List<LicenseFeeDetailSearch> feeDetails;
 
@@ -77,6 +81,7 @@ public class LicenseApplicationSearchEntity {
 
 		licenseAppSearch.setFieldInspectionReport(this.fieldInspectionReport);
 		licenseAppSearch.setLicenseFee( this.licenseFee);
+		licenseAppSearch.setStatusName(this.statusName);
 		
 		feeDetails = new ArrayList<LicenseFeeDetailSearch>();
 
@@ -117,6 +122,8 @@ public class LicenseApplicationSearchEntity {
 		this.setApplicationType(licenseApplicationSearch.getApplicationType().toString());
 
 		this.setStatus(licenseApplicationSearch.getStatus().toString());
+		
+		this.setStatusName(licenseApplicationSearch.getStatusName());
 
 		// this.setApplicationDate( license.getApplicationDate());
 		this.applicationDate = licenseApplicationSearch.getApplicationDate();

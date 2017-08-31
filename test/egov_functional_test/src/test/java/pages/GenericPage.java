@@ -1,5 +1,7 @@
 package pages;
 
+import com.testvagrant.stepdefs.utils.FileExtension;
+import com.testvagrant.stepdefs.utils.FileFinder;
 import org.apache.commons.lang.math.RandomUtils;
 import org.json.JSONObject;
 import org.openqa.selenium.By;
@@ -7,8 +9,6 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import steps.GenericSteps;
-import utils.FileExtension;
-import utils.FileFinder;
 
 import java.io.BufferedReader;
 import java.io.File;

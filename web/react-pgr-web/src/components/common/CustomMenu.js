@@ -170,8 +170,8 @@ const menuConvention={
   "Employee Management.HR Report.Employee leave summary report":"/report/hr/employeeLeaveSummaryReport",
 
   //Administration
-  "Administration.UpdateUserWithoutValidation":"/administration/searchUserRole"
-
+  "Administration.UpdateUserWithoutValidation":"/administration/searchUserRole",
+  "Service Request.Requests.Search": "/service/request/search"
 
 
 

@@ -61,55 +61,6 @@ ReportDefinitions:
           fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
          and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL') and prop.tenantid=$tenantid
          group by hscno,state,pipesize,consumerName, usage,boundaryname) )result order by hscno asc;
-
-- reportName: DemandRegister
-  summary: Demand Register Report
-  version: 1.0.0
-  moduleName: wcms
-  sourceColumns:
-  - name: consumerno
-    label: reports.wcms.consumerno
-    type: string
-    source: wcms
-  - name: consumername
-    label: reports.wcms.consumername
-    type: number
-    source: wcms
-  - name: billnumber
-    label: reports.wcms.billnumber
-    type: number
-    source: wcms
-  - name: arrear
-    label: reports.wcms.arrear
-    type: number
-    source: wcms
-  - name: current
-    label: reports.wcms.current
-    type: number
-    source: wcms
-  - name: advance
-    label: reports.wcms.advance
-    type: number
-    source: seva
-  - name: total
-    label: reports.wcms.total
-    type: number
-    source: seva   
-  searchParams:
-  - name: fromDate
-    label: reports.wcms.fromdate
-    type: string
-    source: seva
-    isMandatory: false
-  - name: toDate
-    label: reports.wcms.todate
-    type: string
-    source: seva
-    isMandatory: false
-  query: select  boundary.name as boundaryName, dcbinfo.hscno as consumerno,dcbinfo.username as consumerName,
-         dcbinfo.pipesize as pipesize,null as usage, billdet.billno as BillNumber,(dcbinfo.curr_balance) as  Current,
-         dcbinfo.arr_demand as Arrear,dcbinfo.advance_coll as Advance from egwtr_connection_view dcbinfo,eg_boundary boundary,egbs_billdetail billdet where  dcbinfo.wardid=boundary.id and 
-         billdet.consumercode=dcbinfo.hscno and dcbinfo.connectionstatus = 'ACTIVE' order by boundary.name;
   
 - reportName: DCBReport
   summary: DCB Report

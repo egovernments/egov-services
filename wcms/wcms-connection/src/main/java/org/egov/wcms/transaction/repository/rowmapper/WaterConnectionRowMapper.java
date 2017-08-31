@@ -47,6 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.wcms.transaction.model.Connection;
 import org.egov.wcms.transaction.model.ConnectionOwner;
 import org.egov.wcms.transaction.model.Meter;
@@ -120,9 +121,15 @@ public class WaterConnectionRowMapper {
 				reading.setReading(rs.getLong("reading"));
 				reading.setReadingDate(rs.getLong("readingdate"));
 				reading.setGapCode(rs.getString("gapcode"));
-				reading.setConsumption(Long.parseLong(rs.getString("consumption")));
-				reading.setConsumptionAdjusted(Long.parseLong(rs.getString("consumptionadjusted")));
-				reading.setNumberOfDays(Long.parseLong(rs.getString("numberofdays")));
+				if(StringUtils.isNotBlank(rs.getString("consumption"))) { 
+					reading.setConsumption(Long.parseLong(rs.getString("consumption")));
+				}
+				if(StringUtils.isNotBlank(rs.getString("consumptionadjusted"))) { 
+					reading.setConsumptionAdjusted(Long.parseLong(rs.getString("consumptionadjusted")));
+				}
+				if(StringUtils.isNotBlank(rs.getString("numberofdays"))) { 
+					reading.setNumberOfDays(Long.parseLong(rs.getString("numberofdays")));
+				}
 				reading.setResetFlag(rs.getBoolean("resetflag"));
 			} catch (Exception e) {
 				LOGGER.error("Encountered Exception while creating Meter Reading Object : " + e.getMessage());

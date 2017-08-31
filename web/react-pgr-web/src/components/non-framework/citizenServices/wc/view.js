@@ -477,6 +477,7 @@ class Report extends Component {
   update = () => {
     let self = this, ServiceRequest = {...this.state.ServiceRequest};
     self.props.setLoadingStatus('loading');
+    //return console.log(self.state.documents[0]);
     if(self.state.documents && self.state.documents.length) {
       let _docs = [];
       let documents = self.state.documents;
@@ -492,7 +493,8 @@ class Report extends Component {
             _docs.push({
               from: JSON.parse(localStorage.userRequest).userName,
               timeStamp: new Date().getTime(),
-              filePath: res.files[0].fileStoreId
+              filePath: res.files[0].fileStoreId,
+              name: documents[i].name
             })
             counter--;
             if(counter == 0 && breakOut == 0) {
@@ -552,18 +554,11 @@ class Report extends Component {
                     </SelectField>
                   </Col> : ""}
                   <Col xs={12} md={6}>
-                    <RaisedButton
-                      floatingLabelStyle={{"color": "#696969"}}
-                      style={{"marginTop": "26px"}}
-                      containerElement='label'
-                      fullWidth={true} 
-                      label={"Upload Files"}>
-                        <input multiple type="file" style={{ display: 'none' }} onChange={(e) => {
+                    <input multiple type="file" style={{"marginTop":"40px"}} onChange={(e) => {
                           self.setState({
                             documents: e.target.files || []
                           })
-                        }}/>
-                    </RaisedButton>
+                    }}/>
                   </Col>
                   <Col xs={12} md={6}>
                     <TextField

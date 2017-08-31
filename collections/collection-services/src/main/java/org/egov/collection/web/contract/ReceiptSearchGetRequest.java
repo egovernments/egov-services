@@ -17,7 +17,13 @@ public class ReceiptSearchGetRequest {
     private String consumerCode;
 
     private Long fromDate;
-
+    
+    private String consumerNo;
+    
+    private String serviceName;
+    
+    private String limit;
+    
     private Long toDate;
 
     private String collectedBy;

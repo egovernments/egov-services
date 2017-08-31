@@ -172,9 +172,7 @@
 					"id": "2"
 				}
 			],
-			"actions": [
-				"action"
-			],
+			"actions":"CREATE",
 			"auditDetails": {
 				"createdBy": "asish",
 				"lastModifiedBy": "asish",

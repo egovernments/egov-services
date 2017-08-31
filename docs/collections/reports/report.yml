@@ -18,7 +18,7 @@ ReportDefinitions:
     label: reports.collection.department
     type: string
     source: collection
-  - name: INSTRUMENT_AMOUNT
+  - name: RECEIPT_AMOUNT
     label: reports.collection.amount
     type: number
     source: seva
@@ -62,7 +62,7 @@ ReportDefinitions:
   sourceColumns:
   - name: TRANSACTIONID
     label: reports.collection.receipt.transactionid
-    type: epoch
+    type: number
     source: collection
   - name: RECEIPT_DATE
     label: reports.collection.receipt.date

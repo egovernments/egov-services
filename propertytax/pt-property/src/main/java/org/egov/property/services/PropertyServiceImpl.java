@@ -920,10 +920,12 @@ public class PropertyServiceImpl implements PropertyService {
 									+ " tax period is ------------" + taxPeriodFromDate.getTime());
 							if (demand.getTaxPeriodFrom().equals(taxPeriodFromDate.getTime())) {
 								finalDemandList.add(demand);
+								break;
 							} else {
 								newDemandList = prepareDemands(tenantId, upicNumber, property, taxHeadResponse,
 										taxPeriod);
 								finalDemandList.addAll(newDemandList);
+								break;
 							}
 						}
 					}

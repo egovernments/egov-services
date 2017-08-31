@@ -13,6 +13,7 @@ import org.egov.tradelicense.common.domain.exception.AgreeMentDateNotFoundExcept
 import org.egov.tradelicense.common.domain.exception.AgreeMentNotFoundException;
 import org.egov.tradelicense.common.domain.exception.AgreeMentNotValidException;
 import org.egov.tradelicense.common.domain.exception.CustomBindException;
+import org.egov.tradelicense.common.domain.exception.CustomInvalidInputException;
 import org.egov.tradelicense.common.domain.exception.DuplicateTradeLicenseException;
 import org.egov.tradelicense.common.domain.exception.EndPointException;
 import org.egov.tradelicense.common.domain.exception.IdNotFoundException;
@@ -139,6 +140,25 @@ public class CustomControllerAdvice {
 		error.setCode(Integer.valueOf(HttpStatus.BAD_REQUEST.toString()));
 		error.setMessage("Inavlid.Input");
 		error.setDescription(ex.getCustomMsg());
+		errRes.setError(error);
+		return errRes;
+	}
+	
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(CustomInvalidInputException.class)
+	public ErrorResponse handleCustomInvalidInputException(CustomInvalidInputException ex) {
+		ErrorResponse errRes = new ErrorResponse();
+		ResponseInfo responseInfo = new ResponseInfo();
+		responseInfo.setApiId(((CustomInvalidInputException) ex).getRequestInfo().getApiId());
+		responseInfo.setVer(((CustomInvalidInputException) ex).getRequestInfo().getVer());
+		responseInfo.setMsgId(((CustomInvalidInputException) ex).getRequestInfo().getMsgId());
+		responseInfo.setTs(new Date().toString());
+		responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
+		errRes.setResponseInfo(responseInfo);
+		Error error = new Error();
+		error.setCode(Integer.valueOf(HttpStatus.BAD_REQUEST.toString()));
+		error.setMessage(((CustomInvalidInputException) ex).getErrorCode());
+		error.setDescription(((CustomInvalidInputException) ex).getCustomMsg());
 		errRes.setError(error);
 		return errRes;
 	}

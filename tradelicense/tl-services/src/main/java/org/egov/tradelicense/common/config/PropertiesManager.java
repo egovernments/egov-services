@@ -263,5 +263,24 @@ public class PropertiesManager {
 	
 	@Value("${egov.services.type.application.detail.missing.error}")
 	private String applicationTypeMissingErr;
+	
+	//Error codes and messages
+	@Value("${tl.error.licensevalidfromdate.notnull.code}")
+	private String licenseValidFromDateNotNullCode;
+	
+	@Value("${tl.error.agreementdate.notvalid.code}")
+	private String agreementDateNotValidCode;
+	
+	@Value("${tl.error.tradecommencementdate.notvalid.code}")
+	private String tradeCommencementDateNotValidCode;
+	
+	@Value("${tl.error.licensevalidfromdate.notnull}")
+	private String licenseValidFromDateNotNullMsg;
+	
+	@Value("${tl.error.agreementdate.notvalid}")
+	private String agreementDateNotValidMsg;
+	
+	@Value("${tl.error.tradecommencementdate.notvalid}")
+	private String tradeCommencementDateNotValidMsg;
 
 }

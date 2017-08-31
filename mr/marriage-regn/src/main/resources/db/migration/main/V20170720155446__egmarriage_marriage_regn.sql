@@ -1,6 +1,6 @@
 CREATE SEQUENCE seq_egmr_marriageregn_application_number;
 create sequence seq_egmr_regn_number;
-
+CREATE SEQUENCE seq_egmr_marriageregn_reg_number;
 
 CREATE TABLE public.egmr_marriage_regn
 (

@@ -58,8 +58,10 @@ public class TaxHeadMasterValidator implements Validator {
 		for (TaxHeadMaster master : taxHeads) {
 			if (!master.getTenantId().equalsIgnoreCase(taxHeads.get(0).getTenantId()))
 				error.rejectValue("TaxHeadMasters", "", "Tenant id should be same in all objects");
+			Set<String> code=new HashSet<>();
+			code.add(master.getCode());
 			taxHeadMasterCriteria = TaxHeadMasterCriteria.builder().tenantId(master.getTenantId())
-					.name(master.getName()).build();
+					.service(master.getService()).code(code).build();
 			final TaxHeadMasterResponse taxHeadMasterResponse = taxHeadMasterService.getTaxHeads(taxHeadMasterCriteria,
 					taxHeadsRequest.getRequestInfo());
 			if (!taxHeadMasterResponse.getTaxHeadMasters().isEmpty())

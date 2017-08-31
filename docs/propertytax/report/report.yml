@@ -66,13 +66,6 @@ ReportDefinitions:
     pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name 
     isMandatory: false
     searchClause: and loc.revenueboundary = $revenueboundary
-  - name: adminboundary
-    label: reports.property.adminboundary
-    type: singlevaluelist
-    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=WARD&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name
-    isMandatory: false
-    searchClause: And loc.adminboundary =$adminboundary
-    source: collection
   - name: locationboundary
     label: reports.property.locationboundary
     type: singlevaluelist
@@ -80,7 +73,7 @@ ReportDefinitions:
     pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION&pageSize=500|$..id|$..name
     isMandatory: false
     searchClause: and loc.locationboundary = $locationboundary
-  query: select * from ((select prop.upicnumber as upicnumber,concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.city,',',address.pincode) as propertyaddress, 
+  query: select * from ((select prop.upicnumber as upicnumber,concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.detail,',',address.city,'-',address.pincode) as propertyaddress, 
          'CURRENT' as STATE,
           SUM((CASE WHEN dd.taxheadcode = 'PT_TAX' THEN dd.taxamount ELSE NULL END)) AS PT_TAX,
           SUM((CASE WHEN dd.taxheadcode = 'LIB_CESS' THEN dd.taxamount ELSE NULL END)) AS LIB_CESS,
@@ -97,7 +90,7 @@ ReportDefinitions:
           and demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and todate>=(select extract ('epoch' from (select * from now()))*1000) 
           and service = 'PT' and tenantid=$tenantid) 
           UNION 
-          (select prop.upicnumber as upicnumber, concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.city,',',address.pincode) as propertyaddress, 
+          (select prop.upicnumber as upicnumber, concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.detail,',',address.city,'-',address.pincode) as propertyaddress, 
           'ARREAR' as STATE,
            SUM((CASE WHEN dd.taxheadcode = 'PT_TAX' THEN dd.taxamount ELSE NULL END)) AS PT_TAX,
            SUM((CASE WHEN dd.taxheadcode = 'LIB_CESS' THEN dd.taxamount ELSE NULL END)) AS LIB_CESS,
@@ -182,13 +175,6 @@ ReportDefinitions:
     pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name 
     isMandatory: false
     searchClause: and loc.revenueboundary = $revenueboundary
-  - name: adminboundary
-    label: reports.property.adminboundary
-    type: singlevaluelist
-    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=WARD&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name
-    isMandatory: false
-    searchClause: And loc.adminboundary =$adminboundary
-    source: collection
   - name: locationboundary
     label: reports.property.locationboundary
     type: singlevaluelist
@@ -196,7 +182,7 @@ ReportDefinitions:
     pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION&pageSize=500|$..id|$..name
     isMandatory: false
     searchClause: and loc.locationboundary = $locationboundary
-  query: select * from ((select prop.upicnumber as upicnumber, concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.city,',',address.pincode) as propertyaddress, 
+  query: select * from ((select prop.upicnumber as upicnumber, concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.detail,',',address.city,'-',address.pincode) as propertyaddress, 
          'CURRENT' as STATE,
          SUM((CASE WHEN dd.taxheadcode = 'PT_TAX' THEN dd.collectionamount ELSE NULL END)) AS PT_COLL,
          SUM((CASE WHEN dd.taxheadcode = 'LIB_CESS' THEN dd.collectionamount ELSE NULL END)) AS LIB_CESS_COLL,
@@ -214,7 +200,7 @@ ReportDefinitions:
          and demand.consumercode=prop.upicnumber
          and demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service = 'PT' and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid) 
          UNION 
-        (select prop.upicnumber as upicnumber, concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.city,',',address.pincode) as propertyaddress, 
+        (select prop.upicnumber as upicnumber, concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.detail,',',address.city,'-',address.pincode) as propertyaddress, 
         'ARREAR' as STATE,
          SUM((CASE WHEN dd.taxheadcode = 'PT_TAX' THEN dd.collectionamount ELSE NULL END)) AS PT_COLL,
          SUM((CASE WHEN dd.taxheadcode = 'LIB_CESS' THEN dd.collectionamount ELSE NULL END)) AS LIB_CESS_COLL,
@@ -308,13 +294,6 @@ ReportDefinitions:
     pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name 
     isMandatory: false
     searchClause: and loc.revenueboundary = $revenueboundary
-  - name: adminboundary
-    label: reports.property.adminboundary
-    type: singlevaluelist
-    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=WARD&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name
-    isMandatory: false
-    searchClause: And loc.adminboundary =$adminboundary
-    source: collection
   - name: locationboundary
     label: reports.property.locationboundary
     type: singlevaluelist
@@ -322,7 +301,7 @@ ReportDefinitions:
     pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION&pageSize=500|$..id|$..name
     isMandatory: false
     searchClause: and loc.locationboundary = $locationboundary
-  query: select * from ((select prop.upicnumber as upicnumber, concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.city,',',address.pincode) as propertyaddress, 
+  query: select * from ((select prop.upicnumber as upicnumber, concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.detail,',',address.city,'-',address.pincode) as propertyaddress, 
          'CURRENT' as STATE,
          SUM((CASE WHEN dd.taxheadcode = 'PT_TAX' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS PT_BAL,
          SUM((CASE WHEN dd.taxheadcode = 'LIB_CESS' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS LIB_CESS_BAL,
@@ -340,7 +319,7 @@ ReportDefinitions:
          and demand.consumercode=prop.upicnumber
          and demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='PT' and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid) 
          UNION 
-         (select prop.upicnumber as upicnumber, concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.city,',',address.pincode) as propertyaddress, 
+         (select prop.upicnumber as upicnumber, concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.detail,',',address.city,'-',address.pincode) as propertyaddress, 
          'ARREAR' as STATE,
          SUM((CASE WHEN dd.taxheadcode = 'PT_TAX' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS PT_BAL,
          SUM((CASE WHEN dd.taxheadcode = 'LIB_CESS' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS LIB_CESS_BAL,
@@ -492,13 +471,6 @@ ReportDefinitions:
     pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name 
     isMandatory: false
     searchClause: and loc.revenueboundary = $revenueboundary
-  - name: adminboundary
-    label: reports.property.adminboundary
-    type: singlevaluelist
-    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=WARD&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name
-    isMandatory: false
-    searchClause: And loc.adminboundary =$adminboundary
-    source: collection
   - name: locationboundary
     label: reports.property.locationboundary
     type: singlevaluelist
@@ -506,7 +478,7 @@ ReportDefinitions:
     pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION&pageSize=500|$..id|$..name
     isMandatory: false
     searchClause: and loc.locationboundary = $locationboundary
-  query: select * from ((select prop.upicnumber as upicnumber, concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.city,',',address.pincode) as propertyaddress, 
+  query: select * from ((select prop.upicnumber as upicnumber, concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.detail,',',address.city,'-',address.pincode) as propertyaddress, 
          'CURRENT' as STATE,
          SUM((CASE WHEN dd.taxheadcode = 'PT_TAX' THEN dd.taxamount ELSE NULL END)) AS PT_TAX,
          SUM((CASE WHEN dd.taxheadcode = 'LIB_CESS' THEN dd.taxamount ELSE NULL END)) AS LIB_CESS,
@@ -540,7 +512,7 @@ ReportDefinitions:
          and demand.consumercode=prop.upicnumber
          and demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service = 'PT' and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid) 
          UNION 
-         (select prop.upicnumber as upicnumber, concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.city,',',address.pincode) as propertyaddress, 
+         (select prop.upicnumber as upicnumber, concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.detail,',',address.city,'-',address.pincode) as propertyaddress, 
          'ARREAR' as STATE,
           SUM((CASE WHEN dd.taxheadcode = 'PT_TAX' THEN dd.taxamount ELSE NULL END)) AS PT_TAX,
           SUM((CASE WHEN dd.taxheadcode = 'LIB_CESS' THEN dd.taxamount ELSE NULL END)) AS LIB_CESS,
@@ -656,14 +628,7 @@ ReportDefinitions:
     pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name 
     isMandatory: false
     searchClause: and loc.revenueboundary = $revenueboundary
-  - name: adminboundary
-    label: reports.property.adminboundary
-    type: singlevaluelist
-    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=WARD&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name
-    isMandatory: false
-    searchClause: And loc.adminboundary =$adminboundary
-    source: collection
-  query: select prop.upicnumber as upicnumber, (ptype.data::jsonb->>'name') as proptype, u.name propertyowner, concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.city,',',address.pincode) as propertyaddress, 
+  query: select prop.upicnumber as upicnumber, (ptype.data::jsonb->>'name') as proptype, u.name propertyowner, concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.detail,',',address.city,'-',address.pincode) as propertyaddress, 
          sum(unit.arv) as arv,
          SUM((CASE WHEN dd.taxheadcode = 'PT_TAX' THEN dd.taxamount ELSE NULL END)) AS PT_TAX,
          SUM((CASE WHEN dd.taxheadcode = 'LIB_CESS' THEN dd.taxamount ELSE NULL END)) AS LIB_CESS,

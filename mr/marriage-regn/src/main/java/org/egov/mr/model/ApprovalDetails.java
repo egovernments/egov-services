@@ -29,7 +29,9 @@ public class ApprovalDetails {
 	private String action;
 
 	private String status;
-
+	
+	private Long initiatorPosition;
+	
 	@NotNull
 	private String comments;
 }

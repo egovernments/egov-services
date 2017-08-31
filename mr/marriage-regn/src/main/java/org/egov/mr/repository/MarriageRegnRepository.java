@@ -1,16 +1,22 @@
 package org.egov.mr.repository;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
+import org.egov.mr.model.MarriageDocument;
 import org.egov.mr.model.MarriageRegn;
 import org.egov.mr.repository.querybuilder.MarriageRegnQueryBuilder;
 import org.egov.mr.repository.rowmapper.MarriageRegnIdsRowMapper;
 import org.egov.mr.repository.rowmapper.MarriageRegnRowMapper;
 import org.egov.mr.web.contract.MarriageRegnCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -42,14 +48,13 @@ public class MarriageRegnRepository {
 			+ " approvalaction, approvalstatus, approvalcomments, createdby, createdtime, lastmodifiedby, lastmodifiedtime, tenantid, feeid, demandid)"
 			+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
-	public static final String UPDATE_MARRIAGE_REGN_QUERY = "UPDATE egmr_marriage_regn"
-			+ " SET(regnunitid, marriagedate, venue, street, placeofmarriage, locality, city, marriagephoto, feeid,"
-			+ " bridegroomid, brideid, priestname, priestreligion, priestaddress, priestaadhaar, priestmobileno,"
-			+ " priestemail, serialno, volumeno, demandid,"
-			+ " regnnumber, regndate, status, source, stateid, isactive, approvaldepartment, approvaldesignation, approvalassignee,"
-			+ " approvalaction, approvalstatus, approvalcomments, lastmodifiedby, lastmodifiedtime)"
-			+ " = (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-			+ " WHERE applicationnumber = ? AND tenantid = ?";
+	public static final String UPDATE_MARRIAGE_REGN_QUERY = "UPDATE egmr_marriage_regn  SET regnunitid=?,"
+			+ " marriagedate=?, venue=?, street=?, placeofmarriage=?, locality=?, city=?, marriagephoto=?,"
+			+ " bridegroomid=?, brideid=?, feeid=?, demandid=?, priestname=?, priestreligion=?, priestaddress=?,"
+			+ " priestaadhaar=?, priestmobileno=?, priestemail=?, serialno=?, volumeno=?, regnnumber=?,"
+			+ " regndate=?, status=?, source=?, stateid=?, isactive=?, approvaldepartment=?, approvaldesignation=?,"
+			+ " approvalassignee=?, approvalaction=?, approvalstatus=?, approvalcomments=?, "
+			+ " lastmodifiedby=?, lastmodifiedtime=? WHERE tenantid=? AND applicationnumber=? ;";
 
 	@SuppressWarnings("unchecked")
 	public List<MarriageRegn> findForCriteria(MarriageRegnCriteria marriageRegnCriteria) {
@@ -75,11 +80,6 @@ public class MarriageRegnRepository {
 	}
 
 	public void save(MarriageRegn marriageRegn) {
-		System.err.println("marriageRegn.getStatus().toString()" + marriageRegn.getStatus().toString());
-		System.err.println("marriageRegn.getSource().toString()" + marriageRegn.getSource().toString());
-		System.err.println("marriageRegn.getApprovalDetails().getDepartment()"
-				+ marriageRegn.getApprovalDetails().getDepartment());
-
 		Object[] obj = new Object[] { marriageRegn.getRegnUnit().getId(), marriageRegn.getMarriageDate(),
 				marriageRegn.getVenue().toString(), marriageRegn.getStreet(), marriageRegn.getPlaceOfMarriage(),
 				marriageRegn.getLocality(), marriageRegn.getCity(), marriageRegn.getMarriagePhoto(),
@@ -116,15 +116,68 @@ public class MarriageRegnRepository {
 	}
 
 	public void update(MarriageRegn marriageRegn) {
+		
+		jdbcTemplate.update(UPDATE_MARRIAGE_REGN_QUERY, new PreparedStatementSetter(){
+
+			@Override
+			public void setValues(PreparedStatement ps) throws SQLException {
+				ps.setLong(1, marriageRegn.getRegnUnit().getId());
+				ps.setLong(2, marriageRegn.getMarriageDate());
+				ps.setString(3, marriageRegn.getVenue().toString());
+				ps.setString(4, marriageRegn.getStreet());
+				ps.setString(5, marriageRegn.getPlaceOfMarriage());
+				ps.setString(6, marriageRegn.getLocality());
+				ps.setString(7, marriageRegn.getCity());
+				ps.setString(8, marriageRegn.getMarriagePhoto());
+				ps.setLong(9, marriageRegn.getBridegroom().getId());
+				ps.setLong(10, marriageRegn.getBride().getId());
+				ps.setString(11, marriageRegn.getFee().getId());
+				ps.setString(12, marriageRegn.getDemands().get(0).getId());
+				ps.setString(13, marriageRegn.getPriest().getName());
+				ps.setLong(14, marriageRegn.getPriest().getReligion());
+				ps.setString(15, marriageRegn.getPriest().getAddress());
+				ps.setString(16, marriageRegn.getPriest().getAadhaar());
+				ps.setString(17, marriageRegn.getPriest().getMobileNo());
+				ps.setString(18, marriageRegn.getPriest().getEmail());
+				ps.setString(19, marriageRegn.getSerialNo());
+				ps.setString(20, marriageRegn.getVolumeNo());
+				ps.setString(21, marriageRegn.getRegnNumber());
+				ps.setLong(22, marriageRegn.getRegnDate());
+				ps.setString(23, marriageRegn.getStatus().toString());
+				ps.setString(24, marriageRegn.getSource().toString());
+				ps.setString(25, marriageRegn.getStateId());
+				ps.setBoolean(26, marriageRegn.getIsActive());
+				ps.setLong(27, marriageRegn.getApprovalDetails().getDepartment());
+				ps.setLong(28, marriageRegn.getApprovalDetails().getDesignation());
+				ps.setLong(29, marriageRegn.getApprovalDetails().getAssignee());
+				ps.setString(30, marriageRegn.getApprovalDetails().getAction());
+				ps.setString(31, marriageRegn.getApprovalDetails().getStatus());
+				ps.setString(32, marriageRegn.getApprovalDetails().getComments());
+				ps.setString(33, marriageRegn.getAuditDetails().getLastModifiedBy());
+				ps.setLong(34, marriageRegn.getAuditDetails().getLastModifiedTime());
+				ps.setString(35, marriageRegn.getTenantId());
+				ps.setString(36, marriageRegn.getApplicationNumber());
+			}
+		});
+		
+		if (marriageRegn.getWitnesses() != null)
+			marriageRegn.getWitnesses().forEach(witness -> {
+				witnessRepository.update(marriageRegn.getApplicationNumber(), marriageRegn.getTenantId(), witness);
+			});
+	}
+	/*public void update(MarriageRegn marriageRegn) {
+		
 		System.out.println("maregn" + marriageRegn);
-		Object[] obj = new Object[] { marriageRegn.getRegnUnit().getId(), marriageRegn.getMarriageDate(),
+		Object[] obj = new Object[] {  marriageRegn.getRegnUnit().getId(), marriageRegn.getMarriageDate(),
 				marriageRegn.getVenue().toString(), marriageRegn.getStreet(), marriageRegn.getPlaceOfMarriage(),
-				marriageRegn.getLocality(), marriageRegn.getCity(), marriageRegn.getMarriagePhoto(),
+				marriageRegn.getLocality(),
+				 marriageRegn.getCity(), marriageRegn.getMarriagePhoto(),
 				marriageRegn.getBridegroom().getId(), marriageRegn.getBride().getId(),
+				
 				marriageRegn.getPriest().getName(), marriageRegn.getPriest().getReligion(),
 				marriageRegn.getPriest().getAddress(), marriageRegn.getPriest().getAadhaar(),
 				marriageRegn.getPriest().getMobileNo(), marriageRegn.getPriest().getEmail(), marriageRegn.getSerialNo(),
-				marriageRegn.getVolumeNo(), marriageRegn.getApplicationNumber(), marriageRegn.getRegnNumber(),
+				marriageRegn.getVolumeNo(), marriageRegn.getRegnNumber(),
 				marriageRegn.getRegnDate(), marriageRegn.getStatus().toString(), marriageRegn.getSource().toString(),
 				marriageRegn.getStateId(), marriageRegn.getIsActive(),
 				marriageRegn.getApprovalDetails().getDepartment(), marriageRegn.getApprovalDetails().getDesignation(),
@@ -132,8 +185,8 @@ public class MarriageRegnRepository {
 				marriageRegn.getApprovalDetails().getStatus(), marriageRegn.getApprovalDetails().getComments(),
 				marriageRegn.getAuditDetails().getCreatedBy(), marriageRegn.getAuditDetails().getCreatedTime(),
 				marriageRegn.getAuditDetails().getLastModifiedBy(),
-				marriageRegn.getAuditDetails().getLastModifiedTime(), marriageRegn.getTenantId(),
-				marriageRegn.getFee().getId(), marriageRegn.getDemands().get(0).getId()};
+				marriageRegn.getAuditDetails().getLastModifiedTime(), marriageRegn.getFee().getId(),
+				marriageRegn.getDemands().get(0).getId(),marriageRegn.getTenantId(),marriageRegn.getApplicationNumber()};
 		jdbcTemplate.update(UPDATE_MARRIAGE_REGN_QUERY, obj);
 
 		if (marriageRegn.getWitnesses() != null)
@@ -141,7 +194,7 @@ public class MarriageRegnRepository {
 				witnessRepository.update(marriageRegn.getApplicationNumber(), marriageRegn.getTenantId(), witness);
 			});
 
-	}
+	}*/
 
 	public void saveJson(String applicationNumber, String marriageRegnJson, String tenantId) {
 		jdbcTemplate.update(INSERT_JSON_QUERY, applicationNumber, marriageRegnJson, tenantId);

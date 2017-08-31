@@ -63,6 +63,36 @@ public class PropertiesManager {
 	@Autowired
 	Environment environment;
 
+	@Value("${egov.services.lams.workflow_initiator_position_key}")
+	public String workflowInitiatorPositionkey;
+	
+	@Value("${egov.services.allottee_service.hostname}")
+	private String allotteeServiceHostName;
+
+	@Value("${egov.services.allottee_service.basepath}")
+	private String allotteeServiceBasePAth;
+
+	@Value("${egov.services.allottee_service.searchpath}")
+	private String allotteeServiceSearchPath;
+
+	@Value("${egov.services.allottee_service.createpath}")
+	private String allotteeServiceCreatePAth;
+	
+	@Value("${egov.services.employee_service.hostname}")
+	public String employeeServiceHostName;
+	
+	@Value("${egov.services.employee_service.searchpath}")
+	public String employeeServiceSearchPath;
+	
+	@Value("${egov.services.employee_service.searchpath.pathvariable}")
+	public String employeeServiceSearchPathVariable;
+	
+	@Value("${kafka.topics.update.workflow}")
+	private String kafkaUpdateworkflowTopic;
+	
+	@Value("${kafka.topics.create.workflow}")
+	private String createWorkflowTopicName;
+	
 	@Value("${kafka.topics.update.fee}")
 	private String updateFeeTopicName;
 	

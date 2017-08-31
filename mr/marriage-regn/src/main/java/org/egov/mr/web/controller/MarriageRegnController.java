@@ -15,6 +15,7 @@ import org.egov.mr.web.contract.MarriageRegnRequest;
 import org.egov.mr.web.contract.MarriageRegnResponse;
 import org.egov.mr.web.contract.RequestInfoWrapper;
 import org.egov.mr.web.contract.ResponseInfoFactory;
+import org.egov.mr.web.errorhandler.ErrorHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,9 @@ public class MarriageRegnController {
 	
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
+	
+	@Autowired
+	private ErrorHandler errorHandler;
 	
 	@PostMapping("/_search")
 	@ResponseBody
@@ -69,10 +73,14 @@ public class MarriageRegnController {
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid MarriageRegnRequest marriageRegnRequest, BindingResult bindingResult) {
 		LOGGER.info("marriageRegnRequest::" + marriageRegnRequest);
+		//ResponseEntity<?> errorResponseEntity = validateMarriageRegnRequest(marriageRegnRequest, bindingResult, false);
+		
+		RequestInfo requestInfo = marriageRegnRequest.getRequestInfo();
+		ResponseEntity<?> errorResponseEntity = errorHandler.handleBindingErrorsForCreate(requestInfo,
+				bindingResult);
 
-		/*ResponseEntity<?> errorResponseEntity = validateMarriageRegnRequest(marriageRegnRequest, bindingResult, false);
 		if (errorResponseEntity != null)
-			return errorResponseEntity;*/
+			return errorResponseEntity;
 
 		MarriageRegn marriageRegns = null;
 
@@ -90,9 +98,11 @@ public class MarriageRegnController {
 	public ResponseEntity<?> update(@RequestBody @Valid MarriageRegnRequest marriageRegnRequest, BindingResult bindingResult) {
 		LOGGER.debug("marriageRegnRequest::" + marriageRegnRequest);
 
-		/*ResponseEntity<?> errorResponseEntity = validateMarriageRegnRequest(marriageRegnRequest, bindingResult, false);
-		if (errorResponseEntity != null)
-			return errorResponseEntity;*/
+		//esponseEntity<?> errorResponseEntity = validateMarriageRegnRequest(marriageRegnRequest, bindingResult, false);
+		RequestInfo requestInfo = marriageRegnRequest.getRequestInfo();
+		
+		ResponseEntity<?> errorResponseEntity = errorHandler.handleBindingErrorsForCreate(requestInfo,
+				bindingResult);
 
 		MarriageRegn marriageRegns = null;
 		try {

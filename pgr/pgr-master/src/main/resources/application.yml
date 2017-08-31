@@ -352,7 +352,7 @@ ReportDefinitions:
     source: reopened
     linkedReport:
       reportName: DrillDownComplaintDetailByFunctionary
-      linkedColumn: _parent?reportName={reportName}&status={currentColumnName}&username={employeename}
+      linkedColumn: _parent?reportName={reportName}&status=COMPLETED','WITHDRAWN','CLOSED&username={employeename}
   - name: rejected
     label: reports.pgr.status.reopened
     type: number

@@ -2444,7 +2444,7 @@ var localization_MR_Data = {
         "reports.collection.consumeraddress": "Consumer Address - Marathi",
         "reports.collection.print": "Print - Marathi",
         "reports.collection.consumerno": "Consumer No - Marathi",
-        "reports.collection.fromdate":" "From Date - Marathi",
+        "reports.collection.fromdate": "From Date - Marathi",
         "reports.collection.todate": "To Date - Marathi",
         "reports.collection.servicename": "Service Name - Marathi",
 

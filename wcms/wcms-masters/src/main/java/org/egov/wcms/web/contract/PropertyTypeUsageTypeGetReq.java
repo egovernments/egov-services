@@ -70,7 +70,7 @@ public class PropertyTypeUsageTypeGetReq {
     
     private String usageCode;
     
-    private String service;
+    private List<String> service;
     
     private String usageTypeId;
     

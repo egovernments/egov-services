@@ -442,6 +442,8 @@ public class WcmsConstants {
     public static final String LOCATION = "LOCATION";
     
     public static final String WC = "WC";
+    
+    public static final String SERVICE = "WC,COMMON";
 
     public String getErrorMessage(final String property) {
         return environment.getProperty(property);

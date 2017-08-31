@@ -1,0 +1,22 @@
+{
+"elements":[
+{
+            "elementName": "payMyDuesforPropertyTax",
+            "identifier": "xpath",
+            "value": ".//*[@id='root']/div/main/div/div[1]/h3/span",
+            "waitFor": "presence"
+         },
+        {
+            "elementName": "assessmentNumber",
+            "identifier": "xpath",
+            "value": ".//*[@id='undefined-undefined-objectObject-238']",
+            "waitFor": "presence"
+         },
+         {
+         "elementName": "search",
+         "identifier": "xpath",
+         "value": ".//*[@id='root']/div/main/div/div[3]/div/div/div[2]/div/button",
+         "waitFor": "presence"
+         }
+           ]
+}

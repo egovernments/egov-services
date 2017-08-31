@@ -75,10 +75,12 @@ public class DemandService {
 
 	public EgDemand updateDemandForCollection(Demand demand) throws Exception {
 		EgDemand egDemand = demandRepository.findOne(demand.getId());
+		LOGGER.info("demandDetails :" + demand.getDemandDetails().toString());
 		for (DemandDetails demandDetails : demand.getDemandDetails()) {
 			for (EgDemandDetails egDemandDetail : egDemand.getEgDemandDetails()) {
 				if (egDemandDetail.getId().equals(demandDetails.getId())) {
 					LOGGER.info("match is occuring in update service");
+					LOGGER.info("collection :" + demandDetails.getCollectionAmount());
 					egDemandDetail.addCollected(demandDetails.getCollectionAmount());
 					LOGGER.info("payment info to update receipts" + demand.getPaymentInfos());
 					if (!demand.getPaymentInfos().isEmpty()) {

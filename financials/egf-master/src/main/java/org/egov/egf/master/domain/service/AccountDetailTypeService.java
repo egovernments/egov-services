@@ -41,7 +41,7 @@ public class AccountDetailTypeService {
                     case Constants.ACTION_CREATE:
                         if (accountdetailtypes == null) {
                             throw new InvalidDataException("accountdetailtypes", ErrorCode.NOT_NULL.getCode(),
-                                    accountdetailtypes.toString());
+                                    null);
                         }
                         for (AccountDetailType accountDetailType : accountdetailtypes) {
                             validator.validate(accountDetailType, errors);
@@ -54,7 +54,7 @@ public class AccountDetailTypeService {
                     case Constants.ACTION_UPDATE:
                         if (accountdetailtypes == null) {
                             throw new InvalidDataException("accountdetailtypes", ErrorCode.NOT_NULL.getCode(),
-                                    accountdetailtypes.toString());
+                                    null);
                         }
                         for (AccountDetailType accountDetailType : accountdetailtypes) {
                             if (accountDetailType.getId() == null) {
@@ -71,7 +71,7 @@ public class AccountDetailTypeService {
                     case Constants.ACTION_SEARCH:
                         if (accountdetailtypes == null) {
                             throw new InvalidDataException("accountdetailtypes", ErrorCode.NOT_NULL.getCode(),
-                                    accountdetailtypes.toString());
+                                    null);
                         }
                         for (AccountDetailType accountdetailtype : accountdetailtypes) {
                             if (accountdetailtype.getTenantId() == null) {

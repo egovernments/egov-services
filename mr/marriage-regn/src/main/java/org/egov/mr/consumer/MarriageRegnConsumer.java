@@ -62,59 +62,28 @@ public class MarriageRegnConsumer {
 		log.info("Entered kakfaConsumer ");
 
 		if (topic.equals(propertiesManager.getCreateMarriageRegnTopicName())) {
-			try {
-				log.info("entering create marriageRegn consumer");
-				marriageRegnService.create(objectMapper.convertValue(consumerRecord, MarriageRegnRequest.class));
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			log.info("entering create marriageRegn consumer");
+			marriageRegnService.create(objectMapper.convertValue(consumerRecord, MarriageRegnRequest.class));
 		}
 		if (topic.equals(propertiesManager.getUpdateMarriageRegnTopicName())) {
-			try {
-				log.info("entering update marriageRegn consumer");
-				marriageRegnService.update(objectMapper.convertValue(consumerRecord, MarriageRegnRequest.class));
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			log.info("entering update marriageRegn consumer");
+			marriageRegnService.update(objectMapper.convertValue(consumerRecord, MarriageRegnRequest.class));
 		}
 
 		if (topic.equals(propertiesManager.getCreateRegistrationUnitTopicName())) {
-			try {
-				log.info("entering update_RegistrationUnit consumer");
-				registrationUnitService.create(objectMapper.convertValue(consumerRecord, RegnUnitRequest.class));
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			log.info("entering update_RegistrationUnit consumer");
+			registrationUnitService.create(objectMapper.convertValue(consumerRecord, RegnUnitRequest.class));
 		}
 		if (topic.equals(propertiesManager.getUpdateRegistrationUnitTopicName())) {
-			try {
-				log.info("entering update_RegistrationUnit consumer");
-				registrationUnitService.update(objectMapper.convertValue(consumerRecord, RegnUnitRequest.class));
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			log.info("entering update_RegistrationUnit consumer");
+			registrationUnitService.update(objectMapper.convertValue(consumerRecord, RegnUnitRequest.class));
 		}
 
 		if (topic.equals(propertiesManager.getCreateMarriageDocumentTypeTopicName())) {
-			System.err
-					.println("MarriageRegnConsumer: pm: " + propertiesManager.getCreateMarriageDocumentTypeTopicName());
-			System.err.println("topic: " + topic);
-			try {
-				marriageDocumentTypeService
-						.create(objectMapper.convertValue(consumerRecord, MarriageDocTypeRequest.class));
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			marriageDocumentTypeService.create(objectMapper.convertValue(consumerRecord, MarriageDocTypeRequest.class));
 		}
 		if (topic.equals(propertiesManager.getUpdateMarriageDocumentTypeTopicName())) {
-			System.err.println(
-					"ObjectMapper: " + objectMapper.convertValue(consumerRecord, MarriageDocTypeRequest.class));
-			try {
-				marriageDocumentTypeService
-						.update(objectMapper.convertValue(consumerRecord, MarriageDocTypeRequest.class));
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			marriageDocumentTypeService.update(objectMapper.convertValue(consumerRecord, MarriageDocTypeRequest.class));
 		}
 		if (topic.equals(propertiesManager.getCreateReissueMarriageRegnTopicName()))
 			marriageCertService.create(objectMapper.convertValue(consumerRecord, ReissueCertRequest.class));

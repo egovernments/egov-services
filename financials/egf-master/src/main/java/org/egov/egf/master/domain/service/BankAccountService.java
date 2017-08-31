@@ -52,11 +52,10 @@ public class BankAccountService {
                         break;
                     case Constants.ACTION_CREATE:
                         if (bankaccounts == null) {
-                            throw new InvalidDataException("bankaccounts", ErrorCode.NOT_NULL.getCode(), bankaccounts.toString());
+                            throw new InvalidDataException("bankaccounts", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (BankAccount bankAccount : bankaccounts) {
                             validator.validate(bankAccount, errors);
-                            boolean x = bankAccountRepository.uniqueCheck("accountNumber", bankAccount);
                             if (!bankAccountRepository.uniqueCheck("accountNumber", bankAccount)) {
                                 errors.addError(new FieldError("bankAccount", "name", bankAccount.getAccountNumber(), false,
                                         new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
@@ -65,7 +64,7 @@ public class BankAccountService {
                         break;
                     case Constants.ACTION_UPDATE:
                         if (bankaccounts == null) {
-                            throw new InvalidDataException("bankaccounts", ErrorCode.NOT_NULL.getCode(), bankaccounts.toString());
+                            throw new InvalidDataException("bankaccounts", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (BankAccount bankAccount : bankaccounts) {
                             if (bankAccount.getId() == null) {
@@ -80,7 +79,7 @@ public class BankAccountService {
                         break;
                     case Constants.ACTION_SEARCH:
                         if (bankaccounts == null) {
-                            throw new InvalidDataException("bankaccounts", ErrorCode.NOT_NULL.getCode(), bankaccounts.toString());
+                            throw new InvalidDataException("bankaccounts", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (BankAccount bankaccount : bankaccounts) {
                             if (bankaccount.getTenantId() == null) {

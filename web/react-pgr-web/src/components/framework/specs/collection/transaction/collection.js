@@ -1,8 +1,9 @@
-var lodash=require("lodash");
+var _=require("lodash");
 
-var isRoleCitizen=false;
+var isRoleCitizen=true;
 
 // Collection Legacy receipt creator
+ isRoleCitizen = !_.some(JSON.parse(localStorage.getItem("userRequest")).roles, { 'code': 'LEGACY_RECEIPT_CREATOR'});
 
 var cashOrMops = {
   "name": "FloorDetailsComponent",
@@ -343,27 +344,27 @@ var dat = {
         },
         {
           "name": "manualReceiptNumber",
-          "jsonPath": "Receipt[0].Bill[0].paidBy",
+          "jsonPath": "Receipt[0].Bill[0].billDetails[0].manualReceiptNumber",
           "label": "Manual receipt number",
           "pattern": "",
           "type": "text",
-          "isRequired": true,
+          "isRequired": false,
           "isDisabled": false,
           "requiredErrMsg": "", //Remove required messages
           "patternErrMsg": "",
-          "hide":isRoleCitizen
+          "isHidden":isRoleCitizen
         },
         {
           "name": "manualReceiptDate",
-          "jsonPath": "Receipt[0].Bill[0].paidBy",
+          "jsonPath": "Receipt[0].Bill[0].billDetails[0].receiptDate",
           "label": "Manual receipt date",
           "pattern": "/^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/",
           "type": "datePicker",
-          "isRequired": true,
+          "isRequired": false,
           "isDisabled": false,
           "requiredErrMsg": "", //Remove required messages
           "patternErrMsg": "",
-          "hide":isRoleCitizen
+          "isHidden":isRoleCitizen
         }
       ]
     }]

@@ -46,6 +46,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.wcms.transaction.config.ConfigurationManager;
 import org.egov.wcms.transaction.model.DocumentOwner;
+import org.egov.wcms.transaction.model.MeterReading;
 import org.egov.wcms.transaction.service.WaterConnectionService;
 import org.egov.wcms.transaction.util.WcmsConnectionConstants;
 import org.egov.wcms.transaction.web.contract.DonationResponseInfo;
@@ -159,19 +160,64 @@ public class ConnectionValidator {
             errorFields.add(errorField);
         }
         if(waterConnectionRequest.getConnection().getIsLegacy() ){
-                if(waterConnectionRequest.getConnection().getBillingType() !=null  && waterConnectionRequest.getConnection().getBillingType().equals("METERED")
-                 && ( waterConnectionRequest.getConnection().getMeter()==null)){
-            final ErrorField errorField = ErrorField.builder().code(WcmsConnectionConstants.CONNECTION_METERED_INVALID_CODE)
-            .message(WcmsConnectionConstants.CONNECTION_METERED_INVALID_ERROR_MESSAGE)
-            .field(WcmsConnectionConstants.CONNECTION_METERED_INVALID_FIELD_NAME).build();
-        errorFields.add(errorField);
-        }
-            if (waterConnectionRequest.getConnection().getExecutionDate() == null) {
-                final ErrorField errorField = ErrorField.builder().code(WcmsConnectionConstants.LEGACY_EXECUTIONDATE_INVALID_CODE)
-                        .message(WcmsConnectionConstants.LEGACY_EXECUTIONDATE_INVALID_ERROR_MESSAGE)
-                        .field(WcmsConnectionConstants.LEGACY_EXECUTIONDATE_INVALID_FIELD_NAME).build();
-                errorFields.add(errorField);
-            }
+        	if(waterConnectionRequest.getConnection().getBillingType() !=null  && waterConnectionRequest.getConnection().getBillingType().equals("METERED")){
+        		LOGGER.info("Validating Connection Meter details");
+        		if ( waterConnectionRequest.getConnection().getMeter()==null || waterConnectionRequest.getConnection().getMeter().isEmpty()){
+        			final ErrorField errorField = ErrorField.builder().code(WcmsConnectionConstants.CONNECTION_METERED_INVALID_CODE)
+        					.message(WcmsConnectionConstants.CONNECTION_METERED_INVALID_ERROR_MESSAGE)
+        					.field(WcmsConnectionConstants.CONNECTION_METERED_INVALID_FIELD_NAME).build();
+        			errorFields.add(errorField);
+        		}else if(waterConnectionRequest.getConnection().getMeter().get(0).getMeterOwner() == null || waterConnectionRequest.getConnection().getMeter().get(0).getMeterOwner().isEmpty()){
+        			final ErrorField errorField = ErrorField.builder().code(WcmsConnectionConstants.CONNECTION_METERED_OWNER_INVALID_CODE)
+        					.message(WcmsConnectionConstants.CONNECTION_METERED_OWNER_INVALID_ERROR_MESSAGE)
+        					.field(WcmsConnectionConstants.CONNECTION_METERED_OWNER_INVALID_FIELD_NAME).build();
+        			errorFields.add(errorField);
+        		}/*else if(waterConnectionRequest.getConnection().getMeter().get(0).getMeterModel() == null || waterConnectionRequest.getConnection().getMeter().get(0).getMeterModel().isEmpty()){
+        			final ErrorField errorField = ErrorField.builder().code(WcmsConnectionConstants.CONNECTION_METERED_MODEL_INVALID_CODE)
+        					.message(WcmsConnectionConstants.CONNECTION_METERED_MODEL_INVALID_ERROR_MESSAGE)
+        					.field(WcmsConnectionConstants.CONNECTION_METERED_MODEL_INVALID_FIELD_NAME).build();
+        			errorFields.add(errorField);
+        		}else if (waterConnectionRequest.getConnection().getMeter().get(0).getMeterSlNo() == null || waterConnectionRequest.getConnection().getMeter().get(0).getMeterSlNo().isEmpty()){
+        			final ErrorField errorField = ErrorField.builder().code(WcmsConnectionConstants.CONNECTION_METERED_NUMBER_INVALID_CODE)
+        					.message(WcmsConnectionConstants.CONNECTION_METERED_NUMBER_INVALID_ERROR_MESSAGE)
+        					.field(WcmsConnectionConstants.CONNECTION_METERED_NUMBER_INVALID_FIELD_NAME).build();
+        			errorFields.add(errorField);
+        		}*/else if (waterConnectionRequest.getConnection().getMeter().get(0).getMaximumMeterReading() == null || waterConnectionRequest.getConnection().getMeter().get(0).getMaximumMeterReading().isEmpty()){
+        			final ErrorField errorField = ErrorField.builder().code(WcmsConnectionConstants.CONNECTION_METERED_MAXMETERREADING_INVALID_CODE)
+        					.message(WcmsConnectionConstants.CONNECTION_METERED_MAXMETERREADING_INVALID_ERROR_MESSAGE)
+        					.field(WcmsConnectionConstants.CONNECTION_METERED_MAXMETERREADING_INVALID_FIELD_NAME).build();
+        			errorFields.add(errorField);
+        		}else if (waterConnectionRequest.getConnection().getMeter().get(0).getMeterReadings() == null || waterConnectionRequest.getConnection().getMeter().get(0).getMeterReadings().isEmpty()){
+        			final ErrorField errorField = ErrorField.builder().code(WcmsConnectionConstants.CONNECTION_METERED_METERREADINGDETAILS_INVALID_CODE)
+        					.message(WcmsConnectionConstants.CONNECTION_METERED_METERREADINGDETAILS_INVALID_ERROR_MESSAGE)
+        					.field(WcmsConnectionConstants.CONNECTION_METERED_METERREADINGDETAILS_INVALID_FIELD_NAME).build();
+        			errorFields.add(errorField);
+        		}else {
+        			LOGGER.info("Validating Connection MeterReadings details");
+        			List<MeterReading> meterReadingList = waterConnectionRequest.getConnection().getMeter().get(0).getMeterReadings();
+        			for (MeterReading meterReading : meterReadingList){
+        				if(meterReading.getReading() <= 0){
+        					final ErrorField errorField = ErrorField.builder().code(WcmsConnectionConstants.CONNECTION_METERED_METERREADING_INVALID_CODE)
+        							.message(WcmsConnectionConstants.CONNECTION_METERED_METERREADING_INVALID_ERROR_MESSAGE)
+        							.field(WcmsConnectionConstants.CONNECTION_METERED_METERREADING_INVALID_FIELD_NAME).build();
+        					errorFields.add(errorField);
+        				}else if(meterReading.getReadingDate() <= 0){
+        					final ErrorField errorField = ErrorField.builder().code(WcmsConnectionConstants.CONNECTION_METERED_METERREADINGDATE_INVALID_CODE)
+        							.message(WcmsConnectionConstants.CONNECTION_METERED_METERREADINGDATE_INVALID_ERROR_MESSAGE)
+        							.field(WcmsConnectionConstants.CONNECTION_METERED_METERREADINGDATE_INVALID_FIELD_NAME).build();
+        					errorFields.add(errorField);
+        				};
+        				break;
+        			}
+
+        		}
+        	}
+        	if (waterConnectionRequest.getConnection().getExecutionDate() == null) {
+        		final ErrorField errorField = ErrorField.builder().code(WcmsConnectionConstants.LEGACY_EXECUTIONDATE_INVALID_CODE)
+        				.message(WcmsConnectionConstants.LEGACY_EXECUTIONDATE_INVALID_ERROR_MESSAGE)
+        				.field(WcmsConnectionConstants.LEGACY_EXECUTIONDATE_INVALID_FIELD_NAME).build();
+        		errorFields.add(errorField);
+        	}
 
         }
         /*else if (waterConnectionRequest.getConnection().getProperty()!=null && 

@@ -46,12 +46,13 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Setter;
+import org.egov.common.contract.response.ResponseInfo;
 
 @Setter
 public class StatusResponse {
 
 	@JsonProperty("ResponseInfo")
-	ResponseInfo responseInfo;
+    ResponseInfo responseInfo;
 
 	@JsonProperty("StatusInfo")
 	List<Status> status;

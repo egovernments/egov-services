@@ -75,7 +75,7 @@ ReportDefinitions:
     type: string
     source: tradelicense
     isMandatory: false
-    searchClause : AND tl.licensenumber = $licenseNo
+    searchClause : AND upper(tl.licensenumber) = upper($licenseNo)
   - name: tradeType
     label: reports.tradelicense.tradetype
     type: singlevaluelist
@@ -88,25 +88,25 @@ ReportDefinitions:
     type: string
     source: tradelicense
     isMandatory: false
-    searchClause : AND tl.owenername = $licenseHolder
+    searchClause : AND upper(tl.ownername) = upper($licenseHolder)
   - name: businessName
     label: reports.tradelicense.businessname
     type: string
     source: tradelicense
     isMandatory: false
-    searchClause : AND tl.tradetitle = $businessName
+    searchClause : AND upper(tl.tradetitle) = upper($businessName)
   - name: licenseValidFromDate
     label: reports.tradelicense.licensevalidfromdate
     type: epoch
     source: tradelicense
     isMandatory: false
-    searchClause : AND tl.licensevalidfromdate >= to_timestamp(Trunc(CAST($licenseValidFromDate as bigint)/1000 ))::timestamp without time zone
+    searchClause : AND (to_timestamp(TO_CHAR(tl.licensevalidfromdate::timestamp, 'DD/MM/YYYY HH24:MI:SS'),'DD/MM/YYYY HH24:MI:SS') at time zone 'GMT') >= to_timestamp(Trunc(CAST($licenseValidFromDate as bigint)/1000 )) at time zone 'GMT-5:30'
   - name: licenseValidToDate
     label: reports.tradelicense.licensevalidtodate
     type: epoch
     source: tradelicense
     isMandatory: false
-    searchClause : AND to_date(TO_CHAR(tl.expirydate, 'DD/MM/YYYY'),'YYYY-MM-DD') <= to_date(TO_CHAR(TO_TIMESTAMP($licenseValidToDate/1000), 'DD/MM/YYYY'),'DD/MM/YYYY')
+    searchClause : AND (to_timestamp(TO_CHAR(tl.expirydate::timestamp, 'DD/MM/YYYY HH24:MI:SS'),'DD/MM/YYYY HH24:MI:SS') at time zone 'GMT') <= (to_timestamp(TO_CHAR(TO_TIMESTAMP($licenseValidToDate/1000), 'DD/MM/YYYY HH24:MI:SS'),'DD/MM/YYYY HH24:MI:SS') at time zone 'GMT-5:30')
   - name: licenseType
     label: reports.tradelicense.licensetype
     type: singlevaluelist
@@ -139,7 +139,7 @@ ReportDefinitions:
     type: string
     source: tradelicense
     isMandatory: false
-    searchClause : AND tl.propertyassesmentno = $propertyNo
+    searchClause : AND upper(tl.propertyassesmentno) = upper($propertyNo)
   query: select ward.name as ward, tl.licensenumber as licenseNumber, tl.tradetype as tradeType, tl.ownername || ' / ' || tl.owneraddress as licenseHolder,
     tl.tradetitle as businessName, tl.tradeaddress as businessAddress,
     locality.name as businessArea, to_char(tl.licensevalidfromdate, 'dd-mm-yyyy') || ' / ' || to_char(tl.expirydate, 'dd-mm-yyyy') as licenseValidity,

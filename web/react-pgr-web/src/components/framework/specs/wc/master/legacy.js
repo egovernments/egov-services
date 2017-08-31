@@ -8,7 +8,7 @@ var meterReading = {
    "label": "wc.group.meterReading",
    "name": "MeterReading",
    "multiple": false,
-   "hide":false,
+   "hide":true,
    "children": [],
    "fields": [
     {
@@ -17,7 +17,7 @@ var meterReading = {
      "label": "wc.group.reading1",
      "pattern": "",
      "type": "number",
-     "isRequired": false,
+     "isRequired": true,
      "isDisabled": false,
      "requiredErrMsg": "",//Remove required messages
      "patternErrMsg": "",
@@ -87,7 +87,7 @@ var meterReading = {
      "label": "wc.group.reading1Date",
      "pattern": "",
      "type": "datePicker",
-     "isRequired": false,
+     "isRequired": true,
      "isDisabled": false,
      "requiredErrMsg": "",//Remove required messages
      "patternErrMsg": ""
@@ -807,7 +807,7 @@ var dat = {
             "name": "ConsumerNo",
             "jsonPath": "Connection.legacyConsumerNumber",
             "label": "wc.create.groups.applicantDetails.consumerNo",
-            "pattern": "",
+            "pattern": "^\\d{1,16}$",
             "type": "text",
             "isRequired": true,
             "isDisabled": false,
@@ -818,7 +818,7 @@ var dat = {
             "name": "ManualConsumerNo",
             "jsonPath": "Connection.manualConsumerNumber",
             "label": "wc.create.groups.applicantDetails.manualConsumerNo",
-            "pattern": "",
+            "pattern": "^\\d{1,16}$",
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
@@ -1058,7 +1058,7 @@ var dat = {
             "depedants": [{
                 "jsonPath": "Connection.subUsageType",
                 "type": "dropDown",
-                "pattern": "/pt-property/property/usages/_search?tenantId=default&parent={Connection.property.usageType}|$..code|$..name"
+                "pattern": "/pt-property/property/usages/_search?tenantId=default&parent={Connection.property.usageType}&service=wc,common|$..code|$..name"
               }]
           },
           {
@@ -1301,7 +1301,7 @@ var dat = {
                     "label": "wc.group.meterOwner",
                     "pattern": "^[\s.]*([^\s.][\s.]*){0,50}$",
                     "type": "text",
-                    "isRequired": false,
+                    "isRequired": true,
                     "isDisabled": false,
                     "requiredErrMsg": "",
                     "patternErrMsg": ""
@@ -1354,9 +1354,9 @@ var dat = {
                     "name": "initialMeterReading",
                     "jsonPath": "Connection.meter[0].initialMeterReading",
                     "label": "wc.group.initialMeterReading",
-                    "pattern": "",
-                    "type": "text",
-                    "isRequired": false,
+                    "pattern": "^\\d{1,8}$",
+                    "type": "number",
+                    "isRequired": true,
                     "isDisabled": false,
                     "requiredErrMsg": "",
                     "patternErrMsg": ""
@@ -1365,9 +1365,9 @@ var dat = {
                      "name": "maximumMeterReading",
                      "jsonPath": "Connection.meter[0].maximumMeterReading",
                      "label": "wc.group.maximumReading",
-                     "pattern": "^\\d{8}$",
-                     "type": "text",
-                     "isRequired": false,
+                     "pattern": "^\\d{1,8}$",
+                     "type": "number",
+                     "isRequired": true,
                      "isDisabled": false,
                      "requiredErrMsg": "",
                      "patternErrMsg": ""

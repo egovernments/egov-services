@@ -16,6 +16,7 @@ import pdfFonts from "pdfmake/build/vfs_fonts";
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 var sumColumn = [];
+var footerexist = false;
 
 class ShowField extends Component {
   constructor(props) {
@@ -53,22 +54,62 @@ class ShowField extends Component {
     $('#reportTable').DataTable({
       dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
       buttons: [
-               'copy', 'csv', 'excel', { extend: 'pdf', text: 'Pdf', orientation: 'landscape', pageSize: 'legal',
-        customize: function ( doc ) {
-            content: [ {
-                alignment: 'justify',
-                columns: [
-                        { width: 'auto' },
-                        { width: '*' },
-                        { width: '*' }
-                ],
-                table: { widths: [ 'auto', '*', '*' ] }
-            } ]
-        }
-    }, 'print'
+         'copy', 'csv', 'excel',
+         { extend: 'pdf', text: 'Pdf', orientation: 'landscape', pageSize: 'legal',
+          customize: function ( doc ) {
+              content: [ {
+                  alignment: 'justify',
+                  columns: [
+                          { width: 'auto' },
+                          { width: '*' },
+                          { width: '*' }
+                  ],
+                  table: { widths: [ 'auto', '*', '*' ] }
+              } ]
+          }
+        }, 'print'
        ],
        ordering: false,
-       bDestroy: true
+       bDestroy: true,
+       footerCallback: function ( row, data, start, end, display ) {
+         var api = this.api(), data, total, pageTotal;
+
+        //  console.log(footerexist, sumColumn);
+
+         {sumColumn.map((columnObj, index) => {
+           if(columnObj.total){
+             // Remove the formatting to get integer data for summation
+             var intVal = function ( i ) {
+                 return typeof i === 'string' ?
+                     i.replace(/[\$,]/g, '')*1 :
+                     typeof i === 'number' ?
+                         i : 0;
+             };
+
+             // Total over all pages
+             total = api
+                 .column( index )
+                 .data()
+                 .reduce( function (a, b) {
+                     return intVal(a) + intVal(b);
+                 }, 0 );
+
+             // Total over this page
+             pageTotal = api
+                 .column( index, { page: 'current'} )
+                 .data()
+                 .reduce( function (a, b) {
+                     return intVal(a) + intVal(b);
+                 }, 0 );
+
+             // Update footer
+             $( api.column( index ).footer() ).html(
+                 pageTotal +' ('+ total +')'
+             );
+           }
+         })}
+
+       }
     });
   }
 
@@ -175,50 +216,11 @@ class ShowField extends Component {
                 var respHeader = reportHeaderObj[itemIndex];
                 if(respHeader.showColumn){
                   columnObj = {};
-                  if(respHeader.total){
-                    columnObj['showColumn'] = respHeader.showColumn;
-                    columnObj['total'] = respHeader.total;
-                    columnObj['value'] = sumColumn[itemIndex] == undefined ? item : (sumColumn[itemIndex].value)+item;
-                    if(sumColumn[itemIndex]){
-                      //remove the object from that itemIndex
-                      sumColumn.splice(itemIndex, 1);
-                      //add that object in that index
-                      sumColumn.splice(itemIndex,0,columnObj)
-                    }else{
-                      sumColumn.push(columnObj)
-                    }
-                    // console.log(itemIndex,':',item,':',sumColumn[itemIndex]);
-                  }else{
-                    columnObj['showColumn'] = respHeader.showColumn;
-                    columnObj['total'] = respHeader.total;
-                    columnObj['value'] = 0;
-                    if(sumColumn[itemIndex]){
-                      //remove the object from that itemIndex
-                      sumColumn.splice(itemIndex, 1);
-                      //add that object in that index
-                      sumColumn.splice(itemIndex,0,columnObj)
-                    }else{
-                      sumColumn.push(columnObj)
-                    }
-                  }
                   return (
                     <td key={itemIndex} onClick={(e)=>{ drillDown(e,dataIndex,itemIndex,dataItem,item) }}>
                       {respHeader.defaultValue ? <a href="javascript:void(0)">{checkIfDate(item,itemIndex)}</a> : checkIfDate(item,itemIndex)}
                     </td>
                   )
-                }else{
-                  columnObj['showColumn'] = respHeader.showColumn;
-                  columnObj['total'] = respHeader.total;
-                  columnObj['value'] = 0;
-                  if(sumColumn[itemIndex]){
-                    //remove the object from that itemIndex
-                    sumColumn.splice(itemIndex, 1);
-                    //add that object in that index
-                    sumColumn.splice(itemIndex,0,columnObj)
-                  }else{
-                    sumColumn.push(columnObj)
-                  }
-                  return null;
                 }
               }
             )}
@@ -230,26 +232,31 @@ class ShowField extends Component {
   }
 
   renderFooter = () => {
-    var footerexist = false;
-    {sumColumn.map((columnObj, index) => {
-      for (var [key, value] of Object.entries(columnObj)) {
-        if(key === 'total' && value === true){
-          footerexist = true;
-        }
+    let { reportResult } = this.props;
+    let reportHeaderObj = reportResult.reportHeader;
+    footerexist = false;
+    
+    {reportHeaderObj.map((headerObj, index) => {
+      let columnObj = {};
+      if(headerObj.showColumn){
+        columnObj['showColumn'] = headerObj.showColumn;
+        columnObj['total'] = headerObj.total;
+        sumColumn.push(columnObj);
       }
+      if(headerObj.total){
+        footerexist = true;
+      }
+      // console.log(headerObj.showColumn, headerObj.total);
     })};
+
     if(footerexist){
       return(
         <tfoot>
         <tr>
           {sumColumn.map((columnObj, index) => {
-            if(columnObj.showColumn){
-              return(
-                <td key={index}>{columnObj.total ? columnObj.value : ''}</td>
-              )
-            }else{
-              return null;
-            }
+            return (
+              <th key={index}>{index === 0 ? 'Total (Grand Total)' : ''}</th>
+            )
           })}
         </tr>
         </tfoot>

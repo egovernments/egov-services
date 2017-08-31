@@ -13,12 +13,12 @@ var dat = {
             "name": "OldLicenseNumber",
             "jsonPath": "licenses[0].oldLicenseNumber",
             "label": "tl.create.licenses.groups.TradeDetails.OldLicenseNumber",
-            "pattern": "",
+            "pattern": "^[a-zA-Z0-9:#()/.-]*$",
             "type": "text",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "Enter Valid Old License Number (Alpha-Numeric)"
           },
           {
             "name": "applicationType",
@@ -104,24 +104,24 @@ var dat = {
             "name": "TradeOwnerName",
             "jsonPath": "licenses[0].ownerName",
             "label": "tl.create.licenses.groups.TradeOwnerDetails.TradeOwnerName",
-            "pattern": "^.[a-zA-Z. ]{3,99}$",
+            "pattern": "^.[a-zA-Z. ]{2,99}$",
             "type": "text",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Enter Valid Trade Owner Name (Min:4, Max:100)",
+            "patternErrMsg": "Enter Valid Trade Owner Name (Min:3, Max:100)",
             "maxLength": "100"
           },
           {
             "name": "FatherSpouseName",
             "jsonPath": "licenses[0].fatherSpouseName",
             "label": "tl.create.licenses.groups.TradeOwnerDetails.FatherSpouseName",
-            "pattern": "^.[a-zA-Z. ]{3,99}$",
+            "pattern": "^.[a-zA-Z. ]{2,99}$",
             "type": "text",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Enter Valid Father/Spouse Name (Min:4, Max:100)",
+            "patternErrMsg": "Enter Valid Father/Spouse Name (Min:3, Max:100)",
             "maxLength": "100"
           },
           {
@@ -133,18 +133,19 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Enter Valid Email ID (ex: abc@xyz.com)"
+            "patternErrMsg": "Enter Valid Email ID (ex: abc@xyz.com, Max: 50)",
+            "maxLength": "50"
           },
           {
             "name": "TradeOwnerAddress",
             "jsonPath": "licenses[0].ownerAddress",
             "label": "tl.create.licenses.groups.TradeOwnerDetails.TradeOwnerAddress",
-            "pattern": "^.{4,250}$",
+            "pattern": "^[a-zA-Z0-9:@&*_+#()/,. -]*$",
             "type": "text",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Enter Valid Trade Owner Address (Min:4, Max:250)",
+            "patternErrMsg": "Enter Valid Trade Owner Address (Max:250)",
             "maxLength": "250"
           }
         ]
@@ -157,8 +158,8 @@ var dat = {
             "name": "PropertyAssessmentNo",
             "jsonPath": "licenses[0].propertyAssesmentNo",
             "label": "tl.create.licenses.groups.TradeLocationDetails.PropertyAssessmentNo",
-            "pattern": "",
-            "type": "number",
+            "pattern": "^[a-zA-Z0-9/-]*$",
+            "type": "text",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -237,13 +238,13 @@ var dat = {
             "name": "TradeAddress",
             "jsonPath": "licenses[0].tradeAddress",
             "label": "tl.create.licenses.groups.TradeLocationDetails.TradeAddress",
-            "pattern": "^.{4,250}$",
+            "pattern": "^[a-zA-Z0-9:@&*_+#()/,. -]*$",
             "type": "text",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Enter Valid Trade Address (Min:4, Max:100)",
-            "maxLength": "100"
+            "patternErrMsg": "Enter Valid Trade Address (Max:250)",
+            "maxLength": "250"
           }
         ]
       },
@@ -254,13 +255,13 @@ var dat = {
             "name": "TradeTitle",
             "jsonPath": "licenses[0].tradeTitle",
             "label": "tl.create.licenses.groups.TradeDetails.TradeTitle",
-            "pattern": "^.[a-zA-Z0-9&:@./ -]{3,100}$",
+            "pattern": "^[a-zA-Z0-9@:()/#,. -]*$",
             "type": "text",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Enter Valid Trade Title (Min:4, Max:100)",
-            "maxLength": "100"
+            "patternErrMsg": "Enter Valid Trade Title (Max: 250)",
+            "maxLength": "250"
           },
           {
             "name": "TradeType",
@@ -367,8 +368,8 @@ var dat = {
             "name": "Remarks",
             "jsonPath": "licenses[0].remarks",
             "label": "tl.create.licenses.groups.TradeDetails.Remarks",
-            "pattern": "^.{0,1000}$",
-            "type": "textarea",
+            "pattern": "^[a-zA-Z0-9:@&*_+#()/,. -]*$",
+            "type": "text",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -469,13 +470,13 @@ var dat = {
             "name": "agreementNo",
             "jsonPath": "licenses[0].agreementNo",
             "label": "tl.create.licenses.groups.agreementDetails.agreementNo",
-            "pattern": "^[a-zA-Z0-9]{4,128}$",
+            "pattern": "^[a-zA-Z0-9&/()-]$",
             "type": "text",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Enter Valid Agreement No (Min:4, Max:128, Alpha/Numeric)",
-            "maxLength": "128"
+            "patternErrMsg": "Enter Valid Agreement No (Max:30, Alpha/Numeric)",
+            "maxLength": "30"
           }
         ]
       },

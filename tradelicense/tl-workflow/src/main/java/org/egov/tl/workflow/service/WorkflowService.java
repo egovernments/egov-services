@@ -3,6 +3,7 @@ package org.egov.tl.workflow.service;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.TradeLicenseContract;
 import org.egov.tl.commons.web.contract.WorkFlowDetails;
+import org.egov.tl.workflow.model.Attribute;
 import org.egov.tl.workflow.model.Position;
 import org.egov.tl.workflow.model.ProcessInstance;
 import org.egov.tl.workflow.model.ProcessInstanceRequest;
@@ -16,8 +17,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class WorkflowService {
-
-	public static final String STATE_ID = "stateId";
 
 	private WorkflowRepository workflowRepository;
 
@@ -39,7 +38,7 @@ public class WorkflowService {
 			processInstanceResponse = workflowRepository.start(request);
 
 			if (processInstanceResponse != null)
-				update(processInstanceResponse, tradeLicense.getWorkFlowDetails());
+				update(processInstanceResponse, tradeLicense);
 
 		} else if (isWorkflowUpdate(tradeLicense.getWorkFlowDetails())) {
 
@@ -50,7 +49,7 @@ public class WorkflowService {
 			taskResponse = workflowRepository.update(taskRequest);
 
 			if (taskResponse != null)
-				update(taskResponse, tradeLicense.getWorkFlowDetails());
+				update(taskResponse, tradeLicense);
 
 		}
 
@@ -92,6 +91,9 @@ public class WorkflowService {
 			task.setTenantId(tenantId);
 			task.setAssignee(new Position());
 			task.getAssignee().setId(workFlowDetails.getAssignee());
+			task.getAttributes().put("department",
+					Attribute.asStringAttr("department", workFlowDetails.getDepartment()));
+
 		}
 		request.setTask(task);
 
@@ -107,17 +109,16 @@ public class WorkflowService {
 		return workFlowDetails != null && workFlowDetails.getAction() != null && !workFlowDetails.getAction().isEmpty();
 	}
 
-	private void update(ProcessInstanceResponse processInstanceResponse, WorkFlowDetails workFlowDetails) {
-		if (workFlowDetails != null) {
-			workFlowDetails.setAssignee(processInstanceResponse.getProcessInstance().getOwner().getId());
-			workFlowDetails.setStateId(processInstanceResponse.getProcessInstance().getValueForKey(STATE_ID));
+	private void update(ProcessInstanceResponse processInstanceResponse, TradeLicenseContract tradeLicense) {
+		if (tradeLicense != null && tradeLicense.getApplication() != null) {
+			tradeLicense.getApplication().setState_id(processInstanceResponse.getProcessInstance().getId());
 		}
 	}
 
-	private void update(TaskResponse taskResponse, WorkFlowDetails workFlowDetails) {
-		if (workFlowDetails != null) {
-			workFlowDetails.setAssignee(taskResponse.getTask().getOwner().getId());
-			workFlowDetails.setStateId(taskResponse.getTask().getValueForKey(STATE_ID));
+	private void update(TaskResponse taskResponse, TradeLicenseContract tradeLicense) {
+
+		if (tradeLicense != null && tradeLicense.getApplication() != null) {
+			tradeLicense.getApplication().setState_id(taskResponse.getTask().getId());
 		}
 	}
 

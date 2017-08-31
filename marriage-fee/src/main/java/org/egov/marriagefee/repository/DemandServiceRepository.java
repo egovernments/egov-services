@@ -9,15 +9,20 @@ import java.util.TimeZone;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.marriagefee.config.PropertiesManager;
+import org.egov.marriagefee.model.Bill;
 import org.egov.marriagefee.model.Demand;
 import org.egov.marriagefee.model.DemandDetail;
 import org.egov.marriagefee.model.GenerateBillCriteria;
 import org.egov.marriagefee.model.MarriageRegn;
 import org.egov.marriagefee.model.Owner;
+import org.egov.marriagefee.model.Receipt;
+import org.egov.marriagefee.model.ReceiptReq;
+import org.egov.marriagefee.model.ReceiptRes;
 import org.egov.marriagefee.web.contract.BillRequest;
 import org.egov.marriagefee.web.contract.BillResponse;
 import org.egov.marriagefee.web.contract.DemandRequest;
 import org.egov.marriagefee.web.contract.DemandResponse;
+import org.egov.marriagefee.web.contract.MarriageRegnRequest;
 import org.egov.marriagefee.web.contract.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -98,6 +103,24 @@ public class DemandServiceRepository {
 
 		return new ResponseEntity<>(restTemplate.postForObject(url, requestInfoWrapper, BillResponse.class),
 				HttpStatus.CREATED);
+	}
+
+	public ResponseEntity<?> generaterecieptForMarriagerRegnPayment(List<Bill> bills, RequestInfo requestInfo) {
+		log.info("DemandServiceRepository  generaterecieptForMarriagerRegnPayment bills" + bills);
+		Receipt receipt = new Receipt();
+		receipt.setBill(bills);
+		List<Receipt> receipts = new ArrayList<>();
+		receipts.add(receipt);
+		ReceiptReq receiptReq = new ReceiptReq();
+		receiptReq.setRequestInfo(requestInfo);
+		receiptReq.setReceipt(receipts);
+		log.info("DemandServiceRepository  generaterecieptForMarriagerRegnPayment receiptReq" + receiptReq);
+		String url =propertiesManager.getCollectionServiceHost()+ propertiesManager.getCollectionServiceGenerateReceipt();
+		log.info("DemandServiceRepository  generaterecieptForMarriagerRegnPayment url" + url);
+
+		return new ResponseEntity<>(restTemplate.postForObject(url,receiptReq , ReceiptRes.class),
+				HttpStatus.CREATED);
+
 	}
 
 }

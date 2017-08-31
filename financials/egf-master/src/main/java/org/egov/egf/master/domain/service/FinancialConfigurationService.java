@@ -46,7 +46,7 @@ public class FinancialConfigurationService {
                     case Constants.ACTION_CREATE:
                         if (financialconfigurations == null) {
                             throw new InvalidDataException("financialconfigurations", ErrorCode.NOT_NULL.getCode(),
-                                    financialconfigurations.toString());
+                                    null);
                         }
                         for (FinancialConfiguration financialConfiguration : financialconfigurations) {
                             validator.validate(financialConfiguration, errors);
@@ -59,7 +59,7 @@ public class FinancialConfigurationService {
                     case Constants.ACTION_UPDATE:
                         if (financialconfigurations == null) {
                             throw new InvalidDataException("financialconfigurations", ErrorCode.NOT_NULL.getCode(),
-                                    financialconfigurations.toString());
+                                    null);
                         }
                         for (FinancialConfiguration financialConfiguration : financialconfigurations) {
                             if (financialConfiguration.getId() == null) {
@@ -76,7 +76,7 @@ public class FinancialConfigurationService {
                     case Constants.ACTION_SEARCH:
                         if (financialconfigurations == null) {
                             throw new InvalidDataException("financialconfigurations", ErrorCode.NOT_NULL.getCode(),
-                                    financialconfigurations.toString());
+                                    null);
                         }
                         for (FinancialConfiguration financialconfiguration : financialconfigurations) {
                             if (financialconfiguration.getTenantId() == null) {

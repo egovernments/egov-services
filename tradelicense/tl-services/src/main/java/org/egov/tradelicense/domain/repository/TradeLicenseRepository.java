@@ -1,6 +1,5 @@
 package org.egov.tradelicense.domain.repository;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +59,7 @@ public class TradeLicenseRepository {
 
 	@Autowired
 	LicenseApplicationJdbcRepository licenseApplicationJdbcRepository;
-
+	
 	public Long getNextSequence() {
 
 		String id = tradeLicenseJdbcRepository.getSequence(TradeLicenseEntity.SEQUENCE_NAME);
@@ -318,8 +317,7 @@ public class TradeLicenseRepository {
 	}
 
 	@Transactional
-	public TradeLicense update(TradeLicense tradeLicense, RequestInfo requestInfo) {
-
+	public TradeLicense update(TradeLicense tradeLicense) {
 		TradeLicenseEntity entity = tradeLicenseJdbcRepository.update(new TradeLicenseEntity().toEntity(tradeLicense));
 		if (tradeLicense.getSupportDocuments() != null && tradeLicense.getSupportDocuments().size() > 0) {
 
@@ -362,20 +360,6 @@ public class TradeLicenseRepository {
 				}
 			}
 		}
-
-		if (tradeLicense.getBillId() != null) {
-		        TradeLicenseSearch tradeLicenseSearch = getByLicenseId(tradeLicense, requestInfo);
-			final Object[] objValue = new Object[] { tradeLicenseSearch.getApplications().get(0).getId(),
-			                tradeLicense.getBillId(), tradeLicense.getTenantId(),
-			                Long.valueOf(tradeLicense.getAuditDetails().getCreatedBy()),
-					new Date(new java.util.Date().getTime()),
-					Long.valueOf(tradeLicense.getAuditDetails().getLastModifiedBy()),
-					new Date(new java.util.Date().getTime()) };
-			jdbcTemplate.update(LicenseBillQueryBuilder.insertLicenseBill(), objValue);
-		}
-		
-		licenseApplicationJdbcRepository.update( new LicenseApplicationEntity().toEntity(tradeLicense.getApplication()));
-
 		return entity.toDomain();
 	}
 
@@ -410,5 +394,9 @@ public class TradeLicenseRepository {
 		return tradeLicenseSearchList;
 
 	}
+
+    public void createLicenseBill(final String query, final Object[] objValue) {
+        jdbcTemplate.update(LicenseBillQueryBuilder.insertLicenseBill(), objValue);
+    }
 
 }

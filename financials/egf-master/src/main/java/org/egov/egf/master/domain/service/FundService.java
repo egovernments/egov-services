@@ -90,7 +90,7 @@ public class FundService {
                         break;
                     case Constants.ACTION_CREATE:
                         if (funds == null) {
-                            throw new InvalidDataException("funds", ErrorCode.NOT_NULL.getCode(), funds.toString());
+                            throw new InvalidDataException("funds", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (Fund fund : funds) {
                             validator.validate(fund, errors);
@@ -111,7 +111,7 @@ public class FundService {
                         break;
                     case Constants.ACTION_UPDATE:
                         if (funds == null) {
-                            throw new InvalidDataException("funds", ErrorCode.NOT_NULL.getCode(), funds.toString());
+                            throw new InvalidDataException("funds", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (Fund fund : funds) {
                             if (fund.getId() == null) {
@@ -135,7 +135,7 @@ public class FundService {
                         break;
                     case Constants.ACTION_SEARCH:
                         if (funds == null) {
-                            throw new InvalidDataException("funds", ErrorCode.NOT_NULL.getCode(), funds.toString());
+                            throw new InvalidDataException("funds", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (Fund fund : funds) {
                             if (fund.getTenantId() == null) {

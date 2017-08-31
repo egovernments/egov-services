@@ -39,14 +39,14 @@ public class TradeLicenseQueueRepository {
 			if(request.getRequestInfo().getApiId() != null && request.getRequestInfo().getApiId().equalsIgnoreCase("org.egov.cs.tl")){
 				
 				topic = propertiesManager.getTradeLicenseWorkFlowPopulatedTopic();
-				key = propertiesManager.getNewTradeLicenseValidatedKey();
 				
 			} else {
 				
 				topic = propertiesManager.getTradeLicenseValidatedTopic();
-				key = propertiesManager.getNewTradeLicenseValidatedKey();
 			}
-
+			
+			key = propertiesManager.getNewTradeLicenseValidatedKey();
+			
 			tlMap.put("tradelicense-new-create", request);
 
 			break;
@@ -62,8 +62,15 @@ public class TradeLicenseQueueRepository {
 
 		case "new-update":
 			
-//			topic = propertiesManager.getTradeLicenseValidatedTopic();
-			topic = propertiesManager.getTradeLicenseWorkFlowPopulatedTopic();
+			if(request.getRequestInfo().getApiId() != null && request.getRequestInfo().getApiId().equalsIgnoreCase("org.egov.cs.tl")){
+				
+				topic = propertiesManager.getTradeLicenseWorkFlowPopulatedTopic();
+				
+			} else {
+				
+				topic = propertiesManager.getTradeLicenseValidatedTopic();
+			}
+			
 			key = propertiesManager.getNewTradeLicenseValidatedKey();
 
 			tlMap.put("tradelicense-new-update", request);

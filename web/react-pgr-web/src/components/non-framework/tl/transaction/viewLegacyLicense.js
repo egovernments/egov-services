@@ -458,7 +458,7 @@ getVal = (path,isDate) => {
         var final = dateFormat(formData.licenses[0].agreementDate);
         console.log("final",final);
 
-        if(!formData.licenses[0].isPropertyOwner){
+        if(formData.licenses[0].isPropertyOwner){
           return (
             <Card className="uiCard">
                   <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate("tl.create.licenses.groups.agreementDetails")}</div>} />

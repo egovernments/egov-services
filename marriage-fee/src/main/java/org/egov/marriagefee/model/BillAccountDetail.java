@@ -2,8 +2,6 @@ package org.egov.marriagefee.model;
 
 import java.math.BigDecimal;
 
-import javax.xml.crypto.KeySelector.Purpose;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

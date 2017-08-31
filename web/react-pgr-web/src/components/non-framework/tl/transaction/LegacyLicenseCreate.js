@@ -934,6 +934,7 @@ if(property == "licenses[0].categoryId"){
                 if(id.categoryId == "" || id.categoryId == null){
                   formData.tradeSubCategory = "";
                   setDropDownData(value.jsonPath, []);
+                  this.populateValidtyYear();
                   console.log(value.jsonPath);
                   console.log("helo", formData);
                   return false;

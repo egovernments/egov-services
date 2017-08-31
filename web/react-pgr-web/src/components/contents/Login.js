@@ -231,6 +231,30 @@ class Login extends Component {
 
         Api.commonApiPost("access/v1/actions/_get",{},{tenantId:response.data.UserRequest.tenantId,roleCodes,enabled:true}).then(function(response){
           var actions = response.actions;
+          var roles = JSON.parse(localStorage.userRequest).roles;
+          for(var i=0; i< roles.length; i++) {
+            if(roles[i].code == "SUPERUSER") {
+              actions.unshift({
+                "id": 12299,
+                "name": "SearchRequest",
+                "url": "/search/service/requests",
+                "displayName": "Search Service Requests",
+                "orderNumber": 35,
+                "queryParams": "",
+                "parentModule": 75,
+                "enabled": true,
+                "serviceCode": "",
+                "tenantId": null,
+                "createdDate": null,
+                "createdBy": null,
+                "lastModifiedDate": null,
+                "lastModifiedBy": null,
+                "path": "Service Request.Requests.Search"
+              });
+              break;
+            }
+          }
+
           $.ajax({
               url: "https://raw.githubusercontent.com/abhiegov/test/master/reportList.json?timestamp="+new Date().getTime(),
               success: function(res) {

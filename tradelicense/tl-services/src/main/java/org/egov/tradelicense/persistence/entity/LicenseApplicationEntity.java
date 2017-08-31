@@ -44,6 +44,14 @@ public class LicenseApplicationEntity {
 
 	private Long lastModifiedTime;
 	
+//	private static List<LicenseFeeDetail> feeDetails;
+//
+//	private static List<SupportDocument> supportDocuments;
+//
+//	private List<LicenseFeeDetailEntity> feeDetailEntitys;
+//
+//	private List<SupportDocumentEntity> supportDocumentEntitys;
+	
 	public LicenseApplication toDomain( ){
 		
 		LicenseApplication licenseApplication = new LicenseApplication();
@@ -54,6 +62,7 @@ public class LicenseApplicationEntity {
 		licenseApplication.setStatus(this.status);
 		licenseApplication.setState_id(this.state_id);
 		licenseApplication.setApplicationType(this.applicationType);
+		
 		if (this.applicationDate != null) {
 
 			licenseApplication.setApplicationDate((this.applicationDate.getTime()));
@@ -61,6 +70,30 @@ public class LicenseApplicationEntity {
 		
 		licenseApplication.setFieldInspectionReport(this.fieldInspectionReport);
 		licenseApplication.setLicenseFee( this.licenseFee);
+		
+		
+//		feeDetails = new ArrayList<LicenseFeeDetail>();
+//
+//		if (this.feeDetailEntitys != null) {
+//
+//			for (LicenseFeeDetailEntity feeDetailEntity : this.feeDetailEntitys) {
+//
+//				feeDetails.add(feeDetailEntity.toDomain());
+//			}
+//		}
+//
+//		licenseApplication.setFeeDetails(feeDetails);
+//
+//		supportDocuments = new ArrayList<SupportDocument>();
+//
+//		if (this.supportDocumentEntitys != null) {
+//
+//			for (SupportDocumentEntity supportDocumentEntity : this.supportDocumentEntitys) {
+//
+//				supportDocuments.add(supportDocumentEntity.toDomain());
+//			}
+//		}
+//		licenseApplication.setSupportDocuments(supportDocuments);
 		
 		auditDetails.setCreatedBy(this.createdBy);
 

@@ -47,6 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.wcms.transaction.model.Connection;
 import org.egov.wcms.transaction.model.ConnectionOwner;
 import org.egov.wcms.transaction.model.Meter;
@@ -102,6 +103,7 @@ public class WaterConnectionRowMapper {
 				meter.setMaximumMeterReading(rs.getString("maximummeterreading"));
 				meter.setMeterStatus(rs.getString("meterstatus"));
 				meter.setTenantId(rs.getString("metertenant")); 
+				meter.setMeterOwner(rs.getString("meterowner"));
 				MeterReading reading = prepareMeterReadingObject(rs);
 				List<MeterReading> meterReadingList = new ArrayList<>(); 
 				meterReadingList.add(reading);
@@ -119,9 +121,15 @@ public class WaterConnectionRowMapper {
 				reading.setReading(rs.getLong("reading"));
 				reading.setReadingDate(rs.getLong("readingdate"));
 				reading.setGapCode(rs.getString("gapcode"));
-				reading.setConsumption(Long.parseLong(rs.getString("consumption")));
-				reading.setConsumptionAdjusted(Long.parseLong(rs.getString("consumptionadjusted")));
-				reading.setNumberOfDays(Long.parseLong(rs.getString("numberofdays")));
+				if(StringUtils.isNotBlank(rs.getString("consumption"))) { 
+					reading.setConsumption(Long.parseLong(rs.getString("consumption")));
+				}
+				if(StringUtils.isNotBlank(rs.getString("consumptionadjusted"))) { 
+					reading.setConsumptionAdjusted(Long.parseLong(rs.getString("consumptionadjusted")));
+				}
+				if(StringUtils.isNotBlank(rs.getString("numberofdays"))) { 
+					reading.setNumberOfDays(Long.parseLong(rs.getString("numberofdays")));
+				}
 				reading.setResetFlag(rs.getBoolean("resetflag"));
 			} catch (Exception e) {
 				LOGGER.error("Encountered Exception while creating Meter Reading Object : " + e.getMessage());
@@ -244,7 +252,8 @@ public class WaterConnectionRowMapper {
 			connection.setPropertyIdentifier(rs.getString("conn_propid"));
 			connection.setCreatedDate(rs.getString("createdtime"));
 			connection.setPlumberName(rs.getString("plumbername"));
-			
+			connection.setManualReceiptNumber(rs.getString("manualreceiptnumber"));
+			connection.setManualReceiptDate(rs.getLong("manualreceiptdate"));
 			if(rs.getDouble("sequencenumber") > 0) {
 				DecimalFormat df = new DecimalFormat("####0.0000");
 				df.format(rs.getDouble("sequencenumber"));

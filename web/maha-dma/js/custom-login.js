@@ -88,8 +88,8 @@ $(document).ready(function(){
       }
 
       function loadServiceMenus(){
-        console.log('coming inside');
-        console.log('groupByModuleServices', groupByModuleServices);
+        // console.log('coming inside');
+        // console.log('groupByModuleServices', groupByModuleServices);
         $('.service-table').html(servicesMenuTempalte(groupByModuleServices));
       }
 
@@ -165,10 +165,19 @@ $(document).ready(function(){
           }
 
           if($("#mobileNumber").val() && $("#password").val()) {
+            var mobileNo = $("#mobileNumber").val();
+            var password = $("#password").val();
             var tenantId = $("#ulb-dropdown").val() || "default";
             waitingDialog.show('Please wait logging...');
+
+            var params = new URLSearchParams();
+            params.append('username', mobileNo);
+            params.append('password', password);
+            params.append('grant_type', 'password');
+            params.append('scope', 'read');
+            params.append('tenantId', tenantId);
             $.ajax({
-              url: window.location.origin + "/user/oauth/token?tenantId=" + tenantId + "&username=" + $("#mobileNumber").val() + "&password=" + $("#password").val() + "&grant_type=password&scope=read",
+              url: window.location.origin + "/user/oauth/token?"+params,
               type: 'POST',
               dataType: 'json',
               data:JSON.stringify({}),

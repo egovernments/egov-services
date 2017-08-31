@@ -40,7 +40,7 @@ public class FunctionaryService {
                         break;
                     case Constants.ACTION_CREATE:
                         if (functionaries == null) {
-                            throw new InvalidDataException("functionaries", ErrorCode.NOT_NULL.getCode(), functionaries.toString());
+                            throw new InvalidDataException("functionaries", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (Functionary functionary : functionaries) {
                             validator.validate(functionary, errors);
@@ -56,7 +56,7 @@ public class FunctionaryService {
                         break;
                     case Constants.ACTION_UPDATE:
                         if (functionaries == null) {
-                            throw new InvalidDataException("functionaries", ErrorCode.NOT_NULL.getCode(), functionaries.toString());
+                            throw new InvalidDataException("functionaries", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (Functionary functionary : functionaries) {
                             if (functionary.getId() == null) {
@@ -75,7 +75,7 @@ public class FunctionaryService {
                         break;
                     case Constants.ACTION_SEARCH:
                         if (functionaries == null) {
-                            throw new InvalidDataException("functionaries", ErrorCode.NOT_NULL.getCode(), functionaries.toString());
+                            throw new InvalidDataException("functionaries", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (Functionary functionary : functionaries) {
                             if (functionary.getTenantId() == null) {

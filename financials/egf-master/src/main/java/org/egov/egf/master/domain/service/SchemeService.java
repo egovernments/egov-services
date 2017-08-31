@@ -44,7 +44,7 @@ public class SchemeService {
                         break;
                     case Constants.ACTION_CREATE:
                         if (schemes == null) {
-                            throw new InvalidDataException("schemes", ErrorCode.NOT_NULL.getCode(), schemes.toString());
+                            throw new InvalidDataException("schemes", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (Scheme scheme : schemes) {
                             validator.validate(scheme, errors);
@@ -60,7 +60,7 @@ public class SchemeService {
                         break;
                     case Constants.ACTION_UPDATE:
                         if (schemes == null) {
-                            throw new InvalidDataException("schemes", ErrorCode.NOT_NULL.getCode(), schemes.toString());
+                            throw new InvalidDataException("schemes", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (Scheme scheme : schemes) {
                             if (scheme.getId() == null) {
@@ -79,7 +79,7 @@ public class SchemeService {
                         break;
                     case Constants.ACTION_SEARCH:
                         if (schemes == null) {
-                            throw new InvalidDataException("schemes", ErrorCode.NOT_NULL.getCode(), schemes.toString());
+                            throw new InvalidDataException("schemes", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (Scheme scheme : schemes) {
                             if (scheme.getTenantId() == null) {

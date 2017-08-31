@@ -9,7 +9,7 @@ import {translate} from '../../../common/common';
 import Api from '../../../../api/api';
 import jp from "jsonpath";
 import UiButton from '../../../framework/components/UiButton';
-import {fileUpload, getInitiatorPosition} from '../../../framework/utility/utility';
+import {fileUpload, getInitiatorPosition, getFullDate} from '../../../framework/utility/utility';
 import Dialog from 'material-ui/Dialog';
 import axios from "axios";
 import {
@@ -36,7 +36,8 @@ class Report extends Component {
       open: false,
       serviceRequest: {},
       stepIndex: 0,
-      RequestInfo: {}
+      RequestInfo: {},
+      documents: []
     }
   }
 
@@ -212,7 +213,7 @@ class Report extends Component {
     var query = {
         [autoObject.autoCompleteUrl.split("?")[1].split("=")[0]]: value
     };
-    Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].useTimestamp).then(function(res){
+    Api.commonApiPost(url, query, {}, false, specifications["wc.create"].useTimestamp).then(function(res){
         var formData = {...self.props.formData};
         for(var key in autoObject.autoFillFields) {
           _.set(formData, key, _.get(res, autoObject.autoFillFields[key]));
@@ -818,7 +819,7 @@ class Report extends Component {
     ServiceRequest.status = "CREATED";
     var BillReceiptObject = [];
     BillReceiptObject[0] = {"Bill":[]};
-    BillReceiptObject[0]["Bill"] = AllResponses[2].response.Bill;
+    BillReceiptObject[0]["Bill"] = AllResponses[1].response.Bill;
     BillReceiptObject[0]["Bill"][0]["paidBy"] = BillReceiptObject[0]["Bill"][0].payeeName;
     BillReceiptObject[0]["tenantId"] = localStorage.getItem("tenantId")
     BillReceiptObject[0]["instrument"] = {"tenantId": localStorage.getItem("tenantId"),"amount": 20,"instrumentType":{"name":"Cash"}}
@@ -846,6 +847,17 @@ class Report extends Component {
     })
   }
 
+  updateRequest = (ServiceRequest) => {
+    let self = this;
+    self.props.setLoadingStatus("loading");
+    Api.commonApiPost("/citizen-services/v1/requests/_create", {}, {"serviceReq": ServiceRequest}, null, true, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
+      self.generateReceipt(res);
+    }, function(err){
+      self.props.setLoadingStatus("hide");
+      self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+    })
+  }
+
   pay = () => {
 
     //Create SR
@@ -858,15 +870,16 @@ class Report extends Component {
     let self = this;
 
     var ConnectionObject = {...self.props.formData};
-    var DemandBillQuery = `?businessService=WC&tenantId=${localStorage.getItem("tenantId")}&consumerCode=`;
+
+    var DemandBillQuery = `?businessService=CS&tenantId=${localStorage.getItem("tenantId")}&consumerCode=`;
     let DemandRequest = {};
     DemandRequest["Demands"] = self.props.metaData["wc.create"].feeDetails;
     DemandRequest["Demands"][0].tenantId = localStorage.getItem("tenantId");
     DemandRequest["Demands"][0].consumerCode = "";
     DemandRequest["Demands"][0].owner.id = JSON.parse(localStorage.userRequest).id;
-    DemandRequest["Demands"][0].taxPeriodFrom = 1301596200000;
-    DemandRequest["Demands"][0].taxPeriodTo = 1317321000000;
-    DemandRequest["Demands"][0].demandDetails[0].taxHeadMasterCode = "WATERCHARGE";
+    DemandRequest["Demands"][0].taxPeriodFrom = 1491004800000;
+    DemandRequest["Demands"][0].taxPeriodTo = 1522540799000;
+    DemandRequest["Demands"][0].demandDetails[0].taxHeadMasterCode = "WC_NO_DUE_CERT_CHAR";
     var ServiceRequest = {
        "tenantId": localStorage.getItem("tenantId"),
        "serviceRequestId": null,
@@ -892,17 +905,12 @@ class Report extends Component {
        "status": "CREATED",
        "assignedTo": "assignedTo",
        "comments": [],
+       "moduleObject": ConnectionObject,
        "backendServiceDetails": [{
           "url": "http://billing-service:8080/billing-service/demand/_create?tenantId=" + localStorage.tenantId,
           "request": {
             RequestInfo: self.state.RequestInfo,
             ...DemandRequest
-          }
-       }, {
-          "url": "http://wcms-connection:8080/wcms-connection/connection/_create",
-          "request": {
-            RequestInfo: self.state.RequestInfo,
-            Connection: ConnectionObject.Connection
           }
        }, {
           "url": "http://billing-service:8080/billing-service/bill/_generate" + DemandBillQuery,
@@ -912,21 +920,36 @@ class Report extends Component {
        }]
     };
 
-    self.props.setLoadingStatus("loading");
-    Api.commonApiPost("/citizen-services/v1/requests/_create", {}, {"serviceReq": ServiceRequest}, null, true, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
-      self.generateReceipt(res);
-    }, function(err){
-      self.props.setLoadingStatus("hide");
-      self.props.toggleSnackbarAndSetText(true, err.message, false, true);
-    })
-
-    //Mock Data
-    /*let self = this;
-    self.handleClose();
-    self.setState({
-      stepIndex: 1
-    });
-    $('html, body').animate({ scrollTop: 0 }, 'fast');*/
+    if(self.state.documents && self.state.documents.length) {
+      let _docs = [];
+      let documents = self.state.documents;
+      let counter = documents.length, breakOut = 0;
+      for(let i=0; i<documents.length; i++) {
+        fileUpload(documents[i], "wc", function(err, res) {
+          if(breakOut == 1) return;
+          if(err) {
+            breakOut = 1;
+            self.props.setLoadingStatus('hide');
+            self.props.toggleSnackbarAndSetText(true, err, false, true);
+          } else {
+            _docs.push({
+              from: JSON.parse(localStorage.userRequest).userName,
+              timeStamp: new Date().getTime(),
+              filePath: res.files[0].fileStoreId,
+              name: documents[i].name
+            })
+            counter--;
+            if(counter == 0 && breakOut == 0) {
+                if(!ServiceRequest.documents) ServiceRequest.documents = [];
+                ServiceRequest.documents = ServiceRequest.documents.concat(_docs);
+                self.updateRequest(ServiceRequest);
+            }
+          }
+        })
+      }
+    } else {
+      self.updateRequest(ServiceRequest);
+    }
   }
 
   generatePDF = () => {
@@ -977,6 +1000,22 @@ class Report extends Component {
                                               addNewCard={addNewCard}
                                               removeCard={removeCard}
                                               autoComHandler={autoComHandler}/>}
+                    <Card className="uiCard">
+                      <CardHeader style={{paddingTop:4,paddingBottom:0}} title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Documents Upload</div>}/>}
+                      <CardText>
+                        <Grid>
+                          <Row>
+                            <Col xs={12} md={4}>
+                              <input multiple type="file" style={{"marginTop":"40px"}} onChange={(e) => {
+                                    self.setState({
+                                      documents: e.target.files || []
+                                    })
+                              }}/>
+                            </Col>
+                          </Row>
+                        </Grid>
+                      </CardText>
+                    </Card>
                     <div style={{"textAlign": "center"}}>
                       <br/>
                       <RaisedButton disabled={!isFormValid} label="Create" primary={true} onClick={() => {self.openPaymentPopup()}}/>
@@ -987,7 +1026,7 @@ class Report extends Component {
           return (
             <Row id="allCertificates">
                 <Col md={6} mdOffset={3}>
-                      <Card id="DownloadReceipt">
+                      {self.state.Receipt && self.state.Receipt[0] ? <Card id="DownloadReceipt">
                         <CardHeader title={<strong>Receipt for: Application Fee</strong>}/>
                         <CardText>
                               <Table responsive style={{fontSize:"bold"}} id="ReceiptForWcAPartOne1" bordered condensed>
@@ -1006,19 +1045,19 @@ class Report extends Component {
                                       </tr>
                                       <tr>
                                           <td style={{textAlign:"left"}}>
-                                            Receipt Number : {1234}
+                                            Receipt Number : {self.state.Receipt[0].Bill[0].billDetails[0].receiptNumber ? self.state.Receipt[0].Bill[0].billDetails[0].receiptNumber : "NA"}
                                           </td>
                                           <td style={{textAlign:"center"}}>
                                             Receipt For : Application Fee
                                           </td>
                                           <td style={{textAlign:"right"}}>
-                                            Receipt Date: 22/11/2018
+                                            Receipt Date: {getFullDate(self.state.Receipt[0].Bill[0].billDetails[0].receiptDate)}
                                           </td>
                                       </tr>
                                       <tr>
                                           <td colSpan={3} style={{textAlign:"left"}}>
-                                            Service Request Number : AX-WC-2020202<br/>
-                                            Applicant Name : 12121212<br/>
+                                            Service Request Number :{self.state.Receipt[0].Bill[0].billDetails[0].consumerCode}<br/>
+                                            Applicant Name : {self.state.Receipt[0].Bill[0].payeeName}<br/>
                                             Amount : Rs. 20<br/>
 
                                           </td>
@@ -1033,27 +1072,27 @@ class Report extends Component {
                                           <td colSpan={2}>
                                             Bill Reference No.& Date
                                           </td>
-                                          <td colSpan={6}>
+                                          <td colSpan={8}>
                                             Details
                                           </td>
                                       </tr>
                                       <tr>
                                           <td colSpan={2}>
-                                            222222 - 21/12/2013
+                                            {self.state.Receipt[0].Bill[0].billDetails[0].billNumber + "-" + getFullDate(self.state.Receipt[0].Bill[0].billDetails[0].receiptDate)}
 
                                           </td>
-                                          <td colSpan={6}>
+                                          <td colSpan={8}>
                                             Application for New Water Connection
                                           </td>
 
                                       </tr>
 
                                       <tr>
-                                          <td colSpan={8}>Amount in words: Rs. Twenty only</td>
+                                          <td colSpan={10}>Amount in words: Rs. Twenty only</td>
 
                                       </tr>
                                       <tr>
-                                        <td colSpan={8}>
+                                        <td colSpan={10}>
                                           Payment Mode
                                         </td>
                                       </tr>
@@ -1070,7 +1109,7 @@ class Report extends Component {
                                           <td>
                                             Transaction Date
                                           </td>
-                                        {true && <td colSpan={4}>
+                                        {true && <td colSpan={6}>
                                                               Bank Name
                                                             </td>}
                                       </tr>
@@ -1079,20 +1118,20 @@ class Report extends Component {
                                           Online
                                         </td>
                                         <td>
-                                          20
+                                          {self.state.Receipt[0].Bill[0].billDetails[0].totalAmount}
                                         </td>
-                                        <td>23232323</td>
+                                        {self.state.Receipt[0].instrument.instrumentType.name=="Cash" ? <td> NA </td> : <td> {self.state.Receipt[0].transactionId} </td>}
 
-                                        <td>22/11/2018</td>
+                                        {self.state.Receipt[0].instrument.instrumentType.name=="Cash" ? <td> NA </td> : <td> {getFullDate(self.state.Receipt[0].Bill[0].billDetails[0].receiptDate)}</td>}
 
-                                        <td colSpan={4}>
-                                          IDBI
+                                        <td colSpan={6}>
+                                          {self.state.Receipt[0].instrument.instrumentType.name == "Cash" ? "NA" : self.state.Receipt[0].instrument.bank.name}
                                         </td>
                                       </tr>
                                   </tbody>
                               </Table>
                         </CardText>
-                      </Card>
+                      </Card> : ""}
                       <br/>
                       <div style={{"textAlign": "center"}}>
                         <RaisedButton primary={true} label="Download" onClick={self.generatePDF}/>

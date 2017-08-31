@@ -75,8 +75,6 @@ public class RecoveryService {
             if (errors.hasErrors()) {
                 throw new CustomBindException(errors);
             }
-            for (Recovery b : recoveries) {
-            }
 
         } catch (CustomBindException e) {
 
@@ -96,7 +94,7 @@ public class RecoveryService {
                         break;
                     case Constants.ACTION_CREATE:
                         if (recoveries == null) {
-                            throw new InvalidDataException("recoveries", ErrorCode.NOT_NULL.getCode(), recoveries.toString());
+                            throw new InvalidDataException("recoveries", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (Recovery recovery : recoveries) {
                             validator.validate(recovery, errors);
@@ -112,7 +110,7 @@ public class RecoveryService {
                         break;
                     case Constants.ACTION_UPDATE:
                         if (recoveries == null) {
-                            throw new InvalidDataException("recoveries", ErrorCode.NOT_NULL.getCode(), recoveries.toString());
+                            throw new InvalidDataException("recoveries", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (Recovery recovery : recoveries) {
                             if (recovery.getId() == null) {
@@ -131,7 +129,7 @@ public class RecoveryService {
                         break;
                     case Constants.ACTION_SEARCH:
                         if (recoveries == null) {
-                            throw new InvalidDataException("recoveries", ErrorCode.NOT_NULL.getCode(), recoveries.toString());
+                            throw new InvalidDataException("recoveries", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (Recovery recovery : recoveries) {
                             if (recovery.getTenantId() == null) {

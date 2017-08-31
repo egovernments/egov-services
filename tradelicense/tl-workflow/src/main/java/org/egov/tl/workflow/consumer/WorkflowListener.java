@@ -98,6 +98,9 @@ public class WorkflowListener {
 
 		HashMap<String, Object> tlWorkflowEnrichedMap = new HashMap<>();
 		TradeLicenseRequest request;
+		
+		System.out.println("tlRequestMap" + tlRequestMap );
+		
 		if (tlRequestMap.get("tradelicense-new-create") != null) {
 
 			request = objectMapper.convertValue(tlRequestMap.get("tradelicense-new-create"), TradeLicenseRequest.class);

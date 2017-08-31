@@ -41,7 +41,7 @@ public class FinancialStatusService {
                     case Constants.ACTION_CREATE:
                         if (financialstatuses == null) {
                             throw new InvalidDataException("financialstatuses", ErrorCode.NOT_NULL.getCode(),
-                                    financialstatuses.toString());
+                                    null);
                         }
                         for (FinancialStatus financialStatus : financialstatuses) {
                             validator.validate(financialStatus, errors);
@@ -58,7 +58,7 @@ public class FinancialStatusService {
                     case Constants.ACTION_UPDATE:
                         if (financialstatuses == null) {
                             throw new InvalidDataException("financialstatuses", ErrorCode.NOT_NULL.getCode(),
-                                    financialstatuses.toString());
+                                    null);
                         }
                         for (FinancialStatus financialStatus : financialstatuses) {
                             if (financialStatus.getId() == null) {
@@ -78,7 +78,7 @@ public class FinancialStatusService {
                     case Constants.ACTION_SEARCH:
                         if (financialstatuses == null) {
                             throw new InvalidDataException("financialstatuses", ErrorCode.NOT_NULL.getCode(),
-                                    financialstatuses.toString());
+                                    null);
                         }
                         for (FinancialStatus financialstatus : financialstatuses) {
                             if (financialstatus.getTenantId() == null) {

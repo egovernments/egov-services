@@ -1,6 +1,7 @@
 package org.egov.property.repository.builder;
 
 import java.util.List;
+import java.util.Set;
 
 import org.egov.property.utility.ConstantUtility;
 import org.json.simple.JSONObject;
@@ -48,7 +49,7 @@ public class SearchMasterBuilder {
 	public static String buildSearchQuery(String tableName, String tenantId, Integer[] ids, String name,
 			String nameLocal, String code, Boolean active, Boolean isResidential, Integer orderNumber, String category,
 			Integer pageSize, Integer offSet, List<Object> preparedStatementValues, Integer fromYear, Integer toYear,
-			Integer year, String parent, String service) {
+			Integer year, String parent, List<String> service) {
 
 		StringBuffer searchSql = new StringBuffer();
 		String defaultService = "common";// TODO read from property file
@@ -90,24 +91,8 @@ public class SearchMasterBuilder {
 		}
 
 		if (tableName.equalsIgnoreCase(ConstantUtility.USAGE_TYPE_TABLE_NAME)) {
-
-			if (service != null) {
-				if (!service.isEmpty()) {
-					if (!service.equalsIgnoreCase(defaultService)) {
-						searchSql.append("AND lower(service) in(LOWER(?),LOWER(?)) ");
-						preparedStatementValues.add(service);
-						preparedStatementValues.add(defaultService);
-					} else {
-						searchSql.append("AND lower(service)=LOWER(?) ");
-						preparedStatementValues.add(defaultService);
-					}
-
-				}
-
-			} else {
-				searchSql.append("AND lower(service)=LOWER(?) ");
-				preparedStatementValues.add(defaultService);
-			}
+			String queryForService = getSearchQueryForStrings(service);
+			searchSql.append("AND lower(service) IN (" + queryForService);
 		}
 
 		JSONObject dataSearch = new JSONObject();
@@ -164,6 +149,20 @@ public class SearchMasterBuilder {
 
 		return searchSql.toString();
 
+	}
+
+	private static String getSearchQueryForStrings(List<String> service) {
+
+		StringBuilder query = new StringBuilder();
+		if (!service.isEmpty()) {
+
+			String[] list = service.toArray(new String[service.size()]);
+			query.append("'" + list[0].toLowerCase() + "'");
+			for (int i = 1; i < service.size(); i++) {
+				query.append("," + "'" + list[i] + "'");
+			}
+		}
+		return query.append(")").toString();
 	}
 
 	@SuppressWarnings("unchecked")

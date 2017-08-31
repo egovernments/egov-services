@@ -172,7 +172,7 @@ specifications = require(`../../../../framework/specs/collection/transaction/col
 //   if ((jsonPath == "businessService") && ((value != "") || (value != null))){
 //     if((jsonPath=="consumerCode") && ((value == "") || (value == "null"))){
 //       console.log("Hi");
-//        return false; 
+//        return false;
 //     }
 //     else {
 //       console.log("Hello");

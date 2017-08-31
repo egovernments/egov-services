@@ -48,7 +48,7 @@ public class AccountCodePurposeService {
                     case ACTION_CREATE:
                         if (accountcodepurposes == null) {
                             throw new InvalidDataException("accountcodepurposes", ErrorCode.NOT_NULL.getCode(),
-                                    accountcodepurposes.toString());
+                                    null);
                         }
                         for (AccountCodePurpose accountCodePurpose : accountcodepurposes) {
                             validator.validate(accountCodePurpose, errors);
@@ -64,7 +64,7 @@ public class AccountCodePurposeService {
                     case ACTION_UPDATE:
                         if (accountcodepurposes == null) {
                             throw new InvalidDataException("accountcodepurposes", ErrorCode.NOT_NULL.getCode(),
-                                    accountcodepurposes.toString());
+                                    null);
                         }
                         for (AccountCodePurpose accountCodePurpose : accountcodepurposes) {
                             if (accountCodePurpose.getId() == null)
@@ -84,7 +84,7 @@ public class AccountCodePurposeService {
                     case Constants.ACTION_SEARCH:
                         if (accountcodepurposes == null) {
                             throw new InvalidDataException("accountcodepurposes", ErrorCode.NOT_NULL.getCode(),
-                                    accountcodepurposes.toString());
+                                    null);
                         }
                         for (AccountCodePurpose accountcodepurpose : accountcodepurposes) {
                             if (accountcodepurpose.getTenantId() == null) {

@@ -40,46 +40,14 @@
 
 package org.egov.collection.service;
 
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.lang3.StringUtils;
-import org.egov.collection.config.ApplicationProperties;
 import org.egov.collection.config.CollectionServiceConstants;
 import org.egov.collection.exception.CustomException;
-import org.egov.collection.model.AuditDetails;
-import org.egov.collection.model.Instrument;
-import org.egov.collection.model.PositionSearchCriteria;
-import org.egov.collection.model.PositionSearchCriteriaWrapper;
-import org.egov.collection.model.ReceiptSearchCriteria;
-import org.egov.collection.model.TransactionType;
+import org.egov.collection.model.*;
 import org.egov.collection.model.enums.CollectionType;
 import org.egov.collection.model.enums.ReceiptStatus;
-import org.egov.collection.repository.BillingServiceRepository;
-import org.egov.collection.repository.BusinessDetailsRepository;
-import org.egov.collection.repository.ChartOfAccountsRepository;
-import org.egov.collection.repository.IdGenRepository;
-import org.egov.collection.repository.InstrumentRepository;
-import org.egov.collection.repository.ReceiptRepository;
-import org.egov.collection.web.contract.Bill;
-import org.egov.collection.web.contract.BillAccountDetail;
-import org.egov.collection.web.contract.BillDetail;
-import org.egov.collection.web.contract.BillResponse;
-import org.egov.collection.web.contract.BusinessDetailsRequestInfo;
-import org.egov.collection.web.contract.BusinessDetailsResponse;
-import org.egov.collection.web.contract.ChartOfAccount;
-import org.egov.collection.web.contract.CollectionConfigGetRequest;
-import org.egov.collection.web.contract.Purpose;
-import org.egov.collection.web.contract.Receipt;
-import org.egov.collection.web.contract.ReceiptReq;
-import org.egov.collection.web.contract.WorkflowDetailsRequest;
+import org.egov.collection.repository.*;
+import org.egov.collection.web.contract.*;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
 import org.egov.common.contract.request.User;
@@ -89,14 +57,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
 @Service
 public class ReceiptService {
 
 	public static final Logger LOGGER = LoggerFactory
 			.getLogger(ReceiptService.class);
-
-	@Autowired
-	private ApplicationProperties applicationProperties;
 
 	@Autowired
 	private ReceiptRepository receiptRepository;

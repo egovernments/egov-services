@@ -47,7 +47,7 @@ ReportDefinitions:
          and  demand.consumercode=prop.hscno 
          and demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE
          fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
-         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid = 'mh.roha') and prop.tenantid='mh.roha' group by hscno,state,pipesize,consumerName, usage  )
+         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid) and prop.tenantid=$tenantid group by hscno,state,pipesize,consumerName, usage  )
          UNION
          (select prop.hscno as hscno,prop.username as consumerName,
          prop.pipesize as pipesize,ut.data::jsonb->>'name'  as usage,
@@ -60,7 +60,7 @@ ReportDefinitions:
          and  demand.consumercode=prop.hscno 
          and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE
           fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
-         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid = 'mh.roha') and prop.tenantid='mh.roha' 
+         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid ) and prop.tenantid=$tenantid
          group by hscno,state,pipesize,consumerName, usage) )result order by hscno asc;
 
 - reportName: DemandRegister
@@ -193,7 +193,7 @@ ReportDefinitions:
          and  demand.consumercode=prop.hscno 
          and demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE
          fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
-         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid = 'mh.roha') and prop.tenantid='mh.roha' group by hscno,state,pipesize,consumerName, usage  )
+         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid) and prop.tenantid=$tenantid group by hscno,state,pipesize,consumerName, usage  )
          UNION
          (select count(prop.hscno) as countofconsumerno,prop.username as consumerName,
          prop.pipesize as pipesize,ut.data::jsonb->>'name'  as usage,
@@ -203,6 +203,6 @@ ReportDefinitions:
          and  NULLIF(prop.usagetype, '')::int  = ut.id and  demand.consumercode=prop.hscno 
          and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE
          fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
-         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid = 'mh.roha') and prop.tenantid='mh.roha' 
+         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid ) and prop.tenantid=$tenantid 
          group by hscno,state,pipesize,consumerName, usage))result ;
   

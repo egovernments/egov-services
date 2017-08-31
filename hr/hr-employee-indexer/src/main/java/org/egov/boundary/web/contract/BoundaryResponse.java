@@ -3,20 +3,14 @@ package org.egov.boundary.web.contract;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.boundary.persistence.entity.Boundary;
+import lombok.*;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.egov.common.contract.response.ResponseInfo;
 
+@Data
 @Builder
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class BoundaryResponse {

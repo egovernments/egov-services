@@ -45,6 +45,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.demand.model.TaxPeriod;
+import org.egov.demand.model.enums.PeriodCycle;
 import org.egov.demand.repository.TaxPeriodRepository;
 import org.egov.demand.web.contract.TaxPeriodCriteria;
 import org.slf4j.Logger;
@@ -95,22 +96,25 @@ public class TaxPeriodQueryBuilder {
             selectQuery.append(" and taxperiod.service IN " + getQueryForCollection(service));
         }
         
-        if(taxPeriodCriteria.getPeriodCycle() != null){
+        PeriodCycle periodCycle = taxPeriodCriteria.getPeriodCycle();
+        if(periodCycle != null){
         	 selectQuery.append(" and taxperiod.periodcycle = ? ");
-             preparedStatementValues.add(taxPeriodCriteria.getPeriodCycle().toString());
+             preparedStatementValues.add(periodCycle.toString());
         }
         
 		if (taxPeriodCriteria.getFromDate() != null && taxPeriodCriteria.getToDate() != null) {
-			if ((service != null && !service.isEmpty() && service.size() == 1)) {
+			if (service != null && !service.isEmpty() && service.size() == 1 && periodCycle!=null) {
 				selectQuery.append(
 						" AND (fromdate >=  ( SELECT fromdate FROM egbs_taxperiod WHERE tenantId =? AND ( ? BETWEEN fromdate AND  todate) "
-								+ " AND service IN " + getQueryForCollection(service)
-								+ ") AND todate <= ( SELECT todate FROM egbs_taxperiod WHERE tenantId = ? AND (? BETWEEN fromdate AND  todate) "
-								+ " AND service IN " + getQueryForCollection(service) + "))");
+								+ " AND service IN " + getQueryForCollection(service) +" AND periodcycle=?)"
+								+ " AND todate <= ( SELECT todate FROM egbs_taxperiod WHERE tenantId = ? AND (? BETWEEN fromdate AND  todate) "
+								+ " AND service IN " + getQueryForCollection(service) + " AND periodcycle=?))");
 				preparedStatementValues.add(tenantId);
 				preparedStatementValues.add(taxPeriodCriteria.getFromDate());
+				preparedStatementValues.add(periodCycle.toString());
 				preparedStatementValues.add(tenantId);
 				preparedStatementValues.add(taxPeriodCriteria.getToDate());
+				preparedStatementValues.add(periodCycle.toString());
 			} else {
 				if (taxPeriodCriteria.getFromDate() != null) {
 					selectQuery.append(" and taxperiod.fromdate >= ? ");

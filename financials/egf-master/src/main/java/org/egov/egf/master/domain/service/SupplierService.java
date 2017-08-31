@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
+import org.egov.common.domain.exception.ErrorCode;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.Bank;
@@ -18,8 +19,8 @@ import org.egov.egf.master.web.requests.SupplierRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.SmartValidator;
 
@@ -39,39 +40,57 @@ public class SupplierService {
 
 	private BindingResult validate(List<Supplier> suppliers, String method, BindingResult errors) {
 
-		try {
-			switch (method) {
-			case Constants.ACTION_VIEW:
-				// validator.validate(supplierContractRequest.getSupplier(),
-				// errors);
-				break;
-			case Constants.ACTION_CREATE:
-				Assert.notNull(suppliers, "Suppliers to create must not be null");
-				for (Supplier supplier : suppliers) {
-					validator.validate(supplier, errors);
-				}
-				break;
-			case Constants.ACTION_UPDATE:
-				Assert.notNull(suppliers, "Suppliers to update must not be null");
-				for (Supplier supplier : suppliers) {
-                                        Assert.notNull(supplier.getId(), "Supplier ID to update must not be null");
-					validator.validate(supplier, errors);
-				}
-				break;
-                        case Constants.ACTION_SEARCH:
-                                Assert.notNull(suppliers, "suppliers to search must not be null");
-                                for (Supplier supplier : suppliers) {
-                                        Assert.notNull(supplier.getTenantId(), "TenantID must not be null for search");
-                                }
-                                break;
-			default:
-
-			}
-		} catch (IllegalArgumentException e) {
+                try {
+                    switch (method) {
+                    case Constants.ACTION_VIEW:
+                        // validator.validate(supplierContractRequest.getSupplier(),
+                        // errors);
+                        break;
+                    case Constants.ACTION_CREATE:
+                        if (suppliers == null) {
+                            throw new InvalidDataException("suppliers", ErrorCode.NOT_NULL.getCode(), suppliers.toString());
+                        }
+                        for (Supplier supplier : suppliers) {
+                            validator.validate(supplier, errors);
+                            if (!supplierRepository.uniqueCheck("code", supplier)) {
+                                errors.addError(new FieldError("supplier", "name", supplier.getName(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                            }
+                        }
+                        break;
+                    case Constants.ACTION_UPDATE:
+                        if (suppliers == null) {
+                            throw new InvalidDataException("suppliers", ErrorCode.NOT_NULL.getCode(), suppliers.toString());
+                        }
+                        for (Supplier supplier : suppliers) {
+                            if (supplier.getId() == null) {
+                                throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), supplier.getId());
+                            }
+                            validator.validate(supplier, errors);
+                            if (!supplierRepository.uniqueCheck("name", supplier)) {
+                                errors.addError(new FieldError("supplier", "name", supplier.getName(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                            }
+                        }
+                        break;
+                    case Constants.ACTION_SEARCH:
+                        if (suppliers == null) {
+                            throw new InvalidDataException("suppliers", ErrorCode.NOT_NULL.getCode(), suppliers.toString());
+                        }
+                        for (Supplier supplier : suppliers) {
+                            if (supplier.getTenantId() == null) {
+                                throw new InvalidDataException("tenantId", ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
+                                        supplier.getTenantId());
+                            }
+                        }
+                        break;
+                    default:
+        
+                    }
+                } catch (IllegalArgumentException e) {
 			errors.addError(new ObjectError("Missing data", e.getMessage()));
 		}
 		return errors;
-
 	}
 
 	public List<Supplier> fetchRelated(List<Supplier> suppliers) {

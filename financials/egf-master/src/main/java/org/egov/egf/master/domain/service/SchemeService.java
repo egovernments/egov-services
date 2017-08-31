@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
+import org.egov.common.domain.exception.ErrorCode;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.Fund;
@@ -16,8 +17,8 @@ import org.egov.egf.master.web.requests.SchemeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.SmartValidator;
 
@@ -35,39 +36,65 @@ public class SchemeService {
 
 	private BindingResult validate(List<Scheme> schemes, String method, BindingResult errors) {
 
-		try {
-			switch (method) {
-			case Constants.ACTION_VIEW:
-				// validator.validate(schemeContractRequest.getScheme(),
-				// errors);
-				break;
-			case Constants.ACTION_CREATE:
-				Assert.notNull(schemes, "Schemes to create must not be null");
-				for (Scheme scheme : schemes) {
-					validator.validate(scheme, errors);
-				}
-				break;
-			case Constants.ACTION_UPDATE:
-				Assert.notNull(schemes, "Schemes to update must not be null");
-				for (Scheme scheme : schemes) {
-				        Assert.notNull(scheme.getId(), "Scheme ID to update must not be null");
-					validator.validate(scheme, errors);
-				}
-				break;
-                        case Constants.ACTION_SEARCH:
-                                Assert.notNull(schemes, "Schemes to search must not be null");
-                                for (Scheme scheme : schemes) {
-                                        Assert.notNull(scheme.getTenantId(), "TenantID must not be null for search");
-                                }
-                                break;
-			default:
-
-			}
-		} catch (IllegalArgumentException e) {
+                try {
+                    switch (method) {
+                    case Constants.ACTION_VIEW:
+                        // validator.validate(schemeContractRequest.getScheme(),
+                        // errors);
+                        break;
+                    case Constants.ACTION_CREATE:
+                        if (schemes == null) {
+                            throw new InvalidDataException("schemes", ErrorCode.NOT_NULL.getCode(), schemes.toString());
+                        }
+                        for (Scheme scheme : schemes) {
+                            validator.validate(scheme, errors);
+                            if (!schemeRepository.uniqueCheck("name", scheme)) {
+                                errors.addError(new FieldError("scheme", "name", scheme.getName(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                            }
+                            if (!schemeRepository.uniqueCheck("code", scheme)) {
+                                errors.addError(new FieldError("scheme", "code", scheme.getCode(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                            }
+                        }
+                        break;
+                    case Constants.ACTION_UPDATE:
+                        if (schemes == null) {
+                            throw new InvalidDataException("schemes", ErrorCode.NOT_NULL.getCode(), schemes.toString());
+                        }
+                        for (Scheme scheme : schemes) {
+                            if (scheme.getId() == null) {
+                                throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), scheme.getId());
+                            }
+                            validator.validate(scheme, errors);
+                            if (!schemeRepository.uniqueCheck("name", scheme)) {
+                                errors.addError(new FieldError("scheme", "name", scheme.getName(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                            }
+                            if (!schemeRepository.uniqueCheck("code", scheme)) {
+                                errors.addError(new FieldError("scheme", "code", scheme.getCode(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                            }
+                        }
+                        break;
+                    case Constants.ACTION_SEARCH:
+                        if (schemes == null) {
+                            throw new InvalidDataException("schemes", ErrorCode.NOT_NULL.getCode(), schemes.toString());
+                        }
+                        for (Scheme scheme : schemes) {
+                            if (scheme.getTenantId() == null) {
+                                throw new InvalidDataException("tenantId", ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
+                                        scheme.getTenantId());
+                            }
+                        }
+                        break;
+                    default:
+        
+                    }
+                } catch (IllegalArgumentException e) {
 			errors.addError(new ObjectError("Missing data", e.getMessage()));
 		}
 		return errors;
-
 	}
 
 	public List<Scheme> fetchRelated(List<Scheme> schemes) {

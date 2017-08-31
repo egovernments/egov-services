@@ -1,126 +1,705 @@
 {
-   "tradelicense": {
-      "mappings": {
-         "tradelicense_type": {
-            "properties": {
-               "active": {
-                  "type": "boolean"
-               },
-               "adhaarNumber": {
-                  "type": "string"
-               },
-               "adminWardId": {
-                  "type": "long"
-               },
-               "applicationDate": {
-                  "type": "string"
-               },
-               "applicationNumber": {
-                  "type": "string"
-               },
-               "applicationType": {
-                  "type": "string"
-               },
-               "auditDetails": {
-                  "properties": {
-                     "createdTime": {
-                        "type": "long"
-                     }
-                  }
-               },
-               "categoryId": {
-                  "type": "long"
-               },
-               "emailId": {
-                  "type": "string"
-               },
-               "expiryDate": {
-                  "type": "string"
-               },
-               "fatherSpouseName": {
-                  "type": "string"
-               },
-               "feeDetails": {
-                  "properties": {
-                     "amount": {
-                        "type": "double"
-                     },
-                     "financialYear": {
-                        "type": "string"
-                     },
-                     "id": {
-                        "type": "long"
-                     },
-                     "licenseId": {
-                        "type": "long"
-                     },
-                     "paid": {
-                        "type": "boolean"
-                     }
-                  }
-               },
-               "id": {
-                  "type": "long"
-               },
-               "isLegacy": {
-                  "type": "boolean"
-               },
-               "licenseNumber": {
-                  "type": "string"
-               },
-               "licenseValidFromDate": {
-                  "type": "string"
-               },
-               "localityId": {
-                  "type": "long"
-               },
-               "mobileNumber": {
-                  "type": "string"
-               },
-               "oldLicenseNumber": {
-                  "type": "string"
-               },
-               "ownerAddress": {
-                  "type": "string"
-               },
-               "ownerName": {
-                  "type": "string"
-               },
-               "ownerShipType": {
-                  "type": "string"
-               },
-               "propertyAssesmentNo": {
-                  "type": "string"
-               },
-               "quantity": {
-                  "type": "double"
-               },
-               "revenueWardId": {
-                  "type": "long"
-               },
-               "subCategoryId": {
-                  "type": "long"
-               },
-               "tenantId": {
-                  "type": "string"
-               },
-               "tradeAddress": {
-                  "type": "string"
-               },
-               "tradeCommencementDate": {
-                  "type": "string"
-               },
-               "tradeTitle": {
-                  "type": "string"
-               },
-               "tradeType": {
-                  "type": "string"
-               },
-               "uomId": {
-                  "type": "long"
-               }
+  "tradelicense": {
+    "mappings": {
+      "tradelicense_type": {
+        "properties": {
+          "active": {
+            "type": "boolean"
+          },
+          "adhaarNumber": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
             }
-         }
+          },
+          "adminWardId": {
+            "type": "long"
+          },
+          "adminWardName": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "agreementDate": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "agreementNo": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "applicationDate": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "applicationNumber": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "applicationType": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "applications": {
+            "properties": {
+              "applicationDate": {
+                "type": "long"
+              },
+              "applicationNumber": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              },
+              "applicationType": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              },
+              "auditDetails": {
+                "properties": {
+                  "createdBy": {
+                    "type": "text",
+                    "fields": {
+                      "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                      }
+                    }
+                  },
+                  "createdTime": {
+                    "type": "long"
+                  },
+                  "lastModifiedBy": {
+                    "type": "text",
+                    "fields": {
+                      "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                      }
+                    }
+                  },
+                  "lastModifiedTime": {
+                    "type": "long"
+                  }
+                }
+              },
+              "feeDetails": {
+                "properties": {
+                  "amount": {
+                    "type": "float"
+                  },
+                  "applicationId": {
+                    "type": "long"
+                  },
+                  "auditDetails": {
+                    "properties": {
+                      "createdBy": {
+                        "type": "text",
+                        "fields": {
+                          "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                          }
+                        }
+                      },
+                      "createdTime": {
+                        "type": "long"
+                      },
+                      "lastModifiedBy": {
+                        "type": "text",
+                        "fields": {
+                          "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                          }
+                        }
+                      },
+                      "lastModifiedTime": {
+                        "type": "long"
+                      }
+                    }
+                  },
+                  "financialYear": {
+                    "type": "text",
+                    "fields": {
+                      "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                      }
+                    }
+                  },
+                  "id": {
+                    "type": "long"
+                  },
+                  "paid": {
+                    "type": "boolean"
+                  },
+                  "tenantId": {
+                    "type": "text",
+                    "fields": {
+                      "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                      }
+                    }
+                  }
+                }
+              },
+              "fieldInspectionReport": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              },
+              "id": {
+                "type": "long"
+              },
+              "licenseFee": {
+                "type": "float"
+              },
+              "licenseId": {
+                "type": "long"
+              },
+              "state_id": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              },
+              "status": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              },
+              "supportDocuments": {
+                "properties": {
+                  "applicationId": {
+                    "type": "long"
+                  },
+                  "auditDetails": {
+                    "properties": {
+                      "createdBy": {
+                        "type": "text",
+                        "fields": {
+                          "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                          }
+                        }
+                      },
+                      "createdTime": {
+                        "type": "long"
+                      },
+                      "lastModifiedBy": {
+                        "type": "text",
+                        "fields": {
+                          "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                          }
+                        }
+                      },
+                      "lastModifiedTime": {
+                        "type": "long"
+                      }
+                    }
+                  },
+                  "comments": {
+                    "type": "text",
+                    "fields": {
+                      "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                      }
+                    }
+                  },
+                  "documentTypeId": {
+                    "type": "long"
+                  },
+                  "documentTypeName": {
+                    "type": "text",
+                    "fields": {
+                      "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                      }
+                    }
+                  },
+                  "fileStoreId": {
+                    "type": "text",
+                    "fields": {
+                      "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                      }
+                    }
+                  },
+                  "id": {
+                    "type": "long"
+                  },
+                  "teantId": {
+                    "type": "text",
+                    "fields": {
+                      "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "auditDetails": {
+            "properties": {
+              "createdBy": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              },
+              "createdTime": {
+                "type": "long"
+              },
+              "lastModifiedBy": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              },
+              "lastModifiedTime": {
+                "type": "long"
+              }
+            }
+          },
+          "category": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "categoryId": {
+            "type": "long"
+          },
+          "emailId": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "expiryDate": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "fatherSpouseName": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "feeDetails": {
+            "properties": {
+              "amount": {
+                "type": "float"
+              },
+              "applicationId": {
+                "type": "long"
+              },
+              "auditDetails": {
+                "properties": {
+                  "createdBy": {
+                    "type": "text",
+                    "fields": {
+                      "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                      }
+                    }
+                  },
+                  "createdTime": {
+                    "type": "long"
+                  },
+                  "lastModifiedBy": {
+                    "type": "text",
+                    "fields": {
+                      "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                      }
+                    }
+                  },
+                  "lastModifiedTime": {
+                    "type": "long"
+                  }
+                }
+              },
+              "financialYear": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              },
+              "id": {
+                "type": "long"
+              },
+              "licenseId": {
+                "type": "long"
+              },
+              "paid": {
+                "type": "boolean"
+              },
+              "tenantId": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              }
+            }
+          },
+          "id": {
+            "type": "long"
+          },
+          "isLegacy": {
+            "type": "boolean"
+          },
+          "isPropertyOwner": {
+            "type": "boolean"
+          },
+          "licenseNumber": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "licenseValidFromDate": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "localityId": {
+            "type": "long"
+          },
+          "localityName": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "mobileNumber": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "oldLicenseNumber": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "ownerAddress": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "ownerName": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "ownerShipType": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "propertyAssesmentNo": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "quantity": {
+            "type": "float"
+          },
+          "remarks": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "revenueWardId": {
+            "type": "long"
+          },
+          "revenueWardName": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "status": {
+            "type": "long"
+          },
+          "subCategory": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "subCategoryId": {
+            "type": "long"
+          },
+          "supportDocuments": {
+            "properties": {
+              "applicationId": {
+                "type": "long"
+              },
+              "auditDetails": {
+                "properties": {
+                  "createdBy": {
+                    "type": "text",
+                    "fields": {
+                      "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                      }
+                    }
+                  },
+                  "createdTime": {
+                    "type": "long"
+                  },
+                  "lastModifiedBy": {
+                    "type": "text",
+                    "fields": {
+                      "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                      }
+                    }
+                  },
+                  "lastModifiedTime": {
+                    "type": "long"
+                  }
+                }
+              },
+              "comments": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              },
+              "documentTypeId": {
+                "type": "long"
+              },
+              "documentTypeName": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              },
+              "fileStoreId": {
+                "type": "long"
+              },
+              "id": {
+                "type": "long"
+              },
+              "licenseId": {
+                "type": "long"
+              },
+              "teantId": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              }
+            }
+          },
+          "tenantId": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "tradeAddress": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "tradeCommencementDate": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "tradeTitle": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "tradeType": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "uom": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "uomId": {
+            "type": "long"
+          },
+          "validityYears": {
+            "type": "long"
+          }
+        }
       }
-   }
+    }
+  }
 }

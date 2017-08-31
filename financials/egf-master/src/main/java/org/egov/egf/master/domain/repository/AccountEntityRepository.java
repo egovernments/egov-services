@@ -83,4 +83,8 @@ public class AccountEntityRepository {
 
     }
 
+    public boolean uniqueCheck(String fieldName, AccountEntity accountEntity) {
+        return accountEntityJdbcRepository.uniqueCheck(fieldName, new AccountEntityEntity().toEntity(accountEntity));
+    }
+
 }

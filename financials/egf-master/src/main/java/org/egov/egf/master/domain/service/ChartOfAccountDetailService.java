@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
+import org.egov.common.domain.exception.ErrorCode;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.AccountDetailType;
@@ -18,7 +19,6 @@ import org.egov.egf.master.web.requests.ChartOfAccountDetailRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.SmartValidator;
@@ -40,39 +40,53 @@ public class ChartOfAccountDetailService {
 	private BindingResult validate(List<ChartOfAccountDetail> chartofaccountdetails, String method,
 			BindingResult errors) {
 
-		try {
-			switch (method) {
-			case Constants.ACTION_VIEW:
-				// validator.validate(chartOfAccountDetailContractRequest.getChartOfAccountDetail(),
-				// errors);
-				break;
-			case Constants.ACTION_CREATE:
-				Assert.notNull(chartofaccountdetails, "ChartOfAccountDetails to create must not be null");
-				for (ChartOfAccountDetail chartOfAccountDetail : chartofaccountdetails) {
-					validator.validate(chartOfAccountDetail, errors);
-				}
-				break;
-			case Constants.ACTION_UPDATE:
-				Assert.notNull(chartofaccountdetails, "ChartOfAccountDetails to update must not be null");
-				for (ChartOfAccountDetail chartOfAccountDetail : chartofaccountdetails) {
-				        Assert.notNull(chartOfAccountDetail.getId(), "ChartOfAccountDetail ID to update must not be null");
-					validator.validate(chartOfAccountDetail, errors);
-				}
-				break;
-                        case Constants.ACTION_SEARCH:
-                                Assert.notNull(chartofaccountdetails, "Chartofaccountdetails to search must not be null");
-                                for (ChartOfAccountDetail chartofaccountdetail : chartofaccountdetails) {
-                                        Assert.notNull(chartofaccountdetail.getTenantId(), "TenantID must not be null for search");
-                                }
-                                break;
-			default:
-
-			}
-		} catch (IllegalArgumentException e) {
+                try {
+                    switch (method) {
+                    case Constants.ACTION_VIEW:
+                        // validator.validate(chartOfAccountDetailContractRequest.getChartOfAccountDetail(),
+                        // errors);
+                        break;
+                    case Constants.ACTION_CREATE:
+                        if (chartofaccountdetails == null) {
+                            throw new InvalidDataException("chartofaccountdetails", ErrorCode.NOT_NULL.getCode(),
+                                    chartofaccountdetails.toString());
+                        }
+                        for (ChartOfAccountDetail chartOfAccountDetail : chartofaccountdetails) {
+                            validator.validate(chartOfAccountDetail, errors);
+                        }
+                        break;
+                    case Constants.ACTION_UPDATE:
+                        if (chartofaccountdetails == null) {
+                            throw new InvalidDataException("chartofaccountdetails", ErrorCode.NOT_NULL.getCode(),
+                                    chartofaccountdetails.toString());
+                        }
+                        for (ChartOfAccountDetail chartOfAccountDetail : chartofaccountdetails) {
+                            if (chartOfAccountDetail.getId() == null) {
+                                throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
+                                        chartOfAccountDetail.getId());
+                            }
+                            validator.validate(chartOfAccountDetail, errors);
+                        }
+                        break;
+                    case Constants.ACTION_SEARCH:
+                        if (chartofaccountdetails == null) {
+                            throw new InvalidDataException("chartofaccountdetails", ErrorCode.NOT_NULL.getCode(),
+                                    chartofaccountdetails.toString());
+                        }
+                        for (ChartOfAccountDetail chartofaccountdetail : chartofaccountdetails) {
+                            if (chartofaccountdetail.getTenantId() == null) {
+                                throw new InvalidDataException("tenantId", ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
+                                        chartofaccountdetail.getTenantId());
+                            }
+                        }
+                        break;
+                    default:
+        
+                    }
+                } catch (IllegalArgumentException e) {
 			errors.addError(new ObjectError("Missing data", e.getMessage()));
 		}
 		return errors;
-
 	}
 
 	public List<ChartOfAccountDetail> fetchRelated(List<ChartOfAccountDetail> chartofaccountdetails) {

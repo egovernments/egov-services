@@ -50,6 +50,7 @@ import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.YearWiseDepreciation;
 import org.egov.asset.model.enums.KafkaTopicName;
+import org.egov.asset.model.enums.Sequence;
 import org.egov.asset.repository.AssetRepository;
 import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
@@ -93,9 +94,10 @@ public class AssetService {
 
     public AssetResponse createAsync(final AssetRequest assetRequest) {
         final Asset asset = assetRequest.getAsset();
-        asset.setCode(assetRepository.getAssetCode());
-        final Long assetId = Long.valueOf(assetRepository.getNextAssetId().longValue());
-        asset.setId(assetId);
+        
+        asset.setCode(assetCommonService.getCode("%06d", Sequence.ASSETCODESEQUENCE));
+        
+        asset.setId(assetCommonService.getNextId(Sequence.ASSETSEQUENCE));
 
         setDepriciationRateAndEnableYearWiseDepreciation(asset);
 

@@ -64,6 +64,7 @@ public class ChartOfAccountServiceTest {
 	public final void testAdd() {
 		when(accountCodePurposeRepository.findById(any(AccountCodePurpose.class))).thenReturn(getAccountCodePurpose());
 		when(chartOfAccountRepository.findById(any(ChartOfAccount.class))).thenReturn(getChartOfAccount());
+		when(chartOfAccountRepository.uniqueCheck(any(String.class), any(ChartOfAccount.class))).thenReturn(true);
 		chartOfAccounts.add(getChartOfAccount());
 		chartOfAccountService.add(chartOfAccounts, errors);
 	}
@@ -73,6 +74,7 @@ public class ChartOfAccountServiceTest {
 		when(accountCodePurposeRepository.findById(any(AccountCodePurpose.class))).thenReturn(getAccountCodePurpose());
 		when(chartOfAccountRepository.findById(any(ChartOfAccount.class))).thenReturn(getChartOfAccount());
 		chartOfAccounts.add(getChartOfAccount());
+		when(chartOfAccountRepository.uniqueCheck(any(String.class), any(ChartOfAccount.class))).thenReturn(true);
 		chartOfAccountService.update(chartOfAccounts, errors);
 	}
 

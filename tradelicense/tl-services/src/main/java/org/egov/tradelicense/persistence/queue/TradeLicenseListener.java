@@ -1,9 +1,14 @@
 package org.egov.tradelicense.persistence.queue;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.egov.tl.commons.web.contract.TradeLicenseContract;
+import org.egov.tl.commons.web.contract.TradeLicenseSearchContract;
+import org.egov.tl.commons.web.requests.TradeLicenseIndexerRequest;
 import org.egov.tl.commons.web.requests.TradeLicenseRequest;
+import org.egov.tl.commons.web.response.TradeLicenseSearchResponse;
 import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.domain.service.TradeLicenseService;
@@ -38,7 +43,7 @@ public class TradeLicenseListener {
 
 		String topic = propertiesManager.getTradeLicensePersistedTopic();
 		String key = propertiesManager.getTradeLicensePersistedKey();
-
+		TradeLicenseIndexerRequest indexerRequest;
 		if (mastersMap.get("tradelicense-legacy-create") != null) {
 
 			TradeLicenseRequest request = objectMapper.convertValue(mastersMap.get("tradelicense-legacy-create"),
@@ -51,7 +56,8 @@ public class TradeLicenseListener {
 				TradeLicense tradeLicense = tradeLicenseService.save(domain);
 			}
 			mastersMap.clear();
-			mastersMap.put("tradelicense-persisted", request);
+			indexerRequest = this.getTradeLicenseIndexerRequest(request);
+			mastersMap.put("tradelicense-persisted", indexerRequest);
 			tradeLicenseProducer.sendMessage(topic, key, mastersMap);
 		}
 		if (mastersMap.get("tradelicense-new-create") != null) {
@@ -66,7 +72,8 @@ public class TradeLicenseListener {
 				tradeLicenseService.save(domain);
 			}
 			mastersMap.clear();
-			mastersMap.put("tradelicense-persisted", request);
+			indexerRequest = this.getTradeLicenseIndexerRequest(request);
+			mastersMap.put("tradelicense-persisted", indexerRequest);
 			tradeLicenseProducer.sendMessage(topic, key, mastersMap);
 		}
 		if (mastersMap.get("tradelicense-legacy-update") != null) {
@@ -81,7 +88,8 @@ public class TradeLicenseListener {
 				tradeLicenseService.update(domain, request.getRequestInfo());
 			}
 			mastersMap.clear();
-			mastersMap.put("tradelicense-persisted", request);
+			indexerRequest = this.getTradeLicenseIndexerRequest(request);
+			mastersMap.put("tradelicense-persisted", indexerRequest);
 			tradeLicenseProducer.sendMessage(topic, key, mastersMap);
 		}
 		if (mastersMap.get("tradelicense-new-update") != null) {
@@ -96,9 +104,29 @@ public class TradeLicenseListener {
 				tradeLicenseService.update(domain, request.getRequestInfo());
 			}
 			mastersMap.clear();
-			mastersMap.put("tradelicense-persisted", request);
+			indexerRequest = this.getTradeLicenseIndexerRequest(request);
+			mastersMap.put("tradelicense-persisted", indexerRequest);
 			tradeLicenseProducer.sendMessage(topic, key, mastersMap);
 		}
+	}
+	
+	public TradeLicenseIndexerRequest getTradeLicenseIndexerRequest( TradeLicenseRequest request){
+		
+		TradeLicenseIndexerRequest indexerRequest = new TradeLicenseIndexerRequest();
+		indexerRequest.setRequestInfo( request.getRequestInfo());
+		
+		List<TradeLicenseContract> tradeLicenseContracts = request.getLicenses();
+		
+		List<TradeLicenseSearchContract> tradeLicenseSarchContracts = new ArrayList<TradeLicenseSearchContract>();
+		
+		for( TradeLicenseContract tradeLicenseContract : tradeLicenseContracts ){
+			TradeLicenseSearchResponse searchReponse = tradeLicenseService.getTradeLicense(request.getRequestInfo(), tradeLicenseContract.getTenantId(), 500, 1, 
+					null, null, new Integer[]{tradeLicenseContract.getId().intValue()},
+					null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+			tradeLicenseSarchContracts.addAll(searchReponse.getLicenses());
+		}
+		indexerRequest.setLicenses(tradeLicenseSarchContracts);
+		return indexerRequest;
 	}
 
 }

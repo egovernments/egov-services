@@ -3,8 +3,8 @@ package org.egov.tl.indexer.consumer;
 import java.io.IOException;
 import java.util.Map;
 
-import org.egov.tl.commons.web.contract.TradeLicenseContract;
-import org.egov.tl.commons.web.requests.TradeLicenseRequest;
+import org.egov.tl.commons.web.contract.TradeLicenseSearchContract;
+import org.egov.tl.commons.web.requests.TradeLicenseIndexerRequest;
 import org.egov.tl.indexer.client.JestClientEs;
 import org.egov.tl.indexer.config.PropertiesManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,10 +45,10 @@ public class TradeLicenseConsumer {
 
 		if (tradeLicenseMap.get("tradelicense-persisted") != null) {
 
-			TradeLicenseRequest request = mapper.convertValue(tradeLicenseMap.get("tradelicense-persisted"),
-					TradeLicenseRequest.class);
+			TradeLicenseIndexerRequest request = mapper.convertValue(tradeLicenseMap.get("tradelicense-persisted"),
+					TradeLicenseIndexerRequest.class);
 
-			for (TradeLicenseContract tlContract : request.getLicenses()) {
+			for (TradeLicenseSearchContract tlContract : request.getLicenses()) {
 
 				String tradeLicenseData = mapper.writeValueAsString(tlContract);
 				DocumentResult DocumentResult = client.getClient()

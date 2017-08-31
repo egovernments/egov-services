@@ -40,21 +40,13 @@
 
 package org.egov.egf.persistence.queue.contract;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
+@Data
 @Builder
 @AllArgsConstructor
-@EqualsAndHashCode
-@Getter
 @NoArgsConstructor
-@Setter
-@ToString
 public class Fund {
 
 	private Long id;
@@ -63,16 +55,22 @@ public class Fund {
 
 	private String code;
 
+	@Getter(onMethod = @__(@JsonIgnore))
 	private Character identifier;
 
+	@Getter(onMethod = @__(@JsonIgnore))
 	private Long level;
 
+	@Getter(onMethod = @__(@JsonIgnore))
 	private Fund parentId;
 
+	@Getter(onMethod = @__(@JsonIgnore))
 	private Boolean isParent;
 
+	@Getter(onMethod = @__(@JsonIgnore))
 	private Boolean active;
 
+	@Getter(onMethod = @__(@JsonIgnore))
 	private String tenantId;
 
 }

@@ -38,33 +38,27 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.indexer.model.enums;
+package org.egov.eis.indexer.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.egov.boundary.web.contract.Boundary;
+import org.egov.boundary.web.contract.BoundaryType;
 
-public enum Gender {
-	MALE("MALE"), FEMALE("FEMALE"), OTHERS("OTHERS");
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class EmployeeJurisdiction {
 
-	private String value;
+	private String id;
 
-	Gender(String value) {
-		this.value = value;
-	}
+	private Boundary boundary;
 
-	@Override
-	@JsonValue
-    public String toString() {
-        return this.name();
-    }
+	private AuditDetails auditDetails;
 
-	@JsonCreator
-	public static Gender fromValue(String passedValue) {
-		for (Gender obj : Gender.values()) {
-			if (String.valueOf(obj.value).equals(passedValue.toUpperCase())) {
-				return obj;
-			}
-		}
-		return null;
-	}
+	private TenantDetails tenantDetails;
+
 }

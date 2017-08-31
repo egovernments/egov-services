@@ -1,20 +1,18 @@
 package org.egov.eis.indexer.service;
 
-import java.net.URI;
-import java.util.List;
-
-import org.egov.boundary.persistence.entity.Boundary;
-import org.egov.boundary.persistence.entity.BoundaryType;
+import lombok.extern.slf4j.Slf4j;
+import org.egov.boundary.web.contract.Boundary;
 import org.egov.boundary.web.contract.BoundaryResponse;
-import org.egov.boundary.web.contract.BoundaryTypeResponse;
-import org.egov.common.contract.request.RequestInfo;
 import org.egov.eis.indexer.config.PropertiesManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
+
+import static org.springframework.util.ObjectUtils.isEmpty;
+
+@Slf4j
 @Service
 public class BoundaryService {
 
@@ -24,26 +22,19 @@ public class BoundaryService {
 	@Autowired
 	private RestTemplate restTemplate;
 
-	public static final Logger LOGGER = LoggerFactory.getLogger(BoundaryService.class);
-
-	public static final String BOUNDARY_SEARCH_BY_ID_QUERY_PARAM = "Boundary.id";
-
-	public static final String BOUNDARY_TYPE_SEARCH_BY_ID_QUERY_PARAM = "BoundaryType.id";
-
-	public List<Boundary> getBoundary(String ids, RequestInfo requestInfo) {
-		URI url = null;
-		BoundaryResponse boundaryResponse = null;
+	public Boundary getBoundary(Long id, String tenantId) {
+		BoundaryResponse boundaryResponse;
 		try {
-			url = new URI(propertiesManager.getEgovLocationServiceHost()
+			URI url = new URI(propertiesManager.getEgovLocationServiceHost()
 					+ propertiesManager.getEgovLocationServiceBasepath()
-					+ propertiesManager.getEgovLocationServiceBoundarySearchPath() + "?"
-					+ BOUNDARY_SEARCH_BY_ID_QUERY_PARAM + "=" + ids);
-			LOGGER.info(url.toString());
+					+ propertiesManager.getEgovLocationServiceBoundarySearchPath()
+					+ "?Boundary.tenantId=" + tenantId + "&Boundary.id=" + id);
+			log.info(url.toString());
 			boundaryResponse = restTemplate.getForObject(url, BoundaryResponse.class);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
-		return boundaryResponse.getBoundarys();
+		return isEmpty(boundaryResponse.getBoundarys()) ? null : boundaryResponse.getBoundarys().get(0);
 	}
 }

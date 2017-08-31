@@ -66,12 +66,6 @@ public class DisposalRepositoryTest {
         disposalRepository.create(disposalRequest);
     }
 
-    @Test
-    public void getNextDisposalIdTest() {
-        final Integer seqId = new Integer(6);
-        when(disposalRepository.getNextDisposalId()).thenReturn(seqId);
-    }
-
     private Disposal getDisposalFromDB() {
 
         final Disposal disposal = new Disposal();

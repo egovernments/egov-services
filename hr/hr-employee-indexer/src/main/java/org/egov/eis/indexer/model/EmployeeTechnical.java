@@ -38,55 +38,36 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.boundary.persistence.entity;
-
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+package org.egov.eis.indexer.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
+@Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-@Getter
-@Setter
-public class Boundary extends AbstractAuditable {
-
-	private static final long serialVersionUID = 5408777344136656829L;
+public class EmployeeTechnical {
 
 	private Long id;
 
-	private String name;
+	private String skill;
 
-	private Long boundaryNum;
+	private String grade;
 
-	private BoundaryType boundaryType;
+	private Integer yearOfPassing;
 
-	private Boundary parent;
+	private String remarks;
 
-	private Set<Boundary> children = new HashSet<>();
+	private List<String> documents = new ArrayList<>();
 
-	private Date fromDate;
+	private AuditDetails auditDetails;
 
-	private Date toDate;
-
-	private boolean isHistory;
-
-	private Long bndryId;
-
-	private String localName;
-
-	private Float longitude;
-
-	private Float latitude;
-
-	private String materializedPath;
-
-	private String tenantid;
+	private TenantDetails tenantDetails;
 
 }

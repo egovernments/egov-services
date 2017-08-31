@@ -40,53 +40,58 @@
 
 package org.egov.egf.persistence.queue.contract;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
+@Data
 @Builder
 @AllArgsConstructor
-@EqualsAndHashCode
-@Getter
 @NoArgsConstructor
-@Setter
-@ToString
 public class BankBranch {
 
 	private Long id;
 
+	@Getter(onMethod = @__(@JsonIgnore))
 	private Bank bank;
 
 	private String code;
 
 	private String name;
 
+	@Getter(onMethod = @__(@JsonIgnore))
 	private String address;
 
+	@Getter(onMethod = @__(@JsonIgnore))
 	private String address2;
 
+	@Getter(onMethod = @__(@JsonIgnore))
 	private String city;
 
+	@Getter(onMethod = @__(@JsonIgnore))
 	private String state;
 
+	@Getter(onMethod = @__(@JsonIgnore))
 	private String pincode;
 
+	@Getter(onMethod = @__(@JsonIgnore))
 	private String phone;
 
+	@Getter(onMethod = @__(@JsonIgnore))
 	private String fax;
 
+	@Getter(onMethod = @__(@JsonIgnore))
 	private String contactPerson;
 
+	@Getter(onMethod = @__(@JsonIgnore))
 	private Boolean active;
 
+	@Getter(onMethod = @__(@JsonIgnore))
 	private String description;
 
+	@Getter(onMethod = @__(@JsonIgnore))
 	private String micr;
 
+	@Getter(onMethod = @__(@JsonIgnore))
 	private String tenantId;
 
 }

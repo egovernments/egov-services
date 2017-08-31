@@ -38,19 +38,34 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.boundary.persistence.entity;
+package org.egov.eis.indexer.model;
 
-import java.io.Serializable;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import lombok.Getter;
-import lombok.Setter;
+import java.util.ArrayList;
+import java.util.List;
 
-@Getter
-@Setter
-public abstract class AbstractPersistable<PK extends Serializable> implements Serializable {
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class EmployeeTest {
 
-	private static final long serialVersionUID = 1378351558791631842L;
+	private Long id;
 
-	private Long version;
-	
+	private String test;
+
+	private Integer yearOfPassing;
+
+	private String remarks;
+
+	private List<String> documents = new ArrayList<>();
+
+	private AuditDetails auditDetails;
+
+	private TenantDetails tenantDetails;
+
 }

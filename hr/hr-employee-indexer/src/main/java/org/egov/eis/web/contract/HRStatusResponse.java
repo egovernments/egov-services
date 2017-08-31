@@ -38,33 +38,26 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.indexer.model.enums;
+package org.egov.eis.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
+import org.egov.common.contract.response.ResponseInfo;
+import org.egov.eis.model.HRStatus;
 
-public enum MaritalStatus {
-	MARRIED("MARRIED"), UNMARRIED("UNMARRIED"), WIDOW("WIDOW"), WIDOWER("WIDOWER"), DIVORCED("DIVORCED");
+import java.util.ArrayList;
+import java.util.List;
 
-	private String value;
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class HRStatusResponse {
 
-	MaritalStatus(String value) {
-		this.value = value;
-	}
+	@JsonProperty("ResponseInfo")
+	private ResponseInfo responseInfo;
 
-	@Override
-	@JsonValue
-    public String toString() {
-        return name();
-    }
+	@JsonProperty("HRStatus")
+	private List<HRStatus> hrStatus = new ArrayList<HRStatus>();
 
-	@JsonCreator
-	public static MaritalStatus fromValue(String passedValue) {
-		for (MaritalStatus obj : MaritalStatus.values()) {
-			if (String.valueOf(obj.value).equals(passedValue.toUpperCase())) {
-				return obj;
-			}
-		}
-		return null;
-	}
 }

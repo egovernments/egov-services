@@ -10,6 +10,7 @@ import org.egov.asset.contract.AssetCategoryResponse;
 import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.AssetCategoryCriteria;
 import org.egov.asset.model.enums.KafkaTopicName;
+import org.egov.asset.model.enums.Sequence;
 import org.egov.asset.repository.AssetCategoryRepository;
 import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
@@ -55,10 +56,14 @@ public class AssetCategoryService {
     public AssetCategoryResponse createAsync(final AssetCategoryRequest assetCategoryRequest) {
 
         final AssetCategory assetCategory = assetCategoryRequest.getAssetCategory();
-
+        
         assetCategory.setDepreciationRate(assetCommonService.getDepreciationRate(assetCategory.getDepreciationRate()));
-        assetCategory.setCode(assetCategoryRepository.getAssetCategoryCode());
-        log.info("AssetCategoryService createAsync" + assetCategoryRequest);
+        
+        assetCategory.setCode(assetCommonService.getCode("%03d", Sequence.ASSETCATEGORYCODESEQUENCE));
+        
+        assetCategory.setId(assetCommonService.getNextId(Sequence.ASSETCATEGORYSEQUENCE));
+        
+        log.debug("AssetCategoryService createAsync" + assetCategoryRequest);
         logAwareKafkaTemplate.send(applicationProperties.getCreateAssetCategoryTopicName(),
                 KafkaTopicName.SAVEASSETCATEGORY.toString(), assetCategoryRequest);
 

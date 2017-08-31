@@ -57,6 +57,7 @@ public class BankBranchServiceTest {
 	public final void testCreate() {
 		bankBranches.add(getBankBranch());
 		when(bankRepository.findById(any(Bank.class))).thenReturn(getBank());
+		when(bankBranchRepository.uniqueCheck(any(String.class), any(BankBranch.class))).thenReturn(true);
 		bankBranchService.create(bankBranches, errors, requestInfo);
 	}
 
@@ -64,12 +65,14 @@ public class BankBranchServiceTest {
 	public final void testUpdate() {
 		bankBranches.add(getBankBranch());
 		when(bankRepository.findById(any(Bank.class))).thenReturn(getBank());
+		when(bankBranchRepository.uniqueCheck(any(String.class), any(BankBranch.class))).thenReturn(true);
 		bankBranchService.update(bankBranches, errors, requestInfo);
 	}
 
 	@Test
 	public final void testCreateInvalid() {
 		BankBranch bankBranch = BankBranch.builder().id("a").code("code").name("name").active(true).build();
+		when(bankBranchRepository.uniqueCheck(any(String.class), any(BankBranch.class))).thenReturn(true);
 		bankBranches.add(bankBranch);
 		bankBranchService.create(bankBranches, errors, requestInfo);
 	}

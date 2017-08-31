@@ -49,12 +49,14 @@ public class FunctionServiceTest {
 	@Test
 	public final void testCreate() {
 		when(functionRepository.findById(any(Function.class))).thenReturn(getParentFunction());
+		when(functionRepository.uniqueCheck(any(String.class), any(Function.class))).thenReturn(true);
 		functionService.create(getFunctions(), errors, requestInfo);
 	}
 
 	@Test
 	public final void testUpdate() {
 		when(functionRepository.findById(any(Function.class))).thenReturn(getParentFunction());
+		when(functionRepository.uniqueCheck(any(String.class), any(Function.class))).thenReturn(true);
 		functionService.update(getFunctions(), errors, requestInfo);
 	}
 
@@ -62,6 +64,7 @@ public class FunctionServiceTest {
 	public final void testCreateInvalid() {
 		Function function1 = Function.builder().id("a").code("code").active(true).parentId(null).level(1).build();
 		functions.add(function1);
+		when(functionRepository.uniqueCheck(any(String.class), any(Function.class))).thenReturn(true);
 		functionService.create(functions, errors, requestInfo);
 	}
 

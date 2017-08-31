@@ -140,6 +140,9 @@ export default class ShowFields extends Component {
 
   renderField=(item, screen,index)=> {
     if(screen == "view") {
+      if (item.type == "datePicker") {
+        item.isDate=true;
+      }
       item.type = "label";
     }
   	switch(item.type) {

@@ -50,5 +50,6 @@ public class LicenseApplicationContract {
 	@JsonProperty("supportDocuments")
 	private List<SupportDocumentContract> supportDocuments;
 	
+	@JsonProperty("workFlowDetails")
 	private WorkFlowDetails workFlowDetails;
 }

@@ -36,6 +36,7 @@ import org.egov.asset.model.enums.TypeOfChangeEnum;
 import org.egov.asset.model.enums.VoucherType;
 import org.egov.asset.repository.RevaluationRepository;
 import org.egov.asset.util.FileUtils;
+import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.junit.Test;
@@ -94,6 +95,9 @@ public class RevaluationServiceTest {
     @Mock
     private AssetCommonService assetCommonService;
 
+    @Mock
+    private ResponseInfoFactory responseInfoFactory;
+
     @Test
     public void testCreate() {
         RevaluationResponse revaluationResponse = null;
@@ -119,7 +123,7 @@ public class RevaluationServiceTest {
         final RevaluationRequest revaluationRequest = getRevaluationRequest();
         final HttpHeaders headers = getHttpHeaders();
         final RevaluationResponse expectedRevaluationResponse = getRevaluationResponse();
-        
+
         when(assetCommonService.getNextId(any(Sequence.class))).thenReturn(Long.valueOf("1"));
         final RevaluationResponse actualRevaluationResponse = revaluationService.createAsync(revaluationRequest,
                 headers);
@@ -149,6 +153,7 @@ public class RevaluationServiceTest {
 
     @Test
     public void testSearch() {
+        final RevaluationCriteria revaluationCriteria = getRevaluationCriteria();
         final List<Revaluation> revaluation = new ArrayList<>();
         revaluation.add(getRevaluationForSearch());
 
@@ -156,10 +161,20 @@ public class RevaluationServiceTest {
         revaluationResponse.setRevaluations(revaluation);
 
         when(revaluationRepository.search(any(RevaluationCriteria.class))).thenReturn(revaluation);
-        final RevaluationResponse expectedRevaluationResponse = revaluationService
-                .search(any(RevaluationCriteria.class));
+        final RevaluationResponse expectedRevaluationResponse = revaluationService.search(revaluationCriteria,
+                new RequestInfo());
 
         assertEquals(revaluationResponse.toString(), expectedRevaluationResponse.toString());
+    }
+
+    private RevaluationCriteria getRevaluationCriteria() {
+        final RevaluationCriteria revaluationCriteria = new RevaluationCriteria();
+        final List<Long> ids = new ArrayList<Long>();
+        ids.add(Long.valueOf("1"));
+        revaluationCriteria.setId(ids);
+        revaluationCriteria.setStatus(Status.APPROVED.toString());
+        revaluationCriteria.setTenantId("ap.kurnool");
+        return null;
     }
 
     private VoucherRequest getVoucherRequest() {
@@ -352,6 +367,7 @@ public class RevaluationServiceTest {
     private Revaluation getRevaluationForSearch() {
 
         final Revaluation revaluation = new Revaluation();
+        revaluation.setId(Long.valueOf("1"));
         revaluation.setTenantId("ap.kurnool");
         revaluation.setAssetId(Long.valueOf("31"));
         revaluation.setCurrentCapitalizedValue(new BigDecimal("100.68"));
@@ -369,6 +385,7 @@ public class RevaluationServiceTest {
         revaluation.setComments("coments");
         revaluation.setStatus(Status.APPROVED.toString());
         revaluation.setAuditDetails(getAuditDetails());
+        revaluation.setVoucherReference("1/GJV/00000214/08/2017-18");
 
         return revaluation;
     }

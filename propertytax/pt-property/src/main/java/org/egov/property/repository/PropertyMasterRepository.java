@@ -744,7 +744,7 @@ public class PropertyMasterRepository {
 
 	public List<UsageMaster> searchUsage(String tenantId, Integer[] ids, String name, String code, String nameLocal,
 			Boolean active, Boolean isResidential, Integer orderNumber, Integer pageSize, Integer offSet, String parent,
-			List<String> service) {
+			String[] service) {
 
 		List<Object> preparedStatementValues = new ArrayList<>();
 		String usageMasterSearchQuery = SearchMasterBuilder.buildSearchQuery(ConstantUtility.USAGE_TYPE_TABLE_NAME,

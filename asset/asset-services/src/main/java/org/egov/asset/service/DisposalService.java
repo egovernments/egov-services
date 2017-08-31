@@ -26,6 +26,7 @@ import org.egov.asset.model.enums.Sequence;
 import org.egov.asset.model.enums.Status;
 import org.egov.asset.repository.AssetRepository;
 import org.egov.asset.repository.DisposalRepository;
+import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +65,9 @@ public class DisposalService {
 
     @Autowired
     private AssetCommonService assetCommonService;
+
+    @Autowired
+    private ResponseInfoFactory responseInfoFactory;
 
     public DisposalResponse search(final DisposalCriteria disposalCriteria, final RequestInfo requestInfo) {
         List<Disposal> disposals = null;
@@ -166,7 +170,7 @@ public class DisposalService {
     public DisposalResponse getResponse(final List<Disposal> disposals, final RequestInfo requestInfo) {
         final DisposalResponse disposalResponse = new DisposalResponse();
         disposalResponse.setDisposals(disposals);
-
+        disposalResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestHeaders(requestInfo));
         return disposalResponse;
     }
 

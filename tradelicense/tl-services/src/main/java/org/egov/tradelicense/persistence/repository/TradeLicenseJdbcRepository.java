@@ -210,6 +210,7 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			license.setRemarks(getString(row.get("remarks")));
 			license.setValidityYears(getLong(row.get("validityyears")));
 			license.setTradeCommencementDate(((Timestamp)row.get("tradeCommencementDate")));
+			license.setIssuedDate(((Timestamp)row.get("issuedDate")));
 			license.setLicenseValidFromDate(
 					((Timestamp)row.get("licenseValidFromDate")));
 			license.setAgreementDate(((Timestamp)row.get("agreementDate")));

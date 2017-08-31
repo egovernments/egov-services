@@ -43,11 +43,16 @@
             <artifactId>hibernate-jpamodelgen</artifactId>
             <optional>true</optional>
         </dependency>
-        		<dependency>
-			<groupId>org.egov.services</groupId>
-			<artifactId>services-common</artifactId>
-			<version>0.5.0</version>
-         </dependency>
+        <dependency>
+            <groupId>org.egov.services</groupId>
+            <artifactId>services-common</artifactId>
+            <version>0.10.0</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.5</version>
+        </dependency>
 
 		<dependency>
 			<groupId>org.postgresql</groupId>
@@ -96,11 +101,16 @@
 		</dependency>
 	</dependencies>
 
-	<repositories>
+    <repositories>
         <repository>
             <id>repo.egovernments.org</id>
             <name>eGov ERP Releases Repository</name>
             <url>http://repo.egovernments.org/nexus/content/repositories/releases/</url>
+        </repository>
+        <repository>
+            <id>repo.egovernments.org.snapshots</id>
+            <name>eGov ERP Releases Repository</name>
+            <url>http://repo.egovernments.org/nexus/content/repositories/snapshots/</url>
         </repository>
     </repositories>
 
@@ -166,16 +176,16 @@
 										<exclude>org.egov.collection.persistence.repository.UserRepository</exclude>
 										<exclude>org.egov.collection.web.errorhandlers.*</exclude>
 									</excludes>
-									<limits>
+									<!--<limits>
 										<limit>
 											<counter>LINE</counter>
 											<value>COVEREDRATIO</value>
-											<minimum>0.75</minimum>
+											<minimum>0.0</minimum>
 										</limit>
-									</limits>
+									</limits>-->
 								</rule>
 
-								<rule>
+								<!--<rule>
 									<element>BUNDLE</element>
 									<limits>
 										<limit>
@@ -184,7 +194,7 @@
 											<minimum>0.3</minimum>
 										</limit>
 									</limits>
-								</rule>
+								</rule>-->
 							</rules>
 						</configuration>
 					</execution>

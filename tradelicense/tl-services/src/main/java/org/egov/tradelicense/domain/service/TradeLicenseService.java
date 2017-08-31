@@ -1,6 +1,7 @@
 package org.egov.tradelicense.domain.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +24,9 @@ import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.domain.model.TradeLicenseSearch;
 import org.egov.tradelicense.domain.repository.TradeLicenseRepository;
+import org.egov.tradelicense.domain.repository.builder.LicenseBillQueryBuilder;
 import org.egov.tradelicense.domain.service.validator.TradeLicenseServiceValidator;
+import org.egov.tradelicense.web.contract.DemandResponse;
 import org.egov.tradelicense.web.repository.StatusRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,6 +85,9 @@ public class TradeLicenseService {
 
 	@Autowired
 	private StatusRepository statusRepository;
+	
+	@Autowired
+	private LicenseBillService licenseBillService;
 
 	private BindingResult validate(List<TradeLicense> tradeLicenses, BindingResult errors) {
 
@@ -292,9 +298,9 @@ public class TradeLicenseService {
 		LicenseStatusResponse currentStatus = null;
 		LicenseStatusResponse nextStatus = null;
 
-		if (null != license.getApplicationStatus()){
+		if (null != license.getApplication()){
 			
-			currentStatus = statusRepository.findByIds(license.getTenantId(), license.getStatus().toString(),
+			currentStatus = statusRepository.findByIds(license.getTenantId(), license.getApplication().getStatus().toString(),
 					requestInfoWrapper);
 		}
 			
@@ -351,7 +357,28 @@ public class TradeLicenseService {
 
 	@Transactional
 	public TradeLicense update(TradeLicense tradeLicense, RequestInfo requestInfo) {
-		return tradeLicenseRepository.update(tradeLicense, requestInfo);
+        	LicenseStatusResponse currentStatus = null;
+                RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+                requestInfoWrapper.setRequestInfo(requestInfo);
+        	if (null != tradeLicense.getStatus())
+                    currentStatus = statusRepository.findByIds(tradeLicense.getTenantId(), tradeLicense.getStatus().toString(),
+                                    requestInfoWrapper);
+
+                if (null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty() && currentStatus
+                        .getLicenseStatuses().get(0).getCode() == NewLicenseStatus.INSPECTION_COMPLETED.getName()) {
+                        DemandResponse demandResponse = licenseBillService.createBill(tradeLicense, requestInfo);
+                        TradeLicenseSearch tradeLicenseSearch = tradeLicenseRepository.getByLicenseId(tradeLicense, requestInfo);
+                        if (tradeLicenseSearch != null) {
+                            final Object[] objValue = new Object[] { tradeLicenseSearch.getApplications().get(0).getId(),
+                                    demandResponse.getDemands().get(0).getId(), tradeLicenseSearch.getTenantId(),
+                                    Long.valueOf(tradeLicenseSearch.getAuditDetails().getCreatedBy()),
+                                    new Date().getTime(),
+                                    Long.valueOf(tradeLicenseSearch.getAuditDetails().getLastModifiedBy()),
+                                    new Date().getTime() };
+                            tradeLicenseRepository.createLicenseBill(LicenseBillQueryBuilder.insertLicenseBill(), objValue);
+                        }
+                }
+		return tradeLicenseRepository.update(tradeLicense);
 	}
 
 	public TradeLicenseSearchResponse getTradeLicense(RequestInfo requestInfo, String tenantId, Integer pageSize,

@@ -41,6 +41,7 @@ import org.egov.asset.model.enums.VoucherType;
 import org.egov.asset.repository.AssetRepository;
 import org.egov.asset.repository.DisposalRepository;
 import org.egov.asset.util.FileUtils;
+import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.junit.Test;
@@ -96,9 +97,12 @@ public class DisposalServiceTest {
 
     @Mock
     private AssetService assetService;
-    
+
     @Mock
     private AssetCommonService assetCommonService;
+
+    @Mock
+    private ResponseInfoFactory responseInfoFactory;
 
     @Test
     public void testSearch() {
@@ -121,10 +125,10 @@ public class DisposalServiceTest {
         final HttpHeaders headers = getHttpHeaders();
         final DisposalResponse expectedDisposalResponse = getDisposalResponse(
                 "disposal/disposalServiceResponse.disposal1.json");
-        
+
         when(assetCommonService.getNextId(any(Sequence.class))).thenReturn(Long.valueOf("15"));
         final DisposalResponse actualDisposalResponse = disposalService.createAsync(disposalRequest, headers);
-        
+
         assertEquals(expectedDisposalResponse.toString(), actualDisposalResponse.toString());
     }
 

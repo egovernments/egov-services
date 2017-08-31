@@ -121,6 +121,9 @@ import CS_WaterConnection from './components/non-framework/citizenServices/wc/cr
 import CS_VIEW_WaterConnection from './components/non-framework/citizenServices/wc/view.js';
 import ViewWc from './components/non-framework/wc/viewWc';
 import ServiceRequests from './components/non-framework/citizenServices/ServiceRequestSearch.js';
+import CS_FireNoc from './components/non-framework/citizenServices/buildingPlan/create.js';
+import Payment from './components/non-framework/citizenServices/payment';
+
 
 const base = "";
 
@@ -132,7 +135,7 @@ const Main = () => {
         <Route exact path={base + '/service/request/search'} component={ServiceRequests}/>
         <Route exact path={base + '/coming/soon'} component={ComingSoon}/>
 	     <Route exact path= {base + '/view/:moduleName/:master?/:id'} component={View}/>
-        
+
         <Route exact path= {base + '/search/:moduleName/:master?/:action'} component={Search}/>
         <Route exact path={base + '/employee/:action/:id?'} component={Employee}/>
         <Route exact path={base + '/prd/profileEdit'} component={ProfileEdit}/>
@@ -258,6 +261,10 @@ const Main = () => {
 	  <Route exact path={base+'/waterConnection/view/:id'} component={ViewWc}/>
       <Route exact path={base + '/non-framework/citizenServices/wc/create'} component={CS_WaterConnection}/>
       <Route exact path={base + '/non-framework/citizenServices/wc/view/:ackNo'} component={CS_VIEW_WaterConnection}/>
+      <Route exact path={base + '/non-framework/citizenServices/fireNoc/create'} component={CS_FireNoc}/>
+
+      <Route exact path= {base + '/payment/response'} component={Payment}/>
+
     </Switch>
   </main>
 )}

@@ -51,6 +51,8 @@ import org.egov.wcms.transaction.config.ConfigurationManager;
 import org.egov.wcms.transaction.model.EnumData;
 import org.egov.wcms.transaction.model.enums.BillingType;
 import org.egov.wcms.transaction.model.enums.ConnectionType;
+import org.egov.wcms.transaction.model.enums.MeterModel;
+import org.egov.wcms.transaction.model.enums.MeterOwner;
 import org.egov.wcms.transaction.validator.RestConnectionService;
 import org.egov.wcms.transaction.web.contract.EnumResponse;
 import org.egov.wcms.transaction.web.contract.RequestInfoWrapper;
@@ -102,6 +104,32 @@ public class CommonConnectionController {
 
         final List<EnumData> modelList = new ArrayList<>();
         for (final BillingType key : BillingType.values())
+            modelList.add(new EnumData(key.name(), key));
+        return getSuccessResponse(modelList, requestInfoWrapper.getRequestInfo());
+    }
+    
+    @RequestMapping(value = "/_getmeterownertypes")
+    public ResponseEntity<?> getMeterOwnerEnum(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            final BindingResult requestBodyBindingResult) {
+        if (requestBodyBindingResult.hasErrors())
+            return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult,
+                    requestInfoWrapper.getRequestInfo());
+
+        final List<EnumData> modelList = new ArrayList<>();
+        for (final MeterOwner key : MeterOwner.values())
+            modelList.add(new EnumData(key.name(), key));
+        return getSuccessResponse(modelList, requestInfoWrapper.getRequestInfo());
+    }
+    
+    @RequestMapping(value = "/_getmetermodeltypes")
+    public ResponseEntity<?> getMeterModelEnum(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            final BindingResult requestBodyBindingResult) {
+        if (requestBodyBindingResult.hasErrors())
+            return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult,
+                    requestInfoWrapper.getRequestInfo());
+
+        final List<EnumData> modelList = new ArrayList<>();
+        for (final MeterModel key : MeterModel.values())
             modelList.add(new EnumData(key.name(), key));
         return getSuccessResponse(modelList, requestInfoWrapper.getRequestInfo());
     }

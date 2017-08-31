@@ -198,7 +198,7 @@ var dat = {
                         "isDisabled": false,
                         "requiredErrMsg": "",
                         "patternErrMsg": "",
-                        "values": [{ "label": "pt.create.groups.ownerDetails.fields.primaryOwner", "value": true }, { "label": "pt.create.groups.ownerDetails.fields.secondaryOwner", "value": false }],
+                        "values": [{ "label": "pt.create.groups.ownerDetails.fields.primaryOwner", "value": true }],
                         "defaultValue": true
                     }
                 ]
@@ -592,23 +592,6 @@ var dat = {
                         "patternErrMsg": ""
                     }
                 ]
-            },
-            {
-                "label": "wc.create.groups.fileDetails.title",
-                "name": "Documents",
-                "fields": [{
-                    "name": "File",
-                    "jsonPath": "Connection.documents",
-                    "type": "documentList",
-                    "appendUserInfo": true,
-                    "pathToArray": "DocumentTypeApplicationTypes",
-                    "displayNameJsonPath": "documentType",
-                    "url": "/wcms/masters/documenttype-applicationtype/_search?applicationType=NEWCONNECTION",
-                    "autoFillFields": [{
-                        "name": "document",
-                        "jsonPath": "documentTypeId"
-                    }]
-                }]
             }
         ],
         "feeDetails": [{

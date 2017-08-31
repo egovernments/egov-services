@@ -8,13 +8,12 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import org.egov.tl.commons.web.contract.LicenseFeeDetailContract;
 import org.egov.tl.commons.web.contract.RequestInfo;
-import org.egov.tl.commons.web.contract.TradeLicenseContract;
-import org.egov.tl.commons.web.contract.enums.BusinessNatureEnum;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
-import org.egov.tl.commons.web.requests.TradeLicenseRequest;
 import org.egov.tradelicense.common.config.PropertiesManager;
+import org.egov.tradelicense.domain.enums.BusinessNature;
+import org.egov.tradelicense.domain.model.LicenseFeeDetail;
+import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.web.contract.Demand;
 import org.egov.tradelicense.web.contract.DemandRequest;
 import org.egov.tradelicense.web.contract.DemandResponse;
@@ -69,19 +68,16 @@ public class LicenseBillServiceTest {
     
     @Test
     public void test_create_bill() {
-        TradeLicenseRequest tradeLicenseRequest = new TradeLicenseRequest();
         RequestInfo requestInfo = new RequestInfo();
-        tradeLicenseRequest.setRequestInfo(requestInfo);
-        TradeLicenseContract license = new TradeLicenseContract();
+        TradeLicense license = new TradeLicense();
         license.setTenantId("mh.roha");
-        license.setTradeType(BusinessNatureEnum.PERMANENT);
-        LicenseFeeDetailContract feeDetail = new LicenseFeeDetailContract();
+        license.setTradeType(BusinessNature.PERMANENT);
+        LicenseFeeDetail feeDetail = new LicenseFeeDetail();
         feeDetail.setAmount(100D);
         license.setFeeDetails(Collections.singletonList(feeDetail));
         license.setValidityYears(1L);
-        tradeLicenseRequest.setLicenses(Collections.singletonList(license));
         
-        DemandResponse demandResponse = licenseBillService.createBill(tradeLicenseRequest);
+        DemandResponse demandResponse = licenseBillService.createBill(license, requestInfo);
         assertEquals("1", demandResponse.getDemands().get(0).getId());
     }
 

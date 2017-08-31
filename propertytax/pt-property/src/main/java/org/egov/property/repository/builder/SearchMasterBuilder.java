@@ -159,7 +159,7 @@ public class SearchMasterBuilder {
 			String[] list = service.toArray(new String[service.size()]);
 			query.append("'" + list[0].toLowerCase() + "'");
 			for (int i = 1; i < service.size(); i++) {
-				query.append("," + "'" + list[i] + "'");
+				query.append("," + "'" + list[i].toLowerCase() + "'");
 			}
 		}
 		return query.append(")").toString();

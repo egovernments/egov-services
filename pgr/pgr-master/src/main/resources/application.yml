@@ -345,7 +345,7 @@ ReportDefinitions:
     source:
     linkedReport:
       reportName: DrillDownComplaintDetailByFunctionary
-      linkedColumn: _parent?reportName={reportName}&status={currentColumnName}&username={employeename}
+      linkedColumn: _parent?reportName={reportName}&status=('FORWARDED','PROCESSING','NOTCOMPLETED')&username={employeename}
   - name: completed
     label: reports.pgr.status.completed
     type: number
@@ -507,7 +507,7 @@ ReportDefinitions:
          (select code from submission_attribute sa where sa.key='feedback' and sa.crn=cs.crn) as feedback,
          CASE WHEN (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision) THEN 'Yes'::text ELSE 'No'::text END AS issla
          from submission cs,egpgr_complainttype ctype,egeis_assignment ass, eg_user us ,servicetype_keyword sk
-         where ctype.code=cs.servicecode and cs.status=$status
+         where ctype.code=cs.servicecode and cs.status in $status
          and cs.createddate >= $fromDate and cs.createddate <= $toDate
          and cs.positionid = ass.positionid and ass.employeeid=us.id
          and cs.createddate >= ass.fromdate and cs.createddate <= ass.todate

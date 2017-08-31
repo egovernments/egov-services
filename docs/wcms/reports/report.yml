@@ -40,10 +40,28 @@ ReportDefinitions:
     type: string
     source: wcms
     isMandatory: false
-  query: select  boundary.name as boundaryName, dcbinfo.hscno as consumerno,dcbinfo.username as consumerName,
-         dcbinfo.pipesize as pipesize,null as usage, (dcbinfo.curr_balance+dcbinfo.arr_balance) as  outstanding
-         from egwtr_connection_view dcbinfo,eg_boundary boundary  where  dcbinfo.wardid=boundary.id 
-         and dcbinfo.connectionstatus = 'ACTIVE' order by boundary.name;
+  query: select * from ((select prop.hscno as hscno,prop.username as consumerName,prop.pipesize as pipesize,ut.data::jsonb->>'name'  as usage,
+         'CURRENT' as STATE,SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS WT_BAL
+         from egwtr_connection_view prop, eg_boundary boundary ,egpt_mstr_usage  ut,egbs_demand demand, egbs_demanddetail dd where prop.wardid=boundary.id and 
+         NULLIF(prop.usagetype, '')::int  = ut.id
+         and  demand.consumercode=prop.hscno 
+         and demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE
+         fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
+         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid = 'mh.roha') and prop.tenantid='mh.roha' group by hscno,state,pipesize,consumerName, usage  )
+         UNION
+         (select prop.hscno as hscno,prop.username as consumerName,
+         prop.pipesize as pipesize,ut.data::jsonb->>'name'  as usage,
+         'ARREAR' as STATE,
+         SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS WT_BAL
+         from egwtr_connection_view prop, eg_boundary boundary,egpt_mstr_usage  ut ,egbs_demand demand, egbs_demanddetail dd where
+         prop.wardid=boundary.id  
+         -- and prop.wardid in ($wardid)  
+         and  NULLIF(prop.usagetype, '')::int  = ut.id 
+         and  demand.consumercode=prop.hscno 
+         and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE
+          fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
+         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid = 'mh.roha') and prop.tenantid='mh.roha' 
+         group by hscno,state,pipesize,consumerName, usage) )result order by hscno asc;
 
 - reportName: DemandRegister
   summary: Demand Register Report
@@ -167,9 +185,24 @@ ReportDefinitions:
     pattern: 'list://METERED:METERED,NONMETERED:NON-METERED'
     source: wcms
     isMandatory: false  
-  query: select  distinct cast(dcbinfo.zoneid as integer) as zoneid,boundary.name as boundaryName, count(hscno) as countofconsumerno,
-         cast(SUM(arr_demand) as bigint) AS arr_demand,cast(SUM(curr_demand) as bigint) AS curr_demand,cast(SUM(arr_demand+curr_demand) as bigint) as total_demand,
-         cast(SUM(arr_coll) as bigint) AS arr_coll,cast(SUM(curr_coll) as bigint) AS curr_coll,cast(SUM(arr_coll+curr_coll) as bigint) AS total_coll,
-         cast(SUM(arr_balance) as bigint) AS arr_balance,cast(SUM(curr_balance) as bigint) AS curr_balance,cast(SUM(arr_balance+curr_balance) as bigint) AS total_balance
-         from egwtr_connection_view dcbinfo,eg_boundary boundary  where  dcbinfo.zoneid=boundary.id and dcbinfo.zoneid in ($zoneid) and dcbinfo.billingtype in ($connectiontype) and dcbinfo.connectionstatus = 'ACTIVE'
-         group by dcbinfo.zoneid,boundary.name order by boundary.name;
+  query: select * from ((select count(prop.hscno) as countofconsumerno,prop.username as consumerName,
+         prop.pipesize as pipesize,ut.data::jsonb->>'name'  as usage,'CURRENT' as STATE,
+         SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS WT_BAL
+         from egwtr_connection_view prop, eg_boundary boundary ,egpt_mstr_usage  ut,egbs_demand demand, egbs_demanddetail dd where prop.wardid=boundary.id and 
+         NULLIF(prop.usagetype, '')::int  = ut.id
+         and  demand.consumercode=prop.hscno 
+         and demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE
+         fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
+         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid = 'mh.roha') and prop.tenantid='mh.roha' group by hscno,state,pipesize,consumerName, usage  )
+         UNION
+         (select count(prop.hscno) as countofconsumerno,prop.username as consumerName,
+         prop.pipesize as pipesize,ut.data::jsonb->>'name'  as usage,
+         'ARREAR' as STATE,SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS WT_BAL
+         from egwtr_connection_view prop, eg_boundary boundary,egpt_mstr_usage  ut ,egbs_demand demand, egbs_demanddetail dd where
+         prop.wardid=boundary.id  
+         and  NULLIF(prop.usagetype, '')::int  = ut.id and  demand.consumercode=prop.hscno 
+         and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE
+         fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
+         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid = 'mh.roha') and prop.tenantid='mh.roha' 
+         group by hscno,state,pipesize,consumerName, usage))result ;
+  

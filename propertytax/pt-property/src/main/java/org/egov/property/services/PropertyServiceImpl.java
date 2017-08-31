@@ -1028,7 +1028,7 @@ public class PropertyServiceImpl implements PropertyService {
 	 */
 	private List<Demand> prepareDemands(String tenantId, String upicNumber, Property property,
 			TaxHeadMasterResponse taxHeadResponse, TaxPeriod taxPeriod) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.s");
 		dateFormat.setTimeZone(TimeZone.getTimeZone("GMT+5:30"));
 		List<Demand> newDemandList = new ArrayList<>();
 		Demand newDemand;

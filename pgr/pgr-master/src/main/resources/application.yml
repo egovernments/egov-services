@@ -428,16 +428,18 @@ ReportDefinitions:
     'REJECTED'::character varying::text, 'WITHDRAWN'::character varying::text])) AND
     (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double
     precision)) THEN 'Yes'::text ELSE 'No'::text END AS issla FROM submission cs,
-    egpgr_complainttype ctype, egeis_assignment ass, eg_user us ,servicetype_keyword sk WHERE cs.positionid
-    = ass.positionid and ass.employeeid=us.id and cs.servicecode = ctype.code
-    = ass.positionid and ass.employeeid=us.id and cs.servicecode = ctype.code
+    egpgr_complainttype ctype, egeis_assignment ass, eg_user us ,servicetype_keyword sk
+    WHERE cs.positionid = ass.positionid and ass.employeeid=us.id
+    and cs.servicecode = ctype.code
     and cs.createddate >= ass.fromdate and cs.createddate <= ass.todate and isprimary=true
     and cs.createddate >= $fromDate and cs.createddate <= $toDate
     and ctype.code=sk.servicecode and sk.keyword='complaint'
+    and us.tenantid = ctype.tenantid
     and sk.tenantid = $tenantid
     and us.tenantid = $tenantid
     and ass.tenantid = $tenantid
     and cs.tenantid = $tenantid
+    and ctype.tenantid = $tenantid
     GROUP BY us.username;
 
 

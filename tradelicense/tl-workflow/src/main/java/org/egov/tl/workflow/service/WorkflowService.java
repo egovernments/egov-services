@@ -17,8 +17,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class WorkflowService {
 
-	public static final String STATE_ID = "stateId";
-
 	private WorkflowRepository workflowRepository;
 
 	@Autowired
@@ -38,10 +36,6 @@ public class WorkflowService {
 
 			processInstanceResponse = workflowRepository.start(request);
 			
-			System.out.println("processInstanceResponse 1 " + processInstanceResponse );
-			
-			System.out.println("processInstanceResponse 2 "  + processInstanceResponse.getProcessInstance().getAttributes());
-
 			if (processInstanceResponse != null)
 				update(processInstanceResponse, tradeLicense.getWorkFlowDetails());
 
@@ -112,19 +106,16 @@ public class WorkflowService {
 	}
 
 	private void update(ProcessInstanceResponse processInstanceResponse, WorkFlowDetails workFlowDetails) {
-		System.out.println("workFlowDetails 1 " + workFlowDetails );
-		System.out.println("processInstanceResponse.getProcessInstance().getOwner().getId():" + processInstanceResponse.getProcessInstance().getOwner().getId() );
-		System.out.println("processInstanceResponse.getProcessInstance().getValueForKey(STATE_ID):" + processInstanceResponse.getProcessInstance().getValueForKey(STATE_ID) );
 		if (workFlowDetails != null) {
 			workFlowDetails.setAssignee(processInstanceResponse.getProcessInstance().getOwner().getId());
-			workFlowDetails.setStateId(processInstanceResponse.getProcessInstance().getValueForKey(STATE_ID));
+			workFlowDetails.setStateId(processInstanceResponse.getProcessInstance().getId());
 		}
 	}
 
 	private void update(TaskResponse taskResponse, WorkFlowDetails workFlowDetails) {
 		if (workFlowDetails != null) {
 			workFlowDetails.setAssignee(taskResponse.getTask().getOwner().getId());
-			workFlowDetails.setStateId(taskResponse.getTask().getValueForKey(STATE_ID));
+			workFlowDetails.setStateId(taskResponse.getTask().getId());
 		}
 	}
 

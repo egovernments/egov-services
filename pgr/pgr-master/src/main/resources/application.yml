@@ -345,7 +345,7 @@ ReportDefinitions:
     source:
     linkedReport:
       reportName: DrillDownComplaintDetailByFunctionary
-      linkedColumn: _parent?reportName={reportName}&status='FORWARDED','PROCESSING','NOTCOMPLETED'&username={employeename}
+      linkedColumn: _parent?reportName={reportName}&status=FORWARDED','PROCESSING','NOTCOMPLETED&username={employeename}
   - name: completed
     label: reports.pgr.status.completed
     type: number
@@ -430,6 +430,7 @@ ReportDefinitions:
     precision)) THEN 'Yes'::text ELSE 'No'::text END AS issla FROM submission cs,
     egpgr_complainttype ctype, egeis_assignment ass, eg_user us ,servicetype_keyword sk WHERE cs.positionid
     = ass.positionid and ass.employeeid=us.id and cs.servicecode = ctype.code
+    = ass.positionid and ass.employeeid=us.id and cs.servicecode = ctype.code
     and cs.createddate >= ass.fromdate and cs.createddate <= ass.todate and isprimary=true
     and cs.createddate >= $fromDate and cs.createddate <= $toDate
     and ctype.code=sk.servicecode and sk.keyword='complaint'
@@ -507,7 +508,7 @@ ReportDefinitions:
          (select code from submission_attribute sa where sa.key='feedback' and sa.crn=cs.crn) as feedback,
          CASE WHEN (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision) THEN 'Yes'::text ELSE 'No'::text END AS issla
          from submission cs,egpgr_complainttype ctype,egeis_assignment ass, eg_user us ,servicetype_keyword sk
-         where ctype.code=cs.servicecode and cs.status in ($status)
+         where ctype.code=cs.servicecode and cs.status IN ($status)
          and cs.createddate >= $fromDate and cs.createddate <= $toDate
          and cs.positionid = ass.positionid and ass.employeeid=us.id
          and cs.createddate >= ass.fromdate and cs.createddate <= ass.todate

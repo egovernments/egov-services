@@ -218,9 +218,9 @@ public class WaterConnectionRepository {
                 LOGGER.error("Inserting documents failed!", e);
             }
         } 
-        }if (connectionId > 0 && waterConnectionRequest.getConnection().getBillingType() != null &&
+        }if (connectionId > 0 && null != waterConnectionRequest.getConnection().getBillingType() &&
                 waterConnectionRequest.getConnection().getBillingType().equals("METERED") &&
-                !waterConnectionRequest.getConnection().getMeter().isEmpty()) {
+                null != waterConnectionRequest.getConnection().getMeter()) {
 
             Long meterId=null;
                 final String insertestQuery = WaterConnectionQueryBuilder.insertMeterQuery();

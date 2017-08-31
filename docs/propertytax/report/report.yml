@@ -369,17 +369,14 @@ ReportDefinitions:
     label: reports.property.upicnumber
     type: number
     source: collection
-    total: true
   - name: propertyaddress
     label: reports.property.address
     type: number
     source: completed
-    total: true
   - name: STATE
     label: reports.property.state
     type: number
     source: completed
-    total: true
   - name: PT_TAX
     label: reports.property.pttax
     type: string
@@ -577,7 +574,7 @@ ReportDefinitions:
           and demand.consumercode=prop.upicnumber
           and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service = 'PT' and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid)
   groupBy: group by upicnumber,propertyaddress,state) 
-  orderBy: )result order by upicnumber asc,state asc limit 20;
+  orderBy: )result order by upicnumber asc,state asc limit 100;
   
 - reportName: AssessmentRegister
   summary:  Assessment Register Report

@@ -82,12 +82,14 @@ var dat = {
             "name": "AadharNumber",
             "jsonPath": "licenses[0].adhaarNumber",
             "label": "tl.create.licenses.groups.TradeOwnerDetails.AadharNumber",
-            "pattern": "aadhar",
-            "type": "aadhar",
+            "pattern": "^.[0-9]{12,12}$",
+            "type": "number",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Enter Valid Aadhar Number (12 Digit Number)"
+            "patternErrMsg": "Enter Valid Aadhar Number (12 Digit Number)",
+            "maxLength": "12",
+            "defaultValue": null
           },
           {
             "name": "MobileNumber",

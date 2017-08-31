@@ -299,7 +299,9 @@ this.setState({openLicense: false});
     let self = this, _url;
     var formData = {...this.props.formData};
     var feeCheck=true;
-    console.log();
+    debugger;
+    if (formData.licenses[0].adhaarNumber=="") formData.licenses[0].adhaarNumber=null;
+    console.log(formData);
     for (var i = 0; i < formData.licenses[0].feeDetails.length; i++) {
       if(formData.licenses[0].feeDetails[i].amount == 0 ||  formData.licenses[0].feeDetails[i].amount == ""){
         feeCheck=false;
@@ -896,6 +898,17 @@ if(property == "licenses[0].categoryId"){
        }
 //***End Point To Populate Fee Details Section***
 
+  console.log(e.target.value);
+  console.log(this.props.formData.licenses[0].adhaarNumber);
+  // if(property == "licenses[0].adhaarNumber" && e.target.value == ""){
+  //   delete e.target;
+  // //console.log(this.props.formData.licenses[0].adhaarNumber.length);
+  // //handleChange({target:{value:null}}, "licenses[0].adhaarNumber");
+  //   //this.props.formData.licenses[0].adhaarNumber = null;
+  //
+  //   //console.log(this.props.formData.licenses[0].adhaarNumber);
+  //   //return false;
+  // }
 
 
 
@@ -905,6 +918,8 @@ if(property == "licenses[0].categoryId"){
       this.checkIfHasShowHideFields(property, e.target.value);
       this.checkIfHasEnDisFields(property, e.target.value);
       handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
+
+
 
       _.forEach(depedants, function(value, key) {
             if (value.type=="dropDown") {
@@ -930,6 +945,8 @@ if(property == "licenses[0].categoryId"){
                     }
           				}
           			}
+
+
 
                 if(id.categoryId == "" || id.categoryId == null){
                   formData.tradeSubCategory = "";

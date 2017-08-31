@@ -212,7 +212,7 @@ public class WaterConnectionQueryBuilder {
                 + "propertytype, address, donationcharge,assetidentifier,waterTreatmentId,"
                 + "islegacy,status,numberOfFamily,subusagetype,plumbername,"
                 + "billsequencenumber,outsideulb,legacyconsumernumber,"
-                + "consumerNumber,executionDate,noOfFlats,manualconsumernumber,housenumber) values"
+                + "consumerNumber,executionDate,noOfFlats,manualconsumernumber,housenumber,manualreceiptnumber,manualreceiptdate) values"
                 + "(nextval('seq_egwtr_waterconnection'),?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
@@ -220,7 +220,7 @@ public class WaterConnectionQueryBuilder {
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?,"
                 + " ?,?,?,?,?,"
-                + "?,?,?)";
+                + "?,?,?,?,?)";
     }
 
     public static String insertAdditionalConnectionQuery() {

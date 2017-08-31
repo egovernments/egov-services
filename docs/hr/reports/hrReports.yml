@@ -418,14 +418,14 @@ ReportDefinitions:
   - name: department
     label: reports.hr.Department
     type: singlevaluelist
-    pattern: http://egov-common-masters:8080/egov-common-masters/departments/_search?tenantId=$tenantId|$..id|$..name
+    pattern: http://egov-common-masters:8080/egov-common-masters/departments/_search?tenantId=$tenantid|$..id|$..name
     source: hr
     isMandatory: false
     searchClause: and dept.id=$department
   - name: designation
     label: reports.hr.Designation
     type: singlevaluelist
-    pattern: http://hr-masters:8080/hr-masters/designations/_search?tenantId=$tenantId|$..id|$..name  
+    pattern: http://hr-masters:8080/hr-masters/designations/_search?tenantId=$tenantid|$..id|$..name  
     source: hr
     isMandatory: false
     searchClause: and desig.id=$designation
@@ -461,8 +461,36 @@ ReportDefinitions:
     type: epoch
     source: hr
     isMandatory: true
-  query: select emp.code ||'-'|| usr.name as employeecodename,levtyp.name as leavetype ,
-    opnbal.noofdays as openingbalance,opnbal.noofdays+opnbal.noofdays as totalleaveseligible
-    from egeis_employee  emp,eg_user usr,egeis_leavetype levtyp,egeis_leaveopeningbalance opnbal
-    where levtyp.tenantid=$tenantid
-    and emp.id=usr.id
+  query: select emp.code ||'-'|| usr.name as employeecodename,levtyp.name as leavetype,openbal.noofdays as openingbalance,
+    cast(((openbal.noofdays/12*(select extract(month from (select to_date(to_char(to_timestamp(Trunc(CAST($asOnDate as bigint)/1000 )), 
+    'YYYY/MM/DD'), 'YYYY-MM-DD')))))) as int) as leaveeligibleasondate,
+    (openbal.noofdays + cast(((openbal.noofdays/12*(select extract(month from (select to_date(to_char(to_timestamp(Trunc(CAST($asOnDate as bigint)/1000 )), 
+    'YYYY/MM/DD'), 'YYYY-MM-DD')))))) as int)) as totalleaveseligible,
+    leaveappl.approved_count,
+    ((openbal.noofdays + cast(((openbal.noofdays/12*(select extract(month from (select to_date(to_char(to_timestamp(Trunc(CAST($asOnDate as bigint)/1000 )), 
+    'YYYY/MM/DD'), 'YYYY-MM-DD')))))) as int)) - (select count(id) from egeis_leaveapplication where status=(select id from egeis_hrstatus where code='APPROVED' and objectname='LeaveApplication' and tenantid=$tenantid) 
+     and tenantid=$tenantid)) as balance
+     from egeis_employee emp,      
+     eg_user usr,
+     egeis_leavetype levtyp, 
+     egeis_assignment assign,    
+     egeis_leaveapplication levapp, 
+     egeis_leaveopeningbalance openbal
+     LEFT OUTER JOIN 
+    (select count(*) as approved_count,employeeid, status from egeis_leaveapplication where status in (select  id from egeis_hrstatus where
+    code='APPROVED' and objectname='LeaveApplication' and tenantid=$tenantid) group by employeeid,status,leavetypeid
+    )leaveappl ON leaveappl.employeeid = openbal.employeeid 
+    where  openbal.tenantid=$tenantid 
+    and emp.id=usr.id 
+    and openbal.employeeid=emp.id
+    and levtyp.id=openbal.leavetypeid
+    and levapp.employeeid=emp.id
+    and assign.employeeid=emp.id
+    and openbal.employeeid=assign.employeeid
+    and emp.tenantid=usr.tenantid
+    and openbal.tenantid=emp.tenantid
+    and levtyp.tenantid=openbal.tenantid
+    and levapp.tenantid=emp.tenantid
+    and assign.tenantid=emp.tenantid 
+    group by emp.code ,usr.name ,levtyp.name,openbal.noofdays,leaveappl.approved_count
+   

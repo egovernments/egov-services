@@ -60,6 +60,12 @@ public class ReceiptSearchCriteria {
 	private Boolean isLegacy;
 
     private List<String> receiptNumbers;
+    
+    private String consumerNo;
+    
+    private String serviceName;
+    
+    private String limit;
 
     private String consumerCode;
 

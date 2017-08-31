@@ -55,7 +55,6 @@ ReportDefinitions:
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS WT_BAL
          from egwtr_connection_view prop, eg_boundary boundary,egpt_mstr_usage  ut ,egbs_demand demand, egbs_demanddetail dd where
          prop.wardid=boundary.id  
-         -- and prop.wardid in ($wardid)  
          and  NULLIF(prop.usagetype, '')::int  = ut.id 
          and  demand.consumercode=prop.hscno 
          and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE

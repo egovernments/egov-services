@@ -65,12 +65,10 @@ public class HierarchyType extends AbstractAuditable  {
     @GeneratedValue(generator = SEQ_HIERARCHY_TYPE, strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @NotBlank
     @Length(max = 128)
     @SafeHtml
     private String name;
 
-    @NotBlank
     @Length(max = 50)
     @SafeHtml
     private String code;

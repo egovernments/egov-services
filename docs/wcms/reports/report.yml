@@ -67,11 +67,6 @@ ReportDefinitions:
   version: 1.0.0 
   moduleName: wcms
   sourceColumns:
-  - name: zoneid
-    label: reports.wcms.zoneid
-    type: number
-    source: wcms
-    showColumn: false
   - name: boundaryname
     label: reports.wcms.boundaryname
     type: string
@@ -84,10 +79,6 @@ ReportDefinitions:
     label: reports.wcms.arreardemand
     type: number
     source: wcms
-  - name: total_demand
-    label: reports.wcms.totaldemand
-    type: number
-    source: wcms
   - name: WT_COLL
     label: reports.wcms.arrearcollection
     type: number
@@ -96,10 +87,7 @@ ReportDefinitions:
     label: reports.wcms.arrearbalance
     type: number
     source: wcms  
-  - name: total_balance
-    label: reports.wcms.totalbalance
-    type: number
-    source: wcms   
+
   searchParams:
   - name: zoneid
     label: reports.wcms.zoneid

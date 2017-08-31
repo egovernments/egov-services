@@ -239,7 +239,8 @@ paths:
             7. expirtyDate will be calculate based on the valid last financial year in the feedetail  and validity years 
             8. License Number, applicationType, applicationDate, applicationNumber, tenantId,id cannot be updated
             9. validityYears will validated against the subcategory validity years
-            10. agreementNo and agreementDate are mandatory when isPropertyOwner is true 
+            10. agreementNo and agreementDate are mandatory when isPropertyOwner is true
+            11. fieldInspection and licenseFee can updated for new Trade License 
           
       parameters:
         - name: TradeLicenseRequest
@@ -434,6 +435,8 @@ definitions:
         description: List of Support Documents for Trade License
         items:
           $ref: '#/definitions/SupportDocument'
+      application:
+        $ref: '#/definitions/LicenseApplication'
       status:
         type: integer
         format: int64
@@ -637,6 +640,11 @@ definitions:
         description: List of Support Documents for Trade License
         items:
           $ref: '#/definitions/SupportDocument'
+      applications:
+        type: array
+        description: List of License Application(s)
+        items:
+          $ref: '#/definitions/LicenseApplicationSearch'
       status:
         type: integer
         format: int64
@@ -717,6 +725,11 @@ definitions:
         type: integer
         format: int64
         description: Unique Identifier of the LicenseFeeDetail
+      tenantId:
+        type: string
+        description: tenant id of the Trade License
+        maxLength: 128
+        minLength: 4
       licenseId:
         type: integer
         format: int64
@@ -739,6 +752,7 @@ definitions:
     - licenseId
     - financialYear
     - amount
+    - tenantId
   SupportDocument:
     type: object
     description: An Object to hold the support document detail for a given Trade License
@@ -747,6 +761,11 @@ definitions:
         type: integer
         format: int64
         description: Unique Identifier of the Support Document
+      tenantId:
+        type: string
+        description: tenant id of the Trade License
+        maxLength: 128
+        minLength: 4
       licenseId:
         type: integer
         format: int64
@@ -765,9 +784,133 @@ definitions:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
     - licenseId
+    - tenantId
     - documentTypeId
     - fileStoreId
-      
+  SupportDocumentSearch:
+    type: object
+    description: An Object to hold the support document detail for a given Trade License
+    properties:
+      id: 
+        type: integer
+        format: int64
+        description: Unique Identifier of the Support Document
+      tenantId:
+        type: string
+        description: tenant id of the Trade License
+        maxLength: 128
+        minLength: 4
+      licenseId:
+        type: integer
+        format: int64
+        description: Unique Identifier of the Trade License
+      documentTypeId:
+        type: integer
+        format: int64
+        description: Unique Identifier of the Document Type
+      documentTypeName:
+        type: string
+        description: Document type name
+      fileStoreId:
+        type: string
+        description: Unique Identifier of the FileStore
+      comments:
+        type: string
+        maxLength: 1024
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+    - licenseId
+    - documentTypeId
+    - fileStoreId
+  LicenseApplication:
+    type: object
+    description: An Object to hold the Application for a given Trade license
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the applicaiton
+      tenantId:
+        type: string
+        description: tenant id of the Trade License
+        maxLength: 128
+        minLength: 4
+      licenseId:
+        type: integer
+        format: int64
+        description: Unique identifier of the Trade license
+      applicationNumber:
+        type: string
+        description: unique application number of the application
+      status:
+        type: string
+        description: Unique identifier of the Applicaiton status
+      state_id:
+        type: string
+        description: Unique identifier of the workflow state
+      licenseFee:
+        type: number
+        description: License Fee Amount of the application
+      fieldInspectionReport:
+        type: string
+        maxLength: 1000
+        description: Field inspection report comments of the application
+      appliactionDate:
+        type: integer
+        format: int64
+        description: application Date in epoch format
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+  LicenseApplicationSearch:
+    type: object
+    description: An Object to hold the Application for a given Trade license
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the applicaiton
+      tenantId:
+        type: string
+        description: tenant id of the Trade License
+        maxLength: 128
+        minLength: 4
+      licenseId:
+        type: integer
+        format: int64
+        description: Unique identifier of the Trade license
+      applicationNumber:
+        type: string
+        description: unique application number of the application
+      status:
+        type: string
+        description: Unique identifier of the Applicaiton status
+      state_id:
+        type: string
+        description: Unique identifier of the workflow state
+      licenseFee:
+        type: number
+        description: License Fee Amount of the application
+      fieldInspectionReport:
+        type: string
+        maxLength: 1000
+        description: Field inspection report comments of the application
+      appliactionDate:
+        type: integer
+        format: int64
+        description: application Date in epoch format
+      feeDetails:
+        type: array
+        description: List of Fee Details for Trade License,  Required only for Legacy Trade License
+        items:
+          $ref: '#/definitions/LicenseFeeDetail'
+      supportDocuments:
+        type: array
+        description: List of Support Documents for Trade License
+        items:
+          $ref: '#/definitions/SupportDocumentSearch'
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
 parameters:
 ##########################################################
 #Parameter name must start with small case followed by camel case.

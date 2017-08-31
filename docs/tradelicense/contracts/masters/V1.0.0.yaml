@@ -727,7 +727,13 @@ paths:
             type: string
             in: query
             description: Unique code of the License Status
-            maxLength: 128
+            maxLength: 20
+            minLength: 4 
+          - name: moduleType
+            type: string
+            in: query
+            description: Module Type of the license
+            maxLength: 20
             minLength: 4 
           - name: active
             type: boolean
@@ -751,6 +757,7 @@ paths:
           To create new LicenseStatus(s) in the system. API supports bulk creation with max limit as defined in the LicenseStatusRequest. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one LicenseStatus, please pass array with one LicenseStatus object. 
           
            LicenseStatus for a given tenantId, code and name there will be only one LicenseStatus in the System. Trying to create new LicenseStatus with the same combination creation of LicenseStatus Fails.
+           LicenseStatus for a given tenantId, code and moduleType there will be only one LicenseStatus in the System. Trying to create new LicenseStatus with the same combination creation of LicenseStatus Fails.
            
            
         tags: 
@@ -1333,6 +1340,11 @@ definitions:
           maxLength: 20
           minLength: 1
           description: Unique code of the Status
+        moduleType:
+          type: string
+          maxLength: 20
+          minLength: 1
+          description: module type of the License Status
         active:
           type: string
           default: "True"

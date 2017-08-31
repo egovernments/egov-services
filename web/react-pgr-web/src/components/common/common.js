@@ -1074,6 +1074,15 @@ var localization_EN_Data = {
     "reports.collection.chequedd_amount":"Cheque DD Amount",
     "reports.collection.online.amount":"Online Amount",
     "reports.collection.status.description":"Status Description",
+    "reports.collection.receiptno": "Receipt No",
+    "reports.collection.receiptdate": "Receipt Date",
+    "reports.collection.totalamount": "Total Amount",
+    "reports.collection.payeename": "Payee Name",
+    "reports.collection.consumeraddress": "Consumer Address",
+    "reports.collection.print": "Print",
+    "reports.collection.consumerno": "Consumer No",
+    "reports.collection.servicename": "Service Name",
+    
 
     "collection.create.consumerCode": "Consumer Code",
     "collection.search.period": "Period",
@@ -2428,6 +2437,16 @@ var localization_MR_Data = {
         "reports.collection.chequedd_amount":"Cheque DD Amount - Marathi",
         "reports.collection.online.amount":"Online Amount - Marathi",
         "reports.collection.status.description":"Status Description - Marathi",
+        "reports.collection.receiptno": "Receipt No - Marathi",
+        "reports.collection.receiptdate": "Receipt Date - Marathi",
+        "reports.collection.totalamount": "Total Amount - Marathi",
+        "reports.collection.payeename": "Payee Name - Marathi",
+        "reports.collection.consumeraddress": "Consumer Address - Marathi",
+        "reports.collection.print": "Print - Marathi",
+        "reports.collection.consumerno": "Consumer No - Marathi",
+        "reports.collection.fromdate":" "From Date - Marathi",
+        "reports.collection.todate": "To Date - Marathi",
+        "reports.collection.servicename": "Service Name - Marathi",
 
         //report Lables Property Tax
   "reports.property.revenueboundary":"Revenue Boundary - Marathi",

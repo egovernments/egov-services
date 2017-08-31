@@ -228,7 +228,8 @@ public class CitizenPersistService {
 			documentContext.put("$.serviceReq", "consumerCode", id);
 		}
     	
-    	if(documentContext.read("$.serviceReq.serviceCode").toString().equals("WATER_NEWCONN") && isCreate){
+    	if((documentContext.read("$.serviceReq.serviceCode").toString().equals("WATER_NEWCONN") ||
+    			documentContext.read("$.serviceReq.serviceCode").toString().equals("BPA_FIRE_NOC")) && isCreate){
     		documentContext.put("$.serviceReq.backendServiceDetails[0].request.Demands[0]", "consumerCode", id);
     		String url = documentContext.read("$.serviceReq.backendServiceDetails[1].url");
     		url = url.replaceAll("consumerCode=", "consumerCode="+id);

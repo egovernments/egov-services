@@ -86,10 +86,10 @@ ReportDefinitions:
     count(CASE WHEN cs.status::text = ANY (ARRAY['COMPLETED'::character varying::text,'WITHDRAWN'::character varying::text]) THEN 1 ELSE NULL::integer END) AS completed,
     count(CASE WHEN cs.status::text = 'REOPENED'::text THEN 1 ELSE NULL::integer END) AS reopened,
     count(CASE WHEN cs.status::text ='REJECTED'::text THEN 1 ELSE NULL::integer END) AS rejected,
-    sum(CASE WHEN (cs.status in ('COMPLETED',  'REJECTED','WITHDRAWN' , 'PROCESSING' , 'REGISTERED'))
+    sum(CASE WHEN (cs.status in ('COMPLETED',  'REJECTED','WITHDRAWN' , 'PROCESSING' , 'REGISTERED','REOPENED'))
     AND (cs.lastmodifieddate - cs.createddate) < ('01:00:00'::interval * ctype.slahours::double  precision)
     AND   (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision) THEN 1 ELSE 0 END) AS withinsla,
-    sum(CASE WHEN (cs.status in ('COMPLETED',  'REJECTED','WITHDRAWN' , 'PROCESSING' , 'REGISTERED'))
+    sum(CASE WHEN (cs.status in ('COMPLETED',  'REJECTED','WITHDRAWN' , 'PROCESSING' , 'REGISTERED','REOPENED'))
     AND (cs.lastmodifieddate - cs.createddate)   > ('01:00:00'::interval * ctype.slahours::double precision)
     AND (now() - cs.createddate::timestamp   with time zone) > ('01:00:00'::interval * ctype.slahours::double precision) THEN 1 ELSE 0 END) AS beyondsla,
     CASE WHEN bool_or((cs.status::text = ANY (ARRAY['COMPLETED'::character
@@ -399,10 +399,10 @@ ReportDefinitions:
     1 ELSE NULL::integer END) AS completed, count(CASE WHEN cs.status::text = 'REOPENED'::text
     THEN 1 ELSE NULL::integer END) AS reopened, count(CASE WHEN cs.status::text = 'REJECTED'::text
     THEN 1 ELSE NULL::integer END) AS rejected,
-    sum(CASE WHEN (cs.status in ('COMPLETED',  'REJECTED','WITHDRAWN' , 'PROCESSING' , 'REGISTERED'))
+    sum(CASE WHEN (cs.status in ('COMPLETED',  'REJECTED','WITHDRAWN' , 'PROCESSING' , 'REGISTERED','REOPENED'))
     AND (cs.lastmodifieddate - cs.createddate) < ('01:00:00'::interval * ctype.slahours::double  precision)
     AND (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision) THEN 1 ELSE 0 END) AS withinsla,
-    sum(CASE WHEN (cs.status in ('COMPLETED',  'REJECTED','WITHDRAWN' , 'PROCESSING' , 'REGISTERED'))
+    sum(CASE WHEN (cs.status in ('COMPLETED',  'REJECTED','WITHDRAWN' , 'PROCESSING' , 'REGISTERED','REOPENED'))
     AND (cs.lastmodifieddate - cs.createddate)   > ('01:00:00'::interval * ctype.slahours::double precision)
     AND (now() - cs.createddate::timestamp   with time zone) > ('01:00:00'::interval * ctype.slahours::double precision) THEN 1 ELSE 0 END) AS beyondsla,
     CASE WHEN bool_or((cs.status::text = ANY (ARRAY['COMPLETED'::character varying::text, 'REJECTED'::character varying::text,

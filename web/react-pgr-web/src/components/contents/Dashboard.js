@@ -298,6 +298,10 @@ class Dashboard extends Component {
 
       Api.commonApiPost("/citizen-services/v1/requests/_search", {userId:currentUser.id}, {}, null, true).then(function(res3){
         if(res3 && res3.serviceReq && res3.serviceReq) {
+          res3.serviceReq.sort(function(v1, v2) {
+            return v1.auditDetails.createdDate < v2.auditDetails.createdDate ? -1 : (v1.auditDetails.createdDate > v2.auditDetails.createdDate ? 1 : 0);
+          });
+
           checkCountAndSetState("serviceRequestsTwo", res3.serviceReq);
         } else {
           checkCountAndSetState("serviceRequestsTwo", []);

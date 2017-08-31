@@ -38,22 +38,29 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.collection.web.contract.factory;
+package org.egov.collection.web.errorhandler;
 
-import org.egov.common.contract.request.RequestInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
+import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
-import org.springframework.stereotype.Component;
 
-@Component
-public class ResponseInfoFactory {
+import java.util.List;
 
-	public ResponseInfo createResponseInfoFromRequestInfo(final RequestInfo requestInfo, final Boolean success) {
-		final String apiId = requestInfo != null ? requestInfo.getApiId() : "";
-		final String ver = requestInfo != null ? requestInfo.getVer() : "";
-		final Long ts = requestInfo != null ? requestInfo.getTs() : null;
-		final String resMsgId = "uief87324"; // FIXME : Hard-coded
-		final String msgId = requestInfo != null ? requestInfo.getMsgId() : "";
-		final String responseStatus = success ? "successful" : "failed";
-		return new ResponseInfo(apiId, ver, ts, resMsgId, msgId, responseStatus);
-	}
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
+public class ErrorResponse {
+
+    private ResponseInfo responseInfo;
+    private Error error;
+
+    @JsonIgnore
+    public List<ErrorField> getErrorFields() {
+        return error.getErrorFields();
+    }
+
 }

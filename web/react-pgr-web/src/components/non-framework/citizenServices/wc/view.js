@@ -478,10 +478,10 @@ class Report extends Component {
     self.props.setLoadingStatus('loading');
     if(self.state.documents && self.state.documents.length) {
       let _docs = [];
-      let documents = JSON.parse(JSON.stringify(self.state.documents));
+      let documents = self.state.documents;
       let counter = documents.length, breakOut = 0;
       for(let i=0; i<documents.length; i++) {
-        fileUpload(documents[i].fileStoreId, "wc", function(err, res) {
+        fileUpload(documents[i], "wc", function(err, res) {
           if(breakOut == 1) return;
           if(err) {
             breakOut = 1;
@@ -557,7 +557,7 @@ class Report extends Component {
                       containerElement='label'
                       fullWidth={true} 
                       label={"Upload Files"}>
-                        <input type="file" style={{ display: 'none' }} onChange={(e) => {
+                        <input multiple type="file" style={{ display: 'none' }} onChange={(e) => {
                           self.setState({
                             documents: e.target.files || []
                           })
@@ -639,7 +639,7 @@ class Report extends Component {
                                   <tr key={i}>
                                     <td>{v.from + (v.from == JSON.parse(localStorage.userRequest).userName ? " (You)" : "")}</td>
                                     <td>{getFullDate(v.timeStamp)}</td>
-                                    <td><a href={"/filestore/v1/files/id?tenantId=" + localStorage.getItem("tenantId") + "&fileStoreId=" + v.filePath}>Download</a></td>
+                                    <td><a target="_blank" href={"/filestore/v1/files/id?tenantId=" + localStorage.getItem("tenantId") + "&fileStoreId=" + v.filePath}>Download</a></td>
                                   </tr>
                                 )
                               }) : <tr><td style={{"textAlign": "center"}} colSpan={3}>No documents uploaded!</td></tr>

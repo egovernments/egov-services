@@ -22,15 +22,15 @@ ReportDefinitions:
     source: completed
     linkedReport:
       reportName: DrillDownComplaintDetailByGrievanceType
-      linkedColumn: _parent?reportName={reportName}&status={currentColumnName}&complainttype={name}  
+      linkedColumn: _parent?reportName={reportName}&status=FORWARDED','PROCESSING&complainttype={name}
   - name: completed
     label: reports.pgr.status.completed
     type: number
     source: reopened
     linkedReport:
       reportName: DrillDownComplaintDetailByGrievanceType
-      linkedColumn: _parent?reportName={reportName}&status={currentColumnName}&complainttype={name}  
-  - name: rejected
+      linkedColumn: _parent?reportName={reportName}&status=COMPLETED','WITHDRAWN&complainttype={name}
+  - name: reopened
     label: reports.pgr.status.reopened
     type: number
     source: seva
@@ -178,7 +178,7 @@ ReportDefinitions:
          cs.details,cs.status,(select code from submission_attribute sa where sa.key='feedback' and sa.crn=cs.crn) as feedback,
          CASE WHEN (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision)
          THEN 'Yes'::text ELSE 'No'::text END AS withinsla from submission cs,egpgr_complainttype ctype , servicetype_keyword sk
-         where ctype.code=cs.servicecode  and cs.status=$status and cs.createddate >= $fromDate and cs.createddate <=$toDate
+         where ctype.code=cs.servicecode  and cs.status in ($status) and cs.createddate >= $fromDate and cs.createddate <=$toDate
          and ctype.code = $complainttype and ctype.code=sk.servicecode and sk.keyword ='complaint'
          and sk.tenantid =$tenantid
          and cs.tenantid = $tenantid

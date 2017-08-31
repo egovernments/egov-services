@@ -17,6 +17,7 @@ import org.egov.mr.web.contract.MarriageRegnRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -34,10 +35,22 @@ public class MarriageRegnConsumerTest {
 	private PropertiesManager propertiesManager;
 
 	@Mock
+	private RegistrationUnitService registrationUnitService;
+
+	@Mock
 	private MarriageRegnService marriageRegnService;
 
 	@Mock
+	private MarriageCertService marriageCertService;
+
+	@Mock
+	private MarriageDocumentTypeService marriageDocumentTypeService;
+
+	@Mock
 	private FeeService feeService;
+
+	@Mock
+	private ObjectMapper objectMapper;
 
 	@InjectMocks
 	private MarriageRegnConsumer marriageRegnConsumer;
@@ -55,13 +68,13 @@ public class MarriageRegnConsumerTest {
 		 * 
 		 * if i use: String topic = "kafka.topics.create.marriageregn";
 		 */
-		String topic_createMarriageRegn = "kafka.topics.create.marriagereg";
+		String topic_createMarriageRegn = "kafka.topics.create.marriageregn";
 
 		when(propertiesManager.getCreateMarriageRegnTopicName()).thenReturn("kafka.topics.create.marriageregn");
 
 		MarriageRegnRequest mrr = new MarriageRegnRequest();
 		mrr.setMarriageRegn(mr);
-		Mockito.doNothing().when(marriageRegnService).create(mrr);
+		Mockito.doNothing().when(marriageRegnService).create(Matchers.any(MarriageRegnRequest.class));
 
 		marriageRegnConsumer.processMessage(consumerRecord, topic_createMarriageRegn);
 
@@ -80,13 +93,13 @@ public class MarriageRegnConsumerTest {
 		 * 
 		 * if i use: String topic = "kafka.topics.update.marriageregn";
 		 */
-		String topic_createMarriageRegn = "kafka.topics.update.marriagereg";
+		String topic_createMarriageRegn = "kafka.topics.update.marriageregn";
 
 		when(propertiesManager.getUpdateMarriageRegnTopicName()).thenReturn("kafka.topics.update.marriageregn");
 
 		MarriageRegnRequest mrr = new MarriageRegnRequest();
 		mrr.setMarriageRegn(mr);
-		Mockito.doNothing().when(marriageRegnService).create(mrr);
+		Mockito.doNothing().when(marriageRegnService).update(Matchers.any());
 
 		marriageRegnConsumer.processMessage(consumerRecord, topic_createMarriageRegn);
 
@@ -105,13 +118,13 @@ public class MarriageRegnConsumerTest {
 		 * 
 		 * if i use: String topic = "kafka.topics.create.registrationunit";
 		 */
-		String topic_createMarriageRegn = "kafka.topics.create.registrationuni";
+		String topic_createMarriageRegn = "kafka.topics.create.registrationunit";
 
 		when(propertiesManager.getCreateRegistrationUnitTopicName()).thenReturn("kafka.topics.create.registrationunit");
 
 		MarriageRegnRequest mrr = new MarriageRegnRequest();
 		mrr.setMarriageRegn(mr);
-		Mockito.doNothing().when(marriageRegnService).create(mrr);
+		Mockito.doNothing().when(marriageRegnService).create(Matchers.any());
 
 		marriageRegnConsumer.processMessage(consumerRecord, topic_createMarriageRegn);
 
@@ -130,13 +143,13 @@ public class MarriageRegnConsumerTest {
 		 * 
 		 * if i use: String topic = "kafka.topics.update.registrationunit";
 		 */
-		String topic_createMarriageRegn = "kafka.topics.update.registrationuni";
+		String topic_createMarriageRegn = "kafka.topics.update.registrationunit";
 
 		when(propertiesManager.getUpdateRegistrationUnitTopicName()).thenReturn("kafka.topics.update.registrationunit");
 
 		MarriageRegnRequest mrr = new MarriageRegnRequest();
 		mrr.setMarriageRegn(mr);
-		Mockito.doNothing().when(marriageRegnService).create(mrr);
+		Mockito.doNothing().when(marriageRegnService).update(Matchers.any());
 
 		marriageRegnConsumer.processMessage(consumerRecord, topic_createMarriageRegn);
 
@@ -155,14 +168,14 @@ public class MarriageRegnConsumerTest {
 		 * 
 		 * if i use: String topic = "kafka.topics.create.marriagedocumenttype";
 		 */
-		String topic_createMarriageRegn = "kafka.topics.create.marriagedocumenttyp";
+		String topic_createMarriageRegn = "kafka.topics.create.marriagedocumenttype";
 
 		when(propertiesManager.getCreateMarriageDocumentTypeTopicName())
 				.thenReturn("kafka.topics.create.marriagedocumenttype");
 
 		MarriageRegnRequest mrr = new MarriageRegnRequest();
 		mrr.setMarriageRegn(mr);
-		Mockito.doNothing().when(marriageRegnService).create(mrr);
+		Mockito.doNothing().when(marriageRegnService).create(Matchers.any());
 
 		marriageRegnConsumer.processMessage(consumerRecord, topic_createMarriageRegn);
 
@@ -181,14 +194,14 @@ public class MarriageRegnConsumerTest {
 		 * 
 		 * if i use: String topic = "kafka.topics.update.marriagedocumenttype";
 		 */
-		String topic_createMarriageRegn = "kafka.topics.update.marriagedocumenttyp";
+		String topic_createMarriageRegn = "kafka.topics.update.marriagedocumenttype";
 
 		when(propertiesManager.getUpdateMarriageDocumentTypeTopicName())
 				.thenReturn("kafka.topics.update.marriagedocumenttype");
 
 		MarriageRegnRequest mrr = new MarriageRegnRequest();
 		mrr.setMarriageRegn(mr);
-		Mockito.doNothing().when(marriageRegnService).create(mrr);
+		Mockito.doNothing().when(marriageRegnService).update(Matchers.any());
 
 		marriageRegnConsumer.processMessage(consumerRecord, topic_createMarriageRegn);
 
@@ -207,13 +220,13 @@ public class MarriageRegnConsumerTest {
 		 * 
 		 * if i use: String topic = "kafka.topics.create.reissueappl";
 		 */
-		String topic_createMarriageRegn = "kafka.topics.create.reissueapp";
+		String topic_createMarriageRegn = "kafka.topics.create.reissueappl";
 
 		when(propertiesManager.getCreateReissueMarriageRegnTopicName()).thenReturn("kafka.topics.create.reissueappl");
 
 		MarriageRegnRequest mrr = new MarriageRegnRequest();
 		mrr.setMarriageRegn(mr);
-		Mockito.doNothing().when(marriageRegnService).create(mrr);
+		Mockito.doNothing().when(marriageRegnService).create(Matchers.any());
 
 		marriageRegnConsumer.processMessage(consumerRecord, topic_createMarriageRegn);
 
@@ -232,13 +245,13 @@ public class MarriageRegnConsumerTest {
 		 * 
 		 * if i use: String topic = "kafka.topics.update.reissueappl";
 		 */
-		String topic_createMarriageRegn = "kafka.topics.update.reissueapp";
+		String topic_createMarriageRegn = "kafka.topics.update.reissueappl";
 
 		when(propertiesManager.getUpdateReissueMarriageRegnTopicName()).thenReturn("kafka.topics.update.reissueappl");
 
 		MarriageRegnRequest mrr = new MarriageRegnRequest();
 		mrr.setMarriageRegn(mr);
-		Mockito.doNothing().when(marriageRegnService).create(mrr);
+		Mockito.doNothing().when(marriageRegnService).update(Matchers.any());
 
 		marriageRegnConsumer.processMessage(consumerRecord, topic_createMarriageRegn);
 
@@ -257,14 +270,14 @@ public class MarriageRegnConsumerTest {
 		 * 
 		 * if i use: String topic = "kafka.topics.create.reissueCertificate";
 		 */
-		String topic_createMarriageRegn = "kafka.topics.create.reissueCertificat";
+		String topic_createMarriageRegn = "kafka.topics.create.reissueCertificate";
 
 		when(propertiesManager.getCreateReissueCertificateTopicName())
 				.thenReturn("kafka.topics.create.reissueCertificate");
 
 		MarriageRegnRequest mrr = new MarriageRegnRequest();
 		mrr.setMarriageRegn(mr);
-		Mockito.doNothing().when(marriageRegnService).create(mrr);
+		Mockito.doNothing().when(marriageRegnService).create(Matchers.any());
 
 		marriageRegnConsumer.processMessage(consumerRecord, topic_createMarriageRegn);
 
@@ -283,13 +296,13 @@ public class MarriageRegnConsumerTest {
 		 * 
 		 * if i use: String topic = "kafka.topics.create.fee";
 		 */
-		String topic_createMarriageRegn = "kafka.topics.create.fe";
+		String topic_createMarriageRegn = "kafka.topics.create.fee";
 
 		when(propertiesManager.getCreateFeeTopicName()).thenReturn("kafka.topics.create.fee");
 
 		MarriageRegnRequest mrr = new MarriageRegnRequest();
 		mrr.setMarriageRegn(mr);
-		Mockito.doNothing().when(marriageRegnService).create(mrr);
+		Mockito.doNothing().when(marriageRegnService).create(Matchers.any());
 
 		marriageRegnConsumer.processMessage(consumerRecord, topic_createMarriageRegn);
 
@@ -308,13 +321,13 @@ public class MarriageRegnConsumerTest {
 		 * 
 		 * if i use: String topic = "kafka.topics.update.fee";
 		 */
-		String topic_createMarriageRegn = "kafka.topics.update.fe";
+		String topic_createMarriageRegn = "kafka.topics.update.fee";
 
 		when(propertiesManager.getUpdateFeeTopicName()).thenReturn("kafka.topics.update.fee");
 
 		MarriageRegnRequest mrr = new MarriageRegnRequest();
 		mrr.setMarriageRegn(mr);
-		Mockito.doNothing().when(marriageRegnService).create(mrr);
+		Mockito.doNothing().when(marriageRegnService).update(Matchers.any());
 
 		marriageRegnConsumer.processMessage(consumerRecord, topic_createMarriageRegn);
 

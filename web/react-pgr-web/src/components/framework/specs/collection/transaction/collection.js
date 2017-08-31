@@ -343,7 +343,7 @@ var dat = {
         },
         {
           "name": "manualReceiptNumber",
-          "jsonPath": "Receipt[0].Bill[0].paidBy",
+          "jsonPath": "Receipt[0].Bill[0].billDetails[0].manualReceiptNumber",
           "label": "Manual receipt number",
           "pattern": "",
           "type": "text",
@@ -355,7 +355,7 @@ var dat = {
         },
         {
           "name": "manualReceiptDate",
-          "jsonPath": "Receipt[0].Bill[0].paidBy",
+          "jsonPath": "Receipt[0].Bill[0].billDetails[0].receiptDate",
           "label": "Manual receipt date",
           "pattern": "/^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/",
           "type": "datePicker",

@@ -45,7 +45,7 @@ public class AccountDetailKeyService {
                     case Constants.ACTION_CREATE:
                         if (accountdetailkeys == null) {
                             throw new InvalidDataException("accountdetailkeys", ErrorCode.NOT_NULL.getCode(),
-                                    accountdetailkeys.toString());
+                                    null);
                         }
                         for (AccountDetailKey accountDetailKey : accountdetailkeys) {
                             validator.validate(accountDetailKey, errors);
@@ -54,7 +54,7 @@ public class AccountDetailKeyService {
                     case Constants.ACTION_UPDATE:
                         if (accountdetailkeys == null) {
                             throw new InvalidDataException("accountdetailkeys", ErrorCode.NOT_NULL.getCode(),
-                                    accountdetailkeys.toString());
+                                    null);
                         }
                         for (AccountDetailKey accountDetailKey : accountdetailkeys) {
                             if (accountDetailKey.getId() == null) {
@@ -67,7 +67,7 @@ public class AccountDetailKeyService {
                     case Constants.ACTION_SEARCH:
                         if (accountdetailkeys == null) {
                             throw new InvalidDataException("accountdetailkeys", ErrorCode.NOT_NULL.getCode(),
-                                    accountdetailkeys.toString());
+                                    null);
                         }
                         for (AccountDetailKey accountdetailkey : accountdetailkeys) {
                             if (accountdetailkey.getId() == null) {

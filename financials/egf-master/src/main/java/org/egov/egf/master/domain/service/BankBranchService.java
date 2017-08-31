@@ -91,7 +91,7 @@ public class BankBranchService {
                         break;
                     case Constants.ACTION_CREATE:
                         if (bankbranches == null) {
-                            throw new InvalidDataException("bankbranches", ErrorCode.NOT_NULL.getCode(), bankbranches.toString());
+                            throw new InvalidDataException("bankbranches", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (BankBranch bankBranch : bankbranches) {
                             validator.validate(bankBranch, errors);
@@ -107,7 +107,7 @@ public class BankBranchService {
                         break;
                     case Constants.ACTION_UPDATE:
                         if (bankbranches == null) {
-                            throw new InvalidDataException("bankbranches", ErrorCode.NOT_NULL.getCode(), bankbranches.toString());
+                            throw new InvalidDataException("bankbranches", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (BankBranch bankBranch : bankbranches) {
                             if (bankBranch.getId() == null) {
@@ -126,7 +126,7 @@ public class BankBranchService {
                         break;
                     case Constants.ACTION_SEARCH:
                         if (bankbranches == null) {
-                            throw new InvalidDataException("bankbranches", ErrorCode.NOT_NULL.getCode(), bankbranches.toString());
+                            throw new InvalidDataException("bankbranches", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (BankBranch bankbranch : bankbranches) {
                             if (bankbranch.getTenantId() == null) {

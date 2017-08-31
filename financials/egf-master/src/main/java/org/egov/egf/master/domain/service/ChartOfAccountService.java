@@ -45,7 +45,7 @@ public class ChartOfAccountService {
                         break;
                     case Constants.ACTION_CREATE:
                         if (chartofaccounts == null) {
-                            throw new InvalidDataException("chartofaccounts", ErrorCode.NOT_NULL.getCode(), chartofaccounts.toString());
+                            throw new InvalidDataException("chartofaccounts", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (ChartOfAccount chartOfAccount : chartofaccounts) {
                             validator.validate(chartOfAccount, errors);
@@ -61,7 +61,7 @@ public class ChartOfAccountService {
                         break;
                     case Constants.ACTION_UPDATE:
                         if (chartofaccounts == null) {
-                            throw new InvalidDataException("chartofaccounts", ErrorCode.NOT_NULL.getCode(), chartofaccounts.toString());
+                            throw new InvalidDataException("chartofaccounts", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (ChartOfAccount chartOfAccount : chartofaccounts) {
                             if (chartOfAccount.getId() == null) {
@@ -80,7 +80,7 @@ public class ChartOfAccountService {
                         break;
                     case Constants.ACTION_SEARCH:
                         if (chartofaccounts == null) {
-                            throw new InvalidDataException("chartofaccounts", ErrorCode.NOT_NULL.getCode(), chartofaccounts.toString());
+                            throw new InvalidDataException("chartofaccounts", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (ChartOfAccount chartofaccount : chartofaccounts) {
                             if (chartofaccount.getTenantId() == null) {

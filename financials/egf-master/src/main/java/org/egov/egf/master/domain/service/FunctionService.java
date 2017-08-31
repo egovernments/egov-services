@@ -91,7 +91,7 @@ public class FunctionService {
                         break;
                     case Constants.ACTION_CREATE:
                         if (functions == null) {
-                            throw new InvalidDataException("functions", ErrorCode.NOT_NULL.getCode(), functions.toString());
+                            throw new InvalidDataException("functions", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (Function function : functions) {
                             validator.validate(function, errors);
@@ -107,7 +107,7 @@ public class FunctionService {
                         break;
                     case Constants.ACTION_UPDATE:
                         if (functions == null) {
-                            throw new InvalidDataException("functions", ErrorCode.NOT_NULL.getCode(), functions.toString());
+                            throw new InvalidDataException("functions", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (Function function : functions) {
                             if (function.getId() == null) {
@@ -126,7 +126,7 @@ public class FunctionService {
                         break;
                     case Constants.ACTION_SEARCH:
                         if (functions == null) {
-                            throw new InvalidDataException("functions", ErrorCode.NOT_NULL.getCode(), functions.toString());
+                            throw new InvalidDataException("functions", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (Function function : functions) {
                             if (function.getTenantId() == null) {

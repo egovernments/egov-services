@@ -44,7 +44,7 @@ public class SubSchemeService {
                         break;
                     case Constants.ACTION_CREATE:
                         if (subschemes == null) {
-                            throw new InvalidDataException("subschemes", ErrorCode.NOT_NULL.getCode(), subschemes.toString());
+                            throw new InvalidDataException("subschemes", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (SubScheme subScheme : subschemes) {
                             validator.validate(subScheme, errors);
@@ -56,7 +56,7 @@ public class SubSchemeService {
                         break;
                     case Constants.ACTION_UPDATE:
                         if (subschemes == null) {
-                            throw new InvalidDataException("subschemes", ErrorCode.NOT_NULL.getCode(), subschemes.toString());
+                            throw new InvalidDataException("subschemes", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (SubScheme subScheme : subschemes) {
                             if (subScheme.getId() == null) {
@@ -71,7 +71,7 @@ public class SubSchemeService {
                         break;
                     case Constants.ACTION_SEARCH:
                         if (subschemes == null) {
-                            throw new InvalidDataException("subschemes", ErrorCode.NOT_NULL.getCode(), subschemes.toString());
+                            throw new InvalidDataException("subschemes", ErrorCode.NOT_NULL.getCode(), null);
                         }
                         for (SubScheme subscheme : subschemes) {
                             if (subscheme.getTenantId() == null) {

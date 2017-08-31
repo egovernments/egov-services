@@ -470,13 +470,13 @@ var dat = {
             "name": "agreementNo",
             "jsonPath": "licenses[0].agreementNo",
             "label": "tl.create.licenses.groups.agreementDetails.agreementNo",
-            "pattern": "^[a-zA-Z0-9&/()-]{4,128}$",
+            "pattern": "^[a-zA-Z0-9&/()-]$",
             "type": "text",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Enter Valid Agreement No (Min:4, Max:128, Alpha/Numeric)",
-            "maxLength": "128"
+            "patternErrMsg": "Enter Valid Agreement No (Max:30, Alpha/Numeric)",
+            "maxLength": "30"
           }
         ]
       },

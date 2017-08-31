@@ -129,4 +129,14 @@ public class PropertiesManager {
 		
 		return environment.getProperty("egov.services.billing_service.createbill");
 	}
+
+	public String getCollectionServiceHost() {
+		
+		return environment.getProperty("egov.services.collection_service.hostname");
+	}
+
+	public String getCollectionServiceGenerateReceipt() {
+		
+		return environment.getProperty("egov.services.collection_service.createreciept");
+	}
 }

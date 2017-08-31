@@ -40,7 +40,7 @@ public class WorkflowService {
 			
 			System.out.println("processInstanceResponse 1 " + processInstanceResponse );
 			
-			System.out.println("processInstanceResponse 2 "  + processInstanceResponse != null ? processInstanceResponse.getProcessInstance().getValueForKey(STATE_ID):"");
+			System.out.println("processInstanceResponse 2 "  + processInstanceResponse.getProcessInstance().getAttributes());
 
 			if (processInstanceResponse != null)
 				update(processInstanceResponse, tradeLicense.getWorkFlowDetails());
@@ -112,6 +112,9 @@ public class WorkflowService {
 	}
 
 	private void update(ProcessInstanceResponse processInstanceResponse, WorkFlowDetails workFlowDetails) {
+		System.out.println("workFlowDetails 1 " + workFlowDetails );
+		System.out.println("processInstanceResponse.getProcessInstance().getOwner().getId() 1 " + workFlowDetails );
+		System.out.println("processInstanceResponse.getProcessInstance().getValueForKey(STATE_ID) 1 " + workFlowDetails );
 		if (workFlowDetails != null) {
 			workFlowDetails.setAssignee(processInstanceResponse.getProcessInstance().getOwner().getId());
 			workFlowDetails.setStateId(processInstanceResponse.getProcessInstance().getValueForKey(STATE_ID));

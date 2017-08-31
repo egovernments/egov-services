@@ -62,7 +62,7 @@ ReportDefinitions:
   sourceColumns:
   - name: TRANSACTIONID
     label: reports.collection.receipt.transactionid
-    type: epoch
+    type: number
     source: collection
   - name: RECEIPT_DATE
     label: reports.collection.receipt.date

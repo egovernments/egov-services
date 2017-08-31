@@ -35,9 +35,9 @@ public class WorkflowService {
 			request.setRequestInfo(requestInfo);
 
 			processInstanceResponse = workflowRepository.start(request);
-			
+
 			if (processInstanceResponse != null)
-				update(processInstanceResponse, tradeLicense.getWorkFlowDetails());
+				update(processInstanceResponse, tradeLicense);
 
 		} else if (isWorkflowUpdate(tradeLicense.getWorkFlowDetails())) {
 
@@ -48,7 +48,7 @@ public class WorkflowService {
 			taskResponse = workflowRepository.update(taskRequest);
 
 			if (taskResponse != null)
-				update(taskResponse, tradeLicense.getWorkFlowDetails());
+				update(taskResponse, tradeLicense);
 
 		}
 
@@ -105,17 +105,16 @@ public class WorkflowService {
 		return workFlowDetails != null && workFlowDetails.getAction() != null && !workFlowDetails.getAction().isEmpty();
 	}
 
-	private void update(ProcessInstanceResponse processInstanceResponse, WorkFlowDetails workFlowDetails) {
-		if (workFlowDetails != null) {
-			workFlowDetails.setAssignee(processInstanceResponse.getProcessInstance().getOwner().getId());
-			workFlowDetails.setStateId(processInstanceResponse.getProcessInstance().getId());
+	private void update(ProcessInstanceResponse processInstanceResponse, TradeLicenseContract tradeLicense) {
+		if (tradeLicense != null && tradeLicense.getApplication() != null) {
+			tradeLicense.getApplication().setState_id(processInstanceResponse.getProcessInstance().getId());
 		}
 	}
 
-	private void update(TaskResponse taskResponse, WorkFlowDetails workFlowDetails) {
-		if (workFlowDetails != null) {
-			workFlowDetails.setAssignee(taskResponse.getTask().getOwner().getId());
-			workFlowDetails.setStateId(taskResponse.getTask().getId());
+	private void update(TaskResponse taskResponse, TradeLicenseContract tradeLicense) {
+
+		if (tradeLicense != null && tradeLicense.getApplication() != null) {
+			tradeLicense.getApplication().setState_id(taskResponse.getTask().getId());
 		}
 	}
 

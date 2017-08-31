@@ -364,9 +364,11 @@ public class DemandService {
 			owners = ownerRepository.getOwners(userSearchRequest);
 			Set<String> ownerIds = owners.stream().map(owner -> owner.getId().toString()).collect(Collectors.toSet());
 			demands = demandRepository.getDemands(demandCriteria, ownerIds);
+		demands.sort(Comparator.comparing(Demand::getTaxPeriodFrom));
 		} else {
 			demands = demandRepository.getDemands(demandCriteria, null);
 			if(!demands.isEmpty()) {
+				demands.sort(Comparator.comparing(Demand::getTaxPeriodFrom));
 				List<Long> ownerIds = new ArrayList<>(
 						demands.stream().map(demand -> demand.getOwner().getId()).collect(Collectors.toSet()));
 				userSearchRequest = UserSearchRequest.builder().requestInfo(requestInfo)

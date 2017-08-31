@@ -14,7 +14,7 @@ var dat = {
 							"name": "name",
 							"jsonPath": "categories[0].name",
 							"label": "tl.create.groups.categorytype.name",
-							"pattern": "^.[a-zA-Z. ]{3,99}$",
+							"pattern": "^.[a-zA-Z. ]{1,99}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
@@ -26,13 +26,13 @@ var dat = {
 							"name": "code",
 							"jsonPath": "categories[0].code",
 							"label": "tl.create.groups.categorytype.code",
-							"pattern": "^.[A-Za-z0-9]{14,14}$",
+							"pattern": "^.[A-Za-z0-9]{1,19}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": "Enter Valid Code (15 digit, Alpha/Numeric)",
-							"maxLength": "15"
+							"patternErrMsg": "Enter Valid Code (Alpha-Numeric, Min:1, Max:20)",
+							"maxLength": "20"
 						},
 						{
 							"name": "active",

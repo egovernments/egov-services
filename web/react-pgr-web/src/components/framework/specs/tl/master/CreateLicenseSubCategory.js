@@ -38,12 +38,13 @@ var dat = {
 							"name": "code",
 							"jsonPath": "categories[0].code",
 							"label": "tl.create.groups.subcategorytype.code",
-							"pattern": "^.[A-Za-z0-9]{14,14}$",
+							"pattern": "^.[A-Za-z0-9]{1,19}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": "Enter 15 digit Alpha/Numeric Code"
+							"patternErrMsg": "Enter Valid Code (Alpha-Numeric, Min:1, Max:20)",
+							"maxLength": "20"
 						},
 						{
 							"name": "active",

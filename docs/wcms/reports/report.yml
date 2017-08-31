@@ -13,7 +13,7 @@ ReportDefinitions:
     label: reports.wcms.consumerno
     type: number
     source: wcms
-  - name: consumername
+  - name: consumerName
     label: reports.wcms.consumername
     type: number
     source: wcms
@@ -133,10 +133,6 @@ ReportDefinitions:
     label: reports.wcms.arreardemand
     type: number
     source: wcms
-  - name: WT_DEMAND
-    label: reports.wcms.currentdemand
-    type: number
-    source: wcms
   - name: total_demand
     label: reports.wcms.totaldemand
     type: number
@@ -144,23 +140,11 @@ ReportDefinitions:
   - name: WT_COLL
     label: reports.wcms.arrearcollection
     type: number
-    source: wcms
-  - name: WT_COLL
-    label: reports.wcms.currentcollection
-    type: number
-    source: wcms  
-  - name: total_coll
-    label: reports.wcms.totalcollection
-    type: number
     source: wcms  
   - name: WT_BAL
     label: reports.wcms.arrearbalance
     type: number
     source: wcms  
-  - name: WT_BAL
-    label: reports.wcms.currentbalance
-    type: number
-    source: wcms
   - name: total_balance
     label: reports.wcms.totalbalance
     type: number

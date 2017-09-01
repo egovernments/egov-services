@@ -19,10 +19,6 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 public class ReceiptRequest {
-
-	@JsonProperty("RequestInfo")
-	@NotNull
-	private RequestInfo requestInfo;
 	
 	@NotNull
 	private String tenantId;

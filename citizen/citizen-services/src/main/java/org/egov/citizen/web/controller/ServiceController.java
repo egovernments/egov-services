@@ -116,7 +116,7 @@ public class ServiceController {
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
 		ReceiptRequest receiptRequest = receiptRequestWrapper.getReceiptRequest();
-		PGPayload pgPayLoad = citizenPersistService.generatePGPayload(receiptRequest);
+		PGPayload pgPayLoad = citizenPersistService.generatePGPayload(receiptRequest, receiptRequestWrapper.getRequestInfo());
 		PGPayloadWrapper pGPayloadWrapper = new PGPayloadWrapper();
 		pGPayloadWrapper.setPgPayLoad(pgPayLoad);
 		return new ResponseEntity<>(pGPayloadWrapper, HttpStatus.OK);

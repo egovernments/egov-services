@@ -310,7 +310,7 @@ public class CitizenPersistService {
     	
     }*/
     
-	public PGPayload generatePGPayload(ReceiptRequest receiptRequest){
+	public PGPayload generatePGPayload(ReceiptRequest receiptRequest, RequestInfo requestInfo){
 		LOGGER.info("Generating PGPayload..");
 		StringBuilder msgForHash = new StringBuilder();
 		String delimiter="|";
@@ -324,7 +324,7 @@ public class CitizenPersistService {
 		LOGGER.info("Request hash obtained: "+requestHash);
 		
 		PGPayload pgPayload = PGPayload.builder()
-							  .requestInfo(receiptRequest.getRequestInfo())
+							  .requestInfo(requestInfo)
 							  .consumerCode(receiptRequest.getConsumerCode())
 							  .tenantId(receiptRequest.getTenantId())
 							  .billServuce(receiptRequest.getBillService())
@@ -333,10 +333,10 @@ public class CitizenPersistService {
 							  .biller(receiptRequest.getBiller())
 							  .billNumber(receiptRequest.getBillNumber())
 							  .date(receiptRequest.getDate())
-							  .email(receiptRequest.getRequestInfo().getUserInfo().getEmailId())
-							  .mobileNo(receiptRequest.getRequestInfo().getUserInfo().getMobileNumber())
+							  .email(requestInfo.getUserInfo().getEmailId())
+							  .mobileNo(requestInfo.getUserInfo().getMobileNumber())
 							  .requestHash(requestHash)
-							  .uid(receiptRequest.getRequestInfo().getUserInfo().getId())
+							  .uid(requestInfo.getUserInfo().getId())
 							  .build();
 		LOGGER.info("PGPayload generated: "+pgPayload);
 		

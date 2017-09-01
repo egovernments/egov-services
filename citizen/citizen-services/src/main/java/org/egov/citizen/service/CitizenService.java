@@ -190,7 +190,7 @@ public class CitizenService {
 		return response;
 	}
 	
-	public ServiceReq createReceiptForPayment(ReceiptRequest receiptReq){
+/*	public ServiceReq createReceiptForPayment(ReceiptRequest receiptReq){
 		LOGGER.info("Incoming request for createReceipt: "+receiptReq);
 		BillingServiceRequestWrapper billingServiceRequestWrapper = new BillingServiceRequestWrapper();
 		billingServiceRequestWrapper.setBillingServiceRequestInfo(receiptReq.getRequestInfo());
@@ -293,7 +293,7 @@ public class CitizenService {
 			throw new CustomException(Integer.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
 					CitizenServiceConstants.BILL_INVALID_MSG, CitizenServiceConstants.BILL_INVALID_DESC);
 		}
-	}
+	} */
 	
 	public Object generateBill(RequestInfoWrapper requestInfoWrapper, String consumerCode, String buisnessService, String tenantId){
 		LOGGER.info("Generate bill flow starts for mobile no: "+consumerCode.toString());

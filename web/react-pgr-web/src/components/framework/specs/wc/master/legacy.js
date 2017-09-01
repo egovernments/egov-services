@@ -1350,7 +1350,7 @@ var dat = {
                     "jsonPath": "Connection.meter[0].meterCost",
                     "label": "wc.group.meterCost",
                     "pattern": "",
-                    "type": "text",
+                    "type": "number",
                     "isRequired": false,
                     "isDisabled": false,
                     "requiredErrMsg": "",

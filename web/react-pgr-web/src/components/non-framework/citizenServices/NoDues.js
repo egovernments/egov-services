@@ -49,6 +49,7 @@ var specifications={};
 let reqRequired = [];
 
 const getFullDate = function(dat,isTimeStamp=false) {
+  if(!dat) return "-";
   var _date = new Date(dat);
   if (isTimeStamp) {
     return ('0' + _date.getDate()).slice(-2) + '/'
@@ -920,7 +921,9 @@ class NoDues extends Component {
         return iter(add_to_words(words, triplet_to_words(first[0], first[1], first[2]), SCALE[i]), ++i, get_first(rest), get_rest(rest));
       }
 
-      return iter('', 0, get_first(String(int)), get_rest(String(int)));
+      var words = iter('', 0, get_first(String(int)), get_rest(String(int)));
+      if(words) words = words[0].toUpperCase() + words.substring(1);
+      return words;
   }
 
   goBackToDashboard = () => {
@@ -1092,10 +1095,10 @@ class NoDues extends Component {
                                       </tr>
                                       <tr>
                                           <td colSpan={3} style={{textAlign:"left"}}>
-                                            Consumer Code : {Receipt[0].Bill[0].billDetails[0].consumerCode}<br/>
-                                            Consumer Name : {Receipt[0].Bill[0].payeeName}<br/>
-                                            Amount : {Receipt[0].Bill[0].billDetails[0].totalAmount?("Rs. "+Receipt[0].Bill[0].billDetails[0].totalAmount+"/-"):"NA"}<br/>
-                                            {/*this.props.match.params.id=="wc" && <div>{"Consumer Address: "+(Receipt[0].Bill[0].payeeAddress?Receipt[0].Bill[0].payeeAddress:"Roha")}<br/>
+                                            {this.props.match.params.id == "pt" ? "Assessment number" : "Consumer code"} : {Receipt[0].Bill[0].billDetails[0].consumerCode}<br/>
+                                            Owner Name : {Receipt[0].Bill[0].payeeName}<br/>
+                                            Amount : {Receipt[0].Bill[0].billDetails[0].totalAmount?("Rs. " + Receipt[0].Bill[0].billDetails[0].totalAmount + "/-") : "NA"}<br/>
+                                            {/*this.props.match.params.id=="wc" && <div>{"Owner Address: "+(Receipt[0].Bill[0].payeeAddress?Receipt[0].Bill[0].payeeAddress:"Roha")}<br/>
                                             {"Received From: "+ Receipt[0].Bill[0].paidBy}<br/></div>*/}
                                           </td>
                                       </tr>
@@ -1361,7 +1364,7 @@ class NoDues extends Component {
                                             </div>
                                             <br/>
                                             <div style={{textAlign:"right"}}>
-                                                  Date / दिनांक :{getFullDate(Receipt[0].Bill[0].billDetails[0].billDate,true)} <br/>
+                                                  Date / दिनांक :{Receipt[0].Bill[0].billDetails[0].billDate ? getFullDate(Receipt[0].Bill[0].billDetails[0].billDate,true) : "-"} <br/>
                                                   Certificate No. / प्रमाणपत्र क्रं : {this.state.serviceRequest.serviceRequestId}
 
                                             </div>
@@ -1388,7 +1391,7 @@ class NoDues extends Component {
                                             </div>
                                             <br/>
                                             <div style={{textAlign:"center"}}>
-                                              संदर्भिय विषयांन्वये प्रमाणित करण्यात येते की, Consumer No/पाणी क्रमांक,
+                                              संदर्भिय विषयांन्वये प्रमाणित करण्यात येते की, {this.props.match.params.id != "pt" ? "Consumer No/पाणी क्रमांक" : "Assessment No/मालमत्ता क्रमांक"},
                                               {Receipt[0].Bill[0].billDetails[0].consumerCode} यांच्या नावे नोंद असून, सन 2017-18  पर्यंतचा संपुर्ण
                                               पाणी रक्कम भरलेली असून, कोणतीही थकबाकी येणे नाही.
 
@@ -1431,7 +1434,7 @@ class NoDues extends Component {
                           <tr>
                             <td colSpan={8}>
                                 <div style={{textAlign:"center"}}>
-                                  <b>Extract Property</b> / मालमत्तेचा उतारा
+                                  <b>Extract Certificate</b> / मालमत्तेचा उतारा
                                 </div>
                             </td>
                           </tr>

@@ -255,11 +255,11 @@ ReportDefinitions:
     isMandatory: false
     searchClause: and emp.employeetypeid=$employeeType
     
-  query: select emp.code||'-'||usr.name as employeecodename ,
+  query: select emp.code||'-'||usr.name as employeecode,
     sum(case when att.type=(select id from egeis_attendance_type where code='P') and month = $month and year = $year then 1 else 0 end) presentDays,
     sum(case when att.type=(select id from egeis_attendance_type where code='A') and month = $month and year = $year then 1 else 0 end)  absentDays,
-    sum(case when att.type=(select id from egeis_attendance_type where code='L') and month = $month and year = $year then 1 else 0 end) leavesDays,
-    sum(case when att.type=(select id from egeis_attendance_type where code='H') and month = $month and year = $year then 1 else 0 end) holidays
+    sum(case when att.type=(select id from egeis_attendance_type where code='L') and month = $month and year = $year then 1 else 0 end) leaveDays,
+    sum(case when att.type=(select id from egeis_attendance_type where code='H') and month = $month and year = $year then 1 else 0 end) noOfOTs
     from egeis_employee emp,eg_user usr,egeis_attendance att,
     egeis_assignment assign,eg_department dept,egeis_designation desig,egeis_attendance_type attyp
     where att.tenantid=$tenantid

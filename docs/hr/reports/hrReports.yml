@@ -69,7 +69,7 @@ ReportDefinitions:
   - name: status
     label: reports.hr.employee.Status
     type: singlevaluelist
-    pattern: http://hr-masters:8080/hr-masters/hrstatuses/_search?objectName='Employee Master'&tenantId=$tenantid|$..id|$..code
+    pattern: http://hr-masters:8080/hr-masters/hrstatuses/_search?objectName=Employee Master&tenantId=$tenantid|$..id|$..code
     source: egeis_hrstatus
     searchClause: and emp.employeestatus=$status
     
@@ -343,7 +343,7 @@ ReportDefinitions:
   - name: employeeStatus
     label: reports.hr.employeeStatus
     type: singlevaluelist
-    pattern: http://hr-masters:8080/hr-masters/hrstatuses/_search?objectName='Employee Master'&tenantId=$tenantid|$..id|$..code
+    pattern: http://hr-masters:8080/hr-masters/hrstatuses/_search?objectName=Employee Master&tenantId=$tenantid|$..id|$..code
     source: hr
     isMandatory: false
     searchClause: and hrstatus.code=$employeeStatus
@@ -373,7 +373,7 @@ ReportDefinitions:
   - name: leaveStatus
     label: reports.hr.leaveStatus
     type: singlevaluelist
-    pattern: http://hr-masters:8080/hr-masters/hrstatuses/_search?objectName='LeaveApplication'&tenantId=$tenantid|$..id|$..code
+    pattern: http://hr-masters:8080/hr-masters/hrstatuses/_search?objectName=LeaveApplication&tenantId=$tenantid|$..id|$..code
     source: hr
     isMandatory: false
     searchClause: and hrstatus.id = $leaveStatus
@@ -513,7 +513,7 @@ ReportDefinitions:
   - name: employeeStatus
     label: reports.hr.employeeStatus
     type: singlevaluelist
-    pattern: http://hr-masters:8080/hr-masters/hrstatuses/_search?objectName='Employee Master'&tenantId=$tenantid|$..id|$..code
+    pattern: http://hr-masters:8080/hr-masters/hrstatuses/_search?objectName=Employee Master&tenantId=$tenantid|$..id|$..code
     source: hr
     isMandatory: false
     searchClause: and emp.employeestatus=$employeeStatus

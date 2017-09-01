@@ -1,6 +1,8 @@
 package org.egov.pgrrest.read.domain.service.validator;
 
 import org.egov.common.contract.response.ErrorField;
+import org.egov.pgr.common.model.Employee;
+import org.egov.pgr.common.repository.EmployeeRepository;
 import org.egov.pgrrest.common.domain.model.AttributeEntry;
 import org.egov.pgrrest.read.domain.exception.InvalidServiceRequestFieldException;
 import org.egov.pgrrest.read.domain.model.RouterResponse;
@@ -126,6 +128,10 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
     public static final String ROUTER_NOT_DEFINED_CODE = "pgr.0068";
     public static final String ROUTER_NOT_DEFINED_FIELD = "router";
 
+    public static final String ASSIGNMENT_NOT_DEFINED_FOR_POSITION_CODE = "pgr.0069";
+    public static final String ASSIGNMENT_NOT_DEFINED_FOR_POSITION_MESSAGE = "Assignment does not exist for the position. Cannot Create Grievance";
+    public static final String ASSIGNMENT_NOT_DEFINED_FOR_POSITION_FIELD = "position";
+
     public static final String SYSTEM_STATUS = "systemStatus";
     public static final String MANUAL = "MANUAL";
     public static final String EXTERNAL_CRN = "systemExternalCRN";
@@ -142,15 +148,19 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
     public static final String SYSTEM_STATE_ID = "systemStateId";
     public static final String ADMINISTRATION = "ADMINISTRATION";
 
+
     private ServiceRequestRepository serviceRequestRepository;
 
     private RouterRestRepository routerRestRepository;
 
+    private EmployeeRepository employeeRepository;
 
     public ServiceRequestFieldValidator(ServiceRequestRepository serviceRequestRepository,
-                                        RouterRestRepository routerRestRepository) {
+                                        RouterRestRepository routerRestRepository,
+                                        EmployeeRepository employeeRepository) {
         this.serviceRequestRepository = serviceRequestRepository;
         this.routerRestRepository = routerRestRepository;
+        this.employeeRepository = employeeRepository;
     }
 
     @Override
@@ -160,8 +170,9 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
 
     @Override
     public void validate(ServiceRequest model) {
-        if (!getError(model).isEmpty()) {
-            throw new InvalidServiceRequestFieldException(getError(model));
+        List<ErrorField> errorFields = getError(model);
+        if (!errorFields.isEmpty()) {
+            throw new InvalidServiceRequestFieldException(errorFields);
         }
     }
 
@@ -558,6 +569,22 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
                 .code(ROUTER_NOT_DEFINED_CODE)
                 .message(ROUTER_NOT_DEFINED_MESSAGE)
                 .field(ROUTER_NOT_DEFINED_FIELD)
+                .build();
+            errorFields.add(errorField);
+        } else {
+            Long positionId = Long.valueOf(router.getRouterTypes().get(0).getPosition());
+            addAssignmentErrors(positionId, model.getTenantId(), errorFields);
+        }
+
+    }
+
+    private void addAssignmentErrors(Long positionId, String tenantid, List<ErrorField> errorFields) {
+        Employee employee = employeeRepository.getEmployeeByPosition(positionId, tenantid);
+        if (employee == null) {
+            final ErrorField errorField = ErrorField.builder()
+                .code(ASSIGNMENT_NOT_DEFINED_FOR_POSITION_CODE)
+                .message(ASSIGNMENT_NOT_DEFINED_FOR_POSITION_MESSAGE)
+                .field(ASSIGNMENT_NOT_DEFINED_FOR_POSITION_FIELD)
                 .build();
             errorFields.add(errorField);
         }

@@ -1300,26 +1300,28 @@ var dat = {
         "hide":true,
         		"children":[meterReading],
                 "fields": [{
-                    "name": "meterOwner",
+                    "name": "MeterOwner",
                     "jsonPath": "Connection.meter[0].meterOwner",
                     "label": "wc.group.meterOwner",
                     "pattern": "^[\s.]*([^\s.][\s.]*){0,50}$",
-                    "type": "text",
+                    "type": "singleValueList",
                     "isRequired": true,
                     "isDisabled": false,
                     "requiredErrMsg": "",
-                    "patternErrMsg": ""
+                    "patternErrMsg": "",
+                    "url":"/wcms-connection/connection/_getmeterownertypes?|$..key|$..object"
                   },
                   {
-                      "name": "meterModel",
+                      "name": "MeterModel",
                       "jsonPath": "Connection.meter[0].meterModel",
                       "label": "wc.group.meterModal",
                       "pattern": "^[\s.]*([^\s.][\s.]*){0,50}$",
-                      "type": "text",
+                      "type": "singleValueList",
                       "isRequired": false,
                       "isDisabled": false,
                       "requiredErrMsg": "",
-                      "patternErrMsg": ""
+                      "patternErrMsg": "",
+                      "url":"/wcms-connection/connection/_getmetermodeltypes?|$..key|$..object"
                     },
                     {
                     "name": "meterMake",

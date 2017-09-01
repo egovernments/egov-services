@@ -390,11 +390,6 @@ var localization_EN_Data = {
       "reports.wcms.arrearbalance":"Balance Arrears",
       "reports.wcms.currentbalance":"Current Balance",
       "reports.wcms.totalbalance":"Total Balance",
-      "reports.wcms.state":"State",
-      "reports.wcms.demand":"Demand",
-      "reports.wcms.collection":"Collection",
-      "reports.wcms.balance":"Balance",
-
 
 
     "pt.create.button": "Forward",
@@ -929,7 +924,6 @@ var localization_EN_Data = {
     "tl.create.licenses.groups.agreementDetails.agreementDate": "Date of Execution",
     "tl.create.licenses.groups.agreementDetails.agreementNo": "Registered/Non Registered Document No",
     "tl.create.licenses.groups.agreementDetails": "Agreement Details",
-    "tl.view.licenses.groups.agreementDetails": "Agreement Details (Trader is not the owner of the Property)",
 
     "tl.create.licenses.groups.FeeDetails": "Fee Details",
     "tl.create.license.table.financialYear": "Financial Year",
@@ -2525,10 +2519,6 @@ var localization_MR_Data = {
   "reports.wcms.arrearbalance":"Balance Arrears - Marathi",
   "reports.wcms.currentbalance":"Current Balance - Marathi",
   "reports.wcms.totalbalance":"Total Balance - Marathi",
-  "reports.wcms.state":"State-Marathi",
-  "reports.wcms.demand":"Demand-Marathi",
-  "reports.wcms.collection":"Collection-Marathi",
-  "reports.wcms.balance":"Balance-Marathi",
 
 "employee.Employee.fields.EmployeePhoto":"कर्मचारी फोटो",
 "employee.Employee.fields.EmployeeSignature":"कर्मचारी स्वाक्षरी",

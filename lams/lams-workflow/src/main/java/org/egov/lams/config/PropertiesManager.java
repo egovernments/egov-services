@@ -37,7 +37,13 @@ public class PropertiesManager {
 
 	@Value("${egov.services.workflow_service.hostname.evict_businesskey}")
 	private String workflowServiceEvictBusinessKey;
-	
+
+	@Value("${egov.services.workflow_service.objection_businesskey}")
+	private String workflowServiceObjectionBusinessKey;
+
+	@Value("${egov.services.workflow_service.judgement_businesskey}")
+	private String workflowServiceJudgementBusinessKey;
+
 	@Value("${kafka.topics.start.workflow}")
 	private String kafkaStartWorkflowTopic;
 	

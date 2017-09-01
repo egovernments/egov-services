@@ -21,8 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Repository
 public class WorkflowRepository {
 
@@ -113,16 +111,22 @@ public class WorkflowRepository {
 		ProcessInstance processInstance = new ProcessInstance();
 
 		assignee.setId(workFlowDetails.getAssignee());
-		if(agreement.getRenewal()!=null){
+		if (Action.JUDGEMENT.equals(agreement.getAction())) {
+			processInstance.setBusinessKey(propertiesManager.getWorkflowServiceJudgementBusinessKey());
+			processInstance.setType(propertiesManager.getWorkflowServiceJudgementBusinessKey());
+		} else if (Action.OBJECTION.equals(agreement.getAction())) {
+			processInstance.setBusinessKey(propertiesManager.getWorkflowServiceObjectionBusinessKey());
+			processInstance.setType(propertiesManager.getWorkflowServiceObjectionBusinessKey());
+		} else if (Action.RENEWAL.equals(agreement.getAction())) {
 			processInstance.setBusinessKey(propertiesManager.getWorkflowServiceRenewBusinessKey());
 			processInstance.setType(propertiesManager.getWorkflowServiceRenewBusinessKey());
-		}else if(agreement.getCancellation()!=null){
+		} else if (Action.CANCELLATION.equals(agreement.getAction())) {
 			processInstance.setBusinessKey(propertiesManager.getWorkflowServiceCancelBusinessKey());
 			processInstance.setType(propertiesManager.getWorkflowServiceCancelBusinessKey());
-		}else if(agreement.getEviction()!=null){
+		} else if (Action.EVICTION.equals(agreement.getAction())) {
 			processInstance.setBusinessKey(propertiesManager.getWorkflowServiceEvictBusinessKey());
 			processInstance.setType(propertiesManager.getWorkflowServiceEvictBusinessKey());
-		}else{
+		} else {
 			processInstance.setBusinessKey(propertiesManager.getWorkflowServiceCreateBusinessKey());
 			processInstance.setType(propertiesManager.getWorkflowServiceCreateBusinessKey());
 		}
@@ -151,16 +155,22 @@ public class WorkflowRepository {
 		Position assignee = new Position();
 
 		taskRequest.setRequestInfo(requestInfo);
-		if(agreement.getRenewal()!=null){
+		if (Action.JUDGEMENT.equals(agreement.getAction())) {
+			task.setBusinessKey(propertiesManager.getWorkflowServiceJudgementBusinessKey());
+			task.setType(propertiesManager.getWorkflowServiceJudgementBusinessKey());
+		} else if (Action.OBJECTION.equals(agreement.getAction())) {
+			task.setBusinessKey(propertiesManager.getWorkflowServiceObjectionBusinessKey());
+			task.setType(propertiesManager.getWorkflowServiceObjectionBusinessKey());
+		} else if (Action.RENEWAL.equals(agreement.getAction())) {
 			task.setBusinessKey(propertiesManager.getWorkflowServiceRenewBusinessKey());
 			task.setType(propertiesManager.getWorkflowServiceRenewBusinessKey());
-		}else if(agreement.getCancellation()!=null){
+		} else if (Action.CANCELLATION.equals(agreement.getAction())) {
 			task.setBusinessKey(propertiesManager.getWorkflowServiceCancelBusinessKey());
 			task.setType(propertiesManager.getWorkflowServiceCancelBusinessKey());
-		}else if(agreement.getEviction()!=null){
+		} else if (Action.EVICTION.equals(agreement.getAction())) {
 			task.setBusinessKey(propertiesManager.getWorkflowServiceEvictBusinessKey());
 			task.setType(propertiesManager.getWorkflowServiceEvictBusinessKey());
-		}else{
+		} else {
 			task.setBusinessKey(propertiesManager.getWorkflowServiceCreateBusinessKey());
 			task.setType(propertiesManager.getWorkflowServiceCreateBusinessKey());
 		}

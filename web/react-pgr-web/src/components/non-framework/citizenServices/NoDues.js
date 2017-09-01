@@ -1360,7 +1360,7 @@ class NoDues extends Component {
                                             </div>
                                             <br/>
                                             <div style={{textAlign:"right"}}>
-                                                  Date / दिनांक :{Receipt[0].Bill[0].billDetails[0].billDate ? getFullDate(Receipt[0].Bill[0].billDetails[0].billDate,true) : "-"} <br/>
+                                                  Date / दिनांक :{Receipt[0].Bill[0].billDetails[0].billDate ? getFullDate(Receipt[0].Bill[0].billDetails[0].billDate, true) : (Receipt[0].Bill[0].billDetails[0].receiptDate ? getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate) : "-")} <br/>
                                                   Certificate No. / प्रमाणपत्र क्रं : {this.state.serviceRequest.serviceRequestId}
 
                                             </div>

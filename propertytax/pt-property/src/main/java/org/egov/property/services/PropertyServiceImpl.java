@@ -867,7 +867,7 @@ public class PropertyServiceImpl implements PropertyService {
 		if (propertyResponse != null) {
 			Property property = propertyResponse.getProperties().get(0);
 
-			SimpleDateFormat dbDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+			SimpleDateFormat dbDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 			Date occupancyDate = dbDateFormat.parse(property.getOccupancyDate());
 			String occupancyDateStr = new SimpleDateFormat(propertiesManager.getSimpleDateFormat())
 					.format(occupancyDate);
@@ -904,11 +904,13 @@ public class PropertyServiceImpl implements PropertyService {
 					for (TaxPeriod taxPeriod : taxPeriodResponse.getTaxPeriods()) {
 						try {
 							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
-							sdf.setTimeZone(TimeZone.getTimeZone("GMT+5:30"));
-							taxPeriodFromDate = sdf.parse(taxPeriod.getFromDate());
+							SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+							sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+							dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+							taxPeriodFromDate = dateFormat.parse(sdf.format(taxPeriod.getFromDate()));
 						} catch (Exception ex) {
 							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-							sdf.setTimeZone(TimeZone.getTimeZone("GMT+5:30"));
+							sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 							taxPeriodFromDate = sdf.parse(taxPeriod.getFromDate());
 						}
 
@@ -1028,7 +1030,7 @@ public class PropertyServiceImpl implements PropertyService {
 	 */
 	private List<Demand> prepareDemands(String tenantId, String upicNumber, Property property,
 			TaxHeadMasterResponse taxHeadResponse, TaxPeriod taxPeriod) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.s");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 		List<Demand> newDemandList = new ArrayList<>();
 		Demand newDemand;
@@ -1053,6 +1055,7 @@ public class PropertyServiceImpl implements PropertyService {
 		logger.info("Demand fromDate = " + taxPeriod.getFromDate() + " \n toDate = " + taxPeriod.getToDate());
 		try {
 			Date fromDate = dateFormat.parse(taxPeriod.getFromDate());
+
 			Date toDate = dateFormat.parse(taxPeriod.getToDate());
 			logger.info(" Dates, fromDate = " + fromDate + ", toDate = " + toDate + " \n Epoch values, fromDate = "
 					+ fromDate.getTime() + " \n toDate = " + toDate.getTime());

@@ -1392,8 +1392,7 @@ class NoDues extends Component {
                                             <br/>
                                             <div style={{textAlign:"center"}}>
                                               संदर्भिय विषयांन्वये प्रमाणित करण्यात येते की, {this.props.match.params.id != "pt" ? "Consumer No/पाणी क्रमांक" : "Assessment No/मालमत्ता क्रमांक"},
-                                              {Receipt[0].Bill[0].billDetails[0].consumerCode} यांच्या नावे नोंद असून, सन 2017-18  पर्यंतचा संपुर्ण
-                                              पाणी रक्कम भरलेली असून, कोणतीही थकबाकी येणे नाही.
+                                              {Receipt[0].Bill[0].billDetails[0].consumerCode} यांच्या नावे नोंद असून, सन 2017-18  {this.props.match.params.id != "pt" ? "पर्यंतचा संपुर्ण पाणी रक्कम भरलेली असून, कोणतीही थकबाकी येणे नाही." : "पर्यंतचा संपुर्ण मालमत्ता कराची रक्कम भरलेली असून, कोणतीही थकबाकी येणे नाही."}
 
 
                                             </div>

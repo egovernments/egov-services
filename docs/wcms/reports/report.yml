@@ -139,4 +139,105 @@ ReportDefinitions:
          fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
          and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL' ) and prop.tenantid=$tenantid 
          group by hscno,state,pipesize,consumerName, usage,boundaryname))result ;
-  
+
+- reportName: ConsumerReport
+  summary: Consumer Register Report
+  version: 1.0.0
+  moduleName: wcms
+  sourceColumns:
+  - name: boundaryname
+    label: reports.wcms.wardno
+    type: string
+    source: wcms
+  - name: hscno
+    label: reports.wcms.consumerno
+    type: number
+    source: wcms
+  - name: consumerName
+    label: reports.wcms.consumername
+    type: number
+    source: wcms
+  - name: pipesize
+    label: reports.wcms.pipesize
+    type: number
+    source: wcms
+  - name: usage
+    label: reports.wcms.usage
+    type: number
+    source: wcms
+  - name: connectionAddress
+    label: reports.wcms.connectionAddress
+    type: number
+    source: wcms
+  - name: applicationtype
+    label: reports.wcms.applicationtype
+    type: number
+    source: wcms
+  - name: billingtype
+    label: reports.wcms.billingtype
+    type: number
+    source: wcms
+  - name: categoryType
+    label: reports.wcms.categoryType
+    type: number
+    source: wcms
+  - name: connectionstatus
+    label: reports.wcms.connectionstatus
+    type: number
+    source: wcms
+  - name: WT_BAL
+    label: reports.wcms.Balance
+    type: number
+    source: wcms
+    total: true
+  - name: WT_DEMAND
+    label: reports.wcms.demand
+    type: number
+    source: wcms
+    total: true
+  - name: WT_COLL
+    label: reports.wcms.coll
+    type: number
+    source: wcms
+    total: true
+  searchParams:
+  - name: fromDate
+    label: reports.wcms.fromdate
+    type: string
+    source: wcms
+    isMandatory: false
+  - name: toDate
+    label: reports.wcms.todate
+    type: string
+    source: wcms
+    isMandatory: false
+  query: select * from ((select boundary.name as boundaryname,prop.hscno as hscno,prop.username as consumerName,prop.pipesize as   pipesize,
+         ut.data::jsonb->>'name'  as usage,prop.address as connectionAddress,
+         prop.applicationtype as applicationtype,prop.categorytype as categoryType, prop.watersource as waterSourceType,prop.connectiontype as    connectiontype, prop.billingtype as billingtype,
+         prop.connectionstatus as connectionstatus,
+         'CURRENT' as STATE, SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount) ELSE NULL END)) AS WT_DEMAND,
+         SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.collectionamount) ELSE NULL END)) AS WT_COLL,
+         SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS WT_BAL
+         from egwtr_connection_view prop, eg_boundary boundary ,egpt_mstr_usage  ut,egbs_demand demand, egbs_demanddetail dd where    prop.wardid=boundary.id and 
+         NULLIF(prop.usagetype, '')::int  = ut.id
+         and  demand.consumercode=prop.hscno 
+         and demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE
+         fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
+         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL') and prop.tenantid=$tenantid group by hscno,state,pipesize,consumerName, usage,boundaryname , connectionAddress,applicationtype,categoryType,waterSourceType,
+         connectiontype,billingtype,connectionstatus )
+         UNION
+         (select boundary.name as boundaryname,prop.hscno as hscno,prop.username as consumerName,prop.pipesize as   pipesize,
+         ut.data::jsonb->>'name'  as usage,prop.address as connectionAddress,
+         prop.applicationtype as applicationtype,prop.categorytype as categoryType, prop.watersource as waterSourceType,prop.connectiontype as    connectiontype, prop.billingtype as billingtype,
+         prop.connectionstatus as connectionstatus,
+         'CURRENT' as STATE, SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount) ELSE NULL END)) AS WT_DEMAND,
+         SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.collectionamount) ELSE NULL END)) AS WT_COLL,
+         SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS WT_BAL
+         from egwtr_connection_view prop, eg_boundary boundary ,egpt_mstr_usage  ut,egbs_demand demand, egbs_demanddetail dd where prop.wardid=boundary.id and 
+         NULLIF(prop.usagetype, '')::int  = ut.id
+         and  demand.consumercode=prop.hscno 
+         and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE
+         fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
+         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL') and prop.tenantid=$tenantid group by hscno,state,pipesize,consumerName, usage,boundaryname , connectionAddress,applicationtype,categoryType,waterSourceType,
+         connectiontype,billingtype,connectionstatus) )result order by hscno asc;
+

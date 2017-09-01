@@ -49,7 +49,7 @@ public class SearchMasterBuilder {
 	public static String buildSearchQuery(String tableName, String tenantId, Integer[] ids, String name,
 			String nameLocal, String code, Boolean active, Boolean isResidential, Integer orderNumber, String category,
 			Integer pageSize, Integer offSet, List<Object> preparedStatementValues, Integer fromYear, Integer toYear,
-			Integer year, String parent, List<String> service) {
+			Integer year, String parent, String[] service) {
 
 		StringBuffer searchSql = new StringBuffer();
 		String defaultService = "common";// TODO read from property file
@@ -151,14 +151,14 @@ public class SearchMasterBuilder {
 
 	}
 
-	private static String getSearchQueryForStrings(List<String> service) {
+	private static String getSearchQueryForStrings(String[] service) {
 
 		StringBuilder query = new StringBuilder();
-		if (!service.isEmpty()) {
+		if (service!=null) {
 
-			String[] list = service.toArray(new String[service.size()]);
+			String[] list = service;
 			query.append("'" + list[0].toLowerCase() + "'");
-			for (int i = 1; i < service.size(); i++) {
+			for (int i = 1; i < service.length; i++) {
 				query.append("," + "'" + list[i].toLowerCase() + "'");
 			}
 		}

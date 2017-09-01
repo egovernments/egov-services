@@ -716,14 +716,15 @@ public class MasterServiceImpl implements Masterservice {
 	@Override
 	public UsageMasterResponse getUsageMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
 			String code, String nameLocal, Boolean active, Boolean isResidential, Integer orderNumber, Integer pageSize,
-			Integer offSet, String parent, List<String> service) throws Exception {
+			Integer offSet, String parent, String[] service) throws Exception {
 
 		UsageMasterResponse usageMasterResponse = new UsageMasterResponse();
 
-		if (service == null || service.isEmpty()) {
-			List<String> services = new ArrayList<String>();
-			services.add(propertiesManager.getUsageMasterDefaultService());
-			service = services;
+		if (service == null) {
+			String[] defaultSerices = new String[1];
+			defaultSerices[0] = propertiesManager.getUsageMasterDefaultService();
+
+			service = defaultSerices;
 		}
 
 		try {

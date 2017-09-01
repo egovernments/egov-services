@@ -378,13 +378,13 @@ public class TradeLicenseRepository {
 			Integer pageNumber, String sort, String active, Integer[] ids, String applicationNumber,
 			String licenseNumber, String oldLicenseNumber, String mobileNumber, String aadhaarNumber, String emailId,
 			String propertyAssesmentNo, Integer adminWard, Integer locality, String ownerName, String tradeTitle,
-			String tradeType, Integer tradeCategory, Integer tradeSubCategory, String legacy, Integer status) {
+			String tradeType, Integer tradeCategory, Integer tradeSubCategory, String legacy, Integer status,Integer applicationStatus) {
 
 		List<TradeLicenseSearch> tradeLicenseSearchList = new ArrayList<TradeLicenseSearch>();
 		List<TradeLicenseSearchEntity> licenses = tradeLicenseJdbcRepository.search(requestInfo, tenantId, pageSize,
 				pageNumber, sort, active, ids, applicationNumber, licenseNumber, oldLicenseNumber, mobileNumber,
 				aadhaarNumber, emailId, propertyAssesmentNo, adminWard, locality, ownerName, tradeTitle, tradeType,
-				tradeCategory, tradeSubCategory, legacy, status);
+				tradeCategory, tradeSubCategory, legacy, status, applicationStatus);
 
 		for (TradeLicenseSearchEntity tradeLicenseSearchEntity : licenses) {
 			TradeLicenseSearch tradeLicenseSearch = tradeLicenseSearchEntity.toDomain();

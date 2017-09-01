@@ -82,7 +82,7 @@ public class TradeLicenseControllerTest {
 	 * 
 	 */
 
-//	@Test
+	@Test
 	public void testCreateLegacyTrade() throws IOException, Exception {
 
 		try {
@@ -163,7 +163,8 @@ public class TradeLicenseControllerTest {
 					any(Integer.class), any(String.class), any(String.class), any(Integer[].class), any(String.class),
 					any(String.class), any(String.class), any(String.class), any(String.class), any(String.class),
 					any(String.class), any(Integer.class), any(Integer.class), any(String.class), any(String.class),
-					any(String.class), any(Integer.class), any(Integer.class), any(String.class), any(Integer.class)))
+					any(String.class), any(Integer.class), any(Integer.class), any(String.class), any(Integer.class),
+					any(Integer.class)))
 							.thenReturn(tradeLicenseSearchResponse);
 
 			mockMvc.perform(post("/license/v1/_search").param("tenantId", "default")

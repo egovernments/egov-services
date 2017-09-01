@@ -231,6 +231,7 @@ public class RestConnectionService {
                 .append("?code=").append(waterConnectionRequest.getConnection().getSubUsageType())
                 .append("&tenantId=").append(waterConnectionRequest.getConnection().getTenantId())
         		.append("&service=").append(WcmsConnectionConstants.SERVICES_FOR_USAGETYPE_SEARCH); 
+        logger.info("URL to validate Sub Usage Type : " + url.toString());
         final RequestInfo requestInfo = RequestInfo.builder().ts(1111111L).build();
         RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
         UsageMasterResponse usagesubtype = new RestTemplate().postForObject(url.toString(),

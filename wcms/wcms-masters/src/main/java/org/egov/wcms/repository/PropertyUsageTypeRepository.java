@@ -146,10 +146,10 @@ public class PropertyUsageTypeRepository {
             usageTypeIdsList.add(Integer.valueOf(propertyTypeUsage.getUsageTypeId()));
         final Integer[] usageTypeIds = usageTypeIdsList.toArray(new Integer[usageTypeIdsList.size()]);
         final UsageTypeResponse usageResponse = restExternalMasterService.getUsageNameFromPTModule(
-                usageTypeIds,WcmsConstants.WC, propUsageTypeGetRequest.getTenantId());
+                usageTypeIds, WcmsConstants.SERVICE, propUsageTypeGetRequest.getTenantId());
         for (final PropertyTypeUsageType propertyTypeUsageType : propUsageTypes)
             for (final PropertyTaxResponseInfo propertyResponse : usageResponse.getUsageMasters())
-                if (propertyResponse.getId().equals(propertyTypeUsageType.getUsageTypeId())){
+                if (propertyResponse.getId().equals(propertyTypeUsageType.getUsageTypeId())) {
                     propertyTypeUsageType.setUsageType(propertyResponse.getName());
                     propertyTypeUsageType.setUsageCode(propertyResponse.getCode());
                     propertyTypeUsageType.setService(propertyResponse.getService());

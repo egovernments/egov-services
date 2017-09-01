@@ -169,6 +169,10 @@ paths:
           in : query
           type: integer
           description: Unqique identifier of the Trade License Status
+        - name: applicationStatus
+          in : query
+          type: integer
+          description: Unqique identifier of the Trade Application Status
       responses:
         200:
           description: Trade License(s) Retrived Successfully
@@ -397,6 +401,10 @@ definitions:
         type: integer
         format: int64
         description:  Commencement Date of the trade as epoch
+      issuedDate:
+        type: integer
+        format: int64
+        description:  License issued Date of the trade as epoch
       licenseValidFromDate:
         type: integer
         format: int64
@@ -607,6 +615,10 @@ definitions:
         type: integer
         format: int64
         description:  Commencement Date of the trade as epoch
+      issuedDate:
+        type: integer
+        format: int64
+        description:  License issued Date of the trade as epoch
       licenseValidFromDate:
         type: integer
         format: int64
@@ -885,6 +897,9 @@ definitions:
       status:
         type: string
         description: Unique identifier of the Applicaiton status
+      statusName:
+        type: string
+        description: status name of the Trade Applicaiton
       state_id:
         type: string
         description: Unique identifier of the workflow state

@@ -38,6 +38,8 @@ public class LicenseApplicationSearch {
 	
 	private AuditDetails auditDetails;
 	
+	private String statusName;
+	
 	@JsonProperty("feeDetails")
 	private List<LicenseFeeDetailSearch> feeDetails;
 	

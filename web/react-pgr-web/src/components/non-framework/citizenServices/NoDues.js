@@ -121,12 +121,6 @@ class NoDues extends Component {
       let self=this;
       let {formData}=this.props;
       self.props.setLoadingStatus('show');
-
-      window.localStorage.setItem("demands",demands);
-      window.localStorage.setItem("applicationFeeDemand",applicationFeeDemand);
-      window.localStorage.setItem("formData",formData);
-
-
       //api call
       /*let request=
       {
@@ -215,56 +209,19 @@ class NoDues extends Component {
             paidBy: Receipt[0]["Bill"][0].payeeName
           })
           console.log(Receipt);
-
           // Receipt.push(res.Bill);
           self.setState({
             ReceiptOne:Receipt
           });
-          window.localStorage.setItem("ReceiptOne",Receipt)
-
-
-          if (demands.length>0) {
-            Api.commonApiPost("/billing-service/bill/_generate", {businessService: this.props.match.params.id.toUpperCase(),consumerCode:formData.consumerCode}, {}, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res){
-                self.props.setLoadingStatus('hide');
-
-                // let Receipt=[];
-                Receipt[0]={"Bill":[]};
-                Receipt[0]["Bill"]=res.Bill;
-                Receipt[0]["Bill"][0]["paidBy"]=Receipt[0]["Bill"][0].payeeName;
-                Receipt[0]["tenantId"]=window.localStorage.getItem("tenantId")
-                Receipt[0]["instrument"]={"tenantId":window.localStorage.getItem("tenantId"),"amount":self.getTotal(demands),"instrumentType":{"name":"Cash"}}
-
-                Receipt[0]["Bill"][0]["billDetails"][0]["amountPaid"]=self.getTotal(demands);
-                self.setState({
-                  paidBy: Receipt[0]["Bill"][0].payeeName
-                })
-                console.log(Receipt);
-                // Receipt.push(res.Bill);
-                self.setState({
-                  Receipt
-                });
-                console.log(Receipt);
-                window.localStorage.setItem("Receipt",Receipt)
-                self.setState({open: true});
-                self.props.setLoadingStatus('hide');
-              }, function(err) {
-                self.props.toggleSnackbarAndSetText(true, err.message, false, true);
-                self.props.setLoadingStatus('hide');
-            })
-
-          } else {
-            self.props.setLoadingStatus('hide');
-          }
-
-          // console.log(Receipt);
-          // self.setState({open: true});
+          console.log(Receipt);
+          self.setState({open: true});
         }, function(err) {
           self.props.toggleSnackbarAndSetText(true, err.message, false, true);
           self.props.setLoadingStatus('hide');
         });
       //}
 
-      // self.setState({open: true});
+      self.setState({open: true});
       /*Api.commonApiPost("/citizen-services/v1/requests/_create", {}, {"serviceReq":request}, null, self.props.metaData["noDues.search"].useTimestamp, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
             // self.props.setLoadingStatus('hide');
 
@@ -280,7 +237,37 @@ class NoDues extends Component {
       })*/
 
 
+      if (demands.length>0) {
+        Api.commonApiPost("/billing-service/bill/_generate", {businessService: this.props.match.params.id.toUpperCase(),consumerCode:formData.consumerCode}, {}, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res){
+            self.props.setLoadingStatus('hide');
 
+            let Receipt=[];
+            Receipt[0]={"Bill":[]};
+            Receipt[0]["Bill"]=res.Bill;
+            Receipt[0]["Bill"][0]["paidBy"]=Receipt[0]["Bill"][0].payeeName;
+            Receipt[0]["tenantId"]=window.localStorage.getItem("tenantId")
+            Receipt[0]["instrument"]={"tenantId":window.localStorage.getItem("tenantId"),"amount":self.getTotal(demands),"instrumentType":{"name":"Cash"}}
+
+            Receipt[0]["Bill"][0]["billDetails"][0]["amountPaid"]=self.getTotal(demands);
+            self.setState({
+              paidBy: Receipt[0]["Bill"][0].payeeName
+            })
+            console.log(Receipt);
+            // Receipt.push(res.Bill);
+            self.setState({
+              Receipt
+            });
+            console.log(Receipt);
+            self.setState({open: true});
+            self.props.setLoadingStatus('hide');
+          }, function(err) {
+            self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+            self.props.setLoadingStatus('hide');
+        })
+
+      } else {
+        self.props.setLoadingStatus('hide');
+      }
 
 
 
@@ -937,17 +924,7 @@ class NoDues extends Component {
   }
 
   goBackToDashboard = () => {
-    let self = this;
-    if(this.state.serviceRequest) {
-      var ServiceRequest = {...this.state.serviceRequest};
-      ServiceRequest.status = "CANCELLED";
-      Api.commonApiPost("/citizen-services/v1/requests/_update", {}, {"serviceReq": ServiceRequest}, null, self.props.metaData["noDues.search"].useTimestamp, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
-        self.props.setRoute("/prd/dashboard");
-      }, function(err) {
-        self.props.setRoute("/prd/dashboard");
-      })
-    } else
-      self.props.setRoute("/prd/dashboard");
+    this.props.setRoute("/prd/dashboard");
   }
 
   render() {
@@ -1242,7 +1219,7 @@ class NoDues extends Component {
                               </Table>
                         </CardText>
                       </Card>
-                      <div style={{"page-break-after": "always"}}></div>
+                      <div className="page-break"></div>
                       </Col> : ""}
                                             {ReceiptOne && ReceiptOne[0] && <Col md={6} >
                       <Card>
@@ -1356,7 +1333,7 @@ class NoDues extends Component {
                               </Table>
                         </CardText>
                       </Card>
-                      <div style={{"page-break-after": "always"}}></div>
+                      <div className="page-break"></div>
                       </Col>}
                       <Col md={6} id="DownloadReceipt">
                       {(this.props.match.params.status != "extract" && Receipt && Receipt[0]) ? <Card>

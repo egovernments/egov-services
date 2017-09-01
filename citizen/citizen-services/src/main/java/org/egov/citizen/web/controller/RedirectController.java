@@ -34,24 +34,17 @@ public class RedirectController {
         return new ModelAndView("pgPayLoadView", "pgPayLoad", new PGPayloadResponse());
     }
 
-    @RequestMapping(value = "/pgjsonresponse", method = RequestMethod.POST)
+    @RequestMapping(value = "/pgresponse", method = RequestMethod.GET)
     public String jsonSubmit(HttpServletRequest request) {
     	String body = null;
-    	try{
-    		if ("POST".equalsIgnoreCase(request.getMethod())) 
-    		{
-    		   body = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-    		}
-    	}catch(Exception e){
-    		
-    	}
+    	String queryString = request.getQueryString();
+    	String[] array = queryString.split("=");
+    	body = array[1];
         LOGGER.info("Body obtained: "+body);
         StringBuilder redirectUrl= new StringBuilder();
         redirectUrl.append(applicationProperties.getRedirectUrl()).append(applicationProperties.getRedirectAppend());
-        
-        return "redirect:http://www.google.com";
-        
-      // return "redirect:"+redirectUrl.toString()+body;
+              
+       return "redirect:"+redirectUrl.toString()+request;        
     }
 
     @RequestMapping(value = "/pgresponses", method = RequestMethod.POST)
@@ -83,7 +76,7 @@ public class RedirectController {
        return "redirect:"+redirectUrl.toString()+model.toString();
     }
     
-    @RequestMapping(value = "/pgresponse", method = RequestMethod.POST)
+    @RequestMapping(value = "/pgpostresponse", method = RequestMethod.POST)
     public String jsonSubmit(@RequestParam(value="msg") String request) {
         LOGGER.info("Body obtained: "+request);
         StringBuilder redirectUrl= new StringBuilder();
@@ -91,4 +84,5 @@ public class RedirectController {
               
        return "redirect:"+redirectUrl.toString()+request;
     }
+    
 }

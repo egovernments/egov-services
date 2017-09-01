@@ -1,20 +1,21 @@
 {
-    "responseInfo": {
+    "ResponseInfo": {
         "apiId": null,
         "ver": "v1",
         "ts": "Sat Aug 19 16:50:40 IST 2017",
         "resMsgId": null,
-        "msgId": null,
+        "msgId": "20170310130900",
         "status": null
     },
-    "depreciation": {
-        "auditDetails": {
+    "Depreciation": {
+    	"id": 1,
+        "AuditDetails": {
             "createdBy": "5",
             "createdDate": 1495978422356,
             "lastModifiedBy": "5",
             "lastModifiedDate": 1495978422356
         },
-        "depreciationDetails": [
+        "DepreciationDetail": [
             {
                 "id": 6,
                 "assetId": 576,

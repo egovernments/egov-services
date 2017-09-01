@@ -358,17 +358,26 @@ public class AssetValidator {
         log.debug("Depreciation Criteria Financial Year :: " + finacialYear);
         AssetCriteria assetCriteria = null;
 
+        final boolean assetIdsCheck = assetIds != null && !assetIds.isEmpty();
+
         if (finacialYear == null && fromDate == null && toDate == null)
             throw new RuntimeException(
-                    "financialyear and (time period)fromdate,todate both cannot be null please provide atleast one value.");
+                    "financialyear and (time period)fromdate,todate both cannot be empty please provide atleast one value.");
+        
         if (finacialYear == null && fromDate != null && toDate == null)
             throw new RuntimeException("If From Date is selected then To date is mandatory.");
-        if (finacialYear == null && fromDate != null && toDate != null && assetIds != null && !assetIds.isEmpty())
+        
+        if (finacialYear == null && fromDate != null && toDate != null && !assetIdsCheck)
+            throw new RuntimeException("Asset IDs are mandatory for custom time period.");
+        
+        if (finacialYear == null && fromDate != null && toDate != null && assetIdsCheck)
             assetCriteria = AssetCriteria.builder().id(new ArrayList<Long>(assetIds)).status(status)
                     .fromCapitalizedValue(depreciationMinimumValue).tenantId(tenantId).fromDate(fromDate).toDate(toDate)
                     .build();
-        else
-            throw new RuntimeException("Asset IDs are mandatory for custom time period.");
+        
+        if (finacialYear != null && fromDate == null && toDate == null)
+            assetCriteria = AssetCriteria.builder().id(new ArrayList<Long>(assetIds)).status(status)
+                    .fromCapitalizedValue(depreciationMinimumValue).tenantId(tenantId).build();
 
         log.debug("Asset Criteria for Asset Search for Depreciation :: " + assetCriteria);
 

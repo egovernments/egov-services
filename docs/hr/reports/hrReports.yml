@@ -326,7 +326,7 @@ ReportDefinitions:
     pattern: http://egov-common-masters:8080/egov-common-masters/departments/_search?tenantId=$tenantid|$..id|$..name
     source: hr
     isMandatory: false
-    searchClause: and dept.id=$departmentId
+    searchClause: and assign.departmentid=$departmentId
     
   - name: designation
     label: reports.hr.Designation
@@ -334,7 +334,7 @@ ReportDefinitions:
     pattern: http://hr-masters:8080/hr-masters/designations/_search?tenantId=$tenantid|$..id|$..name  
     source: hr
     isMandatory: false
-    searchClause: and desig.id=$designation
+    searchClause: and assign.designationid=$designation
     
   - name: employeeCode/Name
     label: reports.hr.Employee_Code/Name  
@@ -389,8 +389,8 @@ ReportDefinitions:
     isMandatory: false
     searchClause: and hrstatus.id = $leaveStatus
     
-  query: select leaveapp.applicationnumber as applicationnumber,emp.code||'-'||usr.name  as name, leavetype.name as leavetype , hrstatus.code as status,
-    leaveapp.fromdate||' - '||leaveapp.todate as daterange, leaveapp.leavedays as noofdays, leaveapp.reason as comment
+  query: select leaveapp.applicationnumber as applicationno,emp.code||'-'||usr.name  as code, leavetype.name as leavetype , hrstatus.code as status,
+    TO_CHAR(leaveapp.fromdate,'DD/MM/YYYY')||' - '||TO_CHAR(leaveapp.todate,'DD/MM/YYYY') as daterange, leaveapp.leavedays as noofdays, leaveapp.reason as comment
     from egeis_employee emp,egeis_leaveapplication leaveapp, eg_user usr, egeis_leavetype leavetype, egeis_hrstatus hrstatus,
     eg_department dept,egeis_assignment assign,egeis_designation desig,egeis_employeetype emptyp
     where leaveapp.tenantid=$tenantid

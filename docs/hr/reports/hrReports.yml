@@ -259,7 +259,7 @@ ReportDefinitions:
     sum(case when att.type=(select id from egeis_attendance_type where code='P') and month = $month and year = $year then 1 else 0 end) presentDays,
     sum(case when att.type=(select id from egeis_attendance_type where code='A') and month = $month and year = $year then 1 else 0 end)  absentDays,
     sum(case when att.type=(select id from egeis_attendance_type where code='L') and month = $month and year = $year then 1 else 0 end) leaveDays,
-    sum(case when att.type=(select id from egeis_attendance_type where code='H') and month = $month and year = $year then 1 else 0 end) noOfOTs
+    0 as noOfOTs
     from egeis_employee emp,eg_user usr,egeis_attendance att,
     egeis_assignment assign,eg_department dept,egeis_designation desig,egeis_attendance_type attyp
     where att.tenantid=$tenantid
@@ -469,7 +469,7 @@ ReportDefinitions:
     type: string
     source: hr
     
-  - name: leaveEligibleAsOn
+  - name: leaveeligibleasondate
     label: reports.hr.leaveEligibleAsOn
     type: string
     source: hr
@@ -479,7 +479,7 @@ ReportDefinitions:
     type: string
     source: hr
     
-  - name: approved
+  - name: approved_count
     label: reports.hr.approved
     type: string
     source: hr
@@ -543,7 +543,7 @@ ReportDefinitions:
     source: hr
     isMandatory: true
     
-  query: select emp.code ||'-'|| usr.name as employeecodename,levtyp.name as leavetype,openbal.noofdays as openingbalance,
+  query: select emp.code ||'-'|| usr.name as code,levtyp.name as leavetype,openbal.noofdays as openingbalance,
     cast(((openbal.noofdays/12*(select extract(month from (select to_date(to_char(to_timestamp(Trunc(CAST($asOnDate as bigint)/1000 )), 
     'YYYY/MM/DD'), 'YYYY-MM-DD')))))) as int) as leaveeligibleasondate,
     (openbal.noofdays + cast(((openbal.noofdays/12*(select extract(month from (select to_date(to_char(to_timestamp(Trunc(CAST($asOnDate as bigint)/1000 )), 

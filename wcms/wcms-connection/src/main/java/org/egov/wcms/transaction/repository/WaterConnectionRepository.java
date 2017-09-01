@@ -274,10 +274,10 @@ public class WaterConnectionRepository {
                 			waterConnectionRequest.getRequestInfo().getUserInfo().getId(), new Date(new java.util.Date().getTime()),
                 			waterConnectionRequest.getRequestInfo().getUserInfo().getId(), new Date(new java.util.Date().getTime()),
                 			meterReading.getGapCode() != null ? meterReading.getGapCode() : "",
-                			meterReading.getGapCode() != null ? meterReading.getConsumption() : "",
-                			meterReading.getGapCode() != null ? meterReading.getConsumptionAdjusted() : "",
-                			meterReading.getGapCode() != null ? meterReading.getNumberOfDays() : "",
-                			meterReading.getGapCode() != null ? meterReading.getResetFlag() : false
+                			meterReading.getConsumption() != null ? meterReading.getConsumption() : "",
+                			meterReading.getConsumptionAdjusted() != null ? meterReading.getConsumptionAdjusted() : "",
+                			meterReading.getNumberOfDays() != null ? meterReading.getNumberOfDays() : "",
+                			meterReading.getResetFlag() != null ? meterReading.getResetFlag() : false
                 	};
                     
                     values.add(obj);

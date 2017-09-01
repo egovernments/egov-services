@@ -917,7 +917,12 @@ public class PropertyServiceImpl implements PropertyService {
 							newDemandList = prepareDemands(tenantId, upicNumber, property, taxHeadResponse, taxPeriod);
 							finalDemandList.addAll(newDemandList);
 						} else {
+							if(matchedDemands.size()>0){
 							finalDemandList.add(matchedDemands.get(0));
+							}else{
+								newDemandList = prepareDemands(tenantId, upicNumber, property, taxHeadResponse, taxPeriod);
+								finalDemandList.addAll(newDemandList);
+							}
 						}
 					}
 					demandResponse = new DemandResponse();

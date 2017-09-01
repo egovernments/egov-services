@@ -23,6 +23,10 @@ ReportDefinitions:
     type: number
     source: seva
     total: true
+  - name: SERVICE_NAME
+    label: reports.collection.service.name
+    type: string
+    source: collection
   searchParams:
   - name: fromDate
     label: reports.collection.fromdate
@@ -43,6 +47,12 @@ ReportDefinitions:
     isMandatory: false
     searchClause: AND EGCL_RECEIPTHEADER.STATUS = $status
     source: collection
+  - name: servicename
+    label: reports.collection.service.name
+    type: singlevaluelist
+    pattern: http://collection-services:8080/collection-services/receipts/_getDistinctBusinessDetails?tenantId=$tenantid|$..code|$..name
+    isMandatory: false
+    searchClause: AND EGCL_RECEIPTHEADER.businessdetails = $servicename
   - name: collectedby
     label: reports.collection.collectedby
     type: singlevaluelist
@@ -50,7 +60,7 @@ ReportDefinitions:
     source: collection
     isMandatory: false
     searchClause: AND EGUSER.NAME = $collectedby
-  query: SELECT ROW_NUMBER() OVER (ORDER BY EGCL_RECEIPTHEADER.RECEIPTNUMBER) AS SERIALNUMBER, EGCL_RECEIPTHEADER.RECEIPTNUMBER AS RECEIPT_NUMBER, EG_DEPARTMENT.NAME AS DEPT_NAME, EGCL_RECEIPTHEADER.TOTALAMOUNT AS RECEIPT_AMOUNT, EGCL_RECEIPTHEADER.CONSUMERCODE AS CONSUMER_CODE,  EGCL_RECEIPTHEADER.RECEIPTTYPE AS RECEIPT_TYPE FROM EGCL_RECEIPTHEADER EGCL_RECEIPTHEADER  INNER JOIN EG_BUSINESSDETAILS EG_BUSINESSDETAILS ON EGCL_RECEIPTHEADER.BUSINESSDETAILS = EG_BUSINESSDETAILS.CODE INNER JOIN EGCL_RECEIPTINSTRUMENT EGCL_RECEIPTINSTRUMENT ON EGCL_RECEIPTHEADER.ID = EGCL_RECEIPTINSTRUMENT.RECEIPTHEADER INNER JOIN EGF_INSTRUMENT EGF_INSTRUMENT ON EGCL_RECEIPTINSTRUMENT.INSTRUMENTHEADER = EGF_INSTRUMENT.ID INNER JOIN EG_DEPARTMENT EG_DEPARTMENT ON  EGCL_RECEIPTHEADER.DEPARTMENT = EG_DEPARTMENT.CODE INNER JOIN EG_USER EGUSER ON EGUSER.ID = EGCL_RECEIPTHEADER.CREATEDBY WHERE   
+  query: SELECT ROW_NUMBER() OVER (ORDER BY EGCL_RECEIPTHEADER.RECEIPTNUMBER) AS SERIALNUMBER, EGCL_RECEIPTHEADER.RECEIPTNUMBER AS RECEIPT_NUMBER, EG_DEPARTMENT.NAME AS DEPT_NAME, EGCL_RECEIPTHEADER.TOTALAMOUNT AS RECEIPT_AMOUNT, EGCL_RECEIPTHEADER.CONSUMERCODE AS CONSUMER_CODE,  EGCL_RECEIPTHEADER.RECEIPTTYPE AS RECEIPT_TYPE , EG_BUSINESSDETAILS.NAME AS SERVICE_NAME FROM EGCL_RECEIPTHEADER EGCL_RECEIPTHEADER  INNER JOIN EG_BUSINESSDETAILS EG_BUSINESSDETAILS ON EGCL_RECEIPTHEADER.BUSINESSDETAILS = EG_BUSINESSDETAILS.CODE INNER JOIN EGCL_RECEIPTINSTRUMENT EGCL_RECEIPTINSTRUMENT ON EGCL_RECEIPTHEADER.ID = EGCL_RECEIPTINSTRUMENT.RECEIPTHEADER INNER JOIN EGF_INSTRUMENT EGF_INSTRUMENT ON EGCL_RECEIPTINSTRUMENT.INSTRUMENTHEADER = EGF_INSTRUMENT.ID INNER JOIN EG_DEPARTMENT EG_DEPARTMENT ON  EGCL_RECEIPTHEADER.DEPARTMENT = EG_DEPARTMENT.CODE INNER JOIN EG_USER EGUSER ON EGUSER.ID = EGCL_RECEIPTHEADER.CREATEDBY WHERE   
          EGF_INSTRUMENT.INSTRUMENTTYPEID = 'Cash' AND EGCL_RECEIPTHEADER.TENANTID=$tenantid 
   orderBy: ORDER BY RECEIPT_NUMBER;
   
@@ -146,6 +156,12 @@ ReportDefinitions:
     pattern: http://collection-services:8080/collection-services/receipts/_getDistinctBusinessDetails?tenantId=$tenantid|$..code|$..name
     isMandatory: false
     searchClause: AND EGCL_RECEIPTHEADER.businessdetails = $servicename
+  - name: classification
+    label: reports.collection.classification
+    type: singlevaluelist
+    pattern: 'list://BILLBASED:BILLBASED,MISCELLANEOUS:MISCELLANEOUS' 
+    isMandatory: false
+    searchClause: AND EGCL_RECEIPTHEADER.receipttype = $classification
   - name: collectedby
     label: reports.collection.collectedby
     type: singlevaluelist
@@ -202,6 +218,10 @@ ReportDefinitions:
     label: reports.collection.amount
     type: number
     source: collection
+  - name: SERVICE_NAME
+    label: reports.collection.service.name
+    type: string
+    source: collection
   searchParams:
   - name: fromDate
     label: reports.collection.fromdate
@@ -222,6 +242,12 @@ ReportDefinitions:
     source: collection
     isMandatory: false
     searchClause: AND CH.status = $status
+  - name: servicename
+    label: reports.collection.service.name
+    type: singlevaluelist
+    pattern: http://collection-services:8080/collection-services/receipts/_getDistinctBusinessDetails?tenantId=$tenantid|$..code|$..name
+    isMandatory: false
+    searchClause: AND EGCL_RECEIPTHEADER.businessdetails = $servicename
   - name: collectedby
     label: reports.collection.collectedby
     type: singlevaluelist
@@ -230,8 +256,8 @@ ReportDefinitions:
     isMandatory: false
     searchClause: AND us.username =$collectedby
   query: SELECT row_number() over (order by CH.RECEIPTNUMBER) as serialnumber, CH.RECEIPTNUMBER AS RECEIPT_NUMBER, ED.NAME AS DEPT_NAME, IH.transactionnumber AS CHEQUE_NUMBER, BK.name AS BANK, 
-         IH.branchname AS BRANCH, IH.transactiondate AS CHEQUE_DATE, IH.amount AS AMOUNT FROM EGCL_RECEIPTHEADER CH, EG_DEPARTMENT ED, EGCL_RECEIPTINSTRUMENT CI, EGF_INSTRUMENT IH, egf_BANK BK,
-         egeis_assignment ass, eg_user us WHERE ED.code=CH.DEPARTMENT AND CI.receiptheader=CH.ID AND IH.ID=CI.INSTRUMENTHEADER AND IH.BANKID=BK.code AND IH.INSTRUMENTTYPEID IN ('Cheque','DD') AND CH.createdby = ass.positionid and ass.employeeid=us.id AND CH.tenantid=$tenantid ORDER BY RECEIPT_NUMBER
+         IH.branchname AS BRANCH, IH.transactiondate AS CHEQUE_DATE, IH.amount AS AMOUNT, EG_BUSINESSDETAILS.NAME AS SERVICE_NAME FROM EGCL_RECEIPTHEADER CH, EG_DEPARTMENT ED, EGCL_RECEIPTINSTRUMENT CI, EGF_INSTRUMENT IH, egf_BANK BK,
+         egeis_assignment ass, eg_user us, EG_BUSINESSDETAILS EG_BUSINESSDETAILS WHERE ED.code=CH.DEPARTMENT AND CI.receiptheader=CH.ID AND IH.ID=CI.INSTRUMENTHEADER AND IH.BANKID=BK.code AND IH.INSTRUMENTTYPEID IN ('Cheque','DD') AND CH.createdby = ass.positionid and ass.employeeid=us.id AND CH.BUSINESSDETAILS = EG_BUSINESSDETAILS.CODE AND CH.tenantid=$tenantid ORDER BY RECEIPT_NUMBER;
   
   
 - reportName: CollectionSummaryAccountHeadWise 
@@ -288,6 +314,10 @@ ReportDefinitions:
     label: reports.collection.total.count
     type: number
     source: collection
+  - name: SERVICE_NAME
+    label: reports.collection.service.name
+    type: string
+    source: collection
   searchParams:
   - name: fromDate
     label: reports.collection.fromdate
@@ -308,6 +338,12 @@ ReportDefinitions:
     source: collection
     isMandatory: false
     searchClause : AND EGCL_RECEIPTHEADER.STATUS = $status 
+  - name: servicename
+    label: reports.collection.service.name
+    type: singlevaluelist
+    pattern: http://collection-services:8080/collection-services/receipts/_getDistinctBusinessDetails?tenantId=$tenantid|$..code|$..name
+    isMandatory: false
+    searchClause: AND EGCL_RECEIPTHEADER.businessdetails = $servicename
   - name: paymentmode
     label: reports.collection.paymentmode
     type: singlevaluelist

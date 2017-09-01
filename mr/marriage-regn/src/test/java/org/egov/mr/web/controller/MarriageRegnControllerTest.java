@@ -39,6 +39,7 @@ import org.egov.mr.web.contract.MarriageRegnCriteria;
 import org.egov.mr.web.contract.MarriageRegnRequest;
 import org.egov.mr.web.contract.MarriageRegnResponse;
 import org.egov.mr.web.contract.ResponseInfoFactory;
+import org.egov.mr.web.errorhandler.ErrorHandler;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -67,6 +68,9 @@ public class MarriageRegnControllerTest {
 	@InjectMocks
 	private MarriageRegnController marriageRegnController;
 
+	@MockBean
+	private ErrorHandler errorHandler;
+	
 	@MockBean
 	ResponseInfoFactory responseInfoFactory;
 

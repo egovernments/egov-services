@@ -473,10 +473,12 @@ class Report extends Component {
     Api.commonApiPost("/citizen-services/v1/requests/_update", {}, {"serviceReq": ServiceRequest}, null, true, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
       self.props.setLoadingStatus("hide");
       self.props.toggleSnackbarAndSetText(true, "Updated successfully.", true, false);
+      $('#fileInput').val("");
       self.setState({
         ServiceRequest: res.serviceReq,
         comments: "",
-        feeAmount: ""
+        feeAmount: "",
+        documents: []
       });
     }, function(err){
       self.props.setLoadingStatus("hide");
@@ -564,7 +566,7 @@ class Report extends Component {
                     </SelectField>
                   </Col> : ""}
                   <Col xs={12} md={6}>
-                    <input multiple type="file" style={{"marginTop":"40px"}} onChange={(e) => {
+                    <input id="fileInput" multiple type="file" style={{"marginTop":"40px"}} onChange={(e) => {
                           self.setState({
                             documents: e.target.files || []
                           })

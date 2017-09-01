@@ -80,7 +80,7 @@ const getAmount = function(demands, arrearsBool) {
       for(var i=0; i<collectionAmountArr.length; i++)
         collSum += collectionAmountArr[i];
       return taxSum - collSum;
-    } else return "NA";
+    } else return "00";
 }
 
 const getAddress = function(property) {
@@ -1085,10 +1085,6 @@ class NoDues extends Component {
                                           <td style={{textAlign:"center"}}>
                                             Receipt For : {this.props.match.params.id=="wc" ? 'Water Charges' : 'Property Tax'}
                                           </td>
-                                          {this.props.match.params.id=="pt" &&
-                                          <td>
-
-                                          </td>}
                                           <td style={{textAlign:"right"}}>
                                             Receipt Date: {getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate)}
                                           </td>

@@ -120,7 +120,7 @@ public class HierarchyTypeController {
 			List<HierarchyType> allHierarchyTypes = hierarchyTypeService.getAllHierarchyTypes(hierarchyTypeRequest);
 			hierarchyTypeResponse.getHierarchyTypes().addAll(allHierarchyTypes);
 			ResponseInfo responseInfo = new ResponseInfo();
-			responseInfo.setStatus(HttpStatus.CREATED.toString());
+			responseInfo.setStatus(HttpStatus.OK.toString());
 			hierarchyTypeResponse.setResponseInfo(responseInfo);
 		}
 		return new ResponseEntity<>(hierarchyTypeResponse, HttpStatus.OK);

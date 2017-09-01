@@ -10,6 +10,7 @@ import org.egov.boundary.domain.service.BoundaryTypeService;
 import org.egov.boundary.web.contract.BoundaryType;
 import org.egov.boundary.web.contract.BoundaryTypeRequest;
 import org.egov.boundary.web.contract.BoundaryTypeResponse;
+import org.egov.boundary.web.contract.BoundaryTypeSearchRequest;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.Error;
 import org.egov.common.contract.response.ErrorField;
@@ -93,9 +94,9 @@ public class BoundaryTypeController {
 		BoundaryTypeResponse boundaryTypeResponse = new BoundaryTypeResponse();
 		if (boundaryTypeRequest.getBoundaryType().getTenantId() != null
 				&& !boundaryTypeRequest.getBoundaryType().getTenantId().isEmpty()) {
-			List<org.egov.boundary.persistence.entity.BoundaryType> allBoundaryTypes = boundaryTypeService
+			/*List<org.egov.boundary.persistence.entity.BoundaryType> allBoundaryTypes = boundaryTypeService
 					.getAllBoundaryTypes(boundaryTypeRequest);
-			boundaryTypeResponse.getBoundaryTypes().addAll(mapToContractBoundaryTypeList(allBoundaryTypes));
+			boundaryTypeResponse.getBoundaryTypes().addAll(mapToContractBoundaryTypeList(allBoundaryTypes));*/
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setStatus(HttpStatus.CREATED.toString());
 			// responseInfo.setApi_id(body.getRequestInfo().getApi_id());
@@ -107,13 +108,13 @@ public class BoundaryTypeController {
 	
 	@PostMapping(value ="/_search")
 	@ResponseBody
-	public ResponseEntity<?> searchBoundaryType(@RequestBody @Valid BoundaryTypeRequest boundaryTypeRequest) {
+	public ResponseEntity<?> searchBoundaryType(@RequestBody @Valid BoundaryTypeSearchRequest boundaryTypeSearchRequest) {
 
 		BoundaryTypeResponse boundaryTypeResponse = new BoundaryTypeResponse();
-		if (boundaryTypeRequest.getBoundaryType().getTenantId() != null
-				&& !boundaryTypeRequest.getBoundaryType().getTenantId().isEmpty()) {
+		if (boundaryTypeSearchRequest.getBoundaryType().getTenantId() != null
+				&& !boundaryTypeSearchRequest.getBoundaryType().getTenantId().isEmpty()) {
 			List<org.egov.boundary.persistence.entity.BoundaryType> allBoundaryTypes = boundaryTypeService
-					.getAllBoundaryTypes(boundaryTypeRequest);
+					.getAllBoundaryTypes(boundaryTypeSearchRequest);
 			boundaryTypeResponse.getBoundaryTypes().addAll(mapToContractBoundaryTypeList(allBoundaryTypes));
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setStatus(HttpStatus.CREATED.toString());

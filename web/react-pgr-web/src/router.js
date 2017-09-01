@@ -263,7 +263,7 @@ const Main = () => {
       <Route exact path={base + '/non-framework/citizenServices/wc/view/:ackNo'} component={CS_VIEW_WaterConnection}/>
       <Route exact path={base + '/non-framework/citizenServices/fireNoc/create'} component={CS_FireNoc}/>
 
-      <Route exact path= {base + '/payment/response'} component={Payment}/>
+      <Route exact path= {base + '/payment/response/redirect/:msg'} component={Payment}/>
 
     </Switch>
   </main>

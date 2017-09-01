@@ -1450,14 +1450,14 @@ class NoDues extends Component {
                             <td colSpan={8}>
                               <div>
                                 <b>Property No:</b> {Receipt[0].Bill[0].billDetails[0].consumerCode}<br/>
-                                <b>Property Usage / Sub Usage:</b> {this.state.Property && this.state.Property.usage ? this.state.Property.usage : ""}
+                                <b>Property Usage / Sub Usage:</b> {this.state.Property && this.state.Property.usage ? this.state.Property.usage : "NA"}
                               </div>
                             </td>
                           </tr>
                           <tr>
                             <td colSpan={8}>
                               <div style={{"whiteSpace": "pre"}}>
-                                <b>Property Owner Name</b>: {this.state.Property && this.state.Property.owners ? this.state.Property.owners[0].name : ""}<br/>
+                                <b>Property Owner Name</b>: {this.state.Property && this.state.Property.owners ? this.state.Property.owners[0].name : "NA"}<br/>
                                 <b>& Address: </b> {getAddress(this.state.Property)}                                                                                        <b>Age of Property</b>
                               </div>
                             </td>
@@ -1466,7 +1466,7 @@ class NoDues extends Component {
                             <td colSpan={8}>
                               <div>
                                 <b>Billing Name</b>: {Receipt[0].Bill[0].payeeName}<br/>
-                                <b>& Address:</b> {Receipt[0].Bill[0].payeeAddress?Receipt[0].Bill[0].payeeAddress:""}
+                                <b>& Address:</b> {Receipt[0].Bill[0].payeeAddress?Receipt[0].Bill[0].payeeAddress:"NA"}
                               </div>
                             </td>
                           </tr>

@@ -41,6 +41,8 @@ public class PropertiesManager {
 
 	private String dateFormat;
 
+	
+
 	public String getServerContextPath() {
 		return environment.getProperty("server.contextPath");
 	}
@@ -120,23 +122,43 @@ public class PropertiesManager {
 		return environment.getProperty("egov.marriageregn.property.demand.generated");
 	}
 
-    public String getCreateMarriageRegnTopicName() {
-		
+	public String getCreateMarriageRegnTopicName() {
+
 		return environment.getProperty("kafka.topics.create.marriageregn");
 	}
 
 	public String getBillingServiceGenerateBill() {
-		
+
 		return environment.getProperty("egov.services.billing_service.createbill");
 	}
 
+	public String getTaxPeriods() {
+
+		return environment.getProperty("egov.services.billing_service.searchtaxperiods");
+	}
+	public String getTaxHead() {
+
+		return environment.getProperty("egov.services.billing_service.searchhead");
+	}
+
 	public String getCollectionServiceHost() {
-		
+
 		return environment.getProperty("egov.services.collection_service.hostname");
 	}
 
 	public String getCollectionServiceGenerateReceipt() {
-		
+
 		return environment.getProperty("egov.services.collection_service.createreciept");
+	}
+	
+	public String getTaxHeadCode(){
+		
+		return environment.getProperty("egov.services.marriageregn.property.taxheadcode");
+		
+	}
+	
+	public String getCreateWorkflowTopicName(){
+		return environment.getProperty("kafka.topics.create.workflow");
+		
 	}
 }

@@ -100,21 +100,14 @@ public class MarriageRegnService {
 		MarriageRegn marriageRegn = marriageRegnRequest.getMarriageRegn();
 
 		populateAuditDetailsForMarriageRegnCreate(marriageRegnRequest);
-		String kafkaTopic = null;
-		if (marriageRegn.getSource().equals(Source.DATA_ENTRY)) {
-			kafkaTopic = propertiesManager.getCreateMarriageRegnTopicName();
-		} else if (marriageRegn.getSource().equals(Source.SYSTEM)) {
-			kafkaTopic = propertiesManager.getCreateWorkflowTopicName();
-			marriageRegn.setStatus(ApplicationStatus.WORKFLOW);
-			//setInitiatorPosition(marriageRegnRequest);
-			marriageRegn.setApplicationNumber(marriageRegnRepository.generateApplicationNumber());
-		}
+
+		// setInitiatorPosition(marriageRegnRequest);
+		marriageRegn.setApplicationNumber(marriageRegnRepository.generateApplicationNumber());
+
 		log.info("marriageRegnRequest::" + marriageRegnRequest);
-		// kafkaTemplate.send(propertiesManager.getCreateMarriageFeeGenerated(),
-		// marriageRegnRequest);
-		// kafkaTemplate.send(propertiesManager.getCreateMarriageRegnTopicName(),
-		// marriageRegnRequest);
-		kafkaTemplate.send(kafkaTopic, marriageRegnRequest);
+		kafkaTemplate.send(propertiesManager.getCreateMarriageFeeGenerated(), marriageRegnRequest);
+		/*kafkaTemplate.send(propertiesManager.getCreateMarriageRegnTopicName(), marriageRegnRequest);*/
+
 		return marriageRegn;
 	}
 
@@ -131,7 +124,7 @@ public class MarriageRegnService {
 			if (workFlowDetails != null) {
 				if ("Approve".equalsIgnoreCase(workFlowDetails.getAction())
 						&& (marriageRegn.getActions().equals(Action.CREATE))) {
-					 marriageRegn.setStatus(ApplicationStatus.ACTIVE);
+					marriageRegn.setStatus(ApplicationStatus.ACTIVE);
 					marriageRegn.setRegnDate(new Date().getTime());
 					if (marriageRegn.getRegnNumber() == null) {
 						marriageRegn
@@ -206,7 +199,7 @@ public class MarriageRegnService {
 
 		log.info("the request url to position get call :: " + positionUrl);
 		log.info("the request body to position get call :: " + requestInfoWrapper);
-		
+
 		try {
 			positionResponse = restTemplate.postForObject(positionUrl, requestInfoWrapper, PositionResponse.class);
 		} catch (Exception e) {
@@ -225,22 +218,21 @@ public class MarriageRegnService {
 		for (Position position : positionList) {
 			positionMap.put(position.getDeptdesig().getDesignation().getName(), position.getId());
 		}
-		
-	/*ServiceConfigurationSearchCriteria config = new ServiceConfigurationSearchCriteria();
-		String keyName = propertiesManager.getWorkflowInitiatorPositionkey();
-		List<String> names = new ArrayList<>();
-		names.add(keyName);
-		config.setNames(names);
-		List<String> assistantDesignations = serviceConfigurationService.search(config).get(keyName);
-		for (String desginationName : assistantDesignations) {
-			log.info("desg name" + desginationName);
-			if (positionMap.containsKey(desginationName)) {
-				workFlowDetails.setInitiatorPosition(positionMap.get(desginationName));
-				log.info(" the initiator name  :: " + desginationName + "the value for key"
-						+ workFlowDetails.getInitiatorPosition());
-			}
-		}*/
-		
+
+		/*
+		 * ServiceConfigurationSearchCriteria config = new
+		 * ServiceConfigurationSearchCriteria(); String keyName =
+		 * propertiesManager.getWorkflowInitiatorPositionkey(); List<String>
+		 * names = new ArrayList<>(); names.add(keyName);
+		 * config.setNames(names); List<String> assistantDesignations =
+		 * serviceConfigurationService.search(config).get(keyName); for (String
+		 * desginationName : assistantDesignations) { log.info("desg name" +
+		 * desginationName); if (positionMap.containsKey(desginationName)) {
+		 * workFlowDetails.setInitiatorPosition(positionMap.get(desginationName)
+		 * ); log.info(" the initiator name  :: " + desginationName +
+		 * "the value for key" + workFlowDetails.getInitiatorPosition()); } }
+		 */
+
 	}
 
 }

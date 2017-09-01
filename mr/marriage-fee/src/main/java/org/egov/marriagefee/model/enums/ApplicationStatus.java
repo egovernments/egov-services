@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum ApplicationStatus {
+	
+	ACTIVE("ACTIVE"),
+	
 	CREATED("CREATED"),
 
 	REGISTERED("REGISTERED"),
@@ -14,8 +17,10 @@ public enum ApplicationStatus {
 	
 	DIGITALSIGNED("DIGITALSIGNED"),
 
-	CANCELLED("CANCELLED");
+	CANCELLED("CANCELLED"),
 
+	WORKFLOW("WORKFLOW");
+	
 	private String value;
 
 	ApplicationStatus(String value) {

@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
+import org.egov.marriagefee.model.enums.Action;
 import org.egov.marriagefee.model.enums.ApplicationStatus;
 import org.egov.marriagefee.model.enums.Source;
 import org.egov.marriagefee.model.enums.Venue;
@@ -44,7 +45,6 @@ public class MarriageRegn {
 	@NotNull
 	private String marriagePhoto;
 
-	@NotNull
 	private Fee fee;
 
 	private MarryingPerson bridegroom;
@@ -67,6 +67,7 @@ public class MarriageRegn {
 	
 	private Long regnDate;
 
+	@NotNull
 	private ApplicationStatus status;
 
 	private Source source;
@@ -83,7 +84,7 @@ public class MarriageRegn {
 	
 	private List<Demand> demands = new ArrayList<Demand>();
 
-	private List<String> actions = new ArrayList<String>();
+	private Action actions;
 	
 	private AuditDetails auditDetails;
 	

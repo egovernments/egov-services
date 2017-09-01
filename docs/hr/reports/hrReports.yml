@@ -179,7 +179,7 @@ ReportDefinitions:
     source: egeis_employee
     
   - name: presentDays
-    label: reports.hr.Attendence.presentDays
+    label: reports.hr.Attendence.presentDay
     type: string
     source: egeis_assignment
     
@@ -194,7 +194,7 @@ ReportDefinitions:
     source: egeis_assignment
     
   - name: noOfOTs
-    label: reports.hr.Attendence.noOfOTs
+    label: reports.hr.Attendence.noOfOT
     type: string
     source: egeis_assignment
     
@@ -387,7 +387,7 @@ ReportDefinitions:
     and usr.id=emp.id 
     and assign.designationid=desig.id
     and leavetype.id = leaveapp.leavetypeid
-    and hrstatus.code=leaveapp.status 
+    and hrstatus.id=leaveapp.status 
     and assign.employeeid=emp.id
     and emp.employeetypeid=emptyp.id
     and assign.departmentid=dept.id

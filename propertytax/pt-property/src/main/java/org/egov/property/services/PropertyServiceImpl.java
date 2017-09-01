@@ -911,7 +911,7 @@ public class PropertyServiceImpl implements PropertyService {
 						long time = taxPeriodFromDate.getTime();
 
 						List<Demand> matchedDemands = demandRespForSavedDemands.getDemands().stream()
-								.filter(demand -> demand.getTaxPeriodFrom().equals(String.valueOf(time)))
+								.filter(demand -> demand.getTaxPeriodFrom()==time)
 								.collect(Collectors.toList());
 						if (matchedDemands == null) {
 							newDemandList = prepareDemands(tenantId, upicNumber, property, taxHeadResponse, taxPeriod);

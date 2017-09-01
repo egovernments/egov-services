@@ -100,9 +100,6 @@ public class ApplicationProperties {
     @Value("${egov.services.egf_masters.host}")
     private String egfMastersHost;
     
-    @Value("${egov.services.egf_master.host}")
-    private String egfMasterHost;
-
     @Value("${egov.services.egf_service.chartofaccounts.searchpath}")
     private String egfServiceChartOfAccountsSearchPath;
 

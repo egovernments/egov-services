@@ -285,7 +285,7 @@ public class DepreciationService {
                 depreciationCriteria.setFinancialYear(from + "-" + Integer.toString(to + 1).substring(2, 4));
         } else if (depreciationCriteria.getFromDate() == null && depreciationCriteria.getToDate() == null) {
 
-            final String url = applicationProperties.getEgfMasterHost()
+            final String url = applicationProperties.getEgfMastersHost()
                     + applicationProperties.getEgfFinancialYearSearchPath() + "?tenantId ="
                     + depreciationCriteria.getTenantId() + "&finYearRange=" + financialYear;
 

@@ -141,7 +141,8 @@ public class ServiceController {
 		error.setMessage(CitizenServiceConstants.FAIL_STATUS_MSG);
 		error.setDescription(CitizenServiceConstants.FAIL_STATUS_DESC);
 
-		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);	}
+		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);	
+	}
 	
 /*	@PostMapping(value = "/requests/_update")
 	public ResponseEntity<?> updateService(HttpEntity<String> httpEntity) {

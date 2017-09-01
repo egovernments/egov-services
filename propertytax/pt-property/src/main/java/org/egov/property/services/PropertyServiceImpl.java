@@ -894,42 +894,31 @@ public class PropertyServiceImpl implements PropertyService {
 			// new demands and set in response
 			logger.info("----------- demands size:" + demandRespForSavedDemands.getDemands().size() + " no of periods"
 					+ noOfPeriods);
+			 Date taxPeriodFromDate = null;
 			if (!demandRespForSavedDemands.getDemands().isEmpty()) {
-				Date taxPeriodFromDate;
+				
 				// If number of demands and tax periods are same, set the
 				// demands to the list,
 				// else prepare demands for the remaining taxperiods and add the
 				// existing demands along with the new demands to the response
 				if (demandRespForSavedDemands.getDemands().size() < noOfPeriods) {
 					for (TaxPeriod taxPeriod : taxPeriodResponse.getTaxPeriods()) {
-						try {
 							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
 							SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 							sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 							dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 							taxPeriodFromDate = dateFormat.parse(sdf.format(taxPeriod.getFromDate()));
-						} catch (Exception ex) {
-							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-							sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-							taxPeriodFromDate = sdf.parse(taxPeriod.getFromDate());
-						}
-
-						for (Demand demand : demandRespForSavedDemands.getDemands()) {
-							// If demand exists for a taxperiod, add it to the
-							// demandlist, else prepare new demand and add to
-							// the list
-							logger.info("demand tax period ----------- " + demand.getTaxPeriodFrom()
-									+ " tax period is ------------" + taxPeriodFromDate.getTime());
-							if (demand.getTaxPeriodFrom().equals(taxPeriodFromDate.getTime())) {
-								finalDemandList.add(demand);
-								break;
-							} else {
-								newDemandList = prepareDemands(tenantId, upicNumber, property, taxHeadResponse,
-										taxPeriod);
-								finalDemandList.addAll(newDemandList);
-								break;
-							}
-						}
+							long time=taxPeriodFromDate.getTime();
+				
+						List<Demand>	matchedDemands=demandRespForSavedDemands.getDemands().stream()
+							.filter(demand -> demand.getTaxPeriodFrom().equals(String.valueOf(time)))
+							.collect(Collectors.toList());
+						if(matchedDemands==null){
+							newDemandList = prepareDemands(tenantId,upicNumber, property, taxHeadResponse, taxPeriod);
+							 finalDemandList.addAll(newDemandList);
+						}else{
+							finalDemandList.add(matchedDemands.get(0));	
+						}					
 					}
 					demandResponse = new DemandResponse();
 					demandResponse.setResponseInfo(responseInfoFactory

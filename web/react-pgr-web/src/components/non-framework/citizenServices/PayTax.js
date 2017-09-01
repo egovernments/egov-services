@@ -47,6 +47,7 @@ var specifications={};
 let reqRequired = [];
 
 const getFullDate = function(dat,isTimeStamp=false) {
+  if(!dat) return "-";
   var _date = new Date(dat);
   if (isTimeStamp) {
     return ('0' + _date.getDate()).slice(-2) + '/'
@@ -77,7 +78,7 @@ const getAmount = function(demands, arrearsBool) {
       for(var i=0; i<collectionAmountArr.length; i++)
         collSum += collectionAmountArr[i];
       return taxSum - collSum;
-    } else return "NA";
+    } else return "00";
 }
 
 const getAddress = function(property) {
@@ -918,7 +919,9 @@ class NoDues extends Component {
         return iter(add_to_words(words, triplet_to_words(first[0], first[1], first[2]), SCALE[i]), ++i, get_first(rest), get_rest(rest));
       }
 
-      return iter('', 0, get_first(String(int)), get_rest(String(int)));
+      var words = iter('', 0, get_first(String(int)), get_rest(String(int)));
+      if(words) words = words[0].toUpperCase() + words.substring(1);
+      return words;
   }
 
   goBackToDashboard = () => {
@@ -1087,11 +1090,11 @@ class NoDues extends Component {
                                       </tr>
                                       <tr>
                                           <td colSpan={3} style={{textAlign:"left"}}>
-                                            Consumer Code : {Receipt[0].Bill[0].billDetails[0].consumerCode}<br/>
-                                            Consumer Name : {Receipt[0].Bill[0].payeeName}<br/>
-                                            Amount : {Receipt[0].Bill[0].billDetails[0].totalAmount?("Rs. "+Receipt[0].Bill[0].billDetails[0].totalAmount+"/-"):"NA"}<br/>
-                                            {/*this.props.match.params.id=="wc" && <div>"Consumer Address: "+Receipt[0].Bill[0].payeeAddress?Receipt[0].Bill[0].payeeAddress:"Roha"<br/>
-                                            "Received From:"+ Receipt[0].Bill[0].paidBy<br/></div>*/}
+                                            {this.props.match.params.id == "pt" ? "Assessment number" : "Consumer code"} : {Receipt[0].Bill[0].billDetails[0].consumerCode}<br/>
+                                            Owner Name : {Receipt[0].Bill[0].payeeName}<br/>
+                                            Amount : {Receipt[0].Bill[0].billDetails[0].totalAmount?("Rs. " + Receipt[0].Bill[0].billDetails[0].totalAmount + "/-") : "NA"}<br/>
+                                            <div>{"Owner Address: "+(Receipt[0].Bill[0].payeeAddress?Receipt[0].Bill[0].payeeAddress:"Roha")}<br/>
+                                            {"Received From: "+ Receipt[0].Bill[0].paidBy}<br/></div>
                                           </td>
                                       </tr>
 
@@ -1158,10 +1161,10 @@ class NoDues extends Component {
                                             {getAmount(this.state.demands, false)}
                                           </td>
                                           <td>
-                                            NA
+                                            00
                                           </td>
                                           <td>
-                                            NA
+                                            00
                                           </td>
                                       </tr>
 
@@ -1202,7 +1205,7 @@ class NoDues extends Component {
                                           {this.state.serviceRequest.serviceRequestId}
                                         </td>}
 
-                                          {Receipt[0].instrument.instrumentType.name=="Cash"?<td colSpan={2}>NA</td>: <td colSpan={2}>(getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate))</td>}
+                                          {Receipt[0].instrument.instrumentType.name=="Cash"?<td colSpan={2}>NA</td>: <td colSpan={2}>{getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate)}</td>}
 
 
                                           {Receipt[0].instrument.instrumentType.name=="Cash"?<td colSpan={2}>NA</td>: <td colSpan={2}>Receipt[0].instrument.bank.name</td>}
@@ -1213,7 +1216,7 @@ class NoDues extends Component {
                               </Table>
                         </CardText>
                       </Card>
-                      <div className="page-break"></div>
+                      <div style={{"page-break-after": "always"}}></div>
                       </Col> : ""}
 
 

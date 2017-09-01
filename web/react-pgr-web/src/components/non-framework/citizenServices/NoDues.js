@@ -1162,10 +1162,10 @@ class NoDues extends Component {
                                             {getAmount(this.state.demands, false)}
                                           </td>
                                           <td>
-                                            NA
+                                            00
                                           </td>
                                           <td>
-                                            NA
+                                            00
                                           </td>
                                       </tr>
 

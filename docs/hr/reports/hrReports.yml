@@ -220,7 +220,7 @@ ReportDefinitions:
   - name: year
     label: reports.hr.Attendence.calenderYear
     type: singlevaluelist
-    pattern: http://egov-common-masters:8080/egov-common-masters/calendaryears/_search?tenantId=$tenantid|$..id|$..name
+    pattern: http://egov-common-masters:8080/egov-common-masters/calendaryears/_search?tenantId=$tenantid|$..name|$..name
     source: eg_calendarYear
     isMandatory: true
     

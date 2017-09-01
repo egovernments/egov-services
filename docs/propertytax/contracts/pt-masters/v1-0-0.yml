@@ -1313,7 +1313,90 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'          
-
+     /guidancevalueboundary/_search:
+      post:
+        summary: Get the list of guidancevaue boundary(s)
+        description: guidancevalueboundaries
+        tags: 
+          - GuidanceValueBoundary
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfoWrapper'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: ids
+            type: array
+            items: 
+              type: integer
+            format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - name: guidanceValueBoundary1
+            type: string
+            in: query
+            description: id of the ward/zone
+            maxLength: 256
+          - name: effectiveFrom
+            in: query
+            description: This date will be compared to nearest effectiveFrom search results, format is dd/MM/yyyy
+            type: string
+            format: date
+          - $ref: '#/parameters/pageSize'
+          - $ref: '#/parameters/offSet'
+        responses:
+          200:
+            description: AppConfiguration(s) retrieved Successfully
+            schema:
+              $ref: '#/definitions/AppConfigurationResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'          
+              
+    
+    /guidancevalueboundary/_create:
+      post:
+        summary: Create  new guidancevalueboundary(s)
+        description: Create  new guidancevalueboundary(s)
+        tags: 
+          - GuidanceValueBoundary
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: guidanceValueBoundaryRequest
+            in: body
+            description: GuidanceValueBoundary Request
+            schema:
+              $ref: '#/definitions/GuidanceValueBoundaryRequest'
+        responses:
+          201:
+            description: GuidanceValueBoundary(s) created Successfully
+            schema:
+              $ref: '#/definitions/GuidanceValueBoundaryResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /guidancevalueboundary/_update:
+      post:
+        summary: Update any of the guidanceValueBoundary
+        description: Update any of the guidanceValueBoundary
+        tags: 
+          - GuidanceValueBoundary
+        parameters:
+          - name: GuidanceValueBoundaryRequest
+            in: body
+            description: GuidanceValueBoundary Request
+            schema:
+              $ref: '#/definitions/GuidanceValueBoundaryRequest'
+        responses:
+          200:
+            description: GuidanceValueBoundary updated Successfully
+            schema:
+              $ref: '#/definitions/GuidanceValueBoundaryResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'            
 
 definitions:
     Department:
@@ -2240,8 +2323,63 @@ definitions:
           type:  array
           maximum: 500
           items:
-            $ref: '#/definitions/AppConfiguration'   
-       
+            $ref: '#/definitions/AppConfiguration'
+            
+    GuidanceValueBoundaryRequest:
+      type: object
+      description: Contract class to recive app guidance value boundary
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        appConfigurations:
+          description: Used for search result and create only
+          type:  array
+          maximum: 500
+          items:
+            $ref: '#/definitions/GuidanceValueBoundary'
+            
+    GuidanceValueBoundary:
+      type: object
+      description: this is model class for inserting guidance value boundary
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the GuidanceValueBoundary
+        tenantId:
+          type: string
+          description: tenant id of the GuidanceValueBoundary
+          maxLength: 128
+          minLength: 4
+        guidanceValueBoundary1:
+          type: string
+          description: id of the ward/zone
+          maxLength: 256
+          minLength: 1
+        guidanceValueBoundary2:
+          type: string
+          maxLength: 256
+          minLength: 1
+          description: description about the key       
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - tenantId
+      - guidanceValueBoundary1
+      
+        
+  
+    GuidanceValueBoundaryResponse:
+      description: Contract class to send response. Array of GuidanceValueBoundary items are used in case of search results or response for create, whereas GuidanceValueBoundary item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        appConfigurations:
+          description: Used for search result and create only
+          type:  array
+          maximum: 500
+          items:
+            $ref: '#/definitions/GuidanceValueBoundary' 
 parameters:
     pageSize:
       name: pageSize

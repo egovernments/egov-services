@@ -42,6 +42,17 @@ var dat = {
           "patternErrMsg": ""
         },
         {
+          "name": "OldConsumerNumber",
+          "jsonPath": "legacyConsumerNumber",
+          "label": "wc.create.groups.applicantDetails.consumerNo",
+          "pattern": "",
+          "type": "text",
+          "isRequired": false,
+          "isDisabled": false,
+          "requiredErrMsg": "",
+          "patternErrMsg": ""
+        },
+        {
           "name": "Name",
           "jsonPath": "name",
           "label": "wc.create.name",

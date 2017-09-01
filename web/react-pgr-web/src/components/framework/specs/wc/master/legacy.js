@@ -1598,13 +1598,13 @@ var dat = {
               "patternErrMsg": ""
             },
             {
-              "name": "Locality",
-              "jsonPath": "Connection[0].connectionLocation.locationBoundary.id",
-              "label": "wc.create.groups.applicantDetails.locality",
+              "name": "zoneName",
+              "jsonPath": "Connection[0].connectionLocation.revenueBoundary.id",
+              "label": "wc.create.groups.fields.zone",
               "pattern": "",
               "type": "singleValueList",
-              "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$.Boundary.*.boundaryNum|$.Boundary.*.name",
-              "isRequired": false,
+              "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE|$.Boundary.*.boundaryNum|$.Boundary.*.name",
+              "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": ""
@@ -1622,13 +1622,47 @@ var dat = {
               "patternErrMsg": ""
             },
             {
-              "name": "zoneName",
-              "jsonPath": "Connection[0].connectionLocation.revenueBoundary.id",
-              "label": "wc.create.groups.fields.zone",
+              "name": "Locality",
+              "jsonPath": "Connection[0].connectionLocation.locationBoundary.id",
+              "label": "wc.create.groups.applicantDetails.locality",
               "pattern": "",
               "type": "singleValueList",
-              "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE|$.Boundary.*.boundaryNum|$.Boundary.*.name",
+              "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$.Boundary.*.boundaryNum|$.Boundary.*.name",
+              "isRequired": false,
+              "isDisabled": false,
+              "requiredErrMsg": "",
+              "patternErrMsg": ""
+            },
+            {
+              "name": "executionDate",
+              "jsonPath": "Connection[0].executionDate",
+              "label": "wc.create.groups.applicantDetails.connectionDate",
+              "maxDate": "today-2",
+              "pattern": "",
+              "type": "datePicker",
               "isRequired": true,
+              "isDisabled": false,
+              "requiredErrMsg": "",
+              "patternErrMsg": ""
+            },
+            {
+              "name": "ConsumerNo",
+              "jsonPath": "Connection[0].legacyConsumerNumber",
+              "label": "wc.create.groups.applicantDetails.consumerNo",
+              "pattern": "^\\d{1,16}$",
+              "type": "text",
+              "isRequired": true,
+              "isDisabled": false,
+              "requiredErrMsg": "",
+              "patternErrMsg": ""
+            },
+            {
+              "name": "ManualConsumerNo",
+              "jsonPath": "Connection[0].manualConsumerNumber",
+              "label": "wc.create.groups.applicantDetails.manualConsumerNo",
+              "pattern": "^\\d{1,16}$",
+              "type": "text",
+              "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": ""
@@ -1783,6 +1817,40 @@ var dat = {
             "type": "text",
             "isRequired": false,
             "isDisabled": true,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "consumerNo",
+            "jsonPath": "Connection[0].legacyConsumerNumber",
+            "label": "wc.create.groups.applicantDetails.consumerNo",
+            "pattern": "",
+            "type": "text",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "ManualConsumerNo",
+            "jsonPath": "Connection[0].manualConsumerNumber",
+            "label": "wc.create.groups.applicantDetails.manualConsumerNo",
+            "pattern": "",
+            "type": "text",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+      	  {
+            "name": "executionDate",
+            "jsonPath": "Connection[0].executionDate",
+            "label": "wc.create.groups.applicantDetails.connectionDate",
+            "maxDate": "today-2",
+            "pattern": "",
+            "type": "datePicker",
+            "isRequired": true,
+            "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
           }

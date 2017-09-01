@@ -1098,8 +1098,8 @@ class NoDues extends Component {
                                             {this.props.match.params.id == "pt" ? "Assessment number" : "Consumer code"} : {Receipt[0].Bill[0].billDetails[0].consumerCode}<br/>
                                             Owner Name : {Receipt[0].Bill[0].payeeName}<br/>
                                             Amount : {Receipt[0].Bill[0].billDetails[0].totalAmount?("Rs. " + Receipt[0].Bill[0].billDetails[0].totalAmount + "/-") : "NA"}<br/>
-                                            {/*this.props.match.params.id=="wc" && <div>{"Owner Address: "+(Receipt[0].Bill[0].payeeAddress?Receipt[0].Bill[0].payeeAddress:"Roha")}<br/>
-                                            {"Received From: "+ Receipt[0].Bill[0].paidBy}<br/></div>*/}
+                                            <div>{"Owner Address: "+(Receipt[0].Bill[0].payeeAddress?Receipt[0].Bill[0].payeeAddress:"Roha")}<br/>
+                                            {"Received From: "+ Receipt[0].Bill[0].paidBy}<br/></div>
                                           </td>
                                       </tr>
 
@@ -1222,7 +1222,7 @@ class NoDues extends Component {
                               </Table>
                         </CardText>
                       </Card>
-                      <div className="page-break"></div>
+                      <div style={{"page-break-after": "always"}}></div>
                       </Col> : ""}
                                             {ReceiptOne && ReceiptOne[0] && <Col md={6} >
                       <Card>
@@ -1336,7 +1336,7 @@ class NoDues extends Component {
                               </Table>
                         </CardText>
                       </Card>
-                      <div className="page-break"></div>
+                      <div style={{"page-break-after": "always"}}></div>
                       </Col>}
                       <Col md={6} id="DownloadReceipt">
                       {(this.props.match.params.status != "extract" && Receipt && Receipt[0]) ? <Card>

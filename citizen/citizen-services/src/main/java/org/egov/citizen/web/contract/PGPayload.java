@@ -27,7 +27,7 @@ public class PGPayload {
     private String requestHash;
     private String biller;
     private BigDecimal transactionFees;
-    private String billServuce;
+    private String billService;
     private String serviceRequestId;
     private String consumerCode;
     

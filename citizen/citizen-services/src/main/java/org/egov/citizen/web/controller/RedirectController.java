@@ -2,9 +2,11 @@ package org.egov.citizen.web.controller;
 
 import javax.validation.Valid;
 
+import org.egov.citizen.config.ApplicationProperties;
 import org.egov.citizen.web.contract.PGPayloadResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -17,6 +19,9 @@ import org.springframework.web.servlet.ModelAndView;
 public class RedirectController {
 	public static final Logger LOGGER = LoggerFactory
 			.getLogger(RedirectController.class);
+	
+	@Autowired
+	private ApplicationProperties applicationProperties;
 
     @RequestMapping(value = "/responses", method = RequestMethod.GET)
     public ModelAndView showForm() {
@@ -46,7 +51,9 @@ public class RedirectController {
 
         
         LOGGER.info("Model Binding: "+model.toString());
+        StringBuilder redirectUrl= new StringBuilder();
+        redirectUrl.append(applicationProperties.getRedirectUrl()).append(applicationProperties.getRedirectAppend());
         
-       return "redirect: http://egov-micro-dev.egovernments.org/app/v1/#/payment/response/redirect?"+model.toString();
+       return "redirect:"+redirectUrl.toString()+model.toString();
     }
 }

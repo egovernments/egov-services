@@ -327,7 +327,7 @@ public class CitizenPersistService {
 							  .requestInfo(requestInfo)
 							  .consumerCode(receiptRequest.getConsumerCode())
 							  .tenantId(receiptRequest.getTenantId())
-							  .billServuce(receiptRequest.getBillService())
+							  .billService(receiptRequest.getBillService())
 							  .serviceRequestId(receiptRequest.getServiceRequestId())
 							  .amountPaid(receiptRequest.getAmountPaid())
 							  .biller(receiptRequest.getBiller())

@@ -316,7 +316,7 @@ public class CitizenService {
 			String serviceRequestId){
 		LOGGER.info("Generating PGPayload..");
 		PGPayload pgPayload = PGPayload.builder()
-							  .requestInfo(requestInfo).consumerCode(consumerCode).tenantId(tenantId).billServuce(buisnessService)
+							  .requestInfo(requestInfo).consumerCode(consumerCode).tenantId(tenantId).billService(buisnessService)
 							  .serviceRequestId(serviceRequestId).build();
 		return pgPayload;
 		

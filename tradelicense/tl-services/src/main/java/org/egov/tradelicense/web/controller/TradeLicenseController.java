@@ -240,10 +240,6 @@ public class TradeLicenseController {
 			applicationContract.setTenantId( license.getTenantId() );
 		}
 		
-		if( license.getApplicationStatus() != null && applicationContract.getStatus() != null){
-			applicationContract.setStatus( license.getApplicationStatus().toString());
-		}
-		
 		// for legacy license field inspection details should not be allowed to update
 		if( license.getIsLegacy()){
 			applicationContract.setLicenseFee(null);

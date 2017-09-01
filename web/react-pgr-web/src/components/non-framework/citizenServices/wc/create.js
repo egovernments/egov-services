@@ -817,6 +817,7 @@ class Report extends Component {
     let ServiceRequest = response.serviceReq, self = this;
     var AllResponses = [...ServiceRequest.backendServiceDetails];
     ServiceRequest.status = "CREATED";
+    ServiceRequest.moduleObject.Connection.acknowledgementNumber = ServiceRequest.serviceRequestId;
     var BillReceiptObject = [];
     BillReceiptObject[0] = {"Bill":[]};
     BillReceiptObject[0]["Bill"] = AllResponses[1].response.Bill;

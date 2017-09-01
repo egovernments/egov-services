@@ -375,7 +375,7 @@ public class AssetValidator {
                     .fromCapitalizedValue(depreciationMinimumValue).tenantId(tenantId).fromDate(fromDate).toDate(toDate)
                     .build();
         
-        if (finacialYear != null && fromDate == null && toDate == null)
+        if (finacialYear != null && fromDate == null && toDate == null && assetIdsCheck)
             assetCriteria = AssetCriteria.builder().id(new ArrayList<Long>(assetIds)).status(status)
                     .fromCapitalizedValue(depreciationMinimumValue).tenantId(tenantId).build();
 

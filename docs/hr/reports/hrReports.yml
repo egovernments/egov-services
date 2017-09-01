@@ -439,14 +439,14 @@ ReportDefinitions:
     source: hr
     isMandatory: true
     
-  query: select emp.code as employeecode ,usr.name as employeename
+  query: select emp.code as code ,usr.name as name,'link' as assign
     from egeis_employee  emp,eg_user usr, egeis_assignment assign
     where emp.id not in (
     select assign.employeeid  from egeis_assignment 
     where to_date(to_char(to_timestamp(Trunc(CAST($date as bigint)/1000 )), 'YYYY/MM/DD'), 'YYYY-MM-DD') 
     between fromdate and todate and tenantid = $tenantid ) 
     and emp.id=usr.id and emp.tenantid=usr.tenantid and assign.employeeid = emp.id and emp.tenantid=$tenantid
-  groupBy: group by employeecode ,employeename;
+
 
   #EmployeeLeave Summary Report
 - reportName: employeeLeaveSummaryReport

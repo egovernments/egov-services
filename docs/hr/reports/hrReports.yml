@@ -164,7 +164,7 @@ ReportDefinitions:
     desig.name as designation ,
     assign.fromdate as fromdate, 
     assign.todate as todate,
-    assign.isprimary as isPrimary
+    (CASE WHEN assign.isprimary = true THEN 'Yes' ELSE 'No' END) AS isprimary
     from egeis_employee emp, egeis_assignment assign,eg_user usr, eg_department dept,egeis_designation desig
     where   emp.tenantid=$tenantid
     and usr.type='EMPLOYEE'

@@ -439,7 +439,7 @@ ReportDefinitions:
     source: hr
     isMandatory: true
     
-  query: select emp.code as code ,usr.name as name,'link' as assign
+  query: select emp.code as code ,usr.name as name,'modify' as assign
     from egeis_employee  emp,eg_user usr, egeis_assignment assign
     where emp.id not in (
     select assign.employeeid  from egeis_assignment 

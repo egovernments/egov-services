@@ -32,7 +32,7 @@ public class PropertyLocationRowMapper implements RowMapper<Object> {
 		propertyLocation.setNorthBoundedBy(getString(rs.getString("northboundedby")));
 		propertyLocation.setEastBoundedBy(getString(rs.getString("eastboundedby")));
 		propertyLocation.setWestBoundedBy(getString(rs.getString("westboundedby")));
-		propertyLocation.setSouthBoundedBy("southboundedby");
+		propertyLocation.setSouthBoundedBy(getString(rs.getString("southboundedby")));
 
 		return propertyLocation;
 	}
@@ -45,7 +45,7 @@ public class PropertyLocationRowMapper implements RowMapper<Object> {
 	 * @return {@link String}
 	 */
 	private String getString(Object object) {
-		return object == null ? "" : object.toString().trim();
+		return object == null ? null : object.toString().trim();
 	}
 
 	/**

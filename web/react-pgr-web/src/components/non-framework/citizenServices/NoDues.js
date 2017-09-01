@@ -1379,7 +1379,7 @@ class NoDues extends Component {
                                             <br/>
                                             <div style={{textAlign:"center"}}>
                                               Subject /विषय :  सन 2017 - 18 थकबाकी नसल्याचे प्रमाणपत्र मिळणेबाबत.<br/>
-                                              Reference / संदर्भ : आपला अर्ज क्रमांक {Receipt[0].Bill[0].billDetails[0].applicationNo} दिनांक {getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate)}
+                                              Reference / संदर्भ : {this.state.serviceRequest ? this.state.serviceRequest.serviceRequestId : ""} आपला अर्ज क्रमांक {Receipt[0].Bill[0].billDetails[0].applicationNo} दिनांक {getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate)}
 
 
                                             </div>

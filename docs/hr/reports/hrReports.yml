@@ -162,8 +162,8 @@ ReportDefinitions:
     usr.name as name,
     dept.name as department,
     desig.name as designation ,
-    assign.fromdate as fromdate, 
-    assign.todate as todate,
+    TO_CHAR(assign.fromdate,'DD/MM/YYYY') as fromdate, 
+    TO_CHAR(assign.todate,'DD/MM/YYYY') as todate,
     (CASE WHEN assign.isprimary = true THEN 'Yes' ELSE 'No' END) AS isprimary
     from egeis_employee emp, egeis_assignment assign,eg_user usr, eg_department dept,egeis_designation desig
     where   emp.tenantid=$tenantid

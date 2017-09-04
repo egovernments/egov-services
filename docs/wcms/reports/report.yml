@@ -250,6 +250,10 @@ ReportDefinitions:
     label: reports.wcms.consumerno
     type: number
     source: wcms
+  - name: consumerName
+    label: reports.wcms.consumername
+    type: number
+    source: wcms
   - name: STATE
     label: reports.wcms.state
     type: number

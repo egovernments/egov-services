@@ -254,6 +254,10 @@ ReportDefinitions:
     label: reports.wcms.consumername
     type: number
     source: wcms
+  - name: STATE
+    label: reports.wcms.state
+    type: number
+    source: wcms
   - name: WT_DEMAND
     label: reports.wcms.demand
     type: number

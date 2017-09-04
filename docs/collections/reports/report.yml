@@ -234,7 +234,7 @@ ReportDefinitions:
     type: epoch
     source: collection
     isMandatory: false
-    searchClause: AND CH.RECEIPTDATE >= $toDate
+    searchClause: AND CH.RECEIPTDATE < $toDate
   - name: status
     label: reports.collection.status
     type: singlevaluelist

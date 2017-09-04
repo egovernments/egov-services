@@ -1,9 +1,8 @@
 package org.egov.tradelicense.web.repository;
 
+import org.egov.models.SearchTenantResponse;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tradelicense.common.config.PropertiesManager;
-import org.egov.tradelicense.web.contract.City;
-import org.egov.tradelicense.web.contract.TenantResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -20,7 +19,7 @@ public class TenantContractRepository {
 		this.restTemplate = restTemplate;
 	}
 
-	public City fetchTenantByCode(String tenantId, RequestInfoWrapper requestInfoWrapper) {
+	public org.egov.models.City fetchTenantByCode(String tenantId, RequestInfoWrapper requestInfoWrapper) {
 
 		String hostUrl = propertiesManger.getTenantServiceHostName() + propertiesManger.getTenantServiceBasePath();
 		String searchUrl = propertiesManger.getTenantServiceSearchPath();
@@ -28,13 +27,18 @@ public class TenantContractRepository {
 		StringBuffer content = new StringBuffer();
 
 		if (tenantId != null) {
-
-			content.append("code=" + tenantId);
+			content.append("?code=" + tenantId);
 		}
 
 		url = url + content.toString();
+		SearchTenantResponse tenantResponse = null;
+		try {
+			
+			tenantResponse = restTemplate.postForObject(url, requestInfoWrapper.getRequestInfo(), SearchTenantResponse.class);
 
-		TenantResponse tenantResponse = restTemplate.postForObject(url, requestInfoWrapper, TenantResponse.class);
+		} catch (Exception e) {
+//			log.debug("Error connecting to Tenant service end point " + url);
+		}
 
 		if (tenantResponse != null && tenantResponse.getTenant() != null) {
 

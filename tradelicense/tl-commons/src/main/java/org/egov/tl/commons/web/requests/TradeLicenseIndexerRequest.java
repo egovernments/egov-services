@@ -6,7 +6,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.egov.tl.commons.web.contract.RequestInfo;
-import org.egov.tl.commons.web.contract.TradeLicenseSearchContract;
+import org.egov.tl.commons.web.contract.TradeLicenseIndexerContract;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -24,6 +24,6 @@ public class TradeLicenseIndexerRequest {
 
 	@JsonProperty("licenses")
 	@Valid
-	private List<TradeLicenseSearchContract> licenses = new ArrayList<TradeLicenseSearchContract>();
-
+	private List<TradeLicenseIndexerContract> licenses = new ArrayList<TradeLicenseIndexerContract>();
+	
 }

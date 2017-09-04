@@ -229,7 +229,7 @@ public class RestConnectionService {
         url.append(configurationManager.getPropertyServiceHostNameTopic())
                 .append(configurationManager.getSerachSubUsageType())
                 .append("?code=").append(waterConnectionRequest.getConnection().getSubUsageType())
-                .append("?parent=").append(waterConnectionRequest.getConnection().getProperty().getUsageType())
+                .append("&parent=").append(waterConnectionRequest.getConnection().getProperty().getUsageType())
                 .append("&tenantId=").append(waterConnectionRequest.getConnection().getTenantId())
         		.append("&service=").append(WcmsConnectionConstants.SERVICES_FOR_USAGETYPE_SEARCH); 
         logger.info("URL to validate Sub Usage Type : " + url.toString());

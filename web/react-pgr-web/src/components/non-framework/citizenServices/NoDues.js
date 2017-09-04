@@ -855,7 +855,7 @@ class NoDues extends Component {
       //   }
 
 
-      paymentGateWayRes["status"]="failed";
+      // paymentGateWayRes["status"]="failed";
       Api.commonApiPost("/citizen-services/v1/pgresponse/_validate", {}, {PGResponse:paymentGateWayRes}, null, metaData["noDues.search"].useTimestamp, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
           self.props.setLoadingStatus('hide');
 

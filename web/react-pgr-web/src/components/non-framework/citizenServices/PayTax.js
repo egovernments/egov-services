@@ -610,6 +610,7 @@ class NoDues extends Component {
     let self=this;
     this.handleClose();
     self.props.setLoadingStatus('loading');
+    // paymentGateWayRes["status"]="failed";
 
     if (this.props.match.params.paymentGateWayRes=="success") {
       Api.commonApiPost("/citizen-services/v1/pgresponse/_validate", {}, {PGResponse:paymentGateWayRes}, null, metaData["noDues.search"].useTimestamp, false, null, JSON.parse(localStorage.userRequest)).then(function(res){

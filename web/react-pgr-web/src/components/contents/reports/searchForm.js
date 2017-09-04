@@ -110,18 +110,24 @@ class ShowForm extends Component {
     }
     if(name == 'fromDate'){
       let startDate = value;
-      let endDate = this.props.searchForm.toDate;
-      this.props.handleChange(e, name, required, pattern);
-      this.validateDate(startDate, endDate, 'fromDate');//3rd param to denote whether field fails
+      if(this.props.searchForm){
+        let endDate = this.props.searchForm.toDate;
+        this.props.handleChange(e, name, required, pattern);
+        this.validateDate(startDate, endDate, required, 'fromDate');//3rd param to denote whether field fails
+      }else{
+        this.props.handleChange(e, name, required, pattern);
+      }
     }else{
       let endDate = value;
-      let startDate = this.props.searchForm.fromDate;
-      this.props.handleChange(e, name, required, pattern);
-      this.validateDate(startDate, endDate, 'toDate');//3rd param to denote whether field fails
+      if(this.props.searchForm){
+        let startDate = this.props.searchForm.fromDate;
+        this.props.handleChange(e, name, required, pattern);
+        this.validateDate(startDate, endDate, required, 'toDate');//3rd param to denote whether field fails
+      }
     }
   }
 
-  validateDate = (startDate, endDate, field) => {
+  validateDate = (startDate, endDate, required, field) => {
     if(startDate && endDate){
       let sD = new Date(startDate);
       sD.setHours(0, 0, 0, 0);
@@ -136,7 +142,7 @@ class ShowForm extends Component {
             value:''
           }
         }
-        this.props.handleChange(e, field, false, '');
+        this.props.handleChange(e, field, required, '');
         this.setState({datefield : field});
         this.setState({dateError :
           field === 'toDate' ? translate('pgr.lbl.dategreater') : translate('pgr.lbl.datelesser')
@@ -162,19 +168,18 @@ class ShowForm extends Component {
   }
 
   componentWillReceiveProps(nextProps){
-    if((this.props.metaData.reportDetails && nextProps.metaData.reportDetails) && (nextProps.metaData.reportDetails !== this.props.metaData.reportDetails)){
-      // console.log(nextProps.metaData.reportDetails.reportName, this.props.match.params.moduleName);
+    if(nextProps.metaData.reportDetails && (nextProps.metaData.reportDetails !== this.props.metaData.reportDetails)){
       this.setState({reportName : nextProps.metaData.reportDetails.reportName});
       this.setState({moduleName : this.props.match.params.moduleName});
       let {initForm,setForm} = this.props;
-      let {searchParams}=!_.isEmpty(nextProps.metaData)?nextProps.metaData.reportDetails:{searchParams:[]};
+      let {searchParams}=!_.isEmpty(nextProps.metaData) ? nextProps.metaData.reportDetails : {searchParams:[]};
       let required=[];
       for (var i = 0; i < searchParams.length; i++) {
-        if (searchParams.isMandatory || searchParams.hasOwnProperty("isMandatory")?false:true) {
-          required.push(searchParams.name)
+        if(searchParams[i].isMandatory) {
+          required.push(searchParams[i].name)
         }
       }
-      initForm(required);
+      setForm(required);
     }
   }
 
@@ -183,15 +188,14 @@ class ShowForm extends Component {
     let {initForm,metaData,setForm} = this.props;
     let {searchParams}=!_.isEmpty(metaData)?metaData.reportDetails:{searchParams:[]};
     let required=[];
-    //console.log(this.props.match.params.reportName, this.props.match.params.moduleName);
     this.setState({reportName : this.props.match.params.reportName});
     this.setState({moduleName : this.props.match.params.moduleName});
     for (var i = 0; i < searchParams.length; i++) {
-      if (searchParams.isMandatory || searchParams.hasOwnProperty("isMandatory")?false:true) {
-        required.push(searchParams.name)
+      if(searchParams[i].isMandatory) {
+        required.push(searchParams[i].name)
       }
     }
-    initForm(required);
+    setForm(required);
     //setForm(required);
   }
 
@@ -211,11 +215,14 @@ class ShowForm extends Component {
               :
         searchForm[variable]):(typeof(searchForm[variable])=="object"?new Date(searchForm[variable]).getTime():searchForm[variable])
 
-        searchParams.push({
-          name:variable,
-          // value:typeof(searchForm[variable])=="object"?new Date(searchForm[variable]).getTime():searchForm[variable]
-          input
-        });
+        console.log(variable , input);
+
+        if(input){
+          searchParams.push({
+            name:variable,
+            input
+          });
+        }
       }
 
       // searchParams.push(
@@ -239,7 +246,7 @@ class ShowForm extends Component {
       },function(err) {
           // console.log(err);
           showTable(false);
-          alert("Select all mandatory fields or try again later");
+          alert("Something went wrong or try again later");
 
       });
 
@@ -285,7 +292,7 @@ class ShowForm extends Component {
         </Card>
         <div style={{"textAlign": "center"}}>
           <br/>
-            <RaisedButton type="submit" disabled={false} primary={true}  label={buttonText} />
+            <RaisedButton type="submit" disabled={!isFormValid} primary={true}  label={buttonText} />
           <br/>
           <br/>
         </div>
@@ -297,6 +304,7 @@ class ShowForm extends Component {
 }
 
 const mapStateToProps = state => {
+  // console.log(state.form.form, state.form.isFormValid);
   return ({searchForm: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText,metaData:state.report.metaData});
 }
 
@@ -306,7 +314,7 @@ const mapDispatchToProps = dispatch => ({
       type: "SET_FORM",
       form:{},
       fieldErrors:{},
-      isFormValid:false,
+      isFormValid: required.length > 0 ? false : true,
       validationData: {
         required: {
           current: [],
@@ -314,7 +322,7 @@ const mapDispatchToProps = dispatch => ({
         },
         pattern: {
           current: [],
-          required: pattern
+          required: []
         }
       }
     });

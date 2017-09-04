@@ -52,20 +52,20 @@ export default class ShowField extends Component
       case "string":
         return (
           <Col xs={12} sm={4} md={3} lg={3}>
-            <TextField fullWidth={true} floatingLabelText={description
+            <TextField fullWidth={true} floatingLabelFixed={true} floatingLabelText={description
             } onChange={(e) => this.props.handler(e, obj.name, obj.isMandatory ? true : false, '')} />
           </Col>
         );
       case "number":
         return(
           <Col xs={12} sm={4} md={3} lg={3}>
-            <TextField fullWidth={true} floatingLabelText={description} onChange={(e) => this.props.handler(e, obj.name, obj.isMandatory ? true : false, /^[+-]?\d+(\.\d+)?$/)}   />
+            <TextField fullWidth={true} floatingLabelFixed={true} floatingLabelText={description} onChange={(e) => this.props.handler(e, obj.name, obj.isMandatory ? true : false, /^[+-]?\d+(\.\d+)?$/)}   />
           </Col>
         );
       case "date" :
         return(
           <Col xs={12} sm={4} md={3} lg={3}>
-            <DatePicker fullWidth={true}  floatingLabelText={description} value={typeof(obj.value)=="object"?obj.value:{}} onChange={(first, object)=>{
+            <DatePicker fullWidth={true} floatingLabelFixed={true}  floatingLabelText={description} value={typeof(obj.value)=="object"?obj.value:{}} onChange={(first, object)=>{
 
               let e={
                 target:{
@@ -81,7 +81,7 @@ export default class ShowField extends Component
         case "epoch" :
           return(
             <Col xs={12} sm={4} md={3} lg={3}>
-              <DatePicker fullWidth={true} floatingLabelText={description}
+              <DatePicker fullWidth={true} floatingLabelFixed={true} floatingLabelText={description}
               value={obj.value ? obj.value: ''}
               errorText={this.props.dateField ? obj.name === this.props.dateField ? this.props.dateError : '' : ''}
               formatDate={(date)=>{
@@ -107,7 +107,7 @@ export default class ShowField extends Component
       case "singlevaluelist":
         return(
           <Col xs={12} sm={4} md={3} lg={3}>
-            <SelectField fullWidth={true} floatingLabelText={description} value={typeof(obj.value)=="undefined"?"":obj.value} onChange={(event, key, value) => {
+            <SelectField fullWidth={true} floatingLabelFixed={true} floatingLabelText={description} value={typeof(obj.value)=="undefined"?"":obj.value} onChange={(event, key, value) => {
               // this.setState({
               //   value
               // })
@@ -118,6 +118,7 @@ export default class ShowField extends Component
               }
               this.props.handler(e, obj.name, obj.isMandatory ? true : false, "")
             }} maxHeight={200} >
+            <MenuItem value="" primaryText="Select" />
             {dropDownData.map((dd, index) => (
                 <MenuItem value={translate(dd.key)} key={index} primaryText={translate(dd.value)} />
             ))}
@@ -128,7 +129,7 @@ export default class ShowField extends Component
         case "url":
           return(
             <Col xs={12} sm={4} md={3} lg={3}>
-              <SelectField fullWidth={true} floatingLabelText={description} value={typeof(obj.value)=="undefined"?"":obj.value} onChange={(event, key, value) => {
+              <SelectField fullWidth={true} floatingLabelFixed={true} floatingLabelText={description} value={typeof(obj.value)=="undefined"?"":obj.value} onChange={(event, key, value) => {
                 // this.setState({
                 //   value
                 // })
@@ -139,6 +140,7 @@ export default class ShowField extends Component
                 }
                 this.props.handler(e, obj.name, obj.isMandatory ? true : false, "")
               }} maxHeight={200} >
+              <MenuItem value="" primaryText="Select" />
               {dropDownData.map((dd, index) => (
                   <MenuItem value={translate(dd.key)} key={index} primaryText={translate(dd.value)} />
               ))}

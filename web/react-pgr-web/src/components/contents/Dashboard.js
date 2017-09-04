@@ -43,7 +43,9 @@ const nameMap = {
   "WC_NODUES": "Water Charges No Dues",
   "CREATED": "Created",
   "WATER_NEWCONN": "New Water Connection",
-  "CANCELLED": "Request Cancelled"
+  "CANCELLED": "Request Cancelled",
+  "REJECTED": "Rejected",
+  "BPA_FIRE_NOC": "Fire NOC"
 };
 
 const content=[
@@ -227,6 +229,7 @@ class Dashboard extends Component {
 
    $('#requestTable').DataTable({
          dom: 'lBfrtip',
+         "aaSorting": [],
          buttons: [],
           bDestroy: true,
           language: {
@@ -299,7 +302,7 @@ class Dashboard extends Component {
       Api.commonApiPost("/citizen-services/v1/requests/_search", {userId:currentUser.id}, {}, null, true).then(function(res3){
         if(res3 && res3.serviceReq && res3.serviceReq) {
           res3.serviceReq.sort(function(v1, v2) {
-            return v1.auditDetails.createdDate < v2.auditDetails.createdDate ? -1 : (v1.auditDetails.createdDate > v2.auditDetails.createdDate ? 1 : 0);
+            return v1.auditDetails.createdDate > v2.auditDetails.createdDate ? -1 : (v1.auditDetails.createdDate < v2.auditDetails.createdDate ? 1 : 0);
           });
 
           checkCountAndSetState("serviceRequestsTwo", res3.serviceReq);
@@ -471,28 +474,23 @@ class Dashboard extends Component {
         Api.commonApiPost("access/v1/actions/_get",{},{tenantId:localStorage.tenantId, roleCodes, enabled:true}).then(function(response){
           var actions = response.actions;
           var roles = JSON.parse(localStorage.userRequest).roles;
-          for(var i=0; i< roles.length; i++) {
-            if(roles[i].code == "SUPERUSER") {
-              actions.unshift({
-                "id": 12299,
-                "name": "SearchRequest",
-                "url": "/search/service/requests",
-                "displayName": "Search Service Requests",
-                "orderNumber": 35,
-                "queryParams": "",
-                "parentModule": 75,
-                "enabled": true,
-                "serviceCode": "",
-                "tenantId": null,
-                "createdDate": null,
-                "createdBy": null,
-                "lastModifiedDate": null,
-                "lastModifiedBy": null,
-                "path": "Service Request.Requests.Search"
-              });
-              break;
-            }
-          }
+          actions.unshift({
+            "id": 12299,
+            "name": "SearchRequest",
+            "url": "/search/service/requests",
+            "displayName": "Search Service Requests",
+            "orderNumber": 35,
+            "queryParams": "",
+            "parentModule": 75,
+            "enabled": true,
+            "serviceCode": "",
+            "tenantId": null,
+            "createdDate": null,
+            "createdBy": null,
+            "lastModifiedDate": null,
+            "lastModifiedBy": null,
+            "path": "Service Request.Requests.Search"
+          });
           localStorage.setItem("actions", JSON.stringify(actions));
           self.props.setActionList(actions);
         }, function(err) {
@@ -537,6 +535,7 @@ class Dashboard extends Component {
 
        $('#requestTable').DataTable({
          dom: 'lBfrtip',
+         "aaSorting": [],
          buttons: [],
           bDestroy: true,
           language: {

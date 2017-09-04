@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.egov.common.domain.exception.CustomBindException;
-import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.PaginationContract;
 import org.egov.common.constants.Constants;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.common.domain.exception.CustomBindException;
+import org.egov.common.domain.model.Pagination;
+import org.egov.common.web.contract.PaginationContract;
 import org.egov.egf.master.domain.model.BankAccount;
 import org.egov.egf.master.domain.model.BankAccountSearch;
 import org.egov.egf.master.domain.service.BankAccountService;
@@ -62,7 +62,7 @@ public class BankAccountController {
 			bankaccounts.add(bankAccount);
 		}
 
-		bankaccounts = bankAccountService.add(bankaccounts, errors);
+		bankaccounts = bankAccountService.create(bankaccounts, errors, bankAccountRequest.getRequestInfo());
 
 		for (BankAccount f : bankaccounts) {
 			contract = new BankAccountContract();
@@ -71,8 +71,6 @@ public class BankAccountController {
 			bankAccountContracts.add(contract);
 		}
 
-		bankAccountRequest.setBankAccounts(bankAccountContracts);
-		bankAccountService.addToQue(bankAccountRequest);
 		bankAccountResponse.setBankAccounts(bankAccountContracts);
 
 		return bankAccountResponse;
@@ -102,7 +100,7 @@ public class BankAccountController {
 			bankaccounts.add(bankAccount);
 		}
 
-		bankaccounts = bankAccountService.update(bankaccounts, errors);
+		bankaccounts = bankAccountService.update(bankaccounts, errors, bankAccountRequest.getRequestInfo());
 
 		for (BankAccount bankAccountObj : bankaccounts) {
 			contract = new BankAccountContract();
@@ -111,8 +109,6 @@ public class BankAccountController {
 			bankAccountContracts.add(contract);
 		}
 
-		bankAccountRequest.setBankAccounts(bankAccountContracts);
-		bankAccountService.addToQue(bankAccountRequest);
 		bankAccountResponse.setBankAccounts(bankAccountContracts);
 
 		return bankAccountResponse;

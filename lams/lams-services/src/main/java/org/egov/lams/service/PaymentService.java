@@ -341,6 +341,7 @@ public class PaymentService {
 		BigDecimal totalAmountCollected = BigDecimal.ZERO;
 		LOGGER.info("the size of objects ::: " + billReceiptInfo.getAccountDetails().size()
 				+ "the size of demand details ::" + demand.getDemandDetails().size());
+		prepareDemandDetailsForCollectionUpdate(demand);
 		for (final ReceiptAccountInfo rcptAccInfo : billReceiptInfo.getAccountDetails()) {
 
 			totalAmountCollected = totalAmountCollected.add(updateDemandDetails(demand, rcptAccInfo));
@@ -348,7 +349,18 @@ public class PaymentService {
 		LOGGER.info("updateDemandDetailForReceiptCreate  ::: totalAmountCollected " + totalAmountCollected);
 		demand.setCollectionAmount(totalAmountCollected);
 	}
+     
+	/*
+	 * making collection amount zero if rent is fully paid 
+	 * and actual collection should be updated in back update of collection 
+	 */
+	private void prepareDemandDetailsForCollectionUpdate(Demand demand) {
 
+		for (DemandDetails demandDetail : demand.getDemandDetails()) {
+			demandDetail.setCollectionAmount(BigDecimal.ZERO);
+		}
+
+	}
 	private BigDecimal updateDemandDetails(Demand demand, final ReceiptAccountInfo rcptAccInfo) {
 
 		BigDecimal totalAmountCollected = BigDecimal.ZERO;

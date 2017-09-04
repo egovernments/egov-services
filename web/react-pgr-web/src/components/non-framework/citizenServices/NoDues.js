@@ -49,6 +49,7 @@ var specifications={};
 let reqRequired = [];
 
 const getFullDate = function(dat,isTimeStamp=false) {
+  if(!dat) return "-";
   var _date = new Date(dat);
   if (isTimeStamp) {
     return ('0' + _date.getDate()).slice(-2) + '/'
@@ -79,7 +80,7 @@ const getAmount = function(demands, arrearsBool) {
       for(var i=0; i<collectionAmountArr.length; i++)
         collSum += collectionAmountArr[i];
       return taxSum - collSum;
-    } else return "NA";
+    } else return "00";
 }
 
 const getAddress = function(property) {
@@ -121,12 +122,6 @@ class NoDues extends Component {
       let self=this;
       let {formData}=this.props;
       self.props.setLoadingStatus('show');
-
-      window.localStorage.setItem("demands",demands);
-      window.localStorage.setItem("applicationFeeDemand",applicationFeeDemand);
-      window.localStorage.setItem("formData",formData);
-
-
       //api call
       /*let request=
       {
@@ -215,56 +210,19 @@ class NoDues extends Component {
             paidBy: Receipt[0]["Bill"][0].payeeName
           })
           console.log(Receipt);
-
           // Receipt.push(res.Bill);
           self.setState({
             ReceiptOne:Receipt
           });
-          window.localStorage.setItem("ReceiptOne",Receipt)
-
-
-          if (demands.length>0) {
-            Api.commonApiPost("/billing-service/bill/_generate", {businessService: this.props.match.params.id.toUpperCase(),consumerCode:formData.consumerCode}, {}, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res){
-                self.props.setLoadingStatus('hide');
-
-                // let Receipt=[];
-                Receipt[0]={"Bill":[]};
-                Receipt[0]["Bill"]=res.Bill;
-                Receipt[0]["Bill"][0]["paidBy"]=Receipt[0]["Bill"][0].payeeName;
-                Receipt[0]["tenantId"]=window.localStorage.getItem("tenantId")
-                Receipt[0]["instrument"]={"tenantId":window.localStorage.getItem("tenantId"),"amount":self.getTotal(demands),"instrumentType":{"name":"Cash"}}
-
-                Receipt[0]["Bill"][0]["billDetails"][0]["amountPaid"]=self.getTotal(demands);
-                self.setState({
-                  paidBy: Receipt[0]["Bill"][0].payeeName
-                })
-                console.log(Receipt);
-                // Receipt.push(res.Bill);
-                self.setState({
-                  Receipt
-                });
-                console.log(Receipt);
-                window.localStorage.setItem("Receipt",Receipt)
-                self.setState({open: true});
-                self.props.setLoadingStatus('hide');
-              }, function(err) {
-                self.props.toggleSnackbarAndSetText(true, err.message, false, true);
-                self.props.setLoadingStatus('hide');
-            })
-
-          } else {
-            self.props.setLoadingStatus('hide');
-          }
-
-          // console.log(Receipt);
-          // self.setState({open: true});
+          console.log(Receipt);
+          self.setState({open: true});
         }, function(err) {
           self.props.toggleSnackbarAndSetText(true, err.message, false, true);
           self.props.setLoadingStatus('hide');
         });
       //}
 
-      // self.setState({open: true});
+      self.setState({open: true});
       /*Api.commonApiPost("/citizen-services/v1/requests/_create", {}, {"serviceReq":request}, null, self.props.metaData["noDues.search"].useTimestamp, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
             // self.props.setLoadingStatus('hide');
 
@@ -280,7 +238,37 @@ class NoDues extends Component {
       })*/
 
 
+      if (demands.length>0) {
+        Api.commonApiPost("/billing-service/bill/_generate", {businessService: this.props.match.params.id.toUpperCase(),consumerCode:formData.consumerCode}, {}, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res){
+            self.props.setLoadingStatus('hide');
 
+            let Receipt=[];
+            Receipt[0]={"Bill":[]};
+            Receipt[0]["Bill"]=res.Bill;
+            Receipt[0]["Bill"][0]["paidBy"]=Receipt[0]["Bill"][0].payeeName;
+            Receipt[0]["tenantId"]=window.localStorage.getItem("tenantId")
+            Receipt[0]["instrument"]={"tenantId":window.localStorage.getItem("tenantId"),"amount":self.getTotal(demands),"instrumentType":{"name":"Cash"}}
+
+            Receipt[0]["Bill"][0]["billDetails"][0]["amountPaid"]=self.getTotal(demands);
+            self.setState({
+              paidBy: Receipt[0]["Bill"][0].payeeName
+            })
+            console.log(Receipt);
+            // Receipt.push(res.Bill);
+            self.setState({
+              Receipt
+            });
+            console.log(Receipt);
+            self.setState({open: true});
+            self.props.setLoadingStatus('hide');
+          }, function(err) {
+            self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+            self.props.setLoadingStatus('hide');
+        })
+
+      } else {
+        self.props.setLoadingStatus('hide');
+      }
 
 
 
@@ -933,21 +921,13 @@ class NoDues extends Component {
         return iter(add_to_words(words, triplet_to_words(first[0], first[1], first[2]), SCALE[i]), ++i, get_first(rest), get_rest(rest));
       }
 
-      return iter('', 0, get_first(String(int)), get_rest(String(int)));
+      var words = iter('', 0, get_first(String(int)), get_rest(String(int)));
+      if(words) words = words[0].toUpperCase() + words.substring(1);
+      return words;
   }
 
   goBackToDashboard = () => {
-    let self = this;
-    if(this.state.serviceRequest) {
-      var ServiceRequest = {...this.state.serviceRequest};
-      ServiceRequest.status = "CANCELLED";
-      Api.commonApiPost("/citizen-services/v1/requests/_update", {}, {"serviceReq": ServiceRequest}, null, self.props.metaData["noDues.search"].useTimestamp, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
-        self.props.setRoute("/prd/dashboard");
-      }, function(err) {
-        self.props.setRoute("/prd/dashboard");
-      })
-    } else
-      self.props.setRoute("/prd/dashboard");
+    this.props.setRoute("/prd/dashboard");
   }
 
   render() {
@@ -1105,21 +1085,17 @@ class NoDues extends Component {
                                           <td style={{textAlign:"center"}}>
                                             Receipt For : {this.props.match.params.id=="wc" ? 'Water Charges' : 'Property Tax'}
                                           </td>
-                                          {this.props.match.params.id=="pt" &&
-                                          <td>
-
-                                          </td>}
                                           <td style={{textAlign:"right"}}>
                                             Receipt Date: {getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate)}
                                           </td>
                                       </tr>
                                       <tr>
                                           <td colSpan={3} style={{textAlign:"left"}}>
-                                            Consumer Code : {Receipt[0].Bill[0].billDetails[0].consumerCode}<br/>
-                                            Consumer Name : {Receipt[0].Bill[0].payeeName}<br/>
-                                            Amount : {Receipt[0].Bill[0].billDetails[0].totalAmount?("Rs. "+Receipt[0].Bill[0].billDetails[0].totalAmount+"/-"):"NA"}<br/>
-                                            {/*this.props.match.params.id=="wc" && <div>{"Consumer Address: "+(Receipt[0].Bill[0].payeeAddress?Receipt[0].Bill[0].payeeAddress:"Roha")}<br/>
-                                            {"Received From: "+ Receipt[0].Bill[0].paidBy}<br/></div>*/}
+                                            {this.props.match.params.id == "pt" ? "Assessment number" : "Consumer code"} : {Receipt[0].Bill[0].billDetails[0].consumerCode}<br/>
+                                            Owner Name : {Receipt[0].Bill[0].payeeName}<br/>
+                                            Amount : {Receipt[0].Bill[0].billDetails[0].totalAmount?("Rs. " + Receipt[0].Bill[0].billDetails[0].totalAmount + "/-") : "NA"}<br/>
+                                            <div>{"Owner Address: "+(Receipt[0].Bill[0].payeeAddress?Receipt[0].Bill[0].payeeAddress:"Roha")}<br/>
+                                            {"Received From: "+ Receipt[0].Bill[0].paidBy}<br/></div>
                                           </td>
                                       </tr>
 
@@ -1186,10 +1162,10 @@ class NoDues extends Component {
                                             {getAmount(this.state.demands, false)}
                                           </td>
                                           <td>
-                                            NA
+                                            00
                                           </td>
                                           <td>
-                                            NA
+                                            00
                                           </td>
                                       </tr>
 
@@ -1384,7 +1360,7 @@ class NoDues extends Component {
                                             </div>
                                             <br/>
                                             <div style={{textAlign:"right"}}>
-                                                  Date / दिनांक :{getFullDate(Receipt[0].Bill[0].billDetails[0].billDate,true)} <br/>
+                                                  Date / दिनांक :{Receipt[0].Bill[0].billDetails[0].billDate ? getFullDate(Receipt[0].Bill[0].billDetails[0].billDate, true) : (Receipt[0].Bill[0].billDetails[0].receiptDate ? getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate, true) : "-")} <br/>
                                                   Certificate No. / प्रमाणपत्र क्रं : {this.state.serviceRequest.serviceRequestId}
 
                                             </div>
@@ -1399,7 +1375,7 @@ class NoDues extends Component {
                                             <br/>
                                             <div style={{textAlign:"center"}}>
                                               Subject /विषय :  सन 2017 - 18 थकबाकी नसल्याचे प्रमाणपत्र मिळणेबाबत.<br/>
-                                              Reference / संदर्भ : आपला अर्ज क्रमांक {Receipt[0].Bill[0].billDetails[0].applicationNo} दिनांक {getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate)}
+                                              Reference / संदर्भ : {this.state.serviceRequest ? this.state.serviceRequest.serviceRequestId : ""} आपला अर्ज क्रमांक {Receipt[0].Bill[0].billDetails[0].applicationNo} दिनांक {getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate)}
 
 
                                             </div>
@@ -1411,9 +1387,8 @@ class NoDues extends Component {
                                             </div>
                                             <br/>
                                             <div style={{textAlign:"center"}}>
-                                              संदर्भिय विषयांन्वये प्रमाणित करण्यात येते की, Consumer No/पाणी क्रमांक,
-                                              {Receipt[0].Bill[0].billDetails[0].consumerCode} यांच्या नावे नोंद असून, सन 2017-18  पर्यंतचा संपुर्ण
-                                              पाणी रक्कम भरलेली असून, कोणतीही थकबाकी येणे नाही.
+                                              संदर्भिय विषयांन्वये प्रमाणित करण्यात येते की, {this.props.match.params.id != "pt" ? "पाणी क्रमांक" : "मालमत्ता क्रमांक"},
+                                              {Receipt[0].Bill[0].billDetails[0].consumerCode} यांच्या नावे नोंद असून, सन 2017-18  {this.props.match.params.id != "pt" ? "पर्यंतचा संपुर्ण पाणी रक्कम भरलेली असून, कोणतीही थकबाकी येणे नाही." : "पर्यंतचा संपुर्ण मालमत्ता कराची रक्कम भरलेली असून, कोणतीही थकबाकी येणे नाही."}
 
 
                                             </div>
@@ -1454,7 +1429,7 @@ class NoDues extends Component {
                           <tr>
                             <td colSpan={8}>
                                 <div style={{textAlign:"center"}}>
-                                  <b>Extract Property</b> / मालमत्तेचा उतारा
+                                  <b>Extract Certificate</b> / मालमत्तेचा उतारा
                                 </div>
                             </td>
                           </tr>
@@ -1471,14 +1446,14 @@ class NoDues extends Component {
                             <td colSpan={8}>
                               <div>
                                 <b>Property No:</b> {Receipt[0].Bill[0].billDetails[0].consumerCode}<br/>
-                                <b>Property Usage / Sub Usage:</b> {this.state.Property && this.state.Property.usage ? this.state.Property.usage : ""}
+                                <b>Property Usage / Sub Usage:</b> {this.state.Property && this.state.Property.usage ? this.state.Property.usage : "NA"}
                               </div>
                             </td>
                           </tr>
                           <tr>
                             <td colSpan={8}>
                               <div style={{"whiteSpace": "pre"}}>
-                                <b>Property Owner Name</b>: {this.state.Property && this.state.Property.owners ? this.state.Property.owners[0].name : ""}<br/>
+                                <b>Property Owner Name</b>: {this.state.Property && this.state.Property.owners ? this.state.Property.owners[0].name : "NA"}<br/>
                                 <b>& Address: </b> {getAddress(this.state.Property)}                                                                                        <b>Age of Property</b>
                               </div>
                             </td>
@@ -1487,7 +1462,7 @@ class NoDues extends Component {
                             <td colSpan={8}>
                               <div>
                                 <b>Billing Name</b>: {Receipt[0].Bill[0].payeeName}<br/>
-                                <b>& Address:</b> {Receipt[0].Bill[0].payeeAddress?Receipt[0].Bill[0].payeeAddress:""}
+                                <b>& Address:</b> {Receipt[0].Bill[0].payeeAddress?Receipt[0].Bill[0].payeeAddress:"NA"}
                               </div>
                             </td>
                           </tr>

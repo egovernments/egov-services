@@ -324,6 +324,8 @@ var localization_EN_Data = {
     "wc.create.groups.connectionDetails.fields.resetFlag1":"1st Month Reset reading",
     "wc.create.groups.connectionDetails.fields.resetFlag2":"2nd Month Reset reading",
     "wc.create.groups.connectionDetails.fields.resetFlag3":"3rd Month Reset reading",
+    "wc.create.capacityOfSource":"Capacity of source",
+    "wc.create.reservationForUlb":"Reservation for ULB",
 
 
 
@@ -390,6 +392,20 @@ var localization_EN_Data = {
       "reports.wcms.arrearbalance":"Balance Arrears",
       "reports.wcms.currentbalance":"Current Balance",
       "reports.wcms.totalbalance":"Total Balance",
+      "reports.wcms.wardno":"BoundaryName",
+      "reports.wcms.applicationtype":"ApplicationType",
+      "reports.wcms.consumerno":"ConsumerNumber",
+      "reports.wcms.pipesize":"Pipesizd",
+      "reports.wcms.usage":"Usage",
+      "reports.wcms.connectionAddress":"Address",
+      "reports.wcms.applicationtype":"ApplicationTYpe",
+      "reports.wcms.billingtype":"BillingTYpe",
+      "reports.wcms.categoryType":"CategoryType",
+      "reports.wcms.connectionstatus":"ConnectionStatus",
+      "reports.wcms.Balance":"Balance",
+      "reports.wcms.demand":"Demand",
+      "reports.wcms.coll":"Collection",
+      "reports.wcms.state":"State",
 
 
     "pt.create.button": "Forward",
@@ -778,6 +794,7 @@ var localization_EN_Data = {
     "tl.view.groups.categorytype.title": "View License Category",
     "tl.view.groups.categorytype.name": "Name",
     "tl.view.groups.categorytype.code": "Code",
+    "tl.view.groups.categorytype.active": "Active",
     "tl.update.groups.categorytype.title": "Update License Category",
     "tl.update.groups.categorytype.name": "Name",
     "tl.update.groups.categorytype.code": "Code",
@@ -786,6 +803,7 @@ var localization_EN_Data = {
     "tl.create.groups.subcategorytype.category": "Category",
     "tl.create.groups.subcategorytype.name": "Name",
     "tl.create.groups.subcategorytype.code": "Code",
+    "tl.create.groups.subcategorytype.validityYears": "Validity Years",
     "tl.create.groups.subcategorytype.active": "Active",
     "tl.create.groups.subcategorytype.categories.details.feeType": "Fee Type",
     "tl.create.groups.subcategorytype.categories.details.rateType": "Rate Type",
@@ -923,11 +941,11 @@ var localization_EN_Data = {
     "tl.create.licenses.groups.TradeDetails.TraderOwnerProperty": "Trader is not the owner of the Property",
     "tl.create.licenses.groups.agreementDetails.agreementDate": "Date of Execution",
     "tl.create.licenses.groups.agreementDetails.agreementNo": "Registered/Non Registered Document No",
-    "tl.create.licenses.groups.agreementDetails": "Agreement Details",
+    "tl.create.licenses.groups.agreementDetails": "Agreement Details (Trader is not the owner of the Property)",
 
     "tl.create.licenses.groups.FeeDetails": "Fee Details",
     "tl.create.license.table.financialYear": "Financial Year",
-    "tl.create.license.table.amount": "Amount*", 
+    "tl.create.license.table.amount": "Amount*",
     "tl.create.license.table.isPaid": "Is Paid",
 
     "tl.search.groups.license.searchTradeLicense": "Search Trade License",
@@ -1551,7 +1569,7 @@ var localization_EN_Data = {
     "fn.ApplicationDetails.block":"Block",
     "fn.ApplicationDetails.zone":"Zone",
     "fn.ApplicationDetails.ward":"Ward",
-    "fn.serviceDetails.privisonalFireNOCNo":"Privisonal fire NOC Number",
+    "fn.serviceDetails.privisonalFireNOCNo":"Provisonal fire NOC Number",
     "fn.serviceDetails.plotNo":"Plot Number",
     "fn.serviceDetails.nocSubCategory":"NOC Sub Category",
     "fn.serviceDetails.vikasPrastavNo":"Vikas Prastav Number",
@@ -2452,7 +2470,7 @@ var localization_MR_Data = {
         "reports.collection.consumeraddress": "Consumer Address - Marathi",
         "reports.collection.print": "Print - Marathi",
         "reports.collection.consumerno": "Consumer No - Marathi",
-        "reports.collection.fromdate": "From Date - Marathi",
+        "reports.collection.fromdate":"From Date - Marathi",
         "reports.collection.todate": "To Date - Marathi",
         "reports.collection.servicename": "Service Name - Marathi",
 
@@ -2519,6 +2537,20 @@ var localization_MR_Data = {
   "reports.wcms.arrearbalance":"Balance Arrears - Marathi",
   "reports.wcms.currentbalance":"Current Balance - Marathi",
   "reports.wcms.totalbalance":"Total Balance - Marathi",
+  "reports.wcms.wardno":"BoundaryName - Marathi",
+  "reports.wcms.applicationtype":"ApplicationType - Marathi",
+  "reports.wcms.consumerno":"ConsumerNumber - Marathi",
+  "reports.wcms.pipesize":"Pipesizd - Marathi",
+  "reports.wcms.usage":"Usage - Marathi",
+  "reports.wcms.connectionAddress":"Address - Marathi",
+  "reports.wcms.applicationtype":"ApplicationTYpe - Marathi",
+  "reports.wcms.billingtype":"BillingTYpe - Marathi",
+  "reports.wcms.categoryType":"CategoryType - Marathi",
+  "reports.wcms.connectionstatus":"ConnectionStatus - Marathi",
+  "reports.wcms.Balance":"Balance - Marathi",
+  "reports.wcms.demand":"Demand - Marathi",
+  "reports.wcms.coll":"Collection - Marathi",
+  "reports.wcms.state":"State - Marathi",
 
 "employee.Employee.fields.EmployeePhoto":"कर्मचारी फोटो",
 "employee.Employee.fields.EmployeeSignature":"कर्मचारी स्वाक्षरी",
@@ -2658,6 +2690,8 @@ var localization_MR_Data = {
 "wc.create.groups.connectionDetails.fields.resetFlag1":"1st Month Reset reading-Marathi",
 "wc.create.groups.connectionDetails.fields.resetFlag2":"2nd Month Reset reading-Marathi",
 "wc.create.groups.connectionDetails.fields.resetFlag3":"3rd Month Reset reading-Marathi",
+"wc.create.capacityOfSource":"Capacity of source-Marathi",
+"wc.create.reservationForUlb":"Reservation for ULB-Marathi",
 
 ﻿﻿"pgr.0001":"अक्षांश / रेखांश किंवा क्रॉस हायरारकी संकेतांक आवश्यक आहे",
 "pgr.0002":"अक्षांश / रेखांश किंवा क्रॉस हायरारकी संकेतांक आवश्यक आहे",
@@ -3096,4 +3130,16 @@ export function toLocalTime(regDate) {
     dat = dat.split("-")[1] + "-" + dat.split("-")[0] + "-" + dat.split("-")[2] + " " + regDate.split(" ")[1];
     dat = new Date(dat + " UTC").toString();
     return dat.substr(0, dat.indexOf("GMT"));
+}
+
+export function epochToDate(t) {
+    function pad2(n) {
+        return n > 9 ? n : '0' + n;
+    }
+    var d = new Date(Number(t));
+    var year = d.getFullYear();
+    var month = d.getMonth() + 1;  // months start at zero
+    var day = d.getDate();
+
+    return pad2(day) + '-' + pad2(month) + '-' + year;
 }

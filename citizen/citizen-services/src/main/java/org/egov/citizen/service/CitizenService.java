@@ -1,7 +1,13 @@
 package org.egov.citizen.service;
 
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 
 import org.egov.citizen.config.ApplicationProperties;
 import org.egov.citizen.config.CitizenServiceConstants;
@@ -184,7 +190,7 @@ public class CitizenService {
 		return response;
 	}
 	
-	public ServiceReq createReceiptForPayment(ReceiptRequest receiptReq){
+/*	public ServiceReq createReceiptForPayment(ReceiptRequest receiptReq){
 		LOGGER.info("Incoming request for createReceipt: "+receiptReq);
 		BillingServiceRequestWrapper billingServiceRequestWrapper = new BillingServiceRequestWrapper();
 		billingServiceRequestWrapper.setBillingServiceRequestInfo(receiptReq.getRequestInfo());
@@ -287,7 +293,7 @@ public class CitizenService {
 			throw new CustomException(Integer.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
 					CitizenServiceConstants.BILL_INVALID_MSG, CitizenServiceConstants.BILL_INVALID_DESC);
 		}
-	}
+	} */
 	
 	public Object generateBill(RequestInfoWrapper requestInfoWrapper, String consumerCode, String buisnessService, String tenantId){
 		LOGGER.info("Generate bill flow starts for mobile no: "+consumerCode.toString());
@@ -310,11 +316,12 @@ public class CitizenService {
 			String serviceRequestId){
 		LOGGER.info("Generating PGPayload..");
 		PGPayload pgPayload = PGPayload.builder()
-							  .requestInfo(requestInfo).consumerCode(consumerCode).tenantId(tenantId).billServuce(buisnessService)
+							  .requestInfo(requestInfo).consumerCode(consumerCode).tenantId(tenantId).billService(buisnessService)
 							  .serviceRequestId(serviceRequestId).build();
 		return pgPayload;
 		
 	}
+
 	
 	public List<ServiceReq> getServiceRequests(ServiceRequestSearchCriteria serviceRequestSearchCriteria){
 		List<ServiceReq> serviceRequests = new ArrayList<>();

@@ -169,18 +169,20 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                 log.debug("AssetRowMapper asset:: " + asset);
                 map.put(assetId, asset);
             }
-            List<YearWiseDepreciation> ywd = asset.getYearWiseDepreciation();
-            if (ywd == null) {
-                ywd = new ArrayList<>();
-                asset.setYearWiseDepreciation(ywd);
-            }
+
             final YearWiseDepreciation ywdObject = new YearWiseDepreciation();
             ywdObject.setId((Long) rs.getObject("ywd_id"));
             ywdObject.setAssetId((Long) rs.getObject("assetid"));
             ywdObject.setDepreciationRate(rs.getDouble("ywd_depreciationrate"));
             ywdObject.setFinancialYear(rs.getString("financialyear"));
             ywdObject.setUsefulLifeInYears((Long) rs.getObject("usefullifeinyears"));
-            ywd.add(ywdObject);
+            ywdObject.setTenantId(rs.getString("tenantId"));
+
+            final List<YearWiseDepreciation> ywd = asset.getYearWiseDepreciation();
+            if (ywd == null)
+                asset.setYearWiseDepreciation(new ArrayList<>());
+            else
+                ywd.add(ywdObject);
 
             asset.setYearWiseDepreciation(ywd);
         }

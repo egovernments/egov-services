@@ -1,6 +1,9 @@
 package org.egov.citizen.service;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -8,10 +11,18 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+
+import org.egov.citizen.config.ApplicationProperties;
 import org.egov.citizen.model.AuditDetails;
+import org.egov.citizen.model.BillResponse;
 import org.egov.citizen.model.ServiceReqRequest;
 import org.egov.citizen.model.ServiceReqResponse;
 import org.egov.citizen.repository.ServiceReqRepository;
+import org.egov.citizen.web.contract.PGPayload;
+import org.egov.citizen.web.contract.PGPayloadResponse;
+import org.egov.citizen.web.contract.ReceiptRequest;
 import org.egov.citizen.web.contract.ServiceRequestSearchCriteria;
 import org.egov.citizen.web.contract.factory.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
@@ -67,6 +78,9 @@ public class CitizenPersistService {
 	
 	@Autowired
 	private ServiceReqRepository serviceReqRepository;
+	
+	@Autowired
+	private ApplicationProperties applicationProperties;
 	
 	@Value("${egov.thread.sleep.time}")
 	private Long threadTimeOut;
@@ -158,7 +172,7 @@ public class CitizenPersistService {
 
 	public String getServiceReqId() {
 
-		String req = "{\"RequestInfo\":{\"apiId\":\"org.egov.ptis\",\"ver\":\"1.0\",\"ts\":\"20934234234234\",\"action\":\"asd\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\":\"5da7d18a-d6bc-4f60-8ed9-b33c0ecd5a0e\"},\"idRequests\":[{\"idName\":\"CS.ServiceRequest\",\"tenantId\":\"default\",\"format\":\"SRN-[cy:MM]/[fy:yyyy-yy]-[d{4}]\"}]}";
+		String req = "{\"RequestInfo\":{\"apiId\":\"org.egov.ptis\",\"ver\":\"1.0\",\"ts\":\"20934234234234\",\"action\":\"asd\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\":\"3c9bdf8c-6936-4f5c-a577-5752552f2257\"},\"idRequests\":[{\"idName\":\"CS.ServiceRequest\",\"tenantId\":\"default\",\"format\":\"SRN-[cy:MM]-[fy:yyyy-yy]-[d{4}]\"}]}";
 
 		String url = idGenHost+idGenGetIdUrl;
 		log.info("url:"+url);
@@ -295,6 +309,100 @@ public class CitizenPersistService {
     /*public String populateNextServiceCallData(){
     	
     }*/
+    
+	public PGPayload generatePGPayload(ReceiptRequest receiptRequest, RequestInfo requestInfo){
+		LOGGER.info("Generating PGPayload..");
+		StringBuilder msgForHash = new StringBuilder();
+		String delimiter="|";
+		msgForHash.append(receiptRequest.getAmountPaid()).append(delimiter)
+		          .append(receiptRequest.getDate()).append(delimiter)
+		          .append(receiptRequest.getBillNumber()).append(delimiter)
+		          .append(receiptRequest.getBiller()).append(delimiter)
+		          .append(receiptRequest.getBillService());
+		String hashKey = applicationProperties.getHashKey();
+		String requestHash = getHashedValue(msgForHash.toString(), hashKey);
+		LOGGER.info("Request hash obtained: "+requestHash);
+		
+		PGPayload pgPayload = PGPayload.builder()
+							  .requestInfo(requestInfo)
+							  .consumerCode(receiptRequest.getConsumerCode())
+							  .tenantId(receiptRequest.getTenantId())
+							  .billService(receiptRequest.getBillService())
+							  .serviceRequestId(receiptRequest.getServiceRequestId())
+							  .amountPaid(receiptRequest.getAmountPaid())
+							  .biller(receiptRequest.getBiller())
+							  .billNumber(receiptRequest.getBillNumber())
+							  .date(receiptRequest.getDate())
+							  .email(requestInfo.getUserInfo().getEmailId())
+							  .mobileNo(requestInfo.getUserInfo().getMobileNumber())
+							  .requestHash(requestHash)
+							  .uid(requestInfo.getUserInfo().getId())
+							  .retrunUrl(receiptRequest.getReturnUrl())
+							  .build();
+		LOGGER.info("PGPayload generated: "+pgPayload);
+		
+		LOGGER.info("Persiting data to db: "+pgPayload);
+		serviceReqRepository.persistPaymentData(pgPayload, null, true);
+		
+		return pgPayload;
+		
+	}
+	
+	public boolean validatingPGResponse(PGPayloadResponse pGPayLoadResponse){
+		LOGGER.info("Validating pgrespnse..");
+		boolean isValid = false;		
+		LOGGER.info("Persiting data to db: "+pGPayLoadResponse);
+		serviceReqRepository.persistPaymentData(null, pGPayLoadResponse, false);
+		
+		StringBuilder msgForHash = new StringBuilder();
+		String delimiter="|";
+		msgForHash.append(pGPayLoadResponse.getStatus()).append(delimiter)
+		          .append(pGPayLoadResponse.getBillNumber()).append(delimiter)
+		          .append(pGPayLoadResponse.getBillService()).append(delimiter)
+		          .append(pGPayLoadResponse.getTransactionId()).append(delimiter)
+		          .append(pGPayLoadResponse.getServiceRequestId()).append(delimiter)
+		          .append(pGPayLoadResponse.getUid()).append(delimiter);
+		
+		String hashKey = applicationProperties.getHashKey();
+		String responseHash = getHashedValue(msgForHash.toString(), hashKey);
+		
+		if(responseHash.equals(pGPayLoadResponse.getResponseHash())){
+			isValid = true;
+			LOGGER.info("Response hash is valid!");
+			return isValid;
+
+		}
+		LOGGER.info("Hash receieved: "+pGPayLoadResponse.getResponseHash());
+		LOGGER.info("Hash generated to match: "+responseHash);
+		LOGGER.info("Response hash is INVALID!");
+		return isValid;
+		
+	}
+	
+	private static String getHashedValue(String msg, String keyString) {
+	    String digest = null;
+	    try {
+	      SecretKeySpec key = new SecretKeySpec((keyString).getBytes("UTF-8"), "HmacSHA256");
+	      Mac mac = Mac.getInstance("HmacSHA256");
+	      mac.init(key);
+	      byte[] bytes = mac.doFinal(msg.getBytes("ASCII"));
+	      StringBuffer hash = new StringBuffer();
+	      for (int i = 0; i < bytes.length; i++) {
+	        String hex = Integer.toHexString(0xFF & bytes[i]);
+	        if (hex.length() == 1) {
+	          hash.append('0');
+	        }
+	        hash.append(hex);
+	      }
+	      digest = hash.toString();
+	    } catch (UnsupportedEncodingException e) {
+	    } catch (InvalidKeyException e) {
+	    } catch (NoSuchAlgorithmException e) {
+	    }
+	    return digest;
+	}
+    
+    
     
     private AuditDetails getAuditDetaisl(RequestInfo requestInfo, boolean isCreate){
 		AuditDetails auditDetails = new AuditDetails();

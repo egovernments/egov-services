@@ -218,9 +218,9 @@ public class WaterConnectionRepository {
                 LOGGER.error("Inserting documents failed!", e);
             }
         } 
-        }if (connectionId > 0 && waterConnectionRequest.getConnection().getBillingType() != null &&
+        }if (connectionId > 0 && null != waterConnectionRequest.getConnection().getBillingType() &&
                 waterConnectionRequest.getConnection().getBillingType().equals("METERED") &&
-                !waterConnectionRequest.getConnection().getMeter().isEmpty()) {
+                null != waterConnectionRequest.getConnection().getMeter()) {
 
             Long meterId=null;
                 final String insertestQuery = WaterConnectionQueryBuilder.insertMeterQuery();
@@ -274,10 +274,10 @@ public class WaterConnectionRepository {
                 			waterConnectionRequest.getRequestInfo().getUserInfo().getId(), new Date(new java.util.Date().getTime()),
                 			waterConnectionRequest.getRequestInfo().getUserInfo().getId(), new Date(new java.util.Date().getTime()),
                 			meterReading.getGapCode() != null ? meterReading.getGapCode() : "",
-                			meterReading.getGapCode() != null ? meterReading.getConsumption() : "",
-                			meterReading.getGapCode() != null ? meterReading.getConsumptionAdjusted() : "",
-                			meterReading.getGapCode() != null ? meterReading.getNumberOfDays() : "",
-                			meterReading.getGapCode() != null ? meterReading.getResetFlag() : false
+                			meterReading.getConsumption() != null ? meterReading.getConsumption() : "",
+                			meterReading.getConsumptionAdjusted() != null ? meterReading.getConsumptionAdjusted() : "",
+                			meterReading.getNumberOfDays() != null ? meterReading.getNumberOfDays() : "",
+                			meterReading.getResetFlag() != null ? meterReading.getResetFlag() : false
                 	};
                     
                     values.add(obj);

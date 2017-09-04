@@ -807,7 +807,7 @@ var dat = {
             "name": "ConsumerNo",
             "jsonPath": "Connection.legacyConsumerNumber",
             "label": "wc.create.groups.applicantDetails.consumerNo",
-            "pattern": "^\\d{1,16}$",
+            "pattern": "^[\s.]*([^\s.][\s.]*){1,16}$",
             "type": "text",
             "isRequired": true,
             "isDisabled": false,
@@ -818,7 +818,7 @@ var dat = {
             "name": "ManualConsumerNo",
             "jsonPath": "Connection.manualConsumerNumber",
             "label": "wc.create.groups.applicantDetails.manualConsumerNo",
-            "pattern": "^\\d{1,16}$",
+            "pattern": "^[\s.]*([^\s.][\s.]*){1,16}$",
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
@@ -1109,6 +1109,10 @@ var dat = {
                     "name": "Metered",
                     "isGroup": true,
                     "isField": false
+                   }, {
+                    "name": "MeterReading",
+                    "isGroup": true,
+                    "isField": false
                    }]
                   }]
           },
@@ -1296,26 +1300,28 @@ var dat = {
         "hide":true,
         		"children":[meterReading],
                 "fields": [{
-                    "name": "meterOwner",
+                    "name": "MeterOwner",
                     "jsonPath": "Connection.meter[0].meterOwner",
                     "label": "wc.group.meterOwner",
                     "pattern": "^[\s.]*([^\s.][\s.]*){0,50}$",
-                    "type": "text",
+                    "type": "singleValueList",
                     "isRequired": true,
                     "isDisabled": false,
                     "requiredErrMsg": "",
-                    "patternErrMsg": ""
+                    "patternErrMsg": "",
+                    "url":"/wcms-connection/connection/_getmeterownertypes?|$..key|$..object"
                   },
                   {
-                      "name": "meterModel",
+                      "name": "MeterModel",
                       "jsonPath": "Connection.meter[0].meterModel",
                       "label": "wc.group.meterModal",
                       "pattern": "^[\s.]*([^\s.][\s.]*){0,50}$",
-                      "type": "text",
-                      "isRequired": false,
+                      "type": "singleValueList",
+                      "isRequired": true,
                       "isDisabled": false,
                       "requiredErrMsg": "",
-                      "patternErrMsg": ""
+                      "patternErrMsg": "",
+                      "url":"/wcms-connection/connection/_getmetermodeltypes?|$..key|$..object"
                     },
                     {
                     "name": "meterMake",
@@ -1334,7 +1340,7 @@ var dat = {
                       "label": "wc.group.meterNumber",
                       "pattern": "",
                       "type": "text",
-                      "isRequired": false,
+                      "isRequired": true,
                       "isDisabled": false,
                       "requiredErrMsg": "",
                       "patternErrMsg": ""
@@ -1344,7 +1350,7 @@ var dat = {
                     "jsonPath": "Connection.meter[0].meterCost",
                     "label": "wc.group.meterCost",
                     "pattern": "",
-                    "type": "text",
+                    "type": "number",
                     "isRequired": false,
                     "isDisabled": false,
                     "requiredErrMsg": "",
@@ -1356,7 +1362,7 @@ var dat = {
                     "label": "wc.group.initialMeterReading",
                     "pattern": "^\\d{1,8}$",
                     "type": "number",
-                    "isRequired": true,
+                    "isRequired": false,
                     "isDisabled": false,
                     "requiredErrMsg": "",
                     "patternErrMsg": ""
@@ -1592,13 +1598,13 @@ var dat = {
               "patternErrMsg": ""
             },
             {
-              "name": "Locality",
-              "jsonPath": "Connection[0].connectionLocation.locationBoundary.id",
-              "label": "wc.create.groups.applicantDetails.locality",
+              "name": "zoneName",
+              "jsonPath": "Connection[0].connectionLocation.revenueBoundary.id",
+              "label": "wc.create.groups.fields.zone",
               "pattern": "",
               "type": "singleValueList",
-              "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$.Boundary.*.boundaryNum|$.Boundary.*.name",
-              "isRequired": false,
+              "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE|$.Boundary.*.boundaryNum|$.Boundary.*.name",
+              "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": ""
@@ -1616,13 +1622,47 @@ var dat = {
               "patternErrMsg": ""
             },
             {
-              "name": "zoneName",
-              "jsonPath": "Connection[0].connectionLocation.revenueBoundary.id",
-              "label": "wc.create.groups.fields.zone",
+              "name": "Locality",
+              "jsonPath": "Connection[0].connectionLocation.locationBoundary.id",
+              "label": "wc.create.groups.applicantDetails.locality",
               "pattern": "",
               "type": "singleValueList",
-              "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE|$.Boundary.*.boundaryNum|$.Boundary.*.name",
+              "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$.Boundary.*.boundaryNum|$.Boundary.*.name",
+              "isRequired": false,
+              "isDisabled": false,
+              "requiredErrMsg": "",
+              "patternErrMsg": ""
+            },
+            {
+              "name": "executionDate",
+              "jsonPath": "Connection[0].executionDate",
+              "label": "wc.create.groups.applicantDetails.connectionDate",
+              "maxDate": "today-2",
+              "pattern": "",
+              "type": "datePicker",
               "isRequired": true,
+              "isDisabled": false,
+              "requiredErrMsg": "",
+              "patternErrMsg": ""
+            },
+            {
+              "name": "ConsumerNo",
+              "jsonPath": "Connection[0].legacyConsumerNumber",
+              "label": "wc.create.groups.applicantDetails.consumerNo",
+              "pattern": "^\\d{1,16}$",
+              "type": "text",
+              "isRequired": true,
+              "isDisabled": false,
+              "requiredErrMsg": "",
+              "patternErrMsg": ""
+            },
+            {
+              "name": "ManualConsumerNo",
+              "jsonPath": "Connection[0].manualConsumerNumber",
+              "label": "wc.create.groups.applicantDetails.manualConsumerNo",
+              "pattern": "^\\d{1,16}$",
+              "type": "text",
+              "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": ""
@@ -1777,6 +1817,40 @@ var dat = {
             "type": "text",
             "isRequired": false,
             "isDisabled": true,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "consumerNo",
+            "jsonPath": "Connection[0].legacyConsumerNumber",
+            "label": "wc.create.groups.applicantDetails.consumerNo",
+            "pattern": "",
+            "type": "text",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "ManualConsumerNo",
+            "jsonPath": "Connection[0].manualConsumerNumber",
+            "label": "wc.create.groups.applicantDetails.manualConsumerNo",
+            "pattern": "",
+            "type": "text",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+      	  {
+            "name": "executionDate",
+            "jsonPath": "Connection[0].executionDate",
+            "label": "wc.create.groups.applicantDetails.connectionDate",
+            "maxDate": "today-2",
+            "pattern": "",
+            "type": "datePicker",
+            "isRequired": true,
+            "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
           }

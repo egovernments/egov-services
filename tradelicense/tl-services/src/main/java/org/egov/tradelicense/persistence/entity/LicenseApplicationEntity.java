@@ -140,32 +140,4 @@ public class LicenseApplicationEntity {
 		
 		return this;
 	}
-	
-	public LicenseApplicationEntity toAppEntity(TradeLicenseEntity license){
-		
-		this.tenantId = license.getTenantId();
-		
-		this.setApplicationNumber( license.getApplicationNumber());
-		
-		if(license.getApplicationType() != null){
-			this.setApplicationType( license.getApplicationType().toString());
-		}
-		
-		if(license.getApplicationStatus() != null){
-			this.setStatus( license.getApplicationStatus().toString());
-		}
-		
-//		this.setApplicationDate( license.getApplicationDate());
-		this.applicationDate = license.getApplicationDate();
-		this.state_id = license.getStateId();
-		this.setLicenseId( license.getId());
-		
-		this.setCreatedBy( license.getCreatedBy());
-		this.setCreatedTime( license.getCreatedTime());
-		
-		this.setLastModifiedBy( license.getLastModifiedBy());
-		this.setLastModifiedTime( license.getLastModifiedTime());
-		
-		return this;
-	}
 }

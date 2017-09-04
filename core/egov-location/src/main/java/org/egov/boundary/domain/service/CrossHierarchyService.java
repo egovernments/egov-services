@@ -46,8 +46,10 @@ import java.util.List;
 import org.egov.boundary.persistence.entity.Boundary;
 import org.egov.boundary.persistence.entity.BoundaryType;
 import org.egov.boundary.persistence.entity.CrossHierarchy;
+import org.egov.boundary.persistence.repository.BoundaryJpaRepository;
+import org.egov.boundary.persistence.repository.BoundaryTypeRepository;
 import org.egov.boundary.persistence.repository.CrossHierarchyRepository;
-import org.egov.boundary.web.contract.CrossHierarchyRequest;
+import org.egov.boundary.web.contract.CrossHierarchySearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,12 +67,42 @@ public class CrossHierarchyService {
 	private BoundaryTypeService boundaryTypeService;
 
 	@Autowired
+	private BoundaryJpaRepository boundaryRepository;
+
+	@Autowired
+	private BoundaryTypeRepository boundaryTypeRepository;
+
+	@Autowired
 	public CrossHierarchyService(final CrossHierarchyRepository crossHierarchyRepository) {
 		this.crossHierarchyRepository = crossHierarchyRepository;
 	}
 
 	@Transactional
 	public CrossHierarchy create(final CrossHierarchy crossHierarchy) {
+
+		if (crossHierarchy.getParent() != null && crossHierarchy.getParent().getTenantId() != null
+				&& crossHierarchy.getParent().getId() != null) {
+			crossHierarchy.setParent(boundaryRepository.findByTenantIdAndId(crossHierarchy.getParent().getTenantId(),
+					crossHierarchy.getParent().getId()));
+		}
+		if (crossHierarchy.getChild() != null && crossHierarchy.getChild().getTenantId() != null
+				&& crossHierarchy.getChild().getId() != null) {
+			crossHierarchy.setChild(boundaryRepository.findByTenantIdAndId(crossHierarchy.getChild().getTenantId(),
+					crossHierarchy.getChild().getId()));
+		}
+
+		if (crossHierarchy.getParentType() != null && crossHierarchy.getParentType().getTenantId() != null
+				&& crossHierarchy.getParentType().getId() != null) {
+			crossHierarchy.setParentType(boundaryTypeRepository.findByIdAndTenantId(
+					crossHierarchy.getParentType().getId(), crossHierarchy.getParentType().getTenantId()));
+		}
+
+		if (crossHierarchy.getChildType() != null && crossHierarchy.getChildType().getTenantId() != null
+				&& crossHierarchy.getChildType().getId() != null) {
+			crossHierarchy.setChildType(boundaryTypeRepository.findByIdAndTenantId(
+					crossHierarchy.getChildType().getId(), crossHierarchy.getChildType().getTenantId()));
+		}
+
 		return crossHierarchyRepository.save(crossHierarchy);
 	}
 
@@ -153,7 +185,7 @@ public class CrossHierarchyService {
 		return crossHierarchyRepository.findByCodeAndTenantId(code, tenantId);
 	}
 
-	public List<CrossHierarchy> getAllCrossHierarchys(CrossHierarchyRequest crossHierarchyRequest) {
+	public List<CrossHierarchy> getAllCrossHierarchys(CrossHierarchySearchRequest crossHierarchyRequest) {
 		List<CrossHierarchy> crossHierarchy = new ArrayList<CrossHierarchy>();
 		if (crossHierarchyRequest.getCrossHierarchy() != null
 				&& crossHierarchyRequest.getCrossHierarchy().getTenantId() != null

@@ -24,6 +24,7 @@ import UiDocumentList from './components/UiDocumentList'
 import UiAutoComplete from './components/UiAutoComplete'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
 import UiDate from './components/UiDate';
+import UiPinCode from './components/UiPinCode';
 
 let styles={
   reducePadding: {
@@ -192,6 +193,8 @@ export default class ShowFields extends Component {
         return <UiPanCard tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
       case 'aadhar':
         return <UiAadharCard tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+      case 'pinCode':
+        return <UiPinCode tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
       case 'label':
         return <UiLabel tabIndex={index} getVal={this.props.getVal} item={item}/>
       case 'radio':

@@ -99,6 +99,15 @@ public class ApplicationProperties {
 	
 	@Value("${egov.citizen.service.taxPeriodTo}")
 	private String taxPeriodTo;
+	
+	@Value("${egov.citizen.service.pgrequest.hash.key}")
+	private String hashKey;
+	
+	@Value("${egov.citizen.redirect.url}")
+	private String redirectUrl;
+	
+	@Value("${egov.citizen.redirect}")
+	private String redirectAppend;
 
 	public String commonsSearchPageSizeDefault() {
 		return environment.getProperty(SEARCH_PAGESIZE_DEFAULT);

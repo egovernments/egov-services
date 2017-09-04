@@ -270,8 +270,7 @@ public class AssetControllerTest {
     public void test_should_depreciate_asset() throws IOException, Exception {
         final Depreciation depreciation = getAssetDepreciation();
         final DepreciationResponse depreciationResponse = new DepreciationResponse();
-        final ResponseInfo responseInfo = getResponseInfo();
-        depreciationResponse.setResponseInfo(responseInfo);
+        depreciationResponse.setResponseInfo(getResponseInfo());
         depreciationResponse.setDepreciation(depreciation);
         when(depreciationService.depreciateAsset(any(DepreciationRequest.class), any(HttpHeaders.class)))
                 .thenReturn(depreciationResponse);
@@ -391,6 +390,7 @@ public class AssetControllerTest {
 
     private Depreciation getAssetDepreciation() {
         final Depreciation depreciation = new Depreciation();
+        depreciation.setId(Long.valueOf("1"));
         depreciation.setTenantId("ap.kurnool");
         depreciation.setAssetIds(null);
         depreciation.setFinancialYear("2017-18");
@@ -420,7 +420,7 @@ public class AssetControllerTest {
         responseInfo.setVer("v1");
         responseInfo.setTs("Sat Aug 19 16:50:40 IST 2017");
         responseInfo.setResMsgId(null);
-        responseInfo.setMsgId(null);
+        responseInfo.setMsgId("20170310130900");
         responseInfo.setStatus(null);
         return responseInfo;
     }

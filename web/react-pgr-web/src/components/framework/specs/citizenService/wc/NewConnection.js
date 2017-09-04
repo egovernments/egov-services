@@ -143,10 +143,10 @@ var dat = {
                     },
                     {
                         "name": "PinCode",
-                        "jsonPath": "Connection.address.pinCode",
+                        "jsonPath": "PIN Code",
                         "label": "pt.create.groups.propertyAddress.fields.pin",
-                        "pattern": "^\\d{6}$",
-                        "type": "number",
+                        "pattern": "",
+                        "type": "pinCode",
                         "isRequired": true,
                         "isDisabled": false,
                         "requiredErrMsg": "",
@@ -198,7 +198,7 @@ var dat = {
                         "isDisabled": false,
                         "requiredErrMsg": "",
                         "patternErrMsg": "",
-                        "values": [{ "label": "pt.create.groups.ownerDetails.fields.primaryOwner", "value": true }],
+                        "values": [{ "label": "pt.create.groups.ownerDetails.fields.primaryOwner", "value": true }, { "label": "pt.create.groups.ownerDetails.fields.secondaryOwner", "value": false }],
                         "defaultValue": true
                     }
                 ]
@@ -776,7 +776,7 @@ var dat = {
                     },
                     {
                         "name": "PinCode",
-                        "jsonPath": "Connection.address.pinCode",
+                        "jsonPath": "PIN Code",
                         "label": "pt.create.groups.propertyAddress.fields.pin",
                         "pattern": "",
                         "type": "number",
@@ -970,7 +970,7 @@ var dat = {
                         "type": "singleValueList",
                         "isRequired": false,
                         "isDisabled": false,
-                        "url": "/pt-property/property/usages/_search?|$..name|$..name",
+                        "url": "/pt-property/property/usages/_search?|$..code|$..name",
                         "requiredErrMsg": "",
                         "patternErrMsg": ""
                     },
@@ -984,7 +984,7 @@ var dat = {
                         "isDisabled": false,
                         "requiredErrMsg": "",
                         "patternErrMsg": "",
-                        "url": "/pt-property/property/usages/_search?|$..name|$..name"
+                        "url": "/pt-property/property/usages/_search?|$..code|$..name"
                     },
                     {
                         "name": "hscPipeSizeType",
@@ -995,7 +995,8 @@ var dat = {
                         "isRequired": false,
                         "isDisabled": false,
                         "requiredErrMsg": "",
-                        "patternErrMsg": ""
+                        "patternErrMsg": "",
+                        "url": "/wcms/masters/propertytype-pipesize/_search?tenantId=default&propertyTypeName=Others|$..pipeSize|$..pipeSizeInInch"
                     },
                     {
                         "name": "applicationType",

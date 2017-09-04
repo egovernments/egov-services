@@ -71,21 +71,10 @@ public class TradeLicenseController {
 			this.setApplicationContract(tradeLicenseContract);
 			model.getConfiguration().setAmbiguityIgnored(true);
 			model.map(tradeLicenseContract, tradeLicense);
-			//preparing audit details
-			AuditDetails auditDetails = new AuditDetails();
-			auditDetails.setCreatedTime(new Date().getTime());
-			auditDetails.setLastModifiedTime(new Date().getTime());
-			if (requestInfo != null && requestInfo.getUserInfo() != null && requestInfo.getUserInfo().getId() != null) {
-				auditDetails.setCreatedBy(requestInfo.getUserInfo().getId().toString());
-				auditDetails.setLastModifiedBy(requestInfo.getUserInfo().getId().toString());
-			}
-
-			tradeLicense.setAuditDetails(auditDetails);
-
 			tradeLicenses.add(tradeLicense);
 		}
 
-		tradeLicenses = tradeLicenseService.add(tradeLicenses, requestInfo, errors);
+		 tradeLicenseService.add(tradeLicenses, requestInfo, errors);
 
 		List<TradeLicenseContract> tradeLicenseContracts = new ArrayList<>();
 		TradeLicenseContract contract;
@@ -251,10 +240,6 @@ public class TradeLicenseController {
 			applicationContract.setTenantId( license.getTenantId() );
 		}
 		
-		if( license.getApplicationStatus() != null && applicationContract.getStatus() != null){
-			applicationContract.setStatus( license.getApplicationStatus().toString());
-		}
-		
 		// for legacy license field inspection details should not be allowed to update
 		if( license.getIsLegacy()){
 			applicationContract.setLicenseFee(null);
@@ -282,12 +267,13 @@ public class TradeLicenseController {
 			@RequestParam(required = false) String ownerName, @RequestParam(required = false) String tradeTitle,
 			@RequestParam(required = false) String tradeType, @RequestParam(required = false) Integer tradeCategory,
 			@RequestParam(required = false) Integer tradeSubCategory, @RequestParam(required = false) String legacy,
-			@RequestParam(required = false) Integer status) throws Exception {
+			@RequestParam(required = false) Integer status,
+			@RequestParam(required = false) Integer applicationStatus) throws Exception {
 
 		return tradeLicenseService.getTradeLicense(requestInfo.getRequestInfo(), tenantId, pageSize, pageNumber, sort,
 				active, ids, applicationNumber, licenseNumber, oldLicenseNumber, mobileNumber, aadhaarNumber, emailId,
 				propertyAssesmentNo, adminWard, locality, ownerName, tradeTitle, tradeType, tradeCategory,
-				tradeSubCategory, legacy, status);
+				tradeSubCategory, legacy, status, applicationStatus);
 	}
 
 }

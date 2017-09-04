@@ -169,6 +169,10 @@ paths:
           in : query
           type: integer
           description: Unqique identifier of the Trade License Status
+        - name: applicationStatus
+          in : query
+          type: integer
+          description: Unqique identifier of the Trade Application Status
       responses:
         200:
           description: Trade License(s) Retrived Successfully
@@ -397,6 +401,10 @@ definitions:
         type: integer
         format: int64
         description:  Commencement Date of the trade as epoch
+      issuedDate:
+        type: integer
+        format: int64
+        description:  License issued Date of the trade as epoch
       licenseValidFromDate:
         type: integer
         format: int64
@@ -607,6 +615,10 @@ definitions:
         type: integer
         format: int64
         description:  Commencement Date of the trade as epoch
+      issuedDate:
+        type: integer
+        format: int64
+        description:  License issued Date of the trade as epoch
       licenseValidFromDate:
         type: integer
         format: int64
@@ -860,6 +872,18 @@ definitions:
         type: integer
         format: int64
         description: application Date in epoch format
+      feeDetails:
+        type: array
+        description: List of Fee Details for Trade License,  Required only for Legacy Trade License
+        items:
+          $ref: '#/definitions/LicenseFeeDetail'
+      supportDocuments:
+        type: array
+        description: List of Support Documents for Trade License
+        items:
+          $ref: '#/definitions/SupportDocumentSearch'
+      workFlowDetails:
+        $ref: '#/definitions/WorkFlowDetails'
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
   LicenseApplicationSearch:
@@ -885,6 +909,9 @@ definitions:
       status:
         type: string
         description: Unique identifier of the Applicaiton status
+      statusName:
+        type: string
+        description: status name of the Trade Applicaiton
       state_id:
         type: string
         description: Unique identifier of the workflow state
@@ -911,6 +938,44 @@ definitions:
           $ref: '#/definitions/SupportDocumentSearch'
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+  WorkFlowDetails:
+    type: object
+    description: An Object to hold the Application workflow details for a given Trade license
+    properties:
+      type:
+        type: string
+        description: workflow type to be processed for an application the Trade License
+      businessKey:
+        type: string
+        description: businesskey of the workflow processing application
+      department:
+        type: string
+        description: department of the workflow processing authority
+      designation:
+        type: string
+        description: designation of the workflow processing authority
+      assignee:
+        type: integer
+        format: int64
+        description: assignee id
+      action:
+        type: string
+        description: action to be taken for processing workflow
+      status:
+        type: string
+        description: status of the application
+      comments:
+        type: string
+        description: comments given by the workflow processing person
+      senderName:
+        type: string
+        description: name of the workflow processing person
+      details:
+        type: string
+        description: details about the workflow process
+      stateId:
+        type: string
+        description: state id of the workflow
 parameters:
 ##########################################################
 #Parameter name must start with small case followed by camel case.

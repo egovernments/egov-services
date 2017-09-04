@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 
 import org.egov.common.contract.request.RequestInfo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -14,15 +16,24 @@ import lombok.ToString;
 @ToString
 public class PGPayloadResponse {
 	
+	private String status;
+	private Object errors;
+	private String paymentMethod;
     private String billNumber;
     private String responseHash;
+	private String transactionId;
+	private Object otherDetails;
     private String billService;
-    private String serviceRequestId;
-    private String consumerCode;
+    
+    @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
+    
     private String tenantId;
     private BigDecimal amountPaid;
-	private String transactionId;
+    private String consumerCode;
+    private Long uid;
+    private String serviceRequestId;
+
 
 
 }

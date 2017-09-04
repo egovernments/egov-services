@@ -1,9 +1,14 @@
 package org.egov.boundary.web.controller;
 
+import java.util.List;
+
+import javax.validation.Valid;
+
 import org.egov.boundary.domain.service.CrossHierarchyService;
 import org.egov.boundary.persistence.entity.CrossHierarchy;
 import org.egov.boundary.web.contract.CrossHierarchyRequest;
 import org.egov.boundary.web.contract.CrossHierarchyResponse;
+import org.egov.boundary.web.contract.CrossHierarchySearchRequest;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.Error;
 import org.egov.common.contract.response.ErrorField;
@@ -14,10 +19,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -89,6 +90,25 @@ public class CrossHierarchyController {
 	@GetMapping
 	@ResponseBody
 	public ResponseEntity<?> search(@ModelAttribute CrossHierarchyRequest crossHierarchyRequest) {
+
+		CrossHierarchyResponse crossHierarchyResponse = new CrossHierarchyResponse();
+		if (crossHierarchyRequest.getCrossHierarchy() != null
+				&& crossHierarchyRequest.getCrossHierarchy().getTenantId() != null
+				&& !crossHierarchyRequest.getCrossHierarchy().getTenantId().isEmpty()) {
+			/*List<CrossHierarchy> allCrossHierarchys = crossHierarchyService
+					.getAllCrossHierarchys(crossHierarchyRequest);
+			crossHierarchyResponse.getCrossHierarchys().addAll(allCrossHierarchys);*/
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setStatus(HttpStatus.OK.toString());
+			// responseInfo.setApi_id(body.getRequestInfo().getApi_id());
+			crossHierarchyResponse.setResponseInfo(responseInfo);
+		}
+		return new ResponseEntity<CrossHierarchyResponse>(crossHierarchyResponse, HttpStatus.OK);
+	}
+	
+	@PostMapping(value = "/_search")
+	@ResponseBody
+	public ResponseEntity<?> searchCrossHierarch(@RequestBody @Valid CrossHierarchySearchRequest crossHierarchyRequest) {
 
 		CrossHierarchyResponse crossHierarchyResponse = new CrossHierarchyResponse();
 		if (crossHierarchyRequest.getCrossHierarchy() != null

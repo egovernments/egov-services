@@ -629,8 +629,10 @@ definitions:
         type: string
         description: The json (array of '#/definitions/Factor')
       assessmentDates:
-        $ref: '#/definitions/AssessmentDate'
-        description: when data entry happens for existing properties, all the assessemnt and reassessment dates will come here.
+        description: when data entry happens for existing properties, all the assessemnt and reassessment dates will come here. This is list of AssessmentDate objects.
+        type: array
+        items:
+          $ref: "#/definitions/AssessmentDate"
       builderDetails:
         $ref: '#/definitions/BuilderDetail'
       workFlowDetails:
@@ -648,6 +650,10 @@ definitions:
         $ref: '#/definitions/Boundary'
       adminBoundary:
         $ref: '#/definitions/Boundary'
+      guidanceValueBoundary:
+        type: integer
+        format: int64
+        description: guidance value boundary id for tax calculation
       northBoundedBy:
         type: string
         description: property bounded by on north side

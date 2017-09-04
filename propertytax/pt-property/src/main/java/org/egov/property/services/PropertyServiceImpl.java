@@ -604,7 +604,7 @@ public class PropertyServiceImpl implements PropertyService {
 		calculationList = mapper.readValue(
 				propertyRespone.getProperties().get(0).getPropertyDetail().getTaxCalculations(), typeReference);
 
-		SimpleDateFormat sdf = new SimpleDateFormat(propertiesManager.getSimpleDateFormat());
+		SimpleDateFormat sdf = new SimpleDateFormat(propertiesManager.getDate());
 
 		SimpleDateFormat sdff = new SimpleDateFormat(propertiesManager.getDateAndTimeFormat());
 		List<TaxCalculation> currentYearTax = new ArrayList<>();
@@ -613,15 +613,14 @@ public class PropertyServiceImpl implements PropertyService {
 		for (TaxPeriod taxPeriod : taxPeriodResponse.getTaxPeriods()) {
 
 			for (TaxCalculation taxCalculation : calculationList) {
-
-				if (sdff.parse(taxPeriod.getFromDate()).compareTo(sdf.parse(taxCalculation.getFromDate())) >= 0
-						&& sdff.parse(taxPeriod.getToDate()).compareTo(sdf.parse(taxCalculation.getToDate())) >= 0) {
+				if ((sdff.parse(taxPeriod.getFromDate()).getTime() == sdf.parse(taxCalculation.getFromDate()).getTime())
+						&& (sdff.parse(taxPeriod.getToDate()).getTime() == sdf.parse(taxCalculation.getToDate())
+								.getTime())) {
 
 					currentYearTax.add(taxCalculation);
 
 				}
 			}
-
 		}
 		List<HeadWiseTax> headWiseTaxes = new ArrayList<>();
 
@@ -867,7 +866,7 @@ public class PropertyServiceImpl implements PropertyService {
 		if (propertyResponse != null) {
 			Property property = propertyResponse.getProperties().get(0);
 
-			SimpleDateFormat dbDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+			SimpleDateFormat dbDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 			Date occupancyDate = dbDateFormat.parse(property.getOccupancyDate());
 			String occupancyDateStr = new SimpleDateFormat(propertiesManager.getSimpleDateFormat())
 					.format(occupancyDate);
@@ -894,38 +893,34 @@ public class PropertyServiceImpl implements PropertyService {
 			// new demands and set in response
 			logger.info("----------- demands size:" + demandRespForSavedDemands.getDemands().size() + " no of periods"
 					+ noOfPeriods);
+			Date taxPeriodFromDate = null;
 			if (!demandRespForSavedDemands.getDemands().isEmpty()) {
-				Date taxPeriodFromDate;
+
 				// If number of demands and tax periods are same, set the
 				// demands to the list,
 				// else prepare demands for the remaining taxperiods and add the
 				// existing demands along with the new demands to the response
 				if (demandRespForSavedDemands.getDemands().size() < noOfPeriods) {
 					for (TaxPeriod taxPeriod : taxPeriodResponse.getTaxPeriods()) {
-						try {
-							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
-							sdf.setTimeZone(TimeZone.getTimeZone("GMT+5:30"));
-							taxPeriodFromDate = sdf.parse(taxPeriod.getFromDate());
-						} catch (Exception ex) {
-							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-							sdf.setTimeZone(TimeZone.getTimeZone("GMT+5:30"));
-							taxPeriodFromDate = sdf.parse(taxPeriod.getFromDate());
-						}
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
 
-						for (Demand demand : demandRespForSavedDemands.getDemands()) {
-							// If demand exists for a taxperiod, add it to the
-							// demandlist, else prepare new demand and add to
-							// the list
-							logger.info("demand tax period ----------- " + demand.getTaxPeriodFrom()
-									+ " tax period is ------------" + taxPeriodFromDate.getTime());
-							if (demand.getTaxPeriodFrom().equals(taxPeriodFromDate.getTime())) {
-								finalDemandList.add(demand);
-								break;
+						sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+						taxPeriodFromDate = sdf.parse(taxPeriod.getFromDate());
+						long time = taxPeriodFromDate.getTime();
+
+						List<Demand> matchedDemands = demandRespForSavedDemands.getDemands().stream()
+								.filter(demand -> demand.getTaxPeriodFrom() == time).collect(Collectors.toList());
+						if (matchedDemands == null) {
+							newDemandList = prepareDemands(tenantId, upicNumber, property, taxHeadResponse, taxPeriod);
+							finalDemandList.addAll(newDemandList);
+						} else {
+							if (matchedDemands.size() > 0) {
+								finalDemandList.add(matchedDemands.get(0));
 							} else {
 								newDemandList = prepareDemands(tenantId, upicNumber, property, taxHeadResponse,
 										taxPeriod);
 								finalDemandList.addAll(newDemandList);
-								break;
 							}
 						}
 					}
@@ -1028,8 +1023,8 @@ public class PropertyServiceImpl implements PropertyService {
 	 */
 	private List<Demand> prepareDemands(String tenantId, String upicNumber, Property property,
 			TaxHeadMasterResponse taxHeadResponse, TaxPeriod taxPeriod) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-		dateFormat.setTimeZone(TimeZone.getTimeZone("GMT+5:30"));
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 		List<Demand> newDemandList = new ArrayList<>();
 		Demand newDemand;
 		List<DemandDetail> demandDetailsList;
@@ -1053,6 +1048,7 @@ public class PropertyServiceImpl implements PropertyService {
 		logger.info("Demand fromDate = " + taxPeriod.getFromDate() + " \n toDate = " + taxPeriod.getToDate());
 		try {
 			Date fromDate = dateFormat.parse(taxPeriod.getFromDate());
+
 			Date toDate = dateFormat.parse(taxPeriod.getToDate());
 			logger.info(" Dates, fromDate = " + fromDate + ", toDate = " + toDate + " \n Epoch values, fromDate = "
 					+ fromDate.getTime() + " \n toDate = " + toDate.getTime());

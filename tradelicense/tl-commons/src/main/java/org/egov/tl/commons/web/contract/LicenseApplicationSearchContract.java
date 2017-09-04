@@ -38,6 +38,9 @@ public class LicenseApplicationSearchContract {
 	@JsonProperty("fieldInspectionReport")
 	private String fieldInspectionReport;
 	
+	@JsonProperty("statusName")
+	private String statusName;
+	
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;
 	
@@ -46,6 +49,4 @@ public class LicenseApplicationSearchContract {
 
 	@JsonProperty("supportDocuments")
 	private List<SupportDocumentSearchContract> supportDocuments;
-	
-	private WorkFlowDetails workFlowDetails;
 }

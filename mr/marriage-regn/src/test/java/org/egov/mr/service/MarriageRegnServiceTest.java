@@ -64,82 +64,84 @@ public class MarriageRegnServiceTest {
 
 	@Mock
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
-	
+
 	@Spy
 	@InjectMocks
 	private MarriageRegnService marriageRegnService;
-	
+
 	@Test
 	public void testGetMarriageRegns() {
 
 		when(marriageRegnRepository.findForCriteria(Matchers.any(MarriageRegnCriteria.class)))
 				.thenReturn(getMarriageRegn());
-		
+
 		MarriageRegnCriteria marriageRegnCriteria = MarriageRegnCriteria.builder().tenantId("default").build();
-		
+
 		assertEquals(getMarriageRegn(), marriageRegnService.getMarriageRegns(marriageRegnCriteria, new RequestInfo()));
 	}
-	
-	
+
 	@Test
-	public void testShouldCreateAsync(){
+	public void testShouldCreateAsync() {
 
 		when(marriageRegnRepository.generateApplicationNumber()).thenReturn("1");
 
 		when(propertiesManager.getCreateMarriageRegnTopicName()).thenReturn("egov-create");
-		
+
 		when(kafkaTemplate.send(Matchers.any(String.class), Matchers.any(Object.class)))
 				.thenReturn(new SendResult<>(null, null));
-		RequestInfo requestInfo=RequestInfo.builder().build();
-		MarriageRegnRequest marriageRegnRequest=MarriageRegnRequest.builder().marriageRegn(getMarriageRegn().get(0)).requestInfo(requestInfo).build();
-		MarriageRegn marriageRegn=marriageRegnService.createAsync(marriageRegnRequest);
+		RequestInfo requestInfo = RequestInfo.builder().build();
+		MarriageRegnRequest marriageRegnRequest = MarriageRegnRequest.builder().marriageRegn(getMarriageRegn().get(0))
+				.requestInfo(requestInfo).build();
+		MarriageRegn marriageRegn = marriageRegnService.createAsync(marriageRegnRequest);
+		marriageRegn.getAuditDetails().setCreatedBy("asish");
 		marriageRegn.getAuditDetails().setCreatedTime(123l);
+		marriageRegn.getAuditDetails().setLastModifiedBy("asish");
 		marriageRegn.getAuditDetails().setLastModifiedTime(123l);
 		assertTrue(getMarriageRegn().get(0).equals(marriageRegn));
 	}
-	
+
 	@Test
-	public void testShouldUpdateAsync(){
+	public void testShouldUpdateAsync() {
 
 		when(propertiesManager.getUpdateMarriageRegnTopicName()).thenReturn("egov-update");
-		
+
 		when(kafkaTemplate.send(Matchers.any(String.class), Matchers.any(Object.class)))
 				.thenReturn(new SendResult<>(null, null));
-		
-		RequestInfo requestInfo=RequestInfo.builder().build();
-		MarriageRegnRequest marriageRegnRequest=MarriageRegnRequest.builder().marriageRegn(getMarriageRegn().get(0)).requestInfo(requestInfo).build();
-		
-		
-		MarriageRegn marriageRegnReq=getMarriageRegn().get(0);
+
+		RequestInfo requestInfo = RequestInfo.builder().build();
+		MarriageRegnRequest marriageRegnRequest = MarriageRegnRequest.builder().marriageRegn(getMarriageRegn().get(0))
+				.requestInfo(requestInfo).build();
+
+		MarriageRegn marriageRegnReq = getMarriageRegn().get(0);
 		marriageRegnReq.getAuditDetails().setCreatedBy(null);
 		marriageRegnReq.getAuditDetails().setLastModifiedBy(null);
-		
-		MarriageRegn marriageRegnRes=marriageRegnService.updateAsync(marriageRegnRequest);
+
+		MarriageRegn marriageRegnRes = marriageRegnService.updateAsync(marriageRegnRequest);
 		marriageRegnRes.getAuditDetails().setCreatedTime(123l);
 		marriageRegnRes.getAuditDetails().setLastModifiedTime(123l);
 		marriageRegnRes.getDocuments().get(0).getAuditDetails().setCreatedBy(null);
 		marriageRegnRes.getDocuments().get(0).getAuditDetails().setLastModifiedBy(null);
 		assertTrue(marriageRegnReq.equals(marriageRegnRes));
 	}
-	
+
 	@Test
-	public void testShouldCreate(){
+	public void testShouldCreate() {
 		doNothing().when(marriageRegnRepository).save(any(MarriageRegn.class));
-		doNothing().when(marryingPersonRepository).save(any(MarryingPerson.class),any(String.class));
+		doNothing().when(marryingPersonRepository).save(any(MarryingPerson.class), any(String.class));
 		marriageRegnService.create(MarriageRegnRequest.builder().marriageRegn(getMarriageRegn().get(0)).build());
 	}
-	
+
 	@Test
-	public void testShouldUpdate(){
+	public void testShouldUpdate() {
 		doNothing().when(marriageRegnRepository).update(any(MarriageRegn.class));
-		doNothing().when(marryingPersonRepository).update(any(MarryingPerson.class),any(String.class));
-		doNothing().when(marryingPersonRepository).update(any(MarryingPerson.class),any(String.class));
+		doNothing().when(marryingPersonRepository).update(any(MarryingPerson.class), any(String.class));
+		doNothing().when(marryingPersonRepository).update(any(MarryingPerson.class), any(String.class));
 		marriageRegnService.update(MarriageRegnRequest.builder().marriageRegn(getMarriageRegn().get(0)).build());
 	}
-	
+
 	public List<MarriageRegn> getMarriageRegn() {
-		AuditDetails auditDetails = AuditDetails.builder().createdBy("asish").createdTime(123l)
-				.lastModifiedBy("asish").lastModifiedTime(123l).build();
+		AuditDetails auditDetails = AuditDetails.builder().createdBy("asish").createdTime(123l).lastModifiedBy("asish")
+				.lastModifiedTime(123l).build();
 
 		MarriageCertificate marriageCertificate = MarriageCertificate.builder().applicationNumber("applnno")
 				.bridePhoto("photo").bridegroomPhoto("photo").certificateDate(1496430744825L).certificateNo("certno")
@@ -165,7 +167,7 @@ public class MarriageRegnServiceTest {
 		List<Witness> witnesses = new ArrayList<>();
 		witnesses.add(witness);
 		List<Demand> demands = new ArrayList<>();
-		Demand demand=Demand.builder().tenantId("default").build();
+		Demand demand = Demand.builder().tenantId("default").build();
 		demands.add(demand);
 
 		List<String> actions = new ArrayList<>();
@@ -193,16 +195,15 @@ public class MarriageRegnServiceTest {
 
 		MarriageRegn marriageRegn = MarriageRegn.builder().applicationNumber("1").approvalDetails(approvalDetails)
 				.auditDetails(auditDetails).bride(bride).bridegroom(bridegroom).certificates(marriageCertificates)
-				.city("bangalore").demands(demands).documents(documentsList).isActive(false)
-				.locality("locality").actions(Action.CREATE).marriageDate(214335l).marriagePhoto("photo")
-				.placeOfMarriage("RESIDENCE").placeOfMarriage("bangalore").priest(priest).street("street")
-				.regnDate(121231l).regnNumber("regnno").regnUnit(regnunit).rejectionReason("inappropriate document")
-				.remarks("remarks").serialNo("serino").source(Source.SYSTEM).tenantId("ap.kurnool")
-				.status(ApplicationStatus.APPROVED).stateId("stateid").venue(Venue.FUNCTION_HALL).volumeNo("volno")
-				.witnesses(witnesses).remarks("remarks").build();
+				.city("bangalore").demands(demands).documents(documentsList).isActive(false).locality("locality")
+				.actions(Action.CREATE).marriageDate(214335l).marriagePhoto("photo").placeOfMarriage("RESIDENCE")
+				.placeOfMarriage("bangalore").priest(priest).street("street").regnDate(121231l).regnNumber("regnno")
+				.regnUnit(regnunit).rejectionReason("inappropriate document").remarks("remarks").serialNo("serino")
+				.source(Source.SYSTEM).tenantId("ap.kurnool").status(ApplicationStatus.APPROVED).stateId("stateid")
+				.venue(Venue.FUNCTION_HALL).volumeNo("volno").witnesses(witnesses).remarks("remarks").build();
 		List<MarriageRegn> marriageRegns = new ArrayList<>();
 		marriageRegns.add(marriageRegn);
-		
+
 		return marriageRegns;
 
 	}

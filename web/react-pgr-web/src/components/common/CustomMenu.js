@@ -149,6 +149,9 @@ const menuConvention={
   "Water Charge.Wcms Reports.WCOutstandingReport":"/report/wcms/OutstandingRegister",
   "Water Charge.Wcms Reports.WCDemandRegister":"/report/wcms/DemandRegister",
   "Water Charge.Wcms Reports.WCDCBReport":"/report/wcms/DCBReport",
+  "Water Charge.Wcms Reports.WCConsumerRegisterReport":"/report/wcms/ConsumerReport",
+
+
 
   "Trade License.License Transactions.CreateNewLicense":"/non-framework/tl/transaction/ApplyNewTradeLicense",
 

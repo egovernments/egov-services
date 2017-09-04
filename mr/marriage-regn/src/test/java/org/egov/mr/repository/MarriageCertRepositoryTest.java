@@ -2,6 +2,7 @@ package org.egov.mr.repository;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertEquals;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -67,7 +68,8 @@ public class MarriageCertRepositoryTest {
 		when(jdbcTemplate.query(any(String.class), Matchers.<Object[]>any(), any(MarriageCertRowMapper.class)))
 				.thenReturn(getReissueCertApplication());
 
-		marriageCertRepository.findForCriteria(getMarriageCertCriteria());
+		List<ReissueCertAppl> reissueCertAppls = marriageCertRepository.findForCriteria(getMarriageCertCriteria());
+		assertEquals(getReissueCertApplication(), reissueCertAppls);
 	}
 
 	@Test

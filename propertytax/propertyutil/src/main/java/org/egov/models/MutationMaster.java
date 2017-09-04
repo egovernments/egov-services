@@ -34,7 +34,7 @@ public class MutationMaster {
 	@JsonProperty("name")
 	private String name;
 
-	@Size(min = 2, max = 64)
+	@Size(min = 1, max = 64)
 	@JsonProperty("code")
 	private String code;
 

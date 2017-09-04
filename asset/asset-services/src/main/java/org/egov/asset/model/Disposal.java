@@ -31,7 +31,7 @@ public class Disposal {
 
 	@JsonProperty("tenantId")
 	@NotNull
-	private String tenantId = null;
+	private String tenantId;
 
 	@JsonProperty("id")
 	private Long id = null;

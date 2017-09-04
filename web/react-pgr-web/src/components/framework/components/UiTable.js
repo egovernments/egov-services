@@ -99,7 +99,7 @@ class UiTable extends Component {
 							dropDownData[keys[k]] = values[k];
 						}
 						self.setState({
-							[self.props.resultList.resultHeader[m].label]: dropDownData 	
+							[self.props.resultList.resultHeader[m].label]: dropDownData
 						}, function() {
 						})
 	    			}, function(err){
@@ -117,7 +117,12 @@ class UiTable extends Component {
   		const getNameById = function(item2, i2) {
   			if(resultList.resultHeader[i2].url) {
   				return self.state[resultList.resultHeader[i2].label] ? self.state[resultList.resultHeader[i2].label][item2] : (item2 + "");
-  			} else {
+  			} else if(resultList.resultHeader[i2].isDate) {      
+					var _date = new Date(Number(item2));
+					return ('0' + _date.getDate()).slice(-2) + '/'
+					+ ('0' + (_date.getMonth()+1)).slice(-2) + '/'
+					+ _date.getFullYear();
+				} else {
   				return item2 === true ? translate("employee.createPosition.groups.fields.outsourcepost.value1") : (item2 === false ? translate("employee.createPosition.groups.fields.outsourcepost.value2") : (item2 === null ? "" : (item2 + "")));
   			}
   		}

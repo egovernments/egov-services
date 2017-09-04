@@ -913,7 +913,7 @@ public class PropertyMasterControllerTest {
 
 			when(masterService.getUsageMaster(any(RequestInfo.class), any(String.class), any(Integer[].class),
 					any(String.class), any(String.class), any(String.class), any(Boolean.class), any(Boolean.class),
-					any(Integer.class), any(Integer.class), any(Integer.class), any(String.class), any(ArrayList.class)))
+					any(Integer.class), any(Integer.class), any(Integer.class), any(String.class), any(String[].class)))
 							.thenReturn(usageMasterResponse);
 
 			mockMvc.perform(post("/property/usages/_search").param("tenantId", "default")

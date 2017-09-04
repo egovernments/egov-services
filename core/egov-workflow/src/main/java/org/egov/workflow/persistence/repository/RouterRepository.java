@@ -77,7 +77,6 @@ public class RouterRepository {
         String routerInsert = "";
         Object[] obj = new Object[]{};
         if (serviceCodeExists) {
-
             routerInsert = RouterQueryBuilder.insertRouter();
             final PersistRouter persistRouter = routerReq.getRouterType();
             obj = new Object[]{persistRouter.getService(), persistRouter.getPosition(), persistRouter.getBoundary(),
@@ -107,11 +106,20 @@ public class RouterRepository {
         PersistRouter persistRouter = routerReq.getRouterType();
         Object[] obj = new Object[]{};
         if (serviceCodeExists) {
-            routerUpdate = RouterQueryBuilder.updateRouter();
-            obj = new Object[]{persistRouter.getPosition(), 0,
-                Long.valueOf(routerReq.getRequestInfo().getUserInfo().getId()), new Date(),
-                Long.valueOf(routerReq.getRequestInfo().getUserInfo().getId()), new Date(), persistRouter.getActive(),
-                persistRouter.getBoundary(), persistRouter.getService(), persistRouter.getTenantId()};
+            if (null != routerReq.getRouterType().getService()) {
+                routerUpdate = RouterQueryBuilder.updateRouter();
+                obj = new Object[]{persistRouter.getPosition(), 0,
+                    Long.valueOf(routerReq.getRequestInfo().getUserInfo().getId()), new Date(),
+                    Long.valueOf(routerReq.getRequestInfo().getUserInfo().getId()), new Date(), persistRouter.getActive(),
+                    persistRouter.getBoundary(), persistRouter.getService(), persistRouter.getTenantId()};
+            } else {
+                routerUpdate = RouterQueryBuilder.updateRouterWithoutService();
+                obj = new Object[]{persistRouter.getPosition(), 0,
+                    Long.valueOf(routerReq.getRequestInfo().getUserInfo().getId()), new Date(),
+                    Long.valueOf(routerReq.getRequestInfo().getUserInfo().getId()), new Date(), persistRouter.getActive(),
+                    persistRouter.getBoundary(), persistRouter.getTenantId()};
+            }
+
         } else {
             routerUpdate = RouterQueryBuilder.updateRouterWithoutService();
             obj = new Object[]{persistRouter.getPosition(), 0,
@@ -128,12 +136,22 @@ public class RouterRepository {
         PersistRouter persistRouter = new PersistRouter();
         if (status) {
             LOGGER.info("with service validation");
-            validateQuery = RouterQueryBuilder.validateRouter();
+            if (null != routerReq.getRouterType().getService()) {
+                validateQuery = RouterQueryBuilder.validateRouter();
+            } else {
+                validateQuery = RouterQueryBuilder.validateRouterWithoutService();
+            }
             try {
-                persistRouter = jdbcTemplate.queryForObject(
-                    validateQuery, new Object[]{routerReq.getRouterType().getService(),
-                        routerReq.getRouterType().getBoundary(), routerReq.getRouterType().getTenantId()},
-                    new PersistRouteRowMapper());
+                if (null != routerReq.getRouterType().getService()) {
+                    persistRouter = jdbcTemplate.queryForObject(
+                        validateQuery, new Object[]{routerReq.getRouterType().getService(),
+                            routerReq.getRouterType().getBoundary(), routerReq.getRouterType().getTenantId()},
+                        new PersistRouteRowMapper());
+                } else {
+                    persistRouter = jdbcTemplate.queryForObject(
+                        validateQuery, new Object[]{routerReq.getRouterType().getBoundary(), routerReq.getRouterType().getTenantId()},
+                        new PersistRouteRowMapper());
+                }
                 LOGGER.info("Value coming from validate query boundary::" + persistRouter.getBoundary());
             } catch (EmptyResultDataAccessException e) {
                 return null;

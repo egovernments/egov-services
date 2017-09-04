@@ -3,7 +3,7 @@ package org.egov.tl.indexer.consumer;
 import java.io.IOException;
 import java.util.Map;
 
-import org.egov.tl.commons.web.contract.TradeLicenseSearchContract;
+import org.egov.tl.commons.web.contract.TradeLicenseIndexerContract;
 import org.egov.tl.commons.web.requests.TradeLicenseIndexerRequest;
 import org.egov.tl.indexer.client.JestClientEs;
 import org.egov.tl.indexer.config.PropertiesManager;
@@ -48,7 +48,7 @@ public class TradeLicenseConsumer {
 			TradeLicenseIndexerRequest request = mapper.convertValue(tradeLicenseMap.get("tradelicense-persisted"),
 					TradeLicenseIndexerRequest.class);
 
-			for (TradeLicenseSearchContract tlContract : request.getLicenses()) {
+			for (TradeLicenseIndexerContract tlContract : request.getLicenses()) {
 
 				String tradeLicenseData = mapper.writeValueAsString(tlContract);
 				DocumentResult DocumentResult = client.getClient()
@@ -60,7 +60,6 @@ public class TradeLicenseConsumer {
 							+ propertiesManager.getTradeLicensePersistedTopic());
 				}
 			}
-
 		}
 	}
 }

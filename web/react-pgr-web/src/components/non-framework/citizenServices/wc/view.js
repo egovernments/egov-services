@@ -280,9 +280,9 @@ class Report extends Component {
       })
   }
 
-  getVal = (path) => {
+  getVal = (path, isDate) => {
     var val = _.get(this.props.formData, path);
-    if(val && ((val + "").length == 13 || (val + "").length == 12) && new Date(Number(val)).getTime() > 0) {
+    if(isDate && val && ((val + "").length == 13 || (val + "").length == 12) && new Date(Number(val)).getTime() > 0) {
       var _date = new Date(Number(val));
       return ('0' + _date.getDate()).slice(-2) + '/'
                + ('0' + (_date.getMonth()+1)).slice(-2) + '/'
@@ -446,7 +446,7 @@ class Report extends Component {
     if(self.state.feeAmount) {
       ServiceRequest.additionalFee = self.state.feeAmount;
       let DemandRequest = {};
-      DemandRequest["Demands"] = self.props.metaData["wc.create"].feeDetails;
+      DemandRequest["Demands"] = Object.assign([], self.props.metaData["wc.create"].feeDetails);
       DemandRequest["Demands"][0].tenantId = localStorage.getItem("tenantId");
       DemandRequest["Demands"][0].businessService = "WC";
       DemandRequest["Demands"][0].consumerCode = self.state.ServiceRequest.serviceRequestId;
@@ -473,10 +473,12 @@ class Report extends Component {
     Api.commonApiPost("/citizen-services/v1/requests/_update", {}, {"serviceReq": ServiceRequest}, null, true, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
       self.props.setLoadingStatus("hide");
       self.props.toggleSnackbarAndSetText(true, "Updated successfully.", true, false);
+      $('#fileInput').val("");
       self.setState({
         ServiceRequest: res.serviceReq,
         comments: "",
-        feeAmount: ""
+        feeAmount: "",
+        documents: []
       });
     }, function(err){
       self.props.setLoadingStatus("hide");
@@ -564,7 +566,7 @@ class Report extends Component {
                     </SelectField>
                   </Col> : ""}
                   <Col xs={12} md={6}>
-                    <input multiple type="file" style={{"marginTop":"40px"}} onChange={(e) => {
+                    <input id="fileInput" multiple type="file" style={{"marginTop":"40px"}} onChange={(e) => {
                           self.setState({
                             documents: e.target.files || []
                           })

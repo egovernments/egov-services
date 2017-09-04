@@ -38,8 +38,8 @@ public class BillingServiceRepository {
 
     public List<Demand> prepareDemand(List<TaxCalculation> taxCalculationList, Property property) {
         List<Demand> demandList = new ArrayList<>();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
-        sdf.setTimeZone(TimeZone.getTimeZone("GMT+5:30"));
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         Date fromDate;
         Date toDate;
         CommonTaxDetails taxDetails;

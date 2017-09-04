@@ -57,7 +57,7 @@ public class BankBranchJdbcRepositoryTest {
 	@Sql(scripts = { "/sql/clearBankBranch.sql", "/sql/insertBankBranch.sql" })
 	public void testUpdate() {
 		BankBranchEntity bankBranchEntity = getBankBranchEntity();
-		BankBranchEntity actualResult = bankBranchJdbcRepository.create(bankBranchEntity);
+		BankBranchEntity actualResult = bankBranchJdbcRepository.update(bankBranchEntity);
 		List<Map<String, Object>> result = namedParameterJdbcTemplate.query("SELECT * FROM egf_bankbranch",
 				new BankBranchResultExtractor());
 		Map<String, Object> row = result.get(0);

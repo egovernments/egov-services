@@ -8,6 +8,7 @@ import org.egov.boundary.domain.service.HierarchyTypeService;
 import org.egov.boundary.persistence.entity.HierarchyType;
 import org.egov.boundary.web.contract.HierarchyTypeRequest;
 import org.egov.boundary.web.contract.HierarchyTypeResponse;
+import org.egov.boundary.web.contract.HierarchyTypeSearchRequest;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.Error;
 import org.egov.common.contract.response.ErrorField;
@@ -100,10 +101,27 @@ public class HierarchyTypeController {
 		if (hierarchyTypeRequest.getHierarchyType() != null
 				&& hierarchyTypeRequest.getHierarchyType().getTenantId() != null
 				&& !hierarchyTypeRequest.getHierarchyType().getTenantId().isEmpty()) {
+/*			List<HierarchyType> allHierarchyTypes = hierarchyTypeService.getAllHierarchyTypes(hierarchyTypeRequest);
+			hierarchyTypeResponse.getHierarchyTypes().addAll(allHierarchyTypes);*/
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setStatus(HttpStatus.CREATED.toString());
+			hierarchyTypeResponse.setResponseInfo(responseInfo);
+		}
+		return new ResponseEntity<>(hierarchyTypeResponse, HttpStatus.OK);
+	}
+	
+	@PostMapping(value="/_search")
+	@ResponseBody
+	public ResponseEntity<?> searchHierachyTypes(@RequestBody @Valid HierarchyTypeSearchRequest hierarchyTypeRequest) {
+
+		HierarchyTypeResponse hierarchyTypeResponse = new HierarchyTypeResponse();
+		if (hierarchyTypeRequest.getHierarchyType() != null
+				&& hierarchyTypeRequest.getHierarchyType().getTenantId() != null
+				&& !hierarchyTypeRequest.getHierarchyType().getTenantId().isEmpty()) {
 			List<HierarchyType> allHierarchyTypes = hierarchyTypeService.getAllHierarchyTypes(hierarchyTypeRequest);
 			hierarchyTypeResponse.getHierarchyTypes().addAll(allHierarchyTypes);
 			ResponseInfo responseInfo = new ResponseInfo();
-			responseInfo.setStatus(HttpStatus.CREATED.toString());
+			responseInfo.setStatus(HttpStatus.OK.toString());
 			hierarchyTypeResponse.setResponseInfo(responseInfo);
 		}
 		return new ResponseEntity<>(hierarchyTypeResponse, HttpStatus.OK);

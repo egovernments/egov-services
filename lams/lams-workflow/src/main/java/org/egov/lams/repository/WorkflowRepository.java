@@ -11,17 +11,18 @@ import org.egov.lams.contract.RequestInfoWrapper;
 import org.egov.lams.contract.Task;
 import org.egov.lams.contract.TaskRequest;
 import org.egov.lams.contract.TaskResponse;
+import org.egov.lams.contract.TenantResponse;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.WorkflowDetails;
 import org.egov.lams.model.enums.Action;
+import org.egov.lams.model.City;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Repository
 public class WorkflowRepository {
@@ -111,20 +112,27 @@ public class WorkflowRepository {
 		Position assignee = new Position();
 		ProcessInstanceRequest processInstanceRequest = new ProcessInstanceRequest();
 		ProcessInstance processInstance = new ProcessInstance();
-
+		Boolean isCorporation = isCorporation(agreement.getTenantId());;
 		assignee.setId(workFlowDetails.getAssignee());
-		if(agreement.getRenewal()!=null){
+		if (Action.JUDGEMENT.equals(agreement.getAction())) {
+			processInstance.setBusinessKey(propertiesManager.getWorkflowServiceJudgementBusinessKey());
+			processInstance.setType(propertiesManager.getWorkflowServiceJudgementBusinessKey());
+		} else if (Action.OBJECTION.equals(agreement.getAction())) {
+			processInstance.setBusinessKey(propertiesManager.getWorkflowServiceObjectionBusinessKey());
+			processInstance.setType(propertiesManager.getWorkflowServiceObjectionBusinessKey());
+		} else if (Action.RENEWAL.equals(agreement.getAction())) {
 			processInstance.setBusinessKey(propertiesManager.getWorkflowServiceRenewBusinessKey());
 			processInstance.setType(propertiesManager.getWorkflowServiceRenewBusinessKey());
-		}else if(agreement.getCancellation()!=null){
+		} else if (Action.CANCELLATION.equals(agreement.getAction())) {
 			processInstance.setBusinessKey(propertiesManager.getWorkflowServiceCancelBusinessKey());
 			processInstance.setType(propertiesManager.getWorkflowServiceCancelBusinessKey());
-		}else if(agreement.getEviction()!=null){
+		} else if (Action.EVICTION.equals(agreement.getAction())) {
 			processInstance.setBusinessKey(propertiesManager.getWorkflowServiceEvictBusinessKey());
 			processInstance.setType(propertiesManager.getWorkflowServiceEvictBusinessKey());
-		}else{
-			processInstance.setBusinessKey(propertiesManager.getWorkflowServiceCreateBusinessKey());
-			processInstance.setType(propertiesManager.getWorkflowServiceCreateBusinessKey());
+		} else {
+			processInstance.setBusinessKey(isCorporation ? propertiesManager.getWorkflowServiceCreateCorporationBusinessKey() : propertiesManager.getWorkflowServiceCreateMunicipalityBusinessKey());
+			processInstance.setType(isCorporation ? propertiesManager.getWorkflowServiceCreateCorporationBusinessKey() : propertiesManager.getWorkflowServiceCreateMunicipalityBusinessKey());
+
 		}
 		processInstance.setAssignee(assignee);
 		processInstance.setComments(workFlowDetails.getComments());
@@ -149,20 +157,26 @@ public class WorkflowRepository {
 		TaskRequest taskRequest = new TaskRequest();
 		Task task = new Task();
 		Position assignee = new Position();
-
+		Boolean isCorporation = isCorporation(agreement.getTenantId());
 		taskRequest.setRequestInfo(requestInfo);
-		if(agreement.getRenewal()!=null){
+		if (Action.JUDGEMENT.equals(agreement.getAction())) {
+			task.setBusinessKey(propertiesManager.getWorkflowServiceJudgementBusinessKey());
+			task.setType(propertiesManager.getWorkflowServiceJudgementBusinessKey());
+		} else if (Action.OBJECTION.equals(agreement.getAction())) {
+			task.setBusinessKey(propertiesManager.getWorkflowServiceObjectionBusinessKey());
+			task.setType(propertiesManager.getWorkflowServiceObjectionBusinessKey());
+		} else if (Action.RENEWAL.equals(agreement.getAction())) {
 			task.setBusinessKey(propertiesManager.getWorkflowServiceRenewBusinessKey());
 			task.setType(propertiesManager.getWorkflowServiceRenewBusinessKey());
-		}else if(agreement.getCancellation()!=null){
+		} else if (Action.CANCELLATION.equals(agreement.getAction())) {
 			task.setBusinessKey(propertiesManager.getWorkflowServiceCancelBusinessKey());
 			task.setType(propertiesManager.getWorkflowServiceCancelBusinessKey());
-		}else if(agreement.getEviction()!=null){
+		} else if (Action.EVICTION.equals(agreement.getAction())) {
 			task.setBusinessKey(propertiesManager.getWorkflowServiceEvictBusinessKey());
 			task.setType(propertiesManager.getWorkflowServiceEvictBusinessKey());
-		}else{
-			task.setBusinessKey(propertiesManager.getWorkflowServiceCreateBusinessKey());
-			task.setType(propertiesManager.getWorkflowServiceCreateBusinessKey());
+		} else {
+			task.setBusinessKey(isCorporation ? propertiesManager.getWorkflowServiceCreateCorporationBusinessKey() : propertiesManager.getWorkflowServiceCreateMunicipalityBusinessKey());
+			task.setType(isCorporation ? propertiesManager.getWorkflowServiceCreateCorporationBusinessKey() : propertiesManager.getWorkflowServiceCreateMunicipalityBusinessKey());
 		}
 		task.setId(agreement.getStateId());
 
@@ -211,4 +225,20 @@ public class WorkflowRepository {
 		return taskRequest;
 	}
 
+	private Boolean isCorporation(String tenantId) {
+
+		City city;
+		Boolean isCorporation = Boolean.FALSE;
+		String url = propertiesManager.getTenantServiceHostName() + "tenant/v1/tenant/_search?code=" + tenantId;
+		TenantResponse tr = restTemplate.postForObject(url, new RequestInfo(), TenantResponse.class);
+		if (!CollectionUtils.isEmpty(tr.getTenant())) {
+
+			city = tr.getTenant().get(0).getCity();
+			if (propertiesManager.getCityGradeCorp().equalsIgnoreCase(city.getGrade())) {
+				isCorporation = Boolean.TRUE;
+			}
+		}
+		return isCorporation;
+	}
+     
 }

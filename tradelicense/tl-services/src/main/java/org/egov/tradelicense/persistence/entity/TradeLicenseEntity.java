@@ -86,8 +86,6 @@ public class TradeLicenseEntity {
 	private Timestamp licenseValidFromDate;
 
 	private Long status;
-
-	protected Long applicationStatus;
 	
 	private String agreementNo;
 
@@ -102,8 +100,6 @@ public class TradeLicenseEntity {
 	private static List<LicenseFeeDetail> feeDetails;
 
 	private static List<SupportDocument> supportDocuments;
-	
-	protected String stateId;
 
 	private String createdBy;
 
@@ -298,8 +294,6 @@ public class TradeLicenseEntity {
 		}
 
 		this.status = tradeLicense.getStatus();
-		
-		this.applicationStatus = tradeLicense.getApplicationStatus();
 
 		this.categoryId = tradeLicense.getCategoryId();
 
@@ -350,8 +344,6 @@ public class TradeLicenseEntity {
 
 		this.supportDocuments = tradeLicense.getSupportDocuments();
 		
-		this.stateId = tradeLicense.getWorkFlowDetails()!=null? tradeLicense.getWorkFlowDetails().getStateId():null;
-
 		this.createdBy = (auditDetails == null) ? null : auditDetails.getCreatedBy();
 
 		this.lastModifiedBy = (auditDetails == null) ? null : auditDetails.getLastModifiedBy();
@@ -363,12 +355,4 @@ public class TradeLicenseEntity {
 		return this;
 	}
 	
-	public LicenseApplicationEntity getLicenseApplicationEntity(){
-		LicenseApplicationEntity applicationEntity = new LicenseApplicationEntity();
-		
-		return applicationEntity.toAppEntity( this);
-		
-		
-	}
-
 }

@@ -1,7 +1,6 @@
 package org.egov.collection.model;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 import javax.validation.constraints.NotNull;
 

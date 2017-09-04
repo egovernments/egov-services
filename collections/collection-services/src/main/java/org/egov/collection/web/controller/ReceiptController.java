@@ -62,7 +62,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.thymeleaf.templateparser.html.LegacyHtml5TemplateParser;
 
 import javax.validation.Valid;
 import javax.validation.ValidationException;
@@ -274,7 +273,7 @@ public class ReceiptController {
      */
     @PostMapping(value = "/_legacycreate")
     @ResponseBody
-    private ResponseEntity<?> createLegacyReceipt(@RequestBody @Valid final LegacyReceiptReq legacyReceiptRequest,
+    public ResponseEntity<?> createLegacyReceipt(@RequestBody @Valid final LegacyReceiptReq legacyReceiptRequest,
             final BindingResult errors) {
         final List<ErrorResponse> errorResponses = receiptReqValidator
                 .validateCreateLegacyReceiptRequest(legacyReceiptRequest);
@@ -287,7 +286,7 @@ public class ReceiptController {
 
     @PostMapping(value = "/_legacysearch")
     @ResponseBody
-    private ResponseEntity<?> searchLegacyReceipt(@ModelAttribute @Valid final LegacyReceiptGetReq legacyReceiptGetReq,
+    public ResponseEntity<?> searchLegacyReceipt(@ModelAttribute @Valid final LegacyReceiptGetReq legacyReceiptGetReq,
             final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
             final BindingResult requestInfoBindingResult) {
         List<LegacyReceiptHeader> legacyReceiptHeaders = receiptService.getLegacyReceiptsByCriteria(legacyReceiptGetReq);

@@ -1,14 +1,9 @@
 package org.egov.collection.repository.rowmapper;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import org.egov.collection.model.LegacyReceiptDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

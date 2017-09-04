@@ -1,13 +1,11 @@
 package org.egov.collection.repository.rowmapper;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
+
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+
 
 import org.egov.collection.model.LegacyReceiptHeader;
 import org.slf4j.Logger;
@@ -22,7 +20,6 @@ public class LegacyReceiptHeaderRowMapper implements RowMapper<LegacyReceiptHead
 
     @Override
     public LegacyReceiptHeader mapRow(ResultSet rs, int rowNum) throws SQLException {
-        final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         LegacyReceiptHeader legacyReceiptHeader = new LegacyReceiptHeader();
         legacyReceiptHeader.setId((Long) rs.getObject("lrh_id"));
         legacyReceiptHeader.setLegacyReceiptId((Long) rs.getObject("lrh_legacyreceiptid"));

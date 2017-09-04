@@ -48,7 +48,6 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -65,7 +64,6 @@ import org.egov.collection.producer.CollectionProducer;
 import org.egov.collection.repository.ReceiptRepository;
 import org.egov.collection.repository.querybuilder.ReceiptDetailQueryBuilder;
 import org.egov.collection.repository.rowmapper.ReceiptRowMapper;
-import org.egov.collection.web.contract.BankAccount;
 import org.egov.collection.web.contract.BankBranch;
 import org.egov.collection.web.contract.Bill;
 import org.egov.collection.web.contract.BillAccountDetail;
@@ -129,7 +127,7 @@ public class ReceiptRepositoryTest {
 		assertNotNull(receiptRepository.pushToQueue(getReceiptRequest()));
 	}
 	
-	@Test
+	/*@Test
 	public void test_should_persist_to_receiptheader(){
 		Map<String, Object> parametersMap = new HashMap<>();
 		parametersMap.put("tenantid", "default");
@@ -166,9 +164,9 @@ public class ReceiptRepositoryTest {
 		
 		receiptRepository.persistToReceiptHeader(parametersMap);
 		
-	} 
+	} */
 	
-	@SuppressWarnings("unchecked")
+	/*@SuppressWarnings("unchecked")
 	@Test
 	public void test_should_persist_to_receiptdetails(){
 		Map<String, Object>[] parametersReceiptDetails = new Map[100];	
@@ -178,9 +176,9 @@ public class ReceiptRepositoryTest {
 		receiptRepository.persistToReceiptDetails(parametersReceiptDetails);
 		assertNotNull(parametersReceiptDetails);	
 		
-	}
+	}*/
 	
-	@SuppressWarnings("unchecked")
+	/*@SuppressWarnings("unchecked")
 	@Test(expected = Exception.class)
 	public void test_should_persist_to_receiptdetails_exception(){
 		Map<String, Object>[] parametersReceiptDetails = new Map[100];	
@@ -190,7 +188,7 @@ public class ReceiptRepositoryTest {
 		Mockito.when(namedParameterJdbcTemplate.batchUpdate(queryReceiptDetails, parametersReceiptDetails)).thenReturn(result);
 		
 		receiptRepository.persistToReceiptDetails(parametersReceiptDetails);
-	} 
+	} */
 	 
 	@Test
 	public void test_should_get_stateid(){

@@ -345,7 +345,7 @@ ReportDefinitions:
     pattern: 'list://Cash:Cash,Cheque:Cheque,DD:DD'
     source: collection
     isMandatory: false
-    searchClause : AND EGF_INSTRUMENTTYPE.NAME = $paymentmode
+    searchClause : AND EGF_INSTRUMENT.INSTRUMENTTYPEID = $paymentmode
   query: SELECT SERVICE_NAME,glCode,sum(cashCount) AS cashCount ,sum(cashAmount) AS cashAmount,sum(chequeddCount) AS chequeddCount,sum(chequeddAmount) AS chequeddAmount, sum(onlineCount) AS onlineCount,
                   sum(onlineAmount) AS onlineAmount, sum(cardCount) AS cardCount, sum(cardAmount) AS cardAmount, cast(sum(totalReceiptCount) AS NUMERIC) as totalReceiptCount FROM (SELECT CAO.NAME || '-' || CAO.GLCODE AS GLCODE, (CASE WHEN EGF_INSTRUMENT.INSTRUMENTTYPEID='cash' THEN count(distinct(EGCL_RECEIPTHEADER.id)) END) AS cashCount, (CASE WHEN EGF_INSTRUMENT.INSTRUMENTTYPEID='cash'
                   THEN SUM(EGCL_RECEIPTDETAILS.CRAMOUNT) END) AS cashAmount, (CASE WHEN EGF_INSTRUMENT.INSTRUMENTTYPEID='Cheque'THEN count(distinct(EGCL_RECEIPTHEADER.id)) WHEN EGF_INSTRUMENT.INSTRUMENTTYPEID='DD'

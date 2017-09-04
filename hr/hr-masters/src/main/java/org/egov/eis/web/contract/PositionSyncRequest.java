@@ -5,7 +5,7 @@
  *  Copyright (C) 2016  eGovernments Foundation
  *
  *  The updated version of eGov suite of products as by eGovernments Foundation
- *  is available at http://www.empernments.org
+ *  is available at http://www.egovernments.org
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -35,43 +35,26 @@
  *         with regards to rights under trademark law for use of the trade names
  *         or trademarks of eGovernments Foundation.
  *
- *  In case of any queries, you can reach eGovernments Foundation at contact@empernments.org.
+ *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.config;
+package org.egov.eis.web.contract;
 
 import lombok.*;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.eis.model.PositionSync;
 
-@Component
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class PropertiesManager {
+@EqualsAndHashCode
+@Builder
+public class PositionSyncRequest {
 
-	@Value("${egov.services.hr_employee_service.hostname}")
-	private String employeeServiceHostName;
-
-	@Value("${egov.services.hr_employee_service.non_vacant_positions.basepath}")
-	private String employeeServiceNonVacantPositionsBasePath;
-
-	@Value("${egov.services.hr_employee_service.non_vacant_positions.searchpath}")
-	private String employeeServiceNonVacantPositionsSearchPath;
-
-	@Value("${egov.services.egov_common_masters_service.hostname}")
-	private String commonMastersServiceHost;
-
-	@Value("${egov.services.egov_common_masters_service.basepath}")
-	private String commonMastersServiceBasePath;
-
-	@Value("${egov.services.egov_common_masters_service.departments.searchpath}")
-	private String commonMastersServiceDepartmentsSearch;
-
-    @Value("${egov.services.data_sync_position.required}")
-    private Boolean dataSyncPositionRequired;
-
+    private RequestInfo requestInfo;
+    private PositionSync positionSync;
 
 }
+

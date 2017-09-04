@@ -43,10 +43,8 @@ package org.egov.eis.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.eis.model.Department;
-import org.egov.eis.model.DepartmentDesignation;
-import org.egov.eis.model.Designation;
-import org.egov.eis.model.Position;
+import org.egov.eis.config.PropertiesManager;
+import org.egov.eis.model.*;
 import org.egov.eis.repository.PositionRepository;
 import org.egov.eis.web.contract.*;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
@@ -100,6 +98,12 @@ public class PositionService {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private PropertiesManager propertiesManager;
+
+    @Autowired
+    private PositionDataSyncService positionDataSyncService;
+
     public List<Position> getPositions(PositionGetRequest positionGetRequest) {
         return positionRepository.findForCriteria(positionGetRequest);
     }
@@ -151,6 +155,12 @@ public class PositionService {
         List<Position> positions = positionRepository.findForCriteria(positionGetRequest);
         positionRequest.setPosition(positions);
         kafkaTemplate.send(positionCreateTopic, positionRequest);
+
+        Position position = positionRequest.getPosition().get(0);
+        PositionSync positionSync = PositionSync.builder().name(position.getName()).tenantId(position.getTenantId()).build();
+        PositionSyncRequest positionSyncRequest = PositionSyncRequest.builder().positionSync(positionSync).build();
+        if (propertiesManager.getDataSyncPositionRequired())
+            positionDataSyncService.createDataSync(positionSyncRequest);
     }
 
     @Transactional
@@ -183,18 +193,27 @@ public class PositionService {
                 deptDesigService.create(deptDesig);
             }
             deptDesig = deptDesigService.getByDepartmentAndDesignation(department.getId(), designation.getId(), tenantId);
-
-            List<Long> sequences = positionRepository.generateSequences(positions.get(i).getNoOfPositions());
-
-            for (int j = 0; j < positions.get(i).getNoOfPositions(); j++) {
-                String name = department.getCode().toUpperCase() + "_" + designation.getCode().toUpperCase() + "_";
-                Position pos = Position.builder().id(sequences.get(j)).name(name).active(true).deptdesig(deptDesig)
-                        .isPostOutsourced(positions.get(i).getIsPostOutsourced()).tenantId(positions.get(i).getTenantId()).build();
-                positionsList.add(pos);
+            List<Long> sequences ;
+            if(positions.get(i).getNoOfPositions() != null)
+                sequences = positionRepository.generateSequences(positions.get(i).getNoOfPositions());
+            else {
+                sequences = positionRepository.generateSequences(1);
+                positions.get(0).setId(sequences.get(0));
             }
-        }
 
-        positionRequest.setPosition(positionsList);
+
+            if(positions.get(i).getNoOfPositions() != null) {
+                for (int j = 0; j < positions.get(i).getNoOfPositions(); j++) {
+                    String name = department.getCode().toUpperCase() + "_" + designation.getCode().toUpperCase() + "_";
+                    Position pos = Position.builder().id(sequences.get(j)).name(name).active(true).deptdesig(deptDesig)
+                            .isPostOutsourced(positions.get(i).getIsPostOutsourced()).tenantId(positions.get(i).getTenantId()).build();
+                    positionsList.add(pos);
+                }
+            }
+            if(positions.get(i).getNoOfPositions() != null)
+                positionRequest.setPosition(positionsList);
+
+        }
     }
 
     private PositionRequest getPositionRequest(PositionBulkRequest positionBulkRequest) {

@@ -5,7 +5,7 @@
  *  Copyright (C) 2016  eGovernments Foundation
  *
  *  The updated version of eGov suite of products as by eGovernments Foundation
- *  is available at http://www.empernments.org
+ *  is available at http://www.egovernments.org
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -35,43 +35,41 @@
  *         with regards to rights under trademark law for use of the trade names
  *         or trademarks of eGovernments Foundation.
  *
- *  In case of any queries, you can reach eGovernments Foundation at contact@empernments.org.
+ *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.config;
+package org.egov.data.sync.employee.repository;
 
-import lombok.*;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcCall;
+import org.springframework.stereotype.Repository;
 
-@Component
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
-public class PropertiesManager {
+import java.util.HashMap;
+import java.util.Map;
 
-	@Value("${egov.services.hr_employee_service.hostname}")
-	private String employeeServiceHostName;
+@Repository
+public class DataSyncPositionRepository {
 
-	@Value("${egov.services.hr_employee_service.non_vacant_positions.basepath}")
-	private String employeeServiceNonVacantPositionsBasePath;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-	@Value("${egov.services.hr_employee_service.non_vacant_positions.searchpath}")
-	private String employeeServiceNonVacantPositionsSearchPath;
+    public void executeProcedure(String name, String tenantId) {
+        SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate).withSchemaName("microservice")
+                .withProcedureName("ms_to_ml_load_position");
 
-	@Value("${egov.services.egov_common_masters_service.hostname}")
-	private String commonMastersServiceHost;
-
-	@Value("${egov.services.egov_common_masters_service.basepath}")
-	private String commonMastersServiceBasePath;
-
-	@Value("${egov.services.egov_common_masters_service.departments.searchpath}")
-	private String commonMastersServiceDepartmentsSearch;
-
-    @Value("${egov.services.data_sync_position.required}")
-    private Boolean dataSyncPositionRequired;
+        Map<String, Object> inParamMap = new HashMap<String, Object>();
+        inParamMap.put("posname", name);
+        inParamMap.put("tenant", tenantId);
+        SqlParameterSource in = new MapSqlParameterSource(inParamMap);
 
 
+        Map<String, Object> simpleJdbcCallResult = simpleJdbcCall.execute(in);
+        System.out.println(simpleJdbcCallResult);
+        //simpleJdbcCall.execute(in);
+
+        //simpleJdbcCall.execute();
+    }
 }

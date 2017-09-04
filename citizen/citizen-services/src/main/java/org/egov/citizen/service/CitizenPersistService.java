@@ -337,6 +337,7 @@ public class CitizenPersistService {
 							  .mobileNo(requestInfo.getUserInfo().getMobileNumber())
 							  .requestHash(requestHash)
 							  .uid(requestInfo.getUserInfo().getId())
+							  .retrunUrl(receiptRequest.getReturnUrl())
 							  .build();
 		LOGGER.info("PGPayload generated: "+pgPayload);
 		

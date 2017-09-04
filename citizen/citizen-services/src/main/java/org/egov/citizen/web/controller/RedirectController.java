@@ -43,8 +43,10 @@ public class RedirectController {
         LOGGER.info("Body obtained: "+body);
         StringBuilder redirectUrl= new StringBuilder();
         redirectUrl.append(applicationProperties.getRedirectUrl()).append(applicationProperties.getRedirectAppend());
-              
-       return "redirect:"+redirectUrl.toString()+request;        
+        LOGGER.info("Redirect URL: "+redirectUrl.toString()+body);
+
+        //return "abc";
+        return "redirect:"+redirectUrl.toString()+body;        
     }
 
     @RequestMapping(value = "/pgresponses", method = RequestMethod.POST)
@@ -81,7 +83,8 @@ public class RedirectController {
         LOGGER.info("Body obtained: "+request);
         StringBuilder redirectUrl= new StringBuilder();
         redirectUrl.append(applicationProperties.getRedirectUrl()).append(applicationProperties.getRedirectAppend());
-              
+        LOGGER.info("Redirect URL: "+redirectUrl);
+
        return "redirect:"+redirectUrl.toString()+request;
     }
     

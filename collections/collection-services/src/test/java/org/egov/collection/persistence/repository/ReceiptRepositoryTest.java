@@ -132,7 +132,6 @@ public class ReceiptRepositoryTest {
 		Map<String, Object> parametersMap = new HashMap<>();
 		parametersMap.put("tenantid", "default");
 		Map<String, Object>[] parametersReceiptDetails = new Map[100];
-
 		ReceiptReq receiptReq = getReceiptRequest();
 		String query = ReceiptDetailQueryBuilder.insertReceiptHeader();
 		String receiptHeaderIdQuery = ReceiptDetailQueryBuilder.getreceiptHeaderId();

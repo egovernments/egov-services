@@ -1,21 +1,20 @@
-Feature: Creating Legacy Connection
+Feature: Applying New Water Connection from Citizen Login
 
-  Scenario: Create Legacy Connection in Micro-QA with tenantId mh.roha
+  Scenario: Apply new water connection
 
     ### On Login Screen ###
     Given user on Login screen verifies signInText has visible value Sign In
-    And user on Login screen types on username value 1234
-    And user on Login screen types on password value 12345678
+    And user on Login screen types on username value 9483619659
+    And user on Login screen types on password value eGov@123
     And user on Login screen clicks on signIn
 
-    ### On Homepage Screen ###
-    And user on Grievance screen will see the complaintDetails
-    And user on Home screen verifies myTasks has visible value My Tasks
-    And user on Home screen clicks on menu
-    And user on Home screen types on menuSearch value Create Legacy Connection
-    And user on Home screen clicks on firstMenuItem
+    ### On Dashboard Screen ###
+    And user on Dashboard screen will wait until the page loads
+    And user on Dashboard screen verifies myServiceRequests has visible value My Service Requests
+    And user on Dashboard screen clicks on text value Water
+    And user on Dashboard screen clicks on text value Apply for New Connection
 
-    ### On Create Legacy Connection entering applicant details ###
+    ### On Create Connection Screen ###
     And user on WaterConnection screen types on ownerName value --"Owner ", 4 random characters
     And user on WaterConnection screen types on mobileNumber value --"1",9 random numbers
     And user on WaterConnection screen types on email value --email
@@ -28,27 +27,34 @@ Feature: Creating Legacy Connection
     And user on WaterConnection screen selects on locality value Andhar Ali
     And user on WaterConnection screen selects on zone value Zone A
     And user on WaterConnection screen selects on ward value Prabhag 1
-#    And user on WaterConnection screen types on oldConsumerNumber value --10 random numbers
-#    And user on WaterConnection screen types on physicalConnectionDate value 23/08/2016
 
     ### On Create Legacy Connection entering connection details ###
-#    And user on WaterConnection screen selects on propertyTypeDataEntry value Others
-#    And user on WaterConnection screen selects on categoryType value GENERAL
     And user on WaterConnection screen selects on usageType value Residential
     And user on WaterConnection screen selects on usageSubType value Residential
     And user on WaterConnection screen selects on connectionSize value 1
-    And user on WaterConnection screen selects on connectionType value NONMETERED
+    And user on WaterConnection screen selects on connectionType value METERED
     And user on WaterConnection screen selects on connectionStatus value PERMANENT
     And user on WaterConnection screen selects on waterSourceType value RIVER
-#    And user on WaterConnection screen selects on supplyType value Semi Bulk Type
     And user on WaterConnection screen selects on waterTreatment value bhuvaneshwar jal shudhikaran
     And user on WaterConnection screen types on sumpCapacityDataEntry value --3 random numbers
     And user on WaterConnection screen types on sequenceNumber value --6 random numbers
     And user on WaterConnection screen types on plumberName value --"Plumber ", 4 random characters
     And user on WaterConnection screen types on noOfTaps value --2 random numbers
     And user on WaterConnection screen types on noOfPersonsDataEntry value --2 random numbers
+    And user on WaterConnection screen clicks on createButton
+    And user on WaterConnection screen clicks on text value Pay & Proceed
 
-    ### On Create Legacy Connection entering connection details ###
-    And user on WaterConnection screen types on securityDeposit value --3 random numbers
-    And user on WaterConnection screen types on receiptNumber value --6 random numbers
-    And user on WaterConnection screen types on receiptDate value 23/08/2017
+    ### On View Receipt Screen ###
+    And user on WaterConnection screen will wait until the page loads
+    And user on WaterConnection screen copies the reqNumber to SRNReqNumber
+    And user on WaterConnection screen clicks on homeButton
+    And user on WaterConnection screen will wait until the page loads
+
+    ### On Dashboard Screen ###
+    And user on Home screen types on dashBoardSearch value SRNReqNumber
+    And user on Home screen verifies text has visible value SRNReqNumber
+    And user on Home screen clicks on text value SRNReqNumber
+
+    ### Logout ###
+    And Intent:LogoutIntentTest
+

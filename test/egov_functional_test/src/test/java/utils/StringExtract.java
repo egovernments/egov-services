@@ -29,14 +29,17 @@ public class StringExtract extends BasePage {
         TreeMap<Integer, String> sortedMap = new TreeMap<>();
         HashSet<String> defaultKeywords = new HashSet<>();
         defaultKeywords.add("CRN");
+        defaultKeywords.add("Request");
         StringTokenizer tokenizer = new StringTokenizer(validMessage.replace(",", "").replace(".", "").replace(":", ""));
         while (tokenizer.hasMoreTokens()) {
             String token = tokenizer.nextToken();
             if (token.matches(".*\\d+.*")) {
                 for (String defaultKeyword : defaultKeywords) {
                     if (getDistanceBetweenWords(validMessage, defaultKeyword, token) >= 0) {
-                        sortedMap.put(getDistanceBetweenWords(validMessage, defaultKeyword, token), token);
-                        break;
+                        return token;
+//                        sortedMap.put(getDistanceBetweenWords(validMessage, defaultKeyword, token), token);
+
+//                        break;
                     }
                 }
             }

@@ -1,14 +1,10 @@
 package steps;
 
 import cucumber.api.DataTable;
-import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
-import org.openqa.selenium.WebElement;
 import pages.GenericPage;
 
 import java.util.List;
-
-import static com.testvagrant.stepdefs.core.Tapster.tapster;
 
 public class ValidationSteps extends BaseSteps {
 
@@ -30,7 +26,7 @@ public class ValidationSteps extends BaseSteps {
                     break;
                 default:
                     pageStore.get(GenericPage.class).performsAction(consumer, screen, action, element, inValidData);
-                    boolean check = pageStore.get(GenericPage.class).checkValidDataEntertedOrNot(inValidMessage);
+                    boolean check = pageStore.get(GenericPage.class).checkValidDataEnteredOrNot(inValidMessage);
 
                     if (check) {
                         pageStore.get(GenericPage.class).performsAction(consumer, screen, action, element, validData);

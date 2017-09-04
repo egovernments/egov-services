@@ -215,6 +215,30 @@
         "identifier":"xpath",
         "value":".//*[@id='root']/div/main/div/form/div[1]/div[6]/div/div[2]/div[1]/div/div[3]/div/div/input",
         "waitFor":"visibility"
+        },
+        {
+        "elementName":"text",
+        "identifier":"xpath",
+        "value":"//*[text()='%s']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"createButton",
+        "identifier":"css",
+        "value":"form div[style='text-align: center;'] button",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"reqNumber",
+        "identifier":"css",
+        "value":"[id='ReceiptForWcAPartOne1'] tbody tr:nth-child(3) td",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"homeButton",
+        "identifier":"xpath",
+        "value":"//i[text()='home']",
+        "waitFor":"visibility"
         }
     ]
 }

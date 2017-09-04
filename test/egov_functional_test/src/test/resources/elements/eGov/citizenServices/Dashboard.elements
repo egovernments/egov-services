@@ -1,22 +1,28 @@
 {
 "elements":[
-           {
-            "elementName": "myServiceRequests",
-            "identifier": "xpath",
-            "value": ".//*[@id='root']/div/main/div/div/div/div/div[2]/div[1]/div/div[1]/div/span[1]",
-            "waitFor": "visibility"
-            },
-            {
-             "elementName": "property",
-             "identifier": "xpath",
-             "value": ".//*[@id='root']/div/main/div/div/div/div/div[1]/div/ul/li[2]/a",
-             "waitFor": "presenece"
-             },
-             {
-             "elementName": "payMyDues",
-             "identifier": "xpath",
-             "value": "//*[@id='root']/div/main/div/div/div/div/div[1]/div/ul/li[2]/ul/li[3]/a",
-             "waitFor": "presence"
-             }
-             ]
+  {
+   "elementName": "myServiceRequests",
+   "identifier": "xpath",
+   "value": ".//*[@id='root']/div/main/div/div/div/div/div[2]/div[1]/div/div[1]/div/span[1]",
+   "waitFor": "visibility"
+  },
+  {
+   "elementName": "property",
+   "identifier": "xpath",
+   "value": ".//*[@id='root']/div/main/div/div/div/div/div[1]/div/ul/li[2]/a",
+   "waitFor": "presenece"
+  },
+  {
+   "elementName": "payMyDues",
+   "identifier": "xpath",
+   "value": "//*[@id='root']/div/main/div/div/div/div/div[1]/div/ul/li[2]/ul/li[3]/a",
+   "waitFor": "presence"
+  },
+  {
+  "elementName":"text",
+  "identifier":"xpath",
+  "value":"//*[text()='%s']",
+  "waitFor":"visibility"
+  }
+ ]
 }

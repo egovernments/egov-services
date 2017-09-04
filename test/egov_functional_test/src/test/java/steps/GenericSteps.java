@@ -100,6 +100,7 @@ public class GenericSteps extends BaseSteps {
 
         switch (placeHolder) {
             case "applicationNumber":
+            case "SRNReqNumber":
                 copyValues.put(placeHolder, pageStore.get(StringExtract.class).getComplaintNumber(webElement));
                 break;
             case "user":

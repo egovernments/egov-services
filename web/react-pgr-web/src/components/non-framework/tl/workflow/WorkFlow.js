@@ -18,7 +18,7 @@ class WorkFlow extends Component {
     this.state={
       workFlowDepartment : [],
       workFlowDesignation : [],
-      workFlowPosition : [],
+      workFlowPosition : []
     };
   }
   componentDidMount(){
@@ -29,7 +29,7 @@ class WorkFlow extends Component {
   }
   componentWillReceiveProps(nextProps){
     if((this.props.fieldErrors !== nextProps.fieldErrors) && nextProps.viewLicense.applications){
-      // console.log('Will Receive Props',nextProps.viewLicense.departmentId, nextProps.viewLicense.designationId, nextProps.viewLicense.positionId);
+      // console.log('Will Receive Props',nextProps.viewLicense);
       this.initCall(nextProps.viewLicense);
     }
   }
@@ -42,12 +42,14 @@ class WorkFlow extends Component {
       stateId : obj.applications[0].state_id,
       approvalComments : obj.approvalComments
     });
-    Api.commonApiPost( 'egov-common-masters/departments/_search').then((response)=>{
-      self.setState({workFlowDepartment: response.Department});
-      self.worKFlowActions();
-    },function(err) {
-      self.props.handleError(err.message);
-    });
+    if(this.state.workFlowDepartment.length === 0){
+      Api.commonApiPost( 'egov-common-masters/departments/_search').then((response)=>{
+        self.setState({workFlowDepartment: response.Department});
+        self.worKFlowActions();
+      },function(err) {
+        self.props.handleError(err.message);
+      });
+    }
   }
   worKFlowActions = () => {
     Api.commonApiPost('egov-common-workflows/process/_search', {id:self.state.stateId},{}, false, true).then((response)=>{

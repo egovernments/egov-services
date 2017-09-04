@@ -11,7 +11,7 @@ var dat = {
 				"name": "createSourceType",
 				"fields": [
 						{
-							"name": "name",
+							"name": "Name",
 							"jsonPath": "SourceType[0].name",
 							"label": "wc.create.sourceType",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
@@ -22,7 +22,7 @@ var dat = {
 							"patternErrMsg": "Length is more than 100"
 						},
 						{
-							"name": "description",
+							"name": "Description",
 							"jsonPath": "SourceType[0].description",
 							"label": "wc.create.description",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
@@ -32,6 +32,28 @@ var dat = {
 							"requiredErrMsg": "",
 							"patternErrMsg": "Length is more than 250"
 						},
+						{
+							"name": "Capacity",
+							"jsonPath": "SourceType[0].description",
+							"label": "wc.create.capacityOfSource",
+							"pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
+							"type": "number",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "Reservation",
+							"jsonPath": "SourceType[0].description",
+							"label": "wc.create.reservationForUlb",
+							"pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
+							"type": "number",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						}
 						{
 							"name": "Active",
 							"jsonPath": "SourceType[0].active",

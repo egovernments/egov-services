@@ -324,6 +324,8 @@ var localization_EN_Data = {
     "wc.create.groups.connectionDetails.fields.resetFlag1":"1st Month Reset reading",
     "wc.create.groups.connectionDetails.fields.resetFlag2":"2nd Month Reset reading",
     "wc.create.groups.connectionDetails.fields.resetFlag3":"3rd Month Reset reading",
+    "wc.create.capacityOfSource":"Capacity of source",
+    "wc.create.reservationForUlb":"Reservation for ULB",
 
 
 
@@ -2686,6 +2688,8 @@ var localization_MR_Data = {
 "wc.create.groups.connectionDetails.fields.resetFlag1":"1st Month Reset reading-Marathi",
 "wc.create.groups.connectionDetails.fields.resetFlag2":"2nd Month Reset reading-Marathi",
 "wc.create.groups.connectionDetails.fields.resetFlag3":"3rd Month Reset reading-Marathi",
+"wc.create.capacityOfSource":"Capacity of source-Marathi",
+"wc.create.reservationForUlb":"Reservation for ULB-Marathi",
 
 ﻿﻿"pgr.0001":"अक्षांश / रेखांश किंवा क्रॉस हायरारकी संकेतांक आवश्यक आहे",
 "pgr.0002":"अक्षांश / रेखांश किंवा क्रॉस हायरारकी संकेतांक आवश्यक आहे",

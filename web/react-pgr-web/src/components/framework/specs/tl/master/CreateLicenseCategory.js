@@ -14,24 +14,24 @@ var dat = {
 							"name": "name",
 							"jsonPath": "categories[0].name",
 							"label": "tl.create.groups.categorytype.name",
-							"pattern": "^.[a-zA-Z. ]{1,99}$",
+							"pattern": "^.[a-zA-Z. ]{2,99}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": "Enter Valid Trade Owner Name (Min:4, Max:100)",
+							"patternErrMsg": "Enter Valid Trade Owner Name (Min:3, Max:100)",
 							"maxLength": "100"
 						},
 						{
 							"name": "code",
 							"jsonPath": "categories[0].code",
 							"label": "tl.create.groups.categorytype.code",
-							"pattern": "^.[A-Za-z0-9]{1,19}$",
+							"pattern": "^.[A-Za-z0-9]{0,19}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": "Enter Valid Code (Alpha-Numeric, Min:1, Max:20)",
+							"patternErrMsg": "Enter Valid Code (Alpha-Numeric, Max:20)",
 							"maxLength": "20"
 						},
 						{

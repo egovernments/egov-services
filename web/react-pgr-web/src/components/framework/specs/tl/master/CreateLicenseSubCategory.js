@@ -17,7 +17,7 @@ var dat = {
             "label": "tl.create.groups.subcategorytype.category",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/tl-masters/category/v1/_search?tenantId=default|$..id|$..name",
+            "url": "/tl-masters/category/v1/_search?tenantId=default&type=category|$..id|$..name",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -27,7 +27,7 @@ var dat = {
 							"name": "name",
 							"jsonPath": "categories[0].name",
 							"label": "tl.create.groups.subcategorytype.name",
-							"pattern": "^.[a-zA-Z. ]{2,49}$",
+							"pattern": "^.[a-zA-Z. ]{2,99}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
@@ -38,13 +38,24 @@ var dat = {
 							"name": "code",
 							"jsonPath": "categories[0].code",
 							"label": "tl.create.groups.subcategorytype.code",
-							"pattern": "^.[A-Za-z0-9]{1,19}$",
+							"pattern": "^.[A-Za-z0-9]{0,19}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": "Enter Valid Code (Alpha-Numeric, Min:1, Max:20)",
 							"maxLength": "20"
+						},
+						{
+							"name": "validityYears",
+							"jsonPath": "categories[0].validityYears",
+							"label": "tl.create.groups.subcategorytype.validityYears",
+							"pattern": "^([1-9]|10)$",
+							"type": "number",
+							"isRequired": true,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": "Enter Valid Validity Year (Min: 1, Max:10)"
 						},
 						{
 							"name": "active",
@@ -113,15 +124,15 @@ var dat = {
 				 },
 				 {
 					 "key": "FLAT_BY_RANGE",
-					 "value": "FLAT_BY_RANGE"
+					 "value": "FLAT BY RANGE"
 				 },
 				 {
 					 "key": "FLAT_BY_PERCENTAGE",
-					 "value": "FLAT_BY_PERCENTAGE"
+					 "value": "FLAT BY PERCENTAGE"
 				 },
 				 {
 					 "key": "UNIT_BY_RANGE",
-					 "value": "UNIT_BY_RANGE"
+					 "value": "UNIT BY RANGE"
 				 }
 					 ]
           },
@@ -136,7 +147,20 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
-          }
+          },
+					{
+						"name": "tenantID",
+						"jsonPath": "categories[0].details[0].tenantId",
+						"label": "tenantId",
+						"pattern": "",
+						"type": "text",
+						"isRequired": true,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"defaultValue": localStorage.getItem("tenantId"),
+						"hide": "true"
+					}
 					]
 				}
 

@@ -49,6 +49,7 @@ export default class CommentDoc extends Component {
                               <th>By</th>
                               <th>Date</th>
                               <th>File Name</th>
+                              {self.props.showRemarks ? <th>Remarks</th> : ""}
                               <th>Action</th>
                             </tr>
                           </thead>
@@ -63,6 +64,7 @@ export default class CommentDoc extends Component {
                                     <td>{v.from + (v.from == JSON.parse(localStorage.userRequest).userName ? " (You)" : "")}</td>
                                     <td>{self.props.getFullDate(v.timeStamp)}</td>
                                     <td>{v.name}</td>
+                                    {self.props.showRemarks ? <td>{v.remarks}</td> : ""}
                                     <td><a target="_blank" href={"/filestore/v1/files/id?tenantId=" + localStorage.getItem("tenantId") + "&fileStoreId=" + v.filePath}>Download</a></td>
                                   </tr>
                                 )

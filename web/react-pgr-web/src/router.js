@@ -121,6 +121,7 @@ import CS_VIEW_WaterConnection from './components/non-framework/citizenServices/
 import ViewWc from './components/non-framework/wc/viewWc';
 import ServiceRequests from './components/non-framework/citizenServices/ServiceRequestSearch.js';
 import CS_FireNoc from './components/non-framework/citizenServices/buildingPlan/create.js';
+import CS_VIEW_FireNoc from './components/non-framework/citizenServices/buildingPlan/view.js';
 import Payment from './components/non-framework/citizenServices/payment';
 
 
@@ -262,7 +263,7 @@ const Main = () => {
       <Route exact path={base + '/non-framework/citizenServices/wc/create'} component={CS_WaterConnection}/>
       <Route exact path={base + '/non-framework/citizenServices/wc/view/:ackNo'} component={CS_VIEW_WaterConnection}/>
       <Route exact path={base + '/non-framework/citizenServices/fireNoc/create'} component={CS_FireNoc}/>
-
+      <Route exact path={base + '/non-framework/citizenServices/fireNoc/view/:ackNo'} component={CS_VIEW_FireNoc}/>
       <Route exact path= {base + '/payment/response/redirect/:msg'} component={Payment}/>
 
     </Switch>

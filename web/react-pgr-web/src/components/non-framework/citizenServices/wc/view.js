@@ -446,7 +446,7 @@ class Report extends Component {
     if(self.state.feeAmount) {
       ServiceRequest.additionalFee = self.state.feeAmount;
       let DemandRequest = {};
-      DemandRequest["Demands"] = self.props.metaData["wc.create"].feeDetails;
+      DemandRequest["Demands"] = Object.assign([], self.props.metaData["wc.create"].feeDetails);
       DemandRequest["Demands"][0].tenantId = localStorage.getItem("tenantId");
       DemandRequest["Demands"][0].businessService = "WC";
       DemandRequest["Demands"][0].consumerCode = self.state.ServiceRequest.serviceRequestId;

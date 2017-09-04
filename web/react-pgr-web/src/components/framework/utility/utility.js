@@ -32,7 +32,9 @@ export function int_to_words(int) {
     return iter(add_to_words(words, triplet_to_words(first[0], first[1], first[2]), SCALE[i]), ++i, get_first(rest), get_rest(rest));
   }
 
-  return iter('', 0, get_first(String(int)), get_rest(String(int)));
+  var words = iter('', 0, get_first(String(int)), get_rest(String(int)));
+  if(words) words = words[0].toUpperCase() + words.substring(1);
+  return words;
 }
 
 export function getFullDate(dat, needTime = false) {

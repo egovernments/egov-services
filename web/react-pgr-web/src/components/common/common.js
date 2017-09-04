@@ -1569,7 +1569,7 @@ var localization_EN_Data = {
     "fn.ApplicationDetails.block":"Block",
     "fn.ApplicationDetails.zone":"Zone",
     "fn.ApplicationDetails.ward":"Ward",
-    "fn.serviceDetails.privisonalFireNOCNo":"Privisonal fire NOC Number",
+    "fn.serviceDetails.privisonalFireNOCNo":"Provisonal fire NOC Number",
     "fn.serviceDetails.plotNo":"Plot Number",
     "fn.serviceDetails.nocSubCategory":"NOC Sub Category",
     "fn.serviceDetails.vikasPrastavNo":"Vikas Prastav Number",

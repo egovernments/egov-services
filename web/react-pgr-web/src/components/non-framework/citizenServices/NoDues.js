@@ -291,8 +291,8 @@ class NoDues extends Component {
                         'type': 'hidden'
                     })).append($('<input>', {
                         'name': 'amount',
-                        // 'value': 1,
-                        'value': res.PGRequest.amountPaid,
+                        'value': 1,
+                        // 'value': res.PGRequest.amountPaid,
                         'type': 'hidden'
                     })).append($('<input>', {
                         'name': 'returnUrl',

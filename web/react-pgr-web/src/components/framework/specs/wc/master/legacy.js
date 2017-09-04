@@ -1317,7 +1317,7 @@ var dat = {
                       "label": "wc.group.meterModal",
                       "pattern": "^[\s.]*([^\s.][\s.]*){0,50}$",
                       "type": "singleValueList",
-                      "isRequired": false,
+                      "isRequired": true,
                       "isDisabled": false,
                       "requiredErrMsg": "",
                       "patternErrMsg": "",
@@ -1340,7 +1340,7 @@ var dat = {
                       "label": "wc.group.meterNumber",
                       "pattern": "",
                       "type": "text",
-                      "isRequired": false,
+                      "isRequired": true,
                       "isDisabled": false,
                       "requiredErrMsg": "",
                       "patternErrMsg": ""
@@ -1362,7 +1362,7 @@ var dat = {
                     "label": "wc.group.initialMeterReading",
                     "pattern": "^\\d{1,8}$",
                     "type": "number",
-                    "isRequired": true,
+                    "isRequired": false,
                     "isDisabled": false,
                     "requiredErrMsg": "",
                     "patternErrMsg": ""

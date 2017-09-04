@@ -241,7 +241,7 @@ ReportDefinitions:
          and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL') and prop.tenantid=$tenantid group by hscno,state,pipesize,consumerName, usage,boundaryname , connectionAddress,applicationtype,categoryType,waterSourceType,
          connectiontype,billingtype,connectionstatus) )result order by hscno asc;
 
-- reportName: DemandRegisterReport
+- reportName: DemandRegister
   summary: Demand Register Report
   version: 1.0.0
   moduleName: wcms

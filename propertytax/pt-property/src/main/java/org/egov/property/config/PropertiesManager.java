@@ -120,6 +120,16 @@ public class PropertiesManager {
 	private String revenueBoundary;
 
 	private String locationBoundary;
+	
+	private String adminBoundary;
+	
+	private String guidanceValueBoundary;
+	
+	private String invalidGuidanceValueBoundary;
+	
+	private String invalidGuidanceValueBoundaryId;
+	
+	private String invalidAppConfigKey;
 
 	// ####---Pagination place holders ---###########
 	private String defaultPageSize;
@@ -479,6 +489,26 @@ public class PropertiesManager {
 
 	public String getLocationBoundary() {
 		return environment.getProperty("location.boundary");
+	}
+	
+	public String getAdminBoundary() {
+		return environment.getProperty("admin.boundary");
+	}
+	
+	public String getGuidanceValueBoundary() {
+		return environment.getProperty("guidance.boundary");
+	}
+	
+	public String getInvalidGuidanceValueBoundary() {
+		return environment.getProperty("invalid.property.boundary.guidance");
+	}
+	
+	public String getInvalidGuidanceValueBoundaryId() {
+		return environment.getProperty("invalid.property.boundary.guidance.id");
+	}
+	
+	public String getInvalidAppConfigKey() {
+		return environment.getProperty("property.APPCONFIG_KEY_ALREADY_EXIST");
 	}
 
 	// ####---Pagination place holders ---------------#######

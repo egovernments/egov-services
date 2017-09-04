@@ -2,7 +2,7 @@
 	"variables": [],
 	"info": {
 		"name": "eGov_WCMS",
-		"_postman_id": "4f19e8cb-7a97-4d3d-348c-6a09d9041ab4",
+		"_postman_id": "d8fafbef-24c3-7fd5-f7ba-bcd9d19cc902",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
@@ -279,6 +279,420 @@
 								"body": {
 									"mode": "raw",
 									"raw": "{\n  \"Connection\": {\n    \"applicationType\": \"NEWCONNECTION\",\n    \"withProperty\": false,\n    \"connectionOwner\": {\n      \"emailId\": \"test@gmail.com\",\n      \"isPrimaryOwner\": \"\",\n      \"isSecondaryOwner\": \"\",\n      \"name\": \"test\",\n      \"mobileNumber\": \"4524545455\",\n      \"aadhaarNumber\": \"524545456464\",\n      \"gender\": \"FEMALE\"\n    },\n    \"property\": {\n      \"email\": \"\",\n      \"propertyIdentifier\": \"\",\n      \"nameOfApplicant\": \"\",\n      \"mobileNumber\": \"\",\n      \"adharNumber\": \"\",\n      \"locality\": \"\",\n      \"address\": \"\",\n      \"zone\": \"\",\n      \"noOfFloors\": \"\",\n      \"propertyTaxDue\": \"\",\n      \"propertyType\": \"Vacant Land\",\n      \"usageType\": \"COMMERCIAL\"\n    },\n    \"documents\": [\n      {\n        \"fileStoreId\": \"\",\n        \"displayName\": \"AadharCard\",\n        \"name\": \"\",\n        \"document\": 3\n      },\n      {\n        \"fileStoreId\": \"\",\n        \"displayName\": \"Passport\",\n        \"name\": \"\",\n        \"document\": 2\n      }\n    ],\n    \"legacyConsumerNumber\": \"7412589632\",\n    \"executionDate\": 1501698600000,\n    \"address\": {\n      \"addressLine1\": \"tfdbgvn\",\n      \"city\": \"gbvgngh\",\n      \"pinCode\": \"454445\"\n    },\n    \"connectionLocation\": {\n      \"locationBoundary\": {\n        \"id\": 4\n      },\n      \"adminBoundary\": {\n        \"id\": 1\n      },\n      \"revenueBoundary\": {\n        \"id\": 1\n      }\n    },\n    \"categoryType\": \"General\",\n    \"subUsageType\": \"HOSPITALS\",\n    \"hscPipeSizeType\": 13,\n    \"meter\": [\n      {\n        \"meterOwner\": \"test\",\n        \"meterModel\": \"testyy\",\n        \"meterMake\": \"testtt\",\n        \"meterSlNo\": \"5242454\",\n        \"meterCost\": \"45\",\n        \"initialMeterReading\": \"100\",\n        \"meterReadings\": [\n          {\n            \"reading\": \"100\",\n            \"readingDate\": 1502217000000\n          },\n          {\n            \"reading\": \"200\",\n            \"readingDate\": 1499797800000\n          },\n          {\n            \"reading\": \"300\",\n            \"readingDate\": 1499884200000\n          }\n        ]\n      }\n    ],\n    \"billingType\": \"METERED\",\n    \"connectionType\": \"PERMANENT\",\n    \"sourceType\": \"Ground Water\",\n    \"supplyType\": \"Ground Water\",\n    \"waterTreatment\": \"CONTAINERISED\",\n    \"sumpCapacity\": \"12\",\n    \"billSequenceNumber\": \"12\",\n    \"plumberName\": \"test\",\n    \"outsideULB\": true,\n    \"numberOfPersons\": \"12\",\n    \"numberOfFamily\": 3,\n    \"donationCharge\": \"100\",\n    \"receiptNumber\": \"52454\",\n    \"receiptDate\": 1502821800000,\n    \"tenantId\": \"default\"\n  },\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1503405887297,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n  }\n}\n"
+								},
+								"description": ""
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "eGov_Masters",
+					"description": "",
+					"item": [
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);",
+											"",
+											"tests[\"Status code is 200\"] = responseCode.code === 200;",
+											"",
+											"tests[\"Username is valid\"] = jsonData.UserRequest.userName.has(request.data[\"username\"]);",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"url": "{{url}}/user/oauth/token",
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"description": ""
+									},
+									{
+										"key": "Authorization",
+										"value": "Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "username",
+											"value": "narasappa",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "demo",
+											"type": "text"
+										},
+										{
+											"key": "grant_type",
+											"value": "password",
+											"type": "text"
+										},
+										{
+											"key": "scope",
+											"value": "read",
+											"type": "text"
+										},
+										{
+											"key": "tenantId",
+											"value": "default",
+											"type": "text"
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Create Gap Code",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": "{{url}}/wcms/masters/gapcode/_create\n",
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n   \"requestInfo\":{\n      \"apiId\":\"emp\",\n      \"ver\":\"1.0\",\n      \"ts\":\"1\",\n      \"action\":\"create\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\",\n      \"msgId\":\"20170310130900\",\n      \"requesterId\":\"rajesh\",\n      \"authToken\":\"{{access_token}}\",\n      \"userInfo\":\n      {\n      \t\"id\":\"1\"\n      }\n\t},\n\t\"Gapcodes\": [\n        {   \"name\": \"Last 8 months Lowest\",\n            \"outSideUlb\": true,\n            \"noOfMonths\": \"Last 8 months\",\n            \"logic\": \"Lowest\",\n            \"active\": true,\n            \"description\": \"custom by 8 month adding\",\n            \"createdBy\": 1,\n            \"createdDate\": 20170827,\n            \"lastUpdatedBy\": 1,\n            \"lastUpdatedDate\": 20170827,\n            \"tenantId\": \"1\"\n        }\n    ]\n}"
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Formula Search",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Successful POST request\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+											"});"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": "{{url}}/wcms/masters/gapcode/formula/_search",
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n   \"requestInfo\":{\n      \"apiId\":\"emp\",\n      \"ver\":\"1.0\",\n      \"ts\":\"1\",\n      \"action\":\"create\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\",\n      \"msgId\":\"20170310130900\",\n      \"requesterId\":\"rajesh\",\n      \"authToken\":\"{{access_token}}\",\n      \"userInfo\":\n      {\n      \t\"id\":\"1\"\n      }\n\t}\n}"
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Search Connection",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": {
+									"raw": "{{url}}/wcms/masters/gapcode/_search?tenantId=1",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"wcms",
+										"masters",
+										"gapcode",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "tenantId",
+											"value": "1",
+											"equals": true,
+											"description": ""
+										}
+									],
+									"variable": []
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n   \"requestInfo\":{\n      \"apiId\":\"emp\",\n      \"ver\":\"1.0\",\n      \"ts\":\"1\",\n      \"action\":\"create\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\",\n      \"msgId\":\"20170310130900\",\n      \"requesterId\":\"rajesh\",\n      \"authToken\":\"{{access_token}}\",\n      \"userInfo\":\n      {\n      \t\"id\":\"1\"\n      }\n\t}\n}"
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Search Connection with code",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": {
+									"raw": "{{url}}/wcms/masters/gapcode/_search?tenantId=default&code=1",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"wcms",
+										"masters",
+										"gapcode",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "tenantId",
+											"value": "default",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "code",
+											"value": "1",
+											"equals": true,
+											"description": ""
+										}
+									],
+									"variable": []
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n   \"requestInfo\":{\n      \"apiId\":\"emp\",\n      \"ver\":\"1.0\",\n      \"ts\":\"1\",\n      \"action\":\"create\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\",\n      \"msgId\":\"20170310130900\",\n      \"requesterId\":\"rajesh\",\n      \"authToken\":\"{{access_token}}\",\n      \"userInfo\":\n      {\n      \t\"id\":\"1\"\n      }\n\t}\n}"
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Search Connection with  name",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Response time is less than 200ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(200);",
+											"});"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": {
+									"raw": "{{url}}/wcms/masters/gapcode/_search?tenantId=default&name=Last 3 months Average",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"wcms",
+										"masters",
+										"gapcode",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "tenantId",
+											"value": "default",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "name",
+											"value": "Last 3 months Average\n",
+											"equals": true,
+											"description": ""
+										}
+									],
+									"variable": []
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n   \"requestInfo\":{\n      \"apiId\":\"emp\",\n      \"ver\":\"1.0\",\n      \"ts\":\"1\",\n      \"action\":\"create\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\",\n      \"msgId\":\"20170310130900\",\n      \"requesterId\":\"rajesh\",\n      \"authToken\":\"{{access_token}}\",\n      \"userInfo\":\n      {\n      \t\"id\":\"1\"\n      }\n\t}\n}\n"
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Last Month Search",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"",
+											"tests[\"Status code is 200\"] = responseCode.code === 200;",
+											"",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"url": "{{url}}/wcms/masters/gapcode/lastmonths/_search\n",
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n   \"requestInfo\":{\n      \"apiId\":\"emp\",\n      \"ver\":\"1.0\",\n      \"ts\":\"1\",\n      \"action\":\"create\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\",\n      \"msgId\":\"20170310130900\",\n      \"requesterId\":\"rajesh\",\n      \"authToken\":\"{{access_token}}\",\n      \"userInfo\":\n      {\n      \t\"id\":\"1\"\n      }\n\t}\n}"
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Logic Search",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Successful POST request\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+											"});"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": "{{url}}/wcms/masters/gapcode/logic/_search",
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n   \"requestInfo\":{\n      \"apiId\":\"emp\",\n      \"ver\":\"1.0\",\n      \"ts\":\"1\",\n      \"action\":\"create\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\",\n      \"msgId\":\"20170310130900\",\n      \"requesterId\":\"rajesh\",\n      \"authToken\":\"{{access_token}}\",\n      \"userInfo\":\n      {\n      \t\"id\":\"1\"\n      }\n\t}\n}\n"
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Update Gap Code",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": "{{url}}/wcms/masters/gapcode/_update",
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "\n{\n   \"requestInfo\":{\n      \"apiId\":\"emp\",\n      \"ver\":\"1.0\",\n      \"ts\":\"1\",\n      \"action\":\"create\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\",\n      \"msgId\":\"20170310130900\",\n      \"requesterId\":\"rajesh\",\n      \"authToken\":\"{{access_token}}\",\n      \"userInfo\":\n      {\n      \t\"id\":\"1\"\n      }\n\t},\n\t\"Gapcodes\": [\n        {   \"code\": 11,\n            \"name\": \"Last 2 months Lowest\",\n            \"outSideUlb\": false,\n            \"noOfMonths\": \"Last 2 months\",\n            \"logic\": \"Lowest2\",\n            \"active\": true,\n            \"description\": \"custom by 2 month adding\",\n            \"createdBy\": 2,\n            \"createdDate\": 20200827,\n            \"lastUpdatedBy\": 2,\n            \"lastUpdatedDate\": 20200827,\n            \"tenantId\": \"2\"\n        }\n    ]\n}"
 								},
 								"description": ""
 							},
@@ -594,6 +1008,443 @@
 								"body": {
 									"mode": "raw",
 									"raw": "{\n  \"Connection\": {\n    \"applicationType\": \"NEWCONNECTION\",\n    \"withProperty\": false,\n    \"connectionOwner\": {\n      \"emailId\": \"test@gmail.com\",\n      \"isPrimaryOwner\": \"\",\n      \"isSecondaryOwner\": \"\",\n      \"name\": \"test\",\n      \"mobileNumber\": \"4524545455\",\n      \"aadhaarNumber\": \"524545456464\",\n      \"gender\": \"FEMALE\"\n    },\n    \"property\": {\n      \"email\": \"\",\n      \"propertyIdentifier\": \"1016000001\",\n      \"nameOfApplicant\": \"\",\n      \"mobileNumber\": \"\",\n      \"adharNumber\": \"\",\n      \"locality\": \"\",\n      \"address\": \"\",\n      \"zone\": \"\",\n      \"noOfFloors\": \"\",\n      \"propertyTaxDue\": \"\",\n      \"propertyType\": \"Vacant Land\",\n      \"usageType\": \"COMMERCIAL\"\n    },\n    \"documents\": [\n      {\n        \"fileStoreId\": \"\",\n        \"displayName\": \"AadharCard\",\n        \"name\": \"\",\n        \"document\": 3\n      },\n      {\n        \"fileStoreId\": \"\",\n        \"displayName\": \"Passport\",\n        \"name\": \"\",\n        \"document\": 2\n      }\n    ],\n    \"legacyConsumerNumber\": \"7412589632\",\n    \"executionDate\": 1501698600000,\n    \"address\": {\n      \"addressLine1\": \"tfdbgvn\",\n      \"city\": \"gbvgngh\",\n      \"pinCode\": \"454445\"\n    },\n    \"connectionLocation\": {\n      \"locationBoundary\": {\n        \"id\": 4\n      },\n      \"adminBoundary\": {\n        \"id\": 1\n      },\n      \"revenueBoundary\": {\n        \"id\": 1\n      }\n    },\n    \"categoryType\": \"General\",\n    \"subUsageType\": \"HOSPITALS\",\n    \"hscPipeSizeType\": 13,\n    \"meter\": [\n      {\n        \"meterOwner\": \"test\",\n        \"meterModel\": \"testyy\",\n        \"meterMake\": \"testtt\",\n        \"meterSlNo\": \"5242454\",\n        \"meterCost\": \"45\",\n        \"initialMeterReading\": \"100\",\n        \"meterReadings\": [\n          {\n            \"reading\": \"100\",\n            \"readingDate\": 1502217000000\n          },\n          {\n            \"reading\": \"200\",\n            \"readingDate\": 1499797800000\n          },\n          {\n            \"reading\": \"300\",\n            \"readingDate\": 1499884200000\n          }\n        ]\n      }\n    ],\n    \"billingType\": \"METERED\",\n    \"connectionType\": \"PERMANENT\",\n    \"sourceType\": \"Ground Water\",\n    \"supplyType\": \"Ground Water\",\n    \"waterTreatment\": \"CONTAINERISED\",\n    \"sumpCapacity\": \"12\",\n    \"billSequenceNumber\": \"12\",\n    \"plumberName\": \"test\",\n    \"outsideULB\": true,\n    \"numberOfPersons\": \"12\",\n    \"numberOfFamily\": 3,\n    \"donationCharge\": \"100\",\n    \"receiptNumber\": \"52454\",\n    \"receiptDate\": 1502821800000,\n    \"tenantId\": \"default\"\n  },\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1503405887297,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n  }\n}\n"
+								},
+								"description": ""
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "eGov_Masters",
+					"description": "",
+					"item": [
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);",
+											"",
+											"tests[\"Status code is 200\"] = responseCode.code === 200;",
+											"",
+											"tests[\"Username is valid\"] = jsonData.UserRequest.userName.has(request.data[\"username\"]);",
+											"",
+											"postman.setNextRequest(\"Create Gap Code\");",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"url": "{{url}}/user/oauth/token",
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"description": ""
+									},
+									{
+										"key": "Authorization",
+										"value": "Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "username",
+											"value": "narasappa",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "demo",
+											"type": "text"
+										},
+										{
+											"key": "grant_type",
+											"value": "password",
+											"type": "text"
+										},
+										{
+											"key": "scope",
+											"value": "read",
+											"type": "text"
+										},
+										{
+											"key": "tenantId",
+											"value": "default",
+											"type": "text"
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Create Gap Code",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"postman.setNextRequest(\"Formula Search\");"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": "{{url}}/wcms/masters/gapcode/_create\n",
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Formula Search",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Successful POST request\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+											"});",
+											"",
+											"postman.setNextRequest(\"Search Connection\");"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": "{{url}}/wcms/masters/gapcode/formula/_search",
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Search Connection",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"",
+											"postman.setNextRequest(\"Search Connection with code\");"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": {
+									"raw": "{{url}}/wcms/masters/gapcode/_search?tenantId=1",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"wcms",
+										"masters",
+										"gapcode",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "tenantId",
+											"value": "1",
+											"equals": true,
+											"description": ""
+										}
+									],
+									"variable": []
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Search Connection with code",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"",
+											"postman.setNextRequest(\"Search Connection with name\");"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": {
+									"raw": "{{url}}/wcms/masters/gapcode/_search?tenantId=default&code=1",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"wcms",
+										"masters",
+										"gapcode",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "tenantId",
+											"value": "default",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "code",
+											"value": "1",
+											"equals": true,
+											"description": ""
+										}
+									],
+									"variable": []
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Search Connection with  name",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Response time is less than 200ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(200);",
+											"});",
+											"",
+											"",
+											"postman.setNextRequest(\"Last Month Search\");"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": {
+									"raw": "{{url}}/wcms/masters/gapcode/_search?tenantId=default&name=Last 3 months Average",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"wcms",
+										"masters",
+										"gapcode",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "tenantId",
+											"value": "default",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "name",
+											"value": "Last 3 months Average\n",
+											"equals": true,
+											"description": ""
+										}
+									],
+									"variable": []
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Last Month Search",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"",
+											"tests[\"Status code is 200\"] = responseCode.code === 200;",
+											"",
+											"",
+											"",
+											"postman.setNextRequest(\"Logic Search\");"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": "{{url}}/wcms/masters/gapcode/lastmonths/_search\n",
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Logic Search",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Successful POST request\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+											"});",
+											"",
+											"",
+											"postman.setNextRequest(\"Update Gap Code\");"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": "{{url}}/wcms/masters/gapcode/logic/_search",
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Update Gap Code",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"",
+											"postman.setNextRequest(null);"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": "{{url}}/wcms/masters/gapcode/_update",
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
 								},
 								"description": ""
 							},

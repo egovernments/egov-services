@@ -97,7 +97,7 @@ public class PositionQueryBuilder {
 			preparedStatementValues.add(positionGetRequest.getTenantId());
 		}
 
-		if (!positionGetRequest.getId().isEmpty() && positionGetRequest.getId() != null) {
+		if (positionGetRequest.getId() != null && !positionGetRequest.getId().isEmpty()) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" p.id IN " + getIdQuery(positionGetRequest.getId()));
 		}

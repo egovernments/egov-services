@@ -159,7 +159,7 @@ ReportDefinitions:
   - name: classification
     label: reports.collection.classification
     type: singlevaluelist
-    pattern: 'list://BILLBASED:BILLBASED,MISCELLANEOUS:MISCELLANEOUS' 
+    pattern: 'list://BILLBASED:BILLBASED,MISCELLANEOUS:MISCELLANEOUS'
     isMandatory: false
     searchClause: AND EGCL_RECEIPTHEADER.receipttype = $classification
   - name: collectedby
@@ -247,19 +247,19 @@ ReportDefinitions:
     type: singlevaluelist
     pattern: http://collection-services:8080/collection-services/receipts/_getDistinctBusinessDetails?tenantId=$tenantid|$..code|$..name
     isMandatory: false
-    searchClause: AND EGCL_RECEIPTHEADER.businessdetails = $servicename
+    searchClause: AND CH.businessdetails = $servicename
   - name: collectedby
     label: reports.collection.collectedby
     type: singlevaluelist
     pattern: http://collection-services:8080/collection-services/receipts/_getDistinctCollectedBy?tenantId=$tenantid|$..userName|$..user[*].name
     source: collection
     isMandatory: false
-    searchClause: AND us.username =$collectedby
+    searchClause: AND us.name =$collectedby
   query: SELECT row_number() over (order by CH.RECEIPTNUMBER) as serialnumber, CH.RECEIPTNUMBER AS RECEIPT_NUMBER, ED.NAME AS DEPT_NAME, IH.transactionnumber AS CHEQUE_NUMBER, BK.name AS BANK, 
          IH.branchname AS BRANCH, IH.transactiondate AS CHEQUE_DATE, IH.amount AS AMOUNT, EG_BUSINESSDETAILS.NAME AS SERVICE_NAME FROM EGCL_RECEIPTHEADER CH, EG_DEPARTMENT ED, EGCL_RECEIPTINSTRUMENT CI, EGF_INSTRUMENT IH, egf_BANK BK,
          egeis_assignment ass, eg_user us, EG_BUSINESSDETAILS EG_BUSINESSDETAILS WHERE ED.code=CH.DEPARTMENT AND CI.receiptheader=CH.ID AND IH.ID=CI.INSTRUMENTHEADER AND IH.BANKID=cast(BK.id as VARCHAR) AND IH.INSTRUMENTTYPEID IN ('Cheque','DD')
-         AND CH.createdby = ass.employeeid and ass.employeeid=us.id AND CH.BUSINESSDETAILS = EG_BUSINESSDETAILS.CODE AND CH.tenantid=$tenantid ORDER BY RECEIPT_NUMBER;
-  
+         AND CH.createdby = ass.employeeid and ass.employeeid=us.id AND CH.BUSINESSDETAILS = EG_BUSINESSDETAILS.CODE AND CH.tenantid=$tenantid
+  orderBy: ORDER BY RECEIPT_NUMBER
   
 - reportName: CollectionSummaryAccountHeadWise 
   summary: Collection Summary Account Head wise Report

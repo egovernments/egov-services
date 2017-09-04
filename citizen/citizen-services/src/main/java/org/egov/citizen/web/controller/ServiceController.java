@@ -59,9 +59,6 @@ public class ServiceController {
 	private ResponseInfoFactory responseInfoFactory;
 	
 	@Autowired
-	private ApplicationProperties applicationProperties;
-	
-	@Autowired
 	public RestTemplate restTemplate;
 	
 	@Autowired

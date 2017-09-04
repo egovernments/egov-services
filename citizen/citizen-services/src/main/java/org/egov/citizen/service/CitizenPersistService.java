@@ -363,6 +363,7 @@ public class CitizenPersistService {
 		          .append(pGPayLoadResponse.getServiceRequestId()).append(delimiter)
 		          .append(pGPayLoadResponse.getUid());
 		
+		LOGGER.info("msg to be hashed: "+msgForHash.toString());
 		String hashKey = applicationProperties.getHashKey();
 		String responseHash = getHashedValue(msgForHash.toString(), hashKey);
 		

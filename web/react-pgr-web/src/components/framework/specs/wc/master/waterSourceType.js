@@ -11,7 +11,7 @@ var dat = {
 				"name": "createSourceType",
 				"fields": [
 						{
-							"name": "Name",
+							"name": "name",
 							"jsonPath": "SourceType[0].name",
 							"label": "wc.create.sourceType",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
@@ -22,7 +22,7 @@ var dat = {
 							"patternErrMsg": "Length is more than 100"
 						},
 						{
-							"name": "Description",
+							"name": "description",
 							"jsonPath": "SourceType[0].description",
 							"label": "wc.create.description",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
@@ -34,10 +34,10 @@ var dat = {
 						},
 						{
 							"name": "Capacity",
-							"jsonPath": "SourceType[0].description",
+							"jsonPath": "SourceType[0].sourceCapacity",
 							"label": "wc.create.capacityOfSource",
-							"pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
-							"type": "number",
+							"pattern": "^\\d+(\\.\\d{1,2})?$",
+							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -45,15 +45,15 @@ var dat = {
 						},
 						{
 							"name": "Reservation",
-							"jsonPath": "SourceType[0].description",
+							"jsonPath": "SourceType[0].ulbReserved",
 							"label": "wc.create.reservationForUlb",
-							"pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
-							"type": "number",
+							"pattern": "^\\d+(\\.\\d{1,2})?$",
+							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
-						}
+						},
 						{
 							"name": "Active",
 							"jsonPath": "SourceType[0].active",
@@ -148,6 +148,28 @@ var dat = {
 							"patternErrMsg": ""
 						},
 						{
+							"name": "Capacity",
+							"jsonPath": "SourceTypes[0].sourceCapacity",
+							"label": "wc.create.capacityOfSource",
+							"pattern": "^\\d+(\\.\\d{1,2})?$",
+							"type": "text",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "Reservation",
+							"jsonPath": "SourceTypes[0].ulbReserved",
+							"label": "wc.create.reservationForUlb",
+							"pattern": "^\\d+(\\.\\d{1,2})?$",
+							"type": "text",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
 							"name": "Active",
 							"jsonPath": "SourceTypes[0].active",
 							"label": "wc.create.active",
@@ -165,11 +187,11 @@ var dat = {
 	"wc.update": {
 		"numCols": 12/3,
 		"searchUrl": "/wcms/masters/sourcetype/_search?id={id}",
-		"url":"/wcms/masters/sourcetype/{SourceType.code}/_update",
+		"url":"/wcms/masters/sourcetype/_update",
 		"isResponseArray":true,
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "SourceType",
+		"objectName": "SourceTypes[0]",
 		"groups": [
 			{
 				"label": "wc.update.sourceType.title",
@@ -177,7 +199,7 @@ var dat = {
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "SourceType[0].name",
+							"jsonPath": "SourceTypes[0].name",
 							"label": "wc.create.sourceType",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
@@ -188,7 +210,7 @@ var dat = {
 						},
 						{
 							"name": "description",
-							"jsonPath": "SourceType[0].description",
+							"jsonPath": "SourceTypes[0].description",
 							"label": "wc.create.description",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
 							"type": "text",
@@ -198,8 +220,30 @@ var dat = {
 							"patternErrMsg": "Length is more than 250"
 						},
 						{
+							"name": "Capacity",
+							"jsonPath": "SourceTypes[0].sourceCapacity",
+							"label": "wc.create.capacityOfSource",
+							"pattern": "^\\d+(\\.\\d{1,2})?$",
+							"type": "text",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
+							"name": "Reservation",
+							"jsonPath": "SourceTypes[0].ulbReserved",
+							"label": "wc.create.reservationForUlb",
+							"pattern": "^\\d+(\\.\\d{1,2})?$",
+							"type": "text",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						},
+						{
 							"name": "Active",
-							"jsonPath": "SourceType[0].active",
+							"jsonPath": "SourceTypes[0].active",
 							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",

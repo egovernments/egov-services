@@ -794,6 +794,7 @@ var localization_EN_Data = {
     "tl.view.groups.categorytype.title": "View License Category",
     "tl.view.groups.categorytype.name": "Name",
     "tl.view.groups.categorytype.code": "Code",
+    "tl.view.groups.categorytype.active": "Active",
     "tl.update.groups.categorytype.title": "Update License Category",
     "tl.update.groups.categorytype.name": "Name",
     "tl.update.groups.categorytype.code": "Code",

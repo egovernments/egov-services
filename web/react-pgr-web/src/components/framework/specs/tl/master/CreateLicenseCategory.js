@@ -86,10 +86,10 @@ var dat = {
 	},
 	"tl.view": {
 		"numCols": 12/2,
-		"url": "/tl-masters/category/v1/_search?id={id}",
+		"url": "/tl-masters/category/v1/_search?ids={id}",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "categories",
+		"objectName": "categories[0]",
 		"groups": [
 			{
 				"label": "tl.view.groups.categorytype.title",

@@ -26,11 +26,11 @@ public class RouterQueryBuilder {
         + "(nextval('seq_egpgr_router'),?,?,?,?,?,?,?,?,?)";
     private static final String INSERT_ROUTER_WITHOUT_SERVICE = "INSERT INTO egpgr_router(id, position, bndryid, version, createdby, createddate, lastmodifiedby, lastmodifieddate,tenantid) values"
         + "(nextval('seq_egpgr_router'),?,?,?,?,?,?,?,?)";
-    private static final String UPDATE_ROUTER = "update egpgr_router SET position =?, version=?, createdby=?, createddate=?, lastmodifiedby=?, lastmodifieddate=?, active = ? where bndryid = ? and (complainttypeid is null or (complainttypeid is not null and complainttypeid = ?)) and tenantid=?";
+    private static final String UPDATE_ROUTER = "update egpgr_router SET position =?, version=?, createdby=?, createddate=?, lastmodifiedby=?, lastmodifieddate=?, active = ? where bndryid = ? and complainttypeid= ? and tenantid=?";
 
     private static final String UPDATE_ROUTER_WITHOUT_SERVICE = "update egpgr_router SET position =?, version=?, createdby=?, createddate=?, lastmodifiedby=?, lastmodifieddate=?, active = ? where bndryid = ? and tenantid=?";
 
-    private static final String CHECK_DUPLICATE = "select * from egpgr_router where (complainttypeid is null or (complainttypeid is not null and complainttypeid = ?)) and bndryid = ? and tenantid = ?";
+    private static final String CHECK_DUPLICATE = "select * from egpgr_router where complainttypeid = ? and bndryid = ? and tenantid = ?";
 
     private static final String CHECK_DUPLICATE_WITHOUT_SERVICE = "select * from egpgr_router where complainttypeid IS NULL and bndryid = ? and tenantid=?";
 

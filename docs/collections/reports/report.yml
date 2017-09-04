@@ -257,7 +257,8 @@ ReportDefinitions:
     searchClause: AND us.username =$collectedby
   query: SELECT row_number() over (order by CH.RECEIPTNUMBER) as serialnumber, CH.RECEIPTNUMBER AS RECEIPT_NUMBER, ED.NAME AS DEPT_NAME, IH.transactionnumber AS CHEQUE_NUMBER, BK.name AS BANK, 
          IH.branchname AS BRANCH, IH.transactiondate AS CHEQUE_DATE, IH.amount AS AMOUNT, EG_BUSINESSDETAILS.NAME AS SERVICE_NAME FROM EGCL_RECEIPTHEADER CH, EG_DEPARTMENT ED, EGCL_RECEIPTINSTRUMENT CI, EGF_INSTRUMENT IH, egf_BANK BK,
-         egeis_assignment ass, eg_user us, EG_BUSINESSDETAILS EG_BUSINESSDETAILS WHERE ED.code=CH.DEPARTMENT AND CI.receiptheader=CH.ID AND IH.ID=CI.INSTRUMENTHEADER AND IH.BANKID=BK.code AND IH.INSTRUMENTTYPEID IN ('Cheque','DD') AND CH.createdby = ass.positionid and ass.employeeid=us.id AND CH.BUSINESSDETAILS = EG_BUSINESSDETAILS.CODE AND CH.tenantid=$tenantid ORDER BY RECEIPT_NUMBER;
+         egeis_assignment ass, eg_user us, EG_BUSINESSDETAILS EG_BUSINESSDETAILS WHERE ED.code=CH.DEPARTMENT AND CI.receiptheader=CH.ID AND IH.ID=CI.INSTRUMENTHEADER AND IH.BANKID=cast(BK.id as VARCHAR) AND IH.INSTRUMENTTYPEID IN ('Cheque','DD')
+         AND CH.createdby = ass.employeeid and ass.employeeid=us.id AND CH.BUSINESSDETAILS = EG_BUSINESSDETAILS.CODE AND CH.tenantid=$tenantid ORDER BY RECEIPT_NUMBER;
   
   
 - reportName: CollectionSummaryAccountHeadWise 
@@ -337,13 +338,7 @@ ReportDefinitions:
     pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=$tenantid|$..key|$..object
     source: collection
     isMandatory: false
-    searchClause : AND EGCL_RECEIPTHEADER.STATUS = $status 
-  - name: servicename
-    label: reports.collection.service.name
-    type: singlevaluelist
-    pattern: http://collection-services:8080/collection-services/receipts/_getDistinctBusinessDetails?tenantId=$tenantid|$..code|$..name
-    isMandatory: false
-    searchClause: AND EGCL_RECEIPTHEADER.businessdetails = $servicename
+    searchClause : AND EGCL_RECEIPTHEADER.STATUS = $status
   - name: paymentmode
     label: reports.collection.paymentmode
     type: singlevaluelist

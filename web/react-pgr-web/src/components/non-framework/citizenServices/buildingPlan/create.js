@@ -29,62 +29,62 @@ let baseUrl="https://raw.githubusercontent.com/abhiegov/test/master/specs/";
 
 let documents=[{
   "from":"",
-  "timeStamp":"",
+  "timeStamp": new Date().getTime(),
   "filePath":"",
   "name":"Application on builder Letter head",
   "remarks":""
   },{
   "from":"",
-  "timeStamp":"",
+  "timeStamp": new Date().getTime(),
   "filePath":"",
   "name":"Application on Architect letter head",
   "remarks":""
 },
 {
   "from":"",
-  "timeStamp":"",
+  "timeStamp": new Date().getTime(),
   "filePath":"",
   "name":"D.G. Certifiacte",
   "remarks":""
 },
 {
   "from":"",
-  "timeStamp":"",
+  "timeStamp": new Date().getTime(),
   "filePath":"",
   "name":"Rs.100 Stamp paper agreement",
   "remarks":""
 },
 {
   "from":"",
-  "timeStamp":"",
+  "timeStamp": new Date().getTime(),
   "filePath":"",
   "name":"Agency certificate",
   "remarks":""
 },
 {
   "from":"",
-  "timeStamp":"",
+  "timeStamp": new Date().getTime(),
   "filePath":"",
   "name":"Building permission certificate",
   "remarks":""
 },
 {
   "from":"",
-  "timeStamp":"",
+  "timeStamp": new Date().getTime(),
   "filePath":"",
   "name":"Lift certificate",
   "remarks":""
 },
 {
   "from":"",
-  "timeStamp":"",
+  "timeStamp": new Date().getTime(),
   "filePath":"",
   "name":"Architectural plan",
   "remarks":""
 },
 {
   "from":"",
-  "timeStamp":"",
+  "timeStamp": new Date().getTime(),
   "filePath":"",
   "name":"Copy of intials /Ammended NOC issued by fire brigade department",
   "remarks":""

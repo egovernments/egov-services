@@ -63,7 +63,7 @@ var dat = {
 				"fields": [
 						{
 							"name": "category",
-							"jsonPath": "name",
+							"jsonPath": "categoryId",
 							"label": "tl.search.groups.categorytype.category",
 							"pattern": "",
 							"type": "singleValueList",

@@ -288,7 +288,7 @@ public class WorkflowMatrixImpl implements Workflow {
 		processInstance.setTenantId(jurisdiction);
 		State state = null;
 		if (processInstance.getId() != null && !processInstance.getId().isEmpty())
-			state = stateService.findOne(Long.valueOf(processInstance.getId()));
+			state = stateService.findByIdAndTenantId(Long.valueOf(processInstance.getId()),jurisdiction);
 		if (state != null) {
 			processInstance.setBusinessKey(state.getType());
 			if (state.getOwnerPosition() != null)

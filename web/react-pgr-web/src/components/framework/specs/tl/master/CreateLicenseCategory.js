@@ -78,7 +78,7 @@ var dat = {
 		],
 		"result": {
 			"header": [{label: "tl.create.groups.categorytype.name"},{label: "tl.create.groups.categorytype.code"}, {label: "tl.create.groups.categorytype.active"}],
-			"values": ["code","name", "active"],
+			"values": ["name","code", "active"],
 			"resultPath": "categories",
 			"rowClickUrlUpdate": "/update/tl/CreateLicenseCategory/{id}",
 			"rowClickUrlView": "/view/tl/CreateLicenseCategory/{id}"
@@ -135,12 +135,12 @@ var dat = {
 	},
 	"tl.update": {
 		"numCols": 12/2,
-		"searchUrl": "/tl-masters/category/v1/_search?id={id}",
-		"url": "/tl-masters/tl-tradelicense/category/v1/{categories.code}/_update",
+		"searchUrl": "/tl-masters/category/v1/_search?ids={id}",
+		"url": "/tl-masters/category/v1/_update",
 		"isResponseArray":true,
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "categories",
+		"objectName": "categories[0]",
 		"groups": [
 			{
 				"label": "tl.update.groups.categorytype.title",
@@ -148,7 +148,7 @@ var dat = {
 				"fields": [
 					{
 						"name": "name",
-						"jsonPath": "categories.name",
+						"jsonPath": "categories[0].name",
 						"label": "tl.update.groups.categorytype.name",
 						"pattern": "^.[a-zA-Z. ]{2,49}$",
 						"type": "text",
@@ -159,18 +159,18 @@ var dat = {
 					},
 					{
 						"name": "code",
-						"jsonPath": "categories.code",
+						"jsonPath": "categories[0].code",
 						"label": "tl.update.groups.categorytype.code",
 						"pattern": "^.[A-Za-z0-9]{14,14}$",
 						"type": "text",
 						"isRequired": true,
-						"isDisabled": false,
+						"isDisabled": true,
 						"requiredErrMsg": "",
 						"patternErrMsg": "Enter 15 digit Alpha/Numeric Code"
 					},
 					{
 						"name": "active",
-						"jsonPath": "categories.active",
+						"jsonPath": "categories[0].active",
 						"label": "tl.update.groups.categorytype.active",
 						"pattern": "",
 						"type": "checkbox",

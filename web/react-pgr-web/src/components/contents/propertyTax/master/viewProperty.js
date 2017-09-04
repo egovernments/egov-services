@@ -197,66 +197,66 @@ class ViewProperty extends Component {
 			  })
       })	
 		
+			
+		Api.commonApiPost('pt-property/property/propertytypes/_search',{}, {},false, true).then((res)=>{
+	        currentThis.setState({propertytypes:res.propertyTypes})
+	    }).catch((err)=> {
+	        currentThis.setState({
+	          propertytypes:[]
+	        })
+	    }) 
+
+		Api.commonApiPost('pt-property/property/departments/_search',{}, {},false, true).then((res)=>{
+		  currentThis.setState({
+			departments:res.departments
+		  })
+		}).catch((err)=> {
+		  console.log(err)
+			console.log(err);
+		})
 		
-	Api.commonApiPost('pt-property/property/propertytypes/_search',{}, {},false, true).then((res)=>{
-        currentThis.setState({propertytypes:res.propertyTypes})
-    }).catch((err)=> {
-        currentThis.setState({
-          propertytypes:[]
-        })
-    }) 
+		Api.commonApiPost('pt-property/property/floortypes/_search',{}, {},false, true).then((res)=>{
+	      console.log(res);
+		  res.floorTypes.unshift({code:-1, name:'None'})
+	      currentThis.setState({floortypes:res.floorTypes})
+	    }).catch((err)=> {
+	      currentThis.setState({
+	        floortypes:[]
+	      })
+	      console.log(err)
+	    })
 
-	Api.commonApiPost('pt-property/property/departments/_search',{}, {},false, true).then((res)=>{
-	  currentThis.setState({
-		departments:res.departments
-	  })
-	}).catch((err)=> {
-	  console.log(err)
-		console.log(err);
-	})
-	
-	Api.commonApiPost('pt-property/property/floortypes/_search',{}, {},false, true).then((res)=>{
-      console.log(res);
-	  res.floorTypes.unshift({code:-1, name:'None'})
-      currentThis.setState({floortypes:res.floorTypes})
-    }).catch((err)=> {
-      currentThis.setState({
-        floortypes:[]
-      })
-      console.log(err)
-    })
+	    Api.commonApiPost('pt-property/property/rooftypes/_search',{}, {},false, true).then((res)=>{
+	      console.log(res);
+	      currentThis.setState({rooftypes: res.roofTypes})
+	    }).catch((err)=> {
+	      currentThis.setState({
+	        rooftypes: []
+	      })
+	      console.log(err.message)
+	    })
 
-    Api.commonApiPost('pt-property/property/rooftypes/_search',{}, {},false, true).then((res)=>{
-      console.log(res);
-      currentThis.setState({rooftypes: res.roofTypes})
-    }).catch((err)=> {
-      currentThis.setState({
-        rooftypes: []
-      })
-      console.log(err.message)
-    })
+	    Api.commonApiPost('pt-property/property/walltypes/_search',{}, {},false, true).then((res)=>{
+	      console.log(res);
+	      currentThis.setState({walltypes: res.wallTypes})
+	    }).catch((err)=> {
+	      currentThis.setState({
+	        walltypes:[]
+	      })
+	      console.log(err.message)
+	    })								
 
-    Api.commonApiPost('pt-property/property/walltypes/_search',{}, {},false, true).then((res)=>{
-      console.log(res);
-      currentThis.setState({walltypes: res.wallTypes})
-    }).catch((err)=> {
-      currentThis.setState({
-        walltypes:[]
-      })
-      console.log(err.message)
-    })
-
-    Api.commonApiPost('pt-property/property/woodtypes/_search',{}, {},false, true).then((res)=>{
-      console.log(res);
-      currentThis.setState({woodtypes: res.woodTypes})
-    }).catch((err)=> {
-      currentThis.setState({
-        woodtypes:[]
-      })
-    })
+	    Api.commonApiPost('pt-property/property/woodtypes/_search',{}, {},false, true).then((res)=>{
+	      console.log(res);
+	      currentThis.setState({woodtypes: res.woodTypes})
+	    }).catch((err)=> {
+	      currentThis.setState({
+	        woodtypes:[]
+	      })
+	    })
 	
 	
-	Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"LOCALITY", hierarchyTypeName:"LOCATION"}).then((res)=>{
+		Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"LOCALITY", hierarchyTypeName:"LOCATION"}).then((res)=>{
           console.log(res);
           currentThis.setState({locality : res.Boundary})
         }).catch((err)=> {
@@ -266,7 +266,7 @@ class ViewProperty extends Component {
           console.log(err.message)
         })
 
-         Api.commonApiPost('pt-property/property/apartments/_search',{}, {},false, true).then((res)=>{
+         Api.commonApiPost('pt-property/property/apartment/_search',{}, {},false, true).then((res)=>{
           console.log(res);
           currentThis.setState({apartments:res.apartments})
         }).catch((err)=> {
@@ -324,8 +324,6 @@ class ViewProperty extends Component {
           console.log(err)
         })
 
-
-
         Api.commonApiPost('pt-property/property/structureclasses/_search').then((res)=>{
           console.log(res);
           currentThis.setState({structureclasses: res.structureClasses})
@@ -346,7 +344,7 @@ class ViewProperty extends Component {
         }).catch((err)=> {
           console.log(err)
         })
-		
+
 		var temp = this.state.floorNumber;
 		
 		for(var i=5;i<=34;i++){
@@ -363,14 +361,11 @@ class ViewProperty extends Component {
 				name:(i-4)+label+" Floor"
 			}
 			temp.push(commonFloors);
-			
-		}
+		}							
 		
-		  this.setState({
-			  floorNumber: temp
-		  })
-		  		
-  
+	  this.setState({
+		  floorNumber: temp
+	  })
 }
 
   componentWillUnmount(){
@@ -384,6 +379,22 @@ class ViewProperty extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     
+  }
+
+  getBoundary = (bId) => {
+
+  		var userRequest = JSON.parse(localStorage.getItem("userRequest"));
+
+  		var query = {
+  			"Boundary.id" : bId,
+  			"Boundary.tenantId" : userRequest.tenantId
+  		}
+
+  	    Api.commonApiPost('egov-location/boundarys', query).then((res)=>{
+          console.log(res);
+        }).catch((err)=> {
+          console.log(err)
+        })
   }
 
   render() {
@@ -543,7 +554,7 @@ class ViewProperty extends Component {
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.zoneNo')}</div>
-												   {getNameById(this.state.zone, item.boundary.revenueBoundary.id) || translate('pt.search.searchProperty.fields.na')}
+												   {this.getBoundary(item.boundary.revenueBoundary.id) || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.blockNo')}</div>
@@ -603,7 +614,7 @@ class ViewProperty extends Component {
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.usageType')}</div>
-												   {translate('pt.search.searchProperty.fields.na')}
+												   {getNameByCode(this.state.usages ,item.propertyDetail.usage) || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											   <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.usageSubType')}</div>
@@ -708,7 +719,7 @@ class ViewProperty extends Component {
                                                     <td>{getNameByCode(currentThis.state.occupancies,i.occupancyType) || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.occupierName || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.annualRent || translate('pt.search.searchProperty.fields.na')}</td>
-                                                    <td>{parseFloat(i.manualArv) || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{parseFloat(i.manualArv).toString() || translate('pt.search.searchProperty.fields.na')}</td>
 													<td>{i.constructionStartDate ?  i.constructionStartDate.split(' ')[0] : translate('pt.search.searchProperty.fields.na') }</td>
                                                     <td>{i.constCompletionDate ? i.constCompletionDate.split(' ')[0] : translate('pt.search.searchProperty.fields.na') }</td>
                                                     <td>{i.occupancyDate ? i.occupancyDate.split(' ')[0]  : translate('pt.search.searchProperty.fields.na') }</td>

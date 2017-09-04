@@ -23,7 +23,7 @@ const defaultState = {
   hasDemandError: false,
   isDatesValid : { type : '',
                    error : false},
-
+  isPrimaryOwner: 'PrimaryOwner'                 
 };
 
 
@@ -314,6 +314,12 @@ function validateDates(floordata, type) {
 
 export default(state = defaultState, action) => {
   switch (action.type) {
+
+    case "HANDLE_PRIMARY_OWNER":
+      return {
+        ...state,
+        isPrimaryOwner: action.isPrimaryOwner
+      }
 
   case "VALIDATE_DATES": 
     var validationData = validateDates(state.form, action.propertyOne);
@@ -855,7 +861,8 @@ export default(state = defaultState, action) => {
         isDatesValid: {
           error:false,
           type:''
-        }
+        },
+        isPrimaryOwner: action.isPrimaryOwner,
       }
       break;
 

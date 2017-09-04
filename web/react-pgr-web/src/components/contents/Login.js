@@ -192,42 +192,40 @@ class Login extends Component {
       params.append('tenantId', typeof(props.match.params.tenantId)!="undefined"?props.match.params.tenantId:'default');
 
       instance.post('/user/oauth/token', params).then(function(response) {
-        localStorage.setItem("auth-token", response.data.access_token);
-        localStorage.setItem("token", response.data.access_token);
-        localStorage.setItem("userRequest", JSON.stringify(response.data.UserRequest));
-        localStorage.setItem("auth", response.data.access_token);
-				localStorage.setItem("type", response.data.UserRequest.type);
-				localStorage.setItem("id", response.data.UserRequest.id);
-				localStorage.setItem("tenantId", response.data.UserRequest.tenantId);
+      localStorage.setItem("auth-token", response.data.access_token);
+      localStorage.setItem("token", response.data.access_token);
+      localStorage.setItem("userRequest", JSON.stringify(response.data.UserRequest));
+      localStorage.setItem("auth", response.data.access_token);
+			localStorage.setItem("type", response.data.UserRequest.type);
+			localStorage.setItem("id", response.data.UserRequest.id);
+			localStorage.setItem("tenantId", response.data.UserRequest.tenantId);
 
 
-        if(window.location.href.indexOf("?") > -1 && window.location.href.indexOf("link") > -1) {
-          var query = window.location.href.split("?")[1].split("&");
-          props.login(false, response.data.access_token, response.data.UserRequest, true);
-          for(var i=0; i<query.length; i++) {
-            if(query[i].indexOf("link") > -1) {
-              switch(query[i].split("=")[1]) {
-                case 'waternodue':
-                  self.props.setRoute("/non-framework/citizenServices/no-dues/search/wc");
-                  break;
-                case  'propertytaxextract':
-                  self.props.setRoute("/non-framework/citizenServices/no-dues/extract/pt");
-                  break;
-                case 'propertytaxdue':
-                  self.props.setRoute("/non-framework/citizenServices/no-dues/search/pt");
-                  break;
-              }
+      if(window.location.href.indexOf("?") > -1 && window.location.href.indexOf("link") > -1) {
+        var query = window.location.href.split("?")[1].split("&");
+        props.login(false, response.data.access_token, response.data.UserRequest, true);
+        for(var i=0; i<query.length; i++) {
+          if(query[i].indexOf("link") > -1) {
+            switch(query[i].split("=")[1]) {
+              case 'waternodue':
+                self.props.setRoute("/non-framework/citizenServices/no-dues/search/wc");
+                break;
+              case  'propertytaxextract':
+                self.props.setRoute("/non-framework/citizenServices/no-dues/extract/pt");
+                break;
+              case 'propertytaxdue':
+                self.props.setRoute("/non-framework/citizenServices/no-dues/search/pt");
+                break;
             }
           }
-        } else
-          props.login(false, response.data.access_token, response.data.UserRequest);
-
-
+        }
+      } else
+        props.login(false, response.data.access_token, response.data.UserRequest);
+        
         let roleCodes=[];
         for (var i = 0; i < response.data.UserRequest.roles.length; i++) {
           roleCodes.push(response.data.UserRequest.roles[i].code);
         }
-
 
         Api.commonApiPost("access/v1/actions/_get",{},{tenantId:response.data.UserRequest.tenantId,roleCodes,enabled:true}).then(function(response){
           var actions = response.actions;

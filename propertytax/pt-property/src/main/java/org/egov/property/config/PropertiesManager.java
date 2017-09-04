@@ -293,6 +293,8 @@ public class PropertiesManager {
 	private String propertyUnitAge;
 
 	private String invalidCategory;
+	
+	private String date;
 
 	public String getInvalidInput() {
 		return environment.getProperty("invalid.input");
@@ -809,6 +811,10 @@ public class PropertiesManager {
 
 	public String getInvalidCategory() {
 		return environment.getProperty("invalid.property.category");
+	}
+
+	public String getDate() {
+		return environment.getProperty("egov.property.date");
 	}
 
 }

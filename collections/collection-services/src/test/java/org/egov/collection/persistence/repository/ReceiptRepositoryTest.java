@@ -36,7 +36,7 @@
  *         or trademarks of eGovernments Foundation.
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
- 
+ */
 package org.egov.collection.persistence.repository;
 
 import static org.junit.Assert.*;
@@ -164,7 +164,7 @@ public class ReceiptRepositoryTest {
 							receiptInfo.getBill().get(0).getPaidBy(), receiptInfo.getAuditDetails().getCreatedDate() },
 					Long.class)).thenThrow(Exception.class);
 		
-		receiptRepository.persistToReceiptHeader(parametersMap, receiptInfo);
+		receiptRepository.persistToReceiptHeader(parametersMap);
 		
 	} 
 	
@@ -189,7 +189,7 @@ public class ReceiptRepositoryTest {
 		Mockito.when(ReceiptDetailQueryBuilder.insertReceiptDetails()).thenThrow(Exception.class);
 		Mockito.when(namedParameterJdbcTemplate.batchUpdate(queryReceiptDetails, parametersReceiptDetails)).thenReturn(result);
 		
-		receiptRepository.persistToReceiptDetails(parametersReceiptDetails, 1);
+		receiptRepository.persistToReceiptDetails(parametersReceiptDetails);
 	} 
 	 
 	@Test
@@ -230,7 +230,7 @@ public class ReceiptRepositoryTest {
 		assertNotNull(receiptRepository.pushReceiptCancelDetailsToQueue(getReceiptRequest()));
 	}
 	
-	@Test
+	/*@Test
 	public void test_should_update_status_and_stateId_toDB(){
 	
 		when(receiptDetailQueryBuilder.getQueryForUpdate(2L,"CANCELLED", 1L, "default"))
@@ -244,7 +244,7 @@ public class ReceiptRepositoryTest {
 	public void test_should_be_able_to_push_update_status_request_to_kafka(){
 		receiptRepository.pushUpdateDetailsToQueque(getReceiptRequest());
 		verify(collectionProducer).producer(any(String.class), any(String.class), any(ReceiptReq.class));
-	}
+	}*/
 
 	private ReceiptReq getReceiptRequest() {
 
@@ -346,4 +346,4 @@ public class ReceiptRepositoryTest {
 
 		return Arrays.asList(header1, header2);
 	}
-}*/
+}

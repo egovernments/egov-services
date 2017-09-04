@@ -2,20 +2,17 @@ package org.egov.demand.web.validator;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-import org.egov.demand.model.Demand;
+import org.egov.demand.model.BusinessServiceDetail;
 import org.egov.demand.model.TaxHeadMaster;
 import org.egov.demand.model.TaxHeadMasterCriteria;
-import org.egov.demand.model.TaxPeriod;
+import org.egov.demand.service.BusinessServDetailService;
 import org.egov.demand.service.TaxHeadMasterService;
 import org.egov.demand.service.TaxPeriodService;
-import org.egov.demand.web.contract.DemandRequest;
+import org.egov.demand.web.contract.BusinessServiceDetailCriteria;
 import org.egov.demand.web.contract.TaxHeadMasterRequest;
 import org.egov.demand.web.contract.TaxHeadMasterResponse;
-import org.egov.demand.web.contract.TaxPeriodCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -32,6 +29,10 @@ public class TaxHeadMasterValidator implements Validator {
 
 	@Autowired
 	private TaxPeriodService taxPeriodService;
+	
+	@Autowired
+	private BusinessServDetailService businessService;
+	
 	@Override
 	public boolean supports(Class<?> clazz) {
 
@@ -54,18 +55,36 @@ public class TaxHeadMasterValidator implements Validator {
 		log.debug(":::::in validator class:::::::" + taxHeadsRequest);
 		List<TaxHeadMaster> taxHeads = taxHeadsRequest.getTaxHeadMasters();
 		TaxHeadMasterCriteria taxHeadMasterCriteria = null;
+		BusinessServiceDetailCriteria businessServiceDetailCriteria = null;
+		Set<String> bServices = new HashSet<>();
 
 		for (TaxHeadMaster master : taxHeads) {
+
 			if (!master.getTenantId().equalsIgnoreCase(taxHeads.get(0).getTenantId()))
 				error.rejectValue("TaxHeadMasters", "", "Tenant id should be same in all objects");
-			Set<String> code=new HashSet<>();
+
+			bServices.add(master.getService());
+			businessServiceDetailCriteria = BusinessServiceDetailCriteria.builder().tenantId(master.getTenantId())
+					.businessService(bServices).build();
+			List<BusinessServiceDetail> businessServiceDetails = businessService
+					.searchBusinessServiceDetails(businessServiceDetailCriteria, taxHeadsRequest.getRequestInfo())
+					.getBusinessServiceDetails();
+
+			if (businessServiceDetails.isEmpty())
+				error.rejectValue("TaxHeadMasters", "", "BusinessService: " + master.getService() + " does not exist");
+
+			Set<String> code = new HashSet<>();
 			code.add(master.getCode());
+			bServices.add(master.getService());
 			taxHeadMasterCriteria = TaxHeadMasterCriteria.builder().tenantId(master.getTenantId())
 					.service(master.getService()).code(code).build();
+
 			final TaxHeadMasterResponse taxHeadMasterResponse = taxHeadMasterService.getTaxHeads(taxHeadMasterCriteria,
 					taxHeadsRequest.getRequestInfo());
+
 			if (!taxHeadMasterResponse.getTaxHeadMasters().isEmpty())
-				error.rejectValue("TaxHeadMasters", "", "Record Already exist");
+				error.rejectValue("TaxHeadMasters", "", "Record with tenantId: " + master.getTenantId() + ", Service: "
+						+ master.getService() + " and Code: " + master.getCode() + " Already exist");
 		}
 	}
 	

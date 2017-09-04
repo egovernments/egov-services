@@ -64,4 +64,7 @@ public class PropertiesManager {
     @Value("${egov.services.filestore.searchpath}")
     private String fileStoreSearchPath;
 
+    @Value("${kafka.topics.position.sync.name}")
+    private String savePositionTopic;
+
 }

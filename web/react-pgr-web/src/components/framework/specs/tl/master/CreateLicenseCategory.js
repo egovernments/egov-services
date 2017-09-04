@@ -14,24 +14,24 @@ var dat = {
 							"name": "name",
 							"jsonPath": "categories[0].name",
 							"label": "tl.create.groups.categorytype.name",
-							"pattern": "^.[a-zA-Z. ]{1,99}$",
+							"pattern": "^.[a-zA-Z. ]{2,99}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": "Enter Valid Trade Owner Name (Min:4, Max:100)",
+							"patternErrMsg": "Enter Valid Trade Owner Name (Min:3, Max:100)",
 							"maxLength": "100"
 						},
 						{
 							"name": "code",
 							"jsonPath": "categories[0].code",
 							"label": "tl.create.groups.categorytype.code",
-							"pattern": "^.[A-Za-z0-9]{1,19}$",
+							"pattern": "^.[A-Za-z0-9]{0,19}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": "Enter Valid Code (Alpha-Numeric, Min:1, Max:20)",
+							"patternErrMsg": "Enter Valid Code (Alpha-Numeric, Max:20)",
 							"maxLength": "20"
 						},
 						{
@@ -78,7 +78,7 @@ var dat = {
 		],
 		"result": {
 			"header": [{label: "tl.create.groups.categorytype.name"},{label: "tl.create.groups.categorytype.code"}, {label: "tl.create.groups.categorytype.active"}],
-			"values": ["code","name", "active"],
+			"values": ["name","code", "active"],
 			"resultPath": "categories",
 			"rowClickUrlUpdate": "/update/tl/CreateLicenseCategory/{id}",
 			"rowClickUrlView": "/view/tl/CreateLicenseCategory/{id}"
@@ -86,10 +86,10 @@ var dat = {
 	},
 	"tl.view": {
 		"numCols": 12/2,
-		"url": "/tl-masters/category/v1/_search?id={id}",
+		"url": "/tl-masters/category/v1/_search?ids={id}",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "categories",
+		"objectName": "categories[0]",
 		"groups": [
 			{
 				"label": "tl.view.groups.categorytype.title",
@@ -135,12 +135,12 @@ var dat = {
 	},
 	"tl.update": {
 		"numCols": 12/2,
-		"searchUrl": "/tl-masters/category/v1/_search?id={id}",
-		"url": "/tl-masters/tl-tradelicense/category/v1/{categories.code}/_update",
+		"searchUrl": "/tl-masters/category/v1/_search?ids={id}",
+		"url": "/tl-masters/category/v1/_update",
 		"isResponseArray":true,
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "categories",
+		"objectName": "categories[0]",
 		"groups": [
 			{
 				"label": "tl.update.groups.categorytype.title",
@@ -148,7 +148,7 @@ var dat = {
 				"fields": [
 					{
 						"name": "name",
-						"jsonPath": "categories.name",
+						"jsonPath": "categories[0].name",
 						"label": "tl.update.groups.categorytype.name",
 						"pattern": "^.[a-zA-Z. ]{2,49}$",
 						"type": "text",
@@ -159,18 +159,18 @@ var dat = {
 					},
 					{
 						"name": "code",
-						"jsonPath": "categories.code",
+						"jsonPath": "categories[0].code",
 						"label": "tl.update.groups.categorytype.code",
 						"pattern": "^.[A-Za-z0-9]{14,14}$",
 						"type": "text",
 						"isRequired": true,
-						"isDisabled": false,
+						"isDisabled": true,
 						"requiredErrMsg": "",
 						"patternErrMsg": "Enter 15 digit Alpha/Numeric Code"
 					},
 					{
 						"name": "active",
-						"jsonPath": "categories.active",
+						"jsonPath": "categories[0].active",
 						"label": "tl.update.groups.categorytype.active",
 						"pattern": "",
 						"type": "checkbox",

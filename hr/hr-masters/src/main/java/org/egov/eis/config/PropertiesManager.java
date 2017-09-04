@@ -70,4 +70,8 @@ public class PropertiesManager {
 	@Value("${egov.services.egov_common_masters_service.departments.searchpath}")
 	private String commonMastersServiceDepartmentsSearch;
 
+    @Value("${egov.services.data_sync_position.required}")
+    private Boolean dataSyncPositionRequired;
+
+
 }

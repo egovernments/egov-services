@@ -874,7 +874,7 @@ class Report extends Component {
 
     var DemandBillQuery = `?businessService=CS&tenantId=${localStorage.getItem("tenantId")}&consumerCode=`;
     let DemandRequest = {};
-    DemandRequest["Demands"] = self.props.metaData["wc.create"].feeDetails;
+    DemandRequest["Demands"] = Object.assign([], self.props.metaData["wc.create"].feeDetails);
     DemandRequest["Demands"][0].tenantId = localStorage.getItem("tenantId");
     DemandRequest["Demands"][0].consumerCode = "";
     DemandRequest["Demands"][0].owner.id = JSON.parse(localStorage.userRequest).id;

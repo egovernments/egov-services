@@ -138,7 +138,7 @@ public class BankBranchRepositoryTest {
 		request.getBankBranches().add(getBankBranchContract());
 		bankBranchRepository.addToQue(request);
 		Map<String, Object> message = new HashMap<>();
-		message.put("bankBranch_create", request);
+		message.put("bankbranch_create", request);
 		Mockito.verify(bankBranchQueueRepository).add(message);
 	}
 
@@ -152,7 +152,7 @@ public class BankBranchRepositoryTest {
 		request.getBankBranches().add(getBankBranchContract());
 		bankBranchRepository.addToQue(request);
 		Map<String, Object> message = new HashMap<>();
-		message.put("bankBranch_update", request);
+		message.put("bankbranch_update", request);
 		Mockito.verify(bankBranchQueueRepository).add(message);
 	}
 
@@ -165,7 +165,7 @@ public class BankBranchRepositoryTest {
 		request.getBankBranches().add(getBankBranchContract());
 		bankBranchRepository.addToSearchQueue(request);
 		Map<String, Object> message = new HashMap<>();
-		message.put("bankBranch_persisted", request);
+		message.put("bankbranch_persisted", request);
 		Mockito.verify(bankBranchQueueRepository).addToSearch(message);
 	}
 

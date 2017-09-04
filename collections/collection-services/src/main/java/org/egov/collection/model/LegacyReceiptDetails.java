@@ -1,5 +1,6 @@
 package org.egov.collection.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.validation.constraints.NotNull;
@@ -10,35 +11,37 @@ import lombok.Setter;
 @Getter
 @Setter
 public class LegacyReceiptDetails {
-@NotNull
-private Long id;
+    public static final Object SEQ_LEGACY_RECEIPT_DETAILS = "seq_legacy_receipt_details";
 
-private String billNo;
+    @NotNull
+    private Long id;
 
-private Long billId;
+    private String billNo;
 
-private Long billYear;
+    private Long billId;
 
-private Long taxId;
-@NotNull
-private Date billDate;
+    private Long billYear;
 
-private String description;
+    private Long taxId;
+    @NotNull
+    private Long billDate;
 
-private Double currDemand;
+    private String description;
 
-private Double arrDemand;
+    private BigDecimal currDemand;
 
-private Double currCollection;
+    private BigDecimal arrDemand;
 
-private Double arrCollection;
+    private BigDecimal currCollection;
 
-private Double currBalance;
+    private BigDecimal arrCollection;
 
-private Double arrBalance;
+    private BigDecimal currBalance;
 
-@NotNull
-private Long id_receipt_header; 
-@NotNull
-private String tenantid;
+    private BigDecimal arrBalance;
+
+    @NotNull
+    private Long receiptHeaderId;
+    @NotNull
+    private String tenantid;
 }

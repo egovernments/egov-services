@@ -44,7 +44,8 @@ const nameMap = {
   "CREATED": "Created",
   "WATER_NEWCONN": "New Water Connection",
   "CANCELLED": "Request Cancelled",
-  "REJECTED": "Rejected"
+  "REJECTED": "Rejected",
+  "BPA_FIRE_NOC": "Fire NOC"
 };
 
 const content=[

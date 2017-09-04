@@ -88,7 +88,7 @@ public class TradeLicenseServiceValidator {
 			if (tradeLicense.getIsLegacy()) {
 				validateTradeValidFromDate(tradeLicense, requestInfo);
 			}
-			// checking the eistance and uniqueness of licensenumber
+			// checking the existance and uniqueness of licensenumber
 			validateLicenseNumber(tradeLicense, isNewRecord, requestInfo);
 			// checking the agreement details
 			validateLicenseAgreementDetails(tradeLicense, requestInfo);
@@ -214,10 +214,12 @@ public class TradeLicenseServiceValidator {
 			} else if (tradeLicense.getApplication().getApplicationType() == null) {
 				throw new InvalidInputException(propertiesManager.getApplicationTypeMissingErr(), requestInfo);
 			}
-
+			if (tradeLicense.getApplication() != null && tradeLicense.getApplication().getApplicationNumber() != null) {
+			    tradeLicenseRepository.validateUniqueApplicationNumber(tradeLicense, isNewRecord, requestInfo);
+	                }
 		}
 	}
-
+	
 	private void validateLicenseAgreementDetails(TradeLicense tradeLicense, RequestInfo requestInfo) {
 
 		if (tradeLicense.getIsPropertyOwner()) {

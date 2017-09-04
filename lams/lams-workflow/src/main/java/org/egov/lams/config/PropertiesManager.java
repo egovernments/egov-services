@@ -25,9 +25,15 @@ public class PropertiesManager {
 	
 	@Value("${egov.services.workflow_service.taskpath}")
 	private String workflowServiceTaskPAth;
-	
-	@Value("${egov.services.workflow_service.hostname.create_businesskey}")
-	private String workflowServiceCreateBusinessKey;
+
+	@Value("${egov.services.tenant.host}")
+	private String tenantServiceHostName;
+
+	@Value("${egov.services.workflow_service.hostname.create_municipality_businesskey}")
+	private String workflowServiceCreateMunicipalityBusinessKey;
+
+	@Value("${egov.services.workflow_service.hostname.create_corporation_businesskey}")
+	private String workflowServiceCreateCorporationBusinessKey;
 	
 	@Value("${egov.services.workflow_service.hostname.renew_businesskey}")
 	private String workflowServiceRenewBusinessKey;
@@ -67,5 +73,8 @@ public class PropertiesManager {
 	
 	@Value("${egov.services.workflow_service.status.rejected}")
 	private String wfStatusRejected;
+	
+	@Value("${egov.services.city.grade.corp}")
+	private String cityGradeCorp;
 	
 }

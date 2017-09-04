@@ -42,6 +42,7 @@ package org.egov.collection.repository.querybuilder;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.collection.model.Instrument;
+import org.egov.collection.model.LegacyReceiptGetReq;
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.repository.InstrumentRepository;
 import org.egov.common.contract.request.RequestInfo;
@@ -413,74 +414,74 @@ public class ReceiptDetailQueryBuilder {
                 + ":status, :remarks, :createdby, :lastmodifiedby, :createddate, :lastmodifieddate, :tenantId)";
     }
 
-    public String getLegacyReceiptSearchQuery(ReceiptSearchCriteria receiptSearchCriteria, List<Object> preparedStatementValues) {
+    public String getLegacyReceiptSearchQuery(LegacyReceiptGetReq legacyReceiptGetRequest, List<Object> preparedStatementValues) {
         StringBuilder legacySelectQuery = new StringBuilder(LEGACY_RECEIPT_HEADER_QUERY);
-        addWhereClauseForLegacy(receiptSearchCriteria, legacySelectQuery, preparedStatementValues);
-        addOrderByClauseForLegacy(receiptSearchCriteria,legacySelectQuery);
-        addLimitForLegacy(receiptSearchCriteria,legacySelectQuery);
+        addWhereClauseForLegacy(legacyReceiptGetRequest, legacySelectQuery, preparedStatementValues);
+        addOrderByClauseForLegacy(legacyReceiptGetRequest, legacySelectQuery);
+        addLimitForLegacy(legacyReceiptGetRequest, legacySelectQuery);
         return legacySelectQuery.toString();
     }
 
-    private void addLimitForLegacy(ReceiptSearchCriteria receiptSearchCriteria, StringBuilder legacySelectQuery) {
-       if(receiptSearchCriteria.getLimit()!=null){
-           legacySelectQuery.append(" limit " + receiptSearchCriteria.getLimit());
-       }
+    private void addLimitForLegacy(LegacyReceiptGetReq legacyReceiptGetRequest, StringBuilder legacySelectQuery) {
+        if (legacyReceiptGetRequest.getLimit() != null) {
+            legacySelectQuery.append(" limit " + legacyReceiptGetRequest.getLimit());
+        }
     }
 
-    private void addOrderByClauseForLegacy(ReceiptSearchCriteria receiptSearchCriteria, StringBuilder legacySelectQuery) {
-        String sortBy = (receiptSearchCriteria.getSortBy() == null ? "lrh.receiptDate"
-                : "lrh." + receiptSearchCriteria.getSortBy());
-        String sortOrder = (receiptSearchCriteria.getSortOrder() == null ? "DESC" : receiptSearchCriteria
+    private void addOrderByClauseForLegacy(LegacyReceiptGetReq legacyReceiptGetRequest, StringBuilder legacySelectQuery) {
+        String sortBy = (legacyReceiptGetRequest.getSortBy() == null ? "lrh.receiptDate"
+                : "lrh." + legacyReceiptGetRequest.getSortBy());
+        String sortOrder = (legacyReceiptGetRequest.getSortOrder() == null ? "DESC" : legacyReceiptGetRequest
                 .getSortOrder());
-        legacySelectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);         
+        legacySelectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
     }
 
-    private void addWhereClauseForLegacy(ReceiptSearchCriteria receiptSearchCriteria, StringBuilder legacySelectQuery,
+    private void addWhereClauseForLegacy(LegacyReceiptGetReq legacyReceiptGetRequest, StringBuilder legacySelectQuery,
             List<Object> preparedStatementValues) {
-        if (receiptSearchCriteria.getTenantId() == null)
+        if (legacyReceiptGetRequest.getTenantId() == null)
             return;
         legacySelectQuery.append(" WHERE");
         Boolean isAppendAndClause = false;
-        if (receiptSearchCriteria.getTenantId() != null) {
+        if (legacyReceiptGetRequest.getTenantId() != null) {
             isAppendAndClause = true;
             legacySelectQuery.append(" lrh.tenantid = ?");
-            preparedStatementValues.add(receiptSearchCriteria.getTenantId());
+            preparedStatementValues.add(legacyReceiptGetRequest.getTenantId());
         }
-        if (receiptSearchCriteria.getReceiptNumbers() != null) {
+        if (legacyReceiptGetRequest.getReceiptNumbers() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
                     legacySelectQuery);
             legacySelectQuery.append(" lrh.receiptNo ilike any  "
-                    + getNumberQuery(receiptSearchCriteria.getReceiptNumbers()));
+                    + getNumberQuery(legacyReceiptGetRequest.getReceiptNumbers()));
         }
-        if (receiptSearchCriteria.getConsumerNo() != null) {
+        if (legacyReceiptGetRequest.getConsumerNo() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
                     legacySelectQuery);
             legacySelectQuery.append(" lrh.consumerNo = ?");
-            preparedStatementValues.add(receiptSearchCriteria.getConsumerNo());
+            preparedStatementValues.add(legacyReceiptGetRequest.getConsumerNo());
         }
-        if (receiptSearchCriteria.getServiceName() != null) {
+        if (legacyReceiptGetRequest.getServiceName() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
                     legacySelectQuery);
             legacySelectQuery.append(" lrh.serviceName = ?");
-            preparedStatementValues.add(receiptSearchCriteria.getServiceName());
+            preparedStatementValues.add(legacyReceiptGetRequest.getServiceName());
         }
-        if (receiptSearchCriteria.getFromDate() != null) {
+        if (legacyReceiptGetRequest.getFromDate() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
                     legacySelectQuery);
             legacySelectQuery.append(" lrh.receiptDate >= ?");
-            preparedStatementValues.add(receiptSearchCriteria.getFromDate());
+            preparedStatementValues.add(legacyReceiptGetRequest.getFromDate());
         }
-        if (receiptSearchCriteria.getToDate() != null) {
+        if (legacyReceiptGetRequest.getToDate() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
                     legacySelectQuery);
             legacySelectQuery.append(" lrh.receiptDate <= ?");
-            if (receiptSearchCriteria.getToDate().equals(receiptSearchCriteria.getFromDate())) {
+            if (legacyReceiptGetRequest.getToDate().equals(legacyReceiptGetRequest.getFromDate())) {
                 Calendar c = Calendar.getInstance();
-                c.setTime(new Date(receiptSearchCriteria.getToDate()));
+                c.setTime(new Date(legacyReceiptGetRequest.getToDate()));
                 c.add(Calendar.DATE, 1);
-                receiptSearchCriteria.setToDate(c.getTime().getTime());
+                legacyReceiptGetRequest.setToDate(c.getTime().getTime());
             }
-            preparedStatementValues.add(receiptSearchCriteria.getToDate());
+            preparedStatementValues.add(legacyReceiptGetRequest.getToDate());
         }
     }
 
@@ -491,5 +492,32 @@ public class ReceiptDetailQueryBuilder {
                 + "lrd.currBalance as lrd_currBalance,lrd.arrBalance as lrd_arrBalance,lrd.id_receipt_header as lrd_id_receipt_header,"
                 + "lrd.tenantid as lrd_tenantid from egcl_legacy_receipt_details lrd where lrd.tenantid =? and lrd.id_receipt_header =?";
 
+    }
+
+    public String getLegacyReceiptHeaderSequenceNumber() {
+        return "select nextval(:seqNumber)";
+    }
+
+    public String getSequenceNumberForReceiptDetails() {
+        return "select nextval(:seqNumber)";
+    }
+
+    public String getLegacyReceiptHeaderInsertQuery() {
+        return "Insert into egcl_legacy_receipt_header(id,receiptno,receiptdate,department,servicename,"
+                + "consumerno,consumername,totalamount,advanceamount,adjustmentamount,consumeraddress,"
+                + "payeename,instrumenttype,instrumentdate,instrumentno,bankname,manualreceiptnumber,"
+                + "manualreceiptdate,tenantid,remarks) values (:id,:receiptno,:receiptdate,:department,:servicename,"
+                + ":consumerno,:consumername,:totalamount,:advanceamount,:adjustmentamount,:consumeraddress,"
+                + ":payeename,:instrumenttype,:instrumentdate,:instrumentno,:bankname,:manualreceiptnumber,"
+                + ":manualreceiptdate,:tenantid,:remarks)";
+    }
+
+    public String getLegacyReceiptDetailInsertQuery() {
+        return "Insert into egcl_legacy_receipt_details(id,billno,billid,billyear,taxid,billdate,"
+                + "description,currdemand,arrdemand,currcollection,arrcollection,currbalance,"
+                + "arrbalance,id_receipt_header,"
+                + "tenantid) values (:id,:billno,:billid,:billyear,:taxid,:billdate,"
+                + ":description,:currdemand,:arrdemand,:currcollection,:arrcollection,:currbalance,"
+                + ":arrbalance,:receiptheaderid,:tenantid)";
     }
 }

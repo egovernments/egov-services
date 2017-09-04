@@ -1698,6 +1698,14 @@ ReportDefinitions:
     source: seva
     isMandatory: false
     searchClause: and b.id=$wardtype
+  - name: isactive
+    label: pgr.lbl.active
+    type: singlevaluelist
+    pattern: 'list://true:true,false:false'
+    source: seva
+    isMandatory: false
+    searchClause: and ct.isactive=$isactive
+
   query: SELECT COALESCE(ct.name, 'NA'::character varying) AS ctname, p.name AS routerposname, b.name AS bndryname,
          COALESCE(( SELECT esclvl1pos.name FROM egeis_position esclvl1pos WHERE esclvl1pos.id = (( SELECT ph.toposition FROM egpgr_escalation_hierarchy ph WHERE ph.fromposition = r.position AND ph.servicecode::text = ct.code::text))), 'NA'::character varying) AS esclvl1posname,
          COALESCE(( SELECT esclvl2pos.name FROM egeis_position esclvl2pos WHERE esclvl2pos.id = (( SELECT ph.toposition FROM egpgr_escalation_hierarchy ph WHERE ph.servicecode::text = ct.code::text AND ph.fromposition = (( SELECT ph_1.toposition FROM egpgr_escalation_hierarchy ph_1 WHERE ph_1.fromposition = r.position AND ph_1.servicecode::text = ct.code::text))))), 'NA'::character varying) AS esclvl2posname,
@@ -1705,6 +1713,7 @@ ReportDefinitions:
          FROM egpgr_router r LEFT JOIN egpgr_complainttype ct ON r.complainttypeid = ct.id LEFT JOIN egpgr_complainttype_category cc ON ct.category = cc.id
          LEFT JOIN eg_boundary b ON r.bndryid = b.id LEFT JOIN servicetype_keyword sk ON ct.code=sk.servicecode and sk.keyword='complaint'
          LEFT JOIN egeis_position p ON r.position = p.id where r.tenantid=$tenantid and cc.keyword='complaint'
+         and ct.tenantid = sk.tenantid
          and sk.tenantid = $tenantid
   groupBy: ORDER BY r.complainttypeid;
 
@@ -1734,7 +1743,7 @@ ReportDefinitions:
     type: string
     source: common
   - name: url
-  
+
     label: reports.common.url
     type: string
     source: common
@@ -1765,7 +1774,7 @@ ReportDefinitions:
          union
          (select to_timestamp(states.createddate/1000)::timestamp without time zone as createddate,us.username as sendername, 'Citizen Service - New Water Connection' as natureoftask,
          states.status as status, states.id as details,
-         '_url?/non-framework/citizenServices/wc/view/' || regexp_replace(states.id, '/', '%2F') as url from egov_citizen_service_req states,eg_user us where 
+         '_url?/non-framework/citizenServices/wc/view/' || regexp_replace(states.id, '/', '%2F') as url from egov_citizen_service_req states,eg_user us where
          us.id = userid and serviceCode  ='WATER_NEWCONN' and states.tenantId=$tenantid and states.status NOT IN ('APPROVED','CANCELLED') order by states.createddate desc)) result
          order by createddate desc;
 

@@ -31,7 +31,8 @@ const nameMap = {
   "PT_NODUES": "Property Tax No Dues",
   "WC_NODUES": "Water Charges No Dues",
   "CREATED": "Created",
-  "WATER_NEWCONN": "New Water Connection"
+  "WATER_NEWCONN": "New Water Connection",
+  "BPA_FIRE_NOC": "Fire NOC"
 };
 
 let reqRequired = [];

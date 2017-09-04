@@ -31,6 +31,8 @@ public class PGPayloadResponse {
     private String tenantId;
     private BigDecimal amountPaid;
     private String consumerCode;
+    
+    @JsonProperty("UID")
     private Long uid;
     private String serviceRequestId;
 

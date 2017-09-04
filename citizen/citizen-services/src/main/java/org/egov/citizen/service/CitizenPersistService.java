@@ -337,6 +337,7 @@ public class CitizenPersistService {
 							  .mobileNo(requestInfo.getUserInfo().getMobileNumber())
 							  .requestHash(requestHash)
 							  .uid(requestInfo.getUserInfo().getId())
+							  .retrunUrl(receiptRequest.getReturnUrl())
 							  .build();
 		LOGGER.info("PGPayload generated: "+pgPayload);
 		
@@ -360,8 +361,9 @@ public class CitizenPersistService {
 		          .append(pGPayLoadResponse.getBillService()).append(delimiter)
 		          .append(pGPayLoadResponse.getTransactionId()).append(delimiter)
 		          .append(pGPayLoadResponse.getServiceRequestId()).append(delimiter)
-		          .append(pGPayLoadResponse.getUid()).append(delimiter);
+		          .append(pGPayLoadResponse.getUid());
 		
+		LOGGER.info("msg to be hashed: "+msgForHash.toString());
 		String hashKey = applicationProperties.getHashKey();
 		String responseHash = getHashedValue(msgForHash.toString(), hashKey);
 		

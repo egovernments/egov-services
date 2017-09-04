@@ -604,7 +604,7 @@ public class PropertyServiceImpl implements PropertyService {
 		calculationList = mapper.readValue(
 				propertyRespone.getProperties().get(0).getPropertyDetail().getTaxCalculations(), typeReference);
 
-		SimpleDateFormat sdf = new SimpleDateFormat(propertiesManager.getSimpleDateFormat());
+		SimpleDateFormat sdf = new SimpleDateFormat(propertiesManager.getDate());
 
 		SimpleDateFormat sdff = new SimpleDateFormat(propertiesManager.getDateAndTimeFormat());
 		List<TaxCalculation> currentYearTax = new ArrayList<>();
@@ -613,15 +613,14 @@ public class PropertyServiceImpl implements PropertyService {
 		for (TaxPeriod taxPeriod : taxPeriodResponse.getTaxPeriods()) {
 
 			for (TaxCalculation taxCalculation : calculationList) {
-
-				if (sdff.parse(taxPeriod.getFromDate()).compareTo(sdf.parse(taxCalculation.getFromDate())) >= 0
-						&& sdff.parse(taxPeriod.getToDate()).compareTo(sdf.parse(taxCalculation.getToDate())) >= 0) {
+				if ((sdff.parse(taxPeriod.getFromDate()).getTime() == sdf.parse(taxCalculation.getFromDate()).getTime())
+						&& (sdff.parse(taxPeriod.getToDate()).getTime() == sdf.parse(taxCalculation.getToDate())
+								.getTime())) {
 
 					currentYearTax.add(taxCalculation);
 
 				}
 			}
-
 		}
 		List<HeadWiseTax> headWiseTaxes = new ArrayList<>();
 
@@ -911,16 +910,16 @@ public class PropertyServiceImpl implements PropertyService {
 						long time = taxPeriodFromDate.getTime();
 
 						List<Demand> matchedDemands = demandRespForSavedDemands.getDemands().stream()
-								.filter(demand -> demand.getTaxPeriodFrom()==time)
-								.collect(Collectors.toList());
+								.filter(demand -> demand.getTaxPeriodFrom() == time).collect(Collectors.toList());
 						if (matchedDemands == null) {
 							newDemandList = prepareDemands(tenantId, upicNumber, property, taxHeadResponse, taxPeriod);
 							finalDemandList.addAll(newDemandList);
 						} else {
-							if(matchedDemands.size()>0){
-							finalDemandList.add(matchedDemands.get(0));
-							}else{
-								newDemandList = prepareDemands(tenantId, upicNumber, property, taxHeadResponse, taxPeriod);
+							if (matchedDemands.size() > 0) {
+								finalDemandList.add(matchedDemands.get(0));
+							} else {
+								newDemandList = prepareDemands(tenantId, upicNumber, property, taxHeadResponse,
+										taxPeriod);
 								finalDemandList.addAll(newDemandList);
 							}
 						}

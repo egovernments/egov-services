@@ -335,6 +335,12 @@ ReportDefinitions:
     source: collection
     isMandatory: false
     searchClause : AND EGCL_RECEIPTHEADER.STATUS = $status
+  - name: servicename
+    label: reports.collection.service.name
+    type: singlevaluelist
+    pattern: http://collection-services:8080/collection-services/receipts/_getDistinctBusinessDetails?tenantId=$tenantid|$..code|$..name
+    isMandatory: false
+    searchClause: AND EGCL_RECEIPTHEADER.businessdetails = $servicename
   - name: paymentmode
     label: reports.collection.paymentmode
     type: singlevaluelist

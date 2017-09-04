@@ -227,7 +227,6 @@ public class WaterConnectionService {
                 UserRequestInfo userRequestInfo = new UserRequestInfo();
                 userRequestInfo.setRequestInfo(waterConnReq.getRequestInfo());
                 User user = buildUserObjectFromConnection(waterConnReq);
-                user.setPassword(configurationManager.getDefaultPassword());
                 userRequestInfo.setUser(user);
                 logger.info("User Object to create User : "+ userRequestInfo); 
                 logger.info("User Service Create URL :: " + createUrl.toString() + " \n userRequestInfo :: "
@@ -283,7 +282,40 @@ public class WaterConnectionService {
 		Role role = Role.builder().code(roleCode).name(roleName).build();
 		List<Role> roleList = new ArrayList<>();
 		roleList.add(role);
-		return User.builder().aadhaarNumber(conn.getConnectionOwner().getAadhaarNumber()).userName(userName)
+		User user = new User(); 
+		user.setName(conn.getConnectionOwner().getName());
+		user.setMobileNumber(userName);
+		user.setUserName(userName);
+		user.setActive(true);
+		user.setTenantId(conn.getTenantId());
+		user.setType(roleCode);
+		user.setPassword(configurationManager.getDefaultPassword());
+		user.setRoles(roleList);
+		if(StringUtils.isNotBlank(conn.getConnectionOwner().getAadhaarNumber())) { 
+			user.setAadhaarNumber(conn.getConnectionOwner().getAadhaarNumber());
+		} 
+		if(StringUtils.isNotBlank(conn.getConnectionOwner().getEmailId())) { 
+			user.setEmailId(conn.getConnectionOwner().getEmailId());
+		}
+		if(StringUtils.isNotBlank(conn.getAddress().getAddressLine1())) { 
+			user.setPermanentAddress(conn.getAddress().getAddressLine1());
+		}
+		if(StringUtils.isNotBlank(conn.getAddress().getPinCode())) { 
+			user.setPermanentPincode(conn.getAddress().getPinCode());
+		}
+		if(StringUtils.isNotBlank(conn.getAddress().getCity())) { 
+			user.setPermanentCity(conn.getAddress().getCity());
+		}
+		if(StringUtils.isNotBlank(conn.getConnectionOwner().getMobileNumber())) { 
+			user.setMobileNumber(conn.getConnectionOwner().getMobileNumber());
+		}
+		if(StringUtils.isNotBlank(conn.getConnectionOwner().getGender())) { 
+			user.setGender(conn.getConnectionOwner().getGender());
+		}
+		
+		return user; 
+		
+		/*return User.builder().aadhaarNumber(conn.getConnectionOwner().getAadhaarNumber()).userName(userName)
 				.mobileNumber(userName).name(conn.getConnectionOwner().getName())
 				.emailId(conn.getConnectionOwner().getEmailId()).permanentAddress(conn.getAddress().getAddressLine1())
 				.permanentPincode(conn.getAddress().getPinCode()).permanentCity(conn.getAddress().getCity())
@@ -293,7 +325,7 @@ public class WaterConnectionService {
 				.gender(conn.getConnectionOwner().getGender())
 				.isPrimaryOwner(conn.getConnectionOwner().getIsPrimaryOwner())
 				.isSecondaryOwner(conn.getConnectionOwner().getIsSecondaryOwner()).tenantId(conn.getTenantId())
-				.type(roleCode).roles(roleList).active(true).build();
+				.type(roleCode).roles(roleList).active(true).build();*/
 	}
     
     private String getUserServiceSearchPath() { 

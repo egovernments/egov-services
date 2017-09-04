@@ -112,7 +112,7 @@ public class WorkflowRepository {
 		Position assignee = new Position();
 		ProcessInstanceRequest processInstanceRequest = new ProcessInstanceRequest();
 		ProcessInstance processInstance = new ProcessInstance();
-
+		Boolean isCorporation = isCorporation(agreement.getTenantId());;
 		assignee.setId(workFlowDetails.getAssignee());
 		if (Action.JUDGEMENT.equals(agreement.getAction())) {
 			processInstance.setBusinessKey(propertiesManager.getWorkflowServiceJudgementBusinessKey());
@@ -130,8 +130,9 @@ public class WorkflowRepository {
 			processInstance.setBusinessKey(propertiesManager.getWorkflowServiceEvictBusinessKey());
 			processInstance.setType(propertiesManager.getWorkflowServiceEvictBusinessKey());
 		} else {
-			processInstance.setBusinessKey(propertiesManager.getWorkflowServiceCreateBusinessKey());
-			processInstance.setType(propertiesManager.getWorkflowServiceCreateBusinessKey());
+			processInstance.setBusinessKey(isCorporation ? propertiesManager.getWorkflowServiceCreateCorporationBusinessKey() : propertiesManager.getWorkflowServiceCreateMunicipalityBusinessKey());
+			processInstance.setType(isCorporation ? propertiesManager.getWorkflowServiceCreateCorporationBusinessKey() : propertiesManager.getWorkflowServiceCreateMunicipalityBusinessKey());
+
 		}
 		processInstance.setAssignee(assignee);
 		processInstance.setComments(workFlowDetails.getComments());
@@ -156,7 +157,7 @@ public class WorkflowRepository {
 		TaskRequest taskRequest = new TaskRequest();
 		Task task = new Task();
 		Position assignee = new Position();
-
+		Boolean isCorporation = isCorporation(agreement.getTenantId());
 		taskRequest.setRequestInfo(requestInfo);
 		if (Action.JUDGEMENT.equals(agreement.getAction())) {
 			task.setBusinessKey(propertiesManager.getWorkflowServiceJudgementBusinessKey());
@@ -174,8 +175,8 @@ public class WorkflowRepository {
 			task.setBusinessKey(propertiesManager.getWorkflowServiceEvictBusinessKey());
 			task.setType(propertiesManager.getWorkflowServiceEvictBusinessKey());
 		} else {
-			task.setBusinessKey(propertiesManager.getWorkflowServiceCreateBusinessKey());
-			task.setType(propertiesManager.getWorkflowServiceCreateBusinessKey());
+			task.setBusinessKey(isCorporation ? propertiesManager.getWorkflowServiceCreateCorporationBusinessKey() : propertiesManager.getWorkflowServiceCreateMunicipalityBusinessKey());
+			task.setType(isCorporation ? propertiesManager.getWorkflowServiceCreateCorporationBusinessKey() : propertiesManager.getWorkflowServiceCreateMunicipalityBusinessKey());
 		}
 		task.setId(agreement.getStateId());
 
@@ -224,7 +225,7 @@ public class WorkflowRepository {
 		return taskRequest;
 	}
 
-	private Boolean getCityGrade(String tenantId) {
+	private Boolean isCorporation(String tenantId) {
 
 		City city;
 		Boolean isCorporation = Boolean.FALSE;

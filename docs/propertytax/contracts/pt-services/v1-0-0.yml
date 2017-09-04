@@ -650,6 +650,10 @@ definitions:
         $ref: '#/definitions/Boundary'
       adminBoundary:
         $ref: '#/definitions/Boundary'
+      guidanceValueBoundary:
+        type: integer
+        format: int64
+        description: guidance value boundary id for tax calculation
       northBoundedBy:
         type: string
         description: property bounded by on north side

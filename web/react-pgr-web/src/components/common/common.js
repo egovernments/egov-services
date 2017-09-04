@@ -940,7 +940,7 @@ var localization_EN_Data = {
     "tl.create.licenses.groups.TradeDetails.TraderOwnerProperty": "Trader is not the owner of the Property",
     "tl.create.licenses.groups.agreementDetails.agreementDate": "Date of Execution",
     "tl.create.licenses.groups.agreementDetails.agreementNo": "Registered/Non Registered Document No",
-    "tl.create.licenses.groups.agreementDetails": "Agreement Details",
+    "tl.create.licenses.groups.agreementDetails": "Agreement Details (Trader is not the owner of the Property)",
 
     "tl.create.licenses.groups.FeeDetails": "Fee Details",
     "tl.create.license.table.financialYear": "Financial Year",
@@ -2469,7 +2469,7 @@ var localization_MR_Data = {
         "reports.collection.consumeraddress": "Consumer Address - Marathi",
         "reports.collection.print": "Print - Marathi",
         "reports.collection.consumerno": "Consumer No - Marathi",
-        "reports.collection.fromdate": "From Date - Marathi",
+        "reports.collection.fromdate":"From Date - Marathi",
         "reports.collection.todate": "To Date - Marathi",
         "reports.collection.servicename": "Service Name - Marathi",
 
@@ -3129,4 +3129,16 @@ export function toLocalTime(regDate) {
     dat = dat.split("-")[1] + "-" + dat.split("-")[0] + "-" + dat.split("-")[2] + " " + regDate.split(" ")[1];
     dat = new Date(dat + " UTC").toString();
     return dat.substr(0, dat.indexOf("GMT"));
+}
+
+export function epochToDate(t) {
+    function pad2(n) {
+        return n > 9 ? n : '0' + n;
+    }
+    var d = new Date(Number(t));
+    var year = d.getFullYear();
+    var month = d.getMonth() + 1;  // months start at zero
+    var day = d.getDate();
+
+    return pad2(day) + '-' + pad2(month) + '-' + year;
 }

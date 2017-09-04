@@ -700,6 +700,10 @@ table thead th, table tfoot th {
 	font-weight: 500;
 }
 
+table tbody tr{
+	border-left: 1px solid rgba(0,0,0,0.12) !important;
+}
+
 table td {
 	cursor: pointer !important;
 }

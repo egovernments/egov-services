@@ -361,7 +361,7 @@ public class CitizenPersistService {
 		          .append(pGPayLoadResponse.getBillService()).append(delimiter)
 		          .append(pGPayLoadResponse.getTransactionId()).append(delimiter)
 		          .append(pGPayLoadResponse.getServiceRequestId()).append(delimiter)
-		          .append(pGPayLoadResponse.getUid()).append(delimiter);
+		          .append(pGPayLoadResponse.getUid());
 		
 		String hashKey = applicationProperties.getHashKey();
 		String responseHash = getHashedValue(msgForHash.toString(), hashKey);

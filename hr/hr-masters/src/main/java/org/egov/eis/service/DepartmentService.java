@@ -70,6 +70,11 @@ public class DepartmentService {
 
     public List<Department> getDepartments(List<Long> ids, String tenantId, RequestInfoWrapper requestInfoWrapper) {
         URI url = null;
+        if(null == ids.get(0) || ids.isEmpty())
+        {
+        	  log.error("Following exception occurred while accessing Department id is null");
+        	  return null;
+        }
         String idsAsCSV = getIdsAsCSV(ids);
         DepartmentResponse departmentResponse = null;
         try {

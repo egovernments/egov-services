@@ -54,11 +54,12 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode
+@NoArgsConstructor
 public class ReceiptCommonModel {
-
+        private List<ReceiptHeader> receiptHeaders; 
 	
 
-	public List<Receipt> toDomainContract(List<ReceiptHeader> receiptHeaders) {
+	public List<Receipt> toDomainContract() {
 		List<Receipt> receipts = new ArrayList<>();
 
 		for (ReceiptHeader receiptHeader : receiptHeaders) {

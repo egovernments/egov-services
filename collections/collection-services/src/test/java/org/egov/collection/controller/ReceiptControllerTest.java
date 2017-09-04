@@ -36,7 +36,7 @@
  *         or trademarks of eGovernments Foundation.
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
- 
+ */
 package org.egov.collection.controller;
 
 import static org.mockito.Matchers.any;
@@ -196,4 +196,4 @@ public class ReceiptControllerTest {
 			throw new RuntimeException(e);
 		}
 	}
-}*/
+}

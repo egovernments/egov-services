@@ -10,10 +10,12 @@ import javax.validation.ValidationException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.collection.config.CollectionServiceConstants;
+import org.egov.collection.model.LegacyReceiptHeader;
 import org.egov.collection.service.CollectionConfigService;
 import org.egov.collection.web.contract.BillAccountDetail;
 import org.egov.collection.web.contract.BillDetail;
 import org.egov.collection.web.contract.CollectionConfigGetRequest;
+import org.egov.collection.web.contract.LegacyReceiptReq;
 import org.egov.collection.web.contract.Receipt;
 import org.egov.collection.web.contract.ReceiptReq;
 import org.egov.collection.web.contract.ReceiptSearchGetRequest;
@@ -236,4 +238,50 @@ public class ReceiptReqValidator {
 					CollectionServiceConstants.INVALID_DATE_EXCEPTION_MSG);
 		}
 	}
+
+    public List<ErrorResponse> validateCreateLegacyReceiptRequest(LegacyReceiptReq legacyReceiptRequest) {
+        List<ErrorResponse> errorResponses = null;
+        final Error error = getError(legacyReceiptRequest);
+        if (error != null) {
+                ErrorResponse errorResponse = new ErrorResponse();
+                errorResponses = new ArrayList<>();
+                errorResponse.setError(error);
+                errorResponses.add(errorResponse);
+        }
+        return errorResponses;
+    }
+
+    private Error getError(LegacyReceiptReq legacyReceiptRequest) {
+        final List<ErrorField> errorFields = getErrorFields(legacyReceiptRequest);
+        Error error = null;
+        if (null!=errorFields &&!errorFields.isEmpty())
+                error = Error
+                                .builder()
+                                .code(HttpStatus.BAD_REQUEST.value())
+                                .message(CollectionServiceConstants.INVALID_LEGACY_RECEIPT_REQUEST)
+                                .fields(errorFields).build();
+        return error;
+    }
+
+    private List<ErrorField> getErrorFields(LegacyReceiptReq legacyReceiptRequest) {
+        final List<ErrorField> errorFields=null;
+        addLegacyReceiptValidationErrors(legacyReceiptRequest, errorFields);
+        return errorFields;
+    }
+
+    private void addLegacyReceiptValidationErrors(LegacyReceiptReq legacyReceiptRequest, List<ErrorField> errorFields) {
+        for(LegacyReceiptHeader legacyReceiptHeader : legacyReceiptRequest.getLegacyReceipts()){
+        if(legacyReceiptHeader.getReceiptNo() == null || legacyReceiptHeader.getReceiptNo().isEmpty()){
+            ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.RCPTNO_MISSING_CODE)
+                    .message(CollectionServiceConstants.RCPTNO_MISSING_MESSAGE)
+                    .field(CollectionServiceConstants.RCPTNO_FIELD_NAME).build();
+            errorFields.add(errorField);
+        }
+        else if(legacyReceiptHeader.getReceiptDate() == null){
+            ErrorField.builder().code(CollectionServiceConstants.RCPTDATE_MISSING_CODE)
+            .message(CollectionServiceConstants.RCPTDATE_MISSING_MESSAGE)
+            .field(CollectionServiceConstants.RCPTDATE_FIELD_NAME).build();
+        }
+    }
+    }
 }

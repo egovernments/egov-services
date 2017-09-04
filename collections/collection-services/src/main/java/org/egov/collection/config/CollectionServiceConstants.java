@@ -45,6 +45,7 @@ import org.springframework.context.annotation.Configuration;
 public class CollectionServiceConstants {
 
 	public static final String INVALID_RECEIPT_REQUEST = "Receipt create request is invalid";
+	public static final String INVALID_LEGACY_RECEIPT_REQUEST = "Legacy Receipt Create request is invalid";
 	public static final String INVALID_DEPT_REQUEST = "Get departments request is invalid";
 	public static final String INVALID_DESIG_REQUEST = "Get designation request is invalid";
 	public static final String INVALID_USERS_REQUEST = "Get users request is invalid";
@@ -153,6 +154,15 @@ public class CollectionServiceConstants {
     public static final String CUTT_OFF_DATE_MESSAGE = "Manual receipt date is greater than the cut-off date ";
     public static final String CUTT_OFF_DATE_MESSAGE_DESC = " for legacy data entry.Please enter proper date";
     
+    public static final String RCPTNO_MISSING_CODE = "egcl_0017";
+    public static final String RCPTNO_FIELD_NAME = "receiptNo";
+    public static final String RCPTNO_MISSING_MESSAGE = "Receipt Number is required";
+  
+    public static final String RCPTDATE_MISSING_CODE = "egcl_0018";
+    public static final String RCPTDATE_FIELD_NAME = "receiptDate";
+    public static final String RCPTDATE_MISSING_MESSAGE = "Receipt Date is required";
+   
+    
     public  static final String INSTRUMENT_TYPE_CASH = "Cash";
     public  static final String INSTRUMENT_TYPE_ONLINE = "ONLINE";
     
@@ -168,6 +178,7 @@ public class CollectionServiceConstants {
 
     public static final String COLLECTION_LEGACY_RECEIPT_CREATOR_ROLE ="Legacy Receipt Creator";
     public static final String COLLECTION_ONLINE_RECEIPT_ROLE ="CITIZEN";
+
     
 
 }

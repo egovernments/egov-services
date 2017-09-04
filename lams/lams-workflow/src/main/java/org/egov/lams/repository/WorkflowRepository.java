@@ -11,14 +11,17 @@ import org.egov.lams.contract.RequestInfoWrapper;
 import org.egov.lams.contract.Task;
 import org.egov.lams.contract.TaskRequest;
 import org.egov.lams.contract.TaskResponse;
+import org.egov.lams.contract.TenantResponse;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.WorkflowDetails;
 import org.egov.lams.model.enums.Action;
+import org.egov.lams.model.City;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 @Repository
@@ -221,4 +224,20 @@ public class WorkflowRepository {
 		return taskRequest;
 	}
 
+	private Boolean getCityGrade(String tenantId) {
+
+		City city;
+		Boolean isCorporation = Boolean.FALSE;
+		String url = propertiesManager.getTenantServiceHostName() + "tenant/v1/tenant/_search?code=" + tenantId;
+		TenantResponse tr = restTemplate.postForObject(url, new RequestInfo(), TenantResponse.class);
+		if (!CollectionUtils.isEmpty(tr.getTenant())) {
+
+			city = tr.getTenant().get(0).getCity();
+			if (propertiesManager.getCityGradeCorp().equalsIgnoreCase(city.getGrade())) {
+				isCorporation = Boolean.TRUE;
+			}
+		}
+		return isCorporation;
+	}
+     
 }

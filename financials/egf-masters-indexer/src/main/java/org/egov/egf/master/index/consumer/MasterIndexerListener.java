@@ -164,7 +164,7 @@ public class MasterIndexerListener {
 					final HashMap<String, Object> indexObj = getAccountCodePurposeContractIndexObject(
 							accountCodePurposeContract);
 					elasticSearchRepository.index(ACCOUNTCODEPURPOSE_OBJECT_TYPE,
-							accountCodePurposeContract.getTenantId() + "-" + accountCodePurposeContract.getName(),
+							accountCodePurposeContract.getName() + "-" + accountCodePurposeContract.getTenantId(),
 							indexObj);
 				}
 		}

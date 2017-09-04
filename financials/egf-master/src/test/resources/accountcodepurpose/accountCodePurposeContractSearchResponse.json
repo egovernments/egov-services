@@ -1,28 +1,16 @@
-{
-  "responseInfo": {
-    "resMsgId": "placeholder",
-    "status": "200",
-    "apiId": null,
-    "ver": null,
-    "key": null,
-    "tenantId": null
-  },
-  "accountCodePurposes": [
+ "accountCodePurposes": [
     {
-      "id": null,
-      "name": "accountCodePurpose1",
-      "createdBy": null,
-      "createdDate": null,
-      "lastModifiedBy": null,
-      "lastModifiedDate": null,
-      "tenantId": null
+      "id": "1",
+      "name": "name",
+      "tenantId":"default"
     }
   ],
-  "page": {
-    "totalResults": 1,
-    "totalPages": 1,
-    "pageSize": 0,
-    "currentPage": 0,
-    "offSet": 0
-  }
+  "page":
+    {
+        "totalResults": 1,
+        "totalPages": 1,
+        "pageSize": 500,
+        "currentPage": 0,
+        "offset": 0
+    }
 }

@@ -535,7 +535,7 @@ ReportDefinitions:
     pattern: http://hr-leave:8080/hr-leave/leavetypes/_search?tenantId=$tenantid|$..id|$..name
     source: egeis_leaveType
     isMandatory: false
-    searchClause: and levapp.leavetypeid=$leavetype
+    searchClause: and levtyp.id=$leavetype
     
   - name: asOnDate
     label: reports.hr.asOnDate
@@ -576,4 +576,3 @@ ReportDefinitions:
     and assign.tenantid=emp.tenantid 
   groupBy : ORDER BY emp.code ,usr.name ,levtyp.name,openbal.noofdays,leaveappl.approved_count
     
-   

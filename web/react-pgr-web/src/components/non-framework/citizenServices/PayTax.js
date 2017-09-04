@@ -42,6 +42,8 @@ import jp from "jsonpath";
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
+var counter=0;
+
 var specifications={};
 
 let reqRequired = [];
@@ -116,124 +118,18 @@ class NoDues extends Component {
   }
 
   handleOpen = () => {
-      let {demands,applicationFeeDemand}=this.state;
+      let {demands,applicationFeeDemand,serviceRequest}=this.state;
       let self=this;
-      let {formData}=this.props;
-      self.props.setLoadingStatus('show');
-      //api call
-      /*let request=
-      {
-           "tenantId": localStorage.getItem("tenantId"),
-           "serviceRequestId": null,
-           "serviceCode": (this.props.match.params.id == "pt") ? "PT_NODUES" : "WC_NODUES",
-           "lat": 12,
-           "lang": 23,
-           "address": "address",
-           "addressId": "addressId",
-           "email": "email",
-           "deviceId": "deviceId",
-           "accountId": "accountId",
-           "firstName": "",
-           "lastName": "firstName",
-           "phone": "phone",
-           "description": "",
-           "consumerCode" : formData.consumerCode,
-           "attributeValues": [
-             {
-               "key": "tenantId",
-               "value": localStorage.getItem("tenantId")
-             }
-           ],
-           "status": "CREATED",
-           "assignedTo": "assignedTo",
-           "comments": [
+      let {formData,metaData}=this.props;
+      self.props.setLoadingStatus('loading');
 
-           ],
-           "backendServiceDetails": null
-         }*/
-	      self.props.setLoadingStatus('show');
-
-      /*if (applicationFeeDemand[0].id==null || applicationFeeDemand[0].id=="") {
-         demandReq["Demands"] = applicationFeeDemand;
-         demandReq["Demands"][0].tenantId=localStorage.getItem("tenantId");
-         demandReq["Demands"][0].consumerCode=formData.consumerCode;
-         demandReq["Demands"][0].owner.id=JSON.parse(localStorage.userRequest).id;
-         demandReq["Demands"][0].taxPeriodFrom=1491004800000;
-         demandReq["Demands"][0].taxPeriodTo=1522540799000;
-         demandReq["Demands"][0].demandDetails[0].taxHeadMasterCode=(this.props.match.params.status == "extract" ? "PT_EXT_OF_PROP_COPY_CHAR" : (this.props.match.params.id == "pt" ? "PT_NO_DUE_CERT_CHAR" : "WC_NO_DUE_CERT_CHAR"));
-
-
-          Api.commonApiPost("/billing-service/demand/_create", {}, demandReq, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp"), JSON.parse(localStorage["request-temp"])).then(function(res){
-            setTimeout(function(){
-              Api.commonApiPost("/billing-service/bill/_generate", {businessService: "CS" , consumerCode:formData.consumerCode}, {}, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp"), JSON.parse(localStorage["request-temp"])).then(function(res){
-                let Receipt=[];
-                Receipt[0]={"Bill":[]};
-                Receipt[0]["Bill"]=res.Bill;
-                Receipt[0]["Bill"][0]["paidBy"]=Receipt[0]["Bill"][0].payeeName;
-                Receipt[0]["tenantId"]=window.localStorage.getItem("tenantId")
-                Receipt[0]["instrument"]={"tenantId":window.localStorage.getItem("tenantId"),"amount":self.getTotal(applicationFeeDemand),"instrumentType":{"name":"Cash"}}
-
-                Receipt[0]["Bill"][0]["billDetails"][0]["amountPaid"]=self.getTotal(applicationFeeDemand);
-                self.setState({
-                  paidBy: Receipt[0]["Bill"][0].payeeName
-                })
-                console.log(Receipt);
-                // Receipt.push(res.Bill);
-                self.setState({
-                  ReceiptOne:Receipt
-                });
-                console.log(Receipt);
-                self.setState({open: true});
-              }, function(err) {
-                self.props.toggleSnackbarAndSetText(true, err.message, false, true);
-                self.props.setLoadingStatus('hide');
-              });
-              }, 5000);
-          }, function(err) {
-            self.props.toggleSnackbarAndSetText(true, err.message, false, true);
-            self.props.setLoadingStatus('hide');
-          })
-      }
-      else {*/
-        // Api.commonApiPost("/billing-service/bill/_generate", {businessService: "CS" , consumerCode: self.state.serviceRequest.serviceRequestId}, {}, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res){
-        //   let Receipt=[];
-        //   Receipt[0]={"Bill":[]};
-        //   Receipt[0]["Bill"]=res.Bill;
-        //   Receipt[0]["Bill"][0]["paidBy"]=Receipt[0]["Bill"][0].payeeName;
-        //   Receipt[0]["tenantId"]=window.localStorage.getItem("tenantId")
-        //   Receipt[0]["instrument"]={"tenantId":window.localStorage.getItem("tenantId"),"amount":self.getTotal(applicationFeeDemand),"instrumentType":{"name":"Cash"}}
-        //
-        //   Receipt[0]["Bill"][0]["billDetails"][0]["amountPaid"]=self.getTotal(applicationFeeDemand);
-        //   self.setState({
-        //     paidBy: Receipt[0]["Bill"][0].payeeName
-        //   })
-        //   console.log(Receipt);
-        //   // Receipt.push(res.Bill);
-        //   self.setState({
-        //     ReceiptOne:Receipt
-        //   });
-        //   console.log(Receipt);
-        //   self.setState({open: true});
-        // }, function(err) {
-        //   self.props.toggleSnackbarAndSetText(true, err.message, false, true);
-        //   self.props.setLoadingStatus('hide');
-        // });
-      //}
-
-      self.setState({open: true});
-      /*Api.commonApiPost("/citizen-services/v1/requests/_create", {}, {"serviceReq":request}, null, self.props.metaData["noDues.search"].useTimestamp, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
-            // self.props.setLoadingStatus('hide');
-
-            self.setState({
-              serviceRequest:res.serviceReq
-            });
-            console.log(res);
-            self.setState({open: true});
-
-          }, function(err) {
-            self.props.toggleSnackbarAndSetText(true, err.message, false, true);
-            self.props.setLoadingStatus('hide');
-      })*/
+      window.localStorage.setItem("demands",JSON.stringify(demands));
+      window.localStorage.setItem("applicationFeeDemand",JSON.stringify(applicationFeeDemand));
+      window.localStorage.setItem("formData",JSON.stringify(formData));
+      window.localStorage.setItem("serviceRequest",JSON.stringify(serviceRequest));
+      window.localStorage.setItem("moduleName",this.props.match.params.id);
+      window.localStorage.setItem("metaData",JSON.stringify(metaData));
+      window.localStorage.setItem("workflow","paytax");
 
 
       if (demands.length>0) {
@@ -257,8 +153,98 @@ class NoDues extends Component {
               Receipt
             });
             console.log(Receipt);
-            self.setState({open: true});
-            self.props.setLoadingStatus('hide');
+            // self.setState({open: true});
+            // self.props.setLoadingStatus('hide');
+            window.localStorage.setItem("ReceiptOne",JSON.stringify(Receipt))
+
+            var PGRequest= {
+                  "billNumber": Receipt[0]["Bill"][0].billDetails[0].billNumber,
+                  "returnUrl": window.location.origin+"/citizen-services/v1/pgresponse",
+                  "date": Receipt[0]["Bill"][0].billDetails[0].billDate,
+                  "biller": "Vishal",
+                  "amount": self.getTotal(demands)+self.getTotal(applicationFeeDemand),
+                  "billService": Receipt[0]["Bill"][0].billDetails[0].businessService,
+                  "serviceRequestId": serviceRequest.serviceRequestId,
+                  "consumerCode": Receipt[0]["Bill"][0].billDetails[0].consumerCode,
+                  "tenantId": Receipt[0]["Bill"][0].tenantId,
+                  "amountPaid": self.getTotal(demands)+self.getTotal(applicationFeeDemand),
+                  "uid": JSON.parse(localStorage.userRequest).id
+              }
+
+
+
+            Api.commonApiPost("/citizen-services/v1/pgrequest/_create", {}, {PGRequest}, null, self.props.metaData["noDues.search"].useTimestamp, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
+                self.props.setLoadingStatus('hide');
+
+                  var newForm = $('<form>', {
+                      'action': 'http://115.124.122.117:8080/mahaulb/getHashKeyBeforePayment',
+                      "methot":"post",
+                      'target': '_top'
+                  }).append($('<input>', {
+                      'name': 'billNumber',
+                      'value': res.PGRequest.billNumber,
+                      'type': 'hidden'
+                  })).append($('<input>', {
+                      'name': 'billService',
+                      'value': res.PGRequest.billService,
+                      'type': 'hidden'
+                  })).append($('<input>', {
+                      'name': 'amount',
+                      // 'value': 1,
+                      'value': res.PGRequest.amountPaid,
+                      'type': 'hidden'
+                  })).append($('<input>', {
+                      'name': 'returnUrl',
+                      'value': res.PGRequest.retrunUrl,
+                      'type': 'hidden'
+                  })).append($('<input>', {
+                      'name': 'date',
+                      'value': res.PGRequest.date,
+                      'type': 'hidden'
+                  })).append($('<input>', {
+                      'name': 'biller',
+                      'value': res.PGRequest.biller,
+                      'type': 'hidden'
+                  })).append($('<input>', {
+                      'name': 'serviceRequestId',
+                      'value': res.PGRequest.serviceRequestId,
+                      'type': 'hidden'
+                  })).append($('<input>', {
+                      'name': 'tenantId',
+                      'value': res.PGRequest.tenantId,
+                      'type': 'hidden'
+                  })).append($('<input>', {
+                      'name': 'amountPaid',
+                      'value': res.PGRequest.amountPaid,
+                      'type': 'hidden'
+                  })).append($('<input>', {
+                      'name': 'requestHash',
+                      'value': res.PGRequest.requestHash,
+                      'type': 'hidden'
+                  })).append($('<input>', {
+                      'name': 'mobileNo',
+                      'value': "7795929033",
+                      'type': 'hidden'
+                  })).append($('<input>', {
+                      'name': 'email',
+                      'value': res.PGRequest.email,
+                      'type': 'hidden'
+                  })).append($('<input>', {
+                      'name': 'consumerCode',
+                      'value': res.PGRequest.consumerCode,
+                      'type': 'hidden'
+                  })).append($('<input>', {
+                      'name': 'uid',
+                      'value': res.PGRequest.uid,
+                      'type': 'hidden'
+                  }));
+                  $(document.body).append(newForm);
+                  newForm.submit();
+              }, function(err) {
+                self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+                self.props.setLoadingStatus('hide');
+            })
+
           }, function(err) {
             self.props.toggleSnackbarAndSetText(true, err.message, false, true);
             self.props.setLoadingStatus('hide');
@@ -334,12 +320,6 @@ class NoDues extends Component {
   }
 
   initData() {
-    if (this.props.match.params.status=="receipt") {
-      this.setState({stepIndex:2})
-    }
-    if (this.props.match.params.status=="pay") {
-      this.setState({stepIndex:1})
-    }
 
     let hashLocation = window.location.hash;
     // $.ajax({
@@ -373,6 +353,16 @@ class NoDues extends Component {
     this.setState({
       pathname:this.props.history.location.pathname
     })
+
+    if (this.props.match.params.status=="receipt") {
+      this.setState({stepIndex:2})
+    }
+    if (this.props.match.params.status=="pay" && counter==0) {
+      counter++;
+      this.setState({stepIndex:1})
+      this.props.setLoadingStatus('loading');
+      this.pay();
+    }
   }
 
   componentDidMount() {
@@ -607,95 +597,65 @@ class NoDues extends Component {
   }
 
   pay=()=>{
-    let {serviceRequest,Receipt,ReceiptOne,applicationFeeDemand,demands}=this.state;
-    let {formData} = this.props;
+    let {localStorage}=window;
+    var serviceRequest=JSON.parse(localStorage.getItem("serviceRequest")),Receipt=JSON.parse(localStorage.getItem("Receipt")),ReceiptOne=JSON.parse(localStorage.getItem("ReceiptOne")),applicationFeeDemand=JSON.parse(localStorage.getItem("applicationFeeDemand")),demands=JSON.parse(localStorage.getItem("demands")),formData=JSON.parse(localStorage.getItem("formData")),metaData=JSON.parse(localStorage.getItem("metaData")),paymentGateWayRes=JSON.parse(localStorage.getItem("paymentGateWayResponse"));
+    this.setState({
+      serviceRequest,
+      Receipt,
+      ReceiptOne,
+      applicationFeeDemand,
+      demands
+    })
+
     let self=this;
     this.handleClose();
-    self.props.setLoadingStatus('show');
-    serviceRequest.status="No Dues Generated";
-    Api.commonApiPost("/citizen-services/v1/requests/_update", {}, {"serviceReq":serviceRequest}, null, self.props.metaData["noDues.search"].useTimestamp, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
-      self.props.setLoadingStatus('hide');
+    self.props.setLoadingStatus('loading');
+
+    if (this.props.match.params.paymentGateWayRes=="success") {
+      Api.commonApiPost("/citizen-services/v1/pgresponse/_validate", {}, {PGResponse:paymentGateWayRes}, null, metaData["noDues.search"].useTimestamp, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
+          self.props.setLoadingStatus('hide');
 
 
-      // self.setState({
-      //   receipt:res.serviceReq
-      // });
-      console.log(res);
-      // self.handleNext();
-
-    }, function(err) {
-      self.props.toggleSnackbarAndSetText(true, err.message, false, true);
-      self.props.setLoadingStatus('hide');
-    })
+                  serviceRequest.status="No Dues Generated";
+                  Api.commonApiPost("/citizen-services/v1/requests/_update", {}, {"serviceReq":serviceRequest}, null, self.props.metaData["noDues.search"].useTimestamp, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
+                    self.props.setLoadingStatus('hide');
 
 
-    Api.commonApiPost("/collection-services/receipts/_create", {}, {"Receipt":Receipt}, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res2){
-    self.props.setLoadingStatus('hide');
+                    // self.setState({
+                    //   receipt:res.serviceReq
+                    // });
+                    console.log(res);
+                    // self.handleNext();
 
-    self.getProperty(function(property) {
-      self.setState({
-        Receipt:res2.Receipt,
-        ReceiptOne: [],
-        Property: property
-      });
-      console.log(res2);
-      self.handleNext();
-    })
+                  }, function(err) {
+                    self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+                    self.props.setLoadingStatus('hide');
+                  })
 
-   }, function(err) {
-    self.props.toggleSnackbarAndSetText(true, err.message, false, true);
-    self.props.setLoadingStatus('hide');
-  })
 
-    // var appFeeRec = Object.assign([], Receipt);
-    // console.log(appFeeRec);
-    // appFeeRec[0]["Bill"] = Object.assign([], self.state.appRec);
-    // appFeeRec[0]["instrument"] = Object.assign({}, self.state.ins);
-    // console.log(appFeeRec);
-    // appFeeRec[0]["Bill"][0]["billDetails"][0]["amountPaid"] = applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount;
-    // appFeeRec[0]["Bill"][0]["paidBy"] = self.state.paidBy;
-    // Api.commonApiPost("/collection-services/receipts/_create", {}, {"Receipt":ReceiptOne}, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res1){
-    //       if (demands.length>0) {
-    //             Api.commonApiPost("/collection-services/receipts/_create", {}, {"Receipt":Receipt}, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res2){
-    //             self.props.setLoadingStatus('hide');
-    //
-    //             self.getProperty(function(property) {
-    //               self.setState({
-    //                 Receipt:res2.Receipt,
-    //                 ReceiptOne: res1.Receipt,
-    //                 Property: property
-    //               });
-    //               console.log(res2);
-    //               self.handleNext();
-    //             })
-    //
-    //           }, function(err) {
-    //             self.props.toggleSnackbarAndSetText(true, err.message, false, true);
-    //             self.props.setLoadingStatus('hide');
-    //           })
-    //       }
-    //       else {
-    //             Api.commonApiPost("/collection-services/receipts/_search", {consumerCode:formData.consumerCode,businessService:formData.businessService}, {}, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res2){
-    //             self.props.setLoadingStatus('hide');
-    //             self.getProperty(function(property) {
-    //               self.setState({
-    //                 Receipt: res2.Receipt,
-    //                 ReceiptOne: res1.Receipt,
-    //                 Property: property
-    //               });
-    //               console.log(res2);
-    //               self.handleNext();
-    //             })
-    //
-    //           }, function(err) {
-    //             self.props.toggleSnackbarAndSetText(true, err.message, false, true);
-    //             self.props.setLoadingStatus('hide');
-    //           })
-    //       }
-    //     }, function(err) {
-    //       self.props.toggleSnackbarAndSetText(true, err.message, false, true);
-    //       self.props.setLoadingStatus('hide');
-    //     })
+                  Api.commonApiPost("/collection-services/receipts/_create", {}, {"Receipt":Receipt}, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res2){
+                  self.props.setLoadingStatus('hide');
+
+                  self.getProperty(function(property) {
+                    self.setState({
+                      Receipt:res2.Receipt,
+                      ReceiptOne: [],
+                      Property: property
+                    });
+                    console.log(res2);
+                    self.handleNext();
+                  })
+
+                 }, function(err) {
+                  self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+                  self.props.setLoadingStatus('hide');
+                })
+              }, function(err) {
+               self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+               self.props.setLoadingStatus('hide');
+             })
+
+       }
   }
 
   generatePdf=(id)=>{

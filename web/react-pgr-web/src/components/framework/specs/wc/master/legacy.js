@@ -217,39 +217,6 @@ var meterReading = {
   	"patternErrMsg": ""
   },
   {
-   "name": "NumberOfDays1",
-   "jsonPath": "Connection.meter[0].meterReadings[0].numberOfDays",
-   "label": "wc.group.numberOfDays1",
-   "pattern": "^\\d{1,2}$",
-   "type": "number",
-   "isRequired": false,
-   "isDisabled": false,
-   "requiredErrMsg": "",
-   "patternErrMsg": ""
-   },
- {
-   "name": "NumberOfDays2",
-   "jsonPath": "Connection.meter[0].meterReadings[1].numberOfDays",
-   "label": "wc.group.numberOfDays2",
-   "pattern": "^\\d{1,2}$",
-   "type": "number",
-   "isRequired": false,
-   "isDisabled": false,
-   "requiredErrMsg": "",
-   "patternErrMsg": ""
-     },
- {
-   "name": "NumberOfDays3",
-   "jsonPath": "Connection.meter[0].meterReadings[2].numberOfDays",
-   "label": "wc.group.numberOfDays3",
-   "pattern": "^\\d{1,2}$",
-   "type": "number",
-   "isRequired": false,
-   "isDisabled": false,
-   "requiredErrMsg": "",
-   "patternErrMsg": ""
- },
-  {
     "name": "FirstMonthReset",
     "jsonPath": "Connection.meter[0].meterReadings[0].resetFlag",
     "label": "wc.create.groups.connectionDetails.fields.resetFlag1",
@@ -509,39 +476,6 @@ var meterReadingView = {
     "patternErrMsg": ""
   },
   {
-   "name": "NumberOfDays1",
-   "jsonPath": "Connection[0].meter[0].meterReadings[0].numberOfDays",
-   "label": "wc.group.numberOfDays1",
-   "pattern": "^\\d{1,2}$",
-   "type": "number",
-   "isRequired": false,
-   "isDisabled": false,
-   "requiredErrMsg": "",
-   "patternErrMsg": ""
-   },
-  {
-   "name": "NumberOfDays2",
-   "jsonPath": "Connection[0].meter[0].meterReadings[1].numberOfDays",
-   "label": "wc.group.numberOfDays2",
-   "pattern": "^\\d{1,2}$",
-   "type": "number",
-   "isRequired": false,
-   "isDisabled": false,
-   "requiredErrMsg": "",
-   "patternErrMsg": ""
-     },
-  {
-   "name": "NumberOfDays3",
-   "jsonPath": "Connection[0].meter[0].meterReadings[2].numberOfDays",
-   "label": "wc.group.numberOfDays3",
-   "pattern": "^\\d{1,2}$",
-   "type": "number",
-   "isRequired": false,
-   "isDisabled": false,
-   "requiredErrMsg": "",
-   "patternErrMsg": ""
- },
- {
    "name": "FirstMonthReset",
    "jsonPath": "Connection[0].meter[0].meterReadings[0].resetFlag",
    "label": "wc.create.groups.connectionDetails.fields.resetFlag1",

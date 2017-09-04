@@ -395,7 +395,7 @@ class Report extends Component {
         }, 3000);
       } else {
         self.props.setLoadingStatus("hide");
-        self.props.toggleSnackbarAndSetText(true, "Oops! Something isn't right. Please try again later.", false, true);  
+        self.props.toggleSnackbarAndSetText(true, "Oops! Something isn't right. Please try again later. ", false, true);  
       }
     }, function(err){
       self.props.setLoadingStatus("hide");

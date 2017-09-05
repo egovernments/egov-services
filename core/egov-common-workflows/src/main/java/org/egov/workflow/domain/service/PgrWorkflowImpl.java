@@ -225,7 +225,7 @@ public class PgrWorkflowImpl implements Workflow {
 	public List<Task> getHistoryDetail(final String tenantId, final String workflowId) {
 		final List<Task> tasks = new ArrayList<Task>();
 		Task t;
-		final State state = stateService.findOne(Long.valueOf(workflowId));
+		final State state = stateService.findByIdAndTenantId(Long.valueOf(workflowId), tenantId);
 		final Set<StateHistory> history = state.getHistory();
 		for (final StateHistory stateHistory : history) {
 			t = stateHistory.map();

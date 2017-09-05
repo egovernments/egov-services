@@ -299,12 +299,12 @@ ReportDefinitions:
     source: collection
     total : true
   - name: ddCount
-    label: reports.collection.card.count
+    label: reports.collection.dd.count
     type: number
     source: collection
     total : true
   - name: ddAmount
-    label: reports.collection.card.amount
+    label: reports.collection.dd.amount
     type: number
     source: collection
     total : true
@@ -314,7 +314,7 @@ ReportDefinitions:
     source: collection
     total : true
   - name: totalReceiptAmount
-    label: reports.collection.total.count
+    label: reports.collection.total.amount
     type: number
     source: collection
     total : true
@@ -324,13 +324,13 @@ ReportDefinitions:
     type: epoch
     source: collection
     isMandatory: false
-    searchClause: AND EXTRACT(EPOCH from(to_timestamp(TRUNC( CAST(receiptdate AS bigint  ) / 1000 ))::date)) >= ($fromDate / 1000)
+    searchClause: AND EXTRACT(EPOCH from(to_timestamp(TRUNC(receiptdate / 1000 ))::date)) >= ($fromDate / 1000)
   - name: toDate
     label: reports.collection.todate
     type: epoch
     source: collection
     isMandatory: false
-    searchClause: AND EXTRACT(EPOCH from(to_timestamp(TRUNC( CAST(receiptdate AS bigint  ) / 1000 ))::date)) <= ($toDate / 1000)
+    searchClause: AND EXTRACT(EPOCH from(to_timestamp(TRUNC(receiptdate / 1000 ))::date)) <= ($toDate / 1000)
   - name: status
     label: reports.collection.status
     type: singlevaluelist

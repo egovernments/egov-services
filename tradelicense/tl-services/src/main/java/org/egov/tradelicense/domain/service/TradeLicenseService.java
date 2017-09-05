@@ -135,26 +135,27 @@ public class TradeLicenseService {
 			license.getApplication().setId(tradeLicenseRepository.getApplicationNextSequence());
 			license.getApplication().setLicenseId(license.getId());
 
+			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+			requestInfoWrapper.setRequestInfo(requestInfo);
+
 			if (!license.getIsLegacy()) {
-
-				RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-				requestInfoWrapper.setRequestInfo(requestInfo);
-
+				
 				LicenseStatusResponse currentStatus = statusRepository.findByModuleTypeAndCode(license.getTenantId(),
 						NEW_LICENSE_MODULE_TYPE, NewLicenseStatus.ACKNOWLEDGED.getName(), requestInfoWrapper);
 
 				// checking the application status and setting to the
 				// application
 				if (null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty()) {
-					license.getApplication().setStatus(currentStatus.getLicenseStatuses().get(0).getId().toString());
+					
+					if (currentStatus.getLicenseStatuses().size() > 0) {
+						
+						license.getApplication().setStatus(currentStatus.getLicenseStatuses().get(0).getId().toString());
+					}
 				}
 
 				populateWorkFlowDetails(license, requestInfo);
 
 			} else {
-
-				RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-				requestInfoWrapper.setRequestInfo(requestInfo);
 
 				LicenseStatusResponse currentStatus = statusRepository.findByModuleTypeAndCode(license.getTenantId(),
 						LICENSE_MODULE_TYPE, LicenseStatus.APPROVED.getName(), requestInfoWrapper);

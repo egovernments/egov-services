@@ -38,6 +38,7 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 package org.egov.egf.master.web.contract;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
@@ -51,13 +52,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 
-@JsonPropertyOrder({ "id","bank","code","name","address","address2","city","state","pincode","phone","fax","contactPerson","active","description","micr"})
+@JsonPropertyOrder({ "id", "bank", "code", "name", "address", "address2", "city", "state", "pincode", "phone", "fax",
+		"contactPerson", "active", "description", "micr" })
 public class BankBranchContract extends AuditableContract {
 
 	private String id;
@@ -107,5 +110,9 @@ public class BankBranchContract extends AuditableContract {
 
 	@Length(max = 50)
 	private String micr;
+
+	public BankBranchContract(final String id) {
+		this.id = id;
+	}
 
 }

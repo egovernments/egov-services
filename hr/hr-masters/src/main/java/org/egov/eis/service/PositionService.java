@@ -190,14 +190,16 @@ public class PositionService {
         for (int i = 0; i < positions.size(); i++) {
             DepartmentDesignation deptDesig = positions.get(i).getDeptdesig();
             String tenantId = positions.get(i).getTenantId();
-
+            Designation designation = new Designation();
             Department department = departmentService.getDepartments(Arrays.asList(deptDesig.getDepartmentId()),
                     tenantId, requestInfoWrapper).get(0);
 
+            if(null !=deptDesig.getDesignation().getId()){
             DesignationGetRequest designationGetRequest = DesignationGetRequest.builder()
                     .id(Arrays.asList(deptDesig.getDesignation().getId())).tenantId(tenantId).build();
-            Designation designation = designationService.getDesignations(designationGetRequest).get(0);
-
+            designation = designationService.getDesignations(designationGetRequest).get(0);
+            }
+            
             deptDesig = deptDesigService.getByDepartmentAndDesignation(department.getId(), designation.getId(), tenantId);
 
             if (isEmpty(deptDesig)) {
@@ -282,18 +284,28 @@ public class PositionService {
     
     private void  validateDesignation(PositionRequest positionRequest )
 	{
+    	
 		List<Position> positions = positionRequest.getPosition();
 		for (int i = 0; i < positions.size(); i++) 
 		{
-			DepartmentDesignation deptDesig = positions.get(i).getDeptdesig();
-			String tenantId = positions.get(i).getTenantId();
-			if(deptDesig.getDesignation().getId()==null )
+			if(null == positions.get(i).getDeptdesig().getDesignation().getId())
 			{
 				throw new InvalidDataException("designation","the field {0} should have a valid value which exists in the system","null");
+
 			}
+			DepartmentDesignation deptDesig = positions.get(i).getDeptdesig();
+			String tenantId = positions.get(i).getTenantId();
+		if(null !=deptDesig.getDesignation().getId() ){
+			DesignationGetRequest designationGetRequest = DesignationGetRequest.builder()
+                    .id(Arrays.asList(deptDesig.getDesignation().getId())).tenantId(tenantId).build();
+			 List<Designation> designations = designationService.getDesignations(designationGetRequest);
+	            
+	            if(designations== null || designations.size()<1){
+	          
+					throw new InvalidDataException("designation","the field {0} should have a valid value which exists in the system","null");
+				}
 		}
-
-       }
-    
-
+	}
+    }
 }
+

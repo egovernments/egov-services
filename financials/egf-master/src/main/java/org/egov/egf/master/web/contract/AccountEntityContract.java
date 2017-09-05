@@ -38,6 +38,7 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 package org.egov.egf.master.web.contract;
+
 import javax.validation.constraints.NotNull;
 
 import org.egov.common.web.contract.AuditableContract;
@@ -50,13 +51,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 
-@JsonPropertyOrder({ "id","accountDetailType","code","name","active","description"})
+@JsonPropertyOrder({ "id", "accountDetailType", "code", "name", "active", "description" })
 public class AccountEntityContract extends AuditableContract {
 
 	private String id;
@@ -78,4 +80,7 @@ public class AccountEntityContract extends AuditableContract {
 	@Length(max = 256)
 	private String description;
 
+	public AccountEntityContract(String id) {
+		this.id = id;
+	}
 }

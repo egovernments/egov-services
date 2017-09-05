@@ -99,7 +99,7 @@ public class AccountDetailKeyJdbcRepository extends JdbcRepository {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("accountDetailType =:accountDetailType");
+			params.append("accountDetailTypeId =:accountDetailType");
 			paramValues.put("accountDetailType", accountDetailKeySearchEntity.getAccountDetailTypeId());
 		}
 

@@ -45,7 +45,6 @@ import javax.validation.constraints.NotNull;
 
 import org.egov.common.web.contract.AuditableContract;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -68,7 +67,7 @@ public class FinancialYearContract extends AuditableContract {
 	private String id;
 
 	@Length(min = 1, max = 25)
-	
+
 	private String finYearRange;
 
 	@NotNull
@@ -87,4 +86,7 @@ public class FinancialYearContract extends AuditableContract {
 
 	private Boolean transferClosingBalance;
 
+	public FinancialYearContract(String id) {
+		this.id = id;
+	}
 }

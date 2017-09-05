@@ -110,7 +110,7 @@ const content=[
     },
     {
         icon: 'icon-class-name',
-        label: 'Building Plan',
+        label: 'NOC',
         content: [
             {
                 icon: 'icon-class-name',

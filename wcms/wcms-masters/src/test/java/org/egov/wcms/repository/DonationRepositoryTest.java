@@ -117,7 +117,6 @@ public class DonationRepositoryTest {
     private DonationGetRequest getDonationvalidaRequest() {
         final DonationGetRequest donation = new DonationGetRequest();
         donation.setCategoryType("1");
-        donation.setPropertyType("2");
         donation.setUsageType("3");
         donation.setMaxPipeSize(4d);
         donation.setMinPipeSize(1d);
@@ -184,8 +183,7 @@ public class DonationRepositoryTest {
         donation.setCode("2");
         donation.getAuditDetails().setCreatedBy(1L);
         donation.setCategoryTypeId(2L);
-        donation.setPropertyTypeId("2");
-        donation.setUsageTypeId("2");
+        donation.setUsageTypeId(2l);
         donation.setFromDate(new Date());
         donation.setToDate(new Date());
         donation.setMaxPipeSizeId(2L);

@@ -65,10 +65,6 @@ public class DonationGetRequest {
 
     private String code;
 
-    private String propertyType;
-
-    private String propertyTypeId;
-
     private String categoryType;
 
     private Long categoryTypeId;
@@ -77,11 +73,11 @@ public class DonationGetRequest {
 
     private String usageType;
 
-    private String usageTypeId;
+    private Long usageTypeId;
     
     private String subUsageType;
 
-    private String subUsageTypeId;
+    private Long subUsageTypeId;
 
     private Double minPipeSize;
 

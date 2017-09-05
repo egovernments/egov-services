@@ -74,25 +74,20 @@ public class Donation {
 
     @NotNull
     @Size(min = 1, max = 100)
-    private String propertyType;
-
-    private String propertyTypeId;
-
-    @NotNull
-    @Size(min = 1, max = 100)
     private String category;
 
+    @NotNull
     private Long categoryTypeId;
 
     @NotNull
     @Size(min = 1, max = 100)
     private String usageType;
-
-    private String usageTypeId;
-
+    @NotNull
+    private Long usageTypeId;
+    @NotNull
     private String subUsageType;
-
-    private String subUsageTypeId;
+    @NotNull
+    private Long subUsageTypeId;
 
     @NotNull
     @Size(min = 1, max = 100)
@@ -124,6 +119,7 @@ public class Donation {
 
     @NotNull
     private Boolean active;
+
     @JsonIgnore
     private AuditDetails auditDetails;
 }

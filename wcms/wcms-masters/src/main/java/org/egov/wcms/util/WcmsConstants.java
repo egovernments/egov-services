@@ -395,8 +395,8 @@ public class WcmsConstants {
     public static final String NON_METER_WATER_RATES_UNQ_ERROR_MESSAGE = "Entered combination of ConnectionType,UsageType ,SourceType ,PipeSize and fromDate has already been mapped";
     
     public static final String DONATION_UNIQUE_CODE = "wcms.0076";
-    public static final String DONATION_UNQ_FIELD_NAME = "peopertyType,usageTypeName,subUsageType,catgeory ,maxPipeSize and minPipeSize";
-    public static final String DONATION_UNQ_ERROR_MESSAGE = "Entered combination of PropertyType ,UsageType ,subUsageType,CategoryType ,MaxPipeSize and MinPipeSize Inmm has already been mapped";
+    public static final String DONATION_UNQ_FIELD_NAME = "usageTypeName,subUsageType,catgeory ,maxPipeSize and minPipeSize";
+    public static final String DONATION_UNQ_ERROR_MESSAGE = "Entered combination of UsageType ,subUsageType,CategoryType ,MaxPipeSize and MinPipeSize Inmm has already been mapped";
 
     public static final String SERVICETYPE_MANDATORY_CODE = "wcms.0076";
     public static final String SERVICETYPE_MANADATORY_FIELD_NAME = "serviceType";
@@ -434,6 +434,10 @@ public class WcmsConstants {
     public static final String LOGIC_MANDATORY_CODE = "wcms.0084";
     public static final String LOGIC_MANADATORY_FIELD_NAME = "logic";
     public static final String LOGIC_MANADATORY_ERROR_MESSAGE = "logic is required";
+    
+    public static final String CATEGORY_TYPE_INVALID_CODE = "wcms.0085";
+    public static final String CATEGORY_TYPE_INVALID_ERROR_MESSAGE = "Please provide valid Category Type";
+    public static final String CATEGORY_TYPE_INVALID_FIELD_NAME = "category Type";
     
     public static final String ZONE = "Zone";
     public static final String REVENUE = "REVENUE";

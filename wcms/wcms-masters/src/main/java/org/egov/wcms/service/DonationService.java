@@ -44,11 +44,8 @@ import java.util.List;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.wcms.model.Donation;
 import org.egov.wcms.repository.DonationRepository;
-import org.egov.wcms.util.WcmsConstants;
 import org.egov.wcms.web.contract.DonationGetRequest;
 import org.egov.wcms.web.contract.DonationRequest;
-import org.egov.wcms.web.contract.PropertyTypeResponse;
-import org.egov.wcms.web.contract.UsageTypeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -63,9 +60,6 @@ public class DonationService {
 
     @Autowired
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
-
-    @Autowired
-    private RestWaterExternalMasterService restExternalMasterService;
 
     @Autowired
     private CodeGeneratorService codeGeneratorService;
@@ -99,85 +93,26 @@ public class DonationService {
     }
 
     public List<Donation> getDonationList(final DonationGetRequest donationGetRequest) {
-        if (donationGetRequest.getPropertyType() != null) {
-            final PropertyTypeResponse propertyType = restExternalMasterService.getPropertyIdFromPTModule(
-                    donationGetRequest.getPropertyType(), donationGetRequest.getTenantId());
-            if (propertyType != null && propertyType.getPropertyTypesSize())
-                donationGetRequest.setPropertyTypeId(propertyType.getPropertyTypes().get(0).getId());
-
-        }
-        if (donationGetRequest.getUsageType() != null) {
-            final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModuleByCode(
-                    donationGetRequest.getUsageType(), WcmsConstants.WC, donationGetRequest.getTenantId());
-            if (usageType != null && usageType.getUsageTypesSize())
-                donationGetRequest.setUsageTypeId(usageType.getUsageMasters().get(0).getId());
-
-        }
-        if (donationGetRequest.getSubUsageType() != null) {
-            final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModuleByCode(
-                    donationGetRequest.getSubUsageType(), WcmsConstants.WC, donationGetRequest.getTenantId());
-            if (usageType != null && usageType.getUsageTypesSize())
-                donationGetRequest.setSubUsageTypeId(usageType.getUsageMasters().get(0).getId());
-
-        }
         return donationRepository.findForCriteria(donationGetRequest);
     }
 
-    public Boolean getPropertyTypeByName(final Donation donation) {
-        Boolean isValidProperty = Boolean.FALSE;
-
-        final PropertyTypeResponse propertyType = restExternalMasterService.getPropertyIdFromPTModule(
-                donation.getPropertyType(),
-                donation.getTenantId());
-        if (propertyType.getPropertyTypesSize()) {
-            isValidProperty = Boolean.TRUE;
-            donation.setPropertyTypeId(
-                    propertyType.getPropertyTypes() != null && propertyType.getPropertyTypes().get(0) != null
-                            ? propertyType.getPropertyTypes().get(0).getId() : "");
-
-        }
-        return isValidProperty;
-
-    }
-
-    public Boolean getUsageTypeByName(final Donation donation) {
-        Boolean isValidUsage = Boolean.FALSE;
-        final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModule(
-                donation.getUsageType(), WcmsConstants.WC,
-                donation.getTenantId());
-        if (usageType.getUsageTypesSize()) {
-            isValidUsage = Boolean.TRUE;
-            donation
-                    .setUsageTypeId(usageType.getUsageMasters() != null && usageType.getUsageMasters().get(0) != null
-                            ? usageType.getUsageMasters().get(0).getId() : "");
-
-        }
-        return isValidUsage;
-
-    }
-
     public boolean checkDonationsExist(final Donation donation) {
-        getPropertyTypeByName(donation);
-        getUsageTypeByName(donation);
-        getSubUsageType(donation);
-        return donationRepository.checkDonationsExist(donation.getCode(), donation.getPropertyTypeId(),
-                donation.getUsageTypeId(), donation.getSubUsageTypeId(),
+        return donationRepository.checkDonationsExist(donation.getCode(),
+                donation.getUsageType(), donation.getSubUsageType(),
                 donation.getCategory(), donation.getMaxPipeSize(), donation.getMinPipeSize(),
                 donation.getTenantId());
     }
 
-    public Boolean getSubUsageType(final Donation donation) {
-        Boolean isValidSubUsageType = Boolean.FALSE;
-        final UsageTypeResponse subUsageType = restExternalMasterService.getUsageIdFromPTModuleByCode(
-                donation.getSubUsageType(), WcmsConstants.WC,
-                donation.getTenantId());
-        if (subUsageType != null && subUsageType.getUsageMasters() != null && !subUsageType.getUsageMasters().isEmpty()
-                && subUsageType.getUsageMasters().get(0).getId() != null) {
-            donation
-                    .setSubUsageTypeId(subUsageType.getUsageMasters().get(0).getId().toString());
-            isValidSubUsageType = Boolean.TRUE;
-        }
-        return isValidSubUsageType;
+    public boolean checkPipeSizeExists(final Double pipeSize, final String tenantId) {
+        return donationRepository.checkPipeSizeExists(pipeSize, tenantId);
+    }
+
+    public boolean checkCategoryExists(final String categoryType, final String tenantId) {
+        return donationRepository.checkCategoryExists(categoryType, tenantId);
+    }
+
+    public boolean checkUsageAndSubUsageExists(final String usageType, final String tenantId) {
+        return donationRepository.checkUsageExists(usageType, tenantId);
     }
 
 }

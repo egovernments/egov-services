@@ -102,8 +102,7 @@ public class DonationServiceTest {
         donation.setCode("2");
         donation.setId(2l);
         donation.setCategoryTypeId(2L);
-        donation.setPropertyTypeId("2");
-        donation.setUsageTypeId("2");
+        donation.setUsageTypeId(2l);
         donation.setFromDate(new Date());
         donation.setToDate(new Date());
         donation.setMaxPipeSizeId(2L);

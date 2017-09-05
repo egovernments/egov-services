@@ -235,13 +235,13 @@ var dat = {
     "objectName": "categories",
     "groups": [
 			{
-				"label": "tl.view.groups.categorytype.title", 
+				"label": "tl.view.groups.categorytype.title",
 				"name": "viewCategoryType",
 				"fields": [
 
 					{
             "name": "category",
-            "jsonPath": "categories[0].parentId",
+            "jsonPath": "categories[0].parentName",
             "label": "tl.view.groups.subcategorytype.category",
             "pattern": "",
             "type": "singleValueList",
@@ -272,7 +272,30 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
-          }
+          },
+					{
+						"name": "validityYears",
+						"jsonPath": "categories[0].validityYears",
+						"label": "tl.view.groups.subcategorytype.validityYears",
+						"pattern": "^([1-9]|10)$",
+						"type": "number",
+						"isRequired": true,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "Enter Valid Validity Year (Min: 1, Max:10)"
+					},
+					{
+						"name": "active",
+						"jsonPath": "categories[0].active",
+						"label": "tl.view.groups.subcategorytype.active",
+						"pattern": "",
+						"type": "checkbox",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"defaultValue":true
+					}
 				]
 			}
     ]

@@ -817,6 +817,8 @@ var localization_EN_Data = {
     "tl.view.groups.subcategorytype.category": "Category",
     "tl.view.groups.subcategorytype.name": "Name",
     "tl.view.groups.subcategorytype.code": "Code",
+    "tl.view.groups.subcategorytype.validityYears": "Validity Years",
+    "tl.view.groups.subcategorytype.active": "Active",
     "tl.view.groups.subcategorytype.categories.details.feeType": "Fee Type",
     "tl.view.groups.subcategorytype.categories.details.rateType": "Rate Type",
     "tl.view.groups.subcategorytype.categories.details.uomId": "UOM",

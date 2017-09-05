@@ -56,7 +56,7 @@ var dat = {
           "name": "Name",
           "jsonPath": "name",
           "label": "wc.create.name",
-          "pattern": "^([a-zA-Z0-9_-]){3,100}$",
+          "pattern": "^([a-zA-Z0-9_-\\s]){3,100}$",
           "type": "text",
           "isRequired": false,
           "isDisabled": false,

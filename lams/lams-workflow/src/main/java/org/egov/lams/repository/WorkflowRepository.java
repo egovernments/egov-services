@@ -242,7 +242,7 @@ public class WorkflowRepository {
 
 			city = tr.getTenant().get(0).getCity();
 			LOGGER.info("City details :" + city.toString());
-			if (propertiesManager.getCityGradeCorp().equalsIgnoreCase(city.getGrade())) {
+			if (propertiesManager.getCityGradeCorp().equalsIgnoreCase(city.getUlbGrade())) {
 				isCorporation = Boolean.TRUE;
 			}
 		}

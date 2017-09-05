@@ -92,7 +92,7 @@ public class BankBranchJdbcRepository extends JdbcRepository {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("bank =:bank");
+			params.append("bankId =:bank");
 			paramValues.put("bank", bankBranchSearchEntity.getBankId());
 		}
 		if (bankBranchSearchEntity.getCode() != null) {

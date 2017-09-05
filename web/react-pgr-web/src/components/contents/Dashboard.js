@@ -76,7 +76,7 @@ const content=[
             {
                 icon: 'icon-class-name',
                 label: 'Apply for New Connection',
-                to: '#/non-fw/citizenServices/wc/create',
+                to: '#/non-framework/citizenServices/wc/create',
             },
             {
                 icon: 'icon-class-name',
@@ -124,7 +124,7 @@ const content=[
             {
                 icon: 'icon-class-name',
                 label: 'Apply for Fire NOC',
-                to: '#/non-fw/citizenServices/fireNoc/create',
+                to: '#/non-framework/citizenServices/fireNoc/create',
             }
         ],
     },
@@ -629,9 +629,9 @@ class Dashboard extends Component {
 
   rowClickHandler = (item) => {
     if(item.serviceCode == "WATER_NEWCONN") {
-      this.props.setRoute("/non-fw/citizenServices/wc/view/" + encodeURIComponent(item.serviceRequestId));
+      this.props.setRoute("/non-framework/citizenServices/wc/view/" + encodeURIComponent(item.serviceRequestId));
     } else if(item.serviceCode == "BPA_FIRE_NOC") {
-      this.props.setRoute("/non-fw/citizenServices/fireNoc/view/" + encodeURIComponent(item.serviceRequestId));
+      this.props.setRoute("/non-framework/citizenServices/fireNoc/view/" + encodeURIComponent(item.serviceRequestId));
     } else if(item.serviceCode == "WC_NODUES" && item.status == "No Dues Generated") {
       this.props.setRoute(`/receipt/watercharge/nodues/${encodeURIComponent(item.consumerCode)}/${encodeURIComponent(item.serviceRequestId)}`);
     } else if(item.serviceCode == "PT_NODUES" && item.status == "No Dues Generated") {

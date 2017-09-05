@@ -261,10 +261,10 @@ const Main = () => {
       <Route exact path={base+'/searchconnection/wc'} component={SearchLegacyWc}/>
       <Route exact path={base+'/wc/application/update/:stateId'} component={updateConnection}/>
 	  <Route exact path={base+'/waterConnection/view/:id'} component={ViewWc}/>
-      <Route exact path={base + '/non-fw/citizenServices/wc/create'} component={CS_WaterConnection}/>
-      <Route exact path={base + '/non-fw/citizenServices/wc/view/:ackNo'} component={CS_VIEW_WaterConnection}/>
-      <Route exact path={base + '/non-fw/citizenServices/fireNoc/create'} component={CS_FireNoc}/>
-      <Route exact path={base + '/non-fw/citizenServices/fireNoc/view/:ackNo'} component={CS_VIEW_FireNoc}/>
+      <Route exact path={base + '/non-framework/citizenServices/wc/create'} component={CS_WaterConnection}/>
+      <Route exact path={base + '/non-framework/citizenServices/wc/view/:ackNo'} component={CS_VIEW_WaterConnection}/>
+      <Route exact path={base + '/non-framework/citizenServices/fireNoc/create'} component={CS_FireNoc}/>
+      <Route exact path={base + '/non-framework/citizenServices/fireNoc/view/:ackNo'} component={CS_VIEW_FireNoc}/>
       <Route exact path= {base + '/payment/response/redirect/:msg'} component={Payment}/>
       <Route exact path= {base + '/receipt/:page/:type/:cc/:sid'} component={ReceiptDownload}/>
 

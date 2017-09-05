@@ -324,13 +324,13 @@ ReportDefinitions:
     type: epoch
     source: collection
     isMandatory: false
-    searchClause: AND EXTRACT(EPOCH from(to_timestamp(TRUNC( CAST(receiptdate AS bigint  ) / 1000 ))::date)) >= ($fromDate as bigint / 1000)
+    searchClause: AND EXTRACT(EPOCH from(to_timestamp(TRUNC( CAST(receiptdate AS bigint  ) / 1000 ))::date)) >= ($fromDate / 1000)
   - name: toDate
     label: reports.collection.todate
     type: epoch
     source: collection
     isMandatory: false
-    searchClause: AND EXTRACT(EPOCH from(to_timestamp(TRUNC( CAST(receiptdate AS bigint  ) / 1000 ))::date)) <= ($toDate as bigint / 1000)
+    searchClause: AND EXTRACT(EPOCH from(to_timestamp(TRUNC( CAST(receiptdate AS bigint  ) / 1000 ))::date)) <= ($toDate / 1000)
   - name: status
     label: reports.collection.status
     type: singlevaluelist

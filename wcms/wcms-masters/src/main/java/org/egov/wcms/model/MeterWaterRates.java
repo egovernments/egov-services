@@ -77,7 +77,7 @@ public class MeterWaterRates {
     private String usageTypeName;
 
     @NotNull
-    private String usageTypeId;
+    private Long usageTypeId;
 
     @NotNull
     private String sourceTypeName;
@@ -93,7 +93,7 @@ public class MeterWaterRates {
 
     private String subUsageType;
 
-    private String subUsageTypeId;
+    private Long subUsageTypeId;
 
     @NotNull
     private Boolean active;

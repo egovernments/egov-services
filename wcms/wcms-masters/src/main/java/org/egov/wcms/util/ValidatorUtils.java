@@ -1242,12 +1242,12 @@ public class ValidatorUtils {
                     .message(WcmsConstants.PIPESIZE_SIZEINMM__MANADATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.PIPESIZE_SIZEINMM__MANADATORY_FIELD_NAME).build();
             errorFields.add(errorField);
-        } else if (!meterWaterRatesService.getUsageTypeByName(meterWaterRates)) {
+        } else if (!meterWaterRatesService.isUsageTypeExists(meterWaterRates)) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.PROPERTY_USAGETYPE_INVALID_CODE)
                     .message(WcmsConstants.PROPERTY_USAGETYPE_INVALID_ERROR_MESSAGE)
                     .field(WcmsConstants.PROPERTY_USAGETYPE_INVALID_FIELD_NAME).build();
             errorFields.add(errorField);
-        } else if (!meterWaterRatesService.getSubUsageType(meterWaterRates)) {
+        } else if (!meterWaterRatesService.isSubUsageTypeExists(meterWaterRates)) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.SUB_USAGETYPE_INVALID_CODE)
                     .message(WcmsConstants.SUB_USAGETYPE_INVALID_ERROR_MESSAGE)
                     .field(WcmsConstants.SUB_USAGETYPE_INVALID_FIELD_NAME).build();
@@ -1337,12 +1337,12 @@ public class ValidatorUtils {
                     .message(WcmsConstants.PIPESIZE_SIZEINMM__MANADATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.PIPESIZE_SIZEINMM__MANADATORY_FIELD_NAME).build();
             errorFields.add(errorField);
-        } else if (!nonMeterWaterRatesService.getUsageTypeByName(nonMeterWaterRates)) {
+        } else if (!nonMeterWaterRatesService.isUsageTypeExists(nonMeterWaterRates)) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.PROPERTY_USAGETYPE_INVALID_CODE)
                     .message(WcmsConstants.PROPERTY_USAGETYPE_INVALID_ERROR_MESSAGE)
                     .field(WcmsConstants.PROPERTY_USAGETYPE_INVALID_FIELD_NAME).build();
             errorFields.add(errorField);
-        } else if (!nonMeterWaterRatesService.getSubUsageType(nonMeterWaterRates)) {
+        } else if (!nonMeterWaterRatesService.isSubUsageTypeExists(nonMeterWaterRates)) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.SUB_USAGETYPE_INVALID_CODE)
                     .message(WcmsConstants.SUB_USAGETYPE_INVALID_ERROR_MESSAGE)
                     .field(WcmsConstants.SUB_USAGETYPE_INVALID_FIELD_NAME).build();

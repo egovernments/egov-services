@@ -41,6 +41,7 @@ package org.egov.wcms.repository;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -50,11 +51,8 @@ import org.egov.wcms.repository.builder.MeterWaterRatesQueryBuilder;
 import org.egov.wcms.repository.builder.PropertyPipeSizeQueryBuilder;
 import org.egov.wcms.repository.rowmapper.MeterWaterRatesRowMapper;
 import org.egov.wcms.service.RestWaterExternalMasterService;
-import org.egov.wcms.util.WcmsConstants;
 import org.egov.wcms.web.contract.MeterWaterRatesGetRequest;
 import org.egov.wcms.web.contract.MeterWaterRatesRequest;
-import org.egov.wcms.web.contract.PropertyTaxResponseInfo;
-import org.egov.wcms.web.contract.UsageTypeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -222,37 +220,14 @@ public class MeterWaterRatesRepository {
 
     public List<MeterWaterRates> findForCriteria(final MeterWaterRatesGetRequest meterWaterRatesGetRequest) {
         final List<Object> preparedStatementValues = new ArrayList<>();
-        final List<Integer> usageTypeIdsList = new ArrayList<>();
-        final List<Integer> subUsageTypeIdsList = new ArrayList<>();
         final String queryStr = meterWaterRatesQueryBuilder.getQuery(meterWaterRatesGetRequest, preparedStatementValues);
         final List<MeterWaterRates> meterWaterRatesList = jdbcTemplate.query(queryStr,
                 preparedStatementValues.toArray(), meterWaterRatesRowMapper);
-
-        // fetch usage type Id and set the usage type name here
-        for (final MeterWaterRates meterWaterRates : meterWaterRatesList)
-            usageTypeIdsList.add(Integer.valueOf(meterWaterRates.getUsageTypeId()));
-        final Integer[] usageTypeIds = usageTypeIdsList.toArray(new Integer[usageTypeIdsList.size()]);
-        final UsageTypeResponse usageResponse = restExternalMasterService.getUsageNameFromPTModule(
-                usageTypeIds, WcmsConstants.WC, meterWaterRatesGetRequest.getTenantId());
-        for (final MeterWaterRates meterWaterRatesObj : meterWaterRatesList)
-            for (final PropertyTaxResponseInfo propertyResponse : usageResponse.getUsageMasters())
-                if (propertyResponse.getId().equals(meterWaterRatesObj.getUsageTypeId()))
-                    meterWaterRatesObj.setUsageTypeName(propertyResponse.getName());
-        // fetch sub usage type Id and set the usage type name here
-        for (final MeterWaterRates meterWaterRates : meterWaterRatesList)
-            subUsageTypeIdsList.add(Integer.valueOf(meterWaterRates.getSubUsageTypeId()));
-        final Integer[] subUsageTypeIds = subUsageTypeIdsList.toArray(new Integer[subUsageTypeIdsList.size()]);
-        final UsageTypeResponse subUsageResponse = restExternalMasterService.getSubUsageNameFromPTModule(
-                subUsageTypeIds, WcmsConstants.WC, meterWaterRatesGetRequest.getTenantId());
-        for (final MeterWaterRates meterWaterRatesObj : meterWaterRatesList)
-            for (final PropertyTaxResponseInfo propertyResponse : subUsageResponse.getUsageMasters())
-                if (propertyResponse.getId().equals(meterWaterRatesObj.getSubUsageTypeId()))
-                    meterWaterRatesObj.setSubUsageType(propertyResponse.getName());
         return meterWaterRatesList;
     }
 
-    public boolean checkMeterWaterRatesExists(final String code, final String usageTypeId,
-            final String subUsageTypeId, final String sourceTypeName, final Double pipeSize, final String tenantId) {
+    public boolean checkMeterWaterRatesExists(final String code, final Long usageTypeId,
+            final Long subUsageTypeId, final String sourceTypeName, final Double pipeSize, final String tenantId) {
         final List<Object> preparedStatementValues = new ArrayList<>();
         final String pipesizeQuery = PropertyPipeSizeQueryBuilder.getPipeSizeIdQuery();
         Long pipesizeId = 0L;
@@ -321,4 +296,19 @@ public class MeterWaterRatesRepository {
 
         return true;
     }
+    
+    public Map<String, Object> checkUsageAndSubUsageTypeExists(final String usageType, final String tenantId) {
+    	final List<Object> preparedStatementValues = new ArrayList<>();
+    	preparedStatementValues.add(usageType);
+    	preparedStatementValues.add(tenantId);
+    	final String query = MeterWaterRatesQueryBuilder.getUsageTypeIdQuery();
+    	
+    	try{
+    		return jdbcTemplate.queryForMap(query,preparedStatementValues.toArray());
+    	}catch(EmptyResultDataAccessException exception){
+    		return new HashMap<String, Object>();    		
+    	}
+    	
+    }
+    
 }

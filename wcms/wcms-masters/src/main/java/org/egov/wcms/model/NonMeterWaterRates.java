@@ -78,11 +78,11 @@ public class NonMeterWaterRates {
     private String usageTypeName;
 
     @NotNull
-    private String usageTypeId;
+    private Long usageTypeId;
 
     private String subUsageType;
 
-    private String subUsageTypeId;
+    private Long subUsageTypeId;
 
     private Boolean outsideUlb;
 

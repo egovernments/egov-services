@@ -58,8 +58,8 @@ public class MeterWaterRatesRowMapper implements RowMapper<MeterWaterRates> {
         meterWaterRates.setId(rs.getLong("meterwater_id"));
         meterWaterRates.setCode(rs.getString("meterwater_code"));
         meterWaterRates.setBillingType(rs.getString("billingtype"));
-        meterWaterRates.setUsageTypeId(rs.getString("meterwater_usagetypeid"));
-        meterWaterRates.setSubUsageTypeId(rs.getString("meterwater_subusagetypeid"));
+        meterWaterRates.setUsageTypeId(rs.getLong("meterwater_usagetypeid"));
+        meterWaterRates.setSubUsageTypeId(rs.getLong("meterwater_subusagetypeid"));
         meterWaterRates.setOutsideUlb((Boolean) rs.getObject("meterwater_outsideulb"));
         meterWaterRates.setSourceTypeId(rs.getLong("meterwater_sourcetypeid"));
         meterWaterRates.setPipeSizeId(rs.getLong("meterwater_pipesizeId"));
@@ -70,6 +70,8 @@ public class MeterWaterRatesRowMapper implements RowMapper<MeterWaterRates> {
         meterWaterRates.setTenantId(rs.getString("meterwater_tenantId"));
         meterWaterRates.setPipeSize(rs.getDouble("pipesize_sizeinmm"));
         meterWaterRates.setSourceTypeName(rs.getString("watersource_name"));
+        meterWaterRates.setUsageTypeName(rs.getString("usage_name"));
+        meterWaterRates.setSubUsageType(rs.getString("subusage_name"));
         final Slab slab = new Slab();
         slab.setId(rs.getLong("slab_id"));
         // slab.setMeterWaterRates(meterWaterRates);

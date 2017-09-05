@@ -48,13 +48,11 @@ import org.egov.wcms.model.NonMeterWaterRates;
 import org.egov.wcms.repository.builder.NonMeterWaterRatesQueryBuilder;
 import org.egov.wcms.repository.rowmapper.NonMeterWaterRatesRowMapper;
 import org.egov.wcms.service.RestWaterExternalMasterService;
-import org.egov.wcms.util.WcmsConstants;
 import org.egov.wcms.web.contract.NonMeterWaterRatesGetReq;
 import org.egov.wcms.web.contract.NonMeterWaterRatesReq;
-import org.egov.wcms.web.contract.PropertyTaxResponseInfo;
-import org.egov.wcms.web.contract.UsageTypeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -76,6 +74,9 @@ public class NonMeterWaterRatesRepository {
 
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     public NonMeterWaterRatesReq persistCreateNonMeterWaterRates(final NonMeterWaterRatesReq nonMeterWaterRatesReq) {
         log.info("NonMeterWaterRatesReq::" + nonMeterWaterRatesReq);
@@ -196,36 +197,13 @@ public class NonMeterWaterRatesRepository {
     public List<NonMeterWaterRates> findForCriteria(final NonMeterWaterRatesGetReq nonMeterWaterRatesGetRequest) {
 
         final Map<String, Object> preparedStatementValues = new HashMap<>();
-        final List<Integer> usageTypeIdsList = new ArrayList<>();
-        final List<Integer> subUsageTypeIdsList = new ArrayList<>();
         final String queryStr = nonMeterWaterRatesQueryBuilder.getQuery(nonMeterWaterRatesGetRequest, preparedStatementValues);
         final List<NonMeterWaterRates> nonMeterWaterRatesList = namedParameterJdbcTemplate.query(queryStr,
                 preparedStatementValues, nonMeterWaterRatesRowMapper);
-        log.info("NonMeterWaterRatesListFromDB"+nonMeterWaterRatesList);
-        // fetch usage type Id and set the usage type name here
-        for (final NonMeterWaterRates nonMeterWaterRates : nonMeterWaterRatesList)
-            usageTypeIdsList.add(Integer.valueOf(nonMeterWaterRates.getUsageTypeId()));
-        final Integer[] usageTypeIds = usageTypeIdsList.toArray(new Integer[usageTypeIdsList.size()]);
-        final UsageTypeResponse usageResponse = restExternalMasterService.getUsageNameFromPTModule(
-                usageTypeIds, WcmsConstants.WC, nonMeterWaterRatesGetRequest.getTenantId());
-        for (final NonMeterWaterRates nonMeterWaterRatesObj : nonMeterWaterRatesList)
-            for (final PropertyTaxResponseInfo propertyResponse : usageResponse.getUsageMasters())
-                if (propertyResponse.getId().equals(nonMeterWaterRatesObj.getUsageTypeId()))
-                    nonMeterWaterRatesObj.setUsageTypeName(propertyResponse.getName());
-        // fetch sub usage type Id and set the usage type name here
-        for (final NonMeterWaterRates nonMeterWaterRates : nonMeterWaterRatesList)
-            subUsageTypeIdsList.add(Integer.valueOf(nonMeterWaterRates.getSubUsageTypeId()));
-        final Integer[] subUsageTypeIds = subUsageTypeIdsList.toArray(new Integer[subUsageTypeIdsList.size()]);
-        final UsageTypeResponse subUsageResponse = restExternalMasterService.getSubUsageNameFromPTModule(
-                subUsageTypeIds, WcmsConstants.WC, nonMeterWaterRatesGetRequest.getTenantId());
-        for (final NonMeterWaterRates nonMeterWaterRatesObj : nonMeterWaterRatesList)
-            for (final PropertyTaxResponseInfo propertyResponse : subUsageResponse.getUsageMasters())
-                if (propertyResponse.getId().equals(nonMeterWaterRatesObj.getSubUsageTypeId()))
-                    nonMeterWaterRatesObj.setSubUsageType(propertyResponse.getName());
         return nonMeterWaterRatesList;
     }
 
-    public boolean checkNonMeterWaterRatesExists(final String code, final String connectionType, final String usageTypeId,
+    public boolean checkNonMeterWaterRatesExists(final String code, final String connectionType, final Long usageTypeId,
             final String sourceTypeName, final Double pipeSize, final Long fromDate, final String tenantId) {
         final Map<String, Object> preparedStatementValues = new HashMap<>();
         final Map<String, Object> batchArguments = new HashMap<>();
@@ -297,5 +275,19 @@ public class NonMeterWaterRatesRepository {
             return false;
 
         return true;
+    }
+    
+    public Map<String, Object> checkUsageAndSubUsageTypeExists(final String usageType, final String tenantId) {
+    	final List<Object> preparedStatementValues = new ArrayList<>();
+    	preparedStatementValues.add(usageType);
+    	preparedStatementValues.add(tenantId);
+    	final String query = NonMeterWaterRatesQueryBuilder.getUsageTypeIdQuery();
+    	
+    	try{
+    		return jdbcTemplate.queryForMap(query,preparedStatementValues.toArray());
+    	}catch(EmptyResultDataAccessException exception){
+    		return new HashMap<String, Object>();    		
+    	}
+    	
     }
 }

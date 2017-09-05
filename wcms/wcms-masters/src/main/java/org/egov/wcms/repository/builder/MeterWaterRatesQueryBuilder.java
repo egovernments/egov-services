@@ -55,10 +55,13 @@ public class MeterWaterRatesQueryBuilder {
             + " meterwater.subusagetypeid as meterwater_subusagetypeid,meterwater.outsideulb as meterwater_outsideulb,"
             + "meterwater.pipesizeid as meterwater_pipesizeId,pipesize.sizeinmilimeter as pipesize_sizeinmm,meterwater.fromdate as meterwater_fromdate,meterwater.todate as meterwater_todate,"
             + "meterwater.active as meterwater_active, watersource.name as watersource_name,"
+            + "usage.name as usage_name, subusage.name as subusage_name,"
             + "meterwater.tenantId as meterwater_tenantId ,slab.id as slab_id,slab.meterwaterratesid as slab_meterwaterratesid,"
             + "slab.fromunit as slab_fromunit,slab.tounit as slab_tounit,slab.unitrate as slab_unitrate,slab.tenantId as slab_tenantId"
             + " FROM egwtr_meter_water_rates meterwater LEFT JOIN egwtr_slab slab ON slab.meterwaterratesid=meterwater.id LEFT JOIN egwtr_pipesize pipesize ON meterwater.pipesizeid = pipesize.id "
-            + " LEFT JOIN egwtr_water_source_type watersource ON meterwater.sourcetypeid = watersource.id";
+            + " LEFT JOIN egwtr_water_source_type watersource ON meterwater.sourcetypeid = watersource.id"
+    		+ " LEFT JOIN egwtr_usage_type usage ON meterwater.usagetypeid = usage.id"
+    		+ " LEFT JOIN egwtr_usage_type subusage ON meterwater.subusagetypeid = subusage.id";
 
     public String getQuery(final MeterWaterRatesGetRequest meterWaterRatesGetRequest,
             @SuppressWarnings("rawtypes") final List preparedStatementValues) {
@@ -189,6 +192,10 @@ public class MeterWaterRatesQueryBuilder {
 
     public static String getSourceTypeNameQuery() {
         return "SELECT name FROM egwtr_water_source_type WHERE id = ? and tenantId = ? ";
+    }
+    
+    public static String getUsageTypeIdQuery() {
+        return " select id FROM egwtr_usage_type  where name= ? and tenantId = ? ";
     }
 
 }

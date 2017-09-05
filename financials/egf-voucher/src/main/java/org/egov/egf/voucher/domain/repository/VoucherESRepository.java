@@ -134,7 +134,7 @@ public class VoucherESRepository extends ESRepository {
 
 		elasticSearchUtils.add(voucherSearchContract.getDescription(), "description", boolQueryBuilder);
 
-		elasticSearchUtils.add(voucherSearchContract.getBudgetCheckRequired(), "budgetCheckRequired", boolQueryBuilder);
+	//	elasticSearchUtils.add(voucherSearchContract.getBudgetCheckRequired(), "budgetCheckRequired", boolQueryBuilder);
 
 		elasticSearchUtils.add(voucherSearchContract.getModuleName(), "moduleName", boolQueryBuilder);
 

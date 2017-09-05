@@ -82,6 +82,10 @@ public class FundContract extends AuditableContract {
 	@NotNull
 	protected Boolean active;
 
+	public FundContract(String id) {
+		this.id = id;
+	}
+
 	/*
 	 * public Fund toDomain() {
 	 *

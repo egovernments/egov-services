@@ -53,40 +53,44 @@ import javax.validation.constraints.NotNull;
 @Builder
 public class RecoveryContract extends AuditableContract {
 
-    private static final long serialVersionUID = 7977534010758407945L;
+	private static final long serialVersionUID = 7977534010758407945L;
 
-    protected String id;
+	protected String id;
 
-    @Length(max = 50, min = 2)
-    @NotNull
-    protected String name;
+	@Length(max = 50, min = 2)
+	@NotNull
+	protected String name;
 
-    @Length(max = 50, min = 2)
-    @NotNull
-    protected String code;
+	@Length(max = 50, min = 2)
+	@NotNull
+	protected String code;
 
-    @NotNull
-    protected ChartOfAccountContract chartOfAccount;
+	@NotNull
+	protected ChartOfAccountContract chartOfAccount;
 
-    protected String type;
+	protected String type;
 
-    protected Double flat;
+	protected Double flat;
 
-    protected Double percentage;
+	protected Double percentage;
 
-    @NotNull
-    protected Boolean active;
+	@NotNull
+	protected Boolean active;
 
-    @Length(max = 100)
-    protected String remitted;
+	@Length(max = 100)
+	protected String remitted;
 
-    @Length(max = 16)
-    protected String ifscCode;
+	@Length(max = 16)
+	protected String ifscCode;
 
-    protected Character mode;
+	protected Character mode;
 
-    protected Character remittanceMode;
+	protected Character remittanceMode;
 
-    @Length(max = 32)
-    protected String accountNumber;
+	@Length(max = 32)
+	protected String accountNumber;
+
+	public RecoveryContract(String id) {
+		this.id = id;
+	}
 }

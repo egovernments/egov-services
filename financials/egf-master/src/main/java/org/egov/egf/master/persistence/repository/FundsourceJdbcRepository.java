@@ -113,7 +113,7 @@ public class FundsourceJdbcRepository extends JdbcRepository {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("fundSource =:fundSource");
+			params.append("parentId =:fundSource");
 			paramValues.put("fundSource", fundsourceSearchEntity.getParentId());
 		}
 		if (fundsourceSearchEntity.getLlevel() != null) {

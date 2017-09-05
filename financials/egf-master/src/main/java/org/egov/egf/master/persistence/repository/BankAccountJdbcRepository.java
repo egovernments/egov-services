@@ -92,21 +92,21 @@ public class BankAccountJdbcRepository extends JdbcRepository {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("bankBranch =:bankBranch");
+			params.append("bankBranchId =:bankBranch");
 			paramValues.put("bankBranch", bankAccountSearchEntity.getBankBranchId());
 		}
 		if (bankAccountSearchEntity.getChartOfAccountId() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("chartOfAccount =:chartOfAccount");
+			params.append("chartOfAccountId =:chartOfAccount");
 			paramValues.put("chartOfAccount", bankAccountSearchEntity.getChartOfAccountId());
 		}
 		if (bankAccountSearchEntity.getFundId() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("fund =:fund");
+			params.append("fundId =:fund");
 			paramValues.put("fund", bankAccountSearchEntity.getFundId());
 		}
 		if (bankAccountSearchEntity.getAccountNumber() != null) {

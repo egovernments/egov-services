@@ -44,7 +44,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.egov.common.web.contract.AuditableContract;
-import org.hibernate.validator.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -85,5 +84,9 @@ public class FinancialStatusContract extends AuditableContract {
 
 	@Size(min = 3, max = 250)
 	private String description;
+
+	public FinancialStatusContract(String id) {
+		this.id = id;
+	}
 
 }

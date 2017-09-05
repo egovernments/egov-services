@@ -94,14 +94,14 @@ public class ChartOfAccountDetailJdbcRepository extends JdbcRepository {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("chartOfAccount =:chartOfAccount");
+			params.append("chartOfAccountId =:chartOfAccount");
 			paramValues.put("chartOfAccount", chartOfAccountDetailSearchEntity.getChartOfAccountId());
 		}
 		if (chartOfAccountDetailSearchEntity.getAccountDetailTypeId() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("accountDetailType =:accountDetailType");
+			params.append("accountDetailTypeId =:accountDetailType");
 			paramValues.put("accountDetailType", chartOfAccountDetailSearchEntity.getAccountDetailTypeId());
 		}
 

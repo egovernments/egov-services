@@ -417,7 +417,7 @@ public class TradeLicenseService {
 					requestInfoWrapper);
 
 		if (null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty() && currentStatus.getLicenseStatuses()
-				.get(0).getCode() == NewLicenseStatus.INSPECTION_COMPLETED.getName()) {
+				.get(0).getCode().equalsIgnoreCase(NewLicenseStatus.INSPECTION_COMPLETED.getName())) {
 			DemandResponse demandResponse = licenseBillService.createBill(tradeLicense, requestInfo);
 			TradeLicenseSearch tradeLicenseSearch = tradeLicenseRepository.getByLicenseId(tradeLicense, requestInfo);
 			if (tradeLicenseSearch != null) {

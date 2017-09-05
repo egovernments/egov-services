@@ -206,7 +206,7 @@ class ReceiptDownload extends Component {
                                           </td>
                                           <td style={{textAlign:"center"}}>
                                               <b>Roha Municipal Council</b><br/>
-                         {this.props.match.params.page == "watercharge" ?  <span>Water Charges Department</span> : <span>Assessment Department / करनिर्धारण विभाग</span>}
+                         {this.props.match.params.page == "watercharge" ?  <span>Water Department</span> : <span>Assessment Department / करनिर्धारण विभाग</span>}
                                           </td>
                                           <td style={{textAlign:"right"}}>
                       <img src="./temp/images/AS.png" height="60" width="60"/>
@@ -441,7 +441,7 @@ class ReceiptDownload extends Component {
 			                                              </td>
 			                                              <td style={{textAlign:"center"}}>
 			                                                  <b>Roha Municipal Council</b><br/>
-			                                                   {this.props.match.params.page == "propertytax" ? <span>Property Tax Department / करनिर्धारण विभाग</span> : <span>Water Charges Department</span>}
+			                                                   {this.props.match.params.page == "propertytax" ? <span>Property Tax Department / करनिर्धारण विभाग</span> : <span>Water Department</span>}
 			                                              </td>
 			                                              <td style={{textAlign:"right"}}>
 			                                                <img src="./temp/images/AS.png" height="60" width="60"/>

@@ -810,16 +810,16 @@ class Report extends Component {
   };
 
   openPaymentPopup = () => {
-    // this.setState({open: true});
-    let {serviceRequest}=this.state;
-    let self=this;
-    let {formData,metaData}=this.props;
-    self.props.setLoadingStatus('loading');
+    this.setState({open: true});
+    // let {serviceRequest}=this.state;
+    // let self=this;
+    // let {formData,metaData}=this.props;
+    // self.props.setLoadingStatus('loading');
 
     // window.localStorage.setItem("demands",JSON.stringify(demands));
     // window.localStorage.setItem("applicationFeeDemand",JSON.stringify(applicationFeeDemand));
-    window.localStorage.setItem("formData",JSON.stringify(formData));
-    window.localStorage.setItem("serviceRequest",JSON.stringify(serviceRequest));
+    // window.localStorage.setItem("formData",JSON.stringify(formData));
+    // window.localStorage.setItem("serviceRequest",JSON.stringify(serviceRequest));
     // window.localStorage.setItem("moduleName",this.props.match.params.id);
     // window.localStorage.setItem("metaData",JSON.stringify(metaData));
     // window.localStorage.setItem("workflow","no-dues");

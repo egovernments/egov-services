@@ -1,5 +1,7 @@
 var localization_EN_Data = {
     //citizen servers
+    "This is computer generated receipt no authorised signature required":"This is computer generated receipt no authorised signature required",
+    "Total (Rs)":"Amount to Pay (Rs)",
     "noDues.search.citizenServices.title":"Search - Provide one...",
     "noDues.citizenService.consumerCode":"Consumer Code",
     "noDues.citizenService.email":"Email",

@@ -1230,7 +1230,7 @@ class NoDues extends Component {
                                     <td>{getFullDate(demands[key].taxPeriodTo)}</td>
 
                                    <td>{itemOne.taxHeadMasterCode}</td>
-                                   <td style={{textAlign:"right"}}>{itemOne.taxAmount-itemOne.collectionAmount}</td>
+                                   <td style={{textAlign:"right"}}>{parseInt(itemOne.taxAmount-itemOne.collectionAmount).toFixed(2)}</td>
                                 </tr>)
                               })
                           }):(
@@ -1250,11 +1250,11 @@ class NoDues extends Component {
 
                           <tr>
                              <th colSpan={3} style={{textAlign:"left"}}><strong>Application Fees (Rs)</strong></th>
-                             <th style={{textAlign:"right"}}><strong>{(applicationFeeDemand && applicationFeeDemand.length>0 && applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount)} </strong></th>
+                             <th style={{textAlign:"right"}}><strong>{(applicationFeeDemand && applicationFeeDemand.length>0 && applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount).toFixed(2)} </strong></th>
                           </tr>
                           <tr>
-                             <th colSpan={3} style={{textAlign:"left"}}><strong>Total (Rs) </strong></th>
-                             <th style={{textAlign:"right"}}><strong>{getTotal(demands)+(applicationFeeDemand && applicationFeeDemand.length>0 && applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount)}</strong></th>
+                             <th colSpan={3} style={{textAlign:"left"}}><strong>{translate("Total (Rs)")} </strong></th>
+                             <th style={{textAlign:"right"}}><strong>{(getTotal(demands)+(applicationFeeDemand && applicationFeeDemand.length>0 && applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount)).toFixed(2)}</strong></th>
                           </tr>
                       </thead>
                   </Table>
@@ -1278,7 +1278,7 @@ class NoDues extends Component {
                         >
                         <div style={{textAlign:"center"}}>
 
-                            <h4>Amount to be paid: Rs {getTotal(demands)+(applicationFeeDemand.length>0 && applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount)}</h4>
+                            <h4>Amount to be paid: Rs {getTotal(demands)+(applicationFeeDemand.length>0 && applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount).toFixed(2)}</h4>
                             <br/>
 
                         </div>
@@ -1307,7 +1307,7 @@ class NoDues extends Component {
                                           </td>
                                           <td style={{textAlign:"center"}}>
                                               <b>Roha Municipal Council</b><br/>
-											                         {this.props.match.params.id == "pt" ? <span>Assessment Department / करनिर्धारण विभाग</span> : <span>Water Charges Department</span>}
+											                         {this.props.match.params.id == "pt" ? <span>Assessment Department / करनिर्धारण विभाग</span> : <span>Water Department</span>}
                                           </td>
                                           <td style={{textAlign:"right"}}>
 											<img src="./temp/images/AS.png" height="60" width="60"/>
@@ -1319,7 +1319,7 @@ class NoDues extends Component {
                                           </td>
 
                                           <td style={{textAlign:"center"}}>
-                                            Receipt For : {this.props.match.params.id=="wc" ? 'Water Charges' : 'Property Tax'}
+                                            Receipt For : {this.props.match.params.id=="wc" ? 'Water Charge' : 'Property Tax'}
                                           </td>
                                           <td style={{textAlign:"right"}}>
                                             Receipt Date: {getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate)}
@@ -1383,7 +1383,7 @@ class NoDues extends Component {
 
                                           </td>
                                           <td >
-                                            {match.params.id=="wc"?"Water":"Property"} No dues
+                                            {match.params.id=="wc"?"Water Charge":"Property"} No dues
                                           </td>
                                           <td >
                                             {getAmount(this.state.demands, true)}
@@ -1452,6 +1452,7 @@ class NoDues extends Component {
                                       </tr>
                                   </tbody>
                               </Table>
+                              <strong style={{textAlign:"right"}}>{translate("This is computer generated receipt no authorised signature required")}</strong>
                         </CardText>
                       </Card>
                       <div style={{"page-break-after": "always"}}></div>
@@ -1468,7 +1469,7 @@ class NoDues extends Component {
                                           </td>
                                           <td style={{textAlign:"center"}}>
                                               <b>Roha Municipal Council</b><br/>
-                                              {this.props.match.params.id == "pt" ? <span>Assesment Department / करनिर्धारण विभाग</span> : <span>Water Charges Department</span>}
+                                              {this.props.match.params.id == "pt" ? <span>Assesment Department / करनिर्धारण विभाग</span> : <span>Water Department</span>}
                                           </td>
                                           <td style={{textAlign:"right"}}>
                       <img src="./temp/images/AS.png" height="60" width="60"/>
@@ -1514,7 +1515,7 @@ class NoDues extends Component {
 
                                           </td>
                                           <td colSpan={4}>
-                                            Application for {(match.params.id=="wc"?"Water":"Property")} {match.params.status == "extract" ? "Extract" : "No Dues"}
+                                            Application for {(match.params.id=="wc"?"Water Charge":"Property")} {match.params.status == "extract" ? "Extract" : "No Dues"}
                                           </td>
 
                                       </tr>
@@ -1566,13 +1567,15 @@ class NoDues extends Component {
                                       </tr>
                                   </tbody>
                               </Table>
+                              <strong style={{textAlign:"right"}}>{translate("This is computer generated receipt no authorised signature required")}</strong>
+
                         </CardText>
                       </Card>
                       <div style={{"page-break-after": "always"}}></div>
                       </Col>}
                       <Col md={6} id="DownloadReceipt">
                       {(this.props.match.params.status != "extract" && Receipt && Receipt[0]) ? <Card>
-                        <CardHeader title={<strong>{"Certificate for: "+(this.props.match.params.id == "pt"?"Property Tax":"Water Charges")+ " No due"}</strong>}/>
+                        <CardHeader title={<strong>{"Certificate for: "+(this.props.match.params.id == "pt"?"Property Tax":"Water Charge")+ " No due"}</strong>}/>
                         <CardText>
                             <Table id="CertificateForWc" responsive style={{fontSize:"bold"}}  bordered condensed>
                                   <tbody>
@@ -1582,7 +1585,7 @@ class NoDues extends Component {
                                           </td>
                                           <td style={{textAlign:"center"}}>
                                               <b>Roha Municipal Council</b><br/>
-											                         {this.props.match.params.id == "pt" ? <span>Property Tax Department / करनिर्धारण विभाग</span> : <span>Water Charges Department</span>}
+											                         {this.props.match.params.id == "pt" ? <span>Property Tax Department / करनिर्धारण विभाग</span> : <span>Water Department</span>}
                                           </td>
                                           <td style={{textAlign:"right"}}>
                                             <img src="./temp/images/AS.png" height="60" width="60"/>
@@ -1597,7 +1600,7 @@ class NoDues extends Component {
                                             <br/>
                                             <div style={{textAlign:"right"}}>
                                                   Date / दिनांक :{Receipt[0].Bill[0].billDetails[0].billDate ? getFullDate(Receipt[0].Bill[0].billDetails[0].billDate, true) : (Receipt[0].Bill[0].billDetails[0].receiptDate ? getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate, true) : "-")} <br/>
-                                                  Certificate No. / प्रमाणपत्र क्रं : {this.state.serviceRequest.serviceRequestId}
+                                                  Certificate No. / प्रमाणपत्र क्रं : {this.state.serviceRequest.serviceRequestId.replace("SRN","CERT")}
 
                                             </div>
                                             <br/>
@@ -1643,10 +1646,11 @@ class NoDues extends Component {
                                   </tbody>
                               </Table>
 
+                              <strong style={{textAlign:"right"}}>{translate("This is computer generated receipt no authorised signature required")}</strong>
 
                         </CardText>
                         </Card> : Receipt && Receipt[0] && <Card>
-            <CardHeader title={<strong>{"Certificate for: "+(this.props.match.params.id == "pt"?"Property Tax":"Water Charges")+ " Extract"}</strong>}/>
+            <CardHeader title={<strong>{"Certificate for: "+(this.props.match.params.id == "pt"?"Property Tax":"Water Charge")+ " Extract"}</strong>}/>
             <CardText>
                   <Table responsive style={{fontSize:"bold", "marginBottom": "20px"}} id="CertificateForWc" bordered condensed>
                       <tbody>
@@ -1656,7 +1660,7 @@ class NoDues extends Component {
                               </td>
                               <td style={{textAlign:"center"}} colSpan={4}>
                                 <b>Roha Municipal Council</b><br/>
-                                {this.props.match.params.id == "pt" ? <span>Property Tax Department / करनिर्धारण विभाग</span> : <span>Water Charges Department</span>}
+                                {this.props.match.params.id == "pt" ? <span>Property Tax Department / करनिर्धारण विभाग</span> : <span>Water Department</span>}
                               </td>
                               <td style={{textAlign:"right"}} colSpan={2}>
                                 <img src="./temp/images/AS.png" height="60" width="60"/>
@@ -1715,6 +1719,8 @@ class NoDues extends Component {
                           {this.state.Property && this.state.Property.propertyDetail && this.state.Property.propertyDetail.floors ? renderProperty(this.state.Property.propertyDetail.floors) : "No Data Available"}
                       </tbody>
                   </Table>
+                  <strong style={{textAlign:"right"}}>{translate("This is computer generated receipt no authorised signature required")}</strong>
+
             </CardText>
         </Card>}
                       </Col>

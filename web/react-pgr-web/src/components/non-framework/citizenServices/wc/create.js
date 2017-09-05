@@ -810,7 +810,19 @@ class Report extends Component {
   };
 
   openPaymentPopup = () => {
-    this.setState({open: true});
+    // this.setState({open: true});
+    let {serviceRequest}=this.state;
+    let self=this;
+    let {formData,metaData}=this.props;
+    self.props.setLoadingStatus('loading');
+
+    // window.localStorage.setItem("demands",JSON.stringify(demands));
+    // window.localStorage.setItem("applicationFeeDemand",JSON.stringify(applicationFeeDemand));
+    window.localStorage.setItem("formData",JSON.stringify(formData));
+    window.localStorage.setItem("serviceRequest",JSON.stringify(serviceRequest));
+    // window.localStorage.setItem("moduleName",this.props.match.params.id);
+    // window.localStorage.setItem("metaData",JSON.stringify(metaData));
+    // window.localStorage.setItem("workflow","no-dues");
   }
 
   generateReceipt = (response) => {
@@ -983,7 +995,7 @@ class Report extends Component {
     let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler, handleClose} = this;
     let {open, stepIndex} = this.state;
     let self = this;
-    
+
     const getStepContent = function (stepIndex) {
       switch (stepIndex) {
         case 0:
@@ -1038,7 +1050,7 @@ class Report extends Component {
                                           </td>
                                           <td style={{textAlign:"center"}}>
                                               <b>Roha Municipal Council</b><br/>
-                                              Water Charges Department
+                                              Water Department
                                           </td>
                                           <td style={{textAlign:"right"}}>
                                             <img src="./temp/images/AS.png" height="60" width="60"/>

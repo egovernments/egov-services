@@ -306,6 +306,8 @@ class Dashboard extends Component {
             return v1.auditDetails.createdDate > v2.auditDetails.createdDate ? -1 : (v1.auditDetails.createdDate < v2.auditDetails.createdDate ? 1 : 0);
           });
 
+
+
           checkCountAndSetState("serviceRequestsTwo", res3.serviceReq);
         } else {
           checkCountAndSetState("serviceRequestsTwo", []);
@@ -747,14 +749,17 @@ class Dashboard extends Component {
                                     </thead>
                                     <tbody>
                                         {serviceRequestsTwo.map((item, key)=>{
-                                          return (<tr key={key} onClick={() => {this.rowClickHandler(item)}}>
-                                              <td>{item.serviceRequestId}</td>
-                                              <td>{nameMap[item.serviceCode] || item.serviceCode}</td>
-                                              <td>{nameMap[item.status] || item.status}</td>
-                                              <td>{item.auditDetails ? getDate(item.auditDetails.createdDate) : "-"}</td>
-                                              {<td><i className="material-icons">cloud_download</i></td>}
+                                          if (item.status!="CREATED") {
+                                            return (<tr key={key} onClick={() => {this.rowClickHandler(item)}}>
+                                                <td>{item.serviceRequestId}</td>
+                                                <td>{nameMap[item.serviceCode] || item.serviceCode}</td>
+                                                <td>{nameMap[item.status] || item.status}</td>
+                                                <td>{item.auditDetails ? getDate(item.auditDetails.createdDate) : "-"}</td>
+                                                {<td><i className="material-icons">cloud_download</i></td>}
 
-                                          </tr>)
+                                            </tr>)
+                                          }
+
                                         }) }
                                     </tbody>
                                 </Table>

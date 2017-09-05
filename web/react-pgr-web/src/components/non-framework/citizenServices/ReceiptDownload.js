@@ -72,7 +72,7 @@ class ReceiptDownload extends Component {
 
 			Api.commonApiPost("/collection-services/receipts/_search", {consumerCode: CC, businessService: BS}, {}, null, true, false, localStorage.getItem("auth-token-temp")).then(function(res){
 		      if(self.props.match.params.page == "extract") {
-		      	Api.commonApiPost("pt-property/properties/_search", {"upicNumber": self.props.formData.consumerCode}, {}, null, true, false, localStorage.getItem("auth-token-temp")).then(function(res2) {
+		      	Api.commonApiPost("pt-property/properties/_search", {"upicNumber": CC}, {}, null, true, false, localStorage.getItem("auth-token-temp")).then(function(res2) {
 			      let Property = {};
 			      self.props.setLoadingStatus('hide');
 			      if(res2 && res2.properties && res2.properties[0] ? res2.properties[0] : {}) {

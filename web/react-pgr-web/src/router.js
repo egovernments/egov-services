@@ -250,9 +250,9 @@ const Main = () => {
 
       <Route exact path= {base + '/non-framework/collection/master/paytax/PayTaxCreate'} component={PayTaxCreate}/>
       <Route exact path= {base + '/non-framework/collection/receipt/view/:id'} component={ReceiptView}/>
-      <Route exact path= {base + '/non-framework/citizenServices/:moduleName/:status/:id/:paymentGateWayRes?'} component={NoDues}/>
+      <Route exact path= {base + '/non-framework-cs/citizenServices/:moduleName/:status/:id/:paymentGateWayRes?'} component={NoDues}/>
 
-      <Route exact path= {base + '/non-framework/citizenServices/paytax/:status/:id/:paymentGateWayRes?'} component={PayTax}/>
+      <Route exact path= {base + '/non-framework-cs/citizenServices/paytax/:status/:id/:paymentGateWayRes?'} component={PayTax}/>
 
 
       <Route exact path={base + '/empsearch/:actionName'} component={EmployeeSearch}/>

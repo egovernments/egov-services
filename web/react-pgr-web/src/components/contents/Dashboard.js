@@ -71,7 +71,7 @@ const content=[
             {
                 icon: 'icon-class-name',
                 label: 'Apply for No Dues',
-                to: '#/non-framework/citizenServices/no-dues/search/wc',
+                to: '#/non-framework-cs/citizenServices/no-dues/search/wc',
             },
             {
                 icon: 'icon-class-name',
@@ -81,7 +81,7 @@ const content=[
             {
                 icon: 'icon-class-name',
                 label: 'Pay My Dues',
-                to: '#/non-framework/citizenServices/paytax/search/wc',
+                to: '#/non-framework-cs/citizenServices/paytax/search/wc',
             }
         ],
     },
@@ -92,17 +92,17 @@ const content=[
             {
                 icon: 'icon-class-name',
                 label: 'Apply for No Dues',
-                to: '#/non-framework/citizenServices/no-dues/search/pt',
+                to: '#/non-framework-cs/citizenServices/no-dues/search/pt',
             },
             {
                 icon: 'icon-class-name',
                 label: 'Apply for Extract',
-                to: '#/non-framework/citizenServices/extract/search/pt',
+                to: '#/non-framework-cs/citizenServices/extract/search/pt',
             },
             {
                 icon: 'icon-class-name',
                 label: 'Pay My Dues',
-                to: '#/non-framework/citizenServices/paytax/search/pt',
+                to: '#/non-framework-cs/citizenServices/paytax/search/pt',
             }
         ],
     },
@@ -515,13 +515,13 @@ class Dashboard extends Component {
             if(query[i].indexOf("link") > -1) {
               switch(query[i].split("=")[1]) {
                 case 'waternodue':
-                  self.props.setRoute("/non-framework/citizenServices/no-dues/search/wc");
+                  self.props.setRoute("/non-framework-cs/citizenServices/no-dues/search/wc");
                   break;
                 case  'propertytaxextract':
-                  self.props.setRoute("/non-framework/citizenServices/no-dues/extract/pt");
+                  self.props.setRoute("/non-framework-cs/citizenServices/no-dues/extract/pt");
                   break;
                 case 'propertytaxdue':
-                  self.props.setRoute("/non-framework/citizenServices/no-dues/search/pt");
+                  self.props.setRoute("/non-framework-cs/citizenServices/no-dues/search/pt");
                   break;
               }
             }

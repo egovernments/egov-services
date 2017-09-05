@@ -790,13 +790,13 @@ class NoDues extends Component {
 
 
 
-       Api.commonApiPost("/billing-service/taxheads/_search", {}, {}, null, self.props.metaData["noDues.search"].useTimestamp, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
-          console.log(res);
-          self.props.setLoadingStatus('hide');
-         }, function(err) {
-           self.props.toggleSnackbarAndSetText(true, err.message, false, true);
-           self.props.setLoadingStatus('hide');
-         })
+      //  Api.commonApiPost("/billing-service/taxheads/_search", {}, {}, null, self.props.metaData["noDues.search"].useTimestamp, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
+      //     console.log(res);
+      //     self.props.setLoadingStatus('hide');
+      //    }, function(err) {
+      //      self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+      //      self.props.setLoadingStatus('hide');
+      //    })
 
   }
 
@@ -1654,7 +1654,7 @@ class NoDues extends Component {
                                   </tbody>
                               </Table>
 
-                              <strong style={{textAlign:"right"}}>{translate("This is computer generated receipt no authorised signature required")}</strong>
+                              <span style={{textAlign:"right"}}>{translate("This is computer generated receipt no authorised signature required")}</span>
 
                         </CardText>
                         </Card> : Receipt && Receipt[0] && <Card>

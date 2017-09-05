@@ -279,7 +279,7 @@ public class TradeLicenseService {
 			if (!license.getIsLegacy()) {
 
 				populateWorkFlowDetails(license, requestInfo);
-				populateStatus(license, requestInfo);
+				populateNextStatus(license, requestInfo);
 
 			} else {
 
@@ -304,7 +304,7 @@ public class TradeLicenseService {
 		return tradeLicenses;
 	}
 
-	private void populateStatus(TradeLicense license, RequestInfo requestInfo) {
+	private void populateNextStatus(TradeLicense license, RequestInfo requestInfo) {
 
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
@@ -319,6 +319,25 @@ public class TradeLicenseService {
 					license.getApplication().getStatus().toString(), requestInfoWrapper);
 		}
 
+		if (null != requestInfo && null != requestInfo.getApiId()
+				&& !requestInfo.getApiId().equalsIgnoreCase("org.egov.cs.tl")) {
+
+			if (null != workFlowDetails && null != workFlowDetails.getAction() && null != currentStatus
+					&& !currentStatus.getLicenseStatuses().isEmpty()
+					&& workFlowDetails.getAction().equalsIgnoreCase("Forward")
+					&& currentStatus.getLicenseStatuses().get(0).getCode() == NewLicenseStatus.ACKNOWLEDGED.getName()) {
+
+				nextStatus = statusRepository.findByModuleTypeAndCode(license.getTenantId(), NEW_LICENSE_MODULE_TYPE,
+						NewLicenseStatus.SCRUTINY_COMPLETED.getName(), requestInfoWrapper);
+
+				if (null != nextStatus && !nextStatus.getLicenseStatuses().isEmpty()) {
+
+					license.getApplication().setStatus(nextStatus.getLicenseStatuses().get(0).getId().toString());
+				}
+
+			}
+		}
+		
 		if (null != workFlowDetails && null != workFlowDetails.getAction() && null != currentStatus
 				&& !currentStatus.getLicenseStatuses().isEmpty()
 				&& workFlowDetails.getAction().equalsIgnoreCase("Forward") && currentStatus.getLicenseStatuses().get(0)

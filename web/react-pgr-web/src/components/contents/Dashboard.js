@@ -46,7 +46,16 @@ const nameMap = {
   "CANCELLED": "Request Cancelled",
   "REJECTED": "Rejected",
   "BPA_FIRE_NOC": "Fire NOC",
-  "INPROGERSS": "In Progress"
+  "INPROGERSS": "In Progress",
+  "APPROVED": "Approved",
+  "PT_EXTRACT": "Property Extract",
+  "WC_PAYTAX": "Water Charge Tax Payment",
+  "PT_PAYTAX": "Property Tax Payment",
+  "ESTIMATIONNOTICEGENERATED": "Estimation Notice Generated",
+  "VERIFIED": "Verified",
+  "ESTIMATIONAMOUNTCOLLECTED": "Estimation Amount Collected",
+  "WORKORDERGENERATED": "Work Order Generated",
+  "SANCTIONED": "Sanctioned"
 };
 
 const content=[
@@ -749,7 +758,7 @@ class Dashboard extends Component {
                                     </thead>
                                     <tbody>
                                         {serviceRequestsTwo.map((item, key)=>{
-                                          if (item.status!="CREATED") {
+                                          if (item.status != "CREATED" || (item.status == "CREATED" && ["BPA_FIRE_NOC", "WATER_NEWCONN"].indexOf(item.serviceCode) > -1)) {
                                             return (<tr key={key} onClick={() => {this.rowClickHandler(item)}}>
                                                 <td>{item.serviceRequestId}</td>
                                                 <td>{nameMap[item.serviceCode] || item.serviceCode}</td>

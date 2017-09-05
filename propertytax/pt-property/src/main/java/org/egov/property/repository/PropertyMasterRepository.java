@@ -1583,7 +1583,7 @@ public class PropertyMasterRepository {
 	public int checkOldUpicNumber(String oldUpicNo) {
 		String query = PropertyBuilder.SELECT_OLDUPIC_NO;
 		int count = 0;
-		count = (Integer) jdbcTemplate.queryForObject(query, Integer.class);		
+		count = (Integer) jdbcTemplate.queryForObject(query,new Object[]{oldUpicNo}, Integer.class);		
 		return count;
 	}
 

@@ -1,0 +1,20 @@
+{
+	"responseInfo": {
+		
+	},
+	"appConfigurations": [
+		{
+			"tenantId": "default",
+			"keyName": "AppConfig",
+			"values": [
+				"appvalue1",
+				"appvalue2",
+				"appvalue3"
+			],
+			"auditDetails": {
+				"createdBy": null,
+				"lastModifiedBy": null
+			}
+		}
+	]
+}

@@ -40,22 +40,17 @@
 
 package org.egov.eis.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.*;
+import org.egov.eis.model.enums.Gender;
+import org.egov.eis.model.enums.UserType;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
-
-import org.egov.eis.model.enums.Gender;
-import org.egov.eis.model.enums.UserType;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -111,6 +106,14 @@ public class EmployeeInfo {
 	private Long bank;
 
 	private Long bankBranch;
+
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date dateOfRetirement;
+
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date dateOfAppointment;
 
 	@Size(max=20)
 	private String bankAccount;

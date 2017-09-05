@@ -131,12 +131,15 @@ public class AgreementDetailsEs {
 	}
 
 	public void setAsset(Asset asset) {
-
-		this.asset.setAsset(asset.getId().toString());
-		this.asset.setAssetName(asset.getName());
-		this.asset.setAssetCode(asset.getCode());
-		this.asset.setAssetCategory(asset.getCategory().getName());
-		this.asset.setAssetDrno(asset.getLocationDetails().getDoorNo());
+		if(null != asset){
+			this.asset = AssetEs.builder()
+					.asset(asset.getId().toString())
+					.assetCategory(asset.getCategory().getName())
+					.assetName(asset.getName())
+					.assetCode(asset.getCode())
+					.assetDrno(asset.getLocationDetails().getDoorNo())
+					.build();
+		}
 	}
 
 	public void setBoundaryDetails(Location location, Map<Long, Boundary> boundaryMap) {
@@ -164,20 +167,26 @@ public class AgreementDetailsEs {
 	}
 
 	public void setAllottee(Allottee allottee) {
-
-		this.allottee.setAllottee(allottee.getId().toString());
-		this.allottee.setAllotteeName(allottee.getName());
-		this.allottee.setAllotteeMobile(allottee.getMobileNumber());
-		this.allottee.setAllotteeAadhaarNo(allottee.getAadhaarNumber());
+		if(null != allottee){
+			this.allottee = AllotteeEs.builder()
+					.allottee(allottee.getId().toString())
+					.allotteeName(allottee.getName())
+					.allotteeMobile(allottee.getMobileNumber())
+					.allotteeAadhaarNo(allottee.getAadhaarNumber())
+					.build();
+		}
 	}
 
 	public void setCity(City city) {
-
-		this.city.setCityGrade(city.getGrade());
-		this.city.setCityName(city.getName());
-		this.city.setCityCode(city.getCode());
-		this.city.setDistrictName(city.getDistrictName());
-		this.city.setRegionName(city.getRegionName());
+		if(null != city){
+			this.city = CityEs.builder()
+					.cityGrade(city.getGrade())
+					.cityName(city.getName())
+					.cityCode(city.getCode())
+					.districtName(city.getDistrictName())
+					.regionName(city.getRegionName())
+					.build();
+		}
 	}
 	
 	public void setRent(List<DemandDetails> demandDetails, Installment installment,String taxReason) {

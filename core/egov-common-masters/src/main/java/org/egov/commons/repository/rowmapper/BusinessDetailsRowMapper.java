@@ -1,6 +1,8 @@
 package org.egov.commons.repository.rowmapper;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
+import org.egov.commons.model.BusinessDetails;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,10 +10,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.egov.commons.model.BusinessCategory;
-import org.egov.commons.model.BusinessDetails;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Component
 public class BusinessDetailsRowMapper implements RowMapper<BusinessDetails> {

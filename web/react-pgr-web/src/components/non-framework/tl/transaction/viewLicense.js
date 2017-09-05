@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import {Grid, Row, Col} from 'react-bootstrap';
 import {List, ListItem} from 'material-ui/List';
+import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
@@ -41,6 +42,8 @@ class viewLicense extends Component{
         if(!response.licenses[0].isLegacy){
           self.getEmployees();
           self.history();
+          if(response.licenses[0].applications[0].statusName === 'Scrutiny Completed')
+            self.setState({fieldInspection : true});
         }
         setLoadingStatus('hide');
       }else{
@@ -60,7 +63,7 @@ class viewLicense extends Component{
     let {viewLicense} = this.props;
     if(viewLicense.applications && viewLicense.applications[0].feeDetails && viewLicense.applications[0].feeDetails.length > 0){
       return(
-        <Card style={styles.marginStyle}>
+        <Card style={styles.cardSpacing}>
           <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
              Fee Details
            < /div>}/>
@@ -94,7 +97,7 @@ class viewLicense extends Component{
     let {viewLicense} = this.props;
     if(viewLicense.applications && viewLicense.applications[0].supportDocuments && viewLicense.applications[0].supportDocuments.length > 0){
       return(
-        <Card style={styles.marginStyle}>
+        <Card style={styles.cardSpacing}>
           <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
              Supporting Documents
            < /div>}/>
@@ -147,7 +150,7 @@ class viewLicense extends Component{
   showHistory = () => {
     if(this.state.tasks && this.state.employees && this.state.tasks.length > 0){
       return(
-        <Card style={styles.marginStyle}>
+        <Card style={styles.cardSpacing}>
           <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
              History
            < /div>}/>
@@ -182,23 +185,65 @@ class viewLicense extends Component{
        )
     }
   }
+  fieldInspection = () => {
+    let {viewLicense} = this.props;
+    // console.log('enable field inspection:', viewLicense.applications ? viewLicense.applications[0].statusName : 'none');
+    if(viewLicense.applications){
+      return(
+        <Card style={styles.cardSpacing}>
+          <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
+             Field Inspection
+           < /div>}/>
+         <CardText style={styles.cardTextPadding}>
+             <Row>
+               <Col xs={12} sm={6} md={4} lg={3}>
+                 <TextField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('Trade value for the UOM')+' *'}
+                    value={this.props.viewLicense.quantity?this.props.viewLicense.quantity:""} onChange={(event, value) => this.props.handleChange(value, "quantity", true, '')}/>
+               </Col>
+               <Col xs={12} sm={6} md={4} lg={3}>
+                 <TextField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('License Fee')+' *'}
+                    value={this.props.viewLicense.licenseFee?this.props.viewLicense.licenseFee:""} onChange={(event, value) => this.props.handleChange(value, "licenseFee", true, '')}/>
+               </Col>
+               <Col xs={12} sm={6} md={4} lg={6}>
+                 <TextField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('Field Inspection Report')+' *'} multiLine={true}
+                    value={this.props.viewLicense.fieldInspectionReport?this.props.viewLicense.fieldInspectionReport:""} onChange={(event, value) => this.props.handleChange(value, "fieldInspectionReport", true, '')}/>
+               </Col>
+             </Row>
+           </CardText>
+         </Card>
+       )
+    }
+  }
   updateWorkFlow = (item, state) => {
     // console.log('came to workflow');
-    let {setLoadingStatus} = this.props;
+    let {setLoadingStatus, viewLicense} = this.props;
     if((item.key === 'Reject' || item.key === 'Cancel') && !state.approvalComments){
       self.handleError('Comments is mandatory while '+item.key);
       return;
     }
     // console.log(!state.departmentId, !state.designationId, !state.positionId);
-    if(item.key === 'Forward' && (!state.departmentId || !state.designationId || !state.positionId)){
-      if(!state.departmentId)
-        self.handleError('Approver Department is mandatory');
-      else if(!state.designationId)
-        self.handleError('Approver Designation is mandatory');
-      else
-        self.handleError('Approver is mandatory');
-      return;
+    if(item.key === 'Forward'){
+      if(this.state.fieldInspection && (!viewLicense.quantity || !viewLicense.licenseFee || !viewLicense.fieldInspectionReport)){
+          if(!viewLicense.quantity){
+            self.handleError('Trade value for UOM is mandatory');
+          }else if(!viewLicense.licenseFee){
+            self.handleError('License Fee is mandatory');
+          }else if(!viewLicense.fieldInspectionReport){
+            self.handleError('Field Inspection Report is mandatory');
+          }
+          return;
+      }
+      if(!state.departmentId || !state.designationId || !state.positionId){
+        if(!state.departmentId)
+          self.handleError('Approver Department is mandatory');
+        else if(!state.designationId)
+          self.handleError('Approver Designation is mandatory');
+        else
+          self.handleError('Approver is mandatory');
+        return;
+      }
     }
+
     setLoadingStatus('loading');
     let departmentObj = state.workFlowDepartment.find(x => x.id === state.departmentId)
     let designationObj = state.workFlowDesignation.find(x => x.id === state.designationId)
@@ -206,7 +251,7 @@ class viewLicense extends Component{
     let workFlowDetails = {
       "department": departmentObj ? departmentObj.name : null,
       "designation": designationObj ? designationObj.name : null,
-      "assignee": state.positionId || null,
+      "assignee": state.positionId ? state.positionId : item.key === 'Approve' ? state.process.initiatorPosition : null,
       "action": item.key,
       "status": state.process.status,
       "comments": state.approvalComments || '',
@@ -218,8 +263,20 @@ class viewLicense extends Component{
     var finalObj = {...state.obj};
     finalObj['application'] = finalObj.applications[0];
     finalObj.supportDocuments = finalObj.applications[0].supportDocuments;
+
+    if(this.state.fieldInspection){
+      finalObj['application']['licenseFee'] = viewLicense.licenseFee;
+      finalObj['application']['fieldInspectionReport'] = viewLicense.fieldInspectionReport;
+    }
+
     finalObj['application']['workFlowDetails'] = workFlowDetails;
     delete finalObj['applications'];
+    delete finalObj['departmentId'];
+    delete finalObj['designationId'];
+    delete finalObj['positionId'];
+    delete finalObj['approvalComments'];
+    delete finalObj['licenseFee'];
+    delete finalObj['fieldInspectionReport'];
 
     var finalArray = [];
     finalArray.push(finalObj);
@@ -259,14 +316,14 @@ class viewLicense extends Component{
       />,
     ];
     return(
-      <Grid style={{width:'100%'}}>
+      <Grid style={styles.fullWidth}>
         <h3 className="text-center">View Trade License</h3>
         <Card style={styles.marginStyle}>
-          <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
+          <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
              {translate('tl.create.licenses.groups.TradeDetailsTab')}
            < /div>}/>
-           <CardText style={{padding:'8px 16px 0'}}>
-            <List>
+         <CardText style={styles.cardTextPadding}>
+            <List style={styles.zeroPadding}>
               <Row>
                 {!viewLicense.isLegacy ?
                 <Col xs={12} sm={6} md={4} lg={3}>
@@ -301,11 +358,11 @@ class viewLicense extends Component{
           </CardText>
         </Card>
         <Card style={styles.marginStyle}>
-          <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
+          <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
              {translate('tl.create.licenses.groups.TradeOwnerDetails')}
            < /div>}/>
-           <CardText style={{padding:'8px 16px 0'}}>
-            <List>
+         <CardText style={styles.cardTextPadding}>
+            <List style={styles.zeroPadding}>
               <Row>
                 <Col xs={12} sm={6} md={4} lg={3}>
                   <ListItem
@@ -348,11 +405,11 @@ class viewLicense extends Component{
           </CardText>
         </Card>
         <Card style={styles.marginStyle}>
-          <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
+          <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
              {translate('tl.create.licenses.groups.TradeLocationDetails')}
            < /div>}/>
-            <CardText style={{padding:'8px 16px 0'}}>
-               <List>
+         <CardText style={styles.cardTextPadding}>
+               <List style={styles.zeroPadding}>
                  <Row>
                    <Col xs={12} sm={6} md={4} lg={3}>
                      <ListItem
@@ -395,11 +452,11 @@ class viewLicense extends Component{
            </CardText>
          </Card>
          <Card style={styles.marginStyle}>
-           <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
+           <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
               {translate('tl.create.licenses.groups.TradeDetails')}
             < /div>}/>
-             <CardText style={{padding:'8px 16px 0'}}>
-                <List>
+          <CardText style={styles.cardTextPadding}>
+                <List style={styles.zeroPadding}>
                   <Row>
                     <Col xs={12} sm={6} md={4} lg={3}>
                       <ListItem
@@ -472,11 +529,11 @@ class viewLicense extends Component{
             </CardText>
           </Card>
           <Card style={styles.marginStyle}>
-            <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
+            <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
                Agreement Details
              < /div>}/>
-             <CardText style={{padding:'8px 16px 0'}}>
-              <List>
+           <CardText style={styles.cardTextPadding}>
+              <List style={styles.zeroPadding}>
                 <Row>
                   <Col xs={12} sm={6} md={4} lg={3}>
                     <ListItem
@@ -496,13 +553,14 @@ class viewLicense extends Component{
           </Card>
           {viewLicense.isLegacy ? this.renderFeeDetails() : ''}
           {this.supportDocuments()}
-          {this.showHistory()}
+          {!viewLicense.isLegacy ? this.showHistory() : ''}
+          {!viewLicense.isLegacy && this.state.fieldInspection ? this.fieldInspection() : ''}
           {!viewLicense.isLegacy ?
           <Card style={styles.marginStyle}>
-            <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
+            <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
                Workflow
              < /div>}/>
-             <CardText style={{padding:'8px 16px 0'}}>
+            <CardText style={styles.cardTextPadding}>
                <WorkFlow viewLicense={viewLicense} fieldErrors={fieldErrors} handleChange={handleChange} handleError={handleError} setLoadingStatus={this.props.setLoadingStatus} updateWorkFlow={this.updateWorkFlow}/>
              </CardText>
           </Card> :

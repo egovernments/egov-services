@@ -194,7 +194,7 @@ public class MasterIndexerListener {
 					final HashMap<String, Object> indexObj = getAccountDetailKeyContractIndexObject(
 							accountDetailKeyContract);
 					elasticSearchRepository.index(ACCOUNTDETAILKEY_OBJECT_TYPE,
-							accountDetailKeyContract.getTenantId() + "-" + accountDetailKeyContract.getKey(), indexObj);
+							accountDetailKeyContract.getKey() + "-" + accountDetailKeyContract.getTenantId(), indexObj);
 				}
 		}
 

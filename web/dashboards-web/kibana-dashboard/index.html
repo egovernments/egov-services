@@ -349,7 +349,7 @@
 
 
 								var stateLevelReports ={
-									PT:"http://ae35855e9842111e7ac1f02bc1626de1-1479662728.ap-south-1.elb.amazonaws.com/goto/ac72f12a08b847c98cc5da52504f8c66?embed=true",
+									PT:"http://ae35855e9842111e7ac1f02bc1626de1-1479662728.ap-south-1.elb.amazonaws.com/goto/3299eeaee3f3d5f01b739f62e7f585c9?embed=true",
 									PGR:"http://ae35855e9842111e7ac1f02bc1626de1-1479662728.ap-south-1.elb.amazonaws.com/goto/df3ef48a619d3a733a8503dac4ac26c2?embed=true",
 									WC:"",
 									COLLECTION:"",
@@ -417,10 +417,10 @@
 											     'Cache-Control': 'max-age=1000'
 											},
 										  success: function(response){
-												console.log('response', response);
+												// console.log('response', response);
 												var data = arrayGroupByKey(response, 'district');
 												districtLists = data;
-												console.log('districtLists', districtLists);
+												// console.log('districtLists', districtLists);
 												updateAllUlbsTemplate(data);
 										  },
 										  cache: false

@@ -96,17 +96,17 @@ ReportDefinitions:
     source: collection
     total: true
   - name: CHEQUE_AMOUNT
-    label: reports.collection.cheque_amount
+    label: reports.collection.chequeamount
     type: string
     source: collection
     total: true
   - name: DD_AMOUNT
-    label: reports.collection.dd_amount
+    label: reports.collection.ddamount
     type: string
     source: collection
     total: true   
   - name: ONLINE_AMOUNT
-    label: reports.collection.online.amount
+    label: reports.collection.onlineamount
     type: string
     source: collection
     total: true   
@@ -256,7 +256,7 @@ ReportDefinitions:
   orderBy: ORDER BY RECEIPT_NUMBER
   
 - reportName: CollectionSummaryAccountHeadWise 
-  summary: Collection Summary Account Head wise Report
+  summary: Collection Summary Account Head Wise Report
   version: 1.0.0
   moduleName: collection
   sourceColumns:
@@ -274,7 +274,7 @@ ReportDefinitions:
     source: collection
     total : true
   - name: cashAmount
-    label: reports.collection.cash.amount
+    label: reports.collection.cashamount
     type: number
     source: collection
     total : true
@@ -284,7 +284,7 @@ ReportDefinitions:
     source: collection
     total : true
   - name: chequeAmount
-    label: reports.collection.cheque.amount
+    label: reports.collection.chequeamount
     type: number
     source: seva
     total : true
@@ -294,7 +294,7 @@ ReportDefinitions:
     source: collection
     total : true
   - name: onlineAmount
-    label: reports.collection.online.amount
+    label: reports.collection.onlineamount
     type: number
     source: collection
     total : true
@@ -304,7 +304,7 @@ ReportDefinitions:
     source: collection
     total : true
   - name: ddAmount
-    label: reports.collection.dd.amount
+    label: reports.collection.ddamount
     type: number
     source: collection
     total : true
@@ -324,13 +324,13 @@ ReportDefinitions:
     type: epoch
     source: collection
     isMandatory: false
-    searchClause: AND EXTRACT(EPOCH from(to_timestamp(TRUNC(receiptdate / 1000 ))::date)) >= ($fromDate / 1000)
+    searchClause: AND EGCL_RECEIPTHEADER.RECEIPTDATE >= $fromDate
   - name: toDate
     label: reports.collection.todate
     type: epoch
     source: collection
     isMandatory: false
-    searchClause: AND EXTRACT(EPOCH from(to_timestamp(TRUNC(receiptdate / 1000 ))::date)) <= ($toDate / 1000)
+    searchClause: AND EGCL_RECEIPTHEADER.RECEIPTDATE < $toDate
   - name: status
     label: reports.collection.status
     type: singlevaluelist

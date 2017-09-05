@@ -48,11 +48,16 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.wcms.model.UsageType;
 import org.egov.wcms.service.UsageTypeService;
+import org.egov.wcms.util.ValidatorUtils;
 import org.egov.wcms.web.contract.RequestInfoWrapper;
 import org.egov.wcms.web.contract.UsageTypeGetRequest;
+import org.egov.wcms.web.contract.UsageTypeReq;
 import org.egov.wcms.web.contract.UsageTypeRes;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
 import org.egov.wcms.web.errorhandlers.ErrorHandler;
+import org.egov.wcms.web.errorhandlers.ErrorResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -70,11 +75,16 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/usagetype")
 public class UsageTypeController {
+    public static final Logger logger = LoggerFactory.getLogger(ServiceChargeController.class);
+
     @Autowired
     private ErrorHandler errHandler;
 
     @Autowired
     UsageTypeService usageTypeService;
+
+    @Autowired
+    private ValidatorUtils validatorUtils;
 
     @Autowired
     private ResponseInfoFactory responseInfoFactory;
@@ -104,6 +114,38 @@ public class UsageTypeController {
         }
 
         return getSuccessResponse(usageTypeList, null, requestInfo);
+    }
+
+    @PostMapping("/_create")
+    @ResponseBody
+    public ResponseEntity<?> create(@RequestBody @Valid final UsageTypeReq usageTypeRequest,
+            final BindingResult errors) {
+        if (errors.hasErrors()) {
+            final ErrorResponse errRes = validatorUtils.populateErrors(errors);
+            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+        }
+        logger.info("ServiceChargeReq::" + usageTypeRequest);
+        final List<ErrorResponse> errorResponses = validatorUtils.validateUsageTypeRequest(usageTypeRequest, false);
+        if (!errorResponses.isEmpty())
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+        final List<UsageType> usageTypes = usageTypeService.createUsageType(usageTypeRequest);
+        return getSuccessResponse(usageTypes, "Created", usageTypeRequest.getRequestInfo());
+    }
+
+    @PostMapping("/_update")
+    @ResponseBody
+    public ResponseEntity<?> update(@RequestBody @Valid final UsageTypeReq usageTypeRequest,
+            final BindingResult errors) {
+        if (errors.hasErrors()) {
+            final ErrorResponse errRes = validatorUtils.populateErrors(errors);
+            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+        }
+        logger.info("ServiceChargeReq::" + usageTypeRequest);
+        final List<ErrorResponse> errorResponses = validatorUtils.validateUsageTypeRequest(usageTypeRequest, true);
+        if (!errorResponses.isEmpty())
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+        final List<UsageType> usageTypes = usageTypeService.updateUsageType(usageTypeRequest);
+        return getSuccessResponse(usageTypes, null, usageTypeRequest.getRequestInfo());
     }
 
     private ResponseEntity<?> getSuccessResponse(final List<UsageType> usageTypeList,

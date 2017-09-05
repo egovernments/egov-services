@@ -62,6 +62,7 @@ import org.egov.wcms.service.SourceTypeService;
 import org.egov.wcms.service.StorageReservoirService;
 import org.egov.wcms.service.SupplyTypeService;
 import org.egov.wcms.service.TreatmentPlantService;
+import org.egov.wcms.service.UsageTypeService;
 import org.egov.wcms.web.contract.CategoryTypeRequest;
 import org.egov.wcms.web.contract.DocumentTypeApplicationTypeReq;
 import org.egov.wcms.web.contract.DocumentTypeReq;
@@ -80,6 +81,7 @@ import org.egov.wcms.web.contract.SourceTypeRequest;
 import org.egov.wcms.web.contract.StorageReservoirRequest;
 import org.egov.wcms.web.contract.SupplyTypeRequest;
 import org.egov.wcms.web.contract.TreatmentPlantRequest;
+import org.egov.wcms.web.contract.UsageTypeReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
@@ -150,9 +152,12 @@ public class WaterMasterConsumer {
 
     @Autowired
     private NonMeterWaterRatesService nonMeterWaterRatesService;
-    
+
     @Autowired
     private GapcodeService gapcodeService;
+
+    @Autowired
+    private UsageTypeService usageTypeService;
 
     @KafkaListener(topics = { "${kafka.topics.usagetype.create.name}", "${kafka.topics.usagetype.update.name}",
             "${kafka.topics.category.create.name}", "${kafka.topics.category.update.name}",
@@ -172,7 +177,7 @@ public class WaterMasterConsumer {
             "${kafka.topics.metercost.update.name}", "${kafka.topics.meterstatus.create.name}",
             "${kafka.topics.meterstatus.update.name}", "${kafka.topics.nonmeterwaterrates.create.name}",
             "${kafka.topics.nonmeterwaterrates.update.name}", "${kafka.topics.servicecharge.create.name}",
-            "${kafka.topics.servicecharge.update.name}","${kafka.topics.gapcode.create.name}",
+            "${kafka.topics.servicecharge.update.name}", "${kafka.topics.gapcode.create.name}",
             "${kafka.topics.gapcode.update.name}" })
 
     public void processMessage(final Map<String, Object> consumerRecord,
@@ -238,6 +243,14 @@ public class WaterMasterConsumer {
                 log.info("Consuming updateServiceChargeRequest");
                 serviceChargeService
                         .updateServiceCharge(objectMapper.convertValue(consumerRecord, ServiceChargeReq.class));
+            } else if (applicationProperties.getCreateUsageTypeTopicName().equals(topic)) {
+                log.info("Consuming createUsageTypeRequest");
+                usageTypeService
+                        .createUsageTypePushToDB(objectMapper.convertValue(consumerRecord, UsageTypeReq.class));
+            } else if (applicationProperties.getUpdateUsageTypeTopicName().equals(topic)) {
+                log.info("Consuming updateUsageTypeRequest");
+                usageTypeService
+                        .updateUsageTypePushToDB(objectMapper.convertValue(consumerRecord, UsageTypeReq.class));
             } else if (applicationProperties.getCreateSourceTypeTopicName().equals(topic))
                 waterSourceTypeService.create(objectMapper.convertValue(consumerRecord, SourceTypeRequest.class));
             else if (applicationProperties.getUpdateSourceTypeTopicName().equals(topic))
@@ -267,9 +280,9 @@ public class WaterMasterConsumer {
                 nonMeterWaterRatesService
                         .update(objectMapper.convertValue(consumerRecord, NonMeterWaterRatesReq.class));
             else if (applicationProperties.getCreateGapcodeTopicName().equals(topic))
-            	System.out.println(gapcodeService.create(objectMapper.convertValue(consumerRecord, GapcodeRequest.class)));
+                System.out.println(gapcodeService.create(objectMapper.convertValue(consumerRecord, GapcodeRequest.class)));
             else if (applicationProperties.getUpdateGapcodeTopicName().equals(topic))
-            	System.out.println(gapcodeService.update(objectMapper.convertValue(consumerRecord, GapcodeRequest.class)));
+                System.out.println(gapcodeService.update(objectMapper.convertValue(consumerRecord, GapcodeRequest.class)));
         } catch (final Exception exception) {
             log.debug("processMessage:" + exception);
             throw exception;

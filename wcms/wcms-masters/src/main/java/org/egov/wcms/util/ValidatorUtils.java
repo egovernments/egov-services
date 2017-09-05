@@ -62,6 +62,7 @@ import org.egov.wcms.model.SourceType;
 import org.egov.wcms.model.StorageReservoir;
 import org.egov.wcms.model.SupplyType;
 import org.egov.wcms.model.TreatmentPlant;
+import org.egov.wcms.model.UsageType;
 import org.egov.wcms.model.enums.ApplicationType;
 import org.egov.wcms.model.enums.ConnectionType;
 import org.egov.wcms.model.enums.PlantType;
@@ -81,6 +82,7 @@ import org.egov.wcms.service.SourceTypeService;
 import org.egov.wcms.service.StorageReservoirService;
 import org.egov.wcms.service.SupplyTypeService;
 import org.egov.wcms.service.TreatmentPlantService;
+import org.egov.wcms.service.UsageTypeService;
 import org.egov.wcms.web.contract.CategoryTypeRequest;
 import org.egov.wcms.web.contract.DocumentTypeApplicationTypeReq;
 import org.egov.wcms.web.contract.DocumentTypeReq;
@@ -99,6 +101,7 @@ import org.egov.wcms.web.contract.SourceTypeRequest;
 import org.egov.wcms.web.contract.StorageReservoirRequest;
 import org.egov.wcms.web.contract.SupplyTypeRequest;
 import org.egov.wcms.web.contract.TreatmentPlantRequest;
+import org.egov.wcms.web.contract.UsageTypeReq;
 import org.egov.wcms.web.errorhandlers.Error;
 import org.egov.wcms.web.errorhandlers.ErrorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,6 +115,9 @@ public class ValidatorUtils {
 
     @Autowired
     private CategoryTypeService categoryTypeService;
+
+    @Autowired
+    private UsageTypeService usageTypeService;
 
     @Autowired
     private PipeSizeService pipeSizeService;
@@ -1507,5 +1513,53 @@ public class ValidatorUtils {
             errorFields.add(errorField);
         } else
             return;
+    }
+
+    public List<ErrorResponse> validateUsageTypeRequest(final UsageTypeReq usageTypeRequest, final boolean isUpdate) {
+        final List<ErrorResponse> errorResponses = new ArrayList<>();
+        final ErrorResponse errorResponse = new ErrorResponse();
+        final Error error = getError(usageTypeRequest, isUpdate);
+        errorResponse.setError(error);
+        if (!errorResponse.getErrorFields().isEmpty())
+            errorResponses.add(errorResponse);
+        return errorResponses;
+    }
+
+    private Error getError(final UsageTypeReq usageTypeRequest, final boolean isUpdate) {
+        final List<ErrorField> errorFields = getErrorFields(usageTypeRequest, isUpdate);
+        return Error.builder().code(HttpStatus.BAD_REQUEST.value())
+                .message(WcmsConstants.INVALID_USAGETYPE_REQUEST_MESSAGE).errorFields(errorFields).build();
+    }
+
+    private List<ErrorField> getErrorFields(final UsageTypeReq usageTypeRequest, final boolean isUpdate) {
+        final List<ErrorField> errorFields = new ArrayList<>();
+        for (final UsageType usageType : usageTypeRequest.getUsageTypes()) {
+            if (isUpdate)
+                if (usageType.getCode() == null || usageType.getCode().isEmpty()) {
+                    final ErrorField errorField = ErrorField.builder().code(WcmsConstants.CODE_MANDATORY_CODE)
+                            .message(WcmsConstants.CODE_MANDATORY_ERROR_MESSAGE).field(WcmsConstants.CODE_MANDATORY_FIELD_NAME)
+                            .build();
+                    errorFields.add(errorField);
+                }
+
+            if (usageType.getTenantId() == null || usageType.getTenantId().isEmpty()) {
+                final ErrorField errorField = ErrorField.builder().code(WcmsConstants.TENANTID_MANDATORY_CODE)
+                        .message(WcmsConstants.TENANTID_MANADATORY_ERROR_MESSAGE)
+                        .field(WcmsConstants.TENANTID_MANADATORY_FIELD_NAME).build();
+                errorFields.add(errorField);
+            } else if (usageType.getActive() == null) {
+                final ErrorField errorField = ErrorField.builder().code(WcmsConstants.ACTIVE_MANDATORY_CODE)
+                        .message(WcmsConstants.ACTIVE_MANADATORY_ERROR_MESSAGE).field(WcmsConstants.ACTIVE_MANADATORY_FIELD_NAME)
+                        .build();
+                errorFields.add(errorField);
+            } else if (!usageTypeService.checkUsageTypeExists(usageType)) {
+                final ErrorField errorField = ErrorField.builder().code(WcmsConstants.USGTYPE_MANDATORY_CODE)
+                        .message(WcmsConstants.USGTYPE_MANADATORY_ERROR_MESSAGE)
+                        .field(WcmsConstants.USGTYPE_MANADATORY_FIELD_NAME)
+                        .build();
+                errorFields.add(errorField);
+            }
+        }
+        return errorFields;
     }
 }

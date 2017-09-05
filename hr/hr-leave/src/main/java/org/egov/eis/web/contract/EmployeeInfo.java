@@ -40,9 +40,12 @@
 
 package org.egov.eis.web.contract;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Size;
+import java.util.Date;
 
 @Builder
 @AllArgsConstructor
@@ -53,38 +56,46 @@ import javax.validation.constraints.Size;
 @ToString
 public class EmployeeInfo {
 
-	private Long id;
+    private Long id;
 
-	@Size(min = 1, max = 256)
-	private String code;
+    @Size(min = 1, max = 256)
+    private String code;
 
-	@Size(max = 5)
-	private String salutation;
+    @Size(max = 5)
+    private String salutation;
 
-	@Size(min = 3, max = 100)
-	private String name;
+    @Size(min = 3, max = 100)
+    private String name;
 
-	@Size(min = 1, max = 64)
-	private String userName;
+    @Size(min = 1, max = 64)
+    private String userName;
 
-	@Size(max = 10)
-	private String mobileNumber;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date dateOfRetirement;
 
-	@Size(min = 5, max = 128)
-	private String emailId;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date dateOfAppointment;
 
-	@Size(max = 10)
-	private String pan;
+    @Size(max = 10)
+    private String mobileNumber;
 
-	@Size(max = 12)
-	private String aadhaarNumber;
+    @Size(min = 5, max = 128)
+    private String emailId;
 
-	private Boolean active;
+    @Size(max = 10)
+    private String pan;
 
-	private Long employeeStatus;
+    @Size(max = 12)
+    private String aadhaarNumber;
 
-	private Long employeeType;
+    private Boolean active;
 
-	private String tenantId;
+    private Long employeeStatus;
+
+    private Long employeeType;
+
+    private String tenantId;
 
 }

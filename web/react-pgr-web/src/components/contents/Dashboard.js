@@ -45,7 +45,8 @@ const nameMap = {
   "WATER_NEWCONN": "New Water Connection",
   "CANCELLED": "Request Cancelled",
   "REJECTED": "Rejected",
-  "BPA_FIRE_NOC": "Fire NOC"
+  "BPA_FIRE_NOC": "Fire NOC",
+  "INPROGERSS": "In Progress"
 };
 
 const content=[
@@ -620,6 +621,16 @@ class Dashboard extends Component {
       this.props.setRoute("/non-framework/citizenServices/wc/view/" + encodeURIComponent(item.serviceRequestId));
     } else if(item.serviceCode == "BPA_FIRE_NOC") {
       this.props.setRoute("/non-framework/citizenServices/fireNoc/view/" + encodeURIComponent(item.serviceRequestId));
+    } else if(item.serviceCode == "WC_NODUES" && item.status == "No Dues Generated") {
+      this.props.setRoute(`/receipt/watercharge/nodues/${encodeURIComponent(item.consumerCode)}/${encodeURIComponent(item.serviceRequestId)}`);
+    } else if(item.serviceCode == "PT_NODUES" && item.status == "No Dues Generated") {
+      this.props.setRoute(`/receipt/propertytax/nodues/${encodeURIComponent(item.consumerCode)}/${encodeURIComponent(item.serviceRequestId)}`);
+    } else if(item.serviceCode == "PT_EXTRACT" && item.status == "No Dues Generated") {
+      this.props.setRoute(`/receipt/extract/nodues/${encodeURIComponent(item.consumerCode)}/${encodeURIComponent(item.serviceRequestId)}`);
+    } else if(item.serviceCode == "PT_PAYTAX" && item.status == "No Dues Generated") {
+      this.props.setRoute(`/receipt/propertytax/paytax/${encodeURIComponent(item.consumerCode)}/${encodeURIComponent(item.serviceRequestId)}`);
+    } else if(item.serviceCode == "WC_PAYTAX" && item.status == "No Dues Generated") {
+      this.props.setRoute(`/receipt/watercharge/paytax/${encodeURIComponent(item.consumerCode)}/${encodeURIComponent(item.serviceRequestId)}`);
     }
   }
 

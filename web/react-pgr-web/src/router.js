@@ -123,7 +123,7 @@ import ServiceRequests from './components/non-framework/citizenServices/ServiceR
 import CS_FireNoc from './components/non-framework/citizenServices/buildingPlan/create.js';
 import CS_VIEW_FireNoc from './components/non-framework/citizenServices/buildingPlan/view.js';
 import Payment from './components/non-framework/citizenServices/payment';
-
+import ReceiptDownload from './components/non-framework/citizenServices/ReceiptDownload.js';
 
 const base = "";
 
@@ -265,6 +265,7 @@ const Main = () => {
       <Route exact path={base + '/non-framework/citizenServices/fireNoc/create'} component={CS_FireNoc}/>
       <Route exact path={base + '/non-framework/citizenServices/fireNoc/view/:ackNo'} component={CS_VIEW_FireNoc}/>
       <Route exact path= {base + '/payment/response/redirect/:msg'} component={Payment}/>
+      <Route exact path= {base + '/receipt/:page/:type/:cc/:sid'} component={ReceiptDownload}/>
 
     </Switch>
   </main>

@@ -209,6 +209,7 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			if (row.get("status") != null) {
 				license.setStatus(Long.valueOf((getString(row.get("status")))));
 			}
+			license.setStatusName(getString(statusName));
 			license.setTradeAddress(getString(row.get("tradeAddress")));
 			license.setOwnerShipType(getString(row.get("ownerShipType")));
 			license.setTradeTitle(getString(row.get("tradeTitle")));

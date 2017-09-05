@@ -163,12 +163,12 @@ public class ApplicationProperties {
 
     @Value("${kafka.topics.nonmeterwaterrates.update.name}")
     private String updateNonMeterWaterRatesTopicName;
-    
+
     @Value("${kafka.topics.gapcode.create.name}")
     private String createGapcodeTopicName;
-    
+
     @Value("${kafka.topics.gapcode.update.name}")
-    private String updateGapcodeTopicName;  
+    private String updateGapcodeTopicName;
 
     @Autowired
     private Environment environment;
@@ -332,7 +332,7 @@ public class ApplicationProperties {
     public String getCreateGapcodeTopicName() {
         return createGapcodeTopicName;
     }
-    
+
     public String getUpdateGapcodeTopicName() {
         return updateGapcodeTopicName;
     }

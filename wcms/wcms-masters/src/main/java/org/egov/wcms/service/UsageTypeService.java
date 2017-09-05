@@ -44,6 +44,7 @@ import java.util.List;
 import org.egov.wcms.model.UsageType;
 import org.egov.wcms.repository.UsageTypeRepository;
 import org.egov.wcms.web.contract.UsageTypeGetRequest;
+import org.egov.wcms.web.contract.UsageTypeReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,6 +55,26 @@ public class UsageTypeService {
 
     public List<UsageType> getUsageTypes(final UsageTypeGetRequest usageTypeGetRequest) {
         return usageTypeRepository.getUsageTypesByCriteria(usageTypeGetRequest);
+    }
+
+    public List<UsageType> createUsageType(final UsageTypeReq usageTypeRequest) {
+        return usageTypeRepository.sendUsageTypeRequestToQueue(usageTypeRequest);
+    }
+
+    public UsageTypeReq createUsageTypePushToDB(final UsageTypeReq usageTypeRequest) {
+        return usageTypeRepository.persistCreateUsageTypeToDB(usageTypeRequest);
+    }
+
+    public List<UsageType> updateUsageType(final UsageTypeReq usageTypeRequest) {
+        return usageTypeRepository.pushUpdateUsageTypeRequestToQueue(usageTypeRequest);
+    }
+
+    public UsageTypeReq updateUsageTypePushToDB(final UsageTypeReq usageTypeRequest) {
+        return usageTypeRepository.persistUpdateUsageTypeToDB(usageTypeRequest);
+    }
+
+    public boolean checkUsageTypeExists(final UsageType usageType) {
+        return usageTypeRepository.checkUsageTypeExists(usageType.getName(), usageType.getTenantId());
     }
 
 }

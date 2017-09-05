@@ -41,27 +41,24 @@ package org.egov.wcms.web.contract;
 
 import java.util.List;
 
-import javax.validation.constraints.NotNull;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.wcms.model.UsageType;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
-public class UsageTypeGetRequest {
-    private List<Long> ids;
+@ToString
+public class UsageTypeReq {
 
-    @NotNull
-    private String tenantId;
+    @JsonProperty("RequestInfo")
+    private RequestInfo requestInfo;
 
-    private String sortBy;
-
-    private String sortOrder;
-
-    private String parent;
-
-    private String code;
-
-    private String name;
+    @JsonProperty("UsageTypes")
+    private List<UsageType> usageTypes;
 
 }

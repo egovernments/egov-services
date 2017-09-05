@@ -89,15 +89,15 @@ public class CrossHierarchyController {
 
 	@GetMapping
 	@ResponseBody
-	public ResponseEntity<?> search(@ModelAttribute CrossHierarchyRequest crossHierarchyRequest) {
+	public ResponseEntity<?> search(@ModelAttribute CrossHierarchySearchRequest crossHierarchyRequest) {
 
 		CrossHierarchyResponse crossHierarchyResponse = new CrossHierarchyResponse();
 		if (crossHierarchyRequest.getCrossHierarchy() != null
 				&& crossHierarchyRequest.getCrossHierarchy().getTenantId() != null
 				&& !crossHierarchyRequest.getCrossHierarchy().getTenantId().isEmpty()) {
-			/*List<CrossHierarchy> allCrossHierarchys = crossHierarchyService
+			List<CrossHierarchy> allCrossHierarchys = crossHierarchyService
 					.getAllCrossHierarchys(crossHierarchyRequest);
-			crossHierarchyResponse.getCrossHierarchys().addAll(allCrossHierarchys);*/
+			crossHierarchyResponse.getCrossHierarchys().addAll(allCrossHierarchys);
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setStatus(HttpStatus.OK.toString());
 			// responseInfo.setApi_id(body.getRequestInfo().getApi_id());

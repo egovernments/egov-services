@@ -132,14 +132,14 @@ public class BasePage {
         }
     }
 
-    protected void switchToNewlyOpenedWindow(WebDriver driver) {
+    public void switchToNewlyOpenedWindow(WebDriver driver) {
         await().atMost(20, SECONDS).until(() -> driver.getWindowHandles().size() > 1);
         for (String winHandle : driver.getWindowHandles()) {
             driver.switchTo().window(winHandle);
         }
     }
 
-    protected void switchToPreviouslyOpenedWindow(WebDriver driver) {
+    public void switchToPreviouslyOpenedWindow(WebDriver driver) {
         await().atMost(5, SECONDS).until(() -> driver.getWindowHandles().size() == 1);
         for (String winHandle : driver.getWindowHandles()) {
             driver.switchTo().window(winHandle);

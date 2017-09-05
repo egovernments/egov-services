@@ -17,6 +17,30 @@
          "identifier": "xpath",
          "value": ".//*[@id='root']/div/main/div/div[3]/div/div/div[2]/div/button",
          "waitFor": "presence"
+         },
+         {
+         "elementName":"text",
+         "identifier":"xpath",
+         "value":"//*[text()='%s']",
+         "waitFor":"visibility"
+         },
+         {
+         "elementName":"payButton",
+         "identifier":"xpath",
+         "value":"(//*[@type='button'])[3]",
+         "waitFor":"visibility"
+         },
+         {
+         "elementName":"selectPayment",
+         "identifier":"xpath",
+         "value":"(//*[@value='Paytm'])[3]",
+         "waitFor":"visibility"
+         },
+         {
+         "elementName":"proceedForPayment",
+         "identifier":"css",
+         "value":"[name='ctl00$CPH$btnSubmit']",
+         "waitFor":"visibility"
          }
            ]
 }

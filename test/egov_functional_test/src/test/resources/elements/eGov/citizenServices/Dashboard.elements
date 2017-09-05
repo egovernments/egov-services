@@ -23,6 +23,12 @@
   "identifier":"xpath",
   "value":"//*[text()='%s']",
   "waitFor":"visibility"
+  },
+  {
+  "elementName":"applyNoDuesForProperty",
+  "identifier":"css",
+  "value":"[class='metismenu-container visible'] li:nth-child(1)",
+  "waitFor":"visibility"
   }
  ]
 }

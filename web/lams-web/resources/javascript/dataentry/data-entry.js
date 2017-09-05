@@ -959,7 +959,7 @@ getDesignations(null, function(designations) {
 
         $(`#approverDesignation`).append(`<option value='${designations[variable]["id"]}'>${designations[variable]["name"]}</option>`);
     }
-},"Create Agreement");
+},"Create Corporation Agreement");
 
 if (assetDetails && Object.keys(assetDetails).length) {
     $("#assetCategory\\.name").val(assetDetails["assetCategory"]["name"]);

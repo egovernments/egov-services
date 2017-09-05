@@ -96,17 +96,19 @@ class InboxAcknowledgement extends Component {
     super(props);
     this.state= {
           status:'',
+          upicNumber:'',
     }
-  } 
+  }
 
 
   componentDidMount() {
     //call boundary service fetch wards,location,zone data
     var currentThis = this;
 	this.setState({
-		status : localStorage['inboxStatus'] || ''
+		status : localStorage['inboxStatus'] || '' ,
+    upicNumber : localStorage['upicNumber']
 	});
-  }  
+  }
 
 
 
@@ -119,10 +121,10 @@ class InboxAcknowledgement extends Component {
 
     let cThis = this;
 
-    return ( 
+    return (
 			<div>
 				<h3 style={{padding:15}}>Acknowledgement</h3>
-			
+
 					<Card className="uiCard" >
 						<CardText style={styles.reducePadding} >
 							<Grid fluid >
@@ -131,7 +133,7 @@ class InboxAcknowledgement extends Component {
 									  <Row>
 										<Col xs={12} md={12} style={{textAlign:'center',paddingTop:15,fontSize: 16}}>
 											{this.state.status == 'Forwarded' && translate('pt.create.groups.acknowledgement.forwarded')}
-											{this.state.status == 'Approved' && translate('pt.create.groups.acknowledgement.approved')}
+											{this.state.status == 'Approved' && translate('pt.create.groups.acknowledgement.approved')} : <span style={{fontWeight:500}}>{this.state.upicNumber}</span>
 										</Col>
 									  </Row>
 									</Col>
@@ -149,9 +151,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  
+
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(InboxAcknowledgement);
-
-

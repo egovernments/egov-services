@@ -67,10 +67,10 @@ public class PropertyValidator {
 		// TODO location service gives provision to search by multiple ids, no
 		// need to do multiple calls for each boundary id
 		for (String field : fields) {
-			if (!field.equalsIgnoreCase(propertiesManager.getGuidanceValueBoundary())) {
+			//if (!field.equalsIgnoreCase(propertiesManager.getGuidanceValueBoundary())) {
 				validateBoundaryFields(property, field, requestInfo);
-			} else {
-				if (property.getBoundary() != null) {
+			/*} else {
+				if (property.getBoundary() != null) {	
 					Boundary guidanceBoundary = property.getBoundary().getGuidanceValueBoundary();
 					if (guidanceBoundary != null) {
 						Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(null, null,
@@ -89,7 +89,7 @@ public class PropertyValidator {
 					throw new InvalidCodeException(propertiesManager.getInvalidPropertyBoundary(), requestInfo);
 				}
 
-			}
+			}*/
 
 		}
 	}
@@ -323,6 +323,13 @@ public class PropertyValidator {
 
 			throw new InvalidFloorException(propertiesManager.getInvalidPropertyFloor(), requestInfo);
 		}
+	}
+	
+	public void validateUpicNo(Property property, RequestInfo requestInfo) {
+		String oldUpicNo = property.getOldUpicNumber();
+		int count = propertyMasterRepository.checkOldUpicNumber(oldUpicNo);
+		if (count > 0) 
+			throw new InvalidCodeException(propertiesManager.getInvalidOldUpicCode(), requestInfo);
 	}
 
 	/**

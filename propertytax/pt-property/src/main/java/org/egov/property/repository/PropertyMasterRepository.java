@@ -38,6 +38,7 @@ import org.egov.property.repository.builder.FloorTypeBuilder;
 import org.egov.property.repository.builder.GuidanceValueBoundaryBuilder;
 import org.egov.property.repository.builder.MutationMasterBuilder;
 import org.egov.property.repository.builder.OccuapancyQueryBuilder;
+import org.egov.property.repository.builder.PropertyBuilder;
 import org.egov.property.repository.builder.PropertyTypesBuilder;
 import org.egov.property.repository.builder.RoofTypeBuilder;
 import org.egov.property.repository.builder.SearchMasterBuilder;
@@ -1577,6 +1578,13 @@ public class PropertyMasterRepository {
 		}
 
 		return apartments;
+	}
+	//unique validation for oldupic number
+	public int checkOldUpicNumber(String oldUpicNo) {
+		String query = PropertyBuilder.SELECT_OLDUPIC_NO;
+		int count = 0;
+		count = (Integer) jdbcTemplate.queryForObject(query, Integer.class);		
+		return count;
 	}
 
 	/**

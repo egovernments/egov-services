@@ -174,6 +174,8 @@ public class PropertiesManager {
 	private String invalidPropertyTypeCode;
 
 	private String invalidPropertyUsageCode;
+	
+	private String invalidOldUpicCode;
 
 	private String invalidPropertySubUsageCode;
 
@@ -592,7 +594,9 @@ public class PropertiesManager {
 	public String getInvalidPropertyUsageCode() {
 		return environment.getProperty("invalid.input.usage");
 	}
-	
+	public String getInvalidOldUpicCode() {
+		return environment.getProperty("invalid.oldupicno");
+	}
 	public String getInvalidPropertySubUsageCode() {
 		return environment.getProperty("invalid.input.subusage");
 	}

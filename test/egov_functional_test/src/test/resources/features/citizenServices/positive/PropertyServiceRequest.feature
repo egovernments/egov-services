@@ -6,9 +6,10 @@ Feature: Citizen request service for Property No Due Certificate and Extract Cer
     And user on Login screen types on password value eGov@123
     And user on Login screen clicks on signIn
 
+    And user on Dashboard screen will wait until the page loads
     And user on Dashboard screen verifies myServiceRequests has visible value My Service Requests
-    And user on Dashboard screen force clicks on property
-    And user on Dashboard screen force clicks on payMyDues
+    And user on Dashboard screen clicks on property
+    And user on Dashboard screen clicks on payMyDues
     And user on PropertyServiceRequest screen verifies payMyDuesforPropertyTax has visible value Pay My Dues for Property Tax
     And user on PropertyServiceRequest screen types on assessmentNumber value roh000008235
-#    And user on PropertyServiceRequest screen clicks on search
+    And user on PropertyServiceRequest screen clicks on search

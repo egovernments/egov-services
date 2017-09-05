@@ -9,7 +9,7 @@
         {
             "elementName": "assessmentNumber",
             "identifier": "xpath",
-            "value": ".//*[@id='undefined-undefined-objectObject-238']",
+            "value": ".//*[@id='root']/div/main/div/div[3]/div/div/div[1]/div/div/div[2]/div[1]/div/div[1]/div/div/input",
             "waitFor": "presence"
          },
          {

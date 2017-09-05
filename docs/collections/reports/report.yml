@@ -96,12 +96,12 @@ ReportDefinitions:
     source: collection
     total: true
   - name: CHEQUE_AMOUNT
-    label: reports.collection.cheque_amount
+    label: reports.collection.cheque.amount
     type: string
     source: collection
     total: true
   - name: DD_AMOUNT
-    label: reports.collection.dd_amount
+    label: reports.collection.dd.amount
     type: string
     source: collection
     total: true   
@@ -324,13 +324,13 @@ ReportDefinitions:
     type: epoch
     source: collection
     isMandatory: false
-    searchClause: AND EXTRACT(EPOCH from(to_timestamp(TRUNC(receiptdate / 1000 ))::date)) >= ($fromDate / 1000)
+    searchClause: AND EGCL_RECEIPTHEADER.RECEIPTDATE >= $fromDate
   - name: toDate
     label: reports.collection.todate
     type: epoch
     source: collection
     isMandatory: false
-    searchClause: AND EXTRACT(EPOCH from(to_timestamp(TRUNC(receiptdate / 1000 ))::date)) <= ($toDate / 1000)
+    searchClause: AND EGCL_RECEIPTHEADER.RECEIPTDATE < $toDate
   - name: status
     label: reports.collection.status
     type: singlevaluelist

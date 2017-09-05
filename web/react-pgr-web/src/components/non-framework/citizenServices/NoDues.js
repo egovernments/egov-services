@@ -130,7 +130,7 @@ class NoDues extends Component {
     window.localStorage.setItem("serviceRequest",JSON.stringify(serviceRequest));
     window.localStorage.setItem("moduleName",this.props.match.params.id);
     window.localStorage.setItem("metaData",JSON.stringify(metaData));
-    window.localStorage.setItem("workflow","no-dues");
+    window.localStorage.setItem("workflow",this.props.match.params.moduleName);
 
 
 
@@ -585,7 +585,7 @@ class NoDues extends Component {
 
     let self = this;
     let {formData} = this.props;
-    finalObject["businessService"] = (self.props.match.params.status == "extract" ? "PT" : (self.props.match.params.id == "pt" ? "PT" : "WC"));
+    finalObject["businessService"] = (self.props.match.params.moduleName == "extract" ? "PT" : (self.props.match.params.id == "pt" ? "PT" : "WC"));
     Api.commonApiPost(self.props.metaData["noDues.search"].url, finalObject, {}, null, self.props.metaData["noDues.search"].useTimestamp,false,response.data.access_token).then(function(res){
         // self.props.setLoadingStatus('hide');
           if (res.Demands.length>0) {
@@ -619,7 +619,7 @@ class NoDues extends Component {
                    demandReq["Demands"][0].owner.id=JSON.parse(localStorage.userRequest).id;
                    demandReq["Demands"][0].taxPeriodFrom=1491004800000;
                    demandReq["Demands"][0].taxPeriodTo=1522540799000;
-                   demandReq["Demands"][0].demandDetails[0].taxHeadMasterCode=(self.props.match.params.status == "extract" ? "PT_EXT_OF_PROP_COPY_CHAR" : (self.props.match.params.id == "pt" ? "PT_NO_DUE_CERT_CHAR" : "WC_NO_DUE_CERT_CHAR"));
+                   demandReq["Demands"][0].demandDetails[0].taxHeadMasterCode=(self.props.match.params.moduleName == "extract" ? "PT_EXT_OF_PROP_COPY_CHAR" : (self.props.match.params.id == "pt" ? "PT_NO_DUE_CERT_CHAR" : "WC_NO_DUE_CERT_CHAR"));
 
                    Api.commonApiPost("/billing-service/demand/_create", {}, demandReq, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp"), JSON.parse(localStorage["request-temp"])).then(function(res){
 
@@ -711,7 +711,7 @@ class NoDues extends Component {
 
       Api.commonApiPost("/citizen-services/v1/requests/_search", {userId: JSON.parse(localStorage.getItem("userRequest")).id}, {}, null, true).then(function(ress) {
           let SID = "", _servReq;
-          let SC = (self.props.match.params.status == "extract" ? "PT_EXTRACT" : (self.props.match.params.id == "pt" ? "PT_NODUES" : "WC_NODUES"));
+          let SC = (self.props.match.params.moduleName == "extract" ? "PT_EXTRACT" : (self.props.match.params.id == "pt" ? "PT_NODUES" : "WC_NODUES"));
           console.log(SC);
           for(let i=0; i<ress.serviceReq.length; i++) {
             //Status needs to be changed
@@ -726,7 +726,7 @@ class NoDues extends Component {
             let request = {
                "tenantId": localStorage.getItem("tenantId"),
                "serviceRequestId": null,
-               "serviceCode": (self.props.match.params.status == "extract" ? "PT_EXTRACT" : (self.props.match.params.id == "pt" ? "PT_NODUES" : "WC_NODUES")),
+               "serviceCode": (self.props.match.params.moduleName == "extract" ? "PT_EXTRACT" : (self.props.match.params.id == "pt" ? "PT_NODUES" : "WC_NODUES")),
                "lat": 12,
                "lang": 23,
                "address": "address",
@@ -1523,7 +1523,7 @@ class NoDues extends Component {
 
                                           </td>
                                           <td colSpan={4}>
-                                            Application for {(match.params.id=="wc"?"Water Charge":"Property")} {match.params.status == "extract" ? "Extract" : "No Dues"}
+                                            Application for {(match.params.id=="wc"?"Water Charge":"Property")} {match.params.moduleName == "extract" ? "Extract" : "No Dues"}
                                           </td>
 
                                       </tr>
@@ -1582,7 +1582,7 @@ class NoDues extends Component {
                       <div style={{"page-break-after": "always"}}></div>
                       </Col>}
                       <Col md={6} id="DownloadReceipt">
-                      {(this.props.match.params.status != "extract" && Receipt && Receipt[0]) ? <Card>
+                      {(this.props.match.params.moduleName != "extract" && Receipt && Receipt[0]) ? <Card>
                         <CardHeader title={<strong>{"Certificate for: "+(this.props.match.params.id == "pt"?"Property Tax":"Water Charge")+ " No due"}</strong>}/>
                         <CardText>
                             <Table id="CertificateForWc" responsive style={{fontSize:"bold"}}  bordered condensed>
@@ -1758,7 +1758,7 @@ class NoDues extends Component {
 
       </div>*/}
         <div style={{textAlign:"center"}}>
-            <h3> {match.params.status != "extract" ? <span>No Dues Certificate for {match.params.id=="wc"?"Water Charge":"Property Tax"}</span> : "Property Extract"}</h3>
+            <h3> {match.params.moduleName != "extract" ? <span>No Dues Certificate for {match.params.id=="wc"?"Water Charge":"Property Tax"}</span> : "Property Extract"}</h3>
         </div>
         <Stepper activeStep={stepIndex}>
            <Step>

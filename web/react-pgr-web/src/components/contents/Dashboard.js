@@ -97,7 +97,7 @@ const content=[
             {
                 icon: 'icon-class-name',
                 label: 'Apply for Extract',
-                to: '#/non-framework/citizenServices/no-dues/extract/pt',
+                to: '#/non-framework/citizenServices/extract/search/pt',
             },
             {
                 icon: 'icon-class-name',

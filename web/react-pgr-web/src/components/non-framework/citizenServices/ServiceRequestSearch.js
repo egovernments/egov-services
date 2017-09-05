@@ -273,9 +273,9 @@ class Report extends Component {
 
   rowClickHandler = (item) => {
     if(item.serviceCode == "WATER_NEWCONN") {
-      var _url = "/non-framework/citizenServices/wc/view/" + encodeURIComponent(item.serviceRequestId);
+      var _url = "/non-fw/citizenServices/wc/view/" + encodeURIComponent(item.serviceRequestId);
     } else {
-      var _url = "/non-framework/citizenServices/fireNoc/view/" + encodeURIComponent(item.serviceRequestId);
+      var _url = "/non-fw/citizenServices/fireNoc/view/" + encodeURIComponent(item.serviceRequestId);
     }
 
     this.props.setRoute(_url);

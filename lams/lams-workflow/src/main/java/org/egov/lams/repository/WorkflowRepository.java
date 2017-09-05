@@ -237,10 +237,11 @@ public class WorkflowRepository {
 		Boolean isCorporation = Boolean.FALSE;
 		String url = propertiesManager.getTenantServiceHostName() + "tenant/v1/tenant/_search?code=" + tenantId;
 		TenantResponse tr = restTemplate.postForObject(url, new RequestInfo(), TenantResponse.class);
+		LOGGER.info("Tenant response :" + tr.toString());
 		if (!CollectionUtils.isEmpty(tr.getTenant())) {
 
 			city = tr.getTenant().get(0).getCity();
-			LOGGER.info("City grade :" + city.getGrade());
+			LOGGER.info("City details :" + city.toString());
 			if (propertiesManager.getCityGradeCorp().equalsIgnoreCase(city.getGrade())) {
 				isCorporation = Boolean.TRUE;
 			}

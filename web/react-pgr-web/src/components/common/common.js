@@ -1005,6 +1005,7 @@ var localization_EN_Data = {
     "tl.licenses.view.groups.revenueWardId": "Revenue Ward",
     "tl.licenses.view.groups.OwnershipType": "Ownership Type",
     "tl.licenses.view.groups.TradeAddress": "Trade Address",
+    "tl.view.licenses.groups.agreementDetails": "Agreement Details",
     "tl.view.licenses.groups.TradeDetails": "Trade Details",
     "tl.view.licenses.groups.TradeTitle": "Trade Title",
     "tl.view.licenses.groups.TradeType": "Trade Type",

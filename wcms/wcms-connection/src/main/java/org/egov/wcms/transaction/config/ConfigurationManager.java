@@ -164,6 +164,9 @@ public class ConfigurationManager {
     @Value("${egov.services.demandbill_service.hostname}")
     private String billingDemandServiceHostNameTopic;
     
+    @Value("${egov.services.demandbill_servivc.updatedemanddet}")
+    private String billingUpdateDemand;
+    
     @Value("${egov.services.demandbill_service.createdemand}")
     private String createbillingDemandServiceTopic;
     

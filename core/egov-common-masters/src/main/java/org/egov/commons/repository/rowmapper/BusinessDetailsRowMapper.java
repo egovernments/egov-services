@@ -40,12 +40,7 @@ public class BusinessDetailsRowMapper implements RowMapper<BusinessDetails> {
 		try {
 			Date date = isEmpty(rs.getDate("voucherCutOffDate")) ? null
 					: sdf.parse(sdf.format(rs.getDate("voucherCutOffDate")));
-			businessDetails.setVoucherCutoffDate(date.getTime());
-			date = isEmpty(rs.getDate("createdDate")) ? null : sdf.parse(sdf.format(rs.getDate("createdDate")));
-			businessDetails.setCreatedDate(date.getTime());
-			date = isEmpty(rs.getDate("lastModifiedDate")) ? null
-					: sdf.parse(sdf.format(rs.getDate("lastModifiedDate")));
-			businessDetails.setLastModifiedDate(date.getTime());
+			businessDetails.setVoucherCutoffDate(date != null ? date.getTime() : null);
 		} catch (ParseException e) {
 			e.printStackTrace();
 			throw new SQLException("Parse exception while parsing date");

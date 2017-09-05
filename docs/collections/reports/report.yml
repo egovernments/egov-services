@@ -156,12 +156,6 @@ ReportDefinitions:
     pattern: http://collection-services:8080/collection-services/receipts/_getDistinctBusinessDetails?tenantId=$tenantid|$..code|$..name
     isMandatory: false
     searchClause: AND EGCL_RECEIPTHEADER.businessdetails = $servicename
-  - name: classification
-    label: reports.collection.classification
-    type: singlevaluelist
-    pattern: 'list://BILLBASED:BILLBASED,MISCELLANEOUS:MISCELLANEOUS'
-    isMandatory: false
-    searchClause: AND EGCL_RECEIPTHEADER.receipttype = $classification
   - name: collectedby
     label: reports.collection.collectedby
     type: singlevaluelist

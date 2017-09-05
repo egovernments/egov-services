@@ -324,13 +324,13 @@ ReportDefinitions:
     type: epoch
     source: collection
     isMandatory: false
-    searchClause: AND (to_timestamp(TO_CHAR(EGCL_RECEIPTHEADER.RECEIPTDATE::timestamp, 'DD/MM/YYYY HH24:MI:SS'),'DD/MM/YYYY HH24:MI:SS') at time zone 'GMT') >= to_timestamp(Trunc(CAST($fromDate as bigint)/1000 )) at time zone 'GMT-5:30'
+    searchClause: AND EXTRACT(EPOCH from(to_timestamp(TRUNC( CAST(receiptdate AS bigint  ) / 1000 ))::date)) >= $fromDate
   - name: toDate
     label: reports.collection.todate
     type: epoch
     source: collection
     isMandatory: false
-    searchClause: AND (to_timestamp(TO_CHAR(EGCL_RECEIPTHEADER.RECEIPTDATE::timestamp, 'DD/MM/YYYY HH24:MI:SS'),'DD/MM/YYYY HH24:MI:SS') at time zone 'GMT') >= to_timestamp(Trunc(CAST($toDate as bigint)/1000 )) at time zone 'GMT-5:30'
+    searchClause: AND EXTRACT(EPOCH from(to_timestamp(TRUNC( CAST(receiptdate AS bigint  ) / 1000 ))::date)) <= $fromDate
   - name: status
     label: reports.collection.status
     type: singlevaluelist

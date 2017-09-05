@@ -789,6 +789,15 @@ class NoDues extends Component {
        }
 
 
+
+       Api.commonApiPost("/billing-service/taxheads/_search", {}, {}, null, self.props.metaData["noDues.search"].useTimestamp, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
+          console.log(res);
+          self.props.setLoadingStatus('hide');
+         }, function(err) {
+           self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+           self.props.setLoadingStatus('hide');
+         })
+
   }
 
   getVal = (path) => {
@@ -1451,7 +1460,7 @@ class NoDues extends Component {
                                       </tr>
                                   </tbody>
                               </Table>
-                              <strong style={{textAlign:"right"}}>{translate("This is computer generated receipt no authorised signature required")}</strong>
+                              <span style={{textAlign:"right"}}>{translate("This is computer generated receipt no authorised signature required")}</span>
                         </CardText>
                       </Card>
                       <div style={{"page-break-after": "always"}}></div>
@@ -1566,7 +1575,7 @@ class NoDues extends Component {
                                       </tr>
                                   </tbody>
                               </Table>
-                              <strong style={{textAlign:"right"}}>{translate("This is computer generated receipt no authorised signature required")}</strong>
+                              <span style={{textAlign:"right"}}>{translate("This is computer generated receipt no authorised signature required")}</span>
 
                         </CardText>
                       </Card>
@@ -1718,7 +1727,7 @@ class NoDues extends Component {
                           {this.state.Property && this.state.Property.propertyDetail && this.state.Property.propertyDetail.floors ? renderProperty(this.state.Property.propertyDetail.floors) : "No Data Available"}
                       </tbody>
                   </Table>
-                  <strong style={{textAlign:"right"}}>{translate("This is computer generated receipt no authorised signature required")}</strong>
+                  <span style={{textAlign:"right"}}>{translate("This is computer generated receipt no authorised signature required")}</span>
 
             </CardText>
         </Card>}

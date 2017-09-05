@@ -1175,8 +1175,8 @@ class NoDues extends Component {
                                       </tr>
                                   </tbody>
                               </Table>
-                              <strong style={{textAlign:"right"}}>{translate("This is computer generated receipt no authorised signature required")}</strong>
-                              
+                              <span style={{textAlign:"right"}}>{translate("This is computer generated receipt no authorised signature required")}</span>
+
                         </CardText>
                       </Card>
                       <div style={{"page-break-after": "always"}}></div>

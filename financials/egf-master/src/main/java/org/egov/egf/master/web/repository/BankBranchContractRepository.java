@@ -11,7 +11,7 @@ public class BankBranchContractRepository {
 	
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = "/egf-master/bankbranches/_search?";
+	public static final String SEARCH_URL = "/egf-masters/bankbranches/_search?";
 
 	public BankBranchContractRepository(@Value("${egf.master.host.url}") String hostUrl, RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;

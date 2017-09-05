@@ -37,7 +37,7 @@ let documents=[{
   "from":"",
   "timeStamp": new Date().getTime(),
   "filePath":"",
-  "name":"Application on Architect letter head",
+  "name":"Application on architect letter head",
   "remarks":""
 },
 {
@@ -51,7 +51,7 @@ let documents=[{
   "from":"",
   "timeStamp": new Date().getTime(),
   "filePath":"",
-  "name":"Rs.100 Stamp paper agreement",
+  "name":"Rs.100 stamp paper agreement",
   "remarks":""
 },
 {
@@ -86,7 +86,7 @@ let documents=[{
   "from":"",
   "timeStamp": new Date().getTime(),
   "filePath":"",
-  "name":"Copy of intials /Ammended NOC issued by fire brigade department",
+  "name":"Copy of initials/amended NOC issued by fire brigade department",
   "remarks":""
 }]
 

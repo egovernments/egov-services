@@ -126,6 +126,8 @@ public class Voucher extends Auditable {
 
 	@Length(max = 50)
 	private String budgetAppropriationNo;
+	
+	private Boolean partial;
 
 	private Set<Ledger> ledgers;
 

@@ -481,7 +481,7 @@ class NoDues extends Component {
           }, function() {
               Api.commonApiPost("/citizen-services/v1/requests/_search", {userId: JSON.parse(localStorage.getItem("userRequest")).id}, {}, null, true).then(function(ress) {
               let SID = "", _servReq;
-              let SC = (self.props.match.params.status == "extract" ? "PT_NODUES" : (self.props.match.params.id == "pt" ? "PT_NODUES" : "WC_NODUES"));
+              let SC = (self.props.match.params.id == "pt" ? "PT_PAYTAX" : "WC_PAYTAX");
               for(let i=0; i<ress.serviceReq.length; i++) {
                 //Status needs to be changed
                 if(SC == ress.serviceReq[i].serviceCode && ress.serviceReq[i].status == "CREATED") {
@@ -495,7 +495,7 @@ class NoDues extends Component {
                 let request = {
                    "tenantId": localStorage.getItem("tenantId"),
                    "serviceRequestId": null,
-                   "serviceCode": (self.props.match.params.id == "pt") ? "PT_NODUES" : "WC_NODUES",
+                   "serviceCode": (self.props.match.params.id == "pt" ? "PT_PAYTAX" : "WC_PAYTAX"),
                    "lat": 12,
                    "lang": 23,
                    "address": "address",

@@ -214,13 +214,6 @@ public class VoucherJdbcRepository extends JdbcRepository {
 			paramValues.put("sourcePath", voucherSearchEntity.getSourcePath());
 		}
 
-		if (voucherSearchEntity.getBudgetCheckRequired() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("budgetCheckRequired =:budgetCheckRequired");
-			paramValues.put("budgetCheckRequired", voucherSearchEntity.getBudgetCheckRequired());
-		}
-
 		if (voucherSearchEntity.getBudgetAppropriationNo() != null) {
 			if (params.length() > 0)
 				params.append(" and ");

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum AssetFinancialParams {
 
-    FUND("Fund"), FUNCTION("Function");
+    FUND("Fund"), FUNCTION("Function"), FUNCTIONARY("Functionary"), SCHEME("Scheme"), SUBSCHEME("Subscheme");
 
     private String value;
 

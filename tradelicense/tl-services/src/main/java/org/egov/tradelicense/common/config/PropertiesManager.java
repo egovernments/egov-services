@@ -285,5 +285,8 @@ public class PropertiesManager {
 	
 	@Value("${tl.error.tradecommencementdate.notvalid}")
 	private String tradeCommencementDateNotValidMsg;
+	
+	@Value("${kafka.topics.demandBill.update.name}")
+	private String updateDemandBillTopicName;
 
 }

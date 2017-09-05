@@ -27,6 +27,7 @@ import org.egov.tradelicense.domain.model.TradeLicenseSearch;
 import org.egov.tradelicense.domain.repository.TradeLicenseRepository;
 import org.egov.tradelicense.domain.repository.builder.LicenseBillQueryBuilder;
 import org.egov.tradelicense.domain.service.validator.TradeLicenseServiceValidator;
+import org.egov.tradelicense.web.contract.Demand;
 import org.egov.tradelicense.web.contract.DemandResponse;
 import org.egov.tradelicense.web.repository.StatusRepository;
 import org.modelmapper.ModelMapper;
@@ -378,13 +379,7 @@ public class TradeLicenseService {
 					NewLicenseStatus.FINAL_APPROVAL_COMPLETED.getName(), requestInfoWrapper);
 
 			if (null != nextStatus && !nextStatus.getLicenseStatuses().isEmpty()) {
-
 				license.getApplication().setStatus(nextStatus.getLicenseStatuses().get(0).getId().toString());
-				// generate license number and setting license number and
-				// license issued date
-				license.setLicenseNumber(licenseNumberGenerationService.generate(license.getTenantId(), requestInfo));
-				license.setIssuedDate(System.currentTimeMillis());
-
 			}
 
 		}
@@ -405,7 +400,6 @@ public class TradeLicenseService {
 			}
 
 		}
-
 	}
 
 	@Transactional
@@ -429,6 +423,13 @@ public class TradeLicenseService {
 				tradeLicenseRepository.createLicenseBill(LicenseBillQueryBuilder.insertLicenseBill(), objValue);
 			}
 		}
+		if (null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty()
+                        && currentStatus.getLicenseStatuses().get(0).getCode() == NewLicenseStatus.LICENSE_FEE_PAID.getName()) {
+                        // generate license number and setting license number and
+                        // license issued date
+		        tradeLicense.setLicenseNumber(licenseNumberGenerationService.generate(tradeLicense.getTenantId(), requestInfo));
+		        tradeLicense.setIssuedDate(System.currentTimeMillis());
+                }
 		return tradeLicenseRepository.update(tradeLicense);
 	}
 
@@ -613,5 +614,36 @@ public class TradeLicenseService {
 		responseInfo.setStatus(responseStatus);
 		return responseInfo;
 	}
+	
+	public RequestInfo createRequestInfoFromResponseInfo(ResponseInfo responseInfo) {
+            RequestInfo requestInfo = new RequestInfo();
+            String apiId = responseInfo.getApiId();
+            requestInfo.setApiId(apiId);
+            String ver = responseInfo.getVer();
+            requestInfo.setVer(ver);
+            Long ts = null;
+            if (responseInfo.getTs() != null)
+                    ts = responseInfo.getTs();
 
+            requestInfo.setTs(ts);
+            String msgId = responseInfo.getMsgId();
+            requestInfo.setMsgId(msgId);
+            return requestInfo;
+    }
+
+        public void updateTradeLicenseAfterCollection(DemandResponse demandResponse) {
+            if (demandResponse != null) {
+                Demand demand = demandResponse.getDemands().get(0);
+                if (demand != null && demand.getBusinessService() != null && "TRADELICENSE".equals(demand.getBusinessService())) {
+                    log.debug(demand.toString());
+                    tradeLicenseRepository.updateTradeLicenseAfterWorkFlowQuery(demand.getConsumerCode());
+                } else {
+                    log.debug("Demand is null in Trade License service");
+                }
+            }
+        }
+        
+        public TradeLicense searchByApplicationNumber(RequestInfo requestInfo, String applicationNumber) {
+            return tradeLicenseRepository.searchByApplicationNumber(requestInfo, applicationNumber);
+        }
 }

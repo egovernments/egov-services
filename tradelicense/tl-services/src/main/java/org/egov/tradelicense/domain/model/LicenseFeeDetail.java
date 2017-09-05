@@ -25,8 +25,8 @@ public class LicenseFeeDetail {
 	@JsonProperty("financialYear")
 	private String financialYear;
 
-	@JsonProperty("teantId")
-	private String teantId;
+	@JsonProperty("tenantId")
+	private String tenantId;
 	
 	@JsonProperty("applicationId")
 	private Long applicationId;

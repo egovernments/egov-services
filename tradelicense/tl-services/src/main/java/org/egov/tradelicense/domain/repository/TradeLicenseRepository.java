@@ -1,5 +1,6 @@
 package org.egov.tradelicense.domain.repository;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import org.egov.tradelicense.common.domain.exception.DuplicateTradeApplicationEx
 import org.egov.tradelicense.common.domain.exception.DuplicateTradeLicenseException;
 import org.egov.tradelicense.common.domain.exception.IdNotFoundException;
 import org.egov.tradelicense.domain.model.LicenseApplication;
+import org.egov.tradelicense.domain.enums.NewLicenseStatus;
 import org.egov.tradelicense.domain.model.LicenseFeeDetail;
 import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
@@ -362,8 +364,8 @@ public class TradeLicenseRepository {
 		if (tradeLicense.getFeeDetails() != null && tradeLicense.getFeeDetails().size() > 0) {
 
 			for (LicenseFeeDetail feeDetail : tradeLicense.getFeeDetails()) {
-				feeDetail.setTeantId(tradeLicense.getTenantId());
-				feeDetail.setApplicationId(applicationEntity.getId());
+				feeDetail.setTenantId(tradeLicense.getTenantId());
+				feeDetail.setApplicationId( applicationEntity.getId());
 				licenseFeeDetailEntity = new LicenseFeeDetailEntity().toEntity(feeDetail);
 
 				licenseFeeDetailJdbcRepository.create(licenseFeeDetailEntity);
@@ -418,7 +420,7 @@ public class TradeLicenseRepository {
 			for (LicenseFeeDetail feeDetail : tradeLicense.getFeeDetails()) {
 
 				Boolean isFeeDetailExists = validateUpdateTradeLicenseFeeDetailId(feeDetail);
-				feeDetail.setTeantId(tradeLicense.getTenantId());
+				feeDetail.setTenantId(tradeLicense.getTenantId());
 				// TODO : Application Id is fetched assuming there will be only
 				// one applicaiton for given license
 				Long applicationId = tradeLicenseJdbcRepository.getLegacyLicenseApplicationId(tradeLicense.getId());
@@ -468,8 +470,21 @@ public class TradeLicenseRepository {
 
 	}
 
-	public void createLicenseBill(final String query, final Object[] objValue) {
-		jdbcTemplate.update(LicenseBillQueryBuilder.insertLicenseBill(), objValue);
-	}
+	@Transactional
+        public void createLicenseBill(final String query, final Object[] objValue) {
+            jdbcTemplate.update(LicenseBillQueryBuilder.insertLicenseBill(), objValue);
+        }
 
+	@Transactional
+        public void updateTradeLicenseAfterWorkFlowQuery(String consumerCode) {
+            String insertquery=LicenseBillQueryBuilder.updateTradeLicenseAfterWorkFlowQuery();
+            Object[] obj = new Object[] { 
+                    new Date(new java.util.Date().getTime()), NewLicenseStatus.LICENSE_FEE_PAID,
+                   consumerCode };
+            jdbcTemplate.update(insertquery, obj);
+        }
+	
+	public TradeLicense searchByApplicationNumber(RequestInfo requestInfo, String applicationNumber) {
+	    return tradeLicenseJdbcRepository.searchByApplicationNumber(requestInfo, applicationNumber);
+	}
 }

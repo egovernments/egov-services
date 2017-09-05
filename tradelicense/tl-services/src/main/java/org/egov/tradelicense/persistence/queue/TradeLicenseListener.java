@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.TradeLicenseContract;
 import org.egov.tl.commons.web.contract.TradeLicenseIndexerContract;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
@@ -14,6 +15,7 @@ import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.domain.service.TradeLicenseService;
 import org.egov.tradelicense.persistence.entity.TradeLicenseSearchEntity;
 import org.egov.tradelicense.persistence.repository.TradeLicenseJdbcRepository;
+import org.egov.tradelicense.web.contract.DemandResponse;
 import org.egov.tradelicense.web.repository.TenantContractRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -123,6 +125,17 @@ public class TradeLicenseListener {
 			indexerRequest = this.getTradeLicenseIndexerRequest(request);
 			mastersMap.put("tradelicense-persisted", indexerRequest);
 			tradeLicenseProducer.sendMessage(topic, key, mastersMap);
+		}
+		if (mastersMap.get(propertiesManager.getUpdateDemandBillTopicName()) != null) {
+                        DemandResponse consumerRecord = objectMapper.convertValue(
+                                mastersMap.get(propertiesManager.getUpdateDemandBillTopicName()),
+                                DemandResponse.class);
+                        tradeLicenseService
+                                .updateTradeLicenseAfterCollection(objectMapper.convertValue(consumerRecord, DemandResponse.class));
+                        RequestInfo requestInfo = tradeLicenseService.createRequestInfoFromResponseInfo(consumerRecord.getResponseInfo());
+                        TradeLicense tradeLicense = tradeLicenseService.searchByApplicationNumber(requestInfo,
+                                consumerRecord.getDemands().get(0).getConsumerCode());
+                        tradeLicenseService.update(tradeLicense, requestInfo);
 		}
 	}
 

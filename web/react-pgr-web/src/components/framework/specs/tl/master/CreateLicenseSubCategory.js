@@ -235,7 +235,7 @@ var dat = {
     "objectName": "categories",
     "groups": [
 			{
-				"label": "tl.view.groups.categorytype.title",
+				"label": "tl.view.groups.categorytype.title", 
 				"name": "viewCategoryType",
 				"fields": [
 

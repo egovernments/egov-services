@@ -200,7 +200,7 @@ var dat = {
             "url": "",
             "isRequired": false,
             "isDisabled": false,
-            "requiredErrMsg": "",
+            "requiredErrMsg": "", 
             "patternErrMsg": "",
 					//	"defaultValue": false
           },

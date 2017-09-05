@@ -1114,7 +1114,7 @@ var localization_EN_Data = {
     "reports.collection.consumerno": "Consumer No",
     "reports.collection.servicename": "Service Name",
     "reports.collection.total.amount":"Total Receipt Amount",
-    "reports.collection.created.by":"Created By"
+    "reports.collection.created.by":"Created By",
 
 
     "collection.create.consumerCode": "Consumer Code",
@@ -1429,7 +1429,7 @@ var localization_EN_Data = {
     "collection.create.checkLatePayment":"Cheque bounce Penalty Rebate",
     "collection.create.total":"Total",
     "reports.collection.receipt.transactionid":"Transaction ID",
-    
+
 
 "reports.collection.amount":"Amount",
 "reports.collection.bank":"Bank",

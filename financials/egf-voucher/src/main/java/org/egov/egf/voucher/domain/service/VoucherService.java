@@ -143,7 +143,11 @@ public class VoucherService {
 				Assert.notNull(voucher.getOriginalVoucherNumber(),
 						"Original Voucher Number is required to create reverse voucher");
 
-				if (null == voucher.getPartial() || !voucher.getPartial()) {
+				if (null != voucher.getPartial() && voucher.getPartial()) {
+
+					reverseVouchers.add(voucher);
+
+				} else {
 
 					Voucher reverseVoucher = prepareReverseVoucher(voucher);
 					reverseVouchers.add(reverseVoucher);
@@ -264,9 +268,9 @@ public class VoucherService {
 				String tenantId = null;
 				tenantId = (null != vouchers && !vouchers.isEmpty()) ? vouchers.get(0).getTenantId() : null;
 
-				// getHeaderMandateFields(tenantId);
+				getHeaderMandateFields(tenantId);
 
-				// validateMandatoryFields(vouchers);
+				validateMandatoryFields(vouchers);
 
 				break;
 			case Constants.ACTION_UPDATE:

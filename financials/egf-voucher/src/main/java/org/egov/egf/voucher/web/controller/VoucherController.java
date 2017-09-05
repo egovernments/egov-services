@@ -17,7 +17,6 @@ import org.egov.egf.voucher.web.contract.VoucherContract;
 import org.egov.egf.voucher.web.contract.VoucherSearchContract;
 import org.egov.egf.voucher.web.requests.VoucherRequest;
 import org.egov.egf.voucher.web.requests.VoucherResponse;
-import org.egov.egf.voucher.web.util.VoucherConstants;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

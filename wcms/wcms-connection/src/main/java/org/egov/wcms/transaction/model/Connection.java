@@ -110,11 +110,21 @@ public class Connection {
     private String waterTreatment;
 
     private String waterTreatmentId;
+    
+    @NotNull
+    private String storageReservoir; 
+    
+    private String storageReservoirId; 
 
+    @NotNull
+    private String usageType;
+    
+    private String usageTypeId;
+    
     @NotNull
     private String subUsageType;
 
-    private Long subUsageTypeId;
+    private String subUsageTypeId;
 
     private int numberOfFamily;
 

@@ -50,6 +50,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.wcms.transaction.config.ConfigurationManager;
 import org.egov.wcms.transaction.model.Connection;
 import org.egov.wcms.transaction.model.DocumentOwner;
 import org.egov.wcms.transaction.model.EstimationCharge;
@@ -64,8 +65,7 @@ import org.egov.wcms.transaction.repository.rowmapper.ConnectionDocumentRowMappe
 import org.egov.wcms.transaction.repository.rowmapper.UpdateWaterConnectionRowMapper;
 import org.egov.wcms.transaction.repository.rowmapper.WaterConnectionRowMapper;
 import org.egov.wcms.transaction.repository.rowmapper.WaterConnectionRowMapper.ConnectionMeterRowMapper;
-import org.egov.wcms.transaction.web.contract.PropertyTaxResponseInfo;
-import org.egov.wcms.transaction.web.contract.PropertyTypeResponse;
+import org.egov.wcms.transaction.web.contract.CommonResponseInfo;
 import org.egov.wcms.transaction.web.contract.RequestInfoWrapper;
 import org.egov.wcms.transaction.web.contract.UsageTypeResponse;
 import org.egov.wcms.transaction.web.contract.WaterConnectionGetReq;
@@ -86,9 +86,6 @@ import org.springframework.web.client.RestTemplate;
 public class WaterConnectionRepository {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(WaterConnectionRepository.class);
-    public static final String baseUrl = "http://pt-property:8080" ;
-	public static final String usageTypeSearch = "/pt-property/property/usages/_search?tenantId={tenantId}" ; 
-	public static final String propertyTypeSearch = "/pt-property/property/propertytypes/_search?tenantId={tenantId}";
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -98,6 +95,9 @@ public class WaterConnectionRepository {
 
     @Autowired
     private WaterConnectionQueryBuilder waterConnectionQueryBuilder;
+    
+    @Autowired
+    private ConfigurationManager configurationManager;
     
     public WaterConnectionReq persistConnection(final WaterConnectionReq waterConnectionRequest) {
 
@@ -138,53 +138,52 @@ public class WaterConnectionRepository {
                 statement.setDate(16, new Date(new java.util.Date().getTime()));
                 statement.setDate(17, new Date(new java.util.Date().getTime()));
                 statement.setString(18, waterConnectionRequest.getConnection().getPropertyIdentifier());
-                statement.setString(19, waterConnectionRequest.getConnection().getProperty().getUsageTypeId());
-                statement.setString(20, waterConnectionRequest.getConnection().getProperty().getPropertyTypeId());
+                statement.setString(19, waterConnectionRequest.getConnection().getUsageTypeId());
                 if(waterConnectionRequest.getConnection().getWithProperty()) { 
-                	statement.setString(21, waterConnectionRequest.getConnection().getProperty().getAddress());	
+                	statement.setString(20, waterConnectionRequest.getConnection().getProperty().getAddress());	
                 } else { 
-                	statement.setString(21, waterConnectionRequest.getConnection().getAddress().getAddressLine1());
+                	statement.setString(20, waterConnectionRequest.getConnection().getAddress().getAddressLine1());
                 }
-                statement.setDouble(22, waterConnectionRequest.getConnection().getDonationCharge());
+                statement.setDouble(21, waterConnectionRequest.getConnection().getDonationCharge());
 
-                statement.setString(23, waterConnectionRequest.getConnection().getAssetIdentifier());
-                statement.setString(24, waterConnectionRequest.getConnection().getWaterTreatmentId());
-                statement.setBoolean(25, waterConnectionRequest.getConnection().getIsLegacy());
+                statement.setString(22, waterConnectionRequest.getConnection().getAssetIdentifier());
+                statement.setString(23, waterConnectionRequest.getConnection().getWaterTreatmentId());
+                statement.setBoolean(24, waterConnectionRequest.getConnection().getIsLegacy());
                 if (!waterConnectionRequest.getConnection().getIsLegacy() && waterConnectionRequest.getConnection().getId() == 0){
                     waterConnectionRequest.getConnection().setStatus(NewConnectionStatus.CREATED.name());
-                    statement.setString(26, NewConnectionStatus.CREATED.name());
+                    statement.setString(25, NewConnectionStatus.CREATED.name());
                 }
                 else if (waterConnectionRequest.getConnection().getIsLegacy()){
                     waterConnectionRequest.getConnection().setStatus(NewConnectionStatus.SANCTIONED.name());
-                    statement.setString(26, NewConnectionStatus.SANCTIONED.name());
+                    statement.setString(25, NewConnectionStatus.SANCTIONED.name());
                 }
                 else{
-                    statement.setString(26, NewConnectionStatus.VERIFIED.name());
+                    statement.setString(25, NewConnectionStatus.VERIFIED.name());
                     waterConnectionRequest.getConnection().setStatus(NewConnectionStatus.VERIFIED.name());
                 }
-                statement.setDouble(27, waterConnectionRequest.getConnection().getNumberOfFamily());
-                statement.setLong(28, waterConnectionRequest.getConnection().getSubUsageTypeId());
-                statement.setString(29,waterConnectionRequest.getConnection().getPlumberName());
-                statement.setDouble(30, waterConnectionRequest.getConnection().getBillSequenceNumber()!=null?
+                statement.setDouble(26, waterConnectionRequest.getConnection().getNumberOfFamily());
+                statement.setString(27, waterConnectionRequest.getConnection().getSubUsageTypeId());
+                statement.setString(28,waterConnectionRequest.getConnection().getPlumberName());
+                statement.setDouble(29, waterConnectionRequest.getConnection().getBillSequenceNumber()!=null?
                         waterConnectionRequest.getConnection().getBillSequenceNumber():0l);
 
-                statement.setBoolean(31, waterConnectionRequest.getConnection().getOutsideULB());
+                statement.setBoolean(30, waterConnectionRequest.getConnection().getOutsideULB());
 
                 if (waterConnectionRequest.getConnection().getIsLegacy()
                         ) {
-                    statement.setString(32, waterConnectionRequest.getConnection().getLegacyConsumerNumber());
-                    statement.setString(33, waterConnectionRequest.getConnection().getConsumerNumber());
-                    statement.setLong(34, waterConnectionRequest.getConnection().getExecutionDate());
-                    statement.setInt(35, waterConnectionRequest.getConnection().getNoOfFlats());
-                   statement.setString(36, waterConnectionRequest.getConnection().getManualConsumerNumber());
-                   statement.setString(37, waterConnectionRequest.getConnection().getHouseNumber());
-                   statement.setString(38, waterConnectionRequest.getConnection().getManualReceiptNumber());
-                   statement.setLong(39, waterConnectionRequest.getConnection().getManualReceiptDate());
+                    statement.setString(31, waterConnectionRequest.getConnection().getLegacyConsumerNumber());
+                    statement.setString(32, waterConnectionRequest.getConnection().getConsumerNumber());
+                    statement.setLong(33, waterConnectionRequest.getConnection().getExecutionDate());
+                    statement.setInt(34, waterConnectionRequest.getConnection().getNoOfFlats());
+                   statement.setString(35, waterConnectionRequest.getConnection().getManualConsumerNumber());
+                   statement.setString(36, waterConnectionRequest.getConnection().getHouseNumber());
+                   statement.setString(37, waterConnectionRequest.getConnection().getManualReceiptNumber());
+                   statement.setLong(38, waterConnectionRequest.getConnection().getManualReceiptDate());
 
                 }
 
                 if (waterConnectionRequest.getConnection().getParentConnectionId() != 0)
-                    statement.setLong(36, waterConnectionRequest.getConnection().getParentConnectionId());
+                    statement.setLong(35, waterConnectionRequest.getConnection().getParentConnectionId());
                 
                 
                 // Please verify if there's proper validation on all these fields to avoid NPE.
@@ -596,24 +595,17 @@ public class WaterConnectionRepository {
 	
 	
 	private void resolvePropertyUsageTypeNames(String tenantId, List<Connection> connectionList, RequestInfo requestInfo) {
-		PropertyTaxResponseInfo prop = new PropertyTaxResponseInfo(); 
+		CommonResponseInfo usage = new CommonResponseInfo();  
 		try {
-			Map<String, PropertyTaxResponseInfo> propTypeMap = getPropertyNameFromPTModule(tenantId, requestInfo); 
-			Map<String, PropertyTaxResponseInfo> usagTypeMap = getUsageNameFromPTModule(tenantId, requestInfo);
-			for(Connection conn : connectionList) { 
-				if(null != conn.getProperty()) { 
-					prop = propTypeMap.get(conn.getProperty().getPropertyTypeId()); 
-					if(null != prop) { 
-						conn.getProperty().setPropertyType(prop.getName());
-					}
-					prop = usagTypeMap.get(conn.getProperty().getUsageTypeId()); 
-					if(null != prop) { 
-						conn.getProperty().setUsageType(prop.getName());
-					}
-					prop = usagTypeMap.get(String.valueOf(conn.getSubUsageTypeId())); 
-					if(null != prop) { 
-						conn.setSubUsageType(prop.getName());
-					}
+			Map<String, CommonResponseInfo> usagTypeMap = getUsageNameFromPTModule(tenantId, requestInfo);
+			for (Connection conn : connectionList) {
+				usage = usagTypeMap.get(conn.getUsageTypeId());
+				if (null != usage) {
+					conn.setUsageType(usage.getName());
+				}
+				usage = usagTypeMap.get(String.valueOf(conn.getSubUsageTypeId()));
+				if (null != usage) {
+					conn.setSubUsageType(usage.getName());
 				}
 			}
 		} catch(Exception e) {
@@ -621,35 +613,17 @@ public class WaterConnectionRepository {
 		}
 	}
 	
-	public Map<String, PropertyTaxResponseInfo> getPropertyNameFromPTModule(final String tenantId, RequestInfo requestInfo) {
-		String url = baseUrl + propertyTypeSearch;
-		Map<String, PropertyTaxResponseInfo> propTypeMap = new HashMap<>();
-		final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
-		final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
-		final PropertyTypeResponse propertyTypes = new RestTemplate().postForObject(url.toString(), request,
-				PropertyTypeResponse.class, tenantId);
-		if(null != propertyTypes) { 
-			LOGGER.info("Property Types fetched from the Property Module : " + propertyTypes);
-			if(null != propertyTypes.getPropertyTypes()) { 
-				for(PropertyTaxResponseInfo prop : propertyTypes.getPropertyTypes()) { 
-					propTypeMap.put(prop.getId(), prop); 
-				}
-			}
-		}
-		return propTypeMap;
-	}
-
-	public Map<String, PropertyTaxResponseInfo> getUsageNameFromPTModule(final String tenantId, RequestInfo requestInfo) {
-		String url = baseUrl + usageTypeSearch;
-		Map<String, PropertyTaxResponseInfo> usagTypeMap = new HashMap<>();
+	public Map<String, CommonResponseInfo> getUsageNameFromPTModule(final String tenantId, RequestInfo requestInfo) {
+		StringBuilder url = new StringBuilder(configurationManager.getSubUsageTypeSearchPathTopic()); 
+		Map<String, CommonResponseInfo> usagTypeMap = new HashMap<>();
 		final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
 		final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
 		final UsageTypeResponse usageTypes = new RestTemplate().postForObject(url.toString(), request,
 				UsageTypeResponse.class, tenantId);
 		if(null != usageTypes) { 
 			LOGGER.info("Usage Types fetched from the Property Module : " + usageTypes);
-			if(null != usageTypes.getUsageMasters()) { 
-				for(PropertyTaxResponseInfo usage : usageTypes.getUsageMasters()) { 
+			if(null != usageTypes.getUsageTypes()) { 
+				for(CommonResponseInfo usage : usageTypes.getUsageTypes()) { 
 					usagTypeMap.put(usage.getId(), usage);
 				}
 			}

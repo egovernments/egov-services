@@ -52,7 +52,6 @@ import org.egov.wcms.transaction.exception.FinYearException;
 import org.egov.wcms.transaction.exception.IdGenerationException;
 import org.egov.wcms.transaction.exception.WaterConnectionException;
 import org.egov.wcms.transaction.model.Connection;
-import org.egov.wcms.transaction.util.WcmsConnectionConstants;
 import org.egov.wcms.transaction.web.contract.AckIdRequest;
 import org.egov.wcms.transaction.web.contract.AckNoGenerationRequest;
 import org.egov.wcms.transaction.web.contract.AckNoGenerationResponse;
@@ -65,17 +64,16 @@ import org.egov.wcms.transaction.web.contract.FinYearReq;
 import org.egov.wcms.transaction.web.contract.FinYearRes;
 import org.egov.wcms.transaction.web.contract.IdGenErrorRes;
 import org.egov.wcms.transaction.web.contract.PipeSizeResponseInfo;
-import org.egov.wcms.transaction.web.contract.PropertyCategoryResponseInfo;
 import org.egov.wcms.transaction.web.contract.PropertyInfo;
 import org.egov.wcms.transaction.web.contract.PropertyResponse;
-import org.egov.wcms.transaction.web.contract.PropertyUsageTypeResponseInfo;
 import org.egov.wcms.transaction.web.contract.RequestInfoBody;
 import org.egov.wcms.transaction.web.contract.RequestInfoWrapper;
+import org.egov.wcms.transaction.web.contract.StorageReservoirResponse;
 import org.egov.wcms.transaction.web.contract.SupplyResponseInfo;
 import org.egov.wcms.transaction.web.contract.Tenant;
 import org.egov.wcms.transaction.web.contract.TenantResponse;
 import org.egov.wcms.transaction.web.contract.TreatmentPlantResponse;
-import org.egov.wcms.transaction.web.contract.UsageMasterResponse;
+import org.egov.wcms.transaction.web.contract.UsageTypeResponse;
 import org.egov.wcms.transaction.web.contract.WaterChargesConfigRes;
 import org.egov.wcms.transaction.web.contract.WaterConnectionReq;
 import org.egov.wcms.transaction.web.contract.WaterSourceResponseInfo;
@@ -132,6 +130,54 @@ public class RestConnectionService {
         }
         return positions;
     }
+    
+    public StorageReservoirResponse getStorageReservoirName(WaterConnectionReq waterConnectionRequest) {
+        StringBuilder url = new StringBuilder();
+        url.append(configurationManager.getWaterMasterServiceBasePathTopic())
+                .append(configurationManager.getReservoirSearchTopic());
+        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(waterConnectionRequest.getRequestInfo()).build();
+        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
+        StorageReservoirResponse response = new RestTemplate().postForObject(url.toString(), request, StorageReservoirResponse.class,
+                waterConnectionRequest.getConnection().getStorageReservoir(), waterConnectionRequest.getConnection().getTenantId());
+        if (response != null && response.getStorageReservoirs() != null && !response.getStorageReservoirs().isEmpty()) {
+            waterConnectionRequest.getConnection()
+                    .setStorageReservoirId(response.getStorageReservoirs() != null && response.getStorageReservoirs().get(0) != null
+                            ? String.valueOf(response.getStorageReservoirs().get(0).getId()) : "");
+        }
+        return response;
+    }
+    
+    public UsageTypeResponse getUsageTypeName(WaterConnectionReq waterConnectionRequest) {
+        StringBuilder url = new StringBuilder();
+        url.append(configurationManager.getWaterMasterServiceBasePathTopic())
+                .append(configurationManager.getUsageTypeSearchPathTopic());
+        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(waterConnectionRequest.getRequestInfo()).build();
+        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
+        UsageTypeResponse response = new RestTemplate().postForObject(url.toString(), request, UsageTypeResponse.class,
+                waterConnectionRequest.getConnection().getUsageType(), waterConnectionRequest.getConnection().getTenantId());
+        if (response != null && response.getUsageTypes() != null && !response.getUsageTypes().isEmpty()) {
+            waterConnectionRequest.getConnection()
+                    .setUsageTypeId(response.getUsageTypes() != null && response.getUsageTypes().get(0) != null
+                            ? String.valueOf(response.getUsageTypes().get(0).getId()) : "");
+        }
+        return response;
+    }
+    
+    public UsageTypeResponse getSubUsageTypeName(WaterConnectionReq waterConnectionRequest) {
+        StringBuilder url = new StringBuilder();
+        url.append(configurationManager.getWaterMasterServiceBasePathTopic())
+                .append(configurationManager.getUsageTypeSearchPathTopic());
+        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(waterConnectionRequest.getRequestInfo()).build();
+        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
+        UsageTypeResponse response = new RestTemplate().postForObject(url.toString(), request, UsageTypeResponse.class,
+                waterConnectionRequest.getConnection().getSubUsageType(), waterConnectionRequest.getConnection().getTenantId());
+        if (response != null && response.getUsageTypes() != null && !response.getUsageTypes().isEmpty()) {
+            waterConnectionRequest.getConnection()
+                    .setSubUsageTypeId(response.getUsageTypes() != null && response.getUsageTypes().get(0) != null
+                            ? String.valueOf(response.getUsageTypes().get(0).getId()) : "");
+        }
+        return response;
+    }
 
     public PipeSizeResponseInfo getPipesizeTypeByCode(WaterConnectionReq waterConnectionRequest) {
         StringBuilder url = new StringBuilder();
@@ -186,44 +232,8 @@ public class RestConnectionService {
         return supplytype;
     }
 
-    public Boolean validatePropertyCategoryMapping(WaterConnectionReq waterConnectionRequest) {
-        Boolean isValidPropAndCategory = Boolean.FALSE;
-        StringBuilder url = new StringBuilder();
-        url.append(configurationManager.getWaterMasterServiceBasePathTopic())
-                .append(configurationManager.getWaterMasterPropCategoryMappingTopic())
-                .append("?propertyType=").append(waterConnectionRequest.getConnection().getProperty().getPropertyType())
-                .append("&categoryType=").append(waterConnectionRequest.getConnection().getCategoryType())
-                .append("&tenantId=").append(waterConnectionRequest.getConnection().getTenantId());
-        final RequestInfo requestInfo = RequestInfo.builder().ts(1111111L).build();
-        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
-        PropertyCategoryResponseInfo propCategory = new RestTemplate().postForObject(url.toString(),
-                wrapper, PropertyCategoryResponseInfo.class);
-        if (propCategory != null && propCategory.getPropCategory() != null && !propCategory.getPropCategory().isEmpty()
-                && propCategory.getPropCategory().get(0).getId() != null) {
-            waterConnectionRequest.getConnection().getProperty()
-                    .setPropertyTypeId(propCategory.getPropCategory().get(0).getPropertyTypeId());
-            isValidPropAndCategory = Boolean.TRUE;
-        }
-        return isValidPropAndCategory;
-    }
-
-    /*
-     * public Boolean validatePropertyPipesizeMapping(WaterConnectionReq waterConnectionRequest) { Boolean isValidPropAndCategory
-     * = Boolean.FALSE; StringBuilder url = new StringBuilder();
-     * url.append(configurationManager.getWaterMasterServiceBasePathTopic())
-     * .append(configurationManager.getWaterMasterPropPipeSizeMappingTopic())
-     * .append("?propertyType=").append(waterConnectionRequest.getConnection().getProperty().getPropertyType())
-     * .append("&pipeSizeType=").append(waterConnectionRequest.getConnection().getHscPipeSizeType())
-     * .append("&tenantId=").append(waterConnectionRequest.getConnection().getTenantId()); final RequestInfo requestInfo =
-     * RequestInfo.builder().ts(111111L).build(); RequestInfoWrapper wrapper =
-     * RequestInfoWrapper.builder().requestInfo(requestInfo).build(); PropertyCategoryResponseInfo propCategory = new
-     * RestTemplate().postForObject(url.toString(), wrapper, PropertyCategoryResponseInfo.class); if (propCategory != null &&
-     * !propCategory.getPropCategory().isEmpty() && propCategory.getPropCategory().get(0).getId() != null) {
-     * waterConnectionRequest.getConnection().getProperty().setPropertyTypeId(Long.valueOf(propCategory.getPropCategory().get(0).
-     * getPropertyTypeId())); isValidPropAndCategory = Boolean.TRUE; } return isValidPropAndCategory; }
-     */
-
-    public Boolean validateSubUsageType(WaterConnectionReq waterConnectionRequest) {
+    
+    /*public Boolean validateSubUsageType(WaterConnectionReq waterConnectionRequest) {
         Boolean isValidSubUsageType = Boolean.FALSE;
         StringBuilder url = new StringBuilder();
         url.append(configurationManager.getPropertyServiceHostNameTopic())
@@ -244,30 +254,9 @@ public class RestConnectionService {
             isValidSubUsageType = Boolean.TRUE;
         }
         return isValidSubUsageType;
-    }
+    }*/
     
     
-    public Boolean validatePropertyUsageTypeMapping(WaterConnectionReq waterConnectionRequest) {
-        Boolean isValidPropAndCategory = Boolean.FALSE;
-        StringBuilder url = new StringBuilder();
-        url.append(configurationManager.getWaterMasterServiceBasePathTopic())
-                .append(configurationManager.getWaterMasterPropUsageTypeMappingTopic())
-                .append("?propertyType=").append(waterConnectionRequest.getConnection().getProperty().getPropertyType())
-                .append("&usageCode=").append(waterConnectionRequest.getConnection().getProperty().getUsageType())
-                .append("&tenantId=").append(waterConnectionRequest.getConnection().getTenantId());
-        final RequestInfo requestInfo = RequestInfo.builder().ts(1111111L).build();
-        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
-        PropertyUsageTypeResponseInfo propCategory = new RestTemplate().postForObject(url.toString(),
-                wrapper, PropertyUsageTypeResponseInfo.class);
-        if (propCategory != null && propCategory.getPropCategory() != null && !propCategory.getPropCategory().isEmpty()
-                && propCategory.getPropCategory().get(0).getId() != null) {
-            waterConnectionRequest.getConnection().getProperty()
-                    .setUsageTypeId(propCategory.getPropCategory().get(0).getUsageTypeId());
-            isValidPropAndCategory = Boolean.TRUE;
-        }
-        return isValidPropAndCategory;
-    }
-
     public PropertyResponse getPropertyDetailsByUpicNo(WaterConnectionReq waterRequestReq) {
         final RequestInfo requestInfo =waterRequestReq.getRequestInfo();
         StringBuilder url = new StringBuilder();
@@ -329,8 +318,7 @@ public class RestConnectionService {
         RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(waterConnectionRequest.getRequestInfo()).build();
         url.append(configurationManager.getWaterMasterServiceBasePathTopic())
                 .append(configurationManager.getWaterMasterServiceDonationSearchPathTopic()).append("?propertyType=")
-                .append(waterConnectionRequest.getConnection().getProperty().getPropertyType())
-                .append("&usageType=").append(waterConnectionRequest.getConnection().getProperty().getUsageType())
+                .append("&usageType=").append(waterConnectionRequest.getConnection().getUsageType())
                 .append("&categoryType=")
                 .append(waterConnectionRequest.getConnection().getCategoryType()).append(
                         "&maxHSCPipeSize=")

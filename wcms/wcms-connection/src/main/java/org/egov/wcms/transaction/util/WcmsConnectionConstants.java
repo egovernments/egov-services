@@ -347,7 +347,19 @@ public class WcmsConnectionConstants {
     
     public static final String CONNECTION_METERED_MODEL_INVALID_CODE = "wcms.0060";
     public static final String CONNECTION_METERED_MODEL_INVALID_ERROR_MESSAGE = "Required meter model";
-    public static final String CONNECTION_METERED_MODEL_INVALID_FIELD_NAME = "meterModel";    
+    public static final String CONNECTION_METERED_MODEL_INVALID_FIELD_NAME = "meterModel";
+    
+    public static final String CONNECTION_METERED_OWNER_WRONG_CODE = "wcms.0061";
+    public static final String CONNECTION_METERED_OWNER_WRONG_ERROR_MESSAGE = "Wrong value for Meter Owner";
+    public static final String CONNECTION_METERED_OWNER_WRONG_FIELD_NAME = "meterOwner";
+    
+    public static final String CONNECTION_METERED_MODEL_WRONG_CODE = "wcms.0062";
+    public static final String CONNECTION_METERED_MODEL_WRONG_ERROR_MESSAGE = "Wrong value for Meter Model";
+    public static final String CONNECTION_METERED_MODEL_WRONG_FIELD_NAME = "meterModel";
+    
+    public static final String STORAGERESERVOIR_MANDATORY_CODE = "wcms.0063";
+    public static final String STORAGERESERVOIR_MANDATORY_ERROR_MESSAGE = "Storage Reservoir Name is required";
+    public static final String STORAGERESERVOIR_MANDATORY_FIELD_NAME = "storageReservoir";
     
     public static final String ZONE = "Zone";
     public static final String REVENUE = "REVENUE";

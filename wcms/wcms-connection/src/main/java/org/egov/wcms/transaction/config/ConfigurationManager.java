@@ -179,6 +179,8 @@ public class ConfigurationManager {
     @Value("${egov.services.wcms_masters.treatment}")
     private String waterTreatmentSearchTopic;
     
+    @Value("${egov.services.wcms.masters.reservoir}") 
+    private String reservoirSearchTopic;
     
     @Value("${egov.services.pt_property.hostname}")
     private String propertyServiceHostNameTopic;
@@ -230,5 +232,26 @@ public class ConfigurationManager {
     
     @Value("${egov.services.wcms_masters.waterChargesConfig.searchpath}")
     private String waterMasterServiceWaterChargesConfigSearchPathTopic;
+    
+    @Value("${demand.periodcycle.annual.keyname}")
+    private String periodCycleAnnualKeyName; 
+    
+    @Value("${demand.periodcycle.halfyear.keyname}")
+    private String periodCycleHalfYearKeyName; 
+    
+    @Value("${demand.periodcycle.quarter.keyname}")
+    private String periodCycleQuarterlyKeyName; 
+    
+    @Value("${demand.periodcycle.month.keyname}")
+    private String periodCycleMonthltKeyName; 
+    
+    @Value("${demand.periodcycle.default.keyname}") 
+    private String periodCycleDefaultKeyName; 
+    
+    @Value("${egov.services.wcms_masters_usageType.searchpath}")
+    private String usageTypeSearchPathTopic;
+    
+    @Value("${egov.services.wcms_masters_subUsageType.searchpath}")
+    private String subUsageTypeSearchPathTopic;
     
 }

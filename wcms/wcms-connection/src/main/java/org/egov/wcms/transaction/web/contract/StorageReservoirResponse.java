@@ -39,30 +39,32 @@
  */
 package org.egov.wcms.transaction.web.contract;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.egov.common.contract.response.ResponseInfo;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
-@AllArgsConstructor
+@Setter
 @NoArgsConstructor
-public class CommonResponseInfo {
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
+public class StorageReservoirResponse {
 
-    @JsonProperty("id")
-    private String id;
-    
-    @JsonProperty("code")
-    private String code;
-    
-    @JsonProperty("name")
-    private String name;
-    
-    @JsonProperty("description")
-    private String description;
-    
-    @JsonProperty("tenantId")
-    private String tenantId; 
-        
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
+
+    @JsonProperty("StorageReservoirs")
+    private List<CommonResponseInfo> storageReservoirs = new ArrayList<>();
+
 }

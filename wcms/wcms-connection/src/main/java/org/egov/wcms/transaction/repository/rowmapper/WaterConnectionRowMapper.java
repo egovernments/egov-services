@@ -144,8 +144,6 @@ public class WaterConnectionRowMapper {
 			final Connection connection = prepareConnectionObject(rs);
 			Property prop = new Property();
 			ConnectionOwner cOwner = new ConnectionOwner(); 
-			prop.setUsageTypeId(rs.getString("conn_usgtype"));
-			prop.setPropertyTypeId(rs.getString("conn_proptype"));
 			prop.setAddress(rs.getString("conn_propaddress"));
 			prop.setPropertyidentifier(rs.getString("conn_propid"));
 			prop.setLocality(Integer.toString(rs.getInt("propertylocation")));
@@ -178,8 +176,6 @@ public class WaterConnectionRowMapper {
 		public Connection mapRow(final ResultSet rs, final int rowNum) throws SQLException {
 			final Connection connection = prepareConnectionObject(rs);
 			Property prop = new Property();
-			prop.setUsageTypeId(rs.getString("conn_usgtype"));
-			prop.setPropertyTypeId(rs.getString("conn_proptype"));
 			prop.setAddress(rs.getString("conn_propaddress"));
 			prop.setPropertyidentifier(rs.getString("conn_propid"));
 			connection.setProperty(prop);
@@ -220,6 +216,7 @@ public class WaterConnectionRowMapper {
 		try {
 			connection.setId(rs.getLong("conn_id"));
 			connection.setTenantId(rs.getString("conn_tenant"));
+			connection.setUsageType(rs.getString("conn_usgtype"));
 			connection.setConnectionType(rs.getString("conn_connType"));
 			connection.setBillingType(rs.getString("conn_billtype"));
 			connection.setConnectionStatus(rs.getString("conn_constatus"));
@@ -267,7 +264,7 @@ public class WaterConnectionRowMapper {
 				connection.setExecutionDate(execDate);
 			}
 			if(null != rs.getString("subusagetype") && !rs.getString("subusagetype").isEmpty())
-					connection.setSubUsageTypeId(Long.parseLong(rs.getString("subusagetype")));
+					connection.setSubUsageTypeId(rs.getString("subusagetype"));
 			if(rs.getString("conn_billtype").equals(METERED) && rs.getBoolean("conn_islegacy")) { 
 				Meter meter = Meter.builder().meterMake(rs.getString("metermake"))
 						.meterCost(rs.getString("metercost"))

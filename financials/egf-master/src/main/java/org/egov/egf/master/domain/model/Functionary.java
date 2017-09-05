@@ -49,6 +49,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 /**
  * 
  * @author mani
@@ -60,11 +61,12 @@ import lombok.Setter;
 @Setter
 @Builder
 /*
- * In the government set-up, demands for expenditure are drawn by the department
-discharging the functions and become the responsibility center for the assigned functions.
-Functionary group represents this. Each sub-level within this group typically can represent the
-organisational structure within the ULB. This level is used only for the internal control of the
-ULB. It is therefore not proposed to prescribe any codification structure for the same.
+ * Functionary is considered as another cost center. In the government set-up,
+ * demands for expenditure are drawn by the department discharging the functions
+ * and become the responsibility center for the assigned functions. Functionary
+ * group represents this. Each sub-level within this group typically can
+ * represent the organisational structure within the ULB. This level is used
+ * only for the internal control of the ULB.
  */
 public class Functionary extends Auditable {
 
@@ -88,8 +90,8 @@ public class Functionary extends Auditable {
 	private String name;
 
 	/**
-	 * active states whether the functionary is active or not .
-	 * Only active functionaries will be used in transaction
+	 * active states whether the functionary is active or not . Only active
+	 * functionaries will be used in transaction
 	 */
 	@NotNull
 	private Boolean active;

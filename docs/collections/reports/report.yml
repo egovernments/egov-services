@@ -101,7 +101,7 @@ ReportDefinitions:
     source: collection
     total: true
   - name: DD_AMOUNT
-    label: reports.collection.dd.amount
+    label: reports.collection.ddamount
     type: string
     source: collection
     total: true   

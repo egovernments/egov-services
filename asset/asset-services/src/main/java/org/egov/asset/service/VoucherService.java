@@ -314,12 +314,12 @@ public class VoucherService {
         log.debug("Voucher Parameters :: " + voucherParams);
 
         final String fundCode = voucherParams.get(AssetFinancialParams.FUND.toString());
-        final String functionCode = voucherParams.get(AssetFinancialParams.FUNCTION);
-        final String functionaryCode = voucherParams.get(AssetFinancialParams.FUNCTIONARY);
-        final String schemeCode = voucherParams.get(AssetFinancialParams.SCHEME);
-        final String subSchemeCode = voucherParams.get(AssetFinancialParams.SUBSCHEME);
-        final String fundSourceCode = voucherParams.get(AssetFinancialParams.FUNDSOURCE);
-        final String fiscalName = voucherParams.get(AssetFinancialParams.FISCAL);
+        final String functionCode = voucherParams.get(AssetFinancialParams.FUNCTION.toString());
+        final String functionaryCode = voucherParams.get(AssetFinancialParams.FUNCTIONARY.toString());
+        final String schemeCode = voucherParams.get(AssetFinancialParams.SCHEME.toString());
+        final String subSchemeCode = voucherParams.get(AssetFinancialParams.SUBSCHEME.toString());
+        final String fundSourceCode = voucherParams.get(AssetFinancialParams.FUNDSOURCE.toString());
+        final String fiscalName = voucherParams.get(AssetFinancialParams.FISCAL.toString());
 
         if (fundCode != null) {
             final Fund fund = new Fund();

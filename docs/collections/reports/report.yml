@@ -393,31 +393,31 @@ ReportDefinitions:
   - name: receiptNo
     label: reports.collection.receiptno
     type: string
-    source: legacy
+    source: collection
   - name: receiptDate
     label: reports.collection.receiptdate
     type: epoch
-    source: legacy
+    source: collection
   - name: totalAmount
     label: reports.collection.totalamount
     type: number
-    source: legacy
+    source: collection
   - name: servicename
     label: reports.collection.service.name
     type: string
-    source: legacy
+    source: collection
   - name: payeeName
     label: reports.collection.payeename
     type: string
-    source: legacy
+    source: collection
   - name: consumerAddress
     label: reports.collection.consumeraddress
     type: string
-    source: legacy
+    source: collection
   - name: print
     label: reports.collection.print
     type: number
-    source: legacy
+    source: collection
     linkedReport:
       reportName: ReceiptDetail
       linkedColumn: _url?/pgr/viewGrievance/:srn

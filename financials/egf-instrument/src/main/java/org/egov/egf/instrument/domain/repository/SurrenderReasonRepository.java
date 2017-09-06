@@ -236,4 +236,8 @@ public class SurrenderReasonRepository {
 
 	}
 
+	public boolean uniqueCheck(String fieldName, SurrenderReason surrenderReason) {
+		return	surrenderReasonJdbcRepository.uniqueCheck(fieldName, new SurrenderReasonEntity().toEntity(surrenderReason));
+	}
+
 }

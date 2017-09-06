@@ -43,6 +43,7 @@ import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.exception.CustomBindException;
+import org.egov.common.domain.exception.ErrorCode;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.budget.domain.model.Budget;
@@ -54,8 +55,8 @@ import org.egov.egf.master.web.repository.FinancialYearContractRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.SmartValidator;
 
@@ -157,22 +158,41 @@ public class BudgetService {
                 // errors);
                 break;
             case ACTION_CREATE:
-                Assert.notNull(budgets, "Budgets to create must not be null");
-                for (final Budget budget : budgets)
+            	if (budgets == null) {
+                    throw new InvalidDataException("budgets", ErrorCode.NOT_NULL.getCode(), null);
+                }
+            	for (final Budget budget : budgets){
                     validator.validate(budget, errors);
+                    if (!budgetRepository.uniqueCheck("name", budget)) {
+                        errors.addError(new FieldError("budget", "name", budget.getName(), false,
+                                new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                    }
+            	}
                 break;
             case ACTION_UPDATE:
-                Assert.notNull(budgets, "Budgets to update must not be null");
+            	if (budgets == null) {
+                    throw new InvalidDataException("budgets", ErrorCode.NOT_NULL.getCode(), null);
+                }
                 for (final Budget budget : budgets){
-                	Assert.notNull(budget.getId(), "Budget ID to update must not be null");
+                	if (budget.getId() == null) {
+                        throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), budget.getId());
+                    }
                 	validator.validate(budget, errors);
+                	if (!budgetRepository.uniqueCheck("name", budget)) {
+                        errors.addError(new FieldError("budget", "name", budget.getName(), false,
+                                new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                    }
                 }
                 break;
             case ACTION_DELETE:
-                Assert.notNull(budgets, "Budgets to delete must not be null");
-                for (final Budget budget : budgets){
-                	Assert.notNull(budget.getId(), "Budget ID to delete must not be null");
+            	if (budgets == null) {
+                    throw new InvalidDataException("budgets", ErrorCode.NOT_NULL.getCode(), null);
                 }
+            	for (final Budget budget : budgets){
+            		if (budget.getId() == null) {
+                        throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), budget.getId());
+                    }
+            	}
                 break;
             default:
 

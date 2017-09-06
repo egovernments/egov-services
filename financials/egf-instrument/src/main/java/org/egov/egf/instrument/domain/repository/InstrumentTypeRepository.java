@@ -236,4 +236,8 @@ public class InstrumentTypeRepository {
 
 	}
 
+	public boolean uniqueCheck(String fieldName, InstrumentType instrumentType) {
+		return	instrumentTypeJdbcRepository.uniqueCheck(fieldName, new InstrumentTypeEntity().toEntity(instrumentType));
+	}
+
 }

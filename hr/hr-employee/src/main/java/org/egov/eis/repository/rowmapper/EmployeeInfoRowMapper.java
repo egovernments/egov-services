@@ -40,18 +40,8 @@
 
 package org.egov.eis.repository.rowmapper;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
+import lombok.Getter;
+import lombok.Setter;
 import org.egov.eis.model.Assignment;
 import org.egov.eis.model.EmployeeInfo;
 import org.egov.eis.model.HODDepartment;
@@ -59,8 +49,13 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
 
-import lombok.Getter;
-import lombok.Setter;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Component
 public class EmployeeInfoRowMapper implements ResultSetExtractor<List<EmployeeInfo>> {
@@ -97,6 +92,16 @@ public class EmployeeInfoRowMapper implements ResultSetExtractor<List<EmployeeIn
 				empInfo.setId((Long) rs.getObject("e_id"));
 				empInfo.setCode(rs.getString("e_code"));
 				empInfo.setEmployeeStatus((Long) rs.getObject("e_employeeStatus"));
+				try {
+					Date date = isEmpty(rs.getDate("e_dateOfAppointment")) ? null : sdf.parse(sdf.format(rs.getDate("e_dateOfAppointment")));
+					empInfo.setDateOfAppointment(date);
+					date = isEmpty(rs.getDate("e_dateOfRetirement")) ? null : sdf.parse(sdf.format(rs.getDate("e_dateOfRetirement")));
+					empInfo.setDateOfRetirement(date);
+
+				} catch (ParseException e) {
+					e.printStackTrace();
+					throw new SQLException("Parse exception while parsing date");
+				}
 				empInfo.setEmployeeType((Long) rs.getObject("e_employeeTypeId"));
 				empInfo.setBank((Long) rs.getObject("e_bankId"));
 				empInfo.setBankBranch((Long) rs.getObject("e_bankBranchId"));
@@ -181,8 +186,8 @@ public class EmployeeInfoRowMapper implements ResultSetExtractor<List<EmployeeIn
 			EmpInfo empInfo = empInfoEntry.getValue();
 
 			EmployeeInfo employeeInfo = EmployeeInfo.builder().id(empInfo.getId()).code(empInfo.getCode())
-					.employeeStatus(empInfo.getEmployeeStatus()).employeeType(empInfo.getEmployeeType())
-					.bank(empInfo.getBank()).bankBranch(empInfo.getBankBranch()).bankAccount(empInfo.getBankAccount())
+					.employeeStatus(empInfo.getEmployeeStatus()).employeeType(empInfo.getEmployeeType()).dateOfAppointment(empInfo.getDateOfAppointment())
+					.dateOfRetirement(empInfo.getDateOfRetirement()).bank(empInfo.getBank()).bankBranch(empInfo.getBankBranch()).bankAccount(empInfo.getBankAccount())
 					.tenantId(empInfo.getTenantId()).build();
 
 			List<Assignment> assignmentList = new ArrayList<>();
@@ -229,6 +234,8 @@ public class EmployeeInfoRowMapper implements ResultSetExtractor<List<EmployeeIn
 		private Long id;
 		private String code;
 		private Long employeeStatus;
+		private Date dateOfAppointment;
+		private Date dateOfRetirement;
 		private Long employeeType;
 		// Key is assignmentId in the assignments map
 		private Map<Long, AssignmentInfo> assignments = new LinkedHashMap<>();

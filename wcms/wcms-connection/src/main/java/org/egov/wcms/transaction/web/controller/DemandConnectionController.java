@@ -136,7 +136,7 @@ public class DemandConnectionController {
                                         saveddemandDet = demandConnectionService.demandDetailExist(demandReason,
                                                 demandBeanGetRequest.getTenantId(),
                                                 tax.getFromDate(), tax.getToDate(), requestInfoWrapper, saveddem.getId());
-                                        if (!dmdDetailBeanList.contains(saveddemandDet))
+                                        if (saveddemandDet!=null && !dmdDetailBeanList.contains(saveddemandDet))
                                             dmdDtl = createDemandDeatils(demandBeanGetRequest.getTenantId(),
                                                     demandReason, tax.getFinancialYear(),
                                                     saveddemandDet.getTaxAmount().doubleValue(),

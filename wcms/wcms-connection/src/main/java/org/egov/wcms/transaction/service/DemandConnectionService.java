@@ -145,10 +145,7 @@ public class DemandConnectionService {
         final DemandDetailResponse demres = new RestTemplate().postForObject(builder.toString(),
                 requestInfoWrapper, DemandDetailResponse.class);
 
-        if (demres.getDemandDetails().isEmpty())
-            throw new WaterConnectionException("Error While Demand detail generation", "Error While Demand generation",
-                    new RequestInfo());
-        else
+        if (!demres.getDemandDetails().isEmpty())
             demandDetExist = demres.getDemandDetails().get(0);
         return demandDetExist;
     }

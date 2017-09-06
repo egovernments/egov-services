@@ -53,10 +53,10 @@ public class AccountCodePurposeControllerTest {
 		when(accountCodePurposeService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
 				.thenReturn(getAccountCodePurposes());
 		mockMvc.perform(post("/accountcodepurposes/_create")
-				.content(resources.readRequest("accountcodepurpose/accountCodePurposeContractCreateRequest.json"))
+				.content(resources.readRequest("accountcodepurpose/accountcodepurpose_create_request.json"))
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content().json(
-						resources.readResponse("accountcodepurpose/accountCodePurposeContractCreateResponse.json")));
+						resources.readResponse("accountcodepurpose/accountcodepurpose_create_response.json")));
 
 		verify(accountCodePurposeService).create(captor.capture(), any(BindingResult.class), any(RequestInfo.class));
 
@@ -70,7 +70,7 @@ public class AccountCodePurposeControllerTest {
 		when(accountCodePurposeService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
 				.thenReturn(getAccountCodePurposes());
 		mockMvc.perform(post("/accountcodepurposes/_create")
-				.content(resources.readRequest("accountcodepurpose/accountCodePurpose_create_invalid_field_value.json"))
+				.content(resources.readRequest("accountcodepurpose/accountcodepurpose_create_invalid_field_value.json"))
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
 
 	}
@@ -81,10 +81,10 @@ public class AccountCodePurposeControllerTest {
 				.thenReturn(getUpdateAccountCodePurposes());
 
 		mockMvc.perform(post("/accountcodepurposes/_update")
-				.content(resources.readRequest("accountcodepurpose/accountCodePurposeContractUpdateRequest.json"))
+				.content(resources.readRequest("accountcodepurpose/accountcodepurpose_update_request.json"))
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content().json(
-						resources.readResponse("accountcodepurpose/accountCodePurposeContractUpdateResponse.json")));
+						resources.readResponse("accountcodepurpose/accountcodepurpose_update_response.json")));
 
 		verify(accountCodePurposeService).update(captor.capture(), any(BindingResult.class), any(RequestInfo.class));
 
@@ -109,7 +109,7 @@ public class AccountCodePurposeControllerTest {
 		mockMvc.perform(post("/accountcodepurposes/_search").content(resources.getRequestInfo())
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(200))
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content().json(
-						resources.readResponse("accountcodepurpose/accountCodePurposeContractSearchResponse.json")));
+						resources.readResponse("accountcodepurpose/accountcodepurpose_search_response.json")));
 
 	}
 

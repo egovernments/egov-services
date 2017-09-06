@@ -53,8 +53,8 @@ public class DonationQueryBuilder {
 
     private static final String BASE_QUERY = "SELECT donation.id as donation_id, donation.code as donation_code ,"
             + "donation.usagetypeid as donation_usagetypeId,donation.subusagetypeid as donation_subusagetypeId,"
-            + "donation.outsideulb as donation_outsideulb, usage.name as usageName ,subusage.name as subUsageName "
-            + " ,donation.categorytypeid as donation_categorytypeId,category.name as categeory ,donation.maxpipesizeid "
+            + " donation.outsideulb as donation_outsideulb, usage.name as usageName ,usage.code as usagecode,subusage.name as subUsageName ,subusage.code as subusagecode ,"
+            + " donation.categorytypeid as donation_categorytypeId,category.name as categeory ,donation.maxpipesizeid "
             + " as donation_maxpipesizId ,maxpipesize.sizeinmilimeter as maxpipesize,donation.minpipesizeid as donation_minpipesizeId,"
             + " minpipesize.sizeinmilimeter as minpipesize,donation.fromdate as donation_fromDate,"
             + "donation.todate as donation_toDate,donation.donationamount as donation_amount, donation.active as donation_active, "
@@ -100,11 +100,23 @@ public class DonationQueryBuilder {
             selectQuery.append(" usage.name = ?");
             preparedStatementValues.add(donation.getUsageType());
         }
+        
+        if (donation.getUsageTypeCode() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" usage.code = ?");
+            preparedStatementValues.add(donation.getUsageTypeCode());
+        }
 
         if (donation.getSubUsageType() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" subusage.name = ?");
             preparedStatementValues.add(donation.getSubUsageType());
+        }
+        
+        if (donation.getSubUsageTypeCode() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" subusage.code = ?");
+            preparedStatementValues.add(donation.getSubUsageTypeCode());
         }
 
         if (donation.getOutSideUlb() != null) {
@@ -124,11 +136,23 @@ public class DonationQueryBuilder {
             selectQuery.append(" maxpipesize.sizeinmilimeter = ?");
             preparedStatementValues.add(donation.getMaxPipeSize());
         }
+        
+        if (donation.getMaxPipeSizeId() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" donation.maxpipesizeid = ?");
+            preparedStatementValues.add(donation.getMaxPipeSizeId());
+        }
 
         if (donation.getMinPipeSize() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" minpipesize.sizeinmilimeter = ?");
             preparedStatementValues.add(donation.getMinPipeSize());
+        }
+        
+        if (donation.getMinPipeSizeId() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" donation.minpipesizeid = ?");
+            preparedStatementValues.add(donation.getMinPipeSizeId());
         }
 
         if (donation.getActive() != null) {

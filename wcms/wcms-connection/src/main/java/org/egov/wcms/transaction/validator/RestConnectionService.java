@@ -324,15 +324,15 @@ public class RestConnectionService {
         RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(waterConnectionRequest.getRequestInfo()).build();
         url.append(configurationManager.getWaterMasterServiceBasePathTopic())
                 .append(configurationManager.getWaterMasterServiceDonationSearchPathTopic())
-                .append("?usageType=").append(waterConnectionRequest.getConnection().getUsageType())
-                .append("&subUsageType=").append(waterConnectionRequest.getConnection().getSubUsageType())
-                .append("&categoryType=")
+                .append("?usageTypeCode=").append(waterConnectionRequest.getConnection().getUsageType())
+                .append("&subUsageTypeCode=").append(waterConnectionRequest.getConnection().getSubUsageType())
+                .append("&category=")
                 .append(waterConnectionRequest.getConnection().getCategoryType()).append(
-                        "&maxHSCPipeSize=")
+                        "&maxPipeSizeId=")
                 .append(
                         waterConnectionRequest.getConnection().getPipesizeId())
                 .append(
-                        "&minHSCPipeSize=")
+                        "&minPipeSizeId=")
                 .append(waterConnectionRequest.getConnection().getPipesizeId()).append(
                         "&tenantId=")
                 .append(waterConnectionRequest.getConnection().getTenantId());

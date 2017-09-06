@@ -1,5 +1,6 @@
 package org.egov.tradelicense.domain.service;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -417,7 +418,12 @@ public class TradeLicenseService {
 
 		if (null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty() && currentStatus.getLicenseStatuses()
 				.get(0).getCode().equalsIgnoreCase(NewLicenseStatus.INSPECTION_COMPLETED.getName())) {
-			DemandResponse demandResponse = licenseBillService.createBill(tradeLicense, requestInfo);
+			DemandResponse demandResponse = null;
+                        try {
+                            demandResponse = licenseBillService.createBill(tradeLicense, requestInfo);
+                        } catch (ParseException e) {
+                            log.error("Error while generating demand");
+                        }
 			TradeLicenseSearch tradeLicenseSearch = tradeLicenseRepository.getByLicenseId(tradeLicense, requestInfo);
 			System.out.println("Trade License Search: " + tradeLicenseSearch);
 			if (tradeLicenseSearch != null) {

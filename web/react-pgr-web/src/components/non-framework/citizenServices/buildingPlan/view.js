@@ -248,16 +248,23 @@ class Report extends Component {
     params.append('scope', 'read');
     params.append('tenantId', window.localStorage.getItem("tenantId"));
 
-    Api.commonApiPost("/citizen-services/v1/requests/_search", {consumerCode: decodeURIComponent(self.props.match.params.ackNo)}, {}, null, true).then(function(res2) {
-        self.setState({
-          ServiceRequest: res2 && res2.serviceReq && res2.serviceReq[0] ? res2.serviceReq[0] : {},
-          status: res2 && res2.serviceReq && res2.serviceReq[0] ? res2.serviceReq[0].status : ""
-        });
+    if(self.props.match.params.type == "receipt") {
+      self.props.setLoadingStatus("loading");
+      //DO WHATEVER YOU WANT TO DO AFTER PAYMENT & THEN CALL GENERATERECEIPT() FUNCTION
+      var response = JSON.parse(localStorage.response);
+      self.generateReceipt(response.ServiceRequest, response.Receipt); 
+    } else {
+      Api.commonApiPost("/citizen-services/v1/requests/_search", {consumerCode: decodeURIComponent(self.props.match.params.ackNo)}, {}, null, true).then(function(res2) {
+          self.setState({
+            ServiceRequest: res2 && res2.serviceReq && res2.serviceReq[0] ? res2.serviceReq[0] : {},
+            status: res2 && res2.serviceReq && res2.serviceReq[0] ? res2.serviceReq[0].status : ""
+          });
 
-        self.props.setFormData(res2 && res2.serviceReq && res2.serviceReq[0] ? res2.serviceReq[0].moduleObject : {});
-        self.setInitialUpdateData((res2 && res2.serviceReq && res2.serviceReq[0] ? res2.serviceReq[0].moduleObject : {}), JSON.parse(JSON.stringify(specifications)), "fn", "view", "Connection");
-    }, function(err) {
-    })
+          self.props.setFormData(res2 && res2.serviceReq && res2.serviceReq[0] ? res2.serviceReq[0].moduleObject : {});
+          self.setInitialUpdateData((res2 && res2.serviceReq && res2.serviceReq[0] ? res2.serviceReq[0].moduleObject : {}), JSON.parse(JSON.stringify(specifications)), "fn", "view", "Connection");
+      }, function(err) {
+      })
+    }
   }
 
   componentDidMount() {
@@ -347,6 +354,34 @@ class Report extends Component {
     })
   }*/
 
+  generateReceipt(ServiceRequest, Receipt) {
+    let self = this;
+    ServiceRequest.backendServiceDetails = [{
+      "url": "http://collection-services:8080/collection-services/receipts/_create",
+      "request": {
+        RequestInfo: self.state.RequestInfo,
+        Receipt: Receipt
+      }
+    }];
+
+    Api.commonApiPost("/citizen-services/v1/requests/_update", {}, {"serviceReq": ServiceRequest}, null, true, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
+      self.props.setLoadingStatus("hide");
+      self.openPayFeeModal();
+      self.setState({
+        showReceipt: true,
+        Receipt: res.serviceReq && res.serviceReq.backendServiceDetails ? res.serviceReq.backendServiceDetails[0].response.Receipt : []
+      });
+      $('html, body').animate({ scrollTop: 0 }, 'fast');
+    }, function(err){
+      self.props.setLoadingStatus("hide");
+      self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+    })
+  }
+
+  makePayment = () => {
+    //YOUR CALL HERE TO MAKE PAYMENT
+  }
+
   payFee = () => {
     //Update service request and generate bill and create receipt
     let self = this;
@@ -372,26 +407,8 @@ class Report extends Component {
         Receipt[0]["instrument"] = {"tenantId":window.localStorage.getItem("tenantId"),"amount": fee,"instrumentType":{"name":"Cash"}}
         Receipt[0]["Bill"][0]["billDetails"][0]["amountPaid"] = fee;
         setTimeout(function(){
-          ServiceRequest.backendServiceDetails = [{
-            "url": "http://collection-services:8080/collection-services/receipts/_create",
-            "request": {
-              RequestInfo: self.state.RequestInfo,
-              Receipt: Receipt
-            }
-          }];
-
-          Api.commonApiPost("/citizen-services/v1/requests/_update", {}, {"serviceReq": ServiceRequest}, null, true, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
-            self.props.setLoadingStatus("hide");
-            self.openPayFeeModal();
-            self.setState({
-              showReceipt: true,
-              Receipt: res.serviceReq && res.serviceReq.backendServiceDetails ? res.serviceReq.backendServiceDetails[0].response.Receipt : []
-            });
-            $('html, body').animate({ scrollTop: 0 }, 'fast');
-          }, function(err){
-            self.props.setLoadingStatus("hide");
-            self.props.toggleSnackbarAndSetText(true, err.message, false, true);
-          })
+          localStorage.setItem("response", JSON.stringiy({ServiceRequest, Receipt}));
+          self.makePayment();
         }, 3000);
       } else {
         self.props.setLoadingStatus("hide");

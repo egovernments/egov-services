@@ -177,7 +177,12 @@ class Report extends Component {
     let self = this;
     specifications = require("../../../framework/specs/citizenService/wc/NewConnection").default;
     self.displayUI(specifications);
-
+    if(self.props.match.params.type == "receipt") {
+      self.props.setLoadingStatus("loading");
+      //DO WHATEVER YOU WANT TO DO AFTER PAYMENT & THEN CALL GENERATERECEIPT() FUNCTION
+      let response = JSON.parse(localStorage.response);
+      self.generateReceipt(response);
+    }
   }
 
   componentDidMount() {
@@ -860,11 +865,18 @@ class Report extends Component {
     })
   }
 
+  makePayment = () => {
+    //DO EVERYTHING FOR MAKING PAYMENT HERE
+  }
+  
   updateRequest = (ServiceRequest) => {
     let self = this;
     self.props.setLoadingStatus("loading");
     Api.commonApiPost("/citizen-services/v1/requests/_create", {}, {"serviceReq": ServiceRequest}, null, true, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
-      self.generateReceipt(res);
+      //self.generateReceipt(res);
+      localStorage.setItem("response", JSON.stringify(res));
+      self.props.setLoadingStatus("hide");
+      self.makePayment();
     }, function(err){
       self.props.setLoadingStatus("hide");
       self.props.toggleSnackbarAndSetText(true, err.message, false, true);

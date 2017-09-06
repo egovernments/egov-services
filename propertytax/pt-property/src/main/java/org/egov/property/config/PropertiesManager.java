@@ -307,6 +307,8 @@ public class PropertiesManager {
 	private String invalidCategory;
 	
 	private String date;
+	
+	private String approveProperty;
 
 	public String getInvalidInput() {
 		return environment.getProperty("invalid.input");
@@ -849,6 +851,10 @@ public class PropertiesManager {
 
 	public String getDate() {
 		return environment.getProperty("egov.property.date");
+	}
+	
+	public String getApproveProperty() {
+		return environment.getProperty("property.approved");
 	}
 
 }

@@ -126,7 +126,7 @@ public class VoucherController {
         VoucherContract contract;
         ModelMapper model = new ModelMapper();
         List<VoucherContract> voucherContracts = new ArrayList<>();
-        Pagination<Voucher> vouchers = voucherService.search(domain);
+        Pagination<Voucher> vouchers = voucherService.search(domain,errors);
 
         if (vouchers.getPagedData() != null) {
             for (Voucher voucher : vouchers.getPagedData()) {

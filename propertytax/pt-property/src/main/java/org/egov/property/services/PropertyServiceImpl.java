@@ -121,6 +121,11 @@ public class PropertyServiceImpl implements PropertyService {
 		for (Property property : propertyRequest.getProperties()) {
 			propertyValidator.validatePropertyBoundary(property, propertyRequest.getRequestInfo());
 			propertyValidator.validateWorkflowDeatails(property, propertyRequest.getRequestInfo());
+			String action = property.getPropertyDetail().getWorkFlowDetails().getAction();
+			if (action.equalsIgnoreCase(propertiesManager.getApproveProperty())) {
+				String upicNumber = upicNoGeneration.generateUpicNo(property, propertyRequest.getRequestInfo());
+				property.setUpicNumber(upicNumber);
+			}
 			property.getPropertyDetail().setStatus(StatusEnum.WORKFLOW);
 			PropertyRequest updatedPropertyRequest = new PropertyRequest();
 			updatedPropertyRequest.setRequestInfo(propertyRequest.getRequestInfo());

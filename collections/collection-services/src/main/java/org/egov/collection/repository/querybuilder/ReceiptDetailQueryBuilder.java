@@ -216,7 +216,7 @@ public class ReceiptDetailQueryBuilder {
             }
         }
 
-        if (searchCriteria.getReceiptNumbers() != null) {
+        if (searchCriteria.getReceiptNumbers() != null && !searchCriteria.getReceiptNumbers().isEmpty()) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
                     selectQuery);
             selectQuery.append(" rh.receiptNumber ilike any  "
@@ -284,6 +284,13 @@ public class ReceiptDetailQueryBuilder {
                     selectQuery);
             selectQuery.append(" rh.transactionid = ? ");
             preparedStatementValues.add(searchCriteria.getTransactionId());
+        }
+
+        if(searchCriteria.getManualReceiptNumbers() != null && !searchCriteria.getManualReceiptNumbers().isEmpty()) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
+                    selectQuery);
+            selectQuery.append(" rh.manualreceiptnumber ilike any  "
+                    + getNumberQuery(searchCriteria.getManualReceiptNumbers()));
         }
     }
 

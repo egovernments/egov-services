@@ -46,6 +46,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.egov.common.contract.response.ErrorField;
+import org.egov.common.contract.response.ErrorResponse;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tradelicense.common.config.PropertiesManager;
@@ -100,13 +102,11 @@ public class LicenseBillService {
         demand.setConsumerCode(tradeLicense.getApplication().getApplicationNumber());
         demand.setMinimumAmountPayable(BigDecimal.ONE);
         demandDetailsList = new ArrayList<>();
-        for (LicenseFeeDetail licenseFeeDetail : tradeLicense.getApplication().getFeeDetails()) {
-            demandDetail = new DemandDetail();
-            demandDetail.setTaxHeadMasterCode(propertiesManager.getTaxHeadMasterCode());
-            demandDetail.setTaxAmount(BigDecimal.valueOf(licenseFeeDetail.getAmount()));
-            demandDetail.setTenantId(tenantId);
-            demandDetailsList.add(demandDetail);
-        }
+        demandDetail = new DemandDetail();
+        demandDetail.setTaxHeadMasterCode(propertiesManager.getTaxHeadMasterCode());
+        demandDetail.setTaxAmount(BigDecimal.valueOf(tradeLicense.getApplication().getLicenseFee()));
+        demandDetail.setTenantId(tenantId);
+        demandDetailsList.add(demandDetail);
         demand.setDemandDetails(demandDetailsList);
         FinancialYearContract currentFYResponse = financialYearService
                 .findFinancialYearIdByDate(tenantId, tradeLicense.getTradeCommencementDate(), requestInfoWrapper);
@@ -132,6 +132,10 @@ public class LicenseBillService {
         final String url = propertiesManager.getBillingServiceHostName() +
                 propertiesManager.getBillingServiceCreatedBill();
 
-        return restTemplate.postForObject(url, demandRequest, DemandResponse.class);
+        ErrorResponse errorResponse = restTemplate.postForObject(url, demandRequest, ErrorResponse.class);
+        if (errorResponse != null && errorResponse.getError().getFields() != null)
+        for (ErrorField errorField : errorResponse.getError().getFields())
+            System.out.println(errorField.getMessage());
+        return new DemandResponse();
     }
 }

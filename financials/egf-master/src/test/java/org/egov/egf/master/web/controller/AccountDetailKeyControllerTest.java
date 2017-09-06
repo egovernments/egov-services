@@ -54,10 +54,10 @@ public class AccountDetailKeyControllerTest {
 		when(accountDetailKeyService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
 				.thenReturn(getAccountDetailKies());
 		mockMvc.perform(post("/accountdetailkeys/_create")
-				.content(resources.readRequest("accountdetailkey/accountDetailKeyContractCreateRequest.json"))
+				.content(resources.readRequest("accountdetailkey/accountdetailkey_create_request.json"))
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content()
-						.json(resources.readResponse("accountdetailkey/accountDetailKeyContractCreateResponse.json")));
+						.json(resources.readResponse("accountdetailkey/accountdetailkey_create_response.json")));
 
 		verify(accountDetailKeyService).create(captor.capture(), any(BindingResult.class), any(RequestInfo.class));
 
@@ -71,7 +71,7 @@ public class AccountDetailKeyControllerTest {
 		when(accountDetailKeyService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
 				.thenReturn(getAccountDetailKies());
 		mockMvc.perform(post("/accountdetailkeys/_create")
-				.content(resources.readRequest("accountdetailkey/accountDetailKeyCreateInvalidFieldValue.json"))
+				.content(resources.readRequest("accountdetailkey/accountdetailkey_create_invalid_fieldvalue.json"))
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
 
 	}
@@ -82,10 +82,10 @@ public class AccountDetailKeyControllerTest {
 				.thenReturn(getUpdateAccountDetailKies());
 
 		mockMvc.perform(post("/accountdetailkeys/_update")
-				.content(resources.readRequest("accountdetailkey/accountDetailKeyContractUpdateRequest.json"))
+				.content(resources.readRequest("accountdetailkey/accountdetailkey_update_request.json"))
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content()
-						.json(resources.readResponse("accountdetailkey/accountDetailKeyContractUpdateResponse.json")));
+						.json(resources.readResponse("accountdetailkey/accountdetailkey_update_response.json")));
 
 		verify(accountDetailKeyService).update(captor.capture(), any(BindingResult.class), any(RequestInfo.class));
 
@@ -111,7 +111,7 @@ public class AccountDetailKeyControllerTest {
 		mockMvc.perform(post("/accountdetailkeys/_search").content(resources.getRequestInfo())
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(200))
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content()
-						.json(resources.readResponse("accountdetailkey/accountDetailKeyContractSearchResponse.json")));
+						.json(resources.readResponse("accountdetailkey/accountdetailkey_search_response.json")));
 
 	}
 

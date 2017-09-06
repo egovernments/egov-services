@@ -1775,7 +1775,12 @@ ReportDefinitions:
          (select to_timestamp(states.createddate/1000)::timestamp without time zone as createddate,us.username as sendername, 'Citizen Service - New Water Connection' as natureoftask,
          states.status as status, states.id as details,
          '_url?/non-framework/citizenServices/wc/view/' || regexp_replace(states.id, '/', '%2F') as url from egov_citizen_service_req states,eg_user us where
-         us.id = userid and serviceCode  ='WATER_NEWCONN' and states.tenantId=$tenantid and states.status NOT IN ('APPROVED','CANCELLED') order by states.createddate desc)) result
+         us.id = userid and serviceCode = 'WC_NODUES' and states.tenantId=$tenantid and states.status NOT IN ('APPROVED','CANCELLED') order by states.createddate desc)) result
+          union
+         (select to_timestamp(states.createddate/1000)::timestamp without time zone as createddate,us.username as sendername, 'Citizen Service - Fire NOC' as natureoftask,
+         states.status as status, states.id as details,
+         '_url?/non-framework/citizenServices/fireNoc/view/' || regexp_replace(states.id, '/', '%2F') as url from egov_citizen_service_req states,eg_user us where
+         us.id = userid and serviceCode = 'BPA_FIRE_NOC' and states.tenantId=$tenantid and states.status NOT IN ('APPROVED','CANCELLED') order by states.createddate desc)) result
          order by createddate desc;
 
 

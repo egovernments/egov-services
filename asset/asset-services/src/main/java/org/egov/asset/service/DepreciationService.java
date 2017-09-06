@@ -231,7 +231,7 @@ public class DepreciationService {
     private String createVoucherForDepreciation(final List<VoucherAccountCodeDetails> accountCodeDetails,
             final RequestInfo requestInfo, final String tenantId, final Long departmentId,
             final List<CalculationAssetDetails> calculationAssetDetailList, final HttpHeaders headers) {
-        final VoucherRequest voucherRequest = voucherService.createDepreciationVoucherRequest(requestInfo,
+        final VoucherRequest voucherRequest = voucherService.createDepreciationVoucherRequest(
                 calculationAssetDetailList, departmentId, accountCodeDetails, tenantId, headers);
         log.debug("Voucher Request for Depreciation :: " + voucherRequest);
 

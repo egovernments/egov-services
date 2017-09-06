@@ -185,7 +185,7 @@ public class VoucherService {
         return voucher;
     }
 
-    public VoucherRequest createRevaluationVoucherRequest(final RequestInfo requestInfo, final Revaluation revaluation,
+    public VoucherRequest createRevaluationVoucherRequest(final Revaluation revaluation,
             final List<VoucherAccountCodeDetails> accountCodeDetails, final Long departmentId,
             final HttpHeaders header) {
         final VoucherRequest voucherRequest = new VoucherRequest();
@@ -222,15 +222,20 @@ public class VoucherService {
 
         vouchers.add(voucher);
 
-        voucherRequest.setRequestInfo(requestInfo);
-        voucherRequest.setVouchers(vouchers);
+        generateVoucherRequest(voucherRequest, vouchers);
 
         return voucherRequest;
     }
 
-    public VoucherRequest createDisposalVoucherRequest(final RequestInfo requestInfo, final Disposal disposal,
-            final Long departmentId, final List<VoucherAccountCodeDetails> accountCodeDetails,
-            final HttpHeaders header) {
+    private void generateVoucherRequest(final VoucherRequest voucherRequest, final List<Voucher> vouchers) {
+
+        final org.egov.asset.model.RequestInfo reqInfo = new org.egov.asset.model.RequestInfo();
+        voucherRequest.setRequestInfo(reqInfo);
+        voucherRequest.setVouchers(vouchers);
+    }
+
+    public VoucherRequest createDisposalVoucherRequest(final Disposal disposal, final Long departmentId,
+            final List<VoucherAccountCodeDetails> accountCodeDetails, final HttpHeaders header) {
         final VoucherRequest voucherRequest = new VoucherRequest();
         final List<Voucher> vouchers = new ArrayList<>();
         final String tenantId = disposal.getTenantId();
@@ -244,7 +249,7 @@ public class VoucherService {
 
         final String source = header.getOrigin() + "/asset-web/app/asset/create-asset-sale.html?id=" + disposal.getId()
                 + "&type=view";
-        
+
         log.debug("Disposal source :: " + source);
         voucher.setSource(source);
 
@@ -255,13 +260,12 @@ public class VoucherService {
         log.debug("Disposal Voucher :: " + voucher);
 
         vouchers.add(voucher);
-        voucherRequest.setRequestInfo(requestInfo);
-        voucherRequest.setVouchers(vouchers);
+        generateVoucherRequest(voucherRequest, vouchers);
 
         return voucherRequest;
     }
 
-    public VoucherRequest createDepreciationVoucherRequest(final RequestInfo requestInfo,
+    public VoucherRequest createDepreciationVoucherRequest(
             final List<CalculationAssetDetails> calculationAssetDetailList, final Long departmentId,
             final List<VoucherAccountCodeDetails> accountCodeDetails, final String tenantId, final HttpHeaders header) {
 
@@ -283,8 +287,7 @@ public class VoucherService {
 
         vouchers.add(voucher);
 
-        voucherRequest.setRequestInfo(requestInfo);
-        voucherRequest.setVouchers(vouchers);
+        generateVoucherRequest(voucherRequest, vouchers);
 
         return voucherRequest;
     }

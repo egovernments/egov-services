@@ -89,7 +89,7 @@ public class VoucherServiceTest {
     public void test_shuould_create_VoucherRequest_For_Revalaution() {
 
         final RevaluationRequest revaluationRequest = getRevaluationRequest();
-        final RequestInfo requestInfo = revaluationRequest.getRequestInfo();
+        revaluationRequest.getRequestInfo();
         final Revaluation revaluation = revaluationRequest.getRevaluation();
 
         final Asset asset = get_Asset();
@@ -103,12 +103,12 @@ public class VoucherServiceTest {
         when(assetConfigurationService
                 .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.REVALUATIONVOUCHERDESCRIPTION, tenantId))
                         .thenReturn("Asset Revaluation Journal Voucher");
-        final VoucherRequest generatedVoucherRequest = voucherService.createRevaluationVoucherRequest(requestInfo,
-                revaluation, accountCodeDetails, asset.getDepartment().getId(), getHttpHeaders());
+        final VoucherRequest generatedVoucherRequest = voucherService.createRevaluationVoucherRequest(revaluation,
+                accountCodeDetails, asset.getDepartment().getId(), getHttpHeaders());
 
         final Fund fund = new Fund();
         fund.setId(Long.valueOf("1"));
-        
+
         final Voucher voucher = getVoucher(asset.getDepartment().getId(), fund);
 
         voucher.setName(assetConfigurationService
@@ -123,7 +123,7 @@ public class VoucherServiceTest {
         vouchers.add(voucher);
 
         final VoucherRequest expectedVoucherRequest = new VoucherRequest();
-        expectedVoucherRequest.setRequestInfo(new RequestInfo());
+        expectedVoucherRequest.setRequestInfo(new org.egov.asset.model.RequestInfo());
         expectedVoucherRequest.setVouchers(vouchers);
 
         System.out.println(generatedVoucherRequest + "\n");
@@ -138,7 +138,7 @@ public class VoucherServiceTest {
             throws JsonParseException, JsonMappingException, IOException {
 
         final DisposalRequest disposalRequest = getDisposalRequest();
-        final RequestInfo requestInfo = disposalRequest.getRequestInfo();
+        disposalRequest.getRequestInfo();
         final Disposal disposal = disposalRequest.getDisposal();
 
         final Asset asset = get_Asset();
@@ -155,8 +155,8 @@ public class VoucherServiceTest {
                 .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DISPOSALVOUCHERDESCRIPTION, tenantId))
                         .thenReturn("Asset Disposal Journal Voucher");
 
-        final VoucherRequest generatedVoucherRequest = voucherService.createDisposalVoucherRequest(requestInfo,
-                disposal, asset.getDepartment().getId(), accountCodeDetails, getHttpHeaders());
+        final VoucherRequest generatedVoucherRequest = voucherService.createDisposalVoucherRequest(disposal,
+                asset.getDepartment().getId(), accountCodeDetails, getHttpHeaders());
 
         final Fund fund = getFund();
         final Voucher voucher = getVoucher(asset.getDepartment().getId(), fund);
@@ -171,7 +171,7 @@ public class VoucherServiceTest {
         vouchers.add(voucher);
 
         final VoucherRequest expectedVoucherRequest = new VoucherRequest();
-        expectedVoucherRequest.setRequestInfo(new RequestInfo());
+        expectedVoucherRequest.setRequestInfo(new org.egov.asset.model.RequestInfo());
         expectedVoucherRequest.setVouchers(vouchers);
 
         System.out.println(generatedVoucherRequest + "\n");
@@ -194,7 +194,7 @@ public class VoucherServiceTest {
 
         final DepreciationRequest depreciationRequest = DepreciationRequest.builder().requestInfo(new RequestInfo())
                 .depreciationCriteria(getDepreciationCriteria()).build();
-        final RequestInfo requestInfo = depreciationRequest.getRequestInfo();
+        depreciationRequest.getRequestInfo();
         final DepreciationCriteria depreciationCriteria = depreciationRequest.getDepreciationCriteria();
 
         final Asset asset = get_Asset();
@@ -213,7 +213,7 @@ public class VoucherServiceTest {
         when(assetConfigurationService
                 .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DEPRECIATIONVOUCHERDESCRIPTION, tenantId))
                         .thenReturn("Asset Disposal Journal Voucher");
-        final VoucherRequest generatedVoucherRequest = voucherService.createDepreciationVoucherRequest(requestInfo,
+        final VoucherRequest generatedVoucherRequest = voucherService.createDepreciationVoucherRequest(
                 calculationAssetDetailList, asset.getDepartment().getId(), accountCodeDetails, tenantId,
                 getHttpHeaders());
 
@@ -229,7 +229,7 @@ public class VoucherServiceTest {
         vouchers.add(voucher);
 
         final VoucherRequest expectedVoucherRequest = new VoucherRequest();
-        expectedVoucherRequest.setRequestInfo(new RequestInfo());
+        expectedVoucherRequest.setRequestInfo(new org.egov.asset.model.RequestInfo());
         expectedVoucherRequest.setVouchers(vouchers);
 
         System.out.println(generatedVoucherRequest + "\n");
@@ -464,7 +464,7 @@ public class VoucherServiceTest {
         final VoucherRequest voucherRequest = new VoucherRequest();
         final List<Voucher> vouchers = new ArrayList<Voucher>();
         vouchers.add(getVoucher(Long.valueOf("5"), getFund()));
-        voucherRequest.setRequestInfo(new RequestInfo());
+        voucherRequest.setRequestInfo(new org.egov.asset.model.RequestInfo());
         voucherRequest.setVouchers(vouchers);
         return voucherRequest;
     }

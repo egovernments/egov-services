@@ -1,0 +1,167 @@
+    /checklists/_search:
+      post:
+        summary: Get the list of checklists
+        description: checklists
+        tags: 
+          - Bill
+          - Checklist
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: ids
+            type: array
+            items: 
+             type: string
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - name: type
+            type: string
+            in: query
+            description: |
+              type refers to the name of the entities. If the check list is required for Bill then type will be billRegister
+          - name: subType
+            type: string
+            in: query
+            description: |
+              subType refers to the different types of  entities. If the check list is required for Bill of type expenseBill
+              then subtype value is expensebill.
+              this is unique combination type and subtype is unique
+          - name: key
+            type: string
+            in: query
+            description: |
+              key is the content of the check list .
+              exmaple. 1. Passport copy attached
+              2. Ration card copy attached etc
+          - name: description
+            type: string
+            in: query
+            description: |
+              description is further detailed discription of the check list values
+          - $ref: "#/parameters/pageSize"
+          - $ref: "#/parameters/offset"
+          - name: sortBy
+            type: string
+            in: query
+            description: |
+              This takes any field from the Object seperated by comma and asc,desc keywords.  
+              example name asc,code desc or name,code or name,code desc 
+        responses:
+          200:
+            description: Checklist retrieved Successfully
+            schema:
+              $ref: '#/definitions/ChecklistResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /checklists/_create:
+      post:
+        summary: Create  new  checklists
+        description: Create  new checklists
+        tags: 
+          - Bill
+          - Checklist
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: checklistRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/ChecklistRequest'
+        responses:
+          201:
+            description: Checklist created Successfully
+            schema:
+              $ref: '#/definitions/ChecklistResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /checklists/_update:
+      post:
+        summary: Update any of the checklists
+        description: Update any of the checklists
+        tags: 
+          - Bill
+          - Checklist
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: checklistRequest
+            in: body
+            description: common Request info
+            schema:
+              $ref: '#/definitions/ChecklistRequest'
+        responses:
+          200:
+            description: Checklist updated Successfully
+            schema:
+              $ref: '#/definitions/ChecklistResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+definitions:
+    Checklist:
+      type: object
+      description: |
+          
+      allOf:
+        - $ref: '#/definitions/Auditable'
+      properties:
+        id:
+          type: string
+          maxLength: 50
+          description: |
+            id is the unique identifier
+        type:
+          type: string
+          maxLength: 50
+          minLength: 1
+          description: |
+            type refers to the name of the entities. If the check list is required for Bill then type will be billRegister
+        subType:
+          type: string
+          maxLength: 50
+          minLength: 1
+          description: |
+            subType refers to the different types of  entities. If the check list is required for Bill of type expenseBill
+            then subtype value is expensebill.
+            this is unique combination type and subtype is unique
+        key:
+          type: string
+          maxLength: 250
+          minLength: 3
+          description: |
+            key is the content of the check list .
+            exmaple. 1. Passport copy attached
+            2. Ration card copy attached etc
+        description:
+          type: string
+          maxLength: 250
+          minLength: 3
+          description: |
+            description is further detailed discription of the check list values
+    ChecklistRequest:
+      description: Contract class for web request. Array of Checklist items  are used in case of create or update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        checklists:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Checklist'
+    ChecklistResponse:
+      description: Contract class for web response. Array of Checklist items  are used in case of search ,create or update request. 
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        checklists:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Checklist'
+        page:
+          $ref: '#/definitions/Page'

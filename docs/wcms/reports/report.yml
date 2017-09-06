@@ -115,6 +115,7 @@ ReportDefinitions:
     pattern: 'list://METERED:METERED,NONMETERED:NON-METERED'
     source: wcms
     isMandatory: false  
+    searchClause: and prop.billingtype = $connectiontype
   query: select * from ((select boundary.name as boundaryname,count(prop.hscno) as countofconsumerno,prop.username as consumerName,
          prop.pipesize as pipesize,ut.data::jsonb->>'name'  as usage,'CURRENT' as STATE,
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount) ELSE NULL END)) AS WT_DEMAND,
@@ -125,7 +126,7 @@ ReportDefinitions:
          and  demand.consumercode=prop.hscno 
          and demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE
          fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
-         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL') and prop.tenantid=$tenantid group by hscno,state,pipesize,consumerName, usage ,boundaryname )
+         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL') and prop.tenantid=$tenantid 
          UNION
          (select boundary.name as boundaryname,count(prop.hscno) as countofconsumerno,prop.username as consumerName,
          prop.pipesize as pipesize,ut.data::jsonb->>'name'  as usage,
@@ -138,7 +139,9 @@ ReportDefinitions:
          and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE
          fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
          and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL' ) and prop.tenantid=$tenantid 
-         group by hscno,state,pipesize,consumerName, usage,boundaryname))result ;
+         
+  groupBy: group by hscno,state,pipesize,consumerName, usage ,boundaryname )
+  orderBy: )result ;
 
 - reportName: ConsumerReport
   summary: Consumer Register Report

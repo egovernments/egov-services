@@ -205,8 +205,11 @@ public class DepreciationService {
                 log.debug("Depreciation Account Code Details :: " + accountCodeDetails);
                 validateDepreciationSubledgerDetails(requestInfo, tenantId, ledgerMap.keySet());
                 if (!accountCodeDetails.isEmpty()) {
-                    final String voucherNumber = createVoucherForDepreciation(accountCodeDetails, requestInfo, tenantId,
-                            departmentId, calculationAssetDetailList, headers);
+                    final VoucherRequest voucherRequest = voucherService.createDepreciationVoucherRequest(
+                            calculationAssetDetailList, departmentId, accountCodeDetails, tenantId, headers);
+                    log.debug("Voucher Request for Depreciation :: " + voucherRequest);
+
+                    final String voucherNumber = voucherService.createVoucher(voucherRequest, tenantId, headers);
                     log.debug("Voucher Number for Depreciation :: " + voucherNumber);
                     setVoucherIdToDepreciaitionDetails(voucherNumber, entryValue, depreciationDetailsMap);
                 }
@@ -226,16 +229,6 @@ public class DepreciationService {
                 depreciationDetail.setVoucherReference(voucherNumber);
             log.debug("Depreciation Details having voucher reference :: " + depreciationDetail);
         }
-    }
-
-    private String createVoucherForDepreciation(final List<VoucherAccountCodeDetails> accountCodeDetails,
-            final RequestInfo requestInfo, final String tenantId, final Long departmentId,
-            final List<CalculationAssetDetails> calculationAssetDetailList, final HttpHeaders headers) {
-        final VoucherRequest voucherRequest = voucherService.createDepreciationVoucherRequest(
-                calculationAssetDetailList, departmentId, accountCodeDetails, tenantId, headers);
-        log.debug("Voucher Request for Depreciation :: " + voucherRequest);
-
-        return voucherService.createVoucher(voucherRequest, tenantId, headers);
     }
 
     private void validateDepreciationSubledgerDetails(final RequestInfo requestInfo, final String tenantId,

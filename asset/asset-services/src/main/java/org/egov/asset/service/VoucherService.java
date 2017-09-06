@@ -94,8 +94,6 @@ public class VoucherService {
 
         log.debug("Request Headers for Voucher Request :: " + requestHeaders);
 
-        voucherRequest.getRequestInfo().setTs(null);
-
         final HttpEntity requestEntity = new HttpEntity(voucherRequest, requestHeaders);
         log.debug("Request Entity ::" + requestEntity);
         final ResponseEntity<JSONObject> response = restTemplate.exchange(createVoucherUrl, HttpMethod.POST,
@@ -365,6 +363,9 @@ public class VoucherService {
 
             for (final VoucherAccountCodeDetails acd : accountCodeDetails)
                 acd.setFunction(function);
+            
+            log.debug("account code details :: " + accountCodeDetails);
+            voucher.setLedgers(accountCodeDetails);
         }
     }
 

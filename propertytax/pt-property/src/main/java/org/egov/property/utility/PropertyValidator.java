@@ -204,6 +204,14 @@ public class PropertyValidator {
 	public void validatePropertyMasterData(Property property, RequestInfo requestInfo) {
 
 		PropertyDetail propertyDetail = property.getPropertyDetail();
+		
+		if (propertyDetail.getSubUsage() != null) {
+			Boolean subUsageExists = propertyMasterRepository.checkWhetherRecordExits(property.getTenantId(), propertyDetail.getSubUsage(),
+					ConstantUtility.USAGE_TYPE_TABLE_NAME, null);
+			if (!subUsageExists) {
+				throw new InvalidCodeException(propertiesManager.getInvalidPropertySubUsageCode(), requestInfo);
+			}
+		}
 
 		if (propertyDetail.getPropertyType() != null) {
 			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(property.getTenantId(),

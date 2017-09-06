@@ -13,9 +13,9 @@ import org.egov.pgr.location.model.CrossHierarchy;
 public class CrossHierarchySearchRequest {
 
     @JsonProperty("RequestInfo")
-    private RequestInfo requestInfo = null;
+    private RequestInfo requestInfo;
 
     @JsonProperty("CrossHierarchy")
-    private CrossHierarchy crossHierarchy = null;
+    private CrossHierarchy crossHierarchy;
 
 }

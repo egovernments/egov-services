@@ -452,5 +452,5 @@ ReportDefinitions:
     source: collection
     isMandatory: false
     searchClause: AND receiptDate <= $toDate
-  query: select receiptNo,receiptDate,totalAmount,servicename,payeeName,consumerAddress,'print' as print from egcl_legacy_receipt_header where tenantid = $tenantid
+  query: select receiptNo,to_char(to_timestamp(receiptDate),'dd/mm/yyyy') as receiptDate,totalAmount,servicename,payeeName,consumerAddress,'print' as print from egcl_legacy_receipt_header where tenantid = $tenantid
 

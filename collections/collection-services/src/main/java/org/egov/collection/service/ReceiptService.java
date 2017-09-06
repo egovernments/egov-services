@@ -136,7 +136,7 @@ public class ReceiptService {
         Bill apportionBill = new Bill(bill.getId(), bill.getPayeeName(),
                 bill.getPayeeAddress(), bill.getPayeeEmail(),
                 bill.getIsActive(), bill.getIsCancelled(), bill.getPaidBy(),
-                null, tenantId);
+                null, tenantId, bill.getMobileNumber());
         Boolean callBackForApportion = false;
         List<BillDetail> apportionBillDetails = new ArrayList<>();
         for (BillDetail billDetail : bill.getBillDetails()) {

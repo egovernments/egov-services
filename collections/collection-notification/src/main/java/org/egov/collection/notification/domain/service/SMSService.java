@@ -35,7 +35,7 @@ public class SMSService {
         List<Receipt> receipts = receiptRequest.getReceipt();
         Receipt receipt = receipts.get(0);
         Bill bill = receipt.getBill().get(0);
-        String mobileNumber = bill.getPayeemobileNumber();
+        String mobileNumber = bill.getMobileNumber();
         String applicantName = bill.getPayeeName();
         final City city = tenantRepository.fetchTenantByCode(receiptRequest.getRequestInfo(),receiptRequest.getTenantId());
         sendSMSNotification(bill, applicantName, mobileNumber, city);

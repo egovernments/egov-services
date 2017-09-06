@@ -20,7 +20,6 @@ import org.egov.asset.domain.CalculationAssetDetails;
 import org.egov.asset.model.Depreciation;
 import org.egov.asset.model.DepreciationCriteria;
 import org.egov.asset.model.DepreciationDetail;
-import org.egov.asset.model.Function;
 import org.egov.asset.model.enums.AssetConfigurationKeys;
 import org.egov.asset.model.enums.DepreciationMethod;
 import org.egov.asset.model.enums.DepreciationStatus;
@@ -103,11 +102,9 @@ public class DepreciationServiceTest {
         final List<CalculationAssetDetails> calculationAssetDetailList = getCalculationAssetDetailList();
         final Map<Long, List<CalculationAssetDetails>> cadMap = getCalculationAssetDetailMap();
 
-        final Function function = getFunction();
         final RequestInfo requestInfo = getRequestInfo();
         when(assetConfigurationService.getEnabledVoucherGeneration(AssetConfigurationKeys.ENABLEVOUCHERGENERATION,
                 "ap.kurnool")).thenReturn(true);
-        when(voucherService.getFunctionFromVoucherMap(requestInfo, "ap.kurnool")).thenReturn(function);
         depreciationService.validationAndGenerationDepreciationVoucher(depreciationDetailsMap, headers, requestInfo,
                 "ap.kurnool", calculationAssetDetailList, cadMap);
     }
@@ -146,17 +143,6 @@ public class DepreciationServiceTest {
         requestInfo.setApiId("org.egov.pgr");
         requestInfo.setVer("1.0");
         return requestInfo;
-    }
-
-    private Function getFunction() {
-        final Function function = new Function();
-        function.setId(Long.valueOf("5"));
-        function.setCode("0600");
-        function.setActive(true);
-        function.setName("Estate");
-        function.setParentId(null);
-        function.setLevel(null);
-        return function;
     }
 
     private Map<Long, List<CalculationAssetDetails>> getCalculationAssetDetailMap() {

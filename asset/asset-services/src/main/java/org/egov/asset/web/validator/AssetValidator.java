@@ -240,8 +240,7 @@ public class AssetValidator {
             validateFund(revaluation.getFund());
         }
 
-        final TypeOfChangeEnum typeOfChange = validateRevaluationForTypeOfChange(revaluation, asset,
-                enableVoucherGeneration);
+        final TypeOfChangeEnum typeOfChange = validateRevaluationForTypeOfChange(revaluation, asset);
 
         if (revaluation.getRevaluationAmount() == null)
             throw new RuntimeException(
@@ -296,8 +295,7 @@ public class AssetValidator {
                     "Fund from financials is necessary for Asset Revaluation,Asset Depreciation and Asset Sale/Disposal");
     }
 
-    private TypeOfChangeEnum validateRevaluationForTypeOfChange(final Revaluation revaluation, final Asset asset,
-            final boolean enableVoucherGeneration) {
+    private TypeOfChangeEnum validateRevaluationForTypeOfChange(final Revaluation revaluation, final Asset asset) {
         final TypeOfChangeEnum typeOfChange = revaluation.getTypeOfChange();
         if (typeOfChange == null)
             throw new RuntimeException("Type Of Change is necessary for asset revaluation");
@@ -381,16 +379,16 @@ public class AssetValidator {
             try {
                 final Date finYearStart = sdf.parse(yearRange[0] + "-04-01");
                 final Date finYearEnd = sdf.parse(yearRange[0] + 1 + "-03-31");
-                
+
                 cal.setTimeInMillis(fromDate);
                 final Date fd = cal.getTime();
-                
+
                 if (!(finYearStart.compareTo(fd) * fd.compareTo(finYearEnd) >= 0))
                     throw new RuntimeException("From Date should belong to selected Financial Year.");
-                
+
                 cal.setTimeInMillis(toDate);
                 final Date td = cal.getTime();
-                
+
                 if (!(finYearStart.compareTo(td) * td.compareTo(finYearEnd) >= 0))
                     throw new RuntimeException("To Date should belong to selected Financial Year.");
             } catch (final ParseException e) {

@@ -158,4 +158,8 @@ public class PropertyDetail {
     
     @JsonProperty("bpaDate")
     private String bpaDate;
+    
+    @JsonProperty("subUsage")
+    @Size(min = 1, max = 128)
+    private String subUsage = null;
 }

@@ -45,4 +45,6 @@ public class ReceiptSearchGetRequest {
 
     private String transactionId;
 
+    private List<String> manualReceiptNumbers;
+
 }

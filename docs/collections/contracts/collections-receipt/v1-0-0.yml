@@ -93,6 +93,13 @@ paths:
           type: string
           minLength: 0
           maxLength: 64
+        - name: manualReceiptNumbers
+          in: query
+          required: false
+          description: List of manual receipt numbers to search legacy receipts.
+          type: array
+          items:
+            type: string
      
       responses:
         200:
@@ -436,6 +443,9 @@ definitions:
       partPaymentAllowed:
         type: boolean
         description: decides if partpayment is allowed
+      manualReceiptNumber:
+        type: string
+        description: Manual Receipt Number for legacy reciepts.
       billAccountDetails:
         type: array
         items:

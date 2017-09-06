@@ -442,6 +442,9 @@ var localization_EN_Data = {
     "pt.create.groups.propertyAddress.fields.isCorrespondanceAddressDifferentFromAddress": "Is correspondence address different from property address?",
     "pt.create.groups.propertyAddress.fields.address1": "Address 1",
 
+    "pt.create.groups.ownerDetails":"Owner Details",
+    "pt.create.groups.advanceSearch":"Advance Search",
+
     "pt.create.groups.assessmentDetails": "Assessment details",
     "pt.create.groups.assessmentDetails.fields.creationReason": "Reason For Creation",
     "pt.create.groups.assessmentDetails.fields.parentUpicNo": "Parent UPIC No.",
@@ -455,7 +458,6 @@ var localization_EN_Data = {
     "pt.create.groups.assessmentDetails.fields.isLegal": "Is Legal?",
 
     "pt.create.groups.propertyFactors": "Property Factors",
-    "pt.create.groups.propertyFactors.fields.totalFactor": "Toilet factor",
     "pt.create.groups.propertyFactors.fields.roadFactor": "Road factor",
     "pt.create.groups.propertyFactors.fields.liftFactor": "Lift factor",
     "pt.create.groups.propertyFactors.fields.parkingFactor": "Parking Factor",
@@ -618,6 +620,7 @@ var localization_EN_Data = {
     "pt.create.groups.workflow.approverName": "Approver Name",
     "pt.create.groups.workflow.comment": "Comment",
     "pt.create.groups.createNewProperty": "Create New Property",
+    "pt.create.groups.createDataEntry":"Create Data Entry",
     "pt.create.groups.ownerDetails.fields.male": "Male",
     "pt.create.groups.ownerDetails.fields.female": "Female",
     "pt.create.groups.ownerDetails.fields.Others": "Others",
@@ -1973,6 +1976,7 @@ var localization_MR_Data = {
     "pt.create.groups.ownerDetails.fields.guardian": "पालक ",
     "pt.create.groups.ownerDetails.fields.ownerType": "मालकाचे प्रकार  ",
     "pt.create.groups.ownerDetails.fields.percentageOfOwnerShip": "मालकी हक्काचे टक्केवारी ",
+    "pt.create.groups.ownerDetails.fields.pan": "पॅन",
     "pt.create.groups.propertyAddress.fields.referancePropertyNumber": "संदर्भित मालमत्ता क्रमांक ",
     "pt.create.groups.propertyAddress.fields.appartment": "अपार्टमेंट / कॉम्प्लेक्स नाव",
     "pt.create.groups.propertyAddress.fields.doorNo": "दरवाजा क्रमांक ",
@@ -1984,8 +1988,10 @@ var localization_MR_Data = {
     "pt.create.groups.propertyAddress.fields.street": " रस्ता",
     "pt.create.groups.propertyAddress.fields.revenueCircle": "महसूल मंडल",
     "pt.create.groups.propertyAddress.fields.pin": "पिन ",
-    "pt.create.groups.propertyAddress.fields.isCorrespondanceAddressDifferentFromAddress ": " पत्रव्यवाहाराचा पता व मालमत्तेचा पत्ता वेगळा आहे का ? ",
+    "pt.create.groups.propertyAddress.fields.isCorrespondanceAddressDifferentFromAddress": " पत्रव्यवाहाराचा पता व मालमत्तेचा पत्ता वेगळा आहे का ? ",
     "pt.create.groups.propertyAddress.fields.address1": "पत्ता 1",
+
+
 
     "pt.create.groups.assessmentDetails.fields.creationReason": " निर्मितीसाठी कारण",
     "pt.create.groups.assessmentDetails.fields.propertyType": "दर सूची",
@@ -1995,15 +2001,14 @@ var localization_MR_Data = {
 
 
     //pt construction details
-    "pt.create.groups.constructionDetails" : "Construction Details",
     "pt.create.groups.acknowledgement.forwarded":"यशस्वीपणे अग्रेषित केले",
     "pt.create.groups.acknowledgement.approved":"यशस्वीरित्या मंजूर",
     "pt.create.groups.acknowledgement.success":"आपला नवीन मालमत्तेचा अर्ज आवक केला गेला आहे,",
     "pt.create.groups.acknowledgement.demandSuccess":"कर आणि संग्रह यशस्वीरित्या जोडले / अद्यतनित केले",
     "pt.create.groups.acknowledgement.dataEntrySuccess":"मालमत्ता तपशील जतन आणि मालमत्ता क्रमांक ",
-    "pt.create.groups.constructionDetails ":"बांधकाम तपशील",
-    "pt.create.groups.oldPropertyNo ":"जुने मालमत्ता क्रमांक",
-    "pt.create.groups.propertyNo ":"मालमत्ता क्रमांक",
+    "pt.create.groups.constructionDetails":"बांधकाम तपशील",
+    "pt.create.groups.oldPropertyNo":"जुने मालमत्ता क्रमांक",
+    "pt.create.groups.propertyNo":"मालमत्ता क्रमांक",
     "pt.create.groups.assessmentDetails.newProperty":"नवीन मालमत्ता",
     "pt.create.groups.assessmentDetails.bifurcation":"विभागणी",
     "pt.create.groups.assessmentDetails.bifurcation":"निरंक",
@@ -2013,6 +2018,7 @@ var localization_MR_Data = {
     "pt.create.groups.workflow.approverName":"मंजूर नाव",
     "pt.create.groups.workflow.comment":"टिप्पणी",
     "pt.create.groups.createNewProperty":"नवीन मालमत्ता तयार करा",
+    "pt.create.groups.createDataEntry":"Create Data Entry - Marathi",
     "pt.create.groups.ownerDetails.fields.male":"पुरुष",
     "pt.create.groups.ownerDetails.fields.female":"स्त्री",
     "pt.create.groups.ownerDetails.fields.Others":"इतर",
@@ -2031,6 +2037,7 @@ var localization_MR_Data = {
     "pt.create.groups.floorDetails.fields.yes":"होय",
     "pt.create.groups.floorDetails.fields.no":"नाही",
 
+    "pt.create.groups.advanceSearch":"Advance Search - Marathi",
 
     ﻿"pt.create.groups.assessmentDetails":"मूल्यांकन तपशील",
     "wc.crete.Slabs":"स्लॅब्स",
@@ -2074,7 +2081,7 @@ var localization_MR_Data = {
     "pt.create.groups.propertyAddress.fields.assessmentDate":"मूल्यांकन तारीख",
     "pt.create.groups.propertyAddress.fields.addressDetails":"पत्ता तपशील",
     "pt.create.groups.propertyAddress.fields.propertyAddress":"मालमत्ता पत्ता",
-    "pt.create.groups.propertyAddress.fields.ebBlock":"EB ब्लॉक",
+    "pt.create.groups.propertyAddress.fields.ebBlock":"EB ब्लॉक - Marathi",
     "pt.create.groups.propertyAddress.mobileNumber":"मोबाईल नंबर (+ 9 1 शिवाय)",
     "pt.create.groups.propertyAddress.propertyTax":"मालमत्ता कर",
     "pt.create.groups.propertyAddress.educationCess":"शैक्षणिक उपकर",
@@ -2118,8 +2125,8 @@ var localization_MR_Data = {
     "pt.create.groups.floorDetails.fields.firmName": "संस्थेचे नाव",
     "pt.create.groups.floorDetails.fields.usageType": "वापराचे  प्रकार",
     "pt.create.groups.floorDetails.fields.usageSubType": "वापराचे उप प्रकार",
-    "pt.create.groups.floorDetails.fields.AnnualRent": "वार्षिक भाडे",
-    "pt.create.groups.floorDetails.fields.manualArv": "मॅन्युअल ARV",
+    "pt.create.groups.floorDetails.fields.annualRent": "वार्षिक भाडे",
+    "pt.create.groups.floorDetails.fields.manualArv": "मॅन्युअल वार्षिक करयोग्य मुल्य",
     "pt.create.groups.floorDetails.fields.Arv":"वार्षिक करयोग्य मुल्य",
     "pt.create.groups.floorDetails.fields.occupantName": " प्रवासी नाव",
     "pt.create.groups.floorDetails.fields.constructionStartDate": "बांधकाम प्रारंभ तारीख",

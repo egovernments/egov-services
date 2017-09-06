@@ -26,10 +26,10 @@ const styles = {
     color: red500
   },
   underlineStyle: {
- 
+
   },
   underlineFocusStyle: {
-  
+
   },
   floatingLabelStyle: {
     color: "#354f57"
@@ -122,35 +122,35 @@ class ConstructionDetails extends Component {
     super(props);
     this.state= {
     }
-  } 
+  }
 
 
  componentDidMount() {
     //call boundary service fetch wards,location,zone data
     var currentThis = this;
-	
+
 	let {toggleSnackbarAndSetText} = this.props;
-	  
-  } 
+
+  }
 
 handleDepartment = (e) => {
-	
+
 	let {toggleSnackbarAndSetText, setLoadingStatus} = this.props;
-		
+
 		setLoadingStatus('loading');
-	
+
 	var currentThis = this;
-	
+
 	 currentThis.setState({
             departments:[]
      })
-	 
+
 	 this.props.constructionDetails.department = '';
-	
+
 	let query = {
 		category : e.target.value
 	}
-	
+
 	  Api.commonApiPost('pt-property/property/departments/_search',query, {},false, true).then((res)=>{
 		   res.departments.unshift({id:-1, name:'None'});
 		  console.log(res);
@@ -164,13 +164,13 @@ handleDepartment = (e) => {
 			setLoadingStatus('hide');
 		})
 
-} 
+}
 
 formatDate(date){
-	
+
 	var day = (date.getDate() < 10) ? ('0'+date.getDate()) : date.getDate();
 	var month = ((date.getMonth() + 1)<10) ? ('0'+(date.getMonth() + 1)) : (date.getMonth() + 1)
-	
+
 	return day + "/" + month + "/" + date.getFullYear();
 }
 
@@ -226,7 +226,7 @@ formatDate(date){
 														  console.log('1');
 														  val+='/';
 													  } else if(value.length == 5) {
-														
+
 														  var a = value.split('/');
 														  console.log(a)
 														  if(a[1].length ==2 && !a[1].match('/')){
@@ -234,12 +234,12 @@ formatDate(date){
 															  val+='/';
 														  }
 													  }
-													  
+
 													   var e = {
 														  target: {
 															  value: val
 														  }
-														}			
+														}
 													  handleChange(e,"currentAssessmentDate", true, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
 												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 												  underlineStyle={styles.underlineStyle}
@@ -263,7 +263,7 @@ formatDate(date){
 															  val+='/';
 														  }
 													  }
-													  
+
 													   var e = {
 														  target: {
 															  value: val
@@ -292,7 +292,7 @@ formatDate(date){
 															  val+='/';
 														  }
 													  }
-													  
+
 													   var e = {
 														  target: {
 															  value: val
@@ -321,7 +321,7 @@ formatDate(date){
 															  val+='/';
 														  }
 													  }
-													  
+
 													   var e = {
 														  target: {
 															  value: val
@@ -350,7 +350,7 @@ formatDate(date){
 															  val+='/';
 														  }
 													  }
-													  
+
 													   var e = {
 														  target: {
 															  value: val
@@ -376,7 +376,7 @@ formatDate(date){
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               />
                                           </Col>
-										  <Col xs={12} md={3} sm={6}>                                             	
+										  <Col xs={12} md={3} sm={6}>
 												<TextField  className="fullWidth"
 												  hintText="dd/mm/yyyy"
 												  floatingLabelFixed={true}
@@ -393,7 +393,7 @@ formatDate(date){
 															  val+='/';
 														  }
 													  }
-													  
+
 													   var e = {
 														  target: {
 															  value: val
@@ -404,9 +404,9 @@ formatDate(date){
 												  underlineStyle={styles.underlineStyle}
 												  underlineFocusStyle={styles.underlineFocusStyle}
 												  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}/>
-											  
+
                                           </Col>
-										  <Col xs={12} md={3} sm={6}> 
+										  <Col xs={12} md={3} sm={6}>
 												<TextField  className="fullWidth"
 												  hintText="dd/mm/yyyy"
 												  floatingLabelFixed={true}
@@ -423,7 +423,7 @@ formatDate(date){
 															  val+='/';
 														  }
 													  }
-													  
+
 													   var e = {
 														  target: {
 															  value: val
@@ -433,7 +433,7 @@ formatDate(date){
 												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 												  underlineStyle={styles.underlineStyle}
 												  underlineFocusStyle={styles.underlineFocusStyle}
-												  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}/>												
+												  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}/>
                                           </Col>
 										  <Col xs={12} md={3} sm={6}>
 											  <TextField  className="fullWidth"
@@ -595,7 +595,7 @@ const mapDispatchToProps = dispatch => ({
       index
     })
   },
-  
+
   addDepandencyFields: (property) => {
 		dispatch({
 			type: 'ADD_REQUIRED',
@@ -616,7 +616,7 @@ const mapDispatchToProps = dispatch => ({
       room
     })
   },
-  
+
    setLoadingStatus: (loadingStatus) => {
      dispatch({type: "SET_LOADING_STATUS", loadingStatus});
    },
@@ -627,5 +627,3 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ConstructionDetails);
-
-

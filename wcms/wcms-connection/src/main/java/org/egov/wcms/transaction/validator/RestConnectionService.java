@@ -104,14 +104,14 @@ public class RestConnectionService {
         final RequestInfo requestInfo = RequestInfo.builder().ts(11111111111L).build();
         RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
         final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
-        CategoryResponseInfo positions = new RestTemplate().postForObject(url.toString(), request, CategoryResponseInfo.class,
+        CategoryResponseInfo categoryRes = new RestTemplate().postForObject(url.toString(), request, CategoryResponseInfo.class,
                 waterConnectionRequest.getConnection().getCategoryType(), waterConnectionRequest.getConnection().getTenantId());
-        if (positions != null && !positions.getCategory().isEmpty()) {
+        if (categoryRes != null && !categoryRes.getCategory().isEmpty()) {
             waterConnectionRequest.getConnection()
-                    .setCategoryId(positions.getCategory() != null && positions.getCategory().get(0) != null
-                            ? String.valueOf(positions.getCategory().get(0).getId()) : "");
+                    .setCategoryId(categoryRes.getCategory() != null && categoryRes.getCategory().get(0) != null
+                            ? String.valueOf(categoryRes.getCategory().get(0).getId()) : "");
         }
-        return positions;
+        return categoryRes;
     }
 
     public TreatmentPlantResponse getTreateMentPlantName(WaterConnectionReq waterConnectionRequest) {
@@ -121,14 +121,14 @@ public class RestConnectionService {
         final RequestInfo requestInfo = RequestInfo.builder().ts(11111111111L).build();
         RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
         final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
-        TreatmentPlantResponse positions = new RestTemplate().postForObject(url.toString(), request, TreatmentPlantResponse.class,
+        TreatmentPlantResponse treatmentPlantRes = new RestTemplate().postForObject(url.toString(), request, TreatmentPlantResponse.class,
                 waterConnectionRequest.getConnection().getWaterTreatment(), waterConnectionRequest.getConnection().getTenantId());
-        if (positions != null && positions.getTreatmentPlants() != null && !positions.getTreatmentPlants().isEmpty()) {
+        if (treatmentPlantRes != null && treatmentPlantRes.getTreatmentPlants() != null && !treatmentPlantRes.getTreatmentPlants().isEmpty()) {
             waterConnectionRequest.getConnection()
-                    .setWaterTreatmentId(positions.getTreatmentPlants() != null && positions.getTreatmentPlants().get(0) != null
-                            ? String.valueOf(positions.getTreatmentPlants().get(0).getId()) : "");
+                    .setWaterTreatmentId(treatmentPlantRes.getTreatmentPlants() != null && treatmentPlantRes.getTreatmentPlants().get(0) != null
+                            ? String.valueOf(treatmentPlantRes.getTreatmentPlants().get(0).getId()) : "");
         }
-        return positions;
+        return treatmentPlantRes;
     }
     
     public StorageReservoirResponse getStorageReservoirName(WaterConnectionReq waterConnectionRequest) {
@@ -137,14 +137,14 @@ public class RestConnectionService {
                 .append(configurationManager.getReservoirSearchTopic());
         RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(waterConnectionRequest.getRequestInfo()).build();
         final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
-        StorageReservoirResponse response = new RestTemplate().postForObject(url.toString(), request, StorageReservoirResponse.class,
+        StorageReservoirResponse storageResponse = new RestTemplate().postForObject(url.toString(), request, StorageReservoirResponse.class,
                 waterConnectionRequest.getConnection().getStorageReservoir(), waterConnectionRequest.getConnection().getTenantId());
-        if (response != null && response.getStorageReservoirs() != null && !response.getStorageReservoirs().isEmpty()) {
+        if (storageResponse != null && storageResponse.getStorageReservoirs() != null && !storageResponse.getStorageReservoirs().isEmpty()) {
             waterConnectionRequest.getConnection()
-                    .setStorageReservoirId(response.getStorageReservoirs() != null && response.getStorageReservoirs().get(0) != null
-                            ? String.valueOf(response.getStorageReservoirs().get(0).getId()) : "");
+                    .setStorageReservoirId(storageResponse.getStorageReservoirs() != null && storageResponse.getStorageReservoirs().get(0) != null
+                            ? String.valueOf(storageResponse.getStorageReservoirs().get(0).getId()) : "");
         }
-        return response;
+        return storageResponse;
     }
     
     public UsageTypeResponse getUsageTypeName(WaterConnectionReq waterConnectionRequest) {
@@ -153,14 +153,14 @@ public class RestConnectionService {
                 .append(configurationManager.getUsageTypeSearchPathTopic());
         RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(waterConnectionRequest.getRequestInfo()).build();
         final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
-        UsageTypeResponse response = new RestTemplate().postForObject(url.toString(), request, UsageTypeResponse.class,
+        UsageTypeResponse usageResponse = new RestTemplate().postForObject(url.toString(), request, UsageTypeResponse.class,
                 waterConnectionRequest.getConnection().getUsageType(), waterConnectionRequest.getConnection().getTenantId());
-        if (response != null && response.getUsageTypes() != null && !response.getUsageTypes().isEmpty()) {
+        if (usageResponse != null && usageResponse.getUsageTypes() != null && !usageResponse.getUsageTypes().isEmpty()) {
             waterConnectionRequest.getConnection()
-                    .setUsageTypeId(response.getUsageTypes() != null && response.getUsageTypes().get(0) != null
-                            ? String.valueOf(response.getUsageTypes().get(0).getId()) : "");
+                    .setUsageTypeId(usageResponse.getUsageTypes() != null && usageResponse.getUsageTypes().get(0) != null
+                            ? String.valueOf(usageResponse.getUsageTypes().get(0).getId()) : "");
         }
-        return response;
+        return usageResponse;
     }
     
     public UsageTypeResponse getSubUsageTypeName(WaterConnectionReq waterConnectionRequest) {
@@ -169,14 +169,14 @@ public class RestConnectionService {
                 .append(configurationManager.getUsageTypeSearchPathTopic());
         RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(waterConnectionRequest.getRequestInfo()).build();
         final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
-        UsageTypeResponse response = new RestTemplate().postForObject(url.toString(), request, UsageTypeResponse.class,
+        UsageTypeResponse subUsageResponse = new RestTemplate().postForObject(url.toString(), request, UsageTypeResponse.class,
                 waterConnectionRequest.getConnection().getSubUsageType(), waterConnectionRequest.getConnection().getTenantId());
-        if (response != null && response.getUsageTypes() != null && !response.getUsageTypes().isEmpty()) {
+        if (subUsageResponse != null && subUsageResponse.getUsageTypes() != null && !subUsageResponse.getUsageTypes().isEmpty()) {
             waterConnectionRequest.getConnection()
-                    .setSubUsageTypeId(response.getUsageTypes() != null && response.getUsageTypes().get(0) != null
-                            ? String.valueOf(response.getUsageTypes().get(0).getId()) : "");
+                    .setSubUsageTypeId(subUsageResponse.getUsageTypes() != null && subUsageResponse.getUsageTypes().get(0) != null
+                            ? String.valueOf(subUsageResponse.getUsageTypes().get(0).getId()) : "");
         }
-        return response;
+        return subUsageResponse;
     }
 
     public PipeSizeResponseInfo getPipesizeTypeByCode(WaterConnectionReq waterConnectionRequest) {
@@ -317,8 +317,9 @@ public class RestConnectionService {
         StringBuilder url = new StringBuilder();
         RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(waterConnectionRequest.getRequestInfo()).build();
         url.append(configurationManager.getWaterMasterServiceBasePathTopic())
-                .append(configurationManager.getWaterMasterServiceDonationSearchPathTopic()).append("?propertyType=")
-                .append("&usageType=").append(waterConnectionRequest.getConnection().getUsageType())
+                .append(configurationManager.getWaterMasterServiceDonationSearchPathTopic())
+                .append("?usageType=").append(waterConnectionRequest.getConnection().getUsageType())
+                .append("&subUsageType=").append(waterConnectionRequest.getConnection().getSubUsageType())
                 .append("&categoryType=")
                 .append(waterConnectionRequest.getConnection().getCategoryType()).append(
                         "&maxHSCPipeSize=")

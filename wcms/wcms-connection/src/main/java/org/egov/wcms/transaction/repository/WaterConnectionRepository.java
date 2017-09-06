@@ -168,20 +168,21 @@ public class WaterConnectionRepository {
                         waterConnectionRequest.getConnection().getBillSequenceNumber():0l);
 
                 statement.setBoolean(30, waterConnectionRequest.getConnection().getOutsideULB());
+                statement.setString(31, waterConnectionRequest.getConnection().getStorageReservoirId());
 
                 if (waterConnectionRequest.getConnection().getIsLegacy()
                         ) {
-                    statement.setString(31, waterConnectionRequest.getConnection().getLegacyConsumerNumber());
-                    statement.setString(32, waterConnectionRequest.getConnection().getConsumerNumber());
-                    statement.setLong(33, waterConnectionRequest.getConnection().getExecutionDate());
-                    statement.setInt(34, waterConnectionRequest.getConnection().getNoOfFlats());
-                   statement.setString(35, waterConnectionRequest.getConnection().getManualConsumerNumber());
-                   statement.setString(36, waterConnectionRequest.getConnection().getHouseNumber());
-                   statement.setString(37, waterConnectionRequest.getConnection().getManualReceiptNumber());
-                   statement.setLong(38, waterConnectionRequest.getConnection().getManualReceiptDate());
+                    statement.setString(32, waterConnectionRequest.getConnection().getLegacyConsumerNumber());
+                    statement.setString(33, waterConnectionRequest.getConnection().getConsumerNumber());
+                    statement.setLong(34, waterConnectionRequest.getConnection().getExecutionDate());
+                    statement.setInt(35, waterConnectionRequest.getConnection().getNoOfFlats());
+                   statement.setString(36, waterConnectionRequest.getConnection().getManualConsumerNumber());
+                   statement.setString(37, waterConnectionRequest.getConnection().getHouseNumber());
+                   statement.setString(38, waterConnectionRequest.getConnection().getManualReceiptNumber());
+                   statement.setLong(39, waterConnectionRequest.getConnection().getManualReceiptDate());
 
                 }
-
+               
                 if (waterConnectionRequest.getConnection().getParentConnectionId() != 0)
                     statement.setLong(35, waterConnectionRequest.getConnection().getParentConnectionId());
                 

@@ -187,13 +187,13 @@ public class WaterConnectionQueryBuilder {
                 + " acknowledgmentnumber, createdby, lastmodifiedby, createdtime, lastmodifiedtime,"
                 + " propertyidentifier, usagetype, address, donationcharge,"
                 + "assetidentifier,waterTreatmentId,islegacy,status,numberOfFamily,subusagetype,"
-                + "plumbername,billsequencenumber,outsideulb) values"
+                + "plumbername,billsequencenumber,outsideulb,storagereservoir) values"
                 + "(nextval('seq_egwtr_waterconnection'),?,?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
-                + ",?,?,?,?,?)";
+                + ",?,?,?,?,?,?)";
     }
 
     public static String insertDemandConnection() {
@@ -211,7 +211,7 @@ public class WaterConnectionQueryBuilder {
                 + " lastmodifiedby, createdtime, lastmodifiedtime,propertyidentifier, usagetype, "
                 + "address, donationcharge,assetidentifier,waterTreatmentId,"
                 + "islegacy,status,numberOfFamily,subusagetype,plumbername,"
-                + "billsequencenumber,outsideulb,legacyconsumernumber,"
+                + "billsequencenumber,outsideulb,storagereservoir,legacyconsumernumber,"
                 + "consumerNumber,executionDate,noOfFlats,manualconsumernumber,housenumber,manualreceiptnumber,manualreceiptdate) values"
                 + "(nextval('seq_egwtr_waterconnection'),?,?,?,?"
                 + ",?,?,?,?,?"
@@ -220,7 +220,7 @@ public class WaterConnectionQueryBuilder {
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?,"
                 + " ?,?,?,?,?,"
-                + "?,?,?,?)";
+                + "?,?,?,?,?)";
     }
 
     public static String insertAdditionalConnectionQuery() {

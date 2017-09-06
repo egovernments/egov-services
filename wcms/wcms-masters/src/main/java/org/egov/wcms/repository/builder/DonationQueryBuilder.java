@@ -75,7 +75,7 @@ public class DonationQueryBuilder {
             final DonationGetRequest donation) {
 
         if (donation.getId() == null && donation.getUsageType() == null && donation.getSubUsageType() == null
-                && donation.getCategoryType() == null && donation.getMaxPipeSize() == null
+                && donation.getCategory() == null && donation.getMaxPipeSize() == null
                 && donation.getMinPipeSize() == null && donation.getDonationAmount() == 0
                 && donation.getActive() == null && donation.getTenantId() == null)
             return;
@@ -113,10 +113,10 @@ public class DonationQueryBuilder {
             preparedStatementValues.add(donation.getOutSideUlb());
         }
 
-        if (donation.getCategoryType() != null) {
+        if (donation.getCategory()!= null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" category.name = ?");
-            preparedStatementValues.add(donation.getCategoryType());
+            preparedStatementValues.add(donation.getCategory());
         }
 
         if (donation.getMaxPipeSize() != null) {

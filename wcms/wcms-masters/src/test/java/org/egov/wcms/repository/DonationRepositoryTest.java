@@ -116,7 +116,7 @@ public class DonationRepositoryTest {
 
     private DonationGetRequest getDonationvalidaRequest() {
         final DonationGetRequest donation = new DonationGetRequest();
-        donation.setCategoryType("1");
+        donation.setCategory("1");
         donation.setUsageType("3");
         donation.setMaxPipeSize(4d);
         donation.setMinPipeSize(1d);

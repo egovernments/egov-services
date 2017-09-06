@@ -65,7 +65,7 @@ public class DonationGetRequest {
 
     private String code;
 
-    private String categoryType;
+    private String category;
 
     private Long categoryTypeId;
     

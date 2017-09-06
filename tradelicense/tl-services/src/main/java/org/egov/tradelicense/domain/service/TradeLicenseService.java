@@ -407,14 +407,19 @@ public class TradeLicenseService {
 		LicenseStatusResponse currentStatus = null;
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
+		System.out.println("TenantId: " + tradeLicense.getTenantId() + "Status: " + tradeLicense.getStatus().toString());
 		if (null != tradeLicense.getStatus())
 			currentStatus = statusRepository.findByIds(tradeLicense.getTenantId(), tradeLicense.getStatus().toString(),
 					requestInfoWrapper);
+		if (null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty())
+    		    System.out.println("Current Status: " + currentStatus.getLicenseStatuses()
+                                    .get(0).getCode());
 
 		if (null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty() && currentStatus.getLicenseStatuses()
 				.get(0).getCode().equalsIgnoreCase(NewLicenseStatus.INSPECTION_COMPLETED.getName())) {
 			DemandResponse demandResponse = licenseBillService.createBill(tradeLicense, requestInfo);
 			TradeLicenseSearch tradeLicenseSearch = tradeLicenseRepository.getByLicenseId(tradeLicense, requestInfo);
+			System.out.println("Trade License Search: " + tradeLicenseSearch);
 			if (tradeLicenseSearch != null) {
 				final Object[] objValue = new Object[] { tradeLicenseSearch.getApplications().get(0).getId(),
 						demandResponse.getDemands().get(0).getId(), tradeLicenseSearch.getTenantId(),

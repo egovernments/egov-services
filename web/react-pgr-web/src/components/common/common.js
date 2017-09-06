@@ -1450,6 +1450,7 @@ var localization_EN_Data = {
 "reports.collection.total.count":"Total Count",
 
     "noDues.citizenService.assessmentNumber":"Assessment Number",
+    "wc.create.groups.connectionDetails.storageReservoir":"Storage Reservoir",
 
 
 

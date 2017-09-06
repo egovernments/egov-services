@@ -346,37 +346,37 @@ var dat = {
         "label": "wc.create.groups.connectionDetails.title",
         "name": "connectionDetails",
         "multiple": false,
-        "fields": [{
-            "name": "PropertyType",
-            "jsonPath": "Connection.property.propertyType",
-            "label": "wc.create.groups.connectionDetails.propertyType",
-            "isHidden":true,
-            "pattern": "",
-            "type": "text",
-            "isRequired": true,
-            "isDisabled": false,
-            // "url": "/pt-property/property/propertytypes/_search?|$..name|$..name",
-            "defaultValue": "Others",
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
+        "fields": [
+          // {
+          //   "name": "PropertyType",
+          //   "jsonPath": "Connection.property.propertyType",
+          //   "label": "wc.create.groups.connectionDetails.propertyType",
+          //   "isHidden":true,
+          //   "pattern": "",
+          //   "type": "text",
+          //   "isRequired": true,
+          //   "isDisabled": false,
+          //   // "url": "/pt-property/property/propertytypes/_search?|$..name|$..name",
+          //   "defaultValue": "Others",
+          //   "requiredErrMsg": "",
+          //   "patternErrMsg": ""
+          // },
           {
             "name": "CategoryType",
             "jsonPath": "Connection.categoryType",
             "label": "wc.create.groups.connectionDetails.categoryType",
-            "isHidden":true,
             "pattern": "",
-            "type": "text",
+            "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-      			"defaultValue": "General",
-      			// "url":"/wcms/masters/propertytype-categorytype/_search?tenantId=default&propertyTypeName=Vacant Land|$..categoryTypeName|$..categoryTypeName"
+      			"defaultValue": [],
+      			"url":"/wcms/masters/categorytype/_search?|$..name|$..name"
           },
           {
             "name": "UsageType",
-            "jsonPath": "Connection.property.usageType",
+            "jsonPath": "Connection.usageType",
             "label": "wc.create.groups.connectionDetails.usageType",
             "pattern": "",
             "type": "singleValueList",
@@ -385,11 +385,11 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": "",
       			"defaultValue": [],
-      			"url":"/wcms/masters/propertytype-usagetype/_search?tenantId=default&propertyTypeName=Others|$..usageCode|$..usageType",
+      			"url":"/wcms/masters/usagetype/_search?|$..code|$..name",
             "depedants": [{
                 "jsonPath": "Connection.subUsageType",
                 "type": "dropDown",
-                "pattern": "/pt-property/property/usages/_search?tenantId=default&parent={Connection.property.usageType}&service=wc,common|$..code|$..name"
+                "pattern": "/wcms/masters/usagetype/_search?&parent={Connection.usageType}|$..code|$..name"
               }]
           },
           {
@@ -416,7 +416,7 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": "",
       			"defaultValue": [],
-      			"url":"/wcms/masters/propertytype-pipesize/_search?tenantId=default&propertyTypeName=Others|$..pipeSize|$..pipeSizeInInch"
+      			"url":"/wcms/masters/pipesize/_search?|$..sizeInMilimeter|$..sizeInInch"
           },
           {
             "name": "applicationType",
@@ -494,7 +494,18 @@ var dat = {
             "defaultValue":"Semi Bulk Type",
             "patternErrMsg": ""
           },
-
+          {
+            "name": "StorageReservoir",
+            "jsonPath": "Connection.storageReservoir",
+            "label": "wc.create.groups.connectionDetails.storageReservoir",
+            "pattern": "",
+            "type": "singleValueList",
+            "isRequired": true,
+            "isDisabled": false,
+            "url": "/wcms/masters/storagereservoir/_search?|$..name|$..name",
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
           {
             "name": "waterTreatment",
             "jsonPath": "Connection.waterTreatment",
@@ -522,8 +533,8 @@ var dat = {
             "name": "Sequence No",
             "jsonPath": "Connection.billSequenceNumber",
             "label": "wc.create.groups.connectionDetails.fields.billingNumber",
-            "pattern": "^\\d+(\\.\\d{1,3})?$",
-            "type": "text",
+            "pattern": "^\\d+(\\.\\d{1,4})?$",
+            "type": "number",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -624,7 +635,7 @@ var dat = {
             "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
-            "url": "/egov-common-masters/departments/_search?tenantId=default|$..id|$..name",
+            "url": "/egov-common-masters/departments/_search?|$..id|$..name",
             "requiredErrMsg": "",
             "patternErrMsg": "",
             "depedants": [{
@@ -640,7 +651,7 @@ var dat = {
             "pattern": "",
             "type": "singleValueList",
             "url": "/egov-common-workflows/designations/_search?tenantId=default&businessKey=WaterConnection&approvalDepartmentName=&departmentRule=&currentStatus=&additionalRule=&pendingAction=&designation=&amountRule=|$..id|$..name",
-            "isRequired": true,
+            "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
@@ -648,7 +659,8 @@ var dat = {
               "jsonPath": "Connection.workflowDetails.assignee",
               "type": "dropDown",
               "pattern": "/hr-employee/employees/_search?tenantId=default&departmentId={Connection.workflowDetails.department}&designationId={Connection.workflowDetails.designation}|$..position|$..name"
-            }]
+            }],
+            "defaultValue":"99"
           },
           {
             "name": "assignee",
@@ -1063,20 +1075,20 @@ var dat = {
           //   "requiredErrMsg": "",
           //   "patternErrMsg": ""
           // },
-          // {
-          //   "name": "CategoryType",
-          //   "jsonPath": "Connection[0].categoryType",
-          //   "label": "wc.create.groups.connectionDetails.categoryType",
-          //   "pattern": "",
-          //   "type": "singleValueList",
-          //   "isRequired": false,
-          //   "isDisabled": false,
-          //   "requiredErrMsg": "",
-          //   "patternErrMsg": ""
-          // },
+          {
+            "name": "CategoryType",
+            "jsonPath": "Connection[0].categoryType",
+            "label": "wc.create.groups.connectionDetails.categoryType",
+            "pattern": "",
+            "type": "singleValueList",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
           {
             "name": "UsageType",
-            "jsonPath": "Connection[0].property.usageType",
+            "jsonPath": "Connection[0].usageType",
             "label": "wc.create.groups.connectionDetails.usageType",
             "pattern": "",
             "type": "singleValueList",
@@ -1183,7 +1195,18 @@ var dat = {
           //   "requiredErrMsg": "",
           //   "patternErrMsg": ""
           // },
-
+          {
+            "name": "StorageReservoir",
+            "jsonPath": "Connection[0].storageReservoir",
+            "label": "wc.create.groups.connectionDetails.storageReservoir",
+            "pattern": "",
+            "type": "singleValueList",
+            "isRequired": true,
+            "isDisabled": false,
+            "url": "/wcms/masters/storagereservoir/_search?|$..name|$..name",
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
           {
             "name": "waterTreatment",
             "jsonPath": "Connection[0].waterTreatment",

@@ -100,13 +100,11 @@ public class LicenseBillService {
         demand.setConsumerCode(tradeLicense.getApplication().getApplicationNumber());
         demand.setMinimumAmountPayable(BigDecimal.ONE);
         demandDetailsList = new ArrayList<>();
-        for (LicenseFeeDetail licenseFeeDetail : tradeLicense.getApplication().getFeeDetails()) {
-            demandDetail = new DemandDetail();
-            demandDetail.setTaxHeadMasterCode(propertiesManager.getTaxHeadMasterCode());
-            demandDetail.setTaxAmount(BigDecimal.valueOf(licenseFeeDetail.getAmount()));
-            demandDetail.setTenantId(tenantId);
-            demandDetailsList.add(demandDetail);
-        }
+        demandDetail = new DemandDetail();
+        demandDetail.setTaxHeadMasterCode(propertiesManager.getTaxHeadMasterCode());
+        demandDetail.setTaxAmount(BigDecimal.valueOf(tradeLicense.getApplication().getLicenseFee()));
+        demandDetail.setTenantId(tenantId);
+        demandDetailsList.add(demandDetail);
         demand.setDemandDetails(demandDetailsList);
         FinancialYearContract currentFYResponse = financialYearService
                 .findFinancialYearIdByDate(tenantId, tradeLicense.getTradeCommencementDate(), requestInfoWrapper);

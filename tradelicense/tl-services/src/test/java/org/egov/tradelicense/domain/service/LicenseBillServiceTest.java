@@ -75,6 +75,7 @@ public class LicenseBillServiceTest {
         license.setTradeType(BusinessNature.PERMANENT);
         LicenseApplication application = new LicenseApplication();
         application.setApplicationNumber("1234");
+        application.setLicenseFee(100D);
         LicenseFeeDetail feeDetail = new LicenseFeeDetail();
         feeDetail.setAmount(100D);
         application.setFeeDetails(Collections.singletonList(feeDetail));

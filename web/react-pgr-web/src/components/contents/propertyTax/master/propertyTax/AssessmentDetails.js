@@ -26,10 +26,10 @@ const styles = {
     color: red500
   },
   underlineStyle: {
- 
+
   },
   underlineFocusStyle: {
-  
+
   },
   floatingLabelStyle: {
     color: "#354f57"
@@ -128,13 +128,13 @@ class AssessmentDetails extends Component {
 		usages:[],
 		subUsage: []
     }
-  } 
+  }
 
 
  componentDidMount() {
     //call boundary service fetch wards,location,zone data
     var currentThis = this;
-	
+
 	let {toggleSnackbarAndSetText} = this.props;
 
       Api.commonApiPost('pt-property/property/propertytypes/_search',{}, {},false, true).then((res)=>{
@@ -147,55 +147,55 @@ class AssessmentDetails extends Component {
 		toggleSnackbarAndSetText(true, err.message);
         console.log(err)
       })
-	  
+
         Api.commonApiPost('pt-property/property/usages/_search').then((res)=>{
           console.log(res);
           currentThis.setState({usages : res.usageMasters})
         }).catch((err)=> {
           console.log(err)
-        })	
-  } 
-  
+        })
+  }
 
-  
+
+
 handleUsage = (value) => {
-	
+
 		let currentThis = this;
-	
-		let query = { 
+
+		let query = {
 			parent: value
 		}
-	
+
 	   Api.commonApiPost('pt-property/property/usages/_search', query).then((res)=>{
           console.log(res);
           currentThis.setState({subUsage : res.usageMasters})
         }).catch((err)=> {
           console.log(err)
         })
-}  
+}
 
 handleDepartment = (e) => {
-	
+
 	let {toggleSnackbarAndSetText, setLoadingStatus} = this.props;
-		
+
 		setLoadingStatus('loading');
-	
+
 	var currentThis = this;
-	
+
 	 currentThis.setState({
             departments:[]
      })
-	 
+
 	 this.props.assessmentDetails.department = '';
-	
+
 	let query = {
 		category : e.target.value
 	}
-	
+
 	let pQuery = {
 		parent : e.target.value
 	}
-	
+
 	 Api.commonApiPost('pt-property/property/propertytypes/_search',pQuery, {},false, true).then((res)=>{
 		  res.propertyTypes.unshift({id:-1, name:'None'});
           console.log(res);
@@ -207,7 +207,7 @@ handleDepartment = (e) => {
 		toggleSnackbarAndSetText(true, err.message);
         console.log(err)
       })
-	
+
 	  Api.commonApiPost('pt-property/property/departments/_search',query, {},false, true).then((res)=>{
 		   res.departments.unshift({id:-1, name:'None'});
 		  console.log(res);
@@ -221,13 +221,13 @@ handleDepartment = (e) => {
 			setLoadingStatus('hide');
 		})
 
-} 
+}
 
 formatDate(date){
-	
+
 	var day = (date.getDate() < 10) ? ('0'+date.getDate()) : date.getDate();
 	var month = ((date.getMonth() + 1)<10) ? ('0'+(date.getMonth() + 1)) : (date.getMonth() + 1)
-	
+
 	return day + "/" + month + "/" + date.getFullYear();
 }
 
@@ -245,7 +245,7 @@ handleAge = (year) => {
 	})*/
 }
 
-  
+
   render() {
 
     const renderOption = function(list,listName="") {
@@ -281,7 +281,7 @@ handleAge = (year) => {
 
     return (
 				<Card className="uiCard">
-                      <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Assessment details</div>} />
+                      <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate('pt.create.groups.assessmentDetails')} </div>} />
                       <CardText style={styles.reducePadding}>
                                   <Grid fluid>
                                       <Row>
@@ -364,7 +364,7 @@ handleAge = (year) => {
 															removeDepandencyFields('layoutApprovalAuthority');
 															removeDepandencyFields('layoutPermitNumber');
 															removeDepandencyFields('layoutPermitDate');
-															
+
 														}
                                                       var e = {
                                                         target: {
@@ -396,14 +396,14 @@ handleAge = (year) => {
                                                           value: value
                                                         }
                                                       };
-													  
+
                                                       handleChange(e, "propertySubType", false, "")}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-                                              >   
+                                              >
 											  {renderOption(this.state.propertySubType)}
                                               </SelectField>
                                           </Col>
@@ -458,7 +458,7 @@ handleAge = (year) => {
 														</SelectField>
 													</Col>
 										  {(getNameByCode(this.state.propertytypes ,assessmentDetails.propertyType).match('Central Government') ||
-											getNameByCode(this.state.propertytypes ,assessmentDetails.propertyType).match('State Government')) 
+											getNameByCode(this.state.propertytypes ,assessmentDetails.propertyType).match('State Government'))
 											&& <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
                                                   floatingLabelText={translate('pt.create.groups.assessmentDetails.fields.department')}
@@ -514,7 +514,7 @@ handleAge = (year) => {
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               />
                                           </Col>
-										  
+
 										  <Col xs={12} md={3} sm={6}>
 												<TextField  className="fullWidth"
 												  floatingLabelText={translate('pt.create.groups.floorDetails.fields.buildingPermissionNumber')}
@@ -529,7 +529,7 @@ handleAge = (year) => {
 												  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 												/>
 										 </Col>
-										 <Col xs={12} md={3} sm={6}>	
+										 <Col xs={12} md={3} sm={6}>
 												<TextField  className="fullWidth"
 												  hintText="dd/mm/yyyy"
 												  floatingLabelFixed={true}
@@ -545,7 +545,7 @@ handleAge = (year) => {
 															  if(a[1].length ==2 && !a[1].match('/')){
 																  val+='/';
 															  }
-														  } 
+														  }
 													   var e = {
 														  target: {
 															  value: val
@@ -573,7 +573,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  
+
   handleChange: (e, property, isRequired, pattern) => {
     dispatch({type: "HANDLE_CHANGE", property, value: e.target.value, isRequired, pattern});
   },
@@ -661,7 +661,7 @@ const mapDispatchToProps = dispatch => ({
       index
     })
   },
-  
+
   addDepandencyFields: (property) => {
 		dispatch({
 			type: 'ADD_REQUIRED',
@@ -682,7 +682,7 @@ const mapDispatchToProps = dispatch => ({
       room
     })
   },
-  
+
    setLoadingStatus: (loadingStatus) => {
      dispatch({type: "SET_LOADING_STATUS", loadingStatus});
    },
@@ -693,5 +693,3 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AssessmentDetails);
-
-

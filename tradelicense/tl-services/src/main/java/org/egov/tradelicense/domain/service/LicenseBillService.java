@@ -46,8 +46,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.egov.common.contract.response.ErrorField;
-import org.egov.common.contract.response.ErrorResponse;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tradelicense.common.config.PropertiesManager;
@@ -132,10 +130,6 @@ public class LicenseBillService {
         final String url = propertiesManager.getBillingServiceHostName() +
                 propertiesManager.getBillingServiceCreatedBill();
 
-        ErrorResponse errorResponse = restTemplate.postForObject(url, demandRequest, ErrorResponse.class);
-        if (errorResponse != null && errorResponse.getError().getFields() != null)
-        for (ErrorField errorField : errorResponse.getError().getFields())
-            System.out.println(errorField.getMessage());
-        return new DemandResponse();
+        return restTemplate.postForObject(url, demandRequest, DemandResponse.class);
     }
 }

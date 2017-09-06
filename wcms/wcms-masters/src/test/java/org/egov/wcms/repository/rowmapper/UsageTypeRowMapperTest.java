@@ -44,7 +44,7 @@ import static org.mockito.Mockito.when;
 
 import java.sql.ResultSet;
 
-import org.egov.wcms.model.ServiceCharge;
+import org.egov.wcms.model.UsageType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -53,42 +53,35 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ServiceChargeRowMapperTest {
-
+public class UsageTypeRowMapperTest {
     @Mock
     private ResultSet rs;
 
     @InjectMocks
-    private ServiceChargeRowMapper serviceChargeRowMapper;
+    private UsageTypeRowMapper usageTypeRowMapper;
 
     @Test
     public void test_should_map_result_set_to_entity() throws Exception {
         Mockito.when(rs.next()).thenReturn(true).thenReturn(false);
-        when(rs.getLong("sc_id")).thenReturn(1L);
-        when(rs.getString("sc_code")).thenReturn("1");
-        when(rs.getString("sc_servicetype")).thenReturn("No Due Certificate");
-        when((Boolean) rs.getObject("sc_servicechargeapplicable")).thenReturn(true);
-        when(rs.getString("sc_servicechargetype")).thenReturn("slab");
-        when(rs.getString("sc_description")).thenReturn("certificate will be issued");
-        when((Boolean) rs.getObject("sc_active")).thenReturn(true);
-        when((Long) rs.getObject("sc_effectivefrom")).thenReturn(15678956L);
-        when((Long) rs.getObject("sc_effectiveto")).thenReturn(15678968L);
-        when((Boolean) rs.getObject("sc_outsideulb")).thenReturn(false);
-        when(rs.getString("sc_tenantid")).thenReturn("default");
-        when((Long) rs.getObject("sc_createdby")).thenReturn(1L);
-        when((Long) rs.getObject("sc_createddate")).thenReturn(15678956L);
-        when((Long) rs.getObject("sc_lastmodifiedby")).thenReturn(1L);
-        when((Long) rs.getObject("sc_lastmodifieddate")).thenReturn(15678956L);
-        final ServiceCharge expectedServiceCharge = getServiceCharge();
-        final ServiceCharge actualServiceCharge = serviceChargeRowMapper.mapRow(rs, 1);
-        assertTrue(expectedServiceCharge.equals(actualServiceCharge));
-
+        when(rs.getLong("ut_id")).thenReturn(1L);
+        when(rs.getString("ut_code")).thenReturn("1");
+        when((Boolean) rs.getObject("ut_active")).thenReturn(true);
+        when(rs.getString("ut_description")).thenReturn("Water required for school");
+        when(rs.getString("ut_name")).thenReturn("School");
+        when(rs.getString("ut_parent")).thenReturn(null);
+        when(rs.getString("ut_tenantid")).thenReturn("default");
+        when((Long) rs.getObject("ut_createdby")).thenReturn(1L);
+        when((Long) rs.getObject("ut_createddate")).thenReturn(142356778L);
+        when((Long) rs.getObject("ut_lastmodifiedby")).thenReturn(1L);
+        when((Long) rs.getObject("ut_lastmodifieddate")).thenReturn(142356778L);
+        final UsageType expectedUsgType = getUsageType();
+        final UsageType actualUsgType = usageTypeRowMapper.mapRow(rs, 1);
+        assertTrue(expectedUsgType.equals(actualUsgType));
     }
 
-    private ServiceCharge getServiceCharge() {
-        return ServiceCharge.builder().id(1L).code("1").serviceType("No Due Certificate").serviceChargeApplicable(true)
-                .serviceChargeType("slab").description("certificate will be issued").active(true).effectiveFrom(15678956L)
-                .effectiveTo(15678968L).outsideUlb(false).tenantId("default").createdBy(1L).lastModifiedBy(1L)
-                .createdDate(15678956L).lastModifiedDate(15678956L).build();
+    private UsageType getUsageType() {
+        return UsageType.builder().id(1L).code("1").active(true).description("Water required for school").name("School")
+                .tenantId("default").createdBy(1L).createdDate(142356778L).lastModifiedBy(1L).lastModifiedDate(142356778L)
+                .build();
     }
 }

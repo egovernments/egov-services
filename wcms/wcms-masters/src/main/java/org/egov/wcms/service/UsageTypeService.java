@@ -51,7 +51,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UsageTypeService {
     @Autowired
-    UsageTypeRepository usageTypeRepository;
+    private UsageTypeRepository usageTypeRepository;
 
     public List<UsageType> getUsageTypes(final UsageTypeGetRequest usageTypeGetRequest) {
         return usageTypeRepository.getUsageTypesByCriteria(usageTypeGetRequest);

@@ -26,10 +26,10 @@ const styles = {
     color: red500
   },
   underlineStyle: {
-    
+
   },
   underlineFocusStyle: {
-   
+
   },
   floatingLabelStyle: {
     color: "#354f57"
@@ -107,7 +107,7 @@ class PropertyAddress extends Component {
            revanue:[],
            election:[]
     }
-  } 
+  }
 
 
   componentDidMount() {
@@ -133,7 +133,7 @@ class PropertyAddress extends Component {
             apartments:[]
         })
           console.log(err)
-        }) 
+        })
 
        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:"REVENUE"}).then((res)=>{
           console.log(res);
@@ -187,17 +187,17 @@ class PropertyAddress extends Component {
         }).catch((err)=> {
           console.log(err)
         })
-		
+
 		this.props.initForm();
 
-  }      
+  }
 
 
   render() {
 
     const renderOption = function(list,listName="") {
         if(list)
-        {	
+        {
             return list.map((item)=>
             {
                 return (<MenuItem key={item.id} value={item.id} primaryText={item.name}/>)
@@ -227,9 +227,9 @@ class PropertyAddress extends Component {
 
     let cThis = this;
 
-    return (	
+    return (
 				<Card className="uiCard">
-                      <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Property Address</div>} />
+                      <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate('pt.create.groups.propertyAddress.fields.propertyAddress')}</div>} />
                       <CardText style={styles.reducePadding}>
                                   <Grid fluid>
                                       <Row>
@@ -474,8 +474,8 @@ class PropertyAddress extends Component {
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 												  maxLength={2}
 												/>
-										
-                                             
+
+
                                           </Col>
                                           <Col xs={12} md={12}>
                                               <Checkbox
@@ -486,7 +486,7 @@ class PropertyAddress extends Component {
 													if(i) {
 														addDepandencyFields('cDoorno');
 														addDepandencyFields('addressTwo');
-													} else {	
+													} else {
 														removeDepandencyFields('cDoorno');
 														removeDepandencyFields('addressTwo');
 													}
@@ -509,14 +509,14 @@ class PropertyAddress extends Component {
                                                         errorText={fieldErrors.cDoorno ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.cDoorno}</span> : ""}
                                                         value={propertyAddress.cDoorno ? propertyAddress.cDoorno : ""}
                                                         onChange={(e) => handleChange(e, "cDoorno", true, '')}
-                                            
-      
+
+
                                                         floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                         underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                         underlineFocusStyle={styles.underlineFocusStyle}
                                                         maxLength={12}
                                                         floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-														
+
                                                     />
                                                 </Col>
                                                 <Col xs={12} md={3} sm={6}>
@@ -552,7 +552,7 @@ class PropertyAddress extends Component {
                                           }
                                       </Row>
                                   </Grid>
-                          
+
                       </CardText>
                   </Card>)
   }
@@ -567,14 +567,14 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-	
+
 initForm : () => {
 	dispatch({
 		type: "SET_FLOOR_NUMBER",
 		noOfFloors: 0
 	})
 },
-  
+
   handleChange: (e, property, isRequired, pattern) => {
     dispatch({type: "HANDLE_CHANGE", property, value: e.target.value, isRequired, pattern});
   },
@@ -669,7 +669,7 @@ initForm : () => {
       room
     })
   },
-  
+
   addDepandencyFields: (property) => {
 		dispatch({
 			type: 'ADD_REQUIRED',
@@ -683,7 +683,7 @@ initForm : () => {
 			property
 		})
 	},
-	
+
 	addFloors: (noOfFloors) => {
 		dispatch({
 			type: 'FLOOR_NUMBERS',
@@ -694,5 +694,3 @@ initForm : () => {
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PropertyAddress);
-
-

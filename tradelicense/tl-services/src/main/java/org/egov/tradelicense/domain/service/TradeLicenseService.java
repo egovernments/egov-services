@@ -408,7 +408,7 @@ public class TradeLicenseService {
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
 		System.out.println("TenantId: " + tradeLicense.getTenantId() + "Status: " + tradeLicense.getApplication().getStatus().toString());
-		if (null != tradeLicense.getStatus())
+		if (null != tradeLicense.getApplication().getStatus())
 			currentStatus = statusRepository.findByIds(tradeLicense.getTenantId(), tradeLicense.getApplication().getStatus().toString(),
 					requestInfoWrapper);
 		if (null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty())

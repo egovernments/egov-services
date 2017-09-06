@@ -393,31 +393,31 @@ ReportDefinitions:
   - name: receiptNo
     label: reports.collection.receiptno
     type: string
-    source: collection
+    source: legacy
   - name: receiptDate
     label: reports.collection.receiptdate
     type: epoch
-    source: collection
+    source: legacy
   - name: totalAmount
     label: reports.collection.totalamount
     type: number
-    source: collection
+    source: legacy
   - name: servicename
     label: reports.collection.service.name
     type: string
-    source: collection
+    source: legacy
   - name: payeeName
     label: reports.collection.payeename
     type: string
-    source: collection
+    source: legacy
   - name: consumerAddress
     label: reports.collection.consumeraddress
     type: string
-    source: collection
+    source: legacy
   - name: print
     label: reports.collection.print
     type: number
-    source: collection
+    source: legacy
     linkedReport:
       reportName: ReceiptDetail
       linkedColumn: _url?/pgr/viewGrievance/:srn
@@ -452,5 +452,5 @@ ReportDefinitions:
     source: collection
     isMandatory: false
     searchClause: AND receiptDate <= $toDate
-  query: select receiptNo,to_char(to_timestamp(receiptDate),'dd/mm/yyyy') as receiptDate,totalAmount,servicename,payeeName,consumerAddress,'print' as print from egcl_legacy_receipt_header where tenantid = $tenantid
+  query: select receiptNo,receiptDate,totalAmount,servicename,payeeName,consumerAddress,'print' as print from egcl_legacy_receipt_header where tenantid = $tenantid
 

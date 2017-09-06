@@ -429,18 +429,18 @@ public class ConnectionValidator {
         
         if(restConnectionService.getSubUsageTypeName(waterConnectionRequest).getUsageTypes().isEmpty()) { 
         	final ErrorField errorField = ErrorField.builder()
-                    .code(WcmsConnectionConstants.STORAGERESERVOIR_MANDATORY_CODE)
-                    .message(WcmsConnectionConstants.STORAGERESERVOIR_MANDATORY_ERROR_MESSAGE)
-                    .field(WcmsConnectionConstants.STORAGERESERVOIR_MANDATORY_FIELD_NAME)
+                    .code(WcmsConnectionConstants.SUBUSAGETYPE_INVALID_CODE)
+                    .message(WcmsConnectionConstants.SUBUSAGETYPE_INVALID_ERROR_MESSAGE)
+                    .field(WcmsConnectionConstants.SUBUSAGETYPE_INVALID_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
         }
         
         if(restConnectionService.getStorageReservoirName(waterConnectionRequest).getStorageReservoirs().isEmpty()) { 
         	final ErrorField errorField = ErrorField.builder()
-                    .code(WcmsConnectionConstants.SUBUSAGETYPE_INVALID_CODE)
-                    .message(WcmsConnectionConstants.SUBUSAGETYPE_INVALID_ERROR_MESSAGE)
-                    .field(WcmsConnectionConstants.SUBUSAGETYPE_INVALID_FIELD_NAME)
+        			.code(WcmsConnectionConstants.STORAGERESERVOIR_MANDATORY_CODE)
+                    .message(WcmsConnectionConstants.STORAGERESERVOIR_MANDATORY_ERROR_MESSAGE)
+                    .field(WcmsConnectionConstants.STORAGERESERVOIR_MANDATORY_FIELD_NAME)
                     .build();
             errorFields.add(errorField);
         }

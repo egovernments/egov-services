@@ -147,30 +147,36 @@ public class RestConnectionService {
         return storageResponse;
     }
     
-    public UsageTypeResponse getUsageTypeName(WaterConnectionReq waterConnectionRequest) {
-        StringBuilder url = new StringBuilder();
-        url.append(configurationManager.getWaterMasterServiceBasePathTopic())
-                .append(configurationManager.getUsageTypeSearchPathTopic());
-        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(waterConnectionRequest.getRequestInfo()).build();
-        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
-        UsageTypeResponse usageResponse = new RestTemplate().postForObject(url.toString(), request, UsageTypeResponse.class,
-                waterConnectionRequest.getConnection().getUsageType(), waterConnectionRequest.getConnection().getTenantId());
-        if (usageResponse != null && usageResponse.getUsageTypes() != null && !usageResponse.getUsageTypes().isEmpty()) {
-            waterConnectionRequest.getConnection()
-                    .setUsageTypeId(usageResponse.getUsageTypes() != null && usageResponse.getUsageTypes().get(0) != null
-                            ? String.valueOf(usageResponse.getUsageTypes().get(0).getId()) : "");
-        }
-        return usageResponse;
-    }
+	public UsageTypeResponse getUsageTypeName(WaterConnectionReq waterConnectionRequest) {
+		StringBuilder url = new StringBuilder();
+		url.append(configurationManager.getWaterMasterServiceBasePathTopic())
+				.append(configurationManager.getUsageTypeSearchPathTopic());
+		RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(waterConnectionRequest.getRequestInfo())
+				.build();
+		final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
+		UsageTypeResponse response = new RestTemplate().postForObject(url.toString(), request, UsageTypeResponse.class,
+				waterConnectionRequest.getConnection().getUsageType(),
+				waterConnectionRequest.getConnection().getTenantId());
+		if (response != null && response.getUsageTypes() != null && !response.getUsageTypes().isEmpty()) {
+			waterConnectionRequest.getConnection()
+					.setUsageTypeId(response.getUsageTypes() != null && response.getUsageTypes().get(0) != null
+							? String.valueOf(response.getUsageTypes().get(0).getId()) : "");
+			waterConnectionRequest.getConnection()
+					.setUsageTypeCode(response.getUsageTypes() != null && response.getUsageTypes().get(0) != null
+							? response.getUsageTypes().get(0).getCode() : "");
+		}
+		return response;
+	}
     
     public UsageTypeResponse getSubUsageTypeName(WaterConnectionReq waterConnectionRequest) {
         StringBuilder url = new StringBuilder();
         url.append(configurationManager.getWaterMasterServiceBasePathTopic())
-                .append(configurationManager.getUsageTypeSearchPathTopic());
+                .append(configurationManager.getSubUsageTypeSearchPathTopic());
         RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(waterConnectionRequest.getRequestInfo()).build();
         final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
         UsageTypeResponse subUsageResponse = new RestTemplate().postForObject(url.toString(), request, UsageTypeResponse.class,
-                waterConnectionRequest.getConnection().getSubUsageType(), waterConnectionRequest.getConnection().getTenantId());
+                waterConnectionRequest.getConnection().getSubUsageType(), waterConnectionRequest.getConnection().getTenantId(),
+                waterConnectionRequest.getConnection().getUsageTypeCode());
         if (subUsageResponse != null && subUsageResponse.getUsageTypes() != null && !subUsageResponse.getUsageTypes().isEmpty()) {
             waterConnectionRequest.getConnection()
                     .setSubUsageTypeId(subUsageResponse.getUsageTypes() != null && subUsageResponse.getUsageTypes().get(0) != null

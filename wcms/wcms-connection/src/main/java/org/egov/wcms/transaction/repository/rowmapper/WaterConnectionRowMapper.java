@@ -216,7 +216,8 @@ public class WaterConnectionRowMapper {
 		try {
 			connection.setId(rs.getLong("conn_id"));
 			connection.setTenantId(rs.getString("conn_tenant"));
-			connection.setUsageType(rs.getString("conn_usgtype"));
+			connection.setUsageType(rs.getString("conn_usgtypename"));
+			connection.setUsageTypeId(rs.getString("conn_usgtype"));
 			connection.setConnectionType(rs.getString("conn_connType"));
 			connection.setBillingType(rs.getString("conn_billtype"));
 			connection.setConnectionStatus(rs.getString("conn_constatus"));
@@ -263,8 +264,10 @@ public class WaterConnectionRowMapper {
 			if (null != execDate) {
 				connection.setExecutionDate(execDate);
 			}
-			if(null != rs.getString("subusagetype") && !rs.getString("subusagetype").isEmpty())
-					connection.setSubUsageTypeId(rs.getString("subusagetype"));
+			if(null != rs.getString("conn_subusgtypename") && !rs.getString("conn_subusgtypename").isEmpty()) { 
+				connection.setSubUsageTypeId(rs.getString("subusagetype"));
+				connection.setSubUsageType(rs.getString("conn_subusgtypename"));
+			}
 			if(rs.getString("conn_billtype").equals(METERED) && rs.getBoolean("conn_islegacy")) { 
 				Meter meter = Meter.builder().meterMake(rs.getString("metermake"))
 						.meterCost(rs.getString("metercost"))

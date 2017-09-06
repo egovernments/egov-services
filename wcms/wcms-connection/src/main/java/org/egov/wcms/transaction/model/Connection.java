@@ -121,6 +121,8 @@ public class Connection {
     
     private String usageTypeId;
     
+    private String usageTypeCode;
+    
     @NotNull
     private String subUsageType;
 

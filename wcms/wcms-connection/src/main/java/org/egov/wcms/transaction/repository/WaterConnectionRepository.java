@@ -65,22 +65,17 @@ import org.egov.wcms.transaction.repository.rowmapper.ConnectionDocumentRowMappe
 import org.egov.wcms.transaction.repository.rowmapper.UpdateWaterConnectionRowMapper;
 import org.egov.wcms.transaction.repository.rowmapper.WaterConnectionRowMapper;
 import org.egov.wcms.transaction.repository.rowmapper.WaterConnectionRowMapper.ConnectionMeterRowMapper;
-import org.egov.wcms.transaction.web.contract.CommonResponseInfo;
-import org.egov.wcms.transaction.web.contract.RequestInfoWrapper;
-import org.egov.wcms.transaction.web.contract.UsageTypeResponse;
 import org.egov.wcms.transaction.web.contract.WaterConnectionGetReq;
 import org.egov.wcms.transaction.web.contract.WaterConnectionReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.client.RestTemplate;
 
 @Repository
 public class WaterConnectionRepository {
@@ -553,7 +548,6 @@ public class WaterConnectionRepository {
 		} catch (Exception ex) {
 			LOGGER.error("Exception encountered while fetching the Connection list without Property : " + ex);
 		}
-		resolvePropertyUsageTypeNames(waterConnectionGetReq.getTenantId(), connectionList, requestInfo);
 		// This condition is added to fetch the Meter Details only in single view case. Not in fetch all case 
 		if(connectionList.size() == 1) { 
 			getConnectionMeterDetails(connectionList);
@@ -595,7 +589,7 @@ public class WaterConnectionRepository {
 	}
 	
 	
-	private void resolvePropertyUsageTypeNames(String tenantId, List<Connection> connectionList, RequestInfo requestInfo) {
+/*	private void resolvePropertyUsageTypeNames(String tenantId, List<Connection> connectionList, RequestInfo requestInfo) {
 		CommonResponseInfo usage = new CommonResponseInfo();  
 		try {
 			Map<String, CommonResponseInfo> usagTypeMap = getUsageNameFromPTModule(tenantId, requestInfo);
@@ -615,7 +609,7 @@ public class WaterConnectionRepository {
 	}
 	
 	public Map<String, CommonResponseInfo> getUsageNameFromPTModule(final String tenantId, RequestInfo requestInfo) {
-		StringBuilder url = new StringBuilder(configurationManager.getSubUsageTypeSearchPathTopic()); 
+		StringBuilder url = new StringBuilder(configurationManager.getWaterMasterServiceBasePathTopic()).append(configurationManager.getSubUsageTypeSearchPathTopic()); 
 		Map<String, CommonResponseInfo> usagTypeMap = new HashMap<>();
 		final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
 		final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
@@ -630,7 +624,7 @@ public class WaterConnectionRepository {
 			}
 		}
 		return usagTypeMap;
-	}
+	}*/
     
     public boolean persistEstimationNoticeLog(EstimationNotice estimationNotice, long connectionId, String tenantId) { 
     	String persistsEstimationNoticeQuery = WaterConnectionQueryBuilder.persistEstimationNoticeQuery();

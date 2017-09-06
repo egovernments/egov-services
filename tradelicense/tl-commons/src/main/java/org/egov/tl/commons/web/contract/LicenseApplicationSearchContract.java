@@ -49,6 +49,4 @@ public class LicenseApplicationSearchContract {
 
 	@JsonProperty("supportDocuments")
 	private List<SupportDocumentSearchContract> supportDocuments;
-	
-	private WorkFlowDetails workFlowDetails;
 }

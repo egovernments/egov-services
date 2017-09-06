@@ -88,7 +88,7 @@ public class TradeLicenseServiceValidator {
 			if (tradeLicense.getIsLegacy()) {
 				validateTradeValidFromDate(tradeLicense, requestInfo);
 			}
-			// checking the eistance and uniqueness of licensenumber
+			// checking the existance and uniqueness of licensenumber
 			validateLicenseNumber(tradeLicense, isNewRecord, requestInfo);
 			// checking the agreement details
 			validateLicenseAgreementDetails(tradeLicense, requestInfo);
@@ -214,7 +214,10 @@ public class TradeLicenseServiceValidator {
 			} else if (tradeLicense.getApplication().getApplicationType() == null) {
 				throw new InvalidInputException(propertiesManager.getApplicationTypeMissingErr(), requestInfo);
 			}
-
+			if (tradeLicense.getApplication() != null && tradeLicense.getApplication().getApplicationNumber() != null
+					&& !tradeLicense.getApplication().getApplicationNumber().isEmpty()) {
+				tradeLicenseRepository.validateUniqueApplicationNumber(tradeLicense, isNewRecord, requestInfo);
+			}
 		}
 	}
 
@@ -412,19 +415,22 @@ public class TradeLicenseServiceValidator {
 		// supporting documents validation
 		if (!tradeLicense.getIsLegacy()) {
 
-			DocumentTypeV2Response documentTypeResponse = documentTypeContractRepository
+			DocumentTypeV2Response documentTypeMandatoryResponse = documentTypeContractRepository
 					.findTradeMandatoryDocuments(tradeLicense, requestInfoWrapper);
 
-			if (documentTypeResponse != null && documentTypeResponse.getDocumentTypes() != null
-					&& documentTypeResponse.getDocumentTypes().size() > 0) {
+			// validating mandatory documents existence
+			if (documentTypeMandatoryResponse != null && documentTypeMandatoryResponse.getDocumentTypes() != null
+					&& documentTypeMandatoryResponse.getDocumentTypes().size() > 0) {
 
-				for (DocumentTypeContract documentTypeContract : documentTypeResponse.getDocumentTypes()) {
+				for (DocumentTypeContract documentTypeContract : documentTypeMandatoryResponse.getDocumentTypes()) {
 
 					Boolean isMandatoryDocumentExists = Boolean.FALSE;
 
-					if (tradeLicense.getSupportDocuments() != null && tradeLicense.getSupportDocuments().size() > 0) {
+					if (tradeLicense.getApplication() != null
+							&& tradeLicense.getApplication().getSupportDocuments() != null
+							&& tradeLicense.getApplication().getSupportDocuments().size() > 0) {
 
-						for (SupportDocument supportDocument : tradeLicense.getSupportDocuments()) {
+						for (SupportDocument supportDocument : tradeLicense.getApplication().getSupportDocuments()) {
 
 							if (documentTypeContract.getId() == supportDocument.getDocumentTypeId()) {
 
@@ -444,22 +450,45 @@ public class TradeLicenseServiceValidator {
 					}
 				}
 			}
-		}
 
-		if (tradeLicense.getSupportDocuments() != null && tradeLicense.getSupportDocuments().size() > 0) {
-			for (SupportDocument supportDocument : tradeLicense.getSupportDocuments()) {
+			// validating request supporting documents
+			if (tradeLicense.getApplication() != null && tradeLicense.getApplication().getSupportDocuments() != null
+					&& tradeLicense.getApplication().getSupportDocuments().size() > 0) {
 
-				DocumentTypeV2Response documentTypeResponse = documentTypeContractRepository
-						.findByIdAndTlValues(tradeLicense, supportDocument, requestInfoWrapper);
+				for (SupportDocument supportDocument : tradeLicense.getApplication().getSupportDocuments()) {
 
-				if (documentTypeResponse == null || documentTypeResponse.getDocumentTypes() == null
-						|| documentTypeResponse.getDocumentTypes().size() == 0) {
+					DocumentTypeV2Response documentTypeResponse = documentTypeContractRepository
+							.findByIdAndTlValues(tradeLicense, supportDocument, requestInfoWrapper);
 
-					throw new InvalidDocumentTypeException(propertiesManager.getDocumentTypeErrorMsg(), requestInfo);
+					if (documentTypeResponse == null || documentTypeResponse.getDocumentTypes() == null
+							|| documentTypeResponse.getDocumentTypes().size() == 0) {
+
+						throw new InvalidDocumentTypeException(propertiesManager.getDocumentTypeErrorMsg(),
+								requestInfo);
+					}
 				}
+
 			}
 
+		} else {
+
+			if (tradeLicense.getSupportDocuments() != null && tradeLicense.getSupportDocuments().size() > 0) {
+				for (SupportDocument supportDocument : tradeLicense.getSupportDocuments()) {
+
+					DocumentTypeV2Response documentTypeResponse = documentTypeContractRepository
+							.findByIdAndTlValues(tradeLicense, supportDocument, requestInfoWrapper);
+
+					if (documentTypeResponse == null || documentTypeResponse.getDocumentTypes() == null
+							|| documentTypeResponse.getDocumentTypes().size() == 0) {
+
+						throw new InvalidDocumentTypeException(propertiesManager.getDocumentTypeErrorMsg(),
+								requestInfo);
+					}
+				}
+
+			}
 		}
+
 	}
 
 	private void validateTradeUomDetails(TradeLicense tradeLicense, RequestInfo requestInfo) {

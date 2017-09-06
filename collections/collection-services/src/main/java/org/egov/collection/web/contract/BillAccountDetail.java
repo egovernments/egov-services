@@ -22,28 +22,6 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class BillAccountDetail   {
     
-        private String billNo;
-
-        private Long billId;
-
-        private Long billYear;
-
-        private Long taxId;
-        
-        private Long billDate;
-        
-        private BigDecimal currDemand;
-
-        private BigDecimal arrDemand;
-
-        private BigDecimal currCollection;
-
-        private BigDecimal arrCollection;
-
-        private BigDecimal currBalance;
-
-        private BigDecimal arrBalance;
-  
 	private String glcode;
 
 	private Integer order;

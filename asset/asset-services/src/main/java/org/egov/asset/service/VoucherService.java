@@ -11,20 +11,24 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.egov.asset.config.ApplicationProperties;
-import org.egov.asset.contract.FunctionResponse;
-import org.egov.asset.contract.FundResponse;
 import org.egov.asset.contract.VoucherRequest;
 import org.egov.asset.contract.VoucherResponse;
+import org.egov.asset.domain.CalculationAssetDetails;
 import org.egov.asset.model.ChartOfAccountContract;
 import org.egov.asset.model.ChartOfAccountContractResponse;
 import org.egov.asset.model.ChartOfAccountDetailContract;
 import org.egov.asset.model.ChartOfAccountDetailContractResponse;
 import org.egov.asset.model.Disposal;
+import org.egov.asset.model.FiscalPeriod;
 import org.egov.asset.model.Function;
+import org.egov.asset.model.Functionary;
 import org.egov.asset.model.Fund;
+import org.egov.asset.model.FundSource;
 import org.egov.asset.model.Revaluation;
+import org.egov.asset.model.Scheme;
+import org.egov.asset.model.SubScheme;
 import org.egov.asset.model.Voucher;
-import org.egov.asset.model.VouchercreateAccountCodeDetails;
+import org.egov.asset.model.VoucherAccountCodeDetails;
 import org.egov.asset.model.enums.AssetConfigurationKeys;
 import org.egov.asset.model.enums.AssetFinancialParams;
 import org.egov.asset.model.enums.VoucherType;
@@ -109,54 +113,10 @@ public class VoucherService {
         }
     }
 
-    public VoucherRequest createVoucherRequest(final Object entity, final Fund fund, final Long depratmentId,
-            final List<VouchercreateAccountCodeDetails> accountCodeDetails, final RequestInfo requestInfo,
-            final String tenantId) {
-        final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+    public VoucherAccountCodeDetails getGlCodes(final RequestInfo requestInfo, final String tenantId,
+            final Long accountId, final BigDecimal amount, final Boolean iscredit, final Boolean isDebit) {
 
-        final Voucher voucher = new Voucher();
-        voucher.setType(VoucherType.JOURNALVOUCHER.toString());
-        voucher.setVoucherDate(sdf.format(new Date()));
-        voucher.setLedgers(accountCodeDetails);
-        voucher.setDepartment(depratmentId);
-        voucher.setFund(fund);
-
-        log.debug("Entity :: " + entity);
-
-        if (entity instanceof Revaluation) {
-            log.info("Setting Revaluation Voucher Name and Description ");
-            voucher.setName(assetConfigurationService
-                    .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.REVALUATIONVOUCHERNAME, tenantId));
-            voucher.setDescription(assetConfigurationService.getAssetConfigValueByKeyAndTenantId(
-                    AssetConfigurationKeys.REVALUATIONVOUCHERDESCRIPTION, tenantId));
-        } else if (entity instanceof Disposal) {
-            log.info("Setting Disposal Voucher Name and Description ");
-            voucher.setName(assetConfigurationService
-                    .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DISPOSALVOUCHERNAME, tenantId));
-            voucher.setDescription(assetConfigurationService
-                    .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DISPOSALVOUCHERDESCRIPTION, tenantId));
-        } else {
-            log.info("Setting Depreciation Voucher Name and Description ");
-            voucher.setName(assetConfigurationService
-                    .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DEPRECIATIONVOUCHERNAME, tenantId));
-            voucher.setDescription(assetConfigurationService.getAssetConfigValueByKeyAndTenantId(
-                    AssetConfigurationKeys.DEPRECIATIONVOUCHERDESCRIPTION, tenantId));
-        }
-        log.debug("Voucher :: " + voucher);
-        final List<Voucher> vouchers = new ArrayList<>();
-        vouchers.add(voucher);
-
-        final VoucherRequest voucherRequest = new VoucherRequest();
-        voucherRequest.setRequestInfo(requestInfo);
-        voucherRequest.setVouchers(vouchers);
-        return voucherRequest;
-    }
-
-    public VouchercreateAccountCodeDetails getGlCodes(final RequestInfo requestInfo, final String tenantId,
-            final Long accountId, final BigDecimal amount, final Function function, final Boolean iscredit,
-            final Boolean isDebit) {
-
-        final VouchercreateAccountCodeDetails debitAccountCodeDetail = new VouchercreateAccountCodeDetails();
+        final VoucherAccountCodeDetails debitAccountCodeDetail = new VoucherAccountCodeDetails();
         final List<ChartOfAccountContract> chartOfAccounts = getChartOfAccounts(requestInfo, tenantId, accountId);
 
         if (!chartOfAccounts.isEmpty()) {
@@ -174,7 +134,6 @@ public class VoucherService {
         if (isDebit)
             debitAccountCodeDetail.setDebitAmount(amount);
 
-        debitAccountCodeDetail.setFunction(function);
         log.debug("Account Code Detail :: " + debitAccountCodeDetail);
 
         return debitAccountCodeDetail;
@@ -215,79 +174,195 @@ public class VoucherService {
             throw new RuntimeException("Subledger Details Should not be present for Chart Of Accounts");
     }
 
-    public FundResponse getFundData(final RequestInfo requestInfo, final String tenantId, final Long fundId) {
-        final String url = applicationProperties.getEgfMastersHost()
-                + applicationProperties.getEgfServiceFundsSearchPath() + "?&tenantId=" + tenantId + "&id=" + fundId;
-        log.debug("fund search url :: " + url);
-        final FundResponse fundResponse = restTemplate.postForObject(url, requestInfo, FundResponse.class);
-        log.debug("fund Response :: " + fundResponse);
-        return fundResponse;
+    private Voucher generateVoucher(final Long departmentId) {
+        final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+
+        final Voucher voucher = new Voucher();
+        voucher.setType(VoucherType.JOURNALVOUCHER.toString());
+        voucher.setVoucherDate(sdf.format(new Date()));
+
+        voucher.setDepartment(departmentId);
+        return voucher;
     }
 
-    public FunctionResponse getFunctionData(final RequestInfo requestInfo, final String tenantId,
-            final Long functionId) {
-        final String url = applicationProperties.getEgfMastersHost()
-                + applicationProperties.getEgfServiceFunctionsSearchPath() + "?&tenantId=" + tenantId + "&id="
-                + functionId;
-        log.debug("function search url :: " + url);
-        final FunctionResponse functionResponse = restTemplate.postForObject(url, requestInfo, FunctionResponse.class);
-        log.debug("function Response :: " + functionResponse);
-        return functionResponse;
+    public VoucherRequest createRevaluationVoucherRequest(final RequestInfo requestInfo, final Revaluation revaluation,
+            final List<VoucherAccountCodeDetails> accountCodeDetails, final Long departmentId,
+            final HttpHeaders header) {
+        final VoucherRequest voucherRequest = new VoucherRequest();
+        final List<Voucher> vouchers = new ArrayList<>();
+        final String tenantId = revaluation.getTenantId();
+
+        final Voucher voucher = generateVoucher(departmentId);
+
+        voucher.setName(assetConfigurationService
+                .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.REVALUATIONVOUCHERNAME, tenantId));
+        voucher.setDescription(assetConfigurationService
+                .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.REVALUATIONVOUCHERDESCRIPTION, tenantId));
+
+        final String source = header.getOrigin() + "/asset-web/app/asset/create-asset-revaluation.html?id="
+                + revaluation.getId() + "&type=view";
+
+        log.debug("Revaluation Source :: " + source);
+        voucher.setSource(source);
+
+        final Function function = new Function();
+        function.setId(revaluation.getFunction());
+
+        final Fund fund = new Fund();
+        fund.setId(revaluation.getFund());
+
+        for (final VoucherAccountCodeDetails acd : accountCodeDetails)
+            acd.setFunction(function);
+
+        voucher.setLedgers(accountCodeDetails);
+
+        voucher.setFund(fund);
+
+        log.debug("Revaluation Voucher :: " + voucher);
+
+        vouchers.add(voucher);
+
+        voucherRequest.setRequestInfo(requestInfo);
+        voucherRequest.setVouchers(vouchers);
+
+        return voucherRequest;
     }
 
-    public Fund getFundFromVoucherMap(final RequestInfo requestInfo, final String tenantId) {
-        Map<String, String> voucherParamsMap = null;
-        try {
-            voucherParamsMap = getVoucherParamsMap(tenantId);
-        } catch (final Exception e) {
-            e.printStackTrace();
-        }
-        final String fundCode = voucherParamsMap.get(AssetFinancialParams.FUND.toString());
-        final String url = applicationProperties.getEgfMastersHost()
-                + applicationProperties.getEgfServiceFundsSearchPath() + "?&tenantId=" + tenantId + "&code=" + fundCode;
-        log.debug("fund search url :: " + url);
-        final FundResponse fundResponse = restTemplate.postForObject(url, requestInfo, FundResponse.class);
-        log.debug("fund Response :: " + fundResponse);
-        final List<Fund> funds = fundResponse.getFunds();
-        if (funds.isEmpty())
-            throw new RuntimeException("Fund Doesn't exists for code :: " + fundCode);
-        else
-            return funds.get(0);
+    public VoucherRequest createDisposalVoucherRequest(final RequestInfo requestInfo, final Disposal disposal,
+            final Long departmentId, final List<VoucherAccountCodeDetails> accountCodeDetails,
+            final HttpHeaders header) {
+        final VoucherRequest voucherRequest = new VoucherRequest();
+        final List<Voucher> vouchers = new ArrayList<>();
+        final String tenantId = disposal.getTenantId();
+
+        final Voucher voucher = generateVoucher(departmentId);
+
+        voucher.setName(assetConfigurationService
+                .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DISPOSALVOUCHERNAME, tenantId));
+        voucher.setDescription(assetConfigurationService
+                .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DISPOSALVOUCHERDESCRIPTION, tenantId));
+
+        final String source = header.getOrigin() + "/asset-web/app/asset/create-asset-sale.html?id=" + disposal.getId()
+                + "&type=view";
         
+        log.debug("Disposal source :: " + source);
+        voucher.setSource(source);
+
+        setFinancialParameters(voucher, accountCodeDetails, tenantId);
+
+        voucher.setLedgers(accountCodeDetails);
+
+        log.debug("Disposal Voucher :: " + voucher);
+
+        vouchers.add(voucher);
+        voucherRequest.setRequestInfo(requestInfo);
+        voucherRequest.setVouchers(vouchers);
+
+        return voucherRequest;
     }
 
-    public Function getFunctionFromVoucherMap(final RequestInfo requestInfo, final String tenantId) {
-        Map<String, String> voucherParamsMap = null;
-        try {
-            voucherParamsMap = getVoucherParamsMap(tenantId);
-        } catch (final Exception e) {
-            e.printStackTrace();
-        }
+    public VoucherRequest createDepreciationVoucherRequest(final RequestInfo requestInfo,
+            final List<CalculationAssetDetails> calculationAssetDetailList, final Long departmentId,
+            final List<VoucherAccountCodeDetails> accountCodeDetails, final String tenantId, final HttpHeaders header) {
 
-        final String functionCode = voucherParamsMap.get(AssetFinancialParams.FUNCTION.toString());
-        final String url = applicationProperties.getEgfMastersHost()
-                + applicationProperties.getEgfServiceFunctionsSearchPath() + "?&tenantId=" + tenantId + "&code="
-                + functionCode;
-        log.debug("function search url :: " + url);
-        final FunctionResponse functionResponse = restTemplate.postForObject(url, requestInfo, FunctionResponse.class);
-        log.debug("function Response :: " + functionResponse);
-        final List<Function> functions = functionResponse.getFunctions();
-        if (functions.isEmpty())
-            throw new RuntimeException("Function Doesn't exists for code :: " + functionCode);
-        else
-            return functions.get(0);
+        final VoucherRequest voucherRequest = new VoucherRequest();
+        final List<Voucher> vouchers = new ArrayList<>();
+
+        final Voucher voucher = generateVoucher(departmentId);
+
+        voucher.setName(assetConfigurationService
+                .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DEPRECIATIONVOUCHERNAME, tenantId));
+        voucher.setDescription(assetConfigurationService
+                .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DEPRECIATIONVOUCHERDESCRIPTION, tenantId));
+
+        setFinancialParameters(voucher, accountCodeDetails, tenantId);
+
+        voucher.setLedgers(accountCodeDetails);
+
+        log.debug("Depreciation Voucher :: " + voucher);
+
+        vouchers.add(voucher);
+
+        voucherRequest.setRequestInfo(requestInfo);
+        voucherRequest.setVouchers(vouchers);
+
+        return voucherRequest;
     }
 
-    public HashMap<String, String> getVoucherParamsMap(final String tenantId)
-            throws IOException, JsonParseException, JsonMappingException {
-        final String voucherParams = assetConfigurationService
+    public void setFinancialParameters(final Voucher voucher, final List<VoucherAccountCodeDetails> accountCodeDetails,
+            final String tenantId) {
+
+        final String voucherParamsConfig = assetConfigurationService
                 .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.VOUCHERPARAMS, tenantId);
 
-        log.debug("Voucher Parameters :: " + voucherParams);
+        log.debug("Voucher Parameters From Config :: " + voucherParamsConfig);
         final TypeReference<HashMap<String, String>> typeRef = new TypeReference<HashMap<String, String>>() {
         };
 
-        return mapper.readValue(voucherParams, typeRef);
+        Map<String, String> voucherParams = null;
+        try {
+            voucherParams = mapper.readValue(voucherParamsConfig, typeRef);
+        } catch (final JsonParseException e) {
+            e.printStackTrace();
+        } catch (final JsonMappingException e) {
+            e.printStackTrace();
+        } catch (final IOException e) {
+            e.printStackTrace();
+        }
+
+        log.debug("Voucher Parameters :: " + voucherParams);
+
+        final String fundCode = voucherParams.get(AssetFinancialParams.FUND.toString());
+        final String functionCode = voucherParams.get(AssetFinancialParams.FUNCTION);
+        final String functionaryCode = voucherParams.get(AssetFinancialParams.FUNCTIONARY);
+        final String schemeCode = voucherParams.get(AssetFinancialParams.SCHEME);
+        final String subSchemeCode = voucherParams.get(AssetFinancialParams.SUBSCHEME);
+        final String fundSourceCode = voucherParams.get(AssetFinancialParams.FUNDSOURCE);
+        final String fiscalName = voucherParams.get(AssetFinancialParams.FISCAL);
+
+        if (fundCode != null) {
+            final Fund fund = new Fund();
+            fund.setCode(fundCode);
+            voucher.setFund(fund);
+        }
+
+        if (functionaryCode != null) {
+            final Functionary functionary = new Functionary();
+            functionary.setCode(functionaryCode);
+            voucher.setFunctionary(functionary);
+        }
+
+        if (schemeCode != null) {
+            final Scheme scheme = new Scheme();
+            scheme.setCode(schemeCode);
+            voucher.setScheme(scheme);
+        }
+
+        if (subSchemeCode != null) {
+            final SubScheme subScheme = new SubScheme();
+            subScheme.setCode(subSchemeCode);
+            voucher.setSubScheme(subScheme);
+        }
+
+        if (fundSourceCode != null) {
+            final FundSource fundSource = new FundSource();
+            fundSource.setCode(fundSourceCode);
+            voucher.setFundsource(fundSource);
+        }
+
+        if (fiscalName != null) {
+            final FiscalPeriod fiscalPeriod = new FiscalPeriod();
+            fiscalPeriod.setName(fiscalName);
+            voucher.setFiscalPeriod(fiscalPeriod);
+        }
+
+        if (functionCode != null) {
+            final Function function = new Function();
+            function.setCode(functionCode);
+
+            for (final VoucherAccountCodeDetails acd : accountCodeDetails)
+                acd.setFunction(function);
+        }
     }
 
 }

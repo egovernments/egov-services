@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.asset.config.ApplicationProperties;
-import org.egov.asset.contract.FunctionResponse;
-import org.egov.asset.contract.FundResponse;
 import org.egov.asset.contract.RevaluationRequest;
 import org.egov.asset.contract.RevaluationResponse;
 import org.egov.asset.contract.VoucherRequest;
@@ -28,7 +26,7 @@ import org.egov.asset.model.Location;
 import org.egov.asset.model.Revaluation;
 import org.egov.asset.model.RevaluationCriteria;
 import org.egov.asset.model.Voucher;
-import org.egov.asset.model.VouchercreateAccountCodeDetails;
+import org.egov.asset.model.VoucherAccountCodeDetails;
 import org.egov.asset.model.enums.ModeOfAcquisition;
 import org.egov.asset.model.enums.Sequence;
 import org.egov.asset.model.enums.Status;
@@ -137,17 +135,11 @@ public class RevaluationServiceTest {
         final HttpHeaders headers = getHttpHeaders();
         final Asset asset = getAsset();
 
-        final FunctionResponse functionResponse = getFunctionResponse();
-        final FundResponse fundResponse = getFundResponse();
         final VoucherRequest voucherRequest = getVoucherRequest();
 
         when(assetService.getAsset(any(String.class), any(Long.class), any(RequestInfo.class))).thenReturn(asset);
-        when(voucherService.getFunctionData(any(RequestInfo.class), any(String.class), any(Long.class)))
-                .thenReturn(functionResponse);
-        when(voucherService.getFundData(any(RequestInfo.class), any(String.class), any(Long.class)))
-                .thenReturn(fundResponse);
-        when(voucherService.createVoucherRequest(any(Object.class), any(Fund.class), any(Long.class), any(List.class),
-                any(RequestInfo.class), any(String.class))).thenReturn(voucherRequest);
+        when(voucherService.createRevaluationVoucherRequest(any(RequestInfo.class), any(Revaluation.class),
+                any(List.class), any(Long.class), any(HttpHeaders.class))).thenReturn(voucherRequest);
         revaluationService.createVoucherForRevaluation(revaluationRequest, headers);
     }
 
@@ -206,15 +198,15 @@ public class RevaluationServiceTest {
         return null;
     }
 
-    private List<VouchercreateAccountCodeDetails> getLedgers() {
-        final List<VouchercreateAccountCodeDetails> ledgers = new ArrayList<>();
-        final VouchercreateAccountCodeDetails creditAccountDetails = new VouchercreateAccountCodeDetails();
+    private List<VoucherAccountCodeDetails> getLedgers() {
+        final List<VoucherAccountCodeDetails> ledgers = new ArrayList<>();
+        final VoucherAccountCodeDetails creditAccountDetails = new VoucherAccountCodeDetails();
         creditAccountDetails.setCreditAmount(new BigDecimal("500"));
         creditAccountDetails.setDebitAmount(BigDecimal.ZERO);
         creditAccountDetails.setFunction(getFunction());
         creditAccountDetails.setGlcode("144005");
         creditAccountDetails.setSubledgerDetails(null);
-        final VouchercreateAccountCodeDetails debitAccountDetails = new VouchercreateAccountCodeDetails();
+        final VoucherAccountCodeDetails debitAccountDetails = new VoucherAccountCodeDetails();
         debitAccountDetails.setCreditAmount(BigDecimal.ZERO);
         debitAccountDetails.setDebitAmount(new BigDecimal("500"));
         debitAccountDetails.setFunction(getFunction());
@@ -223,18 +215,6 @@ public class RevaluationServiceTest {
         ledgers.add(creditAccountDetails);
         ledgers.add(debitAccountDetails);
         return ledgers;
-    }
-
-    private FundResponse getFundResponse() {
-        final FundResponse fundResponse = new FundResponse();
-        final List<Fund> funds = new ArrayList<>();
-        final Fund fund = getFund();
-        funds.add(fund);
-        fundResponse.setFunds(funds);
-        fundResponse.setFund(null);
-        fundResponse.setPage(null);
-        fundResponse.setResponseInfo(null);
-        return fundResponse;
     }
 
     private Fund getFund() {
@@ -247,18 +227,6 @@ public class RevaluationServiceTest {
         fund.setLevel(null);
         fund.setParentId(null);
         return fund;
-    }
-
-    private FunctionResponse getFunctionResponse() {
-        final FunctionResponse functionResponse = new FunctionResponse();
-        final List<Function> functions = new ArrayList<>();
-        final Function function = getFunction();
-        functions.add(function);
-        functionResponse.setFunctions(functions);
-        functionResponse.setFunction(null);
-        functionResponse.setPage(null);
-        functionResponse.setResponseInfo(null);
-        return functionResponse;
     }
 
     private Function getFunction() {

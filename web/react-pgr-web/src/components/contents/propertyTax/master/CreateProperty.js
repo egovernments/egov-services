@@ -18,7 +18,6 @@ import Checkbox from 'material-ui/Checkbox';
 import RaisedButton from 'material-ui/RaisedButton';
 import {translate} from '../../../common/common';
 import Api from '../../../../api/api';
-
 import OwnerDetails from './propertyTax/OwnerDetails';
 import CreateNewProperty from './propertyTax/CreateNewProperty';
 import PropertyAddress from './propertyTax/PropertyAddress';
@@ -175,13 +174,11 @@ class CreateProperty extends Component {
       revanue:[],
       election:[],
       usages:[],
+      tenant:[],
 	  ack:''
     }
  }
   
-
-
-
   componentWillMount() {
 
 
@@ -240,8 +237,18 @@ class CreateProperty extends Component {
             zone : []
           })
           console.log(err)
+        })		
+
+		var userRequest = JSON.parse(localStorage.getItem("userRequest"));
+        var tenantQuery = {
+        		code: userRequest.tenantId || 'default',
+        }
+
+        Api.commonApiPost('tenant/v1/tenant/_search',tenantQuery).then((res)=>{
+        	currentThis.setState({ tenant: res.tenant })
+        }).catch((err)=>{
+        	currentThis.setState({ tenant: [] })
         })
-				
   }
 
   componentWillUnmount() {
@@ -377,7 +384,7 @@ createPropertyTax = () => {
 					"addressLine1": createProperty.locality || null,
 					"addressLine2": null,
 					"landmark": null,
-					"city": "Roha",
+					"city": currentThis.state.tenant[0].city.name || null,
 					"pincode": createProperty.pin || null,
 					"detail": null,
 					"auditDetails": {
@@ -418,20 +425,20 @@ createPropertyTax = () => {
 					"wallType": (createProperty.propertyType != 'VACANT_LAND' ? (createProperty.wallType || null) : null),
 					"floors":createProperty.floorsArr || null,
 					"factors": [{
-								"name": "TOILET",
-								"value": createProperty.toiletFactor || null
+									"name": "TOILET",
+									"value": createProperty.toiletFactor || null
 								},
 								{
-								"name": "ROAD",
-								"value": createProperty.roadFactor || null
+									"name": "ROAD",
+									"value": createProperty.roadFactor || null
 								},
 								{
-								"name": "LIFT",
-								"value": createProperty.liftFactor || null
+									"name": "LIFT",
+									"value": createProperty.liftFactor || null
 								},
 								{
-								"name": "PARKING",
-								"value": createProperty.parkingFactor || null
+									"name": "PARKING",
+									"value": createProperty.parkingFactor || null
 								}
 								],
 					"documents": [],
@@ -711,7 +718,8 @@ const mapDispatchToProps = dispatch => ({
           current: [],
           required: ['occupierName','annualRent', 'manualArv', 'length', 'width', 'occupancyCertiNumber', 'buildingCost', 'landCost',]
         }
-      }
+      },
+      isPrimaryOwner : 'PrimaryOwner'
     });
   },
   handleChange: (e, property, isRequired, pattern) => {

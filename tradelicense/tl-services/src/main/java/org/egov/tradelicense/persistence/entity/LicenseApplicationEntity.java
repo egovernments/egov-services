@@ -58,9 +58,13 @@ public class LicenseApplicationEntity {
 		AuditDetails auditDetails = new AuditDetails();
 		
 		licenseApplication.setTenantId(this.tenantId );
+		
 		licenseApplication.setApplicationNumber(this.applicationNumber);
+		
 		licenseApplication.setStatus(this.status);
+		
 		licenseApplication.setState_id(this.state_id);
+		
 		licenseApplication.setApplicationType(this.applicationType);
 		
 		if (this.applicationDate != null) {
@@ -69,6 +73,7 @@ public class LicenseApplicationEntity {
 		}
 		
 		licenseApplication.setFieldInspectionReport(this.fieldInspectionReport);
+		
 		licenseApplication.setLicenseFee( this.licenseFee);
 		
 		
@@ -107,6 +112,7 @@ public class LicenseApplicationEntity {
 		
 		return licenseApplication;
 	}
+	
 	public LicenseApplicationEntity toEntity(LicenseApplication licenseApplication){
 		
         this.tenantId = licenseApplication.getTenantId();
@@ -116,9 +122,9 @@ public class LicenseApplicationEntity {
 		this.setApplicationNumber( licenseApplication.getApplicationNumber());
 		
 		if( licenseApplication.getApplicationType() != null ){
+			
 			this.setApplicationType( licenseApplication.getApplicationType().toString());
 		}
-		
 		
 		this.setStatus( licenseApplication.getStatus() == null ? null : licenseApplication.getStatus().toString());
 		
@@ -128,43 +134,20 @@ public class LicenseApplicationEntity {
 
 			this.setApplicationDate(new Timestamp(licenseApplication.getApplicationDate()));
 		}
+		
 		this.setLicenseFee(licenseApplication.getLicenseFee());
+		
 		this.setFieldInspectionReport(licenseApplication.getFieldInspectionReport());
+		
 		this.setLicenseId( licenseApplication.getLicenseId());
 		
 		this.setCreatedBy( licenseApplication.getAuditDetails() == null ? null : licenseApplication.getAuditDetails().getCreatedBy() );
+		
 		this.setCreatedTime(  licenseApplication.getAuditDetails() == null ? System.currentTimeMillis() : licenseApplication.getAuditDetails().getCreatedTime());
 		
 		this.setLastModifiedBy(licenseApplication.getAuditDetails() == null ? null : licenseApplication.getAuditDetails().getLastModifiedBy());
+		
 		this.setLastModifiedTime(licenseApplication.getAuditDetails() == null ? System.currentTimeMillis() : licenseApplication.getAuditDetails().getLastModifiedTime());
-		
-		return this;
-	}
-	
-	public LicenseApplicationEntity toAppEntity(TradeLicenseEntity license){
-		
-		this.tenantId = license.getTenantId();
-		
-		this.setApplicationNumber( license.getApplicationNumber());
-		
-		if(license.getApplicationType() != null){
-			this.setApplicationType( license.getApplicationType().toString());
-		}
-		
-		if(license.getApplicationStatus() != null){
-			this.setStatus( license.getApplicationStatus().toString());
-		}
-		
-//		this.setApplicationDate( license.getApplicationDate());
-		this.applicationDate = license.getApplicationDate();
-		this.state_id = license.getStateId();
-		this.setLicenseId( license.getId());
-		
-		this.setCreatedBy( license.getCreatedBy());
-		this.setCreatedTime( license.getCreatedTime());
-		
-		this.setLastModifiedBy( license.getLastModifiedBy());
-		this.setLastModifiedTime( license.getLastModifiedTime());
 		
 		return this;
 	}

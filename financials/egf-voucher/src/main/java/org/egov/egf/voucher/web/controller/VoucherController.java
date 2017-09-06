@@ -144,6 +144,46 @@ public class VoucherController {
         return response;
 
     }
+    
+    @PostMapping("/_reverse")
+    @ResponseStatus(HttpStatus.CREATED)
+    public VoucherResponse reverse(@RequestBody VoucherRequest voucherRequest, BindingResult errors) {
+        if (errors.hasErrors()) {
+            throw new CustomBindException(errors);
+        }
+
+        ModelMapper model = new ModelMapper();
+        VoucherResponse voucherResponse = new VoucherResponse();
+        voucherResponse.setResponseInfo(getResponseInfo(voucherRequest.getRequestInfo()));
+        List<Voucher> vouchers = new ArrayList<>();
+        Voucher voucher;
+        List<VoucherContract> voucherContracts = new ArrayList<>();
+        VoucherContract contract;
+
+        voucherRequest.getRequestInfo().setAction(Constants.ACTION_CREATE);
+
+        for (VoucherContract voucherContract : voucherRequest.getVouchers()) {
+            voucher = new Voucher();
+            model.map(voucherContract, voucher);
+            voucher.setCreatedDate(new Date());
+            voucher.setCreatedBy(voucherRequest.getRequestInfo().getUserInfo());
+            voucher.setLastModifiedBy(voucherRequest.getRequestInfo().getUserInfo());
+            vouchers.add(voucher);
+        }
+
+        vouchers = voucherService.reverse(vouchers, errors, voucherRequest.getRequestInfo());
+
+        for (Voucher f : vouchers) {
+            contract = new VoucherContract();
+            contract.setCreatedDate(new Date());
+            model.map(f, contract);
+            voucherContracts.add(contract);
+        }
+
+        voucherResponse.setVouchers(voucherContracts);
+
+        return voucherResponse;
+    }
 
     private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
         return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())

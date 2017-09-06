@@ -44,7 +44,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.data.sync.employee.config.PropertiesManager;
 import org.egov.data.sync.employee.service.DataSyncEmployeeService;
+import org.egov.data.sync.employee.service.DataSyncPositionService;
 import org.egov.data.sync.employee.web.contract.EmployeeSyncRequest;
+import org.egov.data.sync.employee.web.contract.PositionSyncRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
@@ -66,6 +68,9 @@ public class DataSyncEmployeeConsumer {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private DataSyncPositionService dataSyncPositionService;
+
     @KafkaListener(topics = {"${kafka.topics.employee.sync.name}"})
     public void listen(Map<String, Object> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         log.info("topic :: " + topic);
@@ -73,4 +78,10 @@ public class DataSyncEmployeeConsumer {
         dataSyncEmployeeService.create(objectMapper.convertValue(record, EmployeeSyncRequest.class));
     }
 
+    @KafkaListener(topics = {"${kafka.topics.position.sync.name}"})
+    public void listenPosition(Map<String, Object> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
+        log.info("topic :: " + topic);
+        log.info("record :: " + record);
+        dataSyncPositionService.create(objectMapper.convertValue(record, PositionSyncRequest.class));
+    }
 }

@@ -41,6 +41,7 @@
 package org.egov.collection.repository;
 
 import lombok.AllArgsConstructor;
+
 import org.egov.collection.config.ApplicationProperties;
 import org.egov.collection.config.CollectionServiceConstants;
 import org.egov.collection.exception.CustomException;
@@ -65,7 +66,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -173,31 +173,9 @@ public class ReceiptRepository {
 
     }
 
-    public List<Receipt> findAllReceiptsByCriteria(
+    public ReceiptCommonModel findAllReceiptsByCriteria(
             ReceiptSearchCriteria receiptSearchCriteria, RequestInfo requestInfo) throws ParseException {
-        ReceiptCommonModel commonModel = new ReceiptCommonModel();
         List<Object> preparedStatementValues = new ArrayList<>();
-        if (receiptSearchCriteria.getIsLegacy()) {
-            List<Object> preparedStatementVal = new ArrayList<>();
-            String legacyReceiptHeaderQuery = receiptDetailQueryBuilder.getLegacyReceiptSearchQuery(receiptSearchCriteria,
-                    preparedStatementVal);
-            String legacyReceiptDetailQuery = receiptDetailQueryBuilder.getLegacyReceiptDetailByLegacyReceiptHeader();
-            List<LegacyReceiptHeader> listOfLegacyReceiptHeader = jdbcTemplate.query(legacyReceiptHeaderQuery,
-                    preparedStatementVal.toArray(),
-                    legacyReceiptHeaderRowMapper);
-            List<LegacyReceiptHeader> listOfLegacyHeaders = new ArrayList<>();
-            for (LegacyReceiptHeader legacyReceiptHeader : listOfLegacyReceiptHeader) {
-                List<Object> receiptDetailsPreparedStatementValues = new ArrayList<>();
-                receiptDetailsPreparedStatementValues.add(receiptSearchCriteria.getTenantId());
-                receiptDetailsPreparedStatementValues.add(legacyReceiptHeader.getId());
-                List<LegacyReceiptDetails> listOfLegacyReceiptDetails = jdbcTemplate.query(legacyReceiptDetailQuery,
-                        receiptDetailsPreparedStatementValues.toArray(), legacyReceiptDetailRowMapper);
-                legacyReceiptHeader.setLegacyReceiptDetails(listOfLegacyReceiptDetails);
-                listOfLegacyHeaders.add(legacyReceiptHeader);
-            }
-            return getReceiptContract(listOfLegacyHeaders);
-
-        }
         String receiptHeaderQuery = receiptDetailQueryBuilder.getQuery(
                 receiptSearchCriteria, preparedStatementValues);
         String receiptDetailsQuery = receiptDetailQueryBuilder.getReceiptDetailByReceiptHeader();
@@ -226,80 +204,7 @@ public class ReceiptRepository {
             receiptHeaders.add(receiptHeader);
         }
 
-        return commonModel.toDomainContract(receiptHeaders);
-    }
-
-    private List<Receipt> getReceiptContract(List<LegacyReceiptHeader> listOfLegacyHeaders) {
-        List<Receipt> receipts = new ArrayList<>();
-        for (LegacyReceiptHeader legacyReceiptHeader : listOfLegacyHeaders) {
-            List<BillAccountDetail> listOfBillAccountDetails = new ArrayList<>();
-            for (LegacyReceiptDetails legacyReceiptDetails : legacyReceiptHeader.getLegacyReceiptDetails())
-
-                listOfBillAccountDetails.add(BillAccountDetail.builder().id(legacyReceiptDetails.getId().toString())
-                        .billNo(legacyReceiptDetails.getBillNo() != null ? legacyReceiptDetails.getBillNo() : "null")
-                        .billId(legacyReceiptDetails.getBillId()).billYear(legacyReceiptDetails.getBillYear())
-                        .billDate(
-                                legacyReceiptDetails.getBillDate() != null ? legacyReceiptDetails.getBillDate().getTime() : null)
-                        .accountDescription(
-                                legacyReceiptDetails.getDescription() != null ? legacyReceiptDetails.getDescription() : "null")
-                        .currDemand(legacyReceiptDetails.getCurrDemand() != null
-                                ? BigDecimal.valueOf(legacyReceiptDetails.getCurrDemand()) : BigDecimal.ZERO)
-                        .arrDemand(legacyReceiptDetails.getArrDemand() != null
-                                ? BigDecimal.valueOf(legacyReceiptDetails.getArrDemand()) : BigDecimal.ZERO)
-                        .currCollection(legacyReceiptDetails.getCurrCollection() != null
-                                ? BigDecimal.valueOf(legacyReceiptDetails.getCurrCollection()) : BigDecimal.ZERO)
-                        .arrCollection(legacyReceiptDetails.getArrCollection() != null
-                                ? BigDecimal.valueOf(legacyReceiptDetails.getArrCollection()) : BigDecimal.ZERO)
-                        .currBalance(legacyReceiptDetails.getCurrBalance() != null
-                                ? BigDecimal.valueOf(legacyReceiptDetails.getCurrBalance()) : BigDecimal.ZERO)
-                        .arrBalance(legacyReceiptDetails.getArrBalance() != null
-                                ? BigDecimal.valueOf(legacyReceiptDetails.getArrBalance()) : BigDecimal.ZERO)
-                        .billDetail(legacyReceiptDetails.getId_receipt_header().toString())
-                        .tenantId(legacyReceiptDetails.getTenantid()).build());
-
-            BillDetail billDetail = BillDetail.builder().id(legacyReceiptHeader.getId().toString())
-                    .receiptNumber(legacyReceiptHeader.getReceiptNo())
-                    .receiptDate(
-                            legacyReceiptHeader.getReceiptDate() != null ? legacyReceiptHeader.getReceiptDate().getTime() : null)
-                    .department(legacyReceiptHeader.getDepartment() != null ? legacyReceiptHeader.getDepartment() : "null")
-                    .businessService(legacyReceiptHeader.getServiceName() != null ? legacyReceiptHeader.getServiceName() : "null")
-                    .consumerNo(legacyReceiptHeader.getConsumerNo() != null ? legacyReceiptHeader.getConsumerNo() : "null")
-                    .consumerName(legacyReceiptHeader.getConsumerName() != null ? legacyReceiptHeader.getConsumerName() : "null")
-                    .totalAmount(legacyReceiptHeader.getTotalAmount() != null
-                            ? BigDecimal.valueOf(legacyReceiptHeader.getTotalAmount()) : BigDecimal.ZERO)
-                    .advanceAmount(legacyReceiptHeader.getAdvanceAmount() != null
-                            ? BigDecimal.valueOf(legacyReceiptHeader.getAdvanceAmount()) : BigDecimal.ZERO)
-                    .adjustmentAmount(legacyReceiptHeader.getAdjustmentAmount() != null
-                            ? BigDecimal.valueOf(legacyReceiptHeader.getAdjustmentAmount()) : BigDecimal.ZERO)
-                    .consumerAddress(
-                            legacyReceiptHeader.getConsumerAddress() != null ? legacyReceiptHeader.getConsumerAddress() : "null")
-                    .bankName(legacyReceiptHeader.getBankName() != null ? legacyReceiptHeader.getBankName() : "null")
-                    .manualReceiptNumber(legacyReceiptHeader.getManualreceiptnumber() != null
-                            ? legacyReceiptHeader.getManualreceiptnumber() : "null")
-                    .manualreceiptDate(legacyReceiptHeader.getManualreceiptDate() != null
-                            ? legacyReceiptHeader.getManualreceiptDate().getTime() : null)
-                    .tenantId(legacyReceiptHeader.getTenantId())
-                    .remarks(legacyReceiptHeader.getRemarks() != null ? legacyReceiptHeader.getRemarks() : "null")
-                    .billAccountDetails(listOfBillAccountDetails).build();
-
-            Bill bill = Bill.builder()
-                    .payeeName(legacyReceiptHeader.getPayeeName() != null ? legacyReceiptHeader.getPayeeName() : "null")
-                    .billDetails(Collections.singletonList(billDetail)).tenantId(legacyReceiptHeader.getTenantId())
-                    .build();
-            InstrumentType type = InstrumentType.builder()
-                    .name(legacyReceiptHeader.getInstrumentType() != null ? legacyReceiptHeader.getInstrumentType() : "null")
-                    .build();
-            Instrument instrument = Instrument.builder()
-                    .instrumentDate(legacyReceiptHeader.getInstrumentDate() != null
-                            ? legacyReceiptHeader.getInstrumentDate().getTime() : null)
-                    .instrumentNumber(
-                            legacyReceiptHeader.getInstrumentNo() != null ? legacyReceiptHeader.getInstrumentNo() : "null")
-                    .instrumentType(type).build();
-            Receipt receipt = Receipt.builder().id(legacyReceiptHeader.getId().toString()).instrument(instrument)
-                    .bill(Arrays.asList(bill)).build();
-            receipts.add(receipt);
-        }
-        return receipts;
+        return new ReceiptCommonModel(receiptHeaders);
     }
 
     public ReceiptReq cancelReceipt(ReceiptReq receiptReq) {
@@ -520,4 +425,129 @@ public class ReceiptRepository {
                 onlineReceiptBatchValues.toArray(new Map[receiptReq.getReceipt().size()]));
         return receiptReq;
     }
+
+    @SuppressWarnings("unchecked")
+    public LegacyReceiptReq pushLegacyReceiptToDB(LegacyReceiptReq legacyReceiptRequest) {
+        logger.info("LegacyReceiptReq:" + legacyReceiptRequest);
+        List<LegacyReceiptHeader> listOflegacyReceiptHeaders = legacyReceiptRequest.getLegacyReceipts();
+        List<LegacyReceiptDetails> listOfLegacyReceiptDetails = new ArrayList<>();
+        String legacyReceiptHeaderQuery = receiptDetailQueryBuilder.getLegacyReceiptHeaderInsertQuery();
+        String legacyReceiptDetailsQuery = receiptDetailQueryBuilder.getLegacyReceiptDetailInsertQuery();
+        for (LegacyReceiptHeader legacyReceiptHeader : listOflegacyReceiptHeaders) {
+            listOfLegacyReceiptDetails.addAll(legacyReceiptHeader.getLegacyReceiptDetails());
+        }
+        List<Map<String, Object>> legacyReceiptValues = new ArrayList<>(listOflegacyReceiptHeaders.size());
+        List<Map<String, Object>> legacyReceiptDetailsValues = new ArrayList<>(listOfLegacyReceiptDetails.size());
+        Long legacyHeaderSeqNumber;
+
+        for (LegacyReceiptHeader legacyReceiptHeader : listOflegacyReceiptHeaders) {
+            String legacyHeaderSeqNumberQuery = receiptDetailQueryBuilder.getLegacyReceiptHeaderSequenceNumber();
+            Map<String, Object> seqNumberMap = new HashMap<>();
+            seqNumberMap.put("seqNumber", LegacyReceiptHeader.SEQ_LEGACY_RECEIPT_HEADER);
+            legacyHeaderSeqNumber = namedParameterJdbcTemplate.queryForObject(legacyHeaderSeqNumberQuery, seqNumberMap,
+                    Long.class);
+            List<String> businessDetailsCode = new ArrayList<>();
+            businessDetailsCode.add(legacyReceiptHeader.getServiceCode());
+            BusinessDetailsResponse detailsResponse = businessDetailsRepository.getBusinessDetails(businessDetailsCode,
+                    legacyReceiptHeader.getTenantId(), legacyReceiptRequest.getRequestInfo());
+            legacyReceiptHeader.setServiceName(detailsResponse.getBusinessDetails().get(0).getName());
+            legacyReceiptValues.add(new MapSqlParameterSource("id", legacyHeaderSeqNumber)
+                    .addValue("receiptno", legacyReceiptHeader.getReceiptNo())
+                    .addValue("receiptdate", legacyReceiptHeader.getReceiptDate())
+                    .addValue("department", legacyReceiptHeader.getDepartment())
+                    .addValue("servicename", legacyReceiptHeader.getServiceName())
+                    .addValue("consumerno", legacyReceiptHeader.getConsumerNo())
+                    .addValue("consumername", legacyReceiptHeader.getConsumerName())
+                    .addValue("totalamount", Double.valueOf(String.valueOf(legacyReceiptHeader.getTotalAmount())))
+                    .addValue("advanceamount", Double.valueOf(String.valueOf(legacyReceiptHeader.getAdvanceAmount())))
+                    .addValue("adjustmentamount", Double.valueOf(String.valueOf(legacyReceiptHeader.getAdjustmentAmount())))
+                    .addValue("consumeraddress", legacyReceiptHeader.getConsumerAddress())
+                    .addValue("payeename", legacyReceiptHeader.getPayeeName())
+                    .addValue("instrumenttype", legacyReceiptHeader.getInstrumentType())
+                    .addValue("instrumentdate", legacyReceiptHeader.getInstrumentDate())
+                    .addValue("instrumentno", legacyReceiptHeader.getInstrumentNo())
+                    .addValue("bankname", legacyReceiptHeader.getBankName())
+                    .addValue("manualreceiptnumber", legacyReceiptHeader.getManualreceiptnumber())
+                    .addValue("manualreceiptdate", legacyReceiptHeader.getManualreceiptDate())
+                    .addValue("tenantid", legacyReceiptHeader.getTenantId())
+                    .addValue("remarks", legacyReceiptHeader.getRemarks())
+                    .getValues());
+            for (LegacyReceiptDetails legacyReceiptDetail : legacyReceiptHeader.getLegacyReceiptDetails()) {
+                String receiptDetailSequenceNumber = receiptDetailQueryBuilder.getSequenceNumberForReceiptDetails();
+                Map<String, Object> detailsParam = new HashMap<>();
+                detailsParam.put("seqNumber", LegacyReceiptDetails.SEQ_LEGACY_RECEIPT_DETAILS);
+                Long sequenceNumberForDetails = namedParameterJdbcTemplate.queryForObject(receiptDetailSequenceNumber,
+                        detailsParam, Long.class);
+                legacyReceiptDetailsValues
+                        .add(new MapSqlParameterSource("id", sequenceNumberForDetails)
+                                .addValue("billno", legacyReceiptDetail.getBillNo())
+                                .addValue("billid", legacyReceiptDetail.getBillId())
+                                .addValue("billyear", legacyReceiptDetail.getBillYear())
+                                .addValue("taxid", legacyReceiptDetail.getTaxId())
+                                .addValue("billdate", legacyReceiptDetail.getBillDate())
+                                .addValue("description", legacyReceiptDetail.getDescription())
+                                .addValue("currdemand",
+                                        Double.valueOf(String.valueOf(legacyReceiptDetail.getCurrDemand())))
+                                .addValue("arrdemand", Double.valueOf(String.valueOf(legacyReceiptDetail.getArrDemand())))
+                                .addValue("currcollection",
+                                        Double.valueOf(String.valueOf(legacyReceiptDetail.getCurrCollection())))
+                                .addValue("arrcollection",
+                                        Double.valueOf(String.valueOf(legacyReceiptDetail.getArrCollection())))
+                                .addValue("currbalance", Double.valueOf(String.valueOf(legacyReceiptDetail.getCurrDemand()
+                                        .subtract(legacyReceiptDetail.getCurrCollection()))))
+                                .addValue("arrbalance", Double.valueOf(String.valueOf(legacyReceiptDetail.getArrDemand()
+                                        .subtract(legacyReceiptDetail.getArrCollection()))))
+                                .addValue("receiptheaderid", legacyHeaderSeqNumber)
+                                .addValue("tenantid", legacyReceiptDetail.getTenantid()).getValues());
+            }
+        }
+        try {
+            logger.info("persisting legacyReceiptHeaderData to its respective table:" + legacyReceiptValues.toString());
+            logger.info("persisting legacyReceiptDetailsData to its respective table:" + legacyReceiptDetailsValues.toString());
+            namedParameterJdbcTemplate.batchUpdate(legacyReceiptHeaderQuery,
+                    legacyReceiptValues.toArray(new Map[listOflegacyReceiptHeaders.size()]));
+            namedParameterJdbcTemplate.batchUpdate(legacyReceiptDetailsQuery,
+                    legacyReceiptDetailsValues.toArray(new Map[listOfLegacyReceiptDetails.size()]));
+        } catch (Exception e) {
+            logger.error("data cannot be persisted to respective tables", e);
+        }
+        return legacyReceiptRequest;
+    }
+
+    public List<LegacyReceiptHeader> pushLegacyReceiptDataToQueue(LegacyReceiptReq legacyReceiptReq) {
+        logger.info("Pushing legacyCreateReceiptReq to queue:" + legacyReceiptReq);
+        try {
+            collectionProducer.producer(applicationProperties.getCreateLegacyReceiptTopicName(),
+                    applicationProperties.getCreateLegacyReceiptTopicKey(), legacyReceiptReq);
+        } catch (Exception e) {
+            logger.error("Pushing to kafka queue failed", e);
+            throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
+                    CollectionServiceConstants.KAFKA_PUSH_EXCEPTION_MSG, CollectionServiceConstants.KAFKA_PUSH_EXCEPTION_DESC);
+        }
+        return legacyReceiptReq.getLegacyReceipts();
+
+    }
+
+    public List<LegacyReceiptHeader> getLegacyReceiptsByCriteria(LegacyReceiptGetReq legacyReceiptGetReq) {
+
+        List<Object> preparedStatementVal = new ArrayList<>();
+        String legacyReceiptHeaderQuery = receiptDetailQueryBuilder.getLegacyReceiptSearchQuery(legacyReceiptGetReq,
+                preparedStatementVal);
+        String legacyReceiptDetailQuery = receiptDetailQueryBuilder.getLegacyReceiptDetailByLegacyReceiptHeader();
+        List<LegacyReceiptHeader> listOfLegacyReceiptHeader = jdbcTemplate.query(legacyReceiptHeaderQuery,
+                preparedStatementVal.toArray(),
+                legacyReceiptHeaderRowMapper);
+        List<LegacyReceiptHeader> listOfLegacyHeaders = new ArrayList<>();
+        for (LegacyReceiptHeader legacyReceiptHeader : listOfLegacyReceiptHeader) {
+            List<Object> receiptDetailsPreparedStatementValues = new ArrayList<>();
+            receiptDetailsPreparedStatementValues.add(legacyReceiptGetReq.getTenantId());
+            receiptDetailsPreparedStatementValues.add(legacyReceiptHeader.getId());
+            List<LegacyReceiptDetails> listOfLegacyReceiptDetails = jdbcTemplate.query(legacyReceiptDetailQuery,
+                    receiptDetailsPreparedStatementValues.toArray(), legacyReceiptDetailRowMapper);
+            legacyReceiptHeader.setLegacyReceiptDetails(listOfLegacyReceiptDetails);
+            listOfLegacyHeaders.add(legacyReceiptHeader);
+        }
+        return listOfLegacyHeaders;
+    }
+
 }

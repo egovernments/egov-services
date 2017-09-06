@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.constants.Constants;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.ErrorCode;
 import org.egov.common.domain.exception.InvalidDataException;
@@ -30,60 +31,106 @@ public class AccountDetailTypeService {
 	@Autowired
 	private SmartValidator validator;
 
+	@Transactional
+	public List<AccountDetailType> create(List<AccountDetailType> accountDetailTypes, BindingResult errors,
+			RequestInfo requestInfo) {
+
+		try {
+
+			accountDetailTypes = fetchRelated(accountDetailTypes);
+
+			validate(accountDetailTypes, Constants.ACTION_CREATE, errors);
+
+			if (errors.hasErrors()) {
+				throw new CustomBindException(errors);
+			}
+			for (AccountDetailType b : accountDetailTypes) {
+				b.setId(accountDetailTypeRepository.getNextSequence());
+			}
+
+		} catch (CustomBindException e) {
+
+			throw new CustomBindException(errors);
+		}
+
+		return accountDetailTypeRepository.save(accountDetailTypes, requestInfo);
+
+	}
+
+	@Transactional
+	public List<AccountDetailType> update(List<AccountDetailType> accountDetailTypes, BindingResult errors,
+			RequestInfo requestInfo) {
+
+		try {
+
+			accountDetailTypes = fetchRelated(accountDetailTypes);
+
+			validate(accountDetailTypes, Constants.ACTION_UPDATE, errors);
+
+			if (errors.hasErrors()) {
+				throw new CustomBindException(errors);
+			}
+
+		} catch (CustomBindException e) {
+
+			throw new CustomBindException(errors);
+		}
+
+		return accountDetailTypeRepository.update(accountDetailTypes, requestInfo);
+
+	}
+
 	private BindingResult validate(List<AccountDetailType> accountdetailtypes, String method, BindingResult errors) {
 
-                try {
-                    switch (method) {
-                    case Constants.ACTION_VIEW:
-                        // validator.validate(accountDetailTypeContractRequest.getAccountDetailType(),
-                        // errors);
-                        break;
-                    case Constants.ACTION_CREATE:
-                        if (accountdetailtypes == null) {
-                            throw new InvalidDataException("accountdetailtypes", ErrorCode.NOT_NULL.getCode(),
-                                    null);
-                        }
-                        for (AccountDetailType accountDetailType : accountdetailtypes) {
-                            validator.validate(accountDetailType, errors);
-                            if (!accountDetailTypeRepository.uniqueCheck("name", accountDetailType)) {
-                                errors.addError(new FieldError("accountDetailType", "name", accountDetailType.getName(), false,
-                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
-                            }
-                        }
-                        break;
-                    case Constants.ACTION_UPDATE:
-                        if (accountdetailtypes == null) {
-                            throw new InvalidDataException("accountdetailtypes", ErrorCode.NOT_NULL.getCode(),
-                                    null);
-                        }
-                        for (AccountDetailType accountDetailType : accountdetailtypes) {
-                            if (accountDetailType.getId() == null) {
-                                throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
-                                        accountDetailType.getId());
-                            }
-                            validator.validate(accountDetailType, errors);
-                            if (!accountDetailTypeRepository.uniqueCheck("name", accountDetailType)) {
-                                errors.addError(new FieldError("accountDetailType", "name", accountDetailType.getName(), false,
-                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
-                            }
-                        }
-                        break;
-                    case Constants.ACTION_SEARCH:
-                        if (accountdetailtypes == null) {
-                            throw new InvalidDataException("accountdetailtypes", ErrorCode.NOT_NULL.getCode(),
-                                    null);
-                        }
-                        for (AccountDetailType accountdetailtype : accountdetailtypes) {
-                            if (accountdetailtype.getTenantId() == null) {
-                                throw new InvalidDataException("tenantId", ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
-                                        accountdetailtype.getTenantId());
-                            }
-                        }
-                        break;
-                    default:
-        
-                    }
-                } catch (IllegalArgumentException e) {
+		try {
+			switch (method) {
+			case Constants.ACTION_VIEW:
+				// validator.validate(accountDetailTypeContractRequest.getAccountDetailType(),
+				// errors);
+				break;
+			case Constants.ACTION_CREATE:
+				if (accountdetailtypes == null) {
+					throw new InvalidDataException("accountdetailtypes", ErrorCode.NOT_NULL.getCode(), null);
+				}
+				for (AccountDetailType accountDetailType : accountdetailtypes) {
+					validator.validate(accountDetailType, errors);
+					if (!accountDetailTypeRepository.uniqueCheck("name", accountDetailType)) {
+						errors.addError(new FieldError("accountDetailType", "name", accountDetailType.getName(), false,
+								new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+					}
+				}
+				break;
+			case Constants.ACTION_UPDATE:
+				if (accountdetailtypes == null) {
+					throw new InvalidDataException("accountdetailtypes", ErrorCode.NOT_NULL.getCode(), null);
+				}
+				for (AccountDetailType accountDetailType : accountdetailtypes) {
+					if (accountDetailType.getId() == null) {
+						throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
+								accountDetailType.getId());
+					}
+					validator.validate(accountDetailType, errors);
+					if (!accountDetailTypeRepository.uniqueCheck("name", accountDetailType)) {
+						errors.addError(new FieldError("accountDetailType", "name", accountDetailType.getName(), false,
+								new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+					}
+				}
+				break;
+			case Constants.ACTION_SEARCH:
+				if (accountdetailtypes == null) {
+					throw new InvalidDataException("accountdetailtypes", ErrorCode.NOT_NULL.getCode(), null);
+				}
+				for (AccountDetailType accountdetailtype : accountdetailtypes) {
+					if (accountdetailtype.getTenantId() == null) {
+						throw new InvalidDataException("tenantId", ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
+								accountdetailtype.getTenantId());
+					}
+				}
+				break;
+			default:
+
+			}
+		} catch (IllegalArgumentException e) {
 			errors.addError(new ObjectError("Missing data", e.getMessage()));
 		}
 		return errors;
@@ -105,7 +152,8 @@ public class AccountDetailTypeService {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-		for(AccountDetailType b:accountdetailtypes)b.setId(accountDetailTypeRepository.getNextSequence());
+		for (AccountDetailType b : accountdetailtypes)
+			b.setId(accountDetailTypeRepository.getNextSequence());
 		return accountdetailtypes;
 
 	}
@@ -125,25 +173,25 @@ public class AccountDetailTypeService {
 		accountDetailTypeRepository.add(request);
 	}
 
-        public Pagination<AccountDetailType> search(AccountDetailTypeSearch accountDetailTypeSearch, BindingResult errors) {
-            
-            try {
-                
-                List<AccountDetailType> accountDetailTypes = new ArrayList<>();
-                accountDetailTypes.add(accountDetailTypeSearch);
-                validate(accountDetailTypes, Constants.ACTION_SEARCH, errors);
-    
-                if (errors.hasErrors()) {
-                    throw new CustomBindException(errors);
-                }
-            
-            } catch (CustomBindException e) {
-    
-                throw new CustomBindException(errors);
-            }
-    
-            return accountDetailTypeRepository.search(accountDetailTypeSearch);
-        }
+	public Pagination<AccountDetailType> search(AccountDetailTypeSearch accountDetailTypeSearch, BindingResult errors) {
+
+		try {
+
+			List<AccountDetailType> accountDetailTypes = new ArrayList<>();
+			accountDetailTypes.add(accountDetailTypeSearch);
+			validate(accountDetailTypes, Constants.ACTION_SEARCH, errors);
+
+			if (errors.hasErrors()) {
+				throw new CustomBindException(errors);
+			}
+
+		} catch (CustomBindException e) {
+
+			throw new CustomBindException(errors);
+		}
+
+		return accountDetailTypeRepository.search(accountDetailTypeSearch);
+	}
 
 	@Transactional
 	public AccountDetailType save(AccountDetailType accountDetailType) {

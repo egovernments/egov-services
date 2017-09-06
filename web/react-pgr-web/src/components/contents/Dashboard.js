@@ -44,7 +44,18 @@ const nameMap = {
   "CREATED": "Created",
   "WATER_NEWCONN": "New Water Connection",
   "CANCELLED": "Request Cancelled",
-  "REJECTED": "Rejected"
+  "REJECTED": "Rejected",
+  "BPA_FIRE_NOC": "Fire NOC",
+  "INPROGERSS": "In Progress",
+  "APPROVED": "Approved",
+  "PT_EXTRACT": "Property Extract",
+  "WC_PAYTAX": "Water Charge Tax Payment",
+  "PT_PAYTAX": "Property Tax Payment",
+  "ESTIMATIONNOTICEGENERATED": "Estimation Notice Generated",
+  "VERIFIED": "Verified",
+  "ESTIMATIONAMOUNTCOLLECTED": "Estimation Amount Collected",
+  "WORKORDERGENERATED": "Work Order Generated",
+  "SANCTIONED": "Sanctioned"
 };
 
 const content=[
@@ -60,7 +71,7 @@ const content=[
             {
                 icon: 'icon-class-name',
                 label: 'Apply for No Dues',
-                to: '#/non-framework/citizenServices/no-dues/search/wc',
+                to: '#/non-framework-cs/citizenServices/no-dues/search/wc',
             },
             {
                 icon: 'icon-class-name',
@@ -70,7 +81,7 @@ const content=[
             {
                 icon: 'icon-class-name',
                 label: 'Pay My Dues',
-                to: '#/non-framework/citizenServices/paytax/search/wc',
+                to: '#/non-framework-cs/citizenServices/paytax/search/wc',
             }
         ],
     },
@@ -81,17 +92,17 @@ const content=[
             {
                 icon: 'icon-class-name',
                 label: 'Apply for No Dues',
-                to: '#/non-framework/citizenServices/no-dues/search/pt',
+                to: '#/non-framework-cs/citizenServices/no-dues/search/pt',
             },
             {
                 icon: 'icon-class-name',
                 label: 'Apply for Extract',
-                to: '#/non-framework/citizenServices/no-dues/extract/pt',
+                to: '#/non-framework-cs/citizenServices/extract/search/pt',
             },
             {
                 icon: 'icon-class-name',
                 label: 'Pay My Dues',
-                to: '#/non-framework/citizenServices/paytax/search/pt',
+                to: '#/non-framework-cs/citizenServices/paytax/search/pt',
             }
         ],
     },
@@ -108,7 +119,7 @@ const content=[
     },
     {
         icon: 'icon-class-name',
-        label: 'Building Plan',
+        label: 'NOC',
         content: [
             {
                 icon: 'icon-class-name',
@@ -303,6 +314,8 @@ class Dashboard extends Component {
           res3.serviceReq.sort(function(v1, v2) {
             return v1.auditDetails.createdDate > v2.auditDetails.createdDate ? -1 : (v1.auditDetails.createdDate < v2.auditDetails.createdDate ? 1 : 0);
           });
+
+
 
           checkCountAndSetState("serviceRequestsTwo", res3.serviceReq);
         } else {
@@ -502,13 +515,13 @@ class Dashboard extends Component {
             if(query[i].indexOf("link") > -1) {
               switch(query[i].split("=")[1]) {
                 case 'waternodue':
-                  self.props.setRoute("/non-framework/citizenServices/no-dues/search/wc");
+                  self.props.setRoute("/non-framework-cs/citizenServices/no-dues/search/wc");
                   break;
                 case  'propertytaxextract':
-                  self.props.setRoute("/non-framework/citizenServices/no-dues/extract/pt");
+                  self.props.setRoute("/non-framework-cs/citizenServices/no-dues/extract/pt");
                   break;
                 case 'propertytaxdue':
-                  self.props.setRoute("/non-framework/citizenServices/no-dues/search/pt");
+                  self.props.setRoute("/non-framework-cs/citizenServices/no-dues/search/pt");
                   break;
               }
             }
@@ -619,6 +632,16 @@ class Dashboard extends Component {
       this.props.setRoute("/non-framework/citizenServices/wc/view/" + encodeURIComponent(item.serviceRequestId));
     } else if(item.serviceCode == "BPA_FIRE_NOC") {
       this.props.setRoute("/non-framework/citizenServices/fireNoc/view/" + encodeURIComponent(item.serviceRequestId));
+    } else if(item.serviceCode == "WC_NODUES" && item.status == "No Dues Generated") {
+      this.props.setRoute(`/receipt/watercharge/nodues/${encodeURIComponent(item.consumerCode)}/${encodeURIComponent(item.serviceRequestId)}`);
+    } else if(item.serviceCode == "PT_NODUES" && item.status == "No Dues Generated") {
+      this.props.setRoute(`/receipt/propertytax/nodues/${encodeURIComponent(item.consumerCode)}/${encodeURIComponent(item.serviceRequestId)}`);
+    } else if(item.serviceCode == "PT_EXTRACT" && item.status == "No Dues Generated") {
+      this.props.setRoute(`/receipt/extract/nodues/${encodeURIComponent(item.consumerCode)}/${encodeURIComponent(item.serviceRequestId)}`);
+    } else if(item.serviceCode == "PT_PAYTAX" && item.status == "No Dues Generated") {
+      this.props.setRoute(`/receipt/propertytax/paytax/${encodeURIComponent(item.consumerCode)}/${encodeURIComponent(item.serviceRequestId)}`);
+    } else if(item.serviceCode == "WC_PAYTAX" && item.status == "No Dues Generated") {
+      this.props.setRoute(`/receipt/watercharge/paytax/${encodeURIComponent(item.consumerCode)}/${encodeURIComponent(item.serviceRequestId)}`);
     }
   }
 
@@ -735,14 +758,17 @@ class Dashboard extends Component {
                                     </thead>
                                     <tbody>
                                         {serviceRequestsTwo.map((item, key)=>{
-                                          return (<tr key={key} onClick={() => {this.rowClickHandler(item)}}>
-                                              <td>{item.serviceRequestId}</td>
-                                              <td>{nameMap[item.serviceCode] || item.serviceCode}</td>
-                                              <td>{nameMap[item.status] || item.status}</td>
-                                              <td>{item.auditDetails ? getDate(item.auditDetails.createdDate) : "-"}</td>
-                                              {<td><i className="material-icons">cloud_download</i></td>}
+                                          if (item.status != "CREATED" || (item.status == "CREATED" && ["BPA_FIRE_NOC", "WATER_NEWCONN"].indexOf(item.serviceCode) > -1)) {
+                                            return (<tr key={key} onClick={() => {this.rowClickHandler(item)}}>
+                                                <td>{item.serviceRequestId}</td>
+                                                <td>{nameMap[item.serviceCode] || item.serviceCode}</td>
+                                                <td>{nameMap[item.status] || item.status}</td>
+                                                <td>{item.auditDetails ? getDate(item.auditDetails.createdDate) : "-"}</td>
+                                                {<td><i className="material-icons">cloud_download</i></td>}
 
-                                          </tr>)
+                                            </tr>)
+                                          }
+
                                         }) }
                                     </tbody>
                                 </Table>

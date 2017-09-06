@@ -1,5 +1,6 @@
 package org.egov.egf.voucher.domain.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -132,6 +133,93 @@ public class VoucherService {
 
 	}
 
+	@Transactional
+	public List<Voucher> reverse(List<Voucher> vouchers, BindingResult errors, RequestInfo requestInfo) {
+		List<Voucher> reverseVouchers = new ArrayList<>();
+		try {
+
+			for (Voucher voucher : vouchers) {
+
+				Assert.notNull(voucher.getOriginalVoucherNumber(),
+						"Original Voucher Number is required to create reverse voucher");
+
+				if (null != voucher.getPartial() && voucher.getPartial()) {
+
+					reverseVouchers.add(voucher);
+
+				} else {
+
+					Voucher reverseVoucher = prepareReverseVoucher(voucher);
+					reverseVouchers.add(reverseVoucher);
+
+				}
+			}
+
+			reverseVouchers = fetchRelated(reverseVouchers);
+
+			validate(reverseVouchers, Constants.ACTION_CREATE, errors);
+
+			if (errors.hasErrors()) {
+				throw new CustomBindException(errors);
+			}
+
+			populateVoucherNumbers(reverseVouchers);
+
+		} catch (CustomBindException e) {
+
+			throw new CustomBindException(errors);
+		}
+
+		return voucherRepository.save(reverseVouchers, requestInfo);
+
+	}
+
+	private Voucher prepareReverseVoucher(Voucher voucher) {
+
+		VoucherSearch voucherSearch = new VoucherSearch();
+
+		voucherSearch.setTenantId(voucher.getTenantId());
+		voucherSearch.setVoucherNumber(voucher.getOriginalVoucherNumber());
+
+		Pagination<Voucher> searchResult = search(voucherSearch);
+
+		Assert.notNull(searchResult, "Given Original Voucher Number to create reverseal voucher is not correct");
+
+		Assert.notNull(searchResult.getPagedData(),
+				"Given Original Voucher Number to create reverseal voucher is not correct");
+
+		Assert.notEmpty(searchResult.getPagedData(),
+				"Given Original Voucher Number to create reverseal voucher is not correct");
+
+		Voucher originalVoucher = searchResult.getPagedData().get(0);
+
+		voucher = originalVoucher;
+
+		voucher.setOriginalVoucherNumber(voucher.getVoucherNumber());
+		voucher.setVoucherNumber(null);
+
+		populateLedgerForReverseVoucher(voucher);
+
+		return voucher;
+
+	}
+
+	private void populateLedgerForReverseVoucher(Voucher voucher) {
+
+		BigDecimal originalDebitAmount, originalCreditAmount;
+
+		for (Ledger ol : voucher.getLedgers()) {
+
+			originalDebitAmount = ol.getDebitAmount();
+			originalCreditAmount = ol.getCreditAmount();
+
+			ol.setDebitAmount(originalCreditAmount);
+			ol.setCreditAmount(originalDebitAmount);
+
+		}
+
+	}
+
 	private void populateVoucherNumbers(List<Voucher> vouchers) {
 
 		for (Voucher voucher : vouchers) {
@@ -177,8 +265,10 @@ public class VoucherService {
 				for (Voucher voucher : vouchers) {
 					validator.validate(voucher, errors);
 				}
+				String tenantId = null;
+				tenantId = (null != vouchers && !vouchers.isEmpty()) ? vouchers.get(0).getTenantId() : null;
 
-				getHeaderMandateFields();
+				getHeaderMandateFields(tenantId);
 
 				validateMandatoryFields(vouchers);
 
@@ -207,6 +297,7 @@ public class VoucherService {
 
 				// fetch related items
 				if (voucher.getFund() != null) {
+					voucher.getFund().setTenantId(voucher.getTenantId());
 					FundContract fund = fundContractRepository.findById(voucher.getFund());
 					if (fund == null) {
 						throw new InvalidDataException("fund", "fund.invalid", " Invalid fund");
@@ -215,6 +306,7 @@ public class VoucherService {
 				}
 
 				if (voucher.getStatus() != null) {
+					voucher.getStatus().setTenantId(voucher.getTenantId());
 					FinancialStatusContract status = financialStatusContractRepository.findById(voucher.getStatus());
 					if (status == null) {
 						throw new InvalidDataException("status", "status.invalid", " Invalid status");
@@ -223,6 +315,7 @@ public class VoucherService {
 				}
 
 				if (voucher.getFunction() != null) {
+					voucher.getFunction().setTenantId(voucher.getTenantId());
 					FunctionContract function = funnctionContractRepository.findById(voucher.getFunction());
 					if (function == null) {
 						throw new InvalidDataException("function", "function.invalid", " Invalid function");
@@ -231,6 +324,7 @@ public class VoucherService {
 				}
 
 				if (voucher.getFundsource() != null) {
+					voucher.getFundsource().setTenantId(voucher.getTenantId());
 					FundsourceContract fundsource = fundsourceContractRepository.findById(voucher.getFundsource());
 					if (fundsource == null) {
 						throw new InvalidDataException("fundsource", "fundsource.invalid", " Invalid fundsource");
@@ -239,6 +333,7 @@ public class VoucherService {
 				}
 
 				if (voucher.getScheme() != null) {
+					voucher.getScheme().setTenantId(voucher.getTenantId());
 					SchemeContract scheme = schemeContractRepository.findById(voucher.getScheme());
 					if (scheme == null) {
 						throw new InvalidDataException("scheme", "scheme.invalid", " Invalid scheme");
@@ -247,6 +342,7 @@ public class VoucherService {
 				}
 
 				if (voucher.getSubScheme() != null) {
+					voucher.getSubScheme().setTenantId(voucher.getTenantId());
 					SubSchemeContract subScheme = subSchemeContractRepository.findById(voucher.getSubScheme());
 					if (subScheme == null) {
 						throw new InvalidDataException("subScheme", "subScheme.invalid", " Invalid subScheme");
@@ -255,6 +351,7 @@ public class VoucherService {
 				}
 
 				if (voucher.getFunctionary() != null) {
+					voucher.getFunctionary().setTenantId(voucher.getTenantId());
 					FunctionaryContract functionary = functionaryContractRepository.findById(voucher.getFunctionary());
 					if (functionary == null) {
 						throw new InvalidDataException("functionary", "functionary.invalid", " Invalid functionary");
@@ -263,6 +360,7 @@ public class VoucherService {
 				}
 
 				if (voucher.getDivision() != null) {
+					voucher.getDivision().setTenantId(voucher.getTenantId());
 					Boundary devision = boundaryRepository.getBoundaryById(voucher.getDivision().getId(),
 							voucher.getDivision().getTenantId());
 					if (devision == null) {
@@ -272,6 +370,7 @@ public class VoucherService {
 				}
 
 				if (voucher.getDepartment() != null) {
+					voucher.getDepartment().setTenantId(voucher.getTenantId());
 					DepartmentResponse department = departmentRepository
 							.getDepartmentById(voucher.getDepartment().getId(), voucher.getDepartment().getTenantId());
 					if (department == null || department.getDepartment() == null
@@ -412,11 +511,12 @@ public class VoucherService {
 		}
 	}
 
-	private void getHeaderMandateFields() {
+	private void getHeaderMandateFields(String tenantId) {
 
 		FinancialConfigurationContract financialConfigurationContract = new FinancialConfigurationContract();
 		financialConfigurationContract.setModule(VoucherConstants.CONFIG_MODULE_NAME);
 		financialConfigurationContract.setName(VoucherConstants.DEFAULT_TXN_MIS_ATTRRIBUTES_CONFIG_NAME);
+		financialConfigurationContract.setTenantId(tenantId);
 
 		FinancialConfigurationContract response = financialConfigurationContractRepository
 				.findByModuleAndName(financialConfigurationContract);

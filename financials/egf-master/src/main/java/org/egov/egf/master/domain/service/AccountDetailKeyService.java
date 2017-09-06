@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.constants.Constants;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.ErrorCode;
 import org.egov.common.domain.exception.InvalidDataException;
@@ -17,7 +18,6 @@ import org.egov.egf.master.web.requests.AccountDetailKeyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.SmartValidator;
@@ -34,52 +34,98 @@ public class AccountDetailKeyService {
 	@Autowired
 	private AccountDetailTypeRepository accountDetailTypeRepository;
 
+	@Transactional
+	public List<AccountDetailKey> create(List<AccountDetailKey> accountDetailKies, BindingResult errors,
+			RequestInfo requestInfo) {
+
+		try {
+
+			accountDetailKies = fetchRelated(accountDetailKies);
+
+			validate(accountDetailKies, Constants.ACTION_CREATE, errors);
+
+			if (errors.hasErrors()) {
+				throw new CustomBindException(errors);
+			}
+			for (AccountDetailKey b : accountDetailKies) {
+				b.setId(accountDetailKeyRepository.getNextSequence());
+			}
+
+		} catch (CustomBindException e) {
+
+			throw new CustomBindException(errors);
+		}
+
+		return accountDetailKeyRepository.save(accountDetailKies, requestInfo);
+
+	}
+
+	@Transactional
+	public List<AccountDetailKey> update(List<AccountDetailKey> accountDetailKies, BindingResult errors,
+			RequestInfo requestInfo) {
+
+		try {
+
+			accountDetailKies = fetchRelated(accountDetailKies);
+
+			validate(accountDetailKies, Constants.ACTION_UPDATE, errors);
+
+			if (errors.hasErrors()) {
+				throw new CustomBindException(errors);
+			}
+
+		} catch (CustomBindException e) {
+
+			throw new CustomBindException(errors);
+		}
+
+		return accountDetailKeyRepository.update(accountDetailKies, requestInfo);
+
+	}
+
 	private BindingResult validate(List<AccountDetailKey> accountdetailkeys, String method, BindingResult errors) {
 
-                try {
-                    switch (method) {
-                    case Constants.ACTION_VIEW:
-                        // validator.validate(accountDetailKeyContractRequest.getAccountDetailKey(),
-                        // errors);
-                        break;
-                    case Constants.ACTION_CREATE:
-                        if (accountdetailkeys == null) {
-                            throw new InvalidDataException("accountdetailkeys", ErrorCode.NOT_NULL.getCode(),
-                                    null);
-                        }
-                        for (AccountDetailKey accountDetailKey : accountdetailkeys) {
-                            validator.validate(accountDetailKey, errors);
-                        }
-                        break;
-                    case Constants.ACTION_UPDATE:
-                        if (accountdetailkeys == null) {
-                            throw new InvalidDataException("accountdetailkeys", ErrorCode.NOT_NULL.getCode(),
-                                    null);
-                        }
-                        for (AccountDetailKey accountDetailKey : accountdetailkeys) {
-                            if (accountDetailKey.getId() == null) {
-                                throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
-                                        accountDetailKey.getId());
-                            }
-                            validator.validate(accountDetailKey, errors);
-                        }
-                        break;
-                    case Constants.ACTION_SEARCH:
-                        if (accountdetailkeys == null) {
-                            throw new InvalidDataException("accountdetailkeys", ErrorCode.NOT_NULL.getCode(),
-                                    null);
-                        }
-                        for (AccountDetailKey accountdetailkey : accountdetailkeys) {
-                            if (accountdetailkey.getId() == null) {
-                                throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
-                                        accountdetailkey.getId());
-                            }
-                        }
-                        break;
-                    default:
-        
-                    }
-                } catch (IllegalArgumentException e) {
+		try {
+			switch (method) {
+			case Constants.ACTION_VIEW:
+				// validator.validate(accountDetailKeyContractRequest.getAccountDetailKey(),
+				// errors);
+				break;
+			case Constants.ACTION_CREATE:
+				if (accountdetailkeys == null) {
+					throw new InvalidDataException("accountdetailkeys", ErrorCode.NOT_NULL.getCode(), null);
+				}
+				for (AccountDetailKey accountDetailKey : accountdetailkeys) {
+					validator.validate(accountDetailKey, errors);
+				}
+				break;
+			case Constants.ACTION_UPDATE:
+				if (accountdetailkeys == null) {
+					throw new InvalidDataException("accountdetailkeys", ErrorCode.NOT_NULL.getCode(), null);
+				}
+				for (AccountDetailKey accountDetailKey : accountdetailkeys) {
+					if (accountDetailKey.getId() == null) {
+						throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
+								accountDetailKey.getId());
+					}
+					validator.validate(accountDetailKey, errors);
+				}
+				break;
+			case Constants.ACTION_SEARCH:
+				if (accountdetailkeys == null) {
+					throw new InvalidDataException("accountdetailkeys", ErrorCode.NOT_NULL.getCode(), null);
+				}
+				for (AccountDetailKey accountdetailkey : accountdetailkeys) {
+					if (accountdetailkey.getTenantId() == null) {
+						throw new InvalidDataException("tenantId", ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
+								accountdetailkey.getId());
+					}
+				}
+				break;
+			default:
+
+			}
+		} catch (IllegalArgumentException e) {
 			errors.addError(new ObjectError("Missing data", e.getMessage()));
 		}
 		return errors;
@@ -111,7 +157,8 @@ public class AccountDetailKeyService {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-		for(AccountDetailKey b:accountdetailkeys)b.setId(accountDetailKeyRepository.getNextSequence());
+		for (AccountDetailKey key : accountdetailkeys)
+			key.setId(accountDetailKeyRepository.getNextSequence());
 		return accountdetailkeys;
 
 	}
@@ -131,25 +178,25 @@ public class AccountDetailKeyService {
 		accountDetailKeyRepository.add(request);
 	}
 
-        public Pagination<AccountDetailKey> search(AccountDetailKeySearch accountDetailKeySearch, BindingResult errors) {
-            
-            try {
-                
-                List<AccountDetailKey> accountDetailKeys = new ArrayList<>();
-                accountDetailKeys.add(accountDetailKeySearch);
-                validate(accountDetailKeys, Constants.ACTION_SEARCH, errors);
-    
-                if (errors.hasErrors()) {
-                    throw new CustomBindException(errors);
-                }
-            
-            } catch (CustomBindException e) {
-    
-                throw new CustomBindException(errors);
-            }
-    
-            return accountDetailKeyRepository.search(accountDetailKeySearch);
-        }
+	public Pagination<AccountDetailKey> search(AccountDetailKeySearch accountDetailKeySearch, BindingResult errors) {
+
+		try {
+
+			List<AccountDetailKey> accountDetailKeys = new ArrayList<>();
+			accountDetailKeys.add(accountDetailKeySearch);
+			validate(accountDetailKeys, Constants.ACTION_SEARCH, errors);
+
+			if (errors.hasErrors()) {
+				throw new CustomBindException(errors);
+			}
+
+		} catch (CustomBindException e) {
+
+			throw new CustomBindException(errors);
+		}
+
+		return accountDetailKeyRepository.search(accountDetailKeySearch);
+	}
 
 	@Transactional
 	public AccountDetailKey save(AccountDetailKey accountDetailKey) {

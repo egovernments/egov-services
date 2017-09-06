@@ -254,18 +254,15 @@ public class CategoryRepository {
 		List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(query, parameter);
 
 		for (Map<String, Object> row : rows) {
-
+			Long parentId = getLong(row.get("parentId"));
 			CategorySearch category = new CategorySearch();
 			category.setId(getLong(row.get("id")));
 			category.setTenantId(getString(row.get("tenantid")));
 			category.setCode(getString(row.get("code")));
 			category.setName(getString(row.get("name")));
 			category.setActive(getBoolean(row.get("active")));
-			if (getLong(row.get("parentId")) == 0) {
-				category.setParentId(null);
-			} else {
-				category.setParentId(getLong(row.get("parentId")));
-			}
+			category.setParentId(parentId == 0 ? null : parentId);
+			category.setParentName(getParentName(parentId));
 			category.setValidityYears( getLong( row.get("validityYears")));
 			AuditDetails auditDetails = new AuditDetails();
 			auditDetails.setCreatedBy(getString(row.get("createdby")));
@@ -279,6 +276,22 @@ public class CategoryRepository {
 		}
 
 		return categories;
+	}
+
+	private String getParentName(Long parentId) {
+
+		String parentName = null;
+		
+		if(parentId != null && parentId != 0){
+			MapSqlParameterSource parameters = new MapSqlParameterSource();
+			String sql = CategoryQueryBuilder.getQueryForParentName(parentId, parameters);
+			List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(sql, parameters);
+			for (Map<String, Object> row : rows) {
+				parentName = getString(row.get("name"));	
+			}
+			
+		}
+		return parentName;
 	}
 
 	/**

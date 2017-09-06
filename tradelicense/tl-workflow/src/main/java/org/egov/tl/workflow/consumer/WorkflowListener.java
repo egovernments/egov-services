@@ -112,11 +112,11 @@ public class WorkflowListener {
 
 				/*
 				 * if (tradeLicense != null && tradeLicense.getWorkFlowDetails()
-				 * != null && tradeLicense.getWorkFlowDetails().getAssignee() ==
+				 * != null && tradeLicense.getApplication().getWorkFlowDetails().getAssignee() ==
 				 * null) populateAssigneeForCitizen(tradeLicense);
 				 */
 
-				workflowService.enrichWorkflow(tradeLicense, request.getRequestInfo());
+				workflowService.enrichWorkflow(tradeLicense.getApplication(), request.getRequestInfo());
 
 			}
 
@@ -128,7 +128,7 @@ public class WorkflowListener {
 
 			for (final TradeLicenseContract tradeLicense : request.getLicenses()) {
 
-				workflowService.enrichWorkflow(tradeLicense, request.getRequestInfo());
+				workflowService.enrichWorkflow(tradeLicense.getApplication(), request.getRequestInfo());
 
 			}
 
@@ -162,7 +162,7 @@ public class WorkflowListener {
 
 		if (employees != null && !employees.isEmpty() && employees.get(0).getId() != null
 				&& employees.get(0).getAssignments() != null && !employees.get(0).getAssignments().isEmpty())
-			tradeLicense.getWorkFlowDetails().setAssignee(employees.get(0).getAssignments().get(0).getPosition());
+			tradeLicense.getApplication().getWorkFlowDetails().setAssignee(employees.get(0).getAssignments().get(0).getPosition());
 
 	}
 

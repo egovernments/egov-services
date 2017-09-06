@@ -125,13 +125,13 @@ class PropertyAddress extends Component {
           console.log(err)
         })
 
-         Api.commonApiPost('pt-property/property/apartments/_search',{}, {},false, true).then((res)=>{
+        Api.commonApiPost('pt-property/property/apartment/_search',{}, {},false, true).then((res)=>{
           console.log(res);
           currentThis.setState({apartments:res.apartments})
         }).catch((err)=> {
            currentThis.setState({
             apartments:[]
-          })
+        })
           console.log(err)
         }) 
 

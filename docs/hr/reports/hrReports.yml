@@ -162,8 +162,8 @@ ReportDefinitions:
     usr.name as name,
     dept.name as department,
     desig.name as designation ,
-    assign.fromdate as fromdate, 
-    assign.todate as todate,
+    TO_CHAR(assign.fromdate,'DD/MM/YYYY') as fromdate, 
+    TO_CHAR(assign.todate,'DD/MM/YYYY') as todate,
     (CASE WHEN assign.isprimary = true THEN 'Yes' ELSE 'No' END) AS isprimary
     from egeis_employee emp, egeis_assignment assign,eg_user usr, eg_department dept,egeis_designation desig
     where   emp.tenantid=$tenantid
@@ -220,7 +220,7 @@ ReportDefinitions:
   - name: year
     label: reports.hr.Attendence.calenderYear
     type: singlevaluelist
-    pattern: http://egov-common-masters:8080/egov-common-masters/calendaryears/_search?tenantId=$tenantid|$..id|$..name
+    pattern: http://egov-common-masters:8080/egov-common-masters/calendaryears/_search?tenantId=$tenantid|$..name|$..name
     source: eg_calendarYear
     isMandatory: true
     
@@ -255,11 +255,11 @@ ReportDefinitions:
     isMandatory: false
     searchClause: and emp.employeetypeid=$employeeType
     
-  query: select emp.code||'-'||usr.name as employeecodename ,
+  query: select emp.code||'-'||usr.name as employeecode,
     sum(case when att.type=(select id from egeis_attendance_type where code='P') and month = $month and year = $year then 1 else 0 end) presentDays,
     sum(case when att.type=(select id from egeis_attendance_type where code='A') and month = $month and year = $year then 1 else 0 end)  absentDays,
-    sum(case when att.type=(select id from egeis_attendance_type where code='L') and month = $month and year = $year then 1 else 0 end) leavesDays,
-    sum(case when att.type=(select id from egeis_attendance_type where code='H') and month = $month and year = $year then 1 else 0 end) holidays
+    sum(case when att.type=(select id from egeis_attendance_type where code='L') and month = $month and year = $year then 1 else 0 end) leaveDays,
+    0 as noOfOTs
     from egeis_employee emp,eg_user usr,egeis_attendance att,
     egeis_assignment assign,eg_department dept,egeis_designation desig,egeis_attendance_type attyp
     where att.tenantid=$tenantid
@@ -326,7 +326,7 @@ ReportDefinitions:
     pattern: http://egov-common-masters:8080/egov-common-masters/departments/_search?tenantId=$tenantid|$..id|$..name
     source: hr
     isMandatory: false
-    searchClause: and dept.id=$departmentId
+    searchClause: and assign.departmentid=$departmentId
     
   - name: designation
     label: reports.hr.Designation
@@ -334,7 +334,7 @@ ReportDefinitions:
     pattern: http://hr-masters:8080/hr-masters/designations/_search?tenantId=$tenantid|$..id|$..name  
     source: hr
     isMandatory: false
-    searchClause: and desig.id=$designation
+    searchClause: and assign.designationid=$designation
     
   - name: employeeCode/Name
     label: reports.hr.Employee_Code/Name  
@@ -389,8 +389,8 @@ ReportDefinitions:
     isMandatory: false
     searchClause: and hrstatus.id = $leaveStatus
     
-  query: select leaveapp.applicationnumber as applicationnumber,emp.code||'-'||usr.name  as name, leavetype.name as leavetype , hrstatus.code as status,
-    leaveapp.fromdate||' - '||leaveapp.todate as daterange, leaveapp.leavedays as noofdays, leaveapp.reason as comment
+  query: select leaveapp.applicationnumber as applicationno,emp.code||'-'||usr.name  as code, leavetype.name as leavetype , hrstatus.code as status,
+    TO_CHAR(leaveapp.fromdate,'DD/MM/YYYY')||' - '||TO_CHAR(leaveapp.todate,'DD/MM/YYYY') as daterange, leaveapp.leavedays as noofdays, leaveapp.reason as comment
     from egeis_employee emp,egeis_leaveapplication leaveapp, eg_user usr, egeis_leavetype leavetype, egeis_hrstatus hrstatus,
     eg_department dept,egeis_assignment assign,egeis_designation desig,egeis_employeetype emptyp
     where leaveapp.tenantid=$tenantid
@@ -439,14 +439,14 @@ ReportDefinitions:
     source: hr
     isMandatory: true
     
-  query: select emp.code as employeecode ,usr.name as employeename
+  query: select emp.code as code ,usr.name as name,'modify' as assign
     from egeis_employee  emp,eg_user usr, egeis_assignment assign
     where emp.id not in (
     select assign.employeeid  from egeis_assignment 
     where to_date(to_char(to_timestamp(Trunc(CAST($date as bigint)/1000 )), 'YYYY/MM/DD'), 'YYYY-MM-DD') 
     between fromdate and todate and tenantid = $tenantid ) 
     and emp.id=usr.id and emp.tenantid=usr.tenantid and assign.employeeid = emp.id and emp.tenantid=$tenantid
-  groupBy: group by employeecode ,employeename;
+
 
   #EmployeeLeave Summary Report
 - reportName: employeeLeaveSummaryReport
@@ -469,7 +469,7 @@ ReportDefinitions:
     type: string
     source: hr
     
-  - name: leaveEligibleAsOn
+  - name: leaveeligibleasondate
     label: reports.hr.leaveEligibleAsOn
     type: string
     source: hr
@@ -479,7 +479,7 @@ ReportDefinitions:
     type: string
     source: hr
     
-  - name: approved
+  - name: approved_count
     label: reports.hr.approved
     type: string
     source: hr
@@ -535,7 +535,7 @@ ReportDefinitions:
     pattern: http://hr-leave:8080/hr-leave/leavetypes/_search?tenantId=$tenantid|$..id|$..name
     source: egeis_leaveType
     isMandatory: false
-    searchClause: and levapp.leavetypeid=$leavetype
+    searchClause: and levtyp.id=$leavetype
     
   - name: asOnDate
     label: reports.hr.asOnDate
@@ -543,7 +543,7 @@ ReportDefinitions:
     source: hr
     isMandatory: true
     
-  query: select emp.code ||'-'|| usr.name as employeecodename,levtyp.name as leavetype,openbal.noofdays as openingbalance,
+  query: select emp.code ||'-'|| usr.name as code,levtyp.name as leavetype,openbal.noofdays as openingbalance,
     cast(((openbal.noofdays/12*(select extract(month from (select to_date(to_char(to_timestamp(Trunc(CAST($asOnDate as bigint)/1000 )), 
     'YYYY/MM/DD'), 'YYYY-MM-DD')))))) as int) as leaveeligibleasondate,
     (openbal.noofdays + cast(((openbal.noofdays/12*(select extract(month from (select to_date(to_char(to_timestamp(Trunc(CAST($asOnDate as bigint)/1000 )), 
@@ -576,4 +576,3 @@ ReportDefinitions:
     and assign.tenantid=emp.tenantid 
   groupBy : ORDER BY emp.code ,usr.name ,levtyp.name,openbal.noofdays,leaveappl.approved_count
     
-   

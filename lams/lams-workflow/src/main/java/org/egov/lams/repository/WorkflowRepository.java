@@ -11,14 +11,17 @@ import org.egov.lams.contract.RequestInfoWrapper;
 import org.egov.lams.contract.Task;
 import org.egov.lams.contract.TaskRequest;
 import org.egov.lams.contract.TaskResponse;
+import org.egov.lams.contract.TenantResponse;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.WorkflowDetails;
 import org.egov.lams.model.enums.Action;
+import org.egov.lams.model.City;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 @Repository
@@ -109,27 +112,30 @@ public class WorkflowRepository {
 		Position assignee = new Position();
 		ProcessInstanceRequest processInstanceRequest = new ProcessInstanceRequest();
 		ProcessInstance processInstance = new ProcessInstance();
-
+		Boolean isCorporation = isCorporation(agreement.getTenantId());
+		LOGGER.info("isCorporation :" + isCorporation);
 		assignee.setId(workFlowDetails.getAssignee());
 		if (Action.JUDGEMENT.equals(agreement.getAction())) {
-			processInstance.setBusinessKey(propertiesManager.getWorkflowServiceJudgementBusinessKey());
-			processInstance.setType(propertiesManager.getWorkflowServiceJudgementBusinessKey());
+			processInstance.setBusinessKey(isCorporation ? propertiesManager.getWorkflowServiceJudgementCorporationBusinessKey() : propertiesManager.getWorkflowServiceJudgementMunicipalityBusinessKey());
+			processInstance.setType(isCorporation ? propertiesManager.getWorkflowServiceJudgementCorporationBusinessKey() : propertiesManager.getWorkflowServiceJudgementMunicipalityBusinessKey());
 		} else if (Action.OBJECTION.equals(agreement.getAction())) {
-			processInstance.setBusinessKey(propertiesManager.getWorkflowServiceObjectionBusinessKey());
-			processInstance.setType(propertiesManager.getWorkflowServiceObjectionBusinessKey());
+			processInstance.setBusinessKey(isCorporation ? propertiesManager.getWorkflowServiceObjectionCorporationBusinessKey() : propertiesManager.getWorkflowServiceObjectionMunicipalityBusinessKey());
+			processInstance.setType(isCorporation ? propertiesManager.getWorkflowServiceObjectionCorporationBusinessKey() : propertiesManager.getWorkflowServiceObjectionMunicipalityBusinessKey());
 		} else if (Action.RENEWAL.equals(agreement.getAction())) {
-			processInstance.setBusinessKey(propertiesManager.getWorkflowServiceRenewBusinessKey());
-			processInstance.setType(propertiesManager.getWorkflowServiceRenewBusinessKey());
+			processInstance.setBusinessKey(isCorporation ? propertiesManager.getWorkflowServiceRenewCorporationBusinessKey() : propertiesManager.getWorkflowServiceRenewMunicipalityBusinessKey());
+			processInstance.setType(isCorporation ? propertiesManager.getWorkflowServiceRenewCorporationBusinessKey() : propertiesManager.getWorkflowServiceRenewMunicipalityBusinessKey());
 		} else if (Action.CANCELLATION.equals(agreement.getAction())) {
-			processInstance.setBusinessKey(propertiesManager.getWorkflowServiceCancelBusinessKey());
-			processInstance.setType(propertiesManager.getWorkflowServiceCancelBusinessKey());
+			processInstance.setBusinessKey(isCorporation ? propertiesManager.getWorkflowServiceCancelCorporationBusinessKey() : propertiesManager.getWorkflowServiceCancelMunicipalityBusinessKey());
+			processInstance.setType(isCorporation ? propertiesManager.getWorkflowServiceCancelCorporationBusinessKey() : propertiesManager.getWorkflowServiceCancelMunicipalityBusinessKey());
 		} else if (Action.EVICTION.equals(agreement.getAction())) {
-			processInstance.setBusinessKey(propertiesManager.getWorkflowServiceEvictBusinessKey());
-			processInstance.setType(propertiesManager.getWorkflowServiceEvictBusinessKey());
+			processInstance.setBusinessKey(isCorporation ? propertiesManager.getWorkflowServiceEvictCorporationBusinessKey() : propertiesManager.getWorkflowServiceEvictMunicipalityBusinessKey());
+			processInstance.setType(isCorporation ? propertiesManager.getWorkflowServiceEvictCorporationBusinessKey() : propertiesManager.getWorkflowServiceEvictMunicipalityBusinessKey());
 		} else {
-			processInstance.setBusinessKey(propertiesManager.getWorkflowServiceCreateBusinessKey());
-			processInstance.setType(propertiesManager.getWorkflowServiceCreateBusinessKey());
+			processInstance.setBusinessKey(isCorporation ? propertiesManager.getWorkflowServiceCreateCorporationBusinessKey() : propertiesManager.getWorkflowServiceCreateMunicipalityBusinessKey());
+			processInstance.setType(isCorporation ? propertiesManager.getWorkflowServiceCreateCorporationBusinessKey() : propertiesManager.getWorkflowServiceCreateMunicipalityBusinessKey());
 		}
+		LOGGER.info("process businesskey :" + processInstance.getBusinessKey());
+		LOGGER.info("process type: " + processInstance.getType());
 		processInstance.setAssignee(assignee);
 		processInstance.setComments(workFlowDetails.getComments());
 		processInstance.setInitiatorPosition(workFlowDetails.getInitiatorPosition());
@@ -153,27 +159,30 @@ public class WorkflowRepository {
 		TaskRequest taskRequest = new TaskRequest();
 		Task task = new Task();
 		Position assignee = new Position();
-
+		Boolean isCorporation = isCorporation(agreement.getTenantId());
+		LOGGER.info("isCorporation :" + isCorporation);
 		taskRequest.setRequestInfo(requestInfo);
 		if (Action.JUDGEMENT.equals(agreement.getAction())) {
-			task.setBusinessKey(propertiesManager.getWorkflowServiceJudgementBusinessKey());
-			task.setType(propertiesManager.getWorkflowServiceJudgementBusinessKey());
+			task.setBusinessKey(isCorporation ? propertiesManager.getWorkflowServiceJudgementCorporationBusinessKey() : propertiesManager.getWorkflowServiceJudgementMunicipalityBusinessKey());
+			task.setType(isCorporation ? propertiesManager.getWorkflowServiceJudgementCorporationBusinessKey() : propertiesManager.getWorkflowServiceJudgementMunicipalityBusinessKey());
 		} else if (Action.OBJECTION.equals(agreement.getAction())) {
-			task.setBusinessKey(propertiesManager.getWorkflowServiceObjectionBusinessKey());
-			task.setType(propertiesManager.getWorkflowServiceObjectionBusinessKey());
+			task.setBusinessKey(isCorporation ? propertiesManager.getWorkflowServiceObjectionCorporationBusinessKey() : propertiesManager.getWorkflowServiceObjectionMunicipalityBusinessKey());
+			task.setType(isCorporation ? propertiesManager.getWorkflowServiceObjectionCorporationBusinessKey() : propertiesManager.getWorkflowServiceObjectionMunicipalityBusinessKey());
 		} else if (Action.RENEWAL.equals(agreement.getAction())) {
-			task.setBusinessKey(propertiesManager.getWorkflowServiceRenewBusinessKey());
-			task.setType(propertiesManager.getWorkflowServiceRenewBusinessKey());
+			task.setBusinessKey(isCorporation ? propertiesManager.getWorkflowServiceRenewCorporationBusinessKey() : propertiesManager.getWorkflowServiceRenewMunicipalityBusinessKey());
+			task.setType(isCorporation ? propertiesManager.getWorkflowServiceRenewCorporationBusinessKey() : propertiesManager.getWorkflowServiceRenewMunicipalityBusinessKey());
 		} else if (Action.CANCELLATION.equals(agreement.getAction())) {
-			task.setBusinessKey(propertiesManager.getWorkflowServiceCancelBusinessKey());
-			task.setType(propertiesManager.getWorkflowServiceCancelBusinessKey());
+			task.setBusinessKey(isCorporation ? propertiesManager.getWorkflowServiceCancelCorporationBusinessKey() : propertiesManager.getWorkflowServiceCancelMunicipalityBusinessKey());
+			task.setType(isCorporation ? propertiesManager.getWorkflowServiceCancelCorporationBusinessKey() : propertiesManager.getWorkflowServiceCancelMunicipalityBusinessKey());
 		} else if (Action.EVICTION.equals(agreement.getAction())) {
-			task.setBusinessKey(propertiesManager.getWorkflowServiceEvictBusinessKey());
-			task.setType(propertiesManager.getWorkflowServiceEvictBusinessKey());
+			task.setBusinessKey(isCorporation ? propertiesManager.getWorkflowServiceEvictCorporationBusinessKey() : propertiesManager.getWorkflowServiceEvictMunicipalityBusinessKey());
+			task.setType(isCorporation ? propertiesManager.getWorkflowServiceEvictCorporationBusinessKey() : propertiesManager.getWorkflowServiceEvictMunicipalityBusinessKey());
 		} else {
-			task.setBusinessKey(propertiesManager.getWorkflowServiceCreateBusinessKey());
-			task.setType(propertiesManager.getWorkflowServiceCreateBusinessKey());
+			task.setBusinessKey(isCorporation ? propertiesManager.getWorkflowServiceCreateCorporationBusinessKey() : propertiesManager.getWorkflowServiceCreateMunicipalityBusinessKey());
+			task.setType(isCorporation ? propertiesManager.getWorkflowServiceCreateCorporationBusinessKey() : propertiesManager.getWorkflowServiceCreateMunicipalityBusinessKey());
 		}
+		LOGGER.info("task businesskey :" + task.getBusinessKey());
+		LOGGER.info("task type: " + task.getType());
 		task.setId(agreement.getStateId());
 
 		if (workflowDetails != null) {
@@ -221,4 +230,22 @@ public class WorkflowRepository {
 		return taskRequest;
 	}
 
+	private Boolean isCorporation(String tenantId) {
+
+		City city;
+		Boolean isCorporation = Boolean.FALSE;
+		String url = propertiesManager.getTenantServiceHostName() + "tenant/v1/tenant/_search?code=" + tenantId;
+		TenantResponse tr = restTemplate.postForObject(url, new RequestInfo(), TenantResponse.class);
+		LOGGER.info("Tenant response :" + tr.toString());
+		if (!CollectionUtils.isEmpty(tr.getTenant())) {
+
+			city = tr.getTenant().get(0).getCity();
+			LOGGER.info("City details :" + city.toString());
+			if (propertiesManager.getCityGradeCorp().equalsIgnoreCase(city.getUlbGrade())) {
+				isCorporation = Boolean.TRUE;
+			}
+		}
+		return isCorporation;
+	}
+     
 }

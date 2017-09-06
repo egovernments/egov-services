@@ -101,10 +101,19 @@ constructor(props) {
 	}
 }
 
-	componentDidMount() {
-		
-	}
+componentDidMount() {
 
+}
+
+handleOwner = (value) => {
+    let {handlePrimaryOwner, ownerDetails, toggleSnackbarAndSetText} = this.props;
+
+    if(ownerDetails.hasOwnProperty('owners')) {
+           handlePrimaryOwner(value);
+    } else {
+        toggleSnackbarAndSetText(true, 'Primary owner is mandatory');
+    }
+}
 
   render() {
 	  
@@ -133,10 +142,14 @@ constructor(props) {
       isEditIndex,
       isAddRoom,
 	  isOwnerValid,
-	  handleChangeOwner
+	  handleChangeOwner,
+      handlePrimaryOwner,
+      isPrimaryOwner
     } = this.props;
 
     let {search} = this;
+
+    console.log(isPrimaryOwner);
 
     let cThis = this;
 
@@ -346,14 +359,15 @@ constructor(props) {
                           <br/>
                           <RadioButtonGroup
                             name="ownerRadio"
-                            valueSelected={ownerDetails.owner ? ownerDetails.owner.isPrimaryOwner: 'PrimaryOwner'}
+                            valueSelected={isPrimaryOwner ? isPrimaryOwner : ''}
                             onChange={(e, v) =>{ 
-                            var e = {
-                            target: {
-                            value: v
-                            }
-                            }
-							               handleChangeOwner(e,"owner", "isPrimaryOwner", false,'')
+                                this.handleOwner(v)
+                                var e = {
+                                    target: {
+                                        value: isPrimaryOwner
+                                    }
+                                }
+                                handleChangeOwner(e,"owner", "isPrimaryOwner", false,'')
                             }}
 							>
                             <RadioButton
@@ -376,12 +390,13 @@ constructor(props) {
                           <br/>
                           { (editIndex == -1 || editIndex == undefined ) &&
                             <RaisedButton type="button" label={translate('pt.create.groups.ownerDetails.fields.add')} disabled={!isOwnerValid} primary={true} onClick={()=> {
-                                if(ownerDetails.hasOwnProperty('owner') &&  !ownerDetails.owner.hasOwnProperty('isPrimaryOwner')) {
-                                    ownerDetails.owner.isPrimaryOwner = true;
+                                if(ownerDetails.hasOwnProperty('owner') && !ownerDetails.owner.hasOwnProperty('isPrimaryOwner')) {
+                                    ownerDetails.owner.isPrimaryOwner = isPrimaryOwner;
                                 }
                                 this.props.addNestedFormData("owners","owner");
                                 this.props.resetObject("owner", false);
 				                this.props.resetObject("floor", false);
+                                this.props.handlePrimaryOwner('SecondaryOwner');
                               }
                             }/>
                           }
@@ -463,7 +478,8 @@ const mapStateToProps = state => ({
   fieldErrors: state.form.fieldErrors,
   editIndex: state.form.editIndex,
   addRoom : state.form.addRoom,
-  isOwnerValid : state.form.isOwnerValid
+  isOwnerValid : state.form.isOwnerValid,
+  isPrimaryOwner: state.form.isPrimaryOwner
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -630,6 +646,17 @@ setForm: () => {
       room
     })
   },
+
+  handlePrimaryOwner: (isPrimaryOwner) => {
+    dispatch({
+        type: "HANDLE_PRIMARY_OWNER",
+        isPrimaryOwner,
+    })
+  },
+
+   toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
+     dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
+   }
 
 });
 

@@ -47,6 +47,7 @@ import org.egov.eis.service.PositionService;
 import org.egov.eis.web.contract.*;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.eis.web.errorhandlers.ErrorHandler;
+import org.egov.eis.web.errorhandlers.InvalidDataException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,7 +117,14 @@ public class PositionController {
 		if (errorResponseEntity != null)
 			return errorResponseEntity;
 
-		return positionService.createPosition(positionRequest);
+		try {
+			return positionService.createPosition(positionRequest);
+		} catch (InvalidDataException ex) {
+			return	 errHandler.getErrorInvalidData(ex, positionRequest.getRequestInfo());
+		}
+		catch (Exception ex) {
+			return	 errHandler.getResponseEntityForUnexpectedErrors(positionRequest.getRequestInfo());
+		}
 	}
 
 	/**
@@ -132,7 +140,13 @@ public class PositionController {
 		if (bindingResult.hasErrors())
 			return errHandler.getErrorResponseEntityForBindingErrors(bindingResult, positionBulkRequest.getRequestInfo());
 
+		try{
 		return positionService.createBulkPositions(positionBulkRequest);
+		} catch (InvalidDataException ex) {
+			return errHandler.getErrorInvalidData(ex, positionBulkRequest.getRequestInfo());
+		} catch (Exception ex) {
+			return errHandler.getResponseEntityForUnexpectedErrors(positionBulkRequest.getRequestInfo());
+		}
 	}
 
 	/**

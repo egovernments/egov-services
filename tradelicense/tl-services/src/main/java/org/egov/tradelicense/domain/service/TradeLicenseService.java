@@ -9,6 +9,7 @@ import java.util.Map;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.ResponseInfo;
 import org.egov.tl.commons.web.contract.TradeLicenseSearchContract;
+import org.egov.tl.commons.web.contract.WorkFlowDetails;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tl.commons.web.requests.ResponseInfoFactory;
 import org.egov.tl.commons.web.requests.TradeLicenseRequest;
@@ -26,6 +27,7 @@ import org.egov.tradelicense.domain.model.TradeLicenseSearch;
 import org.egov.tradelicense.domain.repository.TradeLicenseRepository;
 import org.egov.tradelicense.domain.repository.builder.LicenseBillQueryBuilder;
 import org.egov.tradelicense.domain.service.validator.TradeLicenseServiceValidator;
+import org.egov.tradelicense.web.contract.Demand;
 import org.egov.tradelicense.web.contract.DemandResponse;
 import org.egov.tradelicense.web.repository.StatusRepository;
 import org.modelmapper.ModelMapper;
@@ -52,12 +54,12 @@ import lombok.extern.slf4j.Slf4j;
 public class TradeLicenseService {
 
 	public static final String NEW_LICENSE_MODULE_TYPE = "NEW LICENSE";
-	
+
 	public static final String LICENSE_MODULE_TYPE = "LICENSE";
-	
-	public static final String NEW_TRADE_LICENSE_WF_TYPE  = "New Trade License";
-	
-	public static final String NEW_TRADE_LICENSE_BUSINESSKEY  = "New Trade License";
+
+	public static final String NEW_TRADE_LICENSE_WF_TYPE = "New Trade License";
+
+	public static final String NEW_TRADE_LICENSE_BUSINESSKEY = "New Trade License";
 
 	@Autowired
 	private TradeLicenseServiceValidator tradeLicenseServiceValidator;
@@ -85,7 +87,7 @@ public class TradeLicenseService {
 
 	@Autowired
 	private StatusRepository statusRepository;
-	
+
 	@Autowired
 	private LicenseBillService licenseBillService;
 
@@ -112,17 +114,14 @@ public class TradeLicenseService {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors, requestInfo);
 		}
-		
-		
-		
-		
+
 		// external end point validations
 		tradeLicenseServiceValidator.validateCreateTradeLicenseRelated(tradeLicenses, requestInfo);
 
 		// setting the id for the license and support document and fee details
 		for (TradeLicense license : tradeLicenses) {
-			
-			//preparing audit details
+
+			// preparing audit details
 			AuditDetails auditDetails = new AuditDetails();
 			auditDetails.setCreatedTime(new Date().getTime());
 			auditDetails.setLastModifiedTime(new Date().getTime());
@@ -134,50 +133,52 @@ public class TradeLicenseService {
 			license.setAuditDetails(auditDetails);
 
 			license.setId(tradeLicenseRepository.getNextSequence());
-			license.getApplication().setId( tradeLicenseRepository.getApplicationNextSequence());
-			license.getApplication().setLicenseId( license.getId() );
-			
+			license.getApplication().setId(tradeLicenseRepository.getApplicationNextSequence());
+			license.getApplication().setLicenseId(license.getId());
+
+			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+			requestInfoWrapper.setRequestInfo(requestInfo);
+
 			if (!license.getIsLegacy()) {
-
-				RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-				requestInfoWrapper.setRequestInfo(requestInfo);
-
+				
 				LicenseStatusResponse currentStatus = statusRepository.findByModuleTypeAndCode(license.getTenantId(),
 						NEW_LICENSE_MODULE_TYPE, NewLicenseStatus.ACKNOWLEDGED.getName(), requestInfoWrapper);
 
-				//checking the application status and setting to the application
-				if (null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty()){
-					license.setApplicationStatus(currentStatus.getLicenseStatuses().get(0).getId());
-					license.getApplication().setStatus(currentStatus.getLicenseStatuses().get(0).getId().toString());
+				// checking the application status and setting to the
+				// application
+				if (null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty()) {
+					
+					if (currentStatus.getLicenseStatuses().size() > 0) {
+						
+						license.getApplication().setStatus(currentStatus.getLicenseStatuses().get(0).getId().toString());
+					}
 				}
-				
-				populateWorkFlowDetails(license,requestInfo);
-				
+
+				populateWorkFlowDetails(license, requestInfo);
+
 			} else {
-				
-				RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-				requestInfoWrapper.setRequestInfo(requestInfo);
 
 				LicenseStatusResponse currentStatus = statusRepository.findByModuleTypeAndCode(license.getTenantId(),
 						LICENSE_MODULE_TYPE, LicenseStatus.APPROVED.getName(), requestInfoWrapper);
 
-				if (null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty()){
-					
-					if(currentStatus.getLicenseStatuses().size() > 0){
-						
+				if (null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty()) {
+
+					if (currentStatus.getLicenseStatuses().size() > 0) {
+
 						license.setStatus(currentStatus.getLicenseStatuses().get(0).getId());
 					}
-					
-				}	
+
+				}
 
 			}
 
-			if (license.getApplication().getSupportDocuments() != null && license.getApplication().getSupportDocuments().size() > 0) {
+			if (license.getApplication().getSupportDocuments() != null
+					&& license.getApplication().getSupportDocuments().size() > 0) {
 
 				for (SupportDocument supportDocument : license.getApplication().getSupportDocuments()) {
 
 					// supportDocument.setLicenseId(license.getId());
-					supportDocument.setApplicationId( license.getApplication().getId() );
+					supportDocument.setApplicationId(license.getApplication().getId());
 					supportDocument.setId(tradeLicenseRepository.getSupportDocumentNextSequence());
 					if (license.getAuditDetails() != null) {
 						supportDocument.setAuditDetails(license.getAuditDetails());
@@ -187,12 +188,13 @@ public class TradeLicenseService {
 			}
 			if (license.getIsLegacy()) {
 
-				if (license.getApplication().getFeeDetails() != null && license.getApplication().getFeeDetails().size() > 0) {
+				if (license.getApplication().getFeeDetails() != null
+						&& license.getApplication().getFeeDetails().size() > 0) {
 
 					for (LicenseFeeDetail feeDetail : license.getApplication().getFeeDetails()) {
 
 						// feeDetail.setLicenseId(license.getId());
-						feeDetail.setApplicationId( license.getApplication().getId() );
+						feeDetail.setApplicationId(license.getApplication().getId());
 						feeDetail.setId(tradeLicenseRepository.getFeeDetailNextSequence());
 						if (license.getAuditDetails() != null) {
 							feeDetail.setAuditDetails(license.getAuditDetails());
@@ -213,9 +215,11 @@ public class TradeLicenseService {
 			} else {
 
 				if (license.getApplication().getApplicationNumber() == null
-						|| (license.getApplication().getApplicationNumber() != null && license.getApplication().getApplicationNumber().isEmpty())) {
+						|| (license.getApplication().getApplicationNumber() != null
+								&& license.getApplication().getApplicationNumber().isEmpty())) {
 
-					license.getApplication().setApplicationNumber(applNumberGenrationService.generate(license.getTenantId(), requestInfo));
+					license.getApplication().setApplicationNumber(
+							applNumberGenrationService.generate(license.getTenantId(), requestInfo));
 				}
 
 				if (license.getApplication().getApplicationDate() == null) {
@@ -230,26 +234,26 @@ public class TradeLicenseService {
 		return tradeLicenses;
 	}
 
-	private void populateWorkFlowDetails(TradeLicense license,RequestInfo requestInfo) {
-		
-		if(null != license && null != license.getWorkFlowDetails()) {
-			
-			/*if(license.getWorkFlowDetails() == null){
-				license.setWorkFlowDetails(new WorkFlowDetails());
-			}*/
-			
-			license.getWorkFlowDetails().setType(NEW_TRADE_LICENSE_WF_TYPE);
-			license.getWorkFlowDetails().setBusinessKey(NEW_TRADE_LICENSE_BUSINESSKEY);
-			
-			if(null != requestInfo && null != requestInfo.getUserInfo()){
-				license.getWorkFlowDetails().setSenderName(requestInfo.getUserInfo().getUsername());
+	private void populateWorkFlowDetails(TradeLicense license, RequestInfo requestInfo) {
+
+		if (null != license && null != license.getApplication()
+				&& null != license.getApplication().getWorkFlowDetails()) {
+
+			WorkFlowDetails workFlowDetails = license.getApplication().getWorkFlowDetails();
+
+			workFlowDetails.setType(NEW_TRADE_LICENSE_WF_TYPE);
+			workFlowDetails.setBusinessKey(NEW_TRADE_LICENSE_BUSINESSKEY);
+
+			if (null != requestInfo && null != requestInfo.getUserInfo()) {
+				workFlowDetails.setSenderName(requestInfo.getUserInfo().getUsername());
 			}
-			//setting stateid for application to capture to database
-			if(license.getApplication() != null && license.getWorkFlowDetails() != null){
-				license.getApplication().setState_id(license.getWorkFlowDetails().getStateId());
+
+			if (workFlowDetails.getStateId() != null) {
+
+				license.getApplication().setState_id(workFlowDetails.getStateId());
 			}
 		}
-		
+
 	}
 
 	public void addToQue(TradeLicenseRequest request, Boolean isNewRecord) {
@@ -275,25 +279,25 @@ public class TradeLicenseService {
 		for (TradeLicense license : tradeLicenses) {
 
 			if (!license.getIsLegacy()) {
-				
-				populateWorkFlowDetails(license,requestInfo);
-				populateStatus(license, requestInfo);
+
+				populateWorkFlowDetails(license, requestInfo);
+				populateNextStatus(license, requestInfo);
 
 			} else {
-				
+
 				RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 				requestInfoWrapper.setRequestInfo(requestInfo);
 
 				LicenseStatusResponse currentStatus = statusRepository.findByModuleTypeAndCode(license.getTenantId(),
 						LICENSE_MODULE_TYPE, LicenseStatus.APPROVED.getName(), requestInfoWrapper);
 
-				if (null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty()){
-					
-					if(currentStatus.getLicenseStatuses().size() > 0){
-						
+				if (null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty()) {
+
+					if (currentStatus.getLicenseStatuses().size() > 0) {
+
 						license.setStatus(currentStatus.getLicenseStatuses().get(0).getId());
 					}
-					
+
 				}
 			}
 
@@ -302,96 +306,134 @@ public class TradeLicenseService {
 		return tradeLicenses;
 	}
 
-	private void populateStatus(TradeLicense license, RequestInfo requestInfo) {
-		
+	private void populateNextStatus(TradeLicense license, RequestInfo requestInfo) {
+
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
 		LicenseStatusResponse currentStatus = null;
 		LicenseStatusResponse nextStatus = null;
+		WorkFlowDetails workFlowDetails = null;
 
-		if (null != license.getApplication() && null != license.getApplication().getStatus()){
-			
-			currentStatus = statusRepository.findByIds(license.getTenantId(), license.getApplication().getStatus().toString(),
-					requestInfoWrapper);
+		if (null != license.getApplication() && null != license.getApplication().getStatus()) {
+
+			workFlowDetails = license.getApplication().getWorkFlowDetails();
+			currentStatus = statusRepository.findByIds(license.getTenantId(),
+					license.getApplication().getStatus().toString(), requestInfoWrapper);
 		}
-			
 
-		if (null != license.getWorkFlowDetails() && null != license.getWorkFlowDetails().getAction()
-				&& null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty()
-				&& license.getWorkFlowDetails().getAction().equalsIgnoreCase("Forward") && currentStatus
-						.getLicenseStatuses().get(0).getCode() == NewLicenseStatus.APPLICATION_FEE_PAID.getName()) {
+		if (null != requestInfo && null != requestInfo.getApiId()
+				&& !requestInfo.getApiId().equalsIgnoreCase("org.egov.cs.tl")) {
+
+			if (null != workFlowDetails && null != workFlowDetails.getAction() && null != currentStatus
+					&& !currentStatus.getLicenseStatuses().isEmpty()
+					&& workFlowDetails.getAction().equalsIgnoreCase("Forward") && currentStatus.getLicenseStatuses()
+							.get(0).getCode().equalsIgnoreCase(NewLicenseStatus.ACKNOWLEDGED.getName())) {
+
+				nextStatus = statusRepository.findByModuleTypeAndCode(license.getTenantId(), NEW_LICENSE_MODULE_TYPE,
+						NewLicenseStatus.SCRUTINY_COMPLETED.getName(), requestInfoWrapper);
+
+				if (null != nextStatus && !nextStatus.getLicenseStatuses().isEmpty()) {
+
+					license.getApplication().setStatus(nextStatus.getLicenseStatuses().get(0).getId().toString());
+				}
+
+			}
+		}
+
+		if (null != workFlowDetails && null != workFlowDetails.getAction() && null != currentStatus
+				&& !currentStatus.getLicenseStatuses().isEmpty()
+				&& workFlowDetails.getAction().equalsIgnoreCase("Forward") && currentStatus.getLicenseStatuses().get(0)
+						.getCode().equalsIgnoreCase(NewLicenseStatus.APPLICATION_FEE_PAID.getName())) {
 
 			nextStatus = statusRepository.findByModuleTypeAndCode(license.getTenantId(), NEW_LICENSE_MODULE_TYPE,
 					NewLicenseStatus.SCRUTINY_COMPLETED.getName(), requestInfoWrapper);
 
-			if (null != nextStatus && !nextStatus.getLicenseStatuses().isEmpty()){
-				
-				license.setApplicationStatus(nextStatus.getLicenseStatuses().get(0).getId());
+			if (null != nextStatus && !nextStatus.getLicenseStatuses().isEmpty()) {
+
 				license.getApplication().setStatus(nextStatus.getLicenseStatuses().get(0).getId().toString());
 			}
-				
+
 		}
 
-		if (null != license.getWorkFlowDetails() && null != license.getWorkFlowDetails().getAction()
-				&& null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty()
-				&& license.getWorkFlowDetails().getAction().equalsIgnoreCase("Forward") && currentStatus
-						.getLicenseStatuses().get(0).getCode() == NewLicenseStatus.SCRUTINY_COMPLETED.getName()) {
+		if (null != workFlowDetails && null != workFlowDetails.getAction() && null != currentStatus
+				&& !currentStatus.getLicenseStatuses().isEmpty()
+				&& workFlowDetails.getAction().equalsIgnoreCase("Forward") && currentStatus.getLicenseStatuses().get(0)
+						.getCode().equalsIgnoreCase(NewLicenseStatus.SCRUTINY_COMPLETED.getName())) {
 
 			nextStatus = statusRepository.findByModuleTypeAndCode(license.getTenantId(), NEW_LICENSE_MODULE_TYPE,
 					NewLicenseStatus.INSPECTION_COMPLETED.getName(), requestInfoWrapper);
 
-			if (null != nextStatus && !nextStatus.getLicenseStatuses().isEmpty()){
-				
-				license.setApplicationStatus(nextStatus.getLicenseStatuses().get(0).getId());
+			if (null != nextStatus && !nextStatus.getLicenseStatuses().isEmpty()) {
+
 				license.getApplication().setStatus(nextStatus.getLicenseStatuses().get(0).getId().toString());
 			}
-				
+
 		}
 
-		if (null != license.getWorkFlowDetails() && null != license.getWorkFlowDetails().getAction()
-				&& null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty()
-				&& license.getWorkFlowDetails().getAction().equalsIgnoreCase("Approve") && currentStatus
-						.getLicenseStatuses().get(0).getCode() == NewLicenseStatus.INSPECTION_COMPLETED.getName()) {
+		if (null != workFlowDetails && null != workFlowDetails.getAction() && null != currentStatus
+				&& !currentStatus.getLicenseStatuses().isEmpty()
+				&& workFlowDetails.getAction().equalsIgnoreCase("Approve") && currentStatus.getLicenseStatuses().get(0)
+						.getCode().equalsIgnoreCase(NewLicenseStatus.INSPECTION_COMPLETED.getName())) {
 
 			nextStatus = statusRepository.findByModuleTypeAndCode(license.getTenantId(), NEW_LICENSE_MODULE_TYPE,
 					NewLicenseStatus.FINAL_APPROVAL_COMPLETED.getName(), requestInfoWrapper);
 
-			if (null != nextStatus && !nextStatus.getLicenseStatuses().isEmpty()){
-				
-				license.setApplicationStatus(nextStatus.getLicenseStatuses().get(0).getId());
+			if (null != nextStatus && !nextStatus.getLicenseStatuses().isEmpty()) {
 				license.getApplication().setStatus(nextStatus.getLicenseStatuses().get(0).getId().toString());
-				//generate license number and setting license number and license issued date
-				license.setLicenseNumber(licenseNumberGenerationService.generate(license.getTenantId(), requestInfo));
-				license.setIssuedDate(System.currentTimeMillis());
-				
 			}
-			
+
 		}
 
+		if (null != workFlowDetails && null != workFlowDetails.getAction() && null != currentStatus
+				&& !currentStatus.getLicenseStatuses().isEmpty()
+				&& workFlowDetails.getAction().equalsIgnoreCase("Print Certificate")
+				&& currentStatus.getLicenseStatuses().get(0).getCode()
+						.equalsIgnoreCase(NewLicenseStatus.LICENSE_FEE_PAID.getName())) {
+
+			nextStatus = statusRepository.findByModuleTypeAndCode(license.getTenantId(), NEW_LICENSE_MODULE_TYPE,
+					NewLicenseStatus.LICENSE_ISSUED.getName(), requestInfoWrapper);
+
+			if (null != nextStatus && !nextStatus.getLicenseStatuses().isEmpty()) {
+
+				license.getApplication().setStatus(nextStatus.getLicenseStatuses().get(0).getId().toString());
+
+			}
+
+		}
 	}
 
 	@Transactional
 	public TradeLicense update(TradeLicense tradeLicense, RequestInfo requestInfo) {
-        	LicenseStatusResponse currentStatus = null;
-                RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-                requestInfoWrapper.setRequestInfo(requestInfo);
-        	if (null != tradeLicense.getStatus())
-                    currentStatus = statusRepository.findByIds(tradeLicense.getTenantId(), tradeLicense.getStatus().toString(),
-                                    requestInfoWrapper);
+		LicenseStatusResponse currentStatus = null;
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		System.out.println("TenantId: " + tradeLicense.getTenantId() + "Status: " + tradeLicense.getApplication().getStatus().toString());
+		if (null != tradeLicense.getApplication().getStatus())
+			currentStatus = statusRepository.findByIds(tradeLicense.getTenantId(), tradeLicense.getApplication().getStatus().toString(),
+					requestInfoWrapper);
+		if (null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty())
+    		    System.out.println("Current Status: " + currentStatus.getLicenseStatuses()
+                                    .get(0).getCode());
 
-                if (null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty() && currentStatus
-                        .getLicenseStatuses().get(0).getCode() == NewLicenseStatus.INSPECTION_COMPLETED.getName()) {
-                        DemandResponse demandResponse = licenseBillService.createBill(tradeLicense, requestInfo);
-                        TradeLicenseSearch tradeLicenseSearch = tradeLicenseRepository.getByLicenseId(tradeLicense, requestInfo);
-                        if (tradeLicenseSearch != null) {
-                            final Object[] objValue = new Object[] { tradeLicenseSearch.getApplications().get(0).getId(),
-                                    demandResponse.getDemands().get(0).getId(), tradeLicenseSearch.getTenantId(),
-                                    Long.valueOf(tradeLicenseSearch.getAuditDetails().getCreatedBy()),
-                                    new Date().getTime(),
-                                    Long.valueOf(tradeLicenseSearch.getAuditDetails().getLastModifiedBy()),
-                                    new Date().getTime() };
-                            tradeLicenseRepository.createLicenseBill(LicenseBillQueryBuilder.insertLicenseBill(), objValue);
-                        }
+		if (null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty() && currentStatus.getLicenseStatuses()
+				.get(0).getCode().equalsIgnoreCase(NewLicenseStatus.INSPECTION_COMPLETED.getName())) {
+			DemandResponse demandResponse = licenseBillService.createBill(tradeLicense, requestInfo);
+			TradeLicenseSearch tradeLicenseSearch = tradeLicenseRepository.getByLicenseId(tradeLicense, requestInfo);
+			System.out.println("Trade License Search: " + tradeLicenseSearch);
+			if (tradeLicenseSearch != null) {
+				final Object[] objValue = new Object[] { tradeLicenseSearch.getApplications().get(0).getId(),
+						demandResponse.getDemands().get(0).getId(), tradeLicenseSearch.getTenantId(),
+						Long.valueOf(tradeLicenseSearch.getAuditDetails().getCreatedBy()), new Date().getTime(),
+						Long.valueOf(tradeLicenseSearch.getAuditDetails().getLastModifiedBy()), new Date().getTime() };
+				tradeLicenseRepository.createLicenseBill(LicenseBillQueryBuilder.insertLicenseBill(), objValue);
+			}
+		}
+		if (null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty()
+                        && currentStatus.getLicenseStatuses().get(0).getCode() == NewLicenseStatus.LICENSE_FEE_PAID.getName()) {
+                        // generate license number and setting license number and
+                        // license issued date
+		        tradeLicense.setLicenseNumber(licenseNumberGenerationService.generate(tradeLicense.getTenantId(), requestInfo));
+		        tradeLicense.setIssuedDate(System.currentTimeMillis());
                 }
 		return tradeLicenseRepository.update(tradeLicense);
 	}
@@ -400,7 +442,8 @@ public class TradeLicenseService {
 			Integer pageNumber, String sort, String active, Integer[] ids, String applicationNumber,
 			String licenseNumber, String oldLicenseNumber, String mobileNumber, String aadhaarNumber, String emailId,
 			String propertyAssesmentNo, Integer adminWard, Integer locality, String ownerName, String tradeTitle,
-			String tradeType, Integer tradeCategory, Integer tradeSubCategory, String legacy, Integer status, Integer applicationStatus) {
+			String tradeType, Integer tradeCategory, Integer tradeSubCategory, String legacy, Integer status,
+			Integer applicationStatus) {
 
 		TradeLicenseSearchResponse tradeLicenseSearchResponse = new TradeLicenseSearchResponse();
 		//
@@ -576,5 +619,36 @@ public class TradeLicenseService {
 		responseInfo.setStatus(responseStatus);
 		return responseInfo;
 	}
+	
+	public RequestInfo createRequestInfoFromResponseInfo(ResponseInfo responseInfo) {
+            RequestInfo requestInfo = new RequestInfo();
+            String apiId = responseInfo.getApiId();
+            requestInfo.setApiId(apiId);
+            String ver = responseInfo.getVer();
+            requestInfo.setVer(ver);
+            Long ts = null;
+            if (responseInfo.getTs() != null)
+                    ts = responseInfo.getTs();
 
+            requestInfo.setTs(ts);
+            String msgId = responseInfo.getMsgId();
+            requestInfo.setMsgId(msgId);
+            return requestInfo;
+    }
+
+        public void updateTradeLicenseAfterCollection(DemandResponse demandResponse) {
+            if (demandResponse != null) {
+                Demand demand = demandResponse.getDemands().get(0);
+                if (demand != null && demand.getBusinessService() != null && "TRADELICENSE".equals(demand.getBusinessService())) {
+                    log.debug(demand.toString());
+                    tradeLicenseRepository.updateTradeLicenseAfterWorkFlowQuery(demand.getConsumerCode());
+                } else {
+                    log.debug("Demand is null in Trade License service");
+                }
+            }
+        }
+        
+        public TradeLicense searchByApplicationNumber(RequestInfo requestInfo, String applicationNumber) {
+            return tradeLicenseRepository.searchByApplicationNumber(requestInfo, applicationNumber);
+        }
 }

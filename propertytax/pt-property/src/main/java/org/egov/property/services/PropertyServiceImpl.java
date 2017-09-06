@@ -89,6 +89,8 @@ public class PropertyServiceImpl implements PropertyService {
 		for (Property property : propertyRequest.getProperties()) {
 			propertyValidator.validatePropertyMasterData(property, propertyRequest.getRequestInfo());
 			propertyValidator.validatePropertyBoundary(property, propertyRequest.getRequestInfo());
+			if (property.getOldUpicNumber() != null)
+				propertyValidator.validateUpicNo(property, propertyRequest.getRequestInfo());
 			String acknowldgementNumber = generateAcknowledegeMentNumber(property.getTenantId(),
 					propertyRequest.getRequestInfo());
 			property.getPropertyDetail().setApplicationNo(acknowldgementNumber);
@@ -604,7 +606,7 @@ public class PropertyServiceImpl implements PropertyService {
 		calculationList = mapper.readValue(
 				propertyRespone.getProperties().get(0).getPropertyDetail().getTaxCalculations(), typeReference);
 
-		SimpleDateFormat sdf = new SimpleDateFormat(propertiesManager.getSimpleDateFormat());
+		SimpleDateFormat sdf = new SimpleDateFormat(propertiesManager.getDate());
 
 		SimpleDateFormat sdff = new SimpleDateFormat(propertiesManager.getDateAndTimeFormat());
 		List<TaxCalculation> currentYearTax = new ArrayList<>();
@@ -613,15 +615,14 @@ public class PropertyServiceImpl implements PropertyService {
 		for (TaxPeriod taxPeriod : taxPeriodResponse.getTaxPeriods()) {
 
 			for (TaxCalculation taxCalculation : calculationList) {
-
-				if (sdff.parse(taxPeriod.getFromDate()).compareTo(sdf.parse(taxCalculation.getFromDate())) >= 0
-						&& sdff.parse(taxPeriod.getToDate()).compareTo(sdf.parse(taxCalculation.getToDate())) >= 0) {
+				if ((sdff.parse(taxPeriod.getFromDate()).getTime() == sdf.parse(taxCalculation.getFromDate()).getTime())
+						&& (sdff.parse(taxPeriod.getToDate()).getTime() == sdf.parse(taxCalculation.getToDate())
+								.getTime())) {
 
 					currentYearTax.add(taxCalculation);
 
 				}
 			}
-
 		}
 		List<HeadWiseTax> headWiseTaxes = new ArrayList<>();
 
@@ -868,13 +869,14 @@ public class PropertyServiceImpl implements PropertyService {
 			Property property = propertyResponse.getProperties().get(0);
 
 			SimpleDateFormat dbDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+			dbDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 			Date occupancyDate = dbDateFormat.parse(property.getOccupancyDate());
 			String occupancyDateStr = new SimpleDateFormat(propertiesManager.getSimpleDateFormat())
 					.format(occupancyDate);
 
 			// Fetch TaxPeriods
 			TaxPeriodResponse taxPeriodResponse = getTaxPeriodsForOccupancyDate(requestInfoWrapper.getRequestInfo(),
-					tenantId, occupancyDateStr);
+					tenantId, occupancyDateStr, dbDateFormat);
 			logger.info("PropertyServiceImpl getDemandsForProperty() taxPeriodResponse : " + taxPeriodResponse);
 
 			// Fetch TaxHeads
@@ -911,16 +913,16 @@ public class PropertyServiceImpl implements PropertyService {
 						long time = taxPeriodFromDate.getTime();
 
 						List<Demand> matchedDemands = demandRespForSavedDemands.getDemands().stream()
-								.filter(demand -> demand.getTaxPeriodFrom().equals(String.valueOf(time)))
-								.collect(Collectors.toList());
+								.filter(demand -> demand.getTaxPeriodFrom() == time).collect(Collectors.toList());
 						if (matchedDemands == null) {
 							newDemandList = prepareDemands(tenantId, upicNumber, property, taxHeadResponse, taxPeriod);
 							finalDemandList.addAll(newDemandList);
 						} else {
-							if(matchedDemands.size()>0){
-							finalDemandList.add(matchedDemands.get(0));
-							}else{
-								newDemandList = prepareDemands(tenantId, upicNumber, property, taxHeadResponse, taxPeriod);
+							if (matchedDemands.size() > 0) {
+								finalDemandList.add(matchedDemands.get(0));
+							} else {
+								newDemandList = prepareDemands(tenantId, upicNumber, property, taxHeadResponse,
+										taxPeriod);
 								finalDemandList.addAll(newDemandList);
 							}
 						}
@@ -958,13 +960,15 @@ public class PropertyServiceImpl implements PropertyService {
 	 * @return TaxPeriodResponse
 	 */
 	private TaxPeriodResponse getTaxPeriodsForOccupancyDate(RequestInfo requestInfo, String tenantId,
-			String occupancyDateStr) {
+			String occupancyDateStr, SimpleDateFormat dateFormat) {
 		StringBuffer taxPeriodSearchUrl = new StringBuffer();
 		taxPeriodSearchUrl.append(propertiesManager.getCalculatorHostName());
 		taxPeriodSearchUrl.append(propertiesManager.getCalculatorTaxperiodsSearch());
-		String todate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
+
+		String toDate = dateFormat.format(new Date());
+		logger.info("getTaxPeriodsForOccupancyDate() ----------- fromDate ---->> "+occupancyDateStr+" and toDate ---->> "+toDate);
 		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(taxPeriodSearchUrl.toString())
-				.queryParam("tenantId", tenantId).queryParam("fromDate", occupancyDateStr).queryParam("toDate", todate);
+				.queryParam("tenantId", tenantId).queryParam("fromDate", occupancyDateStr).queryParam("toDate", toDate);
 
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);

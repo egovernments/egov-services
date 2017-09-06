@@ -112,6 +112,9 @@ public class PropertiesManager {
 
 	@Value("${error.oldLicense.duplicate}")
 	private String duplicateOldTradeLicenseMsg;
+	
+	@Value("${error.applicationnumber.duplicate}")
+        private String duplicateTradeApplicationNumberMsg;
 
 	@Value("${error.license.categoryendpoint}")
 	private String catEndPointError;
@@ -282,5 +285,8 @@ public class PropertiesManager {
 	
 	@Value("${tl.error.tradecommencementdate.notvalid}")
 	private String tradeCommencementDateNotValidMsg;
+	
+	@Value("${kafka.topics.demandBill.update.name}")
+	private String updateDemandBillTopicName;
 
 }

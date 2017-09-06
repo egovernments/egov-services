@@ -17,6 +17,14 @@ import org.egov.tl.commons.web.response.LicenseStatusResponse;
 import org.egov.tl.commons.web.response.UOMResponse;
 import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.common.persistense.repository.JdbcRepository;
+import org.egov.tradelicense.domain.enums.ApplicationType;
+import org.egov.tradelicense.domain.enums.BusinessNature;
+import org.egov.tradelicense.domain.enums.OwnerShipType;
+import org.egov.tradelicense.domain.model.AuditDetails;
+import org.egov.tradelicense.domain.model.LicenseApplication;
+import org.egov.tradelicense.domain.model.LicenseFeeDetail;
+import org.egov.tradelicense.domain.model.SupportDocument;
+import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.persistence.entity.LicenseApplicationSearchEntity;
 import org.egov.tradelicense.persistence.entity.LicenseFeeDetailSearchEntity;
 import org.egov.tradelicense.persistence.entity.SupportDocumentSearchEntity;
@@ -180,7 +188,11 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			license.setApplicationNumber(license.getLicenseApplicationSearchEntitys().get(0).getApplicationNumber());
 
 			license.setLicenseNumber(getString(row.get("licenseNumber")));
-			license.setOldLicenseNumber(getString(row.get("oldLicenseNumber")));
+			if(row.get("oldLicenseNumber") == null){
+				license.setOldLicenseNumber(null);
+			} else {
+				license.setOldLicenseNumber(getString(row.get("oldLicenseNumber")));
+			}
 			license.setAdhaarNumber(getString(row.get("adhaarNumber")));
 			license.setMobileNumber(getString(row.get("mobileNumber")));
 			license.setOwnerName(getString(row.get("ownerName")));
@@ -197,6 +209,7 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			if (row.get("status") != null) {
 				license.setStatus(Long.valueOf((getString(row.get("status")))));
 			}
+			license.setStatusName(getString(statusName));
 			license.setTradeAddress(getString(row.get("tradeAddress")));
 			license.setOwnerShipType(getString(row.get("ownerShipType")));
 			license.setTradeTitle(getString(row.get("tradeTitle")));
@@ -326,6 +339,7 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			LicenseApplicationSearchEntity licenseApplication = new LicenseApplicationSearchEntity();
 			licenseApplication.setId(getLong(row.get("id")));
 			licenseApplication.setTenantId(getString(row.get("tenantId")));
+			licenseApplication.setLicenseId(getLong(row.get("licenseId")));
 			licenseApplication.setState_id(getString(row.get("state_id")));
 			licenseApplication.setStatus(getString(row.get("status")));
 			licenseApplication.setStatusName(getApplicationStatusName(getString(row.get("tenantId")), getString( row.get("status")), requestInfo));
@@ -872,5 +886,126 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 	        return appStatus;
 	        
 	    }
+	 
+	 public TradeLicense searchByApplicationNumber(RequestInfo requestInfo, String applicationNumber) {
+
+             MapSqlParameterSource parameter = new MapSqlParameterSource();
+             StringBuffer searchSql = new StringBuffer();
+             TradeLicense tradeLicense = new TradeLicense();
+             searchSql.append(
+                "select * from egtl_license where id = (select licenseid from egtl_license_application"
+                + " where applicationnumber = :applicationNumber)");
+             parameter.addValue("applicationNumber", applicationNumber);
+             List<TradeLicenseSearchEntity> tradeLicenseSearchEntities = executeSearchQuery(requestInfo, searchSql.toString(),
+                             parameter);
+             if (tradeLicenseSearchEntities != null && !tradeLicenseSearchEntities.isEmpty()) {
+                 TradeLicenseSearchEntity entity = tradeLicenseSearchEntities.get(0);
+                 tradeLicense.setId(entity.getId());
+                 tradeLicense.setActive(entity.getActive());
+                 tradeLicense.setAdhaarNumber(entity.getAdhaarNumber());
+                 tradeLicense.setAdminWardId(entity.getAdminWardId());
+                 if (entity.getAgreementDate() != null)
+                     tradeLicense.setAgreementDate(entity.getAgreementDate().getTime());
+                 tradeLicense.setAgreementNo(entity.getAgreementNo());
+                 LicenseApplication application = new LicenseApplication();
+                 LicenseApplicationSearchEntity applicationSearchEntity = entity.getLicenseApplicationSearchEntitys().get(0);
+                 application.setId(applicationSearchEntity.getId());
+                 if (applicationSearchEntity.getApplicationDate() != null)
+                     application.setApplicationDate(applicationSearchEntity.getApplicationDate().getTime());
+                 if (applicationSearchEntity.getApplicationDate() != null)
+                     tradeLicense.setApplicationDate(applicationSearchEntity.getApplicationDate().getTime());
+                 application.setApplicationNumber(applicationSearchEntity.getApplicationNumber());
+                 tradeLicense.setApplicationNumber(applicationSearchEntity.getApplicationNumber());
+                 tradeLicense.setApplicationType(Enum.valueOf(ApplicationType.class, applicationSearchEntity.getApplicationType()));
+                 application.setApplicationType(applicationSearchEntity.getApplicationType());
+                 AuditDetails appAuditDetails = new AuditDetails();
+                 appAuditDetails.setCreatedBy(applicationSearchEntity.getCreatedBy());
+                 appAuditDetails.setCreatedTime(applicationSearchEntity.getCreatedTime());
+                 appAuditDetails.setLastModifiedBy(applicationSearchEntity.getLastModifiedBy());
+                 appAuditDetails.setLastModifiedTime(applicationSearchEntity.getLastModifiedTime());
+                 application.setAuditDetails(appAuditDetails);
+                 application.setFieldInspectionReport(applicationSearchEntity.getFieldInspectionReport());
+                 application.setLicenseFee(applicationSearchEntity.getLicenseFee());
+                 application.setLicenseId(applicationSearchEntity.getLicenseId());
+                 application.setState_id(applicationSearchEntity.getState_id());
+                 application.setStatus(applicationSearchEntity.getStatus());
+                 application.setTenantId(applicationSearchEntity.getTenantId());
+                 tradeLicense.setApplication(application);
+                 List<LicenseFeeDetail> details = new ArrayList<>();
+                 for (LicenseFeeDetailSearchEntity feeDetailSearchEntity : applicationSearchEntity.getFeeDetailEntitys()) {
+                     LicenseFeeDetail detail = new LicenseFeeDetail();
+                     detail.setId(feeDetailSearchEntity.getId());
+                     detail.setApplicationId(feeDetailSearchEntity.getApplicationId());
+                     AuditDetails feeAuditDetails = new AuditDetails();
+                     feeAuditDetails.setCreatedBy(feeDetailSearchEntity.getCreatedBy());
+                     feeAuditDetails.setCreatedTime(feeDetailSearchEntity.getCreatedTime());
+                     feeAuditDetails.setLastModifiedBy(feeDetailSearchEntity.getLastModifiedBy());
+                     feeAuditDetails.setLastModifiedTime(feeDetailSearchEntity.getLastModifiedTime());
+                     detail.setAuditDetails(feeAuditDetails);
+                     detail.setFinancialYear(feeDetailSearchEntity.getFinancialYear());
+                     detail.setPaid(feeDetailSearchEntity.getPaid());
+                     detail.setTenantId(feeDetailSearchEntity.getTenantId());
+                     details.add(detail);
+                 }
+                 tradeLicense.setFeeDetails(details);
+                 List<SupportDocument> documents = new ArrayList<>();
+                 for (SupportDocumentSearchEntity documentSearchEntity : applicationSearchEntity.getSupportDocumentEntitys()) {
+                     SupportDocument document = new SupportDocument();
+                     document.setApplicationId(documentSearchEntity.getApplicationId());
+                     AuditDetails docAuditDetails = new AuditDetails();
+                     docAuditDetails.setCreatedBy(documentSearchEntity.getCreatedBy());
+                     docAuditDetails.setCreatedTime(documentSearchEntity.getCreatedTime());
+                     docAuditDetails.setLastModifiedBy(documentSearchEntity.getLastModifiedBy());
+                     docAuditDetails.setLastModifiedTime(documentSearchEntity.getLastModifiedTime());
+                     document.setAuditDetails(docAuditDetails);
+                     document.setComments(documentSearchEntity.getComments());
+                     document.setDocumentTypeId(documentSearchEntity.getDocumentTypeId());
+                     document.setFileStoreId(documentSearchEntity.getFileStoreId());
+                     document.setTeantId(documentSearchEntity.getTenantId());
+                     documents.add(document);
+                 }
+                 tradeLicense.setSupportDocuments(documents);
+                 application.setSupportDocuments(documents);
+                 AuditDetails auditDetails = new AuditDetails();
+                 auditDetails.setCreatedBy(entity.getCreatedBy());
+                 auditDetails.setCreatedTime(entity.getCreatedTime());
+                 auditDetails.setLastModifiedBy(entity.getLastModifiedBy());
+                 auditDetails.setLastModifiedTime(entity.getLastModifiedTime());
+                 tradeLicense.setAuditDetails(auditDetails);
+                 tradeLicense.setCategoryId(entity.getCategoryId());
+                 tradeLicense.setEmailId(entity.getEmailId());
+                 if (entity.getExpiryDate() != null)
+                     tradeLicense.setExpiryDate(entity.getExpiryDate().getTime());
+                 tradeLicense.setFatherSpouseName(entity.getFatherSpouseName());
+                 tradeLicense.setIsLegacy(entity.getIsLegacy());
+                 tradeLicense.setIsPropertyOwner(entity.getIsPropertyOwner());
+                 if (entity.getIssuedDate() != null)
+                     tradeLicense.setIssuedDate(entity.getIssuedDate().getTime());
+                 tradeLicense.setLicenseNumber(entity.getLicenseNumber());
+                 if (entity.getLicenseValidFromDate() != null)
+                     tradeLicense.setLicenseValidFromDate(entity.getLicenseValidFromDate().getTime());
+                 tradeLicense.setLocalityId(entity.getLocalityId());
+                 tradeLicense.setMobileNumber(entity.getMobileNumber());
+                 tradeLicense.setOldLicenseNumber(entity.getOldLicenseNumber());
+                 tradeLicense.setOwnerAddress(entity.getOwnerAddress());
+                 tradeLicense.setOwnerName(entity.getOwnerName());
+                 tradeLicense.setOwnerShipType(Enum.valueOf(OwnerShipType.class, entity.getOwnerShipType()));
+                 tradeLicense.setPropertyAssesmentNo(entity.getPropertyAssesmentNo());
+                 tradeLicense.setQuantity(entity.getQuantity());
+                 tradeLicense.setRemarks(entity.getRemarks());
+                 tradeLicense.setRevenueWardId(entity.getRevenueWardId());
+                 tradeLicense.setStatus(entity.getStatus());
+                 tradeLicense.setSubCategoryId(entity.getSubCategoryId());
+                 tradeLicense.setTenantId(entity.getTenantId());
+                 tradeLicense.setTradeAddress(entity.getTradeAddress());
+                 if (entity.getTradeCommencementDate() != null)
+                     tradeLicense.setTradeCommencementDate(entity.getTradeCommencementDate().getTime());
+                 tradeLicense.setTradeTitle(entity.getTradeTitle());
+                 tradeLicense.setTradeType(Enum.valueOf(BusinessNature.class, entity.getTradeType()));
+                 tradeLicense.setUomId(entity.getUomId());
+                 tradeLicense.setValidityYears(entity.getValidityYears());
+             }
+             return tradeLicense;
+         }
 
 }

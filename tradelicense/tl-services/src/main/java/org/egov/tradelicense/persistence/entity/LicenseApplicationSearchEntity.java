@@ -68,6 +68,8 @@ public class LicenseApplicationSearchEntity {
 		AuditDetails auditDetails = new AuditDetails();
 
 		licenseAppSearch.setId(this.id);
+		licenseAppSearch.setTenantId(this.tenantId);
+		licenseAppSearch.setLicenseId(this.licenseId);
 		licenseAppSearch.setApplicationDate(this.applicationDate);
 		licenseAppSearch.setApplicationNumber(this.applicationNumber);
 		licenseAppSearch.setApplicationType(this.applicationType);

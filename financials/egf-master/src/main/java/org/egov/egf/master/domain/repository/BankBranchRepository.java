@@ -65,7 +65,7 @@ public class BankBranchRepository {
 	}
 
 	@Transactional
-	public List<BankBranch> save(List<BankBranch> bankBranchs, RequestInfo requestInfo) {
+	public List<BankBranch> save(List<BankBranch> bankBranches, RequestInfo requestInfo) {
 
 		ModelMapper mapper = new ModelMapper();
 		BankBranchContract contract;
@@ -77,7 +77,7 @@ public class BankBranchRepository {
 			request.setRequestInfo(requestInfo);
 			request.setBankBranches(new ArrayList<>());
 
-			for (BankBranch b : bankBranchs) {
+			for (BankBranch b : bankBranches) {
 
 				contract = new BankBranchContract();
 				contract.setCreatedDate(new Date());
@@ -88,12 +88,12 @@ public class BankBranchRepository {
 
 			addToQue(request);
 
-			return bankBranchs;
+			return bankBranches;
 		} else {
 
 			List<BankBranch> resultList = new ArrayList<>();
 
-			for (BankBranch b : bankBranchs) {
+			for (BankBranch b : bankBranches) {
 
 				resultList.add(save(b));
 			}
@@ -119,7 +119,7 @@ public class BankBranchRepository {
 	}
 
 	@Transactional
-	public List<BankBranch> update(List<BankBranch> bankBranchs, RequestInfo requestInfo) {
+	public List<BankBranch> update(List<BankBranch> bankBranches, RequestInfo requestInfo) {
 
 		ModelMapper mapper = new ModelMapper();
 		BankBranchContract contract;
@@ -131,7 +131,7 @@ public class BankBranchRepository {
 			request.setRequestInfo(requestInfo);
 			request.setBankBranches(new ArrayList<>());
 
-			for (BankBranch b : bankBranchs) {
+			for (BankBranch b : bankBranches) {
 
 				contract = new BankBranchContract();
 				contract.setCreatedDate(new Date());
@@ -142,12 +142,12 @@ public class BankBranchRepository {
 
 			addToQue(request);
 
-			return bankBranchs;
+			return bankBranches;
 		} else {
 
 			List<BankBranch> resultList = new ArrayList<>();
 
-			for (BankBranch b : bankBranchs) {
+			for (BankBranch b : bankBranches) {
 
 				resultList.add(update(b));
 			}
@@ -213,9 +213,9 @@ public class BankBranchRepository {
 		Map<String, Object> message = new HashMap<>();
 
 		if (request.getRequestInfo().getAction().equalsIgnoreCase(Constants.ACTION_CREATE)) {
-			message.put("bankBranch_create", request);
+			message.put("bankbranch_create", request);
 		} else {
-			message.put("bankBranch_update", request);
+			message.put("bankbranch_update", request);
 		}
 		bankBranchQueueRepository.add(message);
 	}
@@ -223,7 +223,7 @@ public class BankBranchRepository {
 	public void addToSearchQueue(BankBranchRequest request) {
 		Map<String, Object> message = new HashMap<>();
 
-		message.put("bankBranch_persisted", request);
+		message.put("bankbranch_persisted", request);
 
 		bankBranchQueueRepository.addToSearch(message);
 	}

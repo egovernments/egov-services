@@ -1,7 +1,7 @@
 package org.egov.tl.workflow.service;
 
+import org.egov.tl.commons.web.contract.LicenseApplicationContract;
 import org.egov.tl.commons.web.contract.RequestInfo;
-import org.egov.tl.commons.web.contract.TradeLicenseContract;
 import org.egov.tl.commons.web.contract.WorkFlowDetails;
 import org.egov.tl.workflow.model.Attribute;
 import org.egov.tl.workflow.model.Position;
@@ -25,31 +25,31 @@ public class WorkflowService {
 		this.workflowRepository = workflowRepository;
 	}
 
-	public void enrichWorkflow(TradeLicenseContract tradeLicense, RequestInfo requestInfo) {
+	public void enrichWorkflow(LicenseApplicationContract application, RequestInfo requestInfo) {
 
-		if (isWorkflowCreate(tradeLicense.getWorkFlowDetails())) {
+		if (isWorkflowCreate(application.getWorkFlowDetails())) {
 
 			ProcessInstanceResponse processInstanceResponse = new ProcessInstanceResponse();
-			ProcessInstanceRequest request = getProcessInstanceRequest(tradeLicense.getWorkFlowDetails(),
-					tradeLicense.getTenantId());
+			ProcessInstanceRequest request = getProcessInstanceRequest(application.getWorkFlowDetails(),
+					application.getTenantId());
 
 			request.setRequestInfo(requestInfo);
 
 			processInstanceResponse = workflowRepository.start(request);
 
 			if (processInstanceResponse != null)
-				update(processInstanceResponse, tradeLicense);
+				update(processInstanceResponse, application);
 
-		} else if (isWorkflowUpdate(tradeLicense.getWorkFlowDetails())) {
+		} else if (isWorkflowUpdate(application.getWorkFlowDetails())) {
 
 			TaskResponse taskResponse = new TaskResponse();
-			TaskRequest taskRequest = getTaskRequest(tradeLicense.getWorkFlowDetails(), tradeLicense.getTenantId());
+			TaskRequest taskRequest = getTaskRequest(application.getWorkFlowDetails(), application.getTenantId());
 			taskRequest.setRequestInfo(requestInfo);
 
 			taskResponse = workflowRepository.update(taskRequest);
 
 			if (taskResponse != null)
-				update(taskResponse, tradeLicense);
+				update(taskResponse, application);
 
 		}
 
@@ -67,6 +67,7 @@ public class WorkflowService {
 			processInstance.setTenantId(tenantId);
 			processInstance.setAssignee(new Position());
 			processInstance.getAssignee().setId(workFlowDetails.getAssignee());
+			processInstance.setInitiatorPosition(workFlowDetails.getAssignee());
 			processInstance.setSenderName(workFlowDetails.getSenderName());
 			processInstance.setDetails(workFlowDetails.getDetails());
 			processInstance.setStatus(workFlowDetails.getStatus());
@@ -109,16 +110,16 @@ public class WorkflowService {
 		return workFlowDetails != null && workFlowDetails.getAction() != null && !workFlowDetails.getAction().isEmpty();
 	}
 
-	private void update(ProcessInstanceResponse processInstanceResponse, TradeLicenseContract tradeLicense) {
-		if (tradeLicense != null && tradeLicense.getApplication() != null) {
-			tradeLicense.getApplication().setState_id(processInstanceResponse.getProcessInstance().getId());
+	private void update(ProcessInstanceResponse processInstanceResponse, LicenseApplicationContract application) {
+		if (application != null) {
+			application.setState_id(processInstanceResponse.getProcessInstance().getId());
 		}
 	}
 
-	private void update(TaskResponse taskResponse, TradeLicenseContract tradeLicense) {
+	private void update(TaskResponse taskResponse, LicenseApplicationContract application) {
 
-		if (tradeLicense != null && tradeLicense.getApplication() != null) {
-			tradeLicense.getApplication().setState_id(taskResponse.getTask().getId());
+		if (application != null) {
+			application.setState_id(taskResponse.getTask().getId());
 		}
 	}
 

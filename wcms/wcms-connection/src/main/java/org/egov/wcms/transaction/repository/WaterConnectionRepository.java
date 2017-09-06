@@ -521,11 +521,11 @@ public class WaterConnectionRepository {
                 acknowledgeNumber);
         return connection;
     }
-    public Connection getWaterConnectionByConsumerNumber(final String acknowledgeNumber) {
+    public Connection getWaterConnectionByConsumerNumber(final String acknowledgeNumber,final String tenantid) {
 
         final Connection connection = jdbcTemplate.queryForObject(
                 WaterConnectionQueryBuilder.getWaterConnectionByConsumerNumber(), new UpdateWaterConnectionRowMapper(),
-                acknowledgeNumber);
+                acknowledgeNumber,tenantid);
         return connection;
     }
 

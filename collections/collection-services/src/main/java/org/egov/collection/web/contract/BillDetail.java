@@ -68,28 +68,12 @@ public class BillDetail {
 
 	private String consumerCode;
 	
-	private String bankName;
-
 	private String consumerType;
-	
-	private String department;
-	
-	private String remarks;
-	
-	private String consumerNo;
-	    
-	private String consumerName;
 
 	private BigDecimal minimumAmount;
 
 	private BigDecimal totalAmount;
 	
-	private BigDecimal advanceAmount; 
-	
-        private BigDecimal adjustmentAmount;
-	    
-	private String consumerAddress;
-
         private List<String> collectionModesNotAllowed = new ArrayList<>();
 
 	private String tenantId;
@@ -125,8 +109,6 @@ public class BillDetail {
 	@JsonProperty("billAccountDetails")
 	private List<BillAccountDetail> billAccountDetails = new ArrayList<>();
 
-    private String manualReceiptNumber;
+        private String manualReceiptNumber;
     
-    private Long manualreceiptDate;
-
 }

@@ -162,7 +162,7 @@ public class SupplierJdbcRepository extends JdbcRepository {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("bankAccount =:bankAccount");
+			params.append("bankAccountId =:bankAccount");
 			paramValues.put("bankAccount", supplierSearchEntity.getBankAccountId());
 		}
 		if (supplierSearchEntity.getIfscCode() != null) {
@@ -176,7 +176,7 @@ public class SupplierJdbcRepository extends JdbcRepository {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("bank =:bank");
+			params.append("bankId =:bank");
 			paramValues.put("bank", supplierSearchEntity.getBankId());
 		}
 

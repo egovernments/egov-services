@@ -92,7 +92,7 @@ public class SubSchemeJdbcRepository extends JdbcRepository {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("scheme =:scheme");
+			params.append("schemeId =:scheme");
 			paramValues.put("scheme", subSchemeSearchEntity.getSchemeId());
 		}
 		if (subSchemeSearchEntity.getCode() != null) {

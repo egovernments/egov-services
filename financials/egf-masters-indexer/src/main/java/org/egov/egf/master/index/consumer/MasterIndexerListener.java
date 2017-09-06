@@ -150,7 +150,7 @@ public class MasterIndexerListener {
 				for (final BankAccountContract bankAccountContract : request.getBankAccounts()) {
 					final HashMap<String, Object> indexObj = getBankAccountIndexObject(bankAccountContract);
 					elasticSearchRepository.index(BANKACCOUNT_OBJECT_TYPE,
-							bankAccountContract.getTenantId() + "-" + bankAccountContract.getAccountNumber(), indexObj);
+							bankAccountContract.getAccountNumber() + "-" + bankAccountContract.getTenantId(), indexObj);
 				}
 		}
 
@@ -164,7 +164,7 @@ public class MasterIndexerListener {
 					final HashMap<String, Object> indexObj = getAccountCodePurposeContractIndexObject(
 							accountCodePurposeContract);
 					elasticSearchRepository.index(ACCOUNTCODEPURPOSE_OBJECT_TYPE,
-							accountCodePurposeContract.getTenantId() + "-" + accountCodePurposeContract.getName(),
+							accountCodePurposeContract.getName() + "-" + accountCodePurposeContract.getTenantId(),
 							indexObj);
 				}
 		}
@@ -179,7 +179,7 @@ public class MasterIndexerListener {
 					final HashMap<String, Object> indexObj = getAccountDetailTypeContractIndexObject(
 							accountDetailTypeContract);
 					elasticSearchRepository.index(ACCOUNTDETAILTYPE_OBJECT_TYPE,
-							accountDetailTypeContract.getTenantId() + "-" + accountDetailTypeContract.getName(),
+							accountDetailTypeContract.getName() + "-" + accountDetailTypeContract.getTenantId(),
 							indexObj);
 				}
 		}
@@ -194,7 +194,7 @@ public class MasterIndexerListener {
 					final HashMap<String, Object> indexObj = getAccountDetailKeyContractIndexObject(
 							accountDetailKeyContract);
 					elasticSearchRepository.index(ACCOUNTDETAILKEY_OBJECT_TYPE,
-							accountDetailKeyContract.getTenantId() + "-" + accountDetailKeyContract.getKey(), indexObj);
+							accountDetailKeyContract.getKey() + "-" + accountDetailKeyContract.getTenantId(), indexObj);
 				}
 		}
 

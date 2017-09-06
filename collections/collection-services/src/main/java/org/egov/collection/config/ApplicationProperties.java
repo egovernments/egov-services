@@ -34,6 +34,12 @@ public class ApplicationProperties {
     @Value("${kafka.topics.receipt.update.key}")
     private String updateReceiptTopicKey;
     
+    @Value("${kafka.topics.legacy.receipt.create.name}")
+    private String createLegacyReceiptTopicName;
+    
+    @Value("${kafka.topics.legacy.receipt.create.key}")
+    private String createLegacyReceiptTopicKey;
+    
     @Value("${egov.services.workflow_service.hostname}")
     private String workflowServiceHostName;
 

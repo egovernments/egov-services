@@ -2017,7 +2017,7 @@ definitions:
           type: string
           description: code of the MutationMaster
           maxLength: 64
-          minLength: 2
+          minLength: 1
         nameLocal:
           type: string
           description: name local of the MutationMaster

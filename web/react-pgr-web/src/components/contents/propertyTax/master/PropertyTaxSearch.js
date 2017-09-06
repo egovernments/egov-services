@@ -97,32 +97,31 @@ class PropertyTaxSearch extends Component {
        super(props);
        this.state = {
          searchBtnText : 'Search',
-		 zone:[],
-		 ward:[],
-		 location:[],
-		 revenueCircle:[],
-		 resultList:[],
-		 usage:[],
-		 propertytypes:[],
-		 showDcb : false,
-		 demands:''
+    		 zone:[],
+    		 ward:[],
+    		 location:[],
+    		 revenueCircle:[],
+    		 resultList:[],
+    		 usage:[],
+    		 propertytypes:[],
+    		 showDcb : false,
+    		 demands:''
        }
        this.search=this.search.bind(this);
    }
 
   componentWillMount()
   {
-
     //call boundary service fetch wards,location,zone data
   }
 
   componentDidMount()
   {
-    let {initForm} = this.props;
-    initForm();
-    let {toggleDailogAndSetText}=this.props;
+      let {initForm} = this.props;
+      initForm();
+      let {toggleDailogAndSetText}=this.props;
    
-	 var currentThis = this;
+	   var currentThis = this;
 
         Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"LOCALITY", hierarchyTypeName:"LOCATION"}).then((res)=>{
           currentThis.setState({location : res.Boundary})
@@ -151,30 +150,27 @@ class PropertyTaxSearch extends Component {
             ward : []
           })
         })
-		
-		Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"REVENUE", hierarchyTypeName:"REVENUE"}).then((res)=>{
-			currentThis.setState({revenueCircle : res.Boundary})
+    		
+    		Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"REVENUE", hierarchyTypeName:"REVENUE"}).then((res)=>{
+    			currentThis.setState({revenueCircle : res.Boundary})
         }).catch((err)=> {
-			currentThis.setState({revenueCircle : []})
+    			currentThis.setState({revenueCircle : []})
         })
-		
-		Api.commonApiPost('pt-property/property/usages/_search').then((res)=>{
-			currentThis.setState({usage : res.usageMasters})
-        }).catch((err)=> {
-			currentThis.setState({usage : []})
-          console.log(err)
+    		
+    		Api.commonApiPost('pt-property/property/usages/_search').then((res)=>{
+    			currentThis.setState({usage : res.usageMasters})
+            }).catch((err)=> {
+    			currentThis.setState({usage : []})
+              console.log(err)
         })
-		
-		Api.commonApiPost('pt-property/property/propertytypes/_search',{}, {},false, true).then((res)=>{
-			currentThis.setState({propertytypes:res.propertyTypes})
-		}).catch((err)=> {
-			currentThis.setState({
-			  propertytypes:[]
-			})
-			console.log(err)
-		})
-		
-   
+    		
+    		Api.commonApiPost('pt-property/property/propertytypes/_search',{}, {},false, true).then((res)=>{
+    			currentThis.setState({propertytypes:res.propertyTypes})
+    		}).catch((err)=> {
+    			currentThis.setState({
+    			  propertytypes:[]
+    			})
+    		})
   }
 
   componentWillUnmount(){
@@ -187,42 +183,39 @@ class PropertyTaxSearch extends Component {
 	  
   }
 
-
-
   search(e)
   {
       let {showTable,changeButtonText, propertyTaxSearch, setLoadingStatus, toggleSnackbarAndSetText }=this.props;
       e.preventDefault();
 	  
-	  setLoadingStatus('loading');
+	   setLoadingStatus('loading');
 	  
-	  let current = this;
+	   let current = this;
 	  
-	var query = propertyTaxSearch;
+	   var query = propertyTaxSearch;
 
-  for(var key in query){
-    if(query[key] == '' || query[key] === null || query[key] === undefined){
-      delete query[key];
-    }
-  }
+      for(var key in query){
+        if(query[key] == '' || query[key] === null || query[key] === undefined){
+          delete query[key];
+        }
+      }
 	  
       Api.commonApiPost('pt-property/properties/_search', query,{}, false, true).then((res)=>{   
-		setLoadingStatus('hide');
-		if(res.hasOwnProperty('Errors')){
-			toggleSnackbarAndSetText(true, "Something went wrong. Please try again.")
-			current.setState({
-				resultList:[]
-			})
-		} else {
-			
-			if(res.hasOwnProperty('properties') && res.properties.length !=0 && res.properties[0].channel == 'DATA_ENTRY') {
-				current.setState({
-					showDcb: true
-				})
-			} else {
-				current.setState({
-					showDcb: false
-				})
+    		setLoadingStatus('hide');
+    		if(res.hasOwnProperty('Errors')){
+    			toggleSnackbarAndSetText(true, "Something went wrong. Please try again.")
+    			current.setState({
+    				resultList:[]
+    			})
+    		} else {
+    			if(res.hasOwnProperty('properties') && res.properties.length !=0 && res.properties[0].channel == 'DATA_ENTRY') {
+    				current.setState({
+    					showDcb: true
+    				})
+    			} else {
+    				current.setState({
+    					showDcb: false
+    			   })
 			}
 			
 			flag=1;
@@ -303,11 +296,9 @@ class PropertyTaxSearch extends Component {
       buttonText
     } = this.props;
 	
-    let {search} = this;
-
-	let currentThis = this;
-	
-	let {history} = this.props;
+   let {search} = this;
+	 let currentThis = this;
+	 let {history} = this.props;
 	
     const viewTable=()=>
     {
@@ -321,19 +312,19 @@ class PropertyTaxSearch extends Component {
               <th>#</th>
               <th>Assessment Number</th>
               <th>Owner Name</th>
-			  <th>Door Number</th>
-			  <th>Locality</th>
+		          <th>Door Number</th>
+			        <th>Locality</th>
               <th>Address</th>
               <th>Current Demand</th>
               <th>Arrears Demand</th>
-			  <th>Property Type</th>
+			        <th>Property Type</th>
               <th>Property sub type</th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody>
           {this.state.resultList.length != 0 && this.state.resultList.map((item, index)=>{
-			  if(item){
+			   if(item){
 				  return(<tr>
 					  <td>{index+1}</td> 
 					  <td style={{color:'blue'}} onClick={() => {
@@ -347,7 +338,7 @@ class PropertyTaxSearch extends Component {
 					  <td>{item.address.addressNumber? item.address.addressNumber+', ' : translate('pt.search.searchProperty.fields.na')} {item.address.addressLine1 ? item.address.addressLine1+', ' : translate('pt.search.searchProperty.fields.na')} 
 						  {item.address.addressLine2 ? item.address.addressLine2+', ':translate('pt.search.searchProperty.fields.na')}{item.address.landmark ? item.address.landmark+',':translate('pt.search.searchProperty.fields.na')}
 						  {item.address.city ? item.address.city : translate('pt.search.searchProperty.fields.na')}
-						  </td>
+					  </td>
 					  <td>{this.state.demands.hasOwnProperty('consolidatedTax') ? this.state.demands.consolidatedTax.currentDemand : translate('pt.search.searchProperty.fields.na')}</td>
 					  <td>{this.state.demands.hasOwnProperty('consolidatedTax') ? this.state.demands.consolidatedTax.arrearsDemand : translate('pt.search.searchProperty.fields.na')}</td>
 					  <td>{getNameByCode(this.state.propertytypes, item.propertyDetail.propertyType) || translate('pt.search.searchProperty.fields.na')}</td>
@@ -581,7 +572,7 @@ class PropertyTaxSearch extends Component {
 			margin:'15px',
 			textAlign:'right'
 		  }}>
-			<RaisedButton type={translate('ui.framework.submit')} primary={true} label={buttonText} />
+			<RaisedButton type={translate('ui.framework.submit')} disabled={!isFormValid} primary={true} label={buttonText} />
 		  </div>
 			  {isTableShow?viewTable():""}																					
         </form>

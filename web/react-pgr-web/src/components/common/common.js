@@ -1,5 +1,7 @@
 var localization_EN_Data = {
     //citizen servers
+    "This is computer generated receipt no authorised signature required":"This is computer generated receipt no authorised signature required",
+    "Total (Rs)":"Amount to Pay (Rs)",
     "noDues.search.citizenServices.title":"Search - Provide one...",
     "noDues.citizenService.consumerCode":"Consumer Code",
     "noDues.citizenService.email":"Email",
@@ -324,6 +326,8 @@ var localization_EN_Data = {
     "wc.create.groups.connectionDetails.fields.resetFlag1":"1st Month Reset reading",
     "wc.create.groups.connectionDetails.fields.resetFlag2":"2nd Month Reset reading",
     "wc.create.groups.connectionDetails.fields.resetFlag3":"3rd Month Reset reading",
+    "wc.create.capacityOfSource":"Capacity of source",
+    "wc.create.reservationForUlb":"Reservation for ULB",
 
 
 
@@ -789,9 +793,10 @@ var localization_EN_Data = {
     "tl.create.groups.categorytype.active": "Active",
     "tl.search.groups.categorytype.title": "Search License Category",
     "tl.search.groups.categorytype.category": "Category",
-    "tl.view.groups.categorytype.title": "View License Category",
+    "tl.view.groups.categorytype.title": "View License Sub-Category",
     "tl.view.groups.categorytype.name": "Name",
     "tl.view.groups.categorytype.code": "Code",
+    "tl.view.groups.categorytype.active": "Active",
     "tl.update.groups.categorytype.title": "Update License Category",
     "tl.update.groups.categorytype.name": "Name",
     "tl.update.groups.categorytype.code": "Code",
@@ -800,6 +805,7 @@ var localization_EN_Data = {
     "tl.create.groups.subcategorytype.category": "Category",
     "tl.create.groups.subcategorytype.name": "Name",
     "tl.create.groups.subcategorytype.code": "Code",
+    "tl.create.groups.subcategorytype.validityYears": "Validity Years",
     "tl.create.groups.subcategorytype.active": "Active",
     "tl.create.groups.subcategorytype.categories.details.feeType": "Fee Type",
     "tl.create.groups.subcategorytype.categories.details.rateType": "Rate Type",
@@ -811,6 +817,8 @@ var localization_EN_Data = {
     "tl.view.groups.subcategorytype.category": "Category",
     "tl.view.groups.subcategorytype.name": "Name",
     "tl.view.groups.subcategorytype.code": "Code",
+    "tl.view.groups.subcategorytype.validityYears": "Validity Years",
+    "tl.view.groups.subcategorytype.active": "Active",
     "tl.view.groups.subcategorytype.categories.details.feeType": "Fee Type",
     "tl.view.groups.subcategorytype.categories.details.rateType": "Rate Type",
     "tl.view.groups.subcategorytype.categories.details.uomId": "UOM",
@@ -818,7 +826,11 @@ var localization_EN_Data = {
     "tl.update.groups.subcategorytype.category": "Category",
     "tl.update.groups.subcategorytype.name": "Name",
     "tl.update.groups.subcategorytype.code": "Code",
+    "tl.update.groups.subcategorytype.validityYears": "Validity Years",
     "tl.update.groups.subcategorytype.active": "Active",
+    "tl.update.groups.subcategorytype.categories.details.feeType": "Fee Type",
+    "tl.update.groups.subcategorytype.categories.details.rateType": "Rate Type",
+    "tl.update.groups.subcategorytype.categories.details.uomId": "UOM ID",
     "tl.create.UOMType.title": "Create Unit of Measurement",
     "tl.create.groups.UOMType.name": "Name",
     "tl.create.groups.UOMType.code": "Code",
@@ -870,8 +882,12 @@ var localization_EN_Data = {
     "tl.update.groups.feematrixtype.effectivefrom": "Effective From eg:dd/mm/yyyy",
     "tl.update.groups.feematrixtype.effectiveto": "Effective To eg:dd/mm/yyyy",
     "tl.create.groups.licensedocumenttype.title": "Create Document Type",
+    "tl.create.licensedocumenttype.groups.TradeDetails.TradeCategory": "Category",
+    "tl.create.licensedocumenttype.groups.TradeDetails.TradeSubCategory": "Sub Category",
     "tl.create.groups.licensedocumenttype.name": "Name",
-    "tl.create.groups.licensedocumenttype.licenseapptype": "License App Type",
+    "tl.create.licenses.groups.TradeDetails.mandatory": "Mandatory",
+    "tl.create.licenses.groups.TradeDetails.enabled": "Enabled",
+    "tl.create.groups.licensedocumenttype.licenseapptype": "Application Type",
     "tl.create.groups.licensedocumenttype.mandatory": "Mandatory",
     "tl.create.groups.licensedocumenttype.enabled": "Enabled",
     "tl.search.groups.licensedocumenttype.title": "Search Document Type",
@@ -879,7 +895,9 @@ var localization_EN_Data = {
     "tl.search.groups.licensedocumenttype.licenseapptype": "License App Type",
     "tl.view.groups.licensedocumenttype.title": "Document Type",
     "tl.view.groups.licensedocumenttype.name": "Name",
-    "tl.view.groups.licensedocumenttype.licenseapptype": "License App Type",
+    "tl.view.groups.licensedocumenttype.mandatory": "Mandatory",
+    "tl.view.groups.licensedocumenttype.enabled": "Enabled",
+    "tl.update.groups.licensedocumenttype.title": "Trade license Document type Modify",
     "tl.update.groups.licensedocumenttype.title": "Edit Document Type",
     "tl.update.groups.licensedocumenttype.name": "Name",
     "tl.update.groups.licensedocumenttype.licenseapptype": "License App Type",
@@ -937,7 +955,7 @@ var localization_EN_Data = {
     "tl.create.licenses.groups.TradeDetails.TraderOwnerProperty": "Trader is not the owner of the Property",
     "tl.create.licenses.groups.agreementDetails.agreementDate": "Date of Execution",
     "tl.create.licenses.groups.agreementDetails.agreementNo": "Registered/Non Registered Document No",
-    "tl.create.licenses.groups.agreementDetails": "Agreement Details",
+    "tl.create.licenses.groups.agreementDetails": "Agreement Details (Trader is not the owner of the Property)",
 
     "tl.create.licenses.groups.FeeDetails": "Fee Details",
     "tl.create.license.table.financialYear": "Financial Year",
@@ -947,7 +965,8 @@ var localization_EN_Data = {
     "tl.search.groups.license.searchTradeLicense": "Search Trade License",
     "tl.search.groups.applicationNumber": "Application Number",
     "tl.search.groups.showActiveLicense": "Show Active License",
-    "tl.search.groups.status": "Status",
+    "tl.search.groups.status": "License Status",
+    "tl.search.groups.applicationStatus": "Application Status",
     "tl.search.groups.licenseNumber": "License Number",
     "tl.search.groups.oldLicenseNumber": "Old License Number",
     "tl.search.groups.tradeCategory": "Trade Category",
@@ -986,6 +1005,7 @@ var localization_EN_Data = {
     "tl.licenses.view.groups.revenueWardId": "Revenue Ward",
     "tl.licenses.view.groups.OwnershipType": "Ownership Type",
     "tl.licenses.view.groups.TradeAddress": "Trade Address",
+    "tl.view.licenses.groups.agreementDetails": "Agreement Details",
     "tl.view.licenses.groups.TradeDetails": "Trade Details",
     "tl.view.licenses.groups.TradeTitle": "Trade Title",
     "tl.view.licenses.groups.TradeType": "Trade Type",
@@ -1085,10 +1105,10 @@ var localization_EN_Data = {
     "reports.collection.department.name":"Department Name",
     "reports.collection.service.name":"Service Name",
     "reports.collection.cashamount":"Cash Amount",
-    "reports.collection.chequedd_amount":"Cheque DD Amount",
-    "reports.collection.online.amount":"Online Amount",
+    "reports.collection.chequeamount":"Cheque Amount",
+    "reports.collection.ddamount":"DD Amount",
     "reports.collection.status.description":"Status Description",
-    "reports.collection.receiptno": "Receipt No",
+    "reports.collection.receiptno": "Receipt No.",
     "reports.collection.receiptdate": "Receipt Date",
     "reports.collection.totalamount": "Total Amount",
     "reports.collection.payeename": "Payee Name",
@@ -1096,6 +1116,8 @@ var localization_EN_Data = {
     "reports.collection.print": "Print",
     "reports.collection.consumerno": "Consumer No",
     "reports.collection.servicename": "Service Name",
+    "reports.collection.total.amount":"Total Receipt Amount",
+    "reports.collection.created.by":"Created By",
 
 
     "collection.create.consumerCode": "Consumer Code",
@@ -1409,17 +1431,19 @@ var localization_EN_Data = {
     "collection.create.currentLatePayment":"Current Late Payment",
     "collection.create.checkLatePayment":"Cheque bounce Penalty Rebate",
     "collection.create.total":"Total",
+    "reports.collection.receipt.transactionid":"Transaction ID",
+
 
 "reports.collection.amount":"Amount",
 "reports.collection.bank":"Bank",
 "reports.collection.branch":"Branch",
-"reports.collection.card.amount":"Card Amount",
-"reports.collection.card.count":"Card Count",
-"reports.collection.cash.amount":"Cash Amount",
-"reports.collection.cash.count":"Cash Count",
-"reports.collection.cashamount":"Cash Amount",
+"reports.collection.cardamount":"Card Amount",
+"reports.collection.card.count":"Card Receipt Count",
+"reports.collection.ddamount":"DD Amount",
+"reports.collection.dd.count":"DD Receipt Count",
+"reports.collection.cash.count":"Cash Receipt Count",
 "reports.collection.cheque.amount":"Cheque Amount",
-"reports.collection.cheque.count":"Cheque Count",
+"reports.collection.cheque.count":"Cheque Receipt Count",
 "reports.collection.chequedate":"Cheque Date",
 "reports.collection.chequedd_amount":"Cheque/DD Amount",
 "reports.collection.chequeno":"Cheque No.",
@@ -1427,10 +1451,11 @@ var localization_EN_Data = {
 "reports.collection.department":"Department",
 "reports.collection.department.name":"Department Name",
 "reports.collection.fromdate":"From Date",
-"reports.collection.online.amount":"Online Amount",
+"reports.collection.onlineamount":"Online Amount",
+"reports.collection.online.count":"Online Receipt Count",
 "reports.collection.paymentmode":"Payment Mode",
 "reports.collection.receipt.date":"Receipt Date",
-"reports.collection.receipt.number":"Receipt N.",
+"reports.collection.receipt.number":"Receipt No.",
 "reports.collection.receiptno":"Receipt No.",
 "reports.collection.revenue.name":"Revenue Name",
 "reports.collection.serialno":"Serial No.",
@@ -1439,7 +1464,7 @@ var localization_EN_Data = {
 "reports.collection.status":"Status ",
 "reports.collection.status.description":"Status Description",
 "reports.collection.todate":"To Date",
-"reports.collection.total.count":"Total Count",
+"reports.collection.total.count":"Total Receipt Count",
 
     "noDues.citizenService.assessmentNumber":"Assessment Number",
 
@@ -1565,15 +1590,15 @@ var localization_EN_Data = {
     "fn.ApplicationDetails.block":"Block",
     "fn.ApplicationDetails.zone":"Zone",
     "fn.ApplicationDetails.ward":"Ward",
-    "fn.serviceDetails.privisonalFireNOCNo":"Privisonal fire NOC Number",
+    "fn.serviceDetails.privisonalFireNOCNo": "Provisonal Fire NOC Number",
     "fn.serviceDetails.plotNo":"Plot Number",
     "fn.serviceDetails.nocSubCategory":"NOC Sub Category",
     "fn.serviceDetails.vikasPrastavNo":"Vikas Prastav Number",
     "fn.serviceDetails.fileNo": "File Number",
     "fn.serviceDetails.landOwnerName":"Land Owner Name",
     "fn.serviceDetails.developerName":"Developer Name",
-    "fn.serviceDetails.surveyNo":"Plot survey No",
-    "fn.serviceDetails.talukaName":"Plot taluka name",
+    "fn.serviceDetails.surveyNo":"Plot Survey No",
+    "fn.serviceDetails.talukaName":"Plot Taluka Name",
     "fn.serviceDetails.architectName":"Architect Name",
     "fn.serviceDetails.architectLicenseNo":"Architect License Number",
     "fn.serviceDetails.locality":"Locality",
@@ -2466,7 +2491,7 @@ var localization_MR_Data = {
         "reports.collection.consumeraddress": "Consumer Address - Marathi",
         "reports.collection.print": "Print - Marathi",
         "reports.collection.consumerno": "Consumer No - Marathi",
-        "reports.collection.fromdate": "From Date - Marathi",
+        "reports.collection.fromdate":"From Date - Marathi",
         "reports.collection.todate": "To Date - Marathi",
         "reports.collection.servicename": "Service Name - Marathi",
 
@@ -2686,6 +2711,8 @@ var localization_MR_Data = {
 "wc.create.groups.connectionDetails.fields.resetFlag1":"1st Month Reset reading-Marathi",
 "wc.create.groups.connectionDetails.fields.resetFlag2":"2nd Month Reset reading-Marathi",
 "wc.create.groups.connectionDetails.fields.resetFlag3":"3rd Month Reset reading-Marathi",
+"wc.create.capacityOfSource":"Capacity of source-Marathi",
+"wc.create.reservationForUlb":"Reservation for ULB-Marathi",
 
 ﻿﻿"pgr.0001":"अक्षांश / रेखांश किंवा क्रॉस हायरारकी संकेतांक आवश्यक आहे",
 "pgr.0002":"अक्षांश / रेखांश किंवा क्रॉस हायरारकी संकेतांक आवश्यक आहे",
@@ -3124,4 +3151,16 @@ export function toLocalTime(regDate) {
     dat = dat.split("-")[1] + "-" + dat.split("-")[0] + "-" + dat.split("-")[2] + " " + regDate.split(" ")[1];
     dat = new Date(dat + " UTC").toString();
     return dat.substr(0, dat.indexOf("GMT"));
+}
+
+export function epochToDate(t) {
+    function pad2(n) {
+        return n > 9 ? n : '0' + n;
+    }
+    var d = new Date(Number(t));
+    var year = d.getFullYear();
+    var month = d.getMonth() + 1;  // months start at zero
+    var day = d.getDate();
+
+    return pad2(day) + '-' + pad2(month) + '-' + year;
 }

@@ -176,6 +176,7 @@ class DataEntry extends Component {
       revanue:[],
       election:[],
       usages:[],
+      tenant: [],
 	  ack:''
     }
  }
@@ -243,6 +244,17 @@ class DataEntry extends Component {
           console.log(err)
         })
 		
+		var userRequest = JSON.parse(localStorage.getItem("userRequest"));
+
+        var tenantQuery = {
+        		code: userRequest.tenantId || 'default',
+        }
+
+        Api.commonApiPost('tenant/v1/tenant/_search',tenantQuery).then((res)=>{
+        	currentThis.setState({ tenant: res.tenant })
+        }).catch((err)=>{
+        	currentThis.setState({ tenant: [] })
+        })
   }
 
   componentWillUnmount() {
@@ -277,27 +289,22 @@ dataEntryTax = () => {
 	if(dataEntry && dataEntry.hasOwnProperty('floorsArr') && dataEntry.hasOwnProperty('floors')){
 		numberOfFloors = dataEntry.floorsArr.length;
 		for(let i=0;i<dataEntry.floors.length;i++){
-			
 			builtupArea += dataEntry.floors[i].builtupArea;
-			
 		}
 	}
 	
-	if(dataEntry && dataEntry.hasOwnProperty('owners')) {		
+	if(dataEntry && dataEntry.hasOwnProperty('owners')) {	
+
 		for(var i=0;i<dataEntry.owners.length;i++){
+
 			dataEntry.owners[i].locale = userRequest.locale || 'en_IN';
 			dataEntry.owners[i].type = 'CITIZEN';
 			dataEntry.owners[i].active = true;
 			dataEntry.owners[i].tenantId = userRequest.tenantId;
 			dataEntry.owners[i].salutation = null;
 			dataEntry.owners[i].pan = null;
-			dataEntry.owners[i].roles =[  
-											 {  
-												"code":"CITIZEN",
-												"name":"Citizen"
-											 }
-										  ];
-			
+			dataEntry.owners[i].roles =[{"code":"CITIZEN", "name":"Citizen"}];
+
 			if(dataEntry.owners[i].isPrimaryOwner == "PrimaryOwner") {
 				dataEntry.owners[i].isPrimaryOwner = true;
 				dataEntry.owners[i].issecondaryowner = false;
@@ -357,9 +364,7 @@ dataEntryTax = () => {
 	} else {
 		vacantLand = null;
 	}
-	
 
-	
 	var date = new Date().getTime();
 	
 	var currentThis = this;
@@ -378,7 +383,7 @@ dataEntryTax = () => {
 					"addressLine1": dataEntry.locality || null,
 					"addressLine2": null,
 					"landmark": null,
-					"city": "Roha",
+					"city": currentThis.state.tenant[0].city.name || null,
 					"pincode": dataEntry.pin || null,
 					"detail": null,
 					"auditDetails": {

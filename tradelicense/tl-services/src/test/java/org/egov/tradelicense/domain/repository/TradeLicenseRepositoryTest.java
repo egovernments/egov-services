@@ -1,20 +1,13 @@
 package org.egov.tradelicense.domain.repository;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
-
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.egov.tl.commons.web.contract.AuditDetails;
 import org.egov.tl.commons.web.contract.LicenseFeeDetailContract;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.SupportDocumentContract;
-import org.egov.tl.commons.web.contract.SupportDocumentSearchContract;
 import org.egov.tl.commons.web.contract.TradeLicenseContract;
 import org.egov.tl.commons.web.contract.UserInfo;
 import org.egov.tl.commons.web.contract.enums.ApplicationTypeEnum;

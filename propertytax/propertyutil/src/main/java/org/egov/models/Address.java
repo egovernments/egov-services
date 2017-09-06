@@ -1,5 +1,7 @@
 package org.egov.models;
 
+import javax.validation.constraints.Size;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -54,5 +56,9 @@ public class Address   {
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
+	
+	@Size(min=1,max=64)
+	@JsonProperty("surveyNo")
+	private String surveyNo;
 }
 

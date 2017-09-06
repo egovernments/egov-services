@@ -34,7 +34,6 @@ public class ReceiptSearchGetRequest {
 
     private String classification;
 
-
     private String businessCode;
 
     @NotNull

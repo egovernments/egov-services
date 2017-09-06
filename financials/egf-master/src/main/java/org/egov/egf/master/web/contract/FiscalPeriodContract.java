@@ -38,6 +38,7 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 package org.egov.egf.master.web.contract;
+
 import java.util.Date;
 
 import javax.validation.constraints.NotNull;
@@ -52,13 +53,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 
-@JsonPropertyOrder({ "id","name","financialYear","startingDate","endingDate","active","isActiveForPosting","isClosed"})
+@JsonPropertyOrder({ "id", "name", "financialYear", "startingDate", "endingDate", "active", "isActiveForPosting",
+		"isClosed" })
 public class FiscalPeriodContract extends AuditableContract {
 
 	private String id;
@@ -83,5 +86,9 @@ public class FiscalPeriodContract extends AuditableContract {
 	private Boolean isActiveForPosting;
 
 	private Boolean isClosed;
+
+	public FiscalPeriodContract(String id) {
+		this.id = id;
+	}
 
 }

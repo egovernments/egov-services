@@ -3,7 +3,7 @@ package org.egov.pgr.location.repository;
 import org.egov.pgr.location.contract.CrossHierarchyResponse;
 import org.egov.pgr.location.contract.CrossHierarchySearchRequest;
 import org.egov.pgr.location.contract.CrossHierarchyServiceResponse;
-import org.egov.pgr.location.model.CrossHierarchy;
+import org.egov.pgr.location.contract.CrossHierarchy;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;

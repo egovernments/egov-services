@@ -1,4 +1,4 @@
-package org.egov.pgr.location.model;
+package org.egov.pgr.location.contract;
 
 import lombok.Builder;
 import lombok.Getter;

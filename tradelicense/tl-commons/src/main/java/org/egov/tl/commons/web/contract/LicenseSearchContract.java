@@ -2,8 +2,6 @@ package org.egov.tl.commons.web.contract;
 
 import javax.validation.constraints.NotNull;
 
-import org.egov.tl.commons.web.contract.enums.BusinessNatureEnum;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

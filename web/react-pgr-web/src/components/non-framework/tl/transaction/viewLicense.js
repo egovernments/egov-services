@@ -138,7 +138,7 @@ class viewLicense extends Component{
   }
   history = () => {
     let {viewLicense} = this.props;
-    if(Object.keys(viewLicense).length){
+    if(Object.keys(viewLicense).length && viewLicense.applications[0].state_id){
       Api.commonApiPost('egov-common-workflows/history', {workflowId:viewLicense.applications[0].state_id},{}, false, true).then((response)=>{
         // console.log(response);
         self.setState({tasks : response.tasks});
@@ -555,7 +555,7 @@ class viewLicense extends Component{
           {this.supportDocuments()}
           {!viewLicense.isLegacy ? this.showHistory() : ''}
           {!viewLicense.isLegacy && this.state.fieldInspection ? this.fieldInspection() : ''}
-          {!viewLicense.isLegacy ?
+          {!viewLicense.isLegacy && viewLicense.applications && viewLicense.applications[0].state_id ?
           <Card style={styles.marginStyle}>
             <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
                Workflow

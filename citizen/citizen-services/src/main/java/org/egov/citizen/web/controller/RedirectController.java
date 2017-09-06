@@ -23,14 +23,17 @@ public class RedirectController {
     @RequestMapping(value = "/pgresponse", method = RequestMethod.GET)
     public String jsonSubmit(HttpServletRequest request) {
     	String body = null;
+    	String host = request.getHeader("host");
     	String queryString = request.getQueryString();
-    	String[] array = queryString.split("=");
-    	body = array[1];
+    	if(null != queryString){
+	    	String[] array = queryString.split("=");
+	    	body = array[1];
+    	}
+        LOGGER.info("Host obtained: "+host);
         LOGGER.info("Body obtained: "+body);
         StringBuilder redirectUrl= new StringBuilder();
-        redirectUrl.append(applicationProperties.getRedirectUrl()).append(applicationProperties.getRedirectAppend());
+        redirectUrl.append("http://"+host).append(applicationProperties.getRedirectUrl()).append(applicationProperties.getRedirectAppend());
         LOGGER.info("Redirect URL: "+redirectUrl.toString()+body);
-
         //return "abc";
         return "redirect:"+redirectUrl.toString()+body;        
     }

@@ -109,6 +109,10 @@ public class ApplicationProperties {
 	@Value("${egov.citizen.redirect}")
 	private String redirectAppend;
 
+	@Value("${egov.citizen.return.url}")
+	private String returnUrl;
+
+			
 	public String commonsSearchPageSizeDefault() {
 		return environment.getProperty(SEARCH_PAGESIZE_DEFAULT);
 	}

@@ -7,11 +7,9 @@ import javax.validation.Valid;
 
 import org.egov.citizen.config.ApplicationProperties;
 import org.egov.citizen.config.CitizenServiceConstants;
-import org.egov.citizen.exception.CustomException;
 import org.egov.citizen.model.RequestInfoWrapper;
 import org.egov.citizen.model.ServiceCollection;
 import org.egov.citizen.model.ServiceConfigs;
-import org.egov.citizen.model.ServiceReq;
 import org.egov.citizen.model.ServiceReqResponse;
 import org.egov.citizen.model.ServiceResponse;
 import org.egov.citizen.service.CitizenPersistService;
@@ -37,6 +35,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
@@ -63,6 +62,9 @@ public class ServiceController {
 	
 	@Autowired
 	private CitizenPersistService citizenPersistService;
+	
+	@Autowired
+	private ApplicationProperties applicationProperties;
 
 	@PostMapping(value = "/_search")
 	public ResponseEntity<?> getService(@RequestBody @Valid RequestInfoWrapper requestInfo,
@@ -104,13 +106,17 @@ public class ServiceController {
 	
 	@PostMapping(value = "/pgrequest/_create")
 	public ResponseEntity<?> generatePGRequest(@RequestBody @Valid ReceiptRequestWrapper receiptRequestWrapper,
-			BindingResult bindingResult) {
+			BindingResult bindingResult, @RequestHeader String host) {
 				LOGGER.info("Request on to controller: "+receiptRequestWrapper.toString());
 		if (bindingResult.hasFieldErrors()) {
 			ErrorResponse errRes = populateErrors(bindingResult);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
+		LOGGER.info("Header: "+host);
 		ReceiptRequest receiptRequest = receiptRequestWrapper.getReceiptRequest();
+		StringBuilder returnUrl = new StringBuilder();
+		returnUrl.append("http://"+host).append(applicationProperties.getReturnUrl());
+		receiptRequest.setReturnUrl(returnUrl.toString());
 		PGPayload pgPayLoad = citizenPersistService.generatePGPayload(receiptRequest, receiptRequestWrapper.getRequestInfo());
 		PGPayloadWrapper pGPayloadWrapper = new PGPayloadWrapper();
 		pGPayloadWrapper.setPgPayLoad(pgPayLoad);

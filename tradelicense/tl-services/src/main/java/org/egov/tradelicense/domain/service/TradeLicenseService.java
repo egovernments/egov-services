@@ -438,6 +438,7 @@ public class TradeLicenseService {
 				&& currentStatus.getLicenseStatuses().get(0).getCode() == NewLicenseStatus.LICENSE_FEE_PAID.getName()) {
 			// generate license number and setting license number and
 			// license issued date
+		        log.info("updating trade license number after fee paid");
 			tradeLicense
 					.setLicenseNumber(licenseNumberGenerationService.generate(tradeLicense.getTenantId(), requestInfo));
 			tradeLicense.setIssuedDate(System.currentTimeMillis());

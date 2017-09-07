@@ -379,7 +379,7 @@ class Report extends Component {
 
     Api.commonApiPost("/citizen-services/v1/requests/_update", {}, {"serviceReq": ServiceRequest}, null, true, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
       self.props.setLoadingStatus("hide");
-      self.openPayFeeModal();
+      //self.openPayFeeModal();
       self.setState({
         showReceipt: true,
         Receipt: res.serviceReq && res.serviceReq.backendServiceDetails ? res.serviceReq.backendServiceDetails[0].response.Receipt : []

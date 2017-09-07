@@ -242,20 +242,21 @@ class Report extends Component {
     specifications = require("../../../framework/specs/citizenService/bp/fireNoc").default;
     self.displayUI(specifications);
     if(self.props.match.params.status == "pay") {
-      // let metaData=JSON.parse(localStorage.getItem("metaData")),paymentGateWayRes=JSON.parse(localStorage.getItem("paymentGateWayResponse"));
-      // self.props.setLoadingStatus("loading");
-      // //DO WHATEVER YOU WANT TO DO AFTER PAYMENT & THEN CALL GENERATERECEIPT() FUNCTION
+      let metaData=JSON.parse(localStorage.getItem("metaData")),paymentGateWayRes=JSON.parse(localStorage.getItem("paymentGateWayResponse"));
+      self.props.setLoadingStatus("loading");
+      //DO WHATEVER YOU WANT TO DO AFTER PAYMENT & THEN CALL GENERATERECEIPT() FUNCTION
       let response = JSON.parse(localStorage.response);
-      // if (this.props.match.params.paymentGateWayRes=="success")
-      //
-      //   // paymentGateWayRes["status"]="failed";
-      //   Api.commonApiPost("/citizen-services/v1/pgresponse/_validate", {}, {PGResponse:paymentGateWayRes}, null, metaData["fn.create"].useTimestamp, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
-      //       self.props.setLoadingStatus('hide');
+      if (this.props.match.params.paymentGateWayRes=="success")
+      {
+        // paymentGateWayRes["status"]="failed";
+        Api.commonApiPost("/citizen-services/v1/pgresponse/_validate", {}, {PGResponse:paymentGateWayRes}, null, metaData["wc.create"].useTimestamp, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
+            self.props.setLoadingStatus('hide');
             self.generateReceipt(response);
-      //   }, function(err) {
-      //       self.props.toggleSnackbarAndSetText(true, err.message, false, true);
-      //       self.props.setLoadingStatus('hide');
-      //  })
+        }, function(err) {
+            self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+            self.props.setLoadingStatus('hide');
+       })
+     }
     }
   }
 

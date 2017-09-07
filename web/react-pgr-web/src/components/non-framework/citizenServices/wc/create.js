@@ -183,7 +183,7 @@ class Report extends Component {
       //DO WHATEVER YOU WANT TO DO AFTER PAYMENT & THEN CALL GENERATERECEIPT() FUNCTION
       let response = JSON.parse(localStorage.response);
       if (this.props.match.params.paymentGateWayRes=="success")
-
+      {
         // paymentGateWayRes["status"]="failed";
         Api.commonApiPost("/citizen-services/v1/pgresponse/_validate", {}, {PGResponse:paymentGateWayRes}, null, metaData["wc.create"].useTimestamp, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
             self.props.setLoadingStatus('hide');
@@ -192,6 +192,7 @@ class Report extends Component {
             self.props.toggleSnackbarAndSetText(true, err.message, false, true);
             self.props.setLoadingStatus('hide');
        })
+     }
     }
   }
 

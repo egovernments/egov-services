@@ -40,6 +40,12 @@ public class DocumentTypeDomainRepository {
 		documentTypeQueueRepository.add(message);
 	}
 	
+	
+	public String getCategoryName(Long categoryId) {
+
+		return documentTypeJdbcRepository.getCategoryName(categoryId);
+	}
+	
 	@Transactional
 	public DocumentType save(DocumentType documentType) {
 

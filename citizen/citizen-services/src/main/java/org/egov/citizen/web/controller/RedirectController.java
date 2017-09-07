@@ -27,14 +27,15 @@ public class RedirectController {
     	String queryString = request.getQueryString();
     	if(null != queryString){
 	    	String[] array = queryString.split("=");
-	    	body = array[1];
+	        LOGGER.info("String array: "+array.length);
+	    	if(1 != array.length)
+	    		body = array[1];
     	}
         LOGGER.info("Host obtained: "+host);
         LOGGER.info("Body obtained: "+body);
         StringBuilder redirectUrl= new StringBuilder();
         redirectUrl.append("http://"+host).append(applicationProperties.getRedirectUrl()).append(applicationProperties.getRedirectAppend());
         LOGGER.info("Redirect URL: "+redirectUrl.toString()+body);
-        //return "abc";
         return "redirect:"+redirectUrl.toString()+body;        
     }
     

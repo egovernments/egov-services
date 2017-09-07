@@ -216,6 +216,9 @@ public class VoucherService {
 
         voucher.setFund(fund);
 
+        final Map<String, String> voucherParams = getVoucherParameters(tenantId);
+        setAdditionalFinancialParams(voucherParams, voucher, tenantId);
+
         log.debug("Revaluation Voucher :: " + voucher);
 
         vouchers.add(voucher);
@@ -226,7 +229,6 @@ public class VoucherService {
     }
 
     private void generateVoucherRequest(final VoucherRequest voucherRequest, final List<Voucher> vouchers) {
-
         final org.egov.asset.model.RequestInfo reqInfo = new org.egov.asset.model.RequestInfo();
         voucherRequest.setRequestInfo(reqInfo);
         voucherRequest.setVouchers(vouchers);
@@ -290,42 +292,14 @@ public class VoucherService {
         return voucherRequest;
     }
 
-    public void setFinancialParameters(final Voucher voucher, final List<VoucherAccountCodeDetails> accountCodeDetails,
+    private void setAdditionalFinancialParams(final Map<String, String> voucherParams, final Voucher voucher,
             final String tenantId) {
 
-        final String voucherParamsConfig = assetConfigurationService
-                .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.VOUCHERPARAMS, tenantId);
-
-        log.debug("Voucher Parameters From Config :: " + voucherParamsConfig);
-        final TypeReference<HashMap<String, String>> typeRef = new TypeReference<HashMap<String, String>>() {
-        };
-
-        Map<String, String> voucherParams = null;
-        try {
-            voucherParams = mapper.readValue(voucherParamsConfig, typeRef);
-        } catch (final JsonParseException e) {
-            e.printStackTrace();
-        } catch (final JsonMappingException e) {
-            e.printStackTrace();
-        } catch (final IOException e) {
-            e.printStackTrace();
-        }
-
-        log.debug("Voucher Parameters :: " + voucherParams);
-
-        final String fundCode = voucherParams.get(AssetFinancialParams.FUND.toString());
-        final String functionCode = voucherParams.get(AssetFinancialParams.FUNCTION.toString());
         final String functionaryCode = voucherParams.get(AssetFinancialParams.FUNCTIONARY.toString());
         final String schemeCode = voucherParams.get(AssetFinancialParams.SCHEME.toString());
         final String subSchemeCode = voucherParams.get(AssetFinancialParams.SUBSCHEME.toString());
         final String fundSourceCode = voucherParams.get(AssetFinancialParams.FUNDSOURCE.toString());
         final String fiscalName = voucherParams.get(AssetFinancialParams.FISCAL.toString());
-
-        if (fundCode != null) {
-            final Fund fund = new Fund();
-            fund.setCode(fundCode);
-            voucher.setFund(fund);
-        }
 
         if (functionaryCode != null) {
             final Functionary functionary = new Functionary();
@@ -357,16 +331,57 @@ public class VoucherService {
             voucher.setFiscalPeriod(fiscalPeriod);
         }
 
+    }
+
+    public void setFinancialParameters(final Voucher voucher, final List<VoucherAccountCodeDetails> accountCodeDetails,
+            final String tenantId) {
+
+        final Map<String, String> voucherParams = getVoucherParameters(tenantId);
+
+        log.debug("Voucher Parameters :: " + voucherParams);
+
+        final String fundCode = voucherParams.get(AssetFinancialParams.FUND.toString());
+        final String functionCode = voucherParams.get(AssetFinancialParams.FUNCTION.toString());
+
+        if (fundCode != null) {
+            final Fund fund = new Fund();
+            fund.setCode(fundCode);
+            voucher.setFund(fund);
+        }
+
         if (functionCode != null) {
             final Function function = new Function();
             function.setCode(functionCode);
 
             for (final VoucherAccountCodeDetails acd : accountCodeDetails)
                 acd.setFunction(function);
-            
+
             log.debug("account code details :: " + accountCodeDetails);
             voucher.setLedgers(accountCodeDetails);
         }
+
+        setAdditionalFinancialParams(voucherParams, voucher, tenantId);
+    }
+
+    private Map<String, String> getVoucherParameters(final String tenantId) {
+        final String voucherParamsConfig = assetConfigurationService
+                .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.VOUCHERPARAMS, tenantId);
+
+        log.debug("Voucher Parameters From Config :: " + voucherParamsConfig);
+        final TypeReference<HashMap<String, String>> typeRef = new TypeReference<HashMap<String, String>>() {
+        };
+
+        Map<String, String> voucherParams = null;
+        try {
+            voucherParams = mapper.readValue(voucherParamsConfig, typeRef);
+        } catch (final JsonParseException e) {
+            e.printStackTrace();
+        } catch (final JsonMappingException e) {
+            e.printStackTrace();
+        } catch (final IOException e) {
+            e.printStackTrace();
+        }
+        return voucherParams;
     }
 
 }

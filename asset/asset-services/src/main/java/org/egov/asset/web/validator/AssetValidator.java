@@ -362,35 +362,40 @@ public class AssetValidator {
 
         final boolean assetIdsCheck = assetIds != null && !assetIds.isEmpty();
 
+        final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        final Calendar cal = Calendar.getInstance();
+
+        final boolean finYearCheck = validateFinYearFromDateAndToDate(fromDate, toDate, finacialYear, sdf, cal);
+
+        log.debug("Financial Year Check :: " + finYearCheck);
+
+        if (!finYearCheck)
+            throw new RuntimeException("From Date and To Date should belong to select Financial Year.");
+
         if (finacialYear == null && fromDate == null && toDate == null)
             throw new RuntimeException(
                     "financialyear and (time period)fromdate,todate both cannot be empty please provide atleast one value.");
 
-        if (finacialYear == null && fromDate != null && toDate == null)
+        if (fromDate != null && toDate == null)
             throw new RuntimeException("If From Date is selected then To date is mandatory.");
+
+        if (fromDate == null && toDate != null)
+            throw new RuntimeException("Please select either financial year or from date in conjunction with to date.");
 
         if (finacialYear == null && fromDate != null && toDate != null && !assetIdsCheck)
             throw new RuntimeException("Asset IDs are mandatory for custom time period.");
 
-        if (finacialYear != null && fromDate != null && toDate != null) {
+        if (finYearCheck && !assetIdsCheck)
+            assetCriteria = AssetCriteria.builder().status(status).fromCapitalizedValue(depreciationMinimumValue)
+                    .tenantId(tenantId).fromDate(fromDate).toDate(toDate).build();
+
+        if (finacialYear != null && fromDate == null && toDate != null && assetIdsCheck) {
             final int[] yearRange = Stream.of(finacialYear.split("-")).mapToInt(Integer::parseInt).toArray();
-            final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            final Calendar cal = Calendar.getInstance();
             try {
-                final Date finYearStart = sdf.parse(yearRange[0] + "-04-01");
-                final Date finYearEnd = sdf.parse(yearRange[0] + 1 + "-03-31");
-
-                cal.setTimeInMillis(fromDate);
-                final Date fd = cal.getTime();
-
-                if (!(finYearStart.compareTo(fd) * fd.compareTo(finYearEnd) >= 0))
-                    throw new RuntimeException("From Date should belong to selected Financial Year.");
-
-                cal.setTimeInMillis(toDate);
-                final Date td = cal.getTime();
-
-                if (!(finYearStart.compareTo(td) * td.compareTo(finYearEnd) >= 0))
-                    throw new RuntimeException("To Date should belong to selected Financial Year.");
+                final Long finYearStart = getFinancialYearStartDate(sdf, yearRange).getTime();
+                assetCriteria = AssetCriteria.builder().id(new ArrayList<Long>(assetIds)).status(status)
+                        .fromCapitalizedValue(depreciationMinimumValue).tenantId(tenantId).fromDate(finYearStart)
+                        .toDate(toDate).build();
             } catch (final ParseException e) {
                 e.printStackTrace();
             }
@@ -429,6 +434,38 @@ public class AssetValidator {
                                     + assetName + " for asset Category :: " + assetCategory.getName());
             }
 
+    }
+
+    private boolean validateFinYearFromDateAndToDate(final Long fromDate, final Long toDate, final String finacialYear,
+            final SimpleDateFormat sdf, final Calendar cal) {
+        if (finacialYear != null && fromDate != null && toDate != null) {
+            final int[] yearRange = Stream.of(finacialYear.split("-")).mapToInt(Integer::parseInt).toArray();
+            try {
+                final Date finYearStart = getFinancialYearStartDate(sdf, yearRange);
+                final Date finYearEnd = sdf.parse(yearRange[0] + 1 + "-03-31");
+
+                cal.setTimeInMillis(fromDate);
+                final Date fd = cal.getTime();
+
+                if (!(finYearStart.compareTo(fd) * fd.compareTo(finYearEnd) >= 0))
+                    return false;
+
+                cal.setTimeInMillis(toDate);
+                final Date td = cal.getTime();
+
+                if (!(finYearStart.compareTo(td) * td.compareTo(finYearEnd) >= 0))
+                    return false;
+
+            } catch (final ParseException e) {
+                e.printStackTrace();
+            }
+
+        }
+        return true;
+    }
+
+    private Date getFinancialYearStartDate(final SimpleDateFormat sdf, final int[] yearRange) throws ParseException {
+        return sdf.parse(yearRange[0] + "-04-01");
     }
 
     private boolean validateAssetCategoryForLand(final AssetCategoryType assetCategoryType) {

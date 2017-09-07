@@ -112,12 +112,13 @@ public class ReceiptService {
         Receipt receipt = receiptReq.getReceipt().get(0);
         Bill bill = receipt.getBill().get(0);
 
-        // TODO:Billing Svc throws 403 for default tenantId. Revert once fixed.
-        /*
-         * if(!validateBill(receiptReq.getRequestInfo(), bill)){ throw new CustomException
-         * (Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()), CollectionServiceConstants.INVALID_BILL_EXCEPTION_MSG,
-         * CollectionServiceConstants.INVALID_BILL_EXCEPTION_DESC); } }
-         */
+        try {
+            validateBill(receiptReq.getRequestInfo(), bill);
+        } catch(CustomException e) {
+            LOGGER.error("Invalid Bill: ", e);
+            throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()), CollectionServiceConstants.INVALID_BILL_EXCEPTION_MSG,
+                      CollectionServiceConstants.INVALID_BILL_EXCEPTION_DESC + bill.getId() + CollectionServiceConstants.INVALID_BILL_EXCEPTION_MESSAGE_DESC);
+        }
 
         bill.setBillDetails(apportionPaidAmount(receiptReq.getRequestInfo(),
                 bill, receipt.getTenantId()));
@@ -242,10 +243,10 @@ public class ReceiptService {
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
                             "dd/MM/yyyy");
                     if (instrument.getInstrumentType().getName()
-                            .equalsIgnoreCase(CollectionServiceConstants.INSTRUMENT_TYPE_CASH) || (instrument
+                            .equalsIgnoreCase(CollectionServiceConstants.INSTRUMENT_TYPE_CASH) || instrument
                             .getInstrumentType().getName().equalsIgnoreCase(CollectionServiceConstants.INSTRUMENT_TYPE_ONLINE)
                             && user.getRoles() != null && roleList.stream().anyMatch(role -> CollectionServiceConstants.COLLECTION_ONLINE_RECEIPT_ROLE
-                            .contains(role.getName())))) {
+                            .contains(role.getName()))) {
                         String transactionDate = simpleDateFormat
                                 .format(new Date());
                         instrument.setTransactionDate(simpleDateFormat
@@ -689,9 +690,15 @@ public class ReceiptService {
 
         BillResponse billResponse = billingServiceRepository.getBillForBillId(
                 requestInfo, bill);
-        if (null != billResponse) {
+        if (null != billResponse && !billResponse.getBill().isEmpty()) {
             isBillValid = true;
             return isBillValid;
+        }
+        if (!isBillValid) {
+            throw new CustomException(
+                    Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
+                    CollectionServiceConstants.INVALID_BILL_EXCEPTION_MSG,
+                    CollectionServiceConstants.INVALID_BILL_EXCEPTION_DESC);
         }
         return isBillValid;
     }

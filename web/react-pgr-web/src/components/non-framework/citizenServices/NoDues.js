@@ -790,13 +790,13 @@ class NoDues extends Component {
 
 
 
-       Api.commonApiPost("/billing-service/taxheads/_search", {businessService:"WC"}, {}, null, self.props.metaData["noDues.search"].useTimestamp, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
-          console.log(res);
-          self.props.setLoadingStatus('hide');
-         }, function(err) {
-           self.props.toggleSnackbarAndSetText(true, err.message, false, true);
-           self.props.setLoadingStatus('hide');
-         })
+      //  Api.commonApiPost("/billing-service/taxheads/_search", {businessService:"WC"}, {}, null, self.props.metaData["noDues.search"].useTimestamp, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
+      //     console.log(res);
+      //     self.props.setLoadingStatus('hide');
+      //    }, function(err) {
+      //      self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+      //      self.props.setLoadingStatus('hide');
+      //    })
 
   }
 

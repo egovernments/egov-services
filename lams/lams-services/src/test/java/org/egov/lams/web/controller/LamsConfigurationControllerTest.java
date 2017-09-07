@@ -29,8 +29,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-/*@RunWith(SpringRunner.class)
-@WebMvcTest(LamsConfigurationController.class)*/
+@RunWith(SpringRunner.class)
+@WebMvcTest(LamsConfigurationController.class)
 @Import(TestConfiguration.class)
 public class LamsConfigurationControllerTest {
 
@@ -47,7 +47,7 @@ public class LamsConfigurationControllerTest {
 	private MockMvc mockMvc;
 	
 	
-	/*@Test
+	@Test
 	public void test_Should_Search_LamsConfigurations() throws Exception{
 		
 		ResponseInfo responeInfo = new ResponseInfo();
@@ -56,17 +56,17 @@ public class LamsConfigurationControllerTest {
 		lamsList.add("lams");
 		resultMap.put("lams", lamsList);
 		
-		//when(lamsConfigurationService.getLamsConfigurations(any(LamsConfigurationGetRequest.class))).thenReturn(resultMap);
-		//when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class),any(Boolean.class))).thenReturn(responeInfo);
+		when(lamsConfigurationService.getLamsConfigurations(any(LamsConfigurationGetRequest.class))).thenReturn(resultMap);
+		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class),any(Boolean.class))).thenReturn(responeInfo);
 		
 		mockMvc.perform(post("/lamsconfigurations/_search")
         		.param("tenantId","ap.kurnool")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(getFileContents("requestinfowrapper.json")))
+                .content(getFileContents("lamsconfigurationrequest.json")))
                 .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
-                //.andExpect(content().json(getFileContents("lamsconfigurationssearch.json")));
-	}*/
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(getFileContents("lamsconfigurationsresponse.json")));
+	}
 	
 	private String getFileContents(String fileName) throws IOException {
 		return new FileUtils().getFileContents(fileName);

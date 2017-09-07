@@ -15,6 +15,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -47,8 +49,10 @@ public class TradeLicenseListener {
 	@Autowired
 	TradeLicenseESRepository tradeLicenseESRepository;
 
-	@KafkaListener(topics = { "#{propertiesManager.getTradeLicenseWorkFlowPopulatedTopic()}" })
-	public void process(Map<String, Object> mastersMap) {
+	@KafkaListener(topics = { "#{propertiesManager.getTradeLicenseWorkFlowPopulatedTopic()}",
+        "${kafka.topics.demandBill.update.name}"})
+	public void process(Map<String, Object> mastersMap,
+	        @Header(KafkaHeaders.RECEIVED_TOPIC) final String receivedTopic) {
 
 		String topic = propertiesManager.getTradeLicensePersistedTopic();
 		String key = propertiesManager.getTradeLicensePersistedKey();
@@ -117,17 +121,16 @@ public class TradeLicenseListener {
 			mastersMap.put("tradelicense-persisted", indexerRequest);
 			tradeLicenseProducer.sendMessage(topic, key, mastersMap);
 		}
-		if (mastersMap.get(propertiesManager.getUpdateDemandBillTopicName()) != null) {
-			DemandResponse consumerRecord = objectMapper.convertValue(
-					mastersMap.get(propertiesManager.getUpdateDemandBillTopicName()), DemandResponse.class);
-			tradeLicenseService
-					.updateTradeLicenseAfterCollection(objectMapper.convertValue(consumerRecord, DemandResponse.class));
-			RequestInfo requestInfo = tradeLicenseService
-					.createRequestInfoFromResponseInfo(consumerRecord.getResponseInfo());
-			TradeLicense tradeLicense = tradeLicenseService.searchByApplicationNumber(requestInfo,
-					consumerRecord.getDemands().get(0).getConsumerCode());
-			tradeLicenseService.update(tradeLicense, requestInfo);
-		}
+		if (receivedTopic != null && receivedTopic.equalsIgnoreCase(propertiesManager.getUpdateDemandBillTopicName())) {
+                    DemandResponse consumerRecord = objectMapper.convertValue(mastersMap,
+                            DemandResponse.class);
+                    tradeLicenseService
+                            .updateTradeLicenseAfterCollection(objectMapper.convertValue(consumerRecord, DemandResponse.class));
+                    RequestInfo requestInfo = tradeLicenseService.createRequestInfoFromResponseInfo(consumerRecord.getResponseInfo());
+                    TradeLicense tradeLicense = tradeLicenseService.searchByApplicationNumber(requestInfo,
+                            consumerRecord.getDemands().get(0).getConsumerCode());
+                    tradeLicenseService.update(tradeLicense, requestInfo);
+                }
 	}
 
 }

@@ -111,27 +111,23 @@ public class PenaltyRateValidator {
 
 	public void validatePenaltyRate(List<PenaltyRate> penaltyRates, String applicationType, RequestInfo requestInfo) {
 		penaltyRates.sort((s1, s2) -> s1.getFromRange().compareTo(s2.getFromRange()));
-		String oldApplicationType = null;
 		Long oldToRange = null;
 		Long fromRange = null;
 		int count = 0;
 		for (PenaltyRate penaltyRate : penaltyRates) {
+			
 			if (penaltyRate.getToRange() <= penaltyRate.getFromRange()) {
 				throw new InvalidRangeException(propertiesManager.getInvalidfromRangeCode(), requestInfo);
 			}
+			
 			if (count > 0) {
-				if (penaltyRate.getApplicationType() != null) {
-					applicationType = penaltyRate.getApplicationType().toString();
-				}
 				fromRange = penaltyRate.getFromRange();
 
 				if (!fromRange.equals(oldToRange)) {
 					throw new InvalidRangeException(propertiesManager.getInvalidSequenceRangeMsg(), requestInfo);
 				}
 			}
-			if (penaltyRate.getApplicationType() != null) {
-				oldApplicationType = penaltyRate.getApplicationType().toString();
-			}
+			
 			oldToRange = penaltyRate.getToRange();
 			count++;
 		}

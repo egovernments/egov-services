@@ -71,7 +71,7 @@ public class PenaltyRateController {
 	@RequestMapping(path = "/_search", method = RequestMethod.POST)
 	public PenaltyRateResponse getPenaltyRateMaster(@RequestBody RequestInfoWrapper requestInfo,
 			@RequestParam(required = true) String tenantId, @RequestParam(required = false) Integer[] ids,
-			@RequestParam(required = true) String applicationType, @RequestParam(required = false) Integer pageSize,
+			@RequestParam(required = false) String applicationType, @RequestParam(required = false) Integer pageSize,
 			@RequestParam(required = false) Integer offSet) throws Exception {
 
 		return penaltyRateService.getPenaltyRateMaster(requestInfo.getRequestInfo(), tenantId, ids, applicationType,

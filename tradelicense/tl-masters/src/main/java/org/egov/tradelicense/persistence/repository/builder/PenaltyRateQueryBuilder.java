@@ -29,11 +29,14 @@ public class PenaltyRateQueryBuilder {
 		parameters.addValue("tenantId", tenantId);
 
 		if (applicationType != null && !applicationType.isEmpty()) {
+			
 			searchSql.append(" AND applicationType = :applicationType ");
 			parameters.addValue("applicationType", applicationType.toUpperCase());
+			
 		} else {
-				searchSql.append(" AND applicationType IS NULL ");
-			}
+			
+			searchSql.append(" AND applicationType IS NULL ");
+		}
 		
 
 		if (ids != null && ids.length > 0) {

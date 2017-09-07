@@ -133,7 +133,11 @@ public class PenaltyRateRepository {
 			PenaltyRate penaltyRate = new PenaltyRate();
 			penaltyRate.setId(getLong(row.get("id")));
 			penaltyRate.setTenantId(getString(row.get("tenantid")));
-			penaltyRate.setApplicationType(ApplicationTypeEnum.fromValue(getString(row.get("applicationType"))));
+			if(row.get("applicationType") != null){
+				penaltyRate.setApplicationType(ApplicationTypeEnum.fromValue(getString(row.get("applicationType"))));
+			} else {
+				penaltyRate.setApplicationType(null);
+			}
 			penaltyRate.setFromRange(getLong(row.get("fromRange")));
 			penaltyRate.setToRange(getLong(row.get("toRange")));
 			penaltyRate.setRate(getDouble(row.get("rate")));

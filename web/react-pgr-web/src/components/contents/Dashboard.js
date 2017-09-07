@@ -127,18 +127,19 @@ const content=[
                 to: '#/non-framework/citizenServices/fireNoc/fill/create',
             }
         ],
-    },
-    {
-        icon: 'icon-class-name',
-        label: 'Grievance',
-        content: [
-            {
-                icon: 'icon-class-name',
-                label: 'New Grievance',
-                to: '#/pgr/createGrievance',
-            }
-        ],
     }
+    // ,
+    // {
+    //     icon: 'icon-class-name',
+    //     label: 'Grievance',
+    //     content: [
+    //         {
+    //             icon: 'icon-class-name',
+    //             label: 'New Grievance',
+    //             to: '#/pgr/createGrievance',
+    //         }
+    //     ],
+    // }
 ];
 
 const style={
@@ -776,7 +777,7 @@ class Dashboard extends Component {
                           </Card>
                           <br/>
 
-                          <Card>
+                        {/*  <Card>
                             <CardHeader title="My Grievances"/>
                               <CardText>
                               <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
@@ -797,7 +798,7 @@ class Dashboard extends Component {
                                 </tbody>
                             </Table>
                               </CardText>
-                          </Card>
+                          </Card>*/}
 
                       </Col>
                   </Row>

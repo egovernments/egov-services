@@ -384,6 +384,7 @@ class Report extends Component {
         showReceipt: true,
         Receipt: res.serviceReq && res.serviceReq.backendServiceDetails ? res.serviceReq.backendServiceDetails[0].response.Receipt : []
       });
+      localStorage.removeItem("ack");
       $('html, body').animate({ scrollTop: 0 }, 'fast');
     }, function(err){
       self.props.setLoadingStatus("hide");

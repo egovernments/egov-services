@@ -356,7 +356,7 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 	 * @return {@link String}
 	 */
 	private String getString(Object object) {
-		return object == null ? "" : object.toString();
+		return object == null ? null : object.toString();
 	}
 
 	/**
@@ -368,7 +368,7 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 	 */
 	@SuppressWarnings("unused")
 	private Double getDouble(Object object) {
-		return object == null ? 0.0 : Double.parseDouble(object.toString());
+		return object == null ? null : Double.parseDouble(object.toString());
 	}
 
 	/**

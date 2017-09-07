@@ -2,15 +2,14 @@ package org.egov.tradelicense.persistence.repository;
 
 import org.egov.tradelicense.common.persistense.repository.JdbcRepository;
 import org.egov.tradelicense.persistence.entity.LicenseApplicationEntity;
-import org.egov.tradelicense.persistence.entity.TradeLicenseEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Service;
 
 @Service
-public class LicenseApplicationJdbcRepository extends JdbcRepository{
-	
+public class LicenseApplicationJdbcRepository extends JdbcRepository {
+
 	private static final Logger LOG = LoggerFactory.getLogger(LicenseApplicationJdbcRepository.class);
 	static {
 		LOG.debug("init licenseApplication");
@@ -31,12 +30,13 @@ public class LicenseApplicationJdbcRepository extends JdbcRepository{
 
 		return entity;
 	}
+
 	public String getSequence(String seqName) {
 		String seqQuery = "select nextval('" + LicenseApplicationEntity.SEQUENCE_NAME + "')";
 		MapSqlParameterSource parameters = new MapSqlParameterSource();
 		return String.valueOf(namedParameterJdbcTemplate.queryForObject(seqQuery, parameters, Long.class) + 1);
 	}
-	
+
 	/**
 	 * This method will cast the given object to String
 	 * 
@@ -56,7 +56,7 @@ public class LicenseApplicationJdbcRepository extends JdbcRepository{
 	 * @return {@link Long}
 	 */
 	private Long getLong(Object object) {
-		return object == null ? 0 : Long.parseLong(object.toString());
+		return object == null ? null : Long.parseLong(object.toString());
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class LicenseApplicationJdbcRepository extends JdbcRepository{
 	 */
 	@SuppressWarnings("unused")
 	private Double getDouble(Object object) {
-		return object == null ? 0.0 : Double.parseDouble(object.toString());
+		return object == null ? null : Double.parseDouble(object.toString());
 	}
 
 	/**

@@ -361,19 +361,19 @@ var dat = {
           //   "requiredErrMsg": "",
           //   "patternErrMsg": ""
           // },
-          {
-            "name": "CategoryType",
-            "jsonPath": "Connection.categoryType",
-            "label": "wc.create.groups.connectionDetails.categoryType",
-            "pattern": "",
-            "type": "singleValueList",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-      			"defaultValue": [],
-      			"url":"/wcms/masters/categorytype/_search?|$..name|$..name"
-          },
+          // {
+          //   "name": "CategoryType",
+          //   "jsonPath": "Connection.categoryType",
+          //   "label": "wc.create.groups.connectionDetails.categoryType",
+          //   "pattern": "",
+          //   "type": "singleValueList",
+          //   "isRequired": true,
+          //   "isDisabled": false,
+          //   "requiredErrMsg": "",
+          //   "patternErrMsg": "",
+      		// 	"defaultValue": [],
+      		// 	"url":"/wcms/masters/categorytype/_search?|$..name|$..name"
+          // },
           {
             "name": "UsageType",
             "jsonPath": "Connection.usageType",
@@ -1075,17 +1075,17 @@ var dat = {
           //   "requiredErrMsg": "",
           //   "patternErrMsg": ""
           // },
-          {
-            "name": "CategoryType",
-            "jsonPath": "Connection[0].categoryType",
-            "label": "wc.create.groups.connectionDetails.categoryType",
-            "pattern": "",
-            "type": "singleValueList",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
+          // {
+          //   "name": "CategoryType",
+          //   "jsonPath": "Connection[0].categoryType",
+          //   "label": "wc.create.groups.connectionDetails.categoryType",
+          //   "pattern": "",
+          //   "type": "singleValueList",
+          //   "isRequired": false,
+          //   "isDisabled": false,
+          //   "requiredErrMsg": "",
+          //   "patternErrMsg": ""
+          // },
           {
             "name": "UsageType",
             "jsonPath": "Connection[0].usageType",

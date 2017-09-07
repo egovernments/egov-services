@@ -7,7 +7,9 @@ import org.egov.citizen.config.ApplicationProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -21,7 +23,8 @@ public class RedirectController {
 	private ApplicationProperties applicationProperties;
 
     @RequestMapping(value = "/pgresponse", method = RequestMethod.GET)
-    public String jsonSubmit(HttpServletRequest request) {
+    public String jsonSubmit(HttpServletRequest request, @RequestHeader final HttpHeaders headers) {
+    	System.out.println("headers:"+headers.getOrigin());
     	String body = null;
     	String host = request.getHeader("host");
     	String queryString = request.getQueryString();

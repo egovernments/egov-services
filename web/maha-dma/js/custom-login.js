@@ -93,39 +93,39 @@ $(document).ready(function(){
         $('.service-table').html(servicesMenuTempalte(groupByModuleServices));
       }
 
-      $(document).on('click', 'a.action-item', function(e){
-          //console.log('serviceName', $(this).data('service-name'));
-          var serviceName = $(this).data('service-name');
-          var moduleName = $(this).data('module-name');
-          $('#servicesDetailModalLabel').html($(this).data('service-name')+" - "+moduleName);
-
-          var service = servicesList.find((service) => service.serviceName === serviceName
-                    && service.moduleName === moduleName);
-
-          var ulb = ulbsList.find((ulb)=>ulb.tenantId === $('#ulb-dropdown').val());
-
-          if(service && service.redirectUrl){
-            // if(!service.slaTable){
-            //   var uniqueKeys = service.slaTable.columns.reduce(function (acc, obj) {
-            //       return acc.concat(acc.indexOf(obj.key) === -1? obj.key : undefined);
-            //   }, []);
-            //   service['uniqueKeys'] = uniqueKeys;
-            // }
-
-            console.log('service', service);
-
-            console.log('docs response', documentsTemplate(service));
-
-            //documentsTempalte
-            $('#apply-btn').attr('data-url', service.redirectUrl);
-            $('#documents-body').html(documentsTemplate(service));
-            $('#servicesDetailModal').modal('show');
-          }
-          else{
-            //else TODO
-            alert('This service is not available');
-          }
-      });
+      // $(document).on('click', 'a.action-item', function(e){
+      //     //console.log('serviceName', $(this).data('service-name'));
+      //     var serviceName = $(this).data('service-name');
+      //     var moduleName = $(this).data('module-name');
+      //     $('#servicesDetailModalLabel').html($(this).data('service-name')+" - "+moduleName);
+      //
+      //     var service = servicesList.find((service) => service.serviceName === serviceName
+      //               && service.moduleName === moduleName);
+      //
+      //     var ulb = ulbsList.find((ulb)=>ulb.tenantId === $('#ulb-dropdown').val());
+      //
+      //     if(service && service.redirectUrl){
+      //       // if(!service.slaTable){
+      //       //   var uniqueKeys = service.slaTable.columns.reduce(function (acc, obj) {
+      //       //       return acc.concat(acc.indexOf(obj.key) === -1? obj.key : undefined);
+      //       //   }, []);
+      //       //   service['uniqueKeys'] = uniqueKeys;
+      //       // }
+      //
+      //       // console.log('service', service);
+      //
+      //       // console.log('docs response', documentsTemplate(service));
+      //
+      //       //documentsTempalte
+      //       $('#apply-btn').attr('data-url', service.redirectUrl);
+      //       $('#documents-body').html(documentsTemplate(service));
+      //       $('#servicesDetailModal').modal('show');
+      //     }
+      //     else{
+      //       //else TODO
+      //       alert('This service is not available');
+      //     }
+      // });
 
       $('#apply-btn').click(function(e){
           redirectUrl = $(this).attr('data-url');

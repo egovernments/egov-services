@@ -1189,7 +1189,6 @@ definitions:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
       - tenantId
-      - applicationType
       - fromRange
       - toRange
       - rate
@@ -1340,7 +1339,7 @@ definitions:
           description: Unique Name of the Status
         code:
           type: string
-          maxLength: 20
+          maxLength: 100
           minLength: 1
           description: Unique code of the Status
         moduleType:

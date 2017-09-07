@@ -2,7 +2,7 @@
 	"variables": [],
 	"info": {
 		"name": "Dev Env TL Masters",
-		"_postman_id": "9dcd4650-790b-d225-80e3-e343fb1d9bbe",
+		"_postman_id": "c8bf2e36-7784-f381-35c7-880bbdfb9fc4",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
@@ -482,12 +482,13 @@
 			],
 			"request": {
 				"url": {
-					"raw": "http://localhost:8085/tl-masters/penaltyrate/v1/_create?tenantId=default",
+					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/penaltyrate/v1/_create?tenantId=default",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"egov-micro-dev",
+						"egovernments",
+						"org"
 					],
-					"port": "8085",
 					"path": [
 						"tl-masters",
 						"penaltyrate",
@@ -566,12 +567,13 @@
 			],
 			"request": {
 				"url": {
-					"raw": "http://localhost:8085/tl-masters/penaltyrate/v1/_search?tenantId=default&applicationType=NEW",
+					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/penaltyrate/v1/_search?tenantId=default",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"egov-micro-dev",
+						"egovernments",
+						"org"
 					],
-					"port": "8085",
 					"path": [
 						"tl-masters",
 						"penaltyrate",
@@ -582,12 +584,6 @@
 						{
 							"key": "tenantId",
 							"value": "default",
-							"equals": true,
-							"description": ""
-						},
-						{
-							"key": "applicationType",
-							"value": "NEW",
 							"equals": true,
 							"description": ""
 						}

@@ -95,6 +95,13 @@ public class EmployeeAssignmentValidator implements Validator {
         List<Integer> primaryMarker = new ArrayList<>();
         for (int index = 0; index < assignments.size(); index++) {
         	
+        	if(!assignments.get(index).getFromDate() .equals(employee.getDateOfAppointment())
+        		&&  !assignments.get(index).getFromDate().before(employee.getDateOfAppointment())) 
+        		{
+        		throw new InvalidDataException("Assignment from Date and Employee  Date Of Appointment", "Assignment from Date should be Greater Than employee Date Of Appointment",
+             			"null");
+        	}
+        	
 			RequestInfo requestInfo = new RequestInfo();
 	         RequestInfoWrapper requestInfoWrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
 	         String tenantId=employee.getTenantId();

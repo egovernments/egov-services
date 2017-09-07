@@ -369,7 +369,7 @@ var localization_EN_Data = {
       //Water Connection
       "reports.wcms.fromdate":"From Date",
       "reports.wcms.todate":"To Date",
-      "reports.wcms.wardno":"Ward",
+      "reports.wcms.ward":"Ward",
       "reports.wcms.consumerno":"Consumer No.",
       "reports.wcms.consumername":"Consumer Name",
       "reports.wcms.pipesize":"Pipe Size",
@@ -2539,7 +2539,7 @@ var localization_MR_Data = {
   //Water Connection
   "reports.wcms.fromdate":"From Date - Marathi",
   "reports.wcms.todate":"To Date - Marathi",
-  "reports.wcms.wardno":"Ward - Marathi",
+  "reports.wcms.ward":"Ward - Marathi",
   "reports.wcms.consumerno":"Consumer No. - Marathi",
   "reports.wcms.consumername":"Consumer Name - Marathi",
   "reports.wcms.pipesize":"Pipe Size - Marathi",

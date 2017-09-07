@@ -488,12 +488,18 @@ public class TradeLicenseService {
 	}
 
 	public void updateTradeLicenseAfterCollection(DemandResponse demandResponse) {
-		if (demandResponse != null) {
+	        LicenseStatusResponse nextStatus = null;
+	        RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+	        requestInfoWrapper.setRequestInfo(createRequestInfoFromResponseInfo(demandResponse.getResponseInfo()));
+	        nextStatus = statusRepository.findByModuleTypeAndCode(demandResponse.getDemands().get(0).getTenantId(),
+	                NEW_LICENSE_MODULE_TYPE, NewLicenseStatus.LICENSE_FEE_PAID.getName(), requestInfoWrapper);
+		if (demandResponse != null && null != nextStatus && !nextStatus.getLicenseStatuses().isEmpty()) {
 			Demand demand = demandResponse.getDemands().get(0);
 			if (demand != null && demand.getBusinessService() != null
 					&& "TRADELICENSE".equals(demand.getBusinessService())) {
 				log.debug(demand.toString());
-				tradeLicenseRepository.updateTradeLicenseAfterWorkFlowQuery(demand.getConsumerCode());
+                                tradeLicenseRepository.updateTradeLicenseAfterWorkFlowQuery(demand.getConsumerCode(),
+                                        nextStatus.getLicenseStatuses().get(0).getId().toString());
 			} else {
 				log.debug("Demand is null in Trade License service");
 			}

@@ -280,14 +280,14 @@ ReportDefinitions:
     total: true
   searchParams:
   - name: wardid
-    label: reports.wcms.wardno
+    label: reports.wcms.ward
     type: singlevaluelist
     pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=WARD&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name
     source: wcms
     isMandatory: false
     searchClause: and prop.wardid = $wardid
   - name: zoneid
-    label: reports.wcms.zone
+    label: reports.wcms.zoneid
     type: singlevaluelist
     pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name
     source: wcms

@@ -48,9 +48,7 @@ import java.util.Map;
 import org.egov.wcms.model.MeterWaterRates;
 import org.egov.wcms.model.Slab;
 import org.egov.wcms.repository.builder.MeterWaterRatesQueryBuilder;
-import org.egov.wcms.repository.builder.PropertyPipeSizeQueryBuilder;
 import org.egov.wcms.repository.rowmapper.MeterWaterRatesRowMapper;
-import org.egov.wcms.service.RestWaterExternalMasterService;
 import org.egov.wcms.web.contract.MeterWaterRatesGetRequest;
 import org.egov.wcms.web.contract.MeterWaterRatesRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,15 +74,12 @@ public class MeterWaterRatesRepository {
     private MeterWaterRatesRowMapper meterWaterRatesRowMapper;
 
     @Autowired
-    private RestWaterExternalMasterService restExternalMasterService;
-
-    @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public MeterWaterRatesRequest persistCreateMeterWaterRates(final MeterWaterRatesRequest meterWaterRatesRequest) {
         log.info("MeterWaterRatesRequest::" + meterWaterRatesRequest);
         final String meterWaterRatesInsertQuery = MeterWaterRatesQueryBuilder.insertMeterWaterRatesQuery();
-        final String pipesizeQuery = PropertyPipeSizeQueryBuilder.getPipeSizeIdQuery();
+        final String pipesizeQuery = MeterWaterRatesQueryBuilder.getPipeSizeIdQuery();
         final String sourcetypeQuery = MeterWaterRatesQueryBuilder.getSourceTypeIdQuery();
         final List<MeterWaterRates> meterWaterRatesList = meterWaterRatesRequest.getMeterWaterRates();
         final List<Map<String, Object>> batchValues = new ArrayList<>(meterWaterRatesList.size());
@@ -154,7 +149,7 @@ public class MeterWaterRatesRepository {
     public MeterWaterRatesRequest persistUpdateMeterWaterRates(final MeterWaterRatesRequest meterWaterRatesRequest) {
         log.info("MeterWaterRatesRequest::" + meterWaterRatesRequest);
         final String meterWaterRatesUpdateQuery = MeterWaterRatesQueryBuilder.updateMeterWaterRatesQuery();
-        final String pipesizeQuery = PropertyPipeSizeQueryBuilder.getPipeSizeIdQuery();
+        final String pipesizeQuery = MeterWaterRatesQueryBuilder.getPipeSizeIdQuery();
         final String sourcetypeQuery = MeterWaterRatesQueryBuilder.getSourceTypeIdQuery();
         final List<MeterWaterRates> meterWaterRatesList = meterWaterRatesRequest.getMeterWaterRates();
         final List<Map<String, Object>> batchValues = new ArrayList<>(meterWaterRatesList.size());
@@ -229,7 +224,7 @@ public class MeterWaterRatesRepository {
     public boolean checkMeterWaterRatesExists(final String code, final Long usageTypeId,
             final Long subUsageTypeId, final String sourceTypeName, final Double pipeSize, final String tenantId) {
         final List<Object> preparedStatementValues = new ArrayList<>();
-        final String pipesizeQuery = PropertyPipeSizeQueryBuilder.getPipeSizeIdQuery();
+        final String pipesizeQuery = MeterWaterRatesQueryBuilder.getPipeSizeIdQuery();
         Long pipesizeId = 0L;
         try {
             pipesizeId = jdbcTemplate.queryForObject(pipesizeQuery,
@@ -275,7 +270,7 @@ public class MeterWaterRatesRepository {
         final List<Object> preparedStatementValues = new ArrayList<>();
         preparedStatementValues.add(pipeSize);
         preparedStatementValues.add(tenantId);
-        final String query = PropertyPipeSizeQueryBuilder.getPipeSizeIdQuery();
+        final String query = MeterWaterRatesQueryBuilder.getPipeSizeIdQuery();
         final List<Map<String, Object>> pipeSizes = jdbcTemplate.queryForList(query,
                 preparedStatementValues.toArray());
         if (!pipeSizes.isEmpty())
@@ -296,19 +291,19 @@ public class MeterWaterRatesRepository {
 
         return true;
     }
-    
+
     public Map<String, Object> checkUsageAndSubUsageTypeExists(final String usageType, final String tenantId) {
-    	final List<Object> preparedStatementValues = new ArrayList<>();
-    	preparedStatementValues.add(usageType);
-    	preparedStatementValues.add(tenantId);
-    	final String query = MeterWaterRatesQueryBuilder.getUsageTypeIdQuery();
-    	
-    	try{
-    		return jdbcTemplate.queryForMap(query,preparedStatementValues.toArray());
-    	}catch(EmptyResultDataAccessException exception){
-    		return new HashMap<String, Object>();    		
-    	}
-    	
+        final List<Object> preparedStatementValues = new ArrayList<>();
+        preparedStatementValues.add(usageType);
+        preparedStatementValues.add(tenantId);
+        final String query = MeterWaterRatesQueryBuilder.getUsageTypeIdQuery();
+
+        try {
+            return jdbcTemplate.queryForMap(query, preparedStatementValues.toArray());
+        } catch (final EmptyResultDataAccessException exception) {
+            return new HashMap<String, Object>();
+        }
+
     }
-    
+
 }

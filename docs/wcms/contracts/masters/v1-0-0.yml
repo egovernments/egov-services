@@ -14,9 +14,6 @@
         - Create, Update and Search for Meter Cost
         - Create, Update and Search for Meter Status
         - Search for ApplicationType
-        - Create, Update and Search for mapping between PropertyType-CategoryType
-        - Create, Update and Search for mapping between PropertyType-PipeSize
-        - Create, Update and Search for mapping between PropertyType-UsageType
         - Create, Update and Search for mapping between DocumentType-ApplicationType
         - Create, Update and Search for Storage Reservoir Master
         - Create, Update and Search for Water Treatment Plant Master
@@ -425,211 +422,6 @@
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
-    
-              
-  # Property Type Category Type API
-    /propertytype-categorytype/_create:
-      post:
-        summary: creates mapping between property type and category type
-        description: allows bulk create a mapping between two types.
-        tags:
-          - PropertyTypeCategoryType
-        parameters:
-          - name: PropertyTypeCategoryType
-            in: body
-            description: required parameters have to be populated
-            required: true
-            schema:
-              $ref: '#/definitions/PropertyTypeCategoryTypeReq'
-        responses:
-          '201':
-            description: Property Category created sucessfully.
-            schema:
-              $ref: "#/definitions/PropertyTypeCategoryTypesRes"
-          '400':
-            description: Request failed
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-
-    /propertytype-categorytype/_update:
-      post:
-        summary:  while updating in request body code is required and updates existing values based on code.
-        description: bulk updates existing values
-        tags:
-          - PropertyTypeCategoryType
-        parameters:
-          - name: PropertyTypeCategoryType
-            in: body
-            description: required parameters have to be populated
-            required: true
-            schema:
-              $ref: '#/definitions/PropertyTypeCategoryTypeReq'
-        responses:
-          '200':
-            description: Property Category updated sucessfully.
-            schema:
-              $ref: "#/definitions/PropertyTypeCategoryTypesRes"
-          '400':
-            description: Request failed
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-
-    /propertytype-categorytype/_search:
-      post:
-        summary: searches existing values
-        tags:
-          - PropertyTypeCategoryType
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - $ref: "#/parameters/id"
-          - $ref: "#/parameters/propertyTypeName"
-          - $ref: "#/parameters/categoryTypeName"
-        responses:
-          200: 
-            description: Successful response
-            schema:
-              $ref: '#/definitions/PropertyTypeCategoryTypesRes'
-          400:
-            description: Invalid input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-  # Property Type PipeSize Type API
-    /propertytype-pipesize/_create:
-      post:
-        summary: creates mapping between property type and pipe size 
-        description: allows bulk creates a mapping between two types.
-        tags:
-          - PropertyTypePipeSize
-        parameters:
-          - name: PropertyTypePipeSize
-            in: body
-            description: required parameters have to be populated
-            required: true
-            schema:
-              $ref: '#/definitions/PropertyTypePipeSizeReq'
-        responses:
-          '201':
-            description: Property PipeSize created sucessfully.
-            schema:
-              $ref: "#/definitions/PropertyTypePipeSizeRes"
-          '400':
-            description: Request failed
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-
-    /propertytype-pipesize/_update:
-      post:
-        summary: while updating in request body code is required and updates existing values based on code.
-        description: bulk updates existing values
-        tags:
-          - PropertyTypePipeSize
-        parameters:
-          - name: PropertyTypePipeSize
-            in: body
-            description: required parameters have to be populated
-            required: true
-            schema:
-              $ref: '#/definitions/PropertyTypePipeSizeReq'
-        responses:
-          '200':
-            description: Property PipeSize updated sucessfully.
-            schema:
-              $ref: "#/definitions/PropertyTypePipeSizeRes"
-          '400':
-            description: Request failed
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-
-    /propertytype-pipesize/_search:
-      post:
-        summary: searches existing values
-        tags:
-          - PropertyTypePipeSize
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - $ref: "#/parameters/id"
-          - $ref: "#/parameters/propertyTypeName"
-          - $ref: "#/parameters/pipeSizeInMM"
-        responses:
-          200: 
-            description: Successful response
-            schema:
-              $ref: '#/definitions/PropertyTypePipeSizeRes'
-          400:
-            description: Invalid input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-  # Property Type Usage Type API
-    /propertytype-usagetype/_create:
-      post:
-        summary: creates mapping between property type and usage type
-        description: allows bulk creates a mapping between two types.
-        tags:
-          - PropertyTypeUsageType
-        parameters:
-          - name: PropertyTypeUsageType
-            in: body
-            description: required parameters have to be populated
-            required: true
-            schema:
-              $ref: '#/definitions/PropertyTypeUsageTypeReq'
-        responses:
-          '201':
-            description:  Property Usage created sucessfully.
-            schema:
-              $ref: "#/definitions/PropertyTypeUsageTypesRes"
-          '400':
-            description: Request failed
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-
-    /propertytype-usagetype/_update:
-      post:
-        summary: while updating in request body code is required and updates existing values based on code.
-        description: bulk updates existing values
-        tags:
-          - PropertyTypeUsageType
-        parameters:
-          - name: PropertyTypeUsageType
-            in: body
-            description: required parameters have to be populated
-            required: true
-            schema:
-              $ref: '#/definitions/PropertyTypeUsageTypeReq'
-        responses:
-          '200':
-            description: Property Usage updated sucessfully.
-            schema:
-              $ref: "#/definitions/PropertyTypeUsageTypesRes"
-          '400':
-            description: Request failed
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-
-    /propertytype-usagetype/_search:
-      post:
-        summary: searches existing values
-        tags:
-          - PropertyTypeUsageType
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - $ref: "#/parameters/id"
-          - $ref: "#/parameters/propertyTypeName"
-          - $ref: "#/parameters/usageTypeName"
-        responses:
-          200: 
-            description: Successful response
-            schema:
-              $ref: '#/definitions/PropertyTypeUsageTypesRes'
-          400:
-            description: Invalid input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
     # Donation  API
     /donation/_create:
@@ -687,7 +479,7 @@
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
           - $ref: "#/parameters/id"
-          - $ref: "#/parameters/propertyTypeName"
+          - $ref: "#/parameters/subUsageTypeName"
           - $ref: "#/parameters/usageTypeName"
           - $ref: "#/parameters/categoryTypeName"
           - $ref: "#/parameters/pipeSizeInMM"
@@ -1197,7 +989,7 @@
               $ref: >-
                 https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
                 
-  # UsageType Master API:
+  # Service Charges Master API:
     /serviceCharges/_create:
       post:
         summary: Create new service charge.
@@ -1248,7 +1040,7 @@
       post:
         summary: searches existing values
         tags:
-          - service Charge
+          - Service Charge
         parameters:
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
@@ -1366,14 +1158,6 @@
       in: query
       type: number
       description: Unique H.S.C pipe size in milli-meters.
-  
-      
-    propertyTypeName:
-      name: propertyTypeName
-      in: query
-      description: unique name of property type
-      required: false
-      type: string
 
     categoryTypeName:
       name: categoryTypeName
@@ -1393,6 +1177,13 @@
       name: usageTypeName
       in: query
       description: unique name of usage type
+      required: false
+      type: string
+      
+    subUsageTypeName:
+      name: subUsageTypeName
+      in: query
+      description: unique name of sub usage type
       required: false
       type: string
 
@@ -1475,180 +1266,6 @@
       type: boolean
               
   definitions:
-  
-  # Proprty Type and Category Type mapping definition
-    PropertyTypeCategoryTypeReq:
-      type: object
-      properties:
-        RequestInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        PropertyTypeCategoryType:
-          $ref: '#/definitions/PropertyTypeCategoryType'
-      required:
-        - RequestInfo
-        - PropertyTypeCategoryType
-    
-    PropertyTypeCategoryTypesRes:
-      type: object
-      properties:
-        ResponseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        PropertyTypeCategoryTypes:
-          type: array
-          maximum: 20
-          items:
-            $ref: '#/definitions/PropertyTypeCategoryType'
-    
-    PropertyTypeCategoryType:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: Unique identifier, typically defined by system and readonly.
-        code:
-          type: string
-          description: unique code this should be defined by system and readonly.
-          maxLength: 20
-        propertyTypeId:
-          type: string
-          description: Unique identifier of property type object
-        categoryTypeId:
-          type: integer
-          format: int64
-          description: unique identifier of category type object
-        active:
-          type: boolean
-          format: varchar
-          description: TRUE for active and FALSE for inactive.
-        tenantId:
-          type: string
-          description: Unique Identifier of the tenant 
-          maxLength: 250
-        auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-      required:
-        - code
-        - propertyTypeId
-        - categoryTypeId
-        - active
-        - tenantId
-          
-  # Proprty Type and PipeSize Type mapping definition
-    PropertyTypePipeSizeReq:
-      type: object
-      properties:
-        RequestInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        PropertyTypePipeSize:
-          $ref: '#/definitions/PropertyTypePipeSize'
-      required:
-        - RequestInfo
-        - PropertyTypePipeSize
-    
-    PropertyTypePipeSizeRes:
-      type: object
-      properties:
-        ResponseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        PropertyTypePipeSizes:
-          type: array
-          maximum: 20
-          items:
-            $ref: '#/definitions/PropertyTypePipeSize'
-    
-    PropertyTypePipeSize:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: Unique identifier, typically defined by system and readonly.
-        code:
-          type: string
-          description: unique code this should be defined by system and readonly.
-          maxLength: 20
-        propertyTypeId:
-          type: string
-          description: Unique identifier of property type object
-        pipeSizeId:
-          type: integer
-          format: int64
-          description: unique identifier of pipe size type object
-        active:
-          type: boolean
-          format: varchar
-          description: TRUE for active and FALSE for inactive.
-        tenantId:
-          type: string
-          description: Unique Identifier of the tenant
-          maxLength: 250
-        auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-      required:
-        - code
-        - propertyTypeId
-        - pipeSizeId
-        - active
-        - tenantId
-
-  # Proprty Type and Usage Type mapping definition
-    PropertyTypeUsageTypeReq:
-      type: object
-      properties:
-        RequestInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        PropertyTypeUsageType:
-          $ref: '#/definitions/PropertyTypeUsageType'
-      required:
-        - RequestInfo
-        - PropertyTypeUsageType
-    
-    PropertyTypeUsageTypesRes:
-      type: object
-      properties:
-        ResponseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        PropertyTypeUsageTypes:
-          type: array
-          maximum: 20
-          items:
-            $ref: '#/definitions/PropertyTypeUsageType'
-            
-    PropertyTypeUsageType:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: Unique identifier, typically defined by system and readonly.
-        code:
-          type: string
-          description: unique code this should be defined by system and readonly.
-          maxLength: 20
-        propertyTypeId:
-          type: string
-          description: Unique identifier of property type object
-        usageTypeId:
-          type: integer
-          format: int64
-          description: unique identifier of property usage type object
-        active:
-          type: boolean
-          format: varchar
-          description: TRUE for active and FALSE for inactive.
-        tenantId:
-          type: string
-          description: Unique Identifier of the tenant 
-          maxLength: 250
-        auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-      required:
-        - code
-        - propertyTypeId
-        - usageTypeId
-        - active
-        - tenantId
 
   # Document Type and Application Type mapping definition
     DocumentTypeApplicationTypeReq:
@@ -2092,15 +1709,12 @@
           type: string
           description: unique code this should be defined by system and readonly.
           maxLength: 20
-        propertyTypeId:
-          type: string
-          description: Unique identifier of property type object
         usageTypeId:
           type: string
-          description: unique identifier of property usage type object
+          description: unique identifier of usage type object
         subUsageTypeId:
           type: string
-          description: unique identifier of property sub usage type object
+          description: unique identifier of sub usage type object
         maxPipeSizeId:
           type: integer
           format: int64
@@ -2132,11 +1746,14 @@
           type: string
           description: Unique Identifier of the tenant
           maxLength: 250
+        outsideUlb:
+          type: boolean
+          format: varchar
+          description: TRUE for outsideUlb  and FALSE for Not outsideUlb.
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
         - code
-        - propertyTypeId
         - usageTypeId
         - subUsageTypeId
         - maxPipeSizeId
@@ -2409,6 +2026,9 @@
         usageTypeId:
           type: string
           description: unique identifier of property usage type object
+        subUsageTypeId:
+          type: string
+          description: unique identifier of sub usage type object
         sourceTypeId:
           type: string
           description: unique identifier of property usage type object
@@ -2439,6 +2059,7 @@
         - code
         - sourceTypeId
         - usageTypeId
+        - subUsageTypeId
         - pipeSizeId
         - fromDate
         - toDate
@@ -2637,10 +2258,10 @@
            - PERMANENT
         usageTypeId:
           type: string
-          description: unique identifier of property usage type object
+          description: unique identifier of usage type object
         subUsageTypeId:
           type: string
-          description: unique identifier of property sub usage type object
+          description: unique identifier of sub usage type object
         sourceTypeId:
           type: string
           description: unique identifier of property usage type object
@@ -2875,8 +2496,3 @@
         - logic
         - noOfLastMonths
         - tenantId
-        
-    
-
-          
-          

@@ -197,5 +197,14 @@ public class MeterWaterRatesQueryBuilder {
     public static String getUsageTypeIdQuery() {
         return " select id FROM egwtr_usage_type  where name= ? and tenantId = ? ";
     }
+    
+    public static String getPipeSizeIdQuery() {
+        return " select id FROM egwtr_pipesize where sizeinmilimeter= ? and tenantId = ? ";
+    }
+
+    public static String getPipeSizeInmm() {
+        return "SELECT sizeinmilimeter FROM egwtr_pipesize WHERE id = ? and tenantId = ? ";
+    }
+
 
 }

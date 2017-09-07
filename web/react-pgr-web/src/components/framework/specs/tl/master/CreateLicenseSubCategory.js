@@ -307,7 +307,7 @@ var dat = {
 				"jsonPath": "categories[0].details",
 				"multiple": true,
 				"fields": [
-					{
+					{ 
 						"name": "createFeeType",
 						"jsonPath": "categories[0].details[0].feeType",
 						"label": "tl.create.groups.subcategorytype.categories.details.feeType",

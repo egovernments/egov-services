@@ -304,7 +304,7 @@ var dat = {
             "patternErrMsg": ""
 					}
 				]
-			}
+			} 
 
 		]
 	},

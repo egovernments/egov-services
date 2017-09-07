@@ -119,6 +119,15 @@ public class VoucherServiceTest {
         voucher.setSource(
                 null + "/asset-web/app/asset/create-asset-revaluation.html?id=" + revaluation.getId() + "&type=view");
 
+        final Function function = new Function();
+        function.setId(Long.valueOf("124"));
+
+        final List<VoucherAccountCodeDetails> voucherAccountCodeDetails = voucher.getLedgers();
+        for (final VoucherAccountCodeDetails acd : voucherAccountCodeDetails)
+            acd.setFunction(function);
+
+        voucher.setLedgers(voucherAccountCodeDetails);
+
         final List<Voucher> vouchers = new ArrayList<>();
         vouchers.add(voucher);
 
@@ -361,7 +370,7 @@ public class VoucherServiceTest {
 
     private Function getFunction() {
         final Function function = new Function();
-        function.setId(Long.valueOf("124"));
+        function.setCode("0600");
         return function;
     }
 

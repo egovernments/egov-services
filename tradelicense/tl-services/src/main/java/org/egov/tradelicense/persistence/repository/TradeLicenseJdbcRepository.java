@@ -23,10 +23,12 @@ import org.egov.tradelicense.domain.enums.OwnerShipType;
 import org.egov.tradelicense.domain.model.AuditDetails;
 import org.egov.tradelicense.domain.model.LicenseApplication;
 import org.egov.tradelicense.domain.model.LicenseFeeDetail;
+import org.egov.tradelicense.domain.model.LicenseSearch;
 import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.persistence.entity.LicenseApplicationSearchEntity;
 import org.egov.tradelicense.persistence.entity.LicenseFeeDetailSearchEntity;
+import org.egov.tradelicense.persistence.entity.LicenseSearchEntity;
 import org.egov.tradelicense.persistence.entity.SupportDocumentSearchEntity;
 import org.egov.tradelicense.persistence.entity.TradeLicenseEntity;
 import org.egov.tradelicense.persistence.entity.TradeLicenseSearchEntity;
@@ -106,21 +108,182 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 		return tradeLicenseSearchEntity;
 	}
 
-	public List<TradeLicenseSearchEntity> search(RequestInfo requestInfo, String tenantId, Integer pageSize,
-			Integer pageNumber, String sort, String active, Integer[] ids, String applicationNumber,
-			String licenseNumber, String oldLicenseNumber, String mobileNumber, String aadhaarNumber, String emailId,
-			String propertyAssesmentNo, Integer adminWard, Integer locality, String ownerName, String tradeTitle,
-			String tradeType, Integer tradeCategory, Integer tradeSubCategory, String isLegacy, Integer status,
-			Integer applicationStatus) {
+	public List<TradeLicenseSearchEntity> search(RequestInfo requestInfo, LicenseSearch domain) {
 
-		MapSqlParameterSource parameter = new MapSqlParameterSource();
+		final LicenseSearchEntity licenseSearchEntity = new LicenseSearchEntity();
+		licenseSearchEntity.toEntity(domain);
+		String searchQuery = "select :selectfields from :tablename :condition  ";
 
-		String query = buildSearchQuery(tenantId, pageSize, pageNumber, sort, active, ids, applicationNumber,
-				licenseNumber, oldLicenseNumber, mobileNumber, aadhaarNumber, emailId, propertyAssesmentNo, adminWard,
-				locality, ownerName, tradeTitle, tradeType, tradeCategory, tradeSubCategory, isLegacy, status,
-				applicationStatus, parameter);
+		MapSqlParameterSource paramValues = new MapSqlParameterSource();
 
-		return executeSearchQuery(requestInfo, query, parameter);
+		final StringBuffer params = new StringBuffer();
+
+		searchQuery = searchQuery.replace(":tablename", LicenseSearchEntity.TABLE_NAME);
+
+		searchQuery = searchQuery.replace(":selectfields", " * ");
+
+		// implement jdbc specfic search
+		if (licenseSearchEntity.getTenantId() != null) {
+			params.append("tenantId =:tenantId");
+			paramValues.addValue("tenantId", licenseSearchEntity.getTenantId());
+		}
+
+		if (licenseSearchEntity.getIds() != null && licenseSearchEntity.getIds().length > 0) {
+
+			String searchIds = "";
+			int count = 1;
+			for (Integer id : licenseSearchEntity.getIds()) {
+
+				if (count < licenseSearchEntity.getIds().length)
+					searchIds = searchIds + id + ",";
+				else
+					searchIds = searchIds + id;
+
+				count++;
+			}
+			params.append(" AND id IN (" + searchIds + ") ");
+		}
+
+		if (licenseSearchEntity.getActive() != null && !licenseSearchEntity.getActive().trim().isEmpty()) {
+
+			if (licenseSearchEntity.getActive().equalsIgnoreCase("true")) {
+				params.append(" AND active = :active ");
+				paramValues.addValue("active", true);
+			} else if (licenseSearchEntity.getActive().equalsIgnoreCase("false")) {
+				params.append(" AND active = :active ");
+				paramValues.addValue("active", false);
+			}
+
+		}
+
+		if (licenseSearchEntity.getLegacy() != null && !licenseSearchEntity.getLegacy().trim().isEmpty()) {
+
+			if (licenseSearchEntity.getLegacy().equalsIgnoreCase("true")) {
+				params.append(" AND isLegacy = :isLegacy ");
+				paramValues.addValue("isLegacy", true);
+			} else if (licenseSearchEntity.getLegacy().equalsIgnoreCase("false")) {
+				params.append(" AND isLegacy = :isLegacy ");
+				paramValues.addValue("isLegacy", false);
+			}
+
+		}
+
+		if (licenseSearchEntity.getApplicationNumber() != null
+				&& !licenseSearchEntity.getApplicationNumber().trim().isEmpty()) {
+			params.append(
+					" AND id in ( SELECT licenseId FROM egtl_license_application WHERE upper(applicationNumber)  like :applicationNumber)");
+			paramValues.addValue("applicationNumber",
+					'%' + licenseSearchEntity.getApplicationNumber().toUpperCase() + '%');
+		}
+
+		if (licenseSearchEntity.getLicenseNumber() != null
+				&& !licenseSearchEntity.getLicenseNumber().trim().isEmpty()) {
+			params.append(" AND upper(licenseNumber)  like  :licenseNumber ");
+			paramValues.addValue("licenseNumber", '%' + licenseSearchEntity.getLicenseNumber().toUpperCase() + '%');
+		}
+
+		if (licenseSearchEntity.getApplicationStatus() != null) {
+			params.append(" AND id in ( SELECT licenseId FROM egtl_license_application WHERE status = '"
+					+ licenseSearchEntity.getApplicationStatus() + "'" + ")");
+		}
+
+		if (licenseSearchEntity.getOldLicenseNumber() != null
+				&& !licenseSearchEntity.getOldLicenseNumber().trim().isEmpty()) {
+			params.append(" AND upper(oldLicenseNumber) like :oldLicenseNumber ");
+			paramValues.addValue("oldLicenseNumber",
+					'%' + licenseSearchEntity.getOldLicenseNumber().toUpperCase() + '%');
+		}
+
+		if (licenseSearchEntity.getMobileNumber() != null && !licenseSearchEntity.getMobileNumber().trim().isEmpty()) {
+			params.append(" AND mobileNumber = :mobileNumber ");
+			paramValues.addValue("mobileNumber", licenseSearchEntity.getMobileNumber());
+		}
+
+		if (licenseSearchEntity.getAadhaarNumber() != null
+				&& !licenseSearchEntity.getAadhaarNumber().trim().isEmpty()) {
+			params.append(" AND adhaarNumber = :adhaarNumber ");
+			paramValues.addValue("adhaarNumber", licenseSearchEntity.getAadhaarNumber());
+		}
+
+		if (licenseSearchEntity.getEmailId() != null && !licenseSearchEntity.getEmailId().trim().isEmpty()) {
+			params.append(" AND emailId = :emailId ");
+			paramValues.addValue("emailId", licenseSearchEntity.getEmailId());
+		}
+
+		if (licenseSearchEntity.getPropertyAssesmentNo() != null
+				&& !licenseSearchEntity.getPropertyAssesmentNo().trim().isEmpty()) {
+			params.append(" AND upper(propertyAssesmentNo) like :propertyAssesmentNo ");
+			paramValues.addValue("propertyAssesmentNo",
+					'%' + licenseSearchEntity.getPropertyAssesmentNo().toUpperCase() + '%');
+		}
+
+		if (licenseSearchEntity.getAdminWard() != null) {
+			params.append(" AND adminWardId = :adminWardId ");
+			paramValues.addValue("adminWardId", licenseSearchEntity.getAdminWard());
+		}
+
+		if (licenseSearchEntity.getLocality() != null) {
+			params.append(" AND localityId = :localityId ");
+			paramValues.addValue("localityId", licenseSearchEntity.getLocality());
+		}
+
+		if (licenseSearchEntity.getOwnerName() != null && !licenseSearchEntity.getOwnerName().trim().isEmpty()) {
+			params.append(" AND upper(ownerName) like :ownerName ");
+			paramValues.addValue("ownerName", '%' + licenseSearchEntity.getOwnerName().toUpperCase() + '%');
+		}
+
+		if (licenseSearchEntity.getTradeTitle() != null && !licenseSearchEntity.getTradeTitle().trim().isEmpty()) {
+			params.append(" AND upper(tradeTitle) like :tradeTitle ");
+			paramValues.addValue("tradeTitle", '%' + licenseSearchEntity.getTradeTitle().toUpperCase() + '%');
+		}
+
+		if (licenseSearchEntity.getTradeType() != null) {
+			params.append(" AND tradeType = :tradeType ");
+			paramValues.addValue("tradeType", licenseSearchEntity.getTradeType());
+		}
+		if (licenseSearchEntity.getTradeCategory() != null) {
+			params.append(" AND categoryId = :categoryId ");
+			paramValues.addValue("categoryId", licenseSearchEntity.getTradeCategory());
+		}
+
+		if (licenseSearchEntity.getTradeSubCategory() != null) {
+			params.append(" AND subCategoryId = :subCategoryId ");
+			paramValues.addValue("subCategoryId", licenseSearchEntity.getTradeSubCategory());
+		}
+
+		if (licenseSearchEntity.getStatus() != null) {
+			params.append(" AND status = :status ");
+			paramValues.addValue("status", licenseSearchEntity.getStatus());
+		}
+
+		if (licenseSearchEntity.getPageSize() == null) {
+			licenseSearchEntity.setPageSize(Integer.valueOf(propertiesManager.getPageSize()));
+		}
+
+		if (licenseSearchEntity.getPageNumber() == null) {
+			licenseSearchEntity.setPageNumber(Integer.valueOf(propertiesManager.getPageNumber()));
+		}
+
+		if (licenseSearchEntity.getSort() == null || licenseSearchEntity.getSort().isEmpty()) {
+
+			params.append("  ORDER BY licenseNumber ASC");
+		} else if (licenseSearchEntity.getSort() != null && licenseSearchEntity.getSort().trim().isEmpty()) {
+
+			params.append("  ORDER BY licenseNumber ASC");
+		} else {
+
+			params.append("  ORDER BY licenseNumber,tradeTitle,ownerName ASC");
+		}
+
+		params.append(" offset :offset ");
+		paramValues.addValue("offset", ((licenseSearchEntity.getPageNumber() - 1) * licenseSearchEntity.getPageSize()));
+
+		params.append(" limit :limit ");
+		paramValues.addValue("limit", licenseSearchEntity.getPageSize());
+
+		searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+
+		return executeSearchQuery(requestInfo, searchQuery, paramValues);
 
 	}
 
@@ -188,7 +351,7 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			license.setApplicationNumber(license.getLicenseApplicationSearchEntitys().get(0).getApplicationNumber());
 
 			license.setLicenseNumber(getString(row.get("licenseNumber")));
-			if(row.get("oldLicenseNumber") == null){
+			if (row.get("oldLicenseNumber") == null) {
 				license.setOldLicenseNumber(null);
 			} else {
 				license.setOldLicenseNumber(getString(row.get("oldLicenseNumber")));
@@ -342,7 +505,8 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			licenseApplication.setLicenseId(getLong(row.get("licenseId")));
 			licenseApplication.setState_id(getString(row.get("state_id")));
 			licenseApplication.setStatus(getString(row.get("status")));
-			licenseApplication.setStatusName(getApplicationStatusName(getString(row.get("tenantId")), getString( row.get("status")), requestInfo));
+			licenseApplication.setStatusName(getApplicationStatusName(getString(row.get("tenantId")),
+					getString(row.get("status")), requestInfo));
 			licenseApplication.setApplicationDate(((Timestamp) row.get("applicationDate")));
 			licenseApplication.setApplicationNumber(getString(row.get("applicationNumber")));
 			licenseApplication.setApplicationType(getString(row.get("applicationType")));
@@ -413,164 +577,6 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 		builder.append(licenseId);
 
 		return builder.toString();
-	}
-
-	public String buildSearchQuery(String tenantId, Integer pageSize, Integer pageNumber, String sort, String active,
-			Integer[] ids, String applicationNumber, String licenseNumber, String oldLicenseNumber, String mobileNumber,
-			String aadhaarNumber, String emailId, String propertyAssesmentNo, Integer adminWard, Integer locality,
-			String ownerName, String tradeTitle, String tradeType, Integer tradeCategory, Integer tradeSubCategory,
-			String isLegacy, Integer status, Integer applicationStatus, MapSqlParameterSource parameter) {
-
-		StringBuffer searchSql = new StringBuffer();
-		searchSql.append("select * from " + "egtl_license" + " where ");
-		searchSql.append(" tenantId = :tenantId ");
-		parameter.addValue("tenantId", tenantId);
-
-		if (active != null && !active.trim().isEmpty()) {
-
-			if (active.equalsIgnoreCase("true")) {
-				searchSql.append(" AND active = :active ");
-				parameter.addValue("active", true);
-			} else if (active.equalsIgnoreCase("false")) {
-				searchSql.append(" AND active = :active ");
-				parameter.addValue("active", false);
-			}
-
-		}
-
-		if (isLegacy != null && !isLegacy.trim().isEmpty()) {
-
-			if (isLegacy.equalsIgnoreCase("true")) {
-				searchSql.append(" AND isLegacy = :isLegacy ");
-				parameter.addValue("isLegacy", true);
-			} else if (isLegacy.equalsIgnoreCase("false")) {
-				searchSql.append(" AND isLegacy = :isLegacy ");
-				parameter.addValue("isLegacy", false);
-			}
-
-		}
-
-		if (ids != null && ids.length > 0) {
-
-			String searchIds = "";
-			int count = 1;
-			for (Integer id : ids) {
-
-				if (count < ids.length)
-					searchIds = searchIds + id + ",";
-				else
-					searchIds = searchIds + id;
-
-				count++;
-			}
-			searchSql.append(" AND id IN (" + searchIds + ") ");
-		}
-
-		if (applicationNumber != null && !applicationNumber.trim().isEmpty()) {
-			searchSql.append(
-					" AND id in ( SELECT licenseId FROM egtl_license_application WHERE upper(applicationNumber)  like :applicationNumber)");
-			parameter.addValue("applicationNumber", '%' + applicationNumber.toUpperCase() + '%');
-		}
-
-		if (licenseNumber != null && !licenseNumber.trim().isEmpty()) {
-			searchSql.append(" AND upper(licenseNumber)  like  :licenseNumber ");
-			parameter.addValue("licenseNumber", '%' + licenseNumber.toUpperCase() + '%');
-		}
-
-		if (applicationStatus != null) {
-			searchSql.append(" AND id in ( SELECT licenseId FROM egtl_license_application WHERE status = '"
-					+ applicationStatus + "'" + ")");
-		}
-
-		if (oldLicenseNumber != null && !oldLicenseNumber.trim().isEmpty()) {
-			searchSql.append(" AND upper(oldLicenseNumber) like :oldLicenseNumber ");
-			parameter.addValue("oldLicenseNumber", '%' + oldLicenseNumber.toUpperCase() + '%');
-		}
-
-		if (mobileNumber != null && !mobileNumber.trim().isEmpty()) {
-			searchSql.append(" AND mobileNumber = :mobileNumber ");
-			parameter.addValue("mobileNumber", mobileNumber);
-		}
-
-		if (aadhaarNumber != null && !aadhaarNumber.trim().isEmpty()) {
-			searchSql.append(" AND adhaarNumber = :adhaarNumber ");
-			parameter.addValue("adhaarNumber", aadhaarNumber);
-		}
-
-		if (emailId != null && !emailId.trim().isEmpty()) {
-			searchSql.append(" AND emailId = :emailId ");
-			parameter.addValue("emailId", emailId);
-		}
-
-		if (propertyAssesmentNo != null && !propertyAssesmentNo.trim().isEmpty()) {
-			searchSql.append(" AND upper(propertyAssesmentNo) like :propertyAssesmentNo ");
-			parameter.addValue("propertyAssesmentNo", '%' + propertyAssesmentNo.toUpperCase() + '%');
-		}
-
-		if (adminWard != null) {
-			searchSql.append(" AND adminWardId = :adminWardId ");
-			parameter.addValue("adminWardId", adminWard);
-		}
-
-		if (locality != null) {
-			searchSql.append(" AND localityId = :localityId ");
-			parameter.addValue("localityId", locality);
-		}
-
-		if (ownerName != null && !ownerName.trim().isEmpty()) {
-			searchSql.append(" AND upper(ownerName) like :ownerName ");
-			parameter.addValue("ownerName", '%' + ownerName.toUpperCase() + '%');
-		}
-
-		if (tradeTitle != null && !tradeTitle.trim().isEmpty()) {
-			searchSql.append(" AND upper(tradeTitle) like :tradeTitle ");
-			parameter.addValue("tradeTitle", '%' + tradeTitle.toUpperCase() + '%');
-		}
-
-		if (tradeType != null && !tradeType.trim().isEmpty()) {
-			searchSql.append(" AND tradeType = :tradeType ");
-			parameter.addValue("tradeType", tradeType);
-		}
-		if (tradeCategory != null) {
-			searchSql.append(" AND categoryId = :categoryId ");
-			parameter.addValue("categoryId", tradeCategory);
-		}
-
-		if (tradeSubCategory != null) {
-			searchSql.append(" AND subCategoryId = :subCategoryId ");
-			parameter.addValue("subCategoryId", tradeSubCategory);
-		}
-
-		if (status != null) {
-			searchSql.append(" AND status = :status ");
-			parameter.addValue("status", status);
-		}
-
-		if (pageSize == null) {
-			pageSize = Integer.valueOf(propertiesManager.getPageSize());
-		}
-
-		if (pageNumber == null) {
-			pageNumber = Integer.valueOf(propertiesManager.getPageNumber());
-		}
-
-		if (sort == null || sort.isEmpty()) {
-
-			searchSql.append("  ORDER BY licenseNumber ASC");
-		} else if (sort != null && sort.trim().isEmpty()) {
-
-			searchSql.append("  ORDER BY licenseNumber ASC");
-		} else {
-			searchSql.append("  ORDER BY licenseNumber,tradeTitle,ownerName ASC");
-		}
-
-		searchSql.append(" offset :offset ");
-		parameter.addValue("offset", ((pageNumber - 1) * pageSize));
-
-		searchSql.append(" limit :limit ");
-		parameter.addValue("limit", pageSize);
-
-		return searchSql.toString();
 	}
 
 	private Map<String, Map<String, String>> identifyDependencyFields(RequestInfo requestInfo,
@@ -865,147 +871,146 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 	private Boolean getBoolean(Object object) {
 		return object == null ? Boolean.FALSE : (Boolean) object;
 	}
-	
-	
-	 private String getApplicationStatusName (String tenantId, String ids, RequestInfo requestInfo){
-	        
-	        RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-	        requestInfoWrapper.setRequestInfo(requestInfo);
-	        String appStatus ="";
-	        LicenseStatusResponse licenseStatusResponse = statusRepository.findByIds(tenantId, ids,
-	                requestInfoWrapper);
-	        if (licenseStatusResponse != null && licenseStatusResponse.getLicenseStatuses() != null
-	                && licenseStatusResponse.getLicenseStatuses().size() > 0) {
 
-	            for (LicenseStatus licenseStatus : licenseStatusResponse.getLicenseStatuses()) {
-	                appStatus = licenseStatus.getName();
-	            }
+	private String getApplicationStatusName(String tenantId, String ids, RequestInfo requestInfo) {
 
-	        }
-	        
-	        return appStatus;
-	        
-	    }
-	 
-	 public TradeLicense searchByApplicationNumber(RequestInfo requestInfo, String applicationNumber) {
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		String appStatus = "";
+		LicenseStatusResponse licenseStatusResponse = statusRepository.findByIds(tenantId, ids, requestInfoWrapper);
+		if (licenseStatusResponse != null && licenseStatusResponse.getLicenseStatuses() != null
+				&& licenseStatusResponse.getLicenseStatuses().size() > 0) {
 
-             MapSqlParameterSource parameter = new MapSqlParameterSource();
-             StringBuffer searchSql = new StringBuffer();
-             TradeLicense tradeLicense = new TradeLicense();
-             searchSql.append(
-                "select * from egtl_license where id = (select licenseid from egtl_license_application"
-                + " where applicationnumber = :applicationNumber)");
-             parameter.addValue("applicationNumber", applicationNumber);
-             List<TradeLicenseSearchEntity> tradeLicenseSearchEntities = executeSearchQuery(requestInfo, searchSql.toString(),
-                             parameter);
-             if (tradeLicenseSearchEntities != null && !tradeLicenseSearchEntities.isEmpty()) {
-                 TradeLicenseSearchEntity entity = tradeLicenseSearchEntities.get(0);
-                 tradeLicense.setId(entity.getId());
-                 tradeLicense.setActive(entity.getActive());
-                 tradeLicense.setAdhaarNumber(entity.getAdhaarNumber());
-                 tradeLicense.setAdminWardId(entity.getAdminWardId());
-                 if (entity.getAgreementDate() != null)
-                     tradeLicense.setAgreementDate(entity.getAgreementDate().getTime());
-                 tradeLicense.setAgreementNo(entity.getAgreementNo());
-                 LicenseApplication application = new LicenseApplication();
-                 LicenseApplicationSearchEntity applicationSearchEntity = entity.getLicenseApplicationSearchEntitys().get(0);
-                 application.setId(applicationSearchEntity.getId());
-                 if (applicationSearchEntity.getApplicationDate() != null)
-                     application.setApplicationDate(applicationSearchEntity.getApplicationDate().getTime());
-                 if (applicationSearchEntity.getApplicationDate() != null)
-                     tradeLicense.setApplicationDate(applicationSearchEntity.getApplicationDate().getTime());
-                 application.setApplicationNumber(applicationSearchEntity.getApplicationNumber());
-                 tradeLicense.setApplicationNumber(applicationSearchEntity.getApplicationNumber());
-                 tradeLicense.setApplicationType(Enum.valueOf(ApplicationType.class, applicationSearchEntity.getApplicationType()));
-                 application.setApplicationType(applicationSearchEntity.getApplicationType());
-                 AuditDetails appAuditDetails = new AuditDetails();
-                 appAuditDetails.setCreatedBy(applicationSearchEntity.getCreatedBy());
-                 appAuditDetails.setCreatedTime(applicationSearchEntity.getCreatedTime());
-                 appAuditDetails.setLastModifiedBy(applicationSearchEntity.getLastModifiedBy());
-                 appAuditDetails.setLastModifiedTime(applicationSearchEntity.getLastModifiedTime());
-                 application.setAuditDetails(appAuditDetails);
-                 application.setFieldInspectionReport(applicationSearchEntity.getFieldInspectionReport());
-                 application.setLicenseFee(applicationSearchEntity.getLicenseFee());
-                 application.setLicenseId(applicationSearchEntity.getLicenseId());
-                 application.setState_id(applicationSearchEntity.getState_id());
-                 application.setStatus(applicationSearchEntity.getStatus());
-                 application.setTenantId(applicationSearchEntity.getTenantId());
-                 tradeLicense.setApplication(application);
-                 List<LicenseFeeDetail> details = new ArrayList<>();
-                 for (LicenseFeeDetailSearchEntity feeDetailSearchEntity : applicationSearchEntity.getFeeDetailEntitys()) {
-                     LicenseFeeDetail detail = new LicenseFeeDetail();
-                     detail.setId(feeDetailSearchEntity.getId());
-                     detail.setApplicationId(feeDetailSearchEntity.getApplicationId());
-                     AuditDetails feeAuditDetails = new AuditDetails();
-                     feeAuditDetails.setCreatedBy(feeDetailSearchEntity.getCreatedBy());
-                     feeAuditDetails.setCreatedTime(feeDetailSearchEntity.getCreatedTime());
-                     feeAuditDetails.setLastModifiedBy(feeDetailSearchEntity.getLastModifiedBy());
-                     feeAuditDetails.setLastModifiedTime(feeDetailSearchEntity.getLastModifiedTime());
-                     detail.setAuditDetails(feeAuditDetails);
-                     detail.setFinancialYear(feeDetailSearchEntity.getFinancialYear());
-                     detail.setPaid(feeDetailSearchEntity.getPaid());
-                     detail.setTenantId(feeDetailSearchEntity.getTenantId());
-                     details.add(detail);
-                 }
-                 tradeLicense.setFeeDetails(details);
-                 List<SupportDocument> documents = new ArrayList<>();
-                 for (SupportDocumentSearchEntity documentSearchEntity : applicationSearchEntity.getSupportDocumentEntitys()) {
-                     SupportDocument document = new SupportDocument();
-                     document.setApplicationId(documentSearchEntity.getApplicationId());
-                     AuditDetails docAuditDetails = new AuditDetails();
-                     docAuditDetails.setCreatedBy(documentSearchEntity.getCreatedBy());
-                     docAuditDetails.setCreatedTime(documentSearchEntity.getCreatedTime());
-                     docAuditDetails.setLastModifiedBy(documentSearchEntity.getLastModifiedBy());
-                     docAuditDetails.setLastModifiedTime(documentSearchEntity.getLastModifiedTime());
-                     document.setAuditDetails(docAuditDetails);
-                     document.setComments(documentSearchEntity.getComments());
-                     document.setDocumentTypeId(documentSearchEntity.getDocumentTypeId());
-                     document.setFileStoreId(documentSearchEntity.getFileStoreId());
-                     document.setTeantId(documentSearchEntity.getTenantId());
-                     documents.add(document);
-                 }
-                 tradeLicense.setSupportDocuments(documents);
-                 application.setSupportDocuments(documents);
-                 AuditDetails auditDetails = new AuditDetails();
-                 auditDetails.setCreatedBy(entity.getCreatedBy());
-                 auditDetails.setCreatedTime(entity.getCreatedTime());
-                 auditDetails.setLastModifiedBy(entity.getLastModifiedBy());
-                 auditDetails.setLastModifiedTime(entity.getLastModifiedTime());
-                 tradeLicense.setAuditDetails(auditDetails);
-                 tradeLicense.setCategoryId(entity.getCategoryId());
-                 tradeLicense.setEmailId(entity.getEmailId());
-                 if (entity.getExpiryDate() != null)
-                     tradeLicense.setExpiryDate(entity.getExpiryDate().getTime());
-                 tradeLicense.setFatherSpouseName(entity.getFatherSpouseName());
-                 tradeLicense.setIsLegacy(entity.getIsLegacy());
-                 tradeLicense.setIsPropertyOwner(entity.getIsPropertyOwner());
-                 if (entity.getIssuedDate() != null)
-                     tradeLicense.setIssuedDate(entity.getIssuedDate().getTime());
-                 tradeLicense.setLicenseNumber(entity.getLicenseNumber());
-                 if (entity.getLicenseValidFromDate() != null)
-                     tradeLicense.setLicenseValidFromDate(entity.getLicenseValidFromDate().getTime());
-                 tradeLicense.setLocalityId(entity.getLocalityId());
-                 tradeLicense.setMobileNumber(entity.getMobileNumber());
-                 tradeLicense.setOldLicenseNumber(entity.getOldLicenseNumber());
-                 tradeLicense.setOwnerAddress(entity.getOwnerAddress());
-                 tradeLicense.setOwnerName(entity.getOwnerName());
-                 tradeLicense.setOwnerShipType(Enum.valueOf(OwnerShipType.class, entity.getOwnerShipType()));
-                 tradeLicense.setPropertyAssesmentNo(entity.getPropertyAssesmentNo());
-                 tradeLicense.setQuantity(entity.getQuantity());
-                 tradeLicense.setRemarks(entity.getRemarks());
-                 tradeLicense.setRevenueWardId(entity.getRevenueWardId());
-                 tradeLicense.setStatus(entity.getStatus());
-                 tradeLicense.setSubCategoryId(entity.getSubCategoryId());
-                 tradeLicense.setTenantId(entity.getTenantId());
-                 tradeLicense.setTradeAddress(entity.getTradeAddress());
-                 if (entity.getTradeCommencementDate() != null)
-                     tradeLicense.setTradeCommencementDate(entity.getTradeCommencementDate().getTime());
-                 tradeLicense.setTradeTitle(entity.getTradeTitle());
-                 tradeLicense.setTradeType(Enum.valueOf(BusinessNature.class, entity.getTradeType()));
-                 tradeLicense.setUomId(entity.getUomId());
-                 tradeLicense.setValidityYears(entity.getValidityYears());
-             }
-             return tradeLicense;
-         }
+			for (LicenseStatus licenseStatus : licenseStatusResponse.getLicenseStatuses()) {
+				appStatus = licenseStatus.getName();
+			}
+
+		}
+
+		return appStatus;
+
+	}
+
+	public TradeLicense searchByApplicationNumber(RequestInfo requestInfo, String applicationNumber) {
+
+		MapSqlParameterSource parameter = new MapSqlParameterSource();
+		StringBuffer searchSql = new StringBuffer();
+		TradeLicense tradeLicense = new TradeLicense();
+		searchSql.append("select * from egtl_license where id = (select licenseid from egtl_license_application"
+				+ " where applicationnumber = :applicationNumber)");
+		parameter.addValue("applicationNumber", applicationNumber);
+		List<TradeLicenseSearchEntity> tradeLicenseSearchEntities = executeSearchQuery(requestInfo,
+				searchSql.toString(), parameter);
+		if (tradeLicenseSearchEntities != null && !tradeLicenseSearchEntities.isEmpty()) {
+			TradeLicenseSearchEntity entity = tradeLicenseSearchEntities.get(0);
+			tradeLicense.setId(entity.getId());
+			tradeLicense.setActive(entity.getActive());
+			tradeLicense.setAdhaarNumber(entity.getAdhaarNumber());
+			tradeLicense.setAdminWardId(entity.getAdminWardId());
+			if (entity.getAgreementDate() != null)
+				tradeLicense.setAgreementDate(entity.getAgreementDate().getTime());
+			tradeLicense.setAgreementNo(entity.getAgreementNo());
+			LicenseApplication application = new LicenseApplication();
+			LicenseApplicationSearchEntity applicationSearchEntity = entity.getLicenseApplicationSearchEntitys().get(0);
+			application.setId(applicationSearchEntity.getId());
+			if (applicationSearchEntity.getApplicationDate() != null)
+				application.setApplicationDate(applicationSearchEntity.getApplicationDate().getTime());
+			if (applicationSearchEntity.getApplicationDate() != null)
+				tradeLicense.setApplicationDate(applicationSearchEntity.getApplicationDate().getTime());
+			application.setApplicationNumber(applicationSearchEntity.getApplicationNumber());
+			tradeLicense.setApplicationNumber(applicationSearchEntity.getApplicationNumber());
+			tradeLicense.setApplicationType(
+					Enum.valueOf(ApplicationType.class, applicationSearchEntity.getApplicationType()));
+			application.setApplicationType(applicationSearchEntity.getApplicationType());
+			AuditDetails appAuditDetails = new AuditDetails();
+			appAuditDetails.setCreatedBy(applicationSearchEntity.getCreatedBy());
+			appAuditDetails.setCreatedTime(applicationSearchEntity.getCreatedTime());
+			appAuditDetails.setLastModifiedBy(applicationSearchEntity.getLastModifiedBy());
+			appAuditDetails.setLastModifiedTime(applicationSearchEntity.getLastModifiedTime());
+			application.setAuditDetails(appAuditDetails);
+			application.setFieldInspectionReport(applicationSearchEntity.getFieldInspectionReport());
+			application.setLicenseFee(applicationSearchEntity.getLicenseFee());
+			application.setLicenseId(applicationSearchEntity.getLicenseId());
+			application.setState_id(applicationSearchEntity.getState_id());
+			application.setStatus(applicationSearchEntity.getStatus());
+			application.setTenantId(applicationSearchEntity.getTenantId());
+			tradeLicense.setApplication(application);
+			List<LicenseFeeDetail> details = new ArrayList<>();
+			for (LicenseFeeDetailSearchEntity feeDetailSearchEntity : applicationSearchEntity.getFeeDetailEntitys()) {
+				LicenseFeeDetail detail = new LicenseFeeDetail();
+				detail.setId(feeDetailSearchEntity.getId());
+				detail.setApplicationId(feeDetailSearchEntity.getApplicationId());
+				AuditDetails feeAuditDetails = new AuditDetails();
+				feeAuditDetails.setCreatedBy(feeDetailSearchEntity.getCreatedBy());
+				feeAuditDetails.setCreatedTime(feeDetailSearchEntity.getCreatedTime());
+				feeAuditDetails.setLastModifiedBy(feeDetailSearchEntity.getLastModifiedBy());
+				feeAuditDetails.setLastModifiedTime(feeDetailSearchEntity.getLastModifiedTime());
+				detail.setAuditDetails(feeAuditDetails);
+				detail.setFinancialYear(feeDetailSearchEntity.getFinancialYear());
+				detail.setPaid(feeDetailSearchEntity.getPaid());
+				detail.setTenantId(feeDetailSearchEntity.getTenantId());
+				details.add(detail);
+			}
+			tradeLicense.setFeeDetails(details);
+			List<SupportDocument> documents = new ArrayList<>();
+			for (SupportDocumentSearchEntity documentSearchEntity : applicationSearchEntity
+					.getSupportDocumentEntitys()) {
+				SupportDocument document = new SupportDocument();
+				document.setApplicationId(documentSearchEntity.getApplicationId());
+				AuditDetails docAuditDetails = new AuditDetails();
+				docAuditDetails.setCreatedBy(documentSearchEntity.getCreatedBy());
+				docAuditDetails.setCreatedTime(documentSearchEntity.getCreatedTime());
+				docAuditDetails.setLastModifiedBy(documentSearchEntity.getLastModifiedBy());
+				docAuditDetails.setLastModifiedTime(documentSearchEntity.getLastModifiedTime());
+				document.setAuditDetails(docAuditDetails);
+				document.setComments(documentSearchEntity.getComments());
+				document.setDocumentTypeId(documentSearchEntity.getDocumentTypeId());
+				document.setFileStoreId(documentSearchEntity.getFileStoreId());
+				document.setTeantId(documentSearchEntity.getTenantId());
+				documents.add(document);
+			}
+			tradeLicense.setSupportDocuments(documents);
+			application.setSupportDocuments(documents);
+			AuditDetails auditDetails = new AuditDetails();
+			auditDetails.setCreatedBy(entity.getCreatedBy());
+			auditDetails.setCreatedTime(entity.getCreatedTime());
+			auditDetails.setLastModifiedBy(entity.getLastModifiedBy());
+			auditDetails.setLastModifiedTime(entity.getLastModifiedTime());
+			tradeLicense.setAuditDetails(auditDetails);
+			tradeLicense.setCategoryId(entity.getCategoryId());
+			tradeLicense.setEmailId(entity.getEmailId());
+			if (entity.getExpiryDate() != null)
+				tradeLicense.setExpiryDate(entity.getExpiryDate().getTime());
+			tradeLicense.setFatherSpouseName(entity.getFatherSpouseName());
+			tradeLicense.setIsLegacy(entity.getIsLegacy());
+			tradeLicense.setIsPropertyOwner(entity.getIsPropertyOwner());
+			if (entity.getIssuedDate() != null)
+				tradeLicense.setIssuedDate(entity.getIssuedDate().getTime());
+			tradeLicense.setLicenseNumber(entity.getLicenseNumber());
+			if (entity.getLicenseValidFromDate() != null)
+				tradeLicense.setLicenseValidFromDate(entity.getLicenseValidFromDate().getTime());
+			tradeLicense.setLocalityId(entity.getLocalityId());
+			tradeLicense.setMobileNumber(entity.getMobileNumber());
+			tradeLicense.setOldLicenseNumber(entity.getOldLicenseNumber());
+			tradeLicense.setOwnerAddress(entity.getOwnerAddress());
+			tradeLicense.setOwnerName(entity.getOwnerName());
+			tradeLicense.setOwnerShipType(Enum.valueOf(OwnerShipType.class, entity.getOwnerShipType()));
+			tradeLicense.setPropertyAssesmentNo(entity.getPropertyAssesmentNo());
+			tradeLicense.setQuantity(entity.getQuantity());
+			tradeLicense.setRemarks(entity.getRemarks());
+			tradeLicense.setRevenueWardId(entity.getRevenueWardId());
+			tradeLicense.setStatus(entity.getStatus());
+			tradeLicense.setSubCategoryId(entity.getSubCategoryId());
+			tradeLicense.setTenantId(entity.getTenantId());
+			tradeLicense.setTradeAddress(entity.getTradeAddress());
+			if (entity.getTradeCommencementDate() != null)
+				tradeLicense.setTradeCommencementDate(entity.getTradeCommencementDate().getTime());
+			tradeLicense.setTradeTitle(entity.getTradeTitle());
+			tradeLicense.setTradeType(Enum.valueOf(BusinessNature.class, entity.getTradeType()));
+			tradeLicense.setUomId(entity.getUomId());
+			tradeLicense.setValidityYears(entity.getValidityYears());
+		}
+		return tradeLicense;
+	}
 
 }

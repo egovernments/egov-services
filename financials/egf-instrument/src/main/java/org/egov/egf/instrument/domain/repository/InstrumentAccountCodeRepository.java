@@ -239,4 +239,8 @@ public class InstrumentAccountCodeRepository {
 
 	}
 
+	public boolean uniqueCheck(String fieldName, InstrumentAccountCode instrumentAccountCode) {
+		return	instrumentAccountCodeJdbcRepository.uniqueCheck(fieldName, new InstrumentAccountCodeEntity().toEntity(instrumentAccountCode));
+	}
+
 }

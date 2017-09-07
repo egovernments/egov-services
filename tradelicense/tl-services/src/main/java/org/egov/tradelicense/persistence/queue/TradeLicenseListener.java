@@ -1,22 +1,16 @@
 package org.egov.tradelicense.persistence.queue;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.TradeLicenseContract;
-import org.egov.tl.commons.web.contract.TradeLicenseIndexerContract;
-import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tl.commons.web.requests.TradeLicenseIndexerRequest;
 import org.egov.tl.commons.web.requests.TradeLicenseRequest;
 import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.domain.model.TradeLicense;
+import org.egov.tradelicense.domain.repository.TradeLicenseESRepository;
 import org.egov.tradelicense.domain.service.TradeLicenseService;
-import org.egov.tradelicense.persistence.entity.TradeLicenseSearchEntity;
-import org.egov.tradelicense.persistence.repository.TradeLicenseJdbcRepository;
 import org.egov.tradelicense.web.contract.DemandResponse;
-import org.egov.tradelicense.web.repository.TenantContractRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -48,13 +42,10 @@ public class TradeLicenseListener {
 	TradeLicenseService tradeLicenseService;
 
 	@Autowired
-	private TradeLicenseJdbcRepository tradeLicenseJdbcRepository;
-	
-	@Autowired
-	private TenantContractRepository tenantWebContract;
-	
-	@Autowired
 	RestTemplate restTemplate;
+
+	@Autowired
+	TradeLicenseESRepository tradeLicenseESRepository;
 
 	@KafkaListener(topics = { "#{propertiesManager.getTradeLicenseWorkFlowPopulatedTopic()}" })
 	public void process(Map<String, Object> mastersMap) {
@@ -74,7 +65,7 @@ public class TradeLicenseListener {
 				TradeLicense tradeLicense = tradeLicenseService.save(domain);
 			}
 			mastersMap.clear();
-			indexerRequest = this.getTradeLicenseIndexerRequest(request);
+			indexerRequest = tradeLicenseESRepository.getTradeLicenseIndexerRequest(request);
 			mastersMap.put("tradelicense-persisted", indexerRequest);
 			tradeLicenseProducer.sendMessage(topic, key, mastersMap);
 		}
@@ -90,7 +81,7 @@ public class TradeLicenseListener {
 				tradeLicenseService.save(domain);
 			}
 			mastersMap.clear();
-			indexerRequest = this.getTradeLicenseIndexerRequest(request);
+			indexerRequest = tradeLicenseESRepository.getTradeLicenseIndexerRequest(request);
 			mastersMap.put("tradelicense-persisted", indexerRequest);
 			tradeLicenseProducer.sendMessage(topic, key, mastersMap);
 		}
@@ -106,7 +97,7 @@ public class TradeLicenseListener {
 				tradeLicenseService.update(domain, request.getRequestInfo());
 			}
 			mastersMap.clear();
-			indexerRequest = this.getTradeLicenseIndexerRequest(request);
+			indexerRequest = tradeLicenseESRepository.getTradeLicenseIndexerRequest(request);
 			mastersMap.put("tradelicense-persisted", indexerRequest);
 			tradeLicenseProducer.sendMessage(topic, key, mastersMap);
 		}
@@ -122,62 +113,21 @@ public class TradeLicenseListener {
 				tradeLicenseService.update(domain, request.getRequestInfo());
 			}
 			mastersMap.clear();
-			indexerRequest = this.getTradeLicenseIndexerRequest(request);
+			indexerRequest = tradeLicenseESRepository.getTradeLicenseIndexerRequest(request);
 			mastersMap.put("tradelicense-persisted", indexerRequest);
 			tradeLicenseProducer.sendMessage(topic, key, mastersMap);
 		}
 		if (mastersMap.get(propertiesManager.getUpdateDemandBillTopicName()) != null) {
-                        DemandResponse consumerRecord = objectMapper.convertValue(
-                                mastersMap.get(propertiesManager.getUpdateDemandBillTopicName()),
-                                DemandResponse.class);
-                        tradeLicenseService
-                                .updateTradeLicenseAfterCollection(objectMapper.convertValue(consumerRecord, DemandResponse.class));
-                        RequestInfo requestInfo = tradeLicenseService.createRequestInfoFromResponseInfo(consumerRecord.getResponseInfo());
-                        TradeLicense tradeLicense = tradeLicenseService.searchByApplicationNumber(requestInfo,
-                                consumerRecord.getDemands().get(0).getConsumerCode());
-                        tradeLicenseService.update(tradeLicense, requestInfo);
+			DemandResponse consumerRecord = objectMapper.convertValue(
+					mastersMap.get(propertiesManager.getUpdateDemandBillTopicName()), DemandResponse.class);
+			tradeLicenseService
+					.updateTradeLicenseAfterCollection(objectMapper.convertValue(consumerRecord, DemandResponse.class));
+			RequestInfo requestInfo = tradeLicenseService
+					.createRequestInfoFromResponseInfo(consumerRecord.getResponseInfo());
+			TradeLicense tradeLicense = tradeLicenseService.searchByApplicationNumber(requestInfo,
+					consumerRecord.getDemands().get(0).getConsumerCode());
+			tradeLicenseService.update(tradeLicense, requestInfo);
 		}
 	}
-
-	public TradeLicenseIndexerRequest getTradeLicenseIndexerRequest(TradeLicenseRequest request) {
-		TradeLicenseIndexerRequest indexerRequest = new TradeLicenseIndexerRequest();
-		indexerRequest.setRequestInfo(request.getRequestInfo());
-
-		List<TradeLicenseIndexerContract> tradeLicenseIndexer = new ArrayList<TradeLicenseIndexerContract>();
-		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-		requestInfoWrapper.setRequestInfo(request.getRequestInfo());
-		org.egov.models.City cityDetails = new org.egov.models.City();
-		String tenantId ="";
-		for (TradeLicenseContract tradeLicenseContract : request.getLicenses()) {
-
-			TradeLicenseSearchEntity tradeLicenseSearchEntity = tradeLicenseJdbcRepository
-					.searchById(request.getRequestInfo(), tradeLicenseContract.getId().longValue());
-
-			
-			ModelMapper mapper = new ModelMapper();
-			mapper.getConfiguration().setAmbiguityIgnored(true);
-			TradeLicenseIndexerContract tradeLicense = mapper.map(tradeLicenseSearchEntity.toDomain(), TradeLicenseIndexerContract.class);
-			
-			if( !tenantId.equalsIgnoreCase( tradeLicenseSearchEntity.getTenantId() )){
-				tenantId = tradeLicenseSearchEntity.getTenantId();
-				cityDetails = tenantWebContract.fetchTenantByCode(tenantId , requestInfoWrapper);
-			}
-			
-			if( cityDetails != null ){
-				tradeLicense.setCityName(cityDetails.getName());
-				tradeLicense.setCityRegionName(cityDetails.getRegionName());
-				tradeLicense.setCityGrade(cityDetails.getUlbGrade());
-				tradeLicense.setCityDistrictName(cityDetails.getDistrictName());
-				tradeLicense.setCityDistrictCode(cityDetails.getDistrictCode());
-				tradeLicense.setCityCode(cityDetails.getCode()); 
-			}
-			
-			
-			tradeLicenseIndexer.add(tradeLicense);
-		}
-		indexerRequest.setLicenses(tradeLicenseIndexer);
-		return indexerRequest;
-	}
-	
 
 }

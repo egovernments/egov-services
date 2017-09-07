@@ -103,12 +103,14 @@ ReportDefinitions:
     pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name
     source: wcms
     isMandatory: false
+    searchClause: and prop.zoneid = $zoneid
   - name: wardid
     label: reports.wcms.ward
     type: singlevaluelist
     source: wcms
     pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=WARD&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name
     isMandatory: false
+    searchClause: and prop.wardid = $wardid	
   - name: connectiontype
     label: reports.wcms.connectiontype
     type: singlevaluelist
@@ -282,11 +284,37 @@ ReportDefinitions:
     type: string
     source: wcms
     isMandatory: false
+    searchClause: and prop.executiondate >= $fromDate	
   - name: toDate
     label: reports.wcms.todate
     type: string
     source: wcms
     isMandatory: false
+    searchClause: and prop.executiondate <= $toDate
+  - name: ward
+    label: reports.wcms.ward
+    type: singlevaluelist
+    source: wcms
+    isMandatory: false
+    searchClause: and prop.wardid <= $ward
+  - name: zone
+    label: reports.wcms.zone
+    type: singlevaluelist
+    source: wcms
+    isMandatory: false
+    searchClause: and prop.zoneid <= $zone
+  - name: consumerNumber
+    label: reports.wcms.consumerNumber
+    type: string
+    source: wcms
+    isMandatory: false
+    searchClause: and prop.hscno <= $consumerNumber
+  - name: usage
+    label: reports.wcms.usage
+    type: string
+    source: wcms
+    isMandatory: false
+    searchClause: and prop.usagetype <= $usage	
   query: select * from ((select prop.hscno as hscno,prop.username as consumerName,
          'CURRENT' as STATE, SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount) ELSE NULL END)) AS WT_DEMAND,
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.collectionamount) ELSE NULL END)) AS WT_COLL,

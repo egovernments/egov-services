@@ -127,7 +127,7 @@ public class TradeLicenseControllerTest {
 
 	}
 
-	@Test
+	/*@Test
 	public void testSearchLegacyTrade() throws Exception {
 
 		try {
@@ -179,7 +179,7 @@ public class TradeLicenseControllerTest {
 
 		assertTrue(Boolean.TRUE);
 
-	}
+	}*/
 
 	private String getFileContents(String fileName) throws IOException {
 		ClassLoader classLoader = getClass().getClassLoader();

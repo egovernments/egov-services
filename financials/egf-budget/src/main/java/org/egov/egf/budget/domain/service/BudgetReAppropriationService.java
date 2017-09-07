@@ -43,6 +43,7 @@ import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.exception.CustomBindException;
+import org.egov.common.domain.exception.ErrorCode;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.budget.domain.model.BudgetDetail;
@@ -53,8 +54,8 @@ import org.egov.egf.budget.domain.repository.BudgetReAppropriationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.SmartValidator;
 
@@ -159,21 +160,40 @@ public class BudgetReAppropriationService {
                 // errors);
                 break;
             case ACTION_CREATE:
-                Assert.notNull(budgetreappropriations, "BudgetReAppropriations to create must not be null");
-                for (final BudgetReAppropriation budgetReAppropriation : budgetreappropriations)
+            	if (budgetreappropriations == null) {
+                    throw new InvalidDataException("budgetreappropriations", ErrorCode.NOT_NULL.getCode(), null);
+                }
+                for (final BudgetReAppropriation budgetReAppropriation : budgetreappropriations) {
                     validator.validate(budgetReAppropriation, errors);
+                    if (!budgetReAppropriationRepository.uniqueCheck("name", budgetReAppropriation)) {
+                        errors.addError(new FieldError("budgetReAppropriation", "name", budgetReAppropriation.getBudgetDetail(), false,
+                                new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                    }
+                }
                 break;
             case ACTION_UPDATE:
-                Assert.notNull(budgetreappropriations, "BudgetReAppropriations to update must not be null");
+            	if (budgetreappropriations == null) {
+                    throw new InvalidDataException("budgetreappropriations", ErrorCode.NOT_NULL.getCode(), null);
+                }
                 for (final BudgetReAppropriation budgetReAppropriation : budgetreappropriations){
-                 	Assert.notNull(budgetReAppropriation.getId(), "BudgetReAppropriation ID to update must not be null");
+                	if (budgetReAppropriation.getId() == null) {
+                        throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), budgetReAppropriation.getId());
+                    }
                     validator.validate(budgetReAppropriation, errors);
+                    if (!budgetReAppropriationRepository.uniqueCheck("name", budgetReAppropriation)) {
+                        errors.addError(new FieldError("budgetReAppropriation", "name", budgetReAppropriation.getBudgetDetail(), false,
+                                new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                    }
                 }
                 break;
             case ACTION_DELETE:
-                Assert.notNull(budgetreappropriations, "BudgetReAppropriations to delete must not be null");
+            	if (budgetreappropriations == null) {
+                    throw new InvalidDataException("budgetreappropriations", ErrorCode.NOT_NULL.getCode(), null);
+                }
                 for (final BudgetReAppropriation budgetReAppropriation : budgetreappropriations){
-                 	Assert.notNull(budgetReAppropriation.getId(), "BudgetReAppropriation ID to delete must not be null");
+                	if (budgetReAppropriation.getId() == null) {
+                        throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), budgetReAppropriation.getId());
+                    }
                 }
                 break;
             default:

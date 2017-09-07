@@ -3,6 +3,7 @@ package org.egov.tradelicense.domain.service;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -68,7 +69,7 @@ public class LicenseBillServiceTest {
     }
     
     @Test
-    public void test_create_bill() {
+    public void test_create_bill() throws ParseException {
         RequestInfo requestInfo = new RequestInfo();
         TradeLicense license = new TradeLicense();
         license.setTenantId("mh.roha");

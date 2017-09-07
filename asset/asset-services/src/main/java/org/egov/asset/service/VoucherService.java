@@ -94,8 +94,6 @@ public class VoucherService {
 
         log.debug("Request Headers for Voucher Request :: " + requestHeaders);
 
-        voucherRequest.getRequestInfo().setTs(null);
-
         final HttpEntity requestEntity = new HttpEntity(voucherRequest, requestHeaders);
         log.debug("Request Entity ::" + requestEntity);
         final ResponseEntity<JSONObject> response = restTemplate.exchange(createVoucherUrl, HttpMethod.POST,
@@ -316,12 +314,12 @@ public class VoucherService {
         log.debug("Voucher Parameters :: " + voucherParams);
 
         final String fundCode = voucherParams.get(AssetFinancialParams.FUND.toString());
-        final String functionCode = voucherParams.get(AssetFinancialParams.FUNCTION);
-        final String functionaryCode = voucherParams.get(AssetFinancialParams.FUNCTIONARY);
-        final String schemeCode = voucherParams.get(AssetFinancialParams.SCHEME);
-        final String subSchemeCode = voucherParams.get(AssetFinancialParams.SUBSCHEME);
-        final String fundSourceCode = voucherParams.get(AssetFinancialParams.FUNDSOURCE);
-        final String fiscalName = voucherParams.get(AssetFinancialParams.FISCAL);
+        final String functionCode = voucherParams.get(AssetFinancialParams.FUNCTION.toString());
+        final String functionaryCode = voucherParams.get(AssetFinancialParams.FUNCTIONARY.toString());
+        final String schemeCode = voucherParams.get(AssetFinancialParams.SCHEME.toString());
+        final String subSchemeCode = voucherParams.get(AssetFinancialParams.SUBSCHEME.toString());
+        final String fundSourceCode = voucherParams.get(AssetFinancialParams.FUNDSOURCE.toString());
+        final String fiscalName = voucherParams.get(AssetFinancialParams.FISCAL.toString());
 
         if (fundCode != null) {
             final Fund fund = new Fund();
@@ -365,6 +363,9 @@ public class VoucherService {
 
             for (final VoucherAccountCodeDetails acd : accountCodeDetails)
                 acd.setFunction(function);
+            
+            log.debug("account code details :: " + accountCodeDetails);
+            voucher.setLedgers(accountCodeDetails);
         }
     }
 

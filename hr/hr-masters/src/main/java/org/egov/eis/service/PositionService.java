@@ -194,12 +194,19 @@ public class PositionService {
             Department department = departmentService.getDepartments(Arrays.asList(deptDesig.getDepartmentId()),
                     tenantId, requestInfoWrapper).get(0);
 
+            System.out.println("department Id" + department.getId());
+            System.out.println("department tenantId" + department.getTenantId());
+
             if(null !=deptDesig.getDesignation().getId()){
             DesignationGetRequest designationGetRequest = DesignationGetRequest.builder()
                     .id(Arrays.asList(deptDesig.getDesignation().getId())).tenantId(tenantId).build();
             designation = designationService.getDesignations(designationGetRequest).get(0);
             }
-            
+
+            System.out.println("designation Id" + designation.getId());
+            System.out.println("designation tenantId" + designation.getTenantId());
+
+
             deptDesig = deptDesigService.getByDepartmentAndDesignation(department.getId(), designation.getId(), tenantId);
 
             if (isEmpty(deptDesig)) {
@@ -208,6 +215,10 @@ public class PositionService {
                 deptDesigService.create(deptDesig);
             }
             deptDesig = deptDesigService.getByDepartmentAndDesignation(department.getId(), designation.getId(), tenantId);
+
+            System.out.println("deptDesig Id" + deptDesig.getId());
+            System.out.println("deptDesig tenantId" + deptDesig.getTenantId());
+
             List<Long> sequences ;
             if(positions.get(i).getNoOfPositions() != null)
                 sequences = positionRepository.generateSequences(positions.get(i).getNoOfPositions());

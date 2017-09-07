@@ -76,7 +76,7 @@ const content=[
             {
                 icon: 'icon-class-name',
                 label: 'Apply for New Connection',
-                to: '#/non-framework/citizenServices/wc/create',
+                to: '#/non-framework/citizenServices/create/fill/wc',
             },
             {
                 icon: 'icon-class-name',
@@ -124,21 +124,22 @@ const content=[
             {
                 icon: 'icon-class-name',
                 label: 'Apply for Fire NOC',
-                to: '#/non-framework/citizenServices/fireNoc/create',
-            }
-        ],
-    },
-    {
-        icon: 'icon-class-name',
-        label: 'Grievance',
-        content: [
-            {
-                icon: 'icon-class-name',
-                label: 'New Grievance',
-                to: '#/pgr/createGrievance',
+                to: '#/non-framework/citizenServices/fireNoc/fill/create',
             }
         ],
     }
+    // ,
+    // {
+    //     icon: 'icon-class-name',
+    //     label: 'Grievance',
+    //     content: [
+    //         {
+    //             icon: 'icon-class-name',
+    //             label: 'New Grievance',
+    //             to: '#/pgr/createGrievance',
+    //         }
+    //     ],
+    // }
 ];
 
 const style={
@@ -629,9 +630,9 @@ class Dashboard extends Component {
 
   rowClickHandler = (item) => {
     if(item.serviceCode == "WATER_NEWCONN") {
-      this.props.setRoute("/non-framework/citizenServices/wc/view/" + encodeURIComponent(item.serviceRequestId));
+      this.props.setRoute("/non-framework/citizenServices/wc/view/pay/" + encodeURIComponent(item.serviceRequestId));
     } else if(item.serviceCode == "BPA_FIRE_NOC") {
-      this.props.setRoute("/non-framework/citizenServices/fireNoc/view/" + encodeURIComponent(item.serviceRequestId));
+      this.props.setRoute("/non-framework/citizenServices/fireNoc/view/pay/" + encodeURIComponent(item.serviceRequestId));
     } else if(item.serviceCode == "WC_NODUES" && item.status == "No Dues Generated") {
       this.props.setRoute(`/receipt/watercharge/nodues/${encodeURIComponent(item.consumerCode)}/${encodeURIComponent(item.serviceRequestId)}`);
     } else if(item.serviceCode == "PT_NODUES" && item.status == "No Dues Generated") {
@@ -776,7 +777,7 @@ class Dashboard extends Component {
                           </Card>
                           <br/>
 
-                          <Card>
+                        {/*  <Card>
                             <CardHeader title="My Grievances"/>
                               <CardText>
                               <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
@@ -797,7 +798,7 @@ class Dashboard extends Component {
                                 </tbody>
                             </Table>
                               </CardText>
-                          </Card>
+                          </Card>*/}
 
                       </Col>
                   </Row>

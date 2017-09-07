@@ -161,7 +161,7 @@ class NoDues extends Component {
                   "billNumber": Receipt[0]["Bill"][0].billDetails[0].billNumber,
                   "returnUrl": window.location.origin+"/citizen-services/v1/pgresponse",
                   "date": Receipt[0]["Bill"][0].billDetails[0].billDate,
-                  "biller": "Vishal",
+                  "biller": JSON.parse(localStorage.userRequest).name,
                   "amount": self.getTotal(demands)+self.getTotal(applicationFeeDemand),
                   "billService": Receipt[0]["Bill"][0].billDetails[0].businessService,
                   "serviceRequestId": serviceRequest.serviceRequestId,

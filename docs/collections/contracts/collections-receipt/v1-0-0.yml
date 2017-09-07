@@ -333,6 +333,9 @@ definitions:
       tenantId:
         type: string
         description: Tenant Id.
+      mobileNumber:
+        type: string
+        description: Consumer mobileNumber defined in bill.
       auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       billDetails:

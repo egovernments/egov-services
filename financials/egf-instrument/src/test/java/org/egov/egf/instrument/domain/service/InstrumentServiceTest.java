@@ -92,6 +92,31 @@ public class InstrumentServiceTest {
 		when(bankAccountContractRepository.findByAccountNumber(any(BankAccountContract.class))).thenReturn(getBankAccountContract());
 		when(financialStatusContractRepository.findById(any(FinancialStatusContract.class))).thenReturn(getFinancialStatusContract());
 		when(surrenderReasonRepository.findById(any(SurrenderReason.class))).thenReturn(getSurrenderReason());
+		when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(true);
+		
+		when(instrumentRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+		
+		List<Instrument> actualResult = instrumentService.create(expextedResult, errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+	
+	@Test(expected=CustomBindException.class)
+	public final void test_create_dd_uniquefalse() {
+
+		List<Instrument> expextedResult = getInstruments();
+		expextedResult.get(0).getInstrumentType().setName("dd");
+		
+		Pagination<InstrumentType> pit = getInstrumentType();
+		pit.getPagedData().get(0).setName("dd");
+		
+		when(instrumentTypeRepository.search(any(InstrumentTypeSearch.class))).thenReturn(pit);
+		when(bankContractRepository.findById(any(BankContract.class))).thenReturn(getBankContract());
+		when(bankAccountContractRepository.findByAccountNumber(any(BankAccountContract.class))).thenReturn(getBankAccountContract());
+		when(financialStatusContractRepository.findById(any(FinancialStatusContract.class))).thenReturn(getFinancialStatusContract());
+		when(surrenderReasonRepository.findById(any(SurrenderReason.class))).thenReturn(getSurrenderReason());
+		when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(false);
 		
 		when(instrumentRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 		
@@ -115,6 +140,7 @@ public class InstrumentServiceTest {
 		when(bankAccountContractRepository.findByAccountNumber(any(BankAccountContract.class))).thenReturn(getBankAccountContract());
 		when(financialStatusContractRepository.findById(any(FinancialStatusContract.class))).thenReturn(getFinancialStatusContract());
 		when(surrenderReasonRepository.findById(any(SurrenderReason.class))).thenReturn(getSurrenderReason());
+		when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(true);
 		
 		when(instrumentRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 		
@@ -138,6 +164,7 @@ public class InstrumentServiceTest {
 		when(bankAccountContractRepository.findByAccountNumber(any(BankAccountContract.class))).thenReturn(getBankAccountContract());
 		when(financialStatusContractRepository.findById(any(FinancialStatusContract.class))).thenReturn(getFinancialStatusContract());
 		when(surrenderReasonRepository.findById(any(SurrenderReason.class))).thenReturn(getSurrenderReason());
+		when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(true);
 		
 		when(instrumentRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 		
@@ -161,6 +188,7 @@ public class InstrumentServiceTest {
 		when(bankAccountContractRepository.findByAccountNumber(any(BankAccountContract.class))).thenReturn(getBankAccountContract());
 		when(financialStatusContractRepository.findById(any(FinancialStatusContract.class))).thenReturn(getFinancialStatusContract());
 		when(surrenderReasonRepository.findById(any(SurrenderReason.class))).thenReturn(getSurrenderReason());
+		when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(true);
 		
 		when(instrumentRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 		
@@ -184,6 +212,7 @@ public class InstrumentServiceTest {
 		when(bankAccountContractRepository.findByAccountNumber(any(BankAccountContract.class))).thenReturn(getBankAccountContract());
 		when(financialStatusContractRepository.findById(any(FinancialStatusContract.class))).thenReturn(getFinancialStatusContract());
 		when(surrenderReasonRepository.findById(any(SurrenderReason.class))).thenReturn(getSurrenderReason());
+		when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(true);
 		
 		when(instrumentRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 		
@@ -214,11 +243,12 @@ public class InstrumentServiceTest {
 		return page;
 	}
 
-	@Test(expected = CustomBindException.class)
+	@Test(expected = InvalidDataException.class)
 	public final void test_save_with_null_req() {
 
 		List<Instrument> expextedResult = getInstruments();
 
+		when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(false);
 		when(instrumentRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
 		List<Instrument> actualResult = instrumentService.create(null, errors, requestInfo);
@@ -232,6 +262,36 @@ public class InstrumentServiceTest {
 
 		List<Instrument> expextedResult = getInstrumentss();
 
+		when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(true);
+		when(instrumentRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+
+		List<Instrument> actualResult = instrumentService.update(expextedResult, errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+	
+	@Test(expected=InvalidDataException.class)
+	public final void test_update_null_id() {
+
+		List<Instrument> expextedResult = getInstruments();
+		expextedResult.get(0).setId(null);
+
+		when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(true);
+		when(instrumentRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+
+		List<Instrument> actualResult = instrumentService.update(expextedResult, errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+	
+	@Test(expected=CustomBindException.class)
+	public final void test_update_uniquefalse() {
+
+		List<Instrument> expextedResult = getInstrumentss();
+
+		when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(false);
 		when(instrumentRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
 		List<Instrument> actualResult = instrumentService.update(expextedResult, errors, requestInfo);
@@ -247,6 +307,22 @@ public class InstrumentServiceTest {
 		
 		expextedResult.get(0).setId("1");
 
+		when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(true);
+		when(instrumentRepository.delete(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+
+		List<Instrument> actualResult = instrumentService.delete(expextedResult, errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+	
+	@Test(expected=InvalidDataException.class)
+	public final void test_delete_null_id() {
+
+		List<Instrument> expextedResult = getInstruments();
+		expextedResult.get(0).setId(null);
+		
+		when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(true);
 		when(instrumentRepository.delete(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
 		List<Instrument> actualResult = instrumentService.delete(expextedResult, errors, requestInfo);
@@ -255,11 +331,12 @@ public class InstrumentServiceTest {
 
 	}
 
-	@Test(expected = CustomBindException.class)
+	@Test(expected = InvalidDataException.class)
 	public final void test_update_with_null_req() {
 
 		List<Instrument> expextedResult = getInstruments();
 
+		when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(true);
 		when(instrumentRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
 		List<Instrument> actualResult = instrumentService.update(null, errors, requestInfo);
@@ -268,11 +345,26 @@ public class InstrumentServiceTest {
 
 	}
 	
-	@Test(expected = CustomBindException.class)
+	@Test(expected = InvalidDataException.class)
+	public final void test_update_without_id() {
+
+		List<Instrument> expextedResult = getInstruments();
+		expextedResult.get(0).setId(null);
+
+		when(instrumentRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+
+		List<Instrument> actualResult = instrumentService.update(expextedResult, errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+	
+	@Test(expected = InvalidDataException.class)
 	public final void test_delete_with_null_req() {
 
 		List<Instrument> expextedResult = getInstruments();
 
+		when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(true);
 		when(instrumentRepository.delete(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
 		List<Instrument> actualResult = instrumentService.delete(null, errors, requestInfo);
@@ -442,41 +534,39 @@ public class InstrumentServiceTest {
 	@Test(expected = InvalidDataException.class)
 	public final void test_fetch_bank_null() {
 
-		List<Instrument> instruments = getInstruments();
+		List<Instrument> instruments = getInstrumentss();
 
-		BankContract expextedResult = BankContract.builder().code("code").description("description").active(true)
-				.id("1").build();
+		BankContract expextedResult = BankContract.builder().name("name").description("description").id("1").build();
 
 		instruments.get(0).setBank(expextedResult);
 
 		when(bankContractRepository.findById(null)).thenReturn(expextedResult);
 
 		List<Instrument> actualResult = instrumentService.fetchRelated(instruments);
-
+		
 		assertEquals(expextedResult, actualResult.get(0).getBank());
 	}
 
 	@Test(expected = InvalidDataException.class)
 	public final void test_fetch_bankaccount_null() {
 
-		List<Instrument> instruments = getInstruments();
+		List<Instrument> instruments = getInstrumentss();
 
-		BankAccountContract expextedResult = BankAccountContract.builder().accountNumber("accountNumber")
-				.description("description").active(true).id("1").build();
+		BankAccountContract expextedResult = BankAccountContract.builder().accountNumber("accountNumber").description("description").id("1").build();
 
 		instruments.get(0).setBankAccount(expextedResult);
 
 		when(bankAccountContractRepository.findByAccountNumber(null)).thenReturn(expextedResult);
 
 		List<Instrument> actualResult = instrumentService.fetchRelated(instruments);
-
+		
 		assertEquals(expextedResult, actualResult.get(0).getBankAccount());
 	}
 
 	@Test(expected = InvalidDataException.class)
 	public final void test_fetch_financialstatus_null() {
 
-		List<Instrument> instruments = getInstruments();
+		List<Instrument> instruments = getInstrumentss();
 
 		FinancialStatusContract expextedResult = FinancialStatusContract.builder().name("name")
 				.description("description").id("1").build();
@@ -493,17 +583,16 @@ public class InstrumentServiceTest {
 	@Test(expected = InvalidDataException.class)
 	public final void test_fetch_surrenderreason_null() {
 
-		List<Instrument> instruments = getInstruments();
+		List<Instrument> instruments = getInstrumentss();
 
-		SurrenderReason expextedResult = SurrenderReason.builder().name("name").description("description").id("1")
-				.build();
+		SurrenderReason expextedResult = SurrenderReason.builder().name("name").description("description").id("1").build();
 
 		instruments.get(0).setSurrenderReason(expextedResult);
 
 		when(surrenderReasonRepository.findById(null)).thenReturn(expextedResult);
 
 		List<Instrument> actualResult = instrumentService.fetchRelated(instruments);
-
+		
 		assertEquals(expextedResult, actualResult.get(0).getSurrenderReason());
 	}
 
@@ -552,7 +641,7 @@ public class InstrumentServiceTest {
 		List<Instrument> instruments = new ArrayList<Instrument>();
 		InstrumentType it = InstrumentType.builder().name("dd").build();
 		it.setTenantId("default");
-		Instrument instrument = Instrument.builder().amount(BigDecimal.ONE)
+		Instrument instrument = Instrument.builder().amount(BigDecimal.ONE).id("1")
 								.payee("payee")
 								.bank(BankContract.builder().code("code").description("description").active(true)
 										.id("1").build())

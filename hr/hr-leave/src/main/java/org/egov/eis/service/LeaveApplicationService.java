@@ -155,7 +155,6 @@ public class LeaveApplicationService {
                 leaveTypeGetRequest.setId(new ArrayList<>(Arrays.asList(leaveApplication.getLeaveType().getId())));
                 leaveTypes = leaveTypeService.getLeaveTypes(leaveTypeGetRequest);
             }
-            final List<Holiday> holidays = commonMastersRepository.getHolidayByDate(leaveApplicationRequest.getRequestInfo(), leaveApplication.getFromDate(), leaveApplication.getTenantId());
             final List<EmployeeInfo> employees = employeeRepository.getEmployeeById(leaveApplicationRequest.getRequestInfo(), leaveApplication.getTenantId(), leaveApplication.getEmployee());
             final List<LeaveApplication> applications = getLeaveApplicationForDateRange(leaveApplication,
                     leaveApplicationRequest.getRequestInfo());
@@ -176,6 +175,8 @@ public class LeaveApplicationService {
                             + " ";
             }
             if (leaveApplication.getCompensatoryForDate() != null && !leaveApplication.getCompensatoryForDate().equals("")) {
+                final List<Holiday> holidays = commonMastersRepository.getHolidayByDate(leaveApplicationRequest.getRequestInfo(), leaveApplication.getFromDate(), leaveApplication.getTenantId());
+
                 if (holidays.size() > 0)
                     errorMsg = errorMsg + applicationConstants.getErrorMessage(ApplicationConstants.MSG_DATE_HOLIDAY);
                 if (employees.size() > 0) {

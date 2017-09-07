@@ -31,7 +31,10 @@ public class PenaltyRateQueryBuilder {
 		if (applicationType != null && !applicationType.isEmpty()) {
 			searchSql.append(" AND applicationType = :applicationType ");
 			parameters.addValue("applicationType", applicationType.toUpperCase());
-		}
+		} else {
+				searchSql.append(" AND applicationType IS NULL ");
+			}
+		
 
 		if (ids != null && ids.length > 0) {
 
@@ -60,5 +63,10 @@ public class PenaltyRateQueryBuilder {
 		}
 
 		return searchSql.toString();
+	}
+
+	public static String getQueryToDeletePenalty(Long id, MapSqlParameterSource parameters) {
+		parameters.addValue("id", id);
+		return "DELETE FROM "+ConstantUtility.PENALTY_RATE_TABLE_NAME+" WHERE id = :id";
 	}
 }

@@ -29,58 +29,109 @@ public class PenaltyRateValidator {
 
 	public void validatePenaltyRange(String tenantId, PenaltyRateRequest penaltyRateRequest, boolean validateNew) {
 
-		RequestInfo requestInfo = penaltyRateRequest.getRequestInfo();
-		// Assuming ApplicationType in all PenalityRate objects will be same,
-		// considering the first one.
-		String applicationType = penaltyRateRequest.getPenaltyRates().get(0).getApplicationType().toString();
-		List<PenaltyRate> penaltyRates = new ArrayList<PenaltyRate>();
-		if (tenantId == null) {
-			tenantId = penaltyRateRequest.getPenaltyRates().get(0).getTenantId();
-		}
-		try {
-			penaltyRates = penaltyRateRepository.searchPenaltyRate(tenantId, null, applicationType, null, null);
-		} catch (Exception e) {
-			throw new InvalidInputException(e.getLocalizedMessage(), requestInfo);
-		}
+		{
+			RequestInfo requestInfo = penaltyRateRequest.getRequestInfo();
+			// Assuming ApplicationType in all PenalityRate objects will be
+			// same,
+			// considering the first one.
 
-		if (validateNew) {
-			for (PenaltyRate penaltyRate : penaltyRateRequest.getPenaltyRates()) {
-				AuditDetails auditDetails = utilityHelper.getCreateMasterAuditDetails(requestInfo);
-				penaltyRate.setAuditDetails(auditDetails);
-				penaltyRates.add(penaltyRate);
+			String applicationType = null;
+			if (penaltyRateRequest.getPenaltyRates().get(0).getApplicationType() != null) {
+				applicationType = penaltyRateRequest.getPenaltyRates().get(0).getApplicationType().toString();
 			}
-		} else {
-			for (PenaltyRate penaltyRate : penaltyRateRequest.getPenaltyRates()) {
-				AuditDetails auditDetails = penaltyRate.getAuditDetails();
-				auditDetails = utilityHelper.getUpdateMasterAuditDetails(auditDetails, requestInfo);
-				penaltyRate.setAuditDetails(auditDetails);
-				for (int i = 0; i < penaltyRates.size(); i++) {
-					Long id = penaltyRates.get(i).getId();
-					if (penaltyRate.getId() != null && id == penaltyRate.getId()) {
-						penaltyRates.set(i, penaltyRate);
-					}
+
+			List<PenaltyRate> penaltyRates = new ArrayList<PenaltyRate>();
+			if (tenantId == null) {
+				tenantId = penaltyRateRequest.getPenaltyRates().get(0).getTenantId();
+			}
+
+			try {
+				penaltyRates = penaltyRateRepository.searchPenaltyRate(tenantId, null, applicationType, null, null);
+			} catch (Exception e) {
+				throw new InvalidInputException(e.getLocalizedMessage(), requestInfo);
+			}
+
+			if (validateNew) {
+				for (PenaltyRate penaltyRate : penaltyRateRequest.getPenaltyRates()) {
+					AuditDetails auditDetails = utilityHelper.getCreateMasterAuditDetails(requestInfo);
+					penaltyRate.setAuditDetails(auditDetails);
+					validateDuplicateAndRate(penaltyRates, penaltyRate, requestInfo);
+					penaltyRates.add(penaltyRate);
+
 				}
+				validatePenaltyRate(penaltyRates, applicationType, requestInfo);
+			} else {
+				validatePenaltyRate(penaltyRateRequest.getPenaltyRates(), applicationType, requestInfo);
+				List<PenaltyRate> pentalties = penaltyRateRequest.getPenaltyRates();
+				for (int i = 0; i < pentalties.size(); i ++) {
+					validateDuplicateAndRateInUpdate(pentalties, pentalties.get(i), i , requestInfo); 
+				}
+				
 			}
+
 		}
 
+	}
+
+	public void validateDuplicateAndRate(List<PenaltyRate> penaltyRates, PenaltyRate penaltyRate,
+			RequestInfo requestInfo) {
+		for (PenaltyRate penalty : penaltyRates) {
+			if ((penalty.getToRange().longValue() == penaltyRate.getToRange().longValue())
+					&& (penalty.getFromRange().longValue() == penaltyRate.getFromRange().longValue())) {
+				throw new InvalidRangeException(propertiesManager.getDuplicatePenaltyRate(), requestInfo);
+			}
+			if (Double.compare(penalty.getRate(), penaltyRate.getRate()) == 0) {
+				throw new InvalidInputException(propertiesManager.getInvalidRateWithapp(), requestInfo);
+
+			}
+		}
+	}
+	
+	public void validateDuplicateAndRateInUpdate(List<PenaltyRate> penaltyRates, PenaltyRate penaltyRate,
+			int index, RequestInfo requestInfo) {
+		
+		for (int i = 0; i < penaltyRates.size(); i ++) {
+		 
+		if(!(index == i)){
+			
+					if ((penaltyRates.get(i).getToRange().longValue() == penaltyRate.getToRange().longValue())
+							&& (penaltyRates.get(i).getFromRange().longValue() == penaltyRate.getFromRange().longValue())) {
+						throw new InvalidRangeException(propertiesManager.getDuplicatePenaltyRate(), requestInfo);
+					}
+					
+					if (Double.compare(penaltyRates.get(i).getRate(), penaltyRate.getRate()) == 0) {
+						throw new InvalidInputException(propertiesManager.getInvalidRateWithapp(), requestInfo);
+
+				
+			}
+			
+		}
+		}
+	}
+
+	public void validatePenaltyRate(List<PenaltyRate> penaltyRates, String applicationType, RequestInfo requestInfo) {
 		penaltyRates.sort((s1, s2) -> s1.getFromRange().compareTo(s2.getFromRange()));
 		String oldApplicationType = null;
 		Long oldToRange = null;
 		Long fromRange = null;
 		int count = 0;
 		for (PenaltyRate penaltyRate : penaltyRates) {
+			if (penaltyRate.getToRange() <= penaltyRate.getFromRange()) {
+				throw new InvalidRangeException(propertiesManager.getInvalidfromRangeCode(), requestInfo);
+			}
 			if (count > 0) {
-				applicationType = penaltyRate.getApplicationType().toString();
+				if (penaltyRate.getApplicationType() != null) {
+					applicationType = penaltyRate.getApplicationType().toString();
+				}
 				fromRange = penaltyRate.getFromRange();
-				if (applicationType.equalsIgnoreCase(oldApplicationType)) {
-					if (!fromRange.equals(oldToRange)) {
-						throw new InvalidRangeException(propertiesManager.getInvalidSequenceRangeMsg(), requestInfo);
-					}
-				} else {
-					throw new InvalidInputException(propertiesManager.getInvalidApplicationTypeMsg(), requestInfo);
+
+				if (!fromRange.equals(oldToRange)) {
+					throw new InvalidRangeException(propertiesManager.getInvalidSequenceRangeMsg(), requestInfo);
 				}
 			}
-			oldApplicationType = penaltyRate.getApplicationType().toString();
+			if (penaltyRate.getApplicationType() != null) {
+				oldApplicationType = penaltyRate.getApplicationType().toString();
+			}
 			oldToRange = penaltyRate.getToRange();
 			count++;
 		}

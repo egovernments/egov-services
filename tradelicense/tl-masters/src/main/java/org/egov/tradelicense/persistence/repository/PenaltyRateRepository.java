@@ -152,6 +152,17 @@ public class PenaltyRateRepository {
 	}
 
 	/**
+	 * This method will delete the penaltyRate from Db based on id
+	 */
+	public Long deletePenaltyRates(Long id) {
+
+		MapSqlParameterSource parameters = new MapSqlParameterSource();
+		String query = PenaltyRateQueryBuilder.getQueryToDeletePenalty(id, parameters);
+		namedParameterJdbcTemplate.update(query, parameters);
+		return id;
+	}
+
+	/**
 	 * This method will cast the given object to String
 	 * 
 	 * @param object

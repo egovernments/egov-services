@@ -630,9 +630,9 @@ class Dashboard extends Component {
 
   rowClickHandler = (item) => {
     if(item.serviceCode == "WATER_NEWCONN") {
-      this.props.setRoute("/non-framework/citizenServices/wc/view/pay/" + encodeURIComponent(item.serviceRequestId));
+      this.props.setRoute("/non-framework/citizenServices/view/update/wc/" + encodeURIComponent(item.serviceRequestId));
     } else if(item.serviceCode == "BPA_FIRE_NOC") {
-      this.props.setRoute("/non-framework/citizenServices/fireNoc/view/pay/" + encodeURIComponent(item.serviceRequestId));
+      this.props.setRoute("/non-framework/citizenServices/fireNoc/update/view/" + encodeURIComponent(item.serviceRequestId) + "/success");
     } else if(item.serviceCode == "WC_NODUES" && item.status == "No Dues Generated") {
       this.props.setRoute(`/receipt/watercharge/nodues/${encodeURIComponent(item.consumerCode)}/${encodeURIComponent(item.serviceRequestId)}`);
     } else if(item.serviceCode == "PT_NODUES" && item.status == "No Dues Generated") {

@@ -76,7 +76,7 @@ const content=[
             {
                 icon: 'icon-class-name',
                 label: 'Apply for New Connection',
-                to: '#/non-framework/citizenServices/wc/create/pay',
+                to: '#/non-framework/citizenServices/create/fill/wc',
             },
             {
                 icon: 'icon-class-name',
@@ -124,7 +124,7 @@ const content=[
             {
                 icon: 'icon-class-name',
                 label: 'Apply for Fire NOC',
-                to: '#/non-framework/citizenServices/fireNoc/create/pay',
+                to: '#/non-framework/citizenServices/fireNoc/fill/create',
             }
         ],
     },

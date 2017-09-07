@@ -37,7 +37,12 @@ class Payment extends Component {
       console.log(paymentGateWayResponse);
       window.localStorage.setItem("paymentGateWayResponse",JSON.stringify(paymentGateWayResponse))
       if (paymentGateWayResponse["status"]!="failed") {
-          setRoute("/non-framework-cs/citizenServices/"+window.localStorage.getItem("workflow")+"/pay/"+window.localStorage.getItem("moduleName")+"/success");
+          if (window.localStorage.getItem("workflow")=="create" || window.localStorage.getItem("workflow")=="fireNoc") {
+            setRoute("/non-framework/citizenServices/"+window.localStorage.getItem("workflow")+"/pay/"+window.localStorage.getItem("moduleName")+"/success");
+          }
+          else {
+            setRoute("/non-framework-cs/citizenServices/"+window.localStorage.getItem("workflow")+"/pay/"+window.localStorage.getItem("moduleName")+"/success");
+          }
       }
       else {
           alert("Payment failed");

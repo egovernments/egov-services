@@ -901,7 +901,6 @@ var localization_EN_Data = {
     "tl.view.groups.licensedocumenttype.mandatory": "Mandatory",
     "tl.view.groups.licensedocumenttype.enabled": "Enabled",
     "tl.update.groups.licensedocumenttype.title": "Trade license Document type Modify",
-    "tl.update.groups.licensedocumenttype.title": "Edit Document Type",
     "tl.update.groups.licensedocumenttype.name": "Name",
     "tl.update.groups.licensedocumenttype.licenseapptype": "License App Type",
     "tl.update.groups.licensedocumenttype.mandatory": "Mandatory",

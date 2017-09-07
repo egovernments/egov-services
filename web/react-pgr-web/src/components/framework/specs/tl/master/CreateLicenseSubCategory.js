@@ -55,7 +55,8 @@ var dat = {
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": "Enter Valid Validity Year (Min: 1, Max:10)"
+							"patternErrMsg": "Enter Valid Validity Year (Min: 1, Max:10)",
+							"maxLength": "2"
 						},
 						{
 							"name": "active",
@@ -187,7 +188,12 @@ var dat = {
               "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",
-              "patternErrMsg": ""
+              "patternErrMsg": "",
+							"depedants": [{
+	              "jsonPath": "ids",
+	              "type": "dropDown",
+	              "pattern": "/tl-masters/category/v1/_search?tenantId=default&type=subcategory&categoryId={categoryId}|$.categories.*.id|$.categories.*.name"
+	            }]
             },
             {
               "name": "subCategory",
@@ -195,14 +201,14 @@ var dat = {
               "label": "tl.search.groups.subcategorytype.subcategory",
               "pattern": "",
               "type": "singleValueList",
-              "url": "/tl-masters/category/v1/_search?tenantId=default&type=subcategory|$..id|$..name",
+              "url": "",
               "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": ""
             },
 						{
-							"name": "category",
+							"name": "type",
 							"jsonPath": "type",
 							"label": "tl.search.groups.subcategorytype.category",
 							"pattern": "",
@@ -220,7 +226,7 @@ var dat = {
     ],
     "result": {
       "header": [{label: "tl.create.groups.subcategorytype.code"},{label: "tl.create.groups.subcategorytype.categories.details.rateType"}, {label: "tl.create.groups.subcategorytype.category"}, {label: "tl.create.groups.subcategorytype.active"}],
-      "values": ["code","details[0].rateType", "parentId", "active"],
+      "values": ["code","details[0].rateType", "parentName", "active"],
       "resultPath": "categories",
       "rowClickUrlUpdate": "/update/tl/CreateLicenseSubCategory/{id}",
       "rowClickUrlView": "/view/tl/CreateLicenseSubCategory/{id}"
@@ -232,7 +238,7 @@ var dat = {
     "url": "/tl-masters/category/v1/_search?ids={id}",
     "tenantIdRequired": true,
     "useTimestamp": true,
-    "objectName": "categories",
+    "objectName": "categories[0]",
     "groups": [
 			{
 				"label": "tl.view.groups.categorytype.title",
@@ -310,16 +316,19 @@ var dat = {
 		"useTimestamp": true,
 		"objectName": "categories[0]",
 		"groups": [
+
+
+
 			{
 				"label": "tl.update.groups.subcategorytype.title",
 				"name": "createCategoryType",
 				"fields": [
           {
             "name": "category",
-            "jsonPath": "categories[0].parentId",
+            "jsonPath": "categories[0].parentName",
             "label": "tl.update.groups.subcategorytype.category",
             "pattern": "",
-            "type": "singleValueList",
+            "type": "text",
             "url": "",
             "isRequired": true,
             "isDisabled": true,
@@ -370,7 +379,22 @@ var dat = {
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
 						"defaultValue":true
+					},
+					{
+						"name": "type",
+						"jsonPath": "type",
+						"label": "subcategorytype",
+						"pattern": "",
+						"type": "",
+						"url": "",
+						"isRequired": true,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"defaultValue": "subcategory",
+						"hide": true
 					}
+
 				]
 			},
 			{

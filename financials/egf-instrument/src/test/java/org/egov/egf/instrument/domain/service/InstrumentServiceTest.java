@@ -127,11 +127,36 @@ public class InstrumentServiceTest {
 	}
 	
 	@Test(expected=InvalidDataException.class)
-	public final void test_create_null_transnumber() {
+	public final void test_create_dd_null_transnumber() {
 
 		List<Instrument> expextedResult = getInstruments();
 		expextedResult.get(0).getInstrumentType().setName("dd");
 		expextedResult.get(0).setTransactionNumber(null);
+		expextedResult.get(0).setBank(null);
+		
+		Pagination<InstrumentType> pit = getInstrumentType();
+		pit.getPagedData().get(0).setName("dd");
+		
+		when(instrumentTypeRepository.search(any(InstrumentTypeSearch.class))).thenReturn(pit);
+		when(bankContractRepository.findById(any(BankContract.class))).thenReturn(getBankContract());
+		when(bankAccountContractRepository.findByAccountNumber(any(BankAccountContract.class))).thenReturn(getBankAccountContract());
+		when(financialStatusContractRepository.findById(any(FinancialStatusContract.class))).thenReturn(getFinancialStatusContract());
+		when(surrenderReasonRepository.findById(any(SurrenderReason.class))).thenReturn(getSurrenderReason());
+		when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(false);
+		
+		when(instrumentRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+		
+		List<Instrument> actualResult = instrumentService.create(expextedResult, errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+	
+	@Test(expected=InvalidDataException.class)
+	public final void test_create_dd_null_bankdetails() {
+
+		List<Instrument> expextedResult = getInstruments();
+		expextedResult.get(0).getInstrumentType().setName("dd");
 		expextedResult.get(0).setBank(null);
 		
 		Pagination<InstrumentType> pit = getInstrumentType();
@@ -176,11 +201,86 @@ public class InstrumentServiceTest {
 
 	}
 	
+	@Test(expected=InvalidDataException.class)
+	public final void test_create_cheque_null_transnumber() {
+
+		List<Instrument> expextedResult = getInstruments();
+		expextedResult.get(0).getInstrumentType().setName("cheque");
+		expextedResult.get(0).setTransactionNumber(null);
+		
+		Pagination<InstrumentType> pit = getInstrumentType();
+		pit.getPagedData().get(0).setName("cheque");
+		
+		when(instrumentTypeRepository.search(any(InstrumentTypeSearch.class))).thenReturn(pit);
+		when(bankContractRepository.findById(any(BankContract.class))).thenReturn(getBankContract());
+		when(bankAccountContractRepository.findByAccountNumber(any(BankAccountContract.class))).thenReturn(getBankAccountContract());
+		when(financialStatusContractRepository.findById(any(FinancialStatusContract.class))).thenReturn(getFinancialStatusContract());
+		when(surrenderReasonRepository.findById(any(SurrenderReason.class))).thenReturn(getSurrenderReason());
+		when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(true);
+		
+		when(instrumentRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+		
+		List<Instrument> actualResult = instrumentService.create(expextedResult, errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+	
+	@Test(expected=InvalidDataException.class)
+	public final void test_create_cheque_null_bankdetails() {
+
+		List<Instrument> expextedResult = getInstruments();
+		expextedResult.get(0).getInstrumentType().setName("cheque");
+		expextedResult.get(0).setBank(null);
+		
+		Pagination<InstrumentType> pit = getInstrumentType();
+		pit.getPagedData().get(0).setName("cheque");
+		
+		when(instrumentTypeRepository.search(any(InstrumentTypeSearch.class))).thenReturn(pit);
+		when(bankContractRepository.findById(any(BankContract.class))).thenReturn(getBankContract());
+		when(bankAccountContractRepository.findByAccountNumber(any(BankAccountContract.class))).thenReturn(getBankAccountContract());
+		when(financialStatusContractRepository.findById(any(FinancialStatusContract.class))).thenReturn(getFinancialStatusContract());
+		when(surrenderReasonRepository.findById(any(SurrenderReason.class))).thenReturn(getSurrenderReason());
+		when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(true);
+		
+		when(instrumentRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+		
+		List<Instrument> actualResult = instrumentService.create(expextedResult, errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+	
 	@Test
 	public final void test_create_cash() {
 
 		List<Instrument> expextedResult = getInstruments();
 		expextedResult.get(0).getInstrumentType().setName("cash");
+		
+		Pagination<InstrumentType> pit = getInstrumentType();
+		pit.getPagedData().get(0).setName("cash");
+
+		when(instrumentTypeRepository.search(any(InstrumentTypeSearch.class))).thenReturn(pit);
+		when(bankContractRepository.findById(any(BankContract.class))).thenReturn(getBankContract());
+		when(bankAccountContractRepository.findByAccountNumber(any(BankAccountContract.class))).thenReturn(getBankAccountContract());
+		when(financialStatusContractRepository.findById(any(FinancialStatusContract.class))).thenReturn(getFinancialStatusContract());
+		when(surrenderReasonRepository.findById(any(SurrenderReason.class))).thenReturn(getSurrenderReason());
+		when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(true);
+		
+		when(instrumentRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+		
+		List<Instrument> actualResult = instrumentService.create(expextedResult, errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+	
+	@Test(expected=InvalidDataException.class)
+	public final void test_create_cash_null_transnumber() {
+
+		List<Instrument> expextedResult = getInstruments();
+		expextedResult.get(0).getInstrumentType().setName("cash");
+		expextedResult.get(0).setTransactionNumber(null);
 		
 		Pagination<InstrumentType> pit = getInstrumentType();
 		pit.getPagedData().get(0).setName("cash");
@@ -224,11 +324,112 @@ public class InstrumentServiceTest {
 
 	}
 	
+	@Test(expected=InvalidDataException.class)
+	public final void test_create_online_null_transnumber() {
+
+		List<Instrument> expextedResult = getInstruments();
+		expextedResult.get(0).getInstrumentType().setName("online");
+		expextedResult.get(0).setTransactionNumber(null);
+
+		Pagination<InstrumentType> pit = getInstrumentType();
+		pit.getPagedData().get(0).setName("online");
+		
+		when(instrumentTypeRepository.search(any(InstrumentTypeSearch.class))).thenReturn(pit);
+		when(bankContractRepository.findById(any(BankContract.class))).thenReturn(getBankContract());
+		when(bankAccountContractRepository.findByAccountNumber(any(BankAccountContract.class))).thenReturn(getBankAccountContract());
+		when(financialStatusContractRepository.findById(any(FinancialStatusContract.class))).thenReturn(getFinancialStatusContract());
+		when(surrenderReasonRepository.findById(any(SurrenderReason.class))).thenReturn(getSurrenderReason());
+		when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(true);
+		
+		when(instrumentRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+		
+		List<Instrument> actualResult = instrumentService.create(expextedResult, errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+	
 	@Test
 	public final void test_create_bankchallan() {
 
 		List<Instrument> expextedResult = getInstruments();
 		expextedResult.get(0).getInstrumentType().setName("bankchallan");
+		
+		Pagination<InstrumentType> pit = getInstrumentType();
+		pit.getPagedData().get(0).setName("bankchallan");
+
+		when(instrumentTypeRepository.search(any(InstrumentTypeSearch.class))).thenReturn(pit);
+		when(bankContractRepository.findById(any(BankContract.class))).thenReturn(getBankContract());
+		when(bankAccountContractRepository.findByAccountNumber(any(BankAccountContract.class))).thenReturn(getBankAccountContract());
+		when(financialStatusContractRepository.findById(any(FinancialStatusContract.class))).thenReturn(getFinancialStatusContract());
+		when(surrenderReasonRepository.findById(any(SurrenderReason.class))).thenReturn(getSurrenderReason());
+		when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(true);
+		
+		when(instrumentRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+		
+		List<Instrument> actualResult = instrumentService.create(expextedResult, errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+	
+	@Test(expected=InvalidDataException.class)
+	public final void test_create_bankchallan_null_transnumber() {
+
+		List<Instrument> expextedResult = getInstruments();
+		expextedResult.get(0).getInstrumentType().setName("bankchallan");
+		expextedResult.get(0).setTransactionNumber(null);
+		
+		Pagination<InstrumentType> pit = getInstrumentType();
+		pit.getPagedData().get(0).setName("bankchallan");
+
+		when(instrumentTypeRepository.search(any(InstrumentTypeSearch.class))).thenReturn(pit);
+		when(bankContractRepository.findById(any(BankContract.class))).thenReturn(getBankContract());
+		when(bankAccountContractRepository.findByAccountNumber(any(BankAccountContract.class))).thenReturn(getBankAccountContract());
+		when(financialStatusContractRepository.findById(any(FinancialStatusContract.class))).thenReturn(getFinancialStatusContract());
+		when(surrenderReasonRepository.findById(any(SurrenderReason.class))).thenReturn(getSurrenderReason());
+		when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(true);
+		
+		when(instrumentRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+		
+		List<Instrument> actualResult = instrumentService.create(expextedResult, errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+	
+	@Test(expected=InvalidDataException.class)
+	public final void test_create_bankchallan_null_bankdetails() {
+
+		List<Instrument> expextedResult = getInstruments();
+		expextedResult.get(0).getInstrumentType().setName("bankchallan");
+		expextedResult.get(0).setBank(null);
+		
+		Pagination<InstrumentType> pit = getInstrumentType();
+		pit.getPagedData().get(0).setName("bankchallan");
+		
+
+		when(instrumentTypeRepository.search(any(InstrumentTypeSearch.class))).thenReturn(pit);
+		when(bankContractRepository.findById(any(BankContract.class))).thenReturn(getBankContract());
+		when(bankAccountContractRepository.findByAccountNumber(any(BankAccountContract.class))).thenReturn(getBankAccountContract());
+		when(financialStatusContractRepository.findById(any(FinancialStatusContract.class))).thenReturn(getFinancialStatusContract());
+		when(surrenderReasonRepository.findById(any(SurrenderReason.class))).thenReturn(getSurrenderReason());
+		when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(true);
+		
+		when(instrumentRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+		
+		List<Instrument> actualResult = instrumentService.create(expextedResult, errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+	
+	@Test(expected=InvalidDataException.class)
+	public final void test_create_bankchallan_null_bankaccountdetails() {
+
+		List<Instrument> expextedResult = getInstruments();
+		expextedResult.get(0).getInstrumentType().setName("bankchallan");
+		expextedResult.get(0).setBankAccount(null);
 		
 		Pagination<InstrumentType> pit = getInstrumentType();
 		pit.getPagedData().get(0).setName("bankchallan");

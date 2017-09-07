@@ -297,26 +297,26 @@ ReportDefinitions:
     pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=WARD&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name
     source: wcms
     isMandatory: false
-    searchClause: and prop.wardid <= $ward
+    searchClause: and prop.wardid = $wardid
   - name: zoneid
     label: reports.wcms.zone
     type: singlevaluelist
     pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name
     source: wcms
     isMandatory: false
-    searchClause: and prop.zoneid <= $zone
+    searchClause: and prop.zoneid = $zoneid
   - name: consumerNumber
     label: reports.wcms.consumerNumber
     type: string
     source: wcms
     isMandatory: false
-    searchClause: and prop.hscno <= $consumerNumber
+    searchClause: and prop.hscno = $consumerNumber
   - name: usage
     label: reports.wcms.usage
     type: string
     source: wcms
     isMandatory: false
-    searchClause: and prop.usagetype <= $usage	
+    searchClause: and prop.usagetype = $usage	
   query: select * from ((select prop.hscno as hscno,prop.username as consumerName,
          'CURRENT' as STATE, SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount) ELSE NULL END)) AS WT_DEMAND,
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.collectionamount) ELSE NULL END)) AS WT_COLL,

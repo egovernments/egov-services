@@ -262,7 +262,7 @@ class NoDues extends Component {
                     "billNumber": Receipt[0]["Bill"][0].billDetails[0].billNumber,
                     "returnUrl": window.location.origin+"/citizen-services/v1/pgresponse",
                     "date": Receipt[0]["Bill"][0].billDetails[0].billDate,
-                    "biller": "Vishal",
+                    "biller": JSON.parse(localStorage.userRequest).name,
                     "amount": self.getTotal(demands)+self.getTotal(applicationFeeDemand),
                     "billService": Receipt[0]["Bill"][0].billDetails[0].businessService,
                     "serviceRequestId": serviceRequest.serviceRequestId,
@@ -291,8 +291,8 @@ class NoDues extends Component {
                         'type': 'hidden'
                     })).append($('<input>', {
                         'name': 'amount',
-                        'value': 1,
-                        // 'value': res.PGRequest.amountPaid,
+                        // 'value': 1,
+                        'value': res.PGRequest.amountPaid,
                         'type': 'hidden'
                     })).append($('<input>', {
                         'name': 'returnUrl',
@@ -355,9 +355,9 @@ class NoDues extends Component {
           // self.props.setLoadingStatus('hide');
           var PGRequest= {
                 "billNumber": Receipt[0]["Bill"][0].billDetails[0].billNumber,
-                "returnUrl": "abc/abcd/abcdef",
+                "returnUrl": window.location.origin+"/citizen-services/v1/pgresponse",
                 "date": Receipt[0]["Bill"][0].billDetails[0].billDate,
-                "biller": "Vishal",
+                "biller": JSON.parse(localStorage.userRequest).name,
                 "amount": self.getTotal(applicationFeeDemand),
                 "billService": Receipt[0]["Bill"][0].billDetails[0].businessService,
                 "serviceRequestId": serviceRequest.serviceRequestId,
@@ -790,13 +790,13 @@ class NoDues extends Component {
 
 
 
-      //  Api.commonApiPost("/billing-service/taxheads/_search", {}, {}, null, self.props.metaData["noDues.search"].useTimestamp, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
-      //     console.log(res);
-      //     self.props.setLoadingStatus('hide');
-      //    }, function(err) {
-      //      self.props.toggleSnackbarAndSetText(true, err.message, false, true);
-      //      self.props.setLoadingStatus('hide');
-      //    })
+       Api.commonApiPost("/billing-service/taxheads/_search", {businessService:"WC"}, {}, null, self.props.metaData["noDues.search"].useTimestamp, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
+          console.log(res);
+          self.props.setLoadingStatus('hide');
+         }, function(err) {
+           self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+           self.props.setLoadingStatus('hide');
+         })
 
   }
 
@@ -1217,7 +1217,7 @@ class NoDues extends Component {
         case 1:
           return (<div>{showResult &&
             <Card>
-              <CardHeader title={"Payment Details- "+(demands.length>0 && demands[0].consumerCode)}/>
+              <CardHeader title={"Payment Details"}/>
               <CardText>
                 <Table responsive>
                      <thead>

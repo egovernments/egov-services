@@ -958,7 +958,7 @@ var localization_EN_Data = {
     "tl.create.licenses.groups.TradeDetails.TraderOwnerProperty": "Trader is not the owner of the Property",
     "tl.create.licenses.groups.agreementDetails.agreementDate": "Date of Execution",
     "tl.create.licenses.groups.agreementDetails.agreementNo": "Registered/Non Registered Document No",
-    "tl.create.licenses.groups.agreementDetails": "Agreement Details (Trader is not the owner of the Property)",
+    "tl.create.licenses.groups.agreementDetails": "Agreement Details",
 
     "tl.create.licenses.groups.FeeDetails": "Fee Details",
     "tl.create.license.table.financialYear": "Financial Year",
@@ -1008,7 +1008,7 @@ var localization_EN_Data = {
     "tl.licenses.view.groups.revenueWardId": "Revenue Ward",
     "tl.licenses.view.groups.OwnershipType": "Ownership Type",
     "tl.licenses.view.groups.TradeAddress": "Trade Address",
-    "tl.view.licenses.groups.agreementDetails": "Agreement Details",
+    "tl.view.licenses.groups.agreementDetails": "Agreement Details (Trader is not the owner of the property)",
     "tl.view.licenses.groups.TradeDetails": "Trade Details",
     "tl.view.licenses.groups.TradeTitle": "Trade Title",
     "tl.view.licenses.groups.TradeType": "Trade Type",

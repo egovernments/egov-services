@@ -389,7 +389,7 @@ class Report extends Component {
     })
   }
 
-  makePayment = (res) => {
+  makePayment = (res, fee) => {
     //DO EVERYTHING FOR MAKING PAYMENT HERE
     let {serviceRequest,RequestInfo,documents}=this.state;
    let self=this;
@@ -411,12 +411,12 @@ class Report extends Component {
          "returnUrl": window.location.origin+"/citizen-services/v1/pgresponse",
          "date": new Date().getTime(),
          "biller": JSON.parse(localStorage.userRequest).name,
-         "amount": 20,
+         "amount": fee || 20,
          "billService": res.serviceReq.serviceCode,
          "serviceRequestId": res.serviceReq.serviceRequestId,
          "consumerCode": res.serviceReq.serviceRequestId,
          "tenantId": localStorage.tenantId,
-         "amountPaid": 20,
+         "amountPaid": fee || 20,
          "uid": JSON.parse(localStorage.userRequest).id
      }
 
@@ -522,7 +522,7 @@ class Report extends Component {
         Receipt[0]["Bill"][0]["billDetails"][0]["amountPaid"] = fee;
         setTimeout(function(){
           localStorage.setItem("response", JSON.stringify({ServiceRequest, Receipt}));
-          self.makePayment(res);
+          self.makePayment(res, fee);
         }, 3000);
       } else {
         self.props.setLoadingStatus("hide");

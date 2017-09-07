@@ -44,7 +44,6 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.response.ErrorField;
-import org.egov.wcms.model.CategoryType;
 import org.egov.wcms.model.DocumentType;
 import org.egov.wcms.model.DocumentTypeApplicationType;
 import org.egov.wcms.model.Donation;
@@ -64,7 +63,6 @@ import org.egov.wcms.model.enums.ApplicationType;
 import org.egov.wcms.model.enums.ConnectionType;
 import org.egov.wcms.model.enums.PlantType;
 import org.egov.wcms.model.enums.ReservoirType;
-import org.egov.wcms.service.CategoryTypeService;
 import org.egov.wcms.service.DocumentTypeApplicationTypeService;
 import org.egov.wcms.service.DocumentTypeService;
 import org.egov.wcms.service.DonationService;
@@ -77,7 +75,6 @@ import org.egov.wcms.service.StorageReservoirService;
 import org.egov.wcms.service.SupplyTypeService;
 import org.egov.wcms.service.TreatmentPlantService;
 import org.egov.wcms.service.UsageTypeService;
-import org.egov.wcms.web.contract.CategoryTypeRequest;
 import org.egov.wcms.web.contract.DocumentTypeApplicationTypeReq;
 import org.egov.wcms.web.contract.DocumentTypeReq;
 import org.egov.wcms.web.contract.DonationRequest;
@@ -103,9 +100,6 @@ import org.springframework.validation.FieldError;
 
 @Service
 public class ValidatorUtils {
-
-    @Autowired
-    private CategoryTypeService categoryTypeService;
 
     @Autowired
     private UsageTypeService usageTypeService;
@@ -142,57 +136,6 @@ public class ValidatorUtils {
 
     @Autowired
     private NonMeterWaterRatesService nonMeterWaterRatesService;
-
-    public List<ErrorResponse> validateCategoryRequest(final CategoryTypeRequest categoryRequest, final Boolean isUpdate) {
-        final List<ErrorResponse> errorResponses = new ArrayList<>();
-        final ErrorResponse errorResponse = new ErrorResponse();
-        final Error error = getError(categoryRequest, isUpdate);
-        errorResponse.setError(error);
-        if (!errorResponse.getErrorFields().isEmpty())
-            errorResponses.add(errorResponse);
-        return errorResponses;
-    }
-
-    private Error getError(final CategoryTypeRequest categoryRequest, final Boolean isUpdate) {
-        categoryRequest.getCategoryType();
-        final List<ErrorField> errorFields = getErrorFields(categoryRequest, isUpdate);
-        return Error.builder().code(HttpStatus.BAD_REQUEST.value())
-                .message(WcmsConstants.INVALID_CATEGORY_REQUEST_MESSAGE).errorFields(errorFields).build();
-    }
-
-    private List<ErrorField> getErrorFields(final CategoryTypeRequest categoryRequest, final Boolean isUpdate) {
-        final List<ErrorField> errorFields = new ArrayList<>();
-        for (final CategoryType category : categoryRequest.getCategoryType()) {
-            addCategoryNameValidationErrors(category, errorFields, isUpdate);
-            addTenantIdValidationErrors(category.getTenantId(), errorFields);
-            addActiveValidationErrors(category.getActive(), errorFields);
-        }
-        return errorFields;
-    }
-
-    private void addCategoryNameValidationErrors(final CategoryType category,
-            final List<ErrorField> errorFields, final Boolean isUpdate) {
-        if (isUpdate)
-            if (category.getCode() == null || category.getCode().isEmpty()) {
-                final ErrorField errorField = ErrorField.builder().code(WcmsConstants.CODE_MANDATORY_CODE)
-                        .message(WcmsConstants.CODE_MANDATORY_ERROR_MESSAGE)
-                        .field(WcmsConstants.CODE_MANDATORY_FIELD_NAME).build();
-                errorFields.add(errorField);
-            }
-        if (category.getName() == null || category.getName().isEmpty()) {
-            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.CATEGORY_NAME_MANDATORY_CODE)
-                    .message(WcmsConstants.CATEGORY_NAME_MANADATORY_ERROR_MESSAGE)
-                    .field(WcmsConstants.CATEGORY_NAME_MANADATORY_FIELD_NAME).build();
-            errorFields.add(errorField);
-        } else if (!categoryTypeService.getCategoryByNameAndCode(category.getCode(), category.getName(),
-                category.getTenantId())) {
-            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.CATEGORY_NAME_UNIQUE_CODE)
-                    .message(WcmsConstants.CATEGORY_UNQ_ERROR_MESSAGE).field(WcmsConstants.CATEGORY_NAME_UNQ_FIELD_NAME)
-                    .build();
-            errorFields.add(errorField);
-        } else
-            return;
-    }
 
     public List<ErrorResponse> validatePipeSizeRequest(final PipeSizeRequest pipeSizeRequest, final Boolean isUpdate) {
         final List<ErrorResponse> errorResponses = new ArrayList<>();
@@ -435,13 +378,12 @@ public class ValidatorUtils {
         for (final Donation donation : donationRequest.getDonation()) {
             checkDonationCode(errorFields, donation, isUpdate);
             checkUsageTypeValue(errorFields, donation);
-            checkCategoryValue(errorFields, donation);
             checkPipeSizeValues(errorFields, donation);
             checkDonationAmountValues(errorFields, donation);
             checkFromToDateValues(errorFields, donation);
             checkMaxPipesizeAndMinPipeSize(errorFields, donation);
             checkUsageTypeAndSubUsageTypeExist(errorFields, donation);
-            checkCategoryTypeAndPipeSizeExist(errorFields, donation);
+            checkPipeSizeExist(errorFields, donation);
             checkDonationsExist(errorFields, donation);
             addTenantIdValidationErrors(donation.getTenantId(), errorFields);
         }
@@ -465,16 +407,6 @@ public class ValidatorUtils {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.USAGETYPE_NAME_MANDATORY_CODE)
                     .message(WcmsConstants.USAGETYPE_NAME_MANADATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.USAGETYPE_NAME_MANADATORY_FIELD_NAME).build();
-            errorFields.add(errorField);
-        }
-    }
-
-    private void checkCategoryValue(final List<ErrorField> errorFields, final Donation donation) {
-        if (donation.getCategory() == null
-                || donation.getCategory().isEmpty()) {
-            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.CATEGORY_NAME_MANDATORY_CODE)
-                    .message(WcmsConstants.CATEGORY_NAME_MANADATORY_ERROR_MESSAGE)
-                    .field(WcmsConstants.CATEGORY_NAME_MANADATORY_FIELD_NAME).build();
             errorFields.add(errorField);
         }
     }
@@ -554,15 +486,8 @@ public class ValidatorUtils {
         }
     }
 
-    private void checkCategoryTypeAndPipeSizeExist(final List<ErrorField> errorFields,
+    private void checkPipeSizeExist(final List<ErrorField> errorFields,
             final Donation donation) {
-        if (donationService.checkCategoryExists(donation.getCategory(),
-                donation.getTenantId())) {
-            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.CATEGORY_TYPE_INVALID_CODE)
-                    .message(WcmsConstants.CATEGORY_TYPE_INVALID_ERROR_MESSAGE)
-                    .field(WcmsConstants.CATEGORY_TYPE_INVALID_FIELD_NAME).build();
-            errorFields.add(errorField);
-        }
         if (donationService.checkPipeSizeExists(donation.getMaxPipeSize(),
                 donation.getTenantId())) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.DONATION_PIPESIZE_MAX_INVALID_CODE)
@@ -1240,7 +1165,7 @@ public class ValidatorUtils {
         gapcodeRequest.getGapcode();
         final List<ErrorField> errorFields = getErrorFields(gapcodeRequest, isUpdate);
         return Error.builder().code(HttpStatus.BAD_REQUEST.value())
-                .message(WcmsConstants.INVALID_CATEGORY_REQUEST_MESSAGE).errorFields(errorFields).build();
+                .message(WcmsConstants.INVALID_GAPCODE_REQUEST_MESSAGE).errorFields(errorFields).build();
     }
 
     private List<ErrorField> getErrorFields(final GapcodeRequest gapcodeRequest, final Boolean isUpdate) {

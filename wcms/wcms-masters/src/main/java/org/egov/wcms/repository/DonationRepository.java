@@ -81,19 +81,6 @@ public class DonationRepository {
         final List<Donation> donationList = donationRequest.getDonation();
         final List<Map<String, Object>> batchValues = new ArrayList<>(donationList.size());
         for (final Donation donation : donationList) {
-
-            final String categoryQuery = DonationQueryBuilder.getCategoryId();
-            Long categoryId = 0L;
-            try {
-                categoryId = jdbcTemplate.queryForObject(categoryQuery,
-                        new Object[] { donation.getCategory(), donation.getTenantId() }, Long.class);
-                log.info("Category Id: " + categoryId);
-            } catch (final EmptyResultDataAccessException e) {
-                log.info("EmptyResultDataAccessException: Query returned empty result set");
-            }
-            if (categoryId == null)
-                log.info("Invalid input.");
-
             final String pipesizeQuery = DonationQueryBuilder.getPipeSizeIdQuery();
             Long maxPipeSizeId = 0L;
             try {
@@ -139,15 +126,14 @@ public class DonationRepository {
                             .addValue("usagetypeid", usageTypeId)
                             .addValue("subusagetypeid", subUsageTypeId)
                             .addValue("outsideulb", donation.getOutsideUlb())
-                            .addValue("categorytypeid", categoryId)
                             .addValue("maxpipesizeid", maxPipeSizeId).addValue("minpipesizeid", minPipeSizeId)
                             .addValue("fromdate", donation.getFromDate()).addValue("todate", donation.getToDate())
                             .addValue("donationamount", donation.getDonationAmount()).addValue("active", donation.getActive())
                             .addValue("tenantid", donation.getTenantId())
                             .addValue("createdby", Long.valueOf(donationRequest.getRequestInfo().getUserInfo().getId()))
                             .addValue("lastmodifiedby", Long.valueOf(donationRequest.getRequestInfo().getUserInfo().getId()))
-                            .addValue("createddate",  new Date(new java.util.Date().getTime()))
-                            .addValue("lastmodifieddate",  new Date(new java.util.Date().getTime()))
+                            .addValue("createddate", new Date().getTime())
+                            .addValue("lastmodifieddate", new Date().getTime())
                             .getValues());
         }
         namedParameterJdbcTemplate.batchUpdate(donationInsert, batchValues.toArray(new Map[donationList.size()]));
@@ -161,18 +147,6 @@ public class DonationRepository {
         final List<Donation> donationList = donationRequest.getDonation();
         final List<Map<String, Object>> batchValues = new ArrayList<>(donationList.size());
         for (final Donation donation : donationList) {
-            final String categoryQuery = DonationQueryBuilder.getCategoryId();
-            Long categoryId = 0L;
-            try {
-                categoryId = jdbcTemplate.queryForObject(categoryQuery,
-                        new Object[] { donation.getCategory(), donation.getTenantId() }, Long.class);
-                log.info("Category Id: " + categoryId);
-            } catch (final EmptyResultDataAccessException e) {
-                log.info("EmptyResultDataAccessException: Query returned empty result set");
-            }
-            if (categoryId == null)
-                log.info("Invalid input.");
-
             final String pipesizeQuery = DonationQueryBuilder.getPipeSizeIdQuery();
             Long maxPipeSizeId = 0L;
             try {
@@ -217,13 +191,12 @@ public class DonationRepository {
                     new MapSqlParameterSource("usagetypeid", usageTypeId)
                             .addValue("subusagetypeid", subUsageTypeId)
                             .addValue("outsideulb", donation.getOutsideUlb())
-                            .addValue("categorytypeid", categoryId)
                             .addValue("maxpipesizeid", maxPipeSizeId).addValue("minpipesizeid", minPipeSizeId)
                             .addValue("fromdate", donation.getFromDate()).addValue("todate", donation.getToDate())
                             .addValue("donationamount", donation.getDonationAmount()).addValue("active", donation.getActive())
                             .addValue("tenantid", donation.getTenantId())
                             .addValue("lastmodifiedby", Long.valueOf(donationRequest.getRequestInfo().getUserInfo().getId()))
-                            .addValue("lastmodifieddate",  new Date(new java.util.Date().getTime()))
+                            .addValue("lastmodifieddate", new Date().getTime())
                             .addValue("code", donation.getCode())
                             .getValues());
         }
@@ -244,22 +217,10 @@ public class DonationRepository {
     }
 
     public boolean checkDonationsExist(final String code, final String usageType,
-            final String subUsageType, final String categoryName, final Double maxPipeSize, final Double minPipeSize,
+            final String subUsageType, final Double maxPipeSize, final Double minPipeSize,
             final String tenantId) {
         final List<Object> preparedStatementValues = new ArrayList<>();
         final String pipesizeQuery = DonationQueryBuilder.getPipeSizeIdQuery();
-        final String categoryQuery = DonationQueryBuilder.getCategoryId();
-        Long categoryId = 0L;
-        try {
-            categoryId = jdbcTemplate.queryForObject(categoryQuery,
-                    new Object[] { categoryName, tenantId }, Long.class);
-            log.info("Category Id: " + categoryId);
-        } catch (final EmptyResultDataAccessException e) {
-            log.info("EmptyResultDataAccessException: Query returned empty result set");
-        }
-        if (categoryId == null)
-            log.info("Invalid input.");
-
         Long maxPipeSizeId = 0L;
         try {
             maxPipeSizeId = jdbcTemplate.queryForObject(pipesizeQuery,
@@ -296,7 +257,6 @@ public class DonationRepository {
         }
         preparedStatementValues.add(usageTypeId);
         preparedStatementValues.add(subUsageTypeId);
-        preparedStatementValues.add(categoryId);
         preparedStatementValues.add(maxPipeSizeId);
         preparedStatementValues.add(minPipeSizeId);
         preparedStatementValues.add(tenantId);
@@ -323,19 +283,6 @@ public class DonationRepository {
         final List<Map<String, Object>> pipeSizes = jdbcTemplate.queryForList(query,
                 preparedStatementValues.toArray());
         if (!pipeSizes.isEmpty())
-            return false;
-
-        return true;
-    }
-
-    public boolean checkCategoryExists(final String category, final String tenantId) {
-        final List<Object> preparedStatementValues = new ArrayList<>();
-        preparedStatementValues.add(category);
-        preparedStatementValues.add(tenantId);
-        final String query = DonationQueryBuilder.getCategoryId();
-        final List<Map<String, Object>> categories = jdbcTemplate.queryForList(query,
-                preparedStatementValues.toArray());
-        if (!categories.isEmpty())
             return false;
 
         return true;

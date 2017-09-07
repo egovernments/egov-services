@@ -4,7 +4,6 @@
     title: Water Charges Management Service (WCMS) Master APIs
     description: |
       APIs available for WCMS Masters and mapping between two masters
-        - Create, Update and Search for CategoryType
         - Create, Update and Search for PipeSize
         - Create, Update and Search for Donation
         - Create, Update and Search for DocumentType
@@ -29,73 +28,6 @@
   x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
 
   paths:
-    /categorytype/_create:
-      post:
-        summary: Create new category type.
-        description: API to bulk create new category type
-        tags:
-          - Category Type
-        parameters:
-          - name: Category Type
-            in: body
-            description: required parameters have to be populated
-            required: true
-            schema:
-              $ref: '#/definitions/CategoryTypeReq'
-        responses:
-          '201':
-            description: Category Type created successfully.
-            schema:
-              $ref: "#/definitions/CategoryTypeRes"
-          '400':
-            description: Category Type creation failed.
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-
-    /categorytype/_update:
-      post:
-        summary:  while updating in request body code is required and updates existing values based on code
-        description: bulk updates existing values
-        tags:
-          - Category Type
-        parameters:
-          - name: Category Type
-            in: body
-            description: required parameters have to be populated
-            required: true
-            schema:
-              $ref: '#/definitions/CategoryTypeReq'
-        responses:
-          '200':
-            description: Category Type updated successfully.
-            schema:
-              $ref: "#/definitions/CategoryTypeRes"
-          '400':
-            description: Request failed
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-
-    /categorytype/_search:
-      post:
-        summary: searches existing values
-        tags:
-          - Category Type
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - $ref: "#/parameters/id"
-          - $ref: "#/parameters/code"
-          - $ref: "#/parameters/name"
-        responses:
-          200: 
-            description: Successful response
-            schema:
-              $ref: '#/definitions/CategoryTypeRes'
-          400:
-            description: Invalid input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-  
   # PipeSize  API
     /pipesize/_create:
       post:
@@ -1052,7 +984,7 @@
           200: 
             description: Successful response
             schema:
-              $ref: '#/definitions/CategoryTypeRes'
+              $ref: '#/definitions/ServiceChargeRes'
           400:
             description: Invalid input
             schema:
@@ -1764,66 +1696,7 @@
         - toDate
         - active
         - tenantId  
-    
 
-        
-  # Category Type definitions
-    CategoryTypeReq:
-      type: object
-      properties:
-        RequestInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        CategoryType:
-          $ref: '#/definitions/CategoryType'
-      required:
-        - RequestInfo
-        - CategoryType
-    
-    CategoryTypeRes:
-      type: object
-      properties:
-        ResponseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        CategoryTypes:
-          type: array
-          maximum: 20
-          items:
-            $ref: '#/definitions/CategoryType'
-    
-    CategoryType:
-      type: object
-      properties:
-        id:
-         type: integer
-         format: int64
-         description : Unique identifier, typically defined by system and readonly.
-        code:
-          type: string
-          description: unique code this should be defined by system and readonly.
-          maxLength: 20
-        name: 
-          type: string
-          description: human readable name should be assigned by user.
-          maxLength: 100
-        description: 
-          type: string
-          description: human readable description should be assigned by user.
-          maxLength: 250
-        active:
-          type: boolean
-          format: varchar
-          description: TRUE for active and FALSE for inactive.
-        tenantId:
-          type: string
-          description: Unique Identifier of the tenant 
-          maxLength: 250
-        auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-      required:
-        - code
-        - name
-        - active
-        - tenantId
         
   # Water treatment plant  Master definitions
     TreatmentPlantReq:
@@ -2496,3 +2369,5 @@
         - logic
         - noOfLastMonths
         - tenantId
+        
+    

@@ -74,12 +74,6 @@ public class ApplicationProperties {
     @Value("${kafka.topics.servicecharge.update.name}")
     private String updateServiceChargeTopicName;
 
-    @Value("${kafka.topics.category.create.name}")
-    private String createCategoryTopicName;
-
-    @Value("${kafka.topics.category.update.name}")
-    private String updateCategoryTopicName;
-
     @Value("${kafka.topics.pipesize.create.name}")
     private String createPipeSizeTopicName;
 
@@ -173,14 +167,6 @@ public class ApplicationProperties {
 
     public String getUpdateUsageTypeTopicName() {
         return updateUsageTypeTopicName;
-    }
-
-    public String getCreateCategoryTopicName() {
-        return createCategoryTopicName;
-    }
-
-    public String getUpdateCategoryTopicName() {
-        return updateCategoryTopicName;
     }
 
     public String getCreatePipeSizetopicName() {

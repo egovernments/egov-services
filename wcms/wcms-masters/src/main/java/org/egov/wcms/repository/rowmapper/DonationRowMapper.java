@@ -61,14 +61,12 @@ public class DonationRowMapper implements RowMapper<Donation> {
         donation.setUsageTypeCode(rs.getString("usagecode"));
         donation.setSubUsageTypeCode(rs.getString("subusagecode"));
         donation.setSubUsageType(rs.getString("subUsageName"));
-        donation.setCategoryTypeId(rs.getLong("donation_categorytypeId"));
-        donation.setCategory(rs.getString("categeory"));
         donation.setMaxPipeSizeId(rs.getLong("donation_maxpipesizId"));
         donation.setMinPipeSizeId(rs.getLong("donation_minpipesizeId"));
         donation.setMaxPipeSize(rs.getDouble("maxpipesize"));
         donation.setMinPipeSize(rs.getDouble("minpipesize"));
-        donation.setFromDate(rs.getDate("donation_fromDate"));
-        donation.setToDate(rs.getDate("donation_toDate"));
+        donation.setFromDate(rs.getLong("donation_fromDate"));
+        donation.setToDate(rs.getLong("donation_toDate"));
         donation.setActive(rs.getBoolean("donation_active"));
         donation.setOutsideUlb((Boolean) rs.getObject("donation_outsideulb"));
         donation.setDonationAmount(rs.getDouble("donation_amount"));

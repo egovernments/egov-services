@@ -99,16 +99,12 @@ public class DonationService {
     public boolean checkDonationsExist(final Donation donation) {
         return donationRepository.checkDonationsExist(donation.getCode(),
                 donation.getUsageType(), donation.getSubUsageType(),
-                donation.getCategory(), donation.getMaxPipeSize(), donation.getMinPipeSize(),
+            donation.getMaxPipeSize(), donation.getMinPipeSize(),
                 donation.getTenantId());
     }
 
     public boolean checkPipeSizeExists(final Double pipeSize, final String tenantId) {
         return donationRepository.checkPipeSizeExists(pipeSize, tenantId);
-    }
-
-    public boolean checkCategoryExists(final String categoryType, final String tenantId) {
-        return donationRepository.checkCategoryExists(categoryType, tenantId);
     }
 
     public boolean checkUsageAndSubUsageExists(final String usageType, final String tenantId) {

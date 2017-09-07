@@ -101,10 +101,10 @@ public class DonationServiceTest {
         donation.setActive(true);
         donation.setCode("2");
         donation.setId(2l);
-        donation.setCategoryTypeId(2L);
         donation.setUsageTypeId(2l);
-        donation.setFromDate(new Date());
-        donation.setToDate(new Date());
+        donation.setSubUsageTypeId(3l);
+        donation.setFromDate(new Date().getTime());
+        donation.setToDate(new Date().getTime());
         donation.setMaxPipeSizeId(2L);
         donation.setMaxPipeSizeId(2L);
         donation.setAuditDetails(auditDetails);

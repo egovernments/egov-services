@@ -44,7 +44,6 @@ package org.egov.wcms.consumers;
 import java.util.Map;
 
 import org.egov.wcms.config.ApplicationProperties;
-import org.egov.wcms.service.CategoryTypeService;
 import org.egov.wcms.service.DocumentTypeApplicationTypeService;
 import org.egov.wcms.service.DocumentTypeService;
 import org.egov.wcms.service.DonationService;
@@ -60,7 +59,6 @@ import org.egov.wcms.service.StorageReservoirService;
 import org.egov.wcms.service.SupplyTypeService;
 import org.egov.wcms.service.TreatmentPlantService;
 import org.egov.wcms.service.UsageTypeService;
-import org.egov.wcms.web.contract.CategoryTypeRequest;
 import org.egov.wcms.web.contract.DocumentTypeApplicationTypeReq;
 import org.egov.wcms.web.contract.DocumentTypeReq;
 import org.egov.wcms.web.contract.DonationRequest;
@@ -95,9 +93,6 @@ public class WaterMasterConsumer {
 
     @Autowired
     private ApplicationProperties applicationProperties;
-
-    @Autowired
-    private CategoryTypeService categoryService;
 
     @Autowired
     private SupplyTypeService supplyTypeService;
@@ -145,7 +140,6 @@ public class WaterMasterConsumer {
     private UsageTypeService usageTypeService;
 
     @KafkaListener(topics = { "${kafka.topics.usagetype.create.name}", "${kafka.topics.usagetype.update.name}",
-            "${kafka.topics.category.create.name}", "${kafka.topics.category.update.name}",
             "${kafka.topics.pipesize.create.name}", "${kafka.topics.pipesize.update.name}",
             "${kafka.topics.donation.create.name}", "${kafka.topics.donation.update.name}",
             "${kafka.topics.documenttype.create.name}", "${kafka.topics.documenttype.update.name}",
@@ -168,11 +162,7 @@ public class WaterMasterConsumer {
         log.debug("key:" + topic + ":" + "value:" + consumerRecord);
 
         try {
-            if (applicationProperties.getCreateCategoryTopicName().equals(topic))
-                categoryService.create(objectMapper.convertValue(consumerRecord, CategoryTypeRequest.class));
-            else if (applicationProperties.getUpdateCategoryTopicName().equals(topic))
-                categoryService.update(objectMapper.convertValue(consumerRecord, CategoryTypeRequest.class));
-            else if (applicationProperties.getCreatePipeSizetopicName().equals(topic))
+            if (applicationProperties.getCreatePipeSizetopicName().equals(topic))
                 pipeSizeService.create(objectMapper.convertValue(consumerRecord, PipeSizeRequest.class));
             else if (applicationProperties.getUpdatePipeSizeTopicName().equals(topic))
                 pipeSizeService.update(objectMapper.convertValue(consumerRecord, PipeSizeRequest.class));

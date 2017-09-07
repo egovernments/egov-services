@@ -39,7 +39,6 @@
  */
 package org.egov.wcms.web.contract;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.validation.constraints.Max;
@@ -65,20 +64,16 @@ public class DonationGetRequest {
 
     private String code;
 
-    private String category;
-
-    private Long categoryTypeId;
-    
     private Boolean outSideUlb;
 
     private String usageType;
-    
+
     private String usageTypeCode;
 
     private Long usageTypeId;
-    
+
     private String subUsageType;
-    
+
     private String subUsageTypeCode;
 
     private Long subUsageTypeId;
@@ -93,9 +88,9 @@ public class DonationGetRequest {
 
     private double donationAmount;
 
-    private Date fromDate;
+    private Long fromDate;
 
-    private Date toDate;
+    private Long toDate;
 
     private Boolean active;
 

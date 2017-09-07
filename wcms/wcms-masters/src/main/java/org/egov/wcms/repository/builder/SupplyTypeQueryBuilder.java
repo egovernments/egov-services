@@ -48,13 +48,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class SupplyTypeQueryBuilder {
 
     @Autowired
     private ApplicationProperties applicationProperties;
-
-    private static final Logger logger = LoggerFactory.getLogger(CategoryTypeQueryBuilder.class);
 
     private static final String BASE_QUERY = "SELECT supplytype.id as supplytype_id, supplytype.code as supplytype_code,"
             + " supplytype.name as supplytype_name, supplytype.description as supplytype_description,supplytype.active as supplytype_active,"
@@ -67,7 +68,7 @@ public class SupplyTypeQueryBuilder {
         addWhereClause(selectQuery, preparedStatementValues, supplyGetRequest);
         addOrderByClause(selectQuery, supplyGetRequest);
         addPagingClause(selectQuery, preparedStatementValues, supplyGetRequest);
-        logger.debug("Query : " + selectQuery);
+        log.debug("Query : " + selectQuery);
         return selectQuery.toString();
     }
 

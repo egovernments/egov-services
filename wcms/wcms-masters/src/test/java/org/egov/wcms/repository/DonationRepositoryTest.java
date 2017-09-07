@@ -116,12 +116,12 @@ public class DonationRepositoryTest {
 
     private DonationGetRequest getDonationvalidaRequest() {
         final DonationGetRequest donation = new DonationGetRequest();
-        donation.setCategory("1");
-        donation.setUsageType("3");
+        donation.setUsageType("abcd");
+        donation.setSubUsageType("test");
         donation.setMaxPipeSize(4d);
         donation.setMinPipeSize(1d);
-        donation.setFromDate(new Date());
-        donation.setToDate(new Date());
+        donation.setFromDate(new Date().getTime());
+        donation.setToDate(new Date().getTime());
 
         donation.setActive(true);
 
@@ -182,10 +182,9 @@ public class DonationRepositoryTest {
         donation.setActive(true);
         donation.setCode("2");
         donation.getAuditDetails().setCreatedBy(1L);
-        donation.setCategoryTypeId(2L);
         donation.setUsageTypeId(2l);
-        donation.setFromDate(new Date());
-        donation.setToDate(new Date());
+        donation.setFromDate(new Date().getTime());
+        donation.setToDate(new Date().getTime());
         donation.setMaxPipeSizeId(2L);
         donation.setMinPipeSizeId(2L);
         return donation;

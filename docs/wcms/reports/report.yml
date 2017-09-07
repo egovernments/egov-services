@@ -313,7 +313,7 @@ ReportDefinitions:
     searchClause: and prop.hscno = $consumerNumber
   - name: usage
     label: reports.wcms.usage
-    type: string
+    type: singlevaluelist
     pattern: http://pt-property:8080/pt-property/property/usages/_search?tenantId=default&pageSize=500|$..id|$..name    		
     source: wcms
     isMandatory: false

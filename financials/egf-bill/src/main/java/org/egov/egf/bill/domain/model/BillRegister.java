@@ -73,19 +73,19 @@ import lombok.Setter;
 @EqualsAndHashCode(exclude = { "status", "fund", "function", "fundsource", "scheme", "subScheme", "functionary",
 	"division", "department", "billDetails" }, callSuper = false)
 public class BillRegister extends Auditable {
- 
     @Length(max = 50)
     private String id;
-    /** billType is the type of the bill
-     * example is ExpenseBill,ContractorBill,PurchaseBill,SalaryBill etc
+    /**
+     * billType is the type of the bill example is
+     * ExpenseBill,ContractorBill,PurchaseBill,SalaryBill etc
      */
     @NotNull
     @Length(max = 50)
     private String billType;
     /**
-     * billSubType refers with each type of bill what is the subtype . 
+     * billSubType refers with each type of bill what is the subtype .
      * 
-     * for example ContractorBill will have subType as "FinalBill" 
+     * for example ContractorBill will have subType as "FinalBill"
      */
     @Length(max = 50)
     private String billSubType;
@@ -95,28 +95,29 @@ public class BillRegister extends Auditable {
      */
     @Length(max = 50)
     private String billNumber;
-    /** 
+    /**
      * billDate is the date when the bill is created.
      */
     @NotNull
     private Date billDate;
     /**
-     * billAmount is the total bill Amount . 
-     * even though the bill is created for billAmount of x 
-     * it may be passed for amount x-k 
+     * billAmount is the total bill Amount . even though the bill is created for
+     * billAmount of x it may be passed for amount x-k
      */
     @NotNull
     private BigDecimal billAmount;
     /**
-     * passedAmount refers to the amount passed by ulb .
-     * even though the bill is created for billAmount of x 
-     * it may be passed for amount x-k 
+     * passedAmount refers to the amount passed by ulb . even though the bill is
+     * created for billAmount of x it may be passed for amount x-k . This
+     * defaults to the Bill Amount and can be less than or equal to the Bill
+     * Amount.
      * 
      */
     private BigDecimal passedAmount;
     @Length(max = 50)
-    /** 
-     * moduleName is the name of the module who is posting the bill in financials
+    /**
+     * moduleName is the name of the module who is posting the bill in
+     * financials
      */
     private String moduleName;
     /**
@@ -124,7 +125,7 @@ public class BillRegister extends Auditable {
      */
     private FinancialStatusContract status;
     /**
-     * fund refers to the fund master 
+     * fund refers to the fund master
      */
     private FundContract fund;
     /**
@@ -143,27 +144,28 @@ public class BillRegister extends Auditable {
     @Length(max = 256)
     private String sourcePath;
     /**
-     * budgetCheckRequired is a boolean field is the budget check is required or not default is true
+     * budgetCheckRequired is a boolean field is the budget check is required or
+     * not default is true
      * 
      */
     private Boolean budgetCheckRequired = true;
     @Length(max = 50)
     /**
-     * budgetAppropriationNo is the number generated after budget check. This field will be null 
-     * if the budget check not done.
+     * budgetAppropriationNo is the number generated after budget check. This
+     * field will be null if the budget check not done.
      */
     private String budgetAppropriationNo;
     @Length(max = 50)
     /**
-     * partyBillNumber is the manual bill number . 
+     * partyBillNumber is the manual bill number .
      */
     private String partyBillNumber;
     /**
-     * partyBillDate is the manual bill date . 
+     * partyBillDate is the manual bill date .
      */
     private Date partyBillDate;
     /**
-     * description is the more detailed information about the bill 
+     * description is the more detailed information about the bill
      */
     @Length(max = 256)
     private String description;

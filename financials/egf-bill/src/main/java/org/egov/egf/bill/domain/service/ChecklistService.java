@@ -46,7 +46,7 @@ public class ChecklistService {
 			}
 			for (Checklist b : checklists) {
 				b.setId(checklistRepository.getNextSequence());
-				b.add();
+				//b.add();
 			}
 
 		} catch (CustomBindException e) {
@@ -70,7 +70,7 @@ public class ChecklistService {
 				throw new CustomBindException(errors);
 			}
 			for (Checklist b : checklists) {
-				b.update();
+				//b.update();
 			}
 
 		} catch (CustomBindException e) {
@@ -96,17 +96,10 @@ public class ChecklistService {
                         for (Checklist checklist : checklists) {
                             validator.validate(checklist, errors);
                             if (!checklistRepository.uniqueCheck("name", checklist)) {
-                                errors.addError(new FieldError("checklist", "name", checklist.getName(), false,
+                                errors.addError(new FieldError("checklist", "type", checklist.getType(), false,
                                         new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
                             }
-                            if (!checklistRepository.uniqueCheck("code", checklist)) {
-                                errors.addError(new FieldError("checklist", "code", checklist.getName(), false,
-                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
-                            }
-                            if (!checklistRepository.uniqueCheck("identifier", checklist)) {
-                                errors.addError(new FieldError("checklist", "identifier", checklist.getName(), false,
-                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
-                            }
+                           
         
                         }
                         break;
@@ -120,18 +113,10 @@ public class ChecklistService {
                             }
                             validator.validate(checklist, errors);
                             if (!checklistRepository.uniqueCheck("name", checklist)) {
-                                errors.addError(new FieldError("checklist", "name", checklist.getName(), false,
+                                errors.addError(new FieldError("checklist", "type", checklist.getType(), false,
                                         new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
                             }
-                            if (!checklistRepository.uniqueCheck("code", checklist)) {
-                                errors.addError(new FieldError("checklist", "code", checklist.getName(), false,
-                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
-                            }
-                            if (!checklistRepository.uniqueCheck("identifier", checklist)) {
-                                errors.addError(new FieldError("checklist", "identifier", checklist.getName(), false,
-                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
-                            }
-        
+                           
                         }
                         break;
                     case Constants.ACTION_SEARCH:
@@ -155,22 +140,6 @@ public class ChecklistService {
 	}
 
 	public List<Checklist> fetchRelated(List<Checklist> checklists) {
-		for (Checklist checklist : checklists) {
-			// fetch related items
-
-			if (checklist.getTenantId() != null)
-				if (checklist.getParent() != null && checklist.getParent().getId() != null) {
-					checklist.getParent().setTenantId(checklist.getTenantId());
-					Checklist parentId = checklistRepository.findById(checklist.getParent());
-					if (parentId == null) {
-						throw new InvalidDataException("parentId", ErrorCode.INVALID_REF_VALUE.getCode(),
-								checklist.getParent().getId());
-					}
-					checklist.setParent(parentId);
-				}
-
-		}
-
 		return checklists;
 	}
 

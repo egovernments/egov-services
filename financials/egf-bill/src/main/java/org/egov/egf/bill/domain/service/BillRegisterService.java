@@ -14,6 +14,8 @@ import org.egov.common.domain.model.Pagination;
 import org.egov.egf.bill.domain.model.BillRegister;
 import org.egov.egf.bill.domain.model.BillRegisterSearch;
 import org.egov.egf.bill.domain.repository.BillRegisterRepository;
+import org.egov.egf.bill.domain.repository.BoundaryRepository;
+import org.egov.egf.bill.domain.repository.DepartmentRepository;
 import org.egov.egf.bill.web.contract.Boundary;
 import org.egov.egf.bill.web.contract.Department;
 import org.egov.egf.master.web.contract.FinancialStatusContract;
@@ -34,7 +36,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.SmartValidator;
 

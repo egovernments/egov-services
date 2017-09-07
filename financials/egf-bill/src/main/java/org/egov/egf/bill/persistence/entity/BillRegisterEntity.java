@@ -29,6 +29,7 @@ import lombok.Setter;
 @Builder
 public class BillRegisterEntity extends AuditableEntity {
     public static final String TABLE_NAME = "egf_billregister";
+    public static final String SEQUENCE_NAME = "seq_egf_billregister";
     private String id;
     private String billType;
     private String billSubType;

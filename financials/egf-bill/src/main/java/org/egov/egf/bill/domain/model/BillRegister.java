@@ -47,6 +47,12 @@ import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import org.egov.common.domain.model.Auditable;
 import org.egov.egf.bill.web.contract.Boundary;
 import org.egov.egf.bill.web.contract.Department;
@@ -58,13 +64,6 @@ import org.egov.egf.master.web.contract.FundsourceContract;
 import org.egov.egf.master.web.contract.SchemeContract;
 import org.egov.egf.master.web.contract.SubSchemeContract;
 import org.hibernate.validator.constraints.Length;
-import org.ja.annotation.DrillDownTable;
-
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @NoArgsConstructor
 @AllArgsConstructor

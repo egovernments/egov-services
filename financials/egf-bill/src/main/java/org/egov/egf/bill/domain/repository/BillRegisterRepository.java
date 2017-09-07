@@ -10,13 +10,13 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.bill.domain.model.BillRegister;
 import org.egov.egf.bill.domain.model.BillRegisterSearch;
-import org.egov.egf.bill.domain.service.FinancialConfigurationService;
 import org.egov.egf.bill.persistence.entity.BillRegisterEntity;
-import org.egov.egf.bill.persistence.queue.MastersQueueRepository;
+import org.egov.egf.bill.persistence.queue.repository.BillRegisterQueueRepository;
 import org.egov.egf.bill.persistence.repository.BillRegisterJdbcRepository;
 import org.egov.egf.bill.web.contract.BillRegisterContract;
 import org.egov.egf.bill.web.contract.BillRegisterSearchContract;
 import org.egov.egf.bill.web.requests.BillRegisterRequest;
+import org.egov.egf.master.web.repository.FinancialConfigurationContractRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,21 +28,21 @@ public class BillRegisterRepository {
 
 	private BillRegisterJdbcRepository billRegisterJdbcRepository;
 
-	private MastersQueueRepository billRegisterQueueRepository;
+	private BillRegisterQueueRepository billRegisterQueueRepository;
 
-	private FinancialConfigurationService financialConfigurationService;
+	private FinancialConfigurationContractRepository financialConfigurationContractRepository;
 
 	private BillRegisterESRepository billRegisterESRepository;
 
 	private String persistThroughKafka;
 
 	@Autowired
-	public BillRegisterRepository(BillRegisterJdbcRepository billRegisterJdbcRepository, MastersQueueRepository billRegisterQueueRepository,
-			FinancialConfigurationService financialConfigurationService, BillRegisterESRepository billRegisterESRepository,
+	public BillRegisterRepository(BillRegisterJdbcRepository billRegisterJdbcRepository, BillRegisterQueueRepository billRegisterQueueRepository,
+			FinancialConfigurationContractRepository financialConfigurationContractRepository, BillRegisterESRepository billRegisterESRepository,
 			@Value("${persist.through.kafka}") String persistThroughKafka) {
 		this.billRegisterJdbcRepository = billRegisterJdbcRepository;
 		this.billRegisterQueueRepository = billRegisterQueueRepository;
-		this.financialConfigurationService = financialConfigurationService;
+		this.financialConfigurationContractRepository = financialConfigurationContractRepository;
 		this.billRegisterESRepository = billRegisterESRepository;
 		this.persistThroughKafka = persistThroughKafka;
 
@@ -170,8 +170,8 @@ public class BillRegisterRepository {
 
 
 	public Pagination<BillRegister> search(BillRegisterSearch domain) {
-		if (!financialConfigurationService.fetchDataFrom().isEmpty()
-				&& financialConfigurationService.fetchDataFrom().equalsIgnoreCase("es")) {
+		if (!financialConfigurationContractRepository.fetchDataFrom().isEmpty()
+				&& financialConfigurationContractRepository.fetchDataFrom().equalsIgnoreCase("es")) {
 			BillRegisterSearchContract billRegisterSearchContract = new BillRegisterSearchContract();
 			ModelMapper mapper = new ModelMapper();
 			mapper.map(domain, billRegisterSearchContract);

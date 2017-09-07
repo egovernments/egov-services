@@ -402,7 +402,7 @@ class Report extends Component {
    window.localStorage.setItem("formData",JSON.stringify(formData));
    window.localStorage.setItem("moduleName",this.props.match.params.id);
    window.localStorage.setItem("metaData",JSON.stringify(metaData));
-   window.localStorage.setItem("workflow","create");
+   window.localStorage.setItem("workflow","view");
    window.localStorage.setItem("ack",this.props.match.params.ack);
    
 

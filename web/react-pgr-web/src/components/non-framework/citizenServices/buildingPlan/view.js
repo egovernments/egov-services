@@ -403,6 +403,8 @@ class Report extends Component {
    window.localStorage.setItem("moduleName",this.props.match.params.id);
    window.localStorage.setItem("metaData",JSON.stringify(metaData));
    window.localStorage.setItem("workflow","create");
+   window.localStorage.setItem("ack",this.props.match.params.ack);
+   
 
    var PGRequest= {
          "billNumber": res.serviceReq.serviceRequestId,

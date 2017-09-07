@@ -1223,7 +1223,7 @@ class Report extends Component {
         //self.generateReceipt(res);
         localStorage.setItem("response", JSON.stringify(res));
         self.props.setLoadingStatus("hide");
-        self.makePayment();
+        self.makePayment(res);
       }, function(err){
         self.props.setLoadingStatus("hide");
         self.props.toggleSnackbarAndSetText(true, err.message, false, true);

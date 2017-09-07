@@ -779,7 +779,7 @@ class Report extends Component {
                                       <tr>
                                           <td colSpan={3} style={{textAlign:"left"}}>
                                             Service Request Number : {self.state.Receipt[0].Bill[0].billDetails[0].consumerCode}<br/>
-                                            Applicant Name : {self.state.Receipt[0].Bill[0].payeeName}<br/>
+                                            Applicant Name : {JSON.parse(localStorage.userRequest).name || self.state.Receipt[0].Bill[0].payeeName}<br/>
                                             Amount : {self.state.Receipt[0].Bill[0].billDetails[0].totalAmount ? ("Rs." + self.state.Receipt[0].Bill[0].billDetails[0].totalAmount + "/-") : "NA"}<br/>
                                           </td>
                                       </tr>

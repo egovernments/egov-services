@@ -136,6 +136,7 @@ public class DocumentTypeRepository {
 			documentType.setTenantId(getString(row.get("tenantid")));
 			documentType.setName(getString(row.get("name")));
 			documentType.setEnabled(getBoolean(row.get("enabled")));
+			documentType.setMandatory(getBoolean(row.get("mandatory")));
 			documentType.setApplicationType(ApplicationTypeEnum.fromValue(getString(row.get("applicationType"))));
 			AuditDetails auditDetails = new AuditDetails();
 			auditDetails.setCreatedBy(getString(row.get("createdby")));

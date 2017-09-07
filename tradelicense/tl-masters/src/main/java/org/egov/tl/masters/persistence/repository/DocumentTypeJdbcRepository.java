@@ -71,6 +71,7 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 			entity.setTenantId(getString(row.get("tenantid")));
 			entity.setName(getString(row.get("name")));
 			entity.setEnabled(getBoolean(row.get("enabled")));
+			entity.setMandatory(getBoolean(row.get("mandatory")));
 			entity.setApplicationType(getString(row.get("applicationType")));
 			entity.setCategoryId(getLong(row.get("categoryId")));
 			entity.setSubCategoryId(getLong(row.get("subCategoryId")));

@@ -362,10 +362,15 @@ public class AssetValidator {
 
         final boolean assetIdsCheck = assetIds != null && !assetIds.isEmpty();
 
+        final boolean fromAndToDateCheck = fromDate != null && toDate != null;
+
+        log.debug("From and To Date Check :: " + fromAndToDateCheck);
+
         final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         final Calendar cal = Calendar.getInstance();
 
-        final boolean finYearCheck = validateFinYearFromDateAndToDate(fromDate, toDate, finacialYear, sdf, cal);
+        final boolean finYearCheck = validateFinYearFromDateAndToDate(fromDate, toDate, finacialYear, sdf, cal,
+                fromAndToDateCheck);
 
         log.debug("Financial Year Check :: " + finYearCheck);
 
@@ -382,7 +387,10 @@ public class AssetValidator {
         if (fromDate == null && toDate != null)
             throw new RuntimeException("Please select either financial year or from date in conjunction with to date.");
 
-        if (finacialYear == null && fromDate != null && toDate != null && !assetIdsCheck)
+        if (fromAndToDateCheck && toDate < fromDate)
+            throw new RuntimeException("To Date should not be less than From Date.");
+
+        if (finacialYear == null && fromAndToDateCheck && !assetIdsCheck)
             throw new RuntimeException("Asset IDs are mandatory for custom time period.");
 
         if (finYearCheck && !assetIdsCheck)
@@ -402,7 +410,7 @@ public class AssetValidator {
 
         }
 
-        if (finacialYear == null && fromDate != null && toDate != null && assetIdsCheck)
+        if (finacialYear == null && fromAndToDateCheck && assetIdsCheck)
             assetCriteria = AssetCriteria.builder().id(new ArrayList<Long>(assetIds)).status(status)
                     .fromCapitalizedValue(depreciationMinimumValue).tenantId(tenantId).fromDate(fromDate).toDate(toDate)
                     .build();
@@ -421,24 +429,29 @@ public class AssetValidator {
             for (final Asset asset : assets) {
                 final String assetName = asset.getName();
                 final AssetCategory assetCategory = asset.getAssetCategory();
-                final boolean assetCategoryForLand = validateAssetCategoryForLand(assetCategory.getAssetCategoryType());
-                if (assetCategoryForLand)
+                final String assetCategoryName = assetCategory.getName();
+
+                if (validateAssetCategoryForLand(assetCategory.getAssetCategoryType()))
                     throw new RuntimeException("Asset category type is LAND for asset :: " + assetName);
+
                 if (assetCategory.getAccumulatedDepreciationAccount() == null)
                     throw new RuntimeException(
                             "Accumulated Depreciation Account should be present for voucher generation for asset :: "
-                                    + assetName + " for asset Category :: " + assetCategory.getName());
+                                    + assetName + " for asset Category :: " + assetCategoryName);
+
                 if (assetCategory.getDepreciationExpenseAccount() == null)
                     throw new RuntimeException(
                             "Depreciation Expense Account should be present for voucher generation for asset :: "
-                                    + assetName + " for asset Category :: " + assetCategory.getName());
+                                    + assetName + " for asset Category :: " + assetCategoryName);
             }
+        else
+            throw new RuntimeException("There is no Asset For Depreciation.");
 
     }
 
     private boolean validateFinYearFromDateAndToDate(final Long fromDate, final Long toDate, final String finacialYear,
-            final SimpleDateFormat sdf, final Calendar cal) {
-        if (finacialYear != null && fromDate != null && toDate != null) {
+            final SimpleDateFormat sdf, final Calendar cal, final boolean fromAndToDateCheck) {
+        if (finacialYear != null && fromAndToDateCheck) {
             final int[] yearRange = Stream.of(finacialYear.split("-")).mapToInt(Integer::parseInt).toArray();
             try {
                 final Date finYearStart = getFinancialYearStartDate(sdf, yearRange);

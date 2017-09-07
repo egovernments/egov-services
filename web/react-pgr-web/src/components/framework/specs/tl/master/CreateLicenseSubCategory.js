@@ -1,6 +1,6 @@
 var dat = {
 	"tl.create": {
-		"numCols": 12/2,
+		"numCols": 12/3,
 		"url": "/tl-masters/category/v1/_create",
 		"useTimestamp": true,
 		"tenantIdRequired": true,
@@ -231,7 +231,7 @@ var dat = {
   },
 
   "tl.view": {
-    "numCols": 12/2,
+    "numCols": 12/3,
     "url": "/tl-masters/category/v1/_search?ids={id}",
     "tenantIdRequired": true,
     "useTimestamp": true,
@@ -305,7 +305,7 @@ var dat = {
 				"label": "tl.create.groups.subcategorytype.details",
 				"name": "createDetails",
 				"jsonPath": "categories[0].details",
-				"multiple":true,
+				"multiple": true,
 				"fields": [
 					{
 						"name": "createFeeType",
@@ -370,27 +370,15 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
-          },
-					{
-						"name": "createTenantID",
-						"jsonPath": "categories[0].details[0].tenantId",
-						"label": "tenantId",
-						"pattern": "",
-						"type": "text",
-						"isRequired": true,
-						"isDisabled": false,
-						"requiredErrMsg": "",
-						"patternErrMsg": "",
-						"defaultValue": localStorage.getItem("tenantId"),
-						"hide": "true"
-					}
+          }
+
 					]
 				}
     ]
   },
 
   "tl.update": {
-		"numCols": 12/2,
+		"numCols": 12/3,
 		"searchUrl": "/tl-masters/category/v1/_search?ids={id}",
 		"url":"/tl-masters/category/v1/_update",
 		"isResponseArray":true,
@@ -465,7 +453,7 @@ var dat = {
 						"jsonPath": "type",
 						"label": "subcategorytype",
 						"pattern": "",
-						"type": "",
+						"type": "text",
 						"url": "",
 						"isRequired": true,
 						"isDisabled": false,

@@ -1,6 +1,6 @@
 var dat = {
 	"tl.create": {
-		"numCols": 12/2,
+		"numCols": 12/3,
 		"url": "/tl-masters/documenttype/v2/_create",
 		"useTimestamp": true,
 		"tenantIdRequired": true,
@@ -9,6 +9,7 @@ var dat = {
 			{
 				"label": "tl.create.groups.licensedocumenttype.title",
 				"name": "createLicenseDocumentType",
+				"jsonPath": "documentTypes",
 				"fields": [
 						{
 							"name": "licenseapptype",
@@ -67,6 +68,7 @@ var dat = {
 
 				"name": "licensedocument",
 				"multiple":true,
+				"jsonPath": "documentTypes",
 				"fields": [
 					{
 						"name": "name",
@@ -197,7 +199,7 @@ var dat = {
 			}
 	},
 	"tl.view": {
-		"numCols": 12/2,
+		"numCols": 12/3,
 		"url": "/tl-masters/documenttype/v2/_search?ids={id}",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
@@ -307,7 +309,7 @@ var dat = {
 		]
 	},
 	"tl.update": {
-		"numCols": 12/2,
+		"numCols": 12/3,
 		"searchUrl": "/tl-masters/documenttype/v2/_search?ids={id}",
 		"url": "/tl-masters/documenttype/v2/_update",
 		"isResponseArray":true,

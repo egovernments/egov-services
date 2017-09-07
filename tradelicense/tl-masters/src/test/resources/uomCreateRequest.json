@@ -14,7 +14,7 @@
          {  
             "tenantId":"default",
             "name":"HP Motor",
-            "code":"HP Motor",
+            "code":"HPMotor",
             "active": null,
             "auditDetails" : {
             	"createdBy": null,

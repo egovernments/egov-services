@@ -11,7 +11,7 @@ public class BankAccountContractRepository {
 
     private RestTemplate restTemplate;
     private String hostUrl;
-    public static final String SEARCH_URL = "/egf-masters/bankaccounts/_search?";
+    public static final String SEARCH_URL = "/egf-master/bankaccounts/_search?";
 
     public BankAccountContractRepository(@Value("${egf.master.host.url}") String hostUrl, RestTemplate restTemplate) {
         this.restTemplate = restTemplate;

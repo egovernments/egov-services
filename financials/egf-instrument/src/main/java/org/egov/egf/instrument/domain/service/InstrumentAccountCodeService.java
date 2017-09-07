@@ -10,6 +10,7 @@ import org.egov.common.domain.model.Pagination;
 import org.egov.egf.instrument.domain.model.InstrumentAccountCode;
 import org.egov.egf.instrument.domain.model.InstrumentAccountCodeSearch;
 import org.egov.egf.instrument.domain.model.InstrumentType;
+import org.egov.egf.instrument.domain.model.InstrumentTypeSearch;
 import org.egov.egf.instrument.domain.repository.InstrumentAccountCodeRepository;
 import org.egov.egf.instrument.domain.repository.InstrumentTypeRepository;
 import org.egov.egf.master.web.contract.ChartOfAccountContract;
@@ -134,8 +135,8 @@ public class InstrumentAccountCodeService {
                 }
 				for (InstrumentAccountCode instrumentAccountCode : instrumentaccountcodes) {
 					validator.validate(instrumentAccountCode, errors);
-					if (!instrumentAccountCodeRepository.uniqueCheck("AccountCode", instrumentAccountCode)) {
-                        errors.addError(new FieldError("instrumentAccountCode", "AccountCode", instrumentAccountCode.getAccountCode(), false,
+					if (!instrumentAccountCodeRepository.uniqueCheck("instrumentTypeId", instrumentAccountCode)) {
+                        errors.addError(new FieldError("instrumentAccountCode", "instrumentType", instrumentAccountCode.getInstrumentType(), false,
                                 new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
                     }
 				}
@@ -149,8 +150,8 @@ public class InstrumentAccountCodeService {
                         throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), instrumentAccountCode.getId());
                     }
 					validator.validate(instrumentAccountCode, errors);
-					if (!instrumentAccountCodeRepository.uniqueCheck("AccountCode", instrumentAccountCode)) {
-                        errors.addError(new FieldError("instrumentAccountCode", "AccountCode", instrumentAccountCode.getAccountCode(), false,
+					if (!instrumentAccountCodeRepository.uniqueCheck("instrumentTypeId", instrumentAccountCode)) {
+                        errors.addError(new FieldError("instrumentAccountCode", "instrumentType", instrumentAccountCode.getInstrumentType(), false,
                                 new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
                     }
 				}
@@ -180,28 +181,28 @@ public class InstrumentAccountCodeService {
 			for (InstrumentAccountCode instrumentAccountCode : instrumentaccountcodes) {
 
 				// fetch related items
-				if (instrumentAccountCode.getInstrumentType() != null
-						&& instrumentAccountCode.getInstrumentType().getName() != null) {
+				
+				if (instrumentAccountCode.getInstrumentType() != null && instrumentAccountCode.getInstrumentType().getName() != null) {
+					InstrumentTypeSearch instrumentTypeSearch = new InstrumentTypeSearch();
+					instrumentTypeSearch.setName(instrumentAccountCode.getInstrumentType().getName());
+					instrumentTypeSearch.setTenantId(instrumentAccountCode.getInstrumentType().getTenantId());
+					Pagination<InstrumentType> response = instrumentTypeRepository.search(instrumentTypeSearch);
+					if (response == null || response.getPagedData() == null || response.getPagedData().isEmpty()) {
+                        throw new InvalidDataException("instrumentTypeSearchResult", ErrorCode.INVALID_REF_VALUE.getCode(), null);
 
-					InstrumentType instrumentType = instrumentTypeRepository
-							.findById(instrumentAccountCode.getInstrumentType());
-
-					if (instrumentType == null) {
-						throw new InvalidDataException("instrumentType", "instrumentType.invalid",
-								" Invalid instrumentType");
 					}
-
-					instrumentAccountCode.setInstrumentType(instrumentType);
-
+					instrumentAccountCode.setInstrumentType(response.getPagedData().get(0));
 				}
+				
 				if (instrumentAccountCode.getAccountCode() != null
 						&& instrumentAccountCode.getAccountCode().getGlcode() != null) {
 
+					instrumentAccountCode.getAccountCode().setTenantId(instrumentAccountCode.getTenantId());
 					ChartOfAccountContract accountCode = chartOfAccountContractRepository
 							.findByGlcode(instrumentAccountCode.getAccountCode());
 
 					if (accountCode == null) {
-						throw new InvalidDataException("accountCode", "accountCode.invalid", " Invalid accountCode");
+                        throw new InvalidDataException("accountCode", ErrorCode.INVALID_REF_VALUE.getCode(), null);
 					}
 
 					instrumentAccountCode.setAccountCode(accountCode);

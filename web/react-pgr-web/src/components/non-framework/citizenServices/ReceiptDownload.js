@@ -456,7 +456,7 @@ class ReceiptDownload extends Component {
 			                                                <br/>
 			                                                <div style={{textAlign:"right"}}>
 			                                                      Date / दिनांक :{Receipt[0].Bill[0].billDetails[0].billDate ? getFullDate(Receipt[0].Bill[0].billDetails[0].billDate, true) : (Receipt[0].Bill[0].billDetails[0].receiptDate ? getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate, true) : "-")} <br/>
-			                                                      Certificate No. / प्रमाणपत्र क्रं : {this.props.match.params.sid}
+			                                                      Certificate No. / प्रमाणपत्र क्रं : {this.props.match.params.sid.replace("SRN", "CERT")}
 
 			                                                </div>
 			                                                <br/>

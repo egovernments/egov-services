@@ -51,6 +51,7 @@ import org.egov.collection.web.contract.*;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
 import org.egov.common.contract.request.User;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -239,41 +240,20 @@ public class ReceiptService {
                     instrument.setTransactionType(TransactionType.Debit);
                     instrument.setTenantId(tenantId);
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-                            "dd-MM-yyyy");
-                    if (instrument
-                            .getInstrumentType()
-                            .getName()
-                            .equalsIgnoreCase(
-                                    CollectionServiceConstants.INSTRUMENT_TYPE_CASH)) {
+                            "dd/MM/yyyy");
+                    if (instrument.getInstrumentType().getName()
+                            .equalsIgnoreCase(CollectionServiceConstants.INSTRUMENT_TYPE_CASH) || (instrument
+                            .getInstrumentType().getName().equalsIgnoreCase(CollectionServiceConstants.INSTRUMENT_TYPE_ONLINE)
+                            && user.getRoles() != null && roleList.stream().anyMatch(role -> CollectionServiceConstants.COLLECTION_ONLINE_RECEIPT_ROLE
+                            .contains(role.getName())))) {
                         String transactionDate = simpleDateFormat
                                 .format(new Date());
                         instrument.setTransactionDate(simpleDateFormat
                                 .parse(transactionDate));
                         instrument.setTransactionNumber(transactionId);
-                    } else if (instrument
-                            .getInstrumentType()
-                            .getName()
-                            .equalsIgnoreCase(
-                                    CollectionServiceConstants.INSTRUMENT_TYPE_ONLINE)
-                            && user.getRoles() != null && roleList
-                                    .stream()
-                                    .anyMatch(
-                                            role -> CollectionServiceConstants.COLLECTION_ONLINE_RECEIPT_ROLE
-                                                    .contains(role.getName()))) {
-
-                        String transactionDate = simpleDateFormat
-                                .format(new Date());
-                        instrument.setTransactionDate(simpleDateFormat
-                                .parse(transactionDate));
-                        instrument.setTransactionNumber(transactionId);
-
                     } else {
-                        String transactionDate = simpleDateFormat
-                                .format(new Date(instrument
-                                        .getTransactionDateInput()));
-                        instrument.setTransactionDate(simpleDateFormat
-                                .parse(transactionDate));
-
+                        DateTime transactionDate = new DateTime(instrument.getTransactionDateInput());
+                        instrument.setTransactionDate(simpleDateFormat.parse(transactionDate.toString("dd/MM/yyyy")));
                     }
                     createdInstrument = instrumentRepository.createInstrument(
                             requestInfo, instrument);
@@ -315,17 +295,16 @@ public class ReceiptService {
                     billDetail.setReceiptDate(new Date().getTime());
                     billDetail.setManualReceiptNumber("");
                 }
-                String receiptNumber;
-                try {
-                    receiptNumber = idGenRepository
-                            .generateReceiptNumber(requestInfo, tenantId);
-                } catch (Exception e) {
-                    throw new CustomException(
-                            Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR
-                                    .toString()),
-                            CollectionServiceConstants.DUPLICATE_RCPT_EXCEPTION_MSG,
-                            CollectionServiceConstants.DUPLICATE_RCPT_EXCEPTION_DESC);
+                String receiptNumber = idGenRepository.generateReceiptNumber(requestInfo, tenantId);
+                try{
+                    validateReceiptNumber(receiptNumber, tenantId, requestInfo);
+                }catch(CustomException e){
+                    LOGGER.error("Duplicate Receipt: ", e);
+                    e.printStackTrace();
+                    throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
+                            CollectionServiceConstants.DUPLICATE_RCPT_EXCEPTION_MSG, CollectionServiceConstants.DUPLICATE_RCPT_EXCEPTION_DESC);
                 }
+
                 if (instrument
                         .getInstrumentType()
                         .getName()

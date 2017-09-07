@@ -639,7 +639,7 @@ class Dashboard extends Component {
       this.props.setRoute(`/receipt/watercharge/nodues/${encodeURIComponent(item.consumerCode)}/${encodeURIComponent(item.serviceRequestId)}`);
     } else if(item.serviceCode == "PT_NODUES" && item.status == "No Dues Generated") {
       this.props.setRoute(`/receipt/propertytax/nodues/${encodeURIComponent(item.consumerCode)}/${encodeURIComponent(item.serviceRequestId)}`);
-    } else if(item.serviceCode == "PT_EXTRACT" && item.status == "No Dues Generated") {
+    } else if(item.serviceCode == "PT_EXTRACT" && item.status == "Extract Generated") {
       this.props.setRoute(`/receipt/extract/nodues/${encodeURIComponent(item.consumerCode)}/${encodeURIComponent(item.serviceRequestId)}`);
     } else if(item.serviceCode == "PT_PAYTAX" && item.status == "No Dues Generated") {
       this.props.setRoute(`/receipt/propertytax/paytax/${encodeURIComponent(item.consumerCode)}/${encodeURIComponent(item.serviceRequestId)}`);

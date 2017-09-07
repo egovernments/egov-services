@@ -495,6 +495,7 @@ public class PropertyRepository {
 		Long revenueBoundaryId = null;
 		Long locationBoundaryId = null;
 		Long adminBoundaryId = null;
+		Long guidanceBoundaryId=null;
 		if (boundary.getRevenueBoundary() != null) {
 			revenueBoundaryId = boundary.getRevenueBoundary().getId();
 		}
@@ -504,12 +505,15 @@ public class PropertyRepository {
 		if (boundary.getAdminBoundary() != null) {
 			adminBoundaryId = boundary.getAdminBoundary().getId();
 		}
+		if (boundary.getGuidanceValueBoundary() != null) {
+			guidanceBoundaryId = boundary.getGuidanceValueBoundary();
+		}
 
 		Object[] boundaryArgs = { revenueBoundaryId, locationBoundaryId, adminBoundaryId, boundary.getNorthBoundedBy(),
 				boundary.getEastBoundedBy(), boundary.getWestBoundedBy(), boundary.getSouthBoundedBy(),
 				boundary.getAuditDetails().getCreatedBy(), boundary.getAuditDetails().getLastModifiedBy(),
 				boundary.getAuditDetails().getCreatedTime(), boundary.getAuditDetails().getLastModifiedTime(),
-				propertyId };
+				propertyId,guidanceBoundaryId };
 
 		jdbcTemplate.update(BoundaryBuilder.INSERT_BOUNDARY_QUERY, boundaryArgs);
 
@@ -1215,6 +1219,7 @@ public class PropertyRepository {
 		Long revenueBoundaryId = null;
 		Long locationBoundaryId = null;
 		Long adminBoundaryId = null;
+		Long guidanceBoundaryId=null;
 		if (boundary.getRevenueBoundary() != null) {
 			revenueBoundaryId = boundary.getRevenueBoundary().getId();
 		}
@@ -1224,12 +1229,15 @@ public class PropertyRepository {
 		if (boundary.getAdminBoundary() != null) {
 			adminBoundaryId = boundary.getAdminBoundary().getId();
 		}
+		if (boundary.getGuidanceValueBoundary() != null) {
+			guidanceBoundaryId = boundary.getGuidanceValueBoundary();
+		}
 
 		Object[] boundaryArgs = { revenueBoundaryId, locationBoundaryId, adminBoundaryId,
 				getString(boundary.getNorthBoundedBy()), getString(boundary.getEastBoundedBy()),
 				getString(boundary.getWestBoundedBy()), getString(boundary.getSouthBoundedBy()),
 				boundary.getAuditDetails().getLastModifiedBy(), boundary.getAuditDetails().getLastModifiedTime(),
-				propertId, boundary.getId() };
+				propertId,guidanceBoundaryId, boundary.getId() };
 
 		jdbcTemplate.update(boundaryUpdate, boundaryArgs);
 

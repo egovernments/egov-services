@@ -343,26 +343,6 @@ public class WaterConnectionQueryBuilder {
             preparedStatementValues.add(waterConnectionGetReq.getManualConsumerNumber());
         }
 
-        /*
-         * if (null != waterConnectionGetReq.getAsgineeId()) { isAppendAndClause = true; selectQuery.append(
-         * " connection.legacyconsumernumber = ?"); preparedStatementValues.add(waterConnectionGetReq.getAsgineeId()); }
-         */
-        /*
-         * if (null != waterConnectionGetReq.getName()) { isAppendAndClause = true; selectQuery.append(
-         * " connection.legacyconsumernumber = ?"); preparedStatementValues.add(waterConnectionGetReq.getName()); }
-         */
-
-        /*
-         * if (null != waterConnectionGetReq.getMobileNumber()) { isAppendAndClause = true; selectQuery.append(
-         * " connection.legacyconsumernumber = ?"); preparedStatementValues.add(waterConnectionGetReq.getMobileNumber()); } if
-         * (null != waterConnectionGetReq.getLocality()) { isAppendAndClause = true; selectQuery.append(
-         * " connection.legacyconsumernumber = ?"); preparedStatementValues.add(waterConnectionGetReq.getLocality()); } if (null
-         * != waterConnectionGetReq.getRevenueWard()) { isAppendAndClause = true; selectQuery.append(
-         * " connection.legacyconsumernumber = ?"); preparedStatementValues.add(waterConnectionGetReq.getRevenueWard()); } if
-         * (null != waterConnectionGetReq.getDoorNumber()) { isAppendAndClause = true; selectQuery.append(
-         * " connection.legacyconsumernumber = ?"); preparedStatementValues.add(waterConnectionGetReq.getDoorNumber()); }
-         */
-
         if (null != waterConnectionGetReq.getId()) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" connection.id IN " + getIdQuery(waterConnectionGetReq.getId()));
@@ -384,12 +364,6 @@ public class WaterConnectionQueryBuilder {
         	isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
         	selectQuery.append(" connection.propertyidentifier IN ('') ");
         }
-        
-        /*
-         * if (serviceGroupRequest.getName() != null) { isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
-         * selectQuery); selectQuery.append(" name = ?"); preparedStatementValues.add(serviceGroupRequest.getName()); }
-         */
-
     }
     
     @SuppressWarnings({ "unchecked", "rawtypes" })

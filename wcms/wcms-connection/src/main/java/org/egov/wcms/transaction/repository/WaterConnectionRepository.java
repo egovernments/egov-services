@@ -50,7 +50,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.wcms.transaction.config.ConfigurationManager;
 import org.egov.wcms.transaction.model.Connection;
 import org.egov.wcms.transaction.model.DocumentOwner;
 import org.egov.wcms.transaction.model.EstimationCharge;
@@ -90,9 +89,6 @@ public class WaterConnectionRepository {
 
     @Autowired
     private WaterConnectionQueryBuilder waterConnectionQueryBuilder;
-    
-    @Autowired
-    private ConfigurationManager configurationManager;
     
     public WaterConnectionReq persistConnection(final WaterConnectionReq waterConnectionRequest) {
 

@@ -44,8 +44,10 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.wcms.transaction.config.ConfigurationManager;
 import org.egov.wcms.transaction.demand.contract.Demand;
 import org.egov.wcms.transaction.demand.contract.DemandDetail;
 import org.egov.wcms.transaction.demand.contract.PeriodCycle;
@@ -56,14 +58,18 @@ import org.egov.wcms.transaction.model.DemandDetailBean;
 import org.egov.wcms.transaction.service.DemandConnectionService;
 import org.egov.wcms.transaction.service.WaterConnectionService;
 import org.egov.wcms.transaction.util.WcmsConnectionConstants;
+import org.egov.wcms.transaction.validator.RestConnectionService;
 import org.egov.wcms.transaction.web.contract.DemandBeanGetRequest;
 import org.egov.wcms.transaction.web.contract.DemandDetailBeanReq;
 import org.egov.wcms.transaction.web.contract.DemandDetailBeanRes;
 import org.egov.wcms.transaction.web.contract.RequestInfoWrapper;
+import org.egov.wcms.transaction.web.contract.WaterChargesConfigRes;
 import org.egov.wcms.transaction.web.contract.factory.ResponseInfoFactory;
 import org.egov.wcms.transaction.web.errorhandler.Error;
 import org.egov.wcms.transaction.web.errorhandler.ErrorHandler;
 import org.egov.wcms.transaction.web.errorhandler.ErrorResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -81,6 +87,7 @@ public class DemandConnectionController {
 
     @Autowired
     private ResponseInfoFactory responseInfoFactory;
+    
     @Autowired
     private ErrorHandler errHandler;
 
@@ -89,6 +96,14 @@ public class DemandConnectionController {
 
     @Autowired
     private WaterConnectionService waterConnectionService;
+    
+    @Autowired
+    private RestConnectionService restConnectionService;
+    
+    @Autowired
+    private ConfigurationManager configurationManager;
+    
+    public static final Logger logger = LoggerFactory.getLogger(DemandConnectionController.class);
 
     @PostMapping(value = "/getLegacyDemandDetailBeanListByExecutionDate")
     @ResponseBody
@@ -96,6 +111,12 @@ public class DemandConnectionController {
             @ModelAttribute @Valid final DemandBeanGetRequest demandBeanGetRequest,
             final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper) {
         final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+        PeriodCycle periodCycle; 
+        if(StringUtils.isNotBlank(demandBeanGetRequest.getPeriodCycle())) { 
+        	periodCycle = getWaterChargeConfigValues(demandBeanGetRequest.getTenantId(), demandBeanGetRequest.getPeriodCycle()); 
+        } else { 
+        	periodCycle = getWaterChargeConfigValues(demandBeanGetRequest.getTenantId(), configurationManager.getPeriodCycleDefaultKeyName());
+        }
         final List<DemandDetailBean> dmdDetailBeanList = new ArrayList<>();
         if (demandBeanGetRequest != null &&
                 demandBeanGetRequest.getConsumerNumber() != null) {
@@ -108,7 +129,7 @@ public class DemandConnectionController {
                 errorResponse.setError(error);
             } else {
                 final TaxPeriodResponse taxperiodres = demandConnectionService.getTaxPeriodByPeriodCycleAndService(
-                        demandBeanGetRequest.getTenantId(), PeriodCycle.ANNUAL,
+                        demandBeanGetRequest.getTenantId(), periodCycle,
                         waterConn.getExecutionDate());
                 final List<TaxPeriod> taxPeriodList = taxperiodres.getTaxPeriods();
                 DemandDetailBean dmdDtl = null;
@@ -220,5 +241,29 @@ public class DemandConnectionController {
         return new ResponseEntity<>(demandDetailBean, HttpStatus.OK);
 
     }
+    
+    public PeriodCycle getWaterChargeConfigValues(String tenantId, String periodCycle) {
+        WaterChargesConfigRes waterChargesConfigRes = null;
+        waterChargesConfigRes = restConnectionService.getWaterChargesConfig(
+                         periodCycle,
+                         tenantId);
+        if(null != waterChargesConfigRes && null != waterChargesConfigRes.getWaterConfigurationValue()) { 
+     	   logger.info("Period Cycle Configuration obtained : " + waterChargesConfigRes);
+     	   if(waterChargesConfigRes.getWaterConfigurationValue().size() > 0) { 
+     		   periodCycle = waterChargesConfigRes.getWaterConfigurationValue().get(0).getValue();   
+     	   }
+        }
+        if(periodCycle.equals(PeriodCycle.ANNUAL.toString())) { 
+     	   return PeriodCycle.ANNUAL; 
+        } else if(periodCycle.equals(PeriodCycle.HALFYEAR.toString())) { 
+     	   return PeriodCycle.HALFYEAR; 
+        } else if(periodCycle.equals(PeriodCycle.MONTH.toString())) { 
+     	   return PeriodCycle.MONTH; 
+        } else if(periodCycle.equals(PeriodCycle.QUARTER.toString())) { 
+     	   return PeriodCycle.QUARTER; 
+        } else { 
+     	   return PeriodCycle.ANNUAL; 
+        }
+     }
 
 }

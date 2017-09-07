@@ -91,9 +91,6 @@ public class ConfigurationManager {
     @Value("${egov.services.wcms_masters_pipesize.searchpath}")
     private String waterMasterServicePipesizeSearchPathTopic;
 
-    @Value("${egov.services.wcms_masters_categoryType.searchpath}")
-    private String waterMasterServiceCategorySearchPathTopic;
-
     @Value("${egov.services.wcms_masters_donation.searchpath}")
     private String waterMasterServiceDonationSearchPathTopic;
 
@@ -152,15 +149,6 @@ public class ConfigurationManager {
     @Value("${egov.services.finance_service.searchpath}")
     private String financeServiceSearchPath; 
     
-    @Value("${egov.services.wcms_masters_propertyCategory.searchpath}")
-    private String waterMasterPropCategoryMappingTopic;
-    
-    @Value("${egov.services.wcms_masters_propertyPipeSize.searchpath}")
-    private String waterMasterPropPipeSizeMappingTopic;
-   
-    @Value("${egov.services.wcms_masters_propertyUsageType.searchpath}")
-    private String waterMasterPropUsageTypeMappingTopic;
-    
     @Value("${egov.services.demandbill_service.hostname}")
     private String billingDemandServiceHostNameTopic;
     
@@ -194,9 +182,6 @@ public class ConfigurationManager {
     @Value("${egov.services.demandbill_service.taxheadperiod}")
     private String taxHeadMasterNameTopic;
     
-    @Value("${egov.services.pt_property_subusagetype.searchpath}")
-    private String serachSubUsageType;
-
     @Value("${estimation.notice.placeholders}")
     private String estimationNoticePlaceHolders;
     

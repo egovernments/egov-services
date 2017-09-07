@@ -208,15 +208,6 @@ public class ConnectionValidator {
         	}
 
         }
-        /*else if (waterConnectionRequest.getConnection().getProperty()!=null && 
-                waterConnectionRequest.getConnection().getProperty().getPropertyidentifier()==null && 
-                        ("").equals(waterConnectionRequest.getConnection().getProperty().getPropertyidentifier())
-                ) {
-            final ErrorField errorField = ErrorField.builder().code(WcmsConnectionConstants.PROPERTYIDENTIFIER_MANDATORY_CODE)
-                    .message(WcmsConnectionConstants.PROPERTYIDENTIFIER_MANADATORY_ERROR_MESSAGE)
-                    .field(WcmsConnectionConstants.PROPERTYIDENTIFIER_MANADATORY_FIELD_NAME).build();
-            errorFields.add(errorField);
-        } */
 		if (!waterConnectionRequest.getConnection().getIsLegacy()) {
 			if (waterConnectionRequest.getConnection().getDocuments() == null
 					|| waterConnectionRequest.getConnection().getDocuments().isEmpty()) {
@@ -237,11 +228,6 @@ public class ConnectionValidator {
 			}
 		}
 		
-		/*if(null != waterConnectionRequest.getConnection().getWithProperty()
-				&& !waterConnectionRequest.getConnection().getWithProperty()) { 
-			validateConnectionLocationDetails(waterConnectionRequest,errorFields);
-		}*/
-
         if (errorFields.size() > 0)
             return Error.builder().code(HttpStatus.BAD_REQUEST.value())
                     .message(WcmsConnectionConstants.INVALID_REQUEST_MESSAGE)
@@ -291,14 +277,6 @@ public class ConnectionValidator {
 				errorFields.add(errorField);
 			}
 		}
-        /*isRequestValid=restConnectionService.validateSubUsageType(waterConnectionRequest);
-        if (!isRequestValid) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(WcmsConnectionConstants.SUBUSAGETYPE_INVALID_CODE)
-                    .message(WcmsConnectionConstants.SUBUSAGETYPE_INVALID_ERROR_MESSAGE)
-                    .field(WcmsConnectionConstants.SUBUSAGETYPE_INVALID_FIELD_NAME).build();
-            errorFields.add(errorField);
-        }*/
         
         isRequestValid = validateStaticFields(waterConnectionRequest);
         if (!isRequestValid) {
@@ -325,17 +303,6 @@ public class ConnectionValidator {
         return errorFields;
     }
 
-
-    /*
-     * private boolean validateDocumentApplicationType(final WaterConnectionReq waterConnectionRequest) { LOGGER.info(
-     * "Validating Document - Application Mapping"); boolean isDocumentValid = true; int countOfDocs = 0; final List<Long>
-     * mandatoryDocs = documentTypeService.getAllMandatoryDocs(ApplicationType.NEWCONNECTION.toString()); if
-     * (waterConnectionRequest.getConnection().getLegacyConsumerNumber() == null) for (final DocumentOwner documentOwner :
-     * waterConnectionRequest.getConnection().getDocuments()) if (mandatoryDocs.contains(documentOwner.getDocument().getTypeId()))
-     * { countOfDocs++; if (documentOwner.getFileStoreId() == null || documentOwner.getFileStoreId().isEmpty()) { LOGGER.info(
-     * "File Upload FAILED for the document: " + documentOwner.toString()); isDocumentValid = false; return isDocumentValid; } }
-     * if (countOfDocs != mandatoryDocs.size()) isDocumentValid = false; return isDocumentValid; }
-     */
 
     private boolean validateStaticFields(final WaterConnectionReq waterConnectionRequest) {
         LOGGER.info("Validating ConnectionType, BillingType, SupplyType, SourceType");

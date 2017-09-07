@@ -194,7 +194,7 @@ class Report extends Component {
     let self = this;
 
     specifications =typeof(results)=="string" ? JSON.parse(results) : results;
-    let obj = specifications["fn.create"];
+    let obj = specifications[];
     reqRequired = [];
     self.setLabelAndReturnRequired(obj);
     initForm(reqRequired);
@@ -205,7 +205,7 @@ class Report extends Component {
 
     /*if(hashLocation.split("/").indexOf("update") == 1) {
       var url = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].searchUrl.split("?")[0];
-      var id = self.props.match.params.id || self.props.match.params.master;
+      var id = self.props.mat"fn.create"ch.params.id || self.props.match.params.master;
       var query = {
         [specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].searchUrl.split("?")[1].split("=")[0]]: id
       };
@@ -242,6 +242,7 @@ class Report extends Component {
     specifications = require("../../../framework/specs/citizenService/bp/fireNoc").default;
     self.displayUI(specifications);
     if(self.props.match.params.status == "pay") {
+      alert()
       let metaData=JSON.parse(localStorage.getItem("metaData")),paymentGateWayRes=JSON.parse(localStorage.getItem("paymentGateWayResponse"));
       self.props.setLoadingStatus("loading");
       //DO WHATEVER YOU WANT TO DO AFTER PAYMENT & THEN CALL GENERATERECEIPT() FUNCTION
@@ -249,7 +250,7 @@ class Report extends Component {
       if (this.props.match.params.paymentGateWayRes=="success")
       {
         // paymentGateWayRes["status"]="failed";
-        Api.commonApiPost("/citizen-services/v1/pgresponse/_validate", {}, {PGResponse:paymentGateWayRes}, null, metaData["wc.create"].useTimestamp, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
+        Api.commonApiPost("/citizen-services/v1/pgresponse/_validate", {}, {PGResponse:paymentGateWayRes}, null, metaData["fn.create"].useTimestamp, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
             self.props.setLoadingStatus('hide');
             self.generateReceipt(response);
         }, function(err) {

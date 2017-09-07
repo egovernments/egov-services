@@ -115,7 +115,6 @@ specifications = require(`../../../../framework/specs/collection/transaction/col
   }
 
   search = (e) => {
-	alert('veenit bewakoof hai');
     e.preventDefault();
     let self = this;
     self.props.setLoadingStatus('loading');

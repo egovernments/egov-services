@@ -28,7 +28,6 @@ import org.egov.egf.master.web.repository.FinancialStatusContractRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -156,35 +155,53 @@ public class InstrumentService {
 				for (Instrument instrument : instruments) {
 					switch (instrument.getInstrumentType().getName().toLowerCase()) {
 					case "cash":
-						Assert.notNull(instrument.getTransactionNumber(), "Cash Transaction Number must not be null");
+						if(instrument.getTransactionNumber() == null) {
+							throw new InvalidDataException("TransactionNumber(Cash)", ErrorCode.NOT_NULL.getCode(), null);
+						}
 //						Assert.isTrue(DateUtils.isSameDay(instrument.getTransactionDate(), Calendar.getInstance().getTime()), "Cash Transaction Date must be current date");
 //						Assert.notNull(instrument.getPayee(), "Payee Details for Cash Transaction must not be null");
 						break;
 					case "cheque":
-						Assert.notNull(instrument.getTransactionNumber(), "Cheque Transaction Number must not be null");
+						if(instrument.getTransactionNumber() == null) {
+							throw new InvalidDataException("TransactionNumber(Cheque)", ErrorCode.NOT_NULL.getCode(), null);
+						}
 //						Assert.notNull(instrument.getPayee(), "Cheque Payee Details must not be null");
 //						cal1.setTime(instrument.getTransactionDate());
 //						Assert.isTrue(cal1.after(cal), "Cheque Transaction should be before 6 months of current date or a future date");
-						Assert.notNull(instrument.getBank(), "Bank Details of the Cheque must not be null");
+						if(instrument.getBank() == null){
+							throw new InvalidDataException("BankDetails(Cheque)", ErrorCode.NOT_NULL.getCode(), null);
+						}
 						break;
 					case "dd":
-						Assert.notNull(instrument.getTransactionNumber(), "DD Transaction Number must not be null");
+						if(instrument.getTransactionNumber() == null) {
+							throw new InvalidDataException("TransactionNumber(DD)", ErrorCode.NOT_NULL.getCode(), null);
+						}
 						cal1.setTime(instrument.getTransactionDate());
 //						Assert.isTrue(cal1.after(cal), "DD Transaction should be before 6 months of current date or a future date");
 //						Assert.notNull(instrument.getPayee(), "DD Payee Details must not be null");
-						Assert.notNull(instrument.getBank(), "Bank Details of the DD must not be null");
+						if(instrument.getBank() == null){
+							throw new InvalidDataException("BankDetails(DD)", ErrorCode.NOT_NULL.getCode(), null);
+						}
 						break;
 					case "online":
-						Assert.notNull(instrument.getTransactionNumber(), "Online Transaction Number must not be null");
+						if(instrument.getTransactionNumber() == null) {
+							throw new InvalidDataException("TransactionNumber(Online)", ErrorCode.NOT_NULL.getCode(), null);
+						}
 //						Assert.notNull(instrument.getPayee(), "Online Payee Details must not be null");
 //						cal1.setTime(instrument.getTransactionDate());
 //						Assert.isTrue(cal1.after(cal), "DD Transaction should be before 6 months of current date or a future date");
 						break;
 					case "bankchallan":
-						Assert.notNull(instrument.getTransactionNumber(), "Bank Challan Transaction Number must not be null");
+						if(instrument.getTransactionNumber() == null) {
+							throw new InvalidDataException("TransactionNumber(BankChallan)", ErrorCode.NOT_NULL.getCode(), null);
+						}
+						if(instrument.getBank() == null){
+							throw new InvalidDataException("BankDetails(BankChallan)", ErrorCode.NOT_NULL.getCode(), null);
+						}
+						if(instrument.getBankAccount() == null){
+							throw new InvalidDataException("BankAccountDetails(BankChallan)", ErrorCode.NOT_NULL.getCode(), null);
+						}
 //						Assert.notNull(instrument.getPayee(), "Bank Challan Payee Details must not be null");
-						Assert.notNull(instrument.getBank(), "Bank Challan must contain Bank Details");
-						Assert.notNull(instrument.getBankAccount(), "Bank Challan must contain Bank Account Details");
 //						cal1.setTime(instrument.getTransactionDate());
 //						Assert.isTrue(cal1.after(cal), "DD Transaction should be before 6 months of current date or a future date");
 						break;

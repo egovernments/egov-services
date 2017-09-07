@@ -1,10 +1,7 @@
 package org.egov.egf.bill.domain.repository;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.model.Pagination;
@@ -13,8 +10,8 @@ import org.egov.egf.bill.domain.model.BillRegisterSearch;
 import org.egov.egf.bill.persistence.entity.BillRegisterEntity;
 import org.egov.egf.bill.persistence.queue.repository.BillRegisterQueueRepository;
 import org.egov.egf.bill.persistence.repository.BillRegisterJdbcRepository;
-import org.egov.egf.bill.web.contract.BillRegisterContract;
 import org.egov.egf.bill.web.contract.BillRegisterSearchContract;
+import org.egov.egf.bill.web.mapper.BillRegisterMapper;
 import org.egov.egf.bill.web.requests.BillRegisterRequest;
 import org.egov.egf.master.web.repository.FinancialConfigurationContractRepository;
 import org.modelmapper.ModelMapper;
@@ -49,11 +46,9 @@ public class BillRegisterRepository {
 	}
 
 	@Transactional
-	public List<BillRegister> save(List<BillRegister> billregisters, RequestInfo requestInfo) {
+	public List<BillRegister> save(List<BillRegister> billRegisters, RequestInfo requestInfo) {
 
-		ModelMapper mapper = new ModelMapper();
-		BillRegisterContract contract;
-		Map<String, Object> message = new HashMap<>();
+		BillRegisterMapper mapper = new BillRegisterMapper();
 
 		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
 				&& persistThroughKafka.equalsIgnoreCase("yes")) {
@@ -62,88 +57,88 @@ public class BillRegisterRepository {
 			request.setRequestInfo(requestInfo);
 			request.setBillRegisters(new ArrayList<>());
 
-			for (BillRegister f : billregisters) {
+			for (BillRegister iac : billRegisters) {
 
-				contract = new BillRegisterContract();
-				contract.setCreatedDate(new Date());
-				mapper.map(f, contract);
-				request.getBillRegisters().add(contract);
+				request.getBillRegisters().add(mapper.toContract(iac));
 
 			}
-			message.put("billRegister_create", request);
-			billRegisterQueueRepository.add(message);
 
-			return billregisters;
+			billRegisterQueueRepository.addToQue(request);
+
+			return billRegisters;
 		} else {
 
 			List<BillRegister> resultList = new ArrayList<BillRegister>();
 
-			for (BillRegister f : billregisters) {
+			for (BillRegister iac : billRegisters) {
 
-				resultList.add(save(f));
+				resultList.add(save(iac));
 			}
 
 			BillRegisterRequest request = new BillRegisterRequest();
 			request.setRequestInfo(requestInfo);
 			request.setBillRegisters(new ArrayList<>());
 
-			for (BillRegister f : resultList) {
+			for (BillRegister iac : resultList) {
 
-				contract = new BillRegisterContract();
-				contract.setCreatedDate(new Date());
-				mapper.map(f, contract);
-				request.getBillRegisters().add(contract);
+				request.getBillRegisters().add(mapper.toContract(iac));
 
 			}
 
-			message.put("billRegister_create", request);
-			billRegisterQueueRepository.addToSearch(message);
+			billRegisterQueueRepository.addToSearchQue(request);
 
 			return resultList;
 		}
 
 	}
-
+	
 	@Transactional
-	public List<BillRegister> update(List<BillRegister> billregisters, RequestInfo requestInfo) {
-		ModelMapper mapper = new ModelMapper();
-		Map<String, Object> message = new HashMap<>();
-		BillRegisterRequest request = new BillRegisterRequest();
-		BillRegisterContract contract;
+	public List<BillRegister> update(List<BillRegister> billRegisters, RequestInfo requestInfo) {
+
+		BillRegisterMapper mapper = new BillRegisterMapper();
+
 		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
 				&& persistThroughKafka.equalsIgnoreCase("yes")) {
 
+			BillRegisterRequest request = new BillRegisterRequest();
 			request.setRequestInfo(requestInfo);
 			request.setBillRegisters(new ArrayList<>());
-			for (BillRegister f : billregisters) {
-				contract = new BillRegisterContract();
-				contract.setCreatedDate(new Date());
-				mapper.map(f, contract);
-				request.getBillRegisters().add(contract);
+
+			for (BillRegister iac : billRegisters) {
+
+				request.getBillRegisters().add(mapper.toContract(iac));
+
 			}
-			message.put("billRegister_update", request);
-			billRegisterQueueRepository.add(message);
-			return billregisters;
+
+			billRegisterQueueRepository.addToQue(request);
+
+			return billRegisters;
 		} else {
+
 			List<BillRegister> resultList = new ArrayList<BillRegister>();
-			for (BillRegister f : billregisters) {
-				resultList.add(update(f));
+
+			for (BillRegister iac : billRegisters) {
+
+				resultList.add(save(iac));
 			}
+
+			BillRegisterRequest request = new BillRegisterRequest();
 			request.setRequestInfo(requestInfo);
 			request.setBillRegisters(new ArrayList<>());
-			for (BillRegister f : resultList) {
-				contract = new BillRegisterContract();
-				contract.setCreatedDate(new Date());
-				mapper.map(f, contract);
-				request.getBillRegisters().add(contract);
+
+			for (BillRegister iac : resultList) {
+
+				request.getBillRegisters().add(mapper.toContract(iac));
+
 			}
-			message.put("billRegister_persisted", request);
-			billRegisterQueueRepository.addToSearch(message);
+
+			billRegisterQueueRepository.addToSearchQue(request);
+
 			return resultList;
 		}
 
 	}
-
+	
 	public String getNextSequence() {
 		return billRegisterJdbcRepository.getSequence(BillRegisterEntity.SEQUENCE_NAME);
 	}
@@ -175,7 +170,8 @@ public class BillRegisterRepository {
 			BillRegisterSearchContract billRegisterSearchContract = new BillRegisterSearchContract();
 			ModelMapper mapper = new ModelMapper();
 			mapper.map(domain, billRegisterSearchContract);
-			return billRegisterESRepository.search(billRegisterSearchContract);
+//			return billRegisterESRepository.search(billRegisterSearchContract);
+			return null;
 		} else {
 			return billRegisterJdbcRepository.search(domain);
 		}

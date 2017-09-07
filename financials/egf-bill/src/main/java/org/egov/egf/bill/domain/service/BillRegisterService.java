@@ -75,7 +75,6 @@ public class BillRegisterService {
 	    }
 	    for (BillRegister b : billregisters) {
 		b.setId(billRegisterRepository.getNextSequence());
-		//b.add();
 	    }
 	} catch (CustomBindException e) {
 	    throw e;
@@ -92,7 +91,6 @@ public class BillRegisterService {
 		throw new CustomBindException(errors);
 	    }
 	    for (BillRegister b : billregisters) {
-		//b.update();
 	    }
 	} catch (CustomBindException e) {
 	    throw new CustomBindException(errors);
@@ -212,16 +210,16 @@ public class BillRegisterService {
 		}
 		billRegister.setDepartment(department);
 	    }
-	    if (billRegister.getTenantId() != null)
-		if (billRegister.getParent() != null && billRegister.getParent().getId() != null) {
-		    billRegister.getParent().setTenantId(billRegister.getTenantId());
-		    BillRegister parentId = billRegisterRepository.findById(billRegister.getParent());
-		    if (parentId == null) {
-			throw new InvalidDataException("parentId", ErrorCode.INVALID_REF_VALUE.getCode(),
-				billRegister.getParent().getId());
-		    }
-		    billRegister.setParent(parentId);
-		}
+//	    if (billRegister.getTenantId() != null)
+//		if (billRegister.getParent() != null && billRegister.getParent().getId() != null) {
+//		    billRegister.getParent().setTenantId(billRegister.getTenantId());
+//		    BillRegister parentId = billRegisterRepository.findById(billRegister.getParent());
+//		    if (parentId == null) {
+//			throw new InvalidDataException("parentId", ErrorCode.INVALID_REF_VALUE.getCode(),
+//				billRegister.getParent().getId());
+//		    }
+//		    billRegister.setParent(parentId);
+//		}
 	}
 	return billregisters;
     }

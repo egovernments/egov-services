@@ -135,11 +135,17 @@ public class BillRegister extends Auditable {
      * fundsource refers to the fundsounce master
      */
     private FundsourceContract fundsource;
+    
     private SchemeContract scheme;
+    
     private SubSchemeContract subScheme;
+    
     private FunctionaryContract functionary;
+    
     private Boundary division;
+    
     private Department department;
+    
     @Length(max = 256)
     private String sourcePath;
     /**
@@ -168,8 +174,9 @@ public class BillRegister extends Auditable {
      */
     @Length(max = 256)
     private String description;
-    @DrillDownTable
+    
     private Set<BillDetail> billDetails;
+    
     private List<BillChecklist> checkLists = new ArrayList<BillChecklist>(0);
 
     public BigDecimal getTotalAmount() {

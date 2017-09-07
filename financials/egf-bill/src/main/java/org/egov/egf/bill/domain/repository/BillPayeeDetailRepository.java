@@ -9,14 +9,10 @@ import java.util.Map;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.bill.domain.model.BillPayeeDetail;
-import org.egov.egf.bill.domain.model.BillPayeeDetailSearch;
-import org.egov.egf.bill.domain.service.FinancialConfigurationService;
 import org.egov.egf.bill.persistence.entity.BillPayeeDetailEntity;
-import org.egov.egf.bill.persistence.queue.MastersQueueRepository;
 import org.egov.egf.bill.persistence.repository.BillPayeeDetailJdbcRepository;
 import org.egov.egf.bill.web.contract.BillPayeeDetailContract;
-import org.egov.egf.bill.web.contract.BillPayeeDetailSearchContract;
-import org.egov.egf.bill.web.requests.BillPayeeDetailRequest;
+import org.egov.egf.master.web.repository.FinancialConfigurationContractRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,21 +24,21 @@ public class BillPayeeDetailRepository {
 
 	private BillPayeeDetailJdbcRepository billPayeeDetailJdbcRepository;
 
-	private MastersQueueRepository billPayeeDetailQueueRepository;
+	private BillPayeeDetailQueueRepository billPayeeDetailQueueRepository;
 
-	private FinancialConfigurationService financialConfigurationService;
+	private FinancialConfigurationContractRepository financialConfigurationContractRepository;
 
 	private BillPayeeDetailESRepository billPayeeDetailESRepository;
 
 	private String persistThroughKafka;
 
 	@Autowired
-	public BillPayeeDetailRepository(BillPayeeDetailJdbcRepository billPayeeDetailJdbcRepository, MastersQueueRepository billPayeeDetailQueueRepository,
-			FinancialConfigurationService financialConfigurationService, BillPayeeDetailESRepository billPayeeDetailESRepository,
+	public BillPayeeDetailRepository(BillPayeeDetailJdbcRepository billPayeeDetailJdbcRepository, BillPayeeDetailQueueRepository billPayeeDetailQueueRepository,
+			FinancialConfigurationContractRepository financialConfigurationContractRepository, BillPayeeDetailESRepository billPayeeDetailESRepository,
 			@Value("${persist.through.kafka}") String persistThroughKafka) {
 		this.billPayeeDetailJdbcRepository = billPayeeDetailJdbcRepository;
 		this.billPayeeDetailQueueRepository = billPayeeDetailQueueRepository;
-		this.financialConfigurationService = financialConfigurationService;
+		this.financialConfigurationContractRepository = financialConfigurationContractRepository;
 		this.billPayeeDetailESRepository = billPayeeDetailESRepository;
 		this.persistThroughKafka = persistThroughKafka;
 
@@ -170,8 +166,8 @@ public class BillPayeeDetailRepository {
 
 
 	public Pagination<BillPayeeDetail> search(BillPayeeDetailSearch domain) {
-		if (!financialConfigurationService.fetchDataFrom().isEmpty()
-				&& financialConfigurationService.fetchDataFrom().equalsIgnoreCase("es")) {
+		if (!financialConfigurationContractRepository.fetchDataFrom().isEmpty()
+				&& financialConfigurationContractRepository.fetchDataFrom().equalsIgnoreCase("es")) {
 			BillPayeeDetailSearchContract billPayeeDetailSearchContract = new BillPayeeDetailSearchContract();
 			ModelMapper mapper = new ModelMapper();
 			mapper.map(domain, billPayeeDetailSearchContract);

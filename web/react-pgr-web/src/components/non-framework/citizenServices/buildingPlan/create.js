@@ -242,7 +242,6 @@ class Report extends Component {
     specifications = require("../../../framework/specs/citizenService/bp/fireNoc").default;
     self.displayUI(specifications);
     if(self.props.match.params.status == "pay") {
-      alert()
       let metaData=JSON.parse(localStorage.getItem("metaData")),paymentGateWayRes=JSON.parse(localStorage.getItem("paymentGateWayResponse"));
       self.props.setLoadingStatus("loading");
       //DO WHATEVER YOU WANT TO DO AFTER PAYMENT & THEN CALL GENERATERECEIPT() FUNCTION

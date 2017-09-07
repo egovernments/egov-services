@@ -291,15 +291,17 @@ ReportDefinitions:
     source: wcms
     isMandatory: false
     searchClause: and prop.executiondate <= $toDate
-  - name: ward
+  - name: wardid
     label: reports.wcms.ward
     type: singlevaluelist
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=WARD&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name
     source: wcms
     isMandatory: false
     searchClause: and prop.wardid <= $ward
-  - name: zone
+  - name: zoneid
     label: reports.wcms.zone
     type: singlevaluelist
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name
     source: wcms
     isMandatory: false
     searchClause: and prop.zoneid <= $zone

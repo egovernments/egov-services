@@ -521,7 +521,7 @@ class Report extends Component {
         Receipt[0]["instrument"] = {"tenantId":window.localStorage.getItem("tenantId"),"amount": fee,"instrumentType":{"name":"Cash"}}
         Receipt[0]["Bill"][0]["billDetails"][0]["amountPaid"] = fee;
         setTimeout(function(){
-          localStorage.setItem("response", JSON.stringiy({ServiceRequest, Receipt}));
+          localStorage.setItem("response", JSON.stringify({ServiceRequest, Receipt}));
           self.makePayment(res);
         }, 3000);
       } else {

@@ -379,7 +379,7 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 	 * @return {@link Long}
 	 */
 	private Long getLong(Object object) {
-		return object == null ? 0 : Long.parseLong(object.toString());
+		return object == null ? null : Long.parseLong(object.toString());
 	}
 
 	/**

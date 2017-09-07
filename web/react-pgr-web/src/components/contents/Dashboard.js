@@ -232,6 +232,7 @@ class Dashboard extends Component {
 	 $('#searchTable').DataTable({
          dom: 'lBfrtip',
          buttons: [],
+         "aaSorting": [],
           bDestroy: true,
           language: {
              "emptyTable": "No Records"
@@ -540,6 +541,7 @@ class Dashboard extends Component {
          },
          dom: 'lBfrtip',
          buttons: [],
+         "aaSorting": [],
           bDestroy: true,
           language: {
              "emptyTable": "No Records"

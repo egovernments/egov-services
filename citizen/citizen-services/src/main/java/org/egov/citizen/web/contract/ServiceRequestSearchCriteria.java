@@ -23,3 +23,4 @@ public class ServiceRequestSearchCriteria {
 	private String sortOrder;
 
 }
+	

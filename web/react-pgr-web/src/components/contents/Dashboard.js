@@ -46,7 +46,7 @@ const nameMap = {
   "CANCELLED": "Request Cancelled",
   "REJECTED": "Rejected",
   "BPA_FIRE_NOC": "Fire NOC",
-  "INPROGERSS": "In Progress",
+  "INPROGRESS": "In Progress",
   "APPROVED": "Approved",
   "PT_EXTRACT": "Property Extract",
   "WC_PAYTAX": "Water Charge Tax Payment",

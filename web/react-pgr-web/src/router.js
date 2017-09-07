@@ -264,7 +264,7 @@ const Main = () => {
       <Route exact path={base + '/non-framework/citizenServices/create/:status/:id/:paymentGateWayRes?'} component={CS_WaterConnection}/>
       <Route exact path={base + '/non-framework/citizenServices/view/:status/:id/:ackNo/:paymentGateWayRes?'} component={CS_VIEW_WaterConnection}/>
       <Route exact path={base + '/non-framework/citizenServices/fireNoc/:status/:id/:paymentGateWayRes?'} component={CS_FireNoc}/>
-      <Route exact path={base + '/non-framework/citizenServices/fireNoc/view/:type/:ackNo'} component={CS_VIEW_FireNoc}/>
+      <Route exact path={base + '/non-framework/citizenServices/fireNoc/:status/:id/:ackNo/:paymentGateWayRes?'} component={CS_VIEW_FireNoc}/>
       <Route exact path= {base + '/payment/response/redirect/:msg'} component={Payment}/>
       <Route exact path= {base + '/receipt/:page/:type/:cc/:sid'} component={ReceiptDownload}/>
 

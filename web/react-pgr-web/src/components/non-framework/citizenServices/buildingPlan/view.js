@@ -256,7 +256,7 @@ class Report extends Component {
       if (this.props.match.params.paymentGateWayRes=="success")
       {
         // paymentGateWayRes["status"]="failed";
-        Api.commonApiPost("/citizen-services/v1/pgresponse/_validate", {}, {PGResponse:paymentGateWayRes}, null, metaData["wc.create"].useTimestamp, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
+        Api.commonApiPost("/citizen-services/v1/pgresponse/_validate", {}, {PGResponse:paymentGateWayRes}, null, metaData["fn.view"].useTimestamp, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
             self.props.setLoadingStatus('hide');
             self.generateReceipt(response);
         }, function(err) {

@@ -114,9 +114,9 @@ public class ServiceController {
 		}
 		LOGGER.info("Header: "+host);
 		ReceiptRequest receiptRequest = receiptRequestWrapper.getReceiptRequest();
-		StringBuilder returnUrl = new StringBuilder();
+		/*StringBuilder returnUrl = new StringBuilder();
 		returnUrl.append("http://"+host).append(applicationProperties.getReturnUrl());
-		receiptRequest.setReturnUrl(returnUrl.toString());
+		receiptRequest.setReturnUrl(returnUrl.toString()); */
 		PGPayload pgPayLoad = citizenPersistService.generatePGPayload(receiptRequest, receiptRequestWrapper.getRequestInfo());
 		PGPayloadWrapper pGPayloadWrapper = new PGPayloadWrapper();
 		pGPayloadWrapper.setPgPayLoad(pgPayLoad);

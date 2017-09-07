@@ -435,7 +435,8 @@ public class TradeLicenseService {
 			}
 		}
 		if (null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty()
-				&& currentStatus.getLicenseStatuses().get(0).getCode() == NewLicenseStatus.LICENSE_FEE_PAID.getName()) {
+                        && currentStatus.getLicenseStatuses().get(0).getCode()
+                                .equalsIgnoreCase(NewLicenseStatus.LICENSE_FEE_PAID.getName())) {
 			// generate license number and setting license number and
 			// license issued date
 		        log.info("updating trade license number after fee paid");

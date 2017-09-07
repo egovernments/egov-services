@@ -127,19 +127,23 @@ $(document).ready(function(){
       //     }
       // });
 
-      $('#apply-btn').click(function(e){
-          redirectUrl = $(this).attr('data-url');
-          alert('Please register yourself and then login.');
-          $('#servicesDetailModal').modal('hide');
+      $('.apply-btn').click(function(e){
+        alert('Please register yourself and then login.');
+      })
 
-          // var serviceRedirectUrl=$(this).attr('data-url');
-          // if(serviceRedirectUrl){
-          //   $('#servicesDetailModal').modal('hide');
-          //   window.open(serviceRedirectUrl);
-          // }
-
-
-      });
+      // $('#apply-btn').click(function(e){
+      //     redirectUrl = $(this).attr('data-url');
+      //     alert('Please register yourself and then login.');
+      //     $('#servicesDetailModal').modal('hide');
+      //
+      //     // var serviceRedirectUrl=$(this).attr('data-url');
+      //     // if(serviceRedirectUrl){
+      //     //   $('#servicesDetailModal').modal('hide');
+      //     //   window.open(serviceRedirectUrl);
+      //     // }
+      //
+      //
+      // });
 
       $('#create-account').click(function(e){
           // window.location = window.location.origin + '/app/v1/#/mh.roha?signup=true';

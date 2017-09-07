@@ -20,7 +20,8 @@ class viewLicense extends Component{
   constructor(props){
     super(props);
     this.state={
-      open: false
+      open: false,
+      fieldInspection : false
     };
   }
   componentDidMount(){
@@ -42,8 +43,12 @@ class viewLicense extends Component{
         if(!response.licenses[0].isLegacy){
           self.getEmployees();
           self.history();
-          if(response.licenses[0].applications[0].statusName === 'Scrutiny Completed')
+          console.log(response.licenses[0].applications[0].statusName);
+          if(response.licenses[0].applications[0].statusName == 'Scrutiny Completed')
             self.setState({fieldInspection : true});
+          else{
+            self.setState({fieldInspection : false});
+          }
         }
         setLoadingStatus('hide');
       }else{
@@ -187,8 +192,8 @@ class viewLicense extends Component{
   }
   fieldInspection = () => {
     let {viewLicense} = this.props;
-    // console.log('enable field inspection:', viewLicense.applications ? viewLicense.applications[0].statusName : 'none');
-    if(viewLicense.applications){
+    // console.log('field inspection:', this.state.fieldInspection);
+    if(viewLicense.applications && this.state.fieldInspection){
       return(
         <Card style={styles.cardSpacing}>
           <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
@@ -198,21 +203,43 @@ class viewLicense extends Component{
              <Row>
                <Col xs={12} sm={6} md={4} lg={3}>
                  <TextField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('Trade value for the UOM')+' *'}
-                    value={this.props.viewLicense.quantity?this.props.viewLicense.quantity:""} onChange={(event, value) => this.props.handleChange(value, "quantity", true, '')}/>
+                    value={this.props.viewLicense.quantity?this.props.viewLicense.quantity:""}
+                    errorText={this.props.fieldErrors.quantity ? this.props.fieldErrors.quantity : ""}
+                    maxLength="13"
+                    onChange={(event, value) => this.props.handleChange(value, "quantity", false, /^\d{0,10}(\.\d{1,2})?$/, 'Please enter only numbers (with optional 2 decimal values)')}/>
                </Col>
                <Col xs={12} sm={6} md={4} lg={3}>
                  <TextField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('License Fee')+' *'}
-                    value={this.props.viewLicense.licenseFee?this.props.viewLicense.licenseFee:""} onChange={(event, value) => this.props.handleChange(value, "licenseFee", true, '')}/>
+                    value={this.props.viewLicense.licenseFee?this.props.viewLicense.licenseFee:""}
+                    errorText={this.props.fieldErrors.licenseFee ? this.props.fieldErrors.licenseFee : ""}
+                    maxLength="13"
+                    onChange={(event, value) => this.props.handleChange(value, "licenseFee", false, /^\d{0,10}(\.\d{1,2})?$/, 'Please enter only numbers (with optional 2 decimal values)')}/>
                </Col>
                <Col xs={12} sm={6} md={4} lg={6}>
                  <TextField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('Field Inspection Report')+' *'} multiLine={true}
-                    value={this.props.viewLicense.fieldInspectionReport?this.props.viewLicense.fieldInspectionReport:""} onChange={(event, value) => this.props.handleChange(value, "fieldInspectionReport", true, '')}/>
+                    value={this.props.viewLicense.fieldInspectionReport?this.props.viewLicense.fieldInspectionReport:""}
+                    maxLength="500"
+                    onChange={(event, value) => this.props.handleChange(value, "fieldInspectionReport", false, /^.[^]{0,500}$/)}/>
                </Col>
              </Row>
            </CardText>
          </Card>
        )
     }
+  }
+  collection = () => {
+    let {viewLicense} = this.props;
+    let userRequest = JSON.parse(localStorage.getItem('userRequest'));
+    // console.log(JSON.stringify(userRequest.roles));
+    let roleObj = userRequest ? userRequest.roles.find(role => role.name === 'Collection Operator'): '';
+    // console.log(roleObj);
+    if(!viewLicense.isLegacy && viewLicense.applications && viewLicense.applications[0].state_id && viewLicense.applications[0].statusName == 'Final approval Completed' && roleObj){
+     return(
+       <div className="text-center">
+         <RaisedButton label="Collect License Fee" primary={true} onClick={(e)=>{this.props.setRoute('/non-framework/collection/master/paytax/PayTaxCreate')}}/>
+       </div>
+     )
+   }
   }
   updateWorkFlow = (item, state) => {
     // console.log('came to workflow');
@@ -232,6 +259,25 @@ class viewLicense extends Component{
             self.handleError('Field Inspection Report is mandatory');
           }
           return;
+      }
+      //validate pattern for UOM and licensefee
+      var pattern = /^\d{0,10}(\.\d{1,2})?$/;
+      if(this.state.fieldInspection && viewLicense.quantity){
+        if (pattern.test(viewLicense.quantity)) {
+          console.log('pattern passed for quantity');
+        }else{
+          self.handleError('Trade value for UOM - Please enter only numbers (with optional 2 decimal values)');
+          return;
+        }
+      }
+      if(this.state.fieldInspection && viewLicense.licenseFee){
+        console.log('came to test license fee');
+        if (pattern.test(viewLicense.licenseFee)) {
+          console.log('pattern passed for license fee');
+        }else{
+          self.handleError('License Fee - Please enter only numbers (with optional 2 decimal values)');
+          return;
+        }
       }
       if(!state.departmentId || !state.designationId || !state.positionId){
         if(!state.departmentId)
@@ -555,16 +601,17 @@ class viewLicense extends Component{
           {this.supportDocuments()}
           {!viewLicense.isLegacy ? this.showHistory() : ''}
           {!viewLicense.isLegacy && this.state.fieldInspection ? this.fieldInspection() : ''}
-          {!viewLicense.isLegacy && viewLicense.applications && viewLicense.applications[0].state_id ?
+          {!viewLicense.isLegacy && viewLicense.applications && viewLicense.applications[0].state_id && viewLicense.applications[0].statusName != 'Final approval Completed' ?
           <Card style={styles.marginStyle}>
             <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
                Workflow
              < /div>}/>
             <CardText style={styles.cardTextPadding}>
-               <WorkFlow viewLicense={viewLicense} fieldErrors={fieldErrors} handleChange={handleChange} handleError={handleError} setLoadingStatus={this.props.setLoadingStatus} updateWorkFlow={this.updateWorkFlow}/>
+               <WorkFlow viewLicense={viewLicense} isFormValid={isFormValid} fieldErrors={fieldErrors} handleChange={handleChange} handleError={handleError} setLoadingStatus={this.props.setLoadingStatus} updateWorkFlow={this.updateWorkFlow}/>
              </CardText>
           </Card> :
           ""}
+          {this.collection()}
           <Dialog
             title="Success"
             actions={actions}
@@ -605,8 +652,8 @@ const mapDispatchToProps = dispatch => ({
       }
     });
   },
-  handleChange: (value, property, isRequired, pattern) => {
-    dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern});
+  handleChange: (value, property, isRequired, pattern, errorMsg) => {
+    dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern, errorMsg});
   },
   toggleDailogAndSetText: (dailogState,msg) => {
     dispatch({type: "TOGGLE_DAILOG_AND_SET_TEXT", dailogState,msg});

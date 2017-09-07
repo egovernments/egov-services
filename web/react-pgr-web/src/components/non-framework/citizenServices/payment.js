@@ -37,14 +37,11 @@ class Payment extends Component {
       console.log(paymentGateWayResponse);
       window.localStorage.setItem("paymentGateWayResponse",JSON.stringify(paymentGateWayResponse))
       if (paymentGateWayResponse["status"]!="failed") {
-          if ((window.localStorage.getItem("workflow")=="create" || window.localStorage.getItem("workflow")=="fireNoc") && (window.localStorage.getItem("ack")=="" || window.localStorage.getItem("ack")=="undefined")) {
+          if ((window.localStorage.getItem("workflow")=="create" || window.localStorage.getItem("workflow")=="fireNoc") && (window.localStorage.getItem("ack")=="" || window.localStorage.getItem("ack") == undefined)) {
             setRoute("/non-framework/citizenServices/"+window.localStorage.getItem("workflow")+"/pay/"+window.localStorage.getItem("moduleName")+"/success");
-          }
-          else if (window.localStorage.getItem("workflow")=="view") {
+          } else if (window.localStorage.getItem("workflow")=="view") {
             setRoute("/non-framework/citizenServices/"+window.localStorage.getItem("workflow")+"/pay/"+window.localStorage.getItem("moduleName")+"/"+window.localStorage.getItem("ack")+"/success");
-
-          }
-          else {
+          } else {
             setRoute("/non-framework-cs/citizenServices/"+window.localStorage.getItem("workflow")+"/pay/"+window.localStorage.getItem("moduleName")+"/success");
           }
       }

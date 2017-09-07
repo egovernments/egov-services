@@ -934,7 +934,6 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			application.setState_id(applicationSearchEntity.getState_id());
 			application.setStatus(applicationSearchEntity.getStatus());
 			application.setTenantId(applicationSearchEntity.getTenantId());
-			tradeLicense.setApplication(application);
 			List<LicenseFeeDetail> details = new ArrayList<>();
 			for (LicenseFeeDetailSearchEntity feeDetailSearchEntity : applicationSearchEntity.getFeeDetailEntitys()) {
 				LicenseFeeDetail detail = new LicenseFeeDetail();
@@ -956,6 +955,7 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			for (SupportDocumentSearchEntity documentSearchEntity : applicationSearchEntity
 					.getSupportDocumentEntitys()) {
 				SupportDocument document = new SupportDocument();
+				document.setId(documentSearchEntity.getId());
 				document.setApplicationId(documentSearchEntity.getApplicationId());
 				AuditDetails docAuditDetails = new AuditDetails();
 				docAuditDetails.setCreatedBy(documentSearchEntity.getCreatedBy());
@@ -971,6 +971,7 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			}
 			tradeLicense.setSupportDocuments(documents);
 			application.setSupportDocuments(documents);
+			tradeLicense.setApplication(application);
 			AuditDetails auditDetails = new AuditDetails();
 			auditDetails.setCreatedBy(entity.getCreatedBy());
 			auditDetails.setCreatedTime(entity.getCreatedTime());

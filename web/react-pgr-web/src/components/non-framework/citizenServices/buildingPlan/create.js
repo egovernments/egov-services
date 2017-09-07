@@ -194,7 +194,7 @@ class Report extends Component {
     let self = this;
 
     specifications =typeof(results)=="string" ? JSON.parse(results) : results;
-    let obj = specifications[];
+    let obj = specifications["fn.create"];
     reqRequired = [];
     self.setLabelAndReturnRequired(obj);
     initForm(reqRequired);
@@ -205,7 +205,7 @@ class Report extends Component {
 
     /*if(hashLocation.split("/").indexOf("update") == 1) {
       var url = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].searchUrl.split("?")[0];
-      var id = self.props.mat"fn.create"ch.params.id || self.props.match.params.master;
+      var id = self.props.match.params.id || self.props.match.params.master;
       var query = {
         [specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].searchUrl.split("?")[1].split("=")[0]]: id
       };

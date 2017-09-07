@@ -487,6 +487,7 @@ public class TradeLicenseService {
 		return requestInfo;
 	}
 
+	@Transactional
 	public void updateTradeLicenseAfterCollection(DemandResponse demandResponse) {
 	        LicenseStatusResponse nextStatus = null;
 	        RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();

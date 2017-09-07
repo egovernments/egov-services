@@ -38,47 +38,46 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model.bulk;
+package org.egov.eis.web.contract;
 
-import java.util.Date;
+import lombok.*;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-@Data
+@Builder
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Department {
+@ToString
+@EqualsAndHashCode
+public class DesignationGetRequest {
 
-	private Long id;
+	private List<Long> id;
 
-	@Size(min=8, max=64)
+	@Size(min=3, max=100)
 	private String name;
 
-	@NotNull
-	@Size(min=1, max=10)
+	@Size(max=20)
 	private String code;
 
 	private Boolean active;
 
+    private String sortBy;
+
+	private String sortOrder;
+
+	@NotNull
 	private String tenantId;
 
-	private Long createdBy;
+	@Min(1)
+	@Max(500)
+	private Short pageSize;
 
-	private Date createdDate;
-
-	private Long lastModifiedBy;
-
-	private Date lastModifiedDate;
+	private Short pageNumber;
 
 }

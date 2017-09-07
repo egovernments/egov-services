@@ -40,15 +40,14 @@
 
 package org.egov.eis.web.controller;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.model.Employee;
@@ -59,11 +58,21 @@ import org.egov.eis.service.EmployeeService;
 import org.egov.eis.service.exception.EmployeeIdNotFoundException;
 import org.egov.eis.service.exception.IdGenerationException;
 import org.egov.eis.service.exception.UserException;
-import org.egov.eis.web.contract.*;
+import org.egov.eis.web.contract.EmployeeBulkRequest;
+import org.egov.eis.web.contract.EmployeeCriteria;
+import org.egov.eis.web.contract.EmployeeGetRequest;
+import org.egov.eis.web.contract.EmployeeInfoResponse;
+import org.egov.eis.web.contract.EmployeeRequest;
+import org.egov.eis.web.contract.EmployeeResponse;
+import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.egov.eis.web.contract.factory.ResponseEntityFactory;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.eis.web.errorhandler.ErrorHandler;
-import org.egov.eis.web.validator.*;
+import org.egov.eis.web.errorhandler.InvalidDataException;
+import org.egov.eis.web.validator.DataIntegrityValidatorForCreateEmployee;
+import org.egov.eis.web.validator.DataIntegrityValidatorForUpdateEmployee;
+import org.egov.eis.web.validator.EmployeeAssignmentValidator;
+import org.egov.eis.web.validator.RequestValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -76,7 +85,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
@@ -239,7 +250,9 @@ public class EmployeeController {
         } catch (IdGenerationException ie) {
             log.error("Error while processing request ", ie);
             return errorHandler.getResponseEntityForIdGenerationErrors(ie);
-        } catch (Exception exception) {
+        } catch (InvalidDataException ex) {
+			return	 errorHandler.getErrorInvalidData(ex, employeeRequest.getRequestInfo());
+		}	catch (Exception exception) {
             log.error("Error while processing request ", exception);
             return errorHandler.getResponseEntityForUnexpectedErrors(employeeRequest.getRequestInfo());
         }
@@ -281,9 +294,24 @@ public class EmployeeController {
                 org.egov.eis.model.bulk.Assignment assignment = bulkEmployee.getAssignments().get(assignIndex);
                 Department department = employeeService.getDepartmentService().getDepartment(
                         assignment.getDepartment().getCode(), bulkEmployee.getTenantId(), requestInfoWrapper);
+        		InvalidDataException invalidDataException = new InvalidDataException();
+
+                if(department==null)
+                {
+                	invalidDataException.setFieldName("Department");
+    				invalidDataException.setMessageKey("the field department should have a valid value which exists in the system " );
+    				invalidDataException.setFieldValue(assignment.getDepartment().getCode());
+    				return	 errorHandler.getErrorInvalidData(invalidDataException, employeeBulkRequest.getRequestInfo());
+                }
                 org.egov.eis.model.bulk.Designation designation = employeeService.getDesignationService().getDesignation(
                         assignment.getDesignation().getCode(), bulkEmployee.getTenantId(), requestInfoWrapper);
-
+                if(designation==null)
+                {
+   	        	 	invalidDataException.setFieldName("Designation");
+    				invalidDataException.setMessageKey("the field designations should have a valid value which exists in the system " );
+    				invalidDataException.setFieldValue(assignment.getDesignation().getCode());
+    				return	 errorHandler.getErrorInvalidData(invalidDataException, employeeBulkRequest.getRequestInfo());
+                }
                 assignment.setDepartment(department);
                 assignment.setDesignation(designation);
 

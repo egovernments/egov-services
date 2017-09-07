@@ -40,19 +40,21 @@
 
 package org.egov.eis.web.validator;
 
+import java.util.List;
+import java.util.Map;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.eis.model.Employee;
 import org.egov.eis.repository.EmployeeRepository;
 import org.egov.eis.service.HRMastersService;
 import org.egov.eis.web.contract.EmployeeRequest;
 import org.egov.eis.web.contract.RequestInfoWrapper;
+import org.egov.eis.web.errorhandler.ErrorHandler;
+import org.egov.eis.web.errorhandler.InvalidDataException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-
-import java.util.List;
-import java.util.Map;
 
 @Component
 public class DataIntegrityValidatorForCreateEmployee extends EmployeeCommonValidator implements Validator {
@@ -62,6 +64,9 @@ public class DataIntegrityValidatorForCreateEmployee extends EmployeeCommonValid
 
 	@Autowired
 	private HRMastersService hrMastersService;
+	
+	@Autowired
+	private ErrorHandler errorHandler;
 
 	/**
 	 * This Validator validates *just* Employee instances
@@ -95,25 +100,36 @@ public class DataIntegrityValidatorForCreateEmployee extends EmployeeCommonValid
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper(requestInfo);
 
 		super.validateEmployee(employeeRequest, errors);
+		InvalidDataException invalidDataException = new InvalidDataException();
 
 		Map<String, List<String>> hrConfigurations = hrMastersService.getHRConfigurations(employee.getTenantId(), requestInfoWrapper);
 
 		if (hrConfigurations.get("Autogenerate_employeecode").get(0).equalsIgnoreCase("N") && (employee.getCode() != null)
 				&& duplicateExists("egeis_employee", "code", employee.getCode(), employee.getTenantId())) {
-			errors.rejectValue("employee.code", "invalid",
-					"Employee Code Already Exists In System. Please Enter Different Employee Code.");
+			
+			invalidDataException.setFieldName("employee.code");
+			invalidDataException.setMessageKey("Employee Code Already Exists In System. Please Enter Different Employee Code." );
+			invalidDataException.setFieldValue("invalid");
+			 errorHandler.getErrorInvalidData(invalidDataException, employeeRequest.getRequestInfo());
 		}
 
 		if ((employee.getPassportNo() != null) && duplicateExists("egeis_employee", "passportNo",
 				employee.getPassportNo(), employee.getTenantId())) {
-			errors.rejectValue("employee.passportNo", "invalid",
-					"Passport Number Already Exists In System. Please Enter Correct Passport Number.");
+			RequestInfo requestinfo=new RequestInfo();
+			
+			invalidDataException.setFieldName("employee.passportNo");
+			invalidDataException.setMessageKey("Passport Number Already Exists In System. Please Enter Correct Passport Number.");
+			invalidDataException.setFieldValue("invalid");
+			 errorHandler.getErrorInvalidData(invalidDataException, employeeRequest.getRequestInfo());
 		}
 
 		if ((employee.getGpfNo() != null) && duplicateExists("egeis_employee", "gpfNo",
 				employee.getGpfNo(), employee.getTenantId())) {
-			errors.rejectValue("employee.gpfNo", "invalid",
-					"GPF Number Already Exists In System. Please Enter Correct GPF Number.");
+
+			invalidDataException.setFieldName("employee.gpfNo");
+			invalidDataException.setMessageKey("GPF Number Already Exists In System. Please Enter Correct GPF Number.");
+			invalidDataException.setFieldValue("invalid");
+			 errorHandler.getErrorInvalidData(invalidDataException, employeeRequest.getRequestInfo());
 		}
 	}
 

@@ -878,6 +878,9 @@ definitions:
          type: integer
          format: int64
          description: Unique Id of the parent Category for subCategory, null for Category.
+        parentName:
+          type: string
+          description: name of the parent category for SubCategory, null for category
         active:
           type: boolean
           description: true if Category is active and false if Category is inactive 

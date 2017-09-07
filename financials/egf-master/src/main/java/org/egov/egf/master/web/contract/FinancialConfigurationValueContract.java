@@ -39,6 +39,7 @@
  */
 
 package org.egov.egf.master.web.contract;
+
 import java.util.Date;
 
 import javax.validation.constraints.NotNull;
@@ -53,13 +54,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 
-@JsonPropertyOrder({ "id","financialConfiguration","value","effectiveFrom"})
+@JsonPropertyOrder({ "id", "financialConfiguration", "value", "effectiveFrom" })
 public class FinancialConfigurationValueContract extends AuditableContract {
 
 	@NotNull
@@ -75,4 +77,7 @@ public class FinancialConfigurationValueContract extends AuditableContract {
 	@NotNull
 	private Date effectiveFrom;
 
+	public FinancialConfigurationValueContract(String id) {
+		this.id = id;
+	}
 }

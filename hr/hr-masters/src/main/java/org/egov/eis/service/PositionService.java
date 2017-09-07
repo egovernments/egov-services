@@ -190,13 +190,22 @@ public class PositionService {
         for (int i = 0; i < positions.size(); i++) {
             DepartmentDesignation deptDesig = positions.get(i).getDeptdesig();
             String tenantId = positions.get(i).getTenantId();
-
+            Designation designation = new Designation();
             Department department = departmentService.getDepartments(Arrays.asList(deptDesig.getDepartmentId()),
                     tenantId, requestInfoWrapper).get(0);
 
+            System.out.println("department Id" + department.getId());
+            System.out.println("department tenantId" + department.getTenantId());
+
+            if(null !=deptDesig.getDesignation().getId()){
             DesignationGetRequest designationGetRequest = DesignationGetRequest.builder()
                     .id(Arrays.asList(deptDesig.getDesignation().getId())).tenantId(tenantId).build();
-            Designation designation = designationService.getDesignations(designationGetRequest).get(0);
+            designation = designationService.getDesignations(designationGetRequest).get(0);
+            }
+
+            System.out.println("designation Id" + designation.getId());
+            System.out.println("designation tenantId" + designation.getTenantId());
+
 
             deptDesig = deptDesigService.getByDepartmentAndDesignation(department.getId(), designation.getId(), tenantId);
 
@@ -206,6 +215,10 @@ public class PositionService {
                 deptDesigService.create(deptDesig);
             }
             deptDesig = deptDesigService.getByDepartmentAndDesignation(department.getId(), designation.getId(), tenantId);
+
+            System.out.println("deptDesig Id" + deptDesig.getId());
+            System.out.println("deptDesig tenantId" + deptDesig.getTenantId());
+
             List<Long> sequences ;
             if(positions.get(i).getNoOfPositions() != null)
                 sequences = positionRepository.generateSequences(positions.get(i).getNoOfPositions());
@@ -282,18 +295,28 @@ public class PositionService {
     
     private void  validateDesignation(PositionRequest positionRequest )
 	{
+    	
 		List<Position> positions = positionRequest.getPosition();
 		for (int i = 0; i < positions.size(); i++) 
 		{
-			DepartmentDesignation deptDesig = positions.get(i).getDeptdesig();
-			String tenantId = positions.get(i).getTenantId();
-			if(deptDesig.getDesignation().getId()==null )
+			if(null == positions.get(i).getDeptdesig().getDesignation().getId())
 			{
 				throw new InvalidDataException("designation","the field {0} should have a valid value which exists in the system","null");
+
 			}
+			DepartmentDesignation deptDesig = positions.get(i).getDeptdesig();
+			String tenantId = positions.get(i).getTenantId();
+		if(null !=deptDesig.getDesignation().getId() ){
+			DesignationGetRequest designationGetRequest = DesignationGetRequest.builder()
+                    .id(Arrays.asList(deptDesig.getDesignation().getId())).tenantId(tenantId).build();
+			 List<Designation> designations = designationService.getDesignations(designationGetRequest);
+	            
+	            if(designations== null || designations.size()<1){
+	          
+					throw new InvalidDataException("designation","the field {0} should have a valid value which exists in the system","null");
+				}
 		}
-
-       }
-    
-
+	}
+    }
 }
+

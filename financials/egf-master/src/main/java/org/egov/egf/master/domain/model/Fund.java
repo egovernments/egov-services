@@ -53,6 +53,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * @author mani
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 @Service
@@ -63,24 +66,24 @@ import lombok.Setter;
 
 /**
  * 
- * @author mani . The Fund is a defining concept in municipal accounting – where
- *         it is required to segregate all accounting transactions into
- *         designated funds. Each fund needs to be treated as an independent
- *         accounting entity – in other words, all vouchers within a fund must
- *         be self-balancing and balance sheets and Income/Expenditure reports
- *         must be generated for each fund. A hierarchy of funds may be defined
- *         – i.e. each fund can have multiple sub-funds and so on.
+ * Fund is a defining concept in municipal accounting – where it is required to
+ * segregate all accounting transactions into designated funds. Each fund needs
+ * to be treated as an independent accounting entity – in other words, all
+ * vouchers within a fund must be self-balancing and balance sheets and
+ * Income/Expenditure reports must be generated for each fund. A hierarchy of
+ * funds may be defined – i.e. each fund can have multiple sub-funds and so on.
  */
 
 public class Fund extends Auditable {
 
 	/**
-	 * id is the unique identifier .
+	 * id is the unique field .
 	 */
 	protected String id;
 
 	/**
-	 * name is the name of the fund . Example :Municipal Fund,Capital Fund
+	 * name is the name of the fund . Example :Municipal Fund,Capital Fund. Also
+	 * name is unique.
 	 */
 	@Length(max = 50, min = 2)
 	@NotNull
@@ -110,10 +113,10 @@ public class Fund extends Auditable {
 	 */
 	protected Fund parent;
 	/**
-	 * active is a boolean value which says whether fund is in use or not . If Fund
-	 * is active, then accounting of transactions under the fund is enabled.
-	 * If  Fund becomes inactive, and no transactions can be
-	 * accounted under the Fund.
+	 * active is a boolean value which says whether fund is in use or not . If
+	 * Fund is active, then accounting of transactions under the fund is
+	 * enabled. If Fund becomes inactive, and no transactions can be accounted
+	 * under the Fund.
 	 */
 	@NotNull
 	protected Boolean active;

@@ -1,0 +1,31 @@
+{
+   "ResponseInfo": {
+        "apiId": "org.egov.wcms",
+        "ver": "1.0",
+        "resMsgId": "uief87324",
+        "msgId": "654654",
+        "status": "200"
+    },
+     "UsageTypes":[{
+     	"name":"Commercial",
+     	"description":"water required for commercial purposes",
+     	"active":true,
+     	"tenantId":"default",
+     	"createdBy":1,
+     	"createdDate":12323321,
+     	"lastModifiedBy":1,
+     	"lastModifiedDate":12323321
+     },
+     {	
+     	"name":"Industrial",
+     	"description":"water required for industrial purposes",
+     	"active":true,
+     	"parent":"1",
+        "tenantId":"default",
+     	"createdBy":1,
+     	"createdDate":12323321,
+     	"lastModifiedBy":1,
+     	"lastModifiedDate":12323321
+     	
+     }]
+}

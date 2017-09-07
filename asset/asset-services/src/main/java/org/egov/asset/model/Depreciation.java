@@ -3,6 +3,8 @@ package org.egov.asset.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -20,6 +22,9 @@ import lombok.ToString;
 public class Depreciation extends DepreciationCriteria {
     
     private Long id;
+    
+    @NotNull
+    private String tenantId;
     
     @JsonProperty("AuditDetails")
     private AuditDetails auditDetails;

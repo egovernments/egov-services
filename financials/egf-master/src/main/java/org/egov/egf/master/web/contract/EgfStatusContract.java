@@ -77,4 +77,7 @@ public class EgfStatusContract extends AuditableContract {
 	@Size(min = 3, max = 250)
 	private String description;
 
+	public EgfStatusContract(String id) {
+		this.id = id;
+	}
 }

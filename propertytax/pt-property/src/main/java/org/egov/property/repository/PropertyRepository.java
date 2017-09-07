@@ -244,6 +244,7 @@ public class PropertyRepository {
 				ps.setObject(37, builderDetailsObject);
 				ps.setString(38, propertyDetails.getBpaNo());
 				ps.setTimestamp(39, TimeStampUtil.getTimeStamp(propertyDetails.getBpaDate()));
+				ps.setString(40, propertyDetails.getSubUsage());
 
 				return ps;
 			}
@@ -888,6 +889,8 @@ public class PropertyRepository {
 				if (bpaDate != null) {
 					propertyDetail.setBpaDate(TimeStampUtil.getDateFormat(bpaDate));
 				}
+				
+				propertyDetail.setSubUsage(getString(row.get("subUsage")));
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
@@ -1103,7 +1106,7 @@ public class PropertyRepository {
 				propertyDetails.getAuditDetails().getLastModifiedBy(),
 				propertyDetails.getAuditDetails().getLastModifiedTime(), proertyId, jsonObject, factorsObject,
 				assessmentDatesObject, builderDetailsObject, propertyDetails.getBpaNo(),
-				TimeStampUtil.getTimeStamp(propertyDetails.getBpaDate()), propertyDetails.getId() };
+				TimeStampUtil.getTimeStamp(propertyDetails.getBpaDate()),propertyDetails.getSubUsage(), propertyDetails.getId() };
 
 		jdbcTemplate.update(propertyDetailsUpdate, propertyDetailsArgs);
 	}

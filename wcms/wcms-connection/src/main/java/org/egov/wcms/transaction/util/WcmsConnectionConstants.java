@@ -374,6 +374,20 @@ public class WcmsConnectionConstants {
     public static final String WORKFLOW_REQUIRED_CONFIG_KEY="WORKFLOW_REQUIRED_OR_NOT";
     public static final String SERVICES_FOR_USAGETYPE_SEARCH = "wc,common" ; 
 
+    private  static final String WATERCHARGETAXHEADCODE="WATERCHARGE";
+    
+    private  static final String WATERCHARGEPENALTYTAXHEADCODE="WATERCHARGEPENALTY";
+
+    
+    
+    public static final HashMap<String, String> DEMAND_REASON_ORDER_MAP = new HashMap<String, String>() {
+        private static final long serialVersionUID = -376251525790947906L;
+
+        {
+            put(WATERCHARGETAXHEADCODE,WATERCHARGETAXHEADCODE);
+            put(WATERCHARGEPENALTYTAXHEADCODE, WATERCHARGEPENALTYTAXHEADCODE);
+        }
+};
 
     
     public String getErrorMessage(final String property) {

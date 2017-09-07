@@ -130,7 +130,7 @@ class NoDues extends Component {
     window.localStorage.setItem("serviceRequest",JSON.stringify(serviceRequest));
     window.localStorage.setItem("moduleName",this.props.match.params.id);
     window.localStorage.setItem("metaData",JSON.stringify(metaData));
-    window.localStorage.setItem("workflow","no-dues");
+    window.localStorage.setItem("workflow",this.props.match.params.moduleName);
 
 
 
@@ -262,7 +262,7 @@ class NoDues extends Component {
                     "billNumber": Receipt[0]["Bill"][0].billDetails[0].billNumber,
                     "returnUrl": window.location.origin+"/citizen-services/v1/pgresponse",
                     "date": Receipt[0]["Bill"][0].billDetails[0].billDate,
-                    "biller": "Vishal",
+                    "biller": JSON.parse(localStorage.userRequest).name,
                     "amount": self.getTotal(demands)+self.getTotal(applicationFeeDemand),
                     "billService": Receipt[0]["Bill"][0].billDetails[0].businessService,
                     "serviceRequestId": serviceRequest.serviceRequestId,
@@ -291,8 +291,8 @@ class NoDues extends Component {
                         'type': 'hidden'
                     })).append($('<input>', {
                         'name': 'amount',
-                        'value': 1,
-                        // 'value': res.PGRequest.amountPaid,
+                        // 'value': 1,
+                        'value': res.PGRequest.amountPaid,
                         'type': 'hidden'
                     })).append($('<input>', {
                         'name': 'returnUrl',
@@ -355,9 +355,9 @@ class NoDues extends Component {
           // self.props.setLoadingStatus('hide');
           var PGRequest= {
                 "billNumber": Receipt[0]["Bill"][0].billDetails[0].billNumber,
-                "returnUrl": "abc/abcd/abcdef",
+                "returnUrl": window.location.origin+"/citizen-services/v1/pgresponse",
                 "date": Receipt[0]["Bill"][0].billDetails[0].billDate,
-                "biller": "Vishal",
+                "biller": JSON.parse(localStorage.userRequest).name,
                 "amount": self.getTotal(applicationFeeDemand),
                 "billService": Receipt[0]["Bill"][0].billDetails[0].businessService,
                 "serviceRequestId": serviceRequest.serviceRequestId,
@@ -585,7 +585,7 @@ class NoDues extends Component {
 
     let self = this;
     let {formData} = this.props;
-    finalObject["businessService"] = (self.props.match.params.status == "extract" ? "PT" : (self.props.match.params.id == "pt" ? "PT" : "WC"));
+    finalObject["businessService"] = (self.props.match.params.moduleName == "extract" ? "PT" : (self.props.match.params.id == "pt" ? "PT" : "WC"));
     Api.commonApiPost(self.props.metaData["noDues.search"].url, finalObject, {}, null, self.props.metaData["noDues.search"].useTimestamp,false,response.data.access_token).then(function(res){
         // self.props.setLoadingStatus('hide');
           if (res.Demands.length>0) {
@@ -619,7 +619,7 @@ class NoDues extends Component {
                    demandReq["Demands"][0].owner.id=JSON.parse(localStorage.userRequest).id;
                    demandReq["Demands"][0].taxPeriodFrom=1491004800000;
                    demandReq["Demands"][0].taxPeriodTo=1522540799000;
-                   demandReq["Demands"][0].demandDetails[0].taxHeadMasterCode=(self.props.match.params.status == "extract" ? "PT_EXT_OF_PROP_COPY_CHAR" : (self.props.match.params.id == "pt" ? "PT_NO_DUE_CERT_CHAR" : "WC_NO_DUE_CERT_CHAR"));
+                   demandReq["Demands"][0].demandDetails[0].taxHeadMasterCode=(self.props.match.params.moduleName == "extract" ? "PT_EXT_OF_PROP_COPY_CHAR" : (self.props.match.params.id == "pt" ? "PT_NO_DUE_CERT_CHAR" : "WC_NO_DUE_CERT_CHAR"));
 
                    Api.commonApiPost("/billing-service/demand/_create", {}, demandReq, null, self.props.metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp"), JSON.parse(localStorage["request-temp"])).then(function(res){
 
@@ -711,7 +711,7 @@ class NoDues extends Component {
 
       Api.commonApiPost("/citizen-services/v1/requests/_search", {userId: JSON.parse(localStorage.getItem("userRequest")).id}, {}, null, true).then(function(ress) {
           let SID = "", _servReq;
-          let SC = (self.props.match.params.status == "extract" ? "PT_NODUES" : (self.props.match.params.id == "pt" ? "PT_NODUES" : "WC_NODUES"));
+          let SC = (self.props.match.params.moduleName == "extract" ? "PT_EXTRACT" : (self.props.match.params.id == "pt" ? "PT_NODUES" : "WC_NODUES"));
           console.log(SC);
           for(let i=0; i<ress.serviceReq.length; i++) {
             //Status needs to be changed
@@ -723,11 +723,10 @@ class NoDues extends Component {
           }
 
           if(!SID) {
-            console.log("HERE22");
             let request = {
                "tenantId": localStorage.getItem("tenantId"),
                "serviceRequestId": null,
-               "serviceCode": (self.props.match.params.id == "pt") ? "PT_NODUES" : "WC_NODUES",
+               "serviceCode": (self.props.match.params.moduleName == "extract" ? "PT_EXTRACT" : (self.props.match.params.id == "pt" ? "PT_NODUES" : "WC_NODUES")),
                "lat": 12,
                "lang": 23,
                "address": "address",
@@ -789,6 +788,15 @@ class NoDues extends Component {
          self.props.toggleSnackbarAndSetText(true, "Please provide at least one field for search", false, true);
        }
 
+
+
+      //  Api.commonApiPost("/billing-service/taxheads/_search", {businessService:"WC"}, {}, null, self.props.metaData["noDues.search"].useTimestamp, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
+      //     console.log(res);
+      //     self.props.setLoadingStatus('hide');
+      //    }, function(err) {
+      //      self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+      //      self.props.setLoadingStatus('hide');
+      //    })
 
   }
 
@@ -1209,7 +1217,7 @@ class NoDues extends Component {
         case 1:
           return (<div>{showResult &&
             <Card>
-              <CardHeader title={"Payment Details- "+(demands.length>0 && demands[0].consumerCode)}/>
+              <CardHeader title={"Payment Details"}/>
               <CardText>
                 <Table responsive>
                      <thead>
@@ -1230,7 +1238,7 @@ class NoDues extends Component {
                                     <td>{getFullDate(demands[key].taxPeriodTo)}</td>
 
                                    <td>{itemOne.taxHeadMasterCode}</td>
-                                   <td style={{textAlign:"right"}}>{itemOne.taxAmount-itemOne.collectionAmount}</td>
+                                   <td style={{textAlign:"right"}}>{parseInt(itemOne.taxAmount-itemOne.collectionAmount).toFixed(2)}</td>
                                 </tr>)
                               })
                           }):(
@@ -1250,11 +1258,11 @@ class NoDues extends Component {
 
                           <tr>
                              <th colSpan={3} style={{textAlign:"left"}}><strong>Application Fees (Rs)</strong></th>
-                             <th style={{textAlign:"right"}}><strong>{(applicationFeeDemand && applicationFeeDemand.length>0 && applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount)} </strong></th>
+                             <th style={{textAlign:"right"}}><strong>{(applicationFeeDemand && applicationFeeDemand.length>0 && applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount).toFixed(2)} </strong></th>
                           </tr>
                           <tr>
-                             <th colSpan={3} style={{textAlign:"left"}}><strong>Total (Rs) </strong></th>
-                             <th style={{textAlign:"right"}}><strong>{getTotal(demands)+(applicationFeeDemand && applicationFeeDemand.length>0 && applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount)}</strong></th>
+                             <th colSpan={3} style={{textAlign:"left"}}><strong>{translate("Total (Rs)")} </strong></th>
+                             <th style={{textAlign:"right"}}><strong>{(getTotal(demands)+(applicationFeeDemand && applicationFeeDemand.length>0 && applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount)).toFixed(2)}</strong></th>
                           </tr>
                       </thead>
                   </Table>
@@ -1278,7 +1286,7 @@ class NoDues extends Component {
                         >
                         <div style={{textAlign:"center"}}>
 
-                            <h4>Amount to be paid: Rs {getTotal(demands)+(applicationFeeDemand.length>0 && applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount)}</h4>
+                            <h4>Amount to be paid: Rs {getTotal(demands)+(applicationFeeDemand.length>0 && applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount).toFixed(2)}</h4>
                             <br/>
 
                         </div>
@@ -1307,7 +1315,7 @@ class NoDues extends Component {
                                           </td>
                                           <td style={{textAlign:"center"}}>
                                               <b>Roha Municipal Council</b><br/>
-											                         {this.props.match.params.id == "pt" ? <span>Assessment Department / करनिर्धारण विभाग</span> : <span>Water Charges Department</span>}
+											                         {this.props.match.params.id == "pt" ? <span>Assessment Department / करनिर्धारण विभाग</span> : <span>Water Department</span>}
                                           </td>
                                           <td style={{textAlign:"right"}}>
 											<img src="./temp/images/AS.png" height="60" width="60"/>
@@ -1319,7 +1327,7 @@ class NoDues extends Component {
                                           </td>
 
                                           <td style={{textAlign:"center"}}>
-                                            Receipt For : {this.props.match.params.id=="wc" ? 'Water Charges' : 'Property Tax'}
+                                            Receipt For : {this.props.match.params.id=="wc" ? 'Water Charge' : 'Property Tax'}
                                           </td>
                                           <td style={{textAlign:"right"}}>
                                             Receipt Date: {getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate)}
@@ -1383,7 +1391,7 @@ class NoDues extends Component {
 
                                           </td>
                                           <td >
-                                            {match.params.id=="wc"?"Water":"Property"} No dues
+                                            {match.params.id=="wc"?"Water Charge":"Property"} No dues
                                           </td>
                                           <td >
                                             {getAmount(this.state.demands, true)}
@@ -1452,6 +1460,7 @@ class NoDues extends Component {
                                       </tr>
                                   </tbody>
                               </Table>
+                              <span style={{textAlign:"right"}}>{translate("This is computer generated receipt no authorised signature required")}</span>
                         </CardText>
                       </Card>
                       <div style={{"page-break-after": "always"}}></div>
@@ -1468,7 +1477,7 @@ class NoDues extends Component {
                                           </td>
                                           <td style={{textAlign:"center"}}>
                                               <b>Roha Municipal Council</b><br/>
-                                              {this.props.match.params.id == "pt" ? <span>Assesment Department / करनिर्धारण विभाग</span> : <span>Water Charges Department</span>}
+                                              {this.props.match.params.id == "pt" ? <span>Assesment Department / करनिर्धारण विभाग</span> : <span>Water Department</span>}
                                           </td>
                                           <td style={{textAlign:"right"}}>
                       <img src="./temp/images/AS.png" height="60" width="60"/>
@@ -1514,7 +1523,7 @@ class NoDues extends Component {
 
                                           </td>
                                           <td colSpan={4}>
-                                            Application for {(match.params.id=="wc"?"Water":"Property")} {match.params.status == "extract" ? "Extract" : "No Dues"}
+                                            Application for {(match.params.id=="wc"?"Water Charge":"Property")} {match.params.moduleName == "extract" ? "Extract" : "No Dues"}
                                           </td>
 
                                       </tr>
@@ -1566,13 +1575,15 @@ class NoDues extends Component {
                                       </tr>
                                   </tbody>
                               </Table>
+                              <span style={{textAlign:"right"}}>{translate("This is computer generated receipt no authorised signature required")}</span>
+
                         </CardText>
                       </Card>
                       <div style={{"page-break-after": "always"}}></div>
                       </Col>}
                       <Col md={6} id="DownloadReceipt">
-                      {(this.props.match.params.status != "extract" && Receipt && Receipt[0]) ? <Card>
-                        <CardHeader title={<strong>{"Certificate for: "+(this.props.match.params.id == "pt"?"Property Tax":"Water Charges")+ " No due"}</strong>}/>
+                      {(this.props.match.params.moduleName != "extract" && Receipt && Receipt[0]) ? <Card>
+                        <CardHeader title={<strong>{"Certificate for: "+(this.props.match.params.id == "pt"?"Property Tax":"Water Charge")+ " No due"}</strong>}/>
                         <CardText>
                             <Table id="CertificateForWc" responsive style={{fontSize:"bold"}}  bordered condensed>
                                   <tbody>
@@ -1582,7 +1593,7 @@ class NoDues extends Component {
                                           </td>
                                           <td style={{textAlign:"center"}}>
                                               <b>Roha Municipal Council</b><br/>
-											                         {this.props.match.params.id == "pt" ? <span>Property Tax Department / करनिर्धारण विभाग</span> : <span>Water Charges Department</span>}
+											                         {this.props.match.params.id == "pt" ? <span>Property Tax Department / करनिर्धारण विभाग</span> : <span>Water Department</span>}
                                           </td>
                                           <td style={{textAlign:"right"}}>
                                             <img src="./temp/images/AS.png" height="60" width="60"/>
@@ -1597,7 +1608,7 @@ class NoDues extends Component {
                                             <br/>
                                             <div style={{textAlign:"right"}}>
                                                   Date / दिनांक :{Receipt[0].Bill[0].billDetails[0].billDate ? getFullDate(Receipt[0].Bill[0].billDetails[0].billDate, true) : (Receipt[0].Bill[0].billDetails[0].receiptDate ? getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate, true) : "-")} <br/>
-                                                  Certificate No. / प्रमाणपत्र क्रं : {this.state.serviceRequest.serviceRequestId}
+                                                  Certificate No. / प्रमाणपत्र क्रं : {this.state.serviceRequest.serviceRequestId.replace("SRN","CERT")}
 
                                             </div>
                                             <br/>
@@ -1643,10 +1654,11 @@ class NoDues extends Component {
                                   </tbody>
                               </Table>
 
+                              <span style={{textAlign:"right"}}>{translate("This is computer generated receipt no authorised signature required")}</span>
 
                         </CardText>
                         </Card> : Receipt && Receipt[0] && <Card>
-            <CardHeader title={<strong>{"Certificate for: "+(this.props.match.params.id == "pt"?"Property Tax":"Water Charges")+ " Extract"}</strong>}/>
+            <CardHeader title={<strong>{"Certificate for: "+(this.props.match.params.id == "pt"?"Property Tax":"Water Charge")+ " Extract"}</strong>}/>
             <CardText>
                   <Table responsive style={{fontSize:"bold", "marginBottom": "20px"}} id="CertificateForWc" bordered condensed>
                       <tbody>
@@ -1656,7 +1668,7 @@ class NoDues extends Component {
                               </td>
                               <td style={{textAlign:"center"}} colSpan={4}>
                                 <b>Roha Municipal Council</b><br/>
-                                {this.props.match.params.id == "pt" ? <span>Property Tax Department / करनिर्धारण विभाग</span> : <span>Water Charges Department</span>}
+                                {this.props.match.params.id == "pt" ? <span>Property Tax Department / करनिर्धारण विभाग</span> : <span>Water Department</span>}
                               </td>
                               <td style={{textAlign:"right"}} colSpan={2}>
                                 <img src="./temp/images/AS.png" height="60" width="60"/>
@@ -1715,6 +1727,8 @@ class NoDues extends Component {
                           {this.state.Property && this.state.Property.propertyDetail && this.state.Property.propertyDetail.floors ? renderProperty(this.state.Property.propertyDetail.floors) : "No Data Available"}
                       </tbody>
                   </Table>
+                  <span style={{textAlign:"right"}}>{translate("This is computer generated receipt no authorised signature required")}</span>
+
             </CardText>
         </Card>}
                       </Col>
@@ -1744,7 +1758,7 @@ class NoDues extends Component {
 
       </div>*/}
         <div style={{textAlign:"center"}}>
-            <h3> {match.params.status != "extract" ? <span>No Dues Certificate for {match.params.id=="wc"?"Water Charge":"Property Tax"}</span> : "Property Extract"}</h3>
+            <h3> {match.params.moduleName != "extract" ? <span>No Dues Certificate for {match.params.id=="wc"?"Water Charge":"Property Tax"}</span> : "Property Extract"}</h3>
         </div>
         <Stepper activeStep={stepIndex}>
            <Step>

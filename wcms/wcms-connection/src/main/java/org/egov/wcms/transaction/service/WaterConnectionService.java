@@ -427,8 +427,8 @@ public class WaterConnectionService {
     public Connection findByApplicationNmber(final String applicationNmber) {
         return waterConnectionRepository.findByApplicationNmber(applicationNmber);
     }
-    public Connection getWaterConnectionByConsumerNumber(final String consumerCode) {
-        return waterConnectionRepository.getWaterConnectionByConsumerNumber(consumerCode);
+    public Connection getWaterConnectionByConsumerNumber(final String consumerCode,String tenantid) {
+        return waterConnectionRepository.getWaterConnectionByConsumerNumber(consumerCode,tenantid);
     }
     
     public void updateConnectionOnChangeOfDemand(final String demandId ,Connection waterConn, RequestInfo requestInfo)

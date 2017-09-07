@@ -37,7 +37,7 @@ let documents=[{
   "from":"",
   "timeStamp": new Date().getTime(),
   "filePath":"",
-  "name":"Application on Architect letter head",
+  "name":"Application on architect letter head",
   "remarks":""
 },
 {
@@ -51,7 +51,7 @@ let documents=[{
   "from":"",
   "timeStamp": new Date().getTime(),
   "filePath":"",
-  "name":"Rs.100 Stamp paper agreement",
+  "name":"Rs.100 stamp paper agreement",
   "remarks":""
 },
 {
@@ -86,7 +86,7 @@ let documents=[{
   "from":"",
   "timeStamp": new Date().getTime(),
   "filePath":"",
-  "name":"Copy of intials /Ammended NOC issued by fire brigade department",
+  "name":"Copy of initials/amended NOC issued by fire brigade department",
   "remarks":""
 }]
 
@@ -241,7 +241,12 @@ class Report extends Component {
     let self = this;
     specifications = require("../../../framework/specs/citizenService/bp/fireNoc").default;
     self.displayUI(specifications);
-
+    if(self.props.match.params.type == "receipt") {
+      self.props.setLoadingStatus("loading");
+      //DO WHATEVER YOU WANT TO DO AFTER PAYMENT & THEN CALL GENERATERECEIPT() FUNCTION
+      let response = JSON.parse(localStorage.response);
+      self.generateReceipt(response);
+    }
   }
 
   componentDidMount() {
@@ -935,6 +940,10 @@ class Report extends Component {
     this.setState({open: true});
   }
 
+  makePayment = () => {
+    //DO EVERYTHING FOR MAKING PAYMENT HERE
+  }
+
   generateReceipt = (response) => {
     let ServiceRequest = response.serviceReq, self = this;
     var AllResponses = [...ServiceRequest.backendServiceDetails];
@@ -1062,9 +1071,10 @@ class Report extends Component {
                 //ServiceRequest.documents=_docs;
                 formData["Documents"] = _docs;
                 Api.commonApiPost("/citizen-services/v1/requests/_create", {}, {"serviceReq": ServiceRequest}, null, true, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
-                  self.generateReceipt(res);
+                  //self.generateReceipt(res);
+                  localStorage.setItem("response", JSON.stringify(res));
                   self.props.setLoadingStatus("hide");
-
+                  self.makePayment();
                 }, function(err){
                   self.props.setLoadingStatus("hide");
                   self.props.toggleSnackbarAndSetText(true, err.message, false, true);
@@ -1084,9 +1094,10 @@ class Report extends Component {
             }
             formData["Documents"] = _docs;
             Api.commonApiPost("/citizen-services/v1/requests/_create", {}, {"serviceReq": ServiceRequest}, null, true, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
-              self.generateReceipt(res);
+              //self.generateReceipt(res);
+              localStorage.setItem("response", JSON.stringify(res));
               self.props.setLoadingStatus("hide");
-
+              self.makePayment();
             }, function(err){
               self.props.setLoadingStatus("hide");
               self.props.toggleSnackbarAndSetText(true, err.message, false, true);
@@ -1097,9 +1108,10 @@ class Report extends Component {
 
     } else {
       Api.commonApiPost("/citizen-services/v1/requests/_create", {}, {"serviceReq": ServiceRequest}, null, true, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
-        self.generateReceipt(res);
+        //self.generateReceipt(res);
+        localStorage.setItem("response", JSON.stringify(res));
         self.props.setLoadingStatus("hide");
-
+        self.makePayment();
       }, function(err){
         self.props.setLoadingStatus("hide");
         self.props.toggleSnackbarAndSetText(true, err.message, false, true);

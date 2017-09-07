@@ -1,6 +1,8 @@
 package org.egov.commons.repository.rowmapper;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
+import org.egov.commons.model.BusinessDetails;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,10 +10,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.egov.commons.model.BusinessCategory;
-import org.egov.commons.model.BusinessDetails;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Component
 public class BusinessDetailsRowMapper implements RowMapper<BusinessDetails> {
@@ -40,12 +39,7 @@ public class BusinessDetailsRowMapper implements RowMapper<BusinessDetails> {
 		try {
 			Date date = isEmpty(rs.getDate("voucherCutOffDate")) ? null
 					: sdf.parse(sdf.format(rs.getDate("voucherCutOffDate")));
-			businessDetails.setVoucherCutoffDate(date.getTime());
-			date = isEmpty(rs.getDate("createdDate")) ? null : sdf.parse(sdf.format(rs.getDate("createdDate")));
-			businessDetails.setCreatedDate(date.getTime());
-			date = isEmpty(rs.getDate("lastModifiedDate")) ? null
-					: sdf.parse(sdf.format(rs.getDate("lastModifiedDate")));
-			businessDetails.setLastModifiedDate(date.getTime());
+			businessDetails.setVoucherCutoffDate(date != null ? date.getTime() : null);
 		} catch (ParseException e) {
 			e.printStackTrace();
 			throw new SQLException("Parse exception while parsing date");

@@ -92,7 +92,7 @@ public class SchemeJdbcRepository extends JdbcRepository {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("fund =:fund");
+			params.append("fundId =:fund");
 			paramValues.put("fund", schemeSearchEntity.getFundId());
 		}
 		if (schemeSearchEntity.getCode() != null) {

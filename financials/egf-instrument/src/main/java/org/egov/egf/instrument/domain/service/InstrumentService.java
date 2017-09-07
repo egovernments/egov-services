@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.exception.CustomBindException;
+import org.egov.common.domain.exception.ErrorCode;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.instrument.domain.model.Instrument;
@@ -29,6 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.SmartValidator;
 
@@ -145,7 +147,9 @@ public class InstrumentService {
 				// errors);
 				break;
 			case ACTION_CREATE:
-				Assert.notNull(instruments, "Instruments to create must not be null");
+				if (instruments == null) {
+                    throw new InvalidDataException("instruments", ErrorCode.NOT_NULL.getCode(), null);
+                }
 				Calendar cal = Calendar.getInstance();
 				cal.add(Calendar.MONTH, -6);
 				Calendar cal1 = Calendar.getInstance();
@@ -186,19 +190,35 @@ public class InstrumentService {
 						break;
 					}
 					validator.validate(instrument, errors);
+					if (!instrumentRepository.uniqueCheck("transactionNumber", instrument)) {
+                        errors.addError(new FieldError("instrument", "transactionNumber", instrument.getTransactionNumber(), false,
+                                new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                    }
 				}
 				break;
 			case ACTION_UPDATE:
-				Assert.notNull(instruments, "Instruments to update must not be null");
+				if (instruments == null) {
+                    throw new InvalidDataException("instruments", ErrorCode.NOT_NULL.getCode(), null);
+                }
 				for (Instrument instrument : instruments) {
-					Assert.notNull(instrument.getId(), "Instrument ID to update must not be null");
+					if (instrument.getId() == null) {
+                        throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), instrument.getId());
+                    }
 					validator.validate(instrument, errors);
+					if (!instrumentRepository.uniqueCheck("transactionNumber", instrument)) {
+                        errors.addError(new FieldError("instrument", "transactionNumber", instrument.getTransactionNumber(), false,
+                                new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                    }
 				}
 				break;
 			case ACTION_DELETE:
-				Assert.notNull(instruments, "Instruments to delete must not be null");
+				if (instruments == null) {
+                    throw new InvalidDataException("instruments", ErrorCode.NOT_NULL.getCode(), null);
+                }
 				for (Instrument instrument : instruments) {
-					Assert.notNull(instrument.getId(), "Instrument ID to delete must not be null");
+					if (instrument.getId() == null) {
+                        throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), instrument.getId());
+                    }
 				}
 				break;
 			default:

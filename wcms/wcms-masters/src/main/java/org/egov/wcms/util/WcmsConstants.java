@@ -73,7 +73,7 @@ public class WcmsConstants {
     public static final String INVALID_SUPPLY_TYPE_REQUEST_MESSAGE = "Supply Type is invalid";
     public static final String INVALID_NON_METER_WATER_RATES_REQUEST_MESSAGE = "Non Meter Water Rates is invalid";
     public static final String INVALID_SERVICE_CHARGE_REQUEST_MESSAGE = "Service Charge is invalid";
-    
+
     public static final String USAGETYPE_NAME_UNIQUE_CODE = "wcms.0001";
     public static final String USAGETYPE_NAME_UNQ_FIELD_NAME = "name";
     public static final String USAGETYPE_UNQ_ERROR_MESSAGE = "Entered Usage Type already exist";
@@ -393,7 +393,7 @@ public class WcmsConstants {
     public static final String NON_METER_WATER_RATES_UNIQUE_CODE = "wcms.0075";
     public static final String NON_METER_WATER_RATES_UNQ_FIELD_NAME = "connectionType ,usageTypeName ,sourceTypeName ,pipeSize and fromDate ";
     public static final String NON_METER_WATER_RATES_UNQ_ERROR_MESSAGE = "Entered combination of ConnectionType,UsageType ,SourceType ,PipeSize and fromDate has already been mapped";
-    
+
     public static final String DONATION_UNIQUE_CODE = "wcms.0076";
     public static final String DONATION_UNQ_FIELD_NAME = "usageTypeName,subUsageType,catgeory ,maxPipeSize and minPipeSize";
     public static final String DONATION_UNQ_ERROR_MESSAGE = "Entered combination of UsageType ,subUsageType,CategoryType ,MaxPipeSize and MinPipeSize Inmm has already been mapped";
@@ -401,36 +401,35 @@ public class WcmsConstants {
     public static final String SERVICETYPE_MANDATORY_CODE = "wcms.0076";
     public static final String SERVICETYPE_MANADATORY_FIELD_NAME = "serviceType";
     public static final String SERVICETYPE_MANADATORY_ERROR_MESSAGE = "serviceType is required";
-    
+
     public static final String SERVICECHARGEAPPLICABLE_MANDATORY_CODE = "wcms.0077";
     public static final String SERVICECHARGEAPPLICABLE_MANADATORY_FIELD_NAME = "serviceChargeApplicable";
     public static final String SERVICECHARGEAPPLICABLE_MANADATORY_ERROR_MESSAGE = "serviceChargeApplicable is required";
 
     public static final String SERVICECHARGETYPE_MANDATORY_CODE = "wcms.0078";
     public static final String SERVICECHARGETYPE_MANADATORY_FIELD_NAME = "serviceChargeType";
-    public static final String SERVICECHARGETYPE_MANADATORY_ERROR_MESSAGE = "serviceChargeType is Required" ;
-  
+    public static final String SERVICECHARGETYPE_MANADATORY_ERROR_MESSAGE = "serviceChargeType is Required";
+
     public static final String SERVICECHARGEEFFECTIVEFROM_MANDATORY_CODE = "wcms.0079";
     public static final String SERVICECHARGEEFFECTIVEFROM_MANADATORY_FIELD_NAME = "effectiveFrom";
     public static final String SERVICECHARGEEFFECTIVEFROM_MANADATORY_ERROR_MESSAGE = "effectiveFrom is Required";
-    
+
     public static final String SERVICECHARGEEFFECTIVETO_MANDATORY_CODE = "wcms.0080";
     public static final String SERVICECHARGEEFFECTIVETO_MANADATORY_FIELD_NAME = "effectiveTo";
     public static final String SERVICECHARGEEFFECTIVETO_MANADATORY_ERROR_MESSAGE = "effectiveTo is Required";
-    
+
     public static final String SUB_USAGETYPE_INVALID_CODE = "wcms.0081";
     public static final String SUB_USAGETYPE_INVALID_ERROR_MESSAGE = "Please provide valid Sub Usage Type";
     public static final String SUB_USAGETYPE_INVALID_FIELD_NAME = "subUsage Type";
-    
-    
+
     public static final String GAPCODE_NAME_MANDATORY_CODE = "wcms.0082";
     public static final String GAPCODE_NAME_MANDATORY_FIELD_NAME = "name";
     public static final String GAPCODE_NAME_MANDATORY_ERROR_MESSAGE = "name is required";
-    
+
     public static final String NO_OF_MONTHS_MANDATORY_CODE = "wcms.0083";
     public static final String NO_OF_MONTHS_MANADATORY_FIELD_NAME = "noOfMonths";
     public static final String NO_OF_MONTHS_MANADATORY_ERROR_MESSAGE = "noOfMonths is required";
-    
+
     public static final String LOGIC_MANDATORY_CODE = "wcms.0084";
     public static final String LOGIC_MANADATORY_FIELD_NAME = "logic";
     public static final String LOGIC_MANADATORY_ERROR_MESSAGE = "logic is required";
@@ -439,14 +438,18 @@ public class WcmsConstants {
     public static final String CATEGORY_TYPE_INVALID_ERROR_MESSAGE = "Please provide valid Category Type";
     public static final String CATEGORY_TYPE_INVALID_FIELD_NAME = "category Type";
     
+    public static final String USGTYPE_MANDATORY_CODE = "wcms.0085";
+    public static final String USGTYPE_MANADATORY_FIELD_NAME = "name,tenantId";
+    public static final String USGTYPE_MANADATORY_ERROR_MESSAGE = "Entered UsageType name and tenantId combination already exists";
+
     public static final String ZONE = "Zone";
     public static final String REVENUE = "REVENUE";
     public static final String WARD = "Ward";
     public static final String LOCALITY = "Locality";
     public static final String LOCATION = "LOCATION";
-    
+
     public static final String WC = "WC";
-    
+
     public static final String SERVICE = "WC,COMMON";
 
     public String getErrorMessage(final String property) {

@@ -27,12 +27,19 @@ public class UOMValidator {
 		RequestInfo requestInfo = uomRequest.getRequestInfo();
 
 		for (UOM uom : uomRequest.getUoms()) {
+			
+			
 
 			Long uomId = null;
 
 			if (isNewUOM) {
 				AuditDetails auditDetails = utilityHelper.getCreateMasterAuditDetails(requestInfo);
 				uom.setAuditDetails(auditDetails);
+				
+				if(uom.getActive() == null){
+					uom.setActive(true);
+				}
+				
 			} else {
 
 				AuditDetails auditDetails = uom.getAuditDetails();

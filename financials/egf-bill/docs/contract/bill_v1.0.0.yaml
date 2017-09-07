@@ -1,0 +1,13 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: Bill Service
+  description: Bill services APIs - to create, update and search Bill. 
+  contact:
+    name: Manikanta P T
+    email: info@egovernments.org
+  
+basePath: "/egf-bill/v110"
+x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/egf-bill/contracts/v1-0-0.yml'
+x-api-id: 'org.egov.egf.bill'

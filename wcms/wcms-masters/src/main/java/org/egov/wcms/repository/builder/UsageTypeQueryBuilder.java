@@ -77,34 +77,58 @@ public class UsageTypeQueryBuilder {
             return;
         selectQuery.append(" WHERE");
         boolean isAppendAndClause = false;
-
-        if (usageTypeGetRequest.getIds() != null) {
-            isAppendAndClause = true;
-            selectQuery.append(" ut.id IN (:ids)");
-            preparedStatementValues.put("ids", usageTypeGetRequest.getIds());
-        }
         if (usageTypeGetRequest.getTenantId() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" ut.tenantid = :tenantId");
             preparedStatementValues.put("tenantId", usageTypeGetRequest.getTenantId());
         }
-        if (usageTypeGetRequest.getParent() != null) {
+        if (usageTypeGetRequest.getIds() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" ut.parent = :parent");
-            preparedStatementValues.put("parent", usageTypeGetRequest.getParent());
+            selectQuery.append(" ut.id IN (:ids)");
+            preparedStatementValues.put("ids", usageTypeGetRequest.getIds());
+        }
+
+        if (usageTypeGetRequest.getName() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" ut.name = :name");
+            preparedStatementValues.put("name", usageTypeGetRequest.getName());
         }
         if (usageTypeGetRequest.getCode() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" ut.code = :code");
             preparedStatementValues.put("code", usageTypeGetRequest.getCode());
         }
-
+        if (usageTypeGetRequest.getParent() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" ut.parent = :parent");
+            preparedStatementValues.put("parent", usageTypeGetRequest.getParent());
+        } else {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" ut.parent is null");
+        }
     }
 
     private boolean addAndClauseIfRequired(final boolean appendAndClauseFlag, final StringBuilder queryString) {
         if (appendAndClauseFlag)
             queryString.append(" AND");
         return true;
+    }
+
+    public String getUsageTypeInsertQuery() {
+        return "Insert into egwtr_usage_type (id,code,name,description,parent,active,createdby,createddate,"
+                + "lastModifiedby,lastmodifieddate,tenantid)values(:id,:code,:name,:description,:parent,"
+                + ":active,:createdby,:createddate,"
+                + ":lastmodifiedby,:lastmodifieddate,:tenantid)";
+    }
+
+    public String getUpdateUsageTypeQuery() {
+        return "Update egwtr_usage_type set name=:name,description=:description,parent=:parent,active=:active,"
+                + "lastmodifiedby=:lastmodifiedby,lastmodifieddate=:lastmodifieddate where code=:code and"
+                + " tenantid=:tenantid";
+    }
+
+    public String getUsageTypeIdQuery() {
+        return " select id FROM egwtr_usage_type  where name= :name and tenantId = :tenantId ";
     }
 
 }

@@ -41,10 +41,13 @@
 package org.egov.tradelicense.domain.service;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
@@ -72,7 +75,7 @@ public class LicenseBillService {
     @Autowired
     private RestTemplate restTemplate;
     
-    public DemandResponse createBill(final TradeLicense tradeLicense, final RequestInfo requestInfo) {
+    public DemandResponse createBill(final TradeLicense tradeLicense, final RequestInfo requestInfo) throws ParseException {
 
         List<Demand> demands = prepareBill(tradeLicense, requestInfo);
         DemandResponse demandRes = createBill(demands, requestInfo);
@@ -81,7 +84,7 @@ public class LicenseBillService {
         return demandRes;
     }
 
-    private List<Demand> prepareBill(final TradeLicense tradeLicense, final RequestInfo requestInfo) {
+    private List<Demand> prepareBill(final TradeLicense tradeLicense, final RequestInfo requestInfo) throws ParseException {
         List<Demand> demandList = new ArrayList<>();
         Date fromDate;
         Date toDate;
@@ -97,21 +100,25 @@ public class LicenseBillService {
         demand.setTenantId(tenantId);
         demand.setBusinessService(propertiesManager.getBillBusinessService());
         demand.setConsumerType(tradeType);
-        demand.setConsumerCode(tradeLicense.getApplicationNumber());
+        demand.setConsumerCode(tradeLicense.getApplication().getApplicationNumber());
         demand.setMinimumAmountPayable(BigDecimal.ONE);
         demandDetailsList = new ArrayList<>();
-        for (LicenseFeeDetail licenseFeeDetail : tradeLicense.getFeeDetails()) {
-            demandDetail = new DemandDetail();
-            demandDetail.setTaxHeadMasterCode(propertiesManager.getTaxHeadMasterCode());
-            demandDetail.setTaxAmount(BigDecimal.valueOf(licenseFeeDetail.getAmount()));
-            demandDetail.setTenantId(tenantId);
-            demandDetailsList.add(demandDetail);
-        }
+        demandDetail = new DemandDetail();
+        demandDetail.setTaxHeadMasterCode(propertiesManager.getTaxHeadMasterCode());
+        demandDetail.setTaxAmount(BigDecimal.valueOf(tradeLicense.getApplication().getLicenseFee()));
+        demandDetail.setTenantId(tenantId);
+        demandDetailsList.add(demandDetail);
         demand.setDemandDetails(demandDetailsList);
         FinancialYearContract currentFYResponse = financialYearService
                 .findFinancialYearIdByDate(tenantId, tradeLicense.getTradeCommencementDate(), requestInfoWrapper);
-        fromDate = currentFYResponse.getStartingDate();
-        date.setTimeInMillis(currentFYResponse.getEndingDate().getTime());
+        
+        // :TODO setting UTC is not advised, since Billing service is tweaking we are forced to do this
+        SimpleDateFormat dbDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        dbDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        fromDate = dbDateFormat.parse(sdf.format(currentFYResponse.getStartingDate()));
+        
+        date.setTimeInMillis(dbDateFormat.parse(sdf.format(currentFYResponse.getEndingDate())).getTime());
         date.add(Calendar.YEAR, tradeLicense.getValidityYears().intValue() - 1);
         toDate = date.getTime();
         demand.setTaxPeriodFrom(fromDate.getTime());

@@ -65,10 +65,10 @@ public class BankBranchControllerTest {
 				.thenReturn((getBankBranches()));
 
 		mockMvc.perform(post("/bankbranches/_create")
-				.content(resources.readRequest("bankbranch/bankBranchContractCreateRequest.json"))
+				.content(resources.readRequest("bankbranch/bankbranch_create_request.json"))
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(content().json(resources.readResponse("bankbranch/bankBranchContractCreateResponse.json")));
+				.andExpect(content().json(resources.readResponse("bankbranch/bankbranch_create_response.json")));
 
 		verify(bankBranchService).create(captor.capture(), any(BindingResult.class), any(RequestInfo.class));
 
@@ -84,10 +84,10 @@ public class BankBranchControllerTest {
 				.thenReturn((getUpdatedBankBranches()));
 
 		mockMvc.perform(post("/bankbranches/_update")
-				.content(resources.readRequest("bankbranch/bankBranchContractUpdateRequest.json"))
+				.content(resources.readRequest("bankbranch/bankbranch_update_request.json"))
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(content().json(resources.readResponse("bankbranch/bankBranchContractUpdateResponse.json")));
+				.andExpect(content().json(resources.readResponse("bankbranch/bankbranch_update_response.json")));
 
 		verify(bankBranchService).update(captor.capture(), any(BindingResult.class), any(RequestInfo.class));
 
@@ -113,7 +113,7 @@ public class BankBranchControllerTest {
 		mockMvc.perform(post("/bankbranches/_search").content(resources.getRequestInfo())
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(200))
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(content().json(resources.readResponse("bankbranch/bankBranchContractSearchResponse.json")));
+				.andExpect(content().json(resources.readResponse("bankbranch/bankbranch_search_response.json")));
 	}
 
 	@Test

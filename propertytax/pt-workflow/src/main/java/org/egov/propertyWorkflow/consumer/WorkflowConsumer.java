@@ -100,8 +100,6 @@ public class WorkflowConsumer {
 				property.getPropertyDetail().setStateId(taskResponse.getTask().getId());
 				String action = workflowDetailsRequestInfo.getWorkflowDetails().getAction();
 				if (action.equalsIgnoreCase(propertiesManager.getApproveProperty())) {
-					String upicNumber = generateUpicNo(property, propertyRequest);
-					property.setUpicNumber(upicNumber);
 					property.getPropertyDetail().setStatus(StatusEnum.ACTIVE);
 					kafkaTemplate.send(propertiesManager.getApproveWorkflow(), propertyRequest);
 				} else {

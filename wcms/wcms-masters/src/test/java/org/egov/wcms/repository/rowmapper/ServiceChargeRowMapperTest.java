@@ -39,6 +39,7 @@
  */
 package org.egov.wcms.repository.rowmapper;
 
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.sql.ResultSet;
@@ -78,7 +79,9 @@ public class ServiceChargeRowMapperTest {
         when((Long) rs.getObject("sc_createddate")).thenReturn(15678956L);
         when((Long) rs.getObject("sc_lastmodifiedby")).thenReturn(1L);
         when((Long) rs.getObject("sc_lastmodifieddate")).thenReturn(15678956L);
-        getServiceCharge();
+        final ServiceCharge expectedServiceCharge = getServiceCharge();
+        final ServiceCharge actualServiceCharge = serviceChargeRowMapper.mapRow(rs, 1);
+        assertTrue(expectedServiceCharge.equals(actualServiceCharge));
 
     }
 

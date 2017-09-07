@@ -82,4 +82,6 @@ public class ReceiptSearchCriteria {
     private String sortOrder;
 
     private String transactionId;
+
+    private List<String> manualReceiptNumbers;
 }

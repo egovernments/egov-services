@@ -147,10 +147,11 @@ public class RouterController {
         // Call service
         List<RouterType> routerTypeList;
         try {
-            routerTypeList = routerService.getRouterTypes(routerTypeGetRequest);
             if (!isEmpty(routerTypeGetRequest.getHierarchyType())) {
                 routerTypeList = routerService.getRouterByHierarchyType(routerTypeGetRequest);
             }
+            else
+                routerTypeList = routerService.getRouterTypes(routerTypeGetRequest);
         } catch (final Exception exception) {
             logger.error("Error while processing request " + routerTypeGetRequest, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);

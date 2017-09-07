@@ -114,14 +114,14 @@ public class ServiceChargeRepositoryTest {
     }
 
     @Test
-    public void test_should_push_create_serviceCharge_to_db() {
+    public void test_should_push_create_serviceCharge_to_queue() {
         when(applicationProperties.getCreateServiceChargeTopicName()).thenReturn("egov.wcms.servicecharge-create");
         serviceChargeRepository.pushServiceChargeCreateReqToQueue(getServiceChargeRequest());
         verify(kafkaTemplate).send("egov.wcms.servicecharge-create", getServiceChargeRequest());
     }
 
     @Test
-    public void test_should_push_update_serviceCharge_to_db() {
+    public void test_should_push_update_serviceCharge_to_queue() {
         when(applicationProperties.getUpdateServiceChargeTopicName()).thenReturn("egov.wcms.servicecharge-update");
         serviceChargeRepository.pushServiceChargeUpdateReqToQueue(getServiceChargeRequest());
         verify(kafkaTemplate).send("egov.wcms.servicecharge-update", getServiceChargeRequest());

@@ -132,6 +132,8 @@ public class VoucherContract extends AuditableContract {
 	@Length(max = 50)
 	private String budgetAppropriationNo;
 
+	private Boolean partial;
+	
 	private Set<LedgerContract> ledgers;
 
 	public BigDecimal getTotalAmount() {

@@ -52,11 +52,13 @@ class WorkFlow extends Component {
     }
   }
   worKFlowActions = () => {
-    Api.commonApiPost('egov-common-workflows/process/_search', {id:self.state.stateId},{}, false, true).then((response)=>{
-      self.setState({process : response.processInstance});
-    },function(err) {
-      self.props.handleError(err.message);
-    });
+    if(this.state.stateId){
+      Api.commonApiPost('egov-common-workflows/process/_search', {id:self.state.stateId},{}, false, true).then((response)=>{
+        self.setState({process : response.processInstance});
+      },function(err) {
+        self.props.handleError(err.message);
+      });
+    }
   }
   handleDesignation = (departmentId, property, isRequired, pattern) => {
     // Load designation based on department
@@ -66,6 +68,10 @@ class WorkFlow extends Component {
     });
     this.props.handleChange('', 'designationId', isRequired, pattern);
     this.props.handleChange('', 'positionId', isRequired, pattern);
+
+    if(!departmentId)
+      return;
+
     let departmentObj = this.state.workFlowDepartment.find(x => x.id === departmentId)
      Api.commonApiPost( 'egov-common-workflows/designations/_search',{businessKey:'New Trade License',departmentRule:'',currentStatus:self.state.process.status,amountRule:'',additionalRule:'',pendingAction:'',approvalDepartmentName:departmentObj.name,designation:''}, {},false, false).then((res)=>{
       for(var i=0; i<res.length;i++){
@@ -93,6 +99,10 @@ class WorkFlow extends Component {
     });
     self.props.handleChange('', 'positionId', isRequired, pattern);
     // Load position based on designation and department
+
+    if(!designationId)
+      return;
+
     Api.commonApiPost( '/hr-employee/employees/_search', {departmentId:self.state.departmentId, designationId:designationId}).then((response)=>{
         self.setState({workFlowPosition: response.Employee});
         self.props.handleChange(designationId, property, isRequired, pattern);

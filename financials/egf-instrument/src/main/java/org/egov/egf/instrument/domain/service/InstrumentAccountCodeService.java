@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.exception.CustomBindException;
+import org.egov.common.domain.exception.ErrorCode;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.instrument.domain.model.InstrumentAccountCode;
@@ -16,8 +17,8 @@ import org.egov.egf.master.web.repository.ChartOfAccountContractRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.SmartValidator;
 
@@ -128,24 +129,40 @@ public class InstrumentAccountCodeService {
 				// errors);
 				break;
 			case ACTION_CREATE:
-				Assert.notNull(instrumentaccountcodes, "InstrumentAccountCodes to create must not be null");
+				if (instrumentaccountcodes == null) {
+                    throw new InvalidDataException("instrumentaccountcodes", ErrorCode.NOT_NULL.getCode(), null);
+                }
 				for (InstrumentAccountCode instrumentAccountCode : instrumentaccountcodes) {
 					validator.validate(instrumentAccountCode, errors);
+					if (!instrumentAccountCodeRepository.uniqueCheck("AccountCode", instrumentAccountCode)) {
+                        errors.addError(new FieldError("instrumentAccountCode", "AccountCode", instrumentAccountCode.getAccountCode(), false,
+                                new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                    }
 				}
 				break;
 			case ACTION_UPDATE:
-				Assert.notNull(instrumentaccountcodes, "InstrumentAccountCodes to update must not be null");
+				if (instrumentaccountcodes == null) {
+                    throw new InvalidDataException("instrumentaccountcodes", ErrorCode.NOT_NULL.getCode(), null);
+                }
 				for (InstrumentAccountCode instrumentAccountCode : instrumentaccountcodes) {
-					Assert.notNull(instrumentAccountCode.getId(),
-							"InstrumentAccountCode ID to update must not be null");
+					if (instrumentAccountCode.getId() == null) {
+                        throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), instrumentAccountCode.getId());
+                    }
 					validator.validate(instrumentAccountCode, errors);
+					if (!instrumentAccountCodeRepository.uniqueCheck("AccountCode", instrumentAccountCode)) {
+                        errors.addError(new FieldError("instrumentAccountCode", "AccountCode", instrumentAccountCode.getAccountCode(), false,
+                                new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                    }
 				}
 				break;
 			case ACTION_DELETE:
-				Assert.notNull(instrumentaccountcodes, "InstrumentAccountCodes to delete must not be null");
+				if (instrumentaccountcodes == null) {
+                    throw new InvalidDataException("instrumentaccountcodes", ErrorCode.NOT_NULL.getCode(), null);
+                }
 				for (InstrumentAccountCode instrumentaccountcode : instrumentaccountcodes) {
-					Assert.notNull(instrumentaccountcode.getId(),
-							"InstrumentAccountCode ID to delete must not be null");
+					if (instrumentaccountcode.getId() == null) {
+                        throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), instrumentaccountcode.getId());
+                    }
 				}
 			default:
 

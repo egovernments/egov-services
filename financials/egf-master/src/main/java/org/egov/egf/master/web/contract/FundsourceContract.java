@@ -38,6 +38,7 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 package org.egov.egf.master.web.contract;
+
 import java.math.BigDecimal;
 
 import javax.validation.constraints.NotNull;
@@ -52,13 +53,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 
-@JsonPropertyOrder({ "id","code","name","type","fundSource","llevel","active","isParent"})
+@JsonPropertyOrder({ "id", "code", "name", "type", "fundSource", "llevel", "active", "isParent" })
 public class FundsourceContract extends AuditableContract {
 
 	private String id;
@@ -84,4 +86,7 @@ public class FundsourceContract extends AuditableContract {
 	// is this required
 	private Boolean isParent;
 
+	public FundsourceContract(String id) {
+		this.id = id;
+	}
 }

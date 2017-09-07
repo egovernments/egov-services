@@ -42,7 +42,6 @@ package org.egov.commons.web.contract;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -66,7 +65,7 @@ public class HolidayGetRequest {
     @Size(min = 3, max = 200)
     private String name;
 
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date applicableOn;
 
     @JsonFormat(pattern = "dd/MM/yyyy")

@@ -52,6 +52,9 @@ public class CategorySearch {
 
 	@JsonProperty("parentId")
 	private Long parentId = null;
+	
+	@JsonProperty("parentName")
+	private String parentName = null;
 
 	@JsonProperty("active")
 	private Boolean active = true;

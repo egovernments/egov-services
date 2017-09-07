@@ -147,8 +147,6 @@ public class CategoryQueryBuilder {
 			searchSql.append( subQuery );
 			
 		}
-		
-		
 
 		if (pageSize != null) {
 			searchSql.append(" limit :limit ");
@@ -161,5 +159,14 @@ public class CategoryQueryBuilder {
 		}
 
 		return searchSql.toString();
+	}
+	
+	
+	public static String getQueryForParentName (Long parentId , MapSqlParameterSource parameters){
+			
+			parameters.addValue("parentId", parentId);
+			
+			return "SELECT name FROM "+ConstantUtility.CATEGORY_TABLE_NAME+" WHERE id = :parentId";
+		
 	}
 }

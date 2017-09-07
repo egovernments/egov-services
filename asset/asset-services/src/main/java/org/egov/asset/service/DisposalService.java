@@ -16,9 +16,7 @@ import org.egov.asset.model.AssetStatus;
 import org.egov.asset.model.ChartOfAccountDetailContract;
 import org.egov.asset.model.Disposal;
 import org.egov.asset.model.DisposalCriteria;
-import org.egov.asset.model.Function;
-import org.egov.asset.model.Fund;
-import org.egov.asset.model.VouchercreateAccountCodeDetails;
+import org.egov.asset.model.VoucherAccountCodeDetails;
 import org.egov.asset.model.enums.AssetConfigurationKeys;
 import org.egov.asset.model.enums.AssetStatusObjectName;
 import org.egov.asset.model.enums.KafkaTopicName;
@@ -141,13 +139,12 @@ public class DisposalService {
                 .getSubledgerDetails(requestInfo, tenantId, disposal.getAssetSaleAccount());
         voucherService.validateSubLedgerDetails(subledgerDetailsForAssetAccount, subledgerDetailsForAssetSaleAccount);
 
-        final List<VouchercreateAccountCodeDetails> accountCodeDetails = getAccountDetails(disposal, assetCategory,
+        final List<VoucherAccountCodeDetails> accountCodeDetails = getAccountDetails(disposal, assetCategory,
                 requestInfo);
         log.debug("Voucher Create Account Code Details :: " + accountCodeDetails);
 
-        final Fund fund = voucherService.getFundFromVoucherMap(requestInfo, tenantId);
-        final VoucherRequest voucherRequest = voucherService.createVoucherRequest(disposal, fund,
-                asset.getDepartment().getId(), accountCodeDetails, requestInfo, tenantId);
+        final VoucherRequest voucherRequest = voucherService.createDisposalVoucherRequest(disposal,
+                asset.getDepartment().getId(), accountCodeDetails, headers);
 
         log.debug("Voucher Request for Disposal :: " + voucherRequest);
 
@@ -155,15 +152,14 @@ public class DisposalService {
 
     }
 
-    private List<VouchercreateAccountCodeDetails> getAccountDetails(final Disposal disposal,
+    private List<VoucherAccountCodeDetails> getAccountDetails(final Disposal disposal,
             final AssetCategory assetCategory, final RequestInfo requestInfo) {
-        final List<VouchercreateAccountCodeDetails> accountCodeDetails = new ArrayList<VouchercreateAccountCodeDetails>();
+        final List<VoucherAccountCodeDetails> accountCodeDetails = new ArrayList<VoucherAccountCodeDetails>();
         final String tenantId = disposal.getTenantId();
-        final Function function = voucherService.getFunctionFromVoucherMap(requestInfo, tenantId);
         accountCodeDetails.add(voucherService.getGlCodes(requestInfo, tenantId, disposal.getAssetSaleAccount(),
-                disposal.getSaleValue(), function, false, true));
+                disposal.getSaleValue(), false, true));
         accountCodeDetails.add(voucherService.getGlCodes(requestInfo, tenantId, assetCategory.getAssetAccount(),
-                disposal.getSaleValue(), function, true, false));
+                disposal.getSaleValue(), true, false));
         return accountCodeDetails;
     }
 

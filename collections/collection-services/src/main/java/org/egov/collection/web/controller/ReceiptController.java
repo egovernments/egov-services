@@ -109,7 +109,7 @@ public class ReceiptController {
                 .status(receiptGetRequest.getStatus())
                 .tenantId(receiptGetRequest.getTenantId())
                 .sortBy(receiptGetRequest.getSortBy())
-                .sortOrder(receiptGetRequest.getSortOrder())
+                .sortOrder(receiptGetRequest.getSortOrder()).manualReceiptNumbers(receiptGetRequest.getManualReceiptNumbers())
                 .transactionId(receiptGetRequest.getTransactionId()).build();
 
         final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();

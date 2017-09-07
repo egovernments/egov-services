@@ -1,7 +1,10 @@
 package org.egov.asset.web.validator;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -9,6 +12,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.asset.config.ApplicationProperties;
@@ -236,8 +240,7 @@ public class AssetValidator {
             validateFund(revaluation.getFund());
         }
 
-        final TypeOfChangeEnum typeOfChange = validateRevaluationForTypeOfChange(revaluation, asset,
-                enableVoucherGeneration);
+        final TypeOfChangeEnum typeOfChange = validateRevaluationForTypeOfChange(revaluation, asset);
 
         if (revaluation.getRevaluationAmount() == null)
             throw new RuntimeException(
@@ -292,8 +295,7 @@ public class AssetValidator {
                     "Fund from financials is necessary for Asset Revaluation,Asset Depreciation and Asset Sale/Disposal");
     }
 
-    private TypeOfChangeEnum validateRevaluationForTypeOfChange(final Revaluation revaluation, final Asset asset,
-            final boolean enableVoucherGeneration) {
+    private TypeOfChangeEnum validateRevaluationForTypeOfChange(final Revaluation revaluation, final Asset asset) {
         final TypeOfChangeEnum typeOfChange = revaluation.getTypeOfChange();
         if (typeOfChange == null)
             throw new RuntimeException("Type Of Change is necessary for asset revaluation");
@@ -363,19 +365,44 @@ public class AssetValidator {
         if (finacialYear == null && fromDate == null && toDate == null)
             throw new RuntimeException(
                     "financialyear and (time period)fromdate,todate both cannot be empty please provide atleast one value.");
-        
+
         if (finacialYear == null && fromDate != null && toDate == null)
             throw new RuntimeException("If From Date is selected then To date is mandatory.");
-        
+
         if (finacialYear == null && fromDate != null && toDate != null && !assetIdsCheck)
             throw new RuntimeException("Asset IDs are mandatory for custom time period.");
-        
+
+        if (finacialYear != null && fromDate != null && toDate != null) {
+            final int[] yearRange = Stream.of(finacialYear.split("-")).mapToInt(Integer::parseInt).toArray();
+            final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            final Calendar cal = Calendar.getInstance();
+            try {
+                final Date finYearStart = sdf.parse(yearRange[0] + "-04-01");
+                final Date finYearEnd = sdf.parse(yearRange[0] + 1 + "-03-31");
+
+                cal.setTimeInMillis(fromDate);
+                final Date fd = cal.getTime();
+
+                if (!(finYearStart.compareTo(fd) * fd.compareTo(finYearEnd) >= 0))
+                    throw new RuntimeException("From Date should belong to selected Financial Year.");
+
+                cal.setTimeInMillis(toDate);
+                final Date td = cal.getTime();
+
+                if (!(finYearStart.compareTo(td) * td.compareTo(finYearEnd) >= 0))
+                    throw new RuntimeException("To Date should belong to selected Financial Year.");
+            } catch (final ParseException e) {
+                e.printStackTrace();
+            }
+
+        }
+
         if (finacialYear == null && fromDate != null && toDate != null && assetIdsCheck)
             assetCriteria = AssetCriteria.builder().id(new ArrayList<Long>(assetIds)).status(status)
                     .fromCapitalizedValue(depreciationMinimumValue).tenantId(tenantId).fromDate(fromDate).toDate(toDate)
                     .build();
-        
-        if (finacialYear != null && fromDate == null && toDate == null && assetIdsCheck)
+
+        if (finacialYear != null && fromDate == null && toDate == null)
             assetCriteria = AssetCriteria.builder().id(new ArrayList<Long>(assetIds)).status(status)
                     .fromCapitalizedValue(depreciationMinimumValue).tenantId(tenantId).build();
 

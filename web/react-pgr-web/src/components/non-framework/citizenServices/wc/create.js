@@ -177,7 +177,12 @@ class Report extends Component {
     let self = this;
     specifications = require("../../../framework/specs/citizenService/wc/NewConnection").default;
     self.displayUI(specifications);
-
+    if(self.props.match.params.type == "receipt") {
+      self.props.setLoadingStatus("loading");
+      //DO WHATEVER YOU WANT TO DO AFTER PAYMENT & THEN CALL GENERATERECEIPT() FUNCTION
+      let response = JSON.parse(localStorage.response);
+      self.generateReceipt(response);
+    }
   }
 
   componentDidMount() {
@@ -811,6 +816,18 @@ class Report extends Component {
 
   openPaymentPopup = () => {
     this.setState({open: true});
+    // let {serviceRequest}=this.state;
+    // let self=this;
+    // let {formData,metaData}=this.props;
+    // self.props.setLoadingStatus('loading');
+
+    // window.localStorage.setItem("demands",JSON.stringify(demands));
+    // window.localStorage.setItem("applicationFeeDemand",JSON.stringify(applicationFeeDemand));
+    // window.localStorage.setItem("formData",JSON.stringify(formData));
+    // window.localStorage.setItem("serviceRequest",JSON.stringify(serviceRequest));
+    // window.localStorage.setItem("moduleName",this.props.match.params.id);
+    // window.localStorage.setItem("metaData",JSON.stringify(metaData));
+    // window.localStorage.setItem("workflow","no-dues");
   }
 
   generateReceipt = (response) => {
@@ -848,11 +865,18 @@ class Report extends Component {
     })
   }
 
+  makePayment = () => {
+    //DO EVERYTHING FOR MAKING PAYMENT HERE
+  }
+  
   updateRequest = (ServiceRequest) => {
     let self = this;
     self.props.setLoadingStatus("loading");
     Api.commonApiPost("/citizen-services/v1/requests/_create", {}, {"serviceReq": ServiceRequest}, null, true, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
-      self.generateReceipt(res);
+      //self.generateReceipt(res);
+      localStorage.setItem("response", JSON.stringify(res));
+      self.props.setLoadingStatus("hide");
+      self.makePayment();
     }, function(err){
       self.props.setLoadingStatus("hide");
       self.props.toggleSnackbarAndSetText(true, err.message, false, true);
@@ -983,7 +1007,7 @@ class Report extends Component {
     let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler, handleClose} = this;
     let {open, stepIndex} = this.state;
     let self = this;
-    
+
     const getStepContent = function (stepIndex) {
       switch (stepIndex) {
         case 0:
@@ -1038,7 +1062,7 @@ class Report extends Component {
                                           </td>
                                           <td style={{textAlign:"center"}}>
                                               <b>Roha Municipal Council</b><br/>
-                                              Water Charges Department
+                                              Water Department
                                           </td>
                                           <td style={{textAlign:"right"}}>
                                             <img src="./temp/images/AS.png" height="60" width="60"/>

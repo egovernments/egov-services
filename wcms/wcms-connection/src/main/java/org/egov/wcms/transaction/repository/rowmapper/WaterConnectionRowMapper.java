@@ -210,7 +210,7 @@ public class WaterConnectionRowMapper {
 		}
 		
 	}
-	
+
 	private Connection prepareConnectionObject(ResultSet rs) {
 		Connection connection = new Connection();
 		try {
@@ -228,8 +228,6 @@ public class WaterConnectionRowMapper {
 			connection.setNumberOfFamily(rs.getInt("numberoffamily"));
 			connection.setSupplyTypeId(rs.getString("supplytype_id"));
 			connection.setSupplyType(rs.getString("supplytype_name"));
-			connection.setCategoryId(rs.getString("category_id"));
-			connection.setCategoryType(rs.getString("category_name"));
 			connection.setHscPipeSizeType(rs.getString("pipesize_sizeininch"));
 			connection.setPipesizeId(rs.getString("pipesize_id"));
 			connection.setSourceTypeId(rs.getString("watersource_id"));

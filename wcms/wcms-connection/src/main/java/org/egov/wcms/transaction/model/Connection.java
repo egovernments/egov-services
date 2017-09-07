@@ -76,11 +76,6 @@ public class Connection {
     @NotNull
     private String billingType;
 
-    @NotNull
-    private String categoryType;
-
-    private String categoryId;
-    
     private Long userid;
 
     @NotNull
@@ -120,8 +115,6 @@ public class Connection {
     private String usageType;
     
     private String usageTypeId;
-    
-    private String usageTypeCode;
     
     @NotNull
     private String subUsageType;

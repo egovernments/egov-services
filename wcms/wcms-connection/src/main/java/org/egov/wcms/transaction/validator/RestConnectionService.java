@@ -58,7 +58,6 @@ import org.egov.wcms.transaction.web.contract.AckNoGenerationResponse;
 import org.egov.wcms.transaction.web.contract.BoundaryRequestInfo;
 import org.egov.wcms.transaction.web.contract.BoundaryRequestInfoWrapper;
 import org.egov.wcms.transaction.web.contract.BoundaryResponse;
-import org.egov.wcms.transaction.web.contract.CategoryResponseInfo;
 import org.egov.wcms.transaction.web.contract.DonationResponseInfo;
 import org.egov.wcms.transaction.web.contract.FinYearReq;
 import org.egov.wcms.transaction.web.contract.FinYearRes;
@@ -96,23 +95,6 @@ public class RestConnectionService {
     private ConfigurationManager configurationManager;
     
     private static final Logger logger = LoggerFactory.getLogger(RestConnectionService.class);
-
-    public CategoryResponseInfo getCategoryTypeByName(WaterConnectionReq waterConnectionRequest) {
-        StringBuilder url = new StringBuilder();
-        url.append(configurationManager.getWaterMasterServiceBasePathTopic())
-                .append(configurationManager.getWaterMasterServiceCategorySearchPathTopic());
-        final RequestInfo requestInfo = RequestInfo.builder().ts(11111111111L).build();
-        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
-        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
-        CategoryResponseInfo categoryRes = new RestTemplate().postForObject(url.toString(), request, CategoryResponseInfo.class,
-                waterConnectionRequest.getConnection().getCategoryType(), waterConnectionRequest.getConnection().getTenantId());
-        if (categoryRes != null && !categoryRes.getCategory().isEmpty()) {
-            waterConnectionRequest.getConnection()
-                    .setCategoryId(categoryRes.getCategory() != null && categoryRes.getCategory().get(0) != null
-                            ? String.valueOf(categoryRes.getCategory().get(0).getId()) : "");
-        }
-        return categoryRes;
-    }
 
     public TreatmentPlantResponse getTreateMentPlantName(WaterConnectionReq waterConnectionRequest) {
         StringBuilder url = new StringBuilder();
@@ -161,9 +143,6 @@ public class RestConnectionService {
 			waterConnectionRequest.getConnection()
 					.setUsageTypeId(response.getUsageTypes() != null && response.getUsageTypes().get(0) != null
 							? String.valueOf(response.getUsageTypes().get(0).getId()) : "");
-			waterConnectionRequest.getConnection()
-					.setUsageTypeCode(response.getUsageTypes() != null && response.getUsageTypes().get(0) != null
-							? response.getUsageTypes().get(0).getCode() : "");
 		}
 		return response;
 	}
@@ -176,7 +155,7 @@ public class RestConnectionService {
         final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
         UsageTypeResponse subUsageResponse = new RestTemplate().postForObject(url.toString(), request, UsageTypeResponse.class,
                 waterConnectionRequest.getConnection().getSubUsageType(), waterConnectionRequest.getConnection().getTenantId(),
-                waterConnectionRequest.getConnection().getUsageTypeCode());
+                waterConnectionRequest.getConnection().getUsageType());
         if (subUsageResponse != null && subUsageResponse.getUsageTypes() != null && !subUsageResponse.getUsageTypes().isEmpty()) {
             waterConnectionRequest.getConnection()
                     .setSubUsageTypeId(subUsageResponse.getUsageTypes() != null && subUsageResponse.getUsageTypes().get(0) != null
@@ -327,7 +306,7 @@ public class RestConnectionService {
                 .append("?usageTypeCode=").append(waterConnectionRequest.getConnection().getUsageType())
                 .append("&subUsageTypeCode=").append(waterConnectionRequest.getConnection().getSubUsageType())
                 .append("&category=")
-                .append(waterConnectionRequest.getConnection().getCategoryType()).append(
+                .append(
                         "&maxPipeSizeId=")
                 .append(
                         waterConnectionRequest.getConnection().getPipesizeId())

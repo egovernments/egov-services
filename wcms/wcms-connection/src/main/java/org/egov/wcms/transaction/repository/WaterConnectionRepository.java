@@ -119,67 +119,66 @@ public class WaterConnectionRepository {
                 statement.setString(2, waterConnectionRequest.getConnection().getConnectionType());
                 statement.setString(3, waterConnectionRequest.getConnection().getApplicationType());
                 statement.setString(4, waterConnectionRequest.getConnection().getBillingType());
-                statement.setString(5, waterConnectionRequest.getConnection().getCategoryId());
-                statement.setString(6, waterConnectionRequest.getConnection().getPipesizeId());
-                statement.setString(7, waterConnectionRequest.getConnection().getSupplyTypeId());
-                statement.setString(8, waterConnectionRequest.getConnection().getSourceTypeId());
-                statement.setString(9, waterConnectionRequest.getConnection().getConnectionStatus());
-                statement.setDouble(10, waterConnectionRequest.getConnection().getSumpCapacity());
-                statement.setInt(11, waterConnectionRequest.getConnection().getNumberOfTaps());
-                statement.setInt(12, waterConnectionRequest.getConnection().getNumberOfPersons());
-                statement.setString(13, waterConnectionRequest.getConnection().getAcknowledgementNumber());
-                statement.setLong(14, waterConnectionRequest.getRequestInfo().getUserInfo().getId());
-                statement.setLong(15, waterConnectionRequest.getRequestInfo().getUserInfo().getId());
+                statement.setString(5, waterConnectionRequest.getConnection().getPipesizeId());
+                statement.setString(6, waterConnectionRequest.getConnection().getSupplyTypeId());
+                statement.setString(7, waterConnectionRequest.getConnection().getSourceTypeId());
+                statement.setString(8, waterConnectionRequest.getConnection().getConnectionStatus());
+                statement.setDouble(9, waterConnectionRequest.getConnection().getSumpCapacity());
+                statement.setInt(10, waterConnectionRequest.getConnection().getNumberOfTaps());
+                statement.setInt(11, waterConnectionRequest.getConnection().getNumberOfPersons());
+                statement.setString(12, waterConnectionRequest.getConnection().getAcknowledgementNumber());
+                statement.setLong(13, waterConnectionRequest.getRequestInfo().getUserInfo().getId()); 
+                statement.setLong(14, waterConnectionRequest.getRequestInfo().getUserInfo().getId()); 
+                statement.setDate(15, new Date(new java.util.Date().getTime()));
                 statement.setDate(16, new Date(new java.util.Date().getTime()));
-                statement.setDate(17, new Date(new java.util.Date().getTime()));
-                statement.setString(18, waterConnectionRequest.getConnection().getPropertyIdentifier());
-                statement.setString(19, waterConnectionRequest.getConnection().getUsageTypeId());
+                statement.setString(17, waterConnectionRequest.getConnection().getPropertyIdentifier());
+                statement.setString(18, waterConnectionRequest.getConnection().getUsageTypeId());
                 if(waterConnectionRequest.getConnection().getWithProperty()) { 
-                	statement.setString(20, waterConnectionRequest.getConnection().getProperty().getAddress());	
+                	statement.setString(19, waterConnectionRequest.getConnection().getProperty().getAddress());	
                 } else { 
-                	statement.setString(20, waterConnectionRequest.getConnection().getAddress().getAddressLine1());
+                	statement.setString(19, waterConnectionRequest.getConnection().getAddress().getAddressLine1());
                 }
-                statement.setDouble(21, waterConnectionRequest.getConnection().getDonationCharge());
+                statement.setDouble(20, waterConnectionRequest.getConnection().getDonationCharge());
 
-                statement.setString(22, waterConnectionRequest.getConnection().getAssetIdentifier());
-                statement.setString(23, waterConnectionRequest.getConnection().getWaterTreatmentId());
-                statement.setBoolean(24, waterConnectionRequest.getConnection().getIsLegacy());
+                statement.setString(21, waterConnectionRequest.getConnection().getAssetIdentifier());
+                statement.setString(22, waterConnectionRequest.getConnection().getWaterTreatmentId());
+                statement.setBoolean(23, waterConnectionRequest.getConnection().getIsLegacy());
                 if (!waterConnectionRequest.getConnection().getIsLegacy() && waterConnectionRequest.getConnection().getId() == 0){
                     waterConnectionRequest.getConnection().setStatus(NewConnectionStatus.CREATED.name());
-                    statement.setString(25, NewConnectionStatus.CREATED.name());
+                    statement.setString(24, NewConnectionStatus.CREATED.name());
                 }
                 else if (waterConnectionRequest.getConnection().getIsLegacy()){
                     waterConnectionRequest.getConnection().setStatus(NewConnectionStatus.SANCTIONED.name());
-                    statement.setString(25, NewConnectionStatus.SANCTIONED.name());
+                    statement.setString(24, NewConnectionStatus.SANCTIONED.name());
                 }
                 else{
-                    statement.setString(25, NewConnectionStatus.VERIFIED.name());
+                    statement.setString(24, NewConnectionStatus.VERIFIED.name());
                     waterConnectionRequest.getConnection().setStatus(NewConnectionStatus.VERIFIED.name());
                 }
-                statement.setDouble(26, waterConnectionRequest.getConnection().getNumberOfFamily());
-                statement.setString(27, waterConnectionRequest.getConnection().getSubUsageTypeId());
-                statement.setString(28,waterConnectionRequest.getConnection().getPlumberName());
-                statement.setDouble(29, waterConnectionRequest.getConnection().getBillSequenceNumber()!=null?
+                statement.setDouble(25, waterConnectionRequest.getConnection().getNumberOfFamily());
+                statement.setString(26, waterConnectionRequest.getConnection().getSubUsageTypeId());
+                statement.setString(27,waterConnectionRequest.getConnection().getPlumberName());
+                statement.setDouble(28, waterConnectionRequest.getConnection().getBillSequenceNumber()!=null?
                         waterConnectionRequest.getConnection().getBillSequenceNumber():0l);
 
-                statement.setBoolean(30, waterConnectionRequest.getConnection().getOutsideULB());
-                statement.setString(31, waterConnectionRequest.getConnection().getStorageReservoirId());
+                statement.setBoolean(29, waterConnectionRequest.getConnection().getOutsideULB());
+                statement.setString(30, waterConnectionRequest.getConnection().getStorageReservoirId());
 
                 if (waterConnectionRequest.getConnection().getIsLegacy()
                         ) {
-                    statement.setString(32, waterConnectionRequest.getConnection().getLegacyConsumerNumber());
-                    statement.setString(33, waterConnectionRequest.getConnection().getConsumerNumber());
-                    statement.setLong(34, waterConnectionRequest.getConnection().getExecutionDate());
-                    statement.setInt(35, waterConnectionRequest.getConnection().getNoOfFlats());
-                   statement.setString(36, waterConnectionRequest.getConnection().getManualConsumerNumber());
-                   statement.setString(37, waterConnectionRequest.getConnection().getHouseNumber());
-                   statement.setString(38, waterConnectionRequest.getConnection().getManualReceiptNumber());
-                   statement.setLong(39, waterConnectionRequest.getConnection().getManualReceiptDate());
+                    statement.setString(31, waterConnectionRequest.getConnection().getLegacyConsumerNumber());
+                    statement.setString(32, waterConnectionRequest.getConnection().getConsumerNumber());
+                    statement.setLong(33, waterConnectionRequest.getConnection().getExecutionDate());
+                    statement.setInt(34, waterConnectionRequest.getConnection().getNoOfFlats());
+                   statement.setString(35, waterConnectionRequest.getConnection().getManualConsumerNumber());
+                   statement.setString(36, waterConnectionRequest.getConnection().getHouseNumber());
+                   statement.setString(37, waterConnectionRequest.getConnection().getManualReceiptNumber());
+                   statement.setLong(38, waterConnectionRequest.getConnection().getManualReceiptDate());
 
                 }
                
                 if (waterConnectionRequest.getConnection().getParentConnectionId() != 0)
-                    statement.setLong(35, waterConnectionRequest.getConnection().getParentConnectionId());
+                    statement.setLong(34, waterConnectionRequest.getConnection().getParentConnectionId());
                 
                 
                 // Please verify if there's proper validation on all these fields to avoid NPE.
@@ -233,10 +232,10 @@ public class WaterConnectionRepository {
                     	statement.setString(4, waterConnectionRequest.getConnection().getMeter().get(0).getMeterSlNo());
                     	statement.setString(5,  waterConnectionRequest.getConnection().getMeter().get(0).getMeterCost());  
                     	statement.setString(6, waterConnectionRequest.getConnection().getTenantId());
-                    	statement.setLong(7, waterConnectionRequest.getRequestInfo().getUserInfo().getId());
+                    	statement.setLong(7, waterConnectionRequest.getRequestInfo().getUserInfo().getId()); 
                     	statement.setDate(8, new Date(new java.util.Date().getTime()));
 
-                    	statement.setLong(9, waterConnectionRequest.getRequestInfo().getUserInfo().getId());
+                    	statement.setLong(9, waterConnectionRequest.getRequestInfo().getUserInfo().getId()); 
                     	statement.setDate(10, new Date(new java.util.Date().getTime()));
                     	statement.setString(11, waterConnectionRequest.getConnection().getMeter().get(0).getMeterOwner()!=null?
                     			waterConnectionRequest.getConnection().getMeter().get(0).getMeterOwner():"");
@@ -266,8 +265,8 @@ public class WaterConnectionRepository {
                 	final Object[] obj = { meterId,
                 			meterReading.getReading(),
                 			meterReading.getReadingDate(),waterConnectionRequest.getConnection().getTenantId(),
-                			waterConnectionRequest.getRequestInfo().getUserInfo().getId(), new Date(new java.util.Date().getTime()),
-                			waterConnectionRequest.getRequestInfo().getUserInfo().getId(), new Date(new java.util.Date().getTime()),
+                			waterConnectionRequest.getRequestInfo().getUserInfo().getId() , new Date(new java.util.Date().getTime()),
+                			waterConnectionRequest.getRequestInfo().getUserInfo().getId() , new Date(new java.util.Date().getTime()),
                 			meterReading.getGapCode() != null ? meterReading.getGapCode() : "",
                 			meterReading.getConsumption() != null ? meterReading.getConsumption() : "",
                 			meterReading.getConsumptionAdjusted() != null ? meterReading.getConsumptionAdjusted() : "",
@@ -346,7 +345,7 @@ public class WaterConnectionRepository {
 					        ?conn.getConnectionLocation().getLocationBoundary().getId():0l)); 
 					statement.setLong(3, (conn.getConnectionLocation().getAdminBoundary()!=null ?
 					        conn.getConnectionLocation().getAdminBoundary().getId():0l));
-					statement.setLong(4, waterConnectionReq.getRequestInfo().getUserInfo().getId());
+					statement.setLong(4, waterConnectionReq.getRequestInfo().getUserInfo().getId()); 
 					statement.setDate(5, new Date(new java.util.Date().getTime()));
 					return statement;
 				}
@@ -497,7 +496,7 @@ public class WaterConnectionRepository {
             jdbcTemplate.update(insertDemandConnectionQuery, objValue);
         }
         final Object[] obj = new Object[] { connection.getConnectionType(), connection.getApplicationType(),
-                connection.getCategoryType(), connection.getBillingType(),
+                connection.getBillingType(),
                 connection.getHscPipeSizeType(), connection.getSourceType(), connection.getConnectionStatus(),
                 connection.getSumpCapacity(), connection.getNumberOfTaps(),
                 connection.getNumberOfPersons(), Long.valueOf(waterConnectionReq.getRequestInfo().getUserInfo().getId()),

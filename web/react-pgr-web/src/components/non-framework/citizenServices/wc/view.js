@@ -258,7 +258,7 @@ class Report extends Component {
 
       })*/
       //Fetch service request
-    if(self.props.match.params.type == "pay") {
+    if(self.props.match.params.status == "pay") {
 
         let metaData=JSON.parse(localStorage.getItem("metaData")),paymentGateWayRes=JSON.parse(localStorage.getItem("paymentGateWayResponse"));
         self.props.setLoadingStatus("loading");
@@ -284,7 +284,7 @@ class Report extends Component {
           });
 
           self.props.setFormData(res2 && res2.serviceReq && res2.serviceReq[0] ? res2.serviceReq[0].moduleObject : {});
-          self.setInitialUpdateData((res2 && res2.serviceReq && res2.serviceReq[0] ? res2.serviceReq[0].moduleObject : {}), JSON.parse(JSON.stringify(specifications)), "fn", "view", "Connection");
+          self.setInitialUpdateData((res2 && res2.serviceReq && res2.serviceReq[0] ? res2.serviceReq[0].moduleObject : {}), JSON.parse(JSON.stringify(specifications)), "wc", "view", "Connection");
       }, function(err) {
       })
     }

@@ -248,7 +248,7 @@ class Report extends Component {
     params.append('scope', 'read');
     params.append('tenantId', window.localStorage.getItem("tenantId"));
 
-    if(self.props.match.params.type == "pay") {
+    if(self.props.match.params.status == "pay") {
       let metaData=JSON.parse(localStorage.getItem("metaData")),paymentGateWayRes=JSON.parse(localStorage.getItem("paymentGateWayResponse"));
       self.props.setLoadingStatus("loading");
       //DO WHATEVER YOU WANT TO DO AFTER PAYMENT & THEN CALL GENERATERECEIPT() FUNCTION
@@ -402,8 +402,8 @@ class Report extends Component {
    window.localStorage.setItem("formData",JSON.stringify(formData));
    window.localStorage.setItem("moduleName",this.props.match.params.id);
    window.localStorage.setItem("metaData",JSON.stringify(metaData));
-   window.localStorage.setItem("workflow","view");
-   window.localStorage.setItem("ack",this.props.match.params.ack);
+   window.localStorage.setItem("workflow", "fireNoc");
+   window.localStorage.setItem("ack", this.props.match.params.ackNo);
    
 
    var PGRequest= {

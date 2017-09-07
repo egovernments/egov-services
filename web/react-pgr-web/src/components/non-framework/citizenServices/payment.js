@@ -41,6 +41,8 @@ class Payment extends Component {
             setRoute("/non-framework/citizenServices/"+window.localStorage.getItem("workflow")+"/pay/"+window.localStorage.getItem("moduleName")+"/success");
           } else if (window.localStorage.getItem("workflow")=="view") {
             setRoute("/non-framework/citizenServices/"+window.localStorage.getItem("workflow")+"/pay/"+window.localStorage.getItem("moduleName")+"/"+window.localStorage.getItem("ack")+"/success");
+          } else if (window.localStorage.getItem("workflow")=="fireNoc") {
+            setRoute("/non-framework/citizenServices/"+window.localStorage.getItem("workflow")+"/pay/"+window.localStorage.getItem("moduleName")+"/"+window.localStorage.getItem("ack")+"/success");
           } else {
             setRoute("/non-framework-cs/citizenServices/"+window.localStorage.getItem("workflow")+"/pay/"+window.localStorage.getItem("moduleName")+"/success");
           }

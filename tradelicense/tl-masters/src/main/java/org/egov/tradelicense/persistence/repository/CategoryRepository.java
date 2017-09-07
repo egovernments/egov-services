@@ -269,8 +269,12 @@ public class CategoryRepository {
 			category.setCode(getString(row.get("code")));
 			category.setName(getString(row.get("name")));
 			category.setActive(getBoolean(row.get("active")));
-			category.setParentId(parentId == 0 ? null : parentId);
-			category.setParentName(getParentName(parentId));
+			category.setParentId(parentId == null ? null : parentId);
+			if(parentId != null){
+				category.setParentName(getParentName(parentId));
+			} else {
+				category.setParentName(null);
+			}
 			category.setValidityYears( getLong( row.get("validityYears")));
 			AuditDetails auditDetails = new AuditDetails();
 			auditDetails.setCreatedBy(getString(row.get("createdby")));
@@ -290,7 +294,8 @@ public class CategoryRepository {
 
 		String parentName = null;
 		
-		if(parentId != null && parentId != 0){
+		if(parentId != null){
+			
 			MapSqlParameterSource parameters = new MapSqlParameterSource();
 			String sql = CategoryQueryBuilder.getQueryForParentName(parentId, parameters);
 			List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(sql, parameters);

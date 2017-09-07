@@ -155,7 +155,7 @@ class NoDues extends Component {
             console.log(Receipt);
             // self.setState({open: true});
             // self.props.setLoadingStatus('hide');
-            window.localStorage.setItem("ReceiptOne",JSON.stringify(Receipt))
+            window.localStorage.setItem("Receipt",JSON.stringify(Receipt))
 
             var PGRequest= {
                   "billNumber": Receipt[0]["Bill"][0].billDetails[0].billNumber,
@@ -598,11 +598,11 @@ class NoDues extends Component {
 
   pay=()=>{
     let {localStorage}=window;
-    var serviceRequest=JSON.parse(localStorage.getItem("serviceRequest")),Receipt=JSON.parse(localStorage.getItem("Receipt")),ReceiptOne=JSON.parse(localStorage.getItem("ReceiptOne")),applicationFeeDemand=JSON.parse(localStorage.getItem("applicationFeeDemand")),demands=JSON.parse(localStorage.getItem("demands")),formData=JSON.parse(localStorage.getItem("formData")),metaData=JSON.parse(localStorage.getItem("metaData")),paymentGateWayRes=JSON.parse(localStorage.getItem("paymentGateWayResponse"));
+    var serviceRequest=JSON.parse(localStorage.getItem("serviceRequest")),Receipt=JSON.parse(localStorage.getItem("Receipt")),applicationFeeDemand=JSON.parse(localStorage.getItem("applicationFeeDemand")),demands=JSON.parse(localStorage.getItem("demands")),formData=JSON.parse(localStorage.getItem("formData")),metaData=JSON.parse(localStorage.getItem("metaData")),paymentGateWayRes=JSON.parse(localStorage.getItem("paymentGateWayResponse"));
     this.setState({
       serviceRequest,
       Receipt,
-      ReceiptOne,
+      ReceiptOne: [],
       applicationFeeDemand,
       demands
     })

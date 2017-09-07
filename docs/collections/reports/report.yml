@@ -215,6 +215,7 @@ ReportDefinitions:
   - name: SERVICE_NAME
     label: reports.collection.service.name
     type: string
+    total: true
     source: collection
   searchParams:
   - name: fromDate
@@ -347,7 +348,7 @@ ReportDefinitions:
   - name: paymentmode
     label: reports.collection.paymentmode
     type: singlevaluelist
-    pattern: 'list://Cash:Cash,Cheque:Cheque,DD:DD'
+    pattern: 'list://Cash:Cash,Cheque:Cheque,DD:DD,Online:Online'
     source: collection
     isMandatory: false
     searchClause : AND EGF_INSTRUMENT.INSTRUMENTTYPEID = $paymentmode

@@ -279,6 +279,26 @@ ReportDefinitions:
     source: wcms
     total: true
   searchParams:
+  - name: wardid
+    label: reports.wcms.wardno
+    type: singlevaluelist
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=WARD&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name
+    source: wcms
+    isMandatory: false
+    searchClause: and prop.wardid = $wardid
+  - name: zoneid
+    label: reports.wcms.zone
+    type: singlevaluelist
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name
+    source: wcms
+    isMandatory: false
+    searchClause: and prop.zoneid = $zoneid
+  - name: consumerNumber
+    label: reports.wcms.consumerno
+    type: string
+    source: wcms
+    isMandatory: false
+    searchClause: and prop.hscno = $consumerNumber
   - name: fromDate
     label: reports.wcms.fromdate
     type: epoch
@@ -290,34 +310,7 @@ ReportDefinitions:
     type: epoch
     source: wcms
     isMandatory: false
-    searchClause: and prop.executiondate <= $toDate
-  - name: zoneid
-    label: reports.wcms.zone
-    type: singlevaluelist
-    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name
-    source: wcms
-    isMandatory: false
-    searchClause: and prop.zoneid = $zoneid
-  - name: wardid
-    label: reports.wcms.ward
-    type: singlevaluelist
-    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=WARD&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name
-    source: wcms
-    isMandatory: false
-    searchClause: and prop.wardid = $wardid
-  - name: consumerNumber
-    label: reports.wcms.consumerNumber
-    type: string
-    source: wcms
-    isMandatory: false
-    searchClause: and prop.hscno = $consumerNumber
-  - name: usage
-    label: reports.wcms.usage
-    type: singlevaluelist
-    pattern: http://pt-property:8080/pt-property/property/usages/_search?tenantId=default&pageSize=500|$..id|$..name    		
-    source: wcms
-    isMandatory: false
-    searchClause: and prop.usagetype = $usage	
+    searchClause: and prop.executiondate <= $toDate  	
   query: select * from ((select prop.hscno as hscno,prop.username as consumerName,
          'CURRENT' as STATE, SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount) ELSE NULL END)) AS WT_DEMAND,
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.collectionamount) ELSE NULL END)) AS WT_COLL,

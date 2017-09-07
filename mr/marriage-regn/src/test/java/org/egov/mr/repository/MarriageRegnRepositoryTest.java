@@ -165,10 +165,10 @@ public class MarriageRegnRepositoryTest {
 		PriestInfo priest = PriestInfo.builder().aadhaar("32425365675").address("addreee").email("email")
 				.mobileNo("459876799").religion(0l).name("string").build();
 
-		RegistrationUnit regnunit = RegistrationUnit.builder().id(33L).code("AP").name("kurnool")
+		RegistrationUnit regnunit = RegistrationUnit.builder().id(33L).name("kurnool")
 				.address(Location.builder().locality(60L).zone(147896325L).revenueWard(150L).block(14788L)
 						.street(159632478L).electionWard(123456789L).doorNo("132").pinCode(560103).build())
-				.isActive(true).tenantId("ap.kurnool").auditDetails(auditDetails).build();
+				.isMainRegistrationUnit(true).isActive(true).tenantId("ap.kurnool").auditDetails(auditDetails).build();
 
 		MarryingPerson bridegroom = MarryingPerson.builder().aadhaar("23546576878").city("bangalore").dob(121234l)
 				.education("BE").email("email").id(10l).mobileNo("9246745333").name("bridegroom name1")

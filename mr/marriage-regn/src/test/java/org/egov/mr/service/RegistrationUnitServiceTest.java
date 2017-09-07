@@ -81,18 +81,21 @@ public class RegistrationUnitServiceTest {
 		AuditDetails auditDetails = AuditDetails.builder().createdBy("123").lastModifiedBy("156").createdTime(159L)
 				.lastModifiedTime(147L).build();
 		// Data For Search
-		regnunitsList.add(RegistrationUnit.builder().id(26L).code("KA").name("Koramangala")
+		regnunitsList.add(RegistrationUnit.builder().id(26L).name("Koramangala")
 				.address(Location.builder().locality(60L).zone(147896325L).revenueWard(150L).block(14788L)
 						.street(159632478L).electionWard(123456789L).doorNo("132").pinCode(560103).build())
-				.isActive(true).tenantId("KA.BANGALORE").auditDetails(auditDetails).build());
-		regnunitsList.add(RegistrationUnit.builder().id(27L).code("KA").name("JP Nagar")
+				.isMainRegistrationUnit(true).isActive(true).tenantId("KA.BANGALORE").auditDetails(auditDetails)
+				.build());
+		regnunitsList.add(RegistrationUnit.builder().id(27L).name("JP Nagar")
 				.address(Location.builder().locality(60L).zone(147896325L).revenueWard(150L).block(14788L)
 						.street(159632478L).electionWard(123456789L).doorNo("132").pinCode(560103).build())
-				.isActive(true).tenantId("KA.BANGALORE").auditDetails(auditDetails).build());
-		regnunitsList.add(RegistrationUnit.builder().id(28L).code("KA").name("Jaya Nagar")
+				.isMainRegistrationUnit(true).isActive(true).tenantId("KA.BANGALORE").auditDetails(auditDetails)
+				.build());
+		regnunitsList.add(RegistrationUnit.builder().id(28L).name("Jaya Nagar")
 				.address(Location.builder().locality(60L).zone(147896325L).revenueWard(150L).block(14788L)
 						.street(159632478L).electionWard(123456789L).doorNo("132").pinCode(560103).build())
-				.isActive(true).tenantId("KA.BANGALORE").auditDetails(auditDetails).build());
+				.isMainRegistrationUnit(true).isActive(true).tenantId("KA.BANGALORE").auditDetails(auditDetails)
+				.build());
 		// Data For CreateAsync
 		// regnunitsList.add(RegistrationUnit.builder().id(29L).name("hyderabad")
 		// .address(Location.builder().locality(60L).zone(147896325L).revenueWard(150L).block(14788L)

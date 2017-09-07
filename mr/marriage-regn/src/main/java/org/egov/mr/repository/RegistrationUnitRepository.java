@@ -40,10 +40,11 @@ public class RegistrationUnitRepository {
 		/**
 		 * @Object created according to the registration_unit table structure
 		 */
-		Object[] obj = new Object[] { registrationUnit.getId(), registrationUnit.getCode(), registrationUnit.getName(),
+		Object[] obj = new Object[] { registrationUnit.getId(), registrationUnit.getName(),
 				registrationUnit.getIsActive(), registrationUnit.getTenantId(), location.getLocality(),
 				location.getZone(), location.getRevenueWard(), location.getBlock(), location.getStreet(),
-				location.getElectionWard(), location.getDoorNo(), location.getPinCode(), auditDetails.getCreatedBy(),
+				location.getElectionWard(), location.getDoorNo(), location.getPinCode(),
+				registrationUnit.getIsMainRegistrationUnit(), auditDetails.getCreatedBy(),
 				auditDetails.getLastModifiedBy(), auditDetails.getCreatedTime(), auditDetails.getLastModifiedTime() };
 		try {
 			/**
@@ -78,12 +79,12 @@ public class RegistrationUnitRepository {
 		/**
 		 * @Object created according to the registration_unit table structure
 		 */
-		Object[] obj = new Object[] { registrationUnit.getCode(), registrationUnit.getName(),
-				registrationUnit.getIsActive(), location.getLocality(), location.getZone(), location.getRevenueWard(),
-				location.getBlock(), location.getStreet(), location.getElectionWard(), location.getDoorNo(),
-				location.getPinCode(), auditDetails.getCreatedBy(), auditDetails.getLastModifiedBy(),
-				auditDetails.getCreatedTime(), auditDetails.getLastModifiedTime(), registrationUnit.getId(),
-				registrationUnit.getTenantId() };
+		Object[] obj = new Object[] { registrationUnit.getName(), registrationUnit.getIsActive(),
+				location.getLocality(), location.getZone(), location.getRevenueWard(), location.getBlock(),
+				location.getStreet(), location.getElectionWard(), location.getDoorNo(), location.getPinCode(),
+				registrationUnit.getIsMainRegistrationUnit(), auditDetails.getCreatedBy(),
+				auditDetails.getLastModifiedBy(), auditDetails.getCreatedTime(), auditDetails.getLastModifiedTime(),
+				registrationUnit.getId(), registrationUnit.getTenantId() };
 		try {
 			jdbcTemplate.update(registrationUnitQueryBuilder.getUpdateQuery(), obj);
 		} catch (DataAccessException e) {

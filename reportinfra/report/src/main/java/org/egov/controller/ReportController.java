@@ -61,11 +61,11 @@ public class ReportController {
 		}
 	}
 	
-	@PostMapping("/_reload")
+	@PostMapping("{moduleName}/_reload")
 	@ResponseBody
-	public ResponseEntity<?> reloadYamlData(@RequestBody @Valid final MetaDataRequest reportRequest,
+	public ResponseEntity<?> reloadYamlData(@PathVariable("moduleName") String moduleName,@RequestBody @Valid final MetaDataRequest reportRequest,
 			final BindingResult errors) {
-		ReportApp.loadYaml();
+		ReportApp.loadYaml(moduleName);
 		return reportService.reloadResponse(reportRequest.getRequestInfo());
 	}
 	

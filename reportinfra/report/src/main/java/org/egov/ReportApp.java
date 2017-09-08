@@ -16,6 +16,7 @@ import org.egov.swagger.model.ReportDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.EnvironmentAware;
@@ -74,7 +75,8 @@ public class ReportApp implements EnvironmentAware {
 	
 	
 	@Bean("reportDefinitions")
-	public static ReportDefinitions loadYaml() {
+	@Value("common")
+	public static ReportDefinitions loadYaml(String moduleName) {
     
 	ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 	mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -90,46 +92,70 @@ public class ReportApp implements EnvironmentAware {
 	try {
     //Local Testing
 	Resource resource = resourceLoader.getResource("file:/ws/reportFileLocations.txt");
-	
 	File file = resource.getFile();
+	fr = new FileReader(file);
+	br = new BufferedReader(fr);
 	
 	//Dev Testing
-	 URL url = new URL("https://raw.githubusercontent.com/egovernments/egov-services/ReportEnhancements/docs/reportinfra/report/reportFileLocations.txt");
+	/* URL url = new URL("https://raw.githubusercontent.com/egovernments/egov-services/master/docs/reportinfra/report/reportFileLocations.txt");
 	 URLConnection urlConnection = url.openConnection();
-	 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+	 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));*/
 	 
 	try {
 
-		fr = new FileReader(file);
-		br = new BufferedReader(fr);
-
 		String yamlLocation;
-		//while ((yamlLocation = br.readLine()) != null) {
-			while ((yamlLocation = bufferedReader.readLine()) != null) {
-			
-			if(yamlLocation.startsWith("https")) {
-				LOGGER.info("Coming in to the https loop");
+		
+		while ((yamlLocation = br.readLine()) != null) {
+			String[] moduleYaml = yamlLocation.split("=");  
+			//while ((yamlLocation = bufferedReader.readLine()) != null) {
+			if(moduleName.equals("common")){
+			if(moduleYaml[1].startsWith("https")) {
 				LOGGER.info("The Yaml Location is : "+yamlLocation);
-				URL oracle = new URL(yamlLocation);
+				URL oracle = new URL(moduleYaml[1]);
+				try{
 				rd = mapper.readValue(new InputStreamReader(oracle.openStream()), ReportDefinitions.class);
+				} catch(Exception e) {
+					LOGGER.info("Skipping the report definition "+yamlLocation);
+				}
 				localrd.addAll(rd.getReportDefinitions());
 				
-				} else if(yamlLocation.startsWith("file://")){
-					LOGGER.info("Coming in to the file loop");
+				} else if(moduleYaml[1].startsWith("file://")){
 					LOGGER.info("The Yaml Location is : "+yamlLocation);
-					resource = resourceLoader.getResource(yamlLocation.toString());
-					file = resource.getFile();
+					 resource = resourceLoader.getResource(moduleYaml[1].toString());
+					 file = resource.getFile();
+					try{
 					rd = mapper.readValue(file, ReportDefinitions.class);
+					 } catch(Exception e) {
+						LOGGER.info("Skipping the report definition "+yamlLocation);
+					}
 					localrd.addAll(rd.getReportDefinitions());
 					
-				} else {
-					LOGGER.info("Coming in to the else loop");
-					LOGGER.info("The Yaml Location is : "+yamlLocation);
-					URL oracle = new URL(yamlLocation);
-					rd = mapper.readValue(new InputStreamReader(oracle.openStream()), ReportDefinitions.class);
-					localrd.addAll(rd.getReportDefinitions());
-				}
+				} 
 			
+		} else {
+			  if(moduleYaml[0].equals(moduleName) && moduleYaml[1].startsWith("https")) {
+				LOGGER.info("The Yaml Location is : "+moduleYaml[1]);
+				URL oracle = new URL(moduleYaml[1]);
+				try{
+				rd = mapper.readValue(new InputStreamReader(oracle.openStream()), ReportDefinitions.class);
+				} catch(Exception e) {
+					LOGGER.info("Skipping the report definition "+yamlLocation);
+				}
+				localrd.addAll(rd.getReportDefinitions());
+				
+				} else if(moduleYaml[0].equals(moduleName) && moduleYaml[1].startsWith("file://")){
+					LOGGER.info("The Yaml Location is : "+moduleYaml[1]);
+					 resource = resourceLoader.getResource(moduleYaml[1].toString());
+					 file = resource.getFile();
+					try{
+					rd = mapper.readValue(file, ReportDefinitions.class);
+					 } catch(Exception e) {
+						LOGGER.info("Skipping the report definition "+moduleYaml[1]);
+					}
+					localrd.addAll(rd.getReportDefinitions());
+					
+				} 
+			}
 		}
 
 	} catch (IOException e) {
@@ -137,15 +163,17 @@ public class ReportApp implements EnvironmentAware {
 
 	} 
 		localReportDefinitions.setReportDefinitions(localrd);
+		
 		reportDefinitions = localReportDefinitions;
+		
 	
 	
      /*LOGGER.info("Duplicate Report Definitions are "+reportDefinitions.getDuplicateReportDefinition());*/
      //Dev Server
 	 /*URL oracle = new URL(ReportApp.env.getProperty("report.yaml.path"));
 	 reportDefinitions = mapper.readValue(new InputStreamReader(oracle.openStream()), ReportDefinitions.class);*/
-	 
-	LOGGER.info("Report Defintion : "+reportDefinitions.toString());
+		LOGGER.info("ModuleName : "+moduleName);
+	
 	return reportDefinitions;
 	}catch (Exception e) {
 	// TODO Auto-generated catch block

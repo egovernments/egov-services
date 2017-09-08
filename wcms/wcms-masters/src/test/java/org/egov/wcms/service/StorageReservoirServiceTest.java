@@ -128,9 +128,9 @@ public class StorageReservoirServiceTest {
         storageReservoir.setTenantId("default");
         storageReservoir.setName("test");
         storageReservoir.setCode("12");
-        storageReservoir.setLocationNum("test1");
-        storageReservoir.setWardNum("test2");
-        storageReservoir.setZoneNum("test3");
+        //storageReservoir.setLocationNum("test1");
+        //storageReservoir.setWardNum("test2");
+        //storageReservoir.setZoneNum("test3");
         storageReservoir.setCapacity(2d);
         storageReservoir.setNoOfSubLines(2l);
         storageReservoir.setNoOfMainDistributionLines(2l);

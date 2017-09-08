@@ -18,6 +18,8 @@
         - Create, Update and Search for Water Treatment Plant Master
         - Create, Update and Search for Meter Water Rates Master
         - Create, Update and Search for Non Meter Water Rates Master
+        - Create, Update and Search for GapCode Master
+        - Create, Update and Search for Service Charges Master 
         
     contact:
       name: Rishi
@@ -413,7 +415,6 @@
           - $ref: "#/parameters/id"
           - $ref: "#/parameters/subUsageTypeName"
           - $ref: "#/parameters/usageTypeName"
-          - $ref: "#/parameters/categoryTypeName"
           - $ref: "#/parameters/pipeSizeInMM"
         responses:
           200: 
@@ -1090,13 +1091,6 @@
       in: query
       type: number
       description: Unique H.S.C pipe size in milli-meters.
-
-    categoryTypeName:
-      name: categoryTypeName
-      in: query
-      description: unique name of category type
-      required: false
-      type: string
       
     pipeSizeInMM:
       name: pipeSizeInMM
@@ -1736,15 +1730,9 @@
           type: string
           description: Name of the plant
           maxLength: 100
-        locationNum: 
+        location: 
           type: string
-          description: boundary location  where storage reservoir is located should be selected.
-        zoneNum: 
-          type: string
-          description: boundary zone drop down should be displayed.
-        wardNum: 
-          type: string
-          description: boundary ward drop down should be displayed.
+          description: User entry text field.
         plantCapacity:
           type: string
           description: Water storage capacity of the plant in million litres should be entered
@@ -1770,9 +1758,7 @@
       required:
         - name
         - code
-        - locationNum
-        - zoneNum
-        - wardNum
+        - location
         - plantCapacity
         - plantType
         - tenantId
@@ -1821,15 +1807,9 @@
           type: string
           description: Name of the Storage Reservoir.
           maxLength: 100
-        locationNum: 
+        location: 
           type: string
-          description: boundary location  where storage reservoir is located should be selected.
-        zoneNum: 
-          type: string
-          description: boundary zone drop down should be displayed.
-        wardNum: 
-          type: string
-          description: boundary ward drop down should be displayed.
+          description: User entry text field.
         storageCapacity:
           type: string
           description: Water storage capacity of the plant in million litres should be entered
@@ -1856,9 +1836,7 @@
         - reservoirType
         - code
         - name
-        - locationNum
-        - zoneNum
-        - wardNum
+        - location
         - storageCapacity
         - tenantId
         

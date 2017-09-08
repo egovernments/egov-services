@@ -86,8 +86,7 @@ public class StorageReservoirRepository {
             batchValues.add(new MapSqlParameterSource("id", Long.valueOf(storageReservoir.getCode()))
                     .addValue("code", storageReservoir.getCode()).addValue("name", storageReservoir.getName())
                     .addValue("reservoirtype", storageReservoir.getReservoirType())
-                    .addValue("location", storageReservoir.getLocationNum())
-                    .addValue("ward", storageReservoir.getWardNum()).addValue("zone", storageReservoir.getZoneNum())
+                    .addValue("location", storageReservoir.getLocation())
                     .addValue("capacity", storageReservoir.getCapacity())
                     .addValue("noofsublines", storageReservoir.getNoOfSubLines())
                     .addValue("noofmaindistributionlines", storageReservoir.getNoOfMainDistributionLines())
@@ -112,8 +111,7 @@ public class StorageReservoirRepository {
         for (final StorageReservoir storageReservoir : storageReservoirRequest.getStorageReservoir())
             batchValues.add(new MapSqlParameterSource("name", storageReservoir.getName())
                     .addValue("reservoirtype", storageReservoir.getReservoirType())
-                    .addValue("location", storageReservoir.getLocationNum())
-                    .addValue("ward", storageReservoir.getWardNum()).addValue("zone", storageReservoir.getZoneNum())
+                    .addValue("location", storageReservoir.getLocation())
                     .addValue("capacity", storageReservoir.getCapacity())
                     .addValue("noofsublines", storageReservoir.getNoOfSubLines())
                     .addValue("noofmaindistributionlines", storageReservoir.getNoOfMainDistributionLines())
@@ -132,15 +130,15 @@ public class StorageReservoirRepository {
 
     public List<StorageReservoir> findForCriteria(final StorageReservoirGetRequest storageReservoirGetRequest) {
         final Map<String, Object> preparedStatementValues = new HashMap<>();
-        final List<String> boundaryWardNumsList = new ArrayList<>();
+       /* final List<String> boundaryWardNumsList = new ArrayList<>();
         final List<String> boundaryZoneNumsList = new ArrayList<>();
-        final List<String> boundaryLocationNumsList = new ArrayList<>();
+        final List<String> boundaryLocationNumsList = new ArrayList<>();*/
         final String queryStr = storageReservoirQueryBuilder.getQuery(storageReservoirGetRequest,
                 preparedStatementValues);
         final List<StorageReservoir> storageReservoirList = namedParameterJdbcTemplate.query(queryStr,
                 preparedStatementValues, storageReservoirRowMapper);
 
-        // fetch boundary Ward Nums and set the boundary name here
+     /*   // fetch boundary Ward Nums and set the boundary name here
         for (final StorageReservoir storageReservoir : storageReservoirList)
             boundaryWardNumsList.add(storageReservoir.getWardNum());
         final String[] boundaryWardNum = boundaryWardNumsList.toArray(new String[boundaryWardNumsList.size()]);
@@ -172,7 +170,7 @@ public class StorageReservoirRepository {
         for (final StorageReservoir storageReservoir : storageReservoirList)
             for (final Boundary boundary : boundaryLocation.getBoundarys())
                 if (boundary.getBoundaryNum().equals(storageReservoir.getLocationNum()))
-                    storageReservoir.setLocationName(boundary.getName());
+                    storageReservoir.setLocationName(boundary.getName());*/
 
         return storageReservoirList;
     }

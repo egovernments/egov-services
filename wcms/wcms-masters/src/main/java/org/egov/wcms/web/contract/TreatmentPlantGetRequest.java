@@ -70,17 +70,7 @@ public class TreatmentPlantGetRequest {
 
     private String plantType;
 
-    private String locationName;
-
     private String location;
-
-    private String wardName;
-
-    private String ward;
-
-    private String zoneName;
-
-    private String zone;
 
     private double capacity;
 

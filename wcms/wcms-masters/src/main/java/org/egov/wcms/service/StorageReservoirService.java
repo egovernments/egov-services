@@ -103,7 +103,7 @@ public class StorageReservoirService {
         return storageReservoirRepository.findForCriteria(storageReservoirGetRequest);
     }
 
-    public Boolean getBoundaryByZone(final StorageReservoir storageReservoir) {
+   /* public Boolean getBoundaryByZone(final StorageReservoir storageReservoir) {
         BoundaryResponse boundaryRespose = null;
         boundaryRespose = restExternalMasterService.getBoundaryNum(WcmsConstants.ZONE, storageReservoir.getZoneNum(),
                 storageReservoir.getTenantId());
@@ -127,7 +127,7 @@ public class StorageReservoirService {
 
         return boundaryRespose != null && !boundaryRespose.getBoundarys().isEmpty();
 
-    }
+    }*/
 
     public boolean getStorageReservoirByNameAndCode(final String code, final String name, final String tenantId) {
         return storageReservoirRepository.checkStorageReservoirByNameAndCode(code, name, tenantId);

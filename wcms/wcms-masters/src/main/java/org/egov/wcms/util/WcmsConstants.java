@@ -402,6 +402,10 @@ public class WcmsConstants {
     public static final String WARD = "Ward";
     public static final String LOCALITY = "Locality";
     public static final String LOCATION = "LOCATION";
+    
+    public static final String LOCATION_MANDATORY_CODE = "wcms.0088";
+    public static final String LOCATION_MANADATORY_FIELD_NAME = "location";
+    public static final String LOCATION_MANADATORY_ERROR_MESSAGE = "location is required";
 
     public static final String WC = "WC";
 

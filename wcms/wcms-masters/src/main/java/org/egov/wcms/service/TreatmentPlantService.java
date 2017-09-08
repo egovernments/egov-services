@@ -103,7 +103,7 @@ public class TreatmentPlantService {
         return treatmentPlantRepository.findForCriteria(treatmentPlantGetRequest);
     }
 
-    public Boolean getBoundaryByZone(final TreatmentPlant treatmentPlant) {
+  /*  public Boolean getBoundaryByZone(final TreatmentPlant treatmentPlant) {
         BoundaryResponse boundaryRespose = null;
         boundaryRespose = restExternalMasterService.getBoundaryNum(WcmsConstants.ZONE, treatmentPlant.getZoneNum(),
                 treatmentPlant.getTenantId());
@@ -125,7 +125,7 @@ public class TreatmentPlantService {
                 treatmentPlant.getLocationNum(), treatmentPlant.getTenantId());
         return boundaryRespose != null && !boundaryRespose.getBoundarys().isEmpty();
 
-    }
+    }*/
 
     public boolean getTreatmentPlantByNameAndCode(final String code, final String name, final String tenantId) {
         return treatmentPlantRepository.checkTreatmentPlantByNameAndCode(code, name, tenantId);

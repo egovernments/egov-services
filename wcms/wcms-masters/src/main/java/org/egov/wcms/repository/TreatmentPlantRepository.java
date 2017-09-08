@@ -39,8 +39,8 @@
  */
 package org.egov.wcms.repository;
 
-import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,10 +48,6 @@ import java.util.Map;
 import org.egov.wcms.model.TreatmentPlant;
 import org.egov.wcms.repository.builder.TreatmentPlantQueryBuilder;
 import org.egov.wcms.repository.rowmapper.TreatmentPlantRowMapper;
-import org.egov.wcms.service.RestWaterExternalMasterService;
-import org.egov.wcms.util.WcmsConstants;
-import org.egov.wcms.web.contract.Boundary;
-import org.egov.wcms.web.contract.BoundaryResponse;
 import org.egov.wcms.web.contract.TreatmentPlantGetRequest;
 import org.egov.wcms.web.contract.TreatmentPlantRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,9 +66,6 @@ public class TreatmentPlantRepository {
 
     @Autowired
     private TreatmentPlantQueryBuilder treatmentPlantQueryBuilder;
-
-    @Autowired
-    private RestWaterExternalMasterService restExternalMasterService;
 
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -96,8 +89,8 @@ public class TreatmentPlantRepository {
             batchArgs.add(new MapSqlParameterSource("id", Long.valueOf(treatmentPlant.getCode()))
                     .addValue("code", treatmentPlant.getCode()).addValue("name", treatmentPlant.getName())
                     .addValue("planttype", treatmentPlant.getPlantType())
-                    .addValue("location", treatmentPlant.getLocationNum()).addValue("ward", treatmentPlant.getWardNum())
-                    .addValue("zone", treatmentPlant.getZoneNum()).addValue("capacity", treatmentPlant.getCapacity())
+                    .addValue("location", treatmentPlant.getLocation())
+                    .addValue("capacity", treatmentPlant.getCapacity())
                     .addValue("storagereservoirid", storageReservoirId)
                     .addValue("description", treatmentPlant.getDescription())
                     .addValue("createdby", Long.valueOf(treatmentPlantRequest.getRequestInfo().getUserInfo().getId()))
@@ -130,8 +123,8 @@ public class TreatmentPlantRepository {
             }
             batchArgs.add(new MapSqlParameterSource("name", treatmentPlant.getName())
                     .addValue("planttype", treatmentPlant.getPlantType())
-                    .addValue("location", treatmentPlant.getLocationNum()).addValue("ward", treatmentPlant.getWardNum())
-                    .addValue("zone", treatmentPlant.getZoneNum()).addValue("capacity", treatmentPlant.getCapacity())
+                    .addValue("location", treatmentPlant.getLocation())
+                    .addValue("capacity", treatmentPlant.getCapacity())
                     .addValue("storagereservoirid", storageReservoirId)
                     .addValue("description", treatmentPlant.getDescription())
                     .addValue("lastmodifiedby",
@@ -146,11 +139,11 @@ public class TreatmentPlantRepository {
     }
 
     public List<TreatmentPlant> findForCriteria(final TreatmentPlantGetRequest treatmentPlantGetRequest) {
-        final List<String> boundaryWardNumsList = new ArrayList<>();
+       /* final List<String> boundaryWardNumsList = new ArrayList<>();
         final List<String> boundaryZoneNumsList = new ArrayList<>();
+        final List<String> boundaryLocationNumsList = new ArrayList<>();*/
         final Map<String, Object> batchArguments = new HashMap<>();
         final Map<String, Object> batchArgs = new HashMap<>();
-        final List<String> boundaryLocationNumsList = new ArrayList<>();
         final Map<String, Object> preparedStatementValues = new HashMap<>();
         try {
             if (treatmentPlantGetRequest.getStorageReservoirName() != null) {
@@ -174,7 +167,7 @@ public class TreatmentPlantRepository {
             treatmentPlant.setStorageReservoirName(
                     namedParameterJdbcTemplate.queryForObject(storageReservoirNameOuery, batchArgs, String.class));
         }
-        // fetch boundary Ward Nums and set the boundary name here
+      /*  // fetch boundary Ward Nums and set the boundary name here
         for (final TreatmentPlant treatmentPlant : treatmentPlantList)
             boundaryWardNumsList.add(treatmentPlant.getWardNum());
         final String[] boundaryWardNum = boundaryWardNumsList.toArray(new String[boundaryWardNumsList.size()]);
@@ -206,7 +199,7 @@ public class TreatmentPlantRepository {
         for (final TreatmentPlant treatmentPlant : treatmentPlantList)
             for (final Boundary boundary : boundaryLocation.getBoundarys())
                 if (boundary.getBoundaryNum().equals(treatmentPlant.getLocationNum()))
-                    treatmentPlant.setLocationName(boundary.getName());
+                    treatmentPlant.setLocationName(boundary.getName());*/
         return treatmentPlantList;
     }
 

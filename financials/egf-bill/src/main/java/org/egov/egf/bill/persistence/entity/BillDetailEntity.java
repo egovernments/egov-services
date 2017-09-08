@@ -2,17 +2,17 @@ package org.egov.egf.bill.persistence.entity;
 
 import java.math.BigDecimal;
 
-import org.egov.common.domain.model.Auditable;
-import org.egov.common.persistence.entity.AuditableEntity;
-import org.egov.egf.bill.domain.model.BillDetail;
-import org.egov.egf.master.web.contract.ChartOfAccountContract;
-import org.egov.egf.master.web.contract.FunctionContract;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import org.egov.common.domain.model.Auditable;
+import org.egov.common.persistence.entity.AuditableEntity;
+import org.egov.egf.bill.domain.model.BillDetail;
+import org.egov.egf.master.web.contract.ChartOfAccountContract;
+import org.egov.egf.master.web.contract.FunctionContract;
 
 @Getter
 @Setter

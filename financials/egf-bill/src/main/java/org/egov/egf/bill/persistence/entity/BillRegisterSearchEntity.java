@@ -1,13 +1,12 @@
 package org.egov.egf.bill.persistence.entity;
 
-import org.egov.egf.bill.domain.model.BillRegister;
-import org.egov.egf.bill.domain.model.BillRegisterSearch;
-
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import org.egov.egf.bill.domain.model.BillRegister;
+import org.egov.egf.bill.domain.model.BillRegisterSearch;
 
 @Getter
 @Setter

@@ -66,21 +66,22 @@ public class BillRegisterService {
     private SubSchemeContractRepository subSchemeContractRepository;
 
     @Transactional
-    public List<BillRegister> create(List<BillRegister> billregisters, BindingResult errors, RequestInfo requestInfo) {
-	try {
-	    billregisters = fetchRelated(billregisters);
-	    validate(billregisters, Constants.ACTION_CREATE, errors);
-	    if (errors.hasErrors()) {
-		throw new CustomBindException(errors);
-	    }
-	    for (BillRegister b : billregisters) {
-		b.setId(billRegisterRepository.getNextSequence());
-	    }
-	} catch (CustomBindException e) {
-	    throw e;
+	public List<BillRegister> create(List<BillRegister> billregisters,
+			BindingResult errors, RequestInfo requestInfo) {
+		try {
+			billregisters = fetchRelated(billregisters);
+			validate(billregisters, Constants.ACTION_CREATE, errors);
+			if (errors.hasErrors()) {
+				throw new CustomBindException(errors);
+			}
+			for (BillRegister b : billregisters) {
+				b.setId(billRegisterRepository.getNextSequence());
+			}
+		} catch (CustomBindException e) {
+			throw e;
+		}
+		return billRegisterRepository.save(billregisters, requestInfo);
 	}
-	return billRegisterRepository.save(billregisters, requestInfo);
-    }
 
     @Transactional
     public List<BillRegister> update(List<BillRegister> billregisters, BindingResult errors, RequestInfo requestInfo) {

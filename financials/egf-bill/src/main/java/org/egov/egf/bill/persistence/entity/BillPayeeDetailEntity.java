@@ -21,6 +21,7 @@ import lombok.Setter;
 @Builder
 public class BillPayeeDetailEntity extends AuditableEntity {
     public static final String TABLE_NAME = "egf_billpayeedetail";
+	public static final String SEQUENCE_NAME = "seq_egf_billpayeedetail";
     private String id;
     private String accountDetailTypeId;
     private String accountDetailKeyId;

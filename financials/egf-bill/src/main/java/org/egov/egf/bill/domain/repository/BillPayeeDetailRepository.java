@@ -6,12 +6,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.common.constants.Constants;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.bill.domain.model.BillPayeeDetail;
+import org.egov.egf.bill.domain.model.BillPayeeDetailSearch;
 import org.egov.egf.bill.persistence.entity.BillPayeeDetailEntity;
+import org.egov.egf.bill.persistence.queue.repository.BillPayeeDetailQueueRepository;
 import org.egov.egf.bill.persistence.repository.BillPayeeDetailJdbcRepository;
 import org.egov.egf.bill.web.contract.BillPayeeDetailContract;
+import org.egov.egf.bill.web.contract.BillPayeeDetailSearchContract;
+import org.egov.egf.bill.web.requests.BillPayeeDetailRequest;
 import org.egov.egf.master.web.repository.FinancialConfigurationContractRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,11 +50,10 @@ public class BillPayeeDetailRepository {
 	}
 
 	@Transactional
-	public List<BillPayeeDetail> save(List<BillPayeeDetail> billpayeedetails, RequestInfo requestInfo) {
+	public List<BillPayeeDetail> save(List<BillPayeeDetail> billPayeeDetails, RequestInfo requestInfo) {
 
 		ModelMapper mapper = new ModelMapper();
 		BillPayeeDetailContract contract;
-		Map<String, Object> message = new HashMap<>();
 
 		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
 				&& persistThroughKafka.equalsIgnoreCase("yes")) {
@@ -58,7 +62,7 @@ public class BillPayeeDetailRepository {
 			request.setRequestInfo(requestInfo);
 			request.setBillPayeeDetails(new ArrayList<>());
 
-			for (BillPayeeDetail f : billpayeedetails) {
+			for (BillPayeeDetail f : billPayeeDetails) {
 
 				contract = new BillPayeeDetailContract();
 				contract.setCreatedDate(new Date());
@@ -66,15 +70,14 @@ public class BillPayeeDetailRepository {
 				request.getBillPayeeDetails().add(contract);
 
 			}
-			message.put("billPayeeDetail_create", request);
-			billPayeeDetailQueueRepository.add(message);
+			addToQue(request);
 
-			return billpayeedetails;
+			return billPayeeDetails;
 		} else {
 
 			List<BillPayeeDetail> resultList = new ArrayList<BillPayeeDetail>();
 
-			for (BillPayeeDetail f : billpayeedetails) {
+			for (BillPayeeDetail f : billPayeeDetails) {
 
 				resultList.add(save(f));
 			}
@@ -92,8 +95,7 @@ public class BillPayeeDetailRepository {
 
 			}
 
-			message.put("billPayeeDetail_create", request);
-			billPayeeDetailQueueRepository.addToSearch(message);
+			addToSearchQueue(request);
 
 			return resultList;
 		}
@@ -101,40 +103,54 @@ public class BillPayeeDetailRepository {
 	}
 
 	@Transactional
-	public List<BillPayeeDetail> update(List<BillPayeeDetail> billpayeedetails, RequestInfo requestInfo) {
+	public List<BillPayeeDetail> update(List<BillPayeeDetail> billPayeeDetails, RequestInfo requestInfo) {
+
 		ModelMapper mapper = new ModelMapper();
-		Map<String, Object> message = new HashMap<>();
-		BillPayeeDetailRequest request = new BillPayeeDetailRequest();
 		BillPayeeDetailContract contract;
+
 		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
 				&& persistThroughKafka.equalsIgnoreCase("yes")) {
 
+			BillPayeeDetailRequest request = new BillPayeeDetailRequest();
 			request.setRequestInfo(requestInfo);
 			request.setBillPayeeDetails(new ArrayList<>());
-			for (BillPayeeDetail f : billpayeedetails) {
+
+			for (BillPayeeDetail f : billPayeeDetails) {
+
 				contract = new BillPayeeDetailContract();
 				contract.setCreatedDate(new Date());
 				mapper.map(f, contract);
 				request.getBillPayeeDetails().add(contract);
+
 			}
-			message.put("billPayeeDetail_update", request);
-			billPayeeDetailQueueRepository.add(message);
-			return billpayeedetails;
+
+			addToQue(request);
+
+			return billPayeeDetails;
 		} else {
+
 			List<BillPayeeDetail> resultList = new ArrayList<BillPayeeDetail>();
-			for (BillPayeeDetail f : billpayeedetails) {
+
+			for (BillPayeeDetail f : billPayeeDetails) {
+
 				resultList.add(update(f));
 			}
+
+			BillPayeeDetailRequest request = new BillPayeeDetailRequest();
 			request.setRequestInfo(requestInfo);
 			request.setBillPayeeDetails(new ArrayList<>());
+
 			for (BillPayeeDetail f : resultList) {
+
 				contract = new BillPayeeDetailContract();
 				contract.setCreatedDate(new Date());
 				mapper.map(f, contract);
 				request.getBillPayeeDetails().add(contract);
+
 			}
-			message.put("billPayeeDetail_persisted", request);
-			billPayeeDetailQueueRepository.addToSearch(message);
+
+			addToSearchQueue(request);
+
 			return resultList;
 		}
 
@@ -171,11 +187,35 @@ public class BillPayeeDetailRepository {
 			BillPayeeDetailSearchContract billPayeeDetailSearchContract = new BillPayeeDetailSearchContract();
 			ModelMapper mapper = new ModelMapper();
 			mapper.map(domain, billPayeeDetailSearchContract);
-			return billPayeeDetailESRepository.search(billPayeeDetailSearchContract);
+//			return billPayeeDetailESRepository.search(billPayeeDetailSearchContract);
+			return null;
 		} else {
-			return billPayeeDetailJdbcRepository.search(domain);
+//			return billPayeeDetailJdbcRepository.search(domain);
+			return null;
 		}
 
+	}
+	
+	public void addToQue(BillPayeeDetailRequest request) {
+
+		Map<String, Object> message = new HashMap<>();
+
+		if (request.getRequestInfo().getAction().equalsIgnoreCase(Constants.ACTION_CREATE)) {
+			message.put("bildetail_create", request);
+		} else {
+			message.put("bildetail_update", request);
+		}
+		billPayeeDetailQueueRepository.addToQue(message);
+
+	}
+	
+	public void addToSearchQueue(BillPayeeDetailRequest request) {
+
+		Map<String, Object> message = new HashMap<>();
+
+		message.put("billPayeeDetail_persisted", request);
+
+		billPayeeDetailQueueRepository.addToSearchQue(message);
 	}
 
 	public boolean uniqueCheck(String fieldName, BillPayeeDetail billPayeeDetail) {

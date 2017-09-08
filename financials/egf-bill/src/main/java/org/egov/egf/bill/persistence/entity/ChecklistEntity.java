@@ -17,6 +17,7 @@ import lombok.Setter;
 @Builder
 public class ChecklistEntity extends AuditableEntity {
     public static final String TABLE_NAME = "egf_checklist";
+	public static final String SEQUENCE_NAME = "seq_egf_checklist";
     private String id;
     private String type;
     private String subType;

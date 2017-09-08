@@ -1,13 +1,10 @@
 package org.egov.egf.bill.persistence.repository;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.common.domain.model.Pagination;
 import org.egov.common.persistence.repository.JdbcRepository;
-import org.egov.egf.bill.domain.model.BillDetail;
 import org.egov.egf.bill.persistence.entity.BillDetailEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

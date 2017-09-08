@@ -1,9 +1,8 @@
 package org.egov.egf.bill.persistence.queue.repository;
 
-import java.util.HashMap;
+import java.util.Map;
 
-import org.egov.egf.bill.persistence.queue.FinancialBillRegisterProducer;
-import org.egov.egf.bill.web.requests.BillRegisterRequest;
+import org.egov.egf.bill.persistence.queue.FinancialProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -11,63 +10,41 @@ import org.springframework.stereotype.Service;
 @Service
 public class BillRegisterQueueRepository {
 
-	private FinancialBillRegisterProducer financialBillRegisterProducer;
+	private FinancialProducer financialBillRegisterProducer;
 
 	private String validatedTopic;
 
-	private String instrumentValidatedKey;
+	private String billValidatedKey;
 
 	private String completedTopic;
 
-	private String instrumentCompletedKey;
+	private String billCompletedKey;
 
 	@Autowired
-	public BillRegisterQueueRepository(FinancialBillRegisterProducer financialBillRegisterProducer,
+	public BillRegisterQueueRepository(
+			final FinancialProducer financialBillRegisterProducer,
 			@Value("${kafka.topics.egf.bill.validated.topic}") String validatedTopic,
-			@Value("${kafka.topics.egf.bill.instrument.validated.key}") String instrumentValidatedKey,
+			@Value("${kafka.topics.egf.bill.validated.key}") String billValidatedKey,
 			@Value("${kafka.topics.egf.bill.completed.topic}") String completedTopic,
-			@Value("${kafka.topics.egf.bill.instrument.completed.key}") String instrumentCompletedKey) {
+			@Value("${kafka.topics.egf.bill.completed.key}") String billCompletedKey) {
 
 		this.financialBillRegisterProducer = financialBillRegisterProducer;
 		this.validatedTopic = validatedTopic;
-		this.instrumentValidatedKey = instrumentValidatedKey;
+		this.billValidatedKey = billValidatedKey;
 		this.completedTopic = completedTopic;
-		this.instrumentCompletedKey = instrumentCompletedKey;
+		this.billCompletedKey = billCompletedKey;
 	}
 
-	public void addToQue(BillRegisterRequest request) {
-		HashMap<String, Object> topicMap = new HashMap<String, Object>();
+	public void addToQue(final Map<String, Object> topicMap) {
 
-		switch (request.getRequestInfo().getAction().toLowerCase()) {
-
-		case "create":
-			topicMap.put("billregister_create", request);
-			System.out.println("push create topic" + request);
-			break;
-		case "update":
-			topicMap.put("billregister_update", request);
-			break;
-		case "delete":
-			topicMap.put("billregister_delete", request);
-			break;
-
-		}
-		financialBillRegisterProducer.sendMessage(validatedTopic, instrumentValidatedKey, topicMap);
+		financialBillRegisterProducer.sendMessage(validatedTopic,
+				billValidatedKey, topicMap);
 	}
 
-	public void addToSearchQue(BillRegisterRequest request) {
+	public void addToSearchQue(final Map<String, Object> topicMap) {
 
-		HashMap<String, Object> topicMap = new HashMap<String, Object>();
-
-		if (!request.getBillRegisters().isEmpty()) {
-
-			topicMap.put("billregister_persisted", request);
-
-			System.out.println("push search topic" + request);
-
-		}
-
-		financialBillRegisterProducer.sendMessage(completedTopic, instrumentCompletedKey, topicMap);
+		financialBillRegisterProducer.sendMessage(completedTopic,
+				billCompletedKey, topicMap);
 
 	}
 }

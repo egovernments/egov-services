@@ -208,7 +208,7 @@ var dat = {
 		"groups": [
 			{
 				"label": "tl.view.groups.licensedocumenttype.title",
-				"name": "createLicenseDocumentType",
+				"name": "viewLicenseDocumentType",
 				"fields": [
 					{
 						"name": "licenseapptype",
@@ -320,13 +320,13 @@ var dat = {
 		"groups": [
 			{
 				"label": "tl.update.groups.licensedocumenttype.title",
-				"name": "createLicenseDocumentType",
+				"name": "updateLicenseDocumentType",
 				"fields": [
 
 					{
 						"name": "licenseapptype",
 						"jsonPath": "documentTypes[0].applicationType",
-						"label": "tl.create.groups.licensedocumenttype.licenseapptype",
+						"label": "tl.update.groups.licensedocumenttype.licenseapptype",
 						"pattern": "",
 						"type": "singleValueList",
 						"url": "",
@@ -349,7 +349,7 @@ var dat = {
 					{
             "name": "Category",
             "jsonPath": "documentTypes[0].categoryId",
-            "label": "tl.create.licensedocumenttype.groups.TradeDetails.TradeCategory",
+            "label": "tl.update.licensedocumenttype.groups.TradeDetails.TradeCategory",
             "pattern": "",
             "type": "singleValueList",
             "url": "/tl-masters/category/v1/_search?tenantId=default&type=category|$..id|$..name",
@@ -366,7 +366,7 @@ var dat = {
 					{
             "name": "SubCategory",
             "jsonPath": "documentTypes[0].subCategoryId",
-            "label": "tl.create.licensedocumenttype.groups.TradeDetails.TradeSubCategory",
+            "label": "tl.update.licensedocumenttype.groups.TradeDetails.TradeSubCategory",
             "pattern": "",
             "type": "singleValueList",
             "url": "",
@@ -397,7 +397,7 @@ var dat = {
 					{
             "name": "mandatory",
             "jsonPath": "documentTypes[0].mandatory",
-            "label": "tl.create.licenses.groups.TradeDetails.mandatory",
+            "label": "tl.update.groups.licensedocumenttype.mandatory",
             "pattern": "",
             "type": "checkbox",
             "url": "",
@@ -410,7 +410,7 @@ var dat = {
 					{
             "name": "enabled",
             "jsonPath": "documentTypes[0].enabled",
-            "label": "tl.create.licenses.groups.TradeDetails.enabled",
+            "label": "tl.update.groups.licensedocumenttype.enabled",
             "pattern": "",
             "type": "checkbox",
             "url": "",

@@ -38,36 +38,46 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.util;
+package org.egov.eis.web.contract;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.annotation.Order;
-import org.springframework.core.env.Environment;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
-@Configuration
-@PropertySource(value = {"classpath:messages/messages.properties",
-        "classpath:messages/errors.properties"}, ignoreResourceNotFound = true)
-@Order(0)
-public class ApplicationConstants {
+import java.util.Date;
 
-    public static final String MSG_LEAVETYPE_PRESENT = "leaveapplication.leavetype.present";
-    public static final String MSG_LEAVETYPE_NOTPRESENT = "leaveapplication.leavetype.notpresent";
-    public static final String MSG_FROMDATE_TODATE = "leaveapplication.fromdate.todate";
-    public static final String MSG_FROMDATE_CUTOFFDATE = "leaveapplication.fromdate.cutoffdate";
-    public static final String MSG_ALREADY_PRESENT = "leaveapplication.already.present";
-    public static final String MSG_DATE_HOLIDAY = "leaveapplication.date.holiday";
-    public static final String MSG_APPOINTMENT_DATE = "leaveapplication.appointment.date";
-    public static final String MSG_RETIREMENT_DATE = "leaveapplication.retirement.date";
-    public static final String MSG_COMPENSATORYDATE_PRESENT = "leaveapplication.compensatorydate.present";
-    public static final String MSG_ASSIGNMENT_TODATE = "leaveapplication.assignment.todate";
+@AllArgsConstructor
+@Builder
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class Assignment {
 
+    private Long id;
 
-    @Autowired
-    private Environment environment;
+    private Long position;
 
-    public String getErrorMessage(final String property) {
-        return environment.getProperty(property);
-    }
+    private Long fund;
+
+    private Long functionary;
+
+    private Long function;
+
+    private Long department;
+
+    private Long designation;
+
+    private Boolean isPrimary;
+
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date fromDate;
+
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date toDate;
+
+    private String tenantId;
+
 }

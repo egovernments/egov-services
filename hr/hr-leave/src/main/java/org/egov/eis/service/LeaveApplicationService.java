@@ -66,6 +66,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.util.Collections.max;
 
 @Service
 public class LeaveApplicationService {
@@ -198,6 +201,18 @@ public class LeaveApplicationService {
                     errorMsg = errorMsg + applicationConstants.getErrorMessage(ApplicationConstants.MSG_COMPENSATORYDATE_PRESENT);
 
             }
+
+            if (employees.size() > 0) {
+                List<Assignment> assignments = employees.get(0).getAssignments().stream()
+                        .filter(assign -> assign.getIsPrimary().equals(true)).collect(Collectors.toList());
+
+                List<Date> todate = assignments.stream().map(assign -> assign.getToDate()).collect(Collectors.toList());
+
+                if (max(todate).before(leaveApplication.getToDate())) {
+                    errorMsg = errorMsg + applicationConstants.getErrorMessage(ApplicationConstants.MSG_ASSIGNMENT_TODATE);
+                }
+            }
+
             if (!applications.isEmpty())
                 errorMsg = errorMsg + applicationConstants.getErrorMessage(ApplicationConstants.MSG_ALREADY_PRESENT);
             leaveApplication.setErrorMsg(errorMsg);

@@ -25,11 +25,11 @@ info:
     email : contacts@egovernments.org
 schemes:
   - https
-basePath: '/tl-service/[API endpoint]'
+basePath: ''
 x-api-id: 'org.egov.tl.services'
 x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
 paths:
-  license/v1/_search:
+  /license/v1/_search:
     post:
       summary: Get the list of Trade License defined in the system.
       description: |
@@ -185,7 +185,7 @@ paths:
       tags:
        - TradeLicense
        
-  license/v1/_create:
+  /license/v1/_create:
     post:
       summary: Create new Trade Licenses.
       description: |
@@ -228,7 +228,7 @@ paths:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
         - TradeLicense  
-  license/v1/_update:
+  /license/v1/_update:
     post:
       summary: update existing licenses.
       description: |
@@ -269,7 +269,7 @@ paths:
       tags:
         - TradeLicense
         
-  noticedocument/v1/_search:
+  /noticedocument/v1/_search:
     post:
       summary: Get the list of Notice Documents defined for the Trade License.
       description: |
@@ -327,7 +327,7 @@ paths:
       tags:
        - NoticeDocument
        
-  noticedocument/v1/_create:
+  /noticedocument/v1/_create:
     post:
       summary: Create new Notice Document.
       description: |
@@ -361,7 +361,7 @@ paths:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
         - NoticeDocument  
-  noticedocument/v1/_update:
+  /noticedocument/v1/_update:
     post:
       summary: update existing Notice Documents.
       description: |
@@ -1127,9 +1127,6 @@ definitions:
       fileStoreId:
         type: string
         description: Unique Identifier of the FileStore
-      comments:
-        type: string
-        maxLength: 1024
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:

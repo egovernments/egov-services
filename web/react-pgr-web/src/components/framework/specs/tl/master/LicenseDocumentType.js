@@ -74,12 +74,13 @@ var dat = {
 						"name": "name",
 						"jsonPath": "documentTypes[0].name",
 						"label": "tl.create.groups.licensedocumenttype.name",
-						"pattern": "",
+						"pattern": "^.[a-zA-Z. ]{2,49}$",
 						"type": "text",
 						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
-						"patternErrMsg": ""
+						"patternErrMsg": "Enter Valid Name (Min:3, Max:50)",
+						"maxLength": "50"
 					},
 					{
             "name": "mandatory",
@@ -385,12 +386,13 @@ var dat = {
 						"name": "name",
 						"jsonPath": "documentTypes[0].name",
 						"label": "tl.update.groups.licensedocumenttype.name",
-						"pattern": "",
+						"pattern": "^.[a-zA-Z. ]{2,49}$",
 						"type": "text",
 						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
-						"patternErrMsg": ""
+						"patternErrMsg": "Enter Valid Name (Min:3, Max:50)",
+						"maxLength": "50"
 					},
 					{
             "name": "mandatory",

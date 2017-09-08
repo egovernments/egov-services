@@ -2,7 +2,7 @@
 	"variables": [],
 	"info": {
 		"name": "Dev Env TL Masters",
-		"_postman_id": "c8bf2e36-7784-f381-35c7-880bbdfb9fc4",
+		"_postman_id": "6c14ecf1-024e-8007-3bc9-a26035b505c5",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
@@ -75,7 +75,30 @@
 				}
 			],
 			"request": {
-				"url": "http://egov-micro-dev.egovernments.org/tl-masters/category/v1/_create",
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/category/v1/_create?type=CATEGORY",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"tl-masters",
+						"category",
+						"v1",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "CATEGORY",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
 				"method": "POST",
 				"header": [
 					{
@@ -359,7 +382,30 @@
 				}
 			],
 			"request": {
-				"url": "http://egov-micro-dev.egovernments.org/tl-masters/category/v1/_update?",
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/category/v1/_update?type=SUBCATEGORY",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"tl-masters",
+						"category",
+						"v1",
+						"_update"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "SUBCATEGORY",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
 				"method": "POST",
 				"header": [
 					{
@@ -450,7 +496,30 @@
 				}
 			],
 			"request": {
-				"url": "http://egov-micro-dev.egovernments.org/tl-masters/category/v1/_update?",
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/category/v1/_update?type=CATEGORY",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"tl-masters",
+						"category",
+						"v1",
+						"_update"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "CATEGORY",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
 				"method": "POST",
 				"header": [
 					{

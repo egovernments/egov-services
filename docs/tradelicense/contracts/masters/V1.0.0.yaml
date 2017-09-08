@@ -151,6 +151,10 @@ paths:
         tags: 
           - Category
         parameters:
+          - name: type
+            type: string
+            in: query
+            description: type set to SUBCATEGORY to update sub categories where categoryId is mandatory. default to CATEGORY.
           - name: categories
             in: body
             required: true

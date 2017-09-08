@@ -24,9 +24,9 @@ public class BillRegisterQueueRepository {
 	public BillRegisterQueueRepository(
 			final FinancialProducer financialBillRegisterProducer,
 			@Value("${kafka.topics.egf.bill.validated.topic}") String validatedTopic,
-			@Value("${kafka.topics.egf.bill.validated.key}") String billValidatedKey,
+			@Value("${kafka.topics.egf.bill.bill.register.validated.key}") String billValidatedKey,
 			@Value("${kafka.topics.egf.bill.completed.topic}") String completedTopic,
-			@Value("${kafka.topics.egf.bill.completed.key}") String billCompletedKey) {
+			@Value("${kafka.topics.egf.bill.bill.register.completed.key}") String billCompletedKey) {
 
 		this.financialBillRegisterProducer = financialBillRegisterProducer;
 		this.validatedTopic = validatedTopic;

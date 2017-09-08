@@ -22,9 +22,9 @@ public class ChecklistQueueRepository {
 	public ChecklistQueueRepository(
 			final FinancialProducer financialChecklistProducer,
 			@Value("${kafka.topics.egf.bill.validated.topic}") String validatedTopic,
-			@Value("${kafka.topics.egf.bill.checklist.validated.key}") String checklistValidatedKey,
+			@Value("${kafka.topics.egf.bill.bill.checklist.validated.key}") String checklistValidatedKey,
 			@Value("${kafka.topics.egf.bill.completed.topic}") String completedTopic,
-			@Value("${kafka.topics.egf.bill.checklist.completed.key}") String checklistCompletedKey) {
+			@Value("${kafka.topics.egf.bill.bill.checklist.completed.key}") String checklistCompletedKey) {
 
 		this.financialChecklistProducer = financialChecklistProducer;
 		this.validatedTopic = validatedTopic;

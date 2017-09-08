@@ -965,7 +965,7 @@ var localization_EN_Data = {
 
     "tl.create.licenses.groups.FeeDetails": "Fee Details",
     "tl.create.license.table.financialYear": "Financial Year",
-    "tl.create.license.table.amount": "Amount*",
+    "tl.create.license.table.amount": "Amount",
     "tl.create.license.table.isPaid": "Is Paid",
 
     "tl.search.groups.license.searchTradeLicense": "Search Trade License",
@@ -3176,4 +3176,9 @@ export function epochToDate(t) {
     var day = d.getDate();
 
     return pad2(day) + '/' + pad2(month) + '/' + year;
+}
+
+export function dateToEpoch(datestring) {
+    let tdate = datestring.split("/");
+    return new Date(tdate[2], tdate[1]-1, tdate[0]).getTime();
 }

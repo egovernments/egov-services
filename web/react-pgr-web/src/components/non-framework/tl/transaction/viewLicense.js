@@ -86,7 +86,7 @@ class viewLicense extends Component{
                   return(
                     <TableRow selectable={false} key={index}>
                       <TableRowColumn>{fee.financialYear}</TableRowColumn>
-                      <TableRowColumn>{fee.amount}</TableRowColumn>
+                      <TableRowColumn style={{textAlign:'right'}}>{fee.amount}</TableRowColumn>
                       <TableRowColumn>{fee.paid ? 'Yes' : 'No'}</TableRowColumn>
                     </TableRow>
                   )
@@ -264,16 +264,16 @@ class viewLicense extends Component{
       var pattern = /^\d{0,10}(\.\d{1,2})?$/;
       if(this.state.fieldInspection && viewLicense.quantity){
         if (pattern.test(viewLicense.quantity)) {
-          console.log('pattern passed for quantity');
+          // console.log('pattern passed for quantity');
         }else{
           self.handleError('Trade value for UOM - Please enter only numbers (with optional 2 decimal values)');
           return;
         }
       }
       if(this.state.fieldInspection && viewLicense.licenseFee){
-        console.log('came to test license fee');
+        // console.log('came to test license fee');
         if (pattern.test(viewLicense.licenseFee)) {
-          console.log('pattern passed for license fee');
+          // console.log('pattern passed for license fee');
         }else{
           self.handleError('License Fee - Please enter only numbers (with optional 2 decimal values)');
           return;
@@ -576,7 +576,7 @@ class viewLicense extends Component{
           </Card>
           <Card style={styles.marginStyle}>
             <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
-               Agreement Details
+               {translate('tl.view.licenses.groups.agreementDetails')}
              < /div>}/>
            <CardText style={styles.cardTextPadding}>
               <List style={styles.zeroPadding}>

@@ -27,12 +27,13 @@ var dat = {
 							"name": "createName",
 							"jsonPath": "categories[0].name",
 							"label": "tl.create.groups.subcategorytype.name",
-							"pattern": "^.[a-zA-Z. ]{2,99}$",
+							"pattern": "^.[a-zA-Z. ]{2,49}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": "Enter Valid Name"
+							"patternErrMsg": "Enter Valid Name (Min:3, Max:50)",
+							"maxLength": "50"
 						},
 						{
 							"name": "createCode",
@@ -237,8 +238,8 @@ var dat = {
       }
     ],
     "result": {
-      "header": [{label: "tl.create.groups.subcategorytype.code"},{label: "tl.create.groups.subcategorytype.categories.details.rateType"}, {label: "tl.create.groups.subcategorytype.category"}, {label: "tl.create.groups.subcategorytype.active"}],
-      "values": ["code","details[0].rateType", "parentName", "active"],
+      "header": [{label: "tl.create.groups.subcategorytype.code"},{label: "tl.create.groups.subcategorytype.name"}, {label: "tl.create.groups.subcategorytype.category"}, {label: "tl.create.groups.subcategorytype.active"}, {label: "tl.create.groups.subcategorytype.categories.details.feeType"}, {label: "tl.create.groups.subcategorytype.categories.details.rateType"}, {label: "tl.create.groups.subcategorytype.categories.details.uomId"}],
+      "values": ["code", "name","parentName", "active", "details[0].feeType", "details[0].rateType", "details[0].uomId"],
       "resultPath": "categories",
       "rowClickUrlUpdate": "/update/tl/CreateLicenseSubCategory/{id}",
       "rowClickUrlView": "/view/tl/CreateLicenseSubCategory/{id}"
@@ -430,7 +431,8 @@ var dat = {
 	          "isRequired": true,
 	          "isDisabled": false,
 	          "requiredErrMsg": "",
-	          "patternErrMsg": "Enter Valid Name"
+	          "patternErrMsg": "Enter Valid Name (Min:3, Max:50)",
+						"maxLength": "50"
 	        },
 	        {
 	          "name": "updateCode",

@@ -192,7 +192,7 @@ var dat = {
 		],
 		"result": {
 			"header": [{label: "tl.create.groups.licensedocumenttype.licenseapptype"},{label: "tl.create.licensedocumenttype.groups.TradeDetails.TradeCategory"}, {label: "tl.create.licensedocumenttype.groups.TradeDetails.TradeSubCategory"}, {label: "tl.create.groups.licensedocumenttype.name"}, {label: "tl.create.licenses.groups.TradeDetails.mandatory"}, {label: "tl.create.licenses.groups.TradeDetails.enabled"}],
-			"values": ["applicationType","categoryId", "subCategoryId", "name", "mandatory", "enabled"],
+			"values": ["applicationType","categoryName", "subCategoryName", "name", "mandatory", "enabled"],
 			"resultPath": "documentTypes",
 			"rowClickUrlUpdate": "/update/tl/LicenseDocumentType/{id}",
 			"rowClickUrlView": "/view/tl/LicenseDocumentType/{id}"
@@ -233,27 +233,27 @@ var dat = {
 					},
 					{
 						"name": "Category",
-						"jsonPath": "documentTypes[0].categoryId",
+						"jsonPath": "documentTypes[0].categoryName",
 						"label": "tl.create.licensedocumenttype.groups.TradeDetails.TradeCategory",
 						"pattern": "",
-						"type": "singleValueList",
+						"type": "text",
 						"url": "/tl-masters/category/v1/_search?tenantId=default&type=category|$..id|$..name",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
-						"depedants": [{
-							"jsonPath": "documentTypes[0].subCategoryId",
-							"type": "dropDown",
-							"pattern": "/tl-masters/category/v1/_search?tenantId=default&type=subcategory&categoryId={documentTypes[0].categoryId}|$.categories.*.id|$.categories.*.name"
-						}]
+						// "depedants": [{
+						// 	"jsonPath": "documentTypes[0].subCategoryId",
+						// 	"type": "dropDown",
+						// 	"pattern": "/tl-masters/category/v1/_search?tenantId=default&type=subcategory&categoryId={documentTypes[0].categoryId}|$.categories.*.id|$.categories.*.name"
+						// }]
 					},
 					{
 						"name": "SubCategory",
-						"jsonPath": "documentTypes[0].subCategoryId",
+						"jsonPath": "documentTypes[0].subCategoryName",
 						"label": "tl.create.licensedocumenttype.groups.TradeDetails.TradeSubCategory",
 						"pattern": "",
-						"type": "singleValueList",
+						"type": "text",
 						"url": "",
 						"isRequired": false,
 						"isDisabled": false,
@@ -304,7 +304,7 @@ var dat = {
             "patternErrMsg": ""
 					}
 				]
-			} 
+			}
 
 		]
 	},

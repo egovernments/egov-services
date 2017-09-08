@@ -810,7 +810,7 @@ var localization_EN_Data = {
     "tl.create.groups.subcategorytype.code": "Code",
     "tl.create.groups.subcategorytype.validityYears": "Validity Years",
     "tl.create.groups.subcategorytype.active": "Active",
-    "tl.create.groups.subcategorytype.details": "Details", 
+    "tl.create.groups.subcategorytype.details": "Details",
     "tl.create.groups.subcategorytype.categories.details.feeType": "Fee Type",
     "tl.create.groups.subcategorytype.categories.details.rateType": "Rate Type",
     "tl.create.groups.subcategorytype.categories.details.uomId": "UOM",
@@ -3169,5 +3169,5 @@ export function epochToDate(t) {
     var month = d.getMonth() + 1;  // months start at zero
     var day = d.getDate();
 
-    return pad2(day) + '-' + pad2(month) + '-' + year;
+    return pad2(day) + '/' + pad2(month) + '/' + year;
 }

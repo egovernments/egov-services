@@ -47,17 +47,16 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-import org.egov.common.domain.model.Auditable;
-import org.egov.egf.master.web.contract.ChartOfAccountContract;
-import org.egov.egf.master.web.contract.FunctionContract;
-import org.hibernate.validator.constraints.Length;
-import org.ja.annotation.DrillDownTable;
-
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import org.egov.common.domain.model.Auditable;
+import org.egov.egf.master.web.contract.ChartOfAccountContract;
+import org.egov.egf.master.web.contract.FunctionContract;
+import org.hibernate.validator.constraints.Length;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -89,7 +88,7 @@ public class BillDetail extends Auditable {
 	private BigDecimal creditAmount;
 
 	private FunctionContract function;
-	@DrillDownTable
+
 	private Set<BillPayeeDetail> billPayeeDetails = new HashSet<BillPayeeDetail>();
 
 }

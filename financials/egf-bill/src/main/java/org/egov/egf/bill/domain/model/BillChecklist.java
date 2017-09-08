@@ -1,8 +1,5 @@
 package org.egov.egf.bill.domain.model;
 
-import org.egov.egf.bill.persistence.entity.ChecklistEntity;
-import org.egov.egf.bill.persistence.entity.ChecklistEntity.ChecklistEntityBuilder;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

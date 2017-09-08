@@ -153,7 +153,7 @@ public class BillRegister extends Auditable {
      * not default is true
      * 
      */
-    private Boolean budgetCheckRequired = true;
+    private Boolean budgetCheckRequired;
     @Length(max = 50)
     /**
      * budgetAppropriationNo is the number generated after budget check. This

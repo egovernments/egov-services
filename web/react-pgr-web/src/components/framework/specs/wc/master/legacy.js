@@ -734,8 +734,8 @@ var dat = {
             "type": "datePicker",
             "isRequired": true,
             "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "requiredErrMsg": "Should allow Current -2 date",
+            "patternErrMsg": "Should allow Current -2 date"
           },
           {
             "name": "ConsumerNo",
@@ -1345,8 +1345,8 @@ var dat = {
              "type": "datePicker",
              "isRequired": false,
              "isDisabled": false,
-             "requiredErrMsg": "",//Remove required messages
-             "patternErrMsg": ""
+             "requiredErrMsg": "future date does not be allowed",//Remove required messages
+             "patternErrMsg": "future date does not be allowed"
             },
         ]
       },

@@ -13,11 +13,11 @@ export default class UiEmailField extends Component {
    			} else if(dateStr.indexOf("+") > -1) {
    				var oneDay = 24 * 60 * 60 * 1000;
    				dateStr = dateStr.split("+")[1];
-   				return new Date(new Date().getTime() + (Number(dateStr) * oneDay));
+   				return new Date(new Date().getTime() + (Number(dateStr) * oneDay)).getTime();
    			} else {
    				var oneDay = 24 * 60 * 60 * 1000;
    				dateStr = dateStr.split("-")[1];
-   				return new Date(new Date().getTime() - (Number(dateStr) * oneDay));
+   				return new Date(new Date().getTime() - (Number(dateStr) * oneDay)).getTime();
    			}
    		} else {
    			return "";
@@ -69,6 +69,11 @@ export default class UiEmailField extends Component {
 									_date = _date.split("/");
 									var newDate = _date[1]+"/"+_date[0]+"/"+_date[2];
 									val = Number(new Date(newDate).getTime());
+									if(item.minDate && val< this.calcMinMaxDate(item.minDate)) {
+									return ;
+								} else if(item.maxDate && val > this.calcMinMaxDate(item.maxDate)) {
+										return ;
+									}
 								}
 							}
 

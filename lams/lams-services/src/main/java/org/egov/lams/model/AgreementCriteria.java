@@ -3,19 +3,18 @@ package org.egov.lams.model;
 import java.util.Date;
 import java.util.Set;
 import javax.validation.constraints.NotNull;
+
+import lombok.*;
 import org.egov.lams.model.enums.Status;
 import org.springframework.format.annotation.DateTimeFormat;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Builder
+@EqualsAndHashCode
 public class AgreementCriteria {
 
 	@NotNull

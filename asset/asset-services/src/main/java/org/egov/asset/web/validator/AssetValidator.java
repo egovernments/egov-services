@@ -15,7 +15,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
-import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.contract.DepreciationRequest;
 import org.egov.asset.contract.DisposalRequest;
@@ -68,9 +67,6 @@ public class AssetValidator {
 
     @Autowired
     private AssetCommonService assetCommonService;
-
-    @Autowired
-    private ApplicationProperties applicationProperties;
 
     public void validateAsset(final AssetRequest assetRequest) {
         final AssetCategory assetCategory = findAssetCategory(assetRequest);
@@ -345,10 +341,14 @@ public class AssetValidator {
     }
 
     public void validateDepreciation(final DepreciationRequest depreciationRequest) {
-        final Double depreciationMinimumValue = Double.valueOf(applicationProperties.getDepreciaitionMinimumValue());
-        log.debug("Depreciation Minimum value :: " + depreciationMinimumValue);
+
         final DepreciationCriteria depreciationCriteria = depreciationRequest.getDepreciationCriteria();
         final String tenantId = depreciationCriteria.getTenantId();
+
+        final Double depreciationMinimumValue = Double.valueOf(assetConfigurationService
+                .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.ASSETMINIMUMVALUE, tenantId));
+        log.debug("Depreciation Minimum value :: " + depreciationMinimumValue);
+
         final Long fromDate = depreciationCriteria.getFromDate();
         log.debug("Depreciation Criteria From date :: " + fromDate);
         final Long toDate = depreciationCriteria.getToDate();

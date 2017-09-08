@@ -9,12 +9,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.model.AssetCurrentValue;
 import org.egov.asset.model.AuditDetails;
+import org.egov.asset.model.enums.AssetConfigurationKeys;
 import org.egov.asset.model.enums.TransactionType;
 import org.egov.asset.repository.builder.CurrentValueQueryBuilder;
 import org.egov.asset.repository.rowmapper.CurrentValueRowMapper;
+import org.egov.asset.service.AssetConfigurationService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -26,7 +27,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 public class CurrentValueRepositoryTest {
 
     @Mock
-    private ApplicationProperties applicationProperties;
+    private AssetConfigurationService assetConfigurationService;
 
     @Mock
     private JdbcTemplate jdbcTemplate;
@@ -56,7 +57,8 @@ public class CurrentValueRepositoryTest {
 
     @Test
     public void test_create() {
-        when(applicationProperties.getBatchSize()).thenReturn("500");
+        when(assetConfigurationService.getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.ASSETBATCHSIZE,
+                "ap.kurnool")).thenReturn("500");
         currentValueRepository.create(getAssetCurrentValues());
     }
 

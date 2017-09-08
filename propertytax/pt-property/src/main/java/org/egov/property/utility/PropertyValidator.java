@@ -75,7 +75,7 @@ public class PropertyValidator {
 						Long guidanceBoundary = property.getBoundary().getGuidanceValueBoundary();
 						if (guidanceBoundary != null) {
 							Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(null, null,
-									ConstantUtility.CONFIGURATION_TABLE_NAME, guidanceBoundary);
+									ConstantUtility.GUIDANCEVALUEBOUNDARY_TABLE_NAME, guidanceBoundary);
 
 							if (!isExists) {
 								throw new InvalidCodeException(propertiesManager.getInvalidGuidanceValueBoundaryId(),

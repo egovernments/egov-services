@@ -305,8 +305,6 @@ public class PropertyServiceImpl implements PropertyService {
 
 				property.setOwners(ownerInfos);
 			}
-			List<Unit> flats = new ArrayList<>();
-			List<Unit> rooms = new ArrayList<>();
 			PropertyDetail propertyDetail = propertyRepository.getPropertyDetailsByProperty(propertyId);
 
 			property.setPropertyDetail(propertyDetail);
@@ -352,6 +350,9 @@ public class PropertyServiceImpl implements PropertyService {
 			int i = 0;
 
 			for (Floor floor : floors) {
+				
+				List<Unit> flats = new ArrayList<>();
+				List<Unit> rooms = new ArrayList<>();
 
 				List<Unit> units = floors.get(i).getUnits();
 

@@ -162,7 +162,7 @@ public class RevaluationService {
 
         log.debug("Voucher Create Account Code Details :: " + accountCodeDetails);
         final VoucherRequest voucherRequest = voucherService.createRevaluationVoucherRequest(revaluation,
-                accountCodeDetails, asset.getDepartment().getId(), headers);
+                accountCodeDetails, asset.getId(), asset.getDepartment().getId(), headers);
         log.debug("Voucher Request for Revaluation :: " + voucherRequest);
 
         return voucherService.createVoucher(voucherRequest, tenantId, headers);

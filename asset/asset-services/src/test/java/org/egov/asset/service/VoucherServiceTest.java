@@ -114,7 +114,7 @@ public class VoucherServiceTest {
                 .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.REVALUATIONVOUCHERDESCRIPTION, tenantId))
                         .thenReturn("Asset Revaluation Journal Voucher");
         final VoucherRequest generatedVoucherRequest = voucherService.createRevaluationVoucherRequest(revaluation,
-                accountCodeDetails, asset.getDepartment().getId(), getHttpHeaders());
+                accountCodeDetails, asset.getId(), asset.getDepartment().getId(), getHttpHeaders());
 
         final Fund fund = new Fund();
         fund.setId(Long.valueOf("1"));
@@ -127,7 +127,7 @@ public class VoucherServiceTest {
                 .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.REVALUATIONVOUCHERDESCRIPTION, tenantId));
 
         voucher.setSource(
-                null + "/asset-web/app/asset/create-asset-revaluation.html?id=" + revaluation.getId() + "&type=view");
+                null + "/asset-web/app/asset/create-asset-revaluation.html?id=" + asset.getId() + "&type=view");
 
         final Function function = new Function();
         function.setId(Long.valueOf("124"));
@@ -175,7 +175,7 @@ public class VoucherServiceTest {
                         .thenReturn("Asset Disposal Journal Voucher");
 
         final VoucherRequest generatedVoucherRequest = voucherService.createDisposalVoucherRequest(disposal,
-                asset.getDepartment().getId(), accountCodeDetails, getHttpHeaders());
+                asset.getId(), asset.getDepartment().getId(), accountCodeDetails, getHttpHeaders());
 
         final Fund fund = getFund();
         final Voucher voucher = getVoucher(asset.getDepartment().getId(), fund);
@@ -185,7 +185,7 @@ public class VoucherServiceTest {
         voucher.setDescription(assetConfigurationService
                 .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DISPOSALVOUCHERDESCRIPTION, tenantId));
 
-        voucher.setSource(null + "/asset-web/app/asset/create-asset-sale.html?id=" + disposal.getId() + "&type=view");
+        voucher.setSource(null + "/asset-web/app/asset/create-asset-sale.html?id=" + asset.getId() + "&type=view");
         final List<Voucher> vouchers = new ArrayList<>();
         vouchers.add(voucher);
 

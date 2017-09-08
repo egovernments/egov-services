@@ -184,7 +184,7 @@ public class VoucherService {
     }
 
     public VoucherRequest createRevaluationVoucherRequest(final Revaluation revaluation,
-            final List<VoucherAccountCodeDetails> accountCodeDetails, final Long departmentId,
+            final List<VoucherAccountCodeDetails> accountCodeDetails, final Long assetId, final Long departmentId,
             final HttpHeaders header) {
         final VoucherRequest voucherRequest = new VoucherRequest();
         final List<Voucher> vouchers = new ArrayList<>();
@@ -197,8 +197,8 @@ public class VoucherService {
         voucher.setDescription(assetConfigurationService
                 .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.REVALUATIONVOUCHERDESCRIPTION, tenantId));
 
-        final String source = header.getOrigin() + "/asset-web/app/asset/create-asset-revaluation.html?id="
-                + revaluation.getId() + "&type=view";
+        final String source = header.getOrigin() + "/asset-web/app/asset/create-asset-revaluation.html?id=" + assetId
+                + "&type=view";
 
         log.debug("Revaluation Source :: " + source);
         voucher.setSource(source);
@@ -234,8 +234,9 @@ public class VoucherService {
         voucherRequest.setVouchers(vouchers);
     }
 
-    public VoucherRequest createDisposalVoucherRequest(final Disposal disposal, final Long departmentId,
-            final List<VoucherAccountCodeDetails> accountCodeDetails, final HttpHeaders header) {
+    public VoucherRequest createDisposalVoucherRequest(final Disposal disposal, final Long assetId,
+            final Long departmentId, final List<VoucherAccountCodeDetails> accountCodeDetails,
+            final HttpHeaders header) {
         final VoucherRequest voucherRequest = new VoucherRequest();
         final List<Voucher> vouchers = new ArrayList<>();
         final String tenantId = disposal.getTenantId();
@@ -247,7 +248,7 @@ public class VoucherService {
         voucher.setDescription(assetConfigurationService
                 .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DISPOSALVOUCHERDESCRIPTION, tenantId));
 
-        final String source = header.getOrigin() + "/asset-web/app/asset/create-asset-sale.html?id=" + disposal.getId()
+        final String source = header.getOrigin() + "/asset-web/app/asset/create-asset-sale.html?id=" + assetId
                 + "&type=view";
 
         log.debug("Disposal source :: " + source);

@@ -243,11 +243,24 @@ public class PositionService {
         List<Position> positions = positionBulkRequest.getPosition().stream().map(position -> {
             Department department = departmentService.getDepartmentByCode(position.getDeptdesig().getDepartmentCode(),
                     position.getTenantId(), requestInfoWrapper);
+            if (department == null || isEmpty(department)) {
+            	
+                throw new InvalidDataException("department", "The field {0} should have a valid value which exists in the system", "null");
+
+            }
             DesignationGetRequest designationGetRequest = DesignationGetRequest.builder()
                     .code(position.getDeptdesig().getDesignation().getCode())
                     .tenantId(position.getTenantId())
                     .build();
-            Designation designation = designationService.getDesignations(designationGetRequest).get(0);
+            
+            List<Designation> designations = designationService.getDesignations(designationGetRequest);
+            
+            if (designations.isEmpty()) {
+            	
+                throw new InvalidDataException("designation", "The designation should have a valid value which exists in the system", "null");
+
+            }
+            final Designation designation = designations.get(0);
             DepartmentDesignation deptDesig = DepartmentDesignation.builder()
                     .id(position.getDeptdesig().getId())
                     .departmentId(department.getId())
@@ -268,7 +281,7 @@ public class PositionService {
 
         return PositionRequest.builder().position(positions).requestInfo(requestInfo).build();
     }
-
+    
     private void validateDepartment(PositionRequest positionRequest) {
         List<Position> positions = positionRequest.getPosition();
         RequestInfo requestInfo = positionRequest.getRequestInfo();
@@ -280,7 +293,7 @@ public class PositionService {
             List<Department> departments = departmentService.getDepartments(Arrays.asList(deptDesig.getDepartmentId()),
                     tenantId, requestInfoWrapper);
             if (departments == null || departments.size() < 1) {
-                throw new InvalidDataException("department", "the field {0} should have a valid value which exists in the system",
+                throw new InvalidDataException("department", "The department should have a valid value which exists in the system",
                         "null");
             }
         }
@@ -291,7 +304,7 @@ public class PositionService {
         List<Position> positions = positionRequest.getPosition();
         for (int i = 0; i < positions.size(); i++) {
             if (null == positions.get(i).getDeptdesig().getDesignation().getId()) {
-                throw new InvalidDataException("designation", "the field {0} should have a valid value which exists in the system", "null");
+                throw new InvalidDataException("designation", "The designation should have a valid value which exists in the system", "null");
 
             }
             DepartmentDesignation deptDesig = positions.get(i).getDeptdesig();
@@ -303,7 +316,7 @@ public class PositionService {
 
                 if (designations == null || designations.size() < 1) {
 
-                    throw new InvalidDataException("designation", "the field {0} should have a valid value which exists in the system", "null");
+                    throw new InvalidDataException("designations", "designations should have a valid value which exists in the system", "null");
                 }
             }
         }

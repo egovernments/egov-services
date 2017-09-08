@@ -241,7 +241,7 @@ var dat = {
       "header": [{label: "tl.create.groups.subcategorytype.code"},{label: "tl.create.groups.subcategorytype.name"}, {label: "tl.create.groups.subcategorytype.category"}, {label: "tl.create.groups.subcategorytype.active"}, {label: "tl.create.groups.subcategorytype.categories.details.feeType"}, {label: "tl.create.groups.subcategorytype.categories.details.rateType"}, {label: "tl.create.groups.subcategorytype.categories.details.uomId"}],
       "values": ["code", "name","parentName", "active", "details[0].feeType", "details[0].rateType", "details[0].uomId"],
       "resultPath": "categories",
-      "rowClickUrlUpdate": "/update/tl/CreateLicenseSubCategory/{id}",
+      "rowClickUrlUpdate": "/non-framework/tl/transaction/UpdateSubCategory/{id}",
       "rowClickUrlView": "/view/tl/CreateLicenseSubCategory/{id}"
       }
   },
@@ -469,20 +469,20 @@ var dat = {
 		          "defaultValue":true
 		        },
 
-	        {
-	          "name": "updateType",
-	          "jsonPath": "categories[0].type",
-	          "label": "typeParameter",
-	          "pattern": "",
-	          "type": "text",
-	          "url": "",
-	          "isRequired": false,
-	          "isDisabled": false,
-	          "requiredErrMsg": "",
-	          "patternErrMsg": "",
-	          "defaultValue": "SUBCATEGORY",
-	          "isHidden": false
-	        }
+	        // {
+	        //   "name": "updateType",
+	        //   "jsonPath": "categories[0].type",
+	        //   "label": "typeParameter",
+	        //   "pattern": "",
+	        //   "type": "text",
+	        //   "url": "",
+	        //   "isRequired": false,
+	        //   "isDisabled": false,
+	        //   "requiredErrMsg": "",
+	        //   "patternErrMsg": "",
+	        //   "defaultValue": "SUBCATEGORY",
+	        //   "isHidden": false
+	        // }
 
 				]
 			},

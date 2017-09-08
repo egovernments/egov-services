@@ -71,17 +71,19 @@ public class DataSyncEmployeeConsumer {
     @Autowired
     private DataSyncPositionService dataSyncPositionService;
 
-    @KafkaListener(topics = {"${kafka.topics.employee.sync.name}"})
+    @KafkaListener(topics = {"${kafka.topics.employee.sync.name}","${kafka.topics.position.sync.name}"})
     public void listen(Map<String, Object> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
-        log.info("topic :: " + topic);
-        log.info("record :: " + record);
-        dataSyncEmployeeService.create(objectMapper.convertValue(record, EmployeeSyncRequest.class));
+        if(topic.equalsIgnoreCase("egov.datasyncposition")) {
+            log.info("topic :: " + topic);
+            log.info("record :: " + record);
+            dataSyncPositionService.create(objectMapper.convertValue(record, PositionSyncRequest.class));
+        }
+        if(topic.equalsIgnoreCase("egov.datasync")) {
+            log.info("topic :: " + topic);
+            log.info("record :: " + record);
+            dataSyncEmployeeService.create(objectMapper.convertValue(record, EmployeeSyncRequest.class));
+        }
+
     }
 
-    @KafkaListener(topics = {"${kafka.topics.position.sync.name}"})
-    public void listenPosition(Map<String, Object> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
-        log.info("topic :: " + topic);
-        log.info("record :: " + record);
-        dataSyncPositionService.create(objectMapper.convertValue(record, PositionSyncRequest.class));
-    }
 }

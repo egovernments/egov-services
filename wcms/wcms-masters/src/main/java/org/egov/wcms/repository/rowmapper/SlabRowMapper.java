@@ -37,20 +37,34 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.web.contract;
+package org.egov.wcms.repository.rowmapper;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-@Builder
-@AllArgsConstructor
-public class BoundaryType {
+import org.egov.wcms.model.MeterWaterRates;
+import org.egov.wcms.model.Slab;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
-    @JsonProperty("id")
-    private String id;
+@Component
+public class SlabRowMapper implements RowMapper<Slab> {
 
-    @JsonProperty("name")
-    private String name;
+    @Override
+    public Slab mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+        final Slab slab = new Slab();
+        slab.setId(rs.getLong("slab_id"));
+        if ((BigDecimal) rs.getObject("slab_fromunit") != null)
+            slab.setFromUnit(Long.valueOf(String.valueOf(rs.getObject("slab_fromunit"))));
+        if ((BigDecimal) rs.getObject("slab_tounit") != null)
+            slab.setToUnit(Long.valueOf(String.valueOf(rs.getObject("slab_tounit"))));
+        slab.setUnitRate((Double) rs.getObject("slab_unitrate"));
+        slab.setTenantId(rs.getString("slab_tenantid"));
+        final MeterWaterRates meterWaterRates = new MeterWaterRates();
+        meterWaterRates.setId(rs.getLong("slab_meterwaterratesid"));
+        slab.setMeterWaterRates(meterWaterRates);
+        return slab;
+    }
 
 }

@@ -131,4 +131,10 @@ public class UsageTypeQueryBuilder {
         return " select id FROM egwtr_usage_type  where name= :name and tenantId = :tenantId ";
     }
 
+    public String getUsageTypeIdQueryWithCode() {
+        return " select id FROM egwtr_usage_type  where name= :name and tenantId = :tenantId"
+                + " and code != :code";
+
+    }
+
 }

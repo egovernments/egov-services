@@ -503,32 +503,39 @@ public class ValidatorUtils {
         }
     }
 
-    public List<ErrorResponse> validateMeterStatusRequest(final MeterStatusReq meterStatusRequest) {
+    public List<ErrorResponse> validateMeterStatusRequest(final MeterStatusReq meterStatusRequest, final Boolean isUpdate) {
         final List<ErrorResponse> errorResponses = new ArrayList<>();
         final ErrorResponse errorResponse = new ErrorResponse();
-        final Error error = getError(meterStatusRequest);
+        final Error error = getError(meterStatusRequest, isUpdate);
         errorResponse.setError(error);
         if (!errorResponse.getErrorFields().isEmpty())
             errorResponses.add(errorResponse);
         return errorResponses;
     }
 
-    private Error getError(final MeterStatusReq meterStatusRequest) {
-        final List<ErrorField> errorFields = getErrorFields(meterStatusRequest);
+    private Error getError(final MeterStatusReq meterStatusRequest, final Boolean isUpdate) {
+        final List<ErrorField> errorFields = getErrorFields(meterStatusRequest, isUpdate);
         return Error.builder().code(HttpStatus.BAD_REQUEST.value())
                 .message(WcmsConstants.INVALID_METER_STATUS_REQUEST_MESSAGE).errorFields(errorFields).build();
     }
 
-    private List<ErrorField> getErrorFields(final MeterStatusReq meterStatusRequest) {
+    private List<ErrorField> getErrorFields(final MeterStatusReq meterStatusRequest, final Boolean isUpdate) {
         final List<ErrorField> errorFields = new ArrayList<>();
         final List<MeterStatus> meterStatuses = meterStatusRequest.getMeterStatus();
         for (final MeterStatus meterStatus : meterStatuses)
-            addMeterStatusValidationErrors(meterStatus, errorFields);
+            addMeterStatusValidationErrors(meterStatus, errorFields, isUpdate);
         return errorFields;
     }
 
-    private void addMeterStatusValidationErrors(final MeterStatus meterStatus, final List<ErrorField> errorFields) {
-
+    private void addMeterStatusValidationErrors(final MeterStatus meterStatus, final List<ErrorField> errorFields,
+            final Boolean isUpdate) {
+        if (isUpdate)
+            if (meterStatus.getCode() == null || meterStatus.getCode().isEmpty()) {
+                final ErrorField errorField = ErrorField.builder().code(WcmsConstants.CODE_MANDATORY_CODE)
+                        .message(WcmsConstants.CODE_MANDATORY_ERROR_MESSAGE)
+                        .field(WcmsConstants.CODE_MANDATORY_FIELD_NAME).build();
+                errorFields.add(errorField);
+            }
         if (StringUtils.isBlank(meterStatus.getTenantId())) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.TENANTID_MANDATORY_CODE)
                     .message(WcmsConstants.TENANTID_MANADATORY_ERROR_MESSAGE)
@@ -539,40 +546,43 @@ public class ValidatorUtils {
                     .message(WcmsConstants.ACTIVE_MANADATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.ACTIVE_MANADATORY_FIELD_NAME).build();
             errorFields.add(errorField);
-        } else if (meterStatus.getCode() == null || meterStatus.getCode().isEmpty()) {
-            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.CODE_MANDATORY_CODE)
-                    .message(WcmsConstants.CODE_MANDATORY_ERROR_MESSAGE)
-                    .field(WcmsConstants.CODE_MANDATORY_FIELD_NAME).build();
-            errorFields.add(errorField);
         } else
             return;
     }
 
-    public List<ErrorResponse> validateMeterCostRequest(final MeterCostReq meterCostRequest) {
+    public List<ErrorResponse> validateMeterCostRequest(final MeterCostReq meterCostRequest, final Boolean isUpdate) {
         final List<ErrorResponse> errorResponses = new ArrayList<>();
         final ErrorResponse errorResponse = new ErrorResponse();
-        final Error error = getError(meterCostRequest);
+        final Error error = getError(meterCostRequest, isUpdate);
         errorResponse.setError(error);
         if (!errorResponse.getErrorFields().isEmpty())
             errorResponses.add(errorResponse);
         return errorResponses;
     }
 
-    private Error getError(final MeterCostReq meterCostRequest) {
-        final List<ErrorField> errorFields = getErrorFields(meterCostRequest);
+    private Error getError(final MeterCostReq meterCostRequest, final Boolean isUpdate) {
+        final List<ErrorField> errorFields = getErrorFields(meterCostRequest, isUpdate);
         return Error.builder().code(HttpStatus.BAD_REQUEST.value())
                 .message(WcmsConstants.INVALID_METER_COST_REQUEST_MESSAGE).errorFields(errorFields).build();
     }
 
-    private List<ErrorField> getErrorFields(final MeterCostReq meterCostRequest) {
+    private List<ErrorField> getErrorFields(final MeterCostReq meterCostRequest, final Boolean isUpdate) {
         final List<ErrorField> errorFields = new ArrayList<>();
         final List<MeterCost> meterCosts = meterCostRequest.getMeterCost();
         for (final MeterCost meterCost : meterCosts)
-            addMeterCostValidationErrors(meterCost, errorFields);
+            addMeterCostValidationErrors(meterCost, errorFields, isUpdate);
         return errorFields;
     }
 
-    private void addMeterCostValidationErrors(final MeterCost meterCost, final List<ErrorField> errorFields) {
+    private void addMeterCostValidationErrors(final MeterCost meterCost, final List<ErrorField> errorFields,
+            final Boolean isUpdate) {
+        if (isUpdate)
+            if (meterCost.getCode() == null || meterCost.getCode().isEmpty()) {
+                final ErrorField errorField = ErrorField.builder().code(WcmsConstants.CODE_MANDATORY_CODE)
+                        .message(WcmsConstants.CODE_MANDATORY_ERROR_MESSAGE)
+                        .field(WcmsConstants.CODE_MANDATORY_FIELD_NAME).build();
+                errorFields.add(errorField);
+            }
 
         if (StringUtils.isBlank(meterCost.getTenantId())) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.TENANTID_MANDATORY_CODE)
@@ -583,11 +593,6 @@ public class ValidatorUtils {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.ACTIVE_MANDATORY_CODE)
                     .message(WcmsConstants.ACTIVE_MANADATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.ACTIVE_MANADATORY_FIELD_NAME).build();
-            errorFields.add(errorField);
-        } else if (meterCost.getCode() == null || meterCost.getCode().isEmpty()) {
-            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.CODE_MANDATORY_CODE)
-                    .message(WcmsConstants.CODE_MANDATORY_ERROR_MESSAGE)
-                    .field(WcmsConstants.CODE_MANDATORY_FIELD_NAME).build();
             errorFields.add(errorField);
         } else if (meterCost.getAmount().toString() == null || meterCost.getAmount().toString().isEmpty()) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.AMOUNT_MANDATORY_CODE)

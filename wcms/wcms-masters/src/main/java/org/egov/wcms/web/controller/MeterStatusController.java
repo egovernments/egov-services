@@ -56,7 +56,7 @@ public class MeterStatusController {
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("MeterStatusRequest :" + meterStatusRequest);
-        final List<ErrorResponse> errorResponses = validatorUtils.validateMeterStatusRequest(meterStatusRequest);
+        final List<ErrorResponse> errorResponses = validatorUtils.validateMeterStatusRequest(meterStatusRequest, false);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
         final List<MeterStatus> listOfMeterStatus = meterStatusService.pushCreateMeterStatusToQueue(meterStatusRequest);
@@ -72,7 +72,7 @@ public class MeterStatusController {
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("MeterStatusRequest :" + meterStatusRequest);
-        final List<ErrorResponse> errorResponses = validatorUtils.validateMeterStatusRequest(meterStatusRequest);
+        final List<ErrorResponse> errorResponses = validatorUtils.validateMeterStatusRequest(meterStatusRequest, true);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
         final List<MeterStatus> listOfMeterStatus = meterStatusService.pushUpdateMeterStatusToQueue(meterStatusRequest);

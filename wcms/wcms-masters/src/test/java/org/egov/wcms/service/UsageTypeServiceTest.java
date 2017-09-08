@@ -107,14 +107,14 @@ public class UsageTypeServiceTest {
 
     @Test
     public void test_should_verify_usageType_exists_in_DB_and_return_false_if_it_exists() {
-        when(usageTypeRepository.checkUsageTypeExists("School", "default")).thenReturn(false);
+        when(usageTypeRepository.checkUsageTypeExists(getUsageType().get(0))).thenReturn(false);
         final Boolean value = usageTypeService.checkUsageTypeExists(getUsageType().get(0));
         assertTrue(value.equals(false));
     }
 
     @Test
     public void test_should_verify_usageType_exists_in_DB_and_return_true_if_it_doesnot_exists() {
-        when(usageTypeRepository.checkUsageTypeExists("School", "default")).thenReturn(true);
+        when(usageTypeRepository.checkUsageTypeExists(getUsageType().get(0))).thenReturn(true);
         final Boolean value = usageTypeService.checkUsageTypeExists(getUsageType().get(0));
         assertTrue(value.equals(true));
     }

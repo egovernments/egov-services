@@ -155,14 +155,21 @@ public class UsageTypeRepository {
         return usageTypeRequest;
     }
 
-    public boolean checkUsageTypeExists(final String name, final String tenantId) {
+    public boolean checkUsageTypeExists(final UsageType usageType) {
         final Map<String, Object> preparedStatementValues = new HashMap<>();
-        preparedStatementValues.put("name", name);
-        preparedStatementValues.put("tenantId", tenantId);
-        final String query = usageTypeQueryBuilder.getUsageTypeIdQuery();
-        final List<Long> UsageTypeIds = namedParameterJdbcTemplate.queryForList(query,
+        preparedStatementValues.put("name", usageType.getName());
+        preparedStatementValues.put("tenantId", usageType.getTenantId());
+
+        final String query;
+        if (usageType.getCode() == null)
+            query = usageTypeQueryBuilder.getUsageTypeIdQuery();
+        else {
+            preparedStatementValues.put("code", usageType.getCode());
+            query = usageTypeQueryBuilder.getUsageTypeIdQueryWithCode();
+        }
+        final List<Long> usageTypeIds = namedParameterJdbcTemplate.queryForList(query,
                 preparedStatementValues, Long.class);
-        if (!UsageTypeIds.isEmpty())
+        if (!usageTypeIds.isEmpty())
             return false;
 
         return true;

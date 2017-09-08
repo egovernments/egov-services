@@ -47,7 +47,9 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
@@ -92,14 +94,14 @@ public class MeterWaterRatesRepositoryTest {
 
     @Test
     public void test_Should_Search_MeterWaterRates() {
-        final List<Object> preparedStatementValues = new ArrayList<>();
+        final Map<String, Object> preparedStatementValues = new HashMap<>();
 
         final MeterWaterRatesGetRequest meterWaterRatesGetRequest = Mockito.mock(MeterWaterRatesGetRequest.class);
         final String queryString = "MyQuery";
         when(meterWaterRatesQueryBuilder.getQuery(meterWaterRatesGetRequest, preparedStatementValues))
                 .thenReturn(queryString);
         final List<MeterWaterRates> meterWaterRates = new ArrayList<>();
-        when(jdbcTemplate.query(queryString, preparedStatementValues.toArray(), meterWaterRatesRowMapper))
+        when(namedParameterJdbcTemplate.query(queryString, preparedStatementValues, meterWaterRatesRowMapper))
                 .thenReturn(meterWaterRates);
 
         assertTrue(meterWaterRates.equals(meterWaterRatesRepository.findForCriteria(meterWaterRatesGetRequest)));
@@ -108,12 +110,12 @@ public class MeterWaterRatesRepositoryTest {
 
     @Test
     public void test_Inavalid_Find_MeterWaterRates() throws Exception {
-        final List<Object> preparedStatementValues = new ArrayList<>();
+        final Map<String, Object> preparedStatementValues = new HashMap<>();
         final MeterWaterRatesGetRequest meterWaterRatesGetRequest = Mockito.mock(MeterWaterRatesGetRequest.class);
         final String queryString = "MyQuery";
         when(meterWaterRatesQueryBuilder.getQuery(meterWaterRatesGetRequest, preparedStatementValues)).thenReturn(null);
         final List<MeterWaterRates> meterWaterRates = new ArrayList<>();
-        when(jdbcTemplate.query(queryString, preparedStatementValues.toArray(), meterWaterRatesRowMapper))
+        when(namedParameterJdbcTemplate.query(queryString, preparedStatementValues, meterWaterRatesRowMapper))
                 .thenReturn(null);
 
         assertTrue(meterWaterRates.equals(meterWaterRatesRepository.findForCriteria(meterWaterRatesGetRequest)));

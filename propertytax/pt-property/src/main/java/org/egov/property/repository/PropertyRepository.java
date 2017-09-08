@@ -348,6 +348,7 @@ public class PropertyRepository {
 				ps.setString(34, unit.getSubUsage());
 				ps.setDouble(35, getDouble(unit.getCarpetArea()));
 				ps.setDouble(36, getDouble(unit.getExemptionArea()));
+				ps.setDouble(37, getDouble(unit.getRv()));
 				return ps;
 			}
 		};
@@ -385,7 +386,7 @@ public class PropertyRepository {
 				unit.getAuditDetails().getLastModifiedBy(), unit.getAuditDetails().getCreatedTime(),
 				unit.getAuditDetails().getLastModifiedTime(), floorId, getLong(parent), unit.getIsAuthorised(),
 				unit.getConstructionStartDate(), unit.getLandCost(), unit.getBuildingCost(), unit.getSubUsage(),
-				unit.getCarpetArea(), unit.getExemptionArea() };
+				unit.getCarpetArea(), unit.getExemptionArea(),getDouble(unit.getRv()) };
 
 		jdbcTemplate.update(UnitBuilder.INSERT_ROOM_QUERY, roomArgs);
 
@@ -1158,7 +1159,7 @@ public class PropertyRepository {
 				unit.getElectricMeterNo(), unit.getWaterMeterNo(), unit.getAuditDetails().getLastModifiedBy(),
 				unit.getAuditDetails().getLastModifiedTime(), unit.getParentId(), unit.getIsAuthorised(),
 				TimeStampUtil.getTimeStamp(unit.getConstructionStartDate()), unit.getLandCost(), unit.getBuildingCost(),
-				unit.getSubUsage(), unit.getCarpetArea(), unit.getExemptionArea(), unit.getId() };
+				unit.getSubUsage(), unit.getCarpetArea(), unit.getExemptionArea(),getDouble(unit.getRv()), unit.getId() };
 
 		jdbcTemplate.update(unitUpdate, unitArgs);
 
@@ -1182,7 +1183,7 @@ public class PropertyRepository {
 				unit.getElectricMeterNo(), unit.getWaterMeterNo(), unit.getAuditDetails().getLastModifiedBy(),
 				unit.getAuditDetails().getLastModifiedTime(), unit.getParentId(), unit.getIsAuthorised(),
 				unit.getConstructionStartDate(), unit.getLandCost(), unit.getBuildingCost(), unit.getSubUsage(),
-				unit.getCarpetArea(), unit.getExemptionArea(), unit.getId() };
+				unit.getCarpetArea(), unit.getExemptionArea(),getDouble(unit.getRv()), unit.getId() };
 
 		jdbcTemplate.update(roomUpdate, roomArgs);
 

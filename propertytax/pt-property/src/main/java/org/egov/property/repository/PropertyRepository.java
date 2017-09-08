@@ -172,7 +172,7 @@ public class PropertyRepository {
 				address.getAddressNumber(), address.getAddressLine1(), address.getAddressLine2(), address.getLandmark(),
 				address.getCity(), address.getPincode(), address.getDetail(), address.getAuditDetails().getCreatedBy(),
 				address.getAuditDetails().getLastModifiedBy(), address.getAuditDetails().getCreatedTime(),
-				address.getAuditDetails().getLastModifiedTime(), propertyId, address.getSurveyNo()};
+				address.getAuditDetails().getLastModifiedTime(), propertyId, address.getSurveyNo(), address.getPlotNo()};
 
 		jdbcTemplate.update(AddressBuilder.INSERT_ADDRESS_QUERY, addressArgs);
 
@@ -1066,7 +1066,7 @@ public class PropertyRepository {
 				address.getAddressNumber(), address.getAddressLine1(), address.getAddressLine2(), address.getLandmark(),
 				address.getCity(), address.getPincode(), address.getDetail(),
 				address.getAuditDetails().getLastModifiedBy(), address.getAuditDetails().getLastModifiedTime(),
-				proertyId, address.getSurveyNo(),address_id };
+				proertyId, address.getSurveyNo(),address.getPlotNo(), address_id };
 
 		jdbcTemplate.update(addressUpdate, addressArgs);
 

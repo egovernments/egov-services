@@ -588,6 +588,124 @@ paths:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
         - Penalty
+        
+  /transferFeeRates/_search:
+  ######################################################
+  # Will be synchronous.
+  # tenantId should be passed in query param.
+  ######################################################
+    post:
+      summary: Search the Transfer Fee Rates in the system based on the criterion specified.
+      description: |
+        Search and get Transfer Fee Rate(s) based on defined search criteria. Currently search parameters are only allowed as HTTP query params. In case multiple parameterts are passed Transfer Fee Rate will be searched as an AND combination of all the parameters. Maximum result size is restricted based on the maxlength of Transfer Fee Rates as defined in TransferFeeRatesResponse model.
+        
+        By default results will be sorted by from date
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - name: feeFactor
+          in: query
+          description: Fee factor for which Transfer Fee Rate to be returned.
+          required: true
+          type: string
+        - name: validDate
+          in: query
+          description: This date will be compared between the available from and to dates for search results, format is dd/MM/yyyy
+          required: true
+          type: string
+          format: date
+        - name: validValue
+          in: query
+          description: This value amount will be compared between the available from and to values for search results.
+          required: true
+          type: number
+      tags:
+        - Master
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ####################################################
+        '200':
+          description: returns Transfer Fee Rates.
+          schema:
+            $ref: '#/definitions/TransferFeeRatesResponse'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
+  /transferFeeRates/_create:
+  ######################################################
+  # Will be asynchronous.
+  # tenantId should be passed in the model.
+  # Validate tenantId before persisting.
+  ######################################################
+    post:
+      description: Creates a Transfer Fee Rate
+      parameters:
+        - name: transferFeeRates
+          in: body
+          description: Request header for the Transfer Fee Rate.
+          required: true
+          schema:
+            $ref: '#/definitions/TransferFeeRatesRequest'
+        - name: tenantId
+          in: query
+          description: Unique id for ulb.
+          required: true
+          type: string
+          format: varchar
+      tags:
+        - Master
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ####################################################
+        '201':
+          description: Transfer Fee Rate(s) created sucessfully.
+          schema:
+            $ref: '#/definitions/TransferFeeRatesResponse'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
+  /transferFeeRates/_update:
+  ######################################################
+  # Will be asynchronous.
+  # tenantId should be passed in the model.
+  # Validate tenantId before persisting.
+  # Unique identifier of the model to be updated should be passed as path parameter. 
+  ######################################################
+    post:
+      description: Updates a Transfer Fee Rate.
+      parameters:
+        - name: transferFeeRates
+          in: body
+          description: Request header for the Transfer Fee Rate.
+          required: true
+          schema:
+            $ref: '#/definitions/TransferFeeRatesRequest'
+        - name: tenantId
+          in: query
+          description: Unique id for ulb.
+          required: true
+          type: string
+          format: varchar
+      tags:
+        - Master
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ####################################################
+        '200':
+          description: Update transferFeeRates(s) successful
+          schema:
+            $ref: '#/definitions/TransferFeeRatesResponse'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
 definitions:
 ########################################################
@@ -779,7 +897,7 @@ definitions:
       id:
         type: integer
         format: int64
-        description: Unique Identifier of the GuidanceValue
+        description: Unique Identifier of the CalculationFactor
       tenantId:
         type: string
         description: tenant id of the CalculationFactor
@@ -1027,7 +1145,7 @@ definitions:
         description: Unique Identifier of the TaxRates
       tenantId:
         type: string
-        description: tenant id of the GuidanceValue
+        description: tenant id of the TaxPeriod
         maxLength: 128
         minLength: 4
       fromDate:
@@ -1105,7 +1223,6 @@ definitions:
     required:
        - upicNo
        - tenantId 
-              
   
   LatePaymentPenaltyResponse:
     type: object
@@ -1128,6 +1245,76 @@ definitions:
        - upicNo
        - tenantId
        - penalty
+       
+  TransferFeeRates:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the TransferFeeRates
+      tenantId:
+        type: string
+        description: tenant id of the TransferFeeRates
+        maxLength: 128
+        minLength: 4
+      feeFactor:
+        type: string
+        description: The fee factor based on which the fee will be calculated.
+      fromDate:
+        type: string
+        format: date
+        description: start date from when the fee rate is applicable. Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
+      toDate:
+        type: string
+        format: date
+        description: start date from when the fee rate is applicable. Date is inclduing timestamp, dd/MM/yyyy hh24:mi:ss
+      fromValue:
+        type: number
+        format: double
+        description: from value from which the free rate is applicable. This value is respective to feeFactor
+      toValue:
+        type: number
+        format: double
+        description: to value to which the free rate is applicable. This value is respective to feeFactor
+      feePercentage:
+        type: number
+        format: double
+        description: The free rate percentage.
+      flatValue:
+        type: number
+        format: double
+        description: for some value ranges there might not be percentages, the flat amounts will be defined.
+    required:
+      - id
+      - tenantId
+      - feeFactor
+      - fromDate
+      - fromValue
+      - toValue
+      
+  TransferFeeRatesRequest:
+    properties:
+      RequestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      TransferFeeRates:
+        type: array
+        minimum: 1
+        maximum: 100
+        items:
+         $ref: '#/definitions/TransferFeeRates'
+    type: object
+    
+  TransferFeeRatesResponse:
+    properties:
+      ResponseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      TransferFeeRates:
+        type: array
+        maximum: 500
+        items:
+          $ref: '#/definitions/TransferFeeRates'
+    type: object
        
   Penalty:
     type: object

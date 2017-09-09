@@ -216,8 +216,15 @@ public class WaterConnectionRowMapper {
 		try {
 			connection.setId(rs.getLong("conn_id"));
 			connection.setTenantId(rs.getString("conn_tenant"));
-			connection.setUsageType(rs.getString("conn_usgtypename"));
+			
+			connection.setStorageReservoirId(rs.getString("conn_storagereservoir"));
 			connection.setUsageTypeId(rs.getString("conn_usgtype"));
+			connection.setSubUsageTypeId(rs.getString("conn_subusagetype"));
+			connection.setSupplyTypeId(rs.getString("conn_suply"));
+			connection.setPipesizeId(rs.getString("conn_pipesize"));
+			connection.setSourceTypeId(rs.getString("conn_sourceType"));
+			connection.setWaterTreatmentId(rs.getString("conn_watertreatmentid"));
+			
 			connection.setConnectionType(rs.getString("conn_connType"));
 			connection.setBillingType(rs.getString("conn_billtype"));
 			connection.setConnectionStatus(rs.getString("conn_constatus"));
@@ -226,20 +233,10 @@ public class WaterConnectionRowMapper {
 			connection.setDonationCharge(rs.getLong("conn_doncharge"));
 			connection.setNumberOfTaps(rs.getInt("conn_nooftaps"));
 			connection.setNumberOfFamily(rs.getInt("numberoffamily"));
-			connection.setSupplyTypeId(rs.getString("supplytype_id"));
-			connection.setSupplyType(rs.getString("supplytype_name"));
-			connection.setHscPipeSizeType(rs.getString("pipesize_sizeininch"));
-			connection.setPipesizeId(rs.getString("pipesize_id"));
-			connection.setSourceTypeId(rs.getString("watersource_id"));
-			connection.setSourceType(rs.getString("watersource_name"));
 			connection.setNumberOfPersons(rs.getInt("conn_noofperson"));
 			connection.setStateId(rs.getLong("conn_stateid"));
 			connection.setParentConnectionId(rs.getLong("conn_parentconnectionid"));
 			connection.setHouseNumber(rs.getString("housenumber"));
-			connection.setWaterTreatmentId(rs.getString("conn_watertreatmentid"));
-			connection.setWaterTreatment(
-					(null != rs.getString("watertreatmentname") && rs.getString("watertreatmentname") != "")
-							? rs.getString("watertreatmentname") : "");
 			connection.setLegacyConsumerNumber(rs.getString("conn_legacyconsumernumber"));
 			connection.setManualConsumerNumber(rs.getString("manualconsumernumber"));
 			connection.setIsLegacy(rs.getBoolean("conn_islegacy"));
@@ -261,10 +258,6 @@ public class WaterConnectionRowMapper {
 			Long execDate = rs.getLong("execdate");
 			if (null != execDate) {
 				connection.setExecutionDate(execDate);
-			}
-			if(null != rs.getString("conn_subusgtypename") && !rs.getString("conn_subusgtypename").isEmpty()) { 
-				connection.setSubUsageTypeId(rs.getString("subusagetype"));
-				connection.setSubUsageType(rs.getString("conn_subusgtypename"));
 			}
 			if(rs.getString("conn_billtype").equals(METERED) && rs.getBoolean("conn_islegacy")) { 
 				Meter meter = Meter.builder().meterMake(rs.getString("metermake"))

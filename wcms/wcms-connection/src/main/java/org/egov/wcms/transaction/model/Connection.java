@@ -69,6 +69,18 @@ public class Connection {
 
     @NotNull
     private String connectionType;
+    
+    @NotNull
+    private String connectionStatus;
+    
+    @NotNull
+    private String acknowledgementNumber;
+
+    @NotNull
+    private String consumerNumber;
+
+    @NotNull
+    private String status;
 
     @NotNull
     private String applicationType;
@@ -78,39 +90,31 @@ public class Connection {
 
     private Long userid;
 
+    private String pipesizeId;
+    
     @NotNull
     private String hscPipeSizeType;
 
-    private String pipesizeId;
-
-    private Long executionDate;
-
+    private String supplyTypeId;
+    
     @NotNull
     private String supplyType;
-
-    private int noOfFlats;
-
-    private String supplyTypeId;
-
-    private String propertyIdentifier;
-
-    private String assetIdentifier;
-
-    @NotNull
-    private String sourceType;
-
+    
     private String sourceTypeId;
 
     @NotNull
-    private String waterTreatment;
-
+    private String sourceType;
+    
     private String waterTreatmentId;
+
+    @NotNull
+    private String waterTreatment;
+    
+    private String storageReservoirId;
     
     @NotNull
     private String storageReservoir; 
     
-    private String storageReservoirId; 
-
     @NotNull
     private String usageType;
     
@@ -121,23 +125,12 @@ public class Connection {
 
     private String subUsageTypeId;
 
+    private int noOfFlats;
+
     private int numberOfFamily;
-
-    @NotNull
-    private String connectionStatus;
-
-    @NotNull
-    private String status;
-
-    @NotNull
-    private Long stateId;
-
-    private String demandid;
+    
     @NotNull
     private double sumpCapacity;
-
-    @NotNull
-    private double donationCharge;
 
     @NotNull
     private int numberOfTaps;
@@ -145,9 +138,24 @@ public class Connection {
     @NotNull
     private int numberOfPersons;
 
-    @NotNull
-    private String legacyConsumerNumber;
+    private String propertyIdentifier;
 
+    private String assetIdentifier;
+    
+    @NotNull
+    private Long stateId;
+
+    private String demandid;
+    
+    @NotNull
+    private double donationCharge;
+    
+    @NotNull
+    private long manualReceiptDate;
+
+    @NotNull
+    private String manualReceiptNumber;
+    
     @NotNull
     private String estimationNumber;
 
@@ -155,26 +163,21 @@ public class Connection {
     private String workOrderNumber;
 
     @NotNull
-    private Boolean isLegacy;
+    private String legacyConsumerNumber;
 
-    @NotNull
-    private String acknowledgementNumber;
+    private Double billSequenceNumber;
+    
+    private String manualConsumerNumber;
+    
+    private Long executionDate;
 
-    @NotNull
-    private String consumerNumber;
+    private String houseNumber;
 
     @NotNull
     private String bplCardHolderName;
 
     @NotNull
     private long parentConnectionId;
-
-    @NotNull
-    private long manualReceiptDate;
-
-    @NotNull
-    private String manualReceiptNumber;
-    
 
     @NotNull
     private List<DocumentOwner> documents;
@@ -209,24 +212,21 @@ public class Connection {
     @NotNull
     private AuditDetails auditDetails;
 
-    @NotNull
-    private String tenantId;
-
     private WorkflowDetails workflowDetails;
 
     private String createdDate;
-
-    private Boolean withProperty;
-
+    
     private String plumberName;
 
-    private Double billSequenceNumber;
-    
-    private String manualConsumerNumber;
+    @NotNull
+    private String tenantId;
 
-    private String houseNumber;
-    
     private Boolean outsideULB;
+    
+    private Boolean withProperty;
+    
+    @NotNull
+    private Boolean isLegacy;
 
 
 

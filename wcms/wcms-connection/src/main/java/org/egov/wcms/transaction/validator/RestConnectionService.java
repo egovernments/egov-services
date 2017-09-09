@@ -305,7 +305,6 @@ public class RestConnectionService {
                 .append(configurationManager.getWaterMasterServiceDonationSearchPathTopic())
                 .append("?usageTypeCode=").append(waterConnectionRequest.getConnection().getUsageType())
                 .append("&subUsageTypeCode=").append(waterConnectionRequest.getConnection().getSubUsageType())
-                .append("&category=")
                 .append(
                         "&maxPipeSizeId=")
                 .append(
@@ -315,6 +314,7 @@ public class RestConnectionService {
                 .append(waterConnectionRequest.getConnection().getPipesizeId()).append(
                         "&tenantId=")
                 .append(waterConnectionRequest.getConnection().getTenantId());
+        logger.info("URL For Donation Validation : " + url.toString());
         DonationResponseInfo donation = new RestTemplate().postForObject(url.toString(), wrapper,
                 DonationResponseInfo.class);
         if (donation != null && donation.getDonations() != null && !donation.getDonations().isEmpty()) {

@@ -53,7 +53,7 @@ public class WaterConnectionQueryBuilder {
 	public static final Logger LOGGER = LoggerFactory.getLogger(WaterConnectionQueryBuilder.class);
 
     
-	private static final String SOURCE_QUERY = "SELECT DISTINCT connection.id as conn_id , connection.tenantid as conn_tenant, connection.connectiontype as conn_connType, " 
+	/*private static final String SOURCE_QUERY = "SELECT DISTINCT connection.id as conn_id , connection.tenantid as conn_tenant, connection.connectiontype as conn_connType, " 
 			+ " connection.billingtype as conn_billtype, connection.createdtime as createdtime, " 
 			+ " connection.hscpipesizetype as conn_pipesize, connection.applicationType as conn_applntype, connection.consumerNumber as conn_consumerNum, " 
 			+ " connection.supplytype as conn_suply, connection.sourcetype as conn_sourceType, connection.connectionstatus as conn_constatus,  "
@@ -77,9 +77,25 @@ public class WaterConnectionQueryBuilder {
 			+ " where prop.id = propowner.property AND propowner.owner = eguser.id AND prop.id = proploc.property ) propertyuserdetail, egwtr_treatment_plant plant , egwtr_usage_type usage1, egwtr_usage_type usage2 , egwtr_storage_reservoir storage " 
 			+ " WHERE NULLIF(connection.usagetype, '')::int = usage1.id AND NULLIF(connection.subusagetype, '')::int = usage2.id AND "  
 			+ " NULLIF(connection.sourcetype, '')::int=watersource.id AND NULLIF(connection.supplytype, '')::int=supplytype.id AND connection.propertyidentifier =propertyuserdetail.prop_upicnumber AND "  
-			+ " NULLIF(connection.watertreatmentid, '')::int = plant.id AND NULLIF(connection.hscpipesizetype, '')::int = pipesize.id AND NULLIF(connection.storagereservoir, '')::int = storage.id  " ;  
+			+ " NULLIF(connection.watertreatmentid, '')::int = plant.id AND NULLIF(connection.hscpipesizetype, '')::int = pipesize.id AND NULLIF(connection.storagereservoir, '')::int = storage.id  " ;*/
 	
-   private static final String QUERY_WITHOUT_PROP = "SELECT DISTINCT conndetails.id as conn_id , conndetails.tenantid as conn_tenant, conndetails.connectiontype as conn_connType, "  
+	private static final String SOURCE_QUERY = "SELECT DISTINCT connection.id as conn_id , connection.tenantid as conn_tenant, connection.connectiontype as conn_connType, " 
+			+ " connection.billingtype as conn_billtype, connection.createdtime as createdtime, connection.hscpipesizetype as conn_pipesize, connection.applicationType as conn_applntype, connection.consumerNumber as conn_consumerNum, " 
+			+ " connection.supplytype as conn_suply, connection.sourcetype as conn_sourceType, connection.connectionstatus as conn_constatus, "
+			+ " connection.sumpcapacity as conn_sumpcap, connection.numberofftaps as conn_nooftaps, connection.parentconnectionid as conn_parentconnectionid, " 
+			+ " connection.watertreatmentid as conn_watertreatmentid, connection.legacyconsumernumber as conn_legacyconsumernumber, connection.numberofpersons as conn_noofperson, " 
+			+ " connection.acknowledgmentnumber as conn_acknumber, connection.propertyidentifier as conn_propid, connection.usagetype as conn_usgtype, "
+			+ " connection.address as conn_propaddress, connection.islegacy as conn_islegacy, connection.donationcharge as conn_doncharge, "
+			+ " connection.executiondate as execdate, connection.stateid as conn_stateid, connection.manualreceiptnumber as manualreceiptnumber, connection.manualreceiptdate as manualreceiptdate, connection.housenumber as housenumber, " 
+			+ " connection.manualconsumernumber as manualconsumernumber, connection.subusagetype as conn_subusagetype,  connection.numberoffamily as numberoffamily, connection.plumbername as plumbername, connection.billsequencenumber as sequencenumber, " 
+			+ " connection.outsideulb as outsideulb, propertyuserdetail.property_owner as propertyowner, propertyuserdetail.aadhaarnumber, propertyuserdetail.mobilenumber, propertyuserdetail.emailid, propertyuserdetail.propertylocation, "
+			+ " propertyuserdetail.isprimaryowner as isprimaryowner, connection.storagereservoir as conn_storagereservoir from egwtr_waterconnection connection, "
+			+ " (select prop.id as property_id, prop.upicnumber as prop_upicnumber, eguser.name property_owner, eguser.aadhaarnumber as aadhaarnumber, eguser.mobilenumber as mobilenumber, eguser.emailid as emailid, proploc.locationboundary as propertylocation, " 
+			+ " propowner.isprimaryowner as isprimaryowner from egpt_property prop, egpt_property_owner propowner, eg_user eguser, egpt_propertylocation proploc " 
+			+ " where prop.id = propowner.property AND propowner.owner = eguser.id AND prop.id = proploc.property ) propertyuserdetail "
+			+ " WHERE connection.propertyidentifier =propertyuserdetail.prop_upicnumber " ;
+	
+   /*private static final String QUERY_WITHOUT_PROP = "SELECT DISTINCT conndetails.id as conn_id , conndetails.tenantid as conn_tenant, conndetails.connectiontype as conn_connType, "  
            + " conndetails.billingtype as conn_billtype, conndetails.createdtime as createdtime, " 
            + " conndetails.hscpipesizetype as conn_pipesize, conndetails.applicationType as conn_applntype, conndetails.consumerNumber as conn_consumerNum, "  
            + " conndetails.supplytype as conn_suply, conndetails.sourcetype as conn_sourceType, conndetails.connectionstatus as conn_constatus, " 
@@ -105,7 +121,22 @@ public class WaterConnectionQueryBuilder {
            + " ON NULLIF(conndetails.supplytype, '')::int=supplytype.id left join egwtr_pipesize pipesize on NULLIF(conndetails.hscpipesizetype, '')::int=pipesize.id " 
            + " left join egwtr_treatment_plant plant ON NULLIF(conndetails.watertreatmentid, '')::int = plant.id left join egwtr_storage_reservoir storage ON NULLIF(conndetails.storagereservoir, '')::int = storage.id left join egwtr_usage_type usage1 ON NULLIF(conndetails.usagetype, '')::int = usage1.id "  
            + " left join egwtr_usage_type usage2 ON NULLIF(conndetails.subusagetype, '')::int = usage2.id  left join egwtr_meter meter ON meter.connectionid = conndetails.id  "
-           + " where useraddress.type='PERMANENT' " ; 	
+           + " where useraddress.type='PERMANENT' " ; 	*/
+	
+	private static final String QUERY_WITHOUT_PROP = "SELECT DISTINCT conndetails.id as conn_id , conndetails.tenantid as conn_tenant, conndetails.connectiontype as conn_connType, conndetails.billingtype as conn_billtype, conndetails.createdtime as createdtime, "  
+			+ " conndetails.hscpipesizetype as conn_pipesize, conndetails.applicationType as conn_applntype, conndetails.consumerNumber as conn_consumerNum, conndetails.supplytype as conn_suply, conndetails.sourcetype as conn_sourceType, conndetails.connectionstatus as conn_constatus, " 
+			+ " conndetails.sumpcapacity as conn_sumpcap, conndetails.numberofftaps as conn_nooftaps, conndetails.parentconnectionid as conn_parentconnectionid, conndetails.watertreatmentid as conn_watertreatmentid, conndetails.legacyconsumernumber as conn_legacyconsumernumber, "
+			+ " conndetails.numberofpersons as conn_noofperson, conndetails.acknowledgmentnumber as conn_acknumber, conndetails.propertyidentifier as conn_propid, conndetails.usagetype as conn_usgtype, "
+			+ " conndetails.address as conn_propaddress, conndetails.islegacy as conn_islegacy, conndetails.donationcharge as conn_doncharge, conndetails.executiondate as execdate, conndetails.stateid as conn_stateid, "  
+			+ " conndetails.manualreceiptnumber as manualreceiptnumber, conndetails.manualreceiptdate as manualreceiptdate, conndetails.isprimaryowner as isprimaryowner, conndetails.housenumber as housenumber, conndetails.manualconsumernumber as manualconsumernumber, conndetails.subusagetype as conn_subusagetype, conndetails.numberoffamily as numberoffamily, conndetails.plumbername as plumbername, conndetails.billsequencenumber as sequencenumber, conndetails.outsideulb as outsideulb, "  
+			+ " useraddress.address as addressline1 ,useraddress.pincode as pincode, useraddress.city as city, connloc.revenueboundary as revenueboundary, connloc.locationboundary as locationboundary, connloc.adminboundary as adminboundary, eguser.name as name, eguser.username as username, eguser.mobilenumber as mobilenumber, eguser.emailid as emailid, eguser.gender as gender, "
+			+ " eguser.aadhaarnumber as aadhaarnumber, meter.metermake as metermake, meter.initialmeterreading as initialmeterreading, meter.meterslno as meterslno, meter.metercost as metercost , "  
+			+ " conndetails.storagereservoir as conn_storagereservoir from egwtr_waterconnection conndetails "
+			+ " left join egwtr_connectionlocation connloc on conndetails.locationid = connloc.id "
+			+ " left join eg_user eguser  on conndetails.userid = eguser.id "
+			+ "	left join EG_USER_ADDRESS useraddress  on useraddress.userid = eguser.id " 
+			+ " left join egwtr_meter meter ON meter.connectionid = conndetails.id "
+			+ " where useraddress.type='PERMANENT' " ;
 	       
 	public static String getConnectionMeterQueryForSearch() {
 		return "select conn.id as connectionid, conn.acknowledgmentnumber, conn.consumernumber, conn.tenantid, "

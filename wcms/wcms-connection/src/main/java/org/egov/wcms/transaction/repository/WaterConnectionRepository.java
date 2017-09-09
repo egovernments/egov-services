@@ -64,6 +64,7 @@ import org.egov.wcms.transaction.repository.rowmapper.ConnectionDocumentRowMappe
 import org.egov.wcms.transaction.repository.rowmapper.UpdateWaterConnectionRowMapper;
 import org.egov.wcms.transaction.repository.rowmapper.WaterConnectionRowMapper;
 import org.egov.wcms.transaction.repository.rowmapper.WaterConnectionRowMapper.ConnectionMeterRowMapper;
+import org.egov.wcms.transaction.util.ConnectionMasterAdapter;
 import org.egov.wcms.transaction.web.contract.WaterConnectionGetReq;
 import org.egov.wcms.transaction.web.contract.WaterConnectionReq;
 import org.slf4j.Logger;
@@ -543,11 +544,24 @@ public class WaterConnectionRepository {
 		} catch (Exception ex) {
 			LOGGER.error("Exception encountered while fetching the Connection list without Property : " + ex);
 		}
+		resolveMasterDetails(connectionList, requestInfo);
 		// This condition is added to fetch the Meter Details only in single view case. Not in fetch all case 
 		if(connectionList.size() == 1) { 
 			getConnectionMeterDetails(connectionList);
 		}
 		return connectionList;
+	}
+	
+	private void resolveMasterDetails(List<Connection> connectionList, RequestInfo requestInfo) {
+		for(Connection conn : connectionList) { 
+			conn.setHscPipeSizeType(ConnectionMasterAdapter.getPipeSizeById(conn.getPipesizeId(), conn.getTenantId(), requestInfo));
+			conn.setSupplyType(ConnectionMasterAdapter.getSupplyTypeById(conn.getSupplyTypeId(), conn.getTenantId(), requestInfo));
+			conn.setSourceType(ConnectionMasterAdapter.getSourceTypeById(conn.getSourceTypeId(), conn.getTenantId(), requestInfo));
+			conn.setWaterTreatment(ConnectionMasterAdapter.getTreatmentPlantById(conn.getWaterTreatmentId(), conn.getTenantId(), requestInfo));
+			conn.setStorageReservoir(ConnectionMasterAdapter.getStorageReservoiById(conn.getStorageReservoirId(), conn.getTenantId(), requestInfo));
+			conn.setUsageType(ConnectionMasterAdapter.getUsageTypeById(conn.getUsageTypeId(), conn.getTenantId(), requestInfo));
+			conn.setSubUsageType(ConnectionMasterAdapter.getSubUsageTypeById(conn.getSubUsageTypeId(), conn.getTenantId(), requestInfo));
+		}
 	}
 	
 	private void getConnectionMeterDetails(List<Connection> connectionList) {

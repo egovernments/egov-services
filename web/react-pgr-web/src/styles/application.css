@@ -7,6 +7,9 @@ html, body{
 	overflow-x: hidden !important;
 }
 
+/*th { font-size: 12px; }
+td { font-size: 11px; }*/
+
 /* fallback */
 @font-face {
   font-family: 'Material Icons';
@@ -14,6 +17,19 @@ html, body{
   font-weight: 400;
   src: local('Material Icons'), local('MaterialIcons-Regular'), url(https://fonts.gstatic.com/s/materialicons/v22/2fcrYFNaTjcS6g4U3t-Y5UEw0lE80llgEseQY3FEmqw.woff2) format('woff2');
 }
+
+/* style sheet for "A4" printing */
+ /*@media print and (width: 21cm) and (height: 29.7cm) {
+    @page {
+       margin: 3cm;
+    }
+ }*/
+ /* style sheet for "letter" printing */
+ /*@media print and (width: 8.5in) and (height: 11in) {
+    @page {
+        margin: 1in;
+    }
+ }*/
 
 .metismenu {
   position: fixed;

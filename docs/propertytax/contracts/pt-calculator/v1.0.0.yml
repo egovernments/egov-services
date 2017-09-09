@@ -61,7 +61,7 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
-        - Calculation  
+        - Calculation
 
   /factor/_search:
   ######################################################
@@ -605,7 +605,7 @@ paths:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
         - name: feeFactor
           in: query
-          description: Fee factor for which Transfer Fee Rate to be returned.
+          description: Fee factor for which Transfer Fee Rate to be returned. should be valid enum value from feeFactor in 'TransferFeeRates'.
           required: true
           type: string
         - name: validDate
@@ -616,7 +616,7 @@ paths:
           format: date
         - name: validValue
           in: query
-          description: This value amount will be compared between the available from and to values for search results.
+          description: This is the value based on the feeFactor value. Eg. feeFactor is propertytax then this validValue should be tax of the respective property. This value amount will be compared between the available from and to values for search results.
           required: true
           type: number
       tags:
@@ -706,6 +706,38 @@ paths:
           description: Invalid input
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
+  /transferFee/_calculate:
+  ######################################################
+  # Will be asynchronous.
+  # tenantId should be passed in the model.
+  # Validate tenantId before persisting.
+  ######################################################
+    post:
+      summary: Calculates a transfer fee.
+      description: API to calculate transfer fee
+      parameters:
+        - name: transferFeeCalRequest
+          in: body
+          description: Details to calculate transfer fee.
+          required: true
+          schema:
+            $ref: '#/definitions/TransferFeeCalRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        200:
+          description: returns the caluclated transfer fee.
+          schema:
+            $ref: '#/definitions/TransferFeeCalResponse'
+        400:
+          description: Invalid Calcualtions data/ failed to get required configuration values.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Calculation
             
 definitions:
 ########################################################
@@ -1245,7 +1277,18 @@ definitions:
        - upicNo
        - tenantId
        - penalty
-       
+
+  Penalty:
+    type: object
+    description: This object would hold the infromation about the penalty imposed on a Property on a perticular period
+    properties:
+      period:
+        type: string
+        description: This would define a period for the penalty
+      amount:
+        type: number
+        format: double
+        
   TransferFeeRates:
     type: object
     properties:
@@ -1261,6 +1304,11 @@ definitions:
       feeFactor:
         type: string
         description: The fee factor based on which the fee will be calculated.
+        enum:
+         - propertytax
+         - documentvalue
+         - marketvalue
+         - flatrate
       fromDate:
         type: string
         format: date
@@ -1311,20 +1359,51 @@ definitions:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       TransferFeeRates:
         type: array
-        maximum: 500
+        maximum: 100
         items:
           $ref: '#/definitions/TransferFeeRates'
     type: object
-       
-  Penalty:
+
+  TransferFeeCal:
     type: object
-    description: This object would hold the infromation about the penalty imposed on a Property on a perticular period
+    description: Details for Transfer fee calculation
     properties:
-      period:
+      feeFactor:
+        description: Fee factor for which Transfer Fee Rate to be returned. should be valid enum value from feeFactor in 'TransferFeeRates'.
         type: string
-        description: This would define a period for the penalty
-      amount:
+      validValue:
+        description: This is the value based on the feeFactor value. Eg. feeFactor is propertytax then this validValue should be tax of the respective property. This value amount will be compared between the available from and to values for search results.
         type: number
-        format: double
+      validDate:
+        type: string
+        format: date
+        description: This date will be compared between the available from and to dates for search results, format is dd/MM/yyyy
+      transferFee:
+        description: The calculated transfer fee for a property
+        type: number
+    required:
+    - feeFactor
+    - validDate
 
-
+  TransferFeeCalRequest:
+    properties:
+      ResponseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      TransferFeeCals:
+        type: array
+        minimum: 1
+        maximum: 100
+        items:
+          $ref: '#/definitions/TransferFeeCal'
+    type: object
+    
+  TransferFeeCalResponse:
+    properties:
+      ResponseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      TransferFeeCals:
+        type: array
+        maximum: 100
+        items:
+          $ref: '#/definitions/TransferFeeCal'
+    type: object

@@ -1309,9 +1309,7 @@ paths:
       tags:
         - Business Details
         
-  /businessDetails/{businessDetailsCode}/_update:
-    parameters:
-      - $ref: '#/parameters/businessDetailsCode'
+  /businessDetails/_update:
     post:
       summary: Update Business Details.
       description: To update an existing business details and to activate/deactivate business details.
@@ -2063,10 +2061,10 @@ definitions:
       department:
         type: object
         description: Reference from Common Services Department.
-      serviceAccountDetails:
+      accountDetails:
         type: array
         items:
-          $ref: '#/definitions/ServiceAccountDetails'
+          $ref: '#/definitions/BusinessAccountDetails'
           
     required:
      - code
@@ -2086,7 +2084,9 @@ definitions:
       RequestInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
       BusinessDetails:
-        $ref: '#/definitions/BusinessDetails'
+        type: array
+        items:
+         $ref: '#/definitions/BusinessDetails'
   
   BusinessDetailsRes:
     type: object
@@ -2098,23 +2098,32 @@ definitions:
         items: 
          $ref: '#/definitions/BusinessDetails'
   
-  ServiceAccountDetails:
+  BusinessAccountDetails:
     type: object
     properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique identifier of the Business Account Details.
       amount:
         type: number
         format: double
         description: Receivable Amount.
+   -  $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
       BusinessDetails:
-        type: object
-        items: 
-         $ref: '#/definitions/BusinessDetails'
+        type: number
+        format: integer
+        description: Business details id.
+      chartOfAccounts:
+        type: number
+        format: integer
+        description: Chart of Accounts id.
       subledgerDetails:
         type: array
         items:
-          $ref: '#/definitions/ServiceSubledgerInfo'
+          $ref: '#/definitions/BusinessAccountSubLedger'
           
-  ServiceSubledgerInfo:
+  BusinessAccountSubLedger:
     type: object
     properties:
       amount:
@@ -2130,10 +2139,12 @@ definitions:
       detailKey:
         type: string
         description: Detail Key
-      serviceAccountDetails:
-        type: object
+      businessAccountDetails:
+        type: number
+        format: integer
+        description : Unique identification of related business account details.
         items:
-          $ref: '#/definitions/ServiceAccountDetails'       
+          $ref: '#/definitions/BusinessAccountDetails'
 parameters:
   tenantId:
     name: tenantid

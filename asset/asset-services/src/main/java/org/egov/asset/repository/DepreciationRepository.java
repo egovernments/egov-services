@@ -10,7 +10,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.domain.CalculationAssetDetails;
 import org.egov.asset.domain.CalculationCurrentValue;
 import org.egov.asset.model.AuditDetails;
@@ -37,9 +36,6 @@ public class DepreciationRepository {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    private ApplicationProperties applicationProperties;
 
     @Autowired
     private CalculationAssetDetailsRowMapper calculationAssetDetailsRowMapper;
@@ -69,10 +65,14 @@ public class DepreciationRepository {
 
     public void saveDepreciation(final Depreciation depreciation) {
 
+        final String tenantId = depreciation.getTenantId();
         final String sql = depreciationQueryBuilder.getInsertQuery();
         final List<DepreciationDetail> assetDepreciationvalues = depreciation.getDepreciationDetails();
         final AuditDetails auditDetails = depreciation.getAuditDetails();
-        final int batchSize = Integer.parseInt(applicationProperties.getBatchSize());
+        final int batchSize = Integer.parseInt(assetConfigurationService
+                .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.ASSETBATCHSIZE, tenantId));
+        
+        log.debug("Batch Size :: " + batchSize);
 
         for (int j = 0; j < assetDepreciationvalues.size(); j += batchSize) {
 

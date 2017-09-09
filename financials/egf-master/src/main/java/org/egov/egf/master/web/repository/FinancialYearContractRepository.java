@@ -14,7 +14,7 @@ public class FinancialYearContractRepository {
 
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = "/egf-masters/financialyears/_search?";
+	public static final String SEARCH_URL = "/egf-master/financialyears/_search?";
 
 	public FinancialYearContractRepository(@Value("${egf.master.host.url}") String hostUrl, RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;

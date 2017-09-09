@@ -101,6 +101,7 @@ import Search from './components/framework/search';
 import Transaction from './components/framework/transaction';
 import Inbox from './components/framework/inbox';
 
+import UpdateSubCategory from './components/non-framework/tl/transaction/UpdateSubCategory';
 import LegacyLicenseCreate from './components/non-framework/tl/transaction/LegacyLicenseCreate';
 import viewLegacyLicense from './components/non-framework/tl/transaction/viewLegacyLicense';
 import LegacyLicenseSearch from './components/non-framework/tl/transaction/LegacyLicenseSearch';
@@ -241,6 +242,7 @@ const Main = () => {
           <Route exact path= {base + '/transaction/:moduleName/:page'} component={Transaction}/>
 		  <Route exact path= {base + '/views/:moduleName/:master?/:id'} component={Inbox}/>
 
+      <Route exact path= {base + '/non-framework/tl/transaction/UpdateSubCategory/:id'} component={UpdateSubCategory}/>
       <Route exact path= {base + '/non-framework/tl/transaction/LegacyLicenseCreate'} component={LegacyLicenseCreate}/>
       <Route exact path= {base + '/non-framework/tl/transaction/ApplyNewTradeLicense'} component={VisibleNewTradeLicense}/>
       <Route exact path= {base + '/non-framework/tl/transaction/LegacyLicenseSearch'} component={LegacyLicenseSearch}/>
@@ -250,9 +252,8 @@ const Main = () => {
 
       <Route exact path= {base + '/non-framework/collection/master/paytax/PayTaxCreate'} component={PayTaxCreate}/>
       <Route exact path= {base + '/non-framework/collection/receipt/view/:id'} component={ReceiptView}/>
-      <Route exact path= {base + '/non-framework-cs/citizenServices/:moduleName/:status/:id/:paymentGateWayRes?'} component={NoDues}/>
-
       <Route exact path= {base + '/non-framework-cs/citizenServices/paytax/:status/:id/:paymentGateWayRes?'} component={PayTax}/>
+      <Route exact path= {base + '/non-framework-cs/citizenServices/:moduleName/:status/:id/:paymentGateWayRes?'} component={NoDues}/>
 
 
       <Route exact path={base + '/empsearch/:actionName'} component={EmployeeSearch}/>

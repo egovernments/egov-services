@@ -6,17 +6,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.common.constants.Constants;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.bill.domain.model.Checklist;
 import org.egov.egf.bill.domain.model.ChecklistSearch;
-import org.egov.egf.bill.domain.service.FinancialConfigurationService;
 import org.egov.egf.bill.persistence.entity.ChecklistEntity;
-import org.egov.egf.bill.persistence.queue.MastersQueueRepository;
+import org.egov.egf.bill.persistence.queue.repository.ChecklistQueueRepository;
 import org.egov.egf.bill.persistence.repository.ChecklistJdbcRepository;
 import org.egov.egf.bill.web.contract.ChecklistContract;
 import org.egov.egf.bill.web.contract.ChecklistSearchContract;
 import org.egov.egf.bill.web.requests.ChecklistRequest;
+import org.egov.egf.master.web.repository.FinancialConfigurationContractRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,21 +29,21 @@ public class ChecklistRepository {
 
 	private ChecklistJdbcRepository checklistJdbcRepository;
 
-	private MastersQueueRepository checklistQueueRepository;
+	private ChecklistQueueRepository checklistQueueRepository;
 
-	private FinancialConfigurationService financialConfigurationService;
+	private FinancialConfigurationContractRepository financialConfigurationContractRepository;
 
 	private ChecklistESRepository checklistESRepository;
 
 	private String persistThroughKafka;
 
 	@Autowired
-	public ChecklistRepository(ChecklistJdbcRepository checklistJdbcRepository, MastersQueueRepository checklistQueueRepository,
-			FinancialConfigurationService financialConfigurationService, ChecklistESRepository checklistESRepository,
+	public ChecklistRepository(ChecklistJdbcRepository checklistJdbcRepository, ChecklistQueueRepository checklistQueueRepository,
+			FinancialConfigurationContractRepository financialConfigurationContractRepository, ChecklistESRepository checklistESRepository,
 			@Value("${persist.through.kafka}") String persistThroughKafka) {
 		this.checklistJdbcRepository = checklistJdbcRepository;
 		this.checklistQueueRepository = checklistQueueRepository;
-		this.financialConfigurationService = financialConfigurationService;
+		this.financialConfigurationContractRepository = financialConfigurationContractRepository;
 		this.checklistESRepository = checklistESRepository;
 		this.persistThroughKafka = persistThroughKafka;
 
@@ -53,7 +54,6 @@ public class ChecklistRepository {
 
 		ModelMapper mapper = new ModelMapper();
 		ChecklistContract contract;
-		Map<String, Object> message = new HashMap<>();
 
 		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
 				&& persistThroughKafka.equalsIgnoreCase("yes")) {
@@ -70,8 +70,7 @@ public class ChecklistRepository {
 				request.getChecklists().add(contract);
 
 			}
-			message.put("checklist_create", request);
-			checklistQueueRepository.add(message);
+			addToQue(request);
 
 			return checklists;
 		} else {
@@ -96,8 +95,7 @@ public class ChecklistRepository {
 
 			}
 
-			message.put("checklist_create", request);
-			checklistQueueRepository.addToSearch(message);
+			addToSearchQueue(request);
 
 			return resultList;
 		}
@@ -106,39 +104,53 @@ public class ChecklistRepository {
 
 	@Transactional
 	public List<Checklist> update(List<Checklist> checklists, RequestInfo requestInfo) {
+
 		ModelMapper mapper = new ModelMapper();
-		Map<String, Object> message = new HashMap<>();
-		ChecklistRequest request = new ChecklistRequest();
 		ChecklistContract contract;
+
 		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
 				&& persistThroughKafka.equalsIgnoreCase("yes")) {
 
+			ChecklistRequest request = new ChecklistRequest();
 			request.setRequestInfo(requestInfo);
 			request.setChecklists(new ArrayList<>());
+
 			for (Checklist f : checklists) {
+
 				contract = new ChecklistContract();
 				contract.setCreatedDate(new Date());
 				mapper.map(f, contract);
 				request.getChecklists().add(contract);
+
 			}
-			message.put("checklist_update", request);
-			checklistQueueRepository.add(message);
+
+			addToQue(request);
+
 			return checklists;
 		} else {
+
 			List<Checklist> resultList = new ArrayList<Checklist>();
+
 			for (Checklist f : checklists) {
+
 				resultList.add(update(f));
 			}
+
+			ChecklistRequest request = new ChecklistRequest();
 			request.setRequestInfo(requestInfo);
 			request.setChecklists(new ArrayList<>());
+
 			for (Checklist f : resultList) {
+
 				contract = new ChecklistContract();
 				contract.setCreatedDate(new Date());
 				mapper.map(f, contract);
 				request.getChecklists().add(contract);
+
 			}
-			message.put("checklist_persisted", request);
-			checklistQueueRepository.addToSearch(message);
+
+			addToSearchQueue(request);
+
 			return resultList;
 		}
 
@@ -170,16 +182,39 @@ public class ChecklistRepository {
 
 
 	public Pagination<Checklist> search(ChecklistSearch domain) {
-		if (!financialConfigurationService.fetchDataFrom().isEmpty()
-				&& financialConfigurationService.fetchDataFrom().equalsIgnoreCase("es")) {
+		if (!financialConfigurationContractRepository.fetchDataFrom().isEmpty()
+				&& financialConfigurationContractRepository.fetchDataFrom().equalsIgnoreCase("es")) {
 			ChecklistSearchContract checklistSearchContract = new ChecklistSearchContract();
 			ModelMapper mapper = new ModelMapper();
 			mapper.map(domain, checklistSearchContract);
-			return checklistESRepository.search(checklistSearchContract);
+//			return checklistESRepository.search(checklistSearchContract);
+			return null;
 		} else {
 			return checklistJdbcRepository.search(domain);
 		}
 
+	}
+	
+	public void addToQue(ChecklistRequest request) {
+
+		Map<String, Object> message = new HashMap<>();
+
+		if (request.getRequestInfo().getAction().equalsIgnoreCase(Constants.ACTION_CREATE)) {
+			message.put("checklist_create", request);
+		} else {
+			message.put("checklist_update", request);
+		}
+		checklistQueueRepository.addToQue(message);
+
+	}
+	
+	public void addToSearchQueue(ChecklistRequest request) {
+
+		Map<String, Object> message = new HashMap<>();
+
+		message.put("checklist_persisted", request);
+
+		checklistQueueRepository.addToSearchQue(message);
 	}
 
 	public boolean uniqueCheck(String fieldName, Checklist checklist) {

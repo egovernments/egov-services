@@ -7,16 +7,14 @@ import Checkbox from 'material-ui/Checkbox';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import AutoComplete from 'material-ui/AutoComplete';
-import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
+import MenuItem from 'material-ui/MenuItem';
 import FlatButton from 'material-ui/FlatButton';
 import _ from "lodash";
-import {translate, validate_fileupload} from '../../../common/common';
+import {translate, validate_fileupload, dateToEpoch} from '../../../common/common';
 import Api from '../../../../api/api';
 import styles from '../../../../styles/material-ui';
-
 const constants = require('../../../common/constants');
-
 
 const patterns = {
   date:/^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g
@@ -53,7 +51,7 @@ const tradeLocationDetails = [
 const tradeDetails = [
   {label : "Trade Title", type:"text", code:"tradeTitle", isMandatory:true, maxLength:100, pattern:""},
   {label : "Trade Type", type:"dropdown", code:"tradeType", isMandatory:true, maxLength:50, pattern:""},
-  {label : "Trade Category", type:"dropdown", code:"categoryId", codeName:'category', codeName:"adminWardName", isMandatory:true, maxLength:50, pattern:""},
+  {label : "Trade Category", type:"dropdown", code:"categoryId", codeName:'category', isMandatory:true, maxLength:50, pattern:""},
   {label : "Trade Sub-Category", type:"dropdown", code:"subCategoryId", codeName:"subCategory", isMandatory:true, maxLength:100, pattern:""},
   {label : "UOM", code:"uomId", codeName:"uom", type:"text", isMandatory:true, maxLength:50, pattern:"", isDisabled:true},
   {label : "Trade Value for the UOM", type:"text", code:"quantity", isMandatory:true, maxLength:50, pattern:/^[+-]?\d+(\.\d{2})?$/, errorMsg:"UOM accepts only numbers"},
@@ -109,7 +107,8 @@ class NewTradeLicense extends Component {
     super();
     this.customHandleChange = this.customHandleChange.bind(this);
     this.state={
-      isPropertyOwner:false,
+      isPropertyOwner:true,
+      open: false,
       documentTypes:[], //supporting documents
       autocompleteDataSource:{
         localityId:[], //assigning datasource by field code
@@ -180,22 +179,37 @@ class NewTradeLicense extends Component {
     }
   }
 
+  handleOpen = () => {
+    this.setState({open: true});
+  };
 
-
-  componentWillMount(){
+  componentDidMount(){
     let requiredFields = [];
+
+    tradeOwnerDetailsCardFields.filter(function(obj){
+      obj.isMandatory ? requiredFields.push(obj.code) : '';
+    });
+
+    tradeLocationDetails.filter(function(obj){
+      obj.isMandatory ? requiredFields.push(obj.code) : '';
+    });
+
+    tradeDetails.filter(function(obj){
+      obj.isMandatory ? requiredFields.push(obj.code) : '';
+    });
+
     this.props.initForm(requiredFields);
-    //?tenantId=default&boundaryTypeName=WARD&hierarchyTypeName=REVENUE
 
     var tenantId = localStorage.getItem("tenantId") || "default";
 
     this.props.setLoadingStatus('loading');
+
     Promise.all([
       Api.commonApiPost("/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName",{boundaryTypeName:"WARD", hierarchyTypeName:"REVENUE"},{tenantId:tenantId}),
       Api.commonApiPost("/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName",{boundaryTypeName:"Ward", hierarchyTypeName:"ADMINISTRATION"},{tenantId:tenantId}),
       Api.commonApiPost("/tl-masters/category/v1/_search",{type:"category"},{tenantId:tenantId, pageSize:"500"}, false, true),
       Api.commonApiPost("/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName",{boundaryTypeName:"LOCALITY", hierarchyTypeName:"LOCATION"},{tenantId:tenantId}),
-      Api.commonApiPost("/tl-masters/documenttype/v2/_search",{applicationType:"NEW"},{tenantId:tenantId})
+      Api.commonApiPost("/tl-masters/documenttype/v2/_search",{applicationType:"NEW",enabled : true},{tenantId:tenantId})
     ])
     .then((responses)=>{
       //if any error occurs
@@ -210,10 +224,9 @@ class NewTradeLicense extends Component {
         let adminWardId = sortArrayByAlphabetically(responses[1].Boundary, "name");
         let categoryId = sortArrayByAlphabetically(responses[2].categories, "name");
         let localityId = sortArrayByAlphabetically(responses[3].Boundary, "name");
-        let documentTypes = sortArrayByAlphabetically(responses[4].documentTypes, "name");
         let dropdownDataSource = {...this.state.dropdownDataSource};
         dropdownDataSource = {...dropdownDataSource, revenueWardId, adminWardId, categoryId, localityId};
-        this.setState({dropdownDataSource, documentTypes});
+        this.setState({dropdownDataSource});
       }
       catch(e){
         console.log('error', e);
@@ -223,8 +236,11 @@ class NewTradeLicense extends Component {
 
   }
 
-  customHandleChange = (value, field)=>{
+  fileSectionChange = (comments, doc) => {
+    this.props.handleChange(comments, doc.id, doc.mandatory, "")
+  }
 
+  customHandleChange = (value, field) => {
     var tenantId = localStorage.getItem("tenantId") || "default";
     var _this=this;
 
@@ -233,11 +249,16 @@ class NewTradeLicense extends Component {
       var id = value.indexOf("~") > -1 ? values[0] : value;
       this.props.handleChange(id, field.code, field.isMandatory, "", "");
       if(values.length > 1){
-        if(field.hasOwnProperty("codeName"))
-          this.props.handleChange(values[1], field.codeName, field.isMandatory, "", "");
+        if(field.hasOwnProperty("codeName")){
+          this.props.handleChange(values[1], field.codeName, false, "", "");
+        }
       }
 
       if(field.code === "categoryId"){
+        this.state.documentTypes.length > 0 && this.state.documentTypes.map((obj) => {
+          obj.mandatory ? _this.props.REMOVE_MANDATORY_LATEST('', obj.id, obj.mandatory, "", "") : '';
+        })
+        this.setState({documentTypes : []});
         const dropdownDataSource = {...this.state.dropdownDataSource, subCategoryId:[]}
         this.setState({dropdownDataSource});
         this.props.handleChange("", "subCategoryId", field.isMandatory, "", "");
@@ -259,7 +280,9 @@ class NewTradeLicense extends Component {
         Api.commonApiPost("tl-masters/category/v1/_search",{type:"subcategory", ids:id},{tenantId:tenantId}, false, true).then(function(response){
           var category=response.categories[0];
           _this.props.handleChange(category.validityYears, "validityYears", field.isMandatory, "", "");
-          _this.props.handleChange(category.details[0].uomName, "uomId", field.isMandatory, "", "");
+          _this.props.handleChange(category.details[0].uomId, "uomId", field.isMandatory, "", "");
+          _this.props.handleChange(category.details[0].uomName, "uom", false, "", "");
+          _this.getDocuments();
         }, function(err) {
             console.log(err);
         });
@@ -269,10 +292,38 @@ class NewTradeLicense extends Component {
     else{
       this.props.handleChange(value, field.code, field.isMandatory || false, field.pattern || "", field.errorMsg || "");
       if(field.code === 'isPropertyOwner'){
-        this.setState({isPropertyOwner:value});
+        this.setState({isPropertyOwner:!value});
+        var agreementdate = agreementDetailsSection.find(agreement => agreement.code == 'agreementDate');
+        var agreementno = agreementDetailsSection.find(agreement => agreement.code == 'agreementNo');
+        if(value){
+          _this.props.ADD_MANDATORY_LATEST('','agreementDate',agreementdate.isMandatory,agreementdate.pattern,agreementdate.errorMsg);
+          _this.props.ADD_MANDATORY_LATEST('','agreementNo',agreementno.isMandatory,agreementno.pattern);
+        }else{
+          _this.props.REMOVE_MANDATORY_LATEST('','agreementDate',agreementdate.isMandatory,agreementdate.pattern,agreementdate.errorMsg);
+          _this.props.REMOVE_MANDATORY_LATEST('','agreementNo',agreementno.isMandatory,agreementno.pattern);
+        }
       }
     }
 
+  }
+
+  getDocuments = () => {
+    var _this = this;
+    let {form} = this.props;
+    Api.commonApiPost("tl-masters/documenttype/v2/_search",{applicationType:"NEW", enabled:true, categoryId:form.categoryId, subCategoryId : form.subCategoryId},{}, false, true).then(function(response){
+      _this.setState({documentTypes : sortArrayByAlphabetically(response.documentTypes,"name")},
+        _this.addMandatoryDocuments(response.documentTypes)
+      );
+    }, function(err) {
+        console.log(err);
+    });
+  }
+
+  addMandatoryDocuments = (docTypes) => {
+    var _this = this;
+    docTypes.filter(function(obj){
+      obj.mandatory ? _this.props.ADD_MANDATORY_LATEST('', obj.id, obj.mandatory, "", "") : '';
+    })
   }
 
   customAutoCompleteKeyUpEvent = (e, field) =>{
@@ -294,13 +345,138 @@ class NewTradeLicense extends Component {
 
   }
 
+  submit = (e) => {
+    var _this=this;
+    let {form, files, setLoadingStatus} = this.props;
+    setLoadingStatus('loading');
+
+    var licenseObj = {}, licenseArray = [];
+    licenseObj = {...form};
+    licenseObj['tenantId'] = localStorage.getItem('tenantId');
+    licenseObj['applicationType'] = 'NEW';
+    licenseObj['tradeCommencementDate'] = dateToEpoch(licenseObj.tradeCommencementDate);
+    licenseObj['licenseValidFromDate'] = licenseObj.tradeCommencementDate;
+    //isnotpropertyowner
+    licenseObj['isPropertyOwner'] = licenseObj['isPropertyOwner'] ? licenseObj['isPropertyOwner'] : false;
+    licenseObj['agreementDate'] = licenseObj.agreementDate ? dateToEpoch(licenseObj.agreementDate) : '';
+    licenseObj['agreementNo'] = licenseObj.agreementNo ? licenseObj.agreementNo : '';
+    licenseObj['isLegacy'] = false;
+    licenseObj['active'] = true;
+    licenseObj['application'] = {};
+    licenseObj['application']['tenantId'] = localStorage.getItem('tenantId');
+    licenseObj['application']['applicationType'] = 'NEW';
+    licenseObj['application']['status'] = 4;
+    licenseObj['application']['applicationDate'] = '';
+    licenseObj['application']['licenseId'] = 0;
+    licenseObj['application']['licenseFee'] = 0;
+    licenseObj['application']['fieldInspectionReport'] = '';
+    licenseObj['application']['statusName'] = 'Acknowledged';
+    licenseObj['application']['workFlowDetails'] = {};
+    licenseObj['application']['workFlowDetails']['department'] = null;
+    licenseObj['application']['workFlowDetails']['designation'] = null;
+    licenseObj['application']['workFlowDetails']['assignee'] = 1;
+    licenseObj['application']['workFlowDetails']['action'] = 'create';
+    licenseObj['application']['workFlowDetails']['status  '] = "Pending For Application processing";
+    licenseObj['application']['workFlowDetails']['comments'] = '';
+    licenseObj['application']['workFlowDetails']['senderName'] = '';
+    licenseObj['application']['workFlowDetails']['details'] = '';
+    licenseObj['application']['workFlowDetails']['stateId'] = null;
+    licenseObj['supportDocuments'] = [];
+
+    var supportDocuments = [];
+
+    if(files.length > 0){
+      files.map((field, index) => {
+        let docs = {};
+        let formData = new FormData();
+        formData.append("tenantId", localStorage.getItem('tenantId'));
+        formData.append("module", "TL");
+        field.files.map((file)=>{
+          formData.append("file", file);
+        });
+        // formData.append("file",file.files);
+        Api.commonApiPost("/filestore/v1/files",{},formData).then(function(response)
+        {
+          // console.log('Comments:',field.code, form[field.code]);
+          let doc = _this.state.documentTypes.find(doc => doc.id == field.code);
+          // console.log('Docs:',doc);
+
+          docs['documentTypeId']=field.code;
+          docs['fileStoreId']=response.files[0].fileStoreId;
+          docs['comments']=form[field.code];
+          docs['auditDetails']=doc.auditDetails;
+          docs['documentTypeName']=doc.name;
+          supportDocuments.push(docs);
+
+          if(files.length == index+1){
+            //last file uploaded, create TL
+            licenseObj['supportDocuments'] = supportDocuments;
+            licenseArray.push(licenseObj);
+            _this.createTL(licenseArray);
+          }
+
+        },function(err) {
+          setLoadingStatus('hide');
+          _this.handleError(err.message);
+        });
+      })
+    }else{
+      licenseArray.push(licenseObj);
+      _this.createTL(licenseArray);
+    }
+  }
+
+  createTL = (licenseArray) => {
+    var _this = this;
+    let {setLoadingStatus} = this.props;
+    console.log(JSON.stringify(licenseArray));
+    Api.commonApiPost("tl-services/license/v1/_create",{},{licenses:licenseArray}, false, true).then(function(response){
+
+      _this.setState({
+        licenseId : response.licenses[0].id,
+        title : 'Create License Added Successfully',
+        acknowledgement : response.responseInfo.status
+      });
+      setLoadingStatus('hide');
+      _this.handleOpen();
+      // _this.handleError('Added successfully');
+      //response.responseInfo.status
+    }, function(err) {
+        setLoadingStatus('hide');
+        _this.handleError(err.message);
+    });
+  }
+
+  handleError = (msg) => {
+    let {toggleDailogAndSetText, toggleSnackbarAndSetText}=this.props;
+    toggleDailogAndSetText(true, msg);
+  }
+
+  viewLicense = () => {
+      console.log('view license');
+      let {setRoute} = this.props;
+      this.setState({open: false});
+      setRoute("/non-framework/tl/transaction/viewLicense/"+this.state.licenseId);
+  }
+
   render(){
+
+    const actions = [
+      <FlatButton
+        label="View License"
+        primary={true}
+        keyboardFocused={true}
+        onClick={this.viewLicense}
+      />,
+    ];
 
     var agreementCard=null;
     var brElement=null;
 
-    if(this.state["isPropertyOwner"]){
-      console.log('coming inside');
+    let {isFormValid} = this.props;
+
+    if(!this.state["isPropertyOwner"]){
+      // console.log('coming inside');
       agreementCard=<CustomCard title={labels.agreementDetailsSection} form={this.props.form}
         fields={agreementDetailsSection}
         fieldErrors = {this.props.fieldErrors}
@@ -334,15 +510,26 @@ class NewTradeLicense extends Component {
         {agreementCard}
         {brElement}
 
+        {this.state.documentTypes && this.state.documentTypes.length > 0 ?
         <SupportingDocuments files={this.props.files} dialogOpener={this.props.toggleDailogAndSetText}
            title={labels.supportingDocuments} docs={this.state.documentTypes}
-           addFile={this.props.addFile} removeFile={this.props.removeFile}>
-        </SupportingDocuments>
+           addFile={this.props.addFile} removeFile={this.props.removeFile}
+           fileSectionChange={this.fileSectionChange}>
+        </SupportingDocuments> : ''}
         <br/>
         <div style={{textAlign: 'center'}}>
           {/* <RaisedButton style={{margin:'15px 5px'}} label="Reset"/> */}
-          <RaisedButton style={{margin:'15px 5px'}} label="Submit" primary={true}/>
+          <RaisedButton style={{margin:'15px 5px'}} disabled={!isFormValid} label="Submit" primary={true} onClick={(e)=>this.submit()}/>
         </div>
+
+        <Dialog
+          title={this.state.title}
+          actions={actions}
+          modal={true}
+          open={this.state.open}
+        >
+        {this.state.acknowledgement}
+        </Dialog>
      </Grid>
     )
   }
@@ -528,13 +715,16 @@ class SupportingDocuments extends Component {
       files = e.target.files;
     }
 
+    // console.log(e.target.files);
+    // console.log(doc);
+
     if(!files)
        return;
 
     //validate file input
     let validationResult = validate_fileupload(files, constants.TRADE_LICENSE_FILE_FORMATS_ALLOWED);
 
-    console.log('validationResult', validationResult);
+    // console.log('validationResult', validationResult);
 
     if(typeof validationResult === "string" || !validationResult){
         if(this.props.dialogOpener)
@@ -548,7 +738,7 @@ class SupportingDocuments extends Component {
   render(){
 
     const props=this.props;
-    console.log('files', this.props.files);
+    // console.log('files', this.props.docs);
 
     return(
       <Card>
@@ -569,23 +759,27 @@ class SupportingDocuments extends Component {
                  <tbody>
                    {props.docs && props.docs.map((doc, index)=>{
 
-                     var fileName = this.props.files.find((file)=>file.code === doc.id);
+                     if(doc.enabled){
+                       var file = this.props.files && this.props.files.find((file)=>file.code === doc.id);
 
-                     return <tr key={index}>
-                       <td>{index+1}</td>
-                       <td>{`${doc.name} ${doc.mandatory ? " *":""}`}</td>
-                       <td>
-                         <FileInput doc={doc} key={`file${index}`} file={fileName || null} 
-                           fileInputOnChange={this.fileInputOnChange} />
-                       </td>
-                       <td>
-                         <TextField
-                            hintText="Comments"
-                            multiLine={true}
-                            fullWidth={true}
-                          />
-                       </td>
-                     </tr>
+                       return <tr key={index}>
+                         <td>{index+1}</td>
+                         <td>{`${doc.name} ${doc.mandatory ? " *":""}`}</td>
+                         <td>
+                           <FileInput doc={doc} key={`file${index}`} file={file || null}
+                             fileInputOnChange={this.fileInputOnChange} />
+                         </td>
+                         <td>
+                           <TextField
+                              hintText="Comments"
+                              multiLine={true}
+                              fullWidth={true}
+                              onChange={(e,newValue)=>{this.props.fileSectionChange(newValue, doc)}}
+                            />
+                         </td>
+                       </tr>
+                     }
+
                    })}
                  </tbody>
                </Table>
@@ -600,9 +794,9 @@ class SupportingDocuments extends Component {
 
 const FileInput = (props)=>{
 
-  const fileName = props.file ? props.file.name : "";
+  let fileName = props.file ? props.file.files[0].name : '';
 
-  console.log('fileName', props.file);
+  // console.log('fileName', props.file ? props.file.code : 'empty', props.file ? props.file.files[0].name : 'empty');
 
   return(
     <div>
@@ -703,12 +897,13 @@ const FileInput = (props)=>{
 
 
 const mapStateToProps = state => {
+  // console.log(state.form.form);
   return ({form: state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid});
 }
 
 const mapDispatchToProps = dispatch => ({
   initForm: (requiredArray) => {
-
+    console.log(requiredArray);
     if(!requiredArray)
         requiredArray=[];
 
@@ -726,6 +921,12 @@ const mapDispatchToProps = dispatch => ({
       }
     });
   },
+  ADD_MANDATORY_LATEST : (value, property, isRequired, pattern, errorMsg) => {
+     dispatch({type: "ADD_MANDATORY_LATEST", property, value, isRequired, pattern});
+  },
+  REMOVE_MANDATORY_LATEST : (value, property, isRequired, pattern, errorMsg) => {
+     dispatch({type: "REMOVE_MANDATORY_LATEST", property, value, isRequired, pattern});
+  },
   toggleDailogAndSetText: (dailogState,msg) => {
     dispatch({type: "TOGGLE_DAILOG_AND_SET_TEXT", dailogState,msg});
   },
@@ -740,7 +941,8 @@ const mapDispatchToProps = dispatch => ({
   },
   removeFile: (action) => {
     dispatch({type: 'FILE_REMOVE_BY_CODE', isRequired:action.isRequired, code: action.code, name : action.name});
-  }
+  },
+  setRoute:(route)=>dispatch({type:'SET_ROUTE',route})
 });
 
 const VisibleNewTradeLicense = connect(

@@ -1,5 +1,6 @@
 package org.egov.lams.repository;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,6 +15,7 @@ import org.egov.lams.model.Asset;
 import org.egov.lams.model.Cancellation;
 import org.egov.lams.model.Document;
 import org.egov.lams.model.Eviction;
+import org.egov.lams.model.Judgement;
 import org.egov.lams.model.Objection;
 import org.egov.lams.model.Renewal;
 import org.egov.lams.model.enums.Action;
@@ -244,65 +246,15 @@ public class AgreementRepository {
 	
 	@Transactional
 	public void saveAgreement(AgreementRequest agreementRequest) {
-		
+
 		Map<String, Object> processMap = getProcessMap(agreementRequest);
 		Agreement agreement = agreementRequest.getAgreement();
 		logger.info("AgreementDao agreement::" + agreement);
-		
+
 		String agreementinsert = AgreementQueryBuilder.INSERT_AGREEMENT_QUERY;
 
-		Long rentIncrement = null;
-		if(agreement.getRentIncrementMethod() !=null)
-			rentIncrement = agreement.getRentIncrementMethod().getId();
-		Map<String, Object> agreementParameters = new HashMap<>();
+		Map<String, Object> agreementParameters = getInputParams(agreement, processMap);
 
-		agreementParameters.put("agreementID", agreement.getId());
-		agreementParameters.put("agreementDate", agreement.getAgreementDate());
-		agreementParameters.put("agreementNo", agreement.getAgreementNumber());
-		agreementParameters.put("bankGuaranteeAmount", agreement.getBankGuaranteeAmount());
-		agreementParameters.put("bankGuaranteeDate", agreement.getBankGuaranteeDate());
-		agreementParameters.put("caseNo", agreement.getCaseNo());
-		agreementParameters.put("commencementDate", agreement.getCommencementDate());
-		agreementParameters.put("councilDate", agreement.getCouncilDate());
-		agreementParameters.put("councilNumber", agreement.getCouncilNumber());
-		agreementParameters.put("expiryDate", agreement.getExpiryDate());
-		agreementParameters.put("natureOfAllotment", agreement.getNatureOfAllotment().toString());
-		agreementParameters.put("orderDate", processMap.get("orderDate"));
-		agreementParameters.put("orderDetails", agreement.getOrderDetails());
-		agreementParameters.put("orderNumber", processMap.get("orderNumber"));
-		agreementParameters.put("paymentCycle", agreement.getPaymentCycle().toString());
-		agreementParameters.put("registrationFee", agreement.getRegistrationFee());
-		agreementParameters.put("remarks", agreement.getRemarks());
-		agreementParameters.put("rent", agreement.getRent());
-		agreementParameters.put("rrReadingNo", agreement.getRrReadingNo());
-		agreementParameters.put("securityDeposit", agreement.getSecurityDeposit());
-		agreementParameters.put("securityDepositDate", agreement.getSecurityDepositDate());
-		agreementParameters.put("solvencyCertificateDate", agreement.getSolvencyCertificateDate());
-		agreementParameters.put("solvencyCertificateNo", agreement.getSolvencyCertificateNo());
-		agreementParameters.put("status", agreement.getStatus().toString());
-		agreementParameters.put("tinNumber", agreement.getTinNumber());
-		agreementParameters.put("tenderDate", agreement.getTenderDate());
-		agreementParameters.put("tenderNumber", agreement.getTenderNumber());
-		agreementParameters.put("tradelicenseNumber", agreement.getTradelicenseNumber());
-		agreementParameters.put("createdBy", agreement.getCreatedBy());
-		agreementParameters.put("lastmodifiedBy", agreement.getLastmodifiedBy());
-		agreementParameters.put("createdDate", agreement.getCreatedDate());
-		agreementParameters.put("lastmodifiedDate", agreement.getLastmodifiedDate());
-		agreementParameters.put("allottee", agreement.getAllottee().getId());
-		agreementParameters.put("asset", agreement.getAsset().getId());
-		agreementParameters.put("rentIncrement", rentIncrement);
-		agreementParameters.put("acknowledgementNumber", agreement.getAcknowledgementNumber());
-		agreementParameters.put("stateId", agreement.getStateId());
-		agreementParameters.put("tenantId", agreement.getTenantId());
-		agreementParameters.put("goodWillAmount", agreement.getGoodWillAmount());
-		agreementParameters.put("timePeriod", agreement.getTimePeriod());
-		agreementParameters.put("collectedSecurityDeposit", agreement.getCollectedSecurityDeposit());
-		agreementParameters.put("collectedGoodWillAmount", agreement.getCollectedGoodWillAmount());
-		agreementParameters.put("source", agreement.getSource().toString());
-		agreementParameters.put("reason", processMap.get("reason"));
-		agreementParameters.put("terminationDate", processMap.get("terminationDate"));
-		agreementParameters.put("courtReferenceNumber", processMap.get("courtReferenceNumber"));
-		agreementParameters.put("action", agreement.getAction().toString());
 		try {
 			namedParameterJdbcTemplate.update(agreementinsert, agreementParameters);
 		} catch (DataAccessException ex) {
@@ -358,30 +310,12 @@ public class AgreementRepository {
 		Agreement agreement = agreementRequest.getAgreement();
 		logger.info("AgreementDao agreement::" + agreement);
 
-		String agreementUpdate = AgreementQueryBuilder.updateAgreementQuery();
+		String agreementUpdate = AgreementQueryBuilder.UPDATE_AGREEMENT_QUERY;
 
-		Object[] obj = new Object[] { agreement.getId(),agreement.getAgreementDate(), agreement.getAgreementNumber(),
-				agreement.getBankGuaranteeAmount(), agreement.getBankGuaranteeDate(), agreement.getCaseNo(),
-				agreement.getCommencementDate(), agreement.getCouncilDate(), agreement.getCouncilNumber(),
-				agreement.getExpiryDate(), agreement.getNatureOfAllotment().toString(), processMap.get("orderDate"),
-				agreement.getOrderDetails(),processMap.get("orderNumber"), agreement.getPaymentCycle().toString(),
-				agreement.getRegistrationFee(), agreement.getRemarks(), agreement.getRent(), agreement.getRrReadingNo(),
-				agreement.getSecurityDeposit(), agreement.getSecurityDepositDate(),
-				agreement.getSolvencyCertificateDate(), agreement.getSolvencyCertificateNo(),
-				agreement.getStatus().toString(), agreement.getTinNumber(), agreement.getTenderDate(),
-				agreement.getTenderNumber(), agreement.getTradelicenseNumber(), agreement.getLastmodifiedBy(), agreement.getLastmodifiedDate(),
-				agreement.getAllottee().getId(), agreement.getAsset().getId(),
-				agreement.getRentIncrementMethod().getId(), agreement.getAcknowledgementNumber(),
-				agreement.getStateId(), agreement.getTenantId(),agreement.getGoodWillAmount(),
-				agreement.getTimePeriod(),agreement.getCollectedSecurityDeposit(),
-				agreement.getCollectedGoodWillAmount(),agreement.getSource().toString(),
-				processMap.get("reason"),processMap.get("terminationDate"),
-				processMap.get("courtReferenceNumber"),agreement.getAction().toString(),
-				
-				agreement.getAcknowledgementNumber(),agreement.getTenantId()};
+		Map<String, Object> agreementParameters = getInputParams(agreement, processMap);
 
 		try {
-			jdbcTemplate.update(agreementUpdate, obj);
+			namedParameterJdbcTemplate.update(agreementUpdate, agreementParameters);
 		} catch (DataAccessException ex) {
 			logger.error("the exception from update demand in update agreement "+ex);
 			throw new RuntimeException(ex.getMessage());
@@ -412,6 +346,65 @@ public class AgreementRepository {
 		}
 	}
 	
+	private Map<String, Object> getInputParams(Agreement agreement, Map<String, Object> processMap) {
+		Map<String, Object> agreementParameters = new HashMap<>();
+		agreementParameters.put("agreementID", agreement.getId());
+		agreementParameters.put("agreementDate", agreement.getAgreementDate());
+		agreementParameters.put("agreementNo", agreement.getAgreementNumber());
+		agreementParameters.put("bankGuaranteeAmount", agreement.getBankGuaranteeAmount());
+		agreementParameters.put("bankGuaranteeDate", agreement.getBankGuaranteeDate());
+		agreementParameters.put("caseNo", agreement.getCaseNo());
+		agreementParameters.put("commencementDate", agreement.getCommencementDate());
+		agreementParameters.put("councilDate", agreement.getCouncilDate());
+		agreementParameters.put("councilNumber", agreement.getCouncilNumber());
+		agreementParameters.put("expiryDate", agreement.getExpiryDate());
+		agreementParameters.put("natureOfAllotment", agreement.getNatureOfAllotment().toString());
+		agreementParameters.put("orderDate", processMap.get("orderDate"));
+		agreementParameters.put("orderDetails", agreement.getOrderDetails());
+		agreementParameters.put("orderNumber", processMap.get("orderNumber"));
+		agreementParameters.put("paymentCycle", agreement.getPaymentCycle().toString());
+		agreementParameters.put("registrationFee", agreement.getRegistrationFee());
+		agreementParameters.put("remarks", agreement.getRemarks());
+		agreementParameters.put("rent", agreement.getRent());
+		agreementParameters.put("rrReadingNo", agreement.getRrReadingNo());
+		agreementParameters.put("securityDeposit", agreement.getSecurityDeposit());
+		agreementParameters.put("securityDepositDate", agreement.getSecurityDepositDate());
+		agreementParameters.put("solvencyCertificateDate", agreement.getSolvencyCertificateDate());
+		agreementParameters.put("solvencyCertificateNo", agreement.getSolvencyCertificateNo());
+		agreementParameters.put("status", agreement.getStatus().toString());
+		agreementParameters.put("tinNumber", agreement.getTinNumber());
+		agreementParameters.put("tenderDate", agreement.getTenderDate());
+		agreementParameters.put("tenderNumber", agreement.getTenderNumber());
+		agreementParameters.put("tradelicenseNumber", agreement.getTradelicenseNumber());
+		agreementParameters.put("createdBy", agreement.getCreatedBy());
+		agreementParameters.put("lastmodifiedBy", agreement.getLastmodifiedBy());
+		agreementParameters.put("createdDate", agreement.getCreatedDate());
+		agreementParameters.put("lastmodifiedDate", agreement.getLastmodifiedDate());
+		agreementParameters.put("allottee", agreement.getAllottee().getId());
+		agreementParameters.put("asset", agreement.getAsset().getId());
+		agreementParameters.put("rentIncrement",
+				agreement.getRentIncrementMethod() != null ? agreement.getRentIncrementMethod().getId() : null);
+		agreementParameters.put("acknowledgementNumber", agreement.getAcknowledgementNumber());
+		agreementParameters.put("stateId", agreement.getStateId());
+		agreementParameters.put("tenantId", agreement.getTenantId());
+		agreementParameters.put("goodWillAmount", agreement.getGoodWillAmount());
+		agreementParameters.put("timePeriod", agreement.getTimePeriod());
+		agreementParameters.put("collectedSecurityDeposit", agreement.getCollectedSecurityDeposit());
+		agreementParameters.put("collectedGoodWillAmount", agreement.getCollectedGoodWillAmount());
+		agreementParameters.put("source", agreement.getSource().toString());
+		agreementParameters.put("reason", processMap.get("reason"));
+		agreementParameters.put("terminationDate", processMap.get("terminationDate"));
+		agreementParameters.put("courtReferenceNumber", processMap.get("courtReferenceNumber"));
+		agreementParameters.put("action", agreement.getAction().toString());
+		agreementParameters.put("courtCaseNo", processMap.get("courtCaseNo"));
+		agreementParameters.put("courtCaseDate", processMap.get("courtCaseDate"));
+		agreementParameters.put("courtFixedRent", processMap.get("courtFixedRent"));
+		agreementParameters.put("effectiveDate", processMap.get("effectiveDate"));
+		agreementParameters.put("judgementNo", processMap.get("judgementNo"));
+		agreementParameters.put("judgementDate", processMap.get("judgementDate"));
+		agreementParameters.put("judgementRent", processMap.get("judgementRent"));
+		return agreementParameters;
+	}
 	private Map<String, Object> getProcessMap(AgreementRequest agreementRequest) {
 
 		Agreement agreement = agreementRequest.getAgreement();
@@ -424,6 +417,10 @@ public class AgreementRepository {
 		Date effectiveDate = null;
 		Date orderDate = null;
 		Date terminationDate = null;
+		String judgementNo = null;
+		Date judgementDate =null;
+		BigDecimal judgementRent=null;
+		
 		Action action = agreement.getAction();
 
 		if(action!=null){
@@ -459,7 +456,13 @@ public class AgreementRepository {
 				courtCaseDate = objection.getCourtCaseDate();
 				courtFixedRent = objection.getCourtFixedRent();
 				effectiveDate = objection.getEffectiveDate();
-
+				break;
+			case JUDGEMENT:
+				Judgement judgement = agreement.getJudgement();
+				judgementNo = judgement.getJudgementNo();
+				judgementDate = judgement.getJudgementDate();
+				judgementRent = BigDecimal.valueOf(judgement.getJudgementRent());
+				effectiveDate = judgement.getEffectiveDate();
 				break;
 			}
 		}
@@ -473,7 +476,10 @@ public class AgreementRepository {
 		processMap.put("courtCaseDate", courtCaseDate);
 		processMap.put("courtFixedRent", courtFixedRent);
 		processMap.put("effectiveDate", effectiveDate);
-
+		processMap.put("judgementNo", judgementNo);
+		processMap.put("judgementDate", judgementDate);
+		processMap.put("judgementRent", judgementRent);
+		
 		return processMap;
 	}
 	
@@ -509,6 +515,21 @@ public class AgreementRepository {
 			status = jdbcTemplate.queryForObject(sql, String.class);
 		} catch (DataAccessException ex) {
 			logger.info("exception while fetching renewal status of agreementNo :" + agreementnumber);
+			throw new RuntimeException(ex.getMessage());
+		}
+		return status;
+	}
+	
+	public String getObjectionStatus(String agreementnumber, String tenantId) {
+		String sql = "select status from  eglams_agreement where agreement_no ='" + agreementnumber
+				+ "' and tenant_id = '" + tenantId + "' and action='OBJECTION'";
+		logger.info("objection status query :", sql);
+		String status = null;
+		try {
+
+			status = jdbcTemplate.queryForObject(sql, String.class);
+		} catch (DataAccessException ex) {
+			logger.info("exception while fetching objection status of agreementNo :" + agreementnumber);
 			throw new RuntimeException(ex.getMessage());
 		}
 		return status;

@@ -1,0 +1,1 @@
+insert into egeis_grade values (1,'A','First Grade',1,true,'default');

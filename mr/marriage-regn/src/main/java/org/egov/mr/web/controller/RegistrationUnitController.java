@@ -8,6 +8,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.mr.model.RegistrationUnit;
 import org.egov.mr.service.RegistrationUnitService;
+import org.egov.mr.validator.RegistrationUnitValidator;
 import org.egov.mr.web.contract.RegistrationUnitSearchCriteria;
 import org.egov.mr.web.contract.RegnUnitRequest;
 import org.egov.mr.web.contract.RegnUnitResponse;
@@ -35,6 +36,9 @@ public class RegistrationUnitController {
 	private RegistrationUnitService registrationUnitService;
 
 	@Autowired
+	private RegistrationUnitValidator registrationUnitValidator;
+
+	@Autowired
 	private ErrorHandler errorHandler;
 
 	/**
@@ -52,9 +56,13 @@ public class RegistrationUnitController {
 		LOGGER.info("regnUnitRequest : " + regnUnitRequest);
 
 		RequestInfo requestInfo = regnUnitRequest.getRequestInfo();
+		/**
+		 * @Validation_for_DuplicateRecord
+		 */
+		registrationUnitValidator.validate(regnUnitRequest, regnUnitRequestBindingResults);
+
 		ResponseEntity<?> errorResponseEntity = errorHandler.handleBindingErrorsForCreate(requestInfo,
 				regnUnitRequestBindingResults);
-
 		if (errorResponseEntity != null)
 			return errorResponseEntity;
 
@@ -171,10 +179,10 @@ public class RegistrationUnitController {
 		 * @Set ResponseInfo
 		 */
 		responseInfo.setApiId(requestInfo.getApiId());
-		//responseInfo.setKey(requestInfo.getKey());
+		// responseInfo.setKey(requestInfo.getKey());
 		responseInfo.setResMsgId(requestInfo.getMsgId());
 		responseInfo.setStatus(HttpStatus.OK.toString());
-		//responseInfo.setTenantId(requestInfo.getTenantId());
+		// responseInfo.setTenantId(requestInfo.getTenantId());
 		responseInfo.setTs(requestInfo.getTs());
 		responseInfo.setVer(requestInfo.getVer());
 		/**

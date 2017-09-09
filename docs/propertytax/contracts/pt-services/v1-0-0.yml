@@ -404,6 +404,7 @@ definitions:
          - CFC_COUNTER
          - CITIZEN
          - DATA_ENTRY
+         - MIGRATION
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -473,6 +474,11 @@ definitions:
         description: Buidling plan approval no for the Property
         maxLength: 16
         minLength: 1
+      subUsage:
+        type: string
+        description: sub usage of the Unit
+        maxLength: 128
+        minLength: 1  
       bpaDate:
         type: string
         format: date
@@ -1114,10 +1120,15 @@ definitions:
     - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/Address'
     - type: object
       properties:
-        serveyNo:
+        surveyNo:
           type: string
           description: survey no for a property 
-          maxLength: 64
+          maxLength: 128
+          minLength: 1
+        plotNo:
+          type: string
+          description: Plot no for a property 
+          maxLength: 128
           minLength: 1
 
   Notice:

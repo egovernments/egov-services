@@ -46,7 +46,7 @@ const nameMap = {
   "CANCELLED": "Request Cancelled",
   "REJECTED": "Rejected",
   "BPA_FIRE_NOC": "Fire NOC",
-  "INPROGERSS": "In Progress",
+  "INPROGRESS": "In Progress",
   "APPROVED": "Approved",
   "PT_EXTRACT": "Property Extract",
   "WC_PAYTAX": "Water Charge Tax Payment",
@@ -232,6 +232,7 @@ class Dashboard extends Component {
 	 $('#searchTable').DataTable({
          dom: 'lBfrtip',
          buttons: [],
+         "aaSorting": [],
           bDestroy: true,
           language: {
              "emptyTable": "No Records"
@@ -540,6 +541,7 @@ class Dashboard extends Component {
          },
          dom: 'lBfrtip',
          buttons: [],
+         "aaSorting": [],
           bDestroy: true,
           language: {
              "emptyTable": "No Records"
@@ -637,7 +639,7 @@ class Dashboard extends Component {
       this.props.setRoute(`/receipt/watercharge/nodues/${encodeURIComponent(item.consumerCode)}/${encodeURIComponent(item.serviceRequestId)}`);
     } else if(item.serviceCode == "PT_NODUES" && item.status == "No Dues Generated") {
       this.props.setRoute(`/receipt/propertytax/nodues/${encodeURIComponent(item.consumerCode)}/${encodeURIComponent(item.serviceRequestId)}`);
-    } else if(item.serviceCode == "PT_EXTRACT" && item.status == "No Dues Generated") {
+    } else if(item.serviceCode == "PT_EXTRACT" && item.status == "Extract Generated") {
       this.props.setRoute(`/receipt/extract/nodues/${encodeURIComponent(item.consumerCode)}/${encodeURIComponent(item.serviceRequestId)}`);
     } else if(item.serviceCode == "PT_PAYTAX" && item.status == "No Dues Generated") {
       this.props.setRoute(`/receipt/propertytax/paytax/${encodeURIComponent(item.consumerCode)}/${encodeURIComponent(item.serviceRequestId)}`);

@@ -229,8 +229,8 @@ class Report extends Component {
                + ('0' + (_date.getMonth()+1)).slice(-2) + '/'
                + _date.getFullYear();
     }
-
-    return  typeof val != "undefined" && (typeof val == "string" || typeof val == "number" || typeof val == "boolean") ? (val + "") : "";
+console.log(val); 
+    return  typeof val != "undefined" && (typeof val == "string" || typeof val == "number" || typeof val == "boolean") ?  (val == true) ? "Yes" : (val == false) ? "No" : (val + "") : "";
   }
 
   printer = () => {

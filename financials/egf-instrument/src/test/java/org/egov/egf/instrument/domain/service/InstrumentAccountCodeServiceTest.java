@@ -257,7 +257,7 @@ public class InstrumentAccountCodeServiceTest {
 		assertEquals(expextedResult, actualResult);
 	}
 
-	@Test
+	@Test(expected=InvalidDataException.class)
 	public final void test_fetch_instrumenttype() {
 
 		List<InstrumentAccountCode> instrumentAccountCodes = getInstrumentAccountCodes();

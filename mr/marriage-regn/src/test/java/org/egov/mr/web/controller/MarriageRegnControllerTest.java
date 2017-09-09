@@ -70,7 +70,7 @@ public class MarriageRegnControllerTest {
 
 	@MockBean
 	private ErrorHandler errorHandler;
-	
+
 	@MockBean
 	ResponseInfoFactory responseInfoFactory;
 
@@ -162,10 +162,10 @@ public class MarriageRegnControllerTest {
 		/**
 		 * @RegnUnit_HelperMethod
 		 */
-		RegistrationUnit regnunit = RegistrationUnit.builder().id(33L).code("AP").name("kurnool")
+		RegistrationUnit regnunit = RegistrationUnit.builder().id(33L).name("kurnool")
 				.address(Location.builder().locality(60L).zone(147896325L).revenueWard(150L).block(14788L)
 						.street(159632478L).electionWard(123456789L).doorNo("132").pinCode(560103).build())
-				.isActive(true).tenantId("ap.kurnool").auditDetails(auditDetails).build();
+				.isMainRegistrationUnit(true).isActive(true).tenantId("ap.kurnool").auditDetails(auditDetails).build();
 
 		/**
 		 * @Certificates_HelperMethod

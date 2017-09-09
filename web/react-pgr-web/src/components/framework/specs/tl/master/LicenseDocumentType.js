@@ -1,6 +1,6 @@
 var dat = {
 	"tl.create": {
-		"numCols": 12/2,
+		"numCols": 12/3,
 		"url": "/tl-masters/documenttype/v2/_create",
 		"useTimestamp": true,
 		"tenantIdRequired": true,
@@ -9,11 +9,136 @@ var dat = {
 			{
 				"label": "tl.create.groups.licensedocumenttype.title",
 				"name": "createLicenseDocumentType",
+				"jsonPath": "documentTypes",
 				"fields": [
+						{
+							"name": "licenseapptype",
+							"jsonPath": "documentTypes[0].applicationType",
+							"label": "tl.create.groups.licensedocumenttype.licenseapptype",
+							"pattern": "",
+							"type": "singleValueList",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": "",
+							"defaultValue": [
+	          {
+	            "key": "NEW",
+	            "value": "NEW"
+	          },
+	          {
+	            "key": "RENEW",
+	            "value": "RENEW"
+	          }
+	            ]
+						},
+						{
+	            "name": "Category",
+	            "jsonPath": "documentTypes[0].categoryId",
+	            "label": "tl.create.licensedocumenttype.groups.TradeDetails.TradeCategory",
+	            "pattern": "",
+	            "type": "singleValueList",
+	            "url": "/tl-masters/category/v1/_search?tenantId=default&type=category|$..id|$..name",
+	            "isRequired": false,
+	            "isDisabled": false,
+	            "requiredErrMsg": "",
+	            "patternErrMsg": "",
+	            "depedants": [{
+	              "jsonPath": "documentTypes[0].subCategoryId",
+	              "type": "dropDown",
+	              "pattern": "/tl-masters/category/v1/_search?tenantId=default&type=subcategory&categoryId={documentTypes[0].categoryId}|$.categories.*.id|$.categories.*.name"
+	            }]
+	          },
+						{
+	            "name": "SubCategory",
+	            "jsonPath": "documentTypes[0].subCategoryId",
+	            "label": "tl.create.licensedocumenttype.groups.TradeDetails.TradeSubCategory",
+	            "pattern": "",
+	            "type": "singleValueList",
+	            "url": "",
+	            "isRequired": false,
+	            "isDisabled": false,
+	            "requiredErrMsg": "",
+	            "patternErrMsg": ""
+						}
+				]
+			},
+
+			{
+
+				"name": "licensedocument",
+				"multiple":true,
+				"jsonPath": "documentTypes",
+				"fields": [
+					{
+						"name": "name",
+						"jsonPath": "documentTypes[0].name",
+						"label": "tl.create.groups.licensedocumenttype.name",
+						"pattern": "^.[a-zA-Z. ]{2,49}$",
+						"type": "text",
+						"isRequired": true,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "Enter Valid Name (Min:3, Max:50)",
+						"maxLength": "50"
+					},
+					{
+            "name": "mandatory",
+            "jsonPath": "documentTypes[0].mandatory",
+            "label": "tl.create.licenses.groups.TradeDetails.mandatory",
+            "pattern": "",
+            "type": "checkbox",
+            "url": "",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+						"defaultValue": false
+          },
+					{
+            "name": "enabled",
+            "jsonPath": "documentTypes[0].enabled",
+            "label": "tl.create.licenses.groups.TradeDetails.enabled",
+            "pattern": "",
+            "type": "checkbox",
+            "url": "",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+						"defaultValue": false
+					}
+				]
+			}
+
+		]
+	},
+	"tl.search": {
+		"numCols": 12/2,
+		"url": "/tl-masters/documenttype/v2/_search",
+		"tenantIdRequired": true,
+		"useTimestamp": true,
+		"objectName": "documentTypes",
+		"groups": [
+			{
+				"label": "tl.search.groups.licensedocumenttype.title",
+				"name": "createCategoryType",
+				"fields": [
+					{
+						"name": "name",
+						"jsonPath": "name",
+						"label": "tl.search.groups.licensedocumenttype.name",
+						"pattern": "",
+						"type": "text",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
 					{
 						"name": "licenseapptype",
 						"jsonPath": "documentTypes[0].applicationType",
-						"label": "tl.create.groups.licensedocumenttype.licenseapptype",
+						"label": "tl.search.groups.licensedocumenttype.licenseapptype",
 						"pattern": "",
 						"type": "singleValueList",
 						"url": "",
@@ -22,15 +147,15 @@ var dat = {
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
 						"defaultValue": [
-          {
-            "key": "NEW",
-            "value": "NEW"
-          },
-          {
-            "key": "RENEW",
-            "value": "RENEW"
-          }
-            ]
+					{
+						"key": "NEW",
+						"value": "NEW"
+					},
+					{
+						"key": "RENEW",
+						"value": "RENEW"
+					}
+						]
 					},
 
 					{
@@ -50,6 +175,7 @@ var dat = {
               "pattern": "/tl-masters/category/v1/_search?tenantId=default&type=subcategory&categoryId={documentTypes[0].categoryId}|$.categories.*.id|$.categories.*.name"
             }]
           },
+
 					{
             "name": "SubCategory",
             "jsonPath": "documentTypes[0].subCategoryId",
@@ -63,114 +189,18 @@ var dat = {
             "patternErrMsg": ""
 					}
 				]
-			},
-
-			{
-				//"label": "tl.create.groups.licensedocumenttype.title",
-				"name": "licensedocument",
-				"multiple":true,
-				"fields": [
-					{
-						"name": "name",
-						"jsonPath": "documentTypes[0].name",
-						"label": "tl.create.groups.licensedocumenttype.name",
-						"pattern": "",
-						"type": "text",
-						"isRequired": true,
-						"isDisabled": false,
-						"requiredErrMsg": "",
-						"patternErrMsg": ""
-					},
-					{
-            "name": "mandatory",
-            "jsonPath": "documentTypes[0].mandatory",
-            "label": "tl.create.licenses.groups.TradeDetails.mandatory",
-            "pattern": "",
-            "type": "checkbox",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-						"defaultValue": false
-          },
-					{
-            "name": "enabled",
-            "jsonPath": "documentTypes[0].enabled",
-            "label": "tl.create.licenses.groups.TradeDetails.enabled",
-            "pattern": "",
-            "type": "checkbox",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-						"defaultValue": false
-					}
-					]
-				}
-
-		]
-	},
-
-  "tl.search": {
-		"numCols": 12/2,
-		"url": "/tl-masters/documenttype/v2/_search",
-		"tenantIdRequired": true,
-		"useTimestamp": true,
-		"objectName": "documentTypes",
-		"groups": [
-			{
-				"label": "tl.search.groups.licensedocumenttype.title",
-				"name": "createCategoryType",
-				"fields": [
-            {
-              "name": "name",
-              "jsonPath": "name",
-              "label": "tl.search.groups.licensedocumenttype.name",
-              "pattern": "",
-              "type": "text",
-              "isRequired": false,
-              "isDisabled": false,
-              "requiredErrMsg": "",
-              "patternErrMsg": ""
-            },
-						{
-							"name": "licenseapptype",
-							"jsonPath": "documentTypes[0].applicationType",
-							"label": "tl.search.groups.licensedocumenttype.licenseapptype",
-							"pattern": "",
-							"type": "singleValueList",
-							"url": "",
-							"isRequired": false,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": "",
-							"defaultValue": [
-	          {
-	            "key": "NEW",
-	            "value": "NEW"
-	          },
-	          {
-	            "key": "RENEW",
-	            "value": "RENEW"
-	          }
-	            ]
-						}
-				]
 			}
 		],
 		"result": {
 			"header": [{label: "tl.create.groups.licensedocumenttype.licenseapptype"},{label: "tl.create.licensedocumenttype.groups.TradeDetails.TradeCategory"}, {label: "tl.create.licensedocumenttype.groups.TradeDetails.TradeSubCategory"}, {label: "tl.create.groups.licensedocumenttype.name"}, {label: "tl.create.licenses.groups.TradeDetails.mandatory"}, {label: "tl.create.licenses.groups.TradeDetails.enabled"}],
-			"values": ["applicationType","categoryId", "subCategoryId", "name", "mandatory", "enabled"],
+			"values": ["applicationType","categoryName", "subCategoryName", "name", "mandatory", "enabled"],
 			"resultPath": "documentTypes",
 			"rowClickUrlUpdate": "/update/tl/LicenseDocumentType/{id}",
 			"rowClickUrlView": "/view/tl/LicenseDocumentType/{id}"
 			}
 	},
-
-  "tl.view": {
-		"numCols": 12/2,
+	"tl.view": {
+		"numCols": 12/3,
 		"url": "/tl-masters/documenttype/v2/_search?ids={id}",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
@@ -178,19 +208,78 @@ var dat = {
 		"groups": [
 			{
 				"label": "tl.view.groups.licensedocumenttype.title",
+				"name": "viewLicenseDocumentType",
+				"fields": [
+					{
+						"name": "licenseapptype",
+						"jsonPath": "documentTypes[0].applicationType",
+						"label": "tl.create.groups.licensedocumenttype.licenseapptype",
+						"pattern": "",
+						"type": "singleValueList",
+						"url": "",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"defaultValue": [
+					{
+						"key": "NEW",
+						"value": "NEW"
+					},
+					{
+						"key": "RENEW",
+						"value": "RENEW"
+					}
+						]
+					},
+					{
+						"name": "Category",
+						"jsonPath": "documentTypes[0].categoryName",
+						"label": "tl.create.licensedocumenttype.groups.TradeDetails.TradeCategory",
+						"pattern": "",
+						"type": "text",
+						"url": "/tl-masters/category/v1/_search?tenantId=default&type=category|$..id|$..name",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						// "depedants": [{
+						// 	"jsonPath": "documentTypes[0].subCategoryId",
+						// 	"type": "dropDown",
+						// 	"pattern": "/tl-masters/category/v1/_search?tenantId=default&type=subcategory&categoryId={documentTypes[0].categoryId}|$.categories.*.id|$.categories.*.name"
+						// }]
+					},
+					{
+						"name": "SubCategory",
+						"jsonPath": "documentTypes[0].subCategoryName",
+						"label": "tl.create.licensedocumenttype.groups.TradeDetails.TradeSubCategory",
+						"pattern": "",
+						"type": "text",
+						"url": "",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					}
+
+				]
+			},
+
+			{
+
 				"name": "viewCategoryType",
 				"fields": [
-          {
-            "name": "name",
-            "jsonPath": "documentTypes[0].name",
-            "label": "tl.view.groups.licensedocumenttype.name",
-            "pattern": "",
-            "type": "text",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
+					{
+						"name": "name",
+						"jsonPath": "documentTypes[0].name",
+						"label": "tl.view.groups.licensedocumenttype.name",
+						"pattern": "",
+						"type": "text",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
 					{
             "name": "mandatory",
             "jsonPath": "documentTypes[0].mandatory",
@@ -200,9 +289,8 @@ var dat = {
             "url": "",
             "isRequired": false,
             "isDisabled": false,
-            "requiredErrMsg": "", 
-            "patternErrMsg": "",
-					//	"defaultValue": false
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
           },
 					{
             "name": "enabled",
@@ -214,18 +302,17 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "",
-						//"defaultValue": false
+            "patternErrMsg": ""
 					}
 				]
 			}
+
 		]
 	},
-
-  "tl.update": {
-		"numCols": 12/2,
+	"tl.update": {
+		"numCols": 12/3,
 		"searchUrl": "/tl-masters/documenttype/v2/_search?ids={id}",
-		"url":"/tl-masters/documenttype/v2/_update",
+		"url": "/tl-masters/documenttype/v2/_update",
 		"isResponseArray":true,
 		"tenantIdRequired": true,
 		"useTimestamp": true,
@@ -233,24 +320,84 @@ var dat = {
 		"groups": [
 			{
 				"label": "tl.update.groups.licensedocumenttype.title",
-				"name": "licensedocument",
+				"name": "updateLicenseDocumentType",
+				"fields": [
+
+					{
+						"name": "licenseapptype",
+						"jsonPath": "documentTypes[0].applicationType",
+						"label": "tl.update.groups.licensedocumenttype.licenseapptype",
+						"pattern": "",
+						"type": "singleValueList",
+						"url": "",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"defaultValue": [
+					{
+						"key": "NEW",
+						"value": "NEW"
+					},
+					{
+						"key": "RENEW",
+						"value": "RENEW"
+					}
+						]
+					},
+
+					{
+            "name": "Category",
+            "jsonPath": "documentTypes[0].categoryId",
+            "label": "tl.update.licensedocumenttype.groups.TradeDetails.TradeCategory",
+            "pattern": "",
+            "type": "singleValueList",
+            "url": "/tl-masters/category/v1/_search?tenantId=default&type=category|$..id|$..name",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+            "depedants": [{
+              "jsonPath": "documentTypes[0].subCategoryId",
+              "type": "dropDown",
+              "pattern": "/tl-masters/category/v1/_search?tenantId=default&type=subcategory&categoryId={documentTypes[0].categoryId}|$.categories.*.id|$.categories.*.name"
+            }]
+          },
+					{
+            "name": "SubCategory",
+            "jsonPath": "documentTypes[0].subCategoryId",
+            "label": "tl.update.licensedocumenttype.groups.TradeDetails.TradeSubCategory",
+            "pattern": "",
+            "type": "singleValueList",
+            "url": "",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+					}
+				]
+			},
+			{
+				"name": "createLicenseDocumentType2",
+				"jsonPath": "documentTypes",
 				"multiple":true,
 				"fields": [
 					{
 						"name": "name",
 						"jsonPath": "documentTypes[0].name",
-						"label": "tl.create.groups.licensedocumenttype.name",
-						"pattern": "",
+						"label": "tl.update.groups.licensedocumenttype.name",
+						"pattern": "^.[a-zA-Z. ]{2,49}$",
 						"type": "text",
 						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
-						"patternErrMsg": ""
+						"patternErrMsg": "Enter Valid Name (Min:3, Max:50)",
+						"maxLength": "50"
 					},
 					{
             "name": "mandatory",
             "jsonPath": "documentTypes[0].mandatory",
-            "label": "tl.create.licenses.groups.TradeDetails.mandatory",
+            "label": "tl.update.groups.licensedocumenttype.mandatory",
             "pattern": "",
             "type": "checkbox",
             "url": "",
@@ -263,7 +410,7 @@ var dat = {
 					{
             "name": "enabled",
             "jsonPath": "documentTypes[0].enabled",
-            "label": "tl.create.licenses.groups.TradeDetails.enabled",
+            "label": "tl.update.groups.licensedocumenttype.enabled",
             "pattern": "",
             "type": "checkbox",
             "url": "",
@@ -273,8 +420,8 @@ var dat = {
             "patternErrMsg": "",
 						"defaultValue": false
 					}
-					]
-				}
+				]
+			}
 		]
 	}
 }

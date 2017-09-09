@@ -38,29 +38,46 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.data.sync.employee.web.controller;
+package org.egov.eis.web.contract;
 
-import lombok.extern.slf4j.Slf4j;
-import org.egov.data.sync.employee.service.DataSyncEmployeeService;
-import org.egov.data.sync.employee.service.DataSyncPositionService;
-import org.egov.data.sync.employee.web.contract.EmployeeSyncRequest;
-import org.egov.data.sync.employee.web.contract.PositionSyncRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
-@Slf4j
-@RestController
-public class DataSyncPositionController {
+import java.util.Date;
 
-    @Autowired
-    private DataSyncPositionService dataSyncPositionService;
+@AllArgsConstructor
+@Builder
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class Assignment {
 
-    @PostMapping("/datasyncposition/_create")
-    public void createUser(@RequestBody PositionSyncRequest positionSyncRequest) {
-        log.debug("Received PositionSyncRequestSyncRequest :: " + positionSyncRequest);
-        dataSyncPositionService.createAsync(positionSyncRequest);
-    }
+    private Long id;
+
+    private Long position;
+
+    private Long fund;
+
+    private Long functionary;
+
+    private Long function;
+
+    private Long department;
+
+    private Long designation;
+
+    private Boolean isPrimary;
+
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date fromDate;
+
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date toDate;
+
+    private String tenantId;
 
 }

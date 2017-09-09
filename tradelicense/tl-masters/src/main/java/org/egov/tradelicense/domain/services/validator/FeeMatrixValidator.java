@@ -295,12 +295,28 @@ public class FeeMatrixValidator {
 			FeeMatrix feeMatrix = new FeeMatrix();
 			feeMatrix.setId(getLong(row.get("id")));
 			feeMatrix.setTenantId(getString(row.get("tenantid")));
-			feeMatrix.setApplicationType(ApplicationTypeEnum.fromValue(getString(row.get("applicationType"))));
-			feeMatrix.setBusinessNature(BusinessNatureEnum.fromValue(getString(row.get("businessNature"))));
+			if(row.get("applicationType") != null){
+				feeMatrix.setApplicationType(ApplicationTypeEnum.fromValue(getString(row.get("applicationType"))));
+			} else {
+				feeMatrix.setApplicationType(null);
+			}
+			if(row.get("businessNature") != null){
+				feeMatrix.setBusinessNature(BusinessNatureEnum.fromValue(getString(row.get("businessNature"))));
+			} else {
+				feeMatrix.setBusinessNature(null);
+			}
 			feeMatrix.setCategoryId(getLong(row.get("categoryId")));
 			feeMatrix.setSubCategoryId(getLong(row.get("subCategoryId")));
-			feeMatrix.setEffectiveFrom(((Timestamp) row.get("effectiveFrom")).getTime());
-			feeMatrix.setEffectiveTo(((Timestamp) row.get("effectiveTo")).getTime());
+			if(row.get("effectiveFrom") != null){
+				feeMatrix.setEffectiveFrom(((Timestamp) row.get("effectiveFrom")).getTime());
+			} else {
+				feeMatrix.setEffectiveFrom(null);
+			}
+			if(row.get("effectiveTo") != null){
+				feeMatrix.setEffectiveTo(((Timestamp) row.get("effectiveTo")).getTime());
+			} else {
+				feeMatrix.setEffectiveTo(null);
+			}
 			feeMatrix.setFinancialYear(getString(row.get("financialYear")));
 			AuditDetails auditDetails = new AuditDetails();
 			auditDetails.setCreatedBy(getString(row.get("createdby")));
@@ -334,7 +350,7 @@ public class FeeMatrixValidator {
 	 * @return {@link Double}
 	 */
 	private Double getDouble(Object object) {
-		return object == null ? 0.0 : Double.parseDouble(object.toString());
+		return object == null ? null : Double.parseDouble(object.toString());
 	}
 
 	/**
@@ -345,6 +361,6 @@ public class FeeMatrixValidator {
 	 * @return {@link Long}
 	 */
 	private Long getLong(Object object) {
-		return object == null ? 0 : Long.parseLong(object.toString());
+		return object == null ? null : Long.parseLong(object.toString());
 	}
 }

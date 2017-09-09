@@ -46,10 +46,15 @@ import org.egov.eis.model.bulk.Department;
 import org.egov.eis.web.contract.DepartmentResponse;
 import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
 
@@ -80,4 +85,39 @@ public class DepartmentService {
 		}
 		return isEmpty(departmentResponse.getDepartment()) ? null : departmentResponse.getDepartment().get(0);
 	}
+
+    public List<Department> getDepartments(List<Long> ids, String tenantId, RequestInfoWrapper requestInfoWrapper) {
+        URI url = null;
+        if(null == ids.get(0) || ids.isEmpty())
+        {
+        	  log.error("Following exception occurred while accessing Department id is null");
+        	  return null;
+        }
+        String idsAsCSV = getIdsAsCSV(ids);
+        DepartmentResponse departmentResponse = null;
+        try {
+            url = new URI(propertiesManager.getCommonMastersServiceHostName()
+                    + propertiesManager.getCommonMastersServiceBasePath()
+                    + propertiesManager.getCommonMastersServiceDepartmentsSearchPath()
+                    + "?tenantId=" + tenantId + "&id=" + idsAsCSV);
+            log.debug(url.toString());
+            departmentResponse = restTemplate.postForObject(url, getRequestInfoAsHttpEntity(requestInfoWrapper),
+                    DepartmentResponse.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("Following exception occurred while accessing Department API : " + e.getMessage());
+            return null;
+        }
+        return departmentResponse.getDepartment();
+    }
+    
+    private String getIdsAsCSV(List<Long> ids) {
+        return String.join(",", ids.stream().map(Object::toString).collect(Collectors.toList()));
+    }
+    private HttpEntity<RequestInfoWrapper> getRequestInfoAsHttpEntity(RequestInfoWrapper requestInfoWrapper) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return new HttpEntity<>(requestInfoWrapper, headers);
+    }
+
 }

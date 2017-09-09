@@ -43,17 +43,33 @@ package org.egov.eis.web.validator;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.eis.model.Assignment;
 import org.egov.eis.model.Employee;
+import org.egov.eis.model.bulk.Department;
+import org.egov.eis.service.DepartmentService;
+import org.egov.eis.service.DesignationService;
+import org.egov.eis.web.contract.DesignationGetRequest;
+import org.egov.eis.web.contract.RequestInfoWrapper;
+import org.egov.eis.web.errorhandler.InvalidDataException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 @Component
 public class EmployeeAssignmentValidator implements Validator {
+	
+	@Autowired
+    private DepartmentService departmentService;
+
+    @Autowired
+    private DesignationService designationService;
+	
 
     /**
      * This Validator validates *just* Employee instances
@@ -78,6 +94,38 @@ public class EmployeeAssignmentValidator implements Validator {
         // Used to mark primary assignments for conveying the index of assignment with errors
         List<Integer> primaryMarker = new ArrayList<>();
         for (int index = 0; index < assignments.size(); index++) {
+        	
+        	if(!assignments.get(index).getFromDate() .equals(employee.getDateOfAppointment())
+        		&&  !assignments.get(index).getFromDate().before(employee.getDateOfAppointment())) 
+        		{
+        		throw new InvalidDataException("Assignment from Date and Employee  Date Of Appointment", "Assignment from Date should be Greater Than employee Date Of Appointment",
+             			"null");
+        	}
+        	
+			RequestInfo requestInfo = new RequestInfo();
+	         RequestInfoWrapper requestInfoWrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+	         String tenantId=employee.getTenantId();
+             Long department = assignments.get(index).getDepartment();
+
+	         List<Department> departments = departmentService.getDepartments(Arrays.asList(department),
+                     tenantId, requestInfoWrapper);
+	         
+	         if(departments==null || departments.size()<1)
+             {
+	        	 throw new InvalidDataException("department", "the field {0} should have a valid value which exists in the system",
+	             			"null");
+             }
+	        Long deptDesig =assignments.get(index).getDesignation();
+			if(null !=assignments.get(index).getDesignation()){
+				DesignationGetRequest designationGetRequest = DesignationGetRequest.builder()
+	                    .id(Arrays.asList(assignments.get(index).getDesignation())).tenantId(tenantId).build();
+				 List<org.egov.eis.model.bulk.Designation> designations = designationService.getDesignations(designationGetRequest,tenantId,requestInfoWrapper);
+		            
+	         if(designations==null || designations.size()<1)
+             {
+	        	 throw new InvalidDataException("designations", "the field {0} should have a valid value which exists in the system",
+	             			"null");
+             }
             // get a list of primary assignments
             if (assignments.get(index).getIsPrimary() != null && assignments.get(index).getIsPrimary()) {
                 primaryAssignments.add(assignments.get(index));
@@ -140,5 +188,6 @@ public class EmployeeAssignmentValidator implements Validator {
                 }
             }
         }
+    }
     }
 }

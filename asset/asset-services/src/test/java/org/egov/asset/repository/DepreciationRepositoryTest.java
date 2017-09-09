@@ -81,10 +81,11 @@ public class DepreciationRepositoryTest {
 
     @Test
     public void test_saveDepreciation() {
-        final Depreciation depreciation = Depreciation.builder().depreciationCriteria(getDepreciationCriteria())
-                .depreciationDetails(getDepreciationDetails()).build();
+        final Depreciation depreciation = Depreciation.builder().tenantId("ap.kurnool")
+                .depreciationCriteria(getDepreciationCriteria()).depreciationDetails(getDepreciationDetails()).build();
 
-        when(applicationProperties.getBatchSize()).thenReturn("500");
+        when(assetConfigurationService.getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.ASSETBATCHSIZE,
+                "ap.kurnool")).thenReturn("500");
         depreciationRepository.saveDepreciation(depreciation);
     }
 

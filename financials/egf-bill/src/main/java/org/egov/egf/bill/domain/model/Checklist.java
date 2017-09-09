@@ -2,15 +2,13 @@ package org.egov.egf.bill.domain.model;
 
 import javax.validation.constraints.Size;
 
-import org.egov.common.domain.model.Auditable;
-import org.egov.egf.bill.persistence.entity.ChecklistEntity;
-import org.egov.egf.bill.persistence.entity.ChecklistEntity.ChecklistEntityBuilder;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import org.egov.common.domain.model.Auditable;
 @Getter
 @Setter
 @AllArgsConstructor

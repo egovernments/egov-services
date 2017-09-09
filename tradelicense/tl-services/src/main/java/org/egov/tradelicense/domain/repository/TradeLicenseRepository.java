@@ -469,9 +469,9 @@ public class TradeLicenseRepository {
 	}
 
 	@Transactional
-	public void updateTradeLicenseAfterWorkFlowQuery(String consumerCode) {
+	public void updateTradeLicenseAfterWorkFlowQuery(String consumerCode, String status) {
 		String insertquery = LicenseBillQueryBuilder.updateTradeLicenseAfterWorkFlowQuery();
-		Object[] obj = new Object[] { new Date(new java.util.Date().getTime()), NewLicenseStatus.LICENSE_FEE_PAID,
+		Object[] obj = new Object[] { new java.util.Date().getTime(), status,
 				consumerCode };
 		jdbcTemplate.update(insertquery, obj);
 	}

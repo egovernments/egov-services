@@ -51,6 +51,7 @@ import org.egov.collection.web.contract.*;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
 import org.egov.common.contract.request.User;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,12 +112,13 @@ public class ReceiptService {
         Receipt receipt = receiptReq.getReceipt().get(0);
         Bill bill = receipt.getBill().get(0);
 
-        // TODO:Billing Svc throws 403 for default tenantId. Revert once fixed.
-        /*
-         * if(!validateBill(receiptReq.getRequestInfo(), bill)){ throw new CustomException
-         * (Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()), CollectionServiceConstants.INVALID_BILL_EXCEPTION_MSG,
-         * CollectionServiceConstants.INVALID_BILL_EXCEPTION_DESC); } }
-         */
+        try {
+            validateBill(receiptReq.getRequestInfo(), bill);
+        } catch(CustomException e) {
+            LOGGER.error("Invalid Bill: ", e);
+            throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()), CollectionServiceConstants.INVALID_BILL_EXCEPTION_MSG,
+                      CollectionServiceConstants.INVALID_BILL_EXCEPTION_DESC + bill.getId() + CollectionServiceConstants.INVALID_BILL_EXCEPTION_MESSAGE_DESC);
+        }
 
         bill.setBillDetails(apportionPaidAmount(receiptReq.getRequestInfo(),
                 bill, receipt.getTenantId()));
@@ -239,41 +241,20 @@ public class ReceiptService {
                     instrument.setTransactionType(TransactionType.Debit);
                     instrument.setTenantId(tenantId);
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-                            "dd-MM-yyyy");
-                    if (instrument
-                            .getInstrumentType()
-                            .getName()
-                            .equalsIgnoreCase(
-                                    CollectionServiceConstants.INSTRUMENT_TYPE_CASH)) {
+                            "dd/MM/yyyy");
+                    if (instrument.getInstrumentType().getName()
+                            .equalsIgnoreCase(CollectionServiceConstants.INSTRUMENT_TYPE_CASH) || instrument
+                            .getInstrumentType().getName().equalsIgnoreCase(CollectionServiceConstants.INSTRUMENT_TYPE_ONLINE)
+                            && user.getRoles() != null && roleList.stream().anyMatch(role -> CollectionServiceConstants.COLLECTION_ONLINE_RECEIPT_ROLE
+                            .contains(role.getName()))) {
                         String transactionDate = simpleDateFormat
                                 .format(new Date());
                         instrument.setTransactionDate(simpleDateFormat
                                 .parse(transactionDate));
                         instrument.setTransactionNumber(transactionId);
-                    } else if (instrument
-                            .getInstrumentType()
-                            .getName()
-                            .equalsIgnoreCase(
-                                    CollectionServiceConstants.INSTRUMENT_TYPE_ONLINE)
-                            && user.getRoles() != null && roleList
-                                    .stream()
-                                    .anyMatch(
-                                            role -> CollectionServiceConstants.COLLECTION_ONLINE_RECEIPT_ROLE
-                                                    .contains(role.getName()))) {
-
-                        String transactionDate = simpleDateFormat
-                                .format(new Date());
-                        instrument.setTransactionDate(simpleDateFormat
-                                .parse(transactionDate));
-                        instrument.setTransactionNumber(transactionId);
-
                     } else {
-                        String transactionDate = simpleDateFormat
-                                .format(new Date(instrument
-                                        .getTransactionDateInput()));
-                        instrument.setTransactionDate(simpleDateFormat
-                                .parse(transactionDate));
-
+                        DateTime transactionDate = new DateTime(instrument.getTransactionDateInput());
+                        instrument.setTransactionDate(simpleDateFormat.parse(transactionDate.toString("dd/MM/yyyy")));
                     }
                     createdInstrument = instrumentRepository.createInstrument(
                             requestInfo, instrument);
@@ -315,17 +296,16 @@ public class ReceiptService {
                     billDetail.setReceiptDate(new Date().getTime());
                     billDetail.setManualReceiptNumber("");
                 }
-                String receiptNumber;
-                try {
-                    receiptNumber = idGenRepository
-                            .generateReceiptNumber(requestInfo, tenantId);
-                } catch (Exception e) {
-                    throw new CustomException(
-                            Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR
-                                    .toString()),
-                            CollectionServiceConstants.DUPLICATE_RCPT_EXCEPTION_MSG,
-                            CollectionServiceConstants.DUPLICATE_RCPT_EXCEPTION_DESC);
+                String receiptNumber = idGenRepository.generateReceiptNumber(requestInfo, tenantId);
+                try{
+                    validateReceiptNumber(receiptNumber, tenantId, requestInfo);
+                }catch(CustomException e){
+                    LOGGER.error("Duplicate Receipt: ", e);
+                    e.printStackTrace();
+                    throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
+                            CollectionServiceConstants.DUPLICATE_RCPT_EXCEPTION_MSG, CollectionServiceConstants.DUPLICATE_RCPT_EXCEPTION_DESC);
                 }
+
                 if (instrument
                         .getInstrumentType()
                         .getName()
@@ -710,9 +690,15 @@ public class ReceiptService {
 
         BillResponse billResponse = billingServiceRepository.getBillForBillId(
                 requestInfo, bill);
-        if (null != billResponse) {
+        if (null != billResponse && !billResponse.getBill().isEmpty()) {
             isBillValid = true;
             return isBillValid;
+        }
+        if (!isBillValid) {
+            throw new CustomException(
+                    Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
+                    CollectionServiceConstants.INVALID_BILL_EXCEPTION_MSG,
+                    CollectionServiceConstants.INVALID_BILL_EXCEPTION_DESC);
         }
         return isBillValid;
     }

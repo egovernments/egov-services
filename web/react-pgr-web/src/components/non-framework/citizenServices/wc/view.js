@@ -258,7 +258,7 @@ class Report extends Component {
 
       })*/
       //Fetch service request
-    if(self.props.match.params.type == "pay") {
+    if(self.props.match.params.status == "pay") {
 
         let metaData=JSON.parse(localStorage.getItem("metaData")),paymentGateWayRes=JSON.parse(localStorage.getItem("paymentGateWayResponse"));
         self.props.setLoadingStatus("loading");
@@ -269,7 +269,7 @@ class Report extends Component {
           // paymentGateWayRes["status"]="failed";
           Api.commonApiPost("/citizen-services/v1/pgresponse/_validate", {}, {PGResponse:paymentGateWayRes}, null, metaData["wc.create"].useTimestamp, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
               self.props.setLoadingStatus('hide');
-              self.generateReceipt(response);
+              self.generateReceipt(response.ServiceRequest, response.Receipt);
           }, function(err) {
               self.props.toggleSnackbarAndSetText(true, err.message, false, true);
               self.props.setLoadingStatus('hide');
@@ -284,7 +284,7 @@ class Report extends Component {
           });
 
           self.props.setFormData(res2 && res2.serviceReq && res2.serviceReq[0] ? res2.serviceReq[0].moduleObject : {});
-          self.setInitialUpdateData((res2 && res2.serviceReq && res2.serviceReq[0] ? res2.serviceReq[0].moduleObject : {}), JSON.parse(JSON.stringify(specifications)), "fn", "view", "Connection");
+          self.setInitialUpdateData((res2 && res2.serviceReq && res2.serviceReq[0] ? res2.serviceReq[0].moduleObject : {}), JSON.parse(JSON.stringify(specifications)), "wc", "view", "Connection");
       }, function(err) {
       })
     }
@@ -379,11 +379,12 @@ class Report extends Component {
 
     Api.commonApiPost("/citizen-services/v1/requests/_update", {}, {"serviceReq": ServiceRequest}, null, true, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
       self.props.setLoadingStatus("hide");
-      self.openPayFeeModal();
+      //self.openPayFeeModal();
       self.setState({
         showReceipt: true,
         Receipt: res.serviceReq && res.serviceReq.backendServiceDetails ? res.serviceReq.backendServiceDetails[0].response.Receipt : []
       });
+      localStorage.removeItem("ack");
       $('html, body').animate({ scrollTop: 0 }, 'fast');
     }, function(err){
       self.props.setLoadingStatus("hide");
@@ -391,7 +392,7 @@ class Report extends Component {
     })
   }
 
-  makePayment = (res) => {
+  makePayment = (res, fee) => {
     let {serviceRequest,RequestInfo,documents}=this.state;
    let self=this;
    let {formData,metaData}=this.props;
@@ -412,12 +413,12 @@ class Report extends Component {
          "returnUrl": window.location.origin+"/citizen-services/v1/pgresponse",
          "date": new Date().getTime(),
          "biller": JSON.parse(localStorage.userRequest).name,
-         "amount": 20,
+         "amount": fee || 20,
          "billService": res.serviceReq.serviceCode,
          "serviceRequestId": res.serviceReq.serviceRequestId,
          "consumerCode": res.serviceReq.serviceRequestId,
          "tenantId": localStorage.tenantId,
-         "amountPaid": 20,
+         "amountPaid": fee || 20,
          "uid": JSON.parse(localStorage.userRequest).id
      }
 
@@ -521,8 +522,8 @@ class Report extends Component {
         Receipt[0]["instrument"] = {"tenantId":window.localStorage.getItem("tenantId"),"amount": fee,"instrumentType":{"name":"Cash"}}
         Receipt[0]["Bill"][0]["billDetails"][0]["amountPaid"] = fee;
         setTimeout(function(){
-          localStorage.setItem("response", JSON.stringiy({ServiceRequest, Receipt}));
-          self.makePayment(res);
+          localStorage.setItem("response", JSON.stringify({ServiceRequest, Receipt}));
+          self.makePayment(res, fee);
         }, 3000);
       } else {
         self.props.setLoadingStatus("hide");
@@ -778,7 +779,7 @@ class Report extends Component {
                                       <tr>
                                           <td colSpan={3} style={{textAlign:"left"}}>
                                             Service Request Number : {self.state.Receipt[0].Bill[0].billDetails[0].consumerCode}<br/>
-                                            Applicant Name : {self.state.Receipt[0].Bill[0].payeeName}<br/>
+                                            Applicant Name : {JSON.parse(localStorage.userRequest).name || self.state.Receipt[0].Bill[0].payeeName}<br/>
                                             Amount : {self.state.Receipt[0].Bill[0].billDetails[0].totalAmount ? ("Rs." + self.state.Receipt[0].Bill[0].billDetails[0].totalAmount + "/-") : "NA"}<br/>
                                           </td>
                                       </tr>

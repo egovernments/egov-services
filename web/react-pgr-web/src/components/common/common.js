@@ -369,7 +369,7 @@ var localization_EN_Data = {
       //Water Connection
       "reports.wcms.fromdate":"From Date",
       "reports.wcms.todate":"To Date",
-      "reports.wcms.wardno":"Ward",
+      "reports.wcms.ward":"Ward",
       "reports.wcms.consumerno":"Consumer No.",
       "reports.wcms.consumername":"Consumer Name",
       "reports.wcms.pipesize":"Pipe Size",
@@ -810,6 +810,7 @@ var localization_EN_Data = {
     "tl.create.groups.subcategorytype.code": "Code",
     "tl.create.groups.subcategorytype.validityYears": "Validity Years",
     "tl.create.groups.subcategorytype.active": "Active",
+    "tl.create.groups.subcategorytype.details": "Details",
     "tl.create.groups.subcategorytype.categories.details.feeType": "Fee Type",
     "tl.create.groups.subcategorytype.categories.details.rateType": "Rate Type",
     "tl.create.groups.subcategorytype.categories.details.uomId": "UOM",
@@ -831,6 +832,7 @@ var localization_EN_Data = {
     "tl.update.groups.subcategorytype.code": "Code",
     "tl.update.groups.subcategorytype.validityYears": "Validity Years",
     "tl.update.groups.subcategorytype.active": "Active",
+    "tl.update.groups.subcategorytype.details": "Details",
     "tl.update.groups.subcategorytype.categories.details.feeType": "Fee Type",
     "tl.update.groups.subcategorytype.categories.details.rateType": "Rate Type",
     "tl.update.groups.subcategorytype.categories.details.uomId": "UOM ID",
@@ -895,17 +897,18 @@ var localization_EN_Data = {
     "tl.create.groups.licensedocumenttype.enabled": "Enabled",
     "tl.search.groups.licensedocumenttype.title": "Search Document Type",
     "tl.search.groups.licensedocumenttype.name": "Name",
-    "tl.search.groups.licensedocumenttype.licenseapptype": "License App Type",
-    "tl.view.groups.licensedocumenttype.title": "Document Type",
+    "tl.search.groups.licensedocumenttype.licenseapptype": "Application Type",
+    "tl.view.groups.licensedocumenttype.title": "Document Type View",
     "tl.view.groups.licensedocumenttype.name": "Name",
     "tl.view.groups.licensedocumenttype.mandatory": "Mandatory",
     "tl.view.groups.licensedocumenttype.enabled": "Enabled",
     "tl.update.groups.licensedocumenttype.title": "Trade license Document type Modify",
-    "tl.update.groups.licensedocumenttype.title": "Edit Document Type",
     "tl.update.groups.licensedocumenttype.name": "Name",
-    "tl.update.groups.licensedocumenttype.licenseapptype": "License App Type",
+    "tl.update.groups.licensedocumenttype.licenseapptype": "Application Type",
+    "tl.update.licensedocumenttype.groups.TradeDetails.TradeCategory": "Category",
+    "tl.update.licensedocumenttype.groups.TradeDetails.TradeSubCategory": "Sub Category",
     "tl.update.groups.licensedocumenttype.mandatory": "Mandatory",
-    "tl.update.groups.licensedocumenttype.Enabled": "Enabled",
+    "tl.update.groups.licensedocumenttype.enabled": "Enabled",
     "tl.create.licensevalidity.title": "License Validity",
     "tl.create.groups.licensevalidity.natureofbusiness": "Nature Of Business",
     "tl.create.groups.licensevalidity.licensecategory": "License Category",
@@ -951,18 +954,19 @@ var localization_EN_Data = {
     "tl.create.licenses.groups.TradeDetails.TradeSubCategory": "Trade Sub-Category",
     "tl.create.licenses.groups.TradeDetails.UOM": "UOM",
     "tl.create.licenses.groups.TradeDetails.tradeValueForUOM": "Trade Value for the UOM",
-    "tl.create.licenses.groups.validity": "Validity",
+    "tl.create.licenses.groups.validity": "Validity Years",
     "tl.create.licenses.groups.TradeDetails.Remarks": "Remarks",
     "tl.create.licenses.groups.TradeDetails.TradeCommencementDate": "Trade Commencement Date",
     "tl.create.licenses.groups.TradeDetails.licenseValidFromDate": "License Valid From Date",
     "tl.create.licenses.groups.TradeDetails.TraderOwnerProperty": "Trader is not the owner of the Property",
     "tl.create.licenses.groups.agreementDetails.agreementDate": "Date of Execution",
     "tl.create.licenses.groups.agreementDetails.agreementNo": "Registered/Non Registered Document No",
-    "tl.create.licenses.groups.agreementDetails": "Agreement Details (Trader is not the owner of the Property)",
+    "tl.create.licenses.groups.agreementDetails": "Agreement Details",
 
     "tl.create.licenses.groups.FeeDetails": "Fee Details",
     "tl.create.license.table.financialYear": "Financial Year",
     "tl.create.license.table.amount": "Amount*",
+    "tl.create.license.table.amountoptional": "Amount",
     "tl.create.license.table.isPaid": "Is Paid",
 
     "tl.search.groups.license.searchTradeLicense": "Search Trade License",
@@ -1008,7 +1012,7 @@ var localization_EN_Data = {
     "tl.licenses.view.groups.revenueWardId": "Revenue Ward",
     "tl.licenses.view.groups.OwnershipType": "Ownership Type",
     "tl.licenses.view.groups.TradeAddress": "Trade Address",
-    "tl.view.licenses.groups.agreementDetails": "Agreement Details",
+    "tl.view.licenses.groups.agreementDetails": "Agreement Details (Trader is not the owner of the property)",
     "tl.view.licenses.groups.TradeDetails": "Trade Details",
     "tl.view.licenses.groups.TradeTitle": "Trade Title",
     "tl.view.licenses.groups.TradeType": "Trade Type",
@@ -1016,7 +1020,7 @@ var localization_EN_Data = {
     "tl.view.licenses.groups.TradeSubCategory": "Trade Sub-Category",
     "tl.view.licenses.groups.UOM": "UOM",
     "tl.view.licenses.groups.TradeValuefortheUOM": "Trade Value for the UOM",
-    "tl.view.licenses.groups.validity": "Validity",
+    "tl.view.licenses.groups.validity": "Validity Years",
     "tl.view.licenses.groups.Remarks": "Remarks",
     "tl.view.licenses.groups.TraderOwnerProperty": "Trader Owner Property",
 
@@ -1654,6 +1658,9 @@ var localization_MR_Data = {
     "employee.createPosition.groups.fields.accumulative.value1 ": " होय",
     "employee.createPosition.groups.fields.accumulative.value2 ": " नाही",
     "employee.Employee.fields.code": " कोड",
+    "employee.Employee.fields.jurisdictionsType": "Jurisdictions Type - Marathi",
+    "employee.Employee.fields.jurisdictionsList": "Jurisdictions List - Marathi",
+    "employee.field.assignments": "Assignments Grade - Marathi",
     "employee.Employee.fields.dateOfAppointment": " नियुक्तीची तारीख",
     "employee.Employee.fields.dateOfJoining": " सामील होण्याची तारीख",
     "employee.Employee.fields.dateOfRetirement": " सेवानिवृत्तीची तारीख",
@@ -2540,7 +2547,7 @@ var localization_MR_Data = {
   //Water Connection
   "reports.wcms.fromdate":"From Date - Marathi",
   "reports.wcms.todate":"To Date - Marathi",
-  "reports.wcms.wardno":"Ward - Marathi",
+  "reports.wcms.ward":"Ward - Marathi",
   "reports.wcms.consumerno":"Consumer No. - Marathi",
   "reports.wcms.consumername":"Consumer Name - Marathi",
   "reports.wcms.pipesize":"Pipe Size - Marathi",
@@ -3169,5 +3176,10 @@ export function epochToDate(t) {
     var month = d.getMonth() + 1;  // months start at zero
     var day = d.getDate();
 
-    return pad2(day) + '-' + pad2(month) + '-' + year;
+    return pad2(day) + '/' + pad2(month) + '/' + year;
+}
+
+export function dateToEpoch(datestring) {
+    let tdate = datestring.split("/");
+    return new Date(tdate[2], tdate[1]-1, tdate[0]).getTime();
 }

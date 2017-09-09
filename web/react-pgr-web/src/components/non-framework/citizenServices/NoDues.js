@@ -867,7 +867,7 @@ class NoDues extends Component {
       Api.commonApiPost("/citizen-services/v1/pgresponse/_validate", {}, {PGResponse:paymentGateWayRes}, null, metaData["noDues.search"].useTimestamp, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
           self.props.setLoadingStatus('hide');
 
-          serviceRequest.status="No Dues Generated";
+          serviceRequest.status = (self.props.match.params.moduleName == "extract") ? "Extract Generated" : "No Dues Generated";
           Api.commonApiPost("/citizen-services/v1/requests/_update", {}, {"serviceReq":serviceRequest}, null, metaData["noDues.search"].useTimestamp, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
           self.props.setLoadingStatus('hide');
 

@@ -122,16 +122,16 @@
   </div>
   <div class="header-section">
      <div class="container">
-      <div class="col-md-2">
+      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
          <img src="images/maharashtralogo.png" class="img-responsive" style="width:90px">
        </div>
 
-       <div class="col-md-8" style="text-align: center">
+       <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8" style="text-align: center">
          <div class="h35" style="color:#ff9800">Government of Maharashtra</div>
          <div class="h20">महाराष्ट्र शासन</div>
          <div class="h20" style="color:green">Integrated Citizen Services Portal</div>
        </div>
-       <div class="col-md-2">
+       <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
          <img src="images/emblem.png" class="img-responsive pull-right" style="width:60px">
        </div>
 
@@ -497,13 +497,16 @@
             <div class="active-component">
                 <ul class="minimum">
                   <li class="action1 active" data-redirect=".citizen-login">
-                    <span class="glyphicon glyphicon-log-in"></span><span> Citizen Login</span>
+                    <span class="glyphicon glyphicon-log-in"></span><span></span>
                   </li>
                   <li class="action2" data-redirect=".search-service">
-                    <span class="glyphicon glyphicon-search"></span> Search Service
+                    <span class="glyphicon glyphicon-search"></span>
                   </li>
                   <li class="action3" data-redirect=".track">
-                    <span class="glyphicon glyphicon-list-alt"></span> Track your Application
+                    <span class="glyphicon glyphicon-list-alt"></span>
+                  </li>
+                  <li class="action4" data-redirect=".download">
+                    <span class="glyphicon glyphicon-download"></span>
                   </li>
                 </ul>
             </div>
@@ -546,9 +549,21 @@
             </div>
             <div class="track">
               <p style="padding-top:10px;font-size:18px;">Track your Application</p><hr>
-              <p style="padding:10px 0 0 0;">Here you can Track your application status. Simply enter the Application ID you have received while apply for certificate. After entering your valid Application ID you can able to find the status of your application.</p>
+              <p style="padding:10px 0 0 0;">Here you can track the status of your application. Kindly enter the Application ID that you received while applying. After entering a valid Application ID you will be able to see the current status of your application</p>
+              <select id="ulb-dropdownForTracking" style="width:100%" data-placement="bottom" data-content="Please select the ulb" class="form-control ulb-dropdownForSignup">
+                <option value="">Please Select...</option>
+              </select><br>
               <input id="trackApplication" type="text" placeholder="Application ID">
               <button id="track-go" style="margin-bottom:15px">GO</button>
+            </div>
+            <div class="download">
+              <p style="padding-top:10px;font-size:18px;">Download the Certificate</p><hr>
+              <p style="padding:10px 0 0 0;">You can download a copy from the ULB repository of certificates by entering the Application ID that you received while applying for the certificate. After entering a valid Application ID you will be able to download the certificate in order to compare with the one available with you.</p>
+              <select id="ulb-dropdownForDownload" style="width:100%" data-placement="bottom" data-content="Please select the ulb" class="form-control ulb-dropdownForSignup">
+                <option value="">Please Select...</option>
+              </select><br>
+              <input id="downloadApplication" type="text" placeholder="Application ID">
+              <button id="download-go" style="margin-bottom:15px">GO</button>
             </div>
           </div>
           <div class="col-md-3 hidden-sm hidden-xs" style="background:#fff;padding:0">
@@ -562,6 +577,9 @@
                   </li>
                   <li class="action3" data-redirect=".track">
                     <span class="glyphicon glyphicon-list-alt"></span> Track your Application
+                  </li>
+                  <li class="action4" data-redirect=".download">
+                    <span class="glyphicon glyphicon-download"></span> Download the Certificate
                   </li>
                 </ul>
             </div>
@@ -603,7 +621,7 @@
               </div>
               <div class="docs-section">
                 <ol>
-                  <li> Property Extract</li>
+                  <li>Property Extract</li>
                   <li>Receipt of last property tax paid </li>
                   <li>Occupancy Certificate (The above document will be verify from their records or Available in system then system will fetch the records from related application)</li>
                 </ol>

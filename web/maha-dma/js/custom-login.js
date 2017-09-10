@@ -29,22 +29,21 @@ function arrayGroupByKey(arry, groupByKey){
 
 $(document).ready(function(){
 
-  $('.search-service, .track').hide();
+  $('.search-service, .track, .download').hide();
 
   $('.active-component ul li').click(function(){
     $('.active-component ul li').removeClass('active');
     var className = $(this).attr('class');
-    console.log(className);
     $('.'+className).addClass('active');
-    $('.citizen-login, .search-service, .track').hide();
+    $('.citizen-login, .search-service, .track, .download').hide();
     $($(this).data('redirect')).show();
   });
 
   var servicesarray=[];
 
-  $('ul.collapse').find('li.news-item').each(function(i){
+  $('ul.collapse').find('li.news-item div').each(function(i){
     var servicesList = {};
-    servicesList['text']=$(this).find('a').html()+' - '+ $(this).parent('ul').data('header');
+    servicesList['text']=$(this).find('a').html()+' - '+ $(this).parents('ul').data('header');
     servicesList['target']=$(this).find('a').data('target');
     servicesarray.push(servicesList);
   });
@@ -117,8 +116,7 @@ $(document).ready(function(){
   		// 	});
 
       function loadUlbsList(){
-        $('#ulb-dropdown').html(ulbOptionTemplate(ulbsList));
-        $('#ulb-dropdownForSignup').html(ulbOptionTemplate(ulbsList));
+        $('#ulb-dropdown, #ulb-dropdownForSignup, #ulb-dropdownForTracking, #ulb-dropdownForDownload').html(ulbOptionTemplate(ulbsList));
       }
 
       function loadServiceMenus(){
@@ -190,6 +188,30 @@ $(document).ready(function(){
           }
           var tenantId = $("#ulb-dropdownForSignup").val();
           window.location = window.location.origin + '/app/v1/#/'+tenantId+'?signup=true';
+      });
+
+      $('#track-go').click(function(e){
+        if(!$('#ulb-dropdownForTracking').val()){
+          $('#ulb-dropdownForTracking').popover('show');
+          return;
+        }
+        else{
+          $('#ulb-dropdownForTracking').popover('hide');
+        }
+        var tenantId = $("#ulb-dropdownForTracking").val();
+        window.location = window.location.origin + '/app/v1/#/'+tenantId;
+      });
+
+      $('#download-go').click(function(e){
+        if(!$('#ulb-dropdownForDownload').val()){
+          $('#ulb-dropdownForDownload').popover('show');
+          return;
+        }
+        else{
+          $('#ulb-dropdownForDownload').popover('hide');
+        }
+        var tenantId = $("#ulb-dropdownForDownload").val();
+        window.location = window.location.origin + '/app/v1/#/'+tenantId;
       });
 
       $('#loginBtn').click(function(e) {

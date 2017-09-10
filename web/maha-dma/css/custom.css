@@ -3,6 +3,10 @@ body{
 	font-family: 'Lato', sans-serif;
 }
 
+.container{
+		width:100%;
+}
+
 .header-section{
 	padding-top: 15px;
 	padding-bottom:15px;
@@ -257,6 +261,7 @@ body{
 }
 
 .login-box{
+	margin-top: 15px;
 	width: 100%;
   padding: 5px 15px 20px;
   background: white;
@@ -271,7 +276,7 @@ body{
   margin: 0;
 }
 
-.login-box input{
+input{
 	display: block;
 width: 100%;
 margin-bottom: 15px;
@@ -282,7 +287,7 @@ outline: 0;
 font-size: 16px;
 }
 
-.login-box button{
+button{
 	border: 10px;
     box-sizing: border-box;
     display: inline-block;
@@ -333,4 +338,62 @@ margin:0;
    */
    -ms-user-select: none;
    user-select: none;
+}
+
+hr{
+	margin:0;
+	margin-top: 5px;
+	border-top:1px solid #1B2D46;
+}
+
+.active-component{
+	width:100%;
+}
+
+.active-component ul{
+	padding:0;
+}
+
+.active-component ul li{
+	list-style-type: none;
+  padding: 20px;
+  border-bottom: 2px solid rgba(0,0,0,0.2);
+	background:#FEA400
+}
+
+.active-component ul li.active{
+	background:#fff;
+}
+
+.active-component ul li:hover{
+	cursor: pointer;
+}
+
+#search-service{
+	position: relative;
+}
+
+.search-service-ul{
+	position: absolute;
+	z-index: 100;
+	width: 93%;
+	padding: 0;
+	background: #ccc;
+	height: 200px;
+	top:40px;
+	overflow: auto;
+}
+
+.search-service-ul li{
+	list-style-type: none;
+	padding: 10px;
+}
+
+.search-service-ul li a{
+	color: #333;
+	text-decoration: none;
+}
+
+ul.minimum li{
+	display:inline;
 }

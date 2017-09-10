@@ -29,6 +29,40 @@ function arrayGroupByKey(arry, groupByKey){
 
 $(document).ready(function(){
 
+  $('.search-service, .track').hide();
+
+  $('.active-component ul li').click(function(){
+    $('.active-component ul li').removeClass('active');
+    var className = $(this).attr('class');
+    console.log(className);
+    $('.'+className).addClass('active');
+    $('.citizen-login, .search-service, .track').hide();
+    $($(this).data('redirect')).show();
+  });
+
+  var servicesarray=[];
+
+  $('ul.collapse').find('li.news-item').each(function(i){
+    var servicesList = {};
+    servicesList['text']=$(this).find('a').html()+' - '+ $(this).parent('ul').data('header');
+    servicesList['target']=$(this).find('a').data('target');
+    servicesarray.push(servicesList);
+  });
+
+  for (var j = 0; j < servicesarray.length; j++){
+    $('.search-service-ul').append('<li><a href="" data-toggle="modal" data-target='+servicesarray[j].target+'>'+servicesarray[j].text+'</a></li>')
+  }
+
+  $('#searchService').keyup(function(){
+    var value = $(this). val();
+    $('.search-service-ul').empty();
+    for (var j = 0; j < servicesarray.length; j++){
+      var result = servicesarray[j].text.toLowerCase().search(value.toLowerCase());
+      if(result >= 0)
+        $('.search-service-ul').append('<li><a href="" data-toggle="modal" data-target='+servicesarray[j].target+'>'+servicesarray[j].text+'</a></li>')
+    }
+  })
+
 		var ulbOptionTemplate = Handlebars.compile($('#ulb-option-template').html());
     var documentsTemplate = Handlebars.compile($('#documents-body-template').html());
     var servicesMenuTempalte = Handlebars.compile($('#services-menu-template').html());
@@ -68,19 +102,19 @@ $(document).ready(function(){
 			  cache: false
 			});
 
-      $.ajax({
-  			  url: 'data/servicesList.json',
-  				data:{ "_": $.now() },
-  				headers: {
-  				   'Cache-Control': 'max-age=1000'
-  				},
-  			  success: function(response){
-            servicesList = response;
-            groupByModuleServices = arrayGroupByKey(servicesList, "moduleName");
-            loadServiceMenus();
-  			  },
-  			  cache: false
-  			});
+      // $.ajax({
+  		// 	  url: 'data/servicesList.json',
+  		// 		data:{ "_": $.now() },
+  		// 		headers: {
+  		// 		   'Cache-Control': 'max-age=1000'
+  		// 		},
+  		// 	  success: function(response){
+      //       servicesList = response;
+      //       groupByModuleServices = arrayGroupByKey(servicesList, "moduleName");
+      //       loadServiceMenus();
+  		// 	  },
+  		// 	  cache: false
+  		// 	});
 
       function loadUlbsList(){
         $('#ulb-dropdown').html(ulbOptionTemplate(ulbsList));

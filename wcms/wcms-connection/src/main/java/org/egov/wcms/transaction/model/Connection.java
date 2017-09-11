@@ -99,8 +99,6 @@ public class Connection {
 
     private String propertyIdentifier;
 
-    private String assetIdentifier;
-
     @NotNull
     private String sourceType;
 

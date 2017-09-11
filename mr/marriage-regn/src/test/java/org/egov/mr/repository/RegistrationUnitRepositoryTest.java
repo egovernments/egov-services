@@ -156,7 +156,7 @@ public class RegistrationUnitRepositoryTest {
 		registrationUnit.setIsActive(true);
 		registrationUnit.setName("Bangalore");
 		registrationUnit.setTenantId("ap.kurnool");
-		registrationUnit.setCode("00015");
+		registrationUnit.setIsMainRegistrationUnit(true);
 		registrationUnit.setAuditDetails(auditDetails);
 		registrationUnit.setAddress(location);
 

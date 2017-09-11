@@ -11,7 +11,7 @@ public class SchemeContractRepository {
 
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = "/egf-master/schemes/_search?";
+	public static final String SEARCH_URL = "/egf-masters/schemes/_search?";
 
 	public SchemeContractRepository(@Value("${egf.master.host.url}") String hostUrl, RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;

@@ -42,7 +42,6 @@ package org.egov.wcms.transaction.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -63,7 +62,6 @@ import org.egov.wcms.transaction.demand.contract.TaxHeadMasterResponse;
 import org.egov.wcms.transaction.demand.contract.TaxPeriodCriteria;
 import org.egov.wcms.transaction.demand.contract.TaxPeriodResponse;
 import org.egov.wcms.transaction.exception.WaterConnectionException;
-import org.egov.wcms.transaction.model.AuditDetails;
 import org.egov.wcms.transaction.model.Connection;
 import org.egov.wcms.transaction.model.DemandDetailBean;
 import org.egov.wcms.transaction.model.EstimationCharge;
@@ -79,6 +77,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;;
+
 @Service
 public class DemandConnectionService {
 
@@ -100,7 +99,7 @@ public class DemandConnectionService {
         ownerobj.setId(waterConnectionRequest.getRequestInfo().getUserInfo().getId());
         final Map<String, Object> feeDetails = new HashMap<>();
         final Demand demand = new Demand();
-        final TaxPeriodResponse taxperiodres = getTaxPeriodByPeriodCycleAndService(tenantId, PeriodCycle.ANNUAL, null);
+        final TaxPeriodResponse taxperiodres = getTaxPeriodByPeriodCycleAndService(tenantId, PeriodCycle.ANNUAL, 1491004800000l);
         if (!waterConnectionRequest.getConnection().getEstimationCharge().isEmpty()) {
             final EstimationCharge estimationCharge = waterConnectionRequest.getConnection().getEstimationCharge().get(0);
             feeDetails.put(WcmsConnectionConstants.SPECIALDEPOSITECHARGEDEMANDREASON, 100d);
@@ -134,177 +133,184 @@ public class DemandConnectionService {
 
         return demandList;
     }
-    
-    
-    public DemandDetail demandDetailExist(String demandreasoncode,String tenantId,
-            Long fromDate,Long toDate,RequestInfoWrapper requestInfoWrapper,String demandId) {
-        DemandDetail demandDetExist=null;
-        StringBuilder builder=new StringBuilder();
-       builder  .append(configurationManager.getBillingDemandServiceHostNameTopic() +
+
+    public DemandDetail demandDetailExist(final String demandreasoncode, final String tenantId,
+            final Long fromDate, final Long toDate, final RequestInfoWrapper requestInfoWrapper, final String demandId) {
+        DemandDetail demandDetExist = null;
+        final StringBuilder builder = new StringBuilder();
+        builder.append(configurationManager.getBillingDemandServiceHostNameTopic() +
                 configurationManager.getSearchDemandDEtailExist());
-        builder.append("?taxHeadCode=").append(demandreasoncode).
-        append("&periodFrom=").append(fromDate).
-        append("&periodTo=").append(toDate).
-        append("&demandId=").append(demandId).
-        append("&tenantId=").append(tenantId);
+        builder.append("?taxHeadCode=").append(demandreasoncode).append("&periodFrom=").append(fromDate).append("&periodTo=")
+                .append(toDate).append("&demandId=").append(demandId).append("&tenantId=").append(tenantId);
         final DemandDetailResponse demres = new RestTemplate().postForObject(builder.toString(),
                 requestInfoWrapper, DemandDetailResponse.class);
- 
-        if (demres.getDemandDetails().isEmpty())
-            throw new WaterConnectionException("Error While Demand detail generation", "Error While Demand generation", new RequestInfo());
-        else
-        {
-            demandDetExist=demres.getDemandDetails().get(0);
-        }
+
+        if (!demres.getDemandDetails().isEmpty())
+            demandDetExist = demres.getDemandDetails().get(0);
         return demandDetExist;
     }
-    public PropertyResponse getPropertyDetailsByUpicNo(String propertyIdentifer,String tenantid, RequestInfo requestInfo) {
-        StringBuilder url = new StringBuilder();
-        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+
+    public PropertyResponse getPropertyDetailsByUpicNo(final String propertyIdentifer, final String tenantid,
+            final RequestInfo requestInfo) {
+        final StringBuilder url = new StringBuilder();
+        final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
         url.append(configurationManager.getPropertyServiceHostNameTopic())
                 .append(configurationManager.getPropertyServiceSearchPathTopic()).append("?upicNo=")
                 .append(propertyIdentifer)
                 .append("&tenantId=").append(tenantid);
         PropertyResponse propResp = null;
         try {
-           propResp = new RestTemplate().postForObject(url.toString(), wrapper,
+            propResp = new RestTemplate().postForObject(url.toString(), wrapper,
                     PropertyResponse.class);
-            System.out.println(propResp!=null ?( propResp.toString() +""+propResp.getProperties().size()):"iisue while binding pt to watertax");
-        } catch (Exception e) {
-            
-            System.out.println(propResp!=null? propResp.toString():"issue with propResp in exception block in WT");
-            
+            System.out.println(propResp != null ? propResp.toString() + "" + propResp.getProperties().size()
+                    : "iisue while binding pt to watertax");
+        } catch (final Exception e) {
+
+            System.out.println(propResp != null ? propResp.toString() : "issue with propResp in exception block in WT");
+
             throw new WaterConnectionException("Error while Fetching Data from PropertyTax",
                     "Error while Fetching Data from PropertyTax", requestInfo);
         }
 
-        
-        
         return propResp;
     }
 
     public List<Demand> prepareDemandForLegacy(final DemandDetailBean demandReason, final Connection connection,
-            final RequestInfo requestInfo, final DemandBeanGetRequest demandBeanGetRequest
-            ,DemandDetailBeanReq demandDetailBeanReq) {
-         DemandResponse demandRes =null;
+            final RequestInfo requestInfo, final DemandBeanGetRequest demandBeanGetRequest,
+            final DemandDetailBeanReq demandDetailBeanReq) {
+        DemandResponse demandRes = null;
         final List<Demand> demandList = new ArrayList<>();
+        final List<Demand> demandResList = new ArrayList<>();
         final String tenantId = connection.getTenantId();
-         Owner ownerobj =null;
-          Demand demand =null;
+        Owner ownerobj = null;
+        Demand demand = null;
         PropertyOwnerInfo prop=new PropertyOwnerInfo();
-        if(connection.getPropertyIdentifier()!=null){
-            PropertyResponse propResp=getPropertyDetailsByUpicNo(connection.getPropertyIdentifier(),tenantId,requestInfo);
-           if(propResp!=null && !propResp.getProperties().isEmpty() &&
-                   propResp.getProperties().get(0)!=null){
-               prop=propResp.getProperties().get(0).getOwners().get(0);;
-               ownerobj=new Owner();
-               ownerobj.setId(prop.getId());
-               ownerobj.setTenantId(prop.getTenantId());
-           }
+        if (connection.getPropertyIdentifier() != null) {
+            final PropertyResponse propResp = getPropertyDetailsByUpicNo(connection.getPropertyIdentifier(), tenantId,
+                    requestInfo);
+            if (propResp != null && !propResp.getProperties().isEmpty() &&
+                    propResp.getProperties().get(0) != null) {
+                prop = propResp.getProperties().get(0).getOwners().get(0);
+                ;
+                ownerobj = new Owner();
+                ownerobj.setId(prop.getId());
+                ownerobj.setTenantId(prop.getTenantId());
+            }
 
-        }
-        else
-        {
-            
-            if(connection.getPropertyIdentifier() ==null &&  connection.getUserid()!=null){
-                ownerobj=new Owner();
+        } else if (connection.getPropertyIdentifier() == null && connection.getUserid() != null) {
+            ownerobj = new Owner();
             ownerobj.setId(connection.getUserid());
             ownerobj.setTenantId(tenantId);
-            
+
+        }
+
+        if (ownerobj != null) {
+            System.out.println("user Object=" + ownerobj);
+
+            final TaxPeriodResponse taxperiodres = getTaxPeriodByTaxCodeAndService(demandReason.getTaxPeriodCode(), tenantId);
+            Boolean savedDeamnd = Boolean.FALSE;
+            final RequestInfoWrapper requestInfowrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+
+            final List<Demand> demsavedList = getDemandsByConsumerCodeAndTaxPeriod(demandBeanGetRequest.getConsumerNumber(),
+                    demandBeanGetRequest.getTenantId(), requestInfowrapper);
+            for (final Demand dem : demsavedList){
+                if (dem.getTaxPeriodFrom().equals(taxperiodres.getTaxPeriods().get(0).getFromDate())
+                        && dem.getTaxPeriodTo().equals(taxperiodres.getTaxPeriods().get(0).getToDate())) {
+                    savedDeamnd = Boolean.TRUE;
+                    demand = dem;
+                }
             }
-            
-        }
-        
-       if(ownerobj !=null){
-           System.out.println("user Object="+ownerobj);
-           
-        if(demandReason.getDemandId() !=null){
-            demand=getDemandById(demandReason.getDemandId(),
-                    demandBeanGetRequest.getTenantId(), requestInfo);
-            AuditDetails audDet=new AuditDetails();
-            audDet.setLastModifiedBy(1l);
-            audDet.setLastModifiedDate(new Date());
-            demand.setAuditDetails(audDet);
-        }
-        else
-        {
-            demand=new Demand();
-        }
-        
-        final TaxPeriodResponse taxperiodres = getTaxPeriodByTaxCodeAndService(demandReason.getTaxPeriodCode(), tenantId);
-        if(demand !=null && demand.getId()==null){
-        demand.setTenantId(tenantId);
-        demand.setBusinessService(BUSINESSSERVICE);
-        demand.setConsumerType(connection.getApplicationType());
-        demand.setConsumerCode(connection.getConsumerNumber());
-        demand.setOwner(ownerobj);
-        }
-        final Set<DemandDetail> dmdDetailSet = new HashSet<>();
-         final String demandreasoncode = "WATERCHARGE";
+            if (demand == null && demandReason.getDemandId() != null)
+                demand = getDemandById(demandReason.getDemandId(),
+                        demandBeanGetRequest.getTenantId(), requestInfo);
+            else if (demand == null)
+                demand = new Demand();
+
+            if (demand != null && demand.getId() == null) {
+                demand.setTenantId(tenantId);
+                demand.setBusinessService(BUSINESSSERVICE);
+                demand.setConsumerType(connection.getApplicationType());
+                demand.setConsumerCode(connection.getConsumerNumber());
+                demand.setOwner(ownerobj);
+            }
+            final Set<DemandDetail> dmdDetailSet = new HashSet<>();
             dmdDetailSet.add(createLegacyDemandDeatils(
-                    tenantId, demandreasoncode,
-                    demandReason.getTaxAmount(), demandReason.getCollectionAmount(), demandReason.getTaxPeriodCode(),demandReason.getId(),
+                    tenantId, demandReason.getTaxHeadMasterCode(),
+                    demandReason.getTaxAmount(), demandReason.getCollectionAmount(), demandReason.getTaxPeriodCode(),
+                    demandReason.getId(),
                     demandReason));
-            demand.getAuditDetails();
-          
-        demand.setDemandDetails(new ArrayList<>(dmdDetailSet));
-        if(demand !=null && demand.getId()==null){
-        demand.setMinimumAmountPayable(new BigDecimal(1));
-        if (taxperiodres != null && !taxperiodres.getTaxPeriods().isEmpty()) {
-            demand.setTaxPeriodFrom(taxperiodres.getTaxPeriods().get(0).getFromDate());
-            demand.setTaxPeriodTo(taxperiodres.getTaxPeriods().get(0).getToDate());
+
+            demand.getAuditDetail();
+            if (savedDeamnd)
+                dmdDetailSet.addAll(demand.getDemandDetails());
+            demand.setDemandDetails(new ArrayList<>(dmdDetailSet));
+            if (demand != null && demand.getId() == null) {
+                demand.setMinimumAmountPayable(new BigDecimal(1));
+                if (taxperiodres != null && !taxperiodres.getTaxPeriods().isEmpty()) {
+                    demand.setTaxPeriodFrom(taxperiodres.getTaxPeriods().get(0).getFromDate());
+                    demand.setTaxPeriodTo(taxperiodres.getTaxPeriods().get(0).getToDate());
+                }
+            }
+            demandList.add(demand);
+
+            if (savedDeamnd) {
+                for (final DemandDetail demDet : demand.getDemandDetails()){
+                    if (demandReason.getTaxHeadMasterCode().equals(demDet.getTaxHeadMasterCode()))
+                        if (demDet.getId() == null) {
+                            System.out.println(demDet.getTaxHeadMasterCode() +""+ demDet.getDemandId());
+                            demandRes = updateDemand(demandList, demandDetailBeanReq.getRequestInfo());
+                        } else{
+                            System.out.println(demDet.getTaxHeadMasterCode() +""+ demDet.getDemandId());
+                            demandRes = updateDemandCollection(demandList, demandDetailBeanReq.getRequestInfo());
+                        }
+                }
+            } else if (demand != null && demand.getId() == null) {
+                System.out.println(demand.getTaxPeriodFrom());
+                demandRes = createDemand(demandList, demandDetailBeanReq.getRequestInfo());
+                waterConnectionService.updateConnectionOnChangeOfDemand(demandRes.getDemands().get(0).getId(), connection,
+                        requestInfo);
+            } else if (!savedDeamnd && demand != null && demand.getId() != null)
+                demandRes = updateDemandCollection(demandList, demandDetailBeanReq.getRequestInfo());
+
         }
-        }
-        demandList.add(demand);
-        if(demand !=null && demand.getId()==null)
-        {
-            demandRes = createDemand(demandList, demandDetailBeanReq.getRequestInfo());
-            waterConnectionService.updateConnectionOnChangeOfDemand(demandRes.getDemands().get(0).getId(), connection,
-                    requestInfo);
-        }
-        else
-        {
-            demandRes = updateDemand(demandList, demandDetailBeanReq.getRequestInfo());
-        }
-            
-        
-    }
-       return demandList;
+        demandResList.addAll(demandRes.getDemands());
+        return demandList;
     }
 
     private DemandDetail createDemandDeatils(final String tenantId, final String demandReason, final double amount,
             final double collectedAmount) {
         final DemandDetail demandDetail = new DemandDetail();
         demandDetail.setTaxHeadMasterCode(demandReason);
-        demandDetail.setTaxAmount(new BigDecimal(amount));
-        demandDetail.setCollectionAmount(new BigDecimal(collectedAmount));
+        demandDetail.setTaxAmount(BigDecimal.valueOf(amount));
+        demandDetail.setCollectionAmount(BigDecimal.valueOf(collectedAmount));
         demandDetail.setTenantId(tenantId);
         return demandDetail;
 
     }
 
     private DemandDetail createLegacyDemandDeatils(final String tenantId, final String demandReasoncode, final double amount,
-            final double collectedAmount, final String taxPeriodCode,final String demandDetId,DemandDetailBean demandReason) {
-         DemandDetail demandDetail=null;
-        if(demandDetId !=null){
+            final double collectedAmount, final String taxPeriodCode, final String demandDetId,
+            final DemandDetailBean demandReason) {
+        DemandDetail demandDetail = null;
+        if (demandDetId != null) {
             demandDetail = new DemandDetail();
-             demandDetail.setId(demandReason.getId());
-             demandDetail.setDemandId(demandReason.getDemandId());
-             demandDetail.setTaxHeadMasterCode(demandReasoncode);
-             demandDetail.setTaxAmount(new BigDecimal(demandReason.getTaxAmount()));
-             demandDetail.setCollectionAmount(new BigDecimal(demandReason.getCollectionAmount()));
-             demandDetail.setTenantId(demandReason.getTenantId());
-             
+            demandDetail.setId(demandReason.getId());
+            demandDetail.setDemandId(demandReason.getDemandId());
+            demandDetail.setTaxHeadMasterCode(demandReasoncode);
+            demandDetail.setTaxAmount(BigDecimal.valueOf(demandReason.getTaxAmount()));
+            demandDetail.setCollectionAmount(BigDecimal.valueOf(demandReason.getCollectionAmount()));
+            demandDetail.setTenantId(demandReason.getTenantId());
+
         }
-            
-        else{
+
+        else {
             demandDetail = new DemandDetail();
-        demandDetail.setId(demandDetId);
-        demandDetail.setDemandId(demandReason.getDemandId());
-        demandDetail.setTaxHeadMasterCode(demandReasoncode);
-        demandDetail.setTaxAmount(new BigDecimal(amount));
-        demandDetail.setCollectionAmount(new BigDecimal(collectedAmount));
-        demandDetail.setTenantId(tenantId);
+            demandDetail.setId(demandDetId);
+            demandDetail.setDemandId(demandReason.getDemandId());
+            demandDetail.setTaxHeadMasterCode(demandReasoncode);
+            demandDetail.setTaxAmount(BigDecimal.valueOf(amount));
+            demandDetail.setCollectionAmount(BigDecimal.valueOf(collectedAmount));
+            demandDetail.setTenantId(tenantId);
         }
         return demandDetail;
 
@@ -314,7 +320,6 @@ public class DemandConnectionService {
             final Long date) {
         final TaxPeriodCriteria taxperiodcriteria = new TaxPeriodCriteria();
         taxperiodcriteria.setTenantId(tenantId);
-   //     taxperiodcriteria.setFromDate(fromDate);
         taxperiodcriteria.setService(BUSINESSSERVICE);
         taxperiodcriteria.setPeriodCycle(periodCycle);
         final StringBuilder url = new StringBuilder();
@@ -322,8 +327,8 @@ public class DemandConnectionService {
                 .append(configurationManager.getTaxperidforfinancialYearTopic());
         url.append("?service=").append(taxperiodcriteria.getService()).append("&tenantId=")
                 .append(taxperiodcriteria.getTenantId());
-                       url.append("&fromDate=").append(date);
-                       url.append("&toDate=").append(1522454400000l);
+        url.append("&fromDate=").append(date);
+        url.append("&toDate=").append(1522454400000l);
         url.append("&periodCycle=").append(taxperiodcriteria.getPeriodCycle());
         return getTaxPeriodServiceResponse(url);
     }
@@ -405,10 +410,8 @@ public class DemandConnectionService {
             throw new WaterConnectionException("Error While Demand generation", "Error While Demand generation", requestInfo);
         return demres;
     }
-    
-    
-    
-    public DemandResponse updateDemand(final List<Demand> demands, final RequestInfo requestInfo) {
+
+    public DemandResponse updateDemandCollection(final List<Demand> demands, final RequestInfo requestInfo) {
         final DemandRequest demandRequest = new DemandRequest();
         demandRequest.setRequestInfo(requestInfo);
         demandRequest.setDemands(demands);
@@ -422,44 +425,94 @@ public class DemandConnectionService {
             throw new WaterConnectionException("Error While Demand generation", "Error While Demand generation", requestInfo);
         return demres;
     }
-    public List<Demand> getDemands(String consumerCode, String tenantId, RequestInfoWrapper requestInfo) throws Exception {
+
+    public DemandResponse updateDemand(final List<Demand> demands, final RequestInfo requestInfo) {
+        final DemandRequest demandRequest = new DemandRequest();
+        demandRequest.setRequestInfo(requestInfo);
+        demandRequest.setDemands(demands);
+
+        final String url = configurationManager.getBillingDemandServiceHostNameTopic() +
+                configurationManager.getBillingUpdateDemand();
+
+        final DemandResponse demres = new RestTemplate().postForObject(url, demandRequest, DemandResponse.class);
+
+        if (demres.getDemands().isEmpty())
+            throw new WaterConnectionException("Error While Demand generation", "Error While Demand generation", requestInfo);
+        return demres;
+    }
+
+    public List<Demand> getDemandsByConsumerCode(final String consumerCode, final String tenantId,
+            final RequestInfoWrapper requestInfo) {
+        List<Demand> demandList = new ArrayList<>();
+        final StringBuilder demandUrl = prepareDemandSearchUrl(consumerCode, tenantId);
+        try {
+            demandList = getDemands(demandUrl.toString(), requestInfo);
+        } catch (final Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return demandList;
+    }
+
+    public List<Demand> getDemandsByConsumerCodeAndTaxPeriod(final String consumerCode, final String tenantId,
+            final RequestInfoWrapper requestInfo) {
+        List<Demand> demandList = new ArrayList<>();
+        final StringBuilder demandUrl = prepareDemandSearchUrl(consumerCode, tenantId);
+        // demandUrl.append("&demandFrom=").append(new BigDecimal(taxperiodFrom));
+        // demandUrl.append("&demandTo=").append(new BigDecimal(taxPeriodTo));
+
+        try {
+            demandList = getDemands(demandUrl.toString(), requestInfo);
+        } catch (final Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return demandList;
+    }
+
+    public List<Demand> getDemands(final String demandUrl, final RequestInfoWrapper requestInfo) {
         DemandResponse demandResponse = null;
-        List<Demand> demandList=new ArrayList<>();
-        StringBuilder demandUrl = new StringBuilder();
+        final List<Demand> demandList = new ArrayList<>();
+        try {
+            demandResponse = new RestTemplate().postForObject(demandUrl.toString(), requestInfo, DemandResponse.class);
+
+            System.out.println("Get demand response is :" + demandResponse);
+            if (demandResponse != null && demandResponse.getDemands() != null)
+                demandList.addAll(demandResponse.getDemands());
+        } catch (final HttpClientErrorException exception) {
+            /*
+             * throw new ValidationUrlNotFoundException(propertiesManager.getInvalidDemandValidation(), exception.getMessage(),
+             * requestInfo.getRequestInfo());
+             */
+        }
+        return demandList;
+    }
+
+    protected StringBuilder prepareDemandSearchUrl(final String consumerCode, final String tenantId) {
+        final StringBuilder demandUrl = new StringBuilder();
         demandUrl.append(configurationManager.getBillingDemandServiceHostNameTopic());
         demandUrl.append(configurationManager.getSearchbillingDemandServiceTopic());
         demandUrl.append("?tenantId=").append(tenantId);
         demandUrl.append("&consumerCode=").append(consumerCode);
         demandUrl.append("&businessService=").append(BUSINESSSERVICE);
-        try {
-            demandResponse = new RestTemplate().postForObject(demandUrl.toString(), requestInfo, DemandResponse.class);
+        return demandUrl;
+    }
 
-               System.out.println("Get demand response is :" + demandResponse);
-                if (demandResponse != null && demandResponse.getDemands()!=null) {
-                    demandList.addAll(demandResponse.getDemands());
-                }
-        } catch (HttpClientErrorException exception) {
-               /* throw new ValidationUrlNotFoundException(propertiesManager.getInvalidDemandValidation(),
-                                exception.getMessage(), requestInfo.getRequestInfo());*/
-        }
-       return demandList;
-}
-    public Demand getDemandById(String id, String tenantId, RequestInfo requestInfo)  {
+    public Demand getDemandById(final String id, final String tenantId, final RequestInfo requestInfo) {
         DemandResponse demandResponse = null;
-       Demand demObj=null;
-        StringBuilder demandUrl = new StringBuilder();
+        Demand demObj = null;
+        final StringBuilder demandUrl = new StringBuilder();
         demandUrl.append(configurationManager.getBillingDemandServiceHostNameTopic());
         demandUrl.append(configurationManager.getSearchbillingDemandServiceTopic());
         demandUrl.append("?tenantId=").append(tenantId);
         demandUrl.append("&demandId=").append(id);
         demandResponse = new RestTemplate().postForObject(demandUrl.toString(), requestInfo, DemandResponse.class);
 
-               System.out.println("Get demand response is :" + demandResponse);
-                if (demandResponse != null && demandResponse.getDemands()!=null) {
-                    demObj=demandResponse.getDemands().get(0);
-                }
-      
-       return demObj;
-}
+        System.out.println("Get demand response is :" + demandResponse);
+        if (demandResponse != null && demandResponse.getDemands() != null)
+            demObj = demandResponse.getDemands().get(0);
+
+        return demObj;
+    }
 
 }

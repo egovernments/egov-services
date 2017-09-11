@@ -82,8 +82,8 @@ var dat = {
             "name": "AadharNumber",
             "jsonPath": "licenses[0].adhaarNumber",
             "label": "tl.create.licenses.groups.TradeOwnerDetails.AadharNumber",
-            "pattern": "^.[0-9]{12,12}$",
-            "type": "number",
+            "pattern": "",
+            "type": "aadhar",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -590,7 +590,20 @@ var dat = {
              "label": "tl.search.groups.status",
              "pattern": "",
              "type": "singleValueList",
-             "url": "/tl-masters/status/v1/_search?tenantId=default|$..id|$..name",
+             "url": "/tl-masters/status/v1/_search?tenantId=default&moduleType=LICENSE|$..id|$..name",
+             "isRequired": false,
+             "isDisabled": false,
+             "requiredErrMsg": "",
+             "patternErrMsg": "",
+
+           },
+           {
+             "name": "applicationStatus",
+             "jsonPath": "applications[0].status",
+             "label": "tl.search.groups.applicationStatus",
+             "pattern": "",
+             "type": "singleValueList",
+             "url": "/tl-masters/status/v1/_search?tenantId=default&moduleType=NEW LICENSE|$..id|$..name",
              "isRequired": false,
              "isDisabled": false,
              "requiredErrMsg": "",
@@ -748,10 +761,10 @@ var dat = {
          }, {
            label: "tl.search.result.groups.workflowOwnerName"
          }],
-         "values": ["applicationNumber","licenseNumber", "oldLicenseNumber", "category", "subCategory", "tradeTitle", "ownerName", "mobileNumber", "propertyAssesmentNo", "adminWardName", "validityYears","active","statusName",""],
+         "values": ["applicationNumber","licenseNumber", "oldLicenseNumber", "category", "subCategory", "tradeTitle", "ownerName", "mobileNumber", "propertyAssesmentNo", "adminWardName", "validityYears", "statusName", "applications[0].statusName", ""],
          "resultPath": "licenses",
          "rowClickUrlUpdate": "/update/tl/CreateLegacyLicense/{id}",
-         "rowClickUrlView": "/non-framework/tl/transaction/viewLegacyLicense/{id}"
+         "rowClickUrlView": "/non-framework/tl/transaction/viewLicense/{id}"
        }
      },
 

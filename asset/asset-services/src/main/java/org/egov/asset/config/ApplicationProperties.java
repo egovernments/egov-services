@@ -109,9 +109,6 @@ public class ApplicationProperties {
     @Value("${egov.services.egf_service.voucher.createpath}")
     private String egfServiceVoucherCreatePath;
 
-    @Value("${egov.services.asset.batchsize}")
-    private String batchSize;
-
     @Value("${egov.services.egf_service.financialyear.searchpath}")
     private String egfFinancialYearSearchPath;
 
@@ -120,15 +117,6 @@ public class ApplicationProperties {
 
     @Value("${kafka.topics.save.currentvalue}")
     private String saveCurrentvalueTopic;
-    
-    @Value("${egov.services.asset.depreciaition.capitalizedvalue}")
-    private String depreciaitionCapitalizedValue;
-    
-    @Value("${egov.services.asset.depreciaition.minvalue}")
-    private String depreciaitionMinimumValue;
-    
-    @Value("${egov.services.asset.depreciaition.c.factor}")
-    private String depreciaitionFactorForC;
     
     @Value("${egov.services.egf_service.functions.searchpath}")
     private String egfServiceFunctionsSearchPath;

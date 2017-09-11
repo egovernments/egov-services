@@ -123,6 +123,7 @@ public class ReceiptRowMapper implements RowMapper<ReceiptHeader> {
 			date = isEmpty((Long) rs.getObject("rh_receiptDate")) ? null : sdf
 					.parse(sdf.format((Long) rs.getObject("rh_receiptDate")));
 			receiptHeader.setReceiptDate(date);
+			receiptHeader.setReceiptDateWithTimeStamp((Long) rs.getObject("rh_receiptDate"));
 			date = isEmpty((Long) rs.getObject("rh_createdDate")) ? null : sdf
 					.parse(sdf.format((Long) rs.getObject("rh_createdDate")));
 			receiptHeader.setCreatedDate(date);

@@ -232,4 +232,8 @@ public class InstrumentRepository {
 
 	}
 
+	public boolean uniqueCheck(String fieldName, Instrument instrument) {
+		return	instrumentJdbcRepository.uniqueCheck(fieldName, new InstrumentEntity().toEntity(instrument));
+	}
+
 }

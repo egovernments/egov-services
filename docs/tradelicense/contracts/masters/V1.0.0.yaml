@@ -151,6 +151,10 @@ paths:
         tags: 
           - Category
         parameters:
+          - name: type
+            type: string
+            in: query
+            description: type set to SUBCATEGORY to update sub categories where categoryId is mandatory. default to CATEGORY.
           - name: categories
             in: body
             required: true
@@ -513,7 +517,7 @@ paths:
           - name: applicationType
             type: integer
             in: query
-            description: set "NEW" in cases where only NEW applicationType PenalityRates are needed and "RENEW" will be set when RENEW applicationType PenalityRates are needed and no value will be set when all PenalityRates are needed.
+            description: set "NEW" in cases where only NEW applicationType PenalityRates are needed and "RENEW" will be set when RENEW applicationType PenalityRates are needed and no value will be set when default PenalityRates are needed.
           - $ref: '#/parameters/pageSize'
           - $ref: '#/parameters/offSet'
         responses:
@@ -878,6 +882,9 @@ definitions:
          type: integer
          format: int64
          description: Unique Id of the parent Category for subCategory, null for Category.
+        parentName:
+          type: string
+          description: name of the parent category for SubCategory, null for category
         active:
           type: boolean
           description: true if Category is active and false if Category is inactive 
@@ -1186,7 +1193,6 @@ definitions:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
       - tenantId
-      - applicationType
       - fromRange
       - toRange
       - rate
@@ -1337,7 +1343,7 @@ definitions:
           description: Unique Name of the Status
         code:
           type: string
-          maxLength: 20
+          maxLength: 100
           minLength: 1
           description: Unique code of the Status
         moduleType:

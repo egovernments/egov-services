@@ -101,6 +101,7 @@ import Search from './components/framework/search';
 import Transaction from './components/framework/transaction';
 import Inbox from './components/framework/inbox';
 
+import UpdateSubCategory from './components/non-framework/tl/transaction/UpdateSubCategory';
 import LegacyLicenseCreate from './components/non-framework/tl/transaction/LegacyLicenseCreate';
 import viewLegacyLicense from './components/non-framework/tl/transaction/viewLegacyLicense';
 import LegacyLicenseSearch from './components/non-framework/tl/transaction/LegacyLicenseSearch';
@@ -123,7 +124,7 @@ import ServiceRequests from './components/non-framework/citizenServices/ServiceR
 import CS_FireNoc from './components/non-framework/citizenServices/buildingPlan/create.js';
 import CS_VIEW_FireNoc from './components/non-framework/citizenServices/buildingPlan/view.js';
 import Payment from './components/non-framework/citizenServices/payment';
-
+import ReceiptDownload from './components/non-framework/citizenServices/ReceiptDownload.js';
 
 const base = "";
 
@@ -241,6 +242,7 @@ const Main = () => {
           <Route exact path= {base + '/transaction/:moduleName/:page'} component={Transaction}/>
 		  <Route exact path= {base + '/views/:moduleName/:master?/:id'} component={Inbox}/>
 
+      <Route exact path= {base + '/non-framework/tl/transaction/UpdateSubCategory/:id'} component={UpdateSubCategory}/>
       <Route exact path= {base + '/non-framework/tl/transaction/LegacyLicenseCreate'} component={LegacyLicenseCreate}/>
       <Route exact path= {base + '/non-framework/tl/transaction/ApplyNewTradeLicense'} component={VisibleNewTradeLicense}/>
       <Route exact path= {base + '/non-framework/tl/transaction/LegacyLicenseSearch'} component={LegacyLicenseSearch}/>
@@ -250,8 +252,8 @@ const Main = () => {
 
       <Route exact path= {base + '/non-framework/collection/master/paytax/PayTaxCreate'} component={PayTaxCreate}/>
       <Route exact path= {base + '/non-framework/collection/receipt/view/:id'} component={ReceiptView}/>
-      <Route exact path= {base + '/non-framework/citizenServices/no-dues/:status/:id'} component={NoDues}/>
-      <Route exact path= {base + '/non-framework/citizenServices/paytax/:status/:id'} component={PayTax}/>
+      <Route exact path= {base + '/non-framework-cs/citizenServices/paytax/:status/:id/:paymentGateWayRes?'} component={PayTax}/>
+      <Route exact path= {base + '/non-framework-cs/citizenServices/:moduleName/:status/:id/:paymentGateWayRes?'} component={NoDues}/>
 
 
       <Route exact path={base + '/empsearch/:actionName'} component={EmployeeSearch}/>
@@ -260,11 +262,12 @@ const Main = () => {
       <Route exact path={base+'/searchconnection/wc'} component={SearchLegacyWc}/>
       <Route exact path={base+'/wc/application/update/:stateId'} component={updateConnection}/>
 	  <Route exact path={base+'/waterConnection/view/:id'} component={ViewWc}/>
-      <Route exact path={base + '/non-framework/citizenServices/wc/create'} component={CS_WaterConnection}/>
-      <Route exact path={base + '/non-framework/citizenServices/wc/view/:ackNo'} component={CS_VIEW_WaterConnection}/>
-      <Route exact path={base + '/non-framework/citizenServices/fireNoc/create'} component={CS_FireNoc}/>
-      <Route exact path={base + '/non-framework/citizenServices/fireNoc/view/:ackNo'} component={CS_VIEW_FireNoc}/>
+      <Route exact path={base + '/non-framework/citizenServices/create/:status/:id/:paymentGateWayRes?'} component={CS_WaterConnection}/>
+      <Route exact path={base + '/non-framework/citizenServices/view/:status/:id/:ackNo/:paymentGateWayRes?'} component={CS_VIEW_WaterConnection}/>
+      <Route exact path={base + '/non-framework/citizenServices/fireNoc/:status/:id/:paymentGateWayRes?'} component={CS_FireNoc}/>
+      <Route exact path={base + '/non-framework/citizenServices/fireNoc/:status/:id/:ackNo/:paymentGateWayRes?'} component={CS_VIEW_FireNoc}/>
       <Route exact path= {base + '/payment/response/redirect/:msg'} component={Payment}/>
+      <Route exact path= {base + '/receipt/:page/:type/:cc/:sid'} component={ReceiptDownload}/>
 
     </Switch>
   </main>

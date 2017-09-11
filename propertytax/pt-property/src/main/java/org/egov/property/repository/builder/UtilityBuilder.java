@@ -64,5 +64,23 @@ public class UtilityBuilder {
         return uniqueQuery.toString();
 
     }
+    
+    //tenantId with keyName validations
+    public static String getUniqueTenantIdKeyNameQuery(String tenantId, String keyName, String tableName,
+            List<Object> preparedStatementValues) {
+
+        StringBuffer uniqueQuery = new StringBuffer("select count(*) from " + tableName);
+        if (tenantId != null & !tenantId.isEmpty()) {
+            uniqueQuery.append(" where tenantId =?");
+            preparedStatementValues.add(tenantId);
+        }
+
+        if (keyName != null & !keyName.isEmpty()) {
+            uniqueQuery.append(" AND keyName =?");
+            preparedStatementValues.add(keyName);
+        }
+        
+        return uniqueQuery.toString();
+    }
 
 }

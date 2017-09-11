@@ -60,6 +60,7 @@ import org.egov.tradelicense.web.adapters.error.PropertyAssesmentNotFoundAdapter
 import org.egov.tradelicense.web.adapters.error.TradeLicensesNotEmptyAdapter;
 import org.egov.tradelicense.web.adapters.error.TradeLicensesNotFoundAdapter;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -125,6 +126,22 @@ public class CustomControllerAdvice {
 		return errRes;
 	}
 
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(BindException.class)
+	public ErrorResponse handleCustomBindErrors(BindException ex) {
+		ErrorResponse errRes = new ErrorResponse();
+		ResponseInfo responseInfo = new ResponseInfo();
+		responseInfo.setTs(new Date().toString());
+		responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
+		errRes.setResponseInfo(responseInfo);
+		Error error = new Error();
+		error.setCode(Integer.valueOf(HttpStatus.BAD_REQUEST.toString()));
+		error.setMessage("Inavlid.Input");
+		error.setDescription(ex.getMessage());
+		errRes.setError(error);
+		return errRes;
+	}
+	
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(InvalidInputException.class)
 	public ErrorResponse handleInvalidInputErrors(InvalidInputException ex) {

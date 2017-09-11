@@ -34,7 +34,6 @@ public class ReceiptSearchGetRequest {
 
     private String classification;
 
-
     private String businessCode;
 
     @NotNull
@@ -45,5 +44,7 @@ public class ReceiptSearchGetRequest {
     private String sortOrder;
 
     private String transactionId;
+
+    private List<String> manualReceiptNumbers;
 
 }

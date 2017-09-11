@@ -78,7 +78,7 @@ public class TradeLicenseEntity {
 	private String remarks;
 
 	private Timestamp tradeCommencementDate;
-	
+
 	private Timestamp issuedDate;
 
 	private Timestamp agreementDate;
@@ -86,7 +86,7 @@ public class TradeLicenseEntity {
 	private Timestamp licenseValidFromDate;
 
 	private Long status;
-	
+
 	private String agreementNo;
 
 	private Boolean isLegacy = false;
@@ -108,8 +108,6 @@ public class TradeLicenseEntity {
 	private Long createdTime;
 
 	private Long lastModifiedTime;
-	
-	
 
 	public TradeLicense toDomain() {
 
@@ -197,9 +195,9 @@ public class TradeLicenseEntity {
 
 			tradeLicense.setLicenseValidFromDate((this.licenseValidFromDate.getTime()));
 		}
-		
-		if(this.issuedDate != null){
-			
+
+		if (this.issuedDate != null) {
+
 			tradeLicense.setIssuedDate((this.issuedDate.getTime()));
 		}
 
@@ -311,9 +309,9 @@ public class TradeLicenseEntity {
 
 			this.tradeCommencementDate = new Timestamp(tradeLicense.getTradeCommencementDate());
 		}
-		
-		if(tradeLicense.getIssuedDate() != null){
-			
+
+		if (tradeLicense.getIssuedDate() != null) {
+
 			this.issuedDate = new Timestamp(tradeLicense.getIssuedDate());
 		}
 
@@ -343,7 +341,7 @@ public class TradeLicenseEntity {
 		this.feeDetails = tradeLicense.getFeeDetails();
 
 		this.supportDocuments = tradeLicense.getSupportDocuments();
-		
+
 		this.createdBy = (auditDetails == null) ? null : auditDetails.getCreatedBy();
 
 		this.lastModifiedBy = (auditDetails == null) ? null : auditDetails.getLastModifiedBy();
@@ -354,5 +352,5 @@ public class TradeLicenseEntity {
 
 		return this;
 	}
-	
+
 }

@@ -32,6 +32,7 @@ public class SubmissionSpecification implements Specification<Submission> {
         Path<String> mobileNumber = root.get(Submission_.mobile);
         Path<Date> escalationDate = root.get(Submission_.escalationDate);
         Path<Long> positionId = root.get(Submission_.position);
+        Path<Long> loggedInRequester = root.get(Submission_.loggedInRequester);
 
         List<Predicate> predicates = new ArrayList<>();
         if (criteria.getTenantId() != null && !criteria.getTenantId().isEmpty()) {
@@ -81,6 +82,9 @@ public class SubmissionSpecification implements Specification<Submission> {
             predicates.add(crn.in(criteria.getCrnList()));
         }
 
+        if (null != criteria.getUserId()) {
+            predicates.add(criteriaBuilder.equal(loggedInRequester, criteria.getUserId()));
+        }
         return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
     }
 }

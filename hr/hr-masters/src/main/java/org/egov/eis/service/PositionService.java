@@ -48,6 +48,7 @@ import org.egov.eis.model.*;
 import org.egov.eis.repository.PositionRepository;
 import org.egov.eis.web.contract.*;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
+import org.egov.eis.web.errorhandlers.InvalidDataException;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +59,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
@@ -101,15 +104,14 @@ public class PositionService {
     @Autowired
     private PropertiesManager propertiesManager;
 
-    @Autowired
-    private PositionDataSyncService positionDataSyncService;
-
     public List<Position> getPositions(PositionGetRequest positionGetRequest) {
         return positionRepository.findForCriteria(positionGetRequest);
     }
 
     public ResponseEntity<?> createPosition(PositionRequest positionRequest) {
         List<Position> positions = positionRequest.getPosition();
+        validateDepartment(positionRequest);
+        validateDesignation(positionRequest);
         kafkaTemplate.send(positionDBPersistTopic, positionRequest);
         return getSuccessResponseForCreate(positions, positionRequest.getRequestInfo());
     }
@@ -136,7 +138,6 @@ public class PositionService {
     public ResponseEntity<?> getSuccessResponseForCreate(List<Position> positionList, RequestInfo requestInfo) {
         PositionResponse positionResponse = new PositionResponse();
         positionResponse.getPosition().addAll(positionList);
-
         ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
         positionResponse.setResponseInfo(responseInfo);
@@ -147,6 +148,12 @@ public class PositionService {
     public void create(PositionRequest positionRequest) {
         populateCreatePositionDetails(positionRequest);
         List<Long> ids = positionRequest.getPosition().stream().map(Position::getId).collect(Collectors.toList());
+
+        for (Position position : positionRequest.getPosition()) {
+            String name = positionRepository.generatePositionName(position.getName(), position.getDeptdesig().getId(), position.getTenantId());
+            position.setName(name);
+        }
+
         positionRepository.create(positionRequest);
         PositionGetRequest positionGetRequest = new PositionGetRequest();
         positionGetRequest.setId(ids);
@@ -155,12 +162,14 @@ public class PositionService {
         List<Position> positions = positionRepository.findForCriteria(positionGetRequest);
         positionRequest.setPosition(positions);
         kafkaTemplate.send(positionCreateTopic, positionRequest);
+        if (propertiesManager.getDataSyncPositionRequired()) {
+            for (Position position : positionRequest.getPosition()) {
+                PositionSync positionSync = PositionSync.builder().name(position.getName()).tenantId(position.getTenantId()).build();
+                PositionSyncRequest positionSyncRequest = PositionSyncRequest.builder().positionSync(positionSync).build();
+                kafkaTemplate.send(propertiesManager.getSavePositionTopic(), positionSyncRequest);
+            }
+        }
 
-        Position position = positionRequest.getPosition().get(0);
-        PositionSync positionSync = PositionSync.builder().name(position.getName()).tenantId(position.getTenantId()).build();
-        PositionSyncRequest positionSyncRequest = PositionSyncRequest.builder().positionSync(positionSync).build();
-        if (propertiesManager.getDataSyncPositionRequired())
-            positionDataSyncService.createDataSync(positionSyncRequest);
     }
 
     @Transactional
@@ -172,18 +181,26 @@ public class PositionService {
         List<Position> positions = positionRequest.getPosition();
         RequestInfo requestInfo = positionRequest.getRequestInfo();
         RequestInfoWrapper requestInfoWrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
-
         List<Position> positionsList = new ArrayList<>();
         for (int i = 0; i < positions.size(); i++) {
             DepartmentDesignation deptDesig = positions.get(i).getDeptdesig();
             String tenantId = positions.get(i).getTenantId();
-
+            Designation designation = new Designation();
             Department department = departmentService.getDepartments(Arrays.asList(deptDesig.getDepartmentId()),
                     tenantId, requestInfoWrapper).get(0);
 
-            DesignationGetRequest designationGetRequest = DesignationGetRequest.builder()
-                    .id(Arrays.asList(deptDesig.getDesignation().getId())).tenantId(tenantId).build();
-            Designation designation = designationService.getDesignations(designationGetRequest).get(0);
+            System.out.println("department Id" + department.getId());
+            System.out.println("department tenantId" + department.getTenantId());
+
+            if (null != deptDesig.getDesignation().getId()) {
+                DesignationGetRequest designationGetRequest = DesignationGetRequest.builder()
+                        .id(Arrays.asList(deptDesig.getDesignation().getId())).tenantId(tenantId).build();
+                designation = designationService.getDesignations(designationGetRequest).get(0);
+            }
+
+            System.out.println("designation Id" + designation.getId());
+            System.out.println("designation tenantId" + designation.getTenantId());
+
 
             deptDesig = deptDesigService.getByDepartmentAndDesignation(department.getId(), designation.getId(), tenantId);
 
@@ -193,16 +210,19 @@ public class PositionService {
                 deptDesigService.create(deptDesig);
             }
             deptDesig = deptDesigService.getByDepartmentAndDesignation(department.getId(), designation.getId(), tenantId);
-            List<Long> sequences ;
-            if(positions.get(i).getNoOfPositions() != null)
+
+            System.out.println("deptDesig Id" + deptDesig.getId());
+            System.out.println("deptDesig tenantId" + deptDesig.getTenantId());
+
+            List<Long> sequences;
+            if (positions.get(i).getNoOfPositions() != null)
                 sequences = positionRepository.generateSequences(positions.get(i).getNoOfPositions());
             else {
                 sequences = positionRepository.generateSequences(1);
                 positions.get(0).setId(sequences.get(0));
             }
 
-
-            if(positions.get(i).getNoOfPositions() != null) {
+            if (positions.get(i).getNoOfPositions() != null) {
                 for (int j = 0; j < positions.get(i).getNoOfPositions(); j++) {
                     String name = department.getCode().toUpperCase() + "_" + designation.getCode().toUpperCase() + "_";
                     Position pos = Position.builder().id(sequences.get(j)).name(name).active(true).deptdesig(deptDesig)
@@ -210,7 +230,7 @@ public class PositionService {
                     positionsList.add(pos);
                 }
             }
-            if(positions.get(i).getNoOfPositions() != null)
+            if (positions.get(i).getNoOfPositions() != null)
                 positionRequest.setPosition(positionsList);
 
         }
@@ -223,11 +243,24 @@ public class PositionService {
         List<Position> positions = positionBulkRequest.getPosition().stream().map(position -> {
             Department department = departmentService.getDepartmentByCode(position.getDeptdesig().getDepartmentCode(),
                     position.getTenantId(), requestInfoWrapper);
+            if (department == null || isEmpty(department)) {
+            	
+                throw new InvalidDataException("department", "The field {0} should have a valid value which exists in the system", "null");
+
+            }
             DesignationGetRequest designationGetRequest = DesignationGetRequest.builder()
                     .code(position.getDeptdesig().getDesignation().getCode())
                     .tenantId(position.getTenantId())
                     .build();
-            Designation designation = designationService.getDesignations(designationGetRequest).get(0);
+            
+            List<Designation> designations = designationService.getDesignations(designationGetRequest);
+            
+            if (designations.isEmpty()) {
+            	
+                throw new InvalidDataException("designation", "The designation should have a valid value which exists in the system", "null");
+
+            }
+            final Designation designation = designations.get(0);
             DepartmentDesignation deptDesig = DepartmentDesignation.builder()
                     .id(position.getDeptdesig().getId())
                     .departmentId(department.getId())
@@ -248,5 +281,45 @@ public class PositionService {
 
         return PositionRequest.builder().position(positions).requestInfo(requestInfo).build();
     }
+    
+    private void validateDepartment(PositionRequest positionRequest) {
+        List<Position> positions = positionRequest.getPosition();
+        RequestInfo requestInfo = positionRequest.getRequestInfo();
+        RequestInfoWrapper requestInfoWrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+        for (int i = 0; i < positions.size(); i++) {
+            DepartmentDesignation deptDesig = positions.get(i).getDeptdesig();
+            String tenantId = positions.get(i).getTenantId();
 
+            List<Department> departments = departmentService.getDepartments(Arrays.asList(deptDesig.getDepartmentId()),
+                    tenantId, requestInfoWrapper);
+            if (departments == null || departments.size() < 1) {
+                throw new InvalidDataException("department", "The department should have a valid value which exists in the system",
+                        "null");
+            }
+        }
+    }
+
+    private void validateDesignation(PositionRequest positionRequest) {
+
+        List<Position> positions = positionRequest.getPosition();
+        for (int i = 0; i < positions.size(); i++) {
+            if (null == positions.get(i).getDeptdesig().getDesignation().getId()) {
+                throw new InvalidDataException("designation", "The designation should have a valid value which exists in the system", "null");
+
+            }
+            DepartmentDesignation deptDesig = positions.get(i).getDeptdesig();
+            String tenantId = positions.get(i).getTenantId();
+            if (null != deptDesig.getDesignation().getId()) {
+                DesignationGetRequest designationGetRequest = DesignationGetRequest.builder()
+                        .id(Arrays.asList(deptDesig.getDesignation().getId())).tenantId(tenantId).build();
+                List<Designation> designations = designationService.getDesignations(designationGetRequest);
+
+                if (designations == null || designations.size() < 1) {
+
+                    throw new InvalidDataException("designations", "designations should have a valid value which exists in the system", "null");
+                }
+            }
+        }
+    }
 }
+

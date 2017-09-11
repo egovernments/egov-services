@@ -39,6 +39,7 @@
  */
 package org.egov.wcms.repository.rowmapper;
 
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.sql.ResultSet;
@@ -70,7 +71,9 @@ public class ServiceChargeDetailsRowMapperTest {
         when((Double) rs.getObject("scd_amountorpercentage")).thenReturn(100.0);
         when((Long) rs.getObject("scd_servicecharge")).thenReturn(1L);
         when(rs.getString("scd_tenantid")).thenReturn("default");
-        getServiceChargeDetails();
+        final ServiceChargeDetails expectedserviceChargeDetails = getServiceChargeDetails();
+        final ServiceChargeDetails actualserviceChargeDetails = serviceChargeDetailsRowMapper.mapRow(rs, 1);
+        assertTrue(expectedserviceChargeDetails.equals(actualserviceChargeDetails));
     }
 
     private ServiceChargeDetails getServiceChargeDetails() {

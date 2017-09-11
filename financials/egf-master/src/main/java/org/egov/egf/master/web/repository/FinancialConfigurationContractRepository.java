@@ -9,7 +9,7 @@ import org.springframework.web.client.RestTemplate;
 @Repository
 public class FinancialConfigurationContractRepository {
 
-    public static final String SEARCH_URL = "/egf-master/financialconfigurations/_search?";
+    public static final String SEARCH_URL = "/egf-masters/financialconfigurations/_search?";
     private RestTemplate restTemplate;
     private String hostUrl;
     private String fetchDataFrom;

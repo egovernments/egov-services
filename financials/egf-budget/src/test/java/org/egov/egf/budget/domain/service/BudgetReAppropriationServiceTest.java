@@ -101,6 +101,22 @@ public class BudgetReAppropriationServiceTest {
 
         final List<BudgetReAppropriation> expextedResult = getBudgetReAppropriations();
 
+        when(budgetReAppropriationRepository.uniqueCheck(any(String.class), any(BudgetReAppropriation.class))).thenReturn(true);
+        when(budgetReAppropriationRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+
+        final List<BudgetReAppropriation> actualResult = budgetReAppropriationService.create(expextedResult, errors,
+                requestInfo);
+
+        assertEquals(expextedResult, actualResult);
+
+    }
+    
+    @Test(expected=CustomBindException.class)
+    public final void test_save_with_out_kafka_uniquefalse() {
+
+        final List<BudgetReAppropriation> expextedResult = getBudgetReAppropriations();
+
+        when(budgetReAppropriationRepository.uniqueCheck(any(String.class), any(BudgetReAppropriation.class))).thenReturn(false);
         when(budgetReAppropriationRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
         final List<BudgetReAppropriation> actualResult = budgetReAppropriationService.create(expextedResult, errors,
@@ -110,7 +126,7 @@ public class BudgetReAppropriationServiceTest {
 
     }
 
-    @Test(expected = CustomBindException.class)
+    @Test(expected = InvalidDataException.class)
     public final void test_save_with_out_kafka_and_with_null_req() {
 
         final List<BudgetReAppropriation> expextedResult = getBudgetReAppropriations();
@@ -128,6 +144,40 @@ public class BudgetReAppropriationServiceTest {
 
         final List<BudgetReAppropriation> expextedResult = getBudgetReAppropriations();
 
+        when(budgetReAppropriationRepository.uniqueCheck(any(String.class), any(BudgetReAppropriation.class))).thenReturn(true);
+        when(budgetReAppropriationRepository.update(any(List.class), any(RequestInfo.class)))
+                .thenReturn(expextedResult);
+
+        final List<BudgetReAppropriation> actualResult = budgetReAppropriationService.update(expextedResult, errors,
+                requestInfo);
+
+        assertEquals(expextedResult, actualResult);
+
+    }
+    
+    @Test(expected=InvalidDataException.class)
+    public final void test_update_with_out_kafka_id_null() {
+
+        final List<BudgetReAppropriation> expextedResult = getBudgetReAppropriations();
+        expextedResult.get(0).setId(null);
+
+        when(budgetReAppropriationRepository.uniqueCheck(any(String.class), any(BudgetReAppropriation.class))).thenReturn(true);
+        when(budgetReAppropriationRepository.update(any(List.class), any(RequestInfo.class)))
+                .thenReturn(expextedResult);
+
+        final List<BudgetReAppropriation> actualResult = budgetReAppropriationService.update(expextedResult, errors,
+                requestInfo);
+
+        assertEquals(expextedResult, actualResult);
+
+    }
+    
+    @Test(expected=CustomBindException.class)
+    public final void test_update_with_out_kafka_uniquefalse() {
+
+        final List<BudgetReAppropriation> expextedResult = getBudgetReAppropriations();
+
+        when(budgetReAppropriationRepository.uniqueCheck(any(String.class), any(BudgetReAppropriation.class))).thenReturn(false);
         when(budgetReAppropriationRepository.update(any(List.class), any(RequestInfo.class)))
                 .thenReturn(expextedResult);
 
@@ -152,8 +202,24 @@ public class BudgetReAppropriationServiceTest {
         assertEquals(expextedResult, actualResult);
 
     }
+    
+    @Test(expected=InvalidDataException.class)
+    public final void test_delete_with_out_kafka_id_null() {
 
-    @Test(expected = CustomBindException.class)
+        final List<BudgetReAppropriation> expextedResult = getBudgetReAppropriations();
+        expextedResult.get(0).setId(null);
+
+        when(budgetReAppropriationRepository.delete(any(List.class), any(RequestInfo.class)))
+                .thenReturn(expextedResult);
+
+        final List<BudgetReAppropriation> actualResult = budgetReAppropriationService.delete(expextedResult, errors,
+                requestInfo);
+
+        assertEquals(expextedResult, actualResult);
+
+    }
+
+    @Test(expected = InvalidDataException.class)
     public final void test_update_with_out_kafka_and_with_null_req() {
 
         final List<BudgetReAppropriation> expextedResult = getBudgetReAppropriations();
@@ -167,7 +233,7 @@ public class BudgetReAppropriationServiceTest {
 
     }
     
-    @Test(expected = CustomBindException.class)
+    @Test(expected = InvalidDataException.class)
     public final void test_delete_with_out_kafka_and_with_null_req() {
 
         final List<BudgetReAppropriation> expextedResult = getBudgetReAppropriations();

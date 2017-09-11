@@ -31,7 +31,7 @@ import org.egov.asset.model.Fund;
 import org.egov.asset.model.Location;
 import org.egov.asset.model.StatusValue;
 import org.egov.asset.model.Voucher;
-import org.egov.asset.model.VouchercreateAccountCodeDetails;
+import org.egov.asset.model.VoucherAccountCodeDetails;
 import org.egov.asset.model.enums.AssetStatusObjectName;
 import org.egov.asset.model.enums.ModeOfAcquisition;
 import org.egov.asset.model.enums.Sequence;
@@ -140,16 +140,12 @@ public class DisposalServiceTest {
         final Asset asset = getAsset();
         final List<Asset> assets = new ArrayList<>();
         assets.add(asset);
-        final FunctionResponse functionResponse = getFunctionResponse();
-        final FundResponse fundResponse = getFundResponse();
+        getFunctionResponse();
+        getFundResponse();
         final VoucherRequest voucherRequest = getVoucherRequest();
         when(assetRepository.findForCriteria(any(AssetCriteria.class))).thenReturn(assets);
-        when(voucherService.getFunctionData(any(RequestInfo.class), any(String.class), any(Long.class)))
-                .thenReturn(functionResponse);
-        when(voucherService.getFundData(any(RequestInfo.class), any(String.class), any(Long.class)))
-                .thenReturn(fundResponse);
-        when(voucherService.createVoucherRequest(any(Object.class), any(Fund.class), any(Long.class), any(List.class),
-                any(RequestInfo.class), any(String.class))).thenReturn(voucherRequest);
+        when(voucherService.createDisposalVoucherRequest(any(Disposal.class), any(Long.class), any(Long.class),
+                any(List.class), any(HttpHeaders.class))).thenReturn(voucherRequest);
         disposalService.createVoucherForDisposal(disposalRequest, headers);
     }
 
@@ -221,15 +217,15 @@ public class DisposalServiceTest {
         return null;
     }
 
-    private List<VouchercreateAccountCodeDetails> getLedgers() {
-        final List<VouchercreateAccountCodeDetails> ledgers = new ArrayList<>();
-        final VouchercreateAccountCodeDetails creditAccountDetails = new VouchercreateAccountCodeDetails();
+    private List<VoucherAccountCodeDetails> getLedgers() {
+        final List<VoucherAccountCodeDetails> ledgers = new ArrayList<>();
+        final VoucherAccountCodeDetails creditAccountDetails = new VoucherAccountCodeDetails();
         creditAccountDetails.setCreditAmount(new BigDecimal("500"));
         creditAccountDetails.setDebitAmount(BigDecimal.ZERO);
         creditAccountDetails.setFunction(getFunction());
         creditAccountDetails.setGlcode("144005");
         creditAccountDetails.setSubledgerDetails(null);
-        final VouchercreateAccountCodeDetails debitAccountDetails = new VouchercreateAccountCodeDetails();
+        final VoucherAccountCodeDetails debitAccountDetails = new VoucherAccountCodeDetails();
         debitAccountDetails.setCreditAmount(BigDecimal.ZERO);
         debitAccountDetails.setDebitAmount(new BigDecimal("500"));
         debitAccountDetails.setFunction(getFunction());

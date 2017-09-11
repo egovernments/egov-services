@@ -67,7 +67,32 @@ public class PropertyValidator {
 		// TODO location service gives provision to search by multiple ids, no
 		// need to do multiple calls for each boundary id
 		for (String field : fields) {
-			validateBoundaryFields(property, field, requestInfo);
+			if (!field.equalsIgnoreCase(propertiesManager.getGuidanceValueBoundary())) {
+				validateBoundaryFields(property, field, requestInfo);
+			} else {
+				if (property.getBoundary() != null) {
+					if (!property.getChannel().toString().equalsIgnoreCase(propertiesManager.getChannelType())) {
+						Long guidanceBoundary = property.getBoundary().getGuidanceValueBoundary();
+						if (guidanceBoundary != null) {
+							Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(null, null,
+									ConstantUtility.GUIDANCEVALUEBOUNDARY_TABLE_NAME, guidanceBoundary);
+
+							if (!isExists) {
+								throw new InvalidCodeException(propertiesManager.getInvalidGuidanceValueBoundaryId(),
+										requestInfo);
+							}
+
+						} else {
+							throw new InvalidCodeException(propertiesManager.getInvalidGuidanceValueBoundary(),
+									requestInfo);
+						}
+					} else {
+						throw new InvalidCodeException(propertiesManager.getInvalidPropertyBoundary(), requestInfo);
+					}
+				}
+
+			}
+
 		}
 	}
 
@@ -92,7 +117,7 @@ public class PropertyValidator {
 			if (propertyLocation.getLocationBoundary() != null) {
 				id = propertyLocation.getLocationBoundary().getId();
 			}
-		} else {
+		} else if (field.equalsIgnoreCase(propertiesManager.getAdminBoundary())) {
 			if (propertyLocation.getAdminBoundary() != null) {
 				id = propertyLocation.getAdminBoundary().getId();
 			}
@@ -182,6 +207,14 @@ public class PropertyValidator {
 
 		PropertyDetail propertyDetail = property.getPropertyDetail();
 
+		if (propertyDetail.getSubUsage() != null) {
+			Boolean subUsageExists = propertyMasterRepository.checkWhetherRecordExits(property.getTenantId(),
+					propertyDetail.getSubUsage(), ConstantUtility.USAGE_TYPE_TABLE_NAME, null);
+			if (!subUsageExists) {
+				throw new InvalidCodeException(propertiesManager.getInvalidPropertySubUsageCode(), requestInfo);
+			}
+		}
+
 		if (propertyDetail.getPropertyType() != null) {
 			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(property.getTenantId(),
 					property.getPropertyDetail().getPropertyType(), ConstantUtility.PROPERTY_TYPE_TABLE_NAME, null);
@@ -204,10 +237,10 @@ public class PropertyValidator {
 
 				String boundary = null;
 
-				if (property.getBoundary() != null && property.getBoundary().getRevenueBoundary() != null) {
-					boundary = property.getBoundary().getRevenueBoundary().getId().toString().trim();
+				if (property.getBoundary() != null && property.getBoundary().getGuidanceValueBoundary() != null) {
+					boundary = property.getBoundary().getGuidanceValueBoundary().toString().trim();
 				} else {
-					throw new InvalidCodeException(propertiesManager.getInvalidInputBoundary(), requestInfo);
+					throw new InvalidCodeException(propertiesManager.getInvalidGuidanceValueBoundaryId(), requestInfo);
 				}
 
 				String propertyType = null;
@@ -302,6 +335,13 @@ public class PropertyValidator {
 		}
 	}
 
+	public void validateUpicNo(Property property, RequestInfo requestInfo) {
+		String oldUpicNo = property.getOldUpicNumber();
+		int count = propertyMasterRepository.checkOldUpicNumber(oldUpicNo);
+		if (count > 0)
+			throw new InvalidCodeException(propertiesManager.getInvalidOldUpicCode(), requestInfo);
+	}
+
 	/**
 	 * Description : Method for validating the unit details
 	 * 
@@ -319,7 +359,7 @@ public class PropertyValidator {
 					throw new InvalidCodeException(propertiesManager.getInvalidPropertyUsageCode(), requestInfo);
 				}
 			}
-			
+
 			if (unit.getSubUsage() != null) {
 				Boolean subUsageExists = propertyMasterRepository.checkWhetherRecordExits(tenantId, unit.getSubUsage(),
 						ConstantUtility.USAGE_TYPE_TABLE_NAME, null);

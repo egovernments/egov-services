@@ -40,18 +40,25 @@
 
 package org.egov.eis.service;
 
-import lombok.extern.slf4j.Slf4j;
+import static org.springframework.util.ObjectUtils.isEmpty;
+
+import java.net.URI;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.egov.eis.config.PropertiesManager;
 import org.egov.eis.model.bulk.Designation;
+import org.egov.eis.web.contract.DesignationGetRequest;
 import org.egov.eis.web.contract.DesignationResponse;
 import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.URI;
-
-import static org.springframework.util.ObjectUtils.isEmpty;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
@@ -75,9 +82,33 @@ public class DesignationService {
 			designationResponse = restTemplate.postForObject(url, requestInfoWrapper, DesignationResponse.class);
 		} catch (Exception e) {
 			e.printStackTrace();
-			log.error("Following exception occurred while accessing Department API : " + e.getMessage());
+			log.error("Following exception occurred while accessing Designation API : " + e.getMessage());
 			return null;
 		}
 		return isEmpty(designationResponse.getDesignation()) ? null : designationResponse.getDesignation().get(0);
 	}
+	public List<Designation> getDesignations(DesignationGetRequest designationGetRequest ,String tenantId,RequestInfoWrapper requestInfoWrapper) {
+		URI url = null;
+		DesignationResponse designationResponse = null;
+        String idsAsCSV = getIdsAsCSV(designationGetRequest.getId());
+
+		try {
+			url = new URI(propertiesManager.getHrMastersServiceHostName()
+					+ propertiesManager.getHrMastersServiceBasePath()
+					+ propertiesManager.getHrMastersServiceDesignationsSearchPath()
+					+ "?tenantId=" + tenantId 
+					+ "&id=" +idsAsCSV );
+			log.debug(url.toString());
+			designationResponse = restTemplate.postForObject(url,requestInfoWrapper,DesignationResponse.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error("Following exception occurred while accessing Designation API : " + e.getMessage());
+			return null;
+		}
+		return isEmpty(designationResponse.getDesignation()) ? null : designationResponse.getDesignation();
+	}
+	private String getIdsAsCSV(List<Long> ids) {
+        return String.join(",", ids.stream().map(Object::toString).collect(Collectors.toList()));
+    }
+   
 }

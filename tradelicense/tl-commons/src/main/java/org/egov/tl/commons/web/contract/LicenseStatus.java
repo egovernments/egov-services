@@ -30,15 +30,15 @@ public class LicenseStatus {
 	private String tenantId = null;
 
 	@JsonProperty("name")
-	@Pattern(regexp = ".*[^ ].*", message = "{error.name.emptyspaces}")
+	@Pattern(regexp = "^\\w+([._`\\s]+\\w+)*$", message = "{error.name.emptyspaces}")
 	@NotEmpty(message = "{error.name.empty}")
 	@Length(min = 1, max = 100, message = "{error.name.empty}")
 	private String name = null;
 
 	@JsonProperty("code")
-	@Pattern(regexp = ".*[^ ].*", message = "{error.code.emptyspaces}")
+	@Pattern(regexp = "^(?=.*[^ ])[a-zA-Z0-9]+$", message = "{error.code.emptyspaces}")
 	@NotEmpty(message = "{error.code.empty}")
-	@Length(min = 1, max = 20, message = "{error.code.empty}")
+	@Length(min = 1, max = 100, message = "{error.code.empty}")
 	private String code = null;
 
 	@JsonProperty("moduleType")

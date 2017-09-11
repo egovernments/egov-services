@@ -16,7 +16,6 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.egov.citizen.config.ApplicationProperties;
 import org.egov.citizen.model.AuditDetails;
-import org.egov.citizen.model.BillResponse;
 import org.egov.citizen.model.ServiceReqRequest;
 import org.egov.citizen.model.ServiceReqResponse;
 import org.egov.citizen.repository.ServiceReqRepository;
@@ -26,7 +25,6 @@ import org.egov.citizen.web.contract.ReceiptRequest;
 import org.egov.citizen.web.contract.ServiceRequestSearchCriteria;
 import org.egov.citizen.web.contract.factory.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,9 +72,6 @@ public class CitizenPersistService {
 	private ResponseInfoFactory responseInfoFactory;
 	
 	@Autowired
-	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
-	
-	@Autowired
 	private ServiceReqRepository serviceReqRepository;
 	
 	@Autowired
@@ -96,10 +91,7 @@ public class CitizenPersistService {
 
 		}
 		List<Object> response = new ArrayList<>();
-		Map<String, Object> responeMap = new HashMap<>();
-
-		//Map<String, Object> 
-		
+		Map<String, Object> responeMap = new HashMap<>();		
 		for(Map<String, Object> map : maps){
 
 			LOGGER.info("Map: "+map);
@@ -108,14 +100,11 @@ public class CitizenPersistService {
 			ObjectMapper objectMapper = new ObjectMapper();
 			try {
 				Map<String, Object> m= objectMapper.readValue(s, Map.class);
-				
-				
 				if(m.containsKey("serviceReq"))
 					response.add(m.get("serviceReq"));
 				else {
 					response.add(m);
 				}
-				
 				System.out.println("m:"+m);
 			} catch (IOException e) {
 				LOGGER.info("Exception: ",e);
@@ -243,7 +232,8 @@ public class CitizenPersistService {
 		}
     	
     	if((documentContext.read("$.serviceReq.serviceCode").toString().equals("WATER_NEWCONN") ||
-    			documentContext.read("$.serviceReq.serviceCode").toString().equals("BPA_FIRE_NOC")) && isCreate){
+    			documentContext.read("$.serviceReq.serviceCode").toString().equals("BPA_FIRE_NOC") ||
+    			documentContext.read("$.serviceReq.serviceCode").toString().equals("TL_NEWCONN")) && isCreate){
     		documentContext.put("$.serviceReq.backendServiceDetails[0].request.Demands[0]", "consumerCode", id);
     		String url = documentContext.read("$.serviceReq.backendServiceDetails[1].url");
     		url = url.replaceAll("consumerCode=", "consumerCode="+id);
@@ -361,8 +351,9 @@ public class CitizenPersistService {
 		          .append(pGPayLoadResponse.getBillService()).append(delimiter)
 		          .append(pGPayLoadResponse.getTransactionId()).append(delimiter)
 		          .append(pGPayLoadResponse.getServiceRequestId()).append(delimiter)
-		          .append(pGPayLoadResponse.getUid()).append(delimiter);
+		          .append(pGPayLoadResponse.getUid());
 		
+		LOGGER.info("msg to be hashed: "+msgForHash.toString());
 		String hashKey = applicationProperties.getHashKey();
 		String responseHash = getHashedValue(msgForHash.toString(), hashKey);
 		

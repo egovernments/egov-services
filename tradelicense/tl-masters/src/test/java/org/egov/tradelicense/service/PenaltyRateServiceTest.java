@@ -72,6 +72,7 @@ public class PenaltyRateServiceTest {
 	public Long InvalidFromRange = 50l;
 	public Long InvalidToRange = 100l;
 	public Double rate = 50d;
+	public Double rateforInvalidSeq = 51d;
 	public Long updatedFromRange = 50l;
 	public Long updatedToRange = 100l;
 
@@ -158,7 +159,7 @@ public class PenaltyRateServiceTest {
 		penaltyRate.setApplicationType(ApplicationTypeEnum.fromValue(applicationType));
 		penaltyRate.setFromRange(InvalidFromRange);
 		penaltyRate.setToRange(InvalidToRange);
-		penaltyRate.setRate(rate);
+		penaltyRate.setRate(rateforInvalidSeq);
 		long createdTime = new Date().getTime();
 
 		AuditDetails auditDetails = new AuditDetails();

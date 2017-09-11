@@ -4,7 +4,7 @@ update eg_wf_types set type='Create Municipality Agreement' where type='Create A
 insert into eg_wf_types (id, type, link, createdby, createddate, lastmodifiedby, lastmodifieddate, typefqn, displayname, version, tenantid) 
 values (nextval('seq_eg_wf_types'), 'Create Corporation Agreement', '/lams-web/app/search-agreement/view-renew-agreement.html?view=inbox&state=:ID', 1, now(), 1, now(), 'org.egov.lams.models.Agreement', 'Create Agreement', 0, 'default');
 
-delete from eg_wf_matrix where type = 'Create Agreement';
+delete from eg_wf_matrix where objecttype = 'Create Agreement';
 
 --Create Municipality Agreement
 

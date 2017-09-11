@@ -47,7 +47,7 @@ public class LicenseFeeDetailEntity {
 
 //		licenseFeeDetail.setLicenseId(this.licenseId);
 		
-		licenseFeeDetail.setTeantId( this.tenantId);
+		licenseFeeDetail.setTenantId( this.tenantId);
 		
 		licenseFeeDetail.setApplicationId(this.applicationId);
 		
@@ -78,7 +78,7 @@ public class LicenseFeeDetailEntity {
 
 		this.id = licenseFeeDetail.getId();
 		
-		this.tenantId = licenseFeeDetail.getTeantId();
+		this.tenantId = licenseFeeDetail.getTenantId();
 		
 		this.applicationId = licenseFeeDetail.getApplicationId();
 

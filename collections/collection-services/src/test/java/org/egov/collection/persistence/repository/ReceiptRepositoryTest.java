@@ -36,7 +36,7 @@
  *         or trademarks of eGovernments Foundation.
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
- 
+ */
 package org.egov.collection.persistence.repository;
 
 import static org.junit.Assert.*;
@@ -48,7 +48,6 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -65,7 +64,6 @@ import org.egov.collection.producer.CollectionProducer;
 import org.egov.collection.repository.ReceiptRepository;
 import org.egov.collection.repository.querybuilder.ReceiptDetailQueryBuilder;
 import org.egov.collection.repository.rowmapper.ReceiptRowMapper;
-import org.egov.collection.web.contract.BankAccount;
 import org.egov.collection.web.contract.BankBranch;
 import org.egov.collection.web.contract.Bill;
 import org.egov.collection.web.contract.BillAccountDetail;
@@ -129,12 +127,11 @@ public class ReceiptRepositoryTest {
 		assertNotNull(receiptRepository.pushToQueue(getReceiptRequest()));
 	}
 	
-	@Test
+	/*@Test
 	public void test_should_persist_to_receiptheader(){
 		Map<String, Object> parametersMap = new HashMap<>();
 		parametersMap.put("tenantid", "default");
 		Map<String, Object>[] parametersReceiptDetails = new Map[100];
-
 		ReceiptReq receiptReq = getReceiptRequest();
 		String query = ReceiptDetailQueryBuilder.insertReceiptHeader();
 		String receiptHeaderIdQuery = ReceiptDetailQueryBuilder.getreceiptHeaderId();
@@ -164,11 +161,11 @@ public class ReceiptRepositoryTest {
 							receiptInfo.getBill().get(0).getPaidBy(), receiptInfo.getAuditDetails().getCreatedDate() },
 					Long.class)).thenThrow(Exception.class);
 		
-		receiptRepository.persistToReceiptHeader(parametersMap, receiptInfo);
+		receiptRepository.persistToReceiptHeader(parametersMap);
 		
-	} 
+	} */
 	
-	@SuppressWarnings("unchecked")
+	/*@SuppressWarnings("unchecked")
 	@Test
 	public void test_should_persist_to_receiptdetails(){
 		Map<String, Object>[] parametersReceiptDetails = new Map[100];	
@@ -178,9 +175,9 @@ public class ReceiptRepositoryTest {
 		receiptRepository.persistToReceiptDetails(parametersReceiptDetails);
 		assertNotNull(parametersReceiptDetails);	
 		
-	}
+	}*/
 	
-	@SuppressWarnings("unchecked")
+	/*@SuppressWarnings("unchecked")
 	@Test(expected = Exception.class)
 	public void test_should_persist_to_receiptdetails_exception(){
 		Map<String, Object>[] parametersReceiptDetails = new Map[100];	
@@ -189,8 +186,8 @@ public class ReceiptRepositoryTest {
 		Mockito.when(ReceiptDetailQueryBuilder.insertReceiptDetails()).thenThrow(Exception.class);
 		Mockito.when(namedParameterJdbcTemplate.batchUpdate(queryReceiptDetails, parametersReceiptDetails)).thenReturn(result);
 		
-		receiptRepository.persistToReceiptDetails(parametersReceiptDetails, 1);
-	} 
+		receiptRepository.persistToReceiptDetails(parametersReceiptDetails);
+	} */
 	 
 	@Test
 	public void test_should_get_stateid(){
@@ -230,7 +227,7 @@ public class ReceiptRepositoryTest {
 		assertNotNull(receiptRepository.pushReceiptCancelDetailsToQueue(getReceiptRequest()));
 	}
 	
-	@Test
+	/*@Test
 	public void test_should_update_status_and_stateId_toDB(){
 	
 		when(receiptDetailQueryBuilder.getQueryForUpdate(2L,"CANCELLED", 1L, "default"))
@@ -244,7 +241,7 @@ public class ReceiptRepositoryTest {
 	public void test_should_be_able_to_push_update_status_request_to_kafka(){
 		receiptRepository.pushUpdateDetailsToQueque(getReceiptRequest());
 		verify(collectionProducer).producer(any(String.class), any(String.class), any(ReceiptReq.class));
-	}
+	}*/
 
 	private ReceiptReq getReceiptRequest() {
 
@@ -346,4 +343,4 @@ public class ReceiptRepositoryTest {
 
 		return Arrays.asList(header1, header2);
 	}
-}*/
+}

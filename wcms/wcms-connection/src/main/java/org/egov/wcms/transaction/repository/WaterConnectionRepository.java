@@ -147,7 +147,7 @@ public class WaterConnectionRepository {
                 }
                 statement.setDouble(22, waterConnectionRequest.getConnection().getDonationCharge());
 
-                statement.setString(23, waterConnectionRequest.getConnection().getAssetIdentifier());
+                statement.setString(23, null);
                 statement.setString(24, waterConnectionRequest.getConnection().getWaterTreatmentId());
                 statement.setBoolean(25, waterConnectionRequest.getConnection().getIsLegacy());
                 if (!waterConnectionRequest.getConnection().getIsLegacy() && waterConnectionRequest.getConnection().getId() == 0){
@@ -521,11 +521,11 @@ public class WaterConnectionRepository {
                 acknowledgeNumber);
         return connection;
     }
-    public Connection getWaterConnectionByConsumerNumber(final String acknowledgeNumber) {
+    public Connection getWaterConnectionByConsumerNumber(final String acknowledgeNumber,final String tenantid) {
 
         final Connection connection = jdbcTemplate.queryForObject(
                 WaterConnectionQueryBuilder.getWaterConnectionByConsumerNumber(), new UpdateWaterConnectionRowMapper(),
-                acknowledgeNumber);
+                acknowledgeNumber,tenantid);
         return connection;
     }
 

@@ -1,6 +1,6 @@
 package org.egov.collection.model;
 
-import java.util.Date;
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
@@ -10,17 +10,24 @@ import lombok.Setter;
 @Getter
 @Setter
 public class LegacyReceiptHeader {
+    
+    public static final String SEQ_LEGACY_RECEIPT_HEADER = "SEQ_LEGACY_RECEIPT_HEADER";
+    
+    
     @NotNull
     private Long id;
     
     private Long legacyReceiptId;
     
-    private String  receiptNo;
+    @NotNull
+    private String receiptNo;
     
     @NotNull
-    private Date receiptDate;
+    private Long receiptDate;
     
     private String department;
+    
+    private String serviceCode;
     
     private String serviceName;
     
@@ -28,13 +35,13 @@ public class LegacyReceiptHeader {
     
     private String consumerName;
     
-    private Double totalAmount;
+    private BigDecimal totalAmount;
     
-    private Double advanceAmount; 
+    private BigDecimal advanceAmount; 
     
     private List<LegacyReceiptDetails> legacyReceiptDetails;
     
-    private Double adjustmentAmount;
+    private BigDecimal adjustmentAmount;
     
     private String consumerAddress;
     
@@ -42,7 +49,7 @@ public class LegacyReceiptHeader {
     
     private String instrumentType;
     
-    private Date instrumentDate;
+    private Long instrumentDate;
     
     private String instrumentNo;
     
@@ -50,7 +57,7 @@ public class LegacyReceiptHeader {
     
     private String manualreceiptnumber;
     
-    private Date manualreceiptDate;
+    private Long manualreceiptDate;
     @NotNull
     private String tenantId;
     

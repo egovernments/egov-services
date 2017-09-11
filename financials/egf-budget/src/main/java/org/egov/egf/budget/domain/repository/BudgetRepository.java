@@ -242,4 +242,9 @@ public class BudgetRepository {
 
     }
 
+	public boolean uniqueCheck(String fieldName, Budget budget) {
+        return budgetJdbcRepository.uniqueCheck(fieldName, new BudgetEntity().toEntity(budget));
+
+	}
+
 }

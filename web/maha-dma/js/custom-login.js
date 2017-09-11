@@ -29,6 +29,39 @@ function arrayGroupByKey(arry, groupByKey){
 
 $(document).ready(function(){
 
+  $('.search-service, .track, .download').hide();
+
+  $('.active-component ul li').click(function(){
+    $('.active-component ul li').removeClass('active');
+    var className = $(this).attr('class');
+    $('.'+className).addClass('active');
+    $('.citizen-login, .search-service, .track, .download').hide();
+    $($(this).data('redirect')).show();
+  });
+
+  var servicesarray=[];
+
+  $('ul.collapse').find('li.news-item div').each(function(i){
+    var servicesList = {};
+    servicesList['text']=$(this).find('a').html()+' - '+ $(this).parents('ul').data('header');
+    servicesList['target']=$(this).find('a').data('target');
+    servicesarray.push(servicesList);
+  });
+
+  for (var j = 0; j < servicesarray.length; j++){
+    $('.search-service-ul').append('<li><a href="" data-toggle="modal" data-target='+servicesarray[j].target+'>'+servicesarray[j].text+'</a></li>')
+  }
+
+  $('#searchService').keyup(function(){
+    var value = $(this). val();
+    $('.search-service-ul').empty();
+    for (var j = 0; j < servicesarray.length; j++){
+      var result = servicesarray[j].text.toLowerCase().search(value.toLowerCase());
+      if(result >= 0)
+        $('.search-service-ul').append('<li><a href="" data-toggle="modal" data-target='+servicesarray[j].target+'>'+servicesarray[j].text+'</a></li>')
+    }
+  })
+
 		var ulbOptionTemplate = Handlebars.compile($('#ulb-option-template').html());
     var documentsTemplate = Handlebars.compile($('#documents-body-template').html());
     var servicesMenuTempalte = Handlebars.compile($('#services-menu-template').html());
@@ -68,23 +101,22 @@ $(document).ready(function(){
 			  cache: false
 			});
 
-      $.ajax({
-  			  url: 'data/servicesList.json',
-  				data:{ "_": $.now() },
-  				headers: {
-  				   'Cache-Control': 'max-age=1000'
-  				},
-  			  success: function(response){
-            servicesList = response;
-            groupByModuleServices = arrayGroupByKey(servicesList, "moduleName");
-            loadServiceMenus();
-  			  },
-  			  cache: false
-  			});
+      // $.ajax({
+  		// 	  url: 'data/servicesList.json',
+  		// 		data:{ "_": $.now() },
+  		// 		headers: {
+  		// 		   'Cache-Control': 'max-age=1000'
+  		// 		},
+  		// 	  success: function(response){
+      //       servicesList = response;
+      //       groupByModuleServices = arrayGroupByKey(servicesList, "moduleName");
+      //       loadServiceMenus();
+  		// 	  },
+  		// 	  cache: false
+  		// 	});
 
       function loadUlbsList(){
-        $('#ulb-dropdown').html(ulbOptionTemplate(ulbsList));
-        $('#ulb-dropdownForSignup').html(ulbOptionTemplate(ulbsList));
+        $('#ulb-dropdown, #ulb-dropdownForSignup, #ulb-dropdownForTracking, #ulb-dropdownForDownload').html(ulbOptionTemplate(ulbsList));
       }
 
       function loadServiceMenus(){
@@ -93,53 +125,57 @@ $(document).ready(function(){
         $('.service-table').html(servicesMenuTempalte(groupByModuleServices));
       }
 
-      $(document).on('click', 'a.action-item', function(e){
-          //console.log('serviceName', $(this).data('service-name'));
-          var serviceName = $(this).data('service-name');
-          var moduleName = $(this).data('module-name');
-          $('#servicesDetailModalLabel').html($(this).data('service-name')+" - "+moduleName);
+      // $(document).on('click', 'a.action-item', function(e){
+      //     //console.log('serviceName', $(this).data('service-name'));
+      //     var serviceName = $(this).data('service-name');
+      //     var moduleName = $(this).data('module-name');
+      //     $('#servicesDetailModalLabel').html($(this).data('service-name')+" - "+moduleName);
+      //
+      //     var service = servicesList.find((service) => service.serviceName === serviceName
+      //               && service.moduleName === moduleName);
+      //
+      //     var ulb = ulbsList.find((ulb)=>ulb.tenantId === $('#ulb-dropdown').val());
+      //
+      //     if(service && service.redirectUrl){
+      //       // if(!service.slaTable){
+      //       //   var uniqueKeys = service.slaTable.columns.reduce(function (acc, obj) {
+      //       //       return acc.concat(acc.indexOf(obj.key) === -1? obj.key : undefined);
+      //       //   }, []);
+      //       //   service['uniqueKeys'] = uniqueKeys;
+      //       // }
+      //
+      //       // console.log('service', service);
+      //
+      //       // console.log('docs response', documentsTemplate(service));
+      //
+      //       //documentsTempalte
+      //       $('#apply-btn').attr('data-url', service.redirectUrl);
+      //       $('#documents-body').html(documentsTemplate(service));
+      //       $('#servicesDetailModal').modal('show');
+      //     }
+      //     else{
+      //       //else TODO
+      //       alert('This service is not available');
+      //     }
+      // });
 
-          var service = servicesList.find((service) => service.serviceName === serviceName
-                    && service.moduleName === moduleName);
+      $('.apply-btn').click(function(e){
+        alert('Please register yourself and then login.');
+      })
 
-          var ulb = ulbsList.find((ulb)=>ulb.tenantId === $('#ulb-dropdown').val());
-
-          if(service && service.redirectUrl){
-            // if(!service.slaTable){
-            //   var uniqueKeys = service.slaTable.columns.reduce(function (acc, obj) {
-            //       return acc.concat(acc.indexOf(obj.key) === -1? obj.key : undefined);
-            //   }, []);
-            //   service['uniqueKeys'] = uniqueKeys;
-            // }
-
-            console.log('service', service);
-
-            console.log('docs response', documentsTemplate(service));
-
-            //documentsTempalte
-            $('#apply-btn').attr('data-url', service.redirectUrl);
-            $('#documents-body').html(documentsTemplate(service));
-            $('#servicesDetailModal').modal('show');
-          }
-          else{
-            //else TODO
-            alert('This service is not available');
-          }
-      });
-
-      $('#apply-btn').click(function(e){
-          redirectUrl = $(this).attr('data-url');
-          alert('Please register yourself and then login.');
-          $('#servicesDetailModal').modal('hide');
-
-          // var serviceRedirectUrl=$(this).attr('data-url');
-          // if(serviceRedirectUrl){
-          //   $('#servicesDetailModal').modal('hide');
-          //   window.open(serviceRedirectUrl);
-          // }
-
-
-      });
+      // $('#apply-btn').click(function(e){
+      //     redirectUrl = $(this).attr('data-url');
+      //     alert('Please register yourself and then login.');
+      //     $('#servicesDetailModal').modal('hide');
+      //
+      //     // var serviceRedirectUrl=$(this).attr('data-url');
+      //     // if(serviceRedirectUrl){
+      //     //   $('#servicesDetailModal').modal('hide');
+      //     //   window.open(serviceRedirectUrl);
+      //     // }
+      //
+      //
+      // });
 
       $('#create-account').click(function(e){
           // window.location = window.location.origin + '/app/v1/#/mh.roha?signup=true';
@@ -152,6 +188,30 @@ $(document).ready(function(){
           }
           var tenantId = $("#ulb-dropdownForSignup").val();
           window.location = window.location.origin + '/app/v1/#/'+tenantId+'?signup=true';
+      });
+
+      $('#track-go').click(function(e){
+        if(!$('#ulb-dropdownForTracking').val()){
+          $('#ulb-dropdownForTracking').popover('show');
+          return;
+        }
+        else{
+          $('#ulb-dropdownForTracking').popover('hide');
+        }
+        var tenantId = $("#ulb-dropdownForTracking").val();
+        window.location = window.location.origin + '/app/v1/#/'+tenantId;
+      });
+
+      $('#download-go').click(function(e){
+        if(!$('#ulb-dropdownForDownload').val()){
+          $('#ulb-dropdownForDownload').popover('show');
+          return;
+        }
+        else{
+          $('#ulb-dropdownForDownload').popover('hide');
+        }
+        var tenantId = $("#ulb-dropdownForDownload").val();
+        window.location = window.location.origin + '/app/v1/#/'+tenantId;
       });
 
       $('#loginBtn').click(function(e) {

@@ -90,7 +90,7 @@ chip: {
 };
 
 
-class OwnerDetails extends Component { 
+class OwnerDetails extends Component {
 
 constructor(props) {
 	super(props);
@@ -116,7 +116,7 @@ handleOwner = (value) => {
 }
 
   render() {
-	  
+
 	  const renderOption = function(list,listName="") {
 			if(list)
 			{
@@ -155,7 +155,7 @@ handleOwner = (value) => {
 
     return (
       <Card className="uiCard">
-        <CardHeader title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Owner Details</div>} style={styles.reducePadding} />
+        <CardHeader title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate('pt.create.groups.ownerDetails')}</div>} style={styles.reducePadding} />
         <CardText>
               <Grid fluid>
                 <Row>
@@ -289,7 +289,7 @@ handleOwner = (value) => {
                                     value: value
                                   }
                                 };
-								handleChangeOwner(e, "owner", "gaurdianRelation", false, "")                                
+								handleChangeOwner(e, "owner", "gaurdianRelation", false, "")
                               }
                             }
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -360,7 +360,7 @@ handleOwner = (value) => {
                           <RadioButtonGroup
                             name="ownerRadio"
                             valueSelected={isPrimaryOwner ? isPrimaryOwner : ''}
-                            onChange={(e, v) =>{ 
+                            onChange={(e, v) =>{
                                 this.handleOwner(v)
                                 var e = {
                                     target: {
@@ -428,7 +428,7 @@ handleOwner = (value) => {
                                 <th>{translate('pt.create.groups.ownerDetails.fields.isPrimaryOwner')}</th>
                                 <th>{translate('pt.create.groups.ownerDetails.fields.guardian')}</th>
                                <th>{translate('pt.create.groups.ownerDetails.fields.percentageOfOwnerShip')}</th>
-                                <th></th>               
+                                <th></th>
                               </tr>
                             </thead>
                             <tbody>
@@ -483,7 +483,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-	
+
 setForm: () => {
 	 var ownerRequired = [];
 	 var ownerCurrent = [];
@@ -506,9 +506,9 @@ setForm: () => {
           required: []
         }
       },
-	
+
     });
-  },	
+  },
 
   handleChange: (e, property, isRequired, pattern) => {
     dispatch({type: "HANDLE_CHANGE", property, value: e.target.value, isRequired, pattern});
@@ -524,7 +524,7 @@ setForm: () => {
       pattern
     })
   },
-  
+
   handleChangeOwner: (e, property, propertyOne, isRequired, pattern) => {
     dispatch({
       type: "HANDLE_CHANGE_OWNER",
@@ -577,7 +577,7 @@ setForm: () => {
       isSectionValid
     })
   },
-  
+
 
   resetObject: (object, isSectionValid) => {
 	  var ownerRequired = [];
@@ -610,11 +610,11 @@ setForm: () => {
           required: []
         }
       }
-	  
+
     })
   },
-  
-   
+
+
 
   updateObject: (objectName, object) => {
     dispatch({
@@ -661,5 +661,3 @@ setForm: () => {
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(OwnerDetails);
-
-

@@ -103,18 +103,21 @@ ReportDefinitions:
     pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name
     source: wcms
     isMandatory: false
+    searchClause: and prop.zoneid = $zoneid
   - name: wardid
     label: reports.wcms.ward
     type: singlevaluelist
     source: wcms
     pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=WARD&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name
     isMandatory: false
+    searchClause: and prop.wardid = $wardid	
   - name: connectiontype
     label: reports.wcms.connectiontype
     type: singlevaluelist
     pattern: 'list://METERED:METERED,NONMETERED:NON-METERED'
     source: wcms
     isMandatory: false  
+    searchClause: and prop.billingtype = $connectiontype
   query: select * from ((select boundary.name as boundaryname,count(prop.hscno) as countofconsumerno,prop.username as consumerName,
          prop.pipesize as pipesize,ut.data::jsonb->>'name'  as usage,'CURRENT' as STATE,
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount) ELSE NULL END)) AS WT_DEMAND,
@@ -125,7 +128,7 @@ ReportDefinitions:
          and  demand.consumercode=prop.hscno 
          and demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE
          fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
-         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL') and prop.tenantid=$tenantid group by hscno,state,pipesize,consumerName, usage ,boundaryname )
+         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL') and prop.tenantid=$tenantid 
          UNION
          (select boundary.name as boundaryname,count(prop.hscno) as countofconsumerno,prop.username as consumerName,
          prop.pipesize as pipesize,ut.data::jsonb->>'name'  as usage,
@@ -138,7 +141,9 @@ ReportDefinitions:
          and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE
          fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
          and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL' ) and prop.tenantid=$tenantid 
-         group by hscno,state,pipesize,consumerName, usage,boundaryname))result ;
+         
+  groupBy: group by hscno,state,pipesize,consumerName, usage ,boundaryname )
+  orderBy: )result ;
 
 - reportName: ConsumerReport
   summary: Consumer Register Report
@@ -274,35 +279,59 @@ ReportDefinitions:
     source: wcms
     total: true
   searchParams:
+  - name: wardid
+    label: reports.wcms.ward
+    type: singlevaluelist
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=WARD&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name
+    source: wcms
+    isMandatory: false
+    searchClause: and prop.wardid = $wardid
+  - name: zoneid
+    label: reports.wcms.zoneid
+    type: singlevaluelist
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name
+    source: wcms
+    isMandatory: false
+    searchClause: and prop.zoneid = $zoneid
+  - name: consumerNumber
+    label: reports.wcms.consumerno
+    type: string
+    source: wcms
+    isMandatory: false
+    searchClause: and prop.hscno = $consumerNumber
   - name: fromDate
     label: reports.wcms.fromdate
-    type: string
+    type: epoch
     source: wcms
     isMandatory: false
+    searchClause: and prop.executiondate >= $fromDate	
   - name: toDate
     label: reports.wcms.todate
-    type: string
+    type: epoch
     source: wcms
     isMandatory: false
+    searchClause: and prop.executiondate <= $toDate  	
   query: select * from ((select prop.hscno as hscno,prop.username as consumerName,
          'CURRENT' as STATE, SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount) ELSE NULL END)) AS WT_DEMAND,
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.collectionamount) ELSE NULL END)) AS WT_COLL,
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS WT_BAL
-         from egwtr_connection_view prop, eg_boundary boundary ,egpt_mstr_usage  ut,egbs_demand demand, egbs_demanddetail dd where    prop.wardid=boundary.id and 
-         NULLIF(prop.usagetype, '')::int  = ut.id
+         from egwtr_connection_view prop, eg_boundary boundary ,egbs_demand demand,
+         egbs_demanddetail dd where    prop.wardid=boundary.id 
          and  demand.consumercode=prop.hscno 
          and demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE
          fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
-         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL') and prop.tenantid=$tenantid group by hscno,state,consumerName )
+         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL') and prop.tenantid=$tenantid 
          UNION
          (select prop.hscno as hscno,prop.username as consumerName,
-         'CURRENT' as STATE, SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount) ELSE NULL END)) AS WT_DEMAND,
+         'ARREAR' as STATE, SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount) ELSE NULL END)) AS WT_DEMAND,
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.collectionamount) ELSE NULL END)) AS WT_COLL,
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS WT_BAL
-         from egwtr_connection_view prop, eg_boundary boundary ,egpt_mstr_usage  ut,egbs_demand demand, egbs_demanddetail dd where    prop.wardid=boundary.id and 
-         NULLIF(prop.usagetype, '')::int  = ut.id
-         and  demand.consumercode=prop.hscno 
+         from egwtr_connection_view prop, eg_boundary boundary ,egbs_demand demand, egbs_demanddetail dd where    prop.wardid=boundary.id and 
+         demand.consumercode=prop.hscno 
          and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE
          fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
-         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL') and prop.tenantid=$tenantid group by hscno,state,consumerName) )result order by hscno asc;
+         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL') and prop.tenantid=$tenantid 
+         
+  groupBy: group by hscno,state,consumerName )
+  orderBy: )result order by hscno asc;
 

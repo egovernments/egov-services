@@ -21,6 +21,7 @@ import org.egov.asset.contract.FundResponse;
 import org.egov.asset.contract.RevaluationRequest;
 import org.egov.asset.contract.VoucherRequest;
 import org.egov.asset.contract.VoucherResponse;
+import org.egov.asset.domain.CalculationAssetDetails;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AuditDetails;
 import org.egov.asset.model.ChartOfAccountContract;
@@ -30,13 +31,19 @@ import org.egov.asset.model.ChartOfAccountDetailContractResponse;
 import org.egov.asset.model.Department;
 import org.egov.asset.model.DepreciationCriteria;
 import org.egov.asset.model.Disposal;
+import org.egov.asset.model.FiscalPeriod;
 import org.egov.asset.model.Function;
+import org.egov.asset.model.Functionary;
 import org.egov.asset.model.Fund;
+import org.egov.asset.model.FundSource;
 import org.egov.asset.model.Revaluation;
+import org.egov.asset.model.Scheme;
+import org.egov.asset.model.SubScheme;
 import org.egov.asset.model.Voucher;
-import org.egov.asset.model.VouchercreateAccountCodeDetails;
+import org.egov.asset.model.VoucherAccountCodeDetails;
 import org.egov.asset.model.enums.AssetConfigurationKeys;
 import org.egov.asset.model.enums.AssetFinancialParams;
+import org.egov.asset.model.enums.DepreciationMethod;
 import org.egov.asset.model.enums.Status;
 import org.egov.asset.model.enums.TransactionType;
 import org.egov.asset.model.enums.TypeOfChangeEnum;
@@ -75,7 +82,7 @@ public class VoucherServiceTest {
     private ApplicationProperties applicationProperties;
 
     @Mock
-    private VouchercreateAccountCodeDetails vouchercreateAccountCodeDetails;
+    private VoucherAccountCodeDetails VoucherAccountCodeDetails;
 
     @InjectMocks
     private VoucherService voucherService;
@@ -84,16 +91,21 @@ public class VoucherServiceTest {
     private AssetConfigurationService assetConfigurationService;
 
     @Test
-    public void test_shuould_create_VoucherRequest_For_Revalaution() {
+    public void test_shuould_create_VoucherRequest_For_Revalaution()
+            throws JsonParseException, JsonMappingException, IOException {
 
         final RevaluationRequest revaluationRequest = getRevaluationRequest();
-        final RequestInfo requestInfo = revaluationRequest.getRequestInfo();
+        revaluationRequest.getRequestInfo();
         final Revaluation revaluation = revaluationRequest.getRevaluation();
 
         final Asset asset = get_Asset();
-        final List<VouchercreateAccountCodeDetails> accountCodeDetails = getLedgers();
+        final List<VoucherAccountCodeDetails> accountCodeDetails = getLedgers();
 
         final String tenantId = revaluation.getTenantId();
+
+        final Map<String, String> voucherParams = getAssetFinancialParamsMap();
+
+        when(mapper.readValue(any(String.class), any(TypeReference.class))).thenReturn(voucherParams);
 
         when(assetConfigurationService
                 .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.REVALUATIONVOUCHERNAME, tenantId))
@@ -101,100 +113,176 @@ public class VoucherServiceTest {
         when(assetConfigurationService
                 .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.REVALUATIONVOUCHERDESCRIPTION, tenantId))
                         .thenReturn("Asset Revaluation Journal Voucher");
-        final Fund revFund = getFund();
-        final VoucherRequest generatedVoucherRequest = voucherService.createVoucherRequest(revaluation, revFund,
-                asset.getDepartment().getId(), accountCodeDetails, requestInfo, tenantId);
+        final VoucherRequest generatedVoucherRequest = voucherService.createRevaluationVoucherRequest(revaluation,
+                accountCodeDetails, asset.getId(), asset.getDepartment().getId(), getHttpHeaders());
 
-        final Fund fund = getFund();
-        final Voucher voucher = getVoucher(revaluation, asset.getDepartment().getId(), fund, tenantId);
+        final Fund fund = new Fund();
+        fund.setId(Long.valueOf("1"));
+
+        final Voucher voucher = getVoucher(asset.getDepartment().getId(), fund);
+
+        voucher.setName(assetConfigurationService
+                .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.REVALUATIONVOUCHERNAME, tenantId));
+        voucher.setDescription(assetConfigurationService
+                .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.REVALUATIONVOUCHERDESCRIPTION, tenantId));
+
+        voucher.setSource(
+                null + "/asset-web/app/asset/create-asset-revaluation.html?id=" + asset.getId() + "&type=view");
+
+        final Function function = new Function();
+        function.setId(Long.valueOf("124"));
+
+        final List<VoucherAccountCodeDetails> voucherAccountCodeDetails = voucher.getLedgers();
+        for (final VoucherAccountCodeDetails acd : voucherAccountCodeDetails)
+            acd.setFunction(function);
+
+        voucher.setLedgers(voucherAccountCodeDetails);
+
         final List<Voucher> vouchers = new ArrayList<>();
         vouchers.add(voucher);
 
         final VoucherRequest expectedVoucherRequest = new VoucherRequest();
-        expectedVoucherRequest.setRequestInfo(new RequestInfo());
+        expectedVoucherRequest.setRequestInfo(new org.egov.asset.model.RequestInfo());
         expectedVoucherRequest.setVouchers(vouchers);
 
         System.out.println(generatedVoucherRequest + "\n");
         System.err.println(expectedVoucherRequest);
 
-        assertEquals(expectedVoucherRequest.getVouchers(), generatedVoucherRequest.getVouchers());
+        assertEquals(expectedVoucherRequest.getVouchers().toString(), generatedVoucherRequest.getVouchers().toString());
 
     }
 
     @Test
-    public void test_shuould_create_VoucherRequest_For_Disposal() {
+    public void test_should_create_VoucherRequest_For_Disposal()
+            throws JsonParseException, JsonMappingException, IOException {
 
         final DisposalRequest disposalRequest = getDisposalRequest();
-        final RequestInfo requestInfo = disposalRequest.getRequestInfo();
+        disposalRequest.getRequestInfo();
         final Disposal disposal = disposalRequest.getDisposal();
 
         final Asset asset = get_Asset();
-        final List<VouchercreateAccountCodeDetails> accountCodeDetails = getLedgers();
+        final List<VoucherAccountCodeDetails> accountCodeDetails = getLedgers();
 
         final String tenantId = disposal.getTenantId();
 
+        final Map<String, String> voucherParams = getAssetFinancialParamsMap();
+
+        when(mapper.readValue(any(String.class), any(TypeReference.class))).thenReturn(voucherParams);
         when(assetConfigurationService.getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DISPOSALVOUCHERNAME,
                 tenantId)).thenReturn("Asset Disposal");
         when(assetConfigurationService
                 .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DISPOSALVOUCHERDESCRIPTION, tenantId))
                         .thenReturn("Asset Disposal Journal Voucher");
-        final Fund disposalFund = getFund();
-        final VoucherRequest generatedVoucherRequest = voucherService.createVoucherRequest(disposal, disposalFund,
-                asset.getDepartment().getId(), accountCodeDetails, requestInfo, tenantId);
+
+        final VoucherRequest generatedVoucherRequest = voucherService.createDisposalVoucherRequest(disposal,
+                asset.getId(), asset.getDepartment().getId(), accountCodeDetails, getHttpHeaders());
 
         final Fund fund = getFund();
-        final Voucher voucher = getVoucher(disposal, asset.getDepartment().getId(), fund, tenantId);
+        final Voucher voucher = getVoucher(asset.getDepartment().getId(), fund);
+
+        voucher.setName(assetConfigurationService
+                .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DISPOSALVOUCHERNAME, tenantId));
+        voucher.setDescription(assetConfigurationService
+                .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DISPOSALVOUCHERDESCRIPTION, tenantId));
+
+        voucher.setSource(null + "/asset-web/app/asset/create-asset-sale.html?id=" + asset.getId() + "&type=view");
         final List<Voucher> vouchers = new ArrayList<>();
         vouchers.add(voucher);
 
         final VoucherRequest expectedVoucherRequest = new VoucherRequest();
-        expectedVoucherRequest.setRequestInfo(new RequestInfo());
+        expectedVoucherRequest.setRequestInfo(new org.egov.asset.model.RequestInfo());
         expectedVoucherRequest.setVouchers(vouchers);
 
         System.out.println(generatedVoucherRequest + "\n");
         System.err.println(expectedVoucherRequest);
 
-        assertEquals(expectedVoucherRequest.getVouchers(), generatedVoucherRequest.getVouchers());
+        assertEquals(expectedVoucherRequest.getVouchers().toString(), generatedVoucherRequest.getVouchers().toString());
 
     }
 
+    private Map<String, String> getAssetFinancialParamsMap() {
+        final Map<String, String> voucherParams = new HashMap<String, String>();
+        voucherParams.put(AssetFinancialParams.FUND.toString(), "01");
+        voucherParams.put(AssetFinancialParams.FUNCTION.toString(), "0600");
+        voucherParams.put(AssetFinancialParams.FUNCTIONARY.toString(), "01");
+        voucherParams.put(AssetFinancialParams.SCHEME.toString(), "01");
+        voucherParams.put(AssetFinancialParams.SUBSCHEME.toString(), "01");
+        voucherParams.put(AssetFinancialParams.FISCAL.toString(), "01");
+        voucherParams.put(AssetFinancialParams.FUNDSOURCE.toString(), "01");
+        return voucherParams;
+    }
+
     @Test
-    public void test_shuould_create_VoucherRequest_For_Depreciation() {
+    public void test_shuould_create_VoucherRequest_For_Depreciation()
+            throws JsonParseException, JsonMappingException, IOException {
 
         final DepreciationRequest depreciationRequest = DepreciationRequest.builder().requestInfo(new RequestInfo())
                 .depreciationCriteria(getDepreciationCriteria()).build();
-        final RequestInfo requestInfo = depreciationRequest.getRequestInfo();
+        depreciationRequest.getRequestInfo();
         final DepreciationCriteria depreciationCriteria = depreciationRequest.getDepreciationCriteria();
 
         final Asset asset = get_Asset();
-        final List<VouchercreateAccountCodeDetails> accountCodeDetails = getLedgers();
+        final List<VoucherAccountCodeDetails> accountCodeDetails = getLedgers();
 
         final String tenantId = depreciationCriteria.getTenantId();
 
+        final List<CalculationAssetDetails> calculationAssetDetailList = getCalculationAssetDetailList();
+
+        final Map<String, String> voucherParams = getAssetFinancialParamsMap();
+
+        when(mapper.readValue(any(String.class), any(TypeReference.class))).thenReturn(voucherParams);
         when(assetConfigurationService
                 .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DEPRECIATIONVOUCHERNAME, tenantId))
                         .thenReturn("Asset Disposal");
         when(assetConfigurationService
                 .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DEPRECIATIONVOUCHERDESCRIPTION, tenantId))
                         .thenReturn("Asset Disposal Journal Voucher");
-        final Fund disposalFund = getFund();
-        final VoucherRequest generatedVoucherRequest = voucherService.createVoucherRequest(depreciationCriteria,
-                disposalFund, asset.getDepartment().getId(), accountCodeDetails, requestInfo, tenantId);
+        final VoucherRequest generatedVoucherRequest = voucherService.createDepreciationVoucherRequest(
+                calculationAssetDetailList, asset.getDepartment().getId(), accountCodeDetails, tenantId,
+                getHttpHeaders());
 
         final Fund fund = getFund();
-        final Voucher voucher = getVoucher(depreciationCriteria, asset.getDepartment().getId(), fund, tenantId);
+        final Voucher voucher = getVoucher(asset.getDepartment().getId(), fund);
         final List<Voucher> vouchers = new ArrayList<>();
+
+        voucher.setName(assetConfigurationService
+                .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DEPRECIATIONVOUCHERNAME, tenantId));
+        voucher.setDescription(assetConfigurationService
+                .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DEPRECIATIONVOUCHERDESCRIPTION, tenantId));
+
         vouchers.add(voucher);
 
         final VoucherRequest expectedVoucherRequest = new VoucherRequest();
-        expectedVoucherRequest.setRequestInfo(new RequestInfo());
+        expectedVoucherRequest.setRequestInfo(new org.egov.asset.model.RequestInfo());
         expectedVoucherRequest.setVouchers(vouchers);
 
         System.out.println(generatedVoucherRequest + "\n");
         System.err.println(expectedVoucherRequest);
 
-        assertEquals(expectedVoucherRequest.getVouchers(), generatedVoucherRequest.getVouchers());
+        assertEquals(expectedVoucherRequest.getVouchers().toString(), generatedVoucherRequest.getVouchers().toString());
 
+    }
+
+    private List<CalculationAssetDetails> getCalculationAssetDetailList() {
+        final List<CalculationAssetDetails> calculationAssetDetails = new ArrayList<CalculationAssetDetails>();
+        final CalculationAssetDetails calculationAssetDetail = new CalculationAssetDetails();
+        calculationAssetDetail.setAccumulatedDepreciation(BigDecimal.ZERO);
+        calculationAssetDetail.setAccumulatedDepreciationAccount(Long.valueOf("1947"));
+        calculationAssetDetail.setAssetCategoryDepreciationRate(null);
+        calculationAssetDetail.setAssetCategoryId(Long.valueOf("196"));
+        calculationAssetDetail.setAssetCategoryName("Kalyana Mandapam");
+        calculationAssetDetail.setAssetDepreciationRate(Double.valueOf("16.53"));
+        calculationAssetDetail.setAssetId(Long.valueOf("597"));
+        calculationAssetDetail.setAssetReference(null);
+        calculationAssetDetail.setDepartmentId(Long.valueOf("5"));
+        calculationAssetDetail.setDepreciationExpenseAccount(Long.valueOf("1906"));
+        calculationAssetDetail.setDepreciationMethod(DepreciationMethod.STRAIGHT_LINE_METHOD);
+        calculationAssetDetail.setEnableYearWiseDepreciation(true);
+        calculationAssetDetail.setFinancialyear("2017-18");
+        calculationAssetDetail.setGrossValue(new BigDecimal("15000"));
+        calculationAssetDetail.setYearwisedepreciationrate(Double.valueOf("15"));
+        calculationAssetDetails.add(calculationAssetDetail);
+        return calculationAssetDetails;
     }
 
     private DepreciationCriteria getDepreciationCriteria() {
@@ -256,7 +344,7 @@ public class VoucherServiceTest {
         when(restTemplate.postForObject(any(String.class), any(Object.class), any(Class.class)))
                 .thenReturn(chartOfAccountContractResponse);
         voucherService.getGlCodes(new RequestInfo(), "ap.kurnool", Long.valueOf("1224501"), new BigDecimal("5000"),
-                getFunction(), true, false);
+                true, false);
     }
 
     @SuppressWarnings("unchecked")
@@ -269,7 +357,6 @@ public class VoucherServiceTest {
         when(restTemplate.postForObject(any(String.class), any(Object.class), any(Class.class)))
                 .thenReturn(fundResponse);
         when(mapper.readValue(any(String.class), any(TypeReference.class))).thenReturn(voucherParams);
-        voucherService.getFundFromVoucherMap(new RequestInfo(), "ap.kurnool");
     }
 
     @SuppressWarnings("unchecked")
@@ -282,7 +369,6 @@ public class VoucherServiceTest {
         when(restTemplate.postForObject(any(String.class), any(Object.class), any(Class.class)))
                 .thenReturn(functionResponse);
         when(mapper.readValue(any(String.class), any(TypeReference.class))).thenReturn(voucherParams);
-        voucherService.getFunctionFromVoucherMap(new RequestInfo(), "ap.kurnool");
     }
 
     private FunctionResponse getFunctionResponse() {
@@ -299,12 +385,7 @@ public class VoucherServiceTest {
 
     private Function getFunction() {
         final Function function = new Function();
-        function.setId(Long.valueOf("5"));
         function.setCode("0600");
-        function.setActive(true);
-        function.setName("Estate");
-        function.setParentId(null);
-        function.setLevel(null);
         return function;
     }
 
@@ -407,43 +488,15 @@ public class VoucherServiceTest {
         final VoucherRequest voucherRequest = new VoucherRequest();
         final List<Voucher> vouchers = new ArrayList<Voucher>();
         vouchers.add(getVoucher(Long.valueOf("5"), getFund()));
-        voucherRequest.setRequestInfo(new RequestInfo());
+        voucherRequest.setRequestInfo(new org.egov.asset.model.RequestInfo());
         voucherRequest.setVouchers(vouchers);
         return voucherRequest;
     }
 
     private Fund getFund() {
         final Fund fund = new Fund();
-        fund.setActive(true);
         fund.setCode("01");
-        fund.setName("Municipal Fund");
-        fund.setId(Long.valueOf("1"));
-        fund.setIdentifier(null);
-        fund.setLevel(null);
-        fund.setParentId(null);
         return fund;
-    }
-
-    private Voucher getVoucher(final Object entity, final Long departmentId, final Fund fund, final String tenantId) {
-        final Voucher voucher = getVoucher(departmentId, fund);
-        if (entity instanceof Revaluation) {
-            voucher.setName(assetConfigurationService
-                    .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.REVALUATIONVOUCHERNAME, tenantId));
-            voucher.setDescription(assetConfigurationService.getAssetConfigValueByKeyAndTenantId(
-                    AssetConfigurationKeys.REVALUATIONVOUCHERDESCRIPTION, tenantId));
-        } else if (entity instanceof Disposal) {
-            voucher.setName(assetConfigurationService
-                    .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DISPOSALVOUCHERNAME, tenantId));
-            voucher.setDescription(assetConfigurationService
-                    .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DISPOSALVOUCHERDESCRIPTION, tenantId));
-        } else {
-            voucher.setName(assetConfigurationService
-                    .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DEPRECIATIONVOUCHERNAME, tenantId));
-            voucher.setDescription(assetConfigurationService.getAssetConfigValueByKeyAndTenantId(
-                    AssetConfigurationKeys.DEPRECIATIONVOUCHERDESCRIPTION, tenantId));
-        }
-
-        return voucher;
     }
 
     private Voucher getVoucher(final Long departmentId, final Fund fund) {
@@ -454,18 +507,39 @@ public class VoucherServiceTest {
         voucher.setLedgers(getLedgers());
         voucher.setDepartment(departmentId);
         voucher.setFund(fund);
+
+        final FiscalPeriod fiscalPeriod = new FiscalPeriod();
+        fiscalPeriod.setName("01");
+        voucher.setFiscalPeriod(fiscalPeriod);
+
+        final Scheme scheme = new Scheme();
+        scheme.setCode("01");
+        voucher.setScheme(scheme);
+
+        final SubScheme subScheme = new SubScheme();
+        subScheme.setCode("01");
+        voucher.setSubScheme(subScheme);
+
+        final Functionary functionary = new Functionary();
+        functionary.setCode("01");
+        voucher.setFunctionary(functionary);
+
+        final FundSource fundSource = new FundSource();
+        fundSource.setCode("01");
+        voucher.setFundsource(fundSource);
+
         return voucher;
     }
 
-    private List<VouchercreateAccountCodeDetails> getLedgers() {
-        final List<VouchercreateAccountCodeDetails> ledgers = new ArrayList<>();
-        final VouchercreateAccountCodeDetails creditAccountDetails = new VouchercreateAccountCodeDetails();
+    private List<VoucherAccountCodeDetails> getLedgers() {
+        final List<VoucherAccountCodeDetails> ledgers = new ArrayList<>();
+        final VoucherAccountCodeDetails creditAccountDetails = new VoucherAccountCodeDetails();
         creditAccountDetails.setCreditAmount(new BigDecimal("500"));
         creditAccountDetails.setDebitAmount(BigDecimal.ZERO);
         creditAccountDetails.setFunction(getFunction());
         creditAccountDetails.setGlcode("144005");
         creditAccountDetails.setSubledgerDetails(null);
-        final VouchercreateAccountCodeDetails debitAccountDetails = new VouchercreateAccountCodeDetails();
+        final VoucherAccountCodeDetails debitAccountDetails = new VoucherAccountCodeDetails();
         debitAccountDetails.setCreditAmount(BigDecimal.ZERO);
         debitAccountDetails.setDebitAmount(new BigDecimal("500"));
         debitAccountDetails.setFunction(getFunction());
@@ -500,7 +574,7 @@ public class VoucherServiceTest {
         revaluation.setReasonForRevaluation("reasonForRevaluation");
         revaluation.setFixedAssetsWrittenOffAccount(Long.valueOf("1"));
         revaluation.setFunction(Long.valueOf("124"));
-        revaluation.setFund(Long.valueOf("3"));
+        revaluation.setFund(Long.valueOf("1"));
         revaluation.setScheme(Long.valueOf("4"));
         revaluation.setSubScheme(Long.valueOf("5"));
         revaluation.setComments("coments");

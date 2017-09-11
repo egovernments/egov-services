@@ -32,12 +32,6 @@ public class AgreementDetailsEs {
 	private String ackNumber;
     private String action;
 
-	private String cityGrade;
-	private String cityName;
-	private String districtName;
-	private String cityCode;
-	private String regionName;
-	
 	private String adminWardName;
 	private String adminWard;
 
@@ -55,16 +49,6 @@ public class AgreementDetailsEs {
 
 	private Date agreementDate;
 	private String status;
-	private String allottee;
-	private String allotteeName;
-	private String allotteeMobile;
-	private String allotteeAadhaarNo;
-	
-	private String asset;
-	private String assetCategory;
-	private String assetCode;
-	private String assetName;
-	private String assetDrno;
 	private String tenderNumber;
 	private Date tenderDate;
 	private String councilNumber;
@@ -99,6 +83,11 @@ public class AgreementDetailsEs {
 	private BigDecimal arrearCollection;
 	private BigDecimal currentAmount;
 	private BigDecimal currentCollection;
+
+	private CityEs city;
+	private AssetEs asset;
+	private AllotteeEs allottee;
+	private List<DemandDetailsEs> demandDetails;
 
 	public void setAgreement(Agreement agreement) {
 
@@ -142,13 +131,15 @@ public class AgreementDetailsEs {
 	}
 
 	public void setAsset(Asset asset) {
-		
-		this.asset = asset.getId().toString();
-		this.assetName = asset.getName();
-		this.assetCode = asset.getCode();
-		this.assetCategory = asset.getCategory().getName();
-		this.assetDrno = asset.getLocationDetails().getDoorNo();
-
+		if(null != asset){
+			this.asset = AssetEs.builder()
+					.asset(asset.getId().toString())
+					.assetCategory(asset.getCategory().getName())
+					.assetName(asset.getName())
+					.assetCode(asset.getCode())
+					.assetDrno(asset.getLocationDetails().getDoorNo())
+					.build();
+		}
 	}
 
 	public void setBoundaryDetails(Location location, Map<Long, Boundary> boundaryMap) {
@@ -176,21 +167,26 @@ public class AgreementDetailsEs {
 	}
 
 	public void setAllottee(Allottee allottee) {
-		
-		this.allottee = allottee.getId().toString();
-		this.allotteeName = allottee.getName();
-		this.allotteeMobile = allottee.getMobileNumber();
-		this.allotteeAadhaarNo = allottee.getAadhaarNumber();
+		if(null != allottee){
+			this.allottee = AllotteeEs.builder()
+					.allottee(allottee.getId().toString())
+					.allotteeName(allottee.getName())
+					.allotteeMobile(allottee.getMobileNumber())
+					.allotteeAadhaarNo(allottee.getAadhaarNumber())
+					.build();
+		}
 	}
 
 	public void setCity(City city) {
-
-		this.cityGrade = city.getGrade();
-		this.cityName = city.getName();
-		this.districtName = city.getDistrictName();
-		this.cityCode = city.getCode();
-		this.regionName = city.getRegionName();
-
+		if(null != city){
+			this.city = CityEs.builder()
+					.cityGrade(city.getGrade())
+					.cityName(city.getName())
+					.cityCode(city.getCode())
+					.districtName(city.getDistrictName())
+					.regionName(city.getRegionName())
+					.build();
+		}
 	}
 	
 	public void setRent(List<DemandDetails> demandDetails, Installment installment,String taxReason) {

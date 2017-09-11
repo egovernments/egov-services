@@ -99,8 +99,8 @@ public class RegistrationUnitQueryBuilder {
 	 * @return
 	 */
 	public String getCreateQuery() {
-		return "INSERT INTO egmr_registration_unit" + "(id,code,name,isactive,tenantid,locality,zone,revenueWard,block"
-				+ ",street,electionWard,doorNo,pinCode,createdBy,lastModifiedBy,createdTime,lastModifiedTime) "
+		return "INSERT INTO egmr_registration_unit" + "(id,name,isactive,tenantid,locality,zone,revenueWard,block"
+				+ ",street,electionWard,doorNo,pinCode,isMainRegistrationUnit,createdBy,lastModifiedBy,createdTime,lastModifiedTime) "
 				+ "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ;";
 	}
 
@@ -109,8 +109,8 @@ public class RegistrationUnitQueryBuilder {
 	 * @return
 	 */
 	public String getUpdateQuery() {
-		return "UPDATE egmr_registration_unit SET code=?, name=?,isactive=?,locality=?,zone=?,revenueWard=?,block=?"
-				+ ",street=?,electionWard=?,doorNo=?,pinCode=?,createdBy=?,lastModifiedBy=?,createdTime=?,lastModifiedTime=?"
+		return "UPDATE egmr_registration_unit SET name=?,isactive=?,locality=?,zone=?,revenueWard=?,block=?"
+				+ ",street=?,electionWard=?,doorNo=?,pinCode=?,isMainRegistrationUnit=?,createdBy=?,lastModifiedBy=?,createdTime=?,lastModifiedTime=?"
 				+ "WHERE id=? AND tenantId=? ;";
 	}
 }

@@ -139,6 +139,21 @@ public class BudgetDetailServiceTest {
 
         final List<BudgetDetail> expextedResult = getBudgetDetails();
 
+        when(budgetDetailRepository.uniqueCheck(any(String.class), any(BudgetDetail.class))).thenReturn(true);
+        when(budgetDetailRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+
+        final List<BudgetDetail> actualResult = budgetDetailService.create(expextedResult, errors, requestInfo);
+
+        assertEquals(expextedResult, actualResult);
+
+    }
+    
+    @Test(expected = CustomBindException.class)
+    public final void test_save_with_out_kafkaa() {
+
+        final List<BudgetDetail> expextedResult = getBudgetDetails();
+
+        when(budgetDetailRepository.uniqueCheck(any(String.class), any(BudgetDetail.class))).thenReturn(false);
         when(budgetDetailRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
         final List<BudgetDetail> actualResult = budgetDetailService.create(expextedResult, errors, requestInfo);
@@ -147,7 +162,7 @@ public class BudgetDetailServiceTest {
 
     }
 
-    @Test(expected = CustomBindException.class)
+    @Test(expected = InvalidDataException.class)
     public final void test_save_with_out_kafka_and_with_null_req() {
 
         final List<BudgetDetail> expextedResult = getBudgetDetails();
@@ -165,6 +180,36 @@ public class BudgetDetailServiceTest {
 
         final List<BudgetDetail> expextedResult = getBudgetDetails();
 
+        when(budgetDetailRepository.uniqueCheck(any(String.class), any(BudgetDetail.class))).thenReturn(true);        
+        when(budgetDetailRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+
+        final List<BudgetDetail> actualResult = budgetDetailService.update(expextedResult, errors, requestInfo);
+
+        assertEquals(expextedResult, actualResult);
+
+    }
+    
+    @Test(expected=InvalidDataException.class)
+    public final void test_update_with_out_kafka_null_id() {
+
+        final List<BudgetDetail> expextedResult = getBudgetDetails();
+        expextedResult.get(0).setId(null);
+
+        when(budgetDetailRepository.uniqueCheck(any(String.class), any(BudgetDetail.class))).thenReturn(true);        
+        when(budgetDetailRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+
+        final List<BudgetDetail> actualResult = budgetDetailService.update(expextedResult, errors, requestInfo);
+
+        assertEquals(expextedResult, actualResult);
+
+    }
+    
+    @Test(expected = CustomBindException.class)
+    public final void test_update_with_out_kafkaa() {
+
+        final List<BudgetDetail> expextedResult = getBudgetDetails();
+
+        when(budgetDetailRepository.uniqueCheck(any(String.class), any(BudgetDetail.class))).thenReturn(false);        
         when(budgetDetailRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
         final List<BudgetDetail> actualResult = budgetDetailService.update(expextedResult, errors, requestInfo);
@@ -185,8 +230,22 @@ public class BudgetDetailServiceTest {
         assertEquals(expextedResult, actualResult);
 
     }
+    
+    @Test(expected=InvalidDataException.class)
+    public final void test_deletete_with_out_kafka_null_id() {
+    	
+    	final List<BudgetDetail> expextedResult = getBudgetDetails();
+    	expextedResult.get(0).setId(null);
+    	
+    	when(budgetDetailRepository.delete(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+    	
+    	final List<BudgetDetail> actualResult = budgetDetailService.delete(expextedResult, errors, requestInfo);
+    	
+    	assertEquals(expextedResult, actualResult);
+    	
+    }
 
-    @Test(expected = CustomBindException.class)
+    @Test(expected = InvalidDataException.class)
     public final void test_update_with_out_kafka_and_with_null_req() {
 
         final List<BudgetDetail> expextedResult = getBudgetDetails();
@@ -199,7 +258,7 @@ public class BudgetDetailServiceTest {
 
     }
     
-    @Test(expected = CustomBindException.class)
+    @Test(expected = InvalidDataException.class)
     public final void test_delete_with_out_kafka_and_with_null_req() {
 
         final List<BudgetDetail> expextedResult = getBudgetDetails();

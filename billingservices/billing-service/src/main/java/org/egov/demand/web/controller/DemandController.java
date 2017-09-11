@@ -97,6 +97,8 @@ public class DemandController {
 		}
 		demandValidator.validate(demandRequest, bindingResult);
 		if (bindingResult.hasErrors()) {
+		        if (bindingResult.getFieldErrors() != null && !bindingResult.getFieldErrors().isEmpty())
+		            log.info(bindingResult.getFieldErrors().get(0).getDefaultMessage());
 			return new ResponseEntity<>(responseFactory.getErrorResponse(bindingResult, requestInfo), HttpStatus.BAD_REQUEST);
 		}
 		DemandResponse demandResponse =  demandService.create(demandRequest);

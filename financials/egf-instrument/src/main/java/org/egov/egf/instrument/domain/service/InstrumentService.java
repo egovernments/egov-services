@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.exception.CustomBindException;
+import org.egov.common.domain.exception.ErrorCode;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.instrument.domain.model.Instrument;
@@ -27,8 +28,8 @@ import org.egov.egf.master.web.repository.FinancialStatusContractRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.SmartValidator;
 
@@ -77,7 +78,7 @@ public class InstrumentService {
 
 		try {
 
-			instruments = fetchRelated(instruments);
+			instruments = fetchRelated(instruments,requestInfo);
 
 			validate(instruments, ACTION_CREATE, errors);
 
@@ -99,7 +100,7 @@ public class InstrumentService {
 
 		try {
 
-			instruments = fetchRelated(instruments);
+			instruments = fetchRelated(instruments,requestInfo);
 
 			validate(instruments, ACTION_UPDATE, errors);
 
@@ -145,60 +146,96 @@ public class InstrumentService {
 				// errors);
 				break;
 			case ACTION_CREATE:
-				Assert.notNull(instruments, "Instruments to create must not be null");
+				if (instruments == null) {
+                    throw new InvalidDataException("instruments", ErrorCode.NOT_NULL.getCode(), null);
+                }
 				Calendar cal = Calendar.getInstance();
 				cal.add(Calendar.MONTH, -6);
 				Calendar cal1 = Calendar.getInstance();
 				for (Instrument instrument : instruments) {
 					switch (instrument.getInstrumentType().getName().toLowerCase()) {
 					case "cash":
-						Assert.notNull(instrument.getTransactionNumber(), "Cash Transaction Number must not be null");
+						if(instrument.getTransactionNumber() == null) {
+							throw new InvalidDataException("TransactionNumber(Cash)", ErrorCode.NOT_NULL.getCode(), null);
+						}
 //						Assert.isTrue(DateUtils.isSameDay(instrument.getTransactionDate(), Calendar.getInstance().getTime()), "Cash Transaction Date must be current date");
 //						Assert.notNull(instrument.getPayee(), "Payee Details for Cash Transaction must not be null");
 						break;
 					case "cheque":
-						Assert.notNull(instrument.getTransactionNumber(), "Cheque Transaction Number must not be null");
+						if(instrument.getTransactionNumber() == null) {
+							throw new InvalidDataException("TransactionNumber(Cheque)", ErrorCode.NOT_NULL.getCode(), null);
+						}
 //						Assert.notNull(instrument.getPayee(), "Cheque Payee Details must not be null");
 //						cal1.setTime(instrument.getTransactionDate());
 //						Assert.isTrue(cal1.after(cal), "Cheque Transaction should be before 6 months of current date or a future date");
-						Assert.notNull(instrument.getBank(), "Bank Details of the Cheque must not be null");
+						if(instrument.getBank() == null){
+							throw new InvalidDataException("BankDetails(Cheque)", ErrorCode.NOT_NULL.getCode(), null);
+						}
 						break;
 					case "dd":
-						Assert.notNull(instrument.getTransactionNumber(), "DD Transaction Number must not be null");
+						if(instrument.getTransactionNumber() == null) {
+							throw new InvalidDataException("TransactionNumber(DD)", ErrorCode.NOT_NULL.getCode(), null);
+						}
 						cal1.setTime(instrument.getTransactionDate());
 //						Assert.isTrue(cal1.after(cal), "DD Transaction should be before 6 months of current date or a future date");
 //						Assert.notNull(instrument.getPayee(), "DD Payee Details must not be null");
-						Assert.notNull(instrument.getBank(), "Bank Details of the DD must not be null");
+						if(instrument.getBank() == null){
+							throw new InvalidDataException("BankDetails(DD)", ErrorCode.NOT_NULL.getCode(), null);
+						}
 						break;
 					case "online":
-						Assert.notNull(instrument.getTransactionNumber(), "Online Transaction Number must not be null");
+						if(instrument.getTransactionNumber() == null) {
+							throw new InvalidDataException("TransactionNumber(Online)", ErrorCode.NOT_NULL.getCode(), null);
+						}
 //						Assert.notNull(instrument.getPayee(), "Online Payee Details must not be null");
 //						cal1.setTime(instrument.getTransactionDate());
 //						Assert.isTrue(cal1.after(cal), "DD Transaction should be before 6 months of current date or a future date");
 						break;
 					case "bankchallan":
-						Assert.notNull(instrument.getTransactionNumber(), "Bank Challan Transaction Number must not be null");
+						if(instrument.getTransactionNumber() == null) {
+							throw new InvalidDataException("TransactionNumber(BankChallan)", ErrorCode.NOT_NULL.getCode(), null);
+						}
+						if(instrument.getBank() == null){
+							throw new InvalidDataException("BankDetails(BankChallan)", ErrorCode.NOT_NULL.getCode(), null);
+						}
+						if(instrument.getBankAccount() == null){
+							throw new InvalidDataException("BankAccountDetails(BankChallan)", ErrorCode.NOT_NULL.getCode(), null);
+						}
 //						Assert.notNull(instrument.getPayee(), "Bank Challan Payee Details must not be null");
-						Assert.notNull(instrument.getBank(), "Bank Challan must contain Bank Details");
-						Assert.notNull(instrument.getBankAccount(), "Bank Challan must contain Bank Account Details");
 //						cal1.setTime(instrument.getTransactionDate());
 //						Assert.isTrue(cal1.after(cal), "DD Transaction should be before 6 months of current date or a future date");
 						break;
 					}
 					validator.validate(instrument, errors);
+					if (!instrumentRepository.uniqueCheck("transactionNumber", instrument)) {
+                        errors.addError(new FieldError("instrument", "transactionNumber", instrument.getTransactionNumber(), false,
+                                new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                    }
 				}
 				break;
 			case ACTION_UPDATE:
-				Assert.notNull(instruments, "Instruments to update must not be null");
+				if (instruments == null) {
+                    throw new InvalidDataException("instruments", ErrorCode.NOT_NULL.getCode(), null);
+                }
 				for (Instrument instrument : instruments) {
-					Assert.notNull(instrument.getId(), "Instrument ID to update must not be null");
+					if (instrument.getId() == null) {
+                        throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), instrument.getId());
+                    }
 					validator.validate(instrument, errors);
+					if (!instrumentRepository.uniqueCheck("transactionNumber", instrument)) {
+                        errors.addError(new FieldError("instrument", "transactionNumber", instrument.getTransactionNumber(), false,
+                                new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                    }
 				}
 				break;
 			case ACTION_DELETE:
-				Assert.notNull(instruments, "Instruments to delete must not be null");
+				if (instruments == null) {
+                    throw new InvalidDataException("instruments", ErrorCode.NOT_NULL.getCode(), null);
+                }
 				for (Instrument instrument : instruments) {
-					Assert.notNull(instrument.getId(), "Instrument ID to delete must not be null");
+					if (instrument.getId() == null) {
+                        throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), instrument.getId());
+                    }
 				}
 				break;
 			default:
@@ -211,7 +248,7 @@ public class InstrumentService {
 
 	}
 
-	public List<Instrument> fetchRelated(List<Instrument> instruments) {
+	public List<Instrument> fetchRelated(List<Instrument> instruments,RequestInfo requestInfo) {
 
 		if (instruments != null)
 			for (Instrument instrument : instruments) {
@@ -232,7 +269,7 @@ public class InstrumentService {
 					instrument.setInstrumentType(response.getPagedData().get(0));
 				}
 				if (instrument.getBank() != null && instrument.getBank().getId() != null) {
-					BankContract bank = bankContractRepository.findById(instrument.getBank());
+					BankContract bank = bankContractRepository.findById(instrument.getBank(),requestInfo);
 					if (bank == null) {
 						throw new InvalidDataException("bank", "bank.invalid", " Invalid bank");
 					}

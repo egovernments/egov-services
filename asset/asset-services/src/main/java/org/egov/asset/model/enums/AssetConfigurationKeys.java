@@ -15,7 +15,9 @@ public enum AssetConfigurationKeys {
                                                             "DepreciationSeparationDate"), DEPRECIATIONVOUCHERNAME(
                                                                     "AssetDepreciationVoucherName"), DEPRECIATIONVOUCHERDESCRIPTION(
                                                                             "AssetDepreciationVoucherDescription"), VOUCHERPARAMS(
-                                                                                    "VoucherParams");
+                                                                                    "VoucherParams"), ASSETBATCHSIZE(
+                                                                                            "AssetBatchSize"), DEPRECIATIONCFACTOR(
+                                                                                                    "DepreciationCFactor");
 
     private String value;
 

@@ -1,0 +1,12 @@
+[
+  {
+    "id": null,
+    "type": "type1",
+    "assetCategory": null,
+    "fromDate": null,
+    "toDate": null,
+    "percentage": null,
+    "flatAmount": null,
+    "tenantId": "1"
+  }
+]

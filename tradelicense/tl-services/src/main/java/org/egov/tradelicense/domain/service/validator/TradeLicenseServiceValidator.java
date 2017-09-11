@@ -38,7 +38,6 @@ import org.egov.tradelicense.common.domain.exception.PropertyAssesmentNotFoundEx
 import org.egov.tradelicense.domain.model.LicenseFeeDetail;
 import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
-import org.egov.tradelicense.domain.model.TradeLicenseSearch;
 import org.egov.tradelicense.domain.repository.TradeLicenseRepository;
 import org.egov.tradelicense.web.contract.FinancialYearContract;
 import org.egov.tradelicense.web.repository.BoundaryContractRepository;
@@ -132,7 +131,7 @@ public class TradeLicenseServiceValidator {
 
 		for (TradeLicense tradeLicense : tradeLicenses) {
 
-			// checking the valid from date existance
+			// checking the valid from date existence
 			if (tradeLicense.getIsLegacy()) {
 				validateTradeValidFromDate(tradeLicense, requestInfo);
 			}
@@ -214,12 +213,13 @@ public class TradeLicenseServiceValidator {
 			} else if (tradeLicense.getApplication().getApplicationType() == null) {
 				throw new InvalidInputException(propertiesManager.getApplicationTypeMissingErr(), requestInfo);
 			}
-			if (tradeLicense.getApplication() != null && tradeLicense.getApplication().getApplicationNumber() != null) {
-			    tradeLicenseRepository.validateUniqueApplicationNumber(tradeLicense, isNewRecord, requestInfo);
-	                }
+			if (tradeLicense.getApplication() != null && tradeLicense.getApplication().getApplicationNumber() != null
+					&& !tradeLicense.getApplication().getApplicationNumber().isEmpty()) {
+				tradeLicenseRepository.validateUniqueApplicationNumber(tradeLicense, isNewRecord, requestInfo);
+			}
 		}
 	}
-	
+
 	private void validateLicenseAgreementDetails(TradeLicense tradeLicense, RequestInfo requestInfo) {
 
 		if (tradeLicense.getIsPropertyOwner()) {
@@ -414,19 +414,22 @@ public class TradeLicenseServiceValidator {
 		// supporting documents validation
 		if (!tradeLicense.getIsLegacy()) {
 
-			DocumentTypeV2Response documentTypeResponse = documentTypeContractRepository
+			DocumentTypeV2Response documentTypeMandatoryResponse = documentTypeContractRepository
 					.findTradeMandatoryDocuments(tradeLicense, requestInfoWrapper);
 
-			if (documentTypeResponse != null && documentTypeResponse.getDocumentTypes() != null
-					&& documentTypeResponse.getDocumentTypes().size() > 0) {
+			// validating mandatory documents existence
+			if (documentTypeMandatoryResponse != null && documentTypeMandatoryResponse.getDocumentTypes() != null
+					&& documentTypeMandatoryResponse.getDocumentTypes().size() > 0) {
 
-				for (DocumentTypeContract documentTypeContract : documentTypeResponse.getDocumentTypes()) {
+				for (DocumentTypeContract documentTypeContract : documentTypeMandatoryResponse.getDocumentTypes()) {
 
 					Boolean isMandatoryDocumentExists = Boolean.FALSE;
 
-					if (tradeLicense.getSupportDocuments() != null && tradeLicense.getSupportDocuments().size() > 0) {
+					if (tradeLicense.getApplication() != null
+							&& tradeLicense.getApplication().getSupportDocuments() != null
+							&& tradeLicense.getApplication().getSupportDocuments().size() > 0) {
 
-						for (SupportDocument supportDocument : tradeLicense.getSupportDocuments()) {
+						for (SupportDocument supportDocument : tradeLicense.getApplication().getSupportDocuments()) {
 
 							if (documentTypeContract.getId() == supportDocument.getDocumentTypeId()) {
 
@@ -446,22 +449,45 @@ public class TradeLicenseServiceValidator {
 					}
 				}
 			}
-		}
 
-		if (tradeLicense.getSupportDocuments() != null && tradeLicense.getSupportDocuments().size() > 0) {
-			for (SupportDocument supportDocument : tradeLicense.getSupportDocuments()) {
+			// validating request supporting documents
+			if (tradeLicense.getApplication() != null && tradeLicense.getApplication().getSupportDocuments() != null
+					&& tradeLicense.getApplication().getSupportDocuments().size() > 0) {
 
-				DocumentTypeV2Response documentTypeResponse = documentTypeContractRepository
-						.findByIdAndTlValues(tradeLicense, supportDocument, requestInfoWrapper);
+				for (SupportDocument supportDocument : tradeLicense.getApplication().getSupportDocuments()) {
 
-				if (documentTypeResponse == null || documentTypeResponse.getDocumentTypes() == null
-						|| documentTypeResponse.getDocumentTypes().size() == 0) {
+					DocumentTypeV2Response documentTypeResponse = documentTypeContractRepository
+							.findByIdAndTlValues(tradeLicense, supportDocument, requestInfoWrapper);
 
-					throw new InvalidDocumentTypeException(propertiesManager.getDocumentTypeErrorMsg(), requestInfo);
+					if (documentTypeResponse == null || documentTypeResponse.getDocumentTypes() == null
+							|| documentTypeResponse.getDocumentTypes().size() == 0) {
+
+						throw new InvalidDocumentTypeException(propertiesManager.getDocumentTypeErrorMsg(),
+								requestInfo);
+					}
 				}
+
 			}
 
+		} else {
+
+			if (tradeLicense.getSupportDocuments() != null && tradeLicense.getSupportDocuments().size() > 0) {
+				for (SupportDocument supportDocument : tradeLicense.getSupportDocuments()) {
+
+					DocumentTypeV2Response documentTypeResponse = documentTypeContractRepository
+							.findByIdAndTlValues(tradeLicense, supportDocument, requestInfoWrapper);
+
+					if (documentTypeResponse == null || documentTypeResponse.getDocumentTypes() == null
+							|| documentTypeResponse.getDocumentTypes().size() == 0) {
+
+						throw new InvalidDocumentTypeException(propertiesManager.getDocumentTypeErrorMsg(),
+								requestInfo);
+					}
+				}
+
+			}
 		}
+
 	}
 
 	private void validateTradeUomDetails(TradeLicense tradeLicense, RequestInfo requestInfo) {
@@ -753,15 +779,18 @@ public class TradeLicenseServiceValidator {
 			validateTradeUpdateFeeDetails(tradeLicense, requestInfo);
 		}
 
-		TradeLicenseSearch tradeLicenseSearch = tradeLicenseRepository.getByLicenseId(tradeLicense, requestInfo);
+		TradeLicense license = tradeLicenseRepository.findByLicenseId(tradeLicense, requestInfo);
 
-		if (tradeLicenseSearch != null) {
+		if (license != null) {
 
-			tradeLicense.setLicenseNumber(tradeLicenseSearch.getLicenseNumber());
-			tradeLicense.setApplicationType(tradeLicenseSearch.getApplicationType());
-			tradeLicense.setApplicationNumber(tradeLicenseSearch.getApplicationNumber());
-			tradeLicense.setTenantId(tradeLicenseSearch.getTenantId());
-			tradeLicense.setApplicationDate(tradeLicenseSearch.getApplicationDate());
+			if(license.getIsLegacy()){
+				tradeLicense.setLicenseNumber(license.getLicenseNumber());
+				tradeLicense.getApplication().setId(license.getApplication().getId());
+			}
+			tradeLicense.setApplicationType(license.getApplicationType());
+			tradeLicense.setApplicationNumber(license.getApplicationNumber());
+			tradeLicense.setTenantId(license.getTenantId());
+			tradeLicense.setApplicationDate(license.getApplicationDate());
 		}
 	}
 

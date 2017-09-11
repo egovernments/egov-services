@@ -1,0 +1,297 @@
+
+    BillRegister:
+      type: object
+      description: |
+          
+      allOf:
+        - $ref: '#/definitions/Auditable'
+      properties:
+        id:
+          type: string
+          maxLength: 50
+          description: |
+            Unique Identifier of the BillRegister
+        billType:
+          type: string
+          maxLength: 50
+          description: |
+            billType is the type of the bill
+            example is ExpenseBill,ContractorBill,PurchaseBill,SalaryBill etc
+        billSubType:
+          type: string
+          maxLength: 50
+          description: |
+            billSubType refers with each type of bill what is the subtype .
+            
+            for example ContractorBill will have subType as "FinalBill"
+        billNumber:
+          type: string
+          maxLength: 50
+          description: |
+            billNumber refers to the unique number generated for the bill.
+        billDate:
+          type: string
+          format: date
+          description: |
+            billDate is the date when the bill is created.
+        billAmount:
+          type: number
+          format: double
+          description: |
+            billAmount is the total bill Amount .
+            even though the bill is created for billAmount of x
+            it may be passed for amount x-k
+        passedAmount:
+          type: number
+          format: double
+          description: |
+            passedAmount refers to the amount passed by ulb .
+            even though the bill is created for billAmount of x
+            it may be passed for amount x-k
+        moduleName:
+          type: string
+          maxLength: 50
+          description: |
+            moduleName is the name of the module who is posting the bill in financials
+        status:
+          $ref: "#/definitions/FinancialStatus"
+          description: |
+            status refers to the status of the bill like ,created,approved etc
+        fund:
+          $ref: "#/definitions/Fund"
+          description: |
+            fundsource refers to the fundsounce master
+        function:
+          $ref: "#/definitions/Function"
+          description: |
+            function refers to the function master
+        fundsource:
+          $ref: "#/definitions/Fundsource"
+          description: |
+            fundsource of the BillRegister
+        scheme:
+          $ref: "#/definitions/Scheme"
+          description: |
+            scheme of the BillRegister
+        subScheme:
+          $ref: "#/definitions/SubScheme"
+          description: |
+            sub scheme of the BillRegister
+        functionary:
+          $ref: "#/definitions/Functionary"
+          description: |
+            functionary of the BillRegister
+        division:
+          $ref: "#/definitions/Boundary"
+          description: |
+            division of the BillRegister
+        department:
+          $ref: "#/definitions/Department"
+          description: |
+            department of the BillRegister
+        sourcePath:
+          type: string
+          maxLength: 256
+          description: |
+            source path of the BillRegister
+        budgetCheckRequired:
+          type: boolean
+          description: |
+            budgetCheckRequired is a boolean field is the budget check is required or not default is true
+        budgetAppropriationNo:
+          type: string
+          maxLength: 50
+          description: |
+            budgetAppropriationNo is the number generated after budget check. This field will be null
+            if the budget check not done.
+        partyBillNumber:
+          type: string
+          maxLength: 50
+          description: |
+            partyBillNumber is the manual bill number .
+        partyBillDate:
+          type: string
+          format: date
+          description: |
+            partyBillDate is the manual bill date .
+        description:
+          type: string
+          maxLength: 256
+          description: |
+            description is the more detailed information about the bill
+        billDetails:
+          type:  array
+          description:  |
+            bill details of the BillRegister
+          items:
+            $ref: "#/definitions/BillDetail"
+          description: |
+            bill details of the BillRegister
+      required:
+      - billType
+      - billDate
+      - billAmount
+    BillDetail:
+      type: object
+      description: |
+          
+      allOf:
+        - $ref: '#/definitions/Auditable'
+      properties:
+        id:
+          type: string
+          description: |
+            Unique Identifier of the BillDetail
+        orderId:
+          type: integer
+          format: int32
+          description: |
+            order id of the BillDetail
+        chartOfAccount:
+          $ref: "#/definitions/ChartOfAccount"
+          description: |
+            chart of account of the BillDetail
+        glcode:
+          type: string
+          maxLength: 16
+          description: |
+            glcode of the BillDetail
+        debitAmount:
+          type: number
+          format: double
+          description: |
+            debit amount of the BillDetail
+        creditAmount:
+          type: number
+          format: double
+          description: |
+            credit amount of the BillDetail
+        function:
+          $ref: "#/definitions/Function"
+          description: |
+            function of the BillDetail
+        billPayeeDetails:
+          type:  array
+          description:  |
+            bill payee details of the BillDetail
+          items:
+            $ref: "#/definitions/BillPayeeDetail"
+          description: |
+            bill payee details of the BillDetail
+      required:
+      - chartOfAccount
+      - glcode
+      - debitAmount
+      - creditAmount
+    BillPayeeDetail:
+      type: object
+      description: |
+          
+      allOf:
+        - $ref: '#/definitions/Auditable'
+      properties:
+        id:
+          type: string
+          description: |
+            Unique Identifier of the BillPayeeDetail
+        accountDetailType:
+          $ref: "#/definitions/AccountDetailType"
+          description: |
+            account detail type of the BillPayeeDetail
+        accountDetailKey:
+          $ref: "#/definitions/AccountDetailKey"
+          description: |
+            account detail key of the BillPayeeDetail
+        amount:
+          type: number
+          format: double
+          description: |
+            amount of the BillPayeeDetail
+      required:
+      - accountDetailKey
+      - amount
+    BillRegisterRequest:
+      description: Contract class for web request. Array of BillRegister items  are used in case of create or update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        billRegisters:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/BillRegister'
+    BillRegisterResponse:
+      description: Contract class for web response. Array of BillRegister items  are used in case of search ,create or update request. 
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        billRegisters:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/BillRegister'
+        page:
+          $ref: '#/definitions/Page'
+
+    Checklist:
+      type: object
+      description: |
+          
+      allOf:
+        - $ref: '#/definitions/Auditable'
+      properties:
+        id:
+          type: string
+          maxLength: 50
+          description: |
+            id is the unique identifier
+        type:
+          type: string
+          maxLength: 50
+          minLength: 1
+          description: |
+            type refers to the name of the entities. If the check list is required for Bill then type will be billRegister
+        subType:
+          type: string
+          maxLength: 50
+          minLength: 1
+          description: |
+            subType refers to the different types of  entities. If the check list is required for Bill of type expenseBill
+            then subtype value is expensebill.
+            this is unique combination type and subtype is unique
+        key:
+          type: string
+          maxLength: 250
+          minLength: 3
+          description: |
+            key is the content of the check list .
+            exmaple. 1. Passport copy attached
+            2. Ration card copy attached etc
+        description:
+          type: string
+          maxLength: 250
+          minLength: 3
+          description: |
+            description is further detailed discription of the check list values
+    ChecklistRequest:
+      description: Contract class for web request. Array of Checklist items  are used in case of create or update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        checklists:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Checklist'
+    ChecklistResponse:
+      description: Contract class for web response. Array of Checklist items  are used in case of search ,create or update request. 
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        checklists:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Checklist'
+        page:
+          $ref: '#/definitions/Page'

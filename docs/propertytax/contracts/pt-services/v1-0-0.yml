@@ -349,7 +349,7 @@ definitions:
          - NEWPROPERTY
          - SUBDIVISION
       address:
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/Address"
+        $ref: '#/definitions/Address'
       owners:
         description: Property owners, these will be citizen users in system.
         type: array
@@ -404,6 +404,7 @@ definitions:
          - CFC_COUNTER
          - CITIZEN
          - DATA_ENTRY
+         - MIGRATION
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -473,6 +474,11 @@ definitions:
         description: Buidling plan approval no for the Property
         maxLength: 16
         minLength: 1
+      subUsage:
+        type: string
+        description: sub usage of the Unit
+        maxLength: 128
+        minLength: 1  
       bpaDate:
         type: string
         format: date
@@ -1090,7 +1096,7 @@ definitions:
         items:
          $ref: '#/definitions/Document'
       correspondenceAddress:
-         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/Address"
+         $ref: '#/definitions/Address'
       stateId:
         type: string
         description: Work flow ref id.
@@ -1108,7 +1114,23 @@ definitions:
      - departmentGuidelineValue
      - upicNo
      - tenantId
-     
+
+  Address:
+    allOf: 
+    - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/Address'
+    - type: object
+      properties:
+        surveyNo:
+          type: string
+          description: survey no for a property 
+          maxLength: 128
+          minLength: 1
+        plotNo:
+          type: string
+          description: Plot no for a property 
+          maxLength: 128
+          minLength: 1
+
   Notice:
     type: object
     description: This object has the details about the special notice
@@ -1202,8 +1224,6 @@ definitions:
     required:
        - upicNo
        - tenantId
-       
-  
        
   SpecialNoticeResponse:
     type: object

@@ -255,7 +255,7 @@ public class AgreementService {
 		agreement.setAcknowledgementNumber(acknowledgementNumberService.generateAcknowledgeNumber());
 		agreement.setId(agreementRepository.getAgreementID());
 		setInitiatorPosition(agreementRequest);
-		List<Demand> demands = agreement.getLegacyDemands();
+		List<Demand> demands = prepareDemandsForClone(agreement.getLegacyDemands());
 		DemandResponse demandResponse = demandRepository.createDemand(demands, agreementRequest.getRequestInfo());
 		List<String> demandIdList = demandResponse.getDemands().stream().map(demand -> demand.getId())
 				.collect(Collectors.toList());
@@ -717,6 +717,11 @@ public class AgreementService {
 
 	}
 
+	public String checkObjectionStatus(AgreementRequest agreementRequest) {
+		Agreement agreement = agreementRequest.getAgreement();
+		return agreementRepository.getObjectionStatus(agreement.getAgreementNumber(), agreement.getTenantId());
+
+	}
 	private List<Demand> prepareDemandsForClone(List<Demand> demands) {
 		List<DemandDetails> clonedDemandDetails = new ArrayList<>();
 		for (DemandDetails demandDetail : demands.get(0).getDemandDetails()) {

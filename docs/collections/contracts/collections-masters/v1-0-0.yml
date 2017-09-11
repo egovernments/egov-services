@@ -93,7 +93,7 @@ definitions:
   BankAccountServiceMappingReq:
     type: object
     properties:
-      ResponseInfo:
+      RequestInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
       BankAccountServiceMapping:
         type: array
@@ -113,10 +113,11 @@ definitions:
   BankAccountServiceMapping:
     type: object
     properties:
+      - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
       businessdetails:
         type: string
         description: Business Details Code.
       bank:
-        type: string
+        type: Integer
         description: Refer Bank From Financials
   

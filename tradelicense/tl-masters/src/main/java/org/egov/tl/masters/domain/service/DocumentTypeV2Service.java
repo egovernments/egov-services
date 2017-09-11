@@ -36,7 +36,7 @@ public class DocumentTypeV2Service {
 
 	@Autowired
 	DocumentTypeJdbcRepository documentTypeJdbcRepository;
-	
+
 	@Autowired
 	DocumentTypeDomainRepository documentTypeDomainRepository;
 
@@ -52,11 +52,12 @@ public class DocumentTypeV2Service {
 		for (DocumentType documentType : documenttypes) {
 
 			if (!isNew && documentType.getId() == null) {
-				
+
 				throw new InvalidInputException(propertiesManager.getInvalidDocumentTypeIdMsg(), requestInfo);
-			}else if( !isNew && documentType.getId() != null ){
-			
-				if (documentTypeJdbcRepository.validateIdExistance(documentType.getId(),ConstantUtility.DOCUMENT_TYPE_TABLE_NAME) == Boolean.FALSE) {
+			} else if (!isNew && documentType.getId() != null) {
+
+				if (documentTypeJdbcRepository.validateIdExistance(documentType.getId(),
+						ConstantUtility.DOCUMENT_TYPE_TABLE_NAME) == Boolean.FALSE) {
 					throw new InvalidInputException(propertiesManager.getInvalidDocumentTypeIdMsg(), requestInfo);
 
 				}
@@ -68,14 +69,15 @@ public class DocumentTypeV2Service {
 				throw new DuplicateDocumentTypeException(propertiesManager.getDocumentTypeCustomMsg(), requestInfo);
 			}
 
-			if (documentType.getCategoryId() !=null && 
-					documentTypeJdbcRepository.validateIdExistance(documentType.getCategoryId(), ConstantUtility.CATEGORY_TABLE_NAME) == Boolean.FALSE) {
+			if (documentType.getCategoryId() != null
+					&& documentTypeJdbcRepository.validateIdExistance(documentType.getCategoryId(),
+							ConstantUtility.CATEGORY_TABLE_NAME) == Boolean.FALSE) {
 				throw new InvalidCategoryException(propertiesManager.getCategoryErrorMsg(), requestInfo);
 
 			}
 
-			if (documentType.getSubCategoryId() !=null && 
-					documentTypeJdbcRepository.validateSubCategoryIdExistance(documentType.getSubCategoryId()) == Boolean.FALSE) {
+			if (documentType.getSubCategoryId() != null && documentTypeJdbcRepository
+					.validateSubCategoryIdExistance(documentType.getSubCategoryId()) == Boolean.FALSE) {
 				throw new InvalidSubCategoryException(propertiesManager.getSubCategoryErrorMsg(), requestInfo);
 			}
 
@@ -141,11 +143,19 @@ public class DocumentTypeV2Service {
 	}
 
 	public List<DocumentType> search(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
-			String enabled, String mandatory, String applicationType, Integer categoryId, Integer subCategoryId, Integer pageSize,
-			Integer offSet) {
+			String enabled, String mandatory, String applicationType, Integer categoryId, Integer subCategoryId,
+			Integer pageSize, Integer offSet) {
 
-		List<DocumentType> documentTypes = documentTypeJdbcRepository.getDocumentTypeContracts(tenantId, ids, name, enabled, mandatory,
-				applicationType, categoryId, subCategoryId, pageSize, offSet);
+		List<DocumentType> documentTypes = documentTypeJdbcRepository.getDocumentTypeContracts(tenantId, ids, name,
+				enabled, mandatory, applicationType, categoryId, subCategoryId, pageSize, offSet);
+
+		for (DocumentType documentType : documentTypes) {
+			documentType
+					.setCategoryName(documentTypeDomainRepository.getCategoryName(documentType.getCategoryId()));
+
+			documentType.setSubCategoryName(
+					documentTypeDomainRepository.getCategoryName(documentType.getSubCategoryId()));
+		}
 
 		return documentTypes;
 	}

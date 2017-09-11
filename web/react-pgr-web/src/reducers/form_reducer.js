@@ -23,7 +23,7 @@ const defaultState = {
   hasDemandError: false,
   isDatesValid : { type : '',
                    error : false},
-  isPrimaryOwner: 'PrimaryOwner'                 
+  isPrimaryOwner: 'PrimaryOwner'
 };
 
 
@@ -251,7 +251,7 @@ function validateCollection(addDemand) {
 	var hasError = false;
 	var demands = [];
 	var collections = [];
-	
+
 	for(var key in addDemand) {
 		if(addDemand.hasOwnProperty(key)){
 			if(key.match('collections')) {
@@ -274,7 +274,7 @@ function validateCollection(addDemand) {
 			count++;
 		}
 	}
-	
+
 	return hasError;
 }
 
@@ -321,13 +321,13 @@ export default(state = defaultState, action) => {
         isPrimaryOwner: action.isPrimaryOwner
       }
 
-  case "VALIDATE_DATES": 
+  case "VALIDATE_DATES":
     var validationData = validateDates(state.form, action.propertyOne);
 	  return {
       ...state,
       isDatesValid:validationData
    }
-	  
+
 	case "VALIDATE_COLLECTION":
 		var validationData = validateCollection(state.form);
 		return {
@@ -602,7 +602,8 @@ export default(state = defaultState, action) => {
 
     case 'FILE_UPLOAD_BY_CODE': //this is used add file for particular field
           var filesArray = [];
-          filesArray = [...state.files];
+          console.log(state);
+          filesArray = state.files ? [...state.files] : [];
           var field=filesArray.find((field) => field.code == action.code);
           var files=[];
           if(field){
@@ -790,6 +791,84 @@ export default(state = defaultState, action) => {
     }
     break;
 
+    case "ADD_MANDATORY_LATEST":
+    var obj = state.validationData;
+    if(!obj.required.required.includes(action.property)){
+      obj.required.required.push(action.property)
+      if (action.pattern.toString().length > 0) obj.pattern.required.push(action.property);
+      validationData = validate(action.isRequired, action.pattern, action.property, action.value, obj, action.errorMsg);
+      return {
+        ...state,
+        files: filearray,
+        fieldErrors: {
+          ...state.fieldErrors,
+          [action.code]: validationData.errorText
+        },
+        validationData: validationData.validationData,
+        isFormValid: validationData.isFormValid
+      };
+    }else{
+      return {
+        ...state
+      }
+    }
+    break;
+
+    case "REMOVE_MANDATORY":
+    var obj = state.validationData;
+    if(obj.required.required.includes(action.property)){
+      let rindex = obj.required.required.indexOf(action.property);
+      obj.required.required.splice(rindex, 1);
+      if(obj.required.current.includes(action.property)){
+        let cindex = obj.required.current.indexOf(action.property);
+        obj.required.current.splice(cindex, 1);
+      }
+      if (action.pattern.toString().length > 0){
+        let pindex = obj.pattern.required.indexOf(action.property);
+        obj.pattern.required.splice(pindex, 1);
+      }
+      return{
+        ...state,
+        validationData: obj
+      }
+    }else{
+      return {
+        ...state
+      }
+    }
+    break;
+
+    case "REMOVE_MANDATORY_LATEST":
+    var obj = state.validationData;
+    if(obj.required.required.includes(action.property)){
+      let rindex = obj.required.required.indexOf(action.property);
+      obj.required.required.splice(rindex, 1);
+      if(obj.required.current.includes(action.property)){
+        let cindex = obj.required.current.indexOf(action.property);
+        obj.required.current.splice(cindex, 1);
+      }
+      if (action.pattern.toString().length > 0){
+        let pindex = obj.pattern.required.indexOf(action.property);
+        obj.pattern.required.splice(pindex, 1);
+      }
+      validationData = validate(action.isRequired, action.pattern, action.property, action.value, obj, action.errorMsg);
+      return {
+        ...state,
+        files: filearray,
+        fieldErrors: {
+          ...state.fieldErrors,
+          [action.code]: validationData.errorText
+        },
+        validationData: validationData.validationData,
+        isFormValid: validationData.isFormValid
+      };
+    }else{
+      return {
+        ...state
+      }
+    }
+    break;
+
     case "PUSH_ONE_ARRAY" :
 
     if (!state.form.hasOwnProperty(action.formObject)) {
@@ -815,31 +894,6 @@ export default(state = defaultState, action) => {
                state.form[action.formData]
              ]
         }
-      }
-    }
-    break;
-
-
-    case "REMOVE_MANDATORY":
-    var obj = state.validationData;
-    if(obj.required.required.includes(action.property)){
-      let rindex = obj.required.required.indexOf(action.property);
-      obj.required.required.splice(rindex, 1);
-      if(obj.required.current.includes(action.property)){
-        let cindex = obj.required.current.indexOf(action.property);
-        obj.required.current.splice(cindex, 1);
-      }
-      if (action.pattern.toString().length > 0){
-        let pindex = obj.pattern.required.indexOf(action.property);
-        obj.pattern.required.splice(pindex, 1);
-      }
-      return{
-        ...state,
-        validationData: obj
-      }
-    }else{
-      return {
-        ...state
       }
     }
     break;

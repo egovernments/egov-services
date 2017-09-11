@@ -2,19 +2,24 @@ package org.egov.egf.bill;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
 
+import org.egov.tracer.config.TracerConfiguration;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
@@ -23,9 +28,17 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
+@Import({ TracerConfiguration.class })
+@ComponentScan({"com.egov"})
+@EntityScan("com.egov")
 @SpringBootApplication
 public class EgfBillApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(EgfBillApplication.class, args);
+	}
 
 	private static final String CLUSTER_NAME = "cluster.name";
 
@@ -43,9 +56,8 @@ public class EgfBillApplication {
 
 	private TransportClient client;
 
-	public static void main(String[] args) {
-		SpringApplication.run(EgfBillApplication.class, args);
-	}
+	@Autowired
+	private LogAwareKafkaTemplate<String, Object> logAwareKafkaTemplate;
 
 	@PostConstruct
 	public void init() throws UnknownHostException {
@@ -59,12 +71,11 @@ public class EgfBillApplication {
 
 	@Bean
 	public MappingJackson2HttpMessageConverter jacksonConverter() {
+		// DateFormat std=DateFormat.getInstance().f
 		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-		// mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS,
-		// false);
-		mapper.setDateFormat(new SimpleDateFormat("dd-MM-yyyy"));
+		mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 		mapper.setTimeZone(TimeZone.getTimeZone(timeZone));
 		converter.setObjectMapper(mapper);
 		return converter;
@@ -83,12 +94,12 @@ public class EgfBillApplication {
 	}
 
 	@Bean
-	public TransportClient getTransportClient() {
-		return client;
+	public RestTemplate restTemplate() {
+		return new RestTemplate();
 	}
 
 	@Bean
-	public RestTemplate restTemplate() {
-		return new RestTemplate();
+	public TransportClient getTransportClient() {
+		return client;
 	}
 }

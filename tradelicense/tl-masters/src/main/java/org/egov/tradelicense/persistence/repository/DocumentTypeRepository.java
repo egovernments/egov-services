@@ -136,7 +136,12 @@ public class DocumentTypeRepository {
 			documentType.setTenantId(getString(row.get("tenantid")));
 			documentType.setName(getString(row.get("name")));
 			documentType.setEnabled(getBoolean(row.get("enabled")));
-			documentType.setApplicationType(ApplicationTypeEnum.fromValue(getString(row.get("applicationType"))));
+			documentType.setMandatory(getBoolean(row.get("mandatory")));
+			if(row.get("applicationType") != null){
+				documentType.setApplicationType(ApplicationTypeEnum.fromValue(getString(row.get("applicationType"))));
+			} else {
+				documentType.setApplicationType(null);
+			}		
 			AuditDetails auditDetails = new AuditDetails();
 			auditDetails.setCreatedBy(getString(row.get("createdby")));
 			auditDetails.setLastModifiedBy(getString(row.get("lastmodifiedby")));
@@ -171,7 +176,7 @@ public class DocumentTypeRepository {
 	 */
 	@SuppressWarnings("unused")
 	private Double getDouble(Object object) {
-		return object == null ? 0.0 : Double.parseDouble(object.toString());
+		return object == null ? null : Double.parseDouble(object.toString());
 	}
 
 	/**
@@ -182,7 +187,7 @@ public class DocumentTypeRepository {
 	 * @return {@link Long}
 	 */
 	private Long getLong(Object object) {
-		return object == null ? 0 : Long.parseLong(object.toString());
+		return object == null ? null : Long.parseLong(object.toString());
 	}
 
 	/**

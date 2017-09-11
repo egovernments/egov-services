@@ -2,7 +2,7 @@
 	"variables": [],
 	"info": {
 		"name": "Dev Env TL Masters",
-		"_postman_id": "9dcd4650-790b-d225-80e3-e343fb1d9bbe",
+		"_postman_id": "6c14ecf1-024e-8007-3bc9-a26035b505c5",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
@@ -75,7 +75,30 @@
 				}
 			],
 			"request": {
-				"url": "http://egov-micro-dev.egovernments.org/tl-masters/category/v1/_create",
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/category/v1/_create?type=CATEGORY",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"tl-masters",
+						"category",
+						"v1",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "CATEGORY",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
 				"method": "POST",
 				"header": [
 					{
@@ -359,7 +382,30 @@
 				}
 			],
 			"request": {
-				"url": "http://egov-micro-dev.egovernments.org/tl-masters/category/v1/_update?",
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/category/v1/_update?type=SUBCATEGORY",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"tl-masters",
+						"category",
+						"v1",
+						"_update"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "SUBCATEGORY",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
 				"method": "POST",
 				"header": [
 					{
@@ -450,7 +496,30 @@
 				}
 			],
 			"request": {
-				"url": "http://egov-micro-dev.egovernments.org/tl-masters/category/v1/_update?",
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/category/v1/_update?type=CATEGORY",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"tl-masters",
+						"category",
+						"v1",
+						"_update"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "CATEGORY",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
 				"method": "POST",
 				"header": [
 					{
@@ -482,12 +551,13 @@
 			],
 			"request": {
 				"url": {
-					"raw": "http://localhost:8085/tl-masters/penaltyrate/v1/_create?tenantId=default",
+					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/penaltyrate/v1/_create?tenantId=default",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"egov-micro-dev",
+						"egovernments",
+						"org"
 					],
-					"port": "8085",
 					"path": [
 						"tl-masters",
 						"penaltyrate",
@@ -566,12 +636,13 @@
 			],
 			"request": {
 				"url": {
-					"raw": "http://localhost:8085/tl-masters/penaltyrate/v1/_search?tenantId=default&applicationType=NEW",
+					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/penaltyrate/v1/_search?tenantId=default",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"egov-micro-dev",
+						"egovernments",
+						"org"
 					],
-					"port": "8085",
 					"path": [
 						"tl-masters",
 						"penaltyrate",
@@ -582,12 +653,6 @@
 						{
 							"key": "tenantId",
 							"value": "default",
-							"equals": true,
-							"description": ""
-						},
-						{
-							"key": "applicationType",
-							"value": "NEW",
 							"equals": true,
 							"description": ""
 						}

@@ -56,4 +56,10 @@ public class LicenseBillQueryBuilder {
                 + "tenantid,createdby,createdtime,lastmodifiedby,lastmodifiedtime)"
                 + " values(nextval('seq_egtl_tradelicense_bill'),?,?,?,?,?,?,?)";
     }
+    
+    public static String updateTradeLicenseAfterWorkFlowQuery() {
+
+        return "UPDATE egtl_license_application SET lastmodifiedtime =?,status =? "
+                + " where applicationnumber = ?";
+    }
 }

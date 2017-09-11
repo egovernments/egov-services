@@ -14,11 +14,9 @@ import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.AssetCurrentValue;
 import org.egov.asset.model.ChartOfAccountDetailContract;
-import org.egov.asset.model.Function;
-import org.egov.asset.model.Fund;
 import org.egov.asset.model.Revaluation;
 import org.egov.asset.model.RevaluationCriteria;
-import org.egov.asset.model.VouchercreateAccountCodeDetails;
+import org.egov.asset.model.VoucherAccountCodeDetails;
 import org.egov.asset.model.enums.AssetConfigurationKeys;
 import org.egov.asset.model.enums.KafkaTopicName;
 import org.egov.asset.model.enums.Sequence;
@@ -159,36 +157,34 @@ public class RevaluationService {
 
         }
 
-        final List<VouchercreateAccountCodeDetails> accountCodeDetails = getAccountDetails(revaluation, assetCategory,
+        final List<VoucherAccountCodeDetails> accountCodeDetails = getAccountDetails(revaluation, assetCategory,
                 requestInfo);
 
         log.debug("Voucher Create Account Code Details :: " + accountCodeDetails);
-        final Fund fund = voucherService.getFundData(requestInfo, tenantId, revaluation.getFund()).getFunds().get(0);
-        final VoucherRequest voucherRequest = voucherService.createVoucherRequest(revaluation, fund,
-                asset.getDepartment().getId(), accountCodeDetails, requestInfo, tenantId);
+        final VoucherRequest voucherRequest = voucherService.createRevaluationVoucherRequest(revaluation,
+                accountCodeDetails, asset.getId(), asset.getDepartment().getId(), headers);
         log.debug("Voucher Request for Revaluation :: " + voucherRequest);
 
         return voucherService.createVoucher(voucherRequest, tenantId, headers);
 
     }
 
-    public List<VouchercreateAccountCodeDetails> getAccountDetails(final Revaluation revaluation,
+    public List<VoucherAccountCodeDetails> getAccountDetails(final Revaluation revaluation,
             final AssetCategory assetCategory, final RequestInfo requestInfo) {
-        final List<VouchercreateAccountCodeDetails> accountCodeDetails = new ArrayList<VouchercreateAccountCodeDetails>();
+        final List<VoucherAccountCodeDetails> accountCodeDetails = new ArrayList<VoucherAccountCodeDetails>();
         final String tenantId = revaluation.getTenantId();
-        final Function function = voucherService.getFunctionData(requestInfo, tenantId, revaluation.getFunction())
-                .getFunctions().get(0);
+
         final BigDecimal amount = revaluation.getRevaluationAmount();
         if (assetCategory != null && revaluation.getTypeOfChange().equals(TypeOfChangeEnum.INCREASED)) {
             accountCodeDetails.add(voucherService.getGlCodes(requestInfo, tenantId, assetCategory.getAssetAccount(),
-                    amount, function, false, true));
+                    amount, false, true));
             accountCodeDetails.add(voucherService.getGlCodes(requestInfo, tenantId,
-                    assetCategory.getRevaluationReserveAccount(), amount, function, true, false));
+                    assetCategory.getRevaluationReserveAccount(), amount, true, false));
         } else if (assetCategory != null && revaluation.getTypeOfChange().equals(TypeOfChangeEnum.DECREASED)) {
             accountCodeDetails.add(voucherService.getGlCodes(requestInfo, tenantId,
-                    revaluation.getFixedAssetsWrittenOffAccount(), amount, function, false, true));
+                    revaluation.getFixedAssetsWrittenOffAccount(), amount, false, true));
             accountCodeDetails.add(voucherService.getGlCodes(requestInfo, tenantId, assetCategory.getAssetAccount(),
-                    amount, function, true, false));
+                    amount, true, false));
 
         }
         return accountCodeDetails;

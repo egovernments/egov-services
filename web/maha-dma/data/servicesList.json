@@ -22,6 +22,22 @@
             "name":"Last Payment of Water Bill Receipt"
           }
         ]
+      },
+      {
+        "requiredDocumentName":"TIME REQUIRED TO DELIVER SERVICE",
+        "documents":[
+          {
+            "name":"Immediate"
+          }
+        ]
+      },
+      {
+        "requiredDocumentName":"CHARGES",
+        "documents":[
+          {
+            "name":"ULB wise charges applicable"
+          }
+        ]
       }
     ],
     "slaTable":{
@@ -97,6 +113,22 @@
             "name":"Occupancy Certificate (Above documents will be verify from their records are available in system then system will fetch records from related application)"
           }
         ]
+      },
+      {
+        "requiredDocumentName":"TIME REQUIRED TO DELIVER SERVICE",
+        "documents":[
+          {
+            "name":"N/A"
+          }
+        ]
+      },
+      {
+        "requiredDocumentName":"CHARGES",
+        "documents":[
+          {
+            "name":"ULB wise charges applicable"
+          }
+        ]
       }
     ],
     "slaTable":{}
@@ -131,6 +163,22 @@
             "name":"Property Extract (Above documents will be verify from their records are available in system then system will fetch records from related application)"
           }
         ]
+      },
+      {
+        "requiredDocumentName":"TIME REQUIRED TO DELIVER SERVICE",
+        "documents":[
+          {
+            "name":"N/A"
+          }
+        ]
+      },
+      {
+        "requiredDocumentName":"CHARGES",
+        "documents":[
+          {
+            "name":"ULB wise charges applicable"
+          }
+        ]
       }
     ],
     "slaTable":{}
@@ -162,6 +210,22 @@
             "name":"Last Payment of Water Bill Receipt and Property Tax paid Receipt (Above documents will be verify from their records are available in system then system will fetch records from related application)"
           }
         ]
+      },
+      {
+        "requiredDocumentName":"TIME REQUIRED TO DELIVER SERVICE",
+        "documents":[
+          {
+            "name":"N/A"
+          }
+        ]
+      },
+      {
+        "requiredDocumentName":"CHARGES",
+        "documents":[
+          {
+            "name":"ULB wise charges applicable"
+          }
+        ]
       }
     ],
     "slaTable":{}
@@ -190,6 +254,22 @@
             "name":"Last Payment Receipt of Water and Property"
           }
         ]
+      },
+      {
+        "requiredDocumentName":"TIME REQUIRED TO DELIVER SERVICE",
+        "documents":[
+          {
+            "name":"N/A"
+          }
+        ]
+      },
+      {
+        "requiredDocumentName":"CHARGES",
+        "documents":[
+          {
+            "name":"ULB wise charges applicable"
+          }
+        ]
       }
     ],
     "slaTable":{}
@@ -216,6 +296,22 @@
         "documents":[
           {
             "name":"Last Payment Receipt of Water and Property Temporary Disconnection order details"
+          }
+        ]
+      },
+      {
+        "requiredDocumentName":"TIME REQUIRED TO DELIVER SERVICE",
+        "documents":[
+          {
+            "name":"N/A"
+          }
+        ]
+      },
+      {
+        "requiredDocumentName":"CHARGES",
+        "documents":[
+          {
+            "name":"ULB wise charges applicable"
           }
         ]
       }
@@ -247,6 +343,22 @@
           },
           {
             "name":"Last Payment of Water Bill Receipt"
+          }
+        ]
+      },
+      {
+        "requiredDocumentName":"TIME REQUIRED TO DELIVER SERVICE",
+        "documents":[
+          {
+            "name":"N/A"
+          }
+        ]
+      },
+      {
+        "requiredDocumentName":"CHARGES",
+        "documents":[
+          {
+            "name":"ULB wise charges applicable"
           }
         ]
       }
@@ -286,6 +398,22 @@
             "name":"N/A"
           }
         ]
+      },
+      {
+        "requiredDocumentName":"TIME REQUIRED TO DELIVER SERVICE",
+        "documents":[
+          {
+            "name":"N/A"
+          }
+        ]
+      },
+      {
+        "requiredDocumentName":"CHARGES",
+        "documents":[
+          {
+            "name":"ULB wise charges applicable"
+          }
+        ]
       }
     ],
     "slaTable":{}
@@ -314,6 +442,22 @@
             "name":"Plumber details will be fetched from system"
           }
         ]
+      },
+      {
+        "requiredDocumentName":"TIME REQUIRED TO DELIVER SERVICE",
+        "documents":[
+          {
+            "name":"Immediate"
+          }
+        ]
+      },
+      {
+        "requiredDocumentName":"CHARGES",
+        "documents":[
+          {
+            "name":"ULB wise charges applicable"
+          }
+        ]
       }
     ],
     "slaTable":{}
@@ -340,6 +484,22 @@
         "documents":[
           {
             "name":"Will check dues in system with Property Number"
+          }
+        ]
+      },
+      {
+        "requiredDocumentName":"TIME REQUIRED TO DELIVER SERVICE",
+        "documents":[
+          {
+            "name":"Immediate"
+          }
+        ]
+      },
+      {
+        "requiredDocumentName":"CHARGES",
+        "documents":[
+          {
+            "name":"ULB wise charges applicable"
           }
         ]
       }
@@ -409,6 +569,22 @@
         "documents":[
           {
             "name":"Will check dues in system with Property Number"
+          }
+        ]
+      },
+      {
+        "requiredDocumentName":"TIME REQUIRED TO DELIVER SERVICE",
+        "documents":[
+          {
+            "name":"N/A"
+          }
+        ]
+      },
+      {
+        "requiredDocumentName":"CHARGES",
+        "documents":[
+          {
+            "name":"ULB wise charges applicable"
           }
         ]
       }
@@ -483,6 +659,30 @@
               "name":"Death Certificate of deceased Spouse (Wherever Applicable)"
             }
           ]
+        },
+        {
+          "requiredDocumentName":"TIME REQUIRED TO DELIVER SERVICE",
+          "documents":[
+            {
+              "name":"N/A"
+            }
+          ]
+        },
+        {
+          "requiredDocumentName":"CHARGES",
+          "documents":[
+            {
+              "name":"ULB wise charges applicable"
+            }
+          ]
+        },
+        {
+          "requiredDocumentName":"For more information on process/procedure",
+          "documents":[
+            {
+              "name":"??pdf/Procedure.pdf&Click Here"
+            }
+          ]
         }
       ],
       "slaTable":{}
@@ -509,6 +709,22 @@
           "documents":[
             {
               "name":"Property Assessment Data"
+            }
+          ]
+        },
+        {
+          "requiredDocumentName":"TIME REQUIRED TO DELIVER SERVICE",
+          "documents":[
+            {
+              "name":"N/A"
+            }
+          ]
+        },
+        {
+          "requiredDocumentName":"CHARGES",
+          "documents":[
+            {
+              "name":"ULB wise charges applicable"
             }
           ]
         }
@@ -542,6 +758,22 @@
               "name":"Demolition Notice by Authorities"
             }
           ]
+        },
+        {
+          "requiredDocumentName":"TIME REQUIRED TO DELIVER SERVICE",
+          "documents":[
+            {
+              "name":"N/A"
+            }
+          ]
+        },
+        {
+          "requiredDocumentName":"CHARGES",
+          "documents":[
+            {
+              "name":"ULB wise charges applicable"
+            }
+          ]
         }
       ],
       "slaTable":{}
@@ -568,6 +800,22 @@
           "documents":[
             {
               "name":"Will verify Occupancy Certificate from BPMS System"
+            }
+          ]
+        },
+        {
+          "requiredDocumentName":"TIME REQUIRED TO DELIVER SERVICE",
+          "documents":[
+            {
+              "name":"N/A"
+            }
+          ]
+        },
+        {
+          "requiredDocumentName":"CHARGES",
+          "documents":[
+            {
+              "name":"ULB wise charges applicable"
             }
           ]
         }
@@ -601,6 +849,22 @@
               "name":"Objection against Transfer (Ownership Documents)"
             }
           ]
+        },
+        {
+          "requiredDocumentName":"TIME REQUIRED TO DELIVER SERVICE",
+          "documents":[
+            {
+              "name":"N/A"
+            }
+          ]
+        },
+        {
+          "requiredDocumentName":"CHARGES",
+          "documents":[
+            {
+              "name":"ULB wise charges applicable"
+            }
+          ]
         }
       ],
       "slaTable":{}
@@ -632,6 +896,22 @@
               "name":"Death Certificate (For Heredity)"
             }
           ]
+        },
+        {
+          "requiredDocumentName":"TIME REQUIRED TO DELIVER SERVICE",
+          "documents":[
+            {
+              "name":"N/A"
+            }
+          ]
+        },
+        {
+          "requiredDocumentName":"CHARGES",
+          "documents":[
+            {
+              "name":"ULB wise charges applicable"
+            }
+          ]
         }
       ],
       "slaTable":{}
@@ -658,6 +938,22 @@
           "documents":[
             {
               "name":"Will Check Dues in System"
+            }
+          ]
+        },
+        {
+          "requiredDocumentName":"TIME REQUIRED TO DELIVER SERVICE",
+          "documents":[
+            {
+              "name":"N/A"
+            }
+          ]
+        },
+        {
+          "requiredDocumentName":"CHARGES",
+          "documents":[
+            {
+              "name":"ULB wise charges applicable"
             }
           ]
         }

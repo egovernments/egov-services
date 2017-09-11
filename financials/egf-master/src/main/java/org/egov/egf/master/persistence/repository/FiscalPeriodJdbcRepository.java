@@ -99,7 +99,7 @@ public class FiscalPeriodJdbcRepository extends JdbcRepository {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("financialYear =:financialYear");
+			params.append("financialYearId =:financialYear");
 			paramValues.put("financialYear", fiscalPeriodSearchEntity.getFinancialYearId());
 		}
 		if (fiscalPeriodSearchEntity.getStartingDate() != null) {

@@ -1,0 +1,1 @@
+update egcl_receiptheader set receipttype ='BILLBASED';

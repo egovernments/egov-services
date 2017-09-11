@@ -120,6 +120,16 @@ public class PropertiesManager {
 	private String revenueBoundary;
 
 	private String locationBoundary;
+	
+	private String adminBoundary;
+	
+	private String guidanceValueBoundary;
+	
+	private String invalidGuidanceValueBoundary;
+	
+	private String invalidGuidanceValueBoundaryId;
+	
+	private String invalidAppConfigKey;
 
 	// ####---Pagination place holders ---###########
 	private String defaultPageSize;
@@ -164,6 +174,8 @@ public class PropertiesManager {
 	private String invalidPropertyTypeCode;
 
 	private String invalidPropertyUsageCode;
+	
+	private String invalidOldUpicCode;
 
 	private String invalidPropertySubUsageCode;
 
@@ -295,6 +307,8 @@ public class PropertiesManager {
 	private String invalidCategory;
 	
 	private String date;
+	
+	private String approveProperty;
 
 	public String getInvalidInput() {
 		return environment.getProperty("invalid.input");
@@ -480,6 +494,26 @@ public class PropertiesManager {
 	public String getLocationBoundary() {
 		return environment.getProperty("location.boundary");
 	}
+	
+	public String getAdminBoundary() {
+		return environment.getProperty("admin.boundary");
+	}
+	
+	public String getGuidanceValueBoundary() {
+		return environment.getProperty("guidance.boundary");
+	}
+	
+	public String getInvalidGuidanceValueBoundary() {
+		return environment.getProperty("invalid.property.boundary.guidance");
+	}
+	
+	public String getInvalidGuidanceValueBoundaryId() {
+		return environment.getProperty("invalid.property.boundary.guidance.id");
+	}
+	
+	public String getInvalidAppConfigKey() {
+		return environment.getProperty("property.APPCONFIG_KEY_ALREADY_EXIST");
+	}
 
 	// ####---Pagination place holders ---------------#######
 	public String getDefaultPageSize() {
@@ -562,7 +596,9 @@ public class PropertiesManager {
 	public String getInvalidPropertyUsageCode() {
 		return environment.getProperty("invalid.input.usage");
 	}
-	
+	public String getInvalidOldUpicCode() {
+		return environment.getProperty("invalid.oldupicno");
+	}
 	public String getInvalidPropertySubUsageCode() {
 		return environment.getProperty("invalid.input.subusage");
 	}
@@ -815,6 +851,10 @@ public class PropertiesManager {
 
 	public String getDate() {
 		return environment.getProperty("egov.property.date");
+	}
+	
+	public String getApproveProperty() {
+		return environment.getProperty("property.approved");
 	}
 
 }

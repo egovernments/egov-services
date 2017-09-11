@@ -172,7 +172,7 @@ public class PropertyRepository {
 				address.getAddressNumber(), address.getAddressLine1(), address.getAddressLine2(), address.getLandmark(),
 				address.getCity(), address.getPincode(), address.getDetail(), address.getAuditDetails().getCreatedBy(),
 				address.getAuditDetails().getLastModifiedBy(), address.getAuditDetails().getCreatedTime(),
-				address.getAuditDetails().getLastModifiedTime(), propertyId };
+				address.getAuditDetails().getLastModifiedTime(), propertyId, address.getSurveyNo(), address.getPlotNo()};
 
 		jdbcTemplate.update(AddressBuilder.INSERT_ADDRESS_QUERY, addressArgs);
 
@@ -244,6 +244,7 @@ public class PropertyRepository {
 				ps.setObject(37, builderDetailsObject);
 				ps.setString(38, propertyDetails.getBpaNo());
 				ps.setTimestamp(39, TimeStampUtil.getTimeStamp(propertyDetails.getBpaDate()));
+				ps.setString(40, propertyDetails.getSubUsage());
 
 				return ps;
 			}
@@ -347,6 +348,7 @@ public class PropertyRepository {
 				ps.setString(34, unit.getSubUsage());
 				ps.setDouble(35, getDouble(unit.getCarpetArea()));
 				ps.setDouble(36, getDouble(unit.getExemptionArea()));
+				ps.setDouble(37, getDouble(unit.getRv()));
 				return ps;
 			}
 		};
@@ -384,7 +386,7 @@ public class PropertyRepository {
 				unit.getAuditDetails().getLastModifiedBy(), unit.getAuditDetails().getCreatedTime(),
 				unit.getAuditDetails().getLastModifiedTime(), floorId, getLong(parent), unit.getIsAuthorised(),
 				unit.getConstructionStartDate(), unit.getLandCost(), unit.getBuildingCost(), unit.getSubUsage(),
-				unit.getCarpetArea(), unit.getExemptionArea() };
+				unit.getCarpetArea(), unit.getExemptionArea(),getDouble(unit.getRv()) };
 
 		jdbcTemplate.update(UnitBuilder.INSERT_ROOM_QUERY, roomArgs);
 
@@ -494,6 +496,7 @@ public class PropertyRepository {
 		Long revenueBoundaryId = null;
 		Long locationBoundaryId = null;
 		Long adminBoundaryId = null;
+		Long guidanceBoundaryId=null;
 		if (boundary.getRevenueBoundary() != null) {
 			revenueBoundaryId = boundary.getRevenueBoundary().getId();
 		}
@@ -503,12 +506,15 @@ public class PropertyRepository {
 		if (boundary.getAdminBoundary() != null) {
 			adminBoundaryId = boundary.getAdminBoundary().getId();
 		}
+		if (boundary.getGuidanceValueBoundary() != null) {
+			guidanceBoundaryId = boundary.getGuidanceValueBoundary();
+		}
 
 		Object[] boundaryArgs = { revenueBoundaryId, locationBoundaryId, adminBoundaryId, boundary.getNorthBoundedBy(),
 				boundary.getEastBoundedBy(), boundary.getWestBoundedBy(), boundary.getSouthBoundedBy(),
 				boundary.getAuditDetails().getCreatedBy(), boundary.getAuditDetails().getLastModifiedBy(),
 				boundary.getAuditDetails().getCreatedTime(), boundary.getAuditDetails().getLastModifiedTime(),
-				propertyId };
+				propertyId,guidanceBoundaryId };
 
 		jdbcTemplate.update(BoundaryBuilder.INSERT_BOUNDARY_QUERY, boundaryArgs);
 
@@ -888,6 +894,8 @@ public class PropertyRepository {
 				if (bpaDate != null) {
 					propertyDetail.setBpaDate(TimeStampUtil.getDateFormat(bpaDate));
 				}
+				
+				propertyDetail.setSubUsage(getString(row.get("subUsage")));
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
@@ -1058,7 +1066,7 @@ public class PropertyRepository {
 				address.getAddressNumber(), address.getAddressLine1(), address.getAddressLine2(), address.getLandmark(),
 				address.getCity(), address.getPincode(), address.getDetail(),
 				address.getAuditDetails().getLastModifiedBy(), address.getAuditDetails().getLastModifiedTime(),
-				proertyId, address_id };
+				proertyId, address.getSurveyNo(),address.getPlotNo(), address_id };
 
 		jdbcTemplate.update(addressUpdate, addressArgs);
 
@@ -1103,7 +1111,7 @@ public class PropertyRepository {
 				propertyDetails.getAuditDetails().getLastModifiedBy(),
 				propertyDetails.getAuditDetails().getLastModifiedTime(), proertyId, jsonObject, factorsObject,
 				assessmentDatesObject, builderDetailsObject, propertyDetails.getBpaNo(),
-				TimeStampUtil.getTimeStamp(propertyDetails.getBpaDate()), propertyDetails.getId() };
+				TimeStampUtil.getTimeStamp(propertyDetails.getBpaDate()),propertyDetails.getSubUsage(), propertyDetails.getId() };
 
 		jdbcTemplate.update(propertyDetailsUpdate, propertyDetailsArgs);
 	}
@@ -1151,7 +1159,7 @@ public class PropertyRepository {
 				unit.getElectricMeterNo(), unit.getWaterMeterNo(), unit.getAuditDetails().getLastModifiedBy(),
 				unit.getAuditDetails().getLastModifiedTime(), unit.getParentId(), unit.getIsAuthorised(),
 				TimeStampUtil.getTimeStamp(unit.getConstructionStartDate()), unit.getLandCost(), unit.getBuildingCost(),
-				unit.getSubUsage(), unit.getCarpetArea(), unit.getExemptionArea(), unit.getId() };
+				unit.getSubUsage(), unit.getCarpetArea(), unit.getExemptionArea(),getDouble(unit.getRv()), unit.getId() };
 
 		jdbcTemplate.update(unitUpdate, unitArgs);
 
@@ -1175,7 +1183,7 @@ public class PropertyRepository {
 				unit.getElectricMeterNo(), unit.getWaterMeterNo(), unit.getAuditDetails().getLastModifiedBy(),
 				unit.getAuditDetails().getLastModifiedTime(), unit.getParentId(), unit.getIsAuthorised(),
 				unit.getConstructionStartDate(), unit.getLandCost(), unit.getBuildingCost(), unit.getSubUsage(),
-				unit.getCarpetArea(), unit.getExemptionArea(), unit.getId() };
+				unit.getCarpetArea(), unit.getExemptionArea(),getDouble(unit.getRv()), unit.getId() };
 
 		jdbcTemplate.update(roomUpdate, roomArgs);
 
@@ -1212,6 +1220,7 @@ public class PropertyRepository {
 		Long revenueBoundaryId = null;
 		Long locationBoundaryId = null;
 		Long adminBoundaryId = null;
+		Long guidanceBoundaryId=null;
 		if (boundary.getRevenueBoundary() != null) {
 			revenueBoundaryId = boundary.getRevenueBoundary().getId();
 		}
@@ -1221,12 +1230,15 @@ public class PropertyRepository {
 		if (boundary.getAdminBoundary() != null) {
 			adminBoundaryId = boundary.getAdminBoundary().getId();
 		}
+		if (boundary.getGuidanceValueBoundary() != null) {
+			guidanceBoundaryId = boundary.getGuidanceValueBoundary();
+		}
 
 		Object[] boundaryArgs = { revenueBoundaryId, locationBoundaryId, adminBoundaryId,
 				getString(boundary.getNorthBoundedBy()), getString(boundary.getEastBoundedBy()),
 				getString(boundary.getWestBoundedBy()), getString(boundary.getSouthBoundedBy()),
 				boundary.getAuditDetails().getLastModifiedBy(), boundary.getAuditDetails().getLastModifiedTime(),
-				propertId, boundary.getId() };
+				propertId,guidanceBoundaryId, boundary.getId() };
 
 		jdbcTemplate.update(boundaryUpdate, boundaryArgs);
 

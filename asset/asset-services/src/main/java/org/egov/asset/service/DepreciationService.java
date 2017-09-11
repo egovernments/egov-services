@@ -26,8 +26,7 @@ import org.egov.asset.model.ChartOfAccountDetailContract;
 import org.egov.asset.model.Depreciation;
 import org.egov.asset.model.DepreciationCriteria;
 import org.egov.asset.model.DepreciationDetail;
-import org.egov.asset.model.Fund;
-import org.egov.asset.model.VouchercreateAccountCodeDetails;
+import org.egov.asset.model.VoucherAccountCodeDetails;
 import org.egov.asset.model.enums.AssetConfigurationKeys;
 import org.egov.asset.model.enums.Sequence;
 import org.egov.asset.repository.DepreciationRepository;
@@ -163,13 +162,8 @@ public class DepreciationService {
         if (assetConfigurationService.getEnabledVoucherGeneration(AssetConfigurationKeys.ENABLEVOUCHERGENERATION,
                 tenantId)) {
             log.info("Commencing voucher generation for depreciation");
-            final Map<Long, VouchercreateAccountCodeDetails> ledgerMap = new HashMap<>();
-            final List<VouchercreateAccountCodeDetails> accountCodeDetails = new ArrayList<VouchercreateAccountCodeDetails>();
-            final org.egov.asset.model.Function function = voucherService.getFunctionFromVoucherMap(requestInfo,
-                    tenantId);
-            log.debug("Function For Depreciation Voucher :: " + function);
-            final Fund fund = voucherService.getFundFromVoucherMap(requestInfo, tenantId);
-            log.debug("Fund for Depreciation Voucher :: " + fund);
+            final Map<Long, VoucherAccountCodeDetails> ledgerMap = new HashMap<>();
+            final List<VoucherAccountCodeDetails> accountCodeDetails = new ArrayList<VoucherAccountCodeDetails>();
 
             for (final Map.Entry<Long, List<CalculationAssetDetails>> entry : cadMap.entrySet()) {
                 final Long departmentId = entry.getKey();
@@ -185,23 +179,23 @@ public class DepreciationService {
                         log.debug("Accumulated Depreciation Account :: " + aDAccount);
                         final Long dEAccount = cad.getDepreciationExpenseAccount();
                         log.debug("Depreciation Expense Account :: " + dEAccount);
-                        VouchercreateAccountCodeDetails adAccountCodeDetails = ledgerMap.get(aDAccount);
+                        VoucherAccountCodeDetails adAccountCodeDetails = ledgerMap.get(aDAccount);
                         log.debug("Accumulated Depreciation Account Code Details :: " + adAccountCodeDetails);
                         if (adAccountCodeDetails != null)
                             adAccountCodeDetails.setDebitAmount(adAccountCodeDetails.getDebitAmount().add(amount));
                         else {
                             adAccountCodeDetails = voucherService.getGlCodes(requestInfo, tenantId, aDAccount, amount,
-                                    function, false, true);
+                                    false, true);
                             ledgerMap.put(aDAccount, adAccountCodeDetails);
                         }
 
-                        VouchercreateAccountCodeDetails deAccountCodeDetails = ledgerMap.get(dEAccount);
+                        VoucherAccountCodeDetails deAccountCodeDetails = ledgerMap.get(dEAccount);
                         log.debug("Depreciation Expense Account Code Details :: " + deAccountCodeDetails);
                         if (deAccountCodeDetails != null)
                             deAccountCodeDetails.setCreditAmount(deAccountCodeDetails.getCreditAmount().add(amount));
                         else {
                             deAccountCodeDetails = voucherService.getGlCodes(requestInfo, tenantId, dEAccount, amount,
-                                    function, true, false);
+                                    true, false);
                             ledgerMap.put(dEAccount, deAccountCodeDetails);
                         }
                     }
@@ -211,8 +205,11 @@ public class DepreciationService {
                 log.debug("Depreciation Account Code Details :: " + accountCodeDetails);
                 validateDepreciationSubledgerDetails(requestInfo, tenantId, ledgerMap.keySet());
                 if (!accountCodeDetails.isEmpty()) {
-                    final String voucherNumber = createVoucherForDepreciation(accountCodeDetails, requestInfo, tenantId,
-                            departmentId, fund, calculationAssetDetailList, headers);
+                    final VoucherRequest voucherRequest = voucherService.createDepreciationVoucherRequest(
+                            calculationAssetDetailList, departmentId, accountCodeDetails, tenantId, headers);
+                    log.debug("Voucher Request for Depreciation :: " + voucherRequest);
+
+                    final String voucherNumber = voucherService.createVoucher(voucherRequest, tenantId, headers);
                     log.debug("Voucher Number for Depreciation :: " + voucherNumber);
                     setVoucherIdToDepreciaitionDetails(voucherNumber, entryValue, depreciationDetailsMap);
                 }
@@ -232,16 +229,6 @@ public class DepreciationService {
                 depreciationDetail.setVoucherReference(voucherNumber);
             log.debug("Depreciation Details having voucher reference :: " + depreciationDetail);
         }
-    }
-
-    private String createVoucherForDepreciation(final List<VouchercreateAccountCodeDetails> accountCodeDetails,
-            final RequestInfo requestInfo, final String tenantId, final Long departmentId, final Fund fund,
-            final List<CalculationAssetDetails> calculationAssetDetailList, final HttpHeaders headers) {
-        final VoucherRequest voucherRequest = voucherService.createVoucherRequest(calculationAssetDetailList, fund,
-                departmentId, accountCodeDetails, requestInfo, tenantId);
-        log.debug("Voucher Request for Depreciation :: " + voucherRequest);
-
-        return voucherService.createVoucher(voucherRequest, tenantId, headers);
     }
 
     private void validateDepreciationSubledgerDetails(final RequestInfo requestInfo, final String tenantId,

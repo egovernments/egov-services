@@ -262,5 +262,9 @@ public class VoucherRepository {
 		return voucherJdbcRepository.search(domain);
 
 	}
+	
+	public boolean uniqueCheck(String fieldName, Voucher voucher) {
+		return	voucherJdbcRepository.uniqueCheck(fieldName, new VoucherEntity().toEntity(voucher));
+	}
 
 }

@@ -16,6 +16,9 @@ import lombok.NoArgsConstructor;
 @Component
 @Builder
 public class Witness {
+	
+	private Long id;
+	
 	@NotNull
 	private String name;
 	

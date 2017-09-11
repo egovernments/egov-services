@@ -20,20 +20,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DocumentTypeJdbcRepository extends JdbcRepository {
 
-	
-	
-
-
 	@Autowired
 	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-	
+
 	static {
 
 		init(DocumentTypeEntity.class);
 
 	}
-    
-	
+
 	public DocumentTypeEntity create(DocumentTypeEntity entity) {
 		super.create(entity);
 
@@ -71,6 +66,7 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 			entity.setTenantId(getString(row.get("tenantid")));
 			entity.setName(getString(row.get("name")));
 			entity.setEnabled(getBoolean(row.get("enabled")));
+			entity.setMandatory(getBoolean(row.get("mandatory")));
 			entity.setApplicationType(getString(row.get("applicationType")));
 			entity.setCategoryId(getLong(row.get("categoryId")));
 			entity.setSubCategoryId(getLong(row.get("subCategoryId")));
@@ -84,10 +80,6 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 		return documentTypes;
 	}
 
-	
-
-	
-
 	public Integer checkForDuplicate(DocumentType documentType, RequestInfo requestInfo) {
 
 		String sql = null;
@@ -95,8 +87,9 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 		MapSqlParameterSource parameters = new MapSqlParameterSource();
 
 		sql = getUniqueTenantDocumentQuery(ConstantUtility.DOCUMENT_TYPE_TABLE_NAME, documentType.getTenantId(),
-				documentType.getName(), (documentType.getApplicationType() != null ? documentType.getApplicationType().name(): null), documentType.getId(),
-				documentType.getCategoryId(), documentType.getSubCategoryId(), parameters);
+				documentType.getName(),
+				(documentType.getApplicationType() != null ? documentType.getApplicationType().name() : null),
+				documentType.getId(), documentType.getCategoryId(), documentType.getSubCategoryId(), parameters);
 
 		Integer count = null;
 		try {
@@ -108,6 +101,32 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 		}
 
 		return count;
+
+	}
+
+	public String getCategoryName(Long categoryId) {
+
+		String categoryName = null;
+
+		if (categoryId != null) {
+
+			MapSqlParameterSource parameters = new MapSqlParameterSource();
+			String sql = getQueryToGetCategoryName(categoryId, parameters);
+			List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(sql, parameters);
+			for (Map<String, Object> row : rows) {
+				categoryName = getString(row.get("name"));
+			}
+
+		}
+		return categoryName;
+	}
+
+	public static String getQueryToGetCategoryName(Long categoryId, MapSqlParameterSource parameters) {
+
+		parameters.addValue("categoryId", categoryId);
+		StringBuilder builder = new StringBuilder();
+		builder.append("SELECT name FROM " + ConstantUtility.CATEGORY_TABLE_NAME + " WHERE id = :categoryId");
+		return builder.toString();
 
 	}
 
@@ -234,7 +253,7 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 
 			}
 		}
-		
+
 		if (documentTypes == null || documentTypes.size() == 0) {
 			if (parameters.hasValue("categoryId")) {
 				parameters = new MapSqlParameterSource();
@@ -355,7 +374,7 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 	 * @return {@link String}
 	 */
 	private String getString(Object object) {
-		return object == null ? "" : object.toString();
+		return object == null ? null : object.toString();
 	}
 
 	/**
@@ -367,7 +386,7 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 	 */
 	@SuppressWarnings("unused")
 	private Double getDouble(Object object) {
-		return object == null ? 0.0 : Double.parseDouble(object.toString());
+		return object == null ? null : Double.parseDouble(object.toString());
 	}
 
 	/**
@@ -378,7 +397,7 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 	 * @return {@link Long}
 	 */
 	private Long getLong(Object object) {
-		return object == null ? 0 : Long.parseLong(object.toString());
+		return object == null ? null : Long.parseLong(object.toString());
 	}
 
 	/**

@@ -21,7 +21,7 @@ public class City {
 	private String districtCode;
 	private String districtName;
 	private String regionName;
-	private String grade;
+	private String ulbGrade;
 	private Float longitude;
 	private Float latitude;
 

@@ -18,7 +18,7 @@ class WorkFlow extends Component {
     this.state={
       workFlowDepartment : [],
       workFlowDesignation : [],
-      workFlowPosition : [],
+      workFlowPosition : []
     };
   }
   componentDidMount(){
@@ -29,7 +29,7 @@ class WorkFlow extends Component {
   }
   componentWillReceiveProps(nextProps){
     if((this.props.fieldErrors !== nextProps.fieldErrors) && nextProps.viewLicense.applications){
-      // console.log('Will Receive Props',nextProps.viewLicense.departmentId, nextProps.viewLicense.designationId, nextProps.viewLicense.positionId);
+      // console.log('Will Receive Props',nextProps.viewLicense);
       this.initCall(nextProps.viewLicense);
     }
   }
@@ -42,19 +42,23 @@ class WorkFlow extends Component {
       stateId : obj.applications[0].state_id,
       approvalComments : obj.approvalComments
     });
-    Api.commonApiPost( 'egov-common-masters/departments/_search').then((response)=>{
-      self.setState({workFlowDepartment: response.Department});
-      self.worKFlowActions();
-    },function(err) {
-      self.props.handleError(err.message);
-    });
+    if(!obj.departmentId){
+      Api.commonApiPost( 'egov-common-masters/departments/_search').then((response)=>{
+        self.setState({workFlowDepartment: response.Department});
+        self.worKFlowActions();
+      },function(err) {
+        self.props.handleError(err.message);
+      });
+    }
   }
   worKFlowActions = () => {
-    Api.commonApiPost('egov-common-workflows/process/_search', {id:self.state.stateId},{}, false, true).then((response)=>{
-      self.setState({process : response.processInstance});
-    },function(err) {
-      self.props.handleError(err.message);
-    });
+    if(this.state.stateId){
+      Api.commonApiPost('egov-common-workflows/process/_search', {id:self.state.stateId},{}, false, true).then((response)=>{
+        self.setState({process : response.processInstance});
+      },function(err) {
+        self.props.handleError(err.message);
+      });
+    }
   }
   handleDesignation = (departmentId, property, isRequired, pattern) => {
     // Load designation based on department
@@ -64,6 +68,12 @@ class WorkFlow extends Component {
     });
     this.props.handleChange('', 'designationId', isRequired, pattern);
     this.props.handleChange('', 'positionId', isRequired, pattern);
+
+    if(!departmentId){
+      this.props.handleChange('', 'departmentId', isRequired, pattern);
+      return;
+    }
+
     let departmentObj = this.state.workFlowDepartment.find(x => x.id === departmentId)
      Api.commonApiPost( 'egov-common-workflows/designations/_search',{businessKey:'New Trade License',departmentRule:'',currentStatus:self.state.process.status,amountRule:'',additionalRule:'',pendingAction:'',approvalDepartmentName:departmentObj.name,designation:''}, {},false, false).then((res)=>{
       for(var i=0; i<res.length;i++){
@@ -91,6 +101,10 @@ class WorkFlow extends Component {
     });
     self.props.handleChange('', 'positionId', isRequired, pattern);
     // Load position based on designation and department
+
+    if(!designationId)
+      return;
+
     Api.commonApiPost( '/hr-employee/employees/_search', {departmentId:self.state.departmentId, designationId:designationId}).then((response)=>{
         self.setState({workFlowPosition: response.Employee});
         self.props.handleChange(designationId, property, isRequired, pattern);
@@ -105,15 +119,16 @@ class WorkFlow extends Component {
   renderActions = () => {
     var actionValues = this.state.process ? this.state.process.attributes.validActions.values : '';
     if(actionValues && actionValues.length > 0){
-      return this.state.process.attributes.validActions.values.map((item)=>{
+      return this.state.process.attributes.validActions.values.map((item, index)=>{
         return(
-          <RaisedButton style={{margin:'15px 5px'}} label={item.name} primary={true} onClick={(e)=>{this.props.updateWorkFlow(item, this.state)}}/>
+          <RaisedButton key={index} style={{margin:'15px 5px'}} label={item.name} primary={true} onClick={(e)=>{this.props.updateWorkFlow(item, this.state)}}/>
         )
       })
     }
   }
   render(){
     self = this;
+    // console.log(this.state.process ? this.state.process.attributes.nextAction.code : 'process not there');
     return(
       <div>
         {this.state.process && this.state.process.attributes.nextAction.code !== 'END' ?

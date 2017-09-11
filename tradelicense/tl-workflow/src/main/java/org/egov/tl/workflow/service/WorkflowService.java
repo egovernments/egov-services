@@ -67,6 +67,7 @@ public class WorkflowService {
 			processInstance.setTenantId(tenantId);
 			processInstance.setAssignee(new Position());
 			processInstance.getAssignee().setId(workFlowDetails.getAssignee());
+			processInstance.setInitiatorPosition(workFlowDetails.getAssignee());
 			processInstance.setSenderName(workFlowDetails.getSenderName());
 			processInstance.setDetails(workFlowDetails.getDetails());
 			processInstance.setStatus(workFlowDetails.getStatus());

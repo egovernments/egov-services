@@ -1,3 +1,42 @@
+/*
+ * eGov suite of products aim to improve the internal efficiency,transparency,
+ *    accountability and the service delivery of the government  organizations.
+ *
+ *     Copyright (C) <2015>  eGovernments Foundation
+ *
+ *     The updated version of eGov suite of products as by eGovernments Foundation
+ *     is available at http://www.egovernments.org
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program. If not, see http://www.gnu.org/licenses/ or
+ *     http://www.gnu.org/licenses/gpl.html .
+ *
+ *     In addition to the terms of the GPL license to be adhered to in using this
+ *     program, the following additional terms are to be complied with:
+ *
+ *         1) All versions of this program, verbatim or modified must carry this
+ *            Legal Notice.
+ *
+ *         2) Any misrepresentation of the origin of the material is prohibited. It
+ *            is required that all modified versions of this material be marked in
+ *            reasonable ways as different from the original version.
+ *
+ *         3) This license does not grant any rights to any user of the program
+ *            with regards to rights under trademark law for use of the trade names
+ *            or trademarks of eGovernments Foundation.
+ *
+ *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
+ */
 package org.egov.wcms.repository;
 
 import java.util.ArrayList;
@@ -7,108 +46,116 @@ import java.util.Map;
 
 import lombok.extern.slf4j.Slf4j;
 
-import org.egov.wcms.model.CategoryType;
 import org.egov.wcms.model.CommonDataModel;
 import org.egov.wcms.model.Gapcode;
-import org.egov.wcms.model.PropertyTypeCategoryType;
-import org.egov.wcms.repository.builder.CategoryTypeQueryBuilder;
 import org.egov.wcms.repository.builder.GapcodeQueryBuilder;
-import org.egov.wcms.repository.builder.PropertyTypeCategoryTypeQueryBuilder;
 import org.egov.wcms.repository.rowmapper.GapcodeFormulaRowMapper;
 import org.egov.wcms.repository.rowmapper.GapcodeRowMapper;
-import org.egov.wcms.web.contract.CategoryTypeGetRequest;
 import org.egov.wcms.web.contract.GapcodeGetRequest;
 import org.egov.wcms.web.contract.GapcodeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-
 @Repository
 @Slf4j
 public class GapcodeRepository {
-	
-	@Autowired
+
+    @Autowired
     private JdbcTemplate jdbcTemplate;
-	
-	@Autowired
-	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-	
-	@Autowired
-	private GapcodeQueryBuilder gapcodeQueryBuilder; 
-	
-	@Autowired
-	private GapcodeRowMapper gapcodeRowMapper;
-	
-	@Autowired
-	private GapcodeFormulaRowMapper gapcodeFormulaRowMapper; 
-	
+
+    @Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    @Autowired
+    private GapcodeQueryBuilder gapcodeQueryBuilder;
+
+    @Autowired
+    private GapcodeRowMapper gapcodeRowMapper;
+
+    @Autowired
+    private GapcodeFormulaRowMapper gapcodeFormulaRowMapper;
+
     public GapcodeRequest persist(final GapcodeRequest gapcodeRequest) {
-    	
+
         log.info("GapcodeRequest::" + gapcodeRequest);
         final String insertGapcode = GapcodeQueryBuilder.insertQuery();
         final List<Gapcode> gapcodeList = gapcodeRequest.getGapcode();
-        final List<Map<String, Object>> batchValues = new ArrayList<>(gapcodeList.size());
-        for (final Gapcode gapcode : gapcodeList){
+        final List<Map<String, Object>> batchValues = new ArrayList<>(
+                gapcodeList.size());
+        for (final Gapcode gapcode : gapcodeList)
             batchValues.add(new MapSqlParameterSource("id", gapcode.getId())
-            		.addValue("code", gapcode.getId()).addValue("name", gapcode.getName())
-                    .addValue("outSideUlb", gapcode.getOutSideUlb())
-                    .addValue("noOfLastMonths", gapcode.getNoOfMonths())
-                    .addValue("logic", gapcode.getDescription())
-                    .addValue("active", gapcode.getActive())
-                    .addValue("description", gapcode.getDescription())
-                    .addValue("createdBy", Long.valueOf(gapcodeRequest.getRequestInfo().getUserInfo().getId()))
-                    .addValue("lastUpdatedBy", Long.valueOf(gapcodeRequest.getRequestInfo().getUserInfo().getId()))
-                    .addValue("createdDate", new Date().getTime())
-                    .addValue("lastUpdatedDate", new Date().getTime())
-                    .addValue("tenantId", gapcode.getTenantId())
-                    .getValues());
-        }
-        namedParameterJdbcTemplate.batchUpdate(insertGapcode, batchValues.toArray(new Map[batchValues.size()]));
+            .addValue("code", gapcode.getId())
+            .addValue("name", gapcode.getName())
+            .addValue("outSideUlb", gapcode.getOutSideUlb())
+            .addValue("noOfLastMonths", gapcode.getNoOfMonths())
+            .addValue("logic", gapcode.getDescription())
+            .addValue("active", gapcode.getActive())
+            .addValue("description", gapcode.getDescription())
+            .addValue(
+                    "createdBy",
+                    Long.valueOf(gapcodeRequest.getRequestInfo()
+                            .getUserInfo().getId()))
+                            .addValue(
+                                    "lastUpdatedBy",
+                                    Long.valueOf(gapcodeRequest.getRequestInfo()
+                                            .getUserInfo().getId()))
+                                            .addValue("createdDate", new Date().getTime())
+                                            .addValue("lastUpdatedDate", new Date().getTime())
+                                            .addValue("tenantId", gapcode.getTenantId()).getValues());
+        namedParameterJdbcTemplate.batchUpdate(insertGapcode,
+                batchValues.toArray(new Map[batchValues.size()]));
         return gapcodeRequest;
     }
-    
-    public GapcodeRequest persistUpdate(final GapcodeRequest gapcodeRequest){
-    	try{
-    		log.info("GapcodeRequest::" + gapcodeRequest);
-    		final String updateGapcode = GapcodeQueryBuilder.updateQuery();
-    		final List<Gapcode> gapcodeList = gapcodeRequest.getGapcode();
-    		final List<Map<String, Object>> batchValues = new ArrayList<>(gapcodeList.size());
-    		for (final Gapcode gapcode : gapcodeList){
-    			batchValues.add(new MapSqlParameterSource("name", gapcode.getName())
-    					.addValue("outSideUlb", gapcode.getOutSideUlb())
-    					.addValue("noOfLastMonths", gapcode.getDescription())
-    					.addValue("logic", gapcode.getDescription())
-    					.addValue("description", gapcode.getDescription())
-    					.addValue("active", gapcode.getActive())
-    					.addValue("lastUpdatedBy", Long.valueOf(gapcodeRequest.getRequestInfo().getUserInfo().getId()))
-    					.addValue("lastUpdatedDate", new Date().getTime()).addValue("code", gapcode.getCode()).getValues());
-    		}
-    		namedParameterJdbcTemplate.batchUpdate(updateGapcode, batchValues.toArray(new Map[gapcodeList.size()]));
-    		
-    	}
-    	catch(Exception exception){
-    		log.error("Exception Encountered : " + exception);  		
-    	}
-    	return gapcodeRequest;
-    }
-    
-    public List<Gapcode> findForCriteria(final GapcodeGetRequest gapcodeGetRequest) {
-        final List<Object> preparedStatementValues = new ArrayList<>();
-        final String queryStr = gapcodeQueryBuilder.getQuery(gapcodeGetRequest, preparedStatementValues);
-        log.info(queryStr);
-        final List<Gapcode> gapcode = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
-        		gapcodeRowMapper);
-        return gapcode;
-    }
-    
-    public List<CommonDataModel> getFormulaQuery() {
-    	List<CommonDataModel> commonDataModel = jdbcTemplate.query("SELECT code, name FROM egwtr_gapcode",	gapcodeFormulaRowMapper);
-        return commonDataModel;
+
+    public GapcodeRequest persistUpdate(final GapcodeRequest gapcodeRequest) {
+        try {
+            log.info("GapcodeRequest::" + gapcodeRequest);
+            final String updateGapcode = GapcodeQueryBuilder.updateQuery();
+            final List<Gapcode> gapcodeList = gapcodeRequest.getGapcode();
+            final List<Map<String, Object>> batchValues = new ArrayList<>(
+                    gapcodeList.size());
+            for (final Gapcode gapcode : gapcodeList)
+                batchValues.add(new MapSqlParameterSource("name", gapcode
+                        .getName())
+                .addValue("outSideUlb", gapcode.getOutSideUlb())
+                .addValue("noOfLastMonths", gapcode.getDescription())
+                .addValue("logic", gapcode.getDescription())
+                .addValue("description", gapcode.getDescription())
+                .addValue("active", gapcode.getActive())
+                .addValue(
+                        "lastUpdatedBy",
+                        Long.valueOf(gapcodeRequest.getRequestInfo()
+                                .getUserInfo().getId()))
+                                .addValue("lastUpdatedDate", new Date().getTime())
+                                .addValue("code", gapcode.getCode()).getValues());
+            namedParameterJdbcTemplate.batchUpdate(updateGapcode,
+                    batchValues.toArray(new Map[gapcodeList.size()]));
+
+        } catch (final Exception exception) {
+            log.error("Exception Encountered : " + exception);
+        }
+        return gapcodeRequest;
     }
 
+    public List<Gapcode> findForCriteria(
+            final GapcodeGetRequest gapcodeGetRequest) {
+        final List<Object> preparedStatementValues = new ArrayList<>();
+        final String queryStr = gapcodeQueryBuilder.getQuery(gapcodeGetRequest,
+                preparedStatementValues);
+        log.info(queryStr);
+        final List<Gapcode> gapcode = jdbcTemplate.query(queryStr,
+                preparedStatementValues.toArray(), gapcodeRowMapper);
+        return gapcode;
+    }
+
+    public List<CommonDataModel> getFormulaQuery() {
+        final List<CommonDataModel> commonDataModel = jdbcTemplate
+                .query("SELECT code, name FROM egwtr_gapcode",
+                        gapcodeFormulaRowMapper);
+        return commonDataModel;
+    }
 
 }

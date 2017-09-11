@@ -476,8 +476,9 @@ class NoDues extends Component {
       Api.commonApiPost(self.props.metaData["noDues.search"].url, finalObject, {}, null, self.props.metaData["noDues.search"].useTimestamp,false,response.data.access_token).then(function(res){
         self.props.setLoadingStatus('hide');
         if(jp.query(res,`$..demandDetails[?(@.taxAmount > @.collectionAmount)]`).length>0) {
+          let consumerCode=res.Demands[0].consumerCode;
           self.setState({
-            demands: res.Demands
+            demands: _.filter(res.Demands, { 'consumerCode': consumerCode})
           }, function() {
               Api.commonApiPost("/citizen-services/v1/requests/_search", {userId: JSON.parse(localStorage.getItem("userRequest")).id}, {}, null, true).then(function(ress) {
               let SID = "", _servReq;
@@ -947,7 +948,7 @@ class NoDues extends Component {
                       </thead>
                       <tbody>
                           {demands.length>0?demands.map((item,key)=>{
-                            if (key==0) {
+
                               return item.demandDetails.map((itemOne,keyOne)=>{
                                 return (<tr key={keyOne}>
                                     <td>{getFullDate(demands[key].taxPeriodFrom)}</td>
@@ -957,7 +958,7 @@ class NoDues extends Component {
                                    <td style={{textAlign:"right"}}>{parseInt(itemOne.taxAmount-itemOne.collectionAmount).toFixed(2)}</td>
                                 </tr>)
                               })
-                            }    
+
                           }):(
                             <tr>
                                 <td style={{textAlign:"center"}} colSpan={4}>No Dues</td>

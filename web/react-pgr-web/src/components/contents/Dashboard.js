@@ -646,6 +646,8 @@ class Dashboard extends Component {
       this.props.setRoute(`/receipt/propertytax/paytax/${encodeURIComponent(item.consumerCode)}/${encodeURIComponent(item.serviceRequestId)}`);
     } else if(item.serviceCode == "WC_PAYTAX" && item.status == "No Dues Generated") {
       this.props.setRoute(`/receipt/watercharge/paytax/${encodeURIComponent(item.consumerCode)}/${encodeURIComponent(item.serviceRequestId)}`);
+    } else if(item.serviceCode == "TL_NEWCONN") {
+      this.props.setRoute("/non-framework/citizenServices/tl/update/view/" + encodeURIComponent(item.serviceRequestId) + "/success");
     }
   }
 

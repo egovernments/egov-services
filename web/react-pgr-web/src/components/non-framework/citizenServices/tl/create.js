@@ -259,6 +259,10 @@ this.setState({openLicense: false});
           "userInfo": JSON.parse(localStorage.userRequest)
         }
       })
+
+      for(var i=0; i<documents.length; i++) {
+        documents[i].from = JSON.parse(localStorage.userRequest).userName;
+      }
   }
 
   componentWillReceiveProps(nextProps) {

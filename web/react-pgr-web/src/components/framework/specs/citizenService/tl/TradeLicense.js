@@ -425,34 +425,7 @@ var dat = {
         "useTimestamp": true,
         "objectName": "licenses",
         "label": "tl.view.groups.title",
-        "groups": [{
-                "label": "tl.licenses.view.groups.tradeDetails",
-                "name": "tradeDetails",
-                "fields": [{
-                        "name": "licenseNumber",
-                        "jsonPath": "licenses[0].licenseNumber",
-                        "label": "tl.search.groups.licenseNumber",
-                        "pattern": "",
-                        "type": "text",
-                        "isRequired": false,
-                        "isDisabled": false,
-                        "requiredErrMsg": "",
-                        "patternErrMsg": ""
-                    },
-                    {
-                        "name": "OldLicenseNumber",
-                        "jsonPath": "licenses[0].oldLicenseNumber",
-                        "label": "tl.create.licenses.groups.TradeDetails.OldLicenseNumber",
-                        "pattern": "",
-                        "type": "text",
-                        "isRequired": false,
-                        "isDisabled": false,
-                        "requiredErrMsg": "",
-                        "patternErrMsg": ""
-                    }
-
-                ]
-            },
+        "groups": [
             {
                 "label": "tl.view.groups.tradeOwnerDetails",
                 "name": "viewCategoryType",
@@ -540,7 +513,7 @@ var dat = {
                     },
                     {
                         "name": "Locality",
-                        "jsonPath": "licenses[0].localityName",
+                        "jsonPath": "licenses[0].localityId",
                         "label": "tl.licenses.view.groups.Locality",
                         "pattern": "",
                         "type": "singleValueList",
@@ -552,11 +525,11 @@ var dat = {
                     },
                     {
                         "name": "adminWardId",
-                        "jsonPath": "licenses[0].adminWardName",
+                        "jsonPath": "licenses[0].adminWardId",
                         "label": "tl.licenses.view.groups.adminWardId",
                         "pattern": "",
                         "type": "singleValueList",
-                        "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=WARD&hierarchyTypeName=REVENUE|$..id|$..name",
+                        "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=Ward&hierarchyTypeName=ADMINISTRATION|$..id|$..name",
                         "isRequired": false,
                         "isDisabled": false,
                         "requiredErrMsg": "",
@@ -587,11 +560,23 @@ var dat = {
                         "patternErrMsg": "",
                         "defaultValue": [{
                                 "key": "STATE_GOVERNMENT",
-                                "value": "STATE_GOVERNMENT"
+                                "value": "STATE GOVERNMENT"
+                            },
+                            {
+                                "key": "OWNED",
+                                "value": "OWNED"
                             },
                             {
                                 "key": "RENTED",
                                 "value": "RENTED"
+                            },
+                            {
+                                "key": "CENTRAL_GOVERNMENT",
+                                "value": "CENTRAL GOVERNMENT"
+                            },
+                            {
+                                "key": "ULB",
+                                "value": "ULB"
                             }
                         ]
                     },
@@ -659,11 +644,11 @@ var dat = {
                     },
                     {
                         "name": "TradeSubCategory",
-                        "jsonPath": "licenses[0].subCategory",
+                        "jsonPath": "licenses[0].subCategoryName",
                         "label": "tl.view.licenses.groups.TradeSubCategory",
                         "pattern": "",
                         "type": "singleValueList",
-                        "url": "/tl-masters/category/v1/_search?type=subcategory|$..id|$..name",
+                        "url": "",
                         "isRequired": false,
                         "isDisabled": false,
                         "requiredErrMsg": "",
@@ -673,17 +658,6 @@ var dat = {
                         "name": "UOM",
                         "jsonPath": "licenses[0].uom",
                         "label": "tl.view.licenses.groups.UOM",
-                        "pattern": "",
-                        "type": "text",
-                        "isRequired": false,
-                        "isDisabled": false,
-                        "requiredErrMsg": "",
-                        "patternErrMsg": ""
-                    },
-                    {
-                        "name": "TradeValueforUOM",
-                        "jsonPath": "licenses[0].quantity",
-                        "label": "tl.view.licenses.groups.TradeValuefortheUOM",
                         "pattern": "",
                         "type": "text",
                         "isRequired": false,
@@ -725,18 +699,6 @@ var dat = {
                         "patternErrMsg": ""
                     },
                     {
-                        "name": "licenseValidFromDate",
-                        "jsonPath": "licenses[0].licenseValidFromDate",
-                        "label": "tl.view.licenses.groups.TradeDetails.licenseValidFromDate",
-                        "pattern": "",
-                        "type": "datePicker",
-                        "isRequired": true,
-                        "isDisabled": false,
-                        "requiredErrMsg": "",
-                        "patternErrMsg": "Enter in dd/mm/yyyy Format",
-                        "maxLength": "10"
-                    },
-                    {
                         "name": "expiryDate",
                         "jsonPath": "licenses[0].expiryDate",
                         "label": "tl.view.licenses.groups.TradeDetails.expiryDate",
@@ -752,56 +714,6 @@ var dat = {
             }
 
         ]
-    },
-
-
-    "tl.update": {
-        "numCols": 12 / 2,
-        "searchUrl": "/tl-masters/v1/category/_search?id={id}",
-        "url": "/tl-masters/v1/tl-tradelicense/category/Flammables/{CategoryType.code}/_update",
-        "isResponseArray": true,
-        "tenantIdRequired": true,
-        "useTimestamp": true,
-        "objectName": "categories",
-        "groups": [{
-            "label": "tl.update.groups.categorytype.title",
-            "name": "createCategoryType",
-            "fields": [{
-                    "name": "name",
-                    "jsonPath": "categories.name",
-                    "label": "tl.update.groups.categorytype.name",
-                    "pattern": "",
-                    "type": "text",
-                    "isRequired": true,
-                    "isDisabled": false,
-                    "requiredErrMsg": "",
-                    "patternErrMsg": ""
-                },
-                {
-                    "name": "code",
-                    "jsonPath": "categories.code",
-                    "label": "tl.update.groups.categorytype.code",
-                    "pattern": "",
-                    "type": "text",
-                    "isRequired": false,
-                    "isDisabled": false,
-                    "requiredErrMsg": "",
-                    "patternErrMsg": ""
-                },
-                {
-                    "name": "active",
-                    "jsonPath": "categories.active",
-                    "label": "tl.update.groups.categorytype.active",
-                    "pattern": "",
-                    "type": "checkbox",
-                    "isRequired": false,
-                    "isDisabled": false,
-                    "requiredErrMsg": "",
-                    "patternErrMsg": "",
-                    "defaultValue": true
-                }
-            ]
-        }]
     }
 }
 

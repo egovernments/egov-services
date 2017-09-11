@@ -126,6 +126,7 @@ import CS_VIEW_FireNoc from './components/non-framework/citizenServices/building
 import Payment from './components/non-framework/citizenServices/payment';
 import ReceiptDownload from './components/non-framework/citizenServices/ReceiptDownload.js';
 import CS_TradeLicense from './components/non-framework/citizenServices/tl/create.js';
+import CS_VIEW_TradeLicense from './components/non-framework/citizenServices/tl/view.js';
 
 const base = "";
 
@@ -270,7 +271,7 @@ const Main = () => {
       <Route exact path= {base + '/payment/response/redirect/:msg'} component={Payment}/>
       <Route exact path= {base + '/receipt/:page/:type/:cc/:sid'} component={ReceiptDownload}/>
       <Route exact path={base + '/non-framework/citizenServices/tl/:status/:id/:paymentGateWayRes?'} component={CS_TradeLicense}/>
-
+      <Route exact path={base + '/non-framework/citizenServices/tl/:status/:id/:ackNo/:paymentGateWayRes?'} component={CS_VIEW_TradeLicense}/>
     </Switch>
   </main>
 )}

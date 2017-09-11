@@ -271,21 +271,15 @@ class CreateProperty extends Component {
 
   
 createPropertyTax = () => {
-	
 	let {createProperty, setLoadingStatus, toggleSnackbarAndSetText} = this.props;
-	
 	setLoadingStatus('loading');
-	
 	var userRequest = JSON.parse(localStorage.getItem("userRequest"));
-	
 	var numberOfFloors='';
 	var builtupArea = 0;
 	if(createProperty && createProperty.hasOwnProperty('floorsArr') && createProperty.hasOwnProperty('floors')){
 		numberOfFloors = createProperty.floorsArr.length;
 		for(let i=0;i<createProperty.floors.length;i++){
-			
-			builtupArea += createProperty.floors[i].builtupArea;
-			
+			builtupArea += createProperty.floors[i].builtupArea;	
 		}
 	}
 	

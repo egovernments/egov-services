@@ -117,6 +117,7 @@ class ViewProperty extends Component {
 			usages:[],
 			creationReason:[{code:'NEWPROPERTY', name:'New Property'}, {code:'SUBDIVISION', name:'Bifurcation'}],
 			demands: [],
+			revenueBoundary: '',
        }
       
    }
@@ -131,279 +132,268 @@ class ViewProperty extends Component {
 	  
 	var currentThis = this;
 		
-	 let {showTable,changeButtonText, propertyTaxSearch, setLoadingStatus, toggleSnackbarAndSetText }=this.props;
+ 	let {showTable,changeButtonText, propertyTaxSearch, setLoadingStatus, toggleSnackbarAndSetText }=this.props;
       	  
-	  setLoadingStatus('loading');
+  	setLoadingStatus('loading');
 	  
-	   var query;
+   	var query;
 	  
-	  if(this.props.match.params.type){
-		  query = {
-			  propertyId: this.props.match.params.searchParam
-		  };
-	  } else {
-		   query = {
-			  upicNumber: this.props.match.params.searchParam
-		  };
-	  }
+	if(this.props.match.params.type){
+		query = {
+		  propertyId: this.props.match.params.searchParam
+		};
+	} else {
+		query = {
+		  upicNumber: this.props.match.params.searchParam
+		};
+	}
 
 	  
-      Api.commonApiPost('pt-property/properties/_search', query,{}, false, true).then((res)=>{   
-		setLoadingStatus('hide');
-		if(res.hasOwnProperty('Errors')){
-			toggleSnackbarAndSetText(true, "Server returned unexpected error. Please contact system administrator.")
-		} else {
-			  var units = [];
-  
-			  var floors = res.properties[0].propertyDetail.floors;
-			  
-			  for(var i = 0; i<floors.length; i++){
-				  for(var j = 0; j<floors[i].units.length;j++){
-					  floors[i].units[j].floorNo = floors[i].floorNo;
-					  units.push(floors[i].units[j])
-				  }
-			  }
-			  
-			  console.log(res)
-			  
-			  res.properties[0].propertyDetail.floors = units;
-			  
-			  currentThis.setState({
-				  resultList: res.properties,
-			  })
-			  
-			  
-			  	var tQuery = {
-					businessService :'PT',
-					consumerCode: res.properties[0].upicNumber || res.properties[0].propertyDetail.applicationNo
-				}		
-		
-		
-				Api.commonApiPost('billing-service/demand/_search', tQuery, {}).then((res)=>{
-				  console.log('demands',res);
-				  currentThis.setState({demands : res.Demands})
+  Api.commonApiPost('pt-property/properties/_search', query,{}, false, true).then((res)=>{   
+	setLoadingStatus('hide');
+	if(res.hasOwnProperty('Errors')){
+		toggleSnackbarAndSetText(true, "Server returned unexpected error. Please contact system administrator.")
+	} else {
+			var userRequest = JSON.parse(localStorage.getItem("userRequest"));
+			if(res.hasOwnProperty('properties') && res.properties.length > 0) {
+				var revenueQuery = {
+					"Boundary.id" : res.properties[0].propertyDetail.boundary.revenueBoundary.id,
+					"Boundary.tenantId" : userRequest.tenantId
+				}
+				Api.commonApiGet('egov-location/boundarys', revenueQuery).then((res)=>{
+					console.log(res);
+
 				}).catch((err)=> {
-					currentThis.setState({demands : []})
-				  console.log(err)
+					console.log(err);
 				})
-			  
-		}
-	
-      }).catch((err)=> {
-			setLoadingStatus('hide');
-			console.log(err)
-			currentThis.setState({
-				  resultList:[]
-			  })
-      })	
+			} 
+			
+
+		  var units = [];
+		  var floors = res.properties[0].propertyDetail.floors;
+		  
+		  for(var i = 0; i<floors.length; i++){
+			  for(var j = 0; j<floors[i].units.length;j++){
+				  floors[i].units[j].floorNo = floors[i].floorNo;
+				  units.push(floors[i].units[j])
+			  }
+		  }
+
+		  res.properties[0].propertyDetail.floors = units;
+		  
+		  currentThis.setState({
+			  resultList: res.properties,
+		  })
+		    
+	  	var tQuery = {
+			businessService :'PT',
+			consumerCode: res.properties[0].upicNumber || res.properties[0].propertyDetail.applicationNo
+		}		
+
+		Api.commonApiPost('billing-service/demand/_search', tQuery, {}).then((res)=>{
+		  currentThis.setState({demands : res.Demands})
+		}).catch((err)=> {
+			currentThis.setState({demands : []})
+		  console.log(err)
+		})	  
+	}
+
+  }).catch((err)=> {
+		setLoadingStatus('hide');
+		console.log(err)
+		currentThis.setState({
+			  resultList:[]
+		  })
+  })	
 		
 			
-		Api.commonApiPost('pt-property/property/propertytypes/_search',{}, {},false, true).then((res)=>{
-	        currentThis.setState({propertytypes:res.propertyTypes})
-	    }).catch((err)=> {
-	        currentThis.setState({
-	          propertytypes:[]
-	        })
-	    }) 
-
-		Api.commonApiPost('pt-property/property/departments/_search',{}, {},false, true).then((res)=>{
-		  currentThis.setState({
-			departments:res.departments
-		  })
-		}).catch((err)=> {
-		  console.log(err)
-			console.log(err);
-		})
-		
-		Api.commonApiPost('pt-property/property/floortypes/_search',{}, {},false, true).then((res)=>{
-	      console.log(res);
-		  res.floorTypes.unshift({code:-1, name:'None'})
-	      currentThis.setState({floortypes:res.floorTypes})
-	    }).catch((err)=> {
-	      currentThis.setState({
-	        floortypes:[]
-	      })
-	      console.log(err)
+	Api.commonApiPost('pt-property/property/propertytypes/_search',{}, {},false, true).then((res)=>{
+	    currentThis.setState({propertytypes:res.propertyTypes})
+	}).catch((err)=> {
+	    currentThis.setState({
+	      propertytypes:[]
 	    })
+	}) 
 
-	    Api.commonApiPost('pt-property/property/rooftypes/_search',{}, {},false, true).then((res)=>{
-	      console.log(res);
-	      currentThis.setState({rooftypes: res.roofTypes})
-	    }).catch((err)=> {
-	      currentThis.setState({
-	        rooftypes: []
-	      })
-	      console.log(err.message)
-	    })
-
-	    Api.commonApiPost('pt-property/property/walltypes/_search',{}, {},false, true).then((res)=>{
-	      console.log(res);
-	      currentThis.setState({walltypes: res.wallTypes})
-	    }).catch((err)=> {
-	      currentThis.setState({
-	        walltypes:[]
-	      })
-	      console.log(err.message)
-	    })								
-
-	    Api.commonApiPost('pt-property/property/woodtypes/_search',{}, {},false, true).then((res)=>{
-	      console.log(res);
-	      currentThis.setState({woodtypes: res.woodTypes})
-	    }).catch((err)=> {
-	      currentThis.setState({
-	        woodtypes:[]
-	      })
-	    })
-	
-	
-		Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"LOCALITY", hierarchyTypeName:"LOCATION"}).then((res)=>{
-          console.log(res);
-          currentThis.setState({locality : res.Boundary})
-        }).catch((err)=> {
-           currentThis.setState({
-            locality : []
-          })
-          console.log(err.message)
-        })
-
-         Api.commonApiPost('pt-property/property/apartment/_search',{}, {},false, true).then((res)=>{
-          console.log(res);
-          currentThis.setState({apartments:res.apartments})
-        }).catch((err)=> {
-           currentThis.setState({
-            apartments:[]
-          })
-          console.log(err.message)
-        }) 
-
-       Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:"REVENUE"}).then((res)=>{
-          console.log(res);
-          currentThis.setState({zone : res.Boundary})
-        }).catch((err)=> {
-           currentThis.setState({
-            zone : []
-          })
-          console.log(err)
-        })
-
-          Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"WARD", hierarchyTypeName:"REVENUE"}).then((res)=>{
-          console.log(res);
-          currentThis.setState({ward : res.Boundary})
-        }).catch((err)=> {
-          currentThis.setState({
-            ward : []
-          })
-          console.log(err)
-        })
-
-         Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"BLOCK", hierarchyTypeName:"REVENUE"}).then((res)=>{
-          console.log(res);
-          currentThis.setState({block : res.Boundary})
-        }).catch((err)=> {
-          console.log(err)
-        })
-
-        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"STREET", hierarchyTypeName:"LOCATION"}).then((res)=>{
-          console.log(res);
-          currentThis.setState({street : res.Boundary})
-        }).catch((err)=> {
-          console.log(err)
-        })
-
-        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"REVENUE", hierarchyTypeName:"REVENUE"}).then((res)=>{
-          console.log(res);
-          currentThis.setState({revanue : res.Boundary})
-        }).catch((err)=> {
-          console.log(err)
-        })
-
-        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"WARD", hierarchyTypeName:"ADMINISTRATION"}).then((res)=>{
-          console.log(res);
-          currentThis.setState({election : res.Boundary})
-        }).catch((err)=> {
-          console.log(err)
-        })
-
-        Api.commonApiPost('pt-property/property/structureclasses/_search').then((res)=>{
-          console.log(res);
-          currentThis.setState({structureclasses: res.structureClasses})
-        }).catch((err)=> {
-          console.log(err)
-        })
-
-        Api.commonApiPost('pt-property/property/occuapancies/_search').then((res)=>{
-          console.log(res);
-          currentThis.setState({occupancies : res.occuapancyMasters})
-        }).catch((err)=> {
-          console.log(err)
-        })
-
-        Api.commonApiPost('pt-property/property/usages/_search').then((res)=>{
-          console.log(res);
-          currentThis.setState({usages : res.usageMasters})
-        }).catch((err)=> {
-          console.log(err)
-        })
-
-		var temp = this.state.floorNumber;
-		
-		for(var i=5;i<=34;i++){
-			var label = 'th';
-			if((i-4)==1){
-				label = 'st';
-			} else if ((i-4)==2){
-				label = 'nd';
-			} else if ((i-4)==3){
-				label = 'rd';
-			}
-			var commonFloors = {
-				code:i,
-				name:(i-4)+label+" Floor"
-			}
-			temp.push(commonFloors);
-		}							
-		
-	  this.setState({
-		  floorNumber: temp
+	Api.commonApiPost('pt-property/property/departments/_search',{}, {},false, true).then((res)=>{
+	  currentThis.setState({
+		departments:res.departments
 	  })
+	}).catch((err)=> {
+	  console.log(err)
+		console.log(err);
+	})
+		
+	Api.commonApiPost('pt-property/property/floortypes/_search',{}, {},false, true).then((res)=>{
+	  res.floorTypes.unshift({code:-1, name:'None'})
+      currentThis.setState({floortypes:res.floorTypes})
+    }).catch((err)=> {
+      currentThis.setState({
+        floortypes:[]
+      })
+      console.log(err)
+    })
+
+    Api.commonApiPost('pt-property/property/rooftypes/_search',{}, {},false, true).then((res)=>{
+      currentThis.setState({rooftypes: res.roofTypes})
+    }).catch((err)=> {
+      currentThis.setState({
+        rooftypes: []
+      })
+      console.log(err.message)
+    })
+
+    Api.commonApiPost('pt-property/property/walltypes/_search',{}, {},false, true).then((res)=>{
+      currentThis.setState({walltypes: res.wallTypes})
+    }).catch((err)=> {
+      currentThis.setState({
+        walltypes:[]
+      })
+      console.log(err.message)
+    })								
+
+    Api.commonApiPost('pt-property/property/woodtypes/_search',{}, {},false, true).then((res)=>{
+      currentThis.setState({woodtypes: res.woodTypes})
+    }).catch((err)=> {
+      currentThis.setState({
+        woodtypes:[]
+      })
+    })
+
+	Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"LOCALITY", hierarchyTypeName:"LOCATION"}).then((res)=>{
+      currentThis.setState({locality : res.Boundary})
+    }).catch((err)=> {
+       currentThis.setState({
+        locality : []
+      })
+      console.log(err.message)
+    })
+
+    Api.commonApiPost('pt-property/property/apartment/_search',{}, {},false, true).then((res)=>{
+      currentThis.setState({apartments:res.apartments})
+    }).catch((err)=> {
+       currentThis.setState({
+        apartments:[]
+      })
+      console.log(err.message)
+    }) 
+
+    Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:"REVENUE"}).then((res)=>{
+      currentThis.setState({zone : res.Boundary})
+    }).catch((err)=> {
+       currentThis.setState({
+        zone : []
+      })
+      console.log(err)
+    })
+
+    Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"WARD", hierarchyTypeName:"REVENUE"}).then((res)=>{
+      currentThis.setState({ward : res.Boundary})
+    }).catch((err)=> {
+      currentThis.setState({
+        ward : []
+      })
+      console.log(err)
+    })
+
+    Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"BLOCK", hierarchyTypeName:"REVENUE"}).then((res)=>{
+      currentThis.setState({block : res.Boundary})
+    }).catch((err)=> {
+      console.log(err)
+    })
+
+    Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"STREET", hierarchyTypeName:"LOCATION"}).then((res)=>{
+      currentThis.setState({street : res.Boundary})
+    }).catch((err)=> {
+      console.log(err)
+    })
+
+    Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"REVENUE", hierarchyTypeName:"REVENUE"}).then((res)=>{
+      currentThis.setState({revanue : res.Boundary})
+    }).catch((err)=> {
+      console.log(err)
+    })
+
+    Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"WARD", hierarchyTypeName:"ADMINISTRATION"}).then((res)=>{
+      currentThis.setState({election : res.Boundary})
+    }).catch((err)=> {
+      console.log(err)
+    })
+
+    Api.commonApiPost('pt-property/property/structureclasses/_search').then((res)=>{
+      currentThis.setState({structureclasses: res.structureClasses})
+    }).catch((err)=> {
+      console.log(err)
+    })
+
+    Api.commonApiPost('pt-property/property/occuapancies/_search').then((res)=>{
+      currentThis.setState({occupancies : res.occuapancyMasters})
+    }).catch((err)=> {
+      console.log(err)
+    })
+
+    Api.commonApiPost('pt-property/property/usages/_search').then((res)=>{
+      currentThis.setState({usages : res.usageMasters})
+    }).catch((err)=> {
+      console.log(err)
+    })
+
+	var temp = this.state.floorNumber;
+	
+	for(var i=5;i<=34;i++){
+		var label = 'th';
+		if((i-4)==1){
+			label = 'st';
+		} else if ((i-4)==2){
+			label = 'nd';
+		} else if ((i-4)==3){
+			label = 'rd';
+		}
+		var commonFloors = {
+			code:i,
+			name:(i-4)+label+" Floor"
+		}
+		temp.push(commonFloors);
+	}							
+	
+    this.setState({
+	  floorNumber: temp
+    })
 }
 
-  componentWillUnmount(){
-  
-  }
+componentWillUnmount(){
+
+}
 
 
-  componentWillUpdate() {
+componentWillUpdate() {
 
-  }
+}
 
-  componentDidUpdate(prevProps, prevState) {
-    
-  }
+componentDidUpdate(prevProps, prevState) {
 
-  getBoundary = (bId) => {
+}
 
-  		var userRequest = JSON.parse(localStorage.getItem("userRequest"));
+getBoundary = (bId) => {
 
-  		var query = {
-  			"Boundary.id" : bId,
-  			"Boundary.tenantId" : userRequest.tenantId
-  		}
+	var userRequest = JSON.parse(localStorage.getItem("userRequest"));
+	var query = {
+		"Boundary.id" : bId,
+		"Boundary.tenantId" : userRequest.tenantId
+	}
 
-  	    Api.commonApiPost('egov-location/boundarys', query).then((res)=>{
-          console.log(res);
-        }).catch((err)=> {
-          console.log(err)
-        })
-  }
+    Api.commonApiGet('egov-location/boundarys', query).then((res)=>{
+      console.log(res);
+    }).catch((err)=> {
+      console.log(err)
+    })
+}
 
   render() {
 	  
 	 let { resultList } = this.state;
-	 
 	 var totalAmount=0;
 	 var taxCollected = 0;
-	 
 	 let currentThis = this;
 	 	  
 	 return(
@@ -503,26 +493,22 @@ class ViewProperty extends Component {
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.AssessmentNumberOfParentProperty')}</div>
-												   NA
+												   {translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											 <Col xs={4} md={3} style={styles.bold}>
 												    <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.effectiveDate')}</div>
-												   {item.occupancyDate ? item.occupancyDate.split(' ')[0] : translate('pt.search.searchProperty.fields.na')}
+												    {item.occupancyDate ? item.occupancyDate.split(' ')[0] : translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											</Row> 
 											<Row>											 
-											 
 											  <Col xs={4} md={3} style={styles.bold}>
 												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.appartment')}</div>
-												  {item.propertyDetail.apartment || translate('pt.search.searchProperty.fields.na')}
+												  {getNameByCode(this.state.apartments, item.propertyDetail.apartment) || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
-										
-								
 											  <Col xs={4} md={3} style={styles.bold}>
 												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.registrationDocDate')}</div>
 												  {item.propertyDetail.regdDocDate ? item.propertyDetail.regdDocDate.split(' ')[0] : translate('pt.search.searchProperty.fields.na')}
 											  </Col>
-									
 											  <Col xs={4} md={3} style={styles.bold}>
 												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.assessmentDate')}</div>
 												  {item.assessmentDate ? item.assessmentDate.split(' ')[0] : translate('pt.search.searchProperty.fields.na')}

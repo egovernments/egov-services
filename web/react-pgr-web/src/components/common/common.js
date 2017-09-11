@@ -414,7 +414,7 @@ var localization_EN_Data = {
     "pt.create.groups.ownerDetails.fields.ownerName": "Owner Name",
     "pt.create.groups.ownerDetails.fields.gender": "Gender",
     "pt.create.groups.ownerDetails.fields.email": "Email",
-    "pt.create.groups.ownerDetails.fields.pan": "Pan",
+    "pt.create.groups.ownerDetails.fields.pan": "PAN",
     "pt.create.groups.ownerDetails.fields.guardianRelation": "Guardian Relation",
     "pt.create.groups.ownerDetails.fields.guardian": "Guardian",
     "pt.create.groups.ownerDetails.fields.ownerType": "Owner Type",

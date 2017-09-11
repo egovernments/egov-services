@@ -12,12 +12,9 @@ import RaisedButton from 'material-ui/RaisedButton';
 import {translate} from '../../../common/common';
 import Api from '../../../../api/api';
 
-
 const $ = require('jquery');
 $.DataTable = require('datatables.net');
 const dt = require('datatables.net-bs');
-
-
 const buttons = require('datatables.net-buttons-bs');
 
 require('datatables.net-buttons/js/buttons.colVis.js'); // Column visibility
@@ -46,7 +43,6 @@ const styles = {
     width:100
   }
 };
-
 
 const getNameById = function(object, id, property = "") {
   if (id == "" || id == null || typeof(object) !== 'object') {

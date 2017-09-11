@@ -62,9 +62,7 @@ public class ServiceController {
 	
 	@Autowired
 	private CitizenPersistService citizenPersistService;
-	
-	@Autowired
-	private ApplicationProperties applicationProperties;
+
 
 	@PostMapping(value = "/_search")
 	public ResponseEntity<?> getService(@RequestBody @Valid RequestInfoWrapper requestInfo,
@@ -304,34 +302,6 @@ public class ServiceController {
 		return new ResponseEntity<>(serviceRes, HttpStatus.OK);
 	}*/
 	
-/*	@PostMapping(value = "/v2/requests/_search")
-	public ResponseEntity<?> getServiceReqv2(@RequestBody @Valid RequestInfoWrapper requestInfo,
-											@ModelAttribute ServiceRequestSearchCriteria serviceRequestSearchCriteria){
-		log.info("serviceRequestSearchCriteria:"+serviceRequestSearchCriteria);
-		Map<String, Object> maps = citizenPersistService.search(serviceRequestSearchCriteria, requestInfo.getRequestInfo());
-		
-		return new ResponseEntity<>(maps ,HttpStatus.OK);
-		
-	}
-	
-	@PostMapping(value = "/v2/requests/_create")
-	public ResponseEntity<?> createServicev2(HttpEntity<String> httpEntity) {
-		
-		String serviceReqJson = httpEntity.getBody();
-		log.info("serviceReqJson:"+serviceReqJson);
-		ServiceReqResponse serviceReqResponse = citizenPersistService.create(serviceReqJson);
-		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);
-	}
-	
-	@PostMapping(value = "/v2/requests/_update")
-	public ResponseEntity<?> updateServicev2(HttpEntity<String> httpEntity) {
-
-		String serviceReqJson = httpEntity.getBody();
-		log.info("update serviceReqJson:"+serviceReqJson);
-		ServiceReqResponse serviceReqResponse = citizenPersistService.update(serviceReqJson);
-		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);
-	} */
-
 	private ErrorResponse populateErrors(BindingResult errors) {
 		ErrorResponse errRes = new ErrorResponse();
 		Error error = new Error();

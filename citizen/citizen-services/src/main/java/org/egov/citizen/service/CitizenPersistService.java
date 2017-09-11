@@ -243,7 +243,6 @@ public class CitizenPersistService {
     	log.info("documentContext:"+documentContext.jsonString());
     	Object serviceCall = JsonPath.read(serviceReqJson, "$.serviceReq.backendServiceDetails");
     	System.out.println(serviceCall instanceof List);
-    	//if(serviceCall instanceof List)
     	if(serviceCall != null){
     		List<LinkedHashMap<String, Object>> list =(List<LinkedHashMap<String, Object>>) serviceCall;
     		log.info("list:"+list);

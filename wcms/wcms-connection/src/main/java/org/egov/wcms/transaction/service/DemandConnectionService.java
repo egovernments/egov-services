@@ -180,6 +180,7 @@ public class DemandConnectionService {
             final DemandDetailBeanReq demandDetailBeanReq) {
         DemandResponse demandRes = null;
         final List<Demand> demandList = new ArrayList<>();
+        final List<Demand> demandResList = new ArrayList<>();
         final String tenantId = connection.getTenantId();
         Owner ownerobj = null;
         Demand demand = null;
@@ -272,6 +273,7 @@ public class DemandConnectionService {
                 demandRes = updateDemandCollection(demandList, demandDetailBeanReq.getRequestInfo());
 
         }
+        demandResList.addAll(demandRes.getDemands());
         return demandList;
     }
 

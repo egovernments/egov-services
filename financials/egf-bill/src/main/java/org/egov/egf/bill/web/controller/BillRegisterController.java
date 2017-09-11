@@ -32,18 +32,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/billregisters")
 public class BillRegisterController {
+	
 	@Autowired
 	private BillRegisterService billRegisterService;
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
-	public BillRegisterResponse create(
-			@RequestBody BillRegisterRequest billRegisterRequest,  BindingResult errors) {
+	public BillRegisterResponse create(@RequestBody BillRegisterRequest billRegisterRequest,  BindingResult errors) {
 		
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-		
+
 		ModelMapper model = new ModelMapper();
 		BillRegisterResponse billRegisterResponse = new BillRegisterResponse();
 		billRegisterResponse.setResponseInfo(getResponseInfo(billRegisterRequest.getRequestInfo()));
@@ -51,17 +51,15 @@ public class BillRegisterController {
 		BillRegister billRegister;
 		List<BillRegisterContract> billRegisterContracts = new ArrayList<>();
 		BillRegisterContract contract;
+		
 		billRegisterRequest.getRequestInfo().setAction(Constants.ACTION_CREATE);
 		
-		for (BillRegisterContract billRegisterContract : billRegisterRequest
-				.getBillRegisters()) {
+		for (BillRegisterContract billRegisterContract : billRegisterRequest.getBillRegisters()) {
 			billRegister = new BillRegister();
 			model.map(billRegisterContract, billRegister);
 			billRegister.setCreatedDate(new Date());
-			billRegister.setCreatedBy(billRegisterRequest.getRequestInfo()
-					.getUserInfo());
-			billRegister.setLastModifiedBy(billRegisterRequest.getRequestInfo()
-					.getUserInfo());
+			billRegister.setCreatedBy(billRegisterRequest.getRequestInfo().getUserInfo());
+			billRegister.setLastModifiedBy(billRegisterRequest.getRequestInfo().getUserInfo());
 			billregisters.add(billRegister);
 		}
 		
@@ -76,6 +74,7 @@ public class BillRegisterController {
 		}
 		
 		billRegisterResponse.setBillRegisters(billRegisterContracts);
+		
 		return billRegisterResponse;
 	}
 

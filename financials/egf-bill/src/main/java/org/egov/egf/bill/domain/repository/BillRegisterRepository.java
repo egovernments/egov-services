@@ -179,14 +179,6 @@ public class BillRegisterRepository {
 
 	}
 
-//	@Transactional
-//	public BillRegister save(BillRegister billRegister) {
-//
-//		BillRegisterEntity entity = billRegisterJdbcRepository.create(new BillRegisterEntity().toEntity(billRegister));
-//		return entity.toDomain();
-//		
-//	}
-	
 	@Transactional
 	public BillRegister save(BillRegister billRegister) {
 

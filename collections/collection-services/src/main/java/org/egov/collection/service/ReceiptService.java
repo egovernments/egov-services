@@ -710,7 +710,7 @@ public class ReceiptService {
     public List<LegacyReceiptHeader> persistAndPushToQueue(LegacyReceiptReq legacyReceiptRequest) {
         LOGGER.info("LegacyReceiptReq" + legacyReceiptRequest.toString());
         LegacyReceiptReq legacyReceiptReq = receiptRepository.pushLegacyReceiptToDB(legacyReceiptRequest);
-        return receiptRepository.pushLegacyReceiptDataToQueue(legacyReceiptReq);
+        return legacyReceiptReq.getLegacyReceipts();
     }
 
     public List<LegacyReceiptHeader> getLegacyReceiptsByCriteria(LegacyReceiptGetReq legacyReceiptGetReq) {

@@ -4,7 +4,7 @@ Feature: Applying New Water Connection from Citizen Login
 
     ### On Login Screen ###
     Given user on Login screen verifies signInText has visible value Sign In
-    And user on Login screen types on username value 9483619659
+    And user on Login screen types on username value 7975179334
     And user on Login screen types on password value eGov@123
     And user on Login screen clicks on signIn
 
@@ -15,14 +15,16 @@ Feature: Applying New Water Connection from Citizen Login
     And user on Dashboard screen clicks on text value Apply for New Connection
 
     ### On Create Connection Screen ###
-    And user on WaterConnection screen types on ownerName value --"Owner ", 4 random characters
-    And user on WaterConnection screen types on mobileNumber value --"1",9 random numbers
+    And user on WaterConnection screen types on ownerName value --"Shivaji ", 4 random characters
+    And user on WaterConnection screen types on mobileNumber value --"9487",6 random numbers
     And user on WaterConnection screen types on email value --email
+
+
     And user on WaterConnection screen types on aadhaarNumber value --12 digit number
     And user on WaterConnection screen selects on gender value MALE
     And user on WaterConnection screen types on addressNumber value 12345
-    And user on WaterConnection screen types on address value Address
-    And user on WaterConnection screen types on city value --"City ", 4 random characters
+    And user on WaterConnection screen types on address value Roha, MH
+    And user on WaterConnection screen types on city value Roha
     And user on WaterConnection screen types on pin value --6 random numbers
     And user on WaterConnection screen selects on locality value Andhar Ali
     And user on WaterConnection screen selects on zone value Zone A
@@ -57,4 +59,3 @@ Feature: Applying New Water Connection from Citizen Login
 
     ### Logout ###
     And Intent:LogoutIntentTest
-

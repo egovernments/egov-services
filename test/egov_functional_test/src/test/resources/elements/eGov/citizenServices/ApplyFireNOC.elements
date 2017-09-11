@@ -1,0 +1,131 @@
+{
+"elements":[
+        {
+            "elementName":"applicantName",
+            "identifier":"xpath",
+            "value":".//*[@id='root']/div/main/div/form/div[1]/div[1]/div/div[2]/div[1]/div/div[1]/div/div",
+            "waitFor": "presence"
+        },
+        {
+            "elementName":"mobileNumber",
+            "identifier":"xpath",
+            "value":"//*[@id='root']/div/main/div/form/div[1]/div[1]/div/div[2]/div[1]/div/div[2]/div",
+            "waitFor": "presence"
+        },
+        {
+            "elementName":"email",
+            "identifier":"xpath",
+            "value":"//*[@id='root']/div/main/div/form/div[1]/div[1]/div/div[2]/div[1]/div/div[3]/div/div",
+            "waitFor": "presence"
+        },
+        {
+            "elementName":"aadhaarNumber",
+            "identifier":"xpath",
+            "value":"//*[@id='root']/div/main/div/form/div[1]/div[1]/div/div[2]/div[1]/div/div[4]/div/div",
+            "waitFor": "presence"
+        },
+        {
+            "elementName":"address",
+            "identifier":"xpath",
+            "value":"//*[@id='root']/div/main/div/form/div[1]/div[1]/div/div[2]/div[1]/div/div[5]/div/div",
+            "waitFor": "presence"
+        },
+        {
+            "elementName":"block",
+            "identifier":"xpath",
+            "value":"//*[@id='root']/div/main/div/form/div[1]/div[1]/div/div[2]/div[1]/div/div[6]/div/div",
+            "waitFor": "visibility"
+        },
+        {
+            "elementName":"zone",
+            "identifier":"xpath",
+            "value":"//*[@id='root']/div/main/div/form/div[1]/div[1]/div/div[2]/div[1]/div/div[7]/div/div",
+            "waitFor": "visibility"
+        },
+        {
+            "elementName":"ward",
+            "identifier":"xpath",
+            "value":"//*[@id='root']/div/main/div/form/div[1]/div[1]/div/div[2]/div[1]/div/div[8]/div/div",
+            "waitFor": "visibility"
+        },
+        {
+            "elementName":"provisionalFireNOCNumber",
+            "identifier":"",
+            "value":"",
+            "waitFor": "presence"
+        },
+        {
+            "elementName":"plotNumber",
+            "identifier":"",
+            "value":"",
+            "waitFor": "presence"
+        },
+        {
+            "elementName":"nocSubCategory",
+            "identifier":"",
+            "value":"",
+            "waitFor": "visibility"
+        },
+        {
+            "elementName":"vikasPrastavNumber",
+            "identifier":"",
+            "value":"",
+            "waitFor": "presence"
+        },
+        {
+            "elementName":"fileNumber",
+            "identifier":"",
+            "value":"",
+            "waitFor": "presence"
+        },
+        {
+            "elementName":"landOwnerName",
+            "identifier":"",
+            "value":"",
+            "waitFor": "presence"
+        },
+        {
+            "elementName":"plotSurveyNumber",
+            "identifier":"",
+            "value":"",
+            "waitFor": "presence"
+        },
+        {
+            "elementName":"plotTalukaName",
+            "identifier":"",
+            "value":"",
+            "waitFor": "presence"
+        },
+        {
+            "elementName":"architectName",
+            "identifier":"",
+            "value":"",
+            "waitFor": "presence"
+        },
+        {
+            "elementName":"architectLicenseNumber",
+            "identifier":"",
+            "value":"",
+            "waitFor": "presence"
+        },
+        {
+            "elementName":"locality",
+            "identifier":"",
+            "value":"",
+            "waitFor": "presence"
+        },
+        {
+            "elementName":"buildingName",
+            "identifier":"",
+            "value":"",
+            "waitFor": "presence"
+        },
+        {
+            "elementName":"ApplicationOnBuilderLetterHead",
+            "identifier":"",
+            "value":"",
+            "waitFor": "presence"
+        }
+]
+
+}

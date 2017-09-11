@@ -46,7 +46,7 @@ public class MarriageRegnQueryBuilderTest {
 				+ " JOIN egmr_marriageregn_witness w ON mr.applicationnumber = w.applicationnumber"
 				+ " JOIN egmr_marriageregn_fee f ON f.id=mr.feeid"
 				+ " LEFT OUTER JOIN egmr_marriage_certificate mc ON mr.applicationnumber = mc.applicationnumber"
-				+ " AND mr.tenantid = mc.tenantid WHERE mr.tenantid = ? LIMIT ? OFFSET ?";
+				+ " AND mr.tenantid = mc.tenantid WHERE mr.tenantid = ?  LIMIT ? OFFSET ?";
 
 		assertEquals(queryString, expectedQueryString);
 		assertEquals((String) preparedStatementValues.get(0), "1"); // tenant id
@@ -75,7 +75,7 @@ public class MarriageRegnQueryBuilderTest {
 				+ " JOIN egmr_marriageregn_witness w ON mr.applicationnumber = w.applicationnumber"
 				+ " JOIN egmr_marriageregn_fee f ON f.id=mr.feeid"
 				+ " LEFT OUTER JOIN egmr_marriage_certificate mc ON mr.applicationnumber = mc.applicationnumber"
-				+ " AND mr.tenantid = mc.tenantid WHERE mr.tenantid = ? AND mr.applicationnumber IN ('9', '10') LIMIT ? OFFSET ?";
+				+ " AND mr.tenantid = mc.tenantid WHERE mr.tenantid = ?  AND mr.applicationnumber IN ('9', '10') LIMIT ? OFFSET ?";
 
 		assertEquals(queryString, expectedQueryString);
 		assertEquals((String) preparedStatementValues.get(0), "1"); // tenant id
@@ -130,7 +130,7 @@ public class MarriageRegnQueryBuilderTest {
 				+ " JOIN egmr_marriageregn_witness w ON mr.applicationnumber = w.applicationnumber"
 				+ " JOIN egmr_marriageregn_fee f ON f.id=mr.feeid"
 				+ " LEFT OUTER JOIN egmr_marriage_certificate mc ON mr.applicationnumber = mc.applicationnumber AND mr.tenantid = mc.tenantid"
-				+ " WHERE mr.tenantid = ? AND mr.applicationnumber IN ('9', '10') ORDER BY mr_marriagedate DESC";
+				+ " WHERE mr.tenantid = ?  AND mr.applicationnumber IN ('9', '10') ORDER BY mr_marriagedate DESC";
 		assertEquals(queryString, expectedQueryString);
 		assertEquals((String) preparedStatementValues.get(0), "1"); // tenant id
 																	// is 1

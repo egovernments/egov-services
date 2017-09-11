@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.SmartValidator;
 
@@ -95,12 +94,6 @@ public class ChecklistService {
                         }
                         for (Checklist checklist : checklists) {
                             validator.validate(checklist, errors);
-                            if (!checklistRepository.uniqueCheck("name", checklist)) {
-                                errors.addError(new FieldError("checklist", "type", checklist.getType(), false,
-                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
-                            }
-                           
-        
                         }
                         break;
                     case Constants.ACTION_UPDATE:
@@ -112,11 +105,6 @@ public class ChecklistService {
                                 throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), checklist.getId());
                             }
                             validator.validate(checklist, errors);
-                            if (!checklistRepository.uniqueCheck("name", checklist)) {
-                                errors.addError(new FieldError("checklist", "type", checklist.getType(), false,
-                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
-                            }
-                           
                         }
                         break;
                     case Constants.ACTION_SEARCH:

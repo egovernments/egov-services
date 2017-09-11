@@ -1,11 +1,10 @@
 package org.egov.lams.service;
 
-import org.egov.lams.model.Agreement;
-import org.egov.lams.model.AgreementCriteria;
-import org.egov.lams.model.Notice;
+import org.egov.lams.model.*;
 import org.egov.lams.repository.NoticeRepository;
 import org.egov.lams.repository.WorkFlowRepository;
 import org.egov.lams.web.contract.NoticeRequest;
+import org.egov.lams.web.contract.NoticeResponse;
 import org.egov.lams.web.contract.RequestInfo;
 import org.egov.lams.web.contract.User;
 import org.junit.Before;
@@ -14,7 +13,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -22,8 +24,6 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class NoticeServiceTest {
-
-    private NoticeService noticeService;
 
     @Mock
     private NoticeRepository noticeRepository;
@@ -34,6 +34,8 @@ public class NoticeServiceTest {
     @Mock
     private AgreementService agreementService;
 
+    private NoticeService noticeService;
+
     @Before
     public void before(){
         noticeService = new NoticeService(noticeRepository,
@@ -42,12 +44,18 @@ public class NoticeServiceTest {
 
     @Test
     public void test_should_generate_notice(){
+        when(workFlowRepository.getCommissionerName(any(),any(),any())).thenReturn("Narasimha Rao");
+        when(noticeRepository.createNotice(any())).thenReturn(getNotice());
+        when(agreementService.searchAgreement(any(),any())).thenReturn(getAgreementsList());
 
+        NoticeResponse notices = noticeService.generateNotice(getNoticeRequest());
+
+        assertEquals(1, notices.getNotices().size());
+        assertEquals("LAAWERD093039",notices.getNotices().get(0).getAcknowledgementNumber());
     }
 
     @Test(expected = RuntimeException.class)
     public void test_to_check_for_exception_if_agreements_list_is_empty(){
-
         when(agreementService.searchAgreement(getAgreementSearchCriteria(), getRequestInfo())).thenReturn(Collections.EMPTY_LIST);
 
         noticeService.getAgreementByAuckNumOrAgreementNum(getAgreementSearchCriteria(), getRequestInfo());
@@ -69,7 +77,6 @@ public class NoticeServiceTest {
                 .notice(getNotice())
                 .build();
     }
-
 
     private Notice getNotice(){
         return Notice.builder()
@@ -102,8 +109,12 @@ public class NoticeServiceTest {
         Agreement agreement1 = Agreement.builder()
                                     .agreementDate(new Date())
                                     .id(1l)
+                                    .asset(getAsset())
+                                    .allottee(getAllottee())
                                     .bankGuaranteeAmount(210112.22)
                                     .councilNumber("454")
+                                    .rent(2000d)
+                                    .securityDeposit(2000d)
                                     .build();
 
         List<Agreement> agreementList = new ArrayList<>();
@@ -116,6 +127,8 @@ public class NoticeServiceTest {
         return Agreement.builder()
                 .agreementDate(new Date())
                 .id(1l)
+                .allottee(getAllottee())
+                .asset(getAsset())
                 .bankGuaranteeAmount(210112.22)
                 .councilNumber("454")
                 .build();
@@ -126,6 +139,45 @@ public class NoticeServiceTest {
                 .agreementNumber("LKGHRTF8585SW")
                 .acknowledgementNumber("121524")
                 .tenantId("kurnool")
+                .build();
+    }
+
+    private Allottee getAllottee(){
+        return Allottee.builder()
+                .aadhaarNumber("1998-2222-9089")
+                .address("Near central Road")
+                .name("Rooney")
+                .mobileNumber("9585754586")
+                .build();
+    }
+
+    private Asset getAsset(){
+        return Asset.builder()
+                .name("Fish Tank")
+                .code("LLN")
+                .category(getCategory())
+                .id(1l)
+                .locationDetails(getLocation())
+                .build();
+    }
+
+    private AssetCategory getCategory(){
+        return AssetCategory.builder()
+                .code("234")
+                .id(3l)
+                .name("Governament Land")
+                .build();
+    }
+
+    private Location getLocation(){
+        return Location.builder()
+                .block(2l)
+                .doorNo("5454")
+                .electionWard(3l)
+                .street(5l)
+                .zone(6l)
+                .pinCode(542121542l)
+                .revenueWard(4l)
                 .build();
     }
 }

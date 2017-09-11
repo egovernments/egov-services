@@ -17,7 +17,7 @@ public class ChecklistContractRepository {
     @Autowired
     private ObjectMapper objectMapper;
 
-    public ChecklistContractRepository(@Value("${egf.billhost.url}") String hostUrl, RestTemplate restTemplate) {
+    public ChecklistContractRepository(@Value("${egf.bill.host.url}") String hostUrl, RestTemplate restTemplate) {
 	this.restTemplate = restTemplate;
 	this.hostUrl = hostUrl;
     }

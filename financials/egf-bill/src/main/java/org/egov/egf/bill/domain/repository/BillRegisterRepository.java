@@ -3,16 +3,24 @@ package org.egov.egf.bill.domain.repository;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.egov.common.constants.Constants;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.model.Pagination;
+import org.egov.egf.bill.domain.model.BillDetail;
+import org.egov.egf.bill.domain.model.BillPayeeDetail;
 import org.egov.egf.bill.domain.model.BillRegister;
 import org.egov.egf.bill.domain.model.BillRegisterSearch;
+import org.egov.egf.bill.persistence.entity.BillDetailEntity;
+import org.egov.egf.bill.persistence.entity.BillPayeeDetailEntity;
 import org.egov.egf.bill.persistence.entity.BillRegisterEntity;
 import org.egov.egf.bill.persistence.queue.repository.BillRegisterQueueRepository;
+import org.egov.egf.bill.persistence.repository.BillDetailJdbcRepository;
+import org.egov.egf.bill.persistence.repository.BillPayeeDetailJdbcRepository;
 import org.egov.egf.bill.persistence.repository.BillRegisterJdbcRepository;
 import org.egov.egf.bill.web.contract.BillRegisterContract;
 import org.egov.egf.bill.web.contract.BillRegisterSearchContract;
@@ -28,6 +36,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class BillRegisterRepository {
 
 	private BillRegisterJdbcRepository billRegisterJdbcRepository;
+	
+	private BillDetailJdbcRepository billDetailJdbcRepository;
+
+	private BillPayeeDetailJdbcRepository billPayeeDetailJdbcRepository;
 
 	private BillRegisterQueueRepository billRegisterQueueRepository;
 
@@ -167,12 +179,52 @@ public class BillRegisterRepository {
 
 	}
 
+//	@Transactional
+//	public BillRegister save(BillRegister billRegister) {
+//
+//		BillRegisterEntity entity = billRegisterJdbcRepository.create(new BillRegisterEntity().toEntity(billRegister));
+//		return entity.toDomain();
+//		
+//	}
+	
 	@Transactional
 	public BillRegister save(BillRegister billRegister) {
 
-		BillRegisterEntity entity = billRegisterJdbcRepository.create(new BillRegisterEntity().toEntity(billRegister));
-		return entity.toDomain();
-		
+		BillRegister savedBillRegister = billRegisterJdbcRepository.create(new BillRegisterEntity().toEntity(billRegister)).toDomain();
+
+		Set<BillDetail> savedBillDetails = new LinkedHashSet<>();
+		BillDetail savedBillDetail = null;
+		BillDetailEntity billDetailEntity = null;
+		BillPayeeDetail savedDetail = null;
+		BillPayeeDetailEntity billPayeeDetailEntity = null;
+
+		for (BillDetail billDetail : billRegister.getBillDetails()) {
+
+			billDetailEntity = new BillDetailEntity().toEntity(billDetail);
+			billDetailEntity.setBillRegisterId(savedBillRegister.getId());
+			savedBillDetail = billDetailJdbcRepository.create(billDetailEntity).toDomain();
+
+			if (billDetail.getBillPayeeDetails() != null && !billDetail.getBillPayeeDetails().isEmpty()) {
+
+				Set<BillPayeeDetail> savedBillPayeeDetails = new LinkedHashSet<>();
+				for (BillPayeeDetail detail : billDetail.getBillPayeeDetails()) {
+					billPayeeDetailEntity = new BillPayeeDetailEntity().toEntity(detail);
+					billPayeeDetailEntity.setBillDetailId(savedBillDetail.getId());
+					savedDetail = billPayeeDetailJdbcRepository.create(billPayeeDetailEntity).toDomain();
+					savedBillPayeeDetails.add(savedDetail);
+
+				}
+
+				savedBillDetail.setBillPayeeDetails(savedBillPayeeDetails);
+			}
+
+			savedBillDetails.add(savedBillDetail);
+
+		}
+		savedBillRegister.setBillDetails(savedBillDetails);
+
+		return savedBillRegister;
+
 	}
 
 	@Transactional
@@ -203,7 +255,7 @@ public class BillRegisterRepository {
 		Map<String, Object> message = new HashMap<>();
 
 		if (request.getRequestInfo().getAction().equalsIgnoreCase(Constants.ACTION_CREATE)) {
-			message.put("bilregister_create", request);
+			message.put("billregister_create", request);
 		} else {
 			message.put("billregister_update", request);
 		}

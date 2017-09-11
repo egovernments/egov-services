@@ -23,7 +23,7 @@ public class ServiceConfigurationSearchCriteria {
 	@Size(min = 1, max = 256)
 	private String tenantId;
 
-	private List<String> names;
+	private String name;
 
 	private List<Integer> ids;
 

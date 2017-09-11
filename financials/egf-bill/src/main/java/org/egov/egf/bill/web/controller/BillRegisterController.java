@@ -53,7 +53,6 @@ public class BillRegisterController {
 		BillRegisterContract contract;
 		
 		billRegisterRequest.getRequestInfo().setAction(Constants.ACTION_CREATE);
-		
 		for (BillRegisterContract billRegisterContract : billRegisterRequest.getBillRegisters()) {
 			billRegister = new BillRegister();
 			model.map(billRegisterContract, billRegister);

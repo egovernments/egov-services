@@ -5,7 +5,9 @@ import java.util.Map;
 import org.egov.egf.bill.persistence.queue.FinancialProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ChecklistQueueRepository {
 
 	private FinancialProducer financialChecklistProducer;

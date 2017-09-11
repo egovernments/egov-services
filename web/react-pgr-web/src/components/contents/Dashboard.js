@@ -55,7 +55,8 @@ const nameMap = {
   "VERIFIED": "Verified",
   "ESTIMATIONAMOUNTCOLLECTED": "Estimation Amount Collected",
   "WORKORDERGENERATED": "Work Order Generated",
-  "SANCTIONED": "Sanctioned"
+  "SANCTIONED": "Sanctioned",
+  "TL_NEWCONN": "New Trade License"
 };
 
 const content=[
@@ -113,7 +114,7 @@ const content=[
             {
                 icon: 'icon-class-name',
                 label: 'Apply for New License',
-                to: '#/coming/soon',
+                to: '#/non-framework/citizenServices/tl/fill/create',
             }
         ],
     },

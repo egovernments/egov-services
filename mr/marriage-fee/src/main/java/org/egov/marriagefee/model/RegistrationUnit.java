@@ -32,6 +32,9 @@ public class RegistrationUnit {
 	private Boolean isActive;
 
 	@NotNull
+	private Boolean isMainRegistrationUnit;
+	 
+	@NotNull
 	@Size(min = 1, max = 256)
 	private String tenantId;
 

@@ -41,9 +41,8 @@ public class RegistrationUnitValidator implements Validator {
 		if (target instanceof RegnUnitRequest) {
 			regnUnitRequest = (RegnUnitRequest) target;
 		} else {
-			throw new RuntimeException("Invalid Object Type for Registration Unit");
-			// errors.rejectValue("Invalid Object Type", "Registration Unit
-			// validator");
+//			throw new RuntimeException("Invalid Object Type for Registration Unit");
+			errors.rejectValue("Invalid Object Type", "Registration Unit validator");
 		}
 		validateForDuplicateRegnUnit(regnUnitRequest.getRegnUnit(), errors,
 				regnUnitRequest.getRegnUnit().getTenantId());
@@ -56,10 +55,8 @@ public class RegistrationUnitValidator implements Validator {
 		List<RegistrationUnit> regnUnit = registrationUnitRepository.search(registrationUnitSearchCriteria);
 		log.info(" MarriageRegnValidator validateRegnUnit  regnUnit" + regnUnit.size());
 		if (!(regnUnit.isEmpty())) {
-
-			// errors.rejectValue("regnUnit","","registrationunit exists
-			// already");
-			throw new RuntimeException("registrationunit exists already");
+			 errors.rejectValue("regnUnit","","registrationunit exists already");
+//			throw new RuntimeException("registrationunit exists already");
 		}
 	}
 

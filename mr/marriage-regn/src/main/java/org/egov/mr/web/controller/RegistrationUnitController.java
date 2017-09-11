@@ -61,10 +61,14 @@ public class RegistrationUnitController {
 		 */
 		registrationUnitValidator.validate(regnUnitRequest, regnUnitRequestBindingResults);
 
-		ResponseEntity<?> errorResponseEntity = errorHandler.handleBindingErrorsForCreate(requestInfo,
+		if (regnUnitRequestBindingResults.hasErrors())
+			return new ResponseEntity<>(errorHandler.getErrorResponse(regnUnitRequestBindingResults, requestInfo),
+					HttpStatus.BAD_REQUEST);
+		
+		/*ResponseEntity<?> errorResponseEntity = errorHandler.handleBindingErrorsForCreate(requestInfo,
 				regnUnitRequestBindingResults);
 		if (errorResponseEntity != null)
-			return errorResponseEntity;
+			return errorResponseEntity;*/
 
 		List<RegistrationUnit> registrationUnitsList = null;
 

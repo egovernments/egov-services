@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.mr.config.PropertiesManager;
-import org.egov.mr.model.Allottee;
 import org.egov.mr.model.ApprovalDetails;
 import org.egov.mr.model.AuditDetails;
 import org.egov.mr.model.MarriageRegn;
@@ -15,17 +14,17 @@ import org.egov.mr.model.Position;
 import org.egov.mr.model.enums.Action;
 import org.egov.mr.model.enums.ApplicationStatus;
 import org.egov.mr.model.enums.Source;
-import org.egov.mr.model.enums.Status;
-import org.egov.mr.repository.AllotteeRepository;
 import org.egov.mr.repository.MarriageCertRepository;
 import org.egov.mr.repository.MarriageRegnRepository;
 import org.egov.mr.repository.MarryingPersonRepository;
+import org.egov.mr.repository.UserPositionRepository;
 import org.egov.mr.util.SequenceIdGenService;
-import org.egov.mr.web.contract.AllotteeResponse;
 import org.egov.mr.web.contract.MarriageRegnCriteria;
 import org.egov.mr.web.contract.MarriageRegnRequest;
 import org.egov.mr.web.contract.PositionResponse;
 import org.egov.mr.web.contract.RequestInfoWrapper;
+import org.egov.mr.web.contract.User;
+import org.egov.mr.web.contract.UserResponse;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -60,7 +59,7 @@ public class MarriageRegnService {
 	private RestTemplate restTemplate;
 
 	@Autowired
-	private AllotteeRepository allotteeRepository;
+	private UserPositionRepository userRepository;
 
 	@Autowired
 	private ServiceConfigurationService serviceConfigurationService;
@@ -98,16 +97,16 @@ public class MarriageRegnService {
 
 	public MarriageRegn createAsync(MarriageRegnRequest marriageRegnRequest) {
 		MarriageRegn marriageRegn = marriageRegnRequest.getMarriageRegn();
-
+		marriageRegn.setId(sequenceGenService.getIds(1, "seq_egmr_regn_number").get(0));
 		populateAuditDetailsForMarriageRegnCreate(marriageRegnRequest);
 
-		// setInitiatorPosition(marriageRegnRequest);
+		//setInitiatorPosition(marriageRegnRequest);
 		marriageRegn.setApplicationNumber(marriageRegnRepository.generateApplicationNumber());
 
 		log.info("marriageRegnRequest::" + marriageRegnRequest);
 		kafkaTemplate.send(propertiesManager.getCreateMarriageFeeGenerated(), marriageRegnRequest);
-		/*kafkaTemplate.send(propertiesManager.getCreateMarriageRegnTopicName(), marriageRegnRequest);*/
-
+//		kafkaTemplate.send(propertiesManager.getCreateMarriageRegnTopicName(), marriageRegnRequest);
+//		kafkaTemplate.send(propertiesManager.getCreateWorkflowTopicName(),marriageRegnRequest);
 		return marriageRegn;
 	}
 
@@ -184,17 +183,19 @@ public class MarriageRegnService {
 		requestInfoWrapper.setRequestInfo(marriageRegnRequest.getRequestInfo());
 		String tenantId = marriageRegn.getTenantId();
 
-		Allottee allottee = new Allottee();
-		allottee.setUserName(requestInfo.getUserInfo().getUserName());
-		allottee.setTenantId(tenantId);
-		AllotteeResponse allotteeResponse = allotteeRepository.getAllottees(allottee,
+		User user = new User();
+		user.setUserName(requestInfo.getUserInfo().getUserName());
+		user.setTenantId(tenantId);
+//		user.setMobileNumber(requestInfo.getUserInfo().getMobileNumber());
+//		user.setEmailId(requestInfo.getUserInfo().getEmailId());
+		UserResponse userResponse = userRepository.getUser(user,
 				requestInfoWrapper.getRequestInfo());
-		allottee = allotteeResponse.getAllottee().get(0);
+		user = userResponse.getUsers().get(0);
 
 		PositionResponse positionResponse = null;
 		String positionUrl = propertiesManager.getEmployeeServiceHostName()
 				+ propertiesManager.getEmployeeServiceSearchPath()
-						.replace(propertiesManager.getEmployeeServiceSearchPathVariable(), allottee.getId().toString())
+						.replace(propertiesManager.getEmployeeServiceSearchPathVariable(), user.getId().toString())
 				+ "?tenantId=" + tenantId;
 
 		log.info("the request url to position get call :: " + positionUrl);

@@ -26,6 +26,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class MarriageRegn {
 
+	private String id;
+	
 	private RegistrationUnit regnUnit;
 
 	@NotNull

@@ -1,6 +1,6 @@
 CREATE SEQUENCE seq_registartion_unit;
 
-CREATE TABLE egmr_registartion_unit(
+CREATE TABLE egmr_registration_unit(
 		id BIGINT NOT NULL, 
 		name CHARACTER VARYING(250),
 		isactive BOOLEAN NOT NULL,

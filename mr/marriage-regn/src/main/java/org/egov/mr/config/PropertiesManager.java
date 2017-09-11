@@ -67,13 +67,13 @@ public class PropertiesManager {
 	public String workflowInitiatorPositionkey;
 	
 	@Value("${egov.services.allottee_service.hostname}")
-	private String allotteeServiceHostName;
+	private String userServiceHostName;
 
 	@Value("${egov.services.allottee_service.basepath}")
 	private String allotteeServiceBasePAth;
 
 	@Value("${egov.services.allottee_service.searchpath}")
-	private String allotteeServiceSearchPath;
+	private String userServiceSearchPath;
 
 	@Value("${egov.services.allottee_service.createpath}")
 	private String allotteeServiceCreatePAth;

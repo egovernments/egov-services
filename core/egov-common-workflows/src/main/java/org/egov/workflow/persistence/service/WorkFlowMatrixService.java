@@ -11,7 +11,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.apache.commons.lang3.StringUtils;
-import org.egov.workflow.domain.exception.InvalidDataException;
 import org.egov.workflow.persistence.entity.WorkFlowMatrix;
 import org.egov.workflow.persistence.repository.WorkFlowMatrixRepository;
 import org.egov.workflow.web.contract.Designation;
@@ -154,7 +153,10 @@ public class WorkFlowMatrixService {
 	private WorkFlowMatrix getWorkflowMatrixObj(final String type, final String additionalRule,
 			final String currentState, final String pendingActions, final Criteria wfMatrixCriteria) {
 		final List<WorkFlowMatrix> objectTypeList = wfMatrixCriteria.list();
+		if(objectTypeList.isEmpty())
+		    throw new  RuntimeException("Workflow not configured  ");
 
+		
 		if (objectTypeList.isEmpty()) {
 			final Criteria defaulfWfMatrixCriteria = commonWorkFlowMatrixCriteria(type, additionalRule, currentState,
 					pendingActions);
@@ -177,6 +179,8 @@ public class WorkFlowMatrixService {
 			final Criteria wfMatrixCriteria) {
 		final List<WorkFlowMatrix> objectTypeList = wfMatrixCriteria.list();
 
+		if(objectTypeList.isEmpty())
+		    throw new  RuntimeException("Workflow not configured  ");
 		if (objectTypeList.isEmpty()) {
 			final Criteria defaulfWfMatrixCriteria = commonWorkFlowMatrixCriteria(type, additionalRule, currentState,
 					pendingActions);

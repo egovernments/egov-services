@@ -947,6 +947,7 @@ class NoDues extends Component {
                       </thead>
                       <tbody>
                           {demands.length>0?demands.map((item,key)=>{
+                            if (key==0) {
                               return item.demandDetails.map((itemOne,keyOne)=>{
                                 return (<tr key={keyOne}>
                                     <td>{getFullDate(demands[key].taxPeriodFrom)}</td>
@@ -956,6 +957,7 @@ class NoDues extends Component {
                                    <td style={{textAlign:"right"}}>{parseInt(itemOne.taxAmount-itemOne.collectionAmount).toFixed(2)}</td>
                                 </tr>)
                               })
+                            }    
                           }):(
                             <tr>
                                 <td style={{textAlign:"center"}} colSpan={4}>No Dues</td>

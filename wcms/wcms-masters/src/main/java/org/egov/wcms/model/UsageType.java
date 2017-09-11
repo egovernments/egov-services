@@ -79,6 +79,8 @@ public class UsageType {
 
     @Size(min = 4, max = 100)
     private String parent;
+    
+    private String parentName;
 
     @Size(max = 250)
     @NotNull

@@ -63,11 +63,9 @@ public class RegistrationUnitRepository {
 		/**
 		 * @search method
 		 */
-		List<Object> preparedStatementValues = new ArrayList<Object>();
-		String selectQuery = registrationUnitQueryBuilder.getSelectQuery(regnUnitSearchCriteria,
-				preparedStatementValues);
+		String selectQuery = registrationUnitQueryBuilder.getSelectQuery(regnUnitSearchCriteria);
 		List<RegistrationUnit> registrationUnitList = new ArrayList<RegistrationUnit>();
-		registrationUnitList = jdbcTemplate.query(selectQuery, preparedStatementValues.toArray(), rowMapper);
+		registrationUnitList = jdbcTemplate.query(selectQuery, rowMapper);
 		return registrationUnitList;
 	}
 
@@ -108,14 +106,11 @@ public class RegistrationUnitRepository {
 		regnUnitSearchIdAndTenantId.setId(registrationUnit.getId());
 		regnUnitSearchIdAndTenantId.setTenantId(registrationUnit.getTenantId());
 
-		List<Object> preparedStatementValues = new ArrayList<Object>();
-		String query = registrationUnitQueryBuilder.getSelectQuery(regnUnitSearchIdAndTenantId,
-				preparedStatementValues);
+		String query = registrationUnitQueryBuilder.getSelectQuery(regnUnitSearchIdAndTenantId);
 
 		try {
 			@SuppressWarnings("unused")
-			RegistrationUnit regnUnit = jdbcTemplate.queryForObject(query, preparedStatementValues.toArray(),
-					rowMapper);
+			RegistrationUnit regnUnit = jdbcTemplate.queryForObject(query, rowMapper);
 		} catch (DataAccessException e) {
 			jdbcTemplate.execute("ROLLBACK");
 			return false;

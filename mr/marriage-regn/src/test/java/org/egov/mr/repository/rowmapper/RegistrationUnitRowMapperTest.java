@@ -48,8 +48,6 @@ public class RegistrationUnitRowMapperTest {
 
 		when(rs.getString("tenantid")).thenReturn("ap.kurnool");
 
-		when(rs.getString("code")).thenReturn("00015");
-
 		RegistrationUnit registrationUnit = registrationUnitRowMapper.mapRow(rs, 1);
 		assertEquals(getRegistrationUnit(), registrationUnit);
 	}
@@ -76,7 +74,7 @@ public class RegistrationUnitRowMapperTest {
 		registrationUnit.setIsActive(true);
 		registrationUnit.setName("Bangalore");
 		registrationUnit.setTenantId("ap.kurnool");
-		registrationUnit.setIsMainRegistrationUnit(true);
+		registrationUnit.setIsMainRegistrationUnit(false);
 		registrationUnit.setAuditDetails(auditDetails);
 		registrationUnit.setAddress(location);
 

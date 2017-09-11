@@ -128,6 +128,15 @@ class Report extends Component {
       var query = {
         [specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].searchUrl.split("?")[1].split("=")[0]]: id
       };
+      if(window.location.href.indexOf("?") > -1) {
+       var qs =  window.location.href.split("?")[1];
+       if(qs && qs.indexOf("=") > -1) {
+         qs = qs.indexOf("&") > -1 ? qs.split("&") : [qs];
+         for(var i=0; i<qs.length; i++) {
+           query[qs[i].split("=")[0]] = qs[i].split("=")[1];
+         }
+       }
+     }
       Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].useTimestamp).then(function(res){
           if(specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].isResponseArray) {
             var obj = {};

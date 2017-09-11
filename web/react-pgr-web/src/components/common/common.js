@@ -1616,6 +1616,22 @@ var localization_EN_Data = {
     "Demand":"Demand",
     "Collection":"Collection",
     "Balance":"Balance",
+
+
+
+    //usageType
+    "wc.create.UsageType.title":"Create Usage Type",
+    "wc.update.UsageTypes.title":"Update Usage Type",
+    "wc.view.UsageTypes.title":"View Usage Type",
+    "wc.search.UsageType.title":"Search Usage Type",
+    "wc.create.UsageType":"Usage Type",
+
+    //subusageType
+    "wc.create.subUsageTypes.title":"Create Sub Usage Type",
+    "wc.update.subUsageTypes.title":"Update Sub Usage Type",
+    "wc.view.subUsageTypes.title":"View Sub Usage Type",
+    "wc.search.subUsageType.title":"Search Sub Usage Type",
+    "wc.create.SubUsageType":"Sub Usage Type"
 };
 
 var localization_MR_Data = {

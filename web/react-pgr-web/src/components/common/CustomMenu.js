@@ -158,6 +158,7 @@ const menuConvention={
 
 
 
+
   "Trade License.License Transactions.CreateNewLicense":"/non-framework/tl/transaction/ApplyNewTradeLicense",
 
 
@@ -179,7 +180,14 @@ const menuConvention={
 
   //Administration
   "Administration.UpdateUserWithoutValidation":"/administration/searchUserRole",
-  "Service Request.Requests.Search": "/service/request/search"
+  "Service Request.Requests.Search": "/service/request/search",
+
+  "Water Charge.WCMS Masters.UsageType Master.CreateUsageTypeMaster":"/create/wc/usageType",
+  "Water Charge.WCMS Masters.UsageType Master.UpdateUsageTypeMaster":"/search/wc/usageType/update",
+  "Water Charge.WCMS Masters.UsageType Master.SearchUsageTypeMaster":"/search/wc/usageType/view",
+  "Water Charge.WCMS Masters.SubUsageType Master.CreateSubUsageTypeMaster":"/create/wc/subUsageType",
+  "Water Charge.WCMS Masters.SubUsageType Master.UpdateSubUsageTypeMaster":"/search/wc/subUsageType/update",
+  "Water Charge.WCMS Masters.SubUsageType Master.SearchSubUsageTypeMaster":"/search/wc/subUsageType/view"
 
 
 

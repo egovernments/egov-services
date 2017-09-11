@@ -207,6 +207,16 @@ class Report extends Component {
     var query = {
       [specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].url.split("?")[1].split("=")[0]]: value
     };
+    
+    if(window.location.href.indexOf("?") > -1) {
+     var qs =  window.location.href.split("?")[1];
+     if(qs && qs.indexOf("=") > -1) {
+       qs = qs.indexOf("&") > -1 ? qs.split("&") : [qs];
+       for(var i=0; i<qs.length; i++) {
+         query[qs[i].split("=")[0]] = qs[i].split("=")[1];
+       }
+     }
+   }
 
     Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].useTimestamp).then(function(res){
       self.props.setFormData(res);

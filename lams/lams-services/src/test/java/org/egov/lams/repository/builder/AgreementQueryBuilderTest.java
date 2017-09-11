@@ -3,16 +3,18 @@ package org.egov.lams.repository.builder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.model.enums.Status;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 public class AgreementQueryBuilderTest {
+
+	@Rule
+	public ExpectedException expectedException = ExpectedException.none();
 
 	@Test
 	public void no_input_test(){
@@ -38,8 +40,8 @@ public class AgreementQueryBuilderTest {
 		agreementsModel.setAgreementNumber("ack");
 		agreementsModel.setAllottee(idList);
 		agreementsModel.setAsset(idList);
-		//agreementsModel.setFromDate(new Date());
-		//agreementsModel.setToDate(toDate);
+		agreementsModel.setFromDate(new Date());
+		agreementsModel.setToDate(new Date());
 		agreementsModel.setOffSet(0l);
 		agreementsModel.setSize(10l);
 		agreementsModel.setStateId("1");
@@ -55,6 +57,7 @@ public class AgreementQueryBuilderTest {
 						+ " AND AGREEMENT.TENANT_ID=? AND AGREEMENT.TENDER_NUMBER=? AND AGREEMENT.TIN_NUMBER=?"
 						+ " AND AGREEMENT.TRADE_LICENSE_NUMBER=? AND AGREEMENT.acknowledgementnumber=?"
 						+ " AND AGREEMENT.stateid=? AND AGREEMENT.ASSET IN (1,2) AND AGREEMENT.ALLOTTEE IN (1,2)"
+						+ " AND AGREEMENT.CREATED_DATE>=? AND AGREEMENT.CREATED_DATE<=?"
 						+ " ORDER BY AGREEMENT.ID LIMIT ? OFFSET ?",
 						AgreementQueryBuilder.getAgreementSearchQuery(agreementsModel, new ArrayList<>()));
 		
@@ -94,11 +97,36 @@ public class AgreementQueryBuilderTest {
 		agreementsModel.setFromDate(calendar.getTime());
 		
 		RuntimeException runtimeException = new RuntimeException("ToDate cannot be lesser than fromdate");
-		//RuntimeException runtimeException = new RuntimeException("Invalid date Range, please enter Both fromDate and toDate");
 		try{
 			AgreementQueryBuilder.getAgreementSearchQuery(agreementsModel, new ArrayList<>());
 		}catch (Exception e) {
 			assertThat(runtimeException.equals(e));
 		}
+	}
+
+	@Test
+	public void test_should_throw_exception_dates_null() {
+		expectedException.reportMissingExceptionWithMessage("Invalid date Range, please enter Both fromDate and toDate");
+		expectedException.expect(RuntimeException.class);
+		AgreementCriteria criteria = new AgreementCriteria();
+		AgreementQueryBuilder.getAgreementSearchQuery(criteria, Collections.emptyList());
+	}
+
+	@Test
+	public void test_should_throw_exception_fromdate_null() {
+		expectedException.reportMissingExceptionWithMessage("Invalid date Range, please enter Both fromDate and toDate");
+		expectedException.expect(RuntimeException.class);
+		AgreementCriteria criteria = new AgreementCriteria();
+		criteria.setToDate(new Date());
+		AgreementQueryBuilder.getAgreementSearchQuery(criteria, Collections.emptyList());
+	}
+
+	@Test
+	public void test_should_throw_exception_todate_null() {
+		expectedException.reportMissingExceptionWithMessage("Invalid date Range, please enter Both fromDate and toDate");
+		expectedException.expect(RuntimeException.class);
+		AgreementCriteria criteria = new AgreementCriteria();
+		criteria.setFromDate(new Date());
+		AgreementQueryBuilder.getAgreementSearchQuery(criteria, Collections.emptyList());
 	}
 }

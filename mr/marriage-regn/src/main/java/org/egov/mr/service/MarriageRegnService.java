@@ -68,8 +68,7 @@ public class MarriageRegnService {
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
 	public List<MarriageRegn> getMarriageRegns(MarriageRegnCriteria marriageRegnCriteria, RequestInfo requestInfo) {
-		List<MarriageRegn> marriageRegnList = marriageRegnRepository.findForCriteria(marriageRegnCriteria);
-		return marriageRegnList;
+		return marriageRegnRepository.findForCriteria(marriageRegnCriteria);
 	}
 
 	private void populateAuditDetailsForMarriageRegnCreate(MarriageRegnRequest marriageRegnRequest) {

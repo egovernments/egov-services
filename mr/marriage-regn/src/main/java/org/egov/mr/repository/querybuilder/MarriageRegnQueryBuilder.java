@@ -92,7 +92,10 @@ public class MarriageRegnQueryBuilder {
 	
 	private void addWhereClause(StringBuilder selectQuery, List<Object> preparedStatementValues,
 			MarriageRegnCriteria marriageRegnCriteria, List<String> listOfApplNos) {
-
+		
+		selectQuery.append(" WHERE mr.tenantid = ? ");
+		preparedStatementValues.add(marriageRegnCriteria.getTenantId());
+		
 		if (marriageRegnCriteria.getApplicationNumber() == null && marriageRegnCriteria.getRegnNo() == null
 				&& marriageRegnCriteria.getMarriageDate() == null && marriageRegnCriteria.getHusbandName() == null
 				&& marriageRegnCriteria.getWifeName() == null && marriageRegnCriteria.getFromDate() == null
@@ -100,55 +103,38 @@ public class MarriageRegnQueryBuilder {
 				&& marriageRegnCriteria.getTenantId() == null)
 			return;
 
-		selectQuery.append(" WHERE");
-		boolean isAppendAndClause = false;
-
-		if (marriageRegnCriteria.getTenantId() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" mr.tenantid = ?");
-			preparedStatementValues.add(marriageRegnCriteria.getTenantId());
-		}
 		if(marriageRegnCriteria.getApplicationNumber() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" mr.applicationnumber IN " + getIdQuery(marriageRegnCriteria.getApplicationNumber())) ;
+			selectQuery.append(" AND mr.applicationnumber IN " + getIdQuery(marriageRegnCriteria.getApplicationNumber())) ;
 		} else if(listOfApplNos != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" mr.applicationnumber IN " + getIdQuery(listOfApplNos));
+			selectQuery.append(" AND mr.applicationnumber IN " + getIdQuery(listOfApplNos));
 		}
 		if (marriageRegnCriteria.getRegnNo() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" mr.regnnumber = ?");
+			selectQuery.append(" AND mr.regnnumber = ?");
 			preparedStatementValues.add(marriageRegnCriteria.getRegnNo());
 		}
 		if (marriageRegnCriteria.getMarriageDate() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" mr.marriagedate = ?");
+			selectQuery.append(" AND mr.marriagedate = ?");
 			preparedStatementValues.add(marriageRegnCriteria.getMarriageDate());
 		}
 		if (marriageRegnCriteria.getHusbandName() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" mr.husbandname = ?");
+			selectQuery.append(" AND mr.husbandname = ?");
 			preparedStatementValues.add(marriageRegnCriteria.getHusbandName());
 		}
 		if (marriageRegnCriteria.getWifeName() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" mr.wifename = ?");
+			selectQuery.append(" AND mr.wifename = ?");
 			preparedStatementValues.add(marriageRegnCriteria.getWifeName());
 		}
 		if ((marriageRegnCriteria.getFromDate() != null) && (marriageRegnCriteria.getToDate() != null)) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" mr.marriagedate between ? and ?");
+			selectQuery.append(" AND mr.marriagedate between ? and ?");
 			preparedStatementValues.add(marriageRegnCriteria.getFromDate());
 			preparedStatementValues.add(marriageRegnCriteria.getToDate());
 		}
 		if (marriageRegnCriteria.getMarriageDate() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" mr.marriagedate = ?");
+			selectQuery.append(" AND mr.marriagedate = ?");
 			preparedStatementValues.add(marriageRegnCriteria.getMarriageDate());
 		}
 		if (marriageRegnCriteria.getRegnUnit() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" mr.regunit = ?");
+			selectQuery.append(" AND mr.regunit = ?");
 			preparedStatementValues.add(marriageRegnCriteria.getRegnUnit());
 		}
 	}
@@ -174,12 +160,6 @@ public class MarriageRegnQueryBuilder {
 		if (marriageRegnCriteria.getPageNo() != null)
 			pageNumber = marriageRegnCriteria.getPageNo() - 1;
 		preparedStatementValues.add(pageNumber * pageSize); // Set offset to pageNo * pageSize
-	}
-	
-	private boolean addAndClauseIfRequired(boolean appendAndClauseFlag, StringBuilder queryString) {
-		if (appendAndClauseFlag)
-			queryString.append(" AND");
-		return true;
 	}
 	
 	private static String getIdQuery(List<String> nosList) {

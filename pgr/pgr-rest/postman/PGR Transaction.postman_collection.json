@@ -470,6 +470,68 @@
 				"description": ""
 			},
 			"response": []
+		},
+		{
+			"name": "ServiceType Search",
+			"request": {
+				"url": {
+					"raw": "egov-micro-dev.egovernments.org/pgr/services/v1/_search?tenantId=default&type=All",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"pgr",
+						"services",
+						"v1",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "type",
+							"value": "All",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "count",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "categoryId",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"RequestInfo\":{\n\t\t\"authToken\":\"777bae49-60ac-4595-bf9b-73a380340dc8\"\n\t}\n}"
+				},
+				"description": ""
+			},
+			"response": []
 		}
 	]
 }

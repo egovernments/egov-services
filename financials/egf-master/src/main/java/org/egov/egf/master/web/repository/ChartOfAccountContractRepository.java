@@ -11,7 +11,7 @@ public class ChartOfAccountContractRepository {
 
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = "/egf-master/chartofaccounts/_search?";
+	public static final String SEARCH_URL = "/egf-masters/chartofaccounts/_search?";
 
 	public ChartOfAccountContractRepository(@Value("${egf.master.host.url}") String hostUrl,
 			RestTemplate restTemplate) {

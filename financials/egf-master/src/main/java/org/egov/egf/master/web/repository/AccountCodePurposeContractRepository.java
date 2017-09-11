@@ -11,7 +11,7 @@ public class AccountCodePurposeContractRepository {
 
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = "/egf-master/accountcodepurposes/_search?";
+	public static final String SEARCH_URL = "/egf-masters/accountcodepurposes/_search?";
 
 	public AccountCodePurposeContractRepository(@Value("${egf.master.host.url}") String hostUrl,
 			RestTemplate restTemplate) {

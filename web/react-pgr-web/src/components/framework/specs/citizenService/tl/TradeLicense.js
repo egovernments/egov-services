@@ -656,7 +656,7 @@ var dat = {
                     },
                     {
                         "name": "UOM",
-                        "jsonPath": "licenses[0].uom",
+                        "jsonPath": "licenses[0].uomName",
                         "label": "tl.view.licenses.groups.UOM",
                         "pattern": "",
                         "type": "text",

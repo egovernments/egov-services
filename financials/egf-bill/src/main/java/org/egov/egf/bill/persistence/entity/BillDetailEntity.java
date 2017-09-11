@@ -23,6 +23,7 @@ public class BillDetailEntity extends AuditableEntity {
     public static final String TABLE_NAME = "egf_billdetail";
 	public static final String SEQUENCE_NAME = "seq_egf_billdetail";
     private String id;
+    private String billRegisterId;
     private Integer orderId;
     private String chartOfAccountId;
     private String glcode;

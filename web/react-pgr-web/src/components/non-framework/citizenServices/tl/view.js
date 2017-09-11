@@ -253,9 +253,7 @@ class Report extends Component {
       self.props.setLoadingStatus("loading");
       //DO WHATEVER YOU WANT TO DO AFTER PAYMENT & THEN CALL GENERATERECEIPT() FUNCTION
       let response = JSON.parse(localStorage.response);
-      if (this.props.match.params.paymentGateWayRes=="success")
-      {
-        // paymentGateWayRes["status"]="failed";
+      if (this.props.match.params.paymentGateWayRes=="success") {
         Api.commonApiPost("/citizen-services/v1/pgresponse/_validate", {}, {PGResponse:paymentGateWayRes}, null, metaData["tl.view"].useTimestamp, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
             self.props.setLoadingStatus('hide');
             self.generateReceipt(response.ServiceRequest, response.Receipt);

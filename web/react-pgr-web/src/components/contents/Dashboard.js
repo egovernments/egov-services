@@ -762,7 +762,7 @@ class Dashboard extends Component {
                                     </thead>
                                     <tbody>
                                         {serviceRequestsTwo.map((item, key)=>{
-                                          if (item.status != "CREATED" || (item.status == "CREATED" && ["BPA_FIRE_NOC", "WATER_NEWCONN"].indexOf(item.serviceCode) > -1)) {
+                                          if (item.status != "CREATED" || (item.status == "CREATED" && ["BPA_FIRE_NOC", "WATER_NEWCONN", "TL_NEWCONN"].indexOf(item.serviceCode) > -1)) {
                                             return (<tr key={key} onClick={() => {this.rowClickHandler(item)}}>
                                                 <td>{item.serviceRequestId}</td>
                                                 <td>{nameMap[item.serviceCode] || item.serviceCode}</td>

@@ -40,6 +40,7 @@ import org.egov.mr.web.contract.MarriageRegnRequest;
 import org.egov.mr.web.contract.MarriageRegnResponse;
 import org.egov.mr.web.contract.ResponseInfoFactory;
 import org.egov.mr.web.errorhandler.ErrorHandler;
+import org.egov.mr.web.validator.MarriageRegnValidator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,6 +54,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.validation.BindingResult;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(MarriageRegnController.class)
@@ -67,6 +69,12 @@ public class MarriageRegnControllerTest {
 
 	@InjectMocks
 	private MarriageRegnController marriageRegnController;
+
+	@MockBean
+	private MarriageRegnValidator marriageRegnValidator;
+
+	@MockBean
+	private BindingResult modelAttributeBindingResult;
 
 	@MockBean
 	private ErrorHandler errorHandler;
@@ -127,9 +135,13 @@ public class MarriageRegnControllerTest {
 
 	@Test
 	public void testForSearch() {
+
 		MarriageRegn marriageRegn = getMarriageRegnFromDB().get(0);
 		ResponseInfo responseInfo = ResponseInfo.builder().apiId("string").status("200").ver("string")
 				.ts(Long.valueOf("987456321")).resMsgId("string").build();
+		when(modelAttributeBindingResult.hasErrors()).thenReturn(false);
+		when(errorHandler.getErrorResponse(Matchers.any(), Matchers.any(RequestInfo.class))).thenReturn(null);
+
 		when(responseInfoFactory.createResponseInfoFromRequestInfo(Matchers.any(RequestInfo.class),
 				Matchers.any(Boolean.class))).thenReturn(responseInfo);
 		when(marriageRegnService.getMarriageRegns(Matchers.any(MarriageRegnCriteria.class),
@@ -137,8 +149,8 @@ public class MarriageRegnControllerTest {
 
 		try {
 			mockMvc.perform(
-					post("/marriageRegns/appl/_search").content(getFileContents("MarriageRegnCreateRequest.json"))
-							.contentType(MediaType.APPLICATION_JSON_UTF8))
+					post("/marriageRegns/appl/_search").content(getFileContents("MarriageRegnSearchRequest.json"))
+							.contentType(MediaType.APPLICATION_JSON_UTF8).param("tenantId", "ap.kurnool"))
 					.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 					.andExpect(content().json(getFileContents("MarriageRegnCreateResponse.json")));
 		} catch (Exception e) {

@@ -55,7 +55,8 @@ const nameMap = {
   "VERIFIED": "Verified",
   "ESTIMATIONAMOUNTCOLLECTED": "Estimation Amount Collected",
   "WORKORDERGENERATED": "Work Order Generated",
-  "SANCTIONED": "Sanctioned"
+  "SANCTIONED": "Sanctioned",
+  "TL_NEWCONN": "New Trade License"
 };
 
 const content=[
@@ -113,7 +114,7 @@ const content=[
             {
                 icon: 'icon-class-name',
                 label: 'Apply for New License',
-                to: '#/coming/soon',
+                to: '#/non-framework/citizenServices/tl/fill/create',
             }
         ],
     },
@@ -761,7 +762,7 @@ class Dashboard extends Component {
                                     </thead>
                                     <tbody>
                                         {serviceRequestsTwo.map((item, key)=>{
-                                          if (item.status != "CREATED" || (item.status == "CREATED" && ["BPA_FIRE_NOC", "WATER_NEWCONN"].indexOf(item.serviceCode) > -1)) {
+                                          if (item.status != "CREATED" || (item.status == "CREATED" && ["BPA_FIRE_NOC", "WATER_NEWCONN", "TL_NEWCONN"].indexOf(item.serviceCode) > -1)) {
                                             return (<tr key={key} onClick={() => {this.rowClickHandler(item)}}>
                                                 <td>{item.serviceRequestId}</td>
                                                 <td>{nameMap[item.serviceCode] || item.serviceCode}</td>

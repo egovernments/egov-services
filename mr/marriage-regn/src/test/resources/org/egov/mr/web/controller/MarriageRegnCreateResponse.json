@@ -10,7 +10,6 @@
 		{
 			"regnUnit": {
 				"id": 33,
-				"code": "AP",
 				"name": "kurnool",
 				"address": {
 					"locality": 60,
@@ -172,7 +171,7 @@
 					"id": "2"
 				}
 			],
-			"actions":"CREATE",
+			"actions": "CREATE",
 			"auditDetails": {
 				"createdBy": "asish",
 				"lastModifiedBy": "asish",

@@ -103,7 +103,7 @@ public class MarriageRegnQueryBuilderTest {
 				+ " mr.approvaldepartment as mr_approvaldepartment, mr.approvaldesignation as mr_approvaldesignation, mr.approvalassignee as mr_approvalassignee,"
 				+ " mr.approvalaction as mr_approvalaction, mr.approvalstatus as mr_approvalstatus, mr.approvalcomments as mr_approvalcomments,"
 				+ " mr.createdby as mr_createdby, mr.lastmodifiedby as mr_lastmodifiedby, mr.lastmodifiedtime as mr_lastmodifiedtime, mr.createdtime as mr_createdtime,"
-				+ " mr.isactive as mr_isactive, ru.id as ru_id, ru.name as ru_name, ru.isactive as ru_isactive, ru.tenantid as ru_tenantid, ru.code as ru_code,"
+				+ " mr.isactive as mr_isactive, ru.id as ru_id, ru.name as ru_name, ru.isactive as ru_isactive, ru.tenantid as ru_tenantid,ru.mainregistrationunit as ru_mainregistrationunit "
 				+ " ru.locality as ru_locality, ru.zone as ru_zone, ru.revenueward as ru_revenueward, ru.block as ru_block, ru.street as ru_street,"
 				+ " ru.electionward as ru_electionward, ru.doorno as ru_doorno, ru.pincode as ru_pincode, mpb.id as mpb_id, mpb.name as mpb_name,"
 				+ " mpb.parentname as mpb_parentname, mpb.dob as mpb_dob, mpb.status as mpb_status, mpb.street as mpb_street, mpb.locality as mpb_locality,"

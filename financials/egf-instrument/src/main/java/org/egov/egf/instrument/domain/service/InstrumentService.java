@@ -78,7 +78,7 @@ public class InstrumentService {
 
 		try {
 
-			instruments = fetchRelated(instruments);
+			instruments = fetchRelated(instruments,requestInfo);
 
 			validate(instruments, ACTION_CREATE, errors);
 
@@ -100,7 +100,7 @@ public class InstrumentService {
 
 		try {
 
-			instruments = fetchRelated(instruments);
+			instruments = fetchRelated(instruments,requestInfo);
 
 			validate(instruments, ACTION_UPDATE, errors);
 
@@ -248,7 +248,7 @@ public class InstrumentService {
 
 	}
 
-	public List<Instrument> fetchRelated(List<Instrument> instruments) {
+	public List<Instrument> fetchRelated(List<Instrument> instruments,RequestInfo requestInfo) {
 
 		if (instruments != null)
 			for (Instrument instrument : instruments) {
@@ -269,7 +269,7 @@ public class InstrumentService {
 					instrument.setInstrumentType(response.getPagedData().get(0));
 				}
 				if (instrument.getBank() != null && instrument.getBank().getId() != null) {
-					BankContract bank = bankContractRepository.findById(instrument.getBank());
+					BankContract bank = bankContractRepository.findById(instrument.getBank(),requestInfo);
 					if (bank == null) {
 						throw new InvalidDataException("bank", "bank.invalid", " Invalid bank");
 					}

@@ -680,6 +680,212 @@
 				"description": ""
 			},
 			"response": []
+		},
+		{
+			"name": "Escalation Hierarchy Create",
+			"request": {
+				"url": "egov-micro-dev.egovernments.org/pgr-master/escalation-hierarchy/v1/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"escalationHierarchy\": [\n    {\n      \"serviceCode\": \"DARVIN1\",\n      \"tenantId\": \"default\",\n      \"fromPosition\": 1,\n      \"toPosition\": 1000,\n      \"department\": 9,\n      \"designation\": 1\n    }\n  ],\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": \"01-04-2017 01:01:01\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"69987a74-86f3-4de1-b30f-ec26afb4d737\",\n    \"userInfo\" : {\n      \"id\" : 1\n    }\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Escalation Hierarchy Update",
+			"request": {
+				"url": "egov-micro-dev.egovernments.org/pgr-master/escalation-hierarchy/v1/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"escalationHierarchy\": [\n    {\n      \"serviceCode\": \"DARVIN\",\n      \"tenantId\": \"default\",\n      \"fromPosition\": 2,\n      \"toPosition\": 9,\n      \"department\": 2,\n      \"designation\": 2\n    },{\n            \"fromPosition\": 7,\n            \"serviceCode\": \"UNIQUE\",\n            \"toPosition\": 9,\n            \"tenantId\": \"default\",\n            \"auditDetails\": null,\n            \"department\": 1,\n            \"designation\": 1\n        }\n  ],\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": \"01-04-2017 01:01:01\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"645d587c-7225-4739-b07c-6605a1a249da\"\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Escalation Hierarchy Search",
+			"request": {
+				"url": {
+					"raw": "egov-micro-dev.egovernments.org/pgr-master/escalation-hierarchy/v1/_search?tenantId=default",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"pgr-master",
+						"escalation-hierarchy",
+						"v1",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "fromPosition",
+							"value": "1",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "toPosition",
+							"value": "",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "serviceCode",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"10-03-2017 00:00:00\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n       \"authToken\" : \"d63ff38d-2ea4-4846-8852-fdbea6414772\"\n   }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Escalation Time Type Create",
+			"request": {
+				"url": "egov-micro-dev.egovernments.org/workflow/escalation-hours/v1/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \t\"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"10-03-2017 00:00:00\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n       \"authToken\" : \"69987a74-86f3-4de1-b30f-ec26afb4d737\"\n   }, \n\n  \"EscalationTimeType\": {\n    \"grievancetype\": {\n      \"id\": 5\n    },\n    \"noOfHours\": \"8\",\n    \"designation\": 6,\n    \"tenantId\": \"default\"\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Escalation Time Type Update",
+			"request": {
+				"url": "egov-micro-dev.egovernments.org/workflow/escalation-hours/v1/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \n   \"RequestInfo\":{  \n      \"apiId\":\"emp\",\n      \"ver\":\"1.0\",\n      \"ts\":\"10-03-2017 00:00:00\",\n      \"action\":\"create\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\",\n      \"msgId\":\"20170310130900\",\n      \"requesterId\":\"rajesh\",\n      \"authToken\":\"69987a74-86f3-4de1-b30f-ec26afb4d737\"\n   },\n   \"EscalationTimeType\":{  \n      \"id\":52,\n      \"tenantId\":\"default\",\n      \"grievanceType\":{  \n         \"id\":135\n      },\n      \"noOfHours\":49,\n      \"designation\":2,\n      \"active\":true,\n      \"auditDetails\":{  \n         \"createdbBy\":1\n      }\n   }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Escalation Time Type Search",
+			"request": {
+				"url": {
+					"raw": "egov-micro-dev.egovernments.org/workflow/escalation-hours/v1/_search?tenantId=default",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"workflow",
+						"escalation-hours",
+						"v1",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "id",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "designation",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "serviceId",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \t\"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"10-03-2017 00:00:00\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n       \"authToken\" : \"69987a74-86f3-4de1-b30f-ec26afb4d737\"\n   }\n}"
+				},
+				"description": ""
+			},
+			"response": []
 		}
 	]
 }

@@ -11,9 +11,7 @@
     {
       "id": 1,
       "name": "accountCodePurposeUU",
-      "createdBy": null,
       "createdDate": null,
-      "lastModifiedBy": null,
       "lastModifiedDate": null,
       "tenantId": "default"
     }

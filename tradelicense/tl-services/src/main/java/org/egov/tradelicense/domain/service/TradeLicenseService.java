@@ -408,14 +408,9 @@ public class TradeLicenseService {
 		LicenseStatusResponse currentStatus = null;
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
-		if(null != tradeLicense.getApplication().getStatus())
-		System.out.println("TenantId: " + tradeLicense.getTenantId() + "Status: "
-				+ tradeLicense.getApplication().getStatus().toString());
 		if (null != tradeLicense.getApplication().getStatus())
 			currentStatus = statusRepository.findByIds(tradeLicense.getTenantId(),
 					tradeLicense.getApplication().getStatus().toString(), requestInfoWrapper);
-		if (null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty())
-			System.out.println("Current Status: " + currentStatus.getLicenseStatuses().get(0).getCode());
 
 		if (null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty() && currentStatus.getLicenseStatuses()
 				.get(0).getCode().equalsIgnoreCase(NewLicenseStatus.INSPECTION_COMPLETED.getName())) {

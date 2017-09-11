@@ -201,9 +201,9 @@ public class BillDetailRepository {
 		Map<String, Object> message = new HashMap<>();
 
 		if (request.getRequestInfo().getAction().equalsIgnoreCase(Constants.ACTION_CREATE)) {
-			message.put("bildetail_create", request);
+			message.put("billdetail_create", request);
 		} else {
-			message.put("bildetail_update", request);
+			message.put("billdetail_update", request);
 		}
 		billDetailQueueRepository.addToQue(message);
 

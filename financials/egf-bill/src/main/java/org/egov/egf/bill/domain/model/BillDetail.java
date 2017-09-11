@@ -70,7 +70,7 @@ public class BillDetail extends Auditable {
 
 	private Integer orderId;
 
-	@NotNull
+//	@NotNull
 	private ChartOfAccountContract chartOfAccount;
 	
 	@NotNull

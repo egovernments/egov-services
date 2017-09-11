@@ -56,7 +56,6 @@ public class AgreementController {
 			ErrorResponse errorResponse = populateErrors(bindingResult);
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
-
 		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 		LOGGER.info("AgreementController:getAgreements():searchAgreementsModel:" + agreementCriteria);
 		List<Agreement> agreements = agreementService.searchAgreement(agreementCriteria, requestInfo);
@@ -65,9 +64,7 @@ public class AgreementController {
 	}
 
 	private ResponseEntity<?> getSuccessResponse(List<Agreement> agreements, RequestInfo requestInfo) {
-		AgreementResponse agreementResponse = new AgreementResponse();
-		agreementResponse.setAgreement(agreements);
-		agreementResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true));
+		AgreementResponse agreementResponse = getAgreementResponse(agreements, requestInfo);
 		LOGGER.info("before returning from getsucces resposne ::" + agreementResponse);
 		return new ResponseEntity<>(agreementResponse, HttpStatus.OK);
 	}
@@ -92,10 +89,7 @@ public class AgreementController {
 		Agreement agreement = agreementService.createAgreement(agreementRequest);
 		List<Agreement> agreements = new ArrayList<>();
 		agreements.add(agreement);
-		AgreementResponse agreementResponse = new AgreementResponse();
-		agreementResponse.setAgreement(agreements);
-		agreementResponse.setResponseInfo(
-				responseInfoFactory.createResponseInfoFromRequestInfo(agreementRequest.getRequestInfo(), true));
+		AgreementResponse agreementResponse = getAgreementResponse(agreements, agreementRequest.getRequestInfo());
 		LOGGER.info(agreementResponse.toString());
 		return new ResponseEntity<>(agreementResponse, HttpStatus.CREATED);
 	}
@@ -120,10 +114,7 @@ public class AgreementController {
 		Agreement agreement = agreementService.createRenewal(agreementRequest);
 		List<Agreement> agreements = new ArrayList<>();
 		agreements.add(agreement);
-		AgreementResponse agreementResponse = new AgreementResponse();
-		agreementResponse.setAgreement(agreements);
-		agreementResponse.setResponseInfo(
-				responseInfoFactory.createResponseInfoFromRequestInfo(agreementRequest.getRequestInfo(), true));
+		AgreementResponse agreementResponse = getAgreementResponse(agreements, agreementRequest.getRequestInfo());
 		LOGGER.info("agreement renewal response:" + agreementResponse.toString());
 		return new ResponseEntity<>(agreementResponse, HttpStatus.CREATED);
 	}
@@ -148,10 +139,7 @@ public class AgreementController {
 		Agreement agreement = agreementService.createEviction(agreementRequest);
 		List<Agreement> agreements = new ArrayList<>();
 		agreements.add(agreement);
-		AgreementResponse agreementResponse = new AgreementResponse();
-		agreementResponse.setAgreement(agreements);
-		agreementResponse.setResponseInfo(
-				responseInfoFactory.createResponseInfoFromRequestInfo(agreementRequest.getRequestInfo(), true));
+		AgreementResponse agreementResponse = getAgreementResponse(agreements, agreementRequest.getRequestInfo());
 		LOGGER.info("agreement eviction response:" + agreementResponse.toString());
 		return new ResponseEntity<>(agreementResponse, HttpStatus.CREATED);
 	}
@@ -176,10 +164,7 @@ public class AgreementController {
 		Agreement agreement = agreementService.createCancellation(agreementRequest);
 		List<Agreement> agreements = new ArrayList<>();
 		agreements.add(agreement);
-		AgreementResponse agreementResponse = new AgreementResponse();
-		agreementResponse.setAgreement(agreements);
-		agreementResponse.setResponseInfo(
-				responseInfoFactory.createResponseInfoFromRequestInfo(agreementRequest.getRequestInfo(), true));
+		AgreementResponse agreementResponse = getAgreementResponse(agreements, agreementRequest.getRequestInfo());
 		LOGGER.info("agreement cancellation response :" + agreementResponse.toString());
 		return new ResponseEntity<>(agreementResponse, HttpStatus.CREATED);
 	}
@@ -204,10 +189,7 @@ public class AgreementController {
 		Agreement agreement = agreementService.createObjection(agreementRequest);
 		List<Agreement> agreements = new ArrayList<>();
 		agreements.add(agreement);
-		AgreementResponse agreementResponse = new AgreementResponse();
-		agreementResponse.setAgreement(agreements);
-		agreementResponse.setResponseInfo(
-				responseInfoFactory.createResponseInfoFromRequestInfo(agreementRequest.getRequestInfo(), true));
+		AgreementResponse agreementResponse = getAgreementResponse(agreements, agreementRequest.getRequestInfo());
 		LOGGER.info("agreement objection response:" + agreementResponse.toString());
 		return new ResponseEntity<>(agreementResponse, HttpStatus.CREATED);
 	}
@@ -221,7 +203,6 @@ public class AgreementController {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
-
 		LOGGER.info("agreementRequest cancel ::" + agreementRequest);
 		agreementValidator.validate(agreementRequest, errors);
 
@@ -229,14 +210,10 @@ public class AgreementController {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
-
 		Agreement agreement = agreementService.createJudgement(agreementRequest);
 		List<Agreement> agreements = new ArrayList<>();
 		agreements.add(agreement);
-		AgreementResponse agreementResponse = new AgreementResponse();
-		agreementResponse.setAgreement(agreements);
-		agreementResponse.setResponseInfo(
-				responseInfoFactory.createResponseInfoFromRequestInfo(agreementRequest.getRequestInfo(), true));
+		AgreementResponse agreementResponse = getAgreementResponse(agreements, agreementRequest.getRequestInfo());
 		LOGGER.info("agreement judgement response:" + agreementResponse.toString());
 		return new ResponseEntity<>(agreementResponse, HttpStatus.CREATED);
 	}
@@ -263,11 +240,133 @@ public class AgreementController {
 		agreement = agreementService.updateAgreement(agreementRequest);
 		List<Agreement> agreements = new ArrayList<>();
 		agreements.add(agreement);
-		AgreementResponse agreementResponse = new AgreementResponse();
-		agreementResponse.setAgreement(agreements);
-		agreementResponse.setResponseInfo(
-				responseInfoFactory.createResponseInfoFromRequestInfo(agreementRequest.getRequestInfo(), true));
-		LOGGER.info("the response form update agrement call : " + agreementResponse);
+		AgreementResponse agreementResponse = getAgreementResponse(agreements, agreementRequest.getRequestInfo());
+		LOGGER.info("the response form update agreement call : " + agreementResponse);
+		return new ResponseEntity<>(agreementResponse, HttpStatus.CREATED);
+	}
+
+	@PostMapping("renewal/_update")
+	@ResponseBody
+	public ResponseEntity<?> updateRenewal(@RequestBody AgreementRequest agreementRequest,
+			BindingResult bindingResult) {
+
+		if (bindingResult.hasErrors()) {
+			ErrorResponse errorResponse = populateErrors(bindingResult);
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+		}
+		if (agreementRequest.getAgreement().getSource().equals(Source.SYSTEM)) {
+			agreementValidator.validateUpdate(agreementRequest, bindingResult);
+		}
+
+		if (!agreementService.isAgreementExist(agreementRequest.getAgreement().getAcknowledgementNumber()))
+			throw new RuntimeException("code mismatch or no agreement found for this value");
+
+		Agreement agreement = null;
+		agreement = agreementService.updateRenewal(agreementRequest);
+		List<Agreement> agreements = new ArrayList<>();
+		agreements.add(agreement);
+		AgreementResponse agreementResponse = getAgreementResponse(agreements, agreementRequest.getRequestInfo());
+		LOGGER.info("the response form update agreement call : " + agreementResponse);
+		return new ResponseEntity<>(agreementResponse, HttpStatus.CREATED);
+	}
+
+	@PostMapping("cancel/_update")
+	@ResponseBody
+	public ResponseEntity<?> updateCancellation(@RequestBody AgreementRequest agreementRequest,
+			BindingResult bindingResult) {
+
+		if (bindingResult.hasErrors()) {
+			ErrorResponse errorResponse = populateErrors(bindingResult);
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+		}
+		if (agreementRequest.getAgreement().getSource().equals(Source.SYSTEM)) {
+			agreementValidator.validateUpdate(agreementRequest, bindingResult);
+		}
+
+		if (!agreementService.isAgreementExist(agreementRequest.getAgreement().getAcknowledgementNumber()))
+			throw new RuntimeException("code mismatch or no agreement found for this value");
+
+		Agreement agreement = null;
+		agreement = agreementService.updateCancellation(agreementRequest);
+		List<Agreement> agreements = new ArrayList<>();
+		agreements.add(agreement);
+		AgreementResponse agreementResponse = getAgreementResponse(agreements, agreementRequest.getRequestInfo());
+		LOGGER.info("the response form update agreement call : " + agreementResponse);
+		return new ResponseEntity<>(agreementResponse, HttpStatus.CREATED);
+	}
+
+	@PostMapping("eviction/_update")
+	@ResponseBody
+	public ResponseEntity<?> updateEviction(@RequestBody AgreementRequest agreementRequest,
+			BindingResult bindingResult) {
+
+		if (bindingResult.hasErrors()) {
+			ErrorResponse errorResponse = populateErrors(bindingResult);
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+		}
+		if (agreementRequest.getAgreement().getSource().equals(Source.SYSTEM)) {
+			agreementValidator.validateUpdate(agreementRequest, bindingResult);
+		}
+
+		if (!agreementService.isAgreementExist(agreementRequest.getAgreement().getAcknowledgementNumber()))
+			throw new RuntimeException("code mismatch or no agreement found for this value");
+
+		Agreement agreement = null;
+		agreement = agreementService.updateEviction(agreementRequest);
+		List<Agreement> agreements = new ArrayList<>();
+		agreements.add(agreement);
+		AgreementResponse agreementResponse = getAgreementResponse(agreements, agreementRequest.getRequestInfo());
+		LOGGER.info("the response form update agreement call : " + agreementResponse);
+		return new ResponseEntity<>(agreementResponse, HttpStatus.CREATED);
+	}
+
+	@PostMapping("objection/_update")
+	@ResponseBody
+	public ResponseEntity<?> updateObjection(@RequestBody AgreementRequest agreementRequest,
+			BindingResult bindingResult) {
+
+		if (bindingResult.hasErrors()) {
+			ErrorResponse errorResponse = populateErrors(bindingResult);
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+		}
+		if (agreementRequest.getAgreement().getSource().equals(Source.SYSTEM)) {
+			agreementValidator.validateUpdate(agreementRequest, bindingResult);
+		}
+
+		if (!agreementService.isAgreementExist(agreementRequest.getAgreement().getAcknowledgementNumber()))
+			throw new RuntimeException("code mismatch or no agreement found for this value");
+
+		Agreement agreement = null;
+		agreement = agreementService.updateObjectionAndJudgement(agreementRequest);
+		List<Agreement> agreements = new ArrayList<>();
+		agreements.add(agreement);
+		AgreementResponse agreementResponse = getAgreementResponse(agreements, agreementRequest.getRequestInfo());
+		LOGGER.info("the response form update agreement call : " + agreementResponse);
+		return new ResponseEntity<>(agreementResponse, HttpStatus.CREATED);
+	}
+
+	@PostMapping("judgement/_update")
+	@ResponseBody
+	public ResponseEntity<?> updateJudgement(@RequestBody AgreementRequest agreementRequest,
+			BindingResult bindingResult) {
+
+		if (bindingResult.hasErrors()) {
+			ErrorResponse errorResponse = populateErrors(bindingResult);
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+		}
+		if (agreementRequest.getAgreement().getSource().equals(Source.SYSTEM)) {
+			agreementValidator.validateUpdate(agreementRequest, bindingResult);
+		}
+
+		if (!agreementService.isAgreementExist(agreementRequest.getAgreement().getAcknowledgementNumber()))
+			throw new RuntimeException("code mismatch or no agreement found for this value");
+
+		Agreement agreement = null;
+		agreement = agreementService.updateObjectionAndJudgement(agreementRequest);
+		List<Agreement> agreements = new ArrayList<>();
+		agreements.add(agreement);
+		AgreementResponse agreementResponse = getAgreementResponse(agreements, agreementRequest.getRequestInfo());
+		LOGGER.info("the response form update agreement call : " + agreementResponse);
 		return new ResponseEntity<>(agreementResponse, HttpStatus.CREATED);
 	}
 
@@ -304,10 +403,7 @@ public class AgreementController {
 
 		List<Agreement> agreements = new ArrayList<>();
 		agreements.add(agreement);
-		AgreementResponse agreementResponse = new AgreementResponse();
-		agreementResponse.setAgreement(agreements);
-		agreementResponse.setResponseInfo(
-				responseInfoFactory.createResponseInfoFromRequestInfo(agreementRequest.getRequestInfo(), true));
+		AgreementResponse agreementResponse = getAgreementResponse(agreements, agreementRequest.getRequestInfo());
 		LOGGER.info(agreementResponse.toString());
 		return new ResponseEntity<>(agreementResponse, HttpStatus.CREATED);
 	}
@@ -330,5 +426,12 @@ public class AgreementController {
 		}
 		errRes.setError(error);
 		return errRes;
+	}
+
+	private AgreementResponse getAgreementResponse(List<Agreement> agreements, RequestInfo requestInfo) {
+		AgreementResponse agreementResponse = new AgreementResponse();
+		agreementResponse.setAgreement(agreements);
+		agreementResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true));
+		return agreementResponse;
 	}
 }

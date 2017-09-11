@@ -239,7 +239,7 @@ var dat = {
     ],
     "result": {
       "header": [{label: "tl.create.groups.subcategorytype.code"},{label: "tl.create.groups.subcategorytype.name"}, {label: "tl.create.groups.subcategorytype.category"}, {label: "tl.create.groups.subcategorytype.active"}, {label: "tl.create.groups.subcategorytype.categories.details.feeType"}, {label: "tl.create.groups.subcategorytype.categories.details.rateType"}, {label: "tl.create.groups.subcategorytype.categories.details.uomId"}],
-      "values": ["code", "name","parentName", "active", "details[0].feeType", "details[0].rateType", "details[0].uomId"],
+      "values": ["code", "name","parentName", "active", "details[0].feeType", "details[0].rateType", "details[0].uomName"],
       "resultPath": "categories",
       "rowClickUrlUpdate": "/non-framework/tl/transaction/UpdateSubCategory/{id}",
       "rowClickUrlView": "/view/tl/CreateLicenseSubCategory/{id}"
@@ -440,7 +440,7 @@ var dat = {
 	          "label": "tl.update.groups.subcategorytype.code",
 	          "pattern": "^.[A-Za-z0-9]{14,14}$",
 	          "type": "text",
-	          "isRequired": false,
+	          "isRequired": true,
 	          "isDisabled": true,
 	          "requiredErrMsg": "",
 	          "patternErrMsg": "Enter 15 digit Alpha/Numeric Code"

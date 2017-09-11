@@ -68,7 +68,7 @@ export default class CommentDoc extends Component {
                                     <td><a target="_blank" href={"/filestore/v1/files/id?tenantId=" + localStorage.getItem("tenantId") + "&fileStoreId=" + v.filePath}>Download</a></td>
                                   </tr>
                                 )
-                              }) : <tr><td style={{"textAlign": "center"}} colSpan={4}>No documents uploaded!</td></tr>
+                              }) : <tr><td style={{"textAlign": "center"}} colSpan={self.props.showRemarks ? 5 : 4}>No documents uploaded!</td></tr>
                             }
                           </tbody>
                       </Table>

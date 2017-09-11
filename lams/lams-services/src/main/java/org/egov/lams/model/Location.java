@@ -40,12 +40,7 @@
 
 package org.egov.lams.model;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -53,6 +48,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
+@Builder
 public class Location {
 	
 	

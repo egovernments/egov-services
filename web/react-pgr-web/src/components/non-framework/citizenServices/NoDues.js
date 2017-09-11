@@ -114,7 +114,8 @@ class NoDues extends Component {
       applicationFeeDemand:[],
       serviceRequest:{},
       ReceiptOne:[],
-      Receipt:[]
+      Receipt:[],
+      TaxHeads: {}
     }
   }
 
@@ -569,6 +570,8 @@ class NoDues extends Component {
       this.props.setLoadingStatus('loading');
       this.pay();
     }
+
+    Api.commonApiPost
   }
 
   componentDidMount() {
@@ -654,6 +657,29 @@ class NoDues extends Component {
       })
   }
 
+  getTaxHeads = () => {
+    let self = this;
+    if(localStorage["taxheads" + self.props.match.params.id.toUpperCase()]) {
+      return self.setState({
+        TaxHeads: JSON.parse(localStorage["taxheads" + self.props.match.params.id.toUpperCase()])
+      });
+    }
+
+    Api.commonApiPost("/billing-service/taxheads/_search", {service: self.props.match.params.id.toUpperCase()}, {}, false, true, false, localStorage.getItem("auth-token-temp")).then(function(res){
+      if(res.TaxHeadMasters && res.TaxHeadMasters.length) {
+        var taxheads = {};
+        for(var i=0; i<res.TaxHeadMasters.length; i++) {
+          taxheads[res.TaxHeadMasters[i].code] = res.TaxHeadMasters[i].name;
+        }
+
+        localStorage.setItem("taxheads" + self.props.match.params.id.toUpperCase(), JSON.stringify(taxheads));
+        return self.setState({
+          TaxHeads: taxheads
+        });
+      }
+    }, function(err) {})
+  }
+
   search = (e) => {
     e.preventDefault();
     let self = this;
@@ -705,6 +731,7 @@ class NoDues extends Component {
     instance.post('/user/oauth/token', params).then(function(response) {
       localStorage.setItem("request-temp", JSON.stringify(response.data.UserRequest));
       localStorage.setItem("auth-token-temp", response.data.access_token);
+      self.getTaxHeads();
       let serviceReq = []
       try {
         serviceReq = JSON.parse(localStorage.servReq);
@@ -1181,6 +1208,7 @@ class NoDues extends Component {
     let {showResult, resultList,open,demands,Receipt, ReceiptOne,applicationFeeDemand} = this.state;
     const {finished, stepIndex} = this.state;
     const contentStyle = {margin: '0 16px'};
+    let self = this;
     console.log(formData);
     console.log(demands);
 
@@ -1239,10 +1267,11 @@ class NoDues extends Component {
                                       <td>{getFullDate(demands[key].taxPeriodFrom)}</td>
                                       <td>{getFullDate(demands[key].taxPeriodTo)}</td>
 
-                                     <td>{itemOne.taxHeadMasterCode}</td>
+                                     <td>{self.state.TaxHeads[itemOne.taxHeadMasterCode] || itemOne.taxHeadMasterCode}</td>
                                      <td style={{textAlign:"right"}}>{parseInt(itemOne.taxAmount-itemOne.collectionAmount).toFixed(2)}</td>
                                   </tr>)
                                 })
+
 
 
                           }):(

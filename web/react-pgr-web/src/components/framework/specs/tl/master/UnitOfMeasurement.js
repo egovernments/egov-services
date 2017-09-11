@@ -1,9 +1,9 @@
 var dat = {
 	"tl.create": {
 		"numCols": 12/2,
-		"url": "/v1/category/_create",
+		"url": "/tl-masters/uom/v1/_create",
 		"tenantIdRequired": true,
-		"objectName": "UOMType",
+		"objectName": "uoms",
 		"groups": [
 			{
 				"label": "tl.create.UOMType.title",
@@ -11,36 +11,39 @@ var dat = {
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "categories.name",
+							"jsonPath": "uoms[0].name",
 							"label": "tl.create.groups.UOMType.name",
-							"pattern": "",
+							"pattern": "^.[a-zA-Z. ]{2,49}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Enter Valid Name (Min:3, Max:50)",
+							"maxLength": "50"
 						},
 						{
 							"name": "code",
-							"jsonPath": "categories.code",
+							"jsonPath": "uoms[0].code",
 							"label": "tl.create.groups.UOMType.code",
-							"pattern": "",
+							"pattern": "^.[A-Za-z0-9]{0,19}$",
 							"type": "text",
-							"isRequired": false,
+							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Enter Valid Code (Alpha-Numeric, Min:1, Max:20)",
+							"maxLength": "20"
 						},
             {
 							"name": "Active",
-							"jsonPath": "CategoryType.active",
+							"jsonPath": "uoms[0].active",
 							"label": "tl.create.groups.UOMType.active",
 							"pattern": "",
 							"type": "checkbox",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"defaultValue":true
 						}
 				]
 			}
@@ -49,10 +52,10 @@ var dat = {
 
   "tl.search": {
 		"numCols": 12/1,
-		"url": "/v1/uom/_search",
+		"url": "/tl-masters/uom/v1/_search",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "CategoryType",
+		"objectName": "uoms",
 		"groups": [
 			{
 				"label": "tl.search.groups.UOMType.title",
@@ -65,7 +68,7 @@ var dat = {
 							"pattern": "",
 							"type": "singleValueList",
               "url": "",
-							"isRequired": true,
+							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
@@ -74,19 +77,19 @@ var dat = {
 			}
 		],
 		"result": {
-			"header": [{label: "wc.create.code"},{label: "wc.search.result.categoryType"}, {label: "wc.search.result.description"}, {label: "wc.search.result.active"}],
-			"values": ["code","name", "description", "active"],
-			"resultPath": "CategoryTypes",
-			"rowClickUrlUpdate": "/update/wc/categoryType/{id}",
-			"rowClickUrlView": "/view/wc/categoryType/{id}"
+			"header": [{label: "tl.create.groups.UOMType.code"},{label: "tl.create.groups.UOMType.name"}, {label: "tl.create.groups.UOMType.active"}],
+			"values": ["code","name", "active"],
+			"resultPath": "uoms",
+			"rowClickUrlUpdate": "/update/tl/UnitOfMeasurement/{id}",
+			"rowClickUrlView": "/view/tl/UnitOfMeasurement/{id}"
 			}
 	},
 	"tl.view": {
 		"numCols": 12/2,
-		"url": "/v1/uom/_search",
+		"url": "/tl-masters/uom/v1/_search?ids={id}",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "CategoryType",
+		"objectName": "uoms[0]",
 		"groups": [
 			{
 				"label": "tl.view.groups.UOMType.title",
@@ -94,18 +97,18 @@ var dat = {
 				"fields": [
 					{
 						"name": "name",
-						"jsonPath": "categories.name",
+						"jsonPath": "uoms[0].name",
 						"label": "tl.view.groups.UOMType.name",
 						"pattern": "",
 						"type": "text",
-						"isRequired": true,
+						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					},
 					{
 						"name": "code",
-						"jsonPath": "categories.code",
+						"jsonPath": "uoms[0].code",
 						"label": "tl.view.groups.UOMType.code",
 						"pattern": "",
 						"type": "text",
@@ -116,7 +119,7 @@ var dat = {
 					},
           {
             "name": "Active",
-            "jsonPath": "CategoryType.active",
+            "jsonPath": "uoms[0].active",
             "label": "tl.view.groups.UOMType.active",
             "pattern": "",
             "type": "checkbox",
@@ -131,12 +134,12 @@ var dat = {
 	},
   "tl.update": {
 		"numCols": 12/2,
-		"searchUrl": "/v1/category/_search",
-		"url":"/v1/category/_update",
+		"searchUrl": "/tl-masters/uom/v1/_search?ids={id}",
+		"url":"/tl-masters/uom/v1/_update",
 		"isResponseArray":true,
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "CategoryType",
+		"objectName": "uoms[0]",
 		"groups": [
 			{
 				"label": "tl.update.groups.UOMType.title",
@@ -144,29 +147,31 @@ var dat = {
 				"fields": [
 					{
 						"name": "name",
-						"jsonPath": "categories.name",
+						"jsonPath": "uoms[0].name",
 						"label": "tl.update.groups.UOMType.name",
-						"pattern": "",
+						"pattern": "^.[a-zA-Z. ]{2,49}$",
 						"type": "text",
 						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
-						"patternErrMsg": ""
+						"patternErrMsg": "Enter Valid Name (Min:3, Max:50)",
+						"maxLength": "50"
 					},
 					{
 						"name": "code",
-						"jsonPath": "categories.code",
+						"jsonPath": "uoms[0].code",
 						"label": "tl.update.groups.UOMType.code",
-						"pattern": "",
+						"pattern": "^.[A-Za-z0-9]{0,19}$",
 						"type": "text",
-						"isRequired": false,
-						"isDisabled": false,
+						"isRequired": true,
+						"isDisabled": true,
 						"requiredErrMsg": "",
-						"patternErrMsg": ""
+						"patternErrMsg": "Enter Valid Code (Alpha-Numeric, Min:1, Max:20)",
+						"maxLength": "20"
 					},
           {
             "name": "Active",
-            "jsonPath": "CategoryType.active",
+            "jsonPath": "uoms[0].active",
             "label": "tl.update.groups.UOMType.active",
             "pattern": "",
             "type": "checkbox",

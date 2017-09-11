@@ -243,8 +243,12 @@ public class PropertyServiceImpl implements PropertyService {
 
 		List<Property> property = (List<Property>) map.get("properties");
 		List<User> users = (List<User>) map.get("users");
+		if(users!=null && users.size()>0){
 		updatedPropety = addAllPropertyDetails(property, requestInfo, users);
-
+		}
+		else{
+			updatedPropety=new ArrayList<Property>();
+		}
 		PropertyResponse propertyResponse = new PropertyResponse();
 		propertyResponse.setProperties(updatedPropety);
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);

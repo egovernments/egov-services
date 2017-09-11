@@ -131,7 +131,7 @@ public class AgreementQueryBuilder {
 			addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" AGREEMENT.CREATED_DATE<=?");
 			preparedStatementValues.add(agreementsModel.getToDate());
-		} else if (agreementsModel.getFromDate() != null || agreementsModel.getToDate() != null)
+		} else if (agreementsModel.getFromDate() == null || agreementsModel.getToDate() == null)
 			throw new RuntimeException("Invalid date Range, please enter Both fromDate and toDate");
 
 	}

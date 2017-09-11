@@ -416,7 +416,7 @@ var localization_EN_Data = {
     "pt.create.groups.ownerDetails.fields.ownerName": "Owner Name",
     "pt.create.groups.ownerDetails.fields.gender": "Gender",
     "pt.create.groups.ownerDetails.fields.email": "Email",
-    "pt.create.groups.ownerDetails.fields.pan": "Pan",
+    "pt.create.groups.ownerDetails.fields.pan": "PAN",
     "pt.create.groups.ownerDetails.fields.guardianRelation": "Guardian Relation",
     "pt.create.groups.ownerDetails.fields.guardian": "Guardian",
     "pt.create.groups.ownerDetails.fields.ownerType": "Owner Type",
@@ -458,6 +458,7 @@ var localization_EN_Data = {
     "pt.create.groups.assessmentDetails.fields.isLegal": "Is Legal?",
 
     "pt.create.groups.propertyFactors": "Property Factors",
+    "pt.create.groups.propertyFactors.fields.toiletFactor": "Toilet Factor",
     "pt.create.groups.propertyFactors.fields.roadFactor": "Road factor",
     "pt.create.groups.propertyFactors.fields.liftFactor": "Lift factor",
     "pt.create.groups.propertyFactors.fields.parkingFactor": "Parking Factor",
@@ -842,6 +843,8 @@ var localization_EN_Data = {
     "tl.create.groups.UOMType.active": "Active",
     "tl.search.groups.UOMType.title": "Search Unit of Measurement",
     "tl.search.groups.UOMType.category": "Unit of Measurement",
+
+    "tl.view.groups.UOMType.title": "View Unit of Measurement",
     "tl.view.groups.UOMType.name": "Name",
     "tl.view.groups.UOMType.code": "Code",
     "tl.view.groups.UOMType.active": "Active",

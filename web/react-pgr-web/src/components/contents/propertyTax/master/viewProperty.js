@@ -63,10 +63,7 @@ const getNameById = function(object, id, property = "") {
     return "";
 }
 
-const getNameByCode = function(object, code, property = "") {
-	
-	console.log(object, code);
-	
+const getNameByCode = function(object, code, property = "") {	
   if (code == "" || code == null) {
         return "";
     }
@@ -99,6 +96,7 @@ class ViewProperty extends Component {
 		    gender:[{code:'MALE', name:'Male'}, {code:'FEMALE', name:'Female'}, {code:'OTHERS', name:'Others'}],
 			ownerType:[{code:'Ex_Service_man', name:'Ex-Service man'}, {code:'Freedom_Fighter', name:'Freedom Fighter'}, {code:'Freedom_fighers_wife', name:"Freedom figher's wife"}],
 			propertytypes: [],
+			propertysubtypes: [],
 			apartments:[],
 			departments:[],
 			floortypes:[],
@@ -117,7 +115,9 @@ class ViewProperty extends Component {
 			usages:[],
 			creationReason:[{code:'NEWPROPERTY', name:'New Property'}, {code:'SUBDIVISION', name:'Bifurcation'}],
 			demands: [],
-			revenueBoundary: '',
+			revenueBoundary: [],
+			adminBoundary:[],
+			locationBoundary:[],
        }
       
    }
@@ -156,17 +156,67 @@ class ViewProperty extends Component {
 		} else {
 				var userRequest = JSON.parse(localStorage.getItem("userRequest"));
 				if(res.hasOwnProperty('properties') && res.properties.length > 0) {
-					var revenueQuery = {
-						"Boundary.id" : res.properties[0].propertyDetail.boundary.revenueBoundary.id,
-						"Boundary.tenantId" : userRequest.tenantId
-					}
-					Api.commonApiGet('egov-location/boundarys', revenueQuery).then((res)=>{
-						console.log(res);
 
-					}).catch((err)=> {
-						console.log(err);
-					})
+					if(res.properties[0].boundary.revenueBoundary.id){
+						var revenueQuery = {
+							"Boundary.id" : res.properties[0].boundary.revenueBoundary.id,
+							"Boundary.tenantId" : userRequest.tenantId
+						}
+						Api.commonApiGet('egov-location/boundarys', revenueQuery).then((res)=>{
+							console.log(res);
+							currentThis.setState({
+								revenueBoundary : res.Boundary[0]
+							})
+						}).catch((err)=> {
+							console.log(err);
+						})
+					}
+
+					if(res.properties[0].boundary.locationBoundary.id){
+						var locationQuery = {
+							"Boundary.id" : res.properties[0].boundary.locationBoundary.id,
+							"Boundary.tenantId" : userRequest.tenantId
+						}
+
+						Api.commonApiGet('egov-location/boundarys', locationQuery).then((res)=>{
+							currentThis.setState({
+								locationBoundary : res.Boundary[0]
+							})
+						}).catch((err)=> {
+							console.log(err);
+						})
+					}
+
+					if(res.properties[0].boundary.adminBoundary.id){
+						var adminQuery = {
+							"Boundary.id" : res.properties[0].boundary.adminBoundary.id,
+							"Boundary.tenantId" : userRequest.tenantId
+						}
+
+						Api.commonApiGet('egov-location/boundarys', adminQuery).then((res)=>{
+							currentThis.setState({
+								adminBoundary : res.Boundary[0]
+							})
+						}).catch((err)=> {
+							console.log(err);
+						})
+					}
+
+					//get propertySubType
+					var ptQuery = {
+						parent: res.properties[0].propertyDetail.propertyType
+					}
+					Api.commonApiPost('pt-property/property/propertytypes/_search',ptQuery, {},false, true).then((res)=>{
+				        currentThis.setState({propertysubtypes:res.propertyTypes})
+				        console.log('Property Sub Type', res);
+				    }).catch((err)=> {
+				        currentThis.setState({
+				          propertysubtypes:[]
+				        })
+				    }) 
 				} 
+
+
 				
 
 			  var units = [];
@@ -544,7 +594,7 @@ class ViewProperty extends Component {
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.zoneNo')}</div>
-												   {this.getBoundary(item.boundary.revenueBoundary.id) || translate('pt.search.searchProperty.fields.na')}
+												   {this.state.revenueBoundary.name || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.blockNo')}</div>
@@ -600,7 +650,7 @@ class ViewProperty extends Component {
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.propertySubType')}</div>
-												   {getNameByCode(this.state.propertytypes ,item.propertyDetail.category) || translate('pt.search.searchProperty.fields.na')}
+												   {getNameByCode(this.state.propertysubtypes ,item.propertyDetail.category) || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.usageType')}</div>
@@ -691,6 +741,9 @@ class ViewProperty extends Component {
 											  <th>{translate('pt.create.groups.floorDetails.fields.occupancyCertificateNumber')}</th>
 											  <th>{translate('pt.create.groups.propertyAddress.fields.buildingCost')}</th>
 											  <th>{translate('pt.create.groups.propertyAddress.fields.landCost')}</th>
+											  <th>{translate('pt.create.groups.propertyAddress.fields.carpetArea')}</th>
+											  <th>{translate('pt.create.groups.propertyAddress.fields.assessableArea')}</th>
+											  <th>{translate('pt.create.groups.propertyAddress.fields.exemptedArea')}</th>
                                               <th>{translate('pt.create.groups.assessmentDetails.fields.isLegal')}</th>
                                             </tr>
                                           </thead>
@@ -720,6 +773,9 @@ class ViewProperty extends Component {
 													<td>{i.occupancyCertiNumber || translate('pt.search.searchProperty.fields.na')}</td>
 													<td>{i.buildingCost || translate('pt.search.searchProperty.fields.na')}</td>
 													<td>{i.landCost || translate('pt.search.searchProperty.fields.na')}</td>
+													<td>{i.carpetArea || translate('pt.search.searchProperty.fields.na')}</td>
+													<td>{i.assessableArea || translate('pt.search.searchProperty.fields.na')}</td>
+													<td>{i.exemptionArea || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.isAuthorised ? 'Yes' : 'No'}</td>  
                                                   </tr>) 
                                                 }

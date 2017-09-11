@@ -190,13 +190,13 @@ class CreateProperty extends Component {
 	  
 	  var currentThis = this;
 
-		  Api.commonApiPost('pt-property/property/propertytypes/_search',{}, {},false, true).then((res)=>{
-			currentThis.setState({propertytypes:res.propertyTypes})
-		  }).catch((err)=> {
-			currentThis.setState({
-			  propertytypes:[]
-			})
-		  })
+	  Api.commonApiPost('pt-property/property/propertytypes/_search',{}, {},false, true).then((res)=>{
+		currentThis.setState({propertytypes:res.propertyTypes})
+	  }).catch((err)=> {
+		currentThis.setState({
+		  propertytypes:[]
+		})
+	  })
 	  
 	    Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"WARD", hierarchyTypeName:"ADMINISTRATION"}).then((res)=>{
           console.log(res);

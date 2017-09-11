@@ -458,6 +458,7 @@ var localization_EN_Data = {
     "pt.create.groups.assessmentDetails.fields.isLegal": "Is Legal?",
 
     "pt.create.groups.propertyFactors": "Property Factors",
+    "pt.create.groups.propertyFactors.fields.toiletFactor": "Toilet Factor",
     "pt.create.groups.propertyFactors.fields.roadFactor": "Road factor",
     "pt.create.groups.propertyFactors.fields.liftFactor": "Lift factor",
     "pt.create.groups.propertyFactors.fields.parkingFactor": "Parking Factor",

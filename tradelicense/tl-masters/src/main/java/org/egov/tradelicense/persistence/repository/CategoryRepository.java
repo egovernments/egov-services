@@ -36,7 +36,7 @@ public class CategoryRepository {
 	private PropertiesManager propertiesManager;
 	
 	@Autowired
-	 private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	/**
 	 * Description : this method will create category in database
@@ -81,6 +81,7 @@ public class CategoryRepository {
 		AuditDetails auditDetails = categoryDetail.getAuditDetails();
 		MapSqlParameterSource parameters = new MapSqlParameterSource();
 		parameters.addValue("categoryId",  categoryDetail.getCategoryId());
+		parameters.addValue("tenantId",  categoryDetail.getTenantId());
 		parameters.addValue("feeType",  categoryDetail.getFeeType().toString());
 		parameters.addValue("rateType",  categoryDetail.getRateType().toString());
 		parameters.addValue("uomId",  categoryDetail.getUomId());
@@ -135,6 +136,7 @@ public class CategoryRepository {
 		
 		MapSqlParameterSource parameters = new MapSqlParameterSource();
 		parameters.addValue("categoryId",  categoryDetail.getCategoryId());
+		parameters.addValue("tenantId",  categoryDetail.getTenantId());
 		parameters.addValue("feeType",  categoryDetail.getFeeType().toString());
 		parameters.addValue("rateType",  categoryDetail.getRateType().toString());
 		parameters.addValue("uomId", categoryDetail.getUomId());
@@ -222,8 +224,17 @@ public class CategoryRepository {
 			CategoryDetailSearch categoryDetail = new CategoryDetailSearch();
 			categoryDetail.setId(getLong(row.get("id")));
 			categoryDetail.setCategoryId(getLong(row.get("categoryId")));
-			categoryDetail.setFeeType(FeeTypeEnum.fromValue(getString(row.get("feeType"))));
-			categoryDetail.setRateType(RateTypeEnum.fromValue(getString(row.get("rateType"))));
+			categoryDetail.setTenantId(getString(row.get("tenantId")));
+			if(row.get("feeType") != null){
+				categoryDetail.setFeeType(FeeTypeEnum.fromValue(getString(row.get("feeType"))));
+			} else {
+				categoryDetail.setFeeType(null);
+			}
+			if(row.get("rateType") != null){
+				categoryDetail.setRateType(RateTypeEnum.fromValue(getString(row.get("rateType"))));
+			} else {
+				categoryDetail.setRateType(null);
+			}
 			categoryDetail.setUomId(getLong(row.get("uomId")));
 			categoryDetail.setUomName(getString(row.get("uomname")));
 			AuditDetails auditDetails = new AuditDetails();
@@ -251,17 +262,18 @@ public class CategoryRepository {
 		List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(query, parameter);
 
 		for (Map<String, Object> row : rows) {
-
+			Long parentId = getLong(row.get("parentId"));
 			CategorySearch category = new CategorySearch();
 			category.setId(getLong(row.get("id")));
 			category.setTenantId(getString(row.get("tenantid")));
 			category.setCode(getString(row.get("code")));
 			category.setName(getString(row.get("name")));
 			category.setActive(getBoolean(row.get("active")));
-			if (getLong(row.get("parentId")) == 0) {
-				category.setParentId(null);
+			category.setParentId(parentId == null ? null : parentId);
+			if(parentId != null){
+				category.setParentName(getParentName(parentId));
 			} else {
-				category.setParentId(getLong(row.get("parentId")));
+				category.setParentName(null);
 			}
 			category.setValidityYears( getLong( row.get("validityYears")));
 			AuditDetails auditDetails = new AuditDetails();
@@ -278,12 +290,25 @@ public class CategoryRepository {
 		return categories;
 	}
 
+	private String getParentName(Long parentId) {
+
+		String parentName = null;
+		
+		if(parentId != null){
+			
+			MapSqlParameterSource parameters = new MapSqlParameterSource();
+			String sql = CategoryQueryBuilder.getQueryForParentName(parentId, parameters);
+			List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(sql, parameters);
+			for (Map<String, Object> row : rows) {
+				parentName = getString(row.get("name"));	
+			}
+			
+		}
+		return parentName;
+	}
+
 	/**
 	 * This method will cast the given object to String
-	 * 
-	 * @param object
-	 *            that need to be cast to string
-	 * @return {@link String}
 	 */
 	private String getString(Object object) {
 		return object == null ? "" : object.toString();
@@ -292,32 +317,21 @@ public class CategoryRepository {
 	/**
 	 * This method will cast the given object to double
 	 * 
-	 * @param object
-	 *            that need to be cast to Double
-	 * @return {@link Double}
 	 */
 	@SuppressWarnings("unused")
 	private Double getDouble(Object object) {
-		return object == null ? 0.0 : Double.parseDouble(object.toString());
+		return object == null ? null : Double.parseDouble(object.toString());
 	}
 
 	/**
 	 * This method will cast the given object to Long
-	 * 
-	 * @param object
-	 *            that need to be cast to Long
-	 * @return {@link Long}
 	 */
 	private Long getLong(Object object) {
-		return object == null ? 0 : Long.parseLong(object.toString());
+		return object == null ? null : Long.parseLong(object.toString());
 	}
 
 	/**
 	 * This method will cast the given object to Boolean
-	 * 
-	 * @param object
-	 *            that need to be cast to Boolean
-	 * @return {@link boolean}
 	 */
 	private Boolean getBoolean(Object object) {
 		return object == null ? Boolean.FALSE : (Boolean) object;

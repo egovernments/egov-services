@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -64,7 +63,8 @@ public abstract class JdbcRepository {
 	public static List<String> fetchFields(Class ob) {
 		List<String> fields = new ArrayList<>();
 		for (Field f : ob.getDeclaredFields()) {
-			if (java.lang.reflect.Modifier.isStatic(f.getModifiers())) {
+			if (java.lang.reflect.Modifier.isStatic(f.getModifiers()) ||
+					java.lang.reflect.Modifier.isProtected(f.getModifiers())) { 
 				continue;
 			}
 			fields.add(f.getName());
@@ -108,11 +108,6 @@ public abstract class JdbcRepository {
 
 	@Transactional
 	public Object create(Object ob) {
-		// System.out.println(allInsertQuery);
-		/*
-		 * ((AuditableEntity) ob).setCreatedDate(new Date()); ((AuditableEntity)
-		 * ob).setLastModifiedDate(new Date());
-		 */
 
 		String obName = ob.getClass().getSimpleName();
 		List<Map<String, Object>> batchValues = new ArrayList<>();
@@ -121,6 +116,20 @@ public abstract class JdbcRepository {
 		System.out.println(obName + "----" + allInsertQuery.get(obName));
 		System.out.println(namedParameterJdbcTemplate);
 		namedParameterJdbcTemplate.batchUpdate(allInsertQuery.get(obName),
+				batchValues.toArray(new Map[batchValues.size()]));
+		return ob;
+	}
+
+	@Transactional
+	public Object update(Object ob) {
+
+		System.out.println(allUpdateQuery);
+		String obName = ob.getClass().getSimpleName();
+		List<Map<String, Object>> batchValues = new ArrayList<>();
+		batchValues.add(paramValues(ob, allUpdateFields.get(obName)));
+		batchValues.get(0).putAll(paramValues(ob, allIdentitiferFields.get(obName)));
+		System.out.println(obName + "----" + allUpdateQuery.get(obName));
+		namedParameterJdbcTemplate.batchUpdate(allUpdateQuery.get(obName),
 				batchValues.toArray(new Map[batchValues.size()]));
 		return ob;
 	}
@@ -182,7 +191,7 @@ public abstract class JdbcRepository {
 	public String getSequence(String seqName) {
 		String seqQuery = "select nextval('" + seqName + "')";
 		MapSqlParameterSource parameters = new MapSqlParameterSource();
-		return String.valueOf(namedParameterJdbcTemplate.queryForObject(seqQuery,parameters, Long.class) + 1);
+		return String.valueOf(namedParameterJdbcTemplate.queryForObject(seqQuery, parameters, Long.class) + 1);
 	}
 
 	/*

@@ -18,35 +18,51 @@ ReportDefinitions:
     label: reports.collection.department
     type: string
     source: collection
-  - name: INSTRUMENT_AMOUNT
+  - name: RECEIPT_AMOUNT
     label: reports.collection.amount
     type: number
     source: seva
+    total: true
+  - name: SERVICE_NAME
+    label: reports.collection.service.name
+    type: string
+    source: collection
   searchParams:
   - name: fromDate
     label: reports.collection.fromdate
     type: epoch
     source: collection
-    isMandatory: true
+    isMandatory: false
+    searchClause: AND EGCL_RECEIPTHEADER.RECEIPTDATE >= $fromDate
   - name: toDate
     label: reports.collection.todate
     type: epoch
     source: collection
-    isMandatory: true
+    isMandatory: false
+    searchClause: AND EGCL_RECEIPTHEADER.RECEIPTDATE <= $toDate
   - name: status
     label: reports.collection.status
     type: singlevaluelist
-    pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=default|$..key|$..object
-    isMandatory: true
+    pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=$tenantid|$..key|$..object
+    isMandatory: false
+    searchClause: AND EGCL_RECEIPTHEADER.STATUS = $status
     source: collection
+  - name: servicename
+    label: reports.collection.service.name
+    type: singlevaluelist
+    pattern: http://collection-services:8080/collection-services/receipts/_getDistinctBusinessDetails?tenantId=$tenantid|$..code|$..name
+    isMandatory: false
+    searchClause: AND EGCL_RECEIPTHEADER.businessdetails = $servicename
   - name: collectedby
     label: reports.collection.collectedby
     type: singlevaluelist
-    pattern: http://collection-services:8080/collection-services/receipts/_getDistinctCollectedBy?tenantId=default|$..userName|$..user[*].name
+    pattern: http://collection-services:8080/collection-services/receipts/_getDistinctCollectedBy?tenantId=$tenantid|$..userName|$..user[*].name
     source: collection
-    isMandatory: true
-  query: SELECT ROW_NUMBER() OVER (ORDER BY EGCL_RECEIPTHEADER.RECEIPTNUMBER) AS SERIALNUMBER, EGCL_RECEIPTHEADER.RECEIPTNUMBER AS RECEIPT_NUMBER, EG_DEPARTMENT.NAME AS DEPT_NAME, EGCL_RECEIPTHEADER.TOTALAMOUNT AS RECEIPT_AMOUNT, EGCL_RECEIPTHEADER.CONSUMERCODE AS CONSUMER_CODE,  EGCL_RECEIPTHEADER.RECEIPTTYPE AS RECEIPT_TYPE FROM EGCL_RECEIPTHEADER EGCL_RECEIPTHEADER  INNER JOIN EG_BUSINESSDETAILS EG_BUSINESSDETAILS ON EGCL_RECEIPTHEADER.BUSINESSDETAILS = EG_BUSINESSDETAILS.CODE INNER JOIN EGCL_RECEIPTINSTRUMENT EGCL_RECEIPTINSTRUMENT ON EGCL_RECEIPTHEADER.ID = EGCL_RECEIPTINSTRUMENT.RECEIPTHEADER INNER JOIN EGF_INSTRUMENT EGF_INSTRUMENT ON EGCL_RECEIPTINSTRUMENT.INSTRUMENTHEADER = EGF_INSTRUMENT.ID INNER JOIN EG_DEPARTMENT EG_DEPARTMENT ON  EGCL_RECEIPTHEADER.DEPARTMENT = EG_DEPARTMENT.CODE INNER JOIN EG_USER EGUSER ON EGUSER.ID = EGCL_RECEIPTHEADER.CREATEDBY WHERE EGCL_RECEIPTHEADER.STATUS = $status AND EGCL_RECEIPTHEADER.RECEIPTDATE >= $fromDate 
-         AND EGCL_RECEIPTHEADER.RECEIPTDATE <= $toDate AND EGUSER.USERNAME = $collectedby AND EGF_INSTRUMENT.INSTRUMENTTYPEID = 'Cash' AND EGCL_RECEIPTHEADER.TENANTID=$tenantid ORDER BY RECEIPT_NUMBER;
+    isMandatory: false
+    searchClause: AND EGUSER.NAME = $collectedby
+  query: SELECT ROW_NUMBER() OVER (ORDER BY EGCL_RECEIPTHEADER.RECEIPTNUMBER) AS SERIALNUMBER, EGCL_RECEIPTHEADER.RECEIPTNUMBER AS RECEIPT_NUMBER, EG_DEPARTMENT.NAME AS DEPT_NAME, EGCL_RECEIPTHEADER.TOTALAMOUNT AS RECEIPT_AMOUNT, EGCL_RECEIPTHEADER.CONSUMERCODE AS CONSUMER_CODE,  EGCL_RECEIPTHEADER.RECEIPTTYPE AS RECEIPT_TYPE , EG_BUSINESSDETAILS.NAME AS SERVICE_NAME FROM EGCL_RECEIPTHEADER EGCL_RECEIPTHEADER  INNER JOIN EG_BUSINESSDETAILS EG_BUSINESSDETAILS ON EGCL_RECEIPTHEADER.BUSINESSDETAILS = EG_BUSINESSDETAILS.CODE INNER JOIN EGCL_RECEIPTINSTRUMENT EGCL_RECEIPTINSTRUMENT ON EGCL_RECEIPTHEADER.ID = EGCL_RECEIPTINSTRUMENT.RECEIPTHEADER INNER JOIN EGF_INSTRUMENT EGF_INSTRUMENT ON EGCL_RECEIPTINSTRUMENT.INSTRUMENTHEADER = EGF_INSTRUMENT.ID INNER JOIN EG_DEPARTMENT EG_DEPARTMENT ON  EGCL_RECEIPTHEADER.DEPARTMENT = EG_DEPARTMENT.CODE INNER JOIN EG_USER EGUSER ON EGUSER.ID = EGCL_RECEIPTHEADER.CREATEDBY WHERE   
+         EGF_INSTRUMENT.INSTRUMENTTYPEID = 'Cash' AND EGCL_RECEIPTHEADER.TENANTID=$tenantid AND egcl_receiptinstrument.tenantid=$tenantid and EGF_INSTRUMENT.tenantid=$tenantid and EG_BUSINESSDETAILS.tenantid=$tenantid and EGUSER.tenantid=$tenantid and EG_DEPARTMENT.tenantid=$tenantid
+  orderBy: ORDER BY RECEIPT_NUMBER;
   
   
 - reportName: ReceiptRegister
@@ -54,6 +70,10 @@ ReportDefinitions:
   version: 1.0.0 
   moduleName: collection
   sourceColumns:
+  - name: TRANSACTIONID
+    label: reports.collection.receipt.transactionid
+    type: number
+    source: collection
   - name: RECEIPT_DATE
     label: reports.collection.receipt.date
     type: epoch
@@ -70,32 +90,32 @@ ReportDefinitions:
     label: reports.collection.service.name
     type: string
     source: collection
-  - name: SOURCE
-    label: reports.collection.source
-    type: string
-    source: collection
   - name: CASH_AMOUNT
     label: reports.collection.cashamount
     type: string
     source: collection
-  - name: CHEQUEDD_AMOUNT
-    label: reports.collection.chequedd_amount
+    total: true
+  - name: CHEQUE_AMOUNT
+    label: reports.collection.chequeamount
     type: string
     source: collection
-  - name: BANK_AMOUNT
-    label: reports.collection.bank.amount
+    total: true
+  - name: DD_AMOUNT
+    label: reports.collection.ddamount
     type: string
-    source: collection   
+    source: collection
+    total: true   
   - name: ONLINE_AMOUNT
-    label: reports.collection.online.amount
+    label: reports.collection.onlineamount
     type: string
-    source: collection   
-  - name: CARD_AMOUNT
-    label: reports.collection.card.amount
-    type: string
-    source: collection   
+    source: collection
+    total: true   
   - name: STATUS_DESCRIPTION
     label: reports.collection.status.description
+    type: string
+    source: collection 
+  - name: CREATED_BY
+    label: reports.collection.created.by
     type: string
     source: collection  
   searchParams:
@@ -103,42 +123,56 @@ ReportDefinitions:
     label: reports.collection.fromdate
     type: epoch
     source: collection
-    isMandatory: true
+    isMandatory: false
+    searchClause: AND EGCL_RECEIPTHEADER.RECEIPTDATE >= $fromDate
   - name: toDate
     label: reports.collection.todate
     type: epoch
     source: collection
-    isMandatory: true
+    isMandatory: false
+    searchClause: AND EGCL_RECEIPTHEADER.RECEIPTDATE < $toDate
   - name: status
     label: reports.collection.status
     type: singlevaluelist
-    pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=default|$..key|$..object
-    isMandatory: true
+    pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=$tenantid|$..key|$..object
+    isMandatory: false
+    searchClause: AND EGCL_RECEIPTHEADER.STATUS = $status
   - name: department
     label: reports.collection.department
     type: singlevaluelist
-    pattern: http://egov-common-masters:8080/egov-common-masters/departments/_search?tenantId=default|$..id|$..name 
+    pattern: http://egov-common-masters:8080/egov-common-masters/departments/_search?tenantId=$tenantid|$..code|$..name 
     source: collection 
-    isMandatory: true
+    isMandatory: false
+    searchClause: AND EGCL_RECEIPTHEADER.DEPARTMENT = $department
   - name: paymentmode
     label: reports.collection.paymentmode
     type: singlevaluelist
-    pattern: 'list://CASH:CASH,CHEQUE:CHEQUE,DD:DD' 
-    isMandatory: true
-  query: SELECT RECEIPT_DATE,RECEIPT_NUMBER,DEPARTMENT_NAME,SERVICE_NAME,INSTRUMENT_TYPE,SOURCE,CASH_AMOUNT,sum(CHEQUEDD_AMOUNT) AS CHEQUEDD_AMOUNT ,BANK_AMOUNT, ONLINE_AMOUNT,CARD_AMOUNT,STATUS_DESCRIPTION from 
-         (SELECT EGCL_RECEIPTHEADER.RECEIPTDATE AS RECEIPT_DATE, EGCL_RECEIPTHEADER.RECEIPTNUMBER AS RECEIPT_NUMBER, EG_DEPARTMENT.NAME AS DEPARTMENT_NAME, EG_DEPARTMENT.NAME AS SERVICE_NAME, 
-         (CASE WHEN EGF_INSTRUMENTTYPE.NAME ='cash' THEN 'cash' WHEN EGF_INSTRUMENTTYPE.NAME='bankchallan' THEN 'bankchallan' WHEN  EGF_INSTRUMENTTYPE.NAME='card' THEN 'card' WHEN EGF_INSTRUMENTTYPE.NAME='online' 
-         THEN 'online' ELSE 'cheque/dd' END) AS INSTRUMENT_TYPE, EGCL_RECEIPTHEADER.CHANNEL AS SOURCE, (CASE WHEN EGF_INSTRUMENTTYPE.NAME='cash' THEN EGF_INSTRUMENT.AMOUNT END) AS CASH_AMOUNT, 
-         (CASE WHEN EGF_INSTRUMENTTYPE.NAME='cheque'THEN EGF_INSTRUMENT.AMOUNT WHEN EGF_INSTRUMENTTYPE.NAME='dd' THEN EGF_INSTRUMENT.AMOUNT END) AS CHEQUEDD_AMOUNT, 
-         (CASE WHEN EGF_INSTRUMENTTYPE.NAME= 'bankchallan' THEN EGF_INSTRUMENT.AMOUNT END) AS BANK_AMOUNT, (CASE WHEN EGF_INSTRUMENTTYPE.NAME= 'online' THEN EGF_INSTRUMENT.AMOUNT END) AS ONLINE_AMOUNT, 
-         (CASE WHEN EGF_INSTRUMENTTYPE.NAME= 'card' THEN EGF_INSTRUMENT.AMOUNT END) AS CARD_AMOUNT, EGCL_RECEIPTHEADER.STATUS AS STATUS_DESCRIPTION FROM EGCL_RECEIPTHEADER EGCL_RECEIPTHEADER 
-         INNER JOIN egcl_receiptinstrument egcl_receiptinstrument ON EGCL_RECEIPTHEADER.ID = egcl_receiptinstrument.receiptheader INNER JOIN EGF_INSTRUMENT 
-         EGF_INSTRUMENT ON egcl_receiptinstrument.INSTRUMENTHEADER = EGF_INSTRUMENT.ID INNER JOIN EGF_INSTRUMENTTYPE EGF_INSTRUMENTTYPE ON EGF_INSTRUMENT.INSTRUMENTTYPEID = EGF_INSTRUMENTTYPE.ID 
-         INNER JOIN EG_DEPARTMENT EG_DEPARTMENT ON EG_DEPARTMENT.code = EGCL_RECEIPTHEADER.DEPARTMENT INNER JOIN EG_BUSINESSDETAILS EGCL_SERVICEDETAILS ON EGCL_SERVICEDETAILS.code = EGCL_RECEIPTHEADER.businessdetails 
-         WHERE EGCL_RECEIPTHEADER.RECEIPTDATE >= $fromDate AND EGCL_RECEIPTHEADER.RECEIPTDATE < $toDate AND EGCL_RECEIPTHEADER.STATUS = $status AND EGCL_RECEIPTHEADER.DEPARTMENT = $department
-         AND EGF_INSTRUMENTTYPE.NAME= $paymentmode AND EGCL_RECEIPTHEADER.tenantid = $tenantid ORDER BY EGCL_RECEIPTHEADER.RECEIPTDATE, 
-         EGCL_RECEIPTHEADER.RECEIPTNUMBER, EG_DEPARTMENT.NAME) AS RESULT GROUP BY RESULT.RECEIPT_DATE, RESULT.RECEIPT_NUMBER, RESULT.DEPARTMENT_NAME, RESULT.SERVICE_NAME, RESULT.INSTRUMENT_TYPE, RESULT.SOURCE, 
-         RESULT.CASH_AMOUNT, RESULT.BANK_AMOUNT, RESULT.ONLINE_AMOUNT , RESULT.CARD_AMOUNT, RESULT.STATUS_DESCRIPTION ORDER BY RESULT.RECEIPT_NUMBER, RESULT.RECEIPT_DATE, RESULT.DEPARTMENT_NAME
+    pattern: 'list://Cash:Cash,Cheque:Cheque,DD:DD,Online:Online' 
+    isMandatory: false
+    searchClause: AND EGF_INSTRUMENT.INSTRUMENTTYPEID = $paymentmode
+  - name: servicename
+    label: reports.collection.service.name
+    type: singlevaluelist
+    pattern: http://collection-services:8080/collection-services/receipts/_getDistinctBusinessDetails?tenantId=$tenantid|$..code|$..name
+    isMandatory: false
+    searchClause: AND EGCL_RECEIPTHEADER.businessdetails = $servicename
+  - name: collectedby
+    label: reports.collection.collectedby
+    type: singlevaluelist
+    pattern: http://collection-services:8080/collection-services/receipts/_getDistinctCollectedBy?tenantId=$tenantid|$..userName|$..user[*].name
+    source: collection
+    isMandatory: false
+    searchClause: AND EGUSER.NAME = $collectedby
+  query: select * from (SELECT EGCL_RECEIPTHEADER.TRANSACTIONID, EGCL_RECEIPTHEADER.RECEIPTDATE AS RECEIPT_DATE, EGCL_RECEIPTHEADER.RECEIPTNUMBER AS RECEIPT_NUMBER, EG_DEPARTMENT.NAME AS DEPARTMENT_NAME, EG_BUSINESSDETAILS.NAME AS SERVICE_NAME, 
+         (CASE WHEN EGF_INSTRUMENT.INSTRUMENTTYPEID ='Cash' THEN 'Cash' WHEN EGF_INSTRUMENT.INSTRUMENTTYPEID='Online' 
+         THEN 'Online' WHEN EGF_INSTRUMENT.INSTRUMENTTYPEID='Cheque' THEN 'Cheque' WHEN EGF_INSTRUMENT.INSTRUMENTTYPEID='DD' THEN 'DD' END) AS INSTRUMENT_TYPE, EGCL_RECEIPTHEADER.CHANNEL AS SOURCE, (CASE WHEN EGF_INSTRUMENT.INSTRUMENTTYPEID='Cash' THEN EGF_INSTRUMENT.AMOUNT END) AS CASH_AMOUNT, 
+         (CASE WHEN EGF_INSTRUMENT.INSTRUMENTTYPEID='Cheque' THEN EGF_INSTRUMENT.AMOUNT END) AS CHEQUE_AMOUNT, 
+         (CASE WHEN EGF_INSTRUMENT.INSTRUMENTTYPEID='DD' THEN EGF_INSTRUMENT.AMOUNT END) AS DD_AMOUNT,
+         (CASE WHEN EGF_INSTRUMENT.INSTRUMENTTYPEID= 'bankchallan' THEN EGF_INSTRUMENT.AMOUNT END) AS BANK_AMOUNT, (CASE WHEN EGF_INSTRUMENT.INSTRUMENTTYPEID= 'Online' THEN EGF_INSTRUMENT.AMOUNT END) AS ONLINE_AMOUNT, EGCL_RECEIPTHEADER.STATUS AS STATUS_DESCRIPTION,EGUSER.NAME AS CREATED_BY FROM EGCL_RECEIPTHEADER EGCL_RECEIPTHEADER 
+         INNER JOIN egcl_receiptinstrument egcl_receiptinstrument ON EGCL_RECEIPTHEADER.ID = egcl_receiptinstrument.receiptheader INNER JOIN EGF_INSTRUMENT EGF_INSTRUMENT ON egcl_receiptinstrument.INSTRUMENTHEADER = EGF_INSTRUMENT.ID INNER JOIN EG_DEPARTMENT EG_DEPARTMENT ON EG_DEPARTMENT.code = EGCL_RECEIPTHEADER.DEPARTMENT INNER JOIN EG_BUSINESSDETAILS EG_BUSINESSDETAILS ON EG_BUSINESSDETAILS.code = EGCL_RECEIPTHEADER.businessdetails INNER JOIN EG_USER EGUSER ON EGUSER.ID = EGCL_RECEIPTHEADER.CREATEDBY
+         WHERE EGCL_RECEIPTHEADER.tenantid = $tenantid AND egcl_receiptinstrument.tenantid=$tenantid and EGF_INSTRUMENT.tenantid=$tenantid and EG_BUSINESSDETAILS.tenantid=$tenantid and EGUSER.tenantid=$tenantid and EG_DEPARTMENT.tenantid=$tenantid
+  orderBy: ) RESULT ORDER BY RESULT.RECEIPT_NUMBER, RESULT.RECEIPT_DATE, RESULT.DEPARTMENT_NAME
+  
   
 
 - reportName: ChequeCollection
@@ -178,48 +212,58 @@ ReportDefinitions:
     label: reports.collection.amount
     type: number
     source: collection
+    total: true
+  - name: SERVICE_NAME
+    label: reports.collection.service.name
+    type: string
+    source: collection
   searchParams:
   - name: fromDate
     label: reports.collection.fromdate
     type: epoch
     source: collection
-    isMandatory: true
+    isMandatory: false
+    searchClause: AND CH.RECEIPTDATE >= $fromDate
   - name: toDate
     label: reports.collection.todate
     type: epoch
     source: collection
-    isMandatory: true
+    isMandatory: false
+    searchClause: AND CH.RECEIPTDATE < $toDate
   - name: status
     label: reports.collection.status
     type: singlevaluelist
-    pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=default|$..key|$..object
+    pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=$tenantid|$..key|$..object
     source: collection
-    isMandatory: true
+    isMandatory: false
+    searchClause: AND CH.status = $status
+  - name: servicename
+    label: reports.collection.service.name
+    type: singlevaluelist
+    pattern: http://collection-services:8080/collection-services/receipts/_getDistinctBusinessDetails?tenantId=$tenantid|$..code|$..name
+    isMandatory: false
+    searchClause: AND CH.businessdetails = $servicename
   - name: collectedby
     label: reports.collection.collectedby
     type: singlevaluelist
-    pattern: http://collection-services:8080/collection-services/receipts/_getDistinctCollectedBy?tenantId=default|$..userName|$..user[*].name
+    pattern: http://collection-services:8080/collection-services/receipts/_getDistinctCollectedBy?tenantId=$tenantid|$..userName|$..user[*].name
     source: collection
-    isMandatory: true
+    isMandatory: false
+    searchClause: AND us.name =$collectedby
   query: SELECT row_number() over (order by CH.RECEIPTNUMBER) as serialnumber, CH.RECEIPTNUMBER AS RECEIPT_NUMBER, ED.NAME AS DEPT_NAME, IH.transactionnumber AS CHEQUE_NUMBER, BK.name AS BANK, 
-         IH.branchname AS BRANCH, IH.transactiondate AS CHEQUE_DATE, IH.amount AS AMOUNT FROM EGCL_RECEIPTHEADER CH, EG_DEPARTMENT ED, EGCL_RECEIPTINSTRUMENT CI, EGF_INSTRUMENT IH, egf_BANK BK,
-         egeis_assignment ass, eg_user us WHERE ED.code=CH.DEPARTMENT AND CI.receiptheader=CH.ID AND IH.ID=CI.INSTRUMENTHEADER AND IH.BANKID=BK.code AND IH.INSTRUMENTTYPEID IN (SELECT ID FROM 
-         EGF_INSTRUMENTTYPE WHERE NAME IN ('cheque','dd')) AND CH.createdby = ass.positionid and ass.employeeid=us.id AND CH.status = $status AND CH.RECEIPTDATE >= $fromDate AND 
-         CH.RECEIPTDATE < $toDate AND us.username =$collectedby AND CH.tenantid=$tenantid ORDER BY RECEIPT_NUMBER
-  
+         IH.branchname AS BRANCH, IH.transactiondate AS CHEQUE_DATE, IH.amount AS AMOUNT, EG_BUSINESSDETAILS.NAME AS SERVICE_NAME FROM EGCL_RECEIPTHEADER CH, EG_DEPARTMENT ED, EGCL_RECEIPTINSTRUMENT CI, EGF_INSTRUMENT IH, egf_BANK BK,eg_user us, EG_BUSINESSDETAILS EG_BUSINESSDETAILS WHERE
+         ED.code=CH.DEPARTMENT AND CI.receiptheader=CH.ID AND IH.ID=CI.INSTRUMENTHEADER AND IH.BANKID=cast(BK.id as VARCHAR) AND IH.INSTRUMENTTYPEID IN ('Cheque','DD')
+         AND CH.createdby = us.id AND CH.BUSINESSDETAILS = EG_BUSINESSDETAILS.CODE AND CH.tenantid=$tenantid and ED.tenantid=$tenantid and CI.tenantid=$tenantid and IH.tenantid=$tenantid and BK.tenantid=$tenantid and us.tenantid=$tenantid and EG_BUSINESSDETAILS.tenantid=$tenantid
+  orderBy: ORDER BY RECEIPT_NUMBER
   
 - reportName: CollectionSummaryAccountHeadWise 
-  summary: Collection Summary Account Head wise Report
+  summary: Collection Summary Account Head Wise Report
   version: 1.0.0
   moduleName: collection
   sourceColumns:
-  - name: serialnumber
-    label: reports.collection.serialno
-    type: number
-    source: collection
-  - name: source
-    label: reports.collection.source
-    type: number
+  - name: SERVICE_NAME
+    label: reports.collection.service.name
+    type: string
     source: collection
   - name: glCode
     label: reports.collection.revenue.name
@@ -231,79 +275,183 @@ ReportDefinitions:
     source: collection
     total : true
   - name: cashAmount
-    label: reports.collection.cash.amount
+    label: reports.collection.cashamount
     type: number
     source: collection
-  - name: chequeddCount
+    total : true
+  - name: chequeCount
     label: reports.collection.cheque.count
     type: number
     source: collection
-  - name: chequeddAmount
-    label: reports.collection.cheque.amount
+    total : true
+  - name: chequeAmount
+    label: reports.collection.chequeamount
     type: number
     source: seva
+    total : true
   - name: onlineCount
     label: reports.collection.online.count
     type: number
     source: collection
+    total : true
   - name: onlineAmount
-    label: reports.collection.online.amount
+    label: reports.collection.onlineamount
     type: number
     source: collection
-  - name: cardCount
-    label: reports.collection.card.count
+    total : true
+  - name: ddCount
+    label: reports.collection.dd.count
     type: number
     source: collection
-  - name: cardAmount
-    label: reports.collection.card.amount
+    total : true
+  - name: ddAmount
+    label: reports.collection.ddamount
     type: number
     source: collection
+    total : true
   - name: totalReceiptCount
     label: reports.collection.total.count
     type: number
     source: collection
+    total : true
+  - name: totalReceiptAmount
+    label: reports.collection.total.amount
+    type: number
+    source: collection
+    total : true
   searchParams:
   - name: fromDate
     label: reports.collection.fromdate
     type: epoch
     source: collection
+    isMandatory: false
+    searchClause: AND EGCL_RECEIPTHEADER.RECEIPTDATE >= $fromDate
   - name: toDate
     label: reports.collection.todate
     type: epoch
     source: collection
+    isMandatory: false
+    searchClause: AND EGCL_RECEIPTHEADER.RECEIPTDATE < $toDate
   - name: status
     label: reports.collection.status
     type: singlevaluelist
-    pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=default|$..key|$..object
+    pattern: http://collection-services:8080/collection-services/receipts/_status?tenantId=$tenantid|$..key|$..object
     source: collection
+    isMandatory: false
+    searchClause : AND EGCL_RECEIPTHEADER.STATUS = $status
+  - name: servicename
+    label: reports.collection.service.name
+    type: singlevaluelist
+    pattern: http://collection-services:8080/collection-services/receipts/_getDistinctBusinessDetails?tenantId=$tenantid|$..code|$..name
+    isMandatory: false
+    searchClause: AND EGCL_RECEIPTHEADER.businessdetails = $servicename
   - name: paymentmode
     label: reports.collection.paymentmode
     type: singlevaluelist
-    pattern: 'list://CASH:CASH,ONLINE:ONLINE,CHEQUE:CHEQUE,DD:DD'
+    pattern: 'list://Cash:Cash,Cheque:Cheque,DD:DD,Online:Online'
     source: collection
-  
-  query: SELECT SOURCE,glCode,sum(cashCount) AS cashCount ,sum(cashAmount) AS cashAmount,sum(chequeddCount) AS chequeddCount,sum(chequeddAmount) AS chequeddAmount, sum(onlineCount) AS onlineCount, 
-         sum(onlineAmount) AS onlineAmount, sum(cardCount) AS cardCount, sum(cardAmount) AS cardAmount, cast(sum(totalReceiptCount) AS NUMERIC) as totalReceiptCount FROM (SELECT EGCL_RECEIPTHEADER.CHANNEL 
-         AS source,CAO.NAME || '-' || CAO.GLCODE AS GLCODE, (CASE WHEN EGF_INSTRUMENTTYPE.NAME='cash' THEN count(distinct(EGCL_RECEIPTHEADER.id)) END) AS cashCount, (CASE WHEN EGF_INSTRUMENTTYPE.NAME='cash' 
-         THEN SUM(EGCL_RECEIPTDETAILS.CRAMOUNT) END) AS cashAmount, (CASE WHEN EGF_INSTRUMENTTYPE.NAME='cheque'THEN count(distinct(EGCL_RECEIPTHEADER.id)) WHEN EGF_INSTRUMENTTYPE.NAME='dd' 
-         THEN count(distinct(EGCL_RECEIPTHEADER.id)) END) AS chequeddCount, (CASE WHEN EGF_INSTRUMENTTYPE.NAME='cheque' THEN SUM(EGCL_RECEIPTDETAILS.CRAMOUNT) WHEN EGF_INSTRUMENTTYPE.NAME='dd' 
-         THEN SUM(EGCL_RECEIPTDETAILS.CRAMOUNT) END) AS chequeddAmount, (CASE WHEN EGF_INSTRUMENTTYPE.NAME= 'online' THEN count(distinct(EGCL_RECEIPTHEADER.id)) END) AS onlineCount, 
-         (CASE WHEN EGF_INSTRUMENTTYPE.NAME= 'online'THEN SUM(EGCL_RECEIPTDETAILS.CRAMOUNT) END) AS onlineAmount, (CASE WHEN EGF_INSTRUMENTTYPE.NAME='card' 
-         THEN count(distinct(EGCL_RECEIPTHEADER.id)) END) AS cardCount, (CASE WHEN EGF_INSTRUMENTTYPE.NAME='card' THEN SUM(EGCL_RECEIPTDETAILS.CRAMOUNT) END) AS cardAmount, count(*) as totalReceiptCount FROM  
-         EGCL_RECEIPTHEADER EGCL_RECEIPTHEADER INNER JOIN EGCL_RECEIPTINSTRUMENT EGCL_RECEIPTINSTRUMENT ON EGCL_RECEIPTHEADER.ID = EGCL_RECEIPTINSTRUMENT.RECEIPTHEADER 
-         INNER JOIN EGF_INSTRUMENT EGF_INSTRUMENT ON EGCL_RECEIPTINSTRUMENT.INSTRUMENTHEADER = EGF_INSTRUMENT.ID INNER JOIN EGF_INSTRUMENTTYPE EGF_INSTRUMENTTYPE ON 
-         EGF_INSTRUMENT.INSTRUMENTTYPEID = EGF_INSTRUMENTTYPE.ID INNER JOIN EGCL_RECEIPTDETAILS EGCL_RECEIPTDETAILS ON EGCL_RECEIPTHEADER.ID = EGCL_RECEIPTDETAILS.RECEIPTHEADER 
-         INNER JOIN egf_chartofaccount CAO ON CAO.glcode = EGCL_RECEIPTDETAILS.CHARTOFACCOUNT WHERE EGCL_RECEIPTHEADER.STATUS = $status 
-         AND EGCL_RECEIPTHEADER.RECEIPTDATE >= $fromDate AND EGCL_RECEIPTHEADER.RECEIPTDATE < $toDate AND EGCL_RECEIPTDETAILS.CRAMOUNT>0  
-         AND EGF_INSTRUMENTTYPE.NAME = $paymentmode GROUP BY source,CAO.NAME,CAO.GLCODE,EGF_INSTRUMENTTYPE.NAME UNION SELECT EGCL_RECEIPTHEADER.CHANNEL AS source,CAO.NAME || '-' || CAO.GLCODE AS GLCODE, 
-         (CASE WHEN EGF_INSTRUMENTTYPE.NAME='cash' THEN count(distinct(EGCL_RECEIPTHEADER.id)) END) AS cashCount, (CASE WHEN EGF_INSTRUMENTTYPE.NAME='cash' THEN SUM(EGCL_RECEIPTDETAILS.DRAMOUNT) END) AS cashAmount, 
-         (CASE WHEN EGF_INSTRUMENTTYPE.NAME='cheque' THEN count(distinct(EGCL_RECEIPTHEADER.id)) WHEN EGF_INSTRUMENTTYPE.NAME='dd'THEN count(distinct(EGCL_RECEIPTHEADER.id)) END) AS chequeddCount,
-          (CASE WHEN EGF_INSTRUMENTTYPE.NAME='cheque'THEN SUM(EGCL_RECEIPTDETAILS.DRAMOUNT) WHEN EGF_INSTRUMENTTYPE.NAME='dd' THEN SUM(EGCL_RECEIPTDETAILS.DRAMOUNT) END) AS chequeddAmount, 
-          (CASE WHEN EGF_INSTRUMENTTYPE.NAME= 'online' THEN count(distinct(EGCL_RECEIPTHEADER.id)) END) AS onlineCount, (CASE WHEN EGF_INSTRUMENTTYPE.NAME= 'online' 
-          THEN SUM(EGCL_RECEIPTDETAILS.DRAMOUNT) END) AS onlineAmount, (CASE WHEN EGF_INSTRUMENTTYPE.NAME='card' THEN count(distinct(EGCL_RECEIPTHEADER.id)) END) AS cardCount, 
-          (CASE WHEN EGF_INSTRUMENTTYPE.NAME='card' THEN SUM(EGCL_RECEIPTDETAILS.DRAMOUNT) END) AS cardAmount, count(*) as totalReceiptCount FROM  EGCL_RECEIPTHEADER EGCL_RECEIPTHEADER 
-          INNER JOIN EGCL_RECEIPTINSTRUMENT EGCL_RECEIPTINSTRUMENT ON EGCL_RECEIPTHEADER.ID = EGCL_RECEIPTINSTRUMENT.RECEIPTHEADER INNER JOIN EGF_INSTRUMENT EGF_INSTRUMENT 
-          ON EGCL_RECEIPTINSTRUMENT.INSTRUMENTHEADER = EGF_INSTRUMENT.ID INNER JOIN EGF_INSTRUMENTTYPE EGF_INSTRUMENTTYPE ON EGF_INSTRUMENT.INSTRUMENTTYPEID = EGF_INSTRUMENTTYPE.ID 
-          INNER JOIN EGCL_RECEIPTDETAILS EGCL_RECEIPTDETAILS ON EGCL_RECEIPTHEADER.ID = EGCL_RECEIPTDETAILS.RECEIPTHEADER INNER JOIN egf_chartofaccount CAO ON CAO.glcode = EGCL_RECEIPTDETAILS.CHARTOFACCOUNT 
-          WHERE EGCL_RECEIPTHEADER.STATUS = $status AND EGCL_RECEIPTHEADER.RECEIPTDATE >= $fromDate AND EGCL_RECEIPTHEADER.RECEIPTDATE < $toDate AND EGCL_RECEIPTDETAILS.DRAMOUNT>0 AND CAO.purposeid in (select id from egf_chartofaccount where name ='REBATE') 
-          AND EGF_INSTRUMENTTYPE.NAME = $paymentmode GROUP BY source,CAO.NAME,CAO.GLCODE,EGF_INSTRUMENTTYPE.NAME) AS RESULT GROUP BY RESULT.SOURCE,RESULT.glCode order by source, glCode
+    isMandatory: false
+    searchClause : AND EGF_INSTRUMENT.INSTRUMENTTYPEID = $paymentmode
+  query:  SELECT SERVICE_NAME,glCode,sum(cashCount) AS cashCount ,sum(cashAmount) AS cashAmount,sum(chequeCount) AS chequeCount,sum(chequeAmount) AS chequeAmount, sum(onlineCount) AS onlineCount,
+                                               sum(onlineAmount) AS onlineAmount, sum(ddCount) AS ddCount, sum(ddAmount) AS ddAmount,sum(COALESCE(cashCount,0) + COALESCE(chequeCount,0) + COALESCE(onlineCount,0) + COALESCE(ddCount,0)) as totalReceiptCount,sum(COALESCE(cashAmount,0) + COALESCE(chequeCount,0) + COALESCE(onlineAmount,0) + COALESCE(ddAmount,0)) as totalReceiptAmount FROM (SELECT CAO.NAME || '-' || CAO.GLCODE AS GLCODE,
+                             (CASE WHEN EGF_INSTRUMENT.INSTRUMENTTYPEID='Cash' THEN count(distinct(EGCL_RECEIPTHEADER.id)) END) AS cashCount,
+                             (CASE WHEN EGF_INSTRUMENT.INSTRUMENTTYPEID='Cash' THEN SUM(EGCL_RECEIPTDETAILS.CRAMOUNT) END) AS cashAmount,
+                             (CASE WHEN EGF_INSTRUMENT.INSTRUMENTTYPEID='Cheque' THEN count(distinct(EGCL_RECEIPTHEADER.id)) END) AS chequeCount,
+                             (CASE WHEN EGF_INSTRUMENT.INSTRUMENTTYPEID='Cheque' THEN SUM(EGCL_RECEIPTDETAILS.CRAMOUNT) END) AS chequeAmount,
+                             (CASE WHEN EGF_INSTRUMENT.INSTRUMENTTYPEID= 'online' THEN count(distinct(EGCL_RECEIPTHEADER.id)) END) AS onlineCount,
+                             (CASE WHEN EGF_INSTRUMENT.INSTRUMENTTYPEID= 'online'THEN SUM(EGCL_RECEIPTDETAILS.CRAMOUNT) END) AS onlineAmount,
+                             (CASE WHEN EGF_INSTRUMENT.INSTRUMENTTYPEID='DD' THEN count(distinct(EGCL_RECEIPTHEADER.id)) END) AS ddCount,
+                             (CASE WHEN EGF_INSTRUMENT.INSTRUMENTTYPEID='DD' THEN SUM(EGCL_RECEIPTDETAILS.CRAMOUNT) END) AS ddAmount,
+                             count(*) as totalReceiptCount,EG_BUSINESSDETAILS.NAME AS SERVICE_NAME FROM
+                             EGCL_RECEIPTHEADER EGCL_RECEIPTHEADER INNER JOIN EGCL_RECEIPTINSTRUMENT EGCL_RECEIPTINSTRUMENT ON EGCL_RECEIPTHEADER.ID = EGCL_RECEIPTINSTRUMENT.RECEIPTHEADER
+                             INNER JOIN EGF_INSTRUMENT EGF_INSTRUMENT ON EGCL_RECEIPTINSTRUMENT.INSTRUMENTHEADER = EGF_INSTRUMENT.ID INNER JOIN EGCL_RECEIPTDETAILS EGCL_RECEIPTDETAILS ON EGCL_RECEIPTHEADER.ID = EGCL_RECEIPTDETAILS.RECEIPTHEADER INNER JOIN EG_BUSINESSDETAILS EG_BUSINESSDETAILS ON EG_BUSINESSDETAILS.code = EGCL_RECEIPTHEADER.businessdetails
+                             INNER JOIN egf_chartofaccount CAO ON CAO.glcode = EGCL_RECEIPTDETAILS.CHARTOFACCOUNT WHERE  EGCL_RECEIPTDETAILS.CRAMOUNT>0 AND
+                             EGCL_RECEIPTHEADER.tenantid = $tenantid AND EGCL_RECEIPTINSTRUMENT.tenantid = $tenantid AND EGF_INSTRUMENT.tenantid = $tenantid AND EGCL_RECEIPTDETAILS.tenantid= $tenantid AND EG_BUSINESSDETAILS.tenantid=$tenantid AND CAO.tenantid=$tenantid
+                                               UNION
+                                    SELECT CAO.NAME || '-' || CAO.GLCODE AS GLCODE,
+                             (CASE WHEN EGF_INSTRUMENT.INSTRUMENTTYPEID='Cash' THEN count(distinct(EGCL_RECEIPTHEADER.id)) END) AS cashCount,
+                             (CASE WHEN EGF_INSTRUMENT.INSTRUMENTTYPEID='Cash' THEN SUM(EGCL_RECEIPTDETAILS.CRAMOUNT) END) AS cashAmount,
+                             (CASE WHEN EGF_INSTRUMENT.INSTRUMENTTYPEID='Cheque' THEN count(distinct(EGCL_RECEIPTHEADER.id)) END) AS chequeCount,
+                             (CASE WHEN EGF_INSTRUMENT.INSTRUMENTTYPEID='Cheque' THEN SUM(EGCL_RECEIPTDETAILS.CRAMOUNT) END) AS chequeAmount,
+                             (CASE WHEN EGF_INSTRUMENT.INSTRUMENTTYPEID= 'online' THEN count(distinct(EGCL_RECEIPTHEADER.id)) END) AS onlineCount,
+                             (CASE WHEN EGF_INSTRUMENT.INSTRUMENTTYPEID= 'online'THEN SUM(EGCL_RECEIPTDETAILS.CRAMOUNT) END) AS onlineAmount,
+                             (CASE WHEN EGF_INSTRUMENT.INSTRUMENTTYPEID='DD' THEN count(distinct(EGCL_RECEIPTHEADER.id)) END) AS ddCount,
+                             (CASE WHEN EGF_INSTRUMENT.INSTRUMENTTYPEID='DD' THEN SUM(EGCL_RECEIPTDETAILS.CRAMOUNT) END) AS ddAmount,
+                             count(*) as totalReceiptCount,
+                                                EG_BUSINESSDETAILS.NAME AS SERVICE_NAME FROM  EGCL_RECEIPTHEADER EGCL_RECEIPTHEADER
+                                                INNER JOIN EGCL_RECEIPTINSTRUMENT EGCL_RECEIPTINSTRUMENT ON EGCL_RECEIPTHEADER.ID = EGCL_RECEIPTINSTRUMENT.RECEIPTHEADER INNER JOIN EGF_INSTRUMENT EGF_INSTRUMENT
+                                                ON EGCL_RECEIPTINSTRUMENT.INSTRUMENTHEADER = EGF_INSTRUMENT.ID INNER JOIN EGCL_RECEIPTDETAILS EGCL_RECEIPTDETAILS ON EGCL_RECEIPTHEADER.ID = EGCL_RECEIPTDETAILS.RECEIPTHEADER INNER JOIN EG_BUSINESSDETAILS EG_BUSINESSDETAILS ON EG_BUSINESSDETAILS.code = EGCL_RECEIPTHEADER.businessdetails INNER JOIN egf_chartofaccount CAO ON CAO.glcode = EGCL_RECEIPTDETAILS.CHARTOFACCOUNT
+                                                WHERE EGCL_RECEIPTDETAILS.DRAMOUNT>0 AND CAO.purposeid in (select id from egf_chartofaccount where name ='REBATE') AND
+                                                EGCL_RECEIPTHEADER.tenantid = $tenantid AND EGCL_RECEIPTINSTRUMENT.tenantid = $tenantid AND EGF_INSTRUMENT.tenantid = $tenantid AND EGCL_RECEIPTDETAILS.tenantid= $tenantid AND EG_BUSINESSDETAILS.tenantid=$tenantid AND CAO.tenantid=$tenantid
+  groupBy: GROUP BY EG_BUSINESSDETAILS.NAME,CAO.NAME,CAO.GLCODE,EGF_INSTRUMENT.INSTRUMENTTYPEID
+  orderBy: ) AS RESULT GROUP BY RESULT.SERVICE_NAME,RESULT.glCode order by glCode,SERVICE_NAME
+
+- reportName: LegacyReceipt
+  summary: Legacy Receipt Report
+  version: 1.0.0
+  moduleName: collection
+  sourceColumns:
+  - name: receiptNo
+    label: reports.collection.receiptno
+    type: string
+    source: legacy
+  - name: receiptDate
+    label: reports.collection.receiptdate
+    type: epoch
+    source: legacy
+  - name: totalAmount
+    label: reports.collection.totalamount
+    type: number
+    source: legacy
+  - name: servicename
+    label: reports.collection.service.name
+    type: string
+    source: legacy
+  - name: payeeName
+    label: reports.collection.payeename
+    type: string
+    source: legacy
+  - name: consumerAddress
+    label: reports.collection.consumeraddress
+    type: string
+    source: legacy
+  - name: print
+    label: reports.collection.print
+    type: number
+    source: legacy
+    linkedReport:
+      reportName: ReceiptDetail
+      linkedColumn: _url?/pgr/viewGrievance/:srn
+  searchParams:
+  - name: consumerno
+    label: reports.collection.consumerno
+    type: string
+    source: collection
+    isMandatory: false
+    searchClause: and consumerNo = $consumerno
+  - name: receiptno
+    label: reports.collection.receiptno
+    type: string
+    source: collection
+    isMandatory: false
+    searchClause: and receiptno = $receiptno
+  - name: servicename
+    label: reports.collection.servicename
+    type: string
+    source: collection
+    isMandatory: false
+    searchClause: and servicename = $servicename
+  - name: fromDate
+    label: reports.collection.fromdate
+    type: epoch
+    source: collection
+    isMandatory: false
+    searchClause: AND receiptDate >= $fromDate
+  - name: toDate
+    label: reports.collection.todate
+    type: epoch
+    source: collection
+    isMandatory: false
+    searchClause: AND receiptDate <= $toDate
+  query: select receiptNo,receiptDate,totalAmount,servicename,payeeName,consumerAddress,'print' as print from egcl_legacy_receipt_header where tenantid = $tenantid
+

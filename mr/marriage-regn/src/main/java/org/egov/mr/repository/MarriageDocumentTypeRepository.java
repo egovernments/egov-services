@@ -35,7 +35,9 @@ public class MarriageDocumentTypeRepository {
 		List<Object> preparedStatementValues = new ArrayList<>();
 		String query = marriageDocumentTypeQueryBuilder.getSelectQuery(marriageDocumentTypeSearchCriteria,
 				preparedStatementValues);
-		// Getting Query
+		/**
+		 * @Get_Query
+		 */
 		List<MarriageDocumentType> marriageDocumentTypesList = jdbcTemplate.query(query,
 				preparedStatementValues.toArray(), rowMapper);
 		log.info(marriageDocumentTypesList.toString());
@@ -94,7 +96,11 @@ public class MarriageDocumentTypeRepository {
 				});
 	}
 
-	// Get Ids List
+	/**
+	 * @Get Ids_List
+	 * @param marriageDocumentTypeList
+	 * @return
+	 */
 	public List<Long> getIds(List<MarriageDocumentType> marriageDocumentTypeList) {
 		log.debug("Differentiating Update And Create Records in getIds:: MarriageDocumentTypeRepository");
 		StringBuilder idQuery = new StringBuilder("(" + marriageDocumentTypeList.get(0).getId());

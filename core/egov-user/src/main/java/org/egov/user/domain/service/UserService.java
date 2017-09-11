@@ -18,10 +18,8 @@ public class UserService {
 	private PasswordEncoder passwordEncoder;
 	private int defaultPasswordExpiryInDays;
 
-	public UserService(UserRepository userRepository,
-					   OtpRepository otpRepository,
-					   PasswordEncoder passwordEncoder,
-					   @Value("${default.password.expiry.in.days}") int defaultPasswordExpiryInDays) {
+	public UserService(UserRepository userRepository, OtpRepository otpRepository, PasswordEncoder passwordEncoder,
+			@Value("${default.password.expiry.in.days}") int defaultPasswordExpiryInDays) {
 		this.userRepository = userRepository;
 		this.otpRepository = otpRepository;
 		this.passwordEncoder = passwordEncoder;
@@ -62,9 +60,16 @@ public class UserService {
 	public User updateWithoutOtpValidation(final Long id, final User user) {
 		user.validateUserModification();
 		validateUser(id, user);
+		validateUserRoles(user);
 		return updateExistingUser(user);
 	}
 
+	private void validateUserRoles(User user) {
+		if (user.getRoles() == null || user.getRoles() != null && user.getRoles().isEmpty()) {
+			throw new AtleastOneRoleCodeException();
+		}
+	}
+	
 	public User partialUpdate(final User user) {
 		validateUserId(user);
 		validateProfileUpdateIsDoneByTheSameLoggedInUser(user);
@@ -74,8 +79,8 @@ public class UserService {
 
 	public void updatePasswordForLoggedInUser(LoggedInUserUpdatePasswordRequest updatePasswordRequest) {
 		updatePasswordRequest.validate();
-		final User user = userRepository
-				.getUserById(updatePasswordRequest.getUserId(), updatePasswordRequest.getTenantId());
+		final User user = userRepository.getUserById(updatePasswordRequest.getUserId(),
+				updatePasswordRequest.getTenantId());
 		validateUserPresent(user);
 		validateExistingPassword(user, updatePasswordRequest.getExistingPassword());
 		user.updatePassword(updatePasswordRequest.getNewPassword());

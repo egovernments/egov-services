@@ -4,6 +4,7 @@ var dat = {
     "version": "v1",
     "url": "/wcms-connection/connection/_create",
     "idJsonPath": "Connection[0].acknowledgementNumber",
+    "ackUrl":"/waterConnection/view",
     "useTimestamp": true,
     "tenantIdRequired": true, //Instead of boolean value give json path
     "objectName": "Connection",
@@ -25,7 +26,7 @@ var dat = {
           "requiredErrMsg": "",
           "patternErrMsg": "",
   			"values": [{"label":"wc.group.withProperty", "value":true},{"label":"wc.group.withoutProperty", "value":false}],
-  			"defaultValue":true,
+  			"defaultValue":false,
         "showHideFields": [{
                "ifValue": false,
                "hide": [{
@@ -51,15 +52,14 @@ var dat = {
         "label": "wc.create.groups.applicantDetails.title", //Cut short labels by taking initial path from parent
         "name": "applicantDetailsWithProp", //Follow Title case pattern
         "multiple": false,
-        "hide":true,
         "fields": [
           {
             "name": "NameOfApplicant",
             "jsonPath": "Connection.connectionOwner.name",
             "label": "wc.create.groups.applicantDetails.nameOfApplicant",
-            "pattern": "^.{3,100}$",
+            "pattern": "^([a-zA-Z0-9_-\\s]){3,100}$",
             "type": "text",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -70,7 +70,7 @@ var dat = {
             "label": "wc.create.groups.applicantDetails.mobileNumber",
             "pattern": "",
             "type": "mobileNumber",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -81,7 +81,7 @@ var dat = {
             "label": "wc.create.groups.applicantDetails.email",
             "pattern": "",
             "type": "email",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
@@ -93,7 +93,7 @@ var dat = {
             "label": "wc.create.groups.applicantDetails.adharNumber",
             "pattern": "",
             "type": "aadhar",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -111,12 +111,23 @@ var dat = {
             "patternErrMsg": ""
           },
           {
+            "name": "AddressNo",
+            "jsonPath": "Connection.houseNumber",
+            "label": "wc.create.groups.applicantDetails.addressNumber",
+            "pattern": "^[\s.]*([^\s.][\s.]*){0,16}$",
+            "type": "text",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
             "name": "Address",
             "jsonPath": "Connection.address.addressLine1",
             "label": "wc.create.groups.applicantDetails.address",
             "pattern": "^.{3,255}$",
-            "type": "textarea",
-            "isRequired": false,
+            "type": "text",
+            "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -125,9 +136,9 @@ var dat = {
             "name": "City",
             "jsonPath": "Connection.address.city",
             "label": "employee.Employee.fields.city",
-            "pattern": "^.{3,25}$",
-            "type": "textarea",
-            "isRequired": false,
+            "pattern": "^([a-zA-Z0-9_-\\s]){2,50}$",
+            "type": "text",
+            "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -138,30 +149,6 @@ var dat = {
             "label": "pt.create.groups.propertyAddress.fields.pin",
             "pattern": "^\\d{6}$",
             "type": "number",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "Locality",
-            "jsonPath": "Connection.connectionLocation.locationBoundary.id",
-            "label": "wc.create.groups.applicantDetails.locality",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$.Boundary.*.boundaryNum|$.Boundary.*.name",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "wardName",
-            "jsonPath": "Connection.connectionLocation.adminBoundary.id",
-            "label": "wc.create.groups.fields.ward",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=WARD&hierarchyTypeName=ADMINISTRATION|$.Boundary.*.boundaryNum|$.Boundary.*.name",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -180,9 +167,33 @@ var dat = {
             "patternErrMsg": ""
           },
           {
-            "name": "Is Primary?",
+            "name": "wardName",
+            "jsonPath": "Connection.connectionLocation.adminBoundary.id",
+            "label": "wc.create.groups.fields.ward",
+            "pattern": "",
+            "type": "singleValueList",
+            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=WARD&hierarchyTypeName=ADMINISTRATION|$.Boundary.*.boundaryNum|$.Boundary.*.name",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "Locality",
+            "jsonPath": "Connection.connectionLocation.locationBoundary.id",
+            "label": "wc.create.groups.applicantDetails.locality",
+            "pattern": "",
+            "type": "singleValueList",
+            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$.Boundary.*.boundaryNum|$.Boundary.*.name",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "Primary Owner",
             "jsonPath": "Connection.connectionOwner.isPrimaryOwner",
-            "label": "employee.Assignment.fields.primary",
+            "label": "",
             "pattern": "",
             "type": "radio",
             "isRequired": false,
@@ -192,13 +203,13 @@ var dat = {
       			"values": [{"label":"pt.create.groups.ownerDetails.fields.primaryOwner", "value":true},{"label":"pt.create.groups.ownerDetails.fields.secondaryOwner", "value":false}],
       			"defaultValue":true
           }
-
         ]
       },
       {
         "label": "wc.create.groups.applicantDetails.title", //Cut short labels by taking initial path from parent
         "name": "applicantDetails", //Follow Title case pattern
         "children": [],
+        "hide":true,
         "multiple": false,
         "fields": [{
             "name": "AssessmentNumber",
@@ -211,17 +222,16 @@ var dat = {
             "autoCompleteDependancy": {
               "autoCompleteUrl": "/pt-property/properties/_search?upicNumber={value}&tenantId=default",
               "autoFillFields": {
-                "Connection.asset.mobileNumber": "properties[0].owners[0].mobileNumber",
-                "Connection.asset.nameOfApplicant": "properties[0].owners[0].name",
-                "Connection.asset.email": "properties[0].owners[0].emailId",
-                "Connection.asset.aadhaarNumber": "properties[0].owners[0].aadhaarNumber",
-                "Connection.asset.noOfFloors": "properties[0].propertyDetail.noOfFloors",
-                "Connection.asset.locality":"properties[0].boundary.locationBoundary.id",
-                "Connection.asset.zone":"properties[0].boundary.revenueBoundary.id",
-                "Connection.asset.ward":"properties[0].boundary.adminBoundary.id",
-                "Connection.asset.address":"properties[0].address.addressNumber",
-                "Connection.asset.property":"properties[0].propertyDetail.propertyType"
-
+                "Connection.property.mobileNumber": "properties[0].owners[0].mobileNumber",
+                "Connection.property.nameOfApplicant": "properties[0].owners[0].name",
+                "Connection.property.email": "properties[0].owners[0].emailId",
+                "Connection.property.aadhaarNumber": "properties[0].owners[0].aadhaarNumber",
+                "Connection.property.noOfFloors": "properties[0].propertyDetail.noOfFloors",
+                "Connection.property.locality":"properties[0].boundary.locationBoundary.id",
+                "Connection.property.zone":"properties[0].boundary.revenueBoundary.id",
+                "Connection.property.ward":"properties[0].boundary.adminBoundary.id",
+                "Connection.property.address":"properties[0].address.addressLine1",
+                "Connection.property.property":"properties[0].propertyDetail.propertyType"
               }
             },
             "requiredErrMsg": "",
@@ -229,7 +239,7 @@ var dat = {
           },
           {
             "name": "NameOfApplicant",
-            "jsonPath": "Connection.asset.nameOfApplicant",
+            "jsonPath": "Connection.property.nameOfApplicant",
             "label": "wc.create.groups.applicantDetails.nameOfApplicant",
             "pattern": "",
             "type": "text",
@@ -240,7 +250,7 @@ var dat = {
           },
           {
             "name": "MobileNumber",
-            "jsonPath": "Connection.asset.mobileNumber",
+            "jsonPath": "Connection.property.mobileNumber",
             "label": "wc.create.groups.applicantDetails.mobileNumber",
             "pattern": "",
             "type": "mobileNumber",
@@ -251,7 +261,7 @@ var dat = {
           },
           {
             "name": "Email",
-            "jsonPath": "Connection.asset.email",
+            "jsonPath": "Connection.property.email",
             "label": "wc.create.groups.applicantDetails.email",
             "pattern": "",
             "type": "email",
@@ -264,7 +274,7 @@ var dat = {
           },
           {
             "name": "AadharNumber",
-            "jsonPath": "Connection.asset.adharNumber",
+            "jsonPath": "Connection.property.adharNumber",
             "label": "wc.create.groups.applicantDetails.adharNumber",
             "pattern": "",
             "type": "aadhar",
@@ -275,21 +285,22 @@ var dat = {
           },
           {
             "name": "Locality",
-            "jsonPath": "Connection.asset.locality",
+            "jsonPath": "Connection.property.locality",
             "label": "wc.create.groups.applicantDetails.locality",
             "pattern": "",
-            "type": "number",
+            "type": "singleValueList",
+            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$.Boundary.*.boundaryNum|$.Boundary.*.name",
             "isRequired": false,
             "isDisabled": true,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
           },
           {
             "name": "Address",
-            "jsonPath": "Connection.asset.address",
+            "jsonPath": "Connection.property.address",
             "label": "wc.create.groups.applicantDetails.address",
-            "pattern": "",
-            "type": "textarea",
+            "pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
+            "type": "text",
             "isRequired": false,
             "isDisabled": true,
             "requiredErrMsg": "",
@@ -297,10 +308,11 @@ var dat = {
           },
           {
             "name": "Zone",
-            "jsonPath": "Connection.asset.zone",
+            "jsonPath": "Connection.property.zone",
             "label": "wc.create.groups.applicantDetails.zone",
             "pattern": "",
-            "type": "textarea",
+            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE|$.Boundary.*.boundaryNum|$.Boundary.*.name",
+            "type": "singleValueList",
             "isRequired": false,
             "isDisabled": true,
             "requiredErrMsg": "",
@@ -308,7 +320,7 @@ var dat = {
           },
           {
             "name": "noOfFloors",
-            "jsonPath": "Connection.asset.noOfFloors",
+            "jsonPath": "Connection.property.noOfFloors",
             "label": "wc.create.groups.applicantDetails.noOfFloors",
             "pattern": "",
             "type": "number",
@@ -338,27 +350,13 @@ var dat = {
             "name": "PropertyType",
             "jsonPath": "Connection.property.propertyType",
             "label": "wc.create.groups.connectionDetails.propertyType",
+            "isHidden":true,
             "pattern": "",
-            "type": "singleValueList",
+            "type": "text",
             "isRequired": true,
             "isDisabled": false,
-            "url": "/pt-property/property/propertytypes/_search?|$..name|$..name",
-            "depedants": [{
-                "jsonPath": "Connection.categoryType",
-                "type": "dropDown",
-                "pattern": "/wcms/masters/propertytype-categorytype/_search?tenantId=default&propertyTypeName={Connection.property.propertyType}|$..categoryTypeName|$..categoryTypeName"
-              },
-              {
-                "jsonPath": "Connection.property.usageType",
-                "type": "dropDown",
-                "pattern": "/wcms/masters/propertytype-usagetype/_search?tenantId=default&propertyTypeName={Connection.property.propertyType}|$..usageCode|$..usageType"
-              },
-              {
-                "jsonPath": "Connection.hscPipeSizeType",
-                "type": "dropDown",
-                "pattern": "/wcms/masters/propertytype-pipesize/_search?tenantId=default&propertyTypeName={Connection.property.propertyType}|$..pipeSize|$..pipeSizeInInch"
-              }
-            ],
+            // "url": "/pt-property/property/propertytypes/_search?|$..name|$..name",
+            "defaultValue": "Others",
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
@@ -366,14 +364,15 @@ var dat = {
             "name": "CategoryType",
             "jsonPath": "Connection.categoryType",
             "label": "wc.create.groups.connectionDetails.categoryType",
+            "isHidden":true,
             "pattern": "",
-            "type": "singleValueList",
+            "type": "text",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-      			"defaultValue": [],
-      			"url":'/wcms/masters/propertytype-categorytype/_search?tenantId=default&propertyTypeName={Connection.property.propertyType}|$..categoryTypeName|$..categoryTypeName'
+      			"defaultValue": "General",
+      			// "url":"/wcms/masters/propertytype-categorytype/_search?tenantId=default&propertyTypeName=Vacant Land|$..categoryTypeName|$..categoryTypeName"
           },
           {
             "name": "UsageType",
@@ -386,11 +385,11 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": "",
       			"defaultValue": [],
-      			"url":'',
+      			"url":"/wcms/masters/propertytype-usagetype/_search?tenantId=default&propertyTypeName=Others|$..usageCode|$..usageType",
             "depedants": [{
                 "jsonPath": "Connection.subUsageType",
                 "type": "dropDown",
-                "pattern": "/pt-property/property/usages/_search?tenantId=default&parent={Connection.property.usageType}|$..code|$..name"
+                "pattern": "/pt-property/property/usages/_search?tenantId=default&parent={Connection.property.usageType}&service=wc,common|$..code|$..name"
               }]
           },
           {
@@ -403,8 +402,8 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-			"defaultValue": [],
-			"url":""
+      			"defaultValue": [],
+      			"url":""
           },
           {
             "name": "hscPipeSizeType",
@@ -416,8 +415,8 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-			"defaultValue": [],
-			"url":''
+      			"defaultValue": [],
+      			"url":"/wcms/masters/propertytype-pipesize/_search?tenantId=default&propertyTypeName=Others|$..pipeSize|$..pipeSizeInInch"
           },
           {
             "name": "applicationType",
@@ -485,12 +484,14 @@ var dat = {
             "name": "supplyType",
             "jsonPath": "Connection.supplyType",
             "label": "wc.create.groups.connectionDetails.supplyType",
+            "isHidden": true,
             "pattern": "",
-            "type": "singleValueList",
+            "type": "text",
             "isRequired": true,
             "isDisabled": false,
-            "url": "/wcms/masters/supplytype/_search?|$..name|$..name",
+            // "url": "/wcms/masters/supplytype/_search?|$..name|$..name",
             "requiredErrMsg": "",
+            "defaultValue":"Semi Bulk Type",
             "patternErrMsg": ""
           },
 
@@ -510,7 +511,7 @@ var dat = {
             "name": "sumpCapacity",
             "jsonPath": "Connection.sumpCapacity",
             "label": "wc.create.groups.connectionDetails.fields.sumpCapacity",
-            "pattern": "^(0|[1-9][0-9]*)$",
+            "pattern": "^\\d{1,15}$",
             "type": "number",
             "isRequired": true,
             "isDisabled": false,
@@ -521,7 +522,7 @@ var dat = {
             "name": "Sequence No",
             "jsonPath": "Connection.billSequenceNumber",
             "label": "wc.create.groups.connectionDetails.fields.billingNumber",
-            "pattern": "^(0|[1-9][0-9]*)$",
+            "pattern": "^\\d+(\\.\\d{1,4})?$",
             "type": "number",
             "isRequired": true,
             "isDisabled": false,
@@ -532,7 +533,7 @@ var dat = {
             "name": "PlumberName",
             "jsonPath": "Connection.plumberName",
             "label": "wc.create.groups.connectionDetails.fields.plumberName",
-            "pattern": "",
+            "pattern": "^([a-zA-Z0-9_-\\s]){3,50}$",
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
@@ -543,7 +544,7 @@ var dat = {
             "name": "NoOfTaps",
             "jsonPath": "Connection.numberOfTaps",
             "label": "wc.create.groups.connectionDetails.fields.noOfTaps",
-            "pattern": "^(0|[1-9][0-9]*)$",
+            "pattern": "^\\d{1,15}$",
             "type": "number",
             "isRequired": false,
             "isDisabled": false,
@@ -555,8 +556,8 @@ var dat = {
             "jsonPath": "Connection.numberOfPersons",
             "label": "wc.create.groups.connectionDetails.fields.numberOfPersons",
             "type": "number",
-            "pattern":"^(0|[1-9][0-9]*)$",
-            "isRequired": false,
+            "pattern":"^\\d{1,15}$",
+            "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
@@ -590,7 +591,8 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+            "defaultValue":false
           }
         ]
       },
@@ -620,7 +622,7 @@ var dat = {
             "label": "wc.create.groups.approvalDetails.fields.department",
             "pattern": "",
             "type": "singleValueList",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "url": "/egov-common-masters/departments/_search?tenantId=default|$..id|$..name",
             "requiredErrMsg": "",
@@ -628,7 +630,7 @@ var dat = {
             "depedants": [{
               "name": "Connection.workflowDetails.assignee",
               "type": "dropDown",
-              "pattern": "/hr-employee/employees/_search?tenantId=default&departmentId={Connection.workflowDetails.department}&designationId={Connection.workflowDetails.designation}|$..id|$..name"
+              "pattern": "/hr-employee/employees/_search?tenantId=default&departmentId={Connection.workflowDetails.department}&designationId={Connection.workflowDetails.designation}|$..position|$..name"
             }]
           },
           {
@@ -638,14 +640,14 @@ var dat = {
             "pattern": "",
             "type": "singleValueList",
             "url": "/egov-common-workflows/designations/_search?tenantId=default&businessKey=WaterConnection&approvalDepartmentName=&departmentRule=&currentStatus=&additionalRule=&pendingAction=&designation=&amountRule=|$..id|$..name",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
             "depedants": [{
               "jsonPath": "Connection.workflowDetails.assignee",
               "type": "dropDown",
-              "pattern": "/hr-employee/employees/_search?tenantId=default&departmentId={Connection.workflowDetails.department}&designationId={Connection.workflowDetails.designation}|$..id|$..name"
+              "pattern": "/hr-employee/employees/_search?tenantId=default&departmentId={Connection.workflowDetails.department}&designationId={Connection.workflowDetails.designation}|$..position|$..name"
             }]
           },
           {
@@ -654,8 +656,8 @@ var dat = {
             "label": "wc.create.groups.approvalDetails.fields.Assignee",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/hr-employee/employees/_search?tenantId=default&departmentId={Connection.workflowDetails.department}&designationId={Connection.workflowDetails.designation}|$.Employee.*.id|$.Employee.*.name",
-            "isRequired": false,
+            "url": "/hr-employee/employees/_search?tenantId=default&departmentId={Connection.workflowDetails.department}&designationId={Connection.workflowDetails.designation}|$..position|$.Employee.*.name",
+            "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -684,10 +686,6 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": ""
           }
-
-
-
-
         ]
       }
     ]
@@ -717,7 +715,7 @@ var dat = {
               "requiredErrMsg": "",
               "patternErrMsg": "",
   			"values": [{"label":"wc.group.withProperty", "value":true},{"label":"wc.group.withoutProperty", "value":false}],
-  			"defaultValue":true,
+  			"defaultValue":false,
         "showHideFields": [{
                "ifValue": false,
                "hide": [{
@@ -741,9 +739,9 @@ var dat = {
         },
         {
           "label": "wc.create.groups.applicantDetails.title", //Cut short labels by taking initial path from parent
-          "name": "applicantDetailsWithProp", //Follow Title case pattern
-          "multiple": false,
+          "name": "applicantDetailsWithProp", //Follow Title case pattern,
           "hide":true,
+          "multiple": false,
           "fields": [
             {
               "name": "NameOfApplicant",
@@ -815,11 +813,22 @@ var dat = {
               "patternErrMsg": ""
             },
             {
+              "name": "AddressNo",
+              "jsonPath": "Connection[0].houseNumber",
+              "label": "wc.create.groups.applicantDetails.addressNumber",
+              "pattern": "^[\s.]*([^\s.][\s.]*){0,16}$",
+              "type": "text",
+              "isRequired": false,
+              "isDisabled": false,
+              "requiredErrMsg": "",
+              "patternErrMsg": ""
+            },
+            {
               "name": "Address",
               "jsonPath": "Connection[0].address.addressLine1",
               "label": "wc.create.groups.applicantDetails.address",
               "pattern": "",
-              "type": "textarea",
+              "type": "text",
               "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",
@@ -884,9 +893,9 @@ var dat = {
               "patternErrMsg": ""
             },
             {
-              "name": "Is Primary?",
+              "name": "Primary Owner",
               "jsonPath": "Connection[0].connectionOwner.isPrimaryOwner",
-              "label": "employee.Assignment.fields.primary",
+              "label": "pt.create.groups.ownerDetails.fields.primaryOwner",
               "pattern": "",
               "type": "radio",
               "isRequired": false,
@@ -896,13 +905,13 @@ var dat = {
         			"values": [{"label":"pt.create.groups.ownerDetails.fields.primaryOwner", "value":true},{"label":"pt.create.groups.ownerDetails.fields.secondaryOwner", "value":false}],
         			"defaultValue":true
             }
-
-          ]
-        },{
+          ]},
+        {
         "label": "wc.create.groups.applicantDetails.title", //Cut short labels by taking initial path from parent
         "name": "applicantDetails", //Follow Title case pattern
         "children": [],
         "multiple": false,
+        "hide":false,
         "fields": [{
             "name": "acknowledgementNumber",
             "jsonPath": "Connection[0].acknowledgementNumber",
@@ -994,9 +1003,10 @@ var dat = {
             "jsonPath": "Connection[0].property.locality",
             "label": "wc.create.groups.applicantDetails.locality",
             "pattern": "",
-            "type": "number",
+            "type": "singleValueList",
             "isRequired": false,
             "isDisabled": true,
+            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$.Boundary.*.boundaryNum|$.Boundary.*.name",
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
@@ -1005,7 +1015,7 @@ var dat = {
             "jsonPath": "Connection[0].property.address",
             "label": "wc.create.groups.applicantDetails.address",
             "pattern": "",
-            "type": "textarea",
+            "type": "text",
             "isRequired": false,
             "isDisabled": true,
             "requiredErrMsg": "",
@@ -1016,7 +1026,8 @@ var dat = {
             "jsonPath": "Connection[0].property.zone",
             "label": "wc.create.groups.applicantDetails.zone",
             "pattern": "",
-            "type": "textarea",
+            "type": "singleValueList",
+            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE|$.Boundary.*.boundaryNum|$.Boundary.*.name",
             "isRequired": false,
             "isDisabled": true,
             "requiredErrMsg": "",
@@ -1039,29 +1050,30 @@ var dat = {
         "label": "wc.create.groups.connectionDetails.title",
         "name": "connectionDetails",
         "multiple": false,
-        "fields": [{
-            "name": "PropertyType",
-            "jsonPath": "Connection[0].property.propertyType",
-            "label": "wc.create.groups.connectionDetails.propertyType",
-            "pattern": "",
-            "type": "singleValueList",
-            "isRequired": false,
-            "isDisabled": false,
-            "url": "/pt-property/property/propertytypes/_search?|$..name|$..name",
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "CategoryType",
-            "jsonPath": "Connection[0].categoryType",
-            "label": "wc.create.groups.connectionDetails.categoryType",
-            "pattern": "",
-            "type": "singleValueList",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
+        "fields": [
+          // {
+          //   "name": "PropertyType",
+          //   "jsonPath": "Connection[0].property.propertyType",
+          //   "label": "wc.create.groups.connectionDetails.propertyType",
+          //   "pattern": "",
+          //   "type": "singleValueList",
+          //   "isRequired": false,
+          //   "isDisabled": false,
+          //   "url": "/pt-property/property/propertytypes/_search?|$..name|$..name",
+          //   "requiredErrMsg": "",
+          //   "patternErrMsg": ""
+          // },
+          // {
+          //   "name": "CategoryType",
+          //   "jsonPath": "Connection[0].categoryType",
+          //   "label": "wc.create.groups.connectionDetails.categoryType",
+          //   "pattern": "",
+          //   "type": "singleValueList",
+          //   "isRequired": false,
+          //   "isDisabled": false,
+          //   "requiredErrMsg": "",
+          //   "patternErrMsg": ""
+          // },
           {
             "name": "UsageType",
             "jsonPath": "Connection[0].property.usageType",
@@ -1073,6 +1085,18 @@ var dat = {
             "url": "/pt-property/property/usages/_search?|$..name|$..name",
             "requiredErrMsg": "",
             "patternErrMsg": ""
+          },
+          {
+            "name": "subUsageType",
+            "jsonPath": "Connection[0].subUsageType",
+            "label": "wc.create.groups.connectionDetails.subUsageType",
+            "pattern": "",
+            "type": "singleValueList",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+      			"url":"/pt-property/property/usages/_search?|$..name|$..name"
           },
           {
             "name": "hscPipeSizeType",
@@ -1147,18 +1171,18 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
-          {
-            "name": "supplyType",
-            "jsonPath": "Connection[0].supplyType",
-            "label": "wc.create.groups.connectionDetails.supplyType",
-            "pattern": "",
-            "type": "singleValueList",
-            "isRequired": false,
-            "isDisabled": false,
-            "url": "/wcms/masters/supplytype/_search?|$..name|$..name",
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
+          // {
+          //   "name": "supplyType",
+          //   "jsonPath": "Connection[0].supplyType",
+          //   "label": "wc.create.groups.connectionDetails.supplyType",
+          //   "pattern": "",
+          //   "type": "singleValueList",
+          //   "isRequired": false,
+          //   "isDisabled": false,
+          //   "url": "/wcms/masters/supplytype/_search?|$..name|$..name",
+          //   "requiredErrMsg": "",
+          //   "patternErrMsg": ""
+          // },
 
           {
             "name": "waterTreatment",

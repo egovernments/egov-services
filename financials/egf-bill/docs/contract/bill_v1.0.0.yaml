@@ -1,0 +1,693 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: Bill Service
+  description: Bill services APIs - to create, update and search Bill. 
+  contact:
+    name: Manikanta P T
+    email: info@egovernments.org
+  
+basePath: "/egf-bill/v110"
+x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/egf-bill/contracts/v1-0-0.yml'
+x-api-id: 'org.egov.egf.bill'
+paths:
+    /billregisters/_search:
+      post:
+        summary: Get the list of billregisters
+        description: billregisters
+        tags: 
+          - Bill
+          - BillRegister
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: ids
+            type: array
+            items: 
+             type: string
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+            maxLength: 50
+          - name: billType
+            type: string
+            in: query
+            description: |
+              billType is the type of the bill
+              example is ExpenseBill,ContractorBill,PurchaseBill,SalaryBill etc
+            maxLength: 50
+          - name: billSubType
+            type: string
+            in: query
+            description: |
+              billSubType refers with each type of bill what is the subtype .
+              for example ContractorBill will have subType as "FinalBill"
+            maxLength: 50
+          - name: billNumber
+            type: string
+            in: query
+            description: |
+              billNumber refers to the unique number generated for the bill.
+            maxLength: 50
+          - name: billDate
+            type: string
+            format: date
+            in: query
+            description: |
+              billDate is the date when the bill is created.
+          - name: billAmount
+            type: number
+            format: double
+            in: query
+            description: |
+              billAmount is the total bill Amount .
+              even though the bill is created for billAmount of x
+              it may be passed for amount x-k
+          - name: passedAmount
+            type: number
+            format: double
+            in: query
+            description: |
+              passedAmount refers to the amount passed by ulb .
+              even though the bill is created for billAmount of x
+              it may be passed for amount x-k
+          - name: moduleName
+            type: string
+            in: query
+            description: |
+              moduleName is the name of the module who is posting the bill in financials
+            maxLength: 50
+          - name: status
+            type: integer
+            format: int64
+            in: query
+            description: |
+              status refers to the status of the bill like ,created,approved etc
+          - name: fund
+            type: integer
+            format: int64
+            in: query
+            description: |
+              fundsource refers to the fundsounce master
+          - name: function
+            type: integer
+            format: int64
+            in: query
+            description: |
+              function refers to the function master
+          - name: fundsource
+            type: integer
+            format: int64
+            in: query
+            description: |
+              fundsource of the BillRegister
+          - name: scheme
+            type: integer
+            format: int64
+            in: query
+            description: |
+              scheme of the BillRegister
+          - name: subScheme
+            type: integer
+            format: int64
+            in: query
+            description: |
+              sub scheme of the BillRegister
+          - name: functionary
+            type: integer
+            format: int64
+            in: query
+            description: |
+              functionary of the BillRegister
+          - name: division
+            type: integer
+            format: int64
+            in: query
+            description: |
+              division of the BillRegister
+          - name: department
+            type: integer
+            format: int64
+            in: query
+            description: |
+              department of the BillRegister
+          - name: sourcePath
+            type: string
+            in: query
+            description: |
+              source path of the BillRegister
+            maxLength: 256
+          - name: budgetCheckRequired
+            type: boolean
+            in: query
+            description: |
+              budgetCheckRequired is a boolean field is the budget check is required or not default is true
+          - name: budgetAppropriationNo
+            type: string
+            in: query
+            description: |
+              budgetAppropriationNo is the number generated after budget check. This field will be null if the budget check not done.
+            maxLength: 50
+          - name: partyBillNumber
+            type: string
+            in: query
+            description: |
+              partyBillNumber is the manual bill number .
+            maxLength: 50
+          - name: partyBillDate
+            type: string
+            format: date
+            in: query
+            description: |
+              partyBillDate is the manual bill date .
+          - $ref: "#/parameters/pageSize"
+          - $ref: "#/parameters/offset"
+          - name: sortBy
+            type: string
+            in: query
+            description: |
+              This takes any field from the Object seperated by comma and asc,desc keywords.  
+              example name asc,code desc or name,code or name,code desc 
+        responses:
+          200:
+            description: BillRegister retrieved Successfully
+            schema:
+              $ref: '#/definitions/BillRegisterResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /billregisters/_create:
+      post:
+        summary: Create  new  billregisters
+        description: Create  new billregisters
+        tags: 
+          - Bill
+          - BillRegister
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: billRegisterRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/BillRegisterRequest'
+        responses:
+          201:
+            description: BillRegister created Successfully
+            schema:
+              $ref: '#/definitions/BillRegisterResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /billregisters/_update:
+      post:
+        summary: Update any of the billregisters
+        description: Update any of the billregisters
+        tags: 
+          - Bill
+          - BillRegister
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: billRegisterRequest
+            in: body
+            description: common Request info
+            schema:
+              $ref: '#/definitions/BillRegisterRequest'
+        responses:
+          200:
+            description: BillRegister updated Successfully
+            schema:
+              $ref: '#/definitions/BillRegisterResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /checklists/_search:
+      post:
+        summary: Get the list of checklists
+        description: checklists
+        tags: 
+          - Bill
+          - Checklist
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: ids
+            type: array
+            items: 
+             type: string
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - name: type
+            type: string
+            in: query
+            description: |
+              type refers to the name of the entities. If the check list is required for Bill then type will be billRegister
+          - name: subType
+            type: string
+            in: query
+            description: |
+              subType refers to the different types of  entities. If the check list is required for Bill of type expenseBill
+              then subtype value is expensebill.
+              this is unique combination type and subtype is unique
+          - name: key
+            type: string
+            in: query
+            description: |
+              key is the content of the check list .
+              exmaple. 1. Passport copy attached
+              2. Ration card copy attached etc
+          - name: description
+            type: string
+            in: query
+            description: |
+              description is further detailed discription of the check list values
+          - $ref: "#/parameters/pageSize"
+          - $ref: "#/parameters/offset"
+          - name: sortBy
+            type: string
+            in: query
+            description: |
+              This takes any field from the Object seperated by comma and asc,desc keywords.  
+              example name asc,code desc or name,code or name,code desc 
+        responses:
+          200:
+            description: Checklist retrieved Successfully
+            schema:
+              $ref: '#/definitions/ChecklistResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /checklists/_create:
+      post:
+        summary: Create  new  checklists
+        description: Create  new checklists
+        tags: 
+          - Bill
+          - Checklist
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: checklistRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/ChecklistRequest'
+        responses:
+          201:
+            description: Checklist created Successfully
+            schema:
+              $ref: '#/definitions/ChecklistResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /checklists/_update:
+      post:
+        summary: Update any of the checklists
+        description: Update any of the checklists
+        tags: 
+          - Bill
+          - Checklist
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: checklistRequest
+            in: body
+            description: common Request info
+            schema:
+              $ref: '#/definitions/ChecklistRequest'
+        responses:
+          200:
+            description: Checklist updated Successfully
+            schema:
+              $ref: '#/definitions/ChecklistResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+definitions:
+
+    BillRegister:
+      type: object
+      description: |
+          
+      allOf:
+        - $ref: '#/definitions/Auditable'
+      properties:
+        id:
+          type: string
+          maxLength: 50
+          description: |
+            Unique Identifier of the BillRegister
+        billType:
+          type: string
+          maxLength: 50
+          description: |
+            billType is the type of the bill
+            example is ExpenseBill,ContractorBill,PurchaseBill,SalaryBill etc
+        billSubType:
+          type: string
+          maxLength: 50
+          description: |
+            billSubType refers with each type of bill what is the subtype .
+            
+            for example ContractorBill will have subType as "FinalBill"
+        billNumber:
+          type: string
+          maxLength: 50
+          description: |
+            billNumber refers to the unique number generated for the bill.
+        billDate:
+          type: string
+          format: date
+          description: |
+            billDate is the date when the bill is created.
+        billAmount:
+          type: number
+          format: double
+          description: |
+            billAmount is the total bill Amount .
+            even though the bill is created for billAmount of x
+            it may be passed for amount x-k
+        passedAmount:
+          type: number
+          format: double
+          description: |
+            passedAmount refers to the amount passed by ulb .
+            even though the bill is created for billAmount of x
+            it may be passed for amount x-k
+        moduleName:
+          type: string
+          maxLength: 50
+          description: |
+            moduleName is the name of the module who is posting the bill in financials
+        status:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/FinancialStatus"
+          description: |
+            status refers to the status of the bill like ,created,approved etc
+        fund:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Fund"
+          description: |
+            fundsource refers to the fundsounce master
+        function:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Function"
+          description: |
+            function refers to the function master
+        fundsource:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Fundsource"
+          description: |
+            fundsource of the BillRegister
+        scheme:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Scheme"
+          description: |
+            scheme of the BillRegister
+        subScheme:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/SubScheme"
+          description: |
+            sub scheme of the BillRegister
+        functionary:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Functionary"
+          description: |
+            functionary of the BillRegister
+        division:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary"
+          description: |
+            division of the BillRegister
+        department:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/Department"
+          description: |
+            department of the BillRegister
+        sourcePath:
+          type: string
+          maxLength: 256
+          description: |
+            source path of the BillRegister
+        budgetCheckRequired:
+          type: boolean
+          description: |
+            budgetCheckRequired is a boolean field is the budget check is required or not default is true
+        budgetAppropriationNo:
+          type: string
+          maxLength: 50
+          description: |
+            budgetAppropriationNo is the number generated after budget check. This field will be null
+            if the budget check not done.
+        partyBillNumber:
+          type: string
+          maxLength: 50
+          description: |
+            partyBillNumber is the manual bill number .
+        partyBillDate:
+          type: string
+          format: date
+          description: |
+            partyBillDate is the manual bill date .
+        description:
+          type: string
+          maxLength: 256
+          description: |
+            description is the more detailed information about the bill
+        billDetails:
+          type:  array
+          description:  |
+            bill details of the BillRegister
+          items:
+            $ref: "#/definitions/BillDetail"
+      required:
+      - billType
+      - billDate
+      - billAmount
+    BillDetail:
+      type: object
+      description: |
+          
+      allOf:
+        - $ref: '#/definitions/Auditable'
+      properties:
+        id:
+          type: string
+          description: |
+            Unique Identifier of the BillDetail
+        orderId:
+          type: integer
+          format: int32
+          description: |
+            order id of the BillDetail
+        chartOfAccount:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/ChartOfAccount"
+          description: |
+            chart of account of the BillDetail
+        glcode:
+          type: string
+          maxLength: 16
+          description: |
+            glcode of the BillDetail
+        debitAmount:
+          type: number
+          format: double
+          description: |
+            debit amount of the BillDetail
+        creditAmount:
+          type: number
+          format: double
+          description: |
+            credit amount of the BillDetail
+        function:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Function"
+          description: |
+            function of the BillDetail
+        billPayeeDetails:
+          type:  array
+          description:  |
+            bill payee details of the BillDetail
+          items:
+            $ref: "#/definitions/BillPayeeDetail"
+      required:
+      - chartOfAccount
+      - glcode
+      - debitAmount
+      - creditAmount
+    BillPayeeDetail:
+      type: object
+      description: |
+          
+      allOf:
+        - $ref: '#/definitions/Auditable'
+      properties:
+        id:
+          type: string
+          description: |
+            Unique Identifier of the BillPayeeDetail
+        accountDetailType:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/AccountDetailType"
+          description: |
+            account detail type of the BillPayeeDetail
+        accountDetailKey:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/AccountDetailKey"
+          description: |
+            account detail key of the BillPayeeDetail
+        amount:
+          type: number
+          format: double
+          description: |
+            amount of the BillPayeeDetail
+      required:
+      - accountDetailKey
+      - amount
+    BillRegisterRequest:
+      description: Contract class for web request. Array of BillRegister items  are used in case of create or update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        billRegisters:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/BillRegister'
+    BillRegisterResponse:
+      description: Contract class for web response. Array of BillRegister items  are used in case of search ,create or update request. 
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        billRegisters:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/BillRegister'
+        page:
+          $ref: '#/definitions/Page'
+
+    Checklist:
+      type: object
+      description: |
+          
+      allOf:
+        - $ref: '#/definitions/Auditable'
+      properties:
+        id:
+          type: string
+          maxLength: 50
+          description: |
+            id is the unique identifier
+        type:
+          type: string
+          maxLength: 50
+          minLength: 1
+          description: |
+            type refers to the name of the entities. If the check list is required for Bill then type will be billRegister
+        subType:
+          type: string
+          maxLength: 50
+          minLength: 1
+          description: |
+            subType refers to the different types of  entities. If the check list is required for Bill of type expenseBill
+            then subtype value is expensebill.
+            this is unique combination type and subtype is unique
+        key:
+          type: string
+          maxLength: 250
+          minLength: 3
+          description: |
+            key is the content of the check list .
+            exmaple. 1. Passport copy attached
+            2. Ration card copy attached etc
+        description:
+          type: string
+          maxLength: 250
+          minLength: 3
+          description: |
+            description is further detailed discription of the check list values
+    ChecklistRequest:
+      description: Contract class for web request. Array of Checklist items  are used in case of create or update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        checklists:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Checklist'
+    ChecklistResponse:
+      description: Contract class for web response. Array of Checklist items  are used in case of search ,create or update request. 
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        checklists:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Checklist'
+        page:
+          $ref: '#/definitions/Page'
+    Auditable:
+      type: object
+      properties:
+        tenantId:
+          type: string
+          maxLength: 50
+          minLength: 5
+          description: |
+            tenantId Unique Identifier of the tenant, Like AP, AP.Kurnool etc.
+            represents the client for which the transaction is created.
+        createdBy:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User"
+          description: |
+            createdBy is the logged in user who is conducting transaction
+        lastModifiedBy:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User"
+          description: |
+            lastModifiedBy is the logged in user who is updating transaction
+        createdDate:
+          type: string
+          format: date
+          description: |
+            
+        lastModifiedDate:
+          type: string
+          format: date
+          description: |
+            lastModifiedDate date is on which trnasaction is updated lastly
+    Page:
+     type: object
+     properties:
+      totalResults:
+        type: integer
+        format: int32
+        description: total results of the Pagination
+      totalPages:
+        type: integer
+        format: int32
+        description: total pages of the Pagination
+      pageSize:
+        type: integer
+        format: int32
+        description: Number of records in a per page in  the Pagination, Default value is 20
+      currentPage:
+        type: integer
+        format: int32
+        description: current page of the Pagination
+      offSet:
+        type: integer
+        format: int32
+        description: page number of the Pagination, Default value is 0  
+
+
+parameters:
+  pageSize:
+    name: pageSize
+    type: integer
+    format: int32
+    in: query
+    description: pageSize
+  offset:
+    name: offset
+    type: integer
+    format: int32
+    in: query
+    description: pageSize          
+          

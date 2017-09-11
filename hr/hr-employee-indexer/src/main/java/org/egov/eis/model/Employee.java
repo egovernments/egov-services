@@ -40,36 +40,31 @@
 
 package org.egov.eis.model;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-
+@Data
+@Builder
 @AllArgsConstructor
-@EqualsAndHashCode
-@Getter
 @NoArgsConstructor
-@Setter
-@ToString
 public class Employee {
 
 	private Long id;
 
+	@Size(min=1, max=256)
 	private String code;
 
 	@NotNull
@@ -86,7 +81,7 @@ public class Employee {
 	private Date dateOfRetirement;
 
 	@NotNull
-	private String employeeStatus;
+	private Long employeeStatus;
 
 	private Long recruitmentMode;
 
@@ -169,13 +164,30 @@ public class Employee {
 	@Valid
 	private List<DepartmentalTest> test = new ArrayList<>();
 
+	@Valid
+	@JsonProperty("APRDetails")
+	private List<APRDetail> aprDetails = new ArrayList<>();
+
 	private List<String> documents = new ArrayList<>();
+
+	private Long createdBy;
+
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date createdDate;
+
+	private Long lastModifiedBy;
+
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date lastModifiedDate;
 
 	@Valid
 	@NotNull
 	private User user;
 
 	@NotNull
+	@Size(max=256)
 	private String tenantId;
 
 }

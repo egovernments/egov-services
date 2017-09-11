@@ -44,8 +44,10 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.wcms.transaction.model.Connection;
@@ -53,6 +55,7 @@ import org.egov.wcms.transaction.model.DocumentOwner;
 import org.egov.wcms.transaction.model.EstimationCharge;
 import org.egov.wcms.transaction.model.EstimationNotice;
 import org.egov.wcms.transaction.model.Material;
+import org.egov.wcms.transaction.model.Meter;
 import org.egov.wcms.transaction.model.MeterReading;
 import org.egov.wcms.transaction.model.WorkOrderFormat;
 import org.egov.wcms.transaction.model.enums.NewConnectionStatus;
@@ -60,22 +63,32 @@ import org.egov.wcms.transaction.repository.builder.WaterConnectionQueryBuilder;
 import org.egov.wcms.transaction.repository.rowmapper.ConnectionDocumentRowMapper;
 import org.egov.wcms.transaction.repository.rowmapper.UpdateWaterConnectionRowMapper;
 import org.egov.wcms.transaction.repository.rowmapper.WaterConnectionRowMapper;
+import org.egov.wcms.transaction.repository.rowmapper.WaterConnectionRowMapper.ConnectionMeterRowMapper;
+import org.egov.wcms.transaction.web.contract.PropertyTaxResponseInfo;
+import org.egov.wcms.transaction.web.contract.PropertyTypeResponse;
+import org.egov.wcms.transaction.web.contract.RequestInfoWrapper;
+import org.egov.wcms.transaction.web.contract.UsageTypeResponse;
 import org.egov.wcms.transaction.web.contract.WaterConnectionGetReq;
 import org.egov.wcms.transaction.web.contract.WaterConnectionReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.client.RestTemplate;
 
 @Repository
 public class WaterConnectionRepository {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(WaterConnectionRepository.class);
+    public static final String baseUrl = "http://pt-property:8080" ;
+	public static final String usageTypeSearch = "/pt-property/property/usages/_search?tenantId={tenantId}" ; 
+	public static final String propertyTypeSearch = "/pt-property/property/propertytypes/_search?tenantId={tenantId}";
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -127,11 +140,14 @@ public class WaterConnectionRepository {
                 statement.setString(18, waterConnectionRequest.getConnection().getPropertyIdentifier());
                 statement.setString(19, waterConnectionRequest.getConnection().getProperty().getUsageTypeId());
                 statement.setString(20, waterConnectionRequest.getConnection().getProperty().getPropertyTypeId());
-   
-                statement.setString(21, "AddressTest"); // waterConnectionRequest.getConnection().getProperty().getAddress());
+                if(waterConnectionRequest.getConnection().getWithProperty()) { 
+                	statement.setString(21, waterConnectionRequest.getConnection().getProperty().getAddress());	
+                } else { 
+                	statement.setString(21, waterConnectionRequest.getConnection().getAddress().getAddressLine1());
+                }
                 statement.setDouble(22, waterConnectionRequest.getConnection().getDonationCharge());
 
-                statement.setString(23, waterConnectionRequest.getConnection().getAssetIdentifier());
+                statement.setString(23, null);
                 statement.setString(24, waterConnectionRequest.getConnection().getWaterTreatmentId());
                 statement.setBoolean(25, waterConnectionRequest.getConnection().getIsLegacy());
                 if (!waterConnectionRequest.getConnection().getIsLegacy() && waterConnectionRequest.getConnection().getId() == 0){
@@ -147,28 +163,28 @@ public class WaterConnectionRepository {
                     waterConnectionRequest.getConnection().setStatus(NewConnectionStatus.VERIFIED.name());
                 }
                 statement.setDouble(27, waterConnectionRequest.getConnection().getNumberOfFamily());
-                statement.setString(28, waterConnectionRequest.getConnection().getSubUsageTypeId());
+                statement.setLong(28, waterConnectionRequest.getConnection().getSubUsageTypeId());
                 statement.setString(29,waterConnectionRequest.getConnection().getPlumberName());
-                System.out.println(waterConnectionRequest.getConnection().getBillSequenceNumber());
-                statement.setLong(30, waterConnectionRequest.getConnection().getBillSequenceNumber()!=null?
+                statement.setDouble(30, waterConnectionRequest.getConnection().getBillSequenceNumber()!=null?
                         waterConnectionRequest.getConnection().getBillSequenceNumber():0l);
-                statement.setString(31, waterConnectionRequest.getConnection().getMeterOwner()!=null?
-                        waterConnectionRequest.getConnection().getMeterOwner():"");
-                statement.setString(32, waterConnectionRequest.getConnection().getMeterModel()!=null?
-                        waterConnectionRequest.getConnection().getMeterModel():"");
-                statement.setBoolean(33, Boolean.FALSE);
+
+                statement.setBoolean(31, waterConnectionRequest.getConnection().getOutsideULB());
 
                 if (waterConnectionRequest.getConnection().getIsLegacy()
                         ) {
-                    statement.setString(34, waterConnectionRequest.getConnection().getLegacyConsumerNumber());
-                    statement.setString(35, waterConnectionRequest.getConnection().getConsumerNumber());
-                  statement.setLong(36, waterConnectionRequest.getConnection().getExecutionDate());
-                   statement.setInt(37, waterConnectionRequest.getConnection().getNoOfFlats());
+                    statement.setString(32, waterConnectionRequest.getConnection().getLegacyConsumerNumber());
+                    statement.setString(33, waterConnectionRequest.getConnection().getConsumerNumber());
+                    statement.setLong(34, waterConnectionRequest.getConnection().getExecutionDate());
+                    statement.setInt(35, waterConnectionRequest.getConnection().getNoOfFlats());
+                   statement.setString(36, waterConnectionRequest.getConnection().getManualConsumerNumber());
+                   statement.setString(37, waterConnectionRequest.getConnection().getHouseNumber());
+                   statement.setString(38, waterConnectionRequest.getConnection().getManualReceiptNumber());
+                   statement.setLong(39, waterConnectionRequest.getConnection().getManualReceiptDate());
 
                 }
 
                 if (waterConnectionRequest.getConnection().getParentConnectionId() != 0)
-                    statement.setLong(38, waterConnectionRequest.getConnection().getParentConnectionId());
+                    statement.setLong(36, waterConnectionRequest.getConnection().getParentConnectionId());
                 
                 
                 // Please verify if there's proper validation on all these fields to avoid NPE.
@@ -184,6 +200,7 @@ public class WaterConnectionRepository {
 
         if (connectionId > 0 ) {
             final List<Object[]> values = new ArrayList<>();
+            if(waterConnectionRequest.getConnection().getDocuments()!=null && !waterConnectionRequest.getConnection().getDocuments().isEmpty()){
             for (final DocumentOwner document : waterConnectionRequest.getConnection().getDocuments()) {
                 document.setDocumentId(Integer.parseInt(document.getDocument()));
                 final Object[] obj = { document.getDocumentId(),
@@ -200,9 +217,10 @@ public class WaterConnectionRepository {
             } catch (final Exception e) {
                 LOGGER.error("Inserting documents failed!", e);
             }
-        }  if (connectionId > 0 && waterConnectionRequest.getConnection().getBillingType() != null &&
+        } 
+        }if (connectionId > 0 && null != waterConnectionRequest.getConnection().getBillingType() &&
                 waterConnectionRequest.getConnection().getBillingType().equals("METERED") &&
-                !waterConnectionRequest.getConnection().getMeter().isEmpty()) {
+                null != waterConnectionRequest.getConnection().getMeter()) {
 
             Long meterId=null;
                 final String insertestQuery = WaterConnectionQueryBuilder.insertMeterQuery();
@@ -210,23 +228,31 @@ public class WaterConnectionRepository {
             
                     final KeyHolder keyHolder = new GeneratedKeyHolder();
                     jdbcTemplate.update((PreparedStatementCreator) connectiontemp -> {
-                        final String[] returnValColumn = new String[] { "id" };
-                        final PreparedStatement statement = connectiontemp.prepareStatement(insertestQuery,
-                                returnValColumn);
-                        statement.setLong(1, waterConnectionRequest.getConnection().getId());
-                        statement.setString(2, waterConnectionRequest.getConnection().getMeter().get(0).getMeterMake());
-                        statement.setString(3, waterConnectionRequest.getConnection().getMeter().get(0).getInitialMeterReading());
-                        
-                        statement.setString(4, waterConnectionRequest.getConnection().getMeter().get(0).getMeterSlNo());
-                        statement.setString(5,  waterConnectionRequest.getConnection().getMeter().get(0).getMeterCost());  
-                        statement.setString(6, waterConnectionRequest.getConnection().getTenantId());
-                        statement.setLong(7, waterConnectionRequest.getRequestInfo().getUserInfo().getId());
-                        statement.setDate(8, new Date(new java.util.Date().getTime()));
+                    	final String[] returnValColumn = new String[] { "id" };
+                    	final PreparedStatement statement = connectiontemp.prepareStatement(insertestQuery,
+                    			returnValColumn);
+                    	statement.setLong(1, waterConnectionRequest.getConnection().getId());
+                    	statement.setString(2, waterConnectionRequest.getConnection().getMeter().get(0).getMeterMake());
+                    	statement.setString(3, waterConnectionRequest.getConnection().getMeter().get(0).getInitialMeterReading());
 
-                        statement.setLong(9, waterConnectionRequest.getRequestInfo().getUserInfo().getId());
-                        statement.setDate(10, new Date(new java.util.Date().getTime()));
-                        
-                        return statement;
+                    	statement.setString(4, waterConnectionRequest.getConnection().getMeter().get(0).getMeterSlNo());
+                    	statement.setString(5,  waterConnectionRequest.getConnection().getMeter().get(0).getMeterCost());  
+                    	statement.setString(6, waterConnectionRequest.getConnection().getTenantId());
+                    	statement.setLong(7, waterConnectionRequest.getRequestInfo().getUserInfo().getId());
+                    	statement.setDate(8, new Date(new java.util.Date().getTime()));
+
+                    	statement.setLong(9, waterConnectionRequest.getRequestInfo().getUserInfo().getId());
+                    	statement.setDate(10, new Date(new java.util.Date().getTime()));
+                    	statement.setString(11, waterConnectionRequest.getConnection().getMeter().get(0).getMeterOwner()!=null?
+                    			waterConnectionRequest.getConnection().getMeter().get(0).getMeterOwner():"");
+                    	statement.setString(12, waterConnectionRequest.getConnection().getMeter().get(0).getMeterModel()!=null?
+                    			waterConnectionRequest.getConnection().getMeter().get(0).getMeterModel():"");
+                    	statement.setString(13, waterConnectionRequest.getConnection().getMeter().get(0).getMaximumMeterReading()!=null?
+                    			waterConnectionRequest.getConnection().getMeter().get(0).getMaximumMeterReading():"");
+                    	statement.setString(14, waterConnectionRequest.getConnection().getMeter().get(0).getMeterStatus()!=null?
+                    			waterConnectionRequest.getConnection().getMeter().get(0).getMeterStatus():"");
+
+                    	return statement;
                     }, keyHolder);
 
                     meterId = keyHolder.getKey().longValue();
@@ -242,12 +268,18 @@ public class WaterConnectionRepository {
                 for (final MeterReading meterReading : waterConnectionRequest.getConnection().getMeter().get(0)
                         .getMeterReadings()) {
 
-                    final Object[] obj = { meterId,
-                            meterReading.getReading(),
-                            meterReading.getReadingDate(),waterConnectionRequest.getConnection().getTenantId(),
-                            waterConnectionRequest.getRequestInfo().getUserInfo().getId(), new Date(new java.util.Date().getTime()),
-                            waterConnectionRequest.getRequestInfo().getUserInfo().getId(), new Date(new java.util.Date().getTime()) };
-
+                	final Object[] obj = { meterId,
+                			meterReading.getReading(),
+                			meterReading.getReadingDate(),waterConnectionRequest.getConnection().getTenantId(),
+                			waterConnectionRequest.getRequestInfo().getUserInfo().getId(), new Date(new java.util.Date().getTime()),
+                			waterConnectionRequest.getRequestInfo().getUserInfo().getId(), new Date(new java.util.Date().getTime()),
+                			meterReading.getGapCode() != null ? meterReading.getGapCode() : "",
+                			meterReading.getConsumption() != null ? meterReading.getConsumption() : "",
+                			meterReading.getConsumptionAdjusted() != null ? meterReading.getConsumptionAdjusted() : "",
+                			meterReading.getNumberOfDays() != null ? meterReading.getNumberOfDays() : "",
+                			meterReading.getResetFlag() != null ? meterReading.getResetFlag() : false
+                	};
+                    
                     values.add(obj);
                 }
                 try {
@@ -315,8 +347,10 @@ public class WaterConnectionRepository {
 					PreparedStatement statement = connection.prepareStatement(persistConnectionLocationQuery,
 							returnValColumn);
 					statement.setLong(1, conn.getConnectionLocation().getRevenueBoundary().getId());
-					statement.setLong(2, conn.getConnectionLocation().getLocationBoundary().getId()); 
-					statement.setLong(3, conn.getConnectionLocation().getAdminBoundary().getId());
+					statement.setLong(2, (conn.getConnectionLocation().getLocationBoundary()!=null
+					        ?conn.getConnectionLocation().getLocationBoundary().getId():0l)); 
+					statement.setLong(3, (conn.getConnectionLocation().getAdminBoundary()!=null ?
+					        conn.getConnectionLocation().getAdminBoundary().getId():0l));
 					statement.setLong(4, waterConnectionReq.getRequestInfo().getUserInfo().getId());
 					statement.setDate(5, new Date(new java.util.Date().getTime()));
 					return statement;
@@ -338,12 +372,15 @@ public class WaterConnectionRepository {
         
     }
     
-    public void updateValuesForNoPropertyConnections(WaterConnectionReq waterConnectionReq, long addressId, long locationId) {
-        String updateQuery=waterConnectionQueryBuilder.updateValuesForNoPropertyConnections();
-        Object[] obj = new Object[] { 
-                waterConnectionReq.getConnection().getConnectionOwner().getId(), addressId, locationId, waterConnectionReq.getConnection().getAcknowledgementNumber()};
-        jdbcTemplate.update(updateQuery, obj);
-    }
+	public void updateValuesForNoPropertyConnections(WaterConnectionReq waterConnectionReq, long addressId,
+			long locationId) {
+		String updateQuery = waterConnectionQueryBuilder.updateValuesForNoPropertyConnections();
+		Object[] obj = new Object[] { waterConnectionReq.getConnection().getConnectionOwner().getId(), addressId,
+				locationId, waterConnectionReq.getConnection().getConnectionOwner().getIsPrimaryOwner(),
+				waterConnectionReq.getConnection().getAcknowledgementNumber(),
+				waterConnectionReq.getConnection().getTenantId() };
+		jdbcTemplate.update(updateQuery, obj);
+	}
 
     public WaterConnectionReq updateConnectionWorkflow(final WaterConnectionReq waterConnectionReq,Connection connectiondemand)
     {
@@ -352,12 +389,7 @@ public class WaterConnectionRepository {
         if(waterConnectionReq!=null){
             Connection connection=waterConnectionReq.getConnection();
         insertQuery = WaterConnectionQueryBuilder.updateConnectionQuery();
-       obj = new Object[] { connection.getConnectionType(), connection.getApplicationType(),
-                connection.getBillingType(), connection.getCategoryId(),
-                connection.getPipesizeId(), connection.getSourceTypeId(), connection.getConnectionStatus(),
-                connection.getSumpCapacity(), connection.getNumberOfTaps(),
-                connection.getNumberOfPersons(), Long.valueOf(waterConnectionReq.getRequestInfo().getUserInfo().getId()),
-                new Date(new java.util.Date().getTime()), connection.getStateId(),connection.getNumberOfFamily(),
+       obj = new Object[] { connection.getStateId(),
                 connection.getAcknowledgementNumber() };
        
         }
@@ -489,16 +521,16 @@ public class WaterConnectionRepository {
                 acknowledgeNumber);
         return connection;
     }
-    public Connection getWaterConnectionByConsumerNumber(final String acknowledgeNumber) {
+    public Connection getWaterConnectionByConsumerNumber(final String acknowledgeNumber,final String tenantid) {
 
         final Connection connection = jdbcTemplate.queryForObject(
                 WaterConnectionQueryBuilder.getWaterConnectionByConsumerNumber(), new UpdateWaterConnectionRowMapper(),
-                acknowledgeNumber);
+                acknowledgeNumber,tenantid);
         return connection;
     }
 
 
-	public List<Connection> getConnectionDetails(final WaterConnectionGetReq waterConnectionGetReq) {
+	public List<Connection> getConnectionDetails(final WaterConnectionGetReq waterConnectionGetReq, RequestInfo requestInfo) {
 		final List<Object> preparedStatementValues = new ArrayList<>();
 		final String fetchQuery = waterConnectionQueryBuilder.getQuery(waterConnectionGetReq, preparedStatementValues);
 		LOGGER.info("Get Connection Details Query : " + fetchQuery);
@@ -521,7 +553,108 @@ public class WaterConnectionRepository {
 		} catch (Exception ex) {
 			LOGGER.error("Exception encountered while fetching the Connection list without Property : " + ex);
 		}
+		resolvePropertyUsageTypeNames(waterConnectionGetReq.getTenantId(), connectionList, requestInfo);
+		// This condition is added to fetch the Meter Details only in single view case. Not in fetch all case 
+		if(connectionList.size() == 1) { 
+			getConnectionMeterDetails(connectionList);
+		}
 		return connectionList;
+	}
+	
+	private void getConnectionMeterDetails(List<Connection> connectionList) {
+		String meterDetailsQuery = WaterConnectionQueryBuilder.getConnectionMeterQueryForSearch();
+		for(Connection conn : connectionList) { 
+			final List<Object> preparedStatementValues = new ArrayList<>();
+			preparedStatementValues.add(conn.getId());
+			LOGGER.info("Get Meter Details Query : " + meterDetailsQuery);
+			ConnectionMeterRowMapper mapper = new WaterConnectionRowMapper().new ConnectionMeterRowMapper(); 
+			jdbcTemplate.query(meterDetailsQuery, preparedStatementValues.toArray(),
+					mapper);
+			sortMeterDetailsToConnection(conn, mapper);
+		}
+	}
+	
+	private void sortMeterDetailsToConnection(Connection conn, ConnectionMeterRowMapper mapper) { 
+		Map<Long, Map<Long, Meter>> meterReadingMap = mapper.meterReadingMap; 
+		Iterator<Entry<Long, Map<Long, Meter>>> itr = meterReadingMap.entrySet().iterator(); 
+		while(itr.hasNext()) { 
+			Entry<Long, Map<Long, Meter>> entry = itr.next();
+			long connectionId = entry.getKey();
+			if(conn.getId() == connectionId) { 
+				Map<Long, Meter> innerMap = entry.getValue();
+				Iterator<Entry<Long, Meter>> innerItr = innerMap.entrySet().iterator();
+				List<Meter> meterList = new ArrayList<>(); 
+				while(innerItr.hasNext()) { 
+					Entry<Long, Meter> innerEntry = innerItr.next();
+					Meter meter = innerEntry.getValue();
+					meterList.add(meter); 
+				}
+				conn.setMeter(meterList);
+			}
+		}
+	}
+	
+	
+	private void resolvePropertyUsageTypeNames(String tenantId, List<Connection> connectionList, RequestInfo requestInfo) {
+		PropertyTaxResponseInfo prop = new PropertyTaxResponseInfo(); 
+		try {
+			Map<String, PropertyTaxResponseInfo> propTypeMap = getPropertyNameFromPTModule(tenantId, requestInfo); 
+			Map<String, PropertyTaxResponseInfo> usagTypeMap = getUsageNameFromPTModule(tenantId, requestInfo);
+			for(Connection conn : connectionList) { 
+				if(null != conn.getProperty()) { 
+					prop = propTypeMap.get(conn.getProperty().getPropertyTypeId()); 
+					if(null != prop) { 
+						conn.getProperty().setPropertyType(prop.getName());
+					}
+					prop = usagTypeMap.get(conn.getProperty().getUsageTypeId()); 
+					if(null != prop) { 
+						conn.getProperty().setUsageType(prop.getName());
+					}
+					prop = usagTypeMap.get(String.valueOf(conn.getSubUsageTypeId())); 
+					if(null != prop) { 
+						conn.setSubUsageType(prop.getName());
+					}
+				}
+			}
+		} catch(Exception e) {
+			LOGGER.error("Exception Encountered while fetching the name for Property or Usage Type ID" + e);
+		}
+	}
+	
+	public Map<String, PropertyTaxResponseInfo> getPropertyNameFromPTModule(final String tenantId, RequestInfo requestInfo) {
+		String url = baseUrl + propertyTypeSearch;
+		Map<String, PropertyTaxResponseInfo> propTypeMap = new HashMap<>();
+		final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+		final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
+		final PropertyTypeResponse propertyTypes = new RestTemplate().postForObject(url.toString(), request,
+				PropertyTypeResponse.class, tenantId);
+		if(null != propertyTypes) { 
+			LOGGER.info("Property Types fetched from the Property Module : " + propertyTypes);
+			if(null != propertyTypes.getPropertyTypes()) { 
+				for(PropertyTaxResponseInfo prop : propertyTypes.getPropertyTypes()) { 
+					propTypeMap.put(prop.getId(), prop); 
+				}
+			}
+		}
+		return propTypeMap;
+	}
+
+	public Map<String, PropertyTaxResponseInfo> getUsageNameFromPTModule(final String tenantId, RequestInfo requestInfo) {
+		String url = baseUrl + usageTypeSearch;
+		Map<String, PropertyTaxResponseInfo> usagTypeMap = new HashMap<>();
+		final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+		final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
+		final UsageTypeResponse usageTypes = new RestTemplate().postForObject(url.toString(), request,
+				UsageTypeResponse.class, tenantId);
+		if(null != usageTypes) { 
+			LOGGER.info("Usage Types fetched from the Property Module : " + usageTypes);
+			if(null != usageTypes.getUsageMasters()) { 
+				for(PropertyTaxResponseInfo usage : usageTypes.getUsageMasters()) { 
+					usagTypeMap.put(usage.getId(), usage);
+				}
+			}
+		}
+		return usagTypeMap;
 	}
     
     public boolean persistEstimationNoticeLog(EstimationNotice estimationNotice, long connectionId, String tenantId) { 
@@ -540,6 +673,10 @@ public class WaterConnectionRepository {
         	return true;
         }
         return false;
+    }
+    
+    public Long generateNextConsumerNumber() { 
+    	return jdbcTemplate.queryForObject(WaterConnectionQueryBuilder.getNextConsumerNumberFromSequence(), Long.class);
     }
     
 	public Map<String, Object> getObjectForInsertEstimationNotice(EstimationNotice estimationNotice, long connectionId,

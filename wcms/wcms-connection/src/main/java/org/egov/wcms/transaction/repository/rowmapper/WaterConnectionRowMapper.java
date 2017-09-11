@@ -41,47 +41,133 @@ package org.egov.wcms.transaction.repository.rowmapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import org.egov.common.contract.request.RequestInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.egov.wcms.transaction.model.Connection;
 import org.egov.wcms.transaction.model.ConnectionOwner;
+import org.egov.wcms.transaction.model.Meter;
+import org.egov.wcms.transaction.model.MeterReading;
 import org.egov.wcms.transaction.model.Property;
 import org.egov.wcms.transaction.web.contract.Address;
 import org.egov.wcms.transaction.web.contract.Boundary;
 import org.egov.wcms.transaction.web.contract.ConnectionLocation;
-import org.egov.wcms.transaction.web.contract.PropertyTaxResponseInfo;
-import org.egov.wcms.transaction.web.contract.PropertyTypeResponse;
-import org.egov.wcms.transaction.web.contract.RequestInfoWrapper;
-import org.egov.wcms.transaction.web.contract.UsageTypeResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpEntity;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 @Component
 public class WaterConnectionRowMapper {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(WaterConnectionRowMapper.class);
-	public static final String baseUrl = "http://pt-property:8080" ; 
-	public static final String usageTypeSearch = "/pt-property/property/usages/_search?ids={ids}&tenantId={tenantId}" ; 
-	public static final String propertyTypeSearch = "/pt-property/property/propertytypes/_search?ids={ids}&tenantId={tenantId}"; 
+	public static final String METERED = "METERED";
+	
+	public class ConnectionMeterRowMapper implements RowMapper<Meter> {
+		public Map<Long, Map<Long, Meter>> meterReadingMap = new HashMap<>();
+		@Override
+		public Meter mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+			if(meterReadingMap.containsKey(rs.getLong("connectionid"))) { 
+				Map<Long, Meter> innerMap = meterReadingMap.get(rs.getLong("connectionid")); 
+				if(innerMap.containsKey(rs.getLong("meterid"))) { 
+					Meter meter= innerMap.get(rs.getLong("meterid"));
+					List<MeterReading> meterReadingList = meter.getMeterReadings(); 
+					MeterReading reading = prepareMeterReadingObject(rs);
+					meterReadingList.add(reading);
+				} else { 
+					Meter meter = prepareMeterObject(rs);
+					innerMap.put(rs.getLong("meterid"), meter); 
+				}
+			} else { 
+				Meter meter = prepareMeterObject(rs);
+				Map<Long, Meter> innerMap = new HashMap<>();
+				innerMap.put(rs.getLong("meterid"), meter);
+				meterReadingMap.put(rs.getLong("connectionid"), innerMap);
+			}
+			return null; 
+		}
+		
+		private Meter prepareMeterObject(ResultSet rs) {
+			Meter meter = new Meter();
+			try {
+				meter.setId(rs.getLong("meterid"));
+				meter.setMeterMake(rs.getString("metermake"));
+				meter.setInitialMeterReading(rs.getString("initialmeterreading"));
+				meter.setMeterSlNo(rs.getString("meterslno"));
+				meter.setMeterCost(rs.getString("metercost"));
+				meter.setMeterModel(rs.getString("metermodel"));
+				meter.setMaximumMeterReading(rs.getString("maximummeterreading"));
+				meter.setMeterStatus(rs.getString("meterstatus"));
+				meter.setTenantId(rs.getString("metertenant")); 
+				meter.setMeterOwner(rs.getString("meterowner"));
+				MeterReading reading = prepareMeterReadingObject(rs);
+				List<MeterReading> meterReadingList = new ArrayList<>(); 
+				meterReadingList.add(reading);
+				meter.setMeterReadings(meterReadingList);
+			} catch (Exception e) {
+				LOGGER.error("Encountered Exception while creating Meter Object : " + e.getMessage());
+			}
+			return meter;
+		}
+		
+		private MeterReading prepareMeterReadingObject(ResultSet rs) {
+			MeterReading reading = new MeterReading();
+			try {
+				reading.setMeterId(rs.getLong("meterid"));
+				reading.setReading(rs.getLong("reading"));
+				reading.setReadingDate(rs.getLong("readingdate"));
+				reading.setGapCode(rs.getString("gapcode"));
+				if(StringUtils.isNotBlank(rs.getString("consumption"))) { 
+					reading.setConsumption(Long.parseLong(rs.getString("consumption")));
+				}
+				if(StringUtils.isNotBlank(rs.getString("consumptionadjusted"))) { 
+					reading.setConsumptionAdjusted(Long.parseLong(rs.getString("consumptionadjusted")));
+				}
+				if(StringUtils.isNotBlank(rs.getString("numberofdays"))) { 
+					reading.setNumberOfDays(Long.parseLong(rs.getString("numberofdays")));
+				}
+				reading.setResetFlag(rs.getBoolean("resetflag"));
+			} catch (Exception e) {
+				LOGGER.error("Encountered Exception while creating Meter Reading Object : " + e.getMessage());
+			}
+			return reading; 
+		}
+	}
 	
 	public class WaterConnectionPropertyRowMapper implements RowMapper<Connection> {
 		@Override
 		public Connection mapRow(final ResultSet rs, final int rowNum) throws SQLException {
 			final Connection connection = prepareConnectionObject(rs);
 			Property prop = new Property();
+			ConnectionOwner cOwner = new ConnectionOwner(); 
 			prop.setUsageTypeId(rs.getString("conn_usgtype"));
 			prop.setPropertyTypeId(rs.getString("conn_proptype"));
 			prop.setAddress(rs.getString("conn_propaddress"));
 			prop.setPropertyidentifier(rs.getString("conn_propid"));
+			prop.setLocality(Integer.toString(rs.getInt("propertylocation")));
 			if (null != rs.getString("propertyowner") && rs.getString("propertyowner") != "") {
 				prop.setNameOfApplicant(rs.getString("propertyowner"));
+				prop.setAdharNumber(rs.getString("aadhaarnumber"));
+				prop.setMobileNumber(rs.getString("mobilenumber"));
+				prop.setEmail(rs.getString("emailid"));
+				cOwner.setName(rs.getString("propertyowner"));
+				cOwner.setAadhaarNumber(rs.getString("aadhaarnumber"));
+				cOwner.setEmailId(rs.getString("emailid"));
+				cOwner.setMobileNumber(rs.getString("mobilenumber")); 
+				cOwner.setIsPrimaryOwner(rs.getBoolean("isprimaryowner"));
+				if(rs.getBoolean("isprimaryowner")) { 
+					cOwner.setIsSecondaryOwner(Boolean.FALSE);
+				} else { 
+					cOwner.setIsSecondaryOwner(Boolean.TRUE);
+				}
 			}
-			resolvePropertyUsageTypeNames(rs, prop);
+			
 			connection.setProperty(prop);
+			connection.setConnectionOwner(cOwner);
 			connection.setWithProperty(true);
 			return connection;
 		}
@@ -96,16 +182,23 @@ public class WaterConnectionRowMapper {
 			prop.setPropertyTypeId(rs.getString("conn_proptype"));
 			prop.setAddress(rs.getString("conn_propaddress"));
 			prop.setPropertyidentifier(rs.getString("conn_propid"));
-			resolvePropertyUsageTypeNames(rs, prop);
 			connection.setProperty(prop);
-			ConnectionOwner connOwner = ConnectionOwner.builder()
-					.name(rs.getString("name"))
-					.userName(rs.getString("username"))
-					.mobileNumber(rs.getString("mobilenumber"))
-					.emailId(rs.getString("emailid"))
-					.gender((rs.getString("gender").equals("1"))?"Male" : "Female")
-					.aadhaarNumber(rs.getString("aadhaarnumber")).build();
-			connection.setConnectionOwner(connOwner);
+			ConnectionOwner cOwner = new ConnectionOwner(); 
+			cOwner.setName(rs.getString("name"));
+			cOwner.setUserName(rs.getString("username"));
+			cOwner.setMobileNumber(rs.getString("mobilenumber"));
+			cOwner.setEmailId(rs.getString("emailid"));
+			cOwner.setAadhaarNumber(rs.getString("aadhaarnumber"));
+			cOwner.setIsPrimaryOwner(rs.getBoolean("isprimaryowner"));
+			if(rs.getBoolean("isprimaryowner")) { 
+				cOwner.setIsSecondaryOwner(Boolean.FALSE);
+			} else { 
+				cOwner.setIsSecondaryOwner(Boolean.TRUE);
+			}
+			if(null != rs.getString("gender") && !rs.getString("gender").isEmpty()) {
+				cOwner.setGender(rs.getString("gender").equals("1") ? "Male" : "Female");
+			}
+			connection.setConnectionOwner(cOwner);
 			ConnectionLocation connLoc = ConnectionLocation.builder()
 					.revenueBoundary(new Boundary(rs.getLong("revenueboundary"), null))
 					.locationBoundary(new Boundary(rs.getLong("locationboundary"), null))
@@ -139,31 +232,51 @@ public class WaterConnectionRowMapper {
 			connection.setSupplyType(rs.getString("supplytype_name"));
 			connection.setCategoryId(rs.getString("category_id"));
 			connection.setCategoryType(rs.getString("category_name"));
-			connection.setHscPipeSizeType(rs.getString("pipesize_sizeinmilimeter"));
+			connection.setHscPipeSizeType(rs.getString("pipesize_sizeininch"));
 			connection.setPipesizeId(rs.getString("pipesize_id"));
 			connection.setSourceTypeId(rs.getString("watersource_id"));
 			connection.setSourceType(rs.getString("watersource_name"));
 			connection.setNumberOfPersons(rs.getInt("conn_noofperson"));
 			connection.setStateId(rs.getLong("conn_stateid"));
 			connection.setParentConnectionId(rs.getLong("conn_parentconnectionid"));
+			connection.setHouseNumber(rs.getString("housenumber"));
 			connection.setWaterTreatmentId(rs.getString("conn_watertreatmentid"));
 			connection.setWaterTreatment(
 					(null != rs.getString("watertreatmentname") && rs.getString("watertreatmentname") != "")
 							? rs.getString("watertreatmentname") : "");
 			connection.setLegacyConsumerNumber(rs.getString("conn_legacyconsumernumber"));
+			connection.setManualConsumerNumber(rs.getString("manualconsumernumber"));
 			connection.setIsLegacy(rs.getBoolean("conn_islegacy"));
 			connection.setAcknowledgementNumber(rs.getString("conn_acknumber"));
 			connection.setConsumerNumber(rs.getString("conn_consumerNum"));
 			connection.setPropertyIdentifier(rs.getString("conn_propid"));
 			connection.setCreatedDate(rs.getString("createdtime"));
 			connection.setPlumberName(rs.getString("plumbername"));
-			connection.setBillSequenceNumber(rs.getLong("sequencenumber"));
+			connection.setManualReceiptNumber(rs.getString("manualreceiptnumber"));
+			connection.setManualReceiptDate(rs.getLong("manualreceiptdate"));
+			if(rs.getDouble("sequencenumber") > 0) {
+				DecimalFormat df = new DecimalFormat("####0.0000");
+				df.format(rs.getDouble("sequencenumber"));
+				connection.setBillSequenceNumber(Double.parseDouble(df.format(rs.getDouble("sequencenumber"))));
+			}
 			connection.setOutsideULB(rs.getBoolean("outsideulb"));
-			connection.setMeterOwner(rs.getString("meterowner"));
-			connection.setMeterModel(rs.getString("metermodel"));
+			//connection.setMeterOwner(rs.getString("meterowner"));
+			//connection.setMeterModel(rs.getString("metermodel"));
 			Long execDate = rs.getLong("execdate");
 			if (null != execDate) {
 				connection.setExecutionDate(execDate);
+			}
+			if(null != rs.getString("subusagetype") && !rs.getString("subusagetype").isEmpty())
+					connection.setSubUsageTypeId(Long.parseLong(rs.getString("subusagetype")));
+			if(rs.getString("conn_billtype").equals(METERED) && rs.getBoolean("conn_islegacy")) { 
+				Meter meter = Meter.builder().meterMake(rs.getString("metermake"))
+						.meterCost(rs.getString("metercost"))
+						.meterSlNo(rs.getString("meterslno"))
+						.initialMeterReading(rs.getString("initialmeterreading"))
+						.build();
+				List<Meter> meterList = new ArrayList<>();
+				meterList.add(meter);
+				connection.setMeter(meterList);
 			}
 		} catch (Exception ex) {
 			LOGGER.error("Exception encountered while mapping the Result Set in Mapper : " + ex);
@@ -171,59 +284,5 @@ public class WaterConnectionRowMapper {
 		return connection;
 	}
 	
-	private void resolvePropertyUsageTypeNames(ResultSet rs, Property prop) { 
-		try { 
-			Integer[] propertyIdList = { Integer.parseInt(rs.getString("conn_proptype")) } ; 
-			String tenantId = rs.getString("conn_tenant"); 
-			final PropertyTypeResponse propertyTypes = getPropertyNameFromPTModule(propertyIdList, tenantId); 
-			if(null != propertyTypes && null != propertyTypes.getPropertyTypes()) { 
-				for (final PropertyTaxResponseInfo propertyResponse : propertyTypes.getPropertyTypes()){
-					if(propertyResponse.getName()!=null && !propertyResponse.getName().isEmpty()) { 
-						prop.setPropertyType(propertyResponse.getName());
-					}
-				}
-			}
-		} catch(Exception e) {
-			LOGGER.error("Exception Encountered while fetching the name for Property Type ID" + e);
-		}
-		
-		try { 
-			Integer[] usageIdList = { Integer.parseInt(rs.getString("conn_usgtype")) } ; 
-			String tenantId = rs.getString("conn_tenant"); 
-			final UsageTypeResponse usageTypes = getUsageNameFromPTModule(usageIdList, tenantId); 
-			if(null != usageTypes && null != usageTypes.getUsageMasters()) { 
-				for (final PropertyTaxResponseInfo usageResponse : usageTypes.getUsageMasters()){
-					if(usageResponse.getName()!=null && !usageResponse.getName().isEmpty()) { 
-						prop.setUsageType(usageResponse.getName());
-					}
-				}
-			}
-		} catch(Exception e) {
-			LOGGER.error("Exception Encountered while fetching the name for Usage Type ID" + e);
-		}
-	}
 	
-	public PropertyTypeResponse getPropertyNameFromPTModule(
-			final Integer[] propertyTypeId, final String tenantId) {
-		String url = baseUrl + propertyTypeSearch;
-		LOGGER.info("URL for Property Types : "+ url);
-		final RequestInfo requestInfo = RequestInfo.builder().ts(123456789L).build();
-		final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
-		final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
-		final PropertyTypeResponse propertyTypes = new RestTemplate().postForObject(url.toString(), request,
-				PropertyTypeResponse.class, propertyTypeId, tenantId);
-		return propertyTypes;
-	}
-
-	public UsageTypeResponse getUsageNameFromPTModule(
-			final Integer[] usageTypeId, final String tenantId) {
-		String url = baseUrl + usageTypeSearch;
-		LOGGER.info("URL for Usage Types : "+ url);
-		final RequestInfo requestInfo = RequestInfo.builder().ts(123456789L).build();
-		final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
-		final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
-		final UsageTypeResponse usageTypes = new RestTemplate().postForObject(url.toString(), request,
-				UsageTypeResponse.class, usageTypeId, tenantId);
-		return usageTypes;
-	}
 }

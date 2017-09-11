@@ -38,6 +38,7 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 package org.egov.egf.master.web.contract;
+
 import java.util.Date;
 
 import javax.validation.constraints.NotNull;
@@ -52,13 +53,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 
-@JsonPropertyOrder({ "id","scheme","code","name","validFrom","validTo","active","departmentId"})
+@JsonPropertyOrder({ "id", "scheme", "code", "name", "validFrom", "validTo", "active", "departmentId" })
 public class SubSchemeContract extends AuditableContract {
 
 	private String id;
@@ -84,5 +86,9 @@ public class SubSchemeContract extends AuditableContract {
 	private Boolean active;
 
 	private String departmentId;
+
+	public SubSchemeContract(String id) {
+		this.id = id;
+	}
 
 }

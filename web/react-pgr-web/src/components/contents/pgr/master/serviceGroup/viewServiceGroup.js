@@ -13,20 +13,8 @@ import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../../api/api';
+import styles from '../../../../../styles/material-ui';
 import {translate} from '../../../../common/common';
-
-const styles = {
-  headerStyle : {
-    fontSize : 19
-  },
-  addBorderBottom:{
-    borderBottom: '1px solid #eee',
-    padding: '10px'
-  },
-  marginStyle:{
-    margin: '15px'
-  }
-};
 
 var _this;
 
@@ -86,28 +74,28 @@ class ViewServiceGroup extends Component {
                {translate('pgr.lbl.view')} {translate('pgr.lbl.grievance.category') }
              < /div>}/>
              <CardText style={{padding:'8px 16px 0'}}>
-               <Row style={styles.addBorderBottom}>
-                 <Col xs={6} md={3}>
-                  {translate("core.lbl.add.name")}
-                 </Col>
-                 <Col xs={6} md={3}>
-                  {viewServiceGroup.name ? viewServiceGroup.name : ''}
-                 </Col>
-                 <Col xs={6} md={3}>
-                   {translate("core.lbl.code")}
-                 </Col>
-                 <Col xs={6} md={3}>
-                  {viewServiceGroup.code ? viewServiceGroup.code : ''}
-                 </Col>
-               </Row>
-               <Row style={styles.addBorderBottom}>
-                 <Col xs={6} md={3}>
-                  {translate("core.lbl.description")}
-                 </Col>
-                 <Col xs={6} md={3}>
-                  {viewServiceGroup.description? viewServiceGroup.description : ''}
-                 </Col>
-               </Row>
+               <List>
+                 <Row>
+                   <Col xs={12} sm={6} md={4} lg={3}>
+                     <ListItem
+                       primaryText={translate("core.lbl.add.name")}
+                       secondaryText={<p style={styles.customColumnStyle}>{viewServiceGroup.name ? viewServiceGroup.name : ''}</p>}
+                     />
+                   </Col>
+                   <Col xs={12} sm={6} md={4} lg={3}>
+                     <ListItem
+                       primaryText={translate("core.lbl.code")}
+                       secondaryText={<p style={styles.customColumnStyle}>{viewServiceGroup.code ? viewServiceGroup.code : ''}</p>}
+                     />
+                   </Col>
+                   <Col xs={12} sm={6} md={4} lg={3}>
+                     <ListItem
+                       primaryText={translate("core.lbl.description")}
+                       secondaryText={<p style={styles.customColumnStyle}>{viewServiceGroup.description? viewServiceGroup.description : ''}</p>}
+                     />
+                   </Col>
+                 </Row>
+               </List>
              </CardText>
           </Card>
         </Grid>

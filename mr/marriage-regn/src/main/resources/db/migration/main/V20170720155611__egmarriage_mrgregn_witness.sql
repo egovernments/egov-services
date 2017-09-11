@@ -1,4 +1,5 @@
 create table egmr_marriageregn_witness(
+       id BIGINT PRIMARY KEY NOT NULL,
        applicationnumber CHARACTER VARYING(250) NOT NULL,  
        tenantid CHARACTER VARYING(250) NOT NULL, 
        witnessno INTEGER NOT NULL,

@@ -100,7 +100,7 @@ var dat = {
 							"pattern": "^([0-9]{2,2})+(\/[0-9]{4,4})+(\-[0-9]{2,2})+(\/[0-9]{6,6})+$",
 							"type": "text",
 							"isRequired": false,
-							"isDisabled": false, 
+							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": "Enter valid Receipt Number (ex: 08/2017-18/000418)"
 						},
@@ -172,7 +172,7 @@ var dat = {
 			}
 		],
 		"result": {
-			"header": [{label: "collection.create.receiptNumber"},{label: "collection.search.receiptDate"}, {label: "collection.create.serviceType"}, {label: "collection.search.billNumber"},{label: "collection.search.billDescription"},{label: "collection.search.paidBy"},{label: "collection.search.amount"},{label: "collection.create.modeOfPayment"},{label:"collection.create.status"}],
+			"header": [{label: "collection.create.receiptNumber"},{label: "collection.search.receiptDate", isDate:true}, {label: "collection.create.serviceType"}, {label: "collection.search.billNumber"},{label: "collection.search.billDescription"},{label: "collection.search.paidBy"},{label: "collection.search.amount"},{label: "collection.create.modeOfPayment"},{label:"collection.create.status"}],
 			"values": ["Bill[0].billDetails[0].receiptNumber","Bill[0].billDetails[0].receiptDate", "Bill[0].billDetails[0].businessService", "Bill[0].billDetails[0].billNumber","Bill[0].billDetails[0].billDescription","Bill[0].paidBy","Bill[0].billDetails[0].amountPaid","instrument.instrumentType.name","Bill[0].billDetails[0].status"],
 			"resultPath": "Receipt",
 			"rowClickUrlUpdate": "/update/collection/categoryType/{id}",

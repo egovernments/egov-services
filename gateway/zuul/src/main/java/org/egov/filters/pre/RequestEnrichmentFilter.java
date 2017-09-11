@@ -38,6 +38,8 @@ public class RequestEnrichmentFilter extends ZuulFilter {
     private static final String JSON_TYPE = "json";
     private final ObjectMapper objectMapper;
     private static final String USER_INFO_HEADER_NAME = "x-user-info";
+    private static final String PASS_THROUGH_GATEWAY_HEADER_NAME = "x-pass-through-gateway";
+    private static final String PASS_THROUGH_GATEWAY_HEADER_VALUE = "true";
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public RequestEnrichmentFilter() {
@@ -72,6 +74,7 @@ public class RequestEnrichmentFilter extends ZuulFilter {
         RequestContext ctx = RequestContext.getCurrentContext();
         addCorrelationIdHeader(ctx);
         addUserInfoHeader(ctx);
+        addPassThroughGatewayHeader(ctx);
     }
 
     private void addUserInfoHeader(RequestContext ctx) {
@@ -90,6 +93,10 @@ public class RequestEnrichmentFilter extends ZuulFilter {
 
     private void addCorrelationIdHeader(RequestContext ctx) {
         ctx.addZuulRequestHeader(CORRELATION_ID_HEADER_NAME, getCorrelationId());
+    }
+
+    private void addPassThroughGatewayHeader(RequestContext ctx) {
+        ctx.addZuulRequestHeader(PASS_THROUGH_GATEWAY_HEADER_NAME, PASS_THROUGH_GATEWAY_HEADER_VALUE);
     }
 
     private void modifyRequestBody() {

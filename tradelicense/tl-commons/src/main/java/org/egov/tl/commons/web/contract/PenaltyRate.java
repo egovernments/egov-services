@@ -26,25 +26,24 @@ public class PenaltyRate {
 	private Long id = null;
 
 	@JsonProperty("tenantId")
-	@Pattern(regexp = ".*[^ ].*",message="{error.tenantId.emptyspaces}")
-	@NotEmpty(message="{error.tenantId.empty}")
-	@Length(min = 4, max = 128, message="{error.tenantId.empty}")
+	@Pattern(regexp = ".*[^ ].*", message = "{error.tenantId.emptyspaces}")
+	@NotEmpty(message = "{error.tenantId.empty}")
+	@Length(min = 4, max = 128, message = "{error.tenantId.empty}")
 	private String tenantId = null;
 
 	@JsonProperty("applicationType")
-	@NotNull(message="{error.applicationType.null}")
 	private ApplicationTypeEnum applicationType = null;
 
 	@JsonProperty("fromRange")
-	@NotNull(message="{error.fromRange.null}")
+	@NotNull(message = "{error.fromRange.null}")
 	private Long fromRange = null;
 
 	@JsonProperty("toRange")
-	@NotNull(message="{error.toRange.null}")
+	@NotNull(message = "{error.toRange.null}")
 	private Long toRange = null;
 
 	@JsonProperty("rate")
-	@NotNull(message="{error.rate.null}")
+	@NotNull(message = "{error.rate.null}")
 	private Double rate = null;
 
 	@JsonProperty("auditDetails")

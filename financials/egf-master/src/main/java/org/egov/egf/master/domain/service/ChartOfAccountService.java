@@ -1,13 +1,14 @@
 package org.egov.egf.master.domain.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
+import org.egov.common.domain.exception.ErrorCode;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.AccountCodePurpose;
-import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.model.ChartOfAccount;
 import org.egov.egf.master.domain.model.ChartOfAccountSearch;
 import org.egov.egf.master.domain.repository.AccountCodePurposeRepository;
@@ -16,8 +17,8 @@ import org.egov.egf.master.web.requests.ChartOfAccountRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.SmartValidator;
 
@@ -36,33 +37,65 @@ public class ChartOfAccountService {
 
 	private BindingResult validate(List<ChartOfAccount> chartofaccounts, String method, BindingResult errors) {
 
-		try {
-			switch (method) {
-			case Constants.ACTION_VIEW:
-				// validator.validate(chartOfAccountContractRequest.getChartOfAccount(),
-				// errors);
-				break;
-			case Constants.ACTION_CREATE:
-				Assert.notNull(chartofaccounts, "ChartOfAccounts to create must not be null");
-				for (ChartOfAccount chartOfAccount : chartofaccounts) {
-					validator.validate(chartOfAccount, errors);
-				}
-				break;
-			case Constants.ACTION_UPDATE:
-				Assert.notNull(chartofaccounts, "ChartOfAccounts to update must not be null");
-				for (ChartOfAccount chartOfAccount : chartofaccounts) {
-				        Assert.notNull(chartOfAccount.getId(), "ChartOfAccount ID to update must not be null");
-					validator.validate(chartOfAccount, errors);
-				}
-				break;
-			default:
-
-			}
-		} catch (IllegalArgumentException e) {
+                try {
+                    switch (method) {
+                    case Constants.ACTION_VIEW:
+                        // validator.validate(chartOfAccountContractRequest.getChartOfAccount(),
+                        // errors);
+                        break;
+                    case Constants.ACTION_CREATE:
+                        if (chartofaccounts == null) {
+                            throw new InvalidDataException("chartofaccounts", ErrorCode.NOT_NULL.getCode(), null);
+                        }
+                        for (ChartOfAccount chartOfAccount : chartofaccounts) {
+                            validator.validate(chartOfAccount, errors);
+                            if (!chartOfAccountRepository.uniqueCheck("name", chartOfAccount)) {
+                                errors.addError(new FieldError("chartOfAccount", "name", chartOfAccount.getName(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                            }
+                            if (!chartOfAccountRepository.uniqueCheck("glcode", chartOfAccount)) {
+                                errors.addError(new FieldError("chartOfAccount", "glcode", chartOfAccount.getGlcode(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                            }
+                        }
+                        break;
+                    case Constants.ACTION_UPDATE:
+                        if (chartofaccounts == null) {
+                            throw new InvalidDataException("chartofaccounts", ErrorCode.NOT_NULL.getCode(), null);
+                        }
+                        for (ChartOfAccount chartOfAccount : chartofaccounts) {
+                            if (chartOfAccount.getId() == null) {
+                                throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), chartOfAccount.getId());
+                            }
+                            validator.validate(chartOfAccount, errors);
+                            if (!chartOfAccountRepository.uniqueCheck("name", chartOfAccount)) {
+                                errors.addError(new FieldError("chartOfAccount", "name", chartOfAccount.getName(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                            }
+                            if (!chartOfAccountRepository.uniqueCheck("glcode", chartOfAccount)) {
+                                errors.addError(new FieldError("chartOfAccount", "glcode", chartOfAccount.getGlcode(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                            }
+                        }
+                        break;
+                    case Constants.ACTION_SEARCH:
+                        if (chartofaccounts == null) {
+                            throw new InvalidDataException("chartofaccounts", ErrorCode.NOT_NULL.getCode(), null);
+                        }
+                        for (ChartOfAccount chartofaccount : chartofaccounts) {
+                            if (chartofaccount.getTenantId() == null) {
+                                throw new InvalidDataException("tenantId", ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
+                                        chartofaccount.getTenantId());
+                            }
+                        }
+                        break;
+                    default:
+        
+                    }
+                } catch (IllegalArgumentException e) {
 			errors.addError(new ObjectError("Missing data", e.getMessage()));
 		}
 		return errors;
-
 	}
 
 	public List<ChartOfAccount> fetchRelated(List<ChartOfAccount> chartofaccounts) {
@@ -117,9 +150,25 @@ public class ChartOfAccountService {
 		chartOfAccountRepository.add(request);
 	}
 
-	public Pagination<ChartOfAccount> search(ChartOfAccountSearch chartOfAccountSearch) {
-		return chartOfAccountRepository.search(chartOfAccountSearch);
-	}
+        public Pagination<ChartOfAccount> search(ChartOfAccountSearch chartOfAccountSearch, BindingResult errors) {
+            
+            try {
+                
+                List<ChartOfAccount> chartOfAccounts = new ArrayList<>();
+                chartOfAccounts.add(chartOfAccountSearch);
+                validate(chartOfAccounts, Constants.ACTION_SEARCH, errors);
+    
+                if (errors.hasErrors()) {
+                    throw new CustomBindException(errors);
+                }
+            
+            } catch (CustomBindException e) {
+    
+                throw new CustomBindException(errors);
+            }
+    
+            return chartOfAccountRepository.search(chartOfAccountSearch);
+        }
 
 	@Transactional
 	public ChartOfAccount save(ChartOfAccount chartOfAccount) {

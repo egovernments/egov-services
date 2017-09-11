@@ -15,7 +15,7 @@ import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import Checkbox from 'material-ui/Checkbox';
-
+import {translate} from '../../../common/common';
 
 var flag = 0;
 const styles = {
@@ -96,17 +96,19 @@ class InboxAcknowledgement extends Component {
     super(props);
     this.state= {
           status:'',
+          upicNumber:'',
     }
-  } 
+  }
 
 
   componentDidMount() {
     //call boundary service fetch wards,location,zone data
     var currentThis = this;
 	this.setState({
-		status : localStorage['inboxStatus'] || ''
+		status : localStorage['inboxStatus'] || '' ,
+    upicNumber : localStorage['upicNumber']
 	});
-  }  
+  }
 
 
 
@@ -119,19 +121,19 @@ class InboxAcknowledgement extends Component {
 
     let cThis = this;
 
-    return ( 
+    return (
 			<div>
 				<h3 style={{padding:15}}>Acknowledgement</h3>
-			
+
 					<Card className="uiCard" >
 						<CardText style={styles.reducePadding} >
 							<Grid fluid >
 								<Row style={{paddingTop:8, paddingBottom:15}}>
 									<Col xs={12} md={12}>
 									  <Row>
-										<Col xs={12} md={12} style={{textAlign:'center'}}>
-											<h3>Application Submitted</h3>
-											{this.state.status} Successfully
+										<Col xs={12} md={12} style={{textAlign:'center',paddingTop:15,fontSize: 16}}>
+											{this.state.status == 'Forwarded' && translate('pt.create.groups.acknowledgement.forwarded')}
+											{this.state.status == 'Approved' && translate('pt.create.groups.acknowledgement.approved')} : <span style={{fontWeight:500}}>{this.state.upicNumber}</span>
 										</Col>
 									  </Row>
 									</Col>
@@ -149,9 +151,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  
+
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(InboxAcknowledgement);
-
-

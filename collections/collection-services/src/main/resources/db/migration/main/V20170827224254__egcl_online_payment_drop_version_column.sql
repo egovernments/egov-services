@@ -1,0 +1,1 @@
+alter table egcl_onlinepayments drop column version;

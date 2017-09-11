@@ -43,6 +43,8 @@ public class Bill   {
 	private List<BillDetail> billDetails = new ArrayList<>(); //for billing-service
 	
 	private String tenantId;
+
+    private String mobileNumber;
 	
 }
 

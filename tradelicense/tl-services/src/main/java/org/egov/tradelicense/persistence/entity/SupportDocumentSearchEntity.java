@@ -1,7 +1,6 @@
 package org.egov.tradelicense.persistence.entity;
 
 import org.egov.tradelicense.domain.model.AuditDetails;
-import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.SupportDocumentSearch;
 
 import lombok.AllArgsConstructor;
@@ -18,9 +17,13 @@ public class SupportDocumentSearchEntity {
 
 	private Long id;
 
-	private Long licenseId;
+//	private Long licenseId;
+	
+	private String tenantId;
 
 	private Long documentTypeId;
+	
+	private Long applicationId;
 
 	private String documentTypeName;
 
@@ -44,47 +47,60 @@ public class SupportDocumentSearchEntity {
 
 		supportDocument.setId(this.id);
 
-		supportDocument.setLicenseId(this.licenseId);
+//		supportDocument.setLicenseId(this.licenseId);
+		
+		supportDocument.setTenantId( this.tenantId);
 
+		supportDocument.setApplicationId( this.applicationId);
+		
 		supportDocument.setDocumentTypeId(this.documentTypeId);
 
-		supportDocument.setFileStoreId(String.valueOf(this.fileStoreId));
+		supportDocument.setFileStoreId(this.fileStoreId);
 
 		supportDocument.setComments(this.comments);
 
 		supportDocument.setDocumentTypeName(this.documentTypeName);
 
-		supportDocument.setCreatedBy(this.createdBy);
-		supportDocument.setCreatedTime(this.createdTime);
-		supportDocument.setLastModifiedBy(this.lastModifiedBy);
-		supportDocument.setLastModifiedTime(this.lastModifiedTime);
+		auditDetails.setCreatedBy(this.createdBy);
+
+		auditDetails.setCreatedTime(this.createdTime);
+
+		auditDetails.setLastModifiedBy(this.lastModifiedBy);
+
+		auditDetails.setLastModifiedTime(this.lastModifiedTime);
+
+		supportDocument.setAuditDetails(auditDetails);
 
 		return supportDocument;
 	}
 
 	public SupportDocumentSearchEntity toEntity(SupportDocumentSearch supportDocument) {
 
+		AuditDetails auditDetails = supportDocument.getAuditDetails();
+
 		this.id = supportDocument.getId();
 
-		this.licenseId = supportDocument.getLicenseId();
+//		this.licenseId = supportDocument.getLicenseId();
 
+		this.tenantId = supportDocument.getTenantId();
+		
+		this.applicationId = supportDocument.getApplicationId();
+		
 		this.documentTypeId = supportDocument.getDocumentTypeId();
 
-		if (supportDocument.getFileStoreId() != null) {
-			this.fileStoreId = supportDocument.getFileStoreId().toString();
-		}
+		this.fileStoreId = supportDocument.getFileStoreId();
 
 		this.documentTypeName = supportDocument.getDocumentTypeName();
 
 		this.comments = supportDocument.getComments();
 
-		this.createdBy = supportDocument.getCreatedBy();
+		this.createdBy = (auditDetails == null) ? null : auditDetails.getCreatedBy();
 
-		this.lastModifiedBy = supportDocument.getLastModifiedBy();
+		this.lastModifiedBy = (auditDetails == null) ? null : auditDetails.getLastModifiedBy();
 
-		this.createdTime = supportDocument.getCreatedTime();
+		this.createdTime = (auditDetails == null) ? null : auditDetails.getCreatedTime();
 
-		this.lastModifiedTime = supportDocument.getLastModifiedTime();
+		this.lastModifiedTime = (auditDetails == null) ? null : auditDetails.getLastModifiedTime();
 
 		return this;
 	}

@@ -15,6 +15,7 @@ import org.egov.egf.instrument.persistence.entity.SurrenderReasonSearchEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -28,8 +29,9 @@ public class SurrenderReasonJdbcRepository extends JdbcRepository {
 		LOG.debug("end init surrenderReason");
 	}
 
-	public SurrenderReasonJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+	public SurrenderReasonJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcTemplate jdbcTemplate) {
 		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+		this.jdbcTemplate = jdbcTemplate;
 	}
 
 	public SurrenderReasonEntity create(SurrenderReasonEntity entity) {

@@ -1,0 +1,9 @@
+    "voucherSubTypes": [
+        {
+            "id": "b96561462fdc484fa97fa72c3944ad89",
+            "voucherType": "STANDARD_VOUCHER_TYPE_CONTRA",
+            "voucherName": "BankToBankk",
+            "exclude": true,
+            "tenantId": "default"
+        }
+    ]

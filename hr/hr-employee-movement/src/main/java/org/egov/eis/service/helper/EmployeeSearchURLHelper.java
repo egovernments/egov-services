@@ -17,7 +17,6 @@ public class EmployeeSearchURLHelper {
     public String searchURL(final Long id, final String tenantId) {
         final String baseUrl = propertiesManager.getHrEmployeeServiceHostName()
                 + propertiesManager.getHrEmployeeServiceEmployeesBasePath()
-                + "/" + id
                 + propertiesManager.getHrEmployeeServiceEmployeesSearchPath();
         final StringBuilder searchURL = new StringBuilder(baseUrl + "?");
 

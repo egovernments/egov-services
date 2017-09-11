@@ -83,7 +83,7 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
         while (rs.next()) {
             final Long assetId = (Long) rs.getObject("id");
 
-            log.info("agreementid in row mapper" + assetId);
+            log.debug("agreementid in row mapper" + assetId);
 
             Asset asset = map.get(assetId);
             if (asset == null) {
@@ -162,24 +162,27 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                 assetCategory.setAccumulatedDepreciationAccount((Long) rs.getObject("accumulatedDepreciationAccount"));
                 assetCategory.setRevaluationReserveAccount((Long) rs.getObject("revaluationReserveAccount"));
                 assetCategory.setUnitOfMeasurement((Long) rs.getObject("unitOfMeasurement"));
+                assetCategory.setTenantId(rs.getString("tenantId"));
 
                 asset.setAssetCategory(assetCategory);
 
-                log.info("AssetRowMapper asset:: " + asset);
+                log.debug("AssetRowMapper asset:: " + asset);
                 map.put(assetId, asset);
             }
-            List<YearWiseDepreciation> ywd = asset.getYearWiseDepreciation();
-            if (ywd == null) {
-                ywd = new ArrayList<>();
-                asset.setYearWiseDepreciation(ywd);
-            }
+
             final YearWiseDepreciation ywdObject = new YearWiseDepreciation();
             ywdObject.setId((Long) rs.getObject("ywd_id"));
             ywdObject.setAssetId((Long) rs.getObject("assetid"));
             ywdObject.setDepreciationRate(rs.getDouble("ywd_depreciationrate"));
             ywdObject.setFinancialYear(rs.getString("financialyear"));
             ywdObject.setUsefulLifeInYears((Long) rs.getObject("usefullifeinyears"));
-            ywd.add(ywdObject);
+            ywdObject.setTenantId(rs.getString("tenantId"));
+
+            final List<YearWiseDepreciation> ywd = asset.getYearWiseDepreciation();
+            if (ywd == null)
+                asset.setYearWiseDepreciation(new ArrayList<>());
+            else
+                ywd.add(ywdObject);
 
             asset.setYearWiseDepreciation(ywd);
         }

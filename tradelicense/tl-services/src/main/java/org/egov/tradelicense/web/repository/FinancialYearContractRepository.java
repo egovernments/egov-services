@@ -5,11 +5,11 @@ import java.util.Date;
 
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tradelicense.common.config.PropertiesManager;
-import org.egov.tradelicense.common.domain.exception.InvalidInputException;
+import org.egov.tradelicense.common.domain.exception.EndPointException;
 import org.egov.tradelicense.web.contract.FinancialYearContract;
-import org.egov.tradelicense.web.requests.FinancialYearContractResponse;
 import org.egov.tradelicense.web.requests.TlMasterRequestInfo;
 import org.egov.tradelicense.web.requests.TlMasterRequestInfoWrapper;
+import org.egov.tradelicense.web.response.FinancialYearContractResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -38,9 +38,8 @@ public class FinancialYearContractRepository {
 		String searchUrl = propertiesManager.getFinancialYearServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
-		
-		content.append("ids=" + id);
-		
+
+		content.append("id=" + id);
 
 		if (tenantId != null) {
 			content.append("&tenantId=" + tenantId);
@@ -54,7 +53,8 @@ public class FinancialYearContractRepository {
 					FinancialYearContractResponse.class);
 
 		} catch (Exception e) {
-			throw new InvalidInputException("Error connecting to Location end point " + url);
+			throw new EndPointException("Error connecting to Location end point " + url,
+					requestInfoWrapper.getRequestInfo());
 		}
 
 		if (financialYearContractResponse != null && financialYearContractResponse.getFinancialYears() != null
@@ -66,6 +66,7 @@ public class FinancialYearContractRepository {
 		}
 
 	}
+
 	public FinancialYearContract findFinancialYearIdByDate(String tenantId, Long date,
 			RequestInfoWrapper requestInfoWrapper) {
 
@@ -92,7 +93,8 @@ public class FinancialYearContractRepository {
 					FinancialYearContractResponse.class);
 
 		} catch (Exception e) {
-			throw new InvalidInputException("Error connecting to Location end point " + url);
+			throw new EndPointException("Error connecting to Location end point " + url,
+					requestInfoWrapper.getRequestInfo());
 		}
 
 		if (financialYearContractResponse != null && financialYearContractResponse.getFinancialYears() != null

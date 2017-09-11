@@ -61,6 +61,22 @@ public class InstrumentRepository {
         LOGGER.info("Response from instrument service: " + instrumentList);
         return !instrumentList.isEmpty() ? instrumentList.get(0) : null;
     }
+
+    public List<Instrument> searchInstrumentsByPaymentMode(final String paymentMode,final String tenantId,final RequestInfo requestInfo) {
+        StringBuilder builder = new StringBuilder();
+        String hostname = applicationProperties.getInstrumentServiceHost();
+        String baseUri = applicationProperties.getSearchInstrumentByPaymentMode();
+        builder.append(hostname).append(baseUri);
+
+        LOGGER.info("Request to instrument search: "
+                + baseUri.toString());
+        LOGGER.info("URI Instrument search: " + builder.toString());
+        List<Instrument> instrumentList = restTemplate.postForObject(builder.toString(),
+                requestInfo, InstrumentResponse.class, paymentMode,tenantId).getInstruments();
+        LOGGER.info("Response from instrument service: " + instrumentList);
+        return instrumentList;
+
+    }
 	
 	public String getAccountCodeId(RequestInfo requestinfo,
 			Instrument instrument, String tenantId){

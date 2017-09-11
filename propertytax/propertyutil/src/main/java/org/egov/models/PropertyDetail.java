@@ -147,7 +147,7 @@ public class PropertyDetail {
 	private List<Factors> factors;
 
 	@JsonProperty("assessmentDates")
-	private AssessmentDate assessmentDates = null;
+	private List<AssessmentDate> assessmentDates = null;
 
 	@JsonProperty("builderDetails")
 	private BuilderDetail builderDetails = null;
@@ -158,4 +158,8 @@ public class PropertyDetail {
     
     @JsonProperty("bpaDate")
     private String bpaDate;
+    
+    @JsonProperty("subUsage")
+    @Size(min = 1, max = 128)
+    private String subUsage = null;
 }

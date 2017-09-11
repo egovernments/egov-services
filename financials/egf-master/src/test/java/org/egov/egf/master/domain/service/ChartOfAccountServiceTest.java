@@ -2,7 +2,6 @@ package org.egov.egf.master.domain.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -65,6 +64,7 @@ public class ChartOfAccountServiceTest {
 	public final void testAdd() {
 		when(accountCodePurposeRepository.findById(any(AccountCodePurpose.class))).thenReturn(getAccountCodePurpose());
 		when(chartOfAccountRepository.findById(any(ChartOfAccount.class))).thenReturn(getChartOfAccount());
+		when(chartOfAccountRepository.uniqueCheck(any(String.class), any(ChartOfAccount.class))).thenReturn(true);
 		chartOfAccounts.add(getChartOfAccount());
 		chartOfAccountService.add(chartOfAccounts, errors);
 	}
@@ -74,6 +74,7 @@ public class ChartOfAccountServiceTest {
 		when(accountCodePurposeRepository.findById(any(AccountCodePurpose.class))).thenReturn(getAccountCodePurpose());
 		when(chartOfAccountRepository.findById(any(ChartOfAccount.class))).thenReturn(getChartOfAccount());
 		chartOfAccounts.add(getChartOfAccount());
+		when(chartOfAccountRepository.uniqueCheck(any(String.class), any(ChartOfAccount.class))).thenReturn(true);
 		chartOfAccountService.update(chartOfAccounts, errors);
 	}
 
@@ -111,7 +112,7 @@ public class ChartOfAccountServiceTest {
 		Pagination<ChartOfAccount> expectedResult = new Pagination<>();
 		expectedResult.setPagedData(search);
 		when(chartOfAccountRepository.search(any(ChartOfAccountSearch.class))).thenReturn(expectedResult);
-		Pagination<ChartOfAccount> actualResult = chartOfAccountService.search(getChartOfAccountSearch());
+		Pagination<ChartOfAccount> actualResult = chartOfAccountService.search(getChartOfAccountSearch(), errors);
 		assertEquals(expectedResult, actualResult);
 	}
 
@@ -169,6 +170,7 @@ public class ChartOfAccountServiceTest {
 		chartOfAccountSearch.setPageSize(0);
 		chartOfAccountSearch.setOffset(0);
 		chartOfAccountSearch.setSortBy("Sort");
+		chartOfAccountSearch.setTenantId("default");
 		return chartOfAccountSearch;
 	}
 

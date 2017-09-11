@@ -227,6 +227,45 @@ public class UtilityHelper {
 		return isExists;
 
 	}
+	
+	
+	
+	
+	/**
+	 * This will check whether any record exists with the given tenantId & name
+	 * in database or not
+	 * 
+	 * @param tenantId
+	 * @param name
+	 * @return True / false if record exists / record does n't exists
+	 */
+	public Boolean checkWhetherLicenseStatusDuplicateWithModuleType(String tenantId, String code, String moduleType, String tableName) {
+
+		Boolean isExists = Boolean.TRUE;
+
+		String query = UtilityBuilder.getUniqueLicenseStatusValidationQuerywithModuleType(tenantId, code, moduleType, tableName);
+
+		int count = 0;
+
+		try {
+
+			MapSqlParameterSource parameters = new MapSqlParameterSource();
+			count = (Integer) namedParameterJdbcTemplate.queryForObject(query, parameters, Integer.class);
+
+
+		} catch (Exception e) {
+
+			log.error("error while executing the query :"+ query + " , error message : " +  e.getMessage());
+
+		}
+
+		if (count == 0)
+			isExists = Boolean.FALSE;
+
+		return isExists;
+
+	}
+
 
 	/**
 	 * This will check whether any record exists with the given tenantId ,code &

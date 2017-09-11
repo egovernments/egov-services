@@ -26,7 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  *
  */
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "org.egov")
 @EnableWebMvc
 @Import({ TracerConfiguration.class })
 public class TradeLicenseApplication {
@@ -48,7 +48,7 @@ public class TradeLicenseApplication {
 	public RestTemplate restTemplate() {
 		return new RestTemplate();
 	}
-	
+
 	@Value("${app.timezone}")
 	private String timeZone;
 
@@ -61,8 +61,8 @@ public class TradeLicenseApplication {
 	public ObjectMapper getObjectMapper() {
 		final ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
-        objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
+		objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+		objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
 		return objectMapper;
 	}
 

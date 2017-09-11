@@ -26,6 +26,7 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 public class User {
 	@Setter
 	private Long id;
+	@Setter
 	private String tenantId;
 	private String username;
 	private String title;
@@ -43,6 +44,7 @@ public class User {
 	private Address permanentAddress;
 	private Address correspondenceAddress;
 	private Boolean active;
+	@Setter
 	private List<Role> roles = new ArrayList<>();
 	private Date dob;
 	private Date passwordExpiryDate;
@@ -61,6 +63,8 @@ public class User {
 	private Long loggedInUserId;
 	@Setter
 	private boolean otpValidationMandatory;
+	@Setter
+	private boolean mobileValidationMandatory = true;
 
 	public void validateNewUser() {
 		if (isUsernameAbsent()
@@ -107,7 +111,7 @@ public class User {
 	}
 
 	public boolean isMobileNumberAbsent() {
-		return isEmpty(mobileNumber);
+		return mobileValidationMandatory && isEmpty(mobileNumber);
 	}
 
 	public boolean isNameAbsent() {

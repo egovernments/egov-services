@@ -43,7 +43,6 @@
          "feeDetails":[  
             {  
                "id":null,
-               "licenseId":null,
                "financialYear":null,
                "amount":null,
                "paid":false,

@@ -11,19 +11,20 @@ import org.egov.mr.web.contract.MarriageDocumentTypeSearchCriteria;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(SpringRunner.class)
-@WebMvcTest(MarriageDocumentTypeQueryBuilder.class)
+@RunWith(MockitoJUnitRunner.class)
 public class MarriageDocumentTypeQueryBuilderTest {
 
-	@MockBean
+	@Mock
 	private KafkaTemplate<String, Object> kafkaTemplate;
 
-	@MockBean
+	@Mock
 	private MarriageDocumentTypeService mdtservice;
 
 	@InjectMocks

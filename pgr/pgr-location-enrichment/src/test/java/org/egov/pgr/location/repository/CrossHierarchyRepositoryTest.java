@@ -5,9 +5,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.client.MockRestServiceServer;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.client.RestTemplate;
 
 import static org.junit.Assert.assertEquals;
@@ -19,10 +21,15 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 @RunWith(MockitoJUnitRunner.class)
 public class CrossHierarchyRepositoryTest {
 
-    private static final String HOST = "http://host";
-    private static final String CREATE_URL = "location/crosshierarchys?id={crossHierarchyId}";
+    private static final String HOST = "http://host/";
+    private static final String CREATE_URL = "egov-location/crosshierarchys/_search";
     private MockRestServiceServer server;
     private CrossHierarchyRepository crossHierarchyRepository;
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    private Resources resources = new Resources();
 
     @Before
     public void before() {
@@ -33,13 +40,13 @@ public class CrossHierarchyRepositoryTest {
 
     @Test
     public void test_should_fetch_hierarchy_for_given_id() {
-        server.expect(once(), requestTo("http://hostlocation/crosshierarchys?id=5"))
-                .andExpect(method(HttpMethod.GET))
-                .andRespond(
-                        withSuccess(new Resources().getFileContents("successHierarchyResponse.json"),
-                                MediaType.APPLICATION_JSON_UTF8));
+        server.expect(once(), requestTo("http://host/egov-location/crosshierarchys/_search"))
+            .andExpect(method(HttpMethod.POST))
+            .andRespond(
+                withSuccess(new Resources().getFileContents("successHierarchyResponse.json"),
+                    MediaType.APPLICATION_JSON_UTF8));
 
-        final CrossHierarchyResponse response = crossHierarchyRepository.getCrossHierarchy("5","tenantId");
+        final CrossHierarchyResponse response = crossHierarchyRepository.getCrossHierarchy("5", "tenantId");
 
         server.verify();
         assertEquals("1", response.getLocationId());
@@ -47,9 +54,6 @@ public class CrossHierarchyRepositoryTest {
         assertEquals("2", response.getChildLocationId());
 
     }
-
-
-
 
 
 }

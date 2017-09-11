@@ -3,20 +3,8 @@ import {Grid, Row, Col, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import RaisedButton from 'material-ui/RaisedButton';
 import FileDownload from 'material-ui/svg-icons/action/get-app';
+import styles from '../../styles/material-ui';
 import {translate} from './common';
-
-const styles = {
-  headerStyle : {
-    fontSize : 19
-  },
-  addBorderBottom:{
-    borderBottom: '1px solid #eee',
-    padding: '10px'
-  },
-  marginStyle:{
-    margin: '15px'
-  }
-};
 
 class employeeDocs extends Component{
   constructor(props){
@@ -42,7 +30,7 @@ class employeeDocs extends Component{
         if(attrib['key'].indexOf('employeeDocs') !== -1){
           let key = (attrib['key'].split(/_(.+)/)[1]).length > 15 ? (attrib['key'].split(/_(.+)/)[1]).substr(0, 12)+'...' : attrib['key'].split(/_(.+)/)[1];
           return (
-            <Col xs={6} md={3} key={index}>
+            <Col xs={12} sm={6} md={4} lg={3} key={index}>
               <RaisedButton
                 href={'/filestore/v1/files/id?fileStoreId=' + attrib['name']+'&tenantId='+localStorage.getItem('tenantId')}
                 download

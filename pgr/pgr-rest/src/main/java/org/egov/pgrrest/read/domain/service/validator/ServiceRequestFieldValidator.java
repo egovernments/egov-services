@@ -1,11 +1,15 @@
 package org.egov.pgrrest.read.domain.service.validator;
 
 import org.egov.common.contract.response.ErrorField;
+import org.egov.pgr.common.model.Employee;
+import org.egov.pgr.common.repository.EmployeeRepository;
 import org.egov.pgrrest.common.domain.model.AttributeEntry;
 import org.egov.pgrrest.read.domain.exception.InvalidServiceRequestFieldException;
+import org.egov.pgrrest.read.domain.model.RouterResponse;
 import org.egov.pgrrest.read.domain.model.ServiceRequest;
 import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
 import org.egov.pgrrest.read.domain.service.ServiceRequestValidator;
+import org.egov.pgrrest.read.persistence.repository.RouterRestRepository;
 import org.egov.pgrrest.read.persistence.repository.ServiceRequestRepository;
 import org.springframework.stereotype.Service;
 
@@ -115,6 +119,18 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
     private static final String STATE_ID_MANDATORY_FIELD_NAME = "ServiceRequest.attribValues.systemStateId";
     private static final String STATE_ID_MANDATORY_MESSAGE = "State ID is required";
 
+    public static final String ADDRESS_LENGTH_CODE = "pgr.0062";
+    public static final String ADDRESS_LENGTH_MESSAGE = "Address must be less than 250 characters";
+    public static final String ADDRESS_FIELD = "serviceRequest.address";
+
+
+    public static final String ROUTER_NOT_DEFINED_MESSAGE = "Router data does not exists. Cannot Create Grievance";
+    public static final String ROUTER_NOT_DEFINED_CODE = "pgr.0068";
+    public static final String ROUTER_NOT_DEFINED_FIELD = "router";
+
+    public static final String ASSIGNMENT_NOT_DEFINED_FOR_POSITION_CODE = "pgr.0069";
+    public static final String ASSIGNMENT_NOT_DEFINED_FOR_POSITION_MESSAGE = "Assignment does not exist for the position. Cannot Create Grievance";
+    public static final String ASSIGNMENT_NOT_DEFINED_FOR_POSITION_FIELD = "position";
 
     public static final String SYSTEM_STATUS = "systemStatus";
     public static final String MANUAL = "MANUAL";
@@ -130,12 +146,21 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
     public static final String REOPENED = "REOPENED";
     public static final String WITHDRAWN = "WITHDRAWN";
     public static final String SYSTEM_STATE_ID = "systemStateId";
+    public static final String ADMINISTRATION = "ADMINISTRATION";
 
 
     private ServiceRequestRepository serviceRequestRepository;
 
-    public ServiceRequestFieldValidator(ServiceRequestRepository serviceRequestRepository) {
+    private RouterRestRepository routerRestRepository;
+
+    private EmployeeRepository employeeRepository;
+
+    public ServiceRequestFieldValidator(ServiceRequestRepository serviceRequestRepository,
+                                        RouterRestRepository routerRestRepository,
+                                        EmployeeRepository employeeRepository) {
         this.serviceRequestRepository = serviceRequestRepository;
+        this.routerRestRepository = routerRestRepository;
+        this.employeeRepository = employeeRepository;
     }
 
     @Override
@@ -145,14 +170,15 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
 
     @Override
     public void validate(ServiceRequest model) {
-        if (!getError(model).isEmpty()) {
-            throw new InvalidServiceRequestFieldException(getError(model));
+        List<ErrorField> errorFields = getError(model);
+        if (!errorFields.isEmpty()) {
+            throw new InvalidServiceRequestFieldException(errorFields);
         }
     }
 
     private List<ErrorField> getError(ServiceRequest model) {
         List<ErrorField> errorFields = new ArrayList<>();
-        commomValidation(model, errorFields);
+        commonValidation(model, errorFields);
 
         if (model.isKeywordComplaint(KEYWORD)) {
             complaintValidation(model, errorFields);
@@ -166,7 +192,7 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
         updateValidation(model, errorFields);
     }
 
-    private void commomValidation(ServiceRequest model, List<ErrorField> errorFields) {
+    private void commonValidation(ServiceRequest model, List<ErrorField> errorFields) {
         addKeywordsValidationErrors(model, errorFields);
         addComplainantFirstNameValidationErrors(model, errorFields);
         addComplainantMobileValidationErrors(model, errorFields);
@@ -175,6 +201,7 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
         getDescriptionValidation(model, errorFields);
         addEmailPattern(model, errorFields);
         addStatusNotPresentValidationErrors(model, errorFields);
+        addAddressLengthValidationErrors(model, errorFields);
     }
 
     private void getDescriptionValidation(ServiceRequest model, List<ErrorField> errorFields) {
@@ -193,6 +220,7 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
             addLocationIdValidationErrors(model, errorFields);
             addExternalCrnNotPresentValidationErrors(model, errorFields);
             addReceivingModeEmployeePresentValidationErrors(model, errorFields);
+            addRouterDefinitionErrors(model, errorFields);
         }
     }
 
@@ -218,6 +246,7 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
         ServiceRequestSearchCriteria serviceRequestSearchCriteria = ServiceRequestSearchCriteria.builder()
             .serviceRequestId(crn)
             .tenantId(tenantId)
+            .crnList(Collections.emptyList())
             .build();
         List<ServiceRequest> serviceRequests = serviceRequestRepository.findFromDb(serviceRequestSearchCriteria);
         return !serviceRequests.isEmpty() && serviceRequests.get(0).isCoordinatesAbsent();
@@ -521,5 +550,44 @@ public class ServiceRequestFieldValidator implements ServiceRequestValidator {
         errorFields.add(errorField);
     }
 
+    private void addAddressLengthValidationErrors(ServiceRequest model, List<ErrorField> errorFields) {
+        String address = model.getAddress();
+        if (!isEmpty(address) && address.length() > 250) {
+            final ErrorField errorField = ErrorField.builder()
+                .code(ADDRESS_LENGTH_CODE)
+                .message(ADDRESS_LENGTH_MESSAGE)
+                .field(ADDRESS_FIELD)
+                .build();
+            errorFields.add(errorField);
+        }
+    }
+
+    private void addRouterDefinitionErrors(ServiceRequest model, List<ErrorField> errorFields) {
+        RouterResponse router = routerRestRepository.getRouter(model.getTenantId(), ADMINISTRATION);
+        if (!router.routerPresent()) {
+            final ErrorField errorField = ErrorField.builder()
+                .code(ROUTER_NOT_DEFINED_CODE)
+                .message(ROUTER_NOT_DEFINED_MESSAGE)
+                .field(ROUTER_NOT_DEFINED_FIELD)
+                .build();
+            errorFields.add(errorField);
+        } else {
+            Long positionId = Long.valueOf(router.getRouterTypes().get(0).getPosition());
+            addAssignmentErrors(positionId, model.getTenantId(), errorFields);
+        }
+
+    }
+
+    private void addAssignmentErrors(Long positionId, String tenantid, List<ErrorField> errorFields) {
+        Employee employee = employeeRepository.getEmployeeByPosition(positionId, tenantid);
+        if (employee == null) {
+            final ErrorField errorField = ErrorField.builder()
+                .code(ASSIGNMENT_NOT_DEFINED_FOR_POSITION_CODE)
+                .message(ASSIGNMENT_NOT_DEFINED_FOR_POSITION_MESSAGE)
+                .field(ASSIGNMENT_NOT_DEFINED_FOR_POSITION_FIELD)
+                .build();
+            errorFields.add(errorField);
+        }
+    }
 }
 

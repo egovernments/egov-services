@@ -4,7 +4,11 @@ html, body{
 	line-height: 18px;
 	top: 0px !important;
 	background-color: #f2f2f2 !important;
+	overflow-x: hidden !important;
 }
+
+/*th { font-size: 12px; }
+td { font-size: 11px; }*/
 
 /* fallback */
 @font-face {
@@ -14,6 +18,28 @@ html, body{
   src: local('Material Icons'), local('MaterialIcons-Regular'), url(https://fonts.gstatic.com/s/materialicons/v22/2fcrYFNaTjcS6g4U3t-Y5UEw0lE80llgEseQY3FEmqw.woff2) format('woff2');
 }
 
+/* style sheet for "A4" printing */
+ /*@media print and (width: 21cm) and (height: 29.7cm) {
+    @page {
+       margin: 3cm;
+    }
+ }*/
+ /* style sheet for "letter" printing */
+ /*@media print and (width: 8.5in) and (height: 11in) {
+    @page {
+        margin: 1in;
+    }
+ }*/
+
+.metismenu {
+  position: fixed;
+  width: 250px;
+
+  bottom: 0;
+  left: 0;
+  top: 0px;
+  padding-top: 65px;
+}
 
 
 .material-icons {
@@ -560,6 +586,10 @@ ul{list-style-type: none; padding: 0; margin: 0;}
 		display:none;
 	}
 
+.panUppercase input{
+	text-transform: uppercase;
+}
+
 /*-- Media Query --*/
 @media screen and (max-width: 768px) {
 
@@ -675,10 +705,19 @@ ul{list-style-type: none; padding: 0; margin: 0;}
 }
 
 
-table th {
+table thead th, table tfoot th {
+	padding: 10px 15px !important;
+	border-bottom:none !important;
+	font-weight:500 !important;
+	font-size:12px !important;
 	background-color: #607d8b !important;
+	border: 1px solid rgba(0,0,0,0.12) !important;
 	color: #ffffff !important;
 	font-weight: 500;
+}
+
+table tbody tr{
+	border-left: 1px solid rgba(0,0,0,0.12) !important;
 }
 
 table td {
@@ -730,23 +769,14 @@ table td {
     visibility: visible;
 }
 
-table thead th {
-    padding: 15px 18px !important;
-	border-bottom:none !important;
-	font-weight:500 !important;
-	font-size:12px !important;
-	border-left:0 !important;
-	border-right:0 !important;
-}
-
  table tbody td {
 	  padding: 15px 10px !important;
 	  border-bottom: 1px solid rgba(0,0,0,0.12) !important;
+		border-right: 1px solid rgba(0,0,0,0.12) !important;
 	  border-top: none !important;
 	  font-weight:400 !important;
 	  color:rgba(0,0,0,0.87) !important;
 	  border-left:0 !important;
-	  border-right:0 !important;
 	  text-align: left;
  }
 
@@ -910,4 +940,12 @@ span.errorMsg{
 .rating{
 	color: #F58720;
   font-size: 25px;
+}
+
+@media all {
+	.page-break	{ display: none; }
+}
+
+@media print {
+	.page-break	{ display: block; page-break-after: always; }
 }

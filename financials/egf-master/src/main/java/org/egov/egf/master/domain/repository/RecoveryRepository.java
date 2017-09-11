@@ -1,5 +1,11 @@
 package org.egov.egf.master.domain.repository;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.egov.common.constants.Constants;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.model.Pagination;
@@ -17,8 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.*;
 
 @Repository
 public class RecoveryRepository {
@@ -208,6 +212,10 @@ public class RecoveryRepository {
             return recoveryJdbcRepository.search(domain);
         }
 
+    }
+
+    public boolean uniqueCheck(String fieldName, Recovery recovery) {
+        return recoveryJdbcRepository.uniqueCheck(fieldName, new RecoveryEntity().toEntity(recovery));
     }
 
 }

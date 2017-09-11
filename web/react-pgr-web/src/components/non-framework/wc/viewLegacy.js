@@ -9,10 +9,14 @@ import UiButton from '../../framework/components/UiButton';
 import UiDynamicTable from '../../framework/components/UiDynamicTable';
 import {fileUpload} from '../../framework/utility/utility';
 import UiTable from '../../framework/components/UiTable';
+import {Card, CardHeader, CardText} from 'material-ui/Card';
+import {Grid, Row, Col, DropdownButton,Table, ListGroup, ListGroupItem} from 'react-bootstrap';
 
 var specifications={};
 
 let reqRequired = [];
+
+var CONST_API_GET_FILE = "filestore/v1/files/id";
 class Report extends Component {
   constructor(props) {
     super(props);
@@ -207,8 +211,16 @@ class Report extends Component {
       this.initData();
   }
 
-  getVal = (path) => {
+  getVal = (path,isDate) => {
     var val = _.get(this.props.formData, path);
+
+    if( isDate && val && ((val + "").length == 13 || (val + "").length == 12) && new Date(Number(val)).getTime() > 0) {
+      var _date = new Date(Number(val));
+      return ('0' + _date.getDate()).slice(-2) + '/'
+               + ('0' + (_date.getMonth()+1)).slice(-2) + '/'
+               + _date.getFullYear();
+    }
+
     return  typeof val != "undefined" && (typeof val == "string" || typeof val == "number" || typeof val == "boolean") ? (val + "") : "";
   }
 
@@ -226,6 +238,47 @@ class Report extends Component {
     let {handleChange, getVal, addNewCard, removeCard, printer, dcbButton } = this;
 
     console.log(formData);
+
+    const renderFiles = function() {
+      {return formData && formData.Connection && formData.Connection[0] && formData.Connection[0].documents && formData.Connection[0].documents.length && formData.Connection[0].documents.map(function(v, i) {
+        return (
+          <tr key={i}>
+            <td>{i+1}</td>
+            <td>{v.name}</td>
+            <td><a href={window.location.origin + "/" + CONST_API_GET_FILE + "?tenantId=" + localStorage.tenantId + "&fileStoreId=" + v.fileStoreId} target="_blank">{translate("wc.craete.file.Download")}</a></td>
+          </tr>
+        )
+      })}
+    }
+
+
+        const renderDocuments = function() {
+            if(formData && formData.hasOwnProperty("Connection") && formData.Connection.length>0 && formData.Connection[0] && formData.Connection[0].documents.length>0  ){
+          {return formData && formData.Connection && formData.Connection[0] && formData.Connection[0].documents && formData.Connection[0].documents.length && formData.Connection.map(function(v, i) {
+            return (
+              <Card className="uiCard">
+                  <CardHeader title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate("tl.table.title.supportDocuments")}</div>}/>
+                  <CardText>
+                  <Table  bordered responsive className="table-striped">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>{translate("tl.create.license.table.documentName")}</th>
+                      <th>{translate("tl.create.license.table.file")}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {renderFiles()}
+                  </tbody>
+                  </Table>
+                </CardText>
+                </Card>
+            )
+          })}
+        }
+      }
+
+
     const renderTable = function() {
       if(moduleName && actionName && formData && formData[objectName]) {
         var objectName = mockData[`${moduleName}.${actionName}`].objectName;
@@ -251,6 +304,7 @@ class Report extends Component {
         {!_.isEmpty(mockData) && mockData["wc.view"] && <ShowFields groups={mockData["wc.view"].groups} noCols={mockData["wc.view"].numCols} ui="google" handler={""} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData["wc.view"].useTimestamp || false} addNewCard={""} removeCard={""} screen="view"/>}
           <br/>
           {renderTable()}
+          {renderDocuments()}
           <br/>
         </form>
 

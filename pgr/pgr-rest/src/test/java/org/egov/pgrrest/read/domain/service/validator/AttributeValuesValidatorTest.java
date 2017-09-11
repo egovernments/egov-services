@@ -53,9 +53,9 @@ public class AttributeValuesValidatorTest {
     }
 
     @Test(expected = InvalidAttributeEntryException.class)
-    public void test_should_throw_exception_when_key_size_is_greater_than_256_chars_in_attribute_value() {
+    public void test_should_throw_exception_when_key_size_is_greater_than_500_chars_in_attribute_value() {
         final AttributeValuesValidator validator = new AttributeValuesValidator();
-        final String key = StringUtils.repeat("k", 257);
+        final String key = StringUtils.repeat("k", 501);
         final List<AttributeEntry> attributeEntries = Collections.singletonList(new AttributeEntry(key, "bar"));
         final ServiceRequest serviceRequest = createServiceRequest(attributeEntries);
 
@@ -73,9 +73,9 @@ public class AttributeValuesValidatorTest {
     }
 
     @Test(expected = InvalidAttributeEntryException.class)
-    public void test_should_throw_exception_when_code_size_is_greater_than_256_chars_in_attribute_value() {
+    public void test_should_throw_exception_when_code_size_is_greater_than_500_chars_in_attribute_value() {
         final AttributeValuesValidator validator = new AttributeValuesValidator();
-        final String code = StringUtils.repeat("k", 257);
+        final String code = StringUtils.repeat("k", 501);
         final List<AttributeEntry> attributeEntries = Collections.singletonList(new AttributeEntry("key", code));
         final ServiceRequest serviceRequest = createServiceRequest(attributeEntries);
 

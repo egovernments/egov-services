@@ -17,21 +17,8 @@ import Fields from '../../common/Fields';
 import ViewSRN from '../../common/viewSRN';
 import EmployeeDocs from '../../common/employeeDocs';
 import WorkFlow from '../../common/workflow';
-import  '../../../styles/custom.css';
+import styles from '../../../styles/material-ui';
 var Rating = require('react-rating');
-
-const styles = {
-  headerStyle : {
-    fontSize : 19
-  },
-  addBorderBottom:{
-    borderBottom: '1px solid #eee',
-    padding: '10px'
-  },
-  marginStyle:{
-    margin: '15px'
-  }
-};
 
 var currentThis;
 
@@ -462,7 +449,9 @@ class grievanceView extends Component{
             <CardText style={{padding:'8px 16px 0'}}>
               <Row>
                 <Col xs={12} sm={4} md={3} lg={3}>
-                  <SelectField fullWidth={true} floatingLabelText={translate('pgr.lbl.change.status')+' *'} maxHeight={200} value={grievanceView.systemStatus ? grievanceView.systemStatus : this.state.systemStatus} onChange={(event, key, value) => {
+                  <SelectField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('pgr.lbl.change.status')+' *'} maxHeight={200} value={grievanceView.systemStatus ? grievanceView.systemStatus : this.state.systemStatus}
+                    dropDownMenuProps={{targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
+                    onChange={(event, key, value) => {
                     handleStatusChange(value, "systemStatus", false, "")
                   }}>
                     {this.state.nextStatus !== undefined ?
@@ -473,7 +462,7 @@ class grievanceView extends Component{
                 </Col>
                 { localStorage.getItem('type') === 'EMPLOYEE' ?
                 <Col xs={12} sm={4} md={3} lg={3}>
-                  <SelectField fullWidth={true} floatingLabelText={translate('pgr.lbl.change.grievancetype')+' *'} maxHeight={200} value={grievanceView.serviceCode ? grievanceView.serviceCode : this.state.serviceCode} onChange={(event, key, value) => {
+                  <SelectField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('pgr.lbl.change.grievancetype')+' *'} maxHeight={200} value={grievanceView.serviceCode ? grievanceView.serviceCode : this.state.serviceCode} onChange={(event, key, value) => {
                     handleChange(value, "serviceCode", false, "")}}>
                     {this.state.complaintTypes !== undefined ?
                     this.state.complaintTypes.map((ctype, index) => (
@@ -483,7 +472,7 @@ class grievanceView extends Component{
                 </Col> : "" }
                 { localStorage.getItem('type') === 'EMPLOYEE' ?
                 <Col xs={12} sm={4} md={3} lg={3}>
-                  <SelectField fullWidth={true} floatingLabelText={translate('Ward')+' *'} maxHeight={200} value={grievanceView.systemLocationId ? grievanceView.systemLocationId : this.state.systemLocationId}  onChange={(event, key, value) => {
+                  <SelectField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('Ward')+' *'} maxHeight={200} value={grievanceView.systemLocationId ? grievanceView.systemLocationId : this.state.systemLocationId}  onChange={(event, key, value) => {
                     handleWard(value, "systemLocationId", false, "")}}>
                     {this.state.ward !== undefined ?
                     this.state.ward.map((ward, index) => (
@@ -493,7 +482,7 @@ class grievanceView extends Component{
                 </Col>: ""}
                 { localStorage.getItem('type') === 'EMPLOYEE' ?
                 <Col xs={12} sm={4} md={3} lg={3}>
-                  <SelectField fullWidth={true} floatingLabelText={translate('core.lbl.location')+' *'} maxHeight={200} value={grievanceView.systemChildLocationId ? grievanceView.systemChildLocationId : this.state.systemChildLocationId}  onChange={(event, key, value) => {
+                  <SelectField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('core.lbl.location')+' *'} maxHeight={200} value={grievanceView.systemChildLocationId ? grievanceView.systemChildLocationId : this.state.systemChildLocationId}  onChange={(event, key, value) => {
                     handleLocality(value, "systemChildLocationId", true, "")}}>
                     {this.state.locality !== undefined ?
                     this.state.locality.map((locality, index) => (
@@ -505,7 +494,7 @@ class grievanceView extends Component{
               { localStorage.getItem('type') === 'EMPLOYEE' && grievanceView.systemStatus === 'FORWARDED' ?
               <Row>
                 <Col xs={12} sm={4} md={3} lg={3}>
-                  <SelectField fullWidth={true} floatingLabelText={translate('pgr.lbl.frwddept')} maxHeight={200} value={grievanceView.departmentId} onChange={(event, key, value) => {
+                  <SelectField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('pgr.lbl.frwddept')} maxHeight={200} value={grievanceView.departmentId} onChange={(event, key, value) => {
                     handleDesignation(value, "departmentId", false, ""); }
                   }>
                     <MenuItem value={0} primaryText="Select Department" />
@@ -516,7 +505,7 @@ class grievanceView extends Component{
                   </SelectField>
                 </Col>
                 <Col xs={12} sm={4} md={3} lg={3}>
-                  <SelectField fullWidth={true} floatingLabelText={translate('pgr.lbl.frwddesgn')} maxHeight={200} value={grievanceView.designationId} onChange={(event, key, value) => {
+                  <SelectField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('pgr.lbl.frwddesgn')} maxHeight={200} value={grievanceView.designationId} onChange={(event, key, value) => {
                     handlePosition(grievanceView.departmentId, value, "designationId", true, "") }}>
                     <MenuItem value={0} primaryText="Select Designation" />
                     {this.state.designation !== undefined ?
@@ -526,7 +515,7 @@ class grievanceView extends Component{
                   </SelectField>
                 </Col>
                 <Col xs={12} sm={4} md={3} lg={3}>
-                  <SelectField fullWidth={true} floatingLabelText={translate('pgr.lbl.frwdpos')} maxHeight={200} value={grievanceView.systemPositionId} onChange={(event, key, value) => {
+                  <SelectField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('pgr.lbl.frwdpos')} maxHeight={200} value={grievanceView.systemPositionId} onChange={(event, key, value) => {
                     handleChange(value, "systemPositionId", true, ""); }}>
                     <MenuItem value={0} primaryText="Select Position" />
                     {this.state.position !== undefined ?
@@ -551,7 +540,7 @@ class grievanceView extends Component{
               </Row> : ''}
               <Row>
                 <Col xs={12} sm={12} md={12} lg={12}>
-                  <TextField floatingLabelText={translate('core.lbl.comments')+' *'} fullWidth={true} multiLine={true} rows={2} rowsMax={4} value={grievanceView.systemApprovalComments ? grievanceView.systemApprovalComments : ''} maxLength="500" onChange={(event, newValue) => {
+                  <TextField floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('core.lbl.comments')+' *'} fullWidth={true} multiLine={true} rows={2} rowsMax={4} value={grievanceView.systemApprovalComments ? grievanceView.systemApprovalComments : ''} maxLength="500" onChange={(event, newValue) => {
                     handleChange(newValue, "systemApprovalComments", true, /^.[^]{0,500}$/) }} errorText={fieldErrors.systemApprovalComments ? fieldErrors.systemApprovalComments : ""}/>
                 </Col>
               </Row>

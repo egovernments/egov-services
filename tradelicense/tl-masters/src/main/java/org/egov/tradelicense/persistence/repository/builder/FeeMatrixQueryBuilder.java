@@ -27,11 +27,11 @@ public class FeeMatrixQueryBuilder {
 			+ " WHERE id = :id";
 
 	public static final String INSERT_FEE_MATRIX_DETAIL_QUERY = "INSERT INTO " + feeMatrixDetailTableName
-			+ " (feeMatrixId, uomFrom, uomTo, amount, createdBy, lastModifiedBy, createdTime, lastModifiedTime)"
-			+ " VALUES(:feeMatrixId, :uomFrom, :uomTo, :amount, :createdBy, :lastModifiedBy, :createdTime, :lastModifiedTime)";
+			+ " (feeMatrixId, tenantId, uomFrom, uomTo, amount, createdBy, lastModifiedBy, createdTime, lastModifiedTime)"
+			+ " VALUES(:feeMatrixId, :tenantId, :uomFrom, :uomTo, :amount, :createdBy, :lastModifiedBy, :createdTime, :lastModifiedTime)";
 
 	public static final String UPDATE_FEE_MATRIX_DETAIL_QUERY = "UPDATE " + feeMatrixDetailTableName
-			+ " SET feeMatrixId = :feeMatrixId, uomFrom = :uomFrom, uomTo = :uomTo, amount = :amount,"
+			+ " SET feeMatrixId = :feeMatrixId, tenantId = :tenantId, uomFrom = :uomFrom, uomTo = :uomTo, amount = :amount,"
 			+ " lastModifiedBy = :lastModifiedBy, lastModifiedTime = :lastModifiedTime"
 			+ " WHERE id = :id";
 

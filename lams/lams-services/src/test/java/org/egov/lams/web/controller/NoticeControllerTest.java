@@ -7,12 +7,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.egov.lams.TestConfiguration;
+import org.egov.lams.model.Notice;
+import org.egov.lams.model.NoticeCriteria;
 import org.egov.lams.service.NoticeService;
 import org.egov.lams.util.FileUtils;
 import org.egov.lams.web.contract.NoticeRequest;
 import org.egov.lams.web.contract.NoticeResponse;
+import org.egov.lams.web.contract.RequestInfo;
 import org.egov.lams.web.contract.ResponseInfo;
 import org.egov.lams.web.contract.factory.ResponseInfoFactory;
 import org.junit.Test;
@@ -52,6 +57,21 @@ public class NoticeControllerTest {
 	                .andExpect(status().isCreated())
 	                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 	                .andExpect(content().json(getFileContents("noticeresponse.json")));
+	}
+
+	@Test
+	public void test_Should_Search_Notices() throws Exception {
+		List<Notice> notices = new ArrayList<>();
+		ResponseInfo responseInfo = new ResponseInfo();
+		when(noticeService.getNotices(any(NoticeCriteria.class))).thenReturn(notices);
+		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), any(Boolean.class))).thenReturn(responseInfo);
+
+		mockMvc.perform(post("/agreement/notice/_search")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(getFileContents("noticerequest.json")))
+				.andExpect(status().isOk())
+				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+				.andExpect(content().json(getFileContents("noticeresponse.json")));
 	}
 
 	private String getFileContents(String fileName) throws IOException {

@@ -1,24 +1,15 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
-// import PropTypes from 'prop-types';
-
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
-// import {
-//   Redirect,
-//   withRouter
-// } from 'react-router-dom';
 import { withRouter } from 'react-router'
 
 import Header from './common/Header';
 import Footer from './common/Footer';
-// import PropertyTaxSearch from "./contents/PropertyTaxSearch";
 import Snackbar from 'material-ui/Snackbar';
 import LoadingIndicator from './common/LoadingIndicator';
 import router from "../router";
-//api import
-import Api from "../api/api"
-
+import Api from "../api/api";
 
 window.urlCheck = false;
 class App extends Component {
@@ -154,7 +145,12 @@ class App extends Component {
       }
       else {
         var hash = window.location.hash.split("/");
-        Api.commonApiPost("tenant/v1/tenant/_search", {code:hash[1]?hash[1]:"default", tenantId: hash[1]?hash[1]:"default"}, {}, true).then(function(res){
+		var urlCode = hash[1];
+		if(hash[1].match('/?')){
+			var codeArray = hash[1].split('?');
+			urlCode = codeArray[0];
+		}
+        Api.commonApiPost("tenant/v1/tenant/_search", {code:hash[1]?urlCode:"default", tenantId: hash[1]?urlCode:"default"}, {}, true).then(function(res){
           // console.log(res);
           setTenantInfo(res.tenant);
         }, function(err){

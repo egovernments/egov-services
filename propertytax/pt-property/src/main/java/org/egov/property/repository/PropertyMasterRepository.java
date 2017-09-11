@@ -6,14 +6,18 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.egov.enums.ApplicationEnum;
 import org.egov.models.Apartment;
+import org.egov.models.AppConfiguration;
 import org.egov.models.AuditDetails;
 import org.egov.models.Department;
 import org.egov.models.Depreciation;
 import org.egov.models.DocumentType;
 import org.egov.models.FloorType;
+import org.egov.models.GuidanceValueBoundary;
 import org.egov.models.MutationMaster;
 import org.egov.models.OccuapancyMaster;
 import org.egov.models.PropertyType;
@@ -25,13 +29,16 @@ import org.egov.models.WallType;
 import org.egov.models.WoodType;
 import org.egov.property.model.ExcludeFileds;
 import org.egov.property.repository.builder.ApartmentBuilder;
+import org.egov.property.repository.builder.AppConfigurationBuilder;
 import org.egov.property.repository.builder.AuditDetailsBuilder;
 import org.egov.property.repository.builder.DepartmentQueryBuilder;
 import org.egov.property.repository.builder.DepreciationBuilder;
 import org.egov.property.repository.builder.DocumentTypeBuilder;
 import org.egov.property.repository.builder.FloorTypeBuilder;
+import org.egov.property.repository.builder.GuidanceValueBoundaryBuilder;
 import org.egov.property.repository.builder.MutationMasterBuilder;
 import org.egov.property.repository.builder.OccuapancyQueryBuilder;
+import org.egov.property.repository.builder.PropertyBuilder;
 import org.egov.property.repository.builder.PropertyTypesBuilder;
 import org.egov.property.repository.builder.RoofTypeBuilder;
 import org.egov.property.repository.builder.SearchMasterBuilder;
@@ -40,7 +47,9 @@ import org.egov.property.repository.builder.UsageMasterBuilder;
 import org.egov.property.repository.builder.UtilityBuilder;
 import org.egov.property.repository.builder.WallTypesBuilder;
 import org.egov.property.repository.builder.WoodTypeBuilder;
+import org.egov.property.rowmappers.ConfigurationRowMapper;
 import org.egov.property.utility.ConstantUtility;
+import org.egov.property.utility.TimeStampUtil;
 import org.postgresql.util.PGobject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -146,7 +155,7 @@ public class PropertyMasterRepository {
 
 		String departmentSearchSql = SearchMasterBuilder.buildSearchQuery(ConstantUtility.DEPARTMENT_TABLE_NAME,
 				tenantId, ids, name, nameLocal, code, null, null, null, null, pageSize, offSet, preparedStatementValues,
-				null, null, null, null);
+				null, null, null, null, null);
 		Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 		departments = jdbcTemplate.query(departmentSearchSql.toString(), preparedStatementValues.toArray(),
 				new BeanPropertyRowMapper(Department.class));
@@ -252,7 +261,7 @@ public class PropertyMasterRepository {
 
 		String occuapancySearchSql = SearchMasterBuilder.buildSearchQuery(ConstantUtility.OCCUPANCY_TABLE_NAME,
 				tenantId, ids, name, nameLocal, code, active, null, orderNumber, null, pageSize, offSet,
-				preparedStatementValues, null, null, null, null);
+				preparedStatementValues, null, null, null, null, null);
 
 		Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 		occupancyMasters = jdbcTemplate.query(occuapancySearchSql.toString(), preparedStatementValues.toArray(),
@@ -355,14 +364,15 @@ public class PropertyMasterRepository {
 	 * @return
 	 */
 	public List<PropertyType> searchPropertyType(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
-			String code, String nameLocal, Boolean active, Integer orderNumber, Integer pageSize, Integer offSet, String parent) {
+			String code, String nameLocal, Boolean active, Integer orderNumber, Integer pageSize, Integer offSet,
+			String parent) {
 
 		List<PropertyType> propertyTypes = new ArrayList<>();
 		List<Object> preparedStatementValues = new ArrayList<>();
 
 		String propertyTypeSearchSql = SearchMasterBuilder.buildSearchQuery(ConstantUtility.PROPERTY_TYPE_TABLE_NAME,
 				tenantId, ids, name, nameLocal, code, active, null, orderNumber, null, pageSize, offSet,
-				preparedStatementValues, null, null, null, parent);
+				preparedStatementValues, null, null, null, parent, null);
 
 		Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 		propertyTypes = jdbcTemplate.query(propertyTypeSearchSql.toString(), preparedStatementValues.toArray(),
@@ -467,7 +477,7 @@ public class PropertyMasterRepository {
 
 		String searchQuery = SearchMasterBuilder.buildSearchQuery(ConstantUtility.FLOOR_TYPE_TABLE_NAME, tenantId, ids,
 				name, nameLocal, code, null, null, null, null, pageSize, offSet, preparedStatementValues, null, null,
-				null, null);
+				null, null, null);
 
 		Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 		floorTypes = jdbcTemplate.query(searchQuery.toString(), preparedStatementValues.toArray(),
@@ -568,7 +578,7 @@ public class PropertyMasterRepository {
 		List<Object> preparedStatementValues = new ArrayList<>();
 		String searchQuery = SearchMasterBuilder.buildSearchQuery(ConstantUtility.ROOF_TYPE_TABLE_NAME, tenantId, ids,
 				name, nameLocal, code, null, null, null, null, pageSize, offSet, preparedStatementValues, null, null,
-				null, null);
+				null, null, null);
 
 		Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 		roofTypes = jdbcTemplate.query(searchQuery.toString(), preparedStatementValues.toArray(),
@@ -672,7 +682,7 @@ public class PropertyMasterRepository {
 
 		String searchQuery = SearchMasterBuilder.buildSearchQuery(ConstantUtility.WOOD_TYPE_TABLE_NAME, tenantId, ids,
 				name, nameLocal, code, null, null, null, null, pageSize, offSet, preparedStatementValues, null, null,
-				null, null);
+				null, null, null);
 
 		Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 		woodTypes = jdbcTemplate.query(searchQuery.toString(), preparedStatementValues.toArray(),
@@ -708,7 +718,7 @@ public class PropertyMasterRepository {
 		List<Object> preparedStatementValues = new ArrayList<>();
 		String wallTypeMasterSearchQuery = SearchMasterBuilder.buildSearchQuery(ConstantUtility.WALL_TYPE_TABLE_NAME,
 				tenantId, ids, name, nameLocal, code, null, null, null, null, pageSize, offSet, preparedStatementValues,
-				null, null, null, null);
+				null, null, null, null, null);
 		List<WallType> wallTypes = jdbcTemplate.query(wallTypeMasterSearchQuery, preparedStatementValues.toArray(),
 				new BeanPropertyRowMapper(WallType.class));
 
@@ -742,13 +752,12 @@ public class PropertyMasterRepository {
 	 */
 
 	public List<UsageMaster> searchUsage(String tenantId, Integer[] ids, String name, String code, String nameLocal,
-			Boolean active, Boolean isResidential, Integer orderNumber, Integer pageSize, Integer offSet,
-			String parent) {
-
+			Boolean active, Boolean isResidential, Integer orderNumber, Integer pageSize, Integer offSet, String parent,
+			String[] service) {
 		List<Object> preparedStatementValues = new ArrayList<>();
 		String usageMasterSearchQuery = SearchMasterBuilder.buildSearchQuery(ConstantUtility.USAGE_TYPE_TABLE_NAME,
 				tenantId, ids, name, nameLocal, code, active, isResidential, orderNumber, null, pageSize, offSet,
-				preparedStatementValues, null, null, null, parent);
+				preparedStatementValues, null, null, null, parent, service);
 		List<UsageMaster> usageTypes = jdbcTemplate.query(usageMasterSearchQuery, preparedStatementValues.toArray(),
 				new BeanPropertyRowMapper(UsageMaster.class));
 
@@ -759,7 +768,7 @@ public class PropertyMasterRepository {
 			usageType.setActive(usageData.getActive());
 			usageType.setIsResidential(usageData.getIsResidential());
 			usageType.setOrderNumber(usageData.getOrderNumber());
-
+			usageType.setService(usageType.getService());
 			usageType.setAuditDetails(usageData.getAuditDetails());
 			usageType.setDescription(usageData.getDescription());
 			usageType.setName(usageData.getName());
@@ -860,10 +869,11 @@ public class PropertyMasterRepository {
 				jsonObject.setType("jsonb");
 				jsonObject.setValue(data);
 				ps.setObject(4, jsonObject);
-				ps.setString(5, usageMaster.getAuditDetails().getCreatedBy());
-				ps.setString(6, usageMaster.getAuditDetails().getLastModifiedBy());
-				ps.setLong(7, usageMaster.getAuditDetails().getCreatedTime());
-				ps.setLong(8, usageMaster.getAuditDetails().getLastModifiedTime());
+				ps.setString(5, usageMaster.getService());
+				ps.setString(6, usageMaster.getAuditDetails().getCreatedBy());
+				ps.setString(7, usageMaster.getAuditDetails().getLastModifiedBy());
+				ps.setLong(8, usageMaster.getAuditDetails().getCreatedTime());
+				ps.setLong(9, usageMaster.getAuditDetails().getLastModifiedTime());
 				return ps;
 			}
 		};
@@ -895,9 +905,10 @@ public class PropertyMasterRepository {
 				ps.setString(2, usageMaster.getCode());
 				ps.setString(3, usageMaster.getParent());
 				ps.setObject(4, jsonObject);
-				ps.setString(5, usageMaster.getAuditDetails().getLastModifiedBy());
-				ps.setLong(6, usageMaster.getAuditDetails().getLastModifiedTime());
-				ps.setLong(7, usageMaster.getId());
+				ps.setString(5, usageMaster.getService());
+				ps.setString(6, usageMaster.getAuditDetails().getLastModifiedBy());
+				ps.setLong(7, usageMaster.getAuditDetails().getLastModifiedTime());
+				ps.setLong(8, usageMaster.getId());
 				return ps;
 			}
 		};
@@ -999,7 +1010,7 @@ public class PropertyMasterRepository {
 		List<Object> preparedStatementValues = new ArrayList<>();
 		String structureClassSearchQuery = SearchMasterBuilder.buildSearchQuery(
 				ConstantUtility.STRUCTURE_CLASS_TABLE_NAME, tenantId, ids, name, nameLocal, code, active, null,
-				orderNumber, null, pageSize, offSet, preparedStatementValues, null, null, null, null);
+				orderNumber, null, pageSize, offSet, preparedStatementValues, null, null, null, null, null);
 
 		List<StructureClass> structureClasses = jdbcTemplate.query(structureClassSearchQuery,
 				preparedStatementValues.toArray(), new BeanPropertyRowMapper(StructureClass.class));
@@ -1143,7 +1154,7 @@ public class PropertyMasterRepository {
 
 		String searchDepreciationSql = SearchMasterBuilder.buildSearchQuery(ConstantUtility.DEPRECIATION_TABLE_NAME,
 				tenantId, ids, null, nameLocal, code, null, null, null, null, pageSize, offset, preparedStatementValues,
-				fromYear, toYear, year, null);
+				fromYear, toYear, year, null, null);
 
 		List<Depreciation> depreciations = jdbcTemplate.query(searchDepreciationSql, preparedStatementValues.toArray(),
 				new BeanPropertyRowMapper(Depreciation.class));
@@ -1255,7 +1266,7 @@ public class PropertyMasterRepository {
 
 		String searchMutationQuery = SearchMasterBuilder.buildSearchQuery(ConstantUtility.MUTATION_MASTER_TABLE_NAME,
 				tenantId, ids, name, nameLocal, code, null, null, null, null, pageSize, offSet, preparedStatemetValues,
-				null, null, null, null);
+				null, null, null, null, null);
 
 		List<MutationMaster> mutationMasters = jdbcTemplate.query(searchMutationQuery, preparedStatemetValues.toArray(),
 				new BeanPropertyRowMapper(MutationMaster.class));
@@ -1568,6 +1579,13 @@ public class PropertyMasterRepository {
 
 		return apartments;
 	}
+	//unique validation for oldupic number
+	public int checkOldUpicNumber(String oldUpicNo) {
+		String query = PropertyBuilder.SELECT_OLDUPIC_NO;
+		int count = 0;
+		count = (Integer) jdbcTemplate.queryForObject(query,new Object[]{oldUpicNo}, Integer.class);		
+		return count;
+	}
 
 	/**
 	 * This method will cast the given object to String
@@ -1590,4 +1608,303 @@ public class PropertyMasterRepository {
 	private Long getLong(Object object) {
 		return object == null ? 0 : Long.parseLong(object.toString());
 	}
+
+	/**
+	 * This will check whether any record exists with the given tenantId & diff
+	 * b/t occupancy year & current year in database or not
+	 * 
+	 * @param tenantId
+	 * @param diff
+	 *            b/t current date & current date
+	 * @return True / false if record exists / record does n't exists
+	 */
+	public String getAge(String tenantId, Integer diffValue, String tableName, List<Object> preparedStatementValues) {
+
+		String query = UtilityBuilder.getAgeQuery(tableName, diffValue, tenantId, preparedStatementValues);
+		String code = null;
+		code = jdbcTemplate.queryForObject(query, preparedStatementValues.toArray(), String.class);
+		return code;
+
+	}
+
+	/**
+	 * Description: create GuidanceValueBoundary preparedstatement
+	 * 
+	 * @param tenantId
+	 * @param GuidanceValueBoundary
+	 * @return keyholder id
+	 */
+
+	public Long saveGuidanceValueBoundary(String tenantId, GuidanceValueBoundary guidanceValueBoundary) {
+
+		final PreparedStatementCreator psc = new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
+				final PreparedStatement ps = connection.prepareStatement(
+						GuidanceValueBoundaryBuilder.INSERT_GUIDANCEBOUNDARYVALUE_QUERY, new String[] { "id" });
+				ps.setString(1, guidanceValueBoundary.getTenantId());
+				ps.setString(2, guidanceValueBoundary.getGuidanceValueBoundary1());
+				ps.setString(3, guidanceValueBoundary.getGuidanceValueBoundary2());
+				ps.setString(4, guidanceValueBoundary.getAuditDetails().getCreatedBy());
+				ps.setString(5, guidanceValueBoundary.getAuditDetails().getLastModifiedBy());
+				ps.setLong(6, guidanceValueBoundary.getAuditDetails().getCreatedTime());
+				ps.setLong(7, guidanceValueBoundary.getAuditDetails().getLastModifiedTime());
+				return ps;
+			}
+		};
+		// The newly generated key will be saved in this object
+		final KeyHolder holder = new GeneratedKeyHolder();
+		jdbcTemplate.update(psc, holder);
+		return Long.valueOf(holder.getKey().intValue());
+	}
+
+	/**
+	 * Description: create GuidanceValueBoundary preparedstatement
+	 * 
+	 * @param tenantId
+	 * @param GuidanceValueBoundary
+	 * @return keyholder id
+	 */
+
+	public void updateGuidanceValueBoundary(GuidanceValueBoundary guidanceValueBoundary) {
+
+		final PreparedStatementCreator psc = new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
+				final PreparedStatement ps = connection.prepareStatement(
+						GuidanceValueBoundaryBuilder.UPDATE_GUIDANCEBOUNDARYVALUE_QUERY, new String[] { "id" });
+				ps.setString(1, guidanceValueBoundary.getTenantId());
+				ps.setString(2, guidanceValueBoundary.getGuidanceValueBoundary1());
+				ps.setString(3, guidanceValueBoundary.getGuidanceValueBoundary2());
+				ps.setString(4, guidanceValueBoundary.getAuditDetails().getLastModifiedBy());
+				ps.setLong(5, guidanceValueBoundary.getAuditDetails().getLastModifiedTime());
+				ps.setLong(6, guidanceValueBoundary.getId());
+				return ps;
+			}
+		};
+		jdbcTemplate.update(psc);
+	}
+
+	/**
+	 * guidance value boundary search
+	 * 
+	 * @param tenantId
+	 * @param guidanceValueBoundary1
+	 * @param guidanceValueBoundary2
+	 * @param pageSize
+	 * @param offset
+	 * @return
+	 */
+	public List<GuidanceValueBoundary> searchGuidanceValueBoundary(String tenantId, String guidanceValueBoundary1,
+			String guidanceValueBoundary2, Integer pageSize, Integer offset) {
+
+		List<Object> preparedStatementValues = new ArrayList<>();
+
+		String searchGuidanceValueBoundaarySql = GuidanceValueBoundaryBuilder.getGuidanceValueBoundarySearchQuery(
+				ConstantUtility.GUIDANCEVALUEBOUNDARY_TABLE_NAME, tenantId, guidanceValueBoundary1,
+				guidanceValueBoundary2, pageSize, offset, preparedStatementValues);
+
+		List<GuidanceValueBoundary> guidanceValueBoundaries = jdbcTemplate.query(searchGuidanceValueBoundaarySql,
+				preparedStatementValues.toArray(), new BeanPropertyRowMapper(GuidanceValueBoundary.class));
+		return guidanceValueBoundaries;
+	}
+
+	/**
+	 * Description: create appConfiguration preparedstatement
+	 * 
+	 * @param tenantId
+	 * @param appConfiguration
+	 * @return keyholder id
+	 */
+
+	public Long saveAppConfiguration(String tenantId, AppConfiguration appConfiguration) {
+
+		final PreparedStatementCreator psc = new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
+				final PreparedStatement ps = connection
+						.prepareStatement(AppConfigurationBuilder.INSERT_APPCONFIGURATION_QUERY, new String[] { "id" });
+				ps.setString(1, appConfiguration.getTenantId());
+				ps.setString(2, appConfiguration.getKeyName());
+				ps.setString(3, appConfiguration.getDescription());
+				ps.setString(4, appConfiguration.getAuditDetails().getCreatedBy());
+				ps.setString(5, appConfiguration.getAuditDetails().getLastModifiedBy());
+				ps.setLong(6, appConfiguration.getAuditDetails().getCreatedTime());
+				ps.setLong(7, appConfiguration.getAuditDetails().getLastModifiedTime());
+				return ps;
+			}
+		};
+		// The newly generated key will be saved in this object
+		final KeyHolder holder = new GeneratedKeyHolder();
+		jdbcTemplate.update(psc, holder);
+
+		return Long.valueOf(holder.getKey().intValue());
+
+	}
+
+	/**
+	 * Description: create appConfiguration values preparedstatement
+	 * 
+	 * @param tenantId
+	 * @param appConfiguration
+	 * @return keyholder id
+	 */
+
+	public void saveAppConfigurationValues(String tenantId, AppConfiguration appConfigurationValues, Long keyId,
+			String value) {
+
+		final PreparedStatementCreator psc = new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
+				final PreparedStatement ps = connection.prepareStatement(
+						AppConfigurationBuilder.INSERT_APPCONFIGURATION_VALUE_QUERY, new String[] { "id" });
+				ps.setString(1, appConfigurationValues.getTenantId());
+				ps.setLong(2, getLong(keyId));
+				ps.setString(3, value);
+				ps.setTimestamp(4, TimeStampUtil.getTimeStamp(appConfigurationValues.getEffectiveFrom()));
+				ps.setString(5, appConfigurationValues.getAuditDetails().getCreatedBy());
+				ps.setString(6, appConfigurationValues.getAuditDetails().getLastModifiedBy());
+				ps.setLong(7, appConfigurationValues.getAuditDetails().getCreatedTime());
+				ps.setLong(8, appConfigurationValues.getAuditDetails().getLastModifiedTime());
+				return ps;
+			}
+		};
+		jdbcTemplate.update(psc);
+	}
+
+	/**
+	 * Description: update appConfiguration preparedstatement
+	 * 
+	 * @param tenantId
+	 * @param appConfiguration
+	 * @return
+	 */
+
+	public void updateAppConfiguration(AppConfiguration appConfiguration) {
+
+		final PreparedStatementCreator psc = new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
+				final PreparedStatement ps = connection
+						.prepareStatement(AppConfigurationBuilder.UPDATE_APPCONFIGURATION_QUERY, new String[] { "id" });
+				ps.setString(1, appConfiguration.getTenantId());
+				ps.setString(2, appConfiguration.getKeyName());
+				ps.setString(3, appConfiguration.getDescription());
+				ps.setString(4, appConfiguration.getAuditDetails().getLastModifiedBy());
+				ps.setLong(5, appConfiguration.getAuditDetails().getLastModifiedTime());
+				ps.setLong(6, appConfiguration.getId());
+				return ps;
+			}
+		};
+
+		jdbcTemplate.update(psc);
+	}
+
+	/**
+	 * Description: update appConfiguration values values preparedstatement
+	 * 
+	 * @param tenantId
+	 * @param appConfiguration
+	 * @return
+	 */
+
+	public void updateAppConfigurationValues(AppConfiguration appConfigurationValues, Long keyId, String value) {
+
+		final PreparedStatementCreator psc = new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
+				final PreparedStatement ps = connection.prepareStatement(
+						AppConfigurationBuilder.UPDATE_APPCONFIGURATION_VALUE_QUERY, new String[] { "id" });
+				ps.setString(1, appConfigurationValues.getTenantId());
+				ps.setString(2, value);
+				ps.setTimestamp(3, TimeStampUtil.getTimeStamp(appConfigurationValues.getEffectiveFrom()));
+				ps.setString(4, appConfigurationValues.getAuditDetails().getLastModifiedBy());
+				ps.setLong(5, appConfigurationValues.getAuditDetails().getLastModifiedTime());
+				ps.setLong(6, getLong(keyId));
+				return ps;
+			}
+		};
+		jdbcTemplate.update(psc);
+	}
+
+	/**
+	 * App configuration search
+	 * 
+	 * @param tenantId
+	 * @param ids
+	 * @param keyName
+	 * @param effectiveFrom
+	 * @param pageSize
+	 * @param offset
+	 * @return
+	 */
+	public List<AppConfiguration> searchAppConfiguration(String tenantId, Long[] ids, String keyName,
+			String effectiveFrom, Integer pageSize, Integer offset) {
+
+		List<Object> preparedStatementValues = new ArrayList<>();
+
+		String searchAppConfigurationSql = AppConfigurationBuilder.getAppConfigurationSearchQuery(tenantId, ids,
+				keyName, effectiveFrom, pageSize, offset, preparedStatementValues);
+
+		List<AppConfiguration> appConfigurations = jdbcTemplate.query(searchAppConfigurationSql,
+				preparedStatementValues.toArray(), new ConfigurationRowMapper());
+		List<AppConfiguration> appConfigurationList = new ArrayList<AppConfiguration>();
+		for (AppConfiguration appConfiguration : appConfigurations) {
+			List<AppConfiguration> keys = appConfigurationList.stream().filter(AppConfiguration -> AppConfiguration
+					.getKeyName().equalsIgnoreCase(appConfiguration.getKeyName())
+					&& AppConfiguration.getEffectiveFrom().equalsIgnoreCase(appConfiguration.getEffectiveFrom()))
+					.collect(Collectors.toList());
+			if (keys == null) {
+				appConfigurationList.add(appConfiguration);
+			} else {
+				if (keys.size() > 0) {
+					int[] indices = IntStream.range(0, appConfigurationList.size())
+							.filter(i -> appConfigurationList.get(i).getKeyName()
+									.equalsIgnoreCase(appConfiguration.getKeyName())
+									&& appConfigurationList.get(i).getEffectiveFrom()
+											.equalsIgnoreCase(appConfiguration.getEffectiveFrom()))
+							.toArray();
+					int index = indices[0];
+					appConfigurationList.get(index).getValues().add(appConfiguration.getValues().get(0));
+				} else {
+					appConfigurationList.add(appConfiguration);
+				}
+			}
+		}
+
+		return appConfigurationList;
+
+	}
+
+	/**
+	 * Checks whether Record with tenantId, name, Application name values exists
+	 * or not
+	 * 
+	 * @param tenantId
+	 * @param name
+	 * @param applicationEnum
+	 * @param tableName
+	 * @param id
+	 * @return
+	 */
+	public Boolean checkWhetherRecordWithTenantIdAndKeyName(String tenantId, String keyName, String tableName) {
+
+		Boolean isExists = Boolean.FALSE;
+
+		List<Object> preparedStatementvalues = new ArrayList<>();
+
+		String query = UtilityBuilder.getUniqueTenantIdKeyNameQuery(tenantId, keyName, tableName,
+				preparedStatementvalues);
+
+		int count = 0;
+
+		count = (Integer) jdbcTemplate.queryForObject(query, preparedStatementvalues.toArray(), Integer.class);
+
+		if (count > 0)
+			isExists = Boolean.TRUE;
+
+		return isExists;
+
+	}
+
 }

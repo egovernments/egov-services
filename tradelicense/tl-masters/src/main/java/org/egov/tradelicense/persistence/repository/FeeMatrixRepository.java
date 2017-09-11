@@ -79,6 +79,7 @@ public class FeeMatrixRepository {
 		AuditDetails auditDetails = feeMatrixDetail.getAuditDetails();
 		MapSqlParameterSource parameters = new MapSqlParameterSource();
 		parameters.addValue("feeMatrixId", feeMatrixDetail.getFeeMatrixId());
+		parameters.addValue("tenantId", feeMatrixDetail.getTenantId());
 		parameters.addValue("uomFrom", feeMatrixDetail.getUomFrom());
 		parameters.addValue("uomTo", feeMatrixDetail.getUomTo());
 		parameters.addValue("amount", feeMatrixDetail.getAmount());
@@ -131,6 +132,7 @@ public class FeeMatrixRepository {
 		AuditDetails auditDetails = feeMatrixDetail.getAuditDetails();
 		MapSqlParameterSource parameters = new MapSqlParameterSource();
 		parameters.addValue("feeMatrixId", feeMatrixDetail.getFeeMatrixId());
+		parameters.addValue("tenantId", feeMatrixDetail.getTenantId());
 		parameters.addValue("uomFrom", feeMatrixDetail.getUomFrom());
 		parameters.addValue("uomTo", feeMatrixDetail.getUomTo());
 		parameters.addValue("amount", feeMatrixDetail.getAmount());

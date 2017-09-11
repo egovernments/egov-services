@@ -23,6 +23,7 @@
             "details": [
                 {
                     "id": 5,
+                    "tenantId": "default",
                     "categoryId": 10,
                     "feeType": "License",
                     "rateType": "Flat_By_Percentage",

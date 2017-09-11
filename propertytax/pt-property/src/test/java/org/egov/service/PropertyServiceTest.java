@@ -1,6 +1,7 @@
 package org.egov.service;
 
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,6 +14,9 @@ import org.egov.enums.SourceEnum;
 import org.egov.enums.StatusEnum;
 import org.egov.enums.UnitTypeEnum;
 import org.egov.models.Address;
+import org.egov.models.AppConfiguration;
+import org.egov.models.AppConfigurationRequest;
+import org.egov.models.AppConfigurationResponse;
 import org.egov.models.AuditDetails;
 import org.egov.models.Boundary;
 import org.egov.models.Department;
@@ -29,6 +33,9 @@ import org.egov.models.Floor;
 import org.egov.models.FloorType;
 import org.egov.models.FloorTypeRequest;
 import org.egov.models.FloorTypeResponse;
+import org.egov.models.GuidanceValueBoundary;
+import org.egov.models.GuidanceValueBoundaryRequest;
+import org.egov.models.GuidanceValueBoundaryResponse;
 import org.egov.models.MutationMaster;
 import org.egov.models.MutationMasterRequest;
 import org.egov.models.MutationMasterResponse;
@@ -44,6 +51,7 @@ import org.egov.models.PropertyTypeRequest;
 import org.egov.models.PropertyTypeResponse;
 import org.egov.models.RequestInfo;
 import org.egov.models.RequestInfoWrapper;
+import org.egov.models.ResponseInfo;
 import org.egov.models.Role;
 import org.egov.models.RoofType;
 import org.egov.models.RoofTypeRequest;
@@ -700,7 +708,7 @@ public class PropertyServiceTest {
 			Integer orderNumber = 1;
 			Integer pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize().trim());
 			Integer offset = Integer.valueOf(propertiesManager.getDefaultOffset());
-			String parent=null;
+			String parent = null;
 
 			PropertyTypeResponse propertyTypeResponse = masterService.getPropertyTypeMaster(getRequestInfoObject(),
 					tenantId, ids, name, code, nameLocal, active, orderNumber, pageSize, offset, parent);
@@ -1167,7 +1175,7 @@ public class PropertyServiceTest {
 
 			Unit unit = new Unit();
 
-			unit.setUnitNo(1);
+			unit.setUnitNo("1");
 			unit.setUnitType(UnitTypeEnum.FLAT.valueOf("FLAT"));
 			unit.setLength((double) 10);
 			unit.setWidth((double) 15);
@@ -1400,7 +1408,7 @@ public class PropertyServiceTest {
 
 			Unit unit = new Unit();
 			unit.setId((long) 1);
-			unit.setUnitNo(1);
+			unit.setUnitNo("1");
 			unit.setUnitType(UnitTypeEnum.FLAT.valueOf("FLAT"));
 			unit.setLength((double) 15);
 			unit.setWidth((double) 15);
@@ -1831,4 +1839,151 @@ public class PropertyServiceTest {
 			assertTrue(false);
 	}
 
+	@Test
+	public void createGuidanceValueBoundaryTest() {
+		try {
+			String tenantId = "default";
+			List<GuidanceValueBoundary> guidanceValueBoundaries = new ArrayList<>();
+			GuidanceValueBoundary guidanceValueBoundary = new GuidanceValueBoundary();
+			guidanceValueBoundary.setTenantId("default");
+			guidanceValueBoundary.setGuidanceValueBoundary1("gvb1");
+			guidanceValueBoundary.setGuidanceValueBoundary2("gvb2");
+			AuditDetails auditDetails = new AuditDetails();
+			guidanceValueBoundary.setAuditDetails(auditDetails);
+			guidanceValueBoundaries.add(guidanceValueBoundary);
+			GuidanceValueBoundaryRequest guidanceValueBoundaryRequest = new GuidanceValueBoundaryRequest();
+			guidanceValueBoundaryRequest.setRequestInfo(getRequestInfoObject());
+			guidanceValueBoundaryRequest.setGuidanceValueBoundaries(guidanceValueBoundaries);
+			GuidanceValueBoundaryResponse guidanceValueBoundaryResponse;
+			guidanceValueBoundaryResponse = masterService.createGuidanceValueBoundary(tenantId,
+					guidanceValueBoundaryRequest);
+
+			if (guidanceValueBoundaryResponse.getGuidanceValueBoundaries().size() == 0)
+				assertTrue(false);
+			assertTrue(true);
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+	}
+
+	@Test
+	public void updateGuidanceValueBoundaryTest() {
+		try {
+			List<GuidanceValueBoundary> guidanceValueBoundaries = new ArrayList<>();
+			GuidanceValueBoundary guidanceValueBoundary = new GuidanceValueBoundary();
+			guidanceValueBoundary.setId(1l);
+			guidanceValueBoundary.setTenantId("default");
+			guidanceValueBoundary.setGuidanceValueBoundary1("updated-gvb1");
+			guidanceValueBoundary.setGuidanceValueBoundary2("updated-gvb2");
+			AuditDetails auditDetails = new AuditDetails();
+			guidanceValueBoundary.setAuditDetails(auditDetails);
+			guidanceValueBoundaries.add(guidanceValueBoundary);
+			GuidanceValueBoundaryRequest guidanceValueBoundaryRequest = new GuidanceValueBoundaryRequest();
+			guidanceValueBoundaryRequest.setRequestInfo(getRequestInfoObject());
+			guidanceValueBoundaryRequest.setGuidanceValueBoundaries(guidanceValueBoundaries);
+			GuidanceValueBoundaryResponse guidanceValueBoundaryResponse;
+			guidanceValueBoundaryResponse = masterService.updateGuidanceValueBoundary(guidanceValueBoundaryRequest);
+
+			if (guidanceValueBoundaryResponse.getGuidanceValueBoundaries().size() == 0)
+				assertTrue(false);
+			assertTrue(true);
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+	}
+
+	@Test
+	public void searchGuidanceValueBoundaryTest() {
+		String tenantId = "default";
+		String guidanceValueBoundary1 = "updated-gvb1";
+		RequestInfo requestInfo = getRequestInfoObject();
+		GuidanceValueBoundaryResponse guidanceValueBoundaryResponse = null;
+		try {
+			guidanceValueBoundaryResponse = masterService.getGuidanceValueBoundary(requestInfo, tenantId,
+					guidanceValueBoundary1, null, null, null);
+			if (guidanceValueBoundaryResponse != null
+					&& guidanceValueBoundaryResponse.getGuidanceValueBoundaries().size() > 0)
+				assertTrue(true);
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+	}
+
+	@Test
+	public void createAppConfigurationTest() {
+		try {
+			String tenantId = "default";
+			List<AppConfiguration> appConfigurations = new ArrayList<>();
+			List<String> values = new ArrayList<>();
+			values.add("appvalue1");
+			values.add("appvalue2");
+			values.add("appvalue3");
+			AppConfiguration appConfiguration = new AppConfiguration();
+			appConfiguration.setTenantId("default");
+			appConfiguration.setKeyName("AppConfig");
+			appConfiguration.setEffectiveFrom("01/04/2012");
+			appConfiguration.setValues(values);
+			AuditDetails auditDetails = new AuditDetails();
+			appConfiguration.setAuditDetails(auditDetails);
+			appConfigurations.add(appConfiguration);
+			AppConfigurationRequest appConfigurationRequest = new AppConfigurationRequest();
+			appConfigurationRequest.setRequestInfo(getRequestInfoObject());
+			appConfigurationRequest.setAppConfigurations(appConfigurations);
+			AppConfigurationResponse appConfigurationResponse;
+			appConfigurationResponse = masterService.createAppConfiguration(tenantId, appConfigurationRequest);
+
+			if (appConfigurationResponse.getAppConfigurations().size() == 0)
+				assertTrue(false);
+			assertTrue(true);
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+	}
+
+	@Test
+	public void updateAppConfigurationTest() {
+		try {
+			List<AppConfiguration> appConfigurations = new ArrayList<>();
+			List<String> values = new ArrayList<>();
+			values.add("appvalueupdate1");
+			values.add("appvalueupdate2");
+			values.add("appvalueupdate3");
+			AppConfiguration appConfiguration = new AppConfiguration();
+			appConfiguration.setId(1l);
+			appConfiguration.setTenantId("default");
+			appConfiguration.setKeyName("AppConfigUpdated");
+			appConfiguration.setEffectiveFrom("05/09/2012");
+			appConfiguration.setValues(values);
+			AuditDetails auditDetails = new AuditDetails();
+			appConfiguration.setAuditDetails(auditDetails);
+			appConfigurations.add(appConfiguration);
+			AppConfigurationRequest appConfigurationRequest = new AppConfigurationRequest();
+			appConfigurationRequest.setRequestInfo(getRequestInfoObject());
+			appConfigurationRequest.setAppConfigurations(appConfigurations);
+			AppConfigurationResponse appConfigurationResponse;
+			appConfigurationResponse = masterService.updateAppConfiguration(appConfigurationRequest);
+
+			if (appConfigurationResponse.getAppConfigurations().size() == 0)
+				assertTrue(false);
+			assertTrue(true);
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+	}
+
+	@Test
+	public void searchAppConfigurationTest() {
+		String tenantId = "default";
+		String keyName = "AppConfigUpdated";
+		RequestInfo requestInfo = getRequestInfoObject();
+		AppConfigurationResponse appConfigurationResponse;
+		try {
+			appConfigurationResponse = masterService.getAppConfiguration(requestInfo, tenantId, null, keyName, null,
+					null, null);
+			if (appConfigurationResponse != null && appConfigurationResponse.getAppConfigurations().size() > 0)
+				assertTrue(true);
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+	}
 }

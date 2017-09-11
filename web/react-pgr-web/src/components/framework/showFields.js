@@ -24,6 +24,7 @@ import UiDocumentList from './components/UiDocumentList'
 import UiAutoComplete from './components/UiAutoComplete'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
 import UiDate from './components/UiDate';
+import UiPinCode from './components/UiPinCode';
 
 let styles={
   reducePadding: {
@@ -49,8 +50,8 @@ export default class ShowFields extends Component {
     let {addNewCard, removeCard} = this.props;
     let {renderField}=this;
     return (
-      <Card  style={{"display": group.hide ? "none" : "block", "marginBottom": isMultiple ? '0px' : '', "marginTop": isMultiple ? '0px' : ''}} className={"uiCard "+group.name} key={groupIndex} expanded={self.state[group.name] ? false : true} onExpandChange={() => {self.changeExpanded(group.name)}}>
-          {!isMultiple && <CardHeader style={{paddingTop:4,paddingBottom:0}} title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{group.label}</div>} showExpandableButton={true} actAsExpander={true}/>}
+      <Card style={{"display": group.hide ? "none" : "block", "marginBottom": isMultiple ? '0px' : '', "marginTop": isMultiple ? '0px' : ''}} className={"uiCard "+group.name} key={groupIndex} expanded={self.state[group.name] ? false : true} onExpandChange={() => {self.changeExpanded(group.name)}}>
+          {!isMultiple && <CardHeader style={{paddingTop:4,paddingBottom:0}} title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{group.label}</div>} actAsExpander={true}/>}
           <CardText style={{paddingTop:0,paddingBottom:0}} expandable={true}>
           <Grid style={{paddingTop:0}}>
             <Row>
@@ -119,7 +120,7 @@ export default class ShowFields extends Component {
           if(listArr[key].objects) {
             return (
               <Card className={"uiCard "} expanded={true}>
-                <CardHeader style={{paddingTop:4,paddingBottom:0}} title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{listArr[key].objects[0].object.label}</div>} showExpandableButton={true} actAsExpander={true}/>
+                <CardHeader style={{paddingTop:4,paddingBottom:0}} title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{listArr[key].objects[0].object.label}</div>} subtitle={typeof(listArr[key].objects[0].object.description)?listArr[key].objects[0].object.description:""} showExpandableButton={true} actAsExpander={true}/>
                   <CardText style={{paddingTop:0,paddingBottom:0}} style={{padding:0}} expandable={true}>
                     {
                       listArr[key].objects.map((grp, grpIndex) => {
@@ -140,6 +141,9 @@ export default class ShowFields extends Component {
 
   renderField=(item, screen,index)=> {
     if(screen == "view") {
+      if (item.type == "datePicker") {
+        item.isDate=true;
+      }
       item.type = "label";
     }
   	switch(item.type) {
@@ -189,6 +193,8 @@ export default class ShowFields extends Component {
         return <UiPanCard tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
       case 'aadhar':
         return <UiAadharCard tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+      case 'pinCode':
+        return <UiPinCode tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
       case 'label':
         return <UiLabel tabIndex={index} getVal={this.props.getVal} item={item}/>
       case 'radio':

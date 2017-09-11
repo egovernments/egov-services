@@ -320,12 +320,72 @@ public class WcmsConnectionConstants {
     public static final String BOUNDARY_LOCATION_INVALID_CODE = "wcms.0053";
     public static final String BOUNDARY_LOCATION_INVALID_ERROR_MESSAGE = "Please provide valid Location";
     public static final String BOUNDARY_LOCATION_INVALID_FIELD_NAME = "location";
-  
+    
+    public static final String CONNECTION_METERED_OWNER_INVALID_CODE = "wcms.0054";
+    public static final String CONNECTION_METERED_OWNER_INVALID_ERROR_MESSAGE = "Required meter owner";
+    public static final String CONNECTION_METERED_OWNER_INVALID_FIELD_NAME = "meterOwner";
+    
+    public static final String CONNECTION_METERED_NUMBER_INVALID_CODE = "wcms.0055";
+    public static final String CONNECTION_METERED_NUMBER_INVALID_ERROR_MESSAGE = "Required meter serial number";
+    public static final String CONNECTION_METERED_NUMBER_INVALID_FIELD_NAME = "meterSlNo";
+    
+    public static final String CONNECTION_METERED_MAXMETERREADING_INVALID_CODE = "wcms.0056";
+    public static final String CONNECTION_METERED_MAXMETERREADING_INVALID_ERROR_MESSAGE = "Required maximum meter reading";
+    public static final String CONNECTION_METERED_MAXMETERREADING_INVALID_FIELD_NAME = "maximumMeterReading";
+    
+    public static final String CONNECTION_METERED_METERREADING_INVALID_CODE = "wcms.0057";
+    public static final String CONNECTION_METERED_METERREADING_INVALID_ERROR_MESSAGE = "Required valid meter reading";
+    public static final String CONNECTION_METERED_METERREADING_INVALID_FIELD_NAME = "reading";
+    
+    public static final String CONNECTION_METERED_METERREADINGDATE_INVALID_CODE = "wcms.0058";
+    public static final String CONNECTION_METERED_METERREADINGDATE_INVALID_ERROR_MESSAGE = "Required valid meter ReadingDate";
+    public static final String CONNECTION_METERED_METERREADINGDATE_INVALID_FIELD_NAME = "readingDate";
+    
+    public static final String CONNECTION_METERED_METERREADINGDETAILS_INVALID_CODE = "wcms.0059";
+    public static final String CONNECTION_METERED_METERREADINGDETAILS_INVALID_ERROR_MESSAGE = "Required meterReadings Deatils for Metered Connection";
+    public static final String CONNECTION_METERED_METERREADINGDETAILS_INVALID_FIELD_NAME = "meterReadings";
+    
+    public static final String CONNECTION_METERED_MODEL_INVALID_CODE = "wcms.0060";
+    public static final String CONNECTION_METERED_MODEL_INVALID_ERROR_MESSAGE = "Required meter model";
+    public static final String CONNECTION_METERED_MODEL_INVALID_FIELD_NAME = "meterModel";    
+    
     public static final String ZONE = "Zone";
     public static final String REVENUE = "REVENUE";
     public static final String WARD = "Ward";
     public static final String LOCALITY = "Locality";
     public static final String LOCATION = "LOCATION";
+    
+    public static final String CONNECTIONSTATUSACTIVE="ACTIVE";
+    public static final String CONNECTIONSTATUSINPROGRESS="INPROGRESS";
+    public static final String CONNECTIONSTATUSCREAED="CREATED";
+    
+    public static final String WORKFLOW_REQUIRED_CONFIG_KEY="WORKFLOW_REQUIRED_OR_NOT";
+    public static final String SERVICES_FOR_USAGETYPE_SEARCH = "wc,common" ; 
+
+    private  static final String WATERCHARGETAXHEADCODE="WATERCHARGE";
+    
+    private  static final String WATERCHARGEPENALTYTAXHEADCODE="WATERCHARGEPENALTY";
+    private  static final String WATERCHARGEADVANCE="ADVANCE";
+
+    public static final HashMap<String, String> DEMAND_REASON_ORDER_MAP_WITHOUTAVANCE = new HashMap<String, String>() {
+        private static final long serialVersionUID = -376251525790947906L;
+
+        {
+            put(WATERCHARGETAXHEADCODE,WATERCHARGETAXHEADCODE);
+            put(WATERCHARGEPENALTYTAXHEADCODE, WATERCHARGEPENALTYTAXHEADCODE);
+        }
+};
+    
+    public static final HashMap<String, String> DEMAND_REASON_ORDER_MAP = new HashMap<String, String>() {
+        private static final long serialVersionUID = -376251525790947906L;
+
+        {
+            put(WATERCHARGETAXHEADCODE,WATERCHARGETAXHEADCODE);
+            put(WATERCHARGEPENALTYTAXHEADCODE, WATERCHARGEPENALTYTAXHEADCODE);
+            put(WATERCHARGEADVANCE, WATERCHARGEADVANCE);
+        }
+};
+
     
     public String getErrorMessage(final String property) {
         return environment.getProperty(property);

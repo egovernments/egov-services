@@ -12,6 +12,7 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.egov.lams.config.PropertiesManager;
+import org.egov.lams.exceptions.CollectionExceedException;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.Allottee;
 import org.egov.lams.model.Demand;
@@ -210,6 +211,10 @@ public class PaymentService {
 			}
 			billInfo.setTotalAmount(totalAmount.doubleValue());
 			billInfo.setBillAmount(totalAmount.doubleValue());
+			if (billDetailInfos.isEmpty()) {
+				LOGGER.info("No bill details for collection");
+				throw new CollectionExceedException();
+			} else
 			billInfo.setBillDetailInfos(billDetailInfos);
 			LOGGER.info("billInfo before>>>>>>>" + billInfo);
 			billInfos.add(billInfo);
@@ -229,13 +234,14 @@ public class PaymentService {
 	public List<BillDetailInfo> getBilldetails(final DemandDetails demandDetail, String functionCode, int orderNo,
 			RequestInfo requestInfo, Map<String, String> purpose) {
 		final List<BillDetailInfo> billDetails = new ArrayList<>();
-
+		BigDecimal balance = BigDecimal.ZERO;
 		LOGGER.info("paymentservice demand detail ::"+demandDetail);
 		try {
 			BillDetailInfo billdetail = new BillDetailInfo();
 			// TODO: Fix me: As per the rules for the order no.
+			balance=demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount());
 			billdetail.setOrderNo(orderNo);
-			billdetail.setCreditAmount(demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount()));
+			billdetail.setCreditAmount(balance);
 			billdetail.setDebitAmount(BigDecimal.ZERO);
 			LOGGER.info("getGlCode before>>>>>>>" + demandDetail.getGlCode());
 			billdetail.setGlCode(demandDetail.getGlCode());
@@ -248,7 +254,10 @@ public class PaymentService {
 
 			billdetail.setIsActualDemand(demandDetail.getIsActualDemand());
 			billdetail.setFunctionCode(functionCode);
-			billDetails.add(billdetail);
+			if (balance.compareTo(BigDecimal.ZERO) > 0) {
+				billDetails.add(billdetail);
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -332,6 +341,7 @@ public class PaymentService {
 		BigDecimal totalAmountCollected = BigDecimal.ZERO;
 		LOGGER.info("the size of objects ::: " + billReceiptInfo.getAccountDetails().size()
 				+ "the size of demand details ::" + demand.getDemandDetails().size());
+		prepareDemandDetailsForCollectionUpdate(demand);
 		for (final ReceiptAccountInfo rcptAccInfo : billReceiptInfo.getAccountDetails()) {
 
 			totalAmountCollected = totalAmountCollected.add(updateDemandDetails(demand, rcptAccInfo));
@@ -339,7 +349,18 @@ public class PaymentService {
 		LOGGER.info("updateDemandDetailForReceiptCreate  ::: totalAmountCollected " + totalAmountCollected);
 		demand.setCollectionAmount(totalAmountCollected);
 	}
+     
+	/*
+	 * making collection amount zero if rent is fully paid 
+	 * and actual collection should be updated in back update of collection 
+	 */
+	private void prepareDemandDetailsForCollectionUpdate(Demand demand) {
 
+		for (DemandDetails demandDetail : demand.getDemandDetails()) {
+			demandDetail.setCollectionAmount(BigDecimal.ZERO);
+		}
+
+	}
 	private BigDecimal updateDemandDetails(Demand demand, final ReceiptAccountInfo rcptAccInfo) {
 
 		BigDecimal totalAmountCollected = BigDecimal.ZERO;

@@ -42,6 +42,7 @@ package org.egov.demand.service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -66,7 +67,6 @@ import org.egov.demand.model.DemandDue;
 import org.egov.demand.model.DemandDueCriteria;
 import org.egov.demand.model.DemandUpdateMisRequest;
 import org.egov.demand.model.Owner;
-import org.egov.demand.model.TaxPeriod;
 import org.egov.demand.repository.DemandRepository;
 import org.egov.demand.repository.OwnerRepository;
 import org.egov.demand.util.DemandEnrichmentUtil;
@@ -77,8 +77,6 @@ import org.egov.demand.web.contract.DemandDueResponse;
 import org.egov.demand.web.contract.DemandRequest;
 import org.egov.demand.web.contract.DemandResponse;
 import org.egov.demand.web.contract.ReceiptRequest;
-import org.egov.demand.web.contract.TaxPeriodCriteria;
-import org.egov.demand.web.contract.TaxPeriodResponse;
 import org.egov.demand.web.contract.UserSearchRequest;
 import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
@@ -298,7 +296,7 @@ public class DemandService {
 			}
 		}
 		demandRequest.setDemands(existingDemands);
-		kafkaTemplate.send(applicationProperties.getUpdateDemandBillTopicName(), demandRequest);
+		kafkaTemplate.send(applicationProperties.getUpdateDemandTopic(), demandRequest);
 		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED),
 				existingDemands);
 	}
@@ -366,9 +364,11 @@ public class DemandService {
 			owners = ownerRepository.getOwners(userSearchRequest);
 			Set<String> ownerIds = owners.stream().map(owner -> owner.getId().toString()).collect(Collectors.toSet());
 			demands = demandRepository.getDemands(demandCriteria, ownerIds);
+		demands.sort(Comparator.comparing(Demand::getTaxPeriodFrom));
 		} else {
 			demands = demandRepository.getDemands(demandCriteria, null);
 			if(!demands.isEmpty()) {
+				demands.sort(Comparator.comparing(Demand::getTaxPeriodFrom));
 				List<Long> ownerIds = new ArrayList<>(
 						demands.stream().map(demand -> demand.getOwner().getId()).collect(Collectors.toSet()));
 				userSearchRequest = UserSearchRequest.builder().requestInfo(requestInfo)
@@ -378,6 +378,9 @@ public class DemandService {
 		}
 		if (demands!=null && !demands.isEmpty())
 			demands = demandEnrichmentUtil.enrichOwners(demands, owners);
+		for(Demand demand:demands){
+			demand.getDemandDetails().sort(Comparator.comparing(DemandDetail::getTaxHeadMasterCode));
+		}
 		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK), demands);
 	}
 

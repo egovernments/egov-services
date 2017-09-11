@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.mr.model.MarriageDocumentType;
 import org.springframework.stereotype.Component;
 

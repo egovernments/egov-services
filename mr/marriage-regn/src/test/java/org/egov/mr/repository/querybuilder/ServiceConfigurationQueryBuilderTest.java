@@ -11,13 +11,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(SpringRunner.class)
-@WebMvcTest(ServiceConfigurationQueryBuilder.class)
-@Import(TestConfiguration.class)
+@RunWith(MockitoJUnitRunner.class)
 public class ServiceConfigurationQueryBuilderTest {
 
 	@Mock

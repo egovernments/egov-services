@@ -9,6 +9,6 @@ import lombok.Data;
 
 public @Data class InstrumentRequest {
 	private RequestInfo requestInfo = new RequestInfo();
-	private List<Instrument> instruments = new ArrayList<Instrument>();
+	private List<Instrument> instruments = new ArrayList<>();
     private String ids;
 }

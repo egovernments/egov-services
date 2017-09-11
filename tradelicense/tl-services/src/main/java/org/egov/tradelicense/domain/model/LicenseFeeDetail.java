@@ -18,13 +18,19 @@ public class LicenseFeeDetail {
 	@JsonProperty("id")
 	private Long id;
 
-	@JsonProperty("licenseId")
-	private Long licenseId;
+//	@JsonProperty("licenseId")
+//	private Long licenseId;
 
 	@NotNull
 	@JsonProperty("financialYear")
 	private String financialYear;
 
+	@JsonProperty("tenantId")
+	private String tenantId;
+	
+	@JsonProperty("applicationId")
+	private Long applicationId;
+	
 	@NotNull
 	@JsonProperty("amount")
 	private Double amount;

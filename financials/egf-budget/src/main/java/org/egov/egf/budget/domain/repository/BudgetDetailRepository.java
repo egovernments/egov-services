@@ -39,6 +39,9 @@
  */
 package org.egov.egf.budget.domain.repository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.budget.domain.model.BudgetDetail;
@@ -54,9 +57,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class BudgetDetailRepository {
@@ -246,5 +246,9 @@ public class BudgetDetailRepository {
         }
 
     }
+
+	public boolean uniqueCheck(String fieldName, BudgetDetail budgetDetail) {
+		return budgetDetailJdbcRepository.uniqueCheck(fieldName, new BudgetDetailEntity().toEntity(budgetDetail));
+	}
 
 }

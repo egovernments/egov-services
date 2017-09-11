@@ -1,5 +1,10 @@
+// var store=require('../store');
+
 var common = require('../components/common/common');
 var axios = require('axios');
+
+// console.log(store.getState);
+
 // var store = require('configureStore').configure();
 
 var instance = axios.create({
@@ -31,7 +36,7 @@ var requestInfo = {
 var tenantId = localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default';
 
 module.exports = {
-    commonApiPost: (context, queryObject = {}, body = {}, doNotOverride = false, isTimeLong = false, noPageSize = false) => {
+    commonApiPost: (context, queryObject = {}, body = {}, doNotOverride = false, isTimeLong = false, noPageSize = false, authToken="", userInfo = "") => {
         var url = context;
         if(url && url[url.length-1] === "/")
             url = url.substring(0, url.length-1);
@@ -54,8 +59,16 @@ module.exports = {
             requestInfo.ts = new Date().getTime();
         }
 
+        if(authToken)
+        {
+          requestInfo["authToken"]=authToken;
+        }
 
         body["RequestInfo"] = requestInfo;
+
+        if(userInfo) {
+            body["RequestInfo"]["userInfo"] = userInfo;
+        }
 
         return instance.post(url, body).then(function(response) {
             return response.data;
@@ -71,17 +84,25 @@ module.exports = {
                         throw new Error(_err);
                     }
                 }else if(response && response.response && response.response.data && response.response.data.error){
-                  let _err = common.translate(response.response.data.error.fields[0].code);
+                  // let _err = common.translate(response.response.data.error.fields[0].code);
+                  let _err = "";
+                  _err=response.response.data.error.message?"a)."+response.response.data.error.message+".":"";
+                  let fields=response.response.data.error.fields;
+                  for (var i = 0; i < fields.length; i++) {
+                    _err+=(i+1)+")." +common.translate(fields[i].code) +".";
+                  }
                   throw new Error(_err);
                 }else if(response && response.response && !response.response.data && response.response.status === 400) {
                     document.title = "eGovernments";
                     var locale = localStorage.getItem('locale');
+                    var _tntId = localStorage.getItem("tenantId") || "default";
                     localStorage.clear();
                     localStorage.setItem('locale', locale);
+                    alert("Session got expired please login again")
                     localStorage.reload = true;
-                    window.location.hash = "#/";
+                    window.location.hash = "#/" + _tntId;
                 } else if(response){
-                    throw new Error(response);
+                    throw new Error("Oops! Something isn't right. Please try again later.");
                 }else {
                     throw new Error("Server returned unexpected error. Please contact system administrator.");
                 }

@@ -99,6 +99,13 @@ public class AgreementValidator implements org.springframework.validation.Valida
 		case EVICTION:
 			validateEviction(agreementRequest, errors);
 			break;
+		case OBJECTION:
+			validateObjection(agreementRequest, errors);
+			break;
+		case JUDGEMENT:
+			validateJudgement(agreementRequest, errors);
+			break;
+			
 
 		default:
 			break;
@@ -312,6 +319,22 @@ public class AgreementValidator implements org.springframework.validation.Valida
 	public void validateUpdate(AgreementRequest agreementRequest, Errors errors) {
 		Agreement agreement = agreementRequest.getAgreement();
 		validateWorkflowDetails(agreement.getWorkflowDetails(), errors);
+		
+	}
+	
+	private void validateObjection(AgreementRequest agreementRequest, Errors errors) {
+		String renewalStatus = agreementService.checkRenewalStatus(agreementRequest);
+		if (!"ACTIVE".equals(renewalStatus)) {
+			errors.reject("Can't do objection", "Renewal status is not active");
+		}
+
+	}
+
+	private void validateJudgement(AgreementRequest agreementRequest, Errors errors) {
+		String objectionStatus = agreementService.checkObjectionStatus(agreementRequest);
+		if (!"ACTIVE".equals(objectionStatus)) {
+			errors.reject("Can't start ", "Judgement will be applicable on objected agreements only!");
+		}
 		
 	}
 }

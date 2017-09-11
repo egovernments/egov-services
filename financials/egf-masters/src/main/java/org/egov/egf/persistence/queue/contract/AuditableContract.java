@@ -43,6 +43,7 @@ import java.util.Date;
 
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import lombok.Data;
@@ -51,10 +52,12 @@ import lombok.Data;
 @JsonPropertyOrder({ "createdBy", "createdDate", "lastModifiedBy", "lastModifiedDate", "tenantId" })
 public class AuditableContract {
 
+	@JsonIgnore
 	private Long createdBy;
 
 	private Date createdDate;
 
+	@JsonIgnore
 	private Long lastModifiedBy;
 
 	private Date lastModifiedDate;

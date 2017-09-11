@@ -33,7 +33,7 @@ public class TradeLicense {
 
 	@NotNull
 	private ApplicationType applicationType;
-
+	
 	@JsonProperty("applicationNumber")
 	private String applicationNumber;
 
@@ -89,7 +89,7 @@ public class TradeLicense {
 	@NotNull
 	@JsonProperty("adminWardId")
 	private Integer adminWardId;
-	
+
 	@NotNull
 	@JsonProperty("tradeAddress")
 	@Size(max = 256)
@@ -123,7 +123,7 @@ public class TradeLicense {
 	@NotNull
 	@JsonProperty("quantity")
 	private Double quantity;
-	
+
 	@NotNull
 	@JsonProperty("validityYears")
 	private Long validityYears;
@@ -135,6 +135,9 @@ public class TradeLicense {
 	@JsonProperty("tradeCommencementDate")
 	private Long tradeCommencementDate;
 	
+	@JsonProperty("issuedDate")
+	private Long issuedDate;
+
 	@NotNull
 	@JsonProperty("licenseValidFromDate")
 	private Long licenseValidFromDate;
@@ -147,10 +150,10 @@ public class TradeLicense {
 
 	@JsonProperty("isLegacy")
 	private Boolean isLegacy = false;
-	
+
 	@JsonProperty("isPropertyOwner")
 	private Boolean isPropertyOwner = false;
-	
+
 	@JsonProperty("active")
 	private Boolean active = true;
 
@@ -162,11 +165,18 @@ public class TradeLicense {
 
 	@JsonProperty("supportDocuments")
 	private List<SupportDocument> supportDocuments;
+	
+	@JsonProperty("licenseDemands")
+	private List<LicenseApplicationBill> applicationLicenseBills;
+	
+	@JsonProperty("application")
+	private LicenseApplication application;
 
 	@JsonProperty("status")
 	private Long status;
-
+	
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;
 
+	private String billId;
 }

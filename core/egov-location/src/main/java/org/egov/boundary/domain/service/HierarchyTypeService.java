@@ -46,7 +46,7 @@ import java.util.List;
 
 import org.egov.boundary.persistence.entity.HierarchyType;
 import org.egov.boundary.persistence.repository.HierarchyTypeRepository;
-import org.egov.boundary.web.contract.HierarchyTypeRequest;
+import org.egov.boundary.web.contract.HierarchyTypeSearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -98,7 +98,7 @@ public class HierarchyTypeService {
 
 	}
 
-	public List<HierarchyType> getAllHierarchyTypes(HierarchyTypeRequest hierarchyTypeRequest) {
+	public List<HierarchyType> getAllHierarchyTypes(HierarchyTypeSearchRequest hierarchyTypeRequest) {
 		List<HierarchyType> hierarchyTypes = new ArrayList<HierarchyType>();
 		if (hierarchyTypeRequest.getHierarchyType() != null
 				&& hierarchyTypeRequest.getHierarchyType().getTenantId() != null

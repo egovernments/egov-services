@@ -1,48 +1,45 @@
 
 {
-   "responseInfo": {
-       "resMsgId": null,
-       "status": "200",
-       "apiId": null,
-       "ver": null,
-       "ts": null,
-       "key": null,
-       "tenantId": null
-   },
-   "marriageDocTypes": [
-   
-       {
-           "id": 1,
-           "name": "ADDRESSPROOF",
-           "code": "00015",
-           "proof": "ADDRESS_PROOF",
-           "applicationType": "REGISTRATION",
-           "isActive": true,
-           "isIndividual": true,
-           "isRequired": true,
-           "tenantId": "ap.kurnool"
-       },
-       {
-           "id": 2,
-           "name": "DOCTYPEPROOF",
-           "code": "00020",
-           "proof": "ADDRESS_PROOF",
-           "applicationType": "REGISTRATION",
-           "isActive": true,
-           "isIndividual": true,
-           "isRequired": false,
-           "tenantId": "ap.kurnool"
-       },
-       {
-           "id": 73,
-           "name": "AGEPROOF",
-           "code": "00065",
-           "proof": "ADDRESS_PROOF",
-           "applicationType": "REISSUE",
-           "isActive": true,
-           "isIndividual": false,
-           "isRequired": false,
-           "tenantId": "ap.kurnool"
-       }
-   ]
+	"responseInfo": {
+		"resMsgId": null,
+		"status": "200",
+		"apiId": null,
+		"ver": null,
+		"ts": 987456321
+	},
+	"marriageDocTypes": [
+		{
+			"id": 1,
+			"name": "ADDRESSPROOF",
+			"code": "00015",
+			"proof": "ADDRESS_PROOF",
+			"applicationType": "REGISTRATION",
+			"isActive": true,
+			"isIndividual": true,
+			"isRequired": true,
+			"tenantId": "ap.kurnool"
+		},
+		{
+			"id": 2,
+			"name": "DOCTYPEPROOF",
+			"code": "00020",
+			"proof": "ADDRESS_PROOF",
+			"applicationType": "REGISTRATION",
+			"isActive": true,
+			"isIndividual": true,
+			"isRequired": false,
+			"tenantId": "ap.kurnool"
+		},
+		{
+			"id": 73,
+			"name": "AGEPROOF",
+			"code": "00065",
+			"proof": "ADDRESS_PROOF",
+			"applicationType": "REISSUE",
+			"isActive": true,
+			"isIndividual": false,
+			"isRequired": false,
+			"tenantId": "ap.kurnool"
+		}
+	]
 }

@@ -2,11 +2,10 @@ package org.egov.tradelicense.web.repository;
 
 import java.util.Date;
 
-import org.egov.tl.commons.web.requests.CategoryResponse;
-import org.egov.tl.commons.web.requests.CategorySearchResponse;
-import org.egov.tl.commons.web.requests.LicenseStatusResponse;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
-import org.egov.tl.commons.web.requests.UOMResponse;
+import org.egov.tl.commons.web.response.CategorySearchResponse;
+import org.egov.tl.commons.web.response.LicenseStatusResponse;
+import org.egov.tl.commons.web.response.UOMResponse;
 import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.web.requests.TlMasterRequestInfo;
@@ -51,7 +50,8 @@ public class CategoryContractRepository {
 
 		try {
 
-			categoryResponse = restTemplate.postForObject(url, tlMasterRequestInfoWrapper, CategorySearchResponse.class);
+			categoryResponse = restTemplate.postForObject(url, tlMasterRequestInfoWrapper,
+					CategorySearchResponse.class);
 		} catch (Exception e) {
 			log.error(propertiesManger.getCatEndPointError());
 		}
@@ -64,7 +64,8 @@ public class CategoryContractRepository {
 
 	}
 
-	public CategorySearchResponse findBySubCategoryId(TradeLicense tradeLicense, RequestInfoWrapper requestInfoWrapper) {
+	public CategorySearchResponse findBySubCategoryId(TradeLicense tradeLicense,
+			RequestInfoWrapper requestInfoWrapper) {
 		String hostUrl = propertiesManger.getTradeLicenseMasterServiceHostName()
 				+ propertiesManger.getTradeLicenseMasterServiceBasePath();
 		String searchUrl = propertiesManger.getCategoryServiceSearchPath();
@@ -87,7 +88,8 @@ public class CategoryContractRepository {
 
 		try {
 
-			categoryResponse = restTemplate.postForObject(url, tlMasterRequestInfoWrapper, CategorySearchResponse.class);
+			categoryResponse = restTemplate.postForObject(url, tlMasterRequestInfoWrapper,
+					CategorySearchResponse.class);
 		} catch (Exception e) {
 			log.error("Error while connecting to the category end point");
 		}
@@ -101,7 +103,8 @@ public class CategoryContractRepository {
 
 	}
 
-	public CategorySearchResponse findBySubCategoryUomId(TradeLicense tradeLicense, RequestInfoWrapper requestInfoWrapper) {
+	public CategorySearchResponse findBySubCategoryUomId(TradeLicense tradeLicense,
+			RequestInfoWrapper requestInfoWrapper) {
 		String hostUrl = propertiesManger.getTradeLicenseMasterServiceHostName()
 				+ propertiesManger.getTradeLicenseMasterServiceBasePath();
 		String searchUrl = propertiesManger.getCategoryServiceSearchPath();
@@ -115,16 +118,17 @@ public class CategoryContractRepository {
 			content.append("&tenantId=" + tradeLicense.getTenantId());
 		}
 
-//		if (tradeLicense.getTenantId() != null) {
-//			content.append("&businessNature=" + tradeLicense.getTradeType());
-//		}
-		
+		// if (tradeLicense.getTenantId() != null) {
+		// content.append("&businessNature=" + tradeLicense.getTradeType());
+		// }
+
 		TlMasterRequestInfoWrapper tlMasterRequestInfoWrapper = getTlMasterRequestInfoWrapper(requestInfoWrapper);
 		url = url + content.toString();
 		CategorySearchResponse categoryResponse = null;
 
 		try {
-			categoryResponse = restTemplate.postForObject(url, tlMasterRequestInfoWrapper, CategorySearchResponse.class);
+			categoryResponse = restTemplate.postForObject(url, tlMasterRequestInfoWrapper,
+					CategorySearchResponse.class);
 		} catch (Exception e) {
 			log.error(propertiesManger.getCatEndPointError());
 		}
@@ -137,7 +141,8 @@ public class CategoryContractRepository {
 
 	}
 
-	public CategorySearchResponse findByCategoryIds(String tenantId, String ids, RequestInfoWrapper requestInfoWrapper) {
+	public CategorySearchResponse findByCategoryIds(String tenantId, String ids,
+			RequestInfoWrapper requestInfoWrapper) {
 		String hostUrl = propertiesManger.getTradeLicenseMasterServiceHostName()
 				+ propertiesManger.getTradeLicenseMasterServiceBasePath();
 		String searchUrl = propertiesManger.getCategoryServiceSearchPath();
@@ -156,7 +161,8 @@ public class CategoryContractRepository {
 
 		try {
 
-			categoryResponse = restTemplate.postForObject(url, tlMasterRequestInfoWrapper, CategorySearchResponse.class);
+			categoryResponse = restTemplate.postForObject(url, tlMasterRequestInfoWrapper,
+					CategorySearchResponse.class);
 		} catch (Exception e) {
 			log.error(propertiesManger.getCatEndPointError());
 		}
@@ -195,40 +201,6 @@ public class CategoryContractRepository {
 		}
 		if (uomResponse != null && uomResponse.getUoms() != null && uomResponse.getUoms().size() > 0) {
 			return uomResponse;
-		} else {
-			return null;
-		}
-
-	}
-
-	public LicenseStatusResponse findByStatusIds(String tenantId, String ids, RequestInfoWrapper requestInfoWrapper) {
-
-		String hostUrl = propertiesManger.getTradeLicenseMasterServiceHostName()
-				+ propertiesManger.getTradeLicenseMasterServiceBasePath();
-		String searchUrl = propertiesManger.getStatusServiceSearchPath();
-		String url = String.format("%s%s", hostUrl, searchUrl);
-		StringBuffer content = new StringBuffer();
-		if (ids != null) {
-			content.append("ids=" + ids);
-		}
-
-		if (tenantId != null) {
-			content.append("&tenantId=" + tenantId);
-		}
-		url = url + content.toString();
-		TlMasterRequestInfoWrapper tlMasterRequestInfoWrapper = getTlMasterRequestInfoWrapper(requestInfoWrapper);
-		LicenseStatusResponse licenseStatusResponse = null;
-
-		try {
-
-			licenseStatusResponse = restTemplate.postForObject(url, tlMasterRequestInfoWrapper,
-					LicenseStatusResponse.class);
-		} catch (Exception e) {
-			log.error(propertiesManger.getCatEndPointError());
-		}
-		if (licenseStatusResponse != null && licenseStatusResponse.getLicenseStatuses() != null
-				&& licenseStatusResponse.getLicenseStatuses().size() > 0) {
-			return licenseStatusResponse;
 		} else {
 			return null;
 		}

@@ -6,6 +6,9 @@ import java.util.List;
 import org.egov.models.Apartment;
 import org.egov.models.ApartmentRequest;
 import org.egov.models.ApartmentResponse;
+import org.egov.models.AppConfiguration;
+import org.egov.models.AppConfigurationRequest;
+import org.egov.models.AppConfigurationResponse;
 import org.egov.models.AuditDetails;
 import org.egov.models.Department;
 import org.egov.models.DepartmentRequest;
@@ -20,6 +23,9 @@ import org.egov.models.Floor;
 import org.egov.models.FloorType;
 import org.egov.models.FloorTypeRequest;
 import org.egov.models.FloorTypeResponse;
+import org.egov.models.GuidanceValueBoundary;
+import org.egov.models.GuidanceValueBoundaryRequest;
+import org.egov.models.GuidanceValueBoundaryResponse;
 import org.egov.models.MutationMaster;
 import org.egov.models.MutationMasterRequest;
 import org.egov.models.MutationMasterResponse;
@@ -565,7 +571,7 @@ public class MasterServiceImpl implements Masterservice {
 
 			if (isExists)
 				throw new DuplicateIdException(propertyTypeRequest.getRequestInfo());
-			
+
 			if (propertyType.getParent() != null) {
 				if (!propertyType.getParent().isEmpty()) {
 					Boolean isParentCodeExists = propertyMasterRepository.checkWhetherRecordExits(
@@ -636,6 +642,10 @@ public class MasterServiceImpl implements Masterservice {
 				}
 			}
 
+			if (usageMaster.getService() == null || usageMaster.getService().isEmpty()) {
+				usageMaster.setService(propertiesManager.getUsageMasterDefaultService());
+			}
+
 			try {
 				usageMaster.setAuditDetails(auditDetails);
 				Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
@@ -685,6 +695,10 @@ public class MasterServiceImpl implements Masterservice {
 				}
 			}
 
+			if (usageMaster.getService() == null || usageMaster.getService().isEmpty()) {
+				usageMaster.setService(propertiesManager.getUsageMasterDefaultService());
+			}
+
 			try {
 				Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
 				String data = gson.toJson(usageMaster);
@@ -707,19 +721,25 @@ public class MasterServiceImpl implements Masterservice {
 	@Override
 	public UsageMasterResponse getUsageMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
 			String code, String nameLocal, Boolean active, Boolean isResidential, Integer orderNumber, Integer pageSize,
-			Integer offSet, String parent) throws Exception {
+			Integer offSet, String parent, String[] service) throws Exception {
 
 		UsageMasterResponse usageMasterResponse = new UsageMasterResponse();
 
+		if (service == null) {
+			String[] defaultSerices = new String[1];
+			defaultSerices[0] = propertiesManager.getUsageMasterDefaultService();
+
+			service = defaultSerices;
+		}
 		try {
 			List<UsageMaster> usageList = propertyMasterRepository.searchUsage(tenantId, ids, name, code, nameLocal,
-					active, isResidential, orderNumber, pageSize, offSet, parent);
+					active, isResidential, orderNumber, pageSize, offSet, parent, service);
 			usageMasterResponse.setUsageMasters(usageList);
 			ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 			usageMasterResponse.setResponseInfo(responseInfo);
 
 		} catch (Exception e) {
-
+			e.printStackTrace();
 			throw new PropertySearchException("invalid input", requestInfo);
 		}
 
@@ -1223,6 +1243,8 @@ public class MasterServiceImpl implements Masterservice {
 					ConstantUtility.APARTMENT_TABLE_NAME, apartment.getId());
 			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(apartment.getTenantId(),
 					apartment.getCode(), ConstantUtility.APARTMENT_TABLE_NAME, apartment.getId());
+			if (isExists)
+				throw new DuplicateIdException(apartmentRequest.getRequestInfo());
 			validateApartmentData(apartment.getFloor(), apartment.getTenantId(), apartmentRequest.getRequestInfo());
 			apartment.setAuditDetails(auditDetails);
 			apartment.getFloor().setAuditDetails(auditDetails);
@@ -1238,8 +1260,6 @@ public class MasterServiceImpl implements Masterservice {
 				}
 				unit.setAuditDetails(auditDetails);
 			}
-			if (isExists)
-				throw new DuplicateIdException(apartmentRequest.getRequestInfo());
 
 			try {
 				Gson gson = new GsonBuilder().setExclusionStrategies(new ExcludeFileds()).serializeNulls().create();
@@ -1378,4 +1398,155 @@ public class MasterServiceImpl implements Masterservice {
 			throw new InvalidCodeException(propertiesManager.getInvalidAge(), requestInfo);
 		}
 	}
+
+	@Override
+	@Transactional
+	public GuidanceValueBoundaryResponse createGuidanceValueBoundary(String tenantId,
+			GuidanceValueBoundaryRequest guidanceValueBoundaryRequest) {
+		// TODO Auto-generated method stub
+		for (GuidanceValueBoundary guidanceValueBoundary : guidanceValueBoundaryRequest.getGuidanceValueBoundaries()) {
+			AuditDetails auditDetails = getAuditDetail(guidanceValueBoundaryRequest.getRequestInfo());
+			guidanceValueBoundary.setAuditDetails(auditDetails);
+			Long id = propertyMasterRepository.saveGuidanceValueBoundary(tenantId, guidanceValueBoundary);
+			guidanceValueBoundary.setId(id);
+		}
+
+		ResponseInfo responseInfo = responseInfoFactory
+				.createResponseInfoFromRequestInfo(guidanceValueBoundaryRequest.getRequestInfo(), true);
+		GuidanceValueBoundaryResponse guidanceValueBoundaryResponse = new GuidanceValueBoundaryResponse();
+		guidanceValueBoundaryResponse.setResponseInfo(responseInfo);
+		guidanceValueBoundaryResponse
+				.setGuidanceValueBoundaries(guidanceValueBoundaryRequest.getGuidanceValueBoundaries());
+		return guidanceValueBoundaryResponse;
+	}
+
+	@Override
+	@Transactional
+	public GuidanceValueBoundaryResponse updateGuidanceValueBoundary(
+			GuidanceValueBoundaryRequest guidanceValueBoundaryRequest) throws Exception {
+
+		for (GuidanceValueBoundary guidanceValueBoundary : guidanceValueBoundaryRequest.getGuidanceValueBoundaries()) {
+
+			AuditDetails auditDetails = getUpdatedAuditDetails(guidanceValueBoundaryRequest.getRequestInfo(),
+					ConstantUtility.GUIDANCEVALUEBOUNDARY_TABLE_NAME, guidanceValueBoundary.getId());
+			guidanceValueBoundary.setAuditDetails(auditDetails);
+			try {
+				propertyMasterRepository.updateGuidanceValueBoundary(guidanceValueBoundary);
+			} catch (Exception e) {
+				throw new InvalidInputException(guidanceValueBoundaryRequest.getRequestInfo());
+			}
+		}
+		ResponseInfo responseInfo = responseInfoFactory
+				.createResponseInfoFromRequestInfo(guidanceValueBoundaryRequest.getRequestInfo(), true);
+		GuidanceValueBoundaryResponse guidanceValueBoundaryResponse = new GuidanceValueBoundaryResponse();
+		guidanceValueBoundaryResponse.setResponseInfo(responseInfo);
+		guidanceValueBoundaryResponse
+				.setGuidanceValueBoundaries(guidanceValueBoundaryRequest.getGuidanceValueBoundaries());
+		return guidanceValueBoundaryResponse;
+	}
+
+	@Override
+	public GuidanceValueBoundaryResponse getGuidanceValueBoundary(RequestInfo requestInfo, String tenantId,
+			String guidanceValueBoundary1, String guidanceValueBoundary2, Integer pageSize, Integer offset)
+			throws Exception {
+
+		if (pageSize == null) {
+			pageSize = Integer.parseInt(propertiesManager.getDefaultPageSize());
+		}
+		if (offset == null) {
+			offset = Integer.parseInt(propertiesManager.getDefaultOffset());
+		}
+
+		List<GuidanceValueBoundary> guidanceValueBoundaries = propertyMasterRepository.searchGuidanceValueBoundary(
+				tenantId, guidanceValueBoundary1, guidanceValueBoundary2, pageSize, offset);
+		GuidanceValueBoundaryResponse guidanceValueBoundaryResponse = new GuidanceValueBoundaryResponse();
+		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		guidanceValueBoundaryResponse.setResponseInfo(responseInfo);
+		guidanceValueBoundaryResponse.setGuidanceValueBoundaries(guidanceValueBoundaries);
+		return guidanceValueBoundaryResponse;
+	}
+
+	@Override
+	@Transactional
+	public AppConfigurationResponse createAppConfiguration(String tenantId,
+			AppConfigurationRequest appConfigurationRequest) {
+		// TODO Auto-generated method stub
+		for (AppConfiguration appConfiguration : appConfigurationRequest.getAppConfigurations()) {
+			AuditDetails auditDetails = getAuditDetail(appConfigurationRequest.getRequestInfo());
+			appConfiguration.setAuditDetails(auditDetails);
+
+			Boolean isExists = propertyMasterRepository.checkWhetherRecordWithTenantIdAndKeyName(
+					appConfiguration.getTenantId(), appConfiguration.getKeyName(),
+					ConstantUtility.CONFIGURATION_TABLE_NAME);
+
+			if (isExists)
+				throw new InvalidCodeException(propertiesManager.getInvalidAppConfigKey(),
+						appConfigurationRequest.getRequestInfo());
+
+			Long id = propertyMasterRepository.saveAppConfiguration(tenantId, appConfiguration);
+			for (String value : appConfiguration.getValues()) {
+				propertyMasterRepository.saveAppConfigurationValues(tenantId, appConfiguration, id, value);
+			}
+			appConfiguration.setId(id);
+		}
+
+		ResponseInfo responseInfo = responseInfoFactory
+				.createResponseInfoFromRequestInfo(appConfigurationRequest.getRequestInfo(), true);
+		AppConfigurationResponse appConfigurationResponse = new AppConfigurationResponse();
+		appConfigurationResponse.setResponseInfo(responseInfo);
+		appConfigurationResponse.setAppConfigurations(appConfigurationRequest.getAppConfigurations());
+		return appConfigurationResponse;
+	}
+
+	@Override
+	@Transactional
+	public AppConfigurationResponse updateAppConfiguration(AppConfigurationRequest appConfigurationRequest)
+			throws Exception {
+
+		for (AppConfiguration appConfiguration : appConfigurationRequest.getAppConfigurations()) {
+
+			AuditDetails auditDetails = getUpdatedAuditDetails(appConfigurationRequest.getRequestInfo(),
+					ConstantUtility.CONFIGURATION_TABLE_NAME, appConfiguration.getId());
+			appConfiguration.setAuditDetails(auditDetails);
+
+			try {
+				propertyMasterRepository.updateAppConfiguration(appConfiguration);
+				for (String value : appConfiguration.getValues()) {
+					propertyMasterRepository.updateAppConfigurationValues(appConfiguration, appConfiguration.getId(),
+							value);
+				}
+
+			} catch (Exception e) {
+				throw new InvalidInputException(appConfigurationRequest.getRequestInfo());
+			}
+		}
+		ResponseInfo responseInfo = responseInfoFactory
+				.createResponseInfoFromRequestInfo(appConfigurationRequest.getRequestInfo(), true);
+		AppConfigurationResponse appConfigurationResponse = new AppConfigurationResponse();
+		appConfigurationResponse.setResponseInfo(responseInfo);
+		appConfigurationResponse.setAppConfigurations(appConfigurationRequest.getAppConfigurations());
+		return appConfigurationResponse;
+	}
+
+	@Override
+	public AppConfigurationResponse getAppConfiguration(RequestInfo requestInfo, String tenantId, Long[] ids,
+			String keyName, String effectiveFrom, Integer pageSize, Integer offSet) throws Exception {
+
+		AppConfigurationResponse appConfigurationResponse = new AppConfigurationResponse();
+
+		if (pageSize == null) {
+			pageSize = Integer.parseInt(propertiesManager.getDefaultPageSize());
+		}
+		if (offSet == null) {
+			offSet = Integer.parseInt(propertiesManager.getDefaultOffset());
+		}
+
+		List<AppConfiguration> appConfigurationList = propertyMasterRepository.searchAppConfiguration(tenantId, ids,
+				keyName, effectiveFrom, pageSize, offSet);
+		appConfigurationResponse.setAppConfigurations(appConfigurationList);
+		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		appConfigurationResponse.setResponseInfo(responseInfo);
+		return appConfigurationResponse;
+	}
+
 }

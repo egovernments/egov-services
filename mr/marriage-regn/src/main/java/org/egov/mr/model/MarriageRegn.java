@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
+import org.egov.mr.model.enums.Action;
 import org.egov.mr.model.enums.ApplicationStatus;
 import org.egov.mr.model.enums.Source;
 import org.egov.mr.model.enums.Venue;
@@ -25,6 +26,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class MarriageRegn {
 
+	private String id;
+	
 	private RegistrationUnit regnUnit;
 
 	@NotNull
@@ -47,8 +50,7 @@ public class MarriageRegn {
 	@NotNull
 	private String marriagePhoto;
 
-	@NotNull
-	private Double fee;
+	private Fee fee;
 
 	private MarryingPerson bridegroom;
 
@@ -70,6 +72,7 @@ public class MarriageRegn {
 	
 	private Long regnDate;
 
+	@NotNull
 	private ApplicationStatus status;
 
 	private Source source;
@@ -84,9 +87,9 @@ public class MarriageRegn {
 
 	private List<MarriageCertificate> certificates = new ArrayList<MarriageCertificate>();
 	
-	private List<Long> demands = new ArrayList<Long>();
+	private List<Demand> demands = new ArrayList<Demand>();
 
-	private List<String> actions = new ArrayList<String>();
+	private Action actions;
 	
 	private AuditDetails auditDetails;
 	

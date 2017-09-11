@@ -11,6 +11,7 @@ import java.util.Set;
 import org.egov.common.constants.Constants;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.model.Pagination;
+import org.egov.egf.master.web.repository.FinancialConfigurationContractRepository;
 import org.egov.egf.voucher.domain.model.Ledger;
 import org.egov.egf.voucher.domain.model.LedgerDetail;
 import org.egov.egf.voucher.domain.model.Voucher;
@@ -23,6 +24,7 @@ import org.egov.egf.voucher.persistence.repository.LedgerDetailJdbcRepository;
 import org.egov.egf.voucher.persistence.repository.LedgerJdbcRepository;
 import org.egov.egf.voucher.persistence.repository.VoucherJdbcRepository;
 import org.egov.egf.voucher.web.contract.VoucherContract;
+import org.egov.egf.voucher.web.contract.VoucherSearchContract;
 import org.egov.egf.voucher.web.requests.VoucherRequest;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +39,9 @@ public class VoucherRepository {
 
 	private VoucherQueueRepository voucherQueueRepository;
 
-	// private FinancialConfigurationContractRepository
-	// financialConfigurationContractRepository;
+	private FinancialConfigurationContractRepository financialConfigurationContractRepository;
 
-	// private VoucherESRepository voucherESRepository;
+	private VoucherESRepository voucherESRepository;
 
 	@Autowired
 	private LedgerJdbcRepository ledgerJdbcRepository;
@@ -52,15 +53,12 @@ public class VoucherRepository {
 
 	@Autowired
 	public VoucherRepository(VoucherJdbcRepository voucherJdbcRepository, VoucherQueueRepository voucherQueueRepository,
-			// FinancialConfigurationContractRepository
-			// financialConfigurationContractRepository,
-			// VoucherESRepository voucherESRepository,
-			@Value("${persist.through.kafka}") String persistThroughKafka) {
+			FinancialConfigurationContractRepository financialConfigurationContractRepository,
+			VoucherESRepository voucherESRepository, @Value("${persist.through.kafka}") String persistThroughKafka) {
 		this.voucherJdbcRepository = voucherJdbcRepository;
 		this.voucherQueueRepository = voucherQueueRepository;
-		// this.financialConfigurationContractRepository =
-		// financialConfigurationContractRepository;
-		// this.voucherESRepository = voucherESRepository;
+		this.financialConfigurationContractRepository = financialConfigurationContractRepository;
+		this.voucherESRepository = voucherESRepository;
 		this.persistThroughKafka = persistThroughKafka;
 
 	}
@@ -252,19 +250,21 @@ public class VoucherRepository {
 	}
 
 	public Pagination<Voucher> search(VoucherSearch domain) {
-		/*
-		 * if
-		 * (!financialConfigurationContractRepository.fetchDataFrom().isEmpty()
-		 * && financialConfigurationContractRepository.fetchDataFrom().
-		 * equalsIgnoreCase("es")) { VoucherSearchContract voucherSearchContract
-		 * = new VoucherSearchContract(); ModelMapper mapper = new
-		 * ModelMapper(); mapper.map(domain, voucherSearchContract); return
-		 * voucherESRepository.search(voucherSearchContract); } else { return
-		 * voucherJdbcRepository.search(domain); }
-		 */
+
+		if (!financialConfigurationContractRepository.fetchDataFrom().isEmpty()
+				&& financialConfigurationContractRepository.fetchDataFrom().equalsIgnoreCase("es")) {
+			VoucherSearchContract voucherSearchContract = new VoucherSearchContract();
+			ModelMapper mapper = new ModelMapper();
+			mapper.map(domain, voucherSearchContract);
+			return voucherESRepository.search(voucherSearchContract);
+		}
 
 		return voucherJdbcRepository.search(domain);
 
+	}
+	
+	public boolean uniqueCheck(String fieldName, Voucher voucher) {
+		return	voucherJdbcRepository.uniqueCheck(fieldName, new VoucherEntity().toEntity(voucher));
 	}
 
 }

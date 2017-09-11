@@ -12,7 +12,7 @@ var dat = {
           "name": "AcknowledgementNumber",
           "jsonPath": "acknowledgementNumber",
           "label": "wc.create.groups.applicantDetails.acknowledgementNumber",
-          "pattern": "",
+          "pattern": "^[\s.]*([^\s.][\s.]*){3,20}$",
           "type": "text",
           "isRequired": false,
           "isDisabled": false,
@@ -23,7 +23,29 @@ var dat = {
           "name": "ConsumerNumber",
           "jsonPath": "consumerNumber",
           "label": "wc.create.groups.applicantDetails.consumerNumber",
-          "pattern": "",
+          "pattern": "^[\s.]*([^\s.][\s.]*){3,16}$",
+          "type": "text",
+          "isRequired": false,
+          "isDisabled": false,
+          "requiredErrMsg": "",
+          "patternErrMsg": ""
+        },
+        {
+          "name": "ConsumerNumber",
+          "jsonPath": "manualConsumerNumber",
+          "label": "wc.create.groups.applicantDetails.manualConsumerNo",
+          "pattern": "^[\s.]*([^\s.][\s.]*){3,16}$",
+          "type": "text",
+          "isRequired": false,
+          "isDisabled": false,
+          "requiredErrMsg": "",
+          "patternErrMsg": ""
+        },
+        {
+          "name": "OldConsumerNumber",
+          "jsonPath": "legacyConsumerNumber",
+          "label": "wc.create.groups.applicantDetails.consumerNo",
+          "pattern": "^[\s.]*([^\s.][\s.]*){3,16}$",
           "type": "text",
           "isRequired": false,
           "isDisabled": false,
@@ -34,7 +56,7 @@ var dat = {
           "name": "Name",
           "jsonPath": "name",
           "label": "wc.create.name",
-          "pattern": "",
+          "pattern": "^([a-zA-Z0-9_-\\s]){3,100}$",
           "type": "text",
           "isRequired": false,
           "isDisabled": false,
@@ -46,7 +68,7 @@ var dat = {
           "jsonPath": "mobileNumber",
           "label": "wc.create.groups.applicantDetails.mobileNumber",
           "pattern": "",
-          "type": "text",
+          "type": "mobileNumber",
           "isRequired": false,
           "isDisabled": false,
           "requiredErrMsg": "",
@@ -57,7 +79,8 @@ var dat = {
           "jsonPath": "locality",
           "label": "wc.create.groups.applicantDetails.locality",
           "pattern": "",
-          "type": "text",
+          "type": "singleValueList",
+          "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$.Boundary.*.boundaryNum|$.Boundary.*.name",
           "isRequired": false,
           "isDisabled": false,
           "requiredErrMsg": "",
@@ -66,26 +89,15 @@ var dat = {
         {
           "name": "RevenueWard",
           "jsonPath": "revenueWard",
-          "label": "tl.licenses.view.groups.revenueWardId",
+          "label": "wc.create.groups.fields.ward",
           "pattern": "",
-          "type": "text",
-          "isRequired": false,
-          "isDisabled": false,
-          "requiredErrMsg": "",
-          "patternErrMsg": ""
-        },
-        {
-          "name": "DoorNumber",
-          "jsonPath": "doorNumber",
-          "label": "pt.create.groups.propertyAddress.fields.doorNo",
-          "pattern": "",
-          "type": "text",
+          "type": "singleValueList",
+          "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=WARD&hierarchyTypeName=ADMINISTRATION|$.Boundary.*.boundaryNum|$.Boundary.*.name",
           "isRequired": false,
           "isDisabled": false,
           "requiredErrMsg": "",
           "patternErrMsg": ""
         }
-
       ]
     }]
   }

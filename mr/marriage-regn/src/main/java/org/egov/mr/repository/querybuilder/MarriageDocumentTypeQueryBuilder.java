@@ -3,8 +3,6 @@ package org.egov.mr.repository.querybuilder;
 import java.util.List;
 
 import org.egov.mr.web.contract.MarriageDocumentTypeSearchCriteria;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +22,13 @@ public class MarriageDocumentTypeQueryBuilder {
 
 	StringBuilder selectQuery;
 
-	// Query for _search
+	/**
+	 * @Query for _search
+	 * 
+	 * @param marriageDocumentTypeSearchCriteria
+	 * @param preparedStatementValues
+	 * @return
+	 */
 	public String getSelectQuery(MarriageDocumentTypeSearchCriteria marriageDocumentTypeSearchCriteria,
 			List<Object> preparedStatementValues) {
 		selectQuery = new StringBuilder(BASEQUERY);
@@ -53,13 +57,23 @@ public class MarriageDocumentTypeQueryBuilder {
 			selectQuery.append("appltype=? ");
 			preparedStatementValues.add(marriageDocumentTypeSearchCriteria.getApplicationType());
 		}
+		if(marriageDocumentTypeSearchCriteria.getCode()!=null){
+			addAndClauseIfRequiredFlag = addAndClauseIfRequired(addAndClauseIfRequiredFlag);
+			selectQuery.append("code= ? ");
+			preparedStatementValues.add(marriageDocumentTypeSearchCriteria.getCode());
+		}
 		addAndClauseIfRequiredFlag = addAndClauseIfRequired(addAndClauseIfRequiredFlag);
 		selectQuery.append("tenantid=? ");
 		preparedStatementValues.add(marriageDocumentTypeSearchCriteria.getTenantId());
 		selectQuery.append(";");
 	}
 
-	// Helper Method
+	/**
+	 * @Helper_Method
+	 * 
+	 * @param addAndClauseIfRequiredFlag
+	 * @return
+	 */
 	private Boolean addAndClauseIfRequired(Boolean addAndClauseIfRequiredFlag) {
 		if (addAndClauseIfRequiredFlag) {
 			selectQuery.append("AND ");
@@ -67,7 +81,10 @@ public class MarriageDocumentTypeQueryBuilder {
 		return true;
 	}
 
-	// Query to generate Unique Id
+	/**
+	 * @Query to generate Unique Id
+	 * @return
+	 */
 	public String getIdNextValForMarriageDocType() {
 		return "SELECT NEXTVAL('seq_marriage_document_type') ;";
 	}

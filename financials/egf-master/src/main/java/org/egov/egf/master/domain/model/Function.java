@@ -39,8 +39,12 @@
  */
 package org.egov.egf.master.domain.model;
 
+/**
+ * @author mani
+ */
 import javax.validation.constraints.NotNull;
 
+import org.egov.common.domain.annotation.Unique;
 import org.egov.common.domain.model.Auditable;
 import org.hibernate.validator.constraints.Length;
 
@@ -57,50 +61,74 @@ import lombok.Setter;
 @Setter
 @Builder
 @EqualsAndHashCode(exclude = { "parentId" }, callSuper = false)
+/**
+ * 
+ * ULB activates are carried out by the concerned Departments . In each
+ * department again multiple activities are carried out and these activities are
+ * grouped as functions .Common functions enabled across all ULBs shall be
+ * managed in Central Monitoring Cell based on the requirements for addition,
+ * deletion and modification of functions from the ULBs.
+ * 
+ */
 
 public class Function extends Auditable {
 
+	/**
+	 * id is the unique identifier .
+	 */
 	private String id;
 
+	/**
+	 * name is the name of the function .
+	 */
 	@Length(max = 128, min = 2)
 	@NotNull
+	@Unique
 	private String name;
 
+	/**
+	 * code is a unique number given to each function . ULBs may refer this for
+	 * the short name.
+	 */
 	@Length(max = 16, min = 2)
 	@NotNull
 	private String code;
-
+	/**
+	 * level identifies what is the level of the function in the tree structure.
+	 * Top most parent will have level 0 and its child will have level as 1
+	 * 
+	 */
 	@NotNull
 	private Integer level;
 
+	/**
+	 * active is a boolean value which says whether function is in use or not .
+	 * If Function is active, then accounting of transactions under the Function
+	 * is enabled. If Function becomes inactive, and no transactions can be
+	 * accounted under the Function. Only leaf function can be used in
+	 * transaction ie function which is not parent to any other function
+	 */
 	@NotNull
 	private Boolean active;
 
 	private Function parentId;
-	
-	
-	public void add()
-	{
-	    if(parentId==null)
-	    {
-	        level=0;
-	        
-	    }else
-	    {
-	        level=parentId.getLevel()+1;
-	    }
+
+	public void add() {
+		if (parentId == null) {
+			level = 0;
+
+		} else {
+			level = parentId.getLevel() + 1;
+		}
 	}
-	
-	public void update()
-        {
-            if(parentId==null)
-            {
-                level=0;
-                
-            }else
-            {
-                level=parentId.getLevel()+1;
-            }
-        }
+
+	public void update() {
+		if (parentId == null) {
+			level = 0;
+
+		} else {
+			level = parentId.getLevel() + 1;
+		}
+	}
 
 }

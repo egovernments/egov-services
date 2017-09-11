@@ -11,7 +11,7 @@ public class SubSchemeContractRepository {
 
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = "/egf-master/subschemes/_search?";
+	public static final String SEARCH_URL = "/egf-masters/subschemes/_search?";
 
 	public SubSchemeContractRepository(@Value("${egf.master.host.url}") String hostUrl, RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;

@@ -40,16 +40,13 @@
 
 package org.egov.eis.web.contract;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.*;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import java.util.Date;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -59,6 +56,8 @@ import lombok.ToString;
 public class AttendanceGetRequest {
 
     private List<Long> id;
+
+    private List<Long> employeeIds;
 
     private String applicableOn;
 
@@ -71,6 +70,9 @@ public class AttendanceGetRequest {
     private Long departmentId;
 
     private Long designationId;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date fromDate;
 
     private String sortBy;
 

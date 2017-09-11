@@ -1,16 +1,12 @@
 
 {
-	"responseInfo": 
-	{
-	    "apiId": null,
-	    "status": "200",
+	"responseInfo": {
+		"apiId": null,
+		"status": "200",
 		"ver": null,
-		"ts": null,
-		"key": null
-	},
-
-	"marriageDocTypes": 
-	[
+		"ts": 987456321
+		},
+	"marriageDocTypes": [
 		{
 			"id": 1,
 			"name": "ADDRESSPROOF",
@@ -22,7 +18,6 @@
 			"isRequired": true,
 			"tenantId": "ap.kurnool"
 		},
-
 		{
 			"id": 2,
 			"name": "ADDRESSPROOF",

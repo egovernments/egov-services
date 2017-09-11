@@ -63,10 +63,13 @@ public class RevaluationRepository {
         }
     }
 
-    private String getRevaluationStatus(final AssetStatusObjectName objectName, final Status code,
+    public String getRevaluationStatus(final AssetStatusObjectName objectName, final Status code,
             final String tenantId) {
         final List<AssetStatus> assetStatuses = assetMasterService.getStatuses(objectName, code, tenantId);
-        return assetStatuses.get(0).getStatusValues().get(0).getCode();
+        if (assetStatuses != null && !assetStatuses.isEmpty())
+            return assetStatuses.get(0).getStatusValues().get(0).getCode();
+        else
+            throw new RuntimeException("Status is not present Revaluation for tenant id : " + tenantId);
     }
 
     public List<Revaluation> search(final RevaluationCriteria revaluationCriteria) {
@@ -82,23 +85,6 @@ public class RevaluationRepository {
             log.info("the exception from findforcriteria : " + ex);
         }
         return revaluations;
-    }
-
-    public Integer getNextRevaluationId() {
-
-        final String query = "SELECT nextval('seq_egasset_revaluation')";
-        Integer result = null;
-        try {
-            result = jdbcTemplate.queryForObject(query, Integer.class);
-        } catch (final Exception ex) {
-            ex.printStackTrace();
-            log.info("getNextRevaluationId::" + ex.getMessage());
-            throw new RuntimeException("Can not fatch next RevaluationId");
-
-        }
-        log.info("result:" + result);
-
-        return result;
     }
 
 }

@@ -153,7 +153,7 @@ public class TradeLicenseJdbcRepositoryTest {
 		LicenseFeeDetail licenseFeeDetail = new LicenseFeeDetail();
 		licenseFeeDetail.setAmount(100.0);
 		licenseFeeDetail.setFinancialYear("1");
-		licenseFeeDetail.setLicenseId(1l);
+//		licenseFeeDetail.setLicenseId(1l);
 		licenseFeeDetail.setPaid(true);
 
 		licenseFeeDetails.add(licenseFeeDetail);
@@ -166,8 +166,8 @@ public class TradeLicenseJdbcRepositoryTest {
 		SupportDocument supportDocument = new SupportDocument();
 		supportDocument.setComments("comments");
 		supportDocument.setDocumentTypeId(1l);
-		supportDocument.setFileStoreId(1l);
-		supportDocument.setLicenseId(1l);
+		supportDocument.setFileStoreId("1");
+//		supportDocument.setLicenseId(1l);
 
 		supportDocuments.add(supportDocument);
 		return supportDocuments;

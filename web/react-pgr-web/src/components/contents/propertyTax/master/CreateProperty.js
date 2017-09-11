@@ -18,7 +18,6 @@ import Checkbox from 'material-ui/Checkbox';
 import RaisedButton from 'material-ui/RaisedButton';
 import {translate} from '../../../common/common';
 import Api from '../../../../api/api';
-
 import OwnerDetails from './propertyTax/OwnerDetails';
 import CreateNewProperty from './propertyTax/CreateNewProperty';
 import PropertyAddress from './propertyTax/PropertyAddress';
@@ -175,13 +174,11 @@ class CreateProperty extends Component {
       revanue:[],
       election:[],
       usages:[],
+      tenant:[],
 	  ack:''
     }
  }
   
-
-
-
   componentWillMount() {
 
 
@@ -193,13 +190,13 @@ class CreateProperty extends Component {
 	  
 	  var currentThis = this;
 
-		  Api.commonApiPost('pt-property/property/propertytypes/_search',{}, {},false, true).then((res)=>{
-			currentThis.setState({propertytypes:res.propertyTypes})
-		  }).catch((err)=> {
-			currentThis.setState({
-			  propertytypes:[]
-			})
-		  })
+	  Api.commonApiPost('pt-property/property/propertytypes/_search',{}, {},false, true).then((res)=>{
+		currentThis.setState({propertytypes:res.propertyTypes})
+	  }).catch((err)=> {
+		currentThis.setState({
+		  propertytypes:[]
+		})
+	  })
 	  
 	    Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"WARD", hierarchyTypeName:"ADMINISTRATION"}).then((res)=>{
           console.log(res);
@@ -240,8 +237,18 @@ class CreateProperty extends Component {
             zone : []
           })
           console.log(err)
+        })		
+
+		var userRequest = JSON.parse(localStorage.getItem("userRequest"));
+        var tenantQuery = {
+        		code: userRequest.tenantId || 'default',
+        }
+
+        Api.commonApiPost('tenant/v1/tenant/_search',tenantQuery).then((res)=>{
+        	currentThis.setState({ tenant: res.tenant })
+        }).catch((err)=>{
+        	currentThis.setState({ tenant: [] })
         })
-				
   }
 
   componentWillUnmount() {
@@ -264,21 +271,15 @@ class CreateProperty extends Component {
 
   
 createPropertyTax = () => {
-	
 	let {createProperty, setLoadingStatus, toggleSnackbarAndSetText} = this.props;
-	
 	setLoadingStatus('loading');
-	
 	var userRequest = JSON.parse(localStorage.getItem("userRequest"));
-	
 	var numberOfFloors='';
 	var builtupArea = 0;
 	if(createProperty && createProperty.hasOwnProperty('floorsArr') && createProperty.hasOwnProperty('floors')){
 		numberOfFloors = createProperty.floorsArr.length;
 		for(let i=0;i<createProperty.floors.length;i++){
-			
-			builtupArea += createProperty.floors[i].builtupArea;
-			
+			builtupArea += createProperty.floors[i].builtupArea;	
 		}
 	}
 	
@@ -308,6 +309,10 @@ createPropertyTax = () => {
 			if(!createProperty.owners[i].hasOwnProperty('ownershippercentage') || createProperty.owners[i].ownershippercentage == ''){
 				createProperty.owners[i].ownershippercentage = null;
 			}
+
+			if(createProperty.owners[i].hasOwnProperty('aadhaarNumber') && createProperty.owners[i].aadhaarNumber == ''){
+				createProperty.owners[i].aadhaarNumber = null;
+			}
 			
 			if(!createProperty.owners[i].hasOwnProperty('ownerType') || createProperty.owners[i].ownerType == ''){
 				createProperty.owners[i].ownerType = null;
@@ -316,8 +321,12 @@ createPropertyTax = () => {
 			if(!createProperty.owners[i].hasOwnProperty('emailId') || createProperty.owners[i].emailId == ''){
 				createProperty.owners[i].emailId = null;
 			}
-			
-		
+		}
+
+		for(var key in createProperty.owners[i]){
+			if(createProperty.owners[i].hasOwnProperty(key) && createProperty.owners[i][key] == ''){
+				delete createProperty.owners[i][key]
+			}
 		}
 	}
 	
@@ -369,7 +378,7 @@ createPropertyTax = () => {
 					"addressLine1": createProperty.locality || null,
 					"addressLine2": null,
 					"landmark": null,
-					"city": "Roha",
+					"city": currentThis.state.tenant[0].city.name || null,
 					"pincode": createProperty.pin || null,
 					"detail": null,
 					"auditDetails": {
@@ -410,20 +419,20 @@ createPropertyTax = () => {
 					"wallType": (createProperty.propertyType != 'VACANT_LAND' ? (createProperty.wallType || null) : null),
 					"floors":createProperty.floorsArr || null,
 					"factors": [{
-								"name": "TOILET",
-								"value": createProperty.toiletFactor || null
+									"name": "TOILET",
+									"value": createProperty.toiletFactor || null
 								},
 								{
-								"name": "ROAD",
-								"value": createProperty.roadFactor || null
+									"name": "ROAD",
+									"value": createProperty.roadFactor || null
 								},
 								{
-								"name": "LIFT",
-								"value": createProperty.liftFactor || null
+									"name": "LIFT",
+									"value": createProperty.liftFactor || null
 								},
 								{
-								"name": "PARKING",
-								"value": createProperty.parkingFactor || null
+									"name": "PARKING",
+									"value": createProperty.parkingFactor || null
 								}
 								],
 					"documents": [],
@@ -456,10 +465,10 @@ createPropertyTax = () => {
 						"id": createProperty.street || createProperty.locality || null ,
 						"name": getNameById(currentThis.state.street, createProperty.street)  || getNameById(currentThis.state.locality, createProperty.locality) || null
 					},
-					"adminBoundary": { 
-						"id": createProperty.electionWard || null,
-						"name": getNameById(currentThis.state.election, createProperty.electionWard)  || null
-					},
+					"adminBoundary": createProperty.electionWard ? { 
+						"id": createProperty.electionWard,
+						"name": getNameById(currentThis.state.election, createProperty.electionWard)
+					} : null,
 					"northBoundedBy": createProperty.north || null,
 					"eastBoundedBy": createProperty.east || null,
 					"westBoundedBy": createProperty.west || null,
@@ -625,7 +634,7 @@ createActivate = () => {
 
 	  return(
 		  <div className="createProperty">
-				<h3 style={{padding:15}}>Create New Property</h3>
+				<h3 style={{padding:15}}>{translate('pt.create.groups.createNewProperty')}</h3>
 			  <form onSubmit={(e) => {search(e)}}>
 			
 				  <OwnerDetails />
@@ -703,7 +712,8 @@ const mapDispatchToProps = dispatch => ({
           current: [],
           required: ['occupierName','annualRent', 'manualArv', 'length', 'width', 'occupancyCertiNumber', 'buildingCost', 'landCost',]
         }
-      }
+      },
+      isPrimaryOwner : 'PrimaryOwner'
     });
   },
   handleChange: (e, property, isRequired, pattern) => {

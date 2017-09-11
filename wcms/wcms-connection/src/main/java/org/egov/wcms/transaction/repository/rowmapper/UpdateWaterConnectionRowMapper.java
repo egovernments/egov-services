@@ -42,6 +42,7 @@ package org.egov.wcms.transaction.repository.rowmapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.wcms.transaction.model.Connection;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
@@ -54,9 +55,14 @@ public class UpdateWaterConnectionRowMapper implements RowMapper<Connection> {
         connection.setId(rs.getLong("id"));
         connection.setStateId(rs.getLong("stateid"));
         connection.setStatus(rs.getString("status"));
+        connection.setUserid(rs.getLong("userid"));
         connection.setAcknowledgementNumber(rs.getString("acknowledgmentnumber"));
         connection.setConsumerNumber(rs.getString("consumernumber"));
         connection.setApplicationType(rs.getString("applicationType"));
+        connection.setExecutionDate(rs.getLong("executiondate"));
+        if(StringUtils.isNotBlank(rs.getString("propertyidentifier"))) { 
+        	connection.setPropertyIdentifier(rs.getString("propertyidentifier"));
+        }
         if(rs.getString("islegacy").equals(Boolean.TRUE))
         connection.setIsLegacy(Boolean.TRUE);
         else

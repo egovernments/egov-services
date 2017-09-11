@@ -24,6 +24,7 @@ import org.egov.asset.contract.DisposalRequest;
 import org.egov.asset.contract.DisposalResponse;
 import org.egov.asset.contract.RevaluationRequest;
 import org.egov.asset.contract.RevaluationResponse;
+import org.egov.asset.exception.ErrorResponse;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.AssetCriteria;
@@ -59,9 +60,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.validation.BindingResult;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(AssetController.class)
@@ -179,7 +182,7 @@ public class AssetControllerTest {
         revaluationResponse.setRevaluations(revaluations);
         when(revaluationService.createAsync(any(RevaluationRequest.class), any(HttpHeaders.class)))
                 .thenReturn(revaluationResponse);
-        mockMvc.perform(post("/assets/revaluation" + "/_create").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/assets/revaluation/_create").contentType(MediaType.APPLICATION_JSON)
                 .content(getFileContents("revaluation/revaluationcreaterequest.json"))).andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(getFileContents("revaluation/revaluationcreateresponse.json")));
@@ -192,7 +195,7 @@ public class AssetControllerTest {
         final RevaluationResponse revaluationResponse = new RevaluationResponse();
         revaluationResponse.setResposneInfo(null);
         revaluationResponse.setRevaluations(revaluations);
-        when(revaluationService.search(any(RevaluationCriteria.class))).thenReturn(revaluationResponse);
+        when(revaluationService.search(any(RevaluationCriteria.class),any(RequestInfo.class))).thenReturn(revaluationResponse);
         mockMvc.perform(post("/assets/revaluation/_search").contentType(MediaType.APPLICATION_JSON)
                 .param("tenantId", "ap.kurnool").content(getFileContents("requestinfowrapper.json")))
                 .andExpect(status().isOk()).andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -267,19 +270,127 @@ public class AssetControllerTest {
     public void test_should_depreciate_asset() throws IOException, Exception {
         final Depreciation depreciation = getAssetDepreciation();
         final DepreciationResponse depreciationResponse = new DepreciationResponse();
-        final ResponseInfo responseInfo = getResponseInfo();
-        depreciationResponse.setResponseInfo(responseInfo);
+        depreciationResponse.setResponseInfo(getResponseInfo());
         depreciationResponse.setDepreciation(depreciation);
-        when(depreciationService.depreciateAsset(any(DepreciationRequest.class),any(HttpHeaders.class)))
+        when(depreciationService.depreciateAsset(any(DepreciationRequest.class), any(HttpHeaders.class)))
                 .thenReturn(depreciationResponse);
         mockMvc.perform(post("/assets/depreciations/_create").contentType(MediaType.APPLICATION_JSON)
-                .content(getFileContents("depreciation/depreciationscreaterequest.json"))).andExpect(status().isCreated())
+                .content(getFileContents("depreciation/depreciationscreaterequest.json")))
+                .andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(getFileContents("depreciation/depreciationscreateresponse.json")));
     }
 
+    @Test
+    public void test_error_assetsSearch() throws IOException, Exception {
+        final ErrorResponse errorResponse = getErrorResponse();
+
+        when(assetCommonService.populateErrors(any(BindingResult.class))).thenReturn(errorResponse);
+
+        mockMvc.perform(post("/assets/_search").contentType(MediaType.APPLICATION_JSON)
+                .content(getFileContents("requestinfowrapper.json"))).andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(getFileContents("errorresponse.json")));
+    }
+
+    @Test
+    public void test_error_revaluationSearch() throws IOException, Exception {
+        final ErrorResponse errorResponse = getErrorResponse();
+
+        when(assetCommonService.populateErrors(any(BindingResult.class))).thenReturn(errorResponse);
+
+        mockMvc.perform(post("/assets/revaluation/_search").contentType(MediaType.APPLICATION_JSON)
+                .content(getFileContents("requestinfowrapper.json"))).andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(getFileContents("errorresponse.json")));
+    }
+
+    @Test
+    public void test_error_disposalSearch() throws IOException, Exception {
+        final ErrorResponse errorResponse = getErrorResponse();
+
+        when(assetCommonService.populateErrors(any(BindingResult.class))).thenReturn(errorResponse);
+
+        mockMvc.perform(post("/assets/dispose/_search").contentType(MediaType.APPLICATION_JSON)
+                .content(getFileContents("requestinfowrapper.json"))).andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(getFileContents("errorresponse.json")));
+    }
+
+    @Test
+    public void test_error_currentValueSearch() throws IOException, Exception {
+        final ErrorResponse errorResponse = getErrorResponse();
+
+        when(assetCommonService.populateErrors(any(BindingResult.class))).thenReturn(errorResponse);
+
+        mockMvc.perform(post("/assets/currentvalue/_search").contentType(MediaType.APPLICATION_JSON)
+                .content(getFileContents("requestinfowrapper.json"))).andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(getFileContents("currentvalue/currentvalueerrorresponse.json")));
+    }
+    
+    @Test
+    public void test_error_assetCreate() throws IOException, Exception {
+        final ErrorResponse errorResponse = getErrorResponse();
+
+        when(assetCommonService.populateErrors(any(BindingResult.class))).thenReturn(errorResponse);
+
+        mockMvc.perform(post("/assets/_create").contentType(MediaType.APPLICATION_JSON)
+                .content(getFileContents("asseterrorrequest.json"))).andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(getFileContents("errorresponse.json")));
+    }
+    
+    @Test
+    public void test_error_revaluationCreate() throws IOException, Exception {
+        final ErrorResponse errorResponse = getErrorResponse();
+
+        when(assetCommonService.populateErrors(any(BindingResult.class))).thenReturn(errorResponse);
+
+        mockMvc.perform(post("/assets/revaluation/_create").contentType(MediaType.APPLICATION_JSON)
+                .content(getFileContents("revaluation/revaluationerrorrequest.json"))).andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(getFileContents("errorresponse.json")));
+    }
+    
+    @Test
+    public void test_error_disposalCreate() throws IOException, Exception {
+        final ErrorResponse errorResponse = getErrorResponse();
+
+        when(assetCommonService.populateErrors(any(BindingResult.class))).thenReturn(errorResponse);
+
+        mockMvc.perform(post("/assets/dispose/_create").contentType(MediaType.APPLICATION_JSON)
+                .content(getFileContents("disposal/disposalerrorrequest.json"))).andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(getFileContents("errorresponse.json")));
+    }
+    
+    @Test
+    public void test_error_depreciationCreate() throws IOException, Exception {
+        final ErrorResponse errorResponse = getErrorResponse();
+
+        when(assetCommonService.populateErrors(any(BindingResult.class))).thenReturn(errorResponse);
+
+        mockMvc.perform(post("/assets/depreciations/_create").contentType(MediaType.APPLICATION_JSON)
+                .content(getFileContents("depreciation/depreciationerrorrequest.json"))).andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(getFileContents("errorresponse.json")));
+    }
+    
+    private ErrorResponse getErrorResponse() {
+        final ErrorResponse errorResponse = new ErrorResponse();
+        final org.egov.asset.exception.Error error = new org.egov.asset.exception.Error();
+        error.setCode(400);
+        error.setMessage(HttpStatus.BAD_REQUEST.getReasonPhrase());
+        error.setDescription(HttpStatus.BAD_REQUEST.toString());
+        errorResponse.setResponseInfo(new ResponseInfo());
+        errorResponse.setError(error);
+        return errorResponse;
+    }
+
     private Depreciation getAssetDepreciation() {
         final Depreciation depreciation = new Depreciation();
+        depreciation.setId(Long.valueOf("1"));
         depreciation.setTenantId("ap.kurnool");
         depreciation.setAssetIds(null);
         depreciation.setFinancialYear("2017-18");
@@ -309,7 +420,7 @@ public class AssetControllerTest {
         responseInfo.setVer("v1");
         responseInfo.setTs("Sat Aug 19 16:50:40 IST 2017");
         responseInfo.setResMsgId(null);
-        responseInfo.setMsgId(null);
+        responseInfo.setMsgId("20170310130900");
         responseInfo.setStatus(null);
         return responseInfo;
     }

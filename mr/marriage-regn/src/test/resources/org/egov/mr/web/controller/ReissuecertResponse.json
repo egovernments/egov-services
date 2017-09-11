@@ -1,95 +1,90 @@
 {
-    "responseInfo": {
-        "resMsgId": "string",
-        "status": "200",
-        "apiId": "uief87324",
-        "ver": "string",
-        "ts": "string",
-        "key": "successful",
-        "tenantId": "ap.kurnool"
-    },
-    "reissueApplications": [
-        {
-            "id": "1",
-            "regnNo": "regnno",
-            "applicantInfo": {
-                "name": "name",
-                "address": "address12345",
-                "mobileNo": "9876543210",
-                "email": "emailid@gmail.com",
-                "fee": 34,
-                "aadhaar": "123456789"
-            },
-            "documents": [
-                {
-                    "id": "1",
-                    "documentType": "documenttype",
-                    "location": "location",
-                    "tenantId": "ap.kurnool",
-                    "reissueCertificateId": "1234",
-                    "auditDetails": {
-                        "createdBy": "creator",
-                        "lastModifiedBy": "modifier",
-                        "createdTime":1496430744825,
-                        "lastModifiedTime": 1496430744825
-                    }
-                }
-            ],
-            "applicationNumber": "egov1234",
-            "reissueApplStatus": "CREATED",
-            "stateId": "12345",
-            "approvalDetails": {
-                "department": 1496430744825,
-                "designation": 1496430744825,
-                "assignee": 1496430744825,
-                "action": "action",
-                "status": "Approved",
-                "comments": "comments"
-            },
-            "demands": [
-                1496430744825
-            ],
-            "tenantId": "ap.kurnool",
-            "certificate": {
-                    "certificateNo": "certno",
-                    "certificateDate": 1496430744825,
-                    "certificateType": "REISSUE",
-                    "regnNumber": "regnnumber",
-                    "bridegroomPhoto": "photo",
-                    "bridePhoto": "photo",
-                    "husbandName": "husname",
-                    "husbandAddress": "hus address",
-                    "wifeName":"wife name",
-                    "wifeAddress": "wife address",
-                    "marriageDate": 1496430744825,
-                    "marriageVenueAddress": "venu address",
-                    "regnDate": 1496430744825,
-                    "regnSerialNo": "serialno",
-                    "regnVolumeNo": "volumeno",
-                    "certificatePlace": "certplace",
-                    "templateVersion": "v2",
-                    "applicationNumber": "applnno",
-                    "tenantId": "ap.kurnool"
-                },
-            "rejectionReason": "rejectionreaon",
-            "remarks": "remarks",
-            "isActive": null,
-            "auditDetails": {
-                "createdBy": "creator",
-                "lastModifiedBy": "modifier",
-                "createdTime": 1496430744825,
-                "lastModifiedTime": 1496430744825
-            }
-        }
-    ],
-    "page": {
-        "totalResults": 1,
-        "totalPages": null,
-        "pageSize": null,
-        "currentPage": null,
-        "offSet": null
-    }
-    
-    
-    
+	"responseInfo": {
+		"resMsgId": "string",
+		"status": "200",
+		"apiId": "uief87324",
+		"ver": "string",
+		"ts": 987456321
+	},
+	"reissueApplications": [
+		{
+			"id": "1",
+			"regnNo": "regnno",
+			"applicantInfo": {
+				"name": "name",
+				"address": "address12345",
+				"mobileNo": "9876543210",
+				"email": "emailid@gmail.com",
+				"fee": 34,
+				"aadhaar": "123456789"
+			},
+			"documents": [
+				{
+					"id": "1",
+					"documentType": "documenttype",
+					"location": "location",
+					"tenantId": "ap.kurnool",
+					"reissueCertificateId": "1234",
+					"auditDetails": {
+						"createdBy": "creator",
+						"lastModifiedBy": "modifier",
+						"createdTime": 1496430744825,
+						"lastModifiedTime": 1496430744825
+					}
+				}
+			],
+			"applicationNumber": "egov1234",
+			"reissueApplStatus": "CREATED",
+			"stateId": "12345",
+			"approvalDetails": {
+				"department": 1496430744825,
+				"designation": 1496430744825,
+				"assignee": 1496430744825,
+				"action": "action",
+				"status": "Approved",
+				"comments": "comments"
+			},
+			"demands": [
+				1496430744825
+			],
+			"tenantId": "ap.kurnool",
+			"certificate": {
+				"certificateNo": "certno",
+				"certificateDate": 1496430744825,
+				"certificateType": "REISSUE",
+				"regnNumber": "regnnumber",
+				"bridegroomPhoto": "photo",
+				"bridePhoto": "photo",
+				"husbandName": "husname",
+				"husbandAddress": "hus address",
+				"wifeName": "wife name",
+				"wifeAddress": "wife address",
+				"marriageDate": 1496430744825,
+				"marriageVenueAddress": "venu address",
+				"regnDate": 1496430744825,
+				"regnSerialNo": "serialno",
+				"regnVolumeNo": "volumeno",
+				"certificatePlace": "certplace",
+				"templateVersion": "v2",
+				"applicationNumber": "applnno",
+				"tenantId": "ap.kurnool"
+			},
+			"rejectionReason": "rejectionreaon",
+			"remarks": "remarks",
+			"isActive": null,
+			"auditDetails": {
+				"createdBy": "creator",
+				"lastModifiedBy": "modifier",
+				"createdTime": 1496430744825,
+				"lastModifiedTime": 1496430744825
+			}
+		}
+	],
+	"page": {
+		"totalResults": 1,
+		"totalPages": null,
+		"pageSize": null,
+		"currentPage": null,
+		"offSet": null
+	}
 }

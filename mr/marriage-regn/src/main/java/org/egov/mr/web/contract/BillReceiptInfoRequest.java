@@ -11,6 +11,7 @@
  */
 package org.egov.mr.web.contract;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.mr.model.BillReceiptInfo;
 import org.springframework.stereotype.Component;
 

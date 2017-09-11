@@ -137,6 +137,11 @@ public class MovementQueryBuilder {
             selectQuery.append(" m.stateId = ?");
             preparedStatementValues.add(movementSearchRequest.getStateId());
         }
+        if (movementSearchRequest.getStatus() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" m.status IN( " + movementSearchRequest.getStatus() + ")");
+        }
+
     }
 
     private void addOrderByClause(final StringBuilder selectQuery,

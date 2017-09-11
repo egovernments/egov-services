@@ -21,8 +21,8 @@ public class PropertiesManager {
 	@Autowired
 	Environment environment;
 
-	@Value("${egov.services.tl-services.create.legacy.tradelicense.validated}")
-	private String createLegacyTradeValidated;
+	@Value("${egov.services.tl-services.tradelicense.persisted.topic}")
+	private String tradeLicensePersistedTopic;
 
 	@Value("${es.host}")
 	private String esHost;
@@ -62,6 +62,9 @@ public class PropertiesManager {
 
 	@Value("${egov.services.tl-masters_v1.status.searchpath}")
 	private String statusServiceSearchPath;
+	
+	@Value("${egov.services.tl-masters_v2.documenttype.searchpath}")
+	private String documentServiceV2SearchPath;
 
 	@Value("${egov.services.egov-location.hostname}")
 	private String locationServiceHostName;
@@ -72,4 +75,15 @@ public class PropertiesManager {
 	@Value("${egov.services.egov-location.searchpath}")
 	private String locationServiceSearchPath;
 
+	@Value("${egov.services.egf-masters.hostname}")
+	private String financialYearServiceHostName;
+
+	@Value("${egov.services.egf-masters.basepath}")
+	private String financialYearServiceBasePath;
+
+	@Value("${egov.services.egf-masters.searchpath}")
+	private String financialYearServiceSearchPath;
+	
+	@Value("${error.endpoint.connection}")
+	private String endPointError;
 }

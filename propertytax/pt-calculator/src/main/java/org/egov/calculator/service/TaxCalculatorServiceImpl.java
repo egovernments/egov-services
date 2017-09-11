@@ -207,7 +207,7 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
                 wrapper.setTaxRates(taxRates);
                 GuidanceValueResponse guidanceValueResponse = taxCalculatorMasterService.getGuidanceValue(
                         calculationRequest.getRequestInfo(), tenantId,
-                        calculationRequest.getProperty().getBoundary().getRevenueBoundary().getId().toString(),
+                        calculationRequest.getProperty().getBoundary().getGuidanceValueBoundary().toString(),
                         unit.getStructure(), unit.getUsage(), null, unit.getOccupancyType(), unit.getOccupancyDate());
                 Double guidanceValue = guidanceValueResponse.getGuidanceValues().get(0).getValue();
                 wrapper.setGuidanceValue(guidanceValue);

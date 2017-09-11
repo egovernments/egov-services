@@ -26,7 +26,10 @@ import jp from "jsonpath";
 import UiButton from './components/UiButton';
 import {fileUpload} from './utility/utility';
 import UiTable from './components/UiTable';
+import jsPDF from 'jspdf';
 import Workflow from './specs/pt/Workflow';
+import "jspdf-autotable";
+import html2canvas from "html2canvas";
 
 var specifications={};
 
@@ -117,19 +120,68 @@ function getPosition(objArray, id){
 	}
 }
 
+const getNameById = function(object, id, property = "") {
+  if (id == "" || id == null) {
+        return "";
+    }
+    for (var i = 0; i < object.length; i++) {
+        if (property == "") {
+            if (object[i].id == id) {
+                return object[i].name;
+            }
+        } else {
+            if (object[i].hasOwnProperty(property)) {
+                if (object[i].id == id) {
+                    return object[i][property];
+                }
+            } else {
+                return "";
+            }
+        }
+    }
+    return "";
+}
+
+const getNameByCode = function(object, code, property = "") {
+  if (code == "" || code == null) {
+        return "";
+    }
+    for (var i = 0; i < object.length; i++) {
+        if (property == "") {
+            if (object[i].code == code) {
+                return object[i].name;
+            }
+        } else {
+            if (object[i].hasOwnProperty(property)) {
+                if (object[i].code == code) {
+                    return object[i][property];
+                }
+            } else {
+                return "";
+            }
+        }
+    }
+    return "";
+}
+
 class Inbox extends Component {
   constructor(props) {
     super(props);
-	this.state = {
-		searchResult : [],
-		buttons : [],
-		employee : [],
-		designation:[],
-		workflowDepartment: [],
-		process: [],
-		forward: false
-		
-	}
+  	this.state = {
+  		searchResult : [],
+  		buttons : [],
+  		employee : [],
+  		designation:[],
+  		workflowDepartment: [],
+  		process: [],
+  		forward: false,
+      specialNotice: {},
+      hasNotice: false,
+      locality:[],
+      usages:[],
+      structureclasses:[],
+      taxHeads: [],
+  	}
   }
   
   componentWillMount() {
@@ -353,7 +405,7 @@ class Inbox extends Component {
     let hashLocation = window.location.hash;
     let self = this;
     let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
-	self.setLabelAndReturnRequired(obj);
+	  self.setLabelAndReturnRequired(obj);
     setMetaData(specifications);
     setMockData(JSON.parse(JSON.stringify(specifications)));
     setModuleName(hashLocation.split("/")[2]);
@@ -370,6 +422,7 @@ class Inbox extends Component {
 		current.setState({
 			searchResult: res.properties
 		})
+
 		var workflowDetails = res.properties[0].propertyDetail.workFlowDetails;
 		if(workflowDetails) {
 			workflow.workflowDepartment = workflowDetails.department || null;
@@ -415,7 +468,7 @@ class Inbox extends Component {
 					  console.log(err)
 					})
 					
-		res.processInstance.attributes.validActions.values.map((item)=>{
+		    res.processInstance.attributes.validActions.values.map((item)=>{
 				if(item.name == 'Forward'){
 					current.setState({
 						forward: true
@@ -442,55 +495,125 @@ class Inbox extends Component {
 
   componentDidMount() {
       this.initData();
-	  this.props.initForm();
+	    this.props.initForm();
 	  
-	  var current = this;
-	  
-	   Api.commonApiPost( 'egov-common-masters/departments/_search').then((res)=>{
-		  console.log(res);
-		  res.Department.unshift({id:-1, name:'None'});
-		  current.setState({workflowDepartment: res.Department})
-		}).catch((err)=> {
-		  current.setState({
-			workflowDepartment:[]
-		  })
-		  console.log(err)
-		})
+      var current = this;
+
+      Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"LOCALITY", hierarchyTypeName:"LOCATION"}).then((res)=>{
+         current.setState({locality : res.Boundary})
+      }).catch((err)=> {
+         current.setState({locality : []})
+      })
+
+      Api.commonApiPost('pt-property/property/structureclasses/_search').then((res)=>{
+        current.setState({structureclasses: res.structureClasses})
+      }).catch((err)=> {
+        current.setState({structureclasses:[]})
+      })
+
+      Api.commonApiPost('pt-property/property/usages/_search').then((res)=>{
+        current.setState({usages : res.usageMasters})
+      }).catch((err)=> {
+        current.setState({usages : []})
+      })
+  
+	    Api.commonApiPost( 'egov-common-masters/departments/_search').then((res)=>{
+  		  res.Department.unshift({id:-1, name:'None'});
+  		  current.setState({workflowDepartment: res.Department})
+		  }).catch((err)=> {
+		    current.setState({workflowDepartment:[]})           
+  		})
   }
   
   updateInbox = (actionName, status) => {
-	  	  
+	  			  
 	  var currentThis = this;
 	  
 	  let {workflow, setLoadingStatus, toggleSnackbarAndSetText} = this.props;
 	 
 	  var data = this.state.searchResult;
+
+    setLoadingStatus('loading');
 	  
 		var workFlowDetails = {
-				"department": workflow.workflowDepartment || 'department',
-				"designation":workflow.workflowDesignation || 'designation',
-				"initiatorPosition": workflow.initiatorPosition || null,
-				"assignee": null,
-				"action": actionName,
-				"status": status
+  				"department": workflow.workflowDepartment || 'department',
+  				"designation":workflow.workflowDesignation || 'designation',
+  				"initiatorPosition": workflow.initiatorPosition || null,
+  				"assignee": null,
+  				"action": actionName,
+  				"status": status
 			  }
 			  
 	  if(actionName == 'Forward') {
 		 
-			workFlowDetails.assignee = getPosition(this.state.approver, workflow.approver) || null;
-			workFlowDetails.initiatorPosition = this.state.process.initiatorPosition || null;
+			  workFlowDetails.assignee = getPosition(this.state.approver, workflow.approver) || null;
+			  workFlowDetails.initiatorPosition = this.state.process.initiatorPosition || null;
 		    localStorage.setItem('inboxStatus', 'Forwarded')
 		  
 	  } else if(actionName == 'Approve') {
-		  
-		  workFlowDetails.assignee = this.state.process.initiatorPosition || null
-		  workFlowDetails.initiatorPosition = this.state.process.initiatorPosition || null;
-		  localStorage.setItem('inboxStatus', 'Approved')
+  		  workFlowDetails.assignee = this.state.process.initiatorPosition || null
+  		  workFlowDetails.initiatorPosition = this.state.process.initiatorPosition || null;
+  		  localStorage.setItem('inboxStatus', 'Approved')
 		  
 	  } else if(actionName == 'Reject') {
 		  
-		  workFlowDetails.assignee = this.state.process.initiatorPosition || null
-		  localStorage.setItem('inboxStatus', 'Rejected') 
+  		  workFlowDetails.assignee = this.state.process.initiatorPosition || null
+  		  localStorage.setItem('inboxStatus', 'Rejected')
+		  
+	  } else if( actionName == 'Print Notice'){
+		 
+		  var body = {
+		   upicNo: data[0].upicNumber,
+       tenantId: localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default'
+	   } 
+
+	    Api.commonApiPost('pt-property/properties/specialnotice/_generate', {},body, false, true).then((res)=>{
+
+              currentThis.setState({
+                  specialNotice: res.notice,
+                  hasNotice: true
+              })
+
+              var taxHeadsArray = [];  
+
+              if(res.notice.hasOwnProperty('taxDetails') && res.notice.taxDetails.hasOwnProperty('headWiseTaxes')){
+                  res.notice.taxDetails.headWiseTaxes.map((item, index)=>{
+                      taxHeadsArray.push(item.taxName);
+                  })
+              }
+
+             taxHeadsArray = taxHeadsArray.filter((item, index, array)=>{
+                return index == array.indexOf(item);
+             })
+
+             var query = {
+                service:'PT',
+                code:taxHeadsArray
+              }
+
+              Api.commonApiPost('/billing-service/taxheads/_search', query, {}, false, true).then((res)=>{
+                 currentThis.setState({
+                   taxHeads:res.TaxHeadMasters
+                 })
+                 setTimeout(()=>{
+                  currentThis.generatePDF();
+                }, 100)
+              }).catch((err)=> {
+               currentThis.setState({
+                   taxHeads:[]
+                 })
+              })
+        
+		  }).catch((err)=> {
+			currentThis.setState({
+          specialNotice: {},
+          hasNotice: false
+        })
+			setLoadingStatus('hide');
+			toggleSnackbarAndSetText(true, err.message);
+		  })
+		  
+		  return false;
 	  }
 	  
 		data[0].owners[0].tenantId = "default";
@@ -507,13 +630,13 @@ class Inbox extends Component {
 		   "properties": data
 	   } 
 	  
-	     Api.commonApiPost('pt-property/properties/_update', {},body, false, true).then((res)=>{
-			setLoadingStatus('hide');
-			currentThis.props.history.push('/propertyTax/inbox-acknowledgement')
+	    Api.commonApiPost('pt-property/properties/_update', {},body, false, true).then((res)=>{
+			   setLoadingStatus('hide');
+			   currentThis.props.history.push('/propertyTax/inbox-acknowledgement')
 		  }).catch((err)=> {
-			console.log(err)
-			setLoadingStatus('hide');
-			toggleSnackbarAndSetText(true, err.message);
+			   console.log(err)
+			   setLoadingStatus('hide');
+			   toggleSnackbarAndSetText(true, err.message);
 		  })
   }
 
@@ -522,8 +645,38 @@ class Inbox extends Component {
     return  typeof val != "undefined" && (typeof val == "string" || typeof val == "number" || typeof val == "boolean") ? (val + "") : "";
   }
 
-  printer = () => {
-    window.print();
+  generatePDF = () => {
+
+    let {setLoadingStatus} = this.props;
+
+  var mywindow = window.open('', 'PRINT', 'height=400,width=600');
+
+    var cdn = `
+      <!-- Latest compiled and minified CSS -->
+      <link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+      <!-- Optional theme -->
+      <link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">  
+      <style>
+        td {padding-top:15px !important;padding-bottom:15px !important;border-left:0px !important;border-right:0px !important;border-top:0px !important;border-bottom:0px !important;}
+      </style>
+      `;
+    mywindow.document.write('<html><head><title> </title>');
+    mywindow.document.write(cdn);
+    mywindow.document.write('</head><body>');
+    mywindow.document.write(document.getElementById('specialNotice').innerHTML);
+    mywindow.document.write('</body></html>');
+
+    mywindow.document.close(); // necessary for IE >= 10
+    mywindow.focus(); // necessary for IE >= 10*/
+
+   setTimeout(function(){
+      setLoadingStatus('hide');
+      mywindow.print();
+      mywindow.close();
+    }, 1000);
+
+    return true;
   }
   
   render() {
@@ -568,7 +721,7 @@ class Inbox extends Component {
     return (
       <div className="Inbox">
         <form id="printable">
-        {!_.isEmpty(mockData) && <ShowFields groups={mockData[`${moduleName}.${actionName}`].groups} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={""} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""} screen="view"/>}
+        {!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] && <ShowFields groups={mockData[`${moduleName}.${actionName}`].groups} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={""} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""} screen="view"/>}
           <br/>
           {renderTable()}
 			  {(this.state.buttons.hasOwnProperty('attributes') && (this.state.buttons.attributes.validActions.values.length > 0) && this.state.forward) &&	<Card className="uiCard">
@@ -578,7 +731,7 @@ class Inbox extends Component {
                                     <Row>
                                         <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText="Department Name *"
+                                                  floatingLabelText={<span>{translate('pt.create.groups.workflow.departmentName')}<span style={{"color": "#FF0000"}}> *</span></span>}
                                                   errorText={fieldErrors.workflowDepartment ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.workflowDepartment}</span>: ""}
                                                   value={workflow.workflowDepartment ? workflow.workflowDepartment :""}
                                                   onChange={(event, index, value) => {
@@ -600,7 +753,7 @@ class Inbox extends Component {
                                         </Col>
                                         <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText="Designation Name *"
+													floatingLabelText={<span>{translate('pt.create.groups.workflow.designationName')}<span style={{"color": "#FF0000"}}> *</span></span>}
                                                   errorText={fieldErrors.workflowDesignation ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.workflowDesignation}</span>: ""}
                                                   value={workflow.workflowDesignation ? workflow.workflowDesignation :""}
                                                   onChange={(event, index, value) => {
@@ -622,7 +775,7 @@ class Inbox extends Component {
                                         </Col>
                                         <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText="Approver Name *"
+                                                  floatingLabelText={<span>{translate('pt.create.groups.workflow.approverName')}<span style={{"color": "#FF0000"}}> *</span></span>}
                                                   errorText={fieldErrors.approver ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.approver}</span>: ""}
                                                   value={workflow.approver ? workflow.approver : ""}
                                                   onChange={(event, index, value) => {
@@ -641,9 +794,9 @@ class Inbox extends Component {
                                                     {renderOption(this.state.approver)}
                                               </SelectField>
                                         </Col>
-										<Col xs={12} md={3} sm={6}>
+										                    <Col xs={12} md={3} sm={6}>
                                               <TextField  className="fullWidth"
-                                                  floatingLabelText="Comments"
+                                                  floatingLabelText={translate('pt.create.groups.workflow.comment')}
                                                   errorText={fieldErrors.comments ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.comments}</span>: ""}
                                                   value={workflow.comments ? workflow.comments : ""}
                                                   onChange={(e) => {
@@ -652,8 +805,7 @@ class Inbox extends Component {
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-                                                  />
-                                                   
+                                                  />     
                                         </Col>
                                     </Row>
                                 </Grid>
@@ -662,7 +814,139 @@ class Inbox extends Component {
 		  <br/>
         </form>
         <div style={{"textAlign": "center"}}>
-	
+	          {this.state.hasNotice && <Card className="uiCard" id="specialNotice" style={{position:'absolute', display:'none'}}>
+              <CardText>
+                <Table  responsive style={{fontSize:"bold", width:'100%'}} condensed>
+                  <tbody>
+                    <tr>
+                        <td style={{textAlign:"left"}}>
+                           ULB Logo
+                        </td>
+                        <td style={{textAlign:"center"}}>
+                            <b>Roha Municipal Council</b><br/>
+                        </td>
+                        <td style={{textAlign:"right"}}>
+                          MAHA Logo
+                        </td>
+                    </tr>
+                    <tr>
+                      <td style={{textAlign:'center'}} colSpan={3}>
+                        <b>Special Notice</b>
+                        <p>(मुवंई प्रांतिक महानगरपालिका अधिनियम 1949 चे अनुसूचीतील प्रकरण 8 अधिनियम 44, 45 व 46 अन्वये )</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style={{textAlign:"right"}}  colSpan={3}>
+                          Date / दिनांक: {this.state.specialNotice.hasOwnProperty('noticeDate') && this.state.specialNotice.noticeDate}<br/>
+                          Notice No. / नोटीस क्रं : {this.state.specialNotice.hasOwnProperty('noticeNumber') && this.state.specialNotice.noticeNumber}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style={{textAlign:"left"}}  colSpan={3}>प्रती,</td>
+                    </tr>
+                    <tr>
+                      <td style={{textAlign:"left"}}  colSpan={3}>{this.state.specialNotice.hasOwnProperty('owners') && this.state.specialNotice.owners.map((owner, index)=>{
+                        return(<span key={index}>{owner.name}</span>)
+                      })}<br/>
+                         {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.addressNumber ? <span>{this.state.specialNotice.address.addressNumber}</span> : '') : ''}
+                         {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.addressLine1 ? <span>, {getNameById(this.state.locality, this.state.specialNotice.address.addressLine1)}</span> : '') : ''}
+                         {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.addressLine2 ? <span>, {this.state.specialNotice.address.addressLine2}</span> : '' ): ''}
+                         {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.landmark ? <span>, {this.state.specialNotice.address.landmark}</span> : '' ): ''}
+                         {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.city ? <span>, {this.state.specialNotice.address.city}</span> : '' ): ''}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colSpan={3} style={{textAlign:"center"}}>Subject /विषय : Special Notice – New Assessment / Special Notice – <br/>Reassessment
+                          Reference / संदर्भ : आपला अर्ज क्रमांक {this.state.specialNotice.hasOwnProperty('applicationNo') && this.state.specialNotice.applicationNo} दिनांक {this.state.specialNotice.hasOwnProperty('applicationDate') && this.state.specialNotice.applicationDate}</td>
+                    </tr>
+                    <tr>
+                      <td colSpan={3}>
+                      महोद्य / महोद्या ,<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;संदर्भिय विषयांन्वये कळविण्यात येते की, आपल्या मालमत्तेची नवीन / सुधारीत कर आकारणी
+                        करण्यात आलेली आहे. मालमत्ता क्रमांक {this.state.specialNotice.hasOwnProperty('upicNo') && this.state.specialNotice.upicNo}, {this.state.specialNotice.hasOwnProperty('owners') && this.state.specialNotice.owners.map((owner, index)=>{
+                        return(<span key={index}>{owner.name}</span>)
+                      })} यांच्या
+                        नावे नोंद असून, मालमत्ता कर आकारणीचा तपशील खालीलप्रमाणे आहे.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colSpan={3}>
+                        <Table responsive style={{fontSize:"bold", width:'100%'}} bordered condensed>
+                          <thead>
+                            <tr>
+                              <th>Floor</th>
+                              <th>Unit Details</th>
+                              <th>Usage</th>
+                              <th>Construction</th>
+                              <th>Assessable Area</th>
+                              <th>ALV</th>
+                              <th>RV</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                           {this.state.specialNotice.hasOwnProperty('floors') && this.state.specialNotice.floors.map((item, index)=>(
+                              <tr key={index}>
+                                <td>{item.floorNo || ''}</td>
+                                <td>{item.unitDetails || ''}</td>
+                                <td>{getNameByCode(this.state.usages,item.usage) || ''}</td>
+                                <td>{getNameByCode(this.state.structureclasses, item.construction) || ''}</td>
+                                <td>{item.assessableArea || ''}</td>
+                                <td>{item.alv || ''}</td>
+                                <td>{item.rv || ''}</td>
+                              </tr>
+                           ))}
+                          </tbody>
+                        </Table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colSpan={3}><b>Tax Details</b></td>
+                    </tr>
+                   <tr>
+                     <td colSpan={3}>
+                        <Table responsive style={{fontSize:"bold", width:'50%'}} bordered condensed>
+                          <thead>
+                            <tr>
+                              <th>Tax Description</th>
+                              <th>Amount</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                           {this.state.specialNotice.taxDetails.hasOwnProperty('headWiseTaxes') &&  this.state.specialNotice.taxDetails.headWiseTaxes.map((item, index)=>{
+                                return(
+                                  <tr key={index}>
+                                    <td>{(this.state.taxHeads.length != 0) && this.state.taxHeads.map((e,i)=>{
+                                      if(e.code == item.taxName){
+                                        return(<span key={i} style={{fontWeight:500}}>{e.name ? e.name : 'NA'}</span>);
+                                      }}
+                                    )}
+                                    </td>
+                                    <td>{item.taxValue}</td>
+                                  </tr>
+                                )
+                            })}
+                          </tbody>
+                        </Table>
+                     </td>
+                   </tr>
+                    <tr>
+                      <td colSpan={3}>
+                          सदर आकारणी जर तुम्हाला मान्य नसेल तर ही नोटीस मिळाल्या पासून 1 महिन्याचे मुदतीचे आत
+                          मुख्यधिकारी यांचकडे फेर तपासणी करता अर्ज करावा. जर 1 महिन्याचे आत सदरहून आकारणी
+                          विरुध्द तक्रार अर्ज प्राप्त झाला नाही तर वर नमुद केल्या प्रमाणे आकारणी कायम करण्यात येईल, याची
+                          नोंद घ्यावी.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colSpan={3} style={{textAlign:"right"}}>
+                        कर अधिक्षक,<br/>
+                        ULB Name
+                      </td>
+                    </tr>
+                  </tbody>
+                </Table>
+              </CardText>
+            </Card>}
 			{(this.state.buttons.hasOwnProperty('attributes') && this.state.buttons.attributes.validActions.values.length > 0) && this.state.buttons.attributes.validActions.values.map((item,index)=> {
 				return(
 					<RaisedButton key={index} type="button" primary={true} label={item.name} style={{margin:'0 5px'}} onClick={()=> {

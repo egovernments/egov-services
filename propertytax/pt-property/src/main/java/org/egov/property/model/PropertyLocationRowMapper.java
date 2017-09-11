@@ -2,6 +2,7 @@ package org.egov.property.model;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import org.egov.models.Boundary;
 import org.egov.models.PropertyLocation;
 import org.springframework.jdbc.core.RowMapper;
@@ -29,10 +30,11 @@ public class PropertyLocationRowMapper implements RowMapper<Object> {
 		boundary = new Boundary();
 		boundary.setId(getLong(rs.getInt("adminboundary")));
 		propertyLocation.setAdminBoundary(boundary);
+		propertyLocation.setGuidanceValueBoundary(getLong(rs.getInt("guidanceValueBoundary")));
 		propertyLocation.setNorthBoundedBy(getString(rs.getString("northboundedby")));
 		propertyLocation.setEastBoundedBy(getString(rs.getString("eastboundedby")));
 		propertyLocation.setWestBoundedBy(getString(rs.getString("westboundedby")));
-		propertyLocation.setSouthBoundedBy("southboundedby");
+		propertyLocation.setSouthBoundedBy(getString(rs.getString("southboundedby")));
 
 		return propertyLocation;
 	}
@@ -45,7 +47,7 @@ public class PropertyLocationRowMapper implements RowMapper<Object> {
 	 * @return {@link String}
 	 */
 	private String getString(Object object) {
-		return object == null ? "" : object.toString().trim();
+		return object == null ? null : object.toString().trim();
 	}
 
 	/**
@@ -56,7 +58,7 @@ public class PropertyLocationRowMapper implements RowMapper<Object> {
 	 * @return {@link Long}
 	 */
 	private Long getLong(Object object) {
-		return object == null ? 0l : Long.parseLong(object.toString().trim());
+		return Integer.valueOf(object.toString()) == 0 ? null : Long.parseLong(object.toString().trim());
 	}
 
 }

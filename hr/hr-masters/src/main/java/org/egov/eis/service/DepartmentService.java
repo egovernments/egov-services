@@ -56,6 +56,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 @Slf4j
 @Service
 public class DepartmentService {
@@ -68,6 +70,11 @@ public class DepartmentService {
 
     public List<Department> getDepartments(List<Long> ids, String tenantId, RequestInfoWrapper requestInfoWrapper) {
         URI url = null;
+        if(null == ids.get(0) || ids.isEmpty())
+        {
+        	  log.error("Following exception occurred while accessing Department id is null");
+        	  return null;
+        }
         String idsAsCSV = getIdsAsCSV(ids);
         DepartmentResponse departmentResponse = null;
         try {
@@ -84,6 +91,25 @@ public class DepartmentService {
             return null;
         }
         return departmentResponse.getDepartment();
+    }
+
+    public Department getDepartmentByCode(String code, String tenantId, RequestInfoWrapper requestInfoWrapper) {
+        URI url = null;
+        DepartmentResponse departmentResponse = null;
+        try {
+            url = new URI(propertiesManager.getCommonMastersServiceHost()
+                    + propertiesManager.getCommonMastersServiceBasePath()
+                    + propertiesManager.getCommonMastersServiceDepartmentsSearch()
+                    + "?tenantId=" + tenantId + "&code=" + code);
+            log.debug(url.toString());
+            departmentResponse = restTemplate.postForObject(url, getRequestInfoAsHttpEntity(requestInfoWrapper),
+                    DepartmentResponse.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("Following exception occurred while accessing Department API : " + e.getMessage());
+            return null;
+        }
+        return isEmpty(departmentResponse.getDepartment()) ? null : departmentResponse.getDepartment().get(0);
     }
 
     private String getIdsAsCSV(List<Long> ids) {

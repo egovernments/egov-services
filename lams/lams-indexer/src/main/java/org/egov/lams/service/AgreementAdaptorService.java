@@ -1,35 +1,18 @@
 package org.egov.lams.service;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.egov.lams.config.PropertiesManager;
-import org.egov.lams.contract.AgreementDetailsEs;
-import org.egov.lams.contract.AgreementIndex;
-import org.egov.lams.contract.AgreementRequest;
-import org.egov.lams.contract.DemandDetailsEs;
-import org.egov.lams.contract.Installment;
-import org.egov.lams.contract.InstallmentResponse;
-import org.egov.lams.contract.RequestInfo;
-import org.egov.lams.model.Agreement;
-import org.egov.lams.model.Allottee;
-import org.egov.lams.model.Asset;
-import org.egov.lams.model.City;
-import org.egov.lams.model.Demand;
-import org.egov.lams.model.DemandDetails;
-import org.egov.lams.repository.AllotteeRepository;
-import org.egov.lams.repository.AssetRepository;
-import org.egov.lams.repository.BoundaryRepository;
-import org.egov.lams.repository.DemandRepository;
-import org.egov.lams.repository.TenantRepository;
+import org.egov.lams.contract.*;
+import org.egov.lams.model.*;
+import org.egov.lams.repository.*;
 import org.egov.lams.repository.helper.InstallmetHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class AgreementAdaptorService {
@@ -76,7 +59,7 @@ public class AgreementAdaptorService {
 		City city = tenantRepository.fetchTenantByCode(agreement.getTenantId());
 		if(agreement.getDemands() != null){
 		agreementDemand = demandRepository.getDemandBySearch(agreement.getDemands().get(0), agreement.getTenantId());
-		agreementIndex.setDemandDetails(getDemandDetails(agreementDemand.getDemandDetails()));
+			agreementDetailsEs.setDemandDetails(getDemandDetails(agreementDemand.getDemandDetails()));
 		}
 		agreementDetailsEs.setAsset(asset);
 		agreementDetailsEs.setAgreement(agreement);

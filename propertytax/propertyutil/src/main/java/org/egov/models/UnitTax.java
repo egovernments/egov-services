@@ -12,11 +12,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UnitTax {
 	
-	@Size(min=1,max=16)
+	@Size(min=1,max=128)
     private String floorNumber;
 	
-	@Size(min=1,max=8)
-    private Integer unitNo;
+	@Size(min=1,max=128)
+    private String unitNo;
 
     @NotNull
     private Double assessableArea;

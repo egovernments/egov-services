@@ -216,7 +216,7 @@ paths:
           description: jurisdiction_id provided was not found
           schema:
             $ref: '#/definitions/ErrorRes'
-  /boundaries:
+  /boundarys:
     get:
       summary: List of boundaries for the given query parameters.
       description: |
@@ -306,6 +306,39 @@ paths:
           description: tenantid provided was not found
           schema:
             $ref: '#/definitions/ErrorRes'
+
+    post:
+      summary: Create boundary
+      description: To create a new boundary.
+      parameters:
+        - name: boundary
+          in: body
+          description: Details for the new boundary.
+          required: true
+          schema:
+            $ref: '#/definitions/BoundaryRequest'
+        - name: tenantId
+          in: query
+          description: Unique id for tenant.
+          required: true
+          type: string
+          format: varchar
+      tags:
+        - boundary
+      responses:
+        '201':
+          description: boundary created
+          schema:
+            $ref: '#/definitions/BoundaryResponse'
+        '400':
+          description: tenantid was not provided or General service error
+          schema:
+            $ref: '#/definitions/ErrorRes'
+        '404':
+          description: tenantid provided was not found
+          schema:
+            $ref: '#/definitions/ErrorRes'
+
   /crossHierarchy:
     get:
       summary: List of cross Hierarchy data for the given query parameters.

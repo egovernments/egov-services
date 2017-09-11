@@ -34,8 +34,15 @@
          "validityYears":2,
          "isPropertyOwner":true,
          "expiryDate":null,
-         "feeDetails":null,
+         "feeDetails":[
+            {
+               "financialYear":"2017-18",
+               "amount":"2000000000",
+               "paid":true
+            }
+         ],
          "supportDocuments":null,
-         "auditDetails":null
+         "auditDetails":null,
+         "workFlowDetails": null
       }
    ]

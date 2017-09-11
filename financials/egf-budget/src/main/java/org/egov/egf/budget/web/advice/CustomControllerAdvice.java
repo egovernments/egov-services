@@ -104,7 +104,7 @@ public class CustomControllerAdvice {
         final Error error = new Error();
         error.setCode(Integer.valueOf(InvalidDataException.code));
         error.setMessage(ex.getFieldName());
-        error.setDescription(ex.getDefaultMessage());
+        error.setDescription(ex.getMessage());
         errRes.setError(error);
 
         return errRes;

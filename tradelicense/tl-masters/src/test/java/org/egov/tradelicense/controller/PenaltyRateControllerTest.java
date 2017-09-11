@@ -18,7 +18,7 @@ import org.egov.tl.commons.web.contract.PenaltyRate;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.ResponseInfo;
 import org.egov.tl.commons.web.requests.PenaltyRateRequest;
-import org.egov.tl.commons.web.requests.PenaltyRateResponse;
+import org.egov.tl.commons.web.response.PenaltyRateResponse;
 import org.egov.tradelicense.TradeLicenseApplication;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.services.PenaltyRateService;

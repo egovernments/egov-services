@@ -1,48 +1,27 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-
 import MenuItem from 'material-ui/MenuItem';
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
-
 import Api from '../../../api/api';
 import {translate} from '../../common/common';
 import _ from 'lodash';
 
+import $ from 'jquery';
+import 'datatables.net-buttons/js/buttons.html5.js';// HTML 5 file export
+import 'datatables.net-buttons/js/buttons.flash.js';// Flash file export
+import jszip from 'jszip/dist/jszip';
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
-
-const $ = require('jquery');
-$.DataTable = require('datatables.net');
-const dt = require('datatables.net-bs');
-
-
-const buttons = require('datatables.net-buttons-bs');
-
-require('datatables.net-buttons/js/buttons.colVis.js'); // Column visibility
-require('datatables.net-buttons/js/buttons.html5.js'); // HTML 5 file export
-require('datatables.net-buttons/js/buttons.flash.js'); // Flash file export
-require('datatables.net-buttons/js/buttons.print.js'); // Print view button
-
-
-
+var sumColumn = [];
+var footerexist = false;
 
 class ShowField extends Component {
   constructor(props) {
        super(props);
    }
-
-  //  componentWillMount()
-  //  {
-  //    console.log('will mount');
-  //    $('#searchTable').DataTable({
-  //      dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
-  //      buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
-  //       bDestroy: true,
-  //       language: {
-  //          "emptyTable": "No Records"
-  //       }
-  //     });
-  //  }
 
   componentWillUnmount()
   {
@@ -60,19 +39,77 @@ class ShowField extends Component {
     }
   }
 
-  componentWillReceiveProps(nextprops){
+  componentDidMount(){
+    this.setState({reportName : this.props.match.params.reportName});
   }
+
+  componentWillReceiveProps(nextprops){
+    if((this.props.match.params.moduleName !== nextprops.match.params.moduleName) || (this.props.match.params.reportName !== nextprops.match.params.reportName))
+    this.setState({reportName : nextprops.match.params.reportName});
+  }
+
 
   componentDidUpdate() {
     // console.log('did update');
     $('#reportTable').DataTable({
       dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
       buttons: [
-               'copy', 'csv', 'excel', 'pdf', 'print'
+         'copy', 'csv', 'excel',
+         { extend: 'pdf', text: 'Pdf', footer : true,  orientation: 'landscape', pageSize: 'TABLOID',
+          customize: function ( doc ) {
+              content: [ {
+                  alignment: 'justify',
+                  columns: [
+                          { width: 'auto' },
+                          { width: '*' },
+                          { width: '*' }
+                  ],
+                  table: { widths: [ 'auto', '*', '*' ] }
+              } ]
+          }
+        }, 'print'
        ],
-       ordering: false,
+      //  ordering: false,
        bDestroy: true,
+       footerCallback: function ( row, data, start, end, display ) {
+         var api = this.api(), data, total, pageTotal;
 
+        //  console.log(footerexist, sumColumn);
+
+         {sumColumn.map((columnObj, index) => {
+           if(columnObj.total){
+             // Remove the formatting to get integer data for summation
+             var intVal = function ( i ) {
+                 return typeof i === 'string' ?
+                     i.replace(/[\$,]/g, '')*1 :
+                     typeof i === 'number' ?
+                         i : 0;
+             };
+
+             // Total over all pages
+             total = api
+                 .column( index )
+                 .data()
+                 .reduce( function (a, b) {
+                     return intVal(a) + intVal(b);
+                 }, 0 );
+
+             // Total over this page
+             pageTotal = api
+                 .column( index, { page: 'current'} )
+                 .data()
+                 .reduce( function (a, b) {
+                     return intVal(a) + intVal(b);
+                 }, 0 );
+
+             // Update footer
+             $( api.column( index ).footer() ).html(
+                 pageTotal.toLocaleString('en-IN') +' ('+ total.toLocaleString('en-IN') +')'
+             );
+           }
+         })}
+
+       }
     });
   }
 
@@ -110,7 +147,10 @@ class ShowField extends Component {
               searchParams.push({"name":key,"input":value});
         }
 
-        let response=Api.commonApiPost("/report/"+match.params.moduleName+"/_get",{},{tenantId:"default",reportName:splitArray[0].split("=")[1],searchParams}).then(function(response)
+            var tenantId = localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : '';
+
+
+        let response=Api.commonApiPost("/report/"+match.params.moduleName+"/_get",{},{tenantId:tenantId,reportName:splitArray[0].split("=")[1],searchParams}).then(function(response)
         {
           // console.log(response)
           setReportResult(response)
@@ -137,6 +177,93 @@ class ShowField extends Component {
     }
   }
 
+  renderHeader = () => {
+    let { reportResult } = this.props;
+    return(
+      <thead style={{backgroundColor:"#f2851f",color:"white"}}>
+        <tr>
+          {reportResult.hasOwnProperty("reportHeader") && reportResult.reportHeader.map((item,i)=>
+          {
+            if(item.showColumn){
+              return (
+                <th key={i}>{translate(item.label)}</th>
+              )
+            }else{
+              return null;
+            }
+          })
+        }
+        </tr>
+      </thead>
+    )
+  }
+
+  renderBody = () => {
+    sumColumn = [];
+    let { reportResult } = this.props;
+    let {drillDown, checkIfDate} = this;
+    return (
+      <tbody>
+        {reportResult.hasOwnProperty("reportData") && reportResult.reportData.map((dataItem,dataIndex)=>
+        {
+          //array of array
+          let reportHeaderObj = reportResult.reportHeader;
+          return(
+            <tr key={dataIndex}>
+              {dataItem.map((item,itemIndex)=>{
+                var columnObj = {};
+                //array for particular row
+                var respHeader = reportHeaderObj[itemIndex];
+                if(respHeader.showColumn){
+                  columnObj = {};
+                  return (
+                    <td key={itemIndex} onClick={(e)=>{ drillDown(e,dataIndex,itemIndex,dataItem,item) }}>
+                      {respHeader.defaultValue ? <a href="javascript:void(0)">{checkIfDate(item,itemIndex)}</a> : checkIfDate(item,itemIndex)}
+                    </td>
+                  )
+                }
+              }
+            )}
+            </tr>
+          )
+        })}
+      </tbody>
+    )
+  }
+
+  renderFooter = () => {
+    let { reportResult } = this.props;
+    let reportHeaderObj = reportResult.reportHeader;
+    footerexist = false;
+
+    {reportHeaderObj.map((headerObj, index) => {
+      let columnObj = {};
+      if(headerObj.showColumn){
+        columnObj['showColumn'] = headerObj.showColumn;
+        columnObj['total'] = headerObj.total;
+        sumColumn.push(columnObj);
+      }
+      if(headerObj.total){
+        footerexist = true;
+      }
+      // console.log(headerObj.showColumn, headerObj.total);
+    })};
+
+    if(footerexist){
+      return(
+        <tfoot>
+        <tr>
+          {sumColumn.map((columnObj, index) => {
+            return (
+              <th key={index}>{index === 0 ? 'Total (Grand Total)' : ''}</th>
+            )
+          })}
+        </tr>
+        </tfoot>
+      )
+    }
+  }
+
   render() {
     let {drillDown,checkIfDate}=this
     let {
@@ -144,11 +271,6 @@ class ShowField extends Component {
       metaData,
       reportResult
     } = this.props;
-    // console.log(metaData);
-
-    // const showRow=()=>{
-    //   return
-    // }
 
     const viewTabel=()=>
     {
@@ -156,47 +278,10 @@ class ShowField extends Component {
         <Card>
           <CardHeader title={< strong > Result < /strong>}/>
           <CardText>
-          <Table id="reportTable" style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
-          <thead style={{backgroundColor:"#f2851f",color:"white"}}>
-            <tr>
-              {reportResult.hasOwnProperty("reportHeader") && reportResult.reportHeader.map((item,i)=>
-              {
-                if(item.showColumn){
-                  return (
-                    <th key={i}>{translate(item.label)}</th>
-                  )
-                }else{
-                  return null;
-                }
-              })
-            }
-            </tr>
-          </thead>
-          <tbody>
-            {reportResult.hasOwnProperty("reportData") && reportResult.reportData.map((dataItem,dataIndex)=>
-            {
-              //array of array
-              let reportHeaderObj = reportResult.reportHeader;
-              return(
-                <tr key={dataIndex}>
-                  {dataItem.map((item,itemIndex)=>{
-                    //array for particular row
-                    var respHeader = reportHeaderObj[itemIndex];
-                    // console.log(respHeader.showColumn, respHeader.defaultValue);
-                    if(respHeader.showColumn){
-                      return (
-                        <td key={itemIndex} onClick={(e)=>{ drillDown(e,dataIndex,itemIndex,dataItem,item) }}>
-                          {respHeader.defaultValue ? <a href="javascript:void(0)">{checkIfDate(item,itemIndex)}</a> : checkIfDate(item,itemIndex)}
-                        </td>
-                      )
-                    }else{
-                      return null;
-                    }
-                  })}
-                </tr>
-              )
-            })}
-          </tbody>
+          <Table id="reportTable" style={{color:"black",fontWeight: "normal",padding:"0 !important"}} bordered responsive>
+            {this.renderHeader()}
+            {this.renderBody()}
+            {this.renderFooter()}
         </Table>
       </CardText>
       </Card>

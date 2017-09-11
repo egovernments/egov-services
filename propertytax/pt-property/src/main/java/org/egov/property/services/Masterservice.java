@@ -2,6 +2,8 @@ package org.egov.property.services;
 
 import org.egov.models.ApartmentRequest;
 import org.egov.models.ApartmentResponse;
+import org.egov.models.AppConfigurationRequest;
+import org.egov.models.AppConfigurationResponse;
 import org.egov.models.DepartmentRequest;
 import org.egov.models.DepartmentResponseInfo;
 import org.egov.models.DepreciationRequest;
@@ -10,6 +12,8 @@ import org.egov.models.DocumentTypeRequest;
 import org.egov.models.DocumentTypeResponse;
 import org.egov.models.FloorTypeRequest;
 import org.egov.models.FloorTypeResponse;
+import org.egov.models.GuidanceValueBoundaryRequest;
+import org.egov.models.GuidanceValueBoundaryResponse;
 import org.egov.models.MutationMasterRequest;
 import org.egov.models.MutationMasterResponse;
 import org.egov.models.OccuapancyMasterRequest;
@@ -349,7 +353,7 @@ public interface Masterservice {
 	 */
 	public UsageMasterResponse getUsageMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
 			String code, String nameLocal, Boolean active, Boolean isResidential, Integer orderNumber, Integer pageSize,
-			Integer offSet, String parent) throws Exception;
+			Integer offSet, String parent, String[] service) throws Exception;
 
 	/**
 	 * Description : This method for creating usageMaster
@@ -409,8 +413,8 @@ public interface Masterservice {
 	 * @throws Exception
 	 */
 	public DepreciationResponse searchDepreciation(RequestInfo requestInfo, String tenantId, Integer[] ids,
-			Integer fromYear, Integer toYear, String code, String nameLocal, Integer pageSize, Integer offset, Integer year)
-			throws Exception;
+			Integer fromYear, Integer toYear, String code, String nameLocal, Integer pageSize, Integer offset,
+			Integer year) throws Exception;
 
 	/**
 	 * This will create the mutation master based on the given mutation master
@@ -449,38 +453,42 @@ public interface Masterservice {
 	public MutationMasterResponse searchMutationMaster(RequestInfo requestInfo, String tenatId, Integer[] ids,
 			String name, String code, String nameLocal, Integer pageSize, Integer offSet) throws Exception;
 
-	/**			public DocumentTypeResponse updateDocumentTypeMaster(DocumentTypeRequest documentTypeRequest);
-	 * This will create the Document type master		
-	 * 		
-	 * @param documentTypeRequest		
-	 * @return DocumentTypeResponse		
-	 * @throws Exception		
-	 */		
-	public DocumentTypeResponse createDocumentTypeMaster(String tenantId, DocumentTypeRequest documentTypeRequest)		
-			throws Exception;		
-	/**		
-	 * This will update the Document type master		
-	 * 		
-	 * @param documentTypeRequest		
-	 * @return DocumentTypeResponse		
-	 * @throws Exception		
-	 */		
-	public DocumentTypeResponse updateDocumentTypeMaster(DocumentTypeRequest documentTypeRequest) throws Exception;		
-	/**		
-	 * This will search the Document Type masters		
-	 * 		
-	 * @param requestInfo		
-	 * @param tenantId		
-	 * @param name		
-	 * @param code		
-	 * @param application		
-	 * @param pageSize		
-	 * @param OffSet		
-	 * @return DocumentTypeResponse		
-	 * @throws Exception		
-	 */		
-	public DocumentTypeResponse searchDocumentTypeMaster(RequestInfo requestInfo, String tenantId, String name,		
+	/**
+	 * public DocumentTypeResponse updateDocumentTypeMaster(DocumentTypeRequest
+	 * documentTypeRequest); This will create the Document type master
+	 * 
+	 * @param documentTypeRequest
+	 * @return DocumentTypeResponse
+	 * @throws Exception
+	 */
+	public DocumentTypeResponse createDocumentTypeMaster(String tenantId, DocumentTypeRequest documentTypeRequest)
+			throws Exception;
+
+	/**
+	 * This will update the Document type master
+	 * 
+	 * @param documentTypeRequest
+	 * @return DocumentTypeResponse
+	 * @throws Exception
+	 */
+	public DocumentTypeResponse updateDocumentTypeMaster(DocumentTypeRequest documentTypeRequest) throws Exception;
+
+	/**
+	 * This will search the Document Type masters
+	 * 
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param name
+	 * @param code
+	 * @param application
+	 * @param pageSize
+	 * @param OffSet
+	 * @return DocumentTypeResponse
+	 * @throws Exception
+	 */
+	public DocumentTypeResponse searchDocumentTypeMaster(RequestInfo requestInfo, String tenantId, String name,
 			String code, String application, Integer pageSize, Integer offSet) throws Exception;
+
 	/**
 	 * This will create Apartment Master
 	 * 
@@ -490,6 +498,7 @@ public interface Masterservice {
 	 * @throws Exception
 	 */
 	public ApartmentResponse createApartment(String tenantId, ApartmentRequest apartmentRequest) throws Exception;
+
 	/**
 	 * This will update Apartment Master
 	 * 
@@ -498,6 +507,7 @@ public interface Masterservice {
 	 * @throws Exception
 	 */
 	public ApartmentResponse updateApartment(ApartmentRequest apartmentRequest) throws Exception;
+
 	/**
 	 * This will search for Apartment Master
 	 * 
@@ -510,6 +520,80 @@ public interface Masterservice {
 	 * @return ApartmentResponse
 	 * @throws Exception
 	 */
-	public ApartmentResponse searchApartment(RequestInfo requestInfo, String tenantId, Integer[] ids, String name, String code,
-			Boolean liftFacility, Boolean powerBackUp, Boolean parkingFacility, Integer pageSize, Integer offSet) throws Exception;
+	public ApartmentResponse searchApartment(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
+			String code, Boolean liftFacility, Boolean powerBackUp, Boolean parkingFacility, Integer pageSize,
+			Integer offSet) throws Exception;
+	
+	/**
+	 * This will create the GuidanceValueBoundary
+	 * 
+	 * @param tenantId
+	 * @param GuidanceValueBouondaryRequest
+	 * @return GuidanceValueBouondaryResponse
+	 */
+	public GuidanceValueBoundaryResponse createGuidanceValueBoundary(String tenantId,
+			GuidanceValueBoundaryRequest guidanceValueBoundaryRequest) throws Exception;
+
+	/**
+	 * This will update the GuidanceValueBoundary
+	 * 
+	 * @param tenantId
+	 * @param GuidanceValueBouondaryRequest
+	 * @return GuidanceValueBouondaryResponse
+	 */
+	public GuidanceValueBoundaryResponse updateGuidanceValueBoundary(
+			GuidanceValueBoundaryRequest guidanceValueBoundaryRequest) throws Exception;
+
+	/**
+	 * This will give search for guidance value boundary
+	 * 
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param guidancevalueboundary1
+	 * @param guidancevalueboundary2
+	 * @param orderNumber
+	 * @param pageSize
+	 * @param offSet
+	 * @return
+	 * @throws Exception
+	 */
+	public GuidanceValueBoundaryResponse getGuidanceValueBoundary(RequestInfo requestInfo, String tenantId,
+			String guidanceValueBoundary1, String guidanceValueBoundary2, Integer pageSize, Integer offSet)
+			throws Exception;
+
+	/**
+	 * This will create the Appconfiguration
+	 * 
+	 * @param tenantId
+	 * @param ConfigurationRequest
+	 * @return ConfigurationResponse
+	 */
+	public AppConfigurationResponse createAppConfiguration(String tenantId,
+			AppConfigurationRequest appConfigurationRequest) throws Exception;
+
+	/**
+	 * This will update the AppConfiguration
+	 * 
+	 * @param ConfigurationRequest
+	 * @return ConfigurationResponse
+	 * @throws Exception
+	 */
+	public AppConfigurationResponse updateAppConfiguration(AppConfigurationRequest appConfigurationRequest)
+			throws Exception;
+	
+	/**
+	 * This will search app confiuration and return list of configurations
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param ids
+	 * @param keyName
+	 * @param effectiveFrom
+	 * @param pageSize
+	 * @param offSet
+	 * @return
+	 */
+	public AppConfigurationResponse getAppConfiguration(RequestInfo requestInfo, String tenantId, Long[] ids,
+			String keyName, String effectiveFrom, Integer pageSize, Integer offSet) throws Exception;
+	 
+
 }

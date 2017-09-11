@@ -14,21 +14,30 @@ public class HRConfigurationSearchURLHelper {
     @Autowired
     private PropertiesManager propertiesManager;
 
-    public String searchURL(final String tenantId) {
+    public StringBuilder searchURL(final String tenantId) {
         final String BASE_URL = propertiesManager.getHrMastersServiceHostName()
                 + propertiesManager.getHrMastersServiceHRConfigurationBasePath()
                 + propertiesManager.getHrMastersServiceConfigurationsSearchPath();
         final StringBuilder searchURL = new StringBuilder(BASE_URL + "?");
 
         if (tenantId == null)
-            return searchURL.toString();
+            return searchURL;
         else
             searchURL.append("tenantId=" + tenantId);
-
-        searchURL.append("&name=" + propertiesManager.getHrMastersServiceConfigurationsKey());
-
         searchURL.append("&pageSize=" + applicationProperties.hrLeaveSearchPageSizeMax());
 
-        return searchURL.toString();
+        return searchURL;
+    }
+
+    public String cuttOffDateSearchURL(final String tenantId) {
+        StringBuilder url = searchURL(tenantId);
+        url.append("&name=" + propertiesManager.getHrMastersServiceConfigurationsKey());
+        return url.toString();
+    }
+
+    public String compensatoryDaysSearchURL(final String tenantId) {
+        StringBuilder url = searchURL(tenantId);
+        url.append("&name=" + propertiesManager.getHrMastersServiceCompensatoryConfigurationKey());
+        return url.toString();
     }
 }

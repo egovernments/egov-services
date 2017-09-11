@@ -46,6 +46,7 @@ import org.egov.pgr.config.ApplicationProperties;
 import org.egov.pgr.domain.exception.PGRMasterException;
 import org.egov.pgr.domain.model.GrievanceType;
 import org.egov.pgr.service.GrievanceTypeService;
+import org.egov.pgr.util.CommonValidation;
 import org.egov.pgr.util.PgrMasterConstants;
 import org.egov.pgr.web.contract.RequestInfoWrapper;
 import org.egov.pgr.web.contract.ServiceGetRequest;
@@ -89,6 +90,9 @@ public class GrievanceTypeController {
 
     @Autowired
     private ApplicationProperties applicationProperties;
+
+    @Autowired
+    private CommonValidation commonValidation;
 
     HashMap<String, String> grievanceTypeException = new HashMap<>();
 
@@ -169,7 +173,9 @@ public class GrievanceTypeController {
         checkCategorySLAValues(serviceTypeRequest);
         checkServiceCodeExists(serviceTypeRequest);
         checkDescriptionLength(serviceTypeRequest);
+        commonValidation(serviceTypeRequest.getService());
     }
+
 
     private void validateUpdateServiceRequest(final ServiceRequest serviceTypeRequest, String mode) {
         addGrievanceNameValidationErrors(serviceTypeRequest);
@@ -178,6 +184,15 @@ public class GrievanceTypeController {
         checkMetadataExists(serviceTypeRequest);
         checkCategorySLAValues(serviceTypeRequest);
         checkDescriptionLength(serviceTypeRequest);
+        commonValidation(serviceTypeRequest.getService());
+    }
+
+    private void commonValidation(GrievanceType grievanceType) {
+        commonValidation.validateCode(grievanceType.getServiceCode());
+        commonValidation.validateCodeLength(grievanceType.getServiceCode());
+        commonValidation.validateName(grievanceType.getServiceName());
+        commonValidation.validateNameLength(grievanceType.getServiceName());
+        commonValidation.validateDescriptionLength(grievanceType.getDescription());
     }
 
     private void addGrievanceNameValidationErrors(final ServiceRequest serviceTypeRequest) {
@@ -219,7 +234,6 @@ public class GrievanceTypeController {
             throw new PGRMasterException(grievanceTypeException);
         }
     }
-
 
 
     private void checkMetadataExists(final ServiceRequest serviceTypeRequest) {

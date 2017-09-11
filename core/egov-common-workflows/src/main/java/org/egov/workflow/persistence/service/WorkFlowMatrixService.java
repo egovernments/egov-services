@@ -11,7 +11,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.apache.commons.lang3.StringUtils;
-import org.egov.workflow.domain.exception.InvalidDataException;
 import org.egov.workflow.persistence.entity.WorkFlowMatrix;
 import org.egov.workflow.persistence.repository.WorkFlowMatrixRepository;
 import org.egov.workflow.web.contract.Designation;
@@ -31,8 +30,8 @@ import org.springframework.validation.SmartValidator;
 @Service
 @Transactional(readOnly = true)
 public class WorkFlowMatrixService {
-	
-	private final static Logger Log=LoggerFactory.getLogger(WorkFlowMatrixService.class);
+
+	private final static Logger Log = LoggerFactory.getLogger(WorkFlowMatrixService.class);
 
 	private final WorkFlowMatrixRepository workFlowMatrixRepository;
 	@PersistenceContext
@@ -109,18 +108,19 @@ public class WorkFlowMatrixService {
 	 */
 
 	public WorkFlowMatrix getWfMatrix(final String type, final String department, final BigDecimal amountRule,
-			final String additionalRule, final String currentState, final String pendingActions,String tenantId) {
+			final String additionalRule, final String currentState, final String pendingActions, String tenantId) {
 		final Criteria wfMatrixCriteria = createWfMatrixAdditionalCriteria(type, department, amountRule, additionalRule,
-				currentState, pendingActions,tenantId);
+				currentState, pendingActions, tenantId);
 
 		return getWorkflowMatrixObj(type, additionalRule, currentState, pendingActions, wfMatrixCriteria);
 
 	}
 
 	public WorkFlowMatrix getWfMatrix(final String type, final String department, final BigDecimal amountRule,
-			final String additionalRule, final String currentState, final String pendingActions, final Date date,String tenantId) {
+			final String additionalRule, final String currentState, final String pendingActions, final Date date,
+			String tenantId) {
 		final Criteria wfMatrixCriteria = createWfMatrixAdditionalCriteria(type, department, amountRule, additionalRule,
-				currentState, pendingActions,tenantId);
+				currentState, pendingActions, tenantId);
 		final Criterion crit1 = Restrictions.le("fromDate", date == null ? new Date() : date);
 		final Criterion crit2 = Restrictions.ge("toDate", date == null ? new Date() : date);
 		final Criterion crit3 = Restrictions.conjunction().add(crit1).add(crit2);
@@ -132,16 +132,17 @@ public class WorkFlowMatrixService {
 
 	public WorkFlowMatrix getWfMatrix(final String type, final String department, final BigDecimal amountRule,
 			final String additionalRule, final String currentState, final String pendingActions, final Date date,
-			final String designation,String tenantId) {
+			final String designation, String tenantId) {
 		final Criteria wfMatrixCriteria = createWfMatrixAdditionalCriteria(type, department, amountRule, additionalRule,
-				currentState, pendingActions, designation);
+				currentState, pendingActions, tenantId);
 		final Criterion crit1 = Restrictions.le("fromDate", date == null ? new Date() : date);
-		final Criterion crit4 = Restrictions.eq("tenantId", tenantId);
 		final Criterion crit2 = Restrictions.ge("toDate", date == null ? new Date() : date);
 		final Criterion crit3 = Restrictions.conjunction().add(crit1).add(crit2);
-		final Criterion criteriaDesignation = Restrictions.ilike("currentDesignation",
-				StringUtils.isNotBlank(designation) ? designation : "");
-		wfMatrixCriteria.add(criteriaDesignation);
+		
+		if (StringUtils.isNotBlank(designation)) {
+			final Criterion criteriaDesignation = Restrictions.ilike("currentDesignation", designation);
+			wfMatrixCriteria.add(criteriaDesignation);
+		}
 		
 		wfMatrixCriteria.add(Restrictions.or(crit3, crit1));
 
@@ -152,7 +153,10 @@ public class WorkFlowMatrixService {
 	private WorkFlowMatrix getWorkflowMatrixObj(final String type, final String additionalRule,
 			final String currentState, final String pendingActions, final Criteria wfMatrixCriteria) {
 		final List<WorkFlowMatrix> objectTypeList = wfMatrixCriteria.list();
+		if(objectTypeList.isEmpty())
+		    throw new  RuntimeException("Workflow not configured  ");
 
+		
 		if (objectTypeList.isEmpty()) {
 			final Criteria defaulfWfMatrixCriteria = commonWorkFlowMatrixCriteria(type, additionalRule, currentState,
 					pendingActions);
@@ -175,6 +179,8 @@ public class WorkFlowMatrixService {
 			final Criteria wfMatrixCriteria) {
 		final List<WorkFlowMatrix> objectTypeList = wfMatrixCriteria.list();
 
+		if(objectTypeList.isEmpty())
+		    throw new  RuntimeException("Workflow not configured  ");
 		if (objectTypeList.isEmpty()) {
 			final Criteria defaulfWfMatrixCriteria = commonWorkFlowMatrixCriteria(type, additionalRule, currentState,
 					pendingActions);
@@ -196,19 +202,16 @@ public class WorkFlowMatrixService {
 
 	private Criteria createWfMatrixAdditionalCriteria(final String type, final String department,
 			final BigDecimal amountRule, final String additionalRule, final String currentState,
-			final String pendingActions,String tenantId) {
+			final String pendingActions, String tenantId) {
 		final Criteria wfMatrixCriteria = commonWorkFlowMatrixCriteria(type, additionalRule, currentState,
 				pendingActions);
 		if (department != null && !"".equals(department.trim()))
 			wfMatrixCriteria.add(Restrictions.eq("department", department));
-	
-		if(tenantId!=null)
-		{
+
+		if (tenantId != null) {
 			wfMatrixCriteria.add(Restrictions.eq("tenantId", tenantId));
 		}
 
-		 
-		
 		// Added restriction for amount rule
 		if (amountRule != null && BigDecimal.ZERO.compareTo(amountRule) != 0) {
 			final Criterion amount1st = Restrictions.conjunction().add(Restrictions.le("fromQty", amountRule))
@@ -224,14 +227,13 @@ public class WorkFlowMatrixService {
 
 	private Criteria createWfMatrixAdditionalCriteria(final String type, final String department,
 			final BigDecimal amountRule, final String additionalRule, final String currentState,
-			final String pendingActions, final String designation,String tenantId) {
+			final String pendingActions, final String designation, String tenantId) {
 		final Criteria wfMatrixCriteria = commonWorkFlowMatrixCriteria(type, additionalRule, currentState,
 				pendingActions);
 		if (department != null && !"".equals(department.trim()))
 			wfMatrixCriteria.add(Restrictions.eq("department", department));
-		
-		if(tenantId!=null)
-		{
+
+		if (tenantId != null) {
 			wfMatrixCriteria.add(Restrictions.eq("tenantId", tenantId));
 		}
 
@@ -312,7 +314,7 @@ public class WorkFlowMatrixService {
 			commonWfMatrixCriteria.add(Restrictions.ilike("pendingActions", pendingActions, MatchMode.ANYWHERE));
 
 		if (currentState != null && !"".equals(currentState.trim()))
-			commonWfMatrixCriteria.add(Restrictions.ilike("currentState", currentState, MatchMode.ANYWHERE));
+			commonWfMatrixCriteria.add(Restrictions.ilike("currentState", currentState, MatchMode.EXACT));
 		else
 			commonWfMatrixCriteria.add(Restrictions.ilike("currentState", "NEW", MatchMode.ANYWHERE));
 
@@ -321,10 +323,10 @@ public class WorkFlowMatrixService {
 
 	public List<String> getNextValidActions(final String type, final String departmentName,
 			final BigDecimal businessRule, final String additionalRule, final String currentState,
-			final String pendingAction, final Date date,String tenantId) {
+			final String pendingAction, final Date date, String tenantId) {
 
 		final WorkFlowMatrix wfMatrix = getWfMatrix(type, departmentName, businessRule, additionalRule, currentState,
-				pendingAction, date,tenantId);
+				pendingAction, date, tenantId);
 		List<String> validActions = Collections.EMPTY_LIST;
 
 		if (wfMatrix != null && wfMatrix.getValidActions() != null)
@@ -334,16 +336,16 @@ public class WorkFlowMatrixService {
 
 	public List<String> getNextValidActions(final String type, final String departmentName,
 			final BigDecimal businessRule, final String additionalRule, final String currentState,
-			final String pendingAction, final Date date, final String currentDesignation,String tenantId) {
+			final String pendingAction, final Date date, final String currentDesignation, String tenantId) {
 
 		final WorkFlowMatrix wfMatrix = getWfMatrix(type, departmentName, businessRule, additionalRule, currentState,
-				pendingAction, date, currentDesignation,tenantId);
+				pendingAction, date, currentDesignation, tenantId);
 		List<String> validActions = Collections.EMPTY_LIST;
 
 		if (wfMatrix != null && wfMatrix.getValidActions() != null)
 			validActions = Arrays.asList(wfMatrix.getValidActions().split(","));
 		return validActions;
-	} 
+	}
 
 	/**
 	 * 
@@ -360,10 +362,10 @@ public class WorkFlowMatrixService {
 	 */
 	public List<Designation> getNextDesignations(final String type, final String department,
 			final BigDecimal businessRule, final String additionalRule, final String currentState,
-			final String pendingAction, final Date date, final String designation,String tenantId) {
+			final String pendingAction, final Date date, final String designation, String tenantId) {
 
 		final WorkFlowMatrix wfMatrix = getWfMatrix(type, department, businessRule, additionalRule, currentState,
-				pendingAction, date, designation,tenantId);
+				pendingAction, date, designation, tenantId);
 		List<Designation> designationList = new ArrayList<Designation>();
 		if (wfMatrix != null && wfMatrix.getNextDesignation() != null) {
 			final List<String> tempDesignationName = Arrays.asList(wfMatrix.getNextDesignation().split(","));

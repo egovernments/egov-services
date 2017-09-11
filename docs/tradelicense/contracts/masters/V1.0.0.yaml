@@ -121,6 +121,10 @@ paths:
         tags: 
           - Category
         parameters:
+          - name: type
+            type: string
+            in: query
+            description: type set to SUBCATEGORY to create sub categories where categoryId is mandatory. default to CATEGORY.
           - name: catogeries
             in: body
             required: true
@@ -147,6 +151,10 @@ paths:
         tags: 
           - Category
         parameters:
+          - name: type
+            type: string
+            in: query
+            description: type set to SUBCATEGORY to update sub categories where categoryId is mandatory. default to CATEGORY.
           - name: categories
             in: body
             required: true
@@ -361,6 +369,126 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /documenttype/v2/_search:
+      post:
+        summary: Get the list of document types
+        description: |
+          Search and get DocumentType(s)  based on defined search criteria.
+          Currently search parameters are only allowed as HTTP query params.
+          
+          
+          1. Search criteria is sub Category and
+           If not defined for a sub category, it should get form category, and if not defined for category, get based on application type, and if not found for applicaiton type, get based on the tenantId
+          2. Search criteria is  Category and
+           If not defined for a  category,  get based on application type, and if not found for applicaiton type, get based on the tenantId
+          3. Search criteria is  application type and
+           and if not found for applicaiton type, get based on the tenantId 
+          4. Search criteria is  tenantId and
+           and if not found for tenantId, return empty response
+
+          Maximum result size is restricted based on the maxlength of DocumentType(s) as defined in DocumentTypeResponse model.
+          
+          By default results will be sorted by DocumentType Name
+        tags: 
+          - DocumentType
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: ids
+            type: array
+            items: 
+              type: integer
+              format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids
+          - name: name
+            type: string
+            in: query
+            description: name of the DocumentType
+            maxLength: 128
+          - name: categoryId
+            type: integer
+            in: query
+            description : Unique reference of the Category to search
+          - name: subCategoryId
+            type: integer
+            in: query
+            description : Unique reference of the Sub Category to search
+          - name: enabled
+            type: boolean
+            in: query
+            description: True will be set in cases where only active DocumentTypes are needed and False will be set when inactive DocumentTypes are needed and no value will be set when all DocumentTypes are needed.
+          - name: applicationType
+            type: string
+            in: query
+            description: set "NEW"  in cases where only NEW applicationType DocumentTypes are needed and "RENEW" will be set when RENEW applicationType DocumentTypes  are needed and no value will be set when all DocumentTypes are needed.
+            enum:
+            - NEW
+            - RENEWAL
+            maxLength: 7
+          - $ref: '#/parameters/pageSize'
+          - $ref: '#/parameters/offSet'
+        responses:
+          200:
+            description: DocumentType(s) retrieved Successfully
+            schema:
+              $ref: '#/definitions/DocumentTypeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /documenttype/v2/_create:
+      post:
+        summary: Create new DocumentType(s)
+        description: |
+          To create new DocumentTypes(s) in the system. API supports bulk creation with max limit as defined in the DocumentTypeRequest. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Document Type, please pass array with one DocumentType object. 
+          
+          1. Name with tenantId is Unique
+          2. CategoryId, Sub CategoryId are validated for existance
+          3. DocumentType with combination of tenantId,ApplicationType,category,subcategory and Name duplication will not be allowed
+        tags: 
+          - DocumentType
+        parameters:
+          - name: documentTypeRequest
+            in: body
+            description: Document Type Request with DocumentType(s) to be created with RequestInfo
+            schema:
+              $ref: '#/definitions/DocumentTypeRequest'
+        responses:
+          201:
+            description: DocumentTypeResponse with ResponseInfo and Array of DocumentType(s) created Successfully
+            schema:
+              $ref: '#/definitions/DocumentTypeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /documenttype/v2/_update:
+      post:
+        summary: Update any of the documentTypes
+        description: |
+          This API will update all DocumentType related details based on their Id.  API supports bulk update with max limit as defined in the DocumentTypeRequest. Following rules apply -
+          1. Name with tenantId is Unique
+          2. CategoryId, Sub CategoryId are validated for existance
+          3. DocumentType with combination of tenantId,ApplicationType,category,subcategory and Name duplication will not be allowed
+        tags: 
+          - DocumentType
+        parameters:
+          - name: DocumentTypeRequest
+            in: body
+            description: DocumentType Request with RequestInfo and DocumentType(s) to be updated.
+            schema:
+              $ref: '#/definitions/DocumentTypeRequest'
+        responses:
+          200:
+            description: DocumentType(s) updated Successfully
+            schema:
+              $ref: '#/definitions/DocumentTypeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
     /penaltyrate/v1/_search:
       post:
         summary: Get the list of PenaltyRate(s)
@@ -389,7 +517,7 @@ paths:
           - name: applicationType
             type: integer
             in: query
-            description: set "NEW" in cases where only NEW applicationType PenalityRates are needed and "RENEW" will be set when RENEW applicationType PenalityRates are needed and no value will be set when all PenalityRates are needed.
+            description: set "NEW" in cases where only NEW applicationType PenalityRates are needed and "RENEW" will be set when RENEW applicationType PenalityRates are needed and no value will be set when default PenalityRates are needed.
           - $ref: '#/parameters/pageSize'
           - $ref: '#/parameters/offSet'
         responses:
@@ -603,7 +731,13 @@ paths:
             type: string
             in: query
             description: Unique code of the License Status
-            maxLength: 128
+            maxLength: 20
+            minLength: 4 
+          - name: moduleType
+            type: string
+            in: query
+            description: Module Type of the license
+            maxLength: 20
             minLength: 4 
           - name: active
             type: boolean
@@ -627,6 +761,7 @@ paths:
           To create new LicenseStatus(s) in the system. API supports bulk creation with max limit as defined in the LicenseStatusRequest. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one LicenseStatus, please pass array with one LicenseStatus object. 
           
            LicenseStatus for a given tenantId, code and name there will be only one LicenseStatus in the System. Trying to create new LicenseStatus with the same combination creation of LicenseStatus Fails.
+           LicenseStatus for a given tenantId, code and moduleType there will be only one LicenseStatus in the System. Trying to create new LicenseStatus with the same combination creation of LicenseStatus Fails.
            
            
         tags: 
@@ -688,12 +823,12 @@ definitions:
           type: string
           description: name of the Category/SubCategory
           maxLength: 100
-          minLength: 4
+          minLength: 1
         code:
           type: string
           description: Unique code of the Category/SubCategory
           maxLength: 20
-          minLength: 4
+          minLength: 1
         parentId:
          type: integer
          format: int64
@@ -737,16 +872,19 @@ definitions:
           type: string
           description: name of the Category/SubCategory
           maxLength: 100
-          minLength: 4
+          minLength: 1
         code:
           type: string
           description: Unique code of the Category/SubCategory
           maxLength: 20
-          minLength: 4
+          minLength: 1
         parentId:
          type: integer
          format: int64
          description: Unique Id of the parent Category for subCategory, null for Category.
+        parentName:
+          type: string
+          description: name of the parent category for SubCategory, null for category
         active:
           type: boolean
           description: true if Category is active and false if Category is inactive 
@@ -799,6 +937,11 @@ definitions:
           type: integer
           format: int64
           description: Unique Identifier of the SubCategoryDetail
+        tenantId:
+          type: string
+          description: tenant id of the DocumentType
+          maxLength: 128
+          minLength: 4
         categoryId:
           type: integer
           format: int64
@@ -812,6 +955,7 @@ definitions:
           format: int64
           description: Unique Identfier of the UOM
       required:
+      - tenantId
       - categoryId
       - feeType
       - rateType
@@ -823,6 +967,11 @@ definitions:
           type: integer
           format: int64
           description: Unique Identifier of the SubCategoryDetail
+        tenantId:
+          type: string
+          description: tenant id of the DocumentType
+          maxLength: 128
+          minLength: 4
         categoryId:
           type: integer
           format: int64
@@ -839,6 +988,7 @@ definitions:
           format: int64
           description: Unique Identfier of the UOM
       required:
+      - tenantId
       - categoryId
       - feeType
       - rateType
@@ -899,12 +1049,12 @@ definitions:
           type: string
           description: name of the UOM
           maxLength: 100
-          minLength: 4
+          minLength: 1
         code:
           type: string
           description: code of the UOM
           maxLength: 20
-          minLength: 4
+          minLength: 1
         active:
           type: boolean
           description: True if UOM is active and False if UOM is inactive
@@ -959,7 +1109,15 @@ definitions:
           type: string
           description: name of the DocumentType
           maxLength: 100
-          minLength: 4
+          minLength: 1
+        categoryId:
+          type: integer
+          format: int64
+          description: Unique reference of the category
+        subCategoryId:
+          type: integer
+          format: int64
+          description: Unique reference of the sub category
         mandatory:
           type: boolean
           description: true for required document type
@@ -1035,7 +1193,6 @@ definitions:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
       - tenantId
-      - applicationType
       - fromRange
       - toRange
       - rate
@@ -1143,6 +1300,11 @@ definitions:
           type: integer
           format: int64
           description: Unique Identifier of the FeeMatrix Detail
+        tenantId:
+          type: string
+          description: tenant id of the DocumentType
+          maxLength: 128
+          minLength: 4
         feeMatrixId:
           type: integer
           format: int64
@@ -1162,6 +1324,7 @@ definitions:
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
+      - tenantId
       - feeMatrixId
       - uomFrom
       - uomTo
@@ -1176,13 +1339,18 @@ definitions:
         name:
           type: string
           maxLength: 100
-          minLength: 4
+          minLength: 1
           description: Unique Name of the Status
         code:
           type: string
-          maxLength: 20
-          minLength: 4
+          maxLength: 100
+          minLength: 1
           description: Unique code of the Status
+        moduleType:
+          type: string
+          maxLength: 20
+          minLength: 1
+          description: module type of the License Status
         active:
           type: string
           default: "True"

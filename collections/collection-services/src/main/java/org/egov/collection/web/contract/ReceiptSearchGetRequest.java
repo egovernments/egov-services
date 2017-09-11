@@ -11,11 +11,19 @@ import java.util.List;
 @ToString
 public class ReceiptSearchGetRequest {
     private List<String> receiptNumbers;
+    
+    private Boolean isLegacy=false;
 
     private String consumerCode;
 
     private Long fromDate;
-
+    
+    private String consumerNo;
+    
+    private String serviceName;
+    
+    private String limit;
+    
     private Long toDate;
 
     private String collectedBy;
@@ -25,7 +33,6 @@ public class ReceiptSearchGetRequest {
     private String paymentType;
 
     private String classification;
-
 
     private String businessCode;
 
@@ -37,5 +44,7 @@ public class ReceiptSearchGetRequest {
     private String sortOrder;
 
     private String transactionId;
+
+    private List<String> manualReceiptNumbers;
 
 }

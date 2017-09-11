@@ -5,5 +5,7 @@ package org.egov.tradelicense.domain.enums;
  */
 public enum BusinessNature {
 
-	PERMANENT, TEMPORARY
+	PERMANENT,
+
+	TEMPORARY
 }

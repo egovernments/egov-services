@@ -21,7 +21,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class BillAccountDetail   {
-  
+    
 	private String glcode;
 
 	private Integer order;

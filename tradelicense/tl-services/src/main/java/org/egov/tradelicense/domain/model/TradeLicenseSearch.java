@@ -152,6 +152,9 @@ public class TradeLicenseSearch {
 	@NotNull
 	@JsonProperty("tradeCommencementDate")
 	private Long tradeCommencementDate;
+	
+	@JsonProperty("issuedDate")
+	private Long issuedDate;
 
 	@NotNull
 	@JsonProperty("licenseValidFromDate")
@@ -177,9 +180,12 @@ public class TradeLicenseSearch {
 
 	@JsonProperty("isPropertyOwner")
 	private Boolean isPropertyOwner = false;
-	
+
 	@JsonProperty("supportDocuments")
 	private List<SupportDocumentSearch> supportDocuments;
+	
+	@JsonProperty("applications")
+	private List<LicenseApplicationSearch> applications;
 
 	@JsonProperty("status")
 	private Long status;

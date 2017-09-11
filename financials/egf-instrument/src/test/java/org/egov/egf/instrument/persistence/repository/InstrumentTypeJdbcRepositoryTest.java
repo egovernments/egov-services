@@ -2,6 +2,7 @@ package org.egov.egf.instrument.persistence.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,6 +22,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
@@ -34,10 +36,13 @@ public class InstrumentTypeJdbcRepositoryTest {
 
 	@Autowired
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
 
 	@Before
 	public void setUp() throws Exception {
-		instrumentTypeJdbcRepository = new InstrumentTypeJdbcRepository(namedParameterJdbcTemplate);
+		instrumentTypeJdbcRepository = new InstrumentTypeJdbcRepository(namedParameterJdbcTemplate, jdbcTemplate);
 	}
 
 	@Test
@@ -75,6 +80,21 @@ public class InstrumentTypeJdbcRepositoryTest {
 		assertThat(row.get("description")).isEqualTo(actualResult.getDescription());
 		assertThat(row.get("active")).isEqualTo(actualResult.getActive());
 
+	}
+	
+	@Test
+	@Sql(scripts = { "/sql/instrumenttype/clearInstrumentType.sql",
+			"/sql/instrumenttype/insertInstrumentTypeData.sql" })
+	public void test_delete() {
+
+		InstrumentTypeEntity instrumentType = InstrumentTypeEntity.builder().id("1").name("name").description("description")
+				.active(true).build();
+		instrumentType.setTenantId("default");
+		InstrumentTypeEntity actualResult = instrumentTypeJdbcRepository.delete(instrumentType);
+
+		List<Map<String, Object>> result = namedParameterJdbcTemplate.query("SELECT * FROM egf_instrumentType",
+				new InstrumentTypeResultExtractor());
+		assertTrue("Result set length is zero", result.size() == 0);
 	}
 
 	@Test

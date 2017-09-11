@@ -46,6 +46,7 @@ import org.egov.pgr.domain.exception.PGRMasterException;
 import org.egov.pgr.domain.model.ReceivingModeType;
 import org.egov.pgr.domain.model.enums.ChannelType;
 import org.egov.pgr.service.ReceivingModeTypeService;
+import org.egov.pgr.util.CommonValidation;
 import org.egov.pgr.util.PgrMasterConstants;
 import org.egov.pgr.web.contract.ReceivingModeTypeGetReq;
 import org.egov.pgr.web.contract.ReceivingModeTypeReq;
@@ -89,6 +90,9 @@ public class ReceivingModeTypeController {
 
     @Autowired
     private ErrorHandler errHandler;
+
+    @Autowired
+    private CommonValidation commonValidation;
 
     HashMap<String, String> receivingModeException = new HashMap<>();
 
@@ -180,6 +184,14 @@ public class ReceivingModeTypeController {
         addChannelValidationErrors(receivingModeRequest);
     }
 
+    private void commonValidation(ReceivingModeType receivingModeRequest) {
+        commonValidation.validateCode(receivingModeRequest.getCode());
+        commonValidation.validateCodeLength(receivingModeRequest.getCode());
+        commonValidation.validateName(receivingModeRequest.getName());
+        commonValidation.validateNameLength(receivingModeRequest.getName());
+        commonValidation.validateDescriptionLength(receivingModeRequest.getDescription());
+    }
+
     private ErrorResponse populateErrors(final BindingResult errors) {
         final ErrorResponse errRes = new ErrorResponse();
 
@@ -237,7 +249,7 @@ public class ReceivingModeTypeController {
             receivingModeException.put(MESSAGE, PgrMasterConstants.SERVICETYPE_DESCRIPTION_LENGTH_ERROR_MESSAGE);
             throw new PGRMasterException(receivingModeException);
         }
-
+        commonValidation(receivingModeRequest.getModeType());
     }
 
 

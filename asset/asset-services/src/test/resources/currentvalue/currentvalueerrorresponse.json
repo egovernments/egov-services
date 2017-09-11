@@ -1,0 +1,9 @@
+{
+  "ResponseInfo": null,
+  "Error": {
+    "code": 400,
+    "message": "Required Set parameter 'assetIds' is not present",
+    "description": null,
+    "fields": {}
+  }
+}

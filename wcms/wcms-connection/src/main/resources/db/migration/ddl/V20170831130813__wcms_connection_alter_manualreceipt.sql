@@ -1,0 +1,1 @@
+alter table egwtr_waterconnection add column manualreceiptnumber character varying(250), add column manualreceiptdate bigint;

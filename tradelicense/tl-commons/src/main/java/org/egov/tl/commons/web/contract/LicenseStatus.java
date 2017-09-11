@@ -24,23 +24,27 @@ public class LicenseStatus {
 	private Long id = null;
 
 	@JsonProperty("tenantId")
-	@Pattern(regexp = ".*[^ ].*",message="{error.tenantId.emptyspaces}")
-	@NotEmpty(message="{error.tenantId.empty}")
-	@Length(min = 4, max = 128, message="{error.tenantId.empty}")
+	@Pattern(regexp = ".*[^ ].*", message = "{error.tenantId.emptyspaces}")
+	@NotEmpty(message = "{error.tenantId.empty}")
+	@Length(min = 4, max = 128, message = "{error.tenantId.empty}")
 	private String tenantId = null;
 
 	@JsonProperty("name")
-	@Pattern(regexp = ".*[^ ].*",message="{error.name.emptyspaces}")
-	@NotEmpty(message="{error.name.empty}")
-	@Length(min = 4, max = 100, message="{error.name.empty}")
+	@Pattern(regexp = "^\\w+([._`\\s]+\\w+)*$", message = "{error.name.emptyspaces}")
+	@NotEmpty(message = "{error.name.empty}")
+	@Length(min = 1, max = 100, message = "{error.name.empty}")
 	private String name = null;
 
 	@JsonProperty("code")
-	@Pattern(regexp = ".*[^ ].*",message="{error.code.emptyspaces}")
-	@NotEmpty(message="{error.code.empty}")
-	@Length(min = 4, max = 20, message="{error.code.empty}")
+	@Pattern(regexp = "^(?=.*[^ ])[a-zA-Z0-9]+$", message = "{error.code.emptyspaces}")
+	@NotEmpty(message = "{error.code.empty}")
+	@Length(min = 1, max = 100, message = "{error.code.empty}")
 	private String code = null;
 
+	@JsonProperty("moduleType")
+	private String moduleType ;
+	
+	
 	@JsonProperty("active")
 	private Boolean active = true;
 

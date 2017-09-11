@@ -81,6 +81,10 @@ public class ReceiptHeader {
 
 	private Date receiptDate;
 	
+	//This has been added to obtain receipt date alongwith timestamp in search receipt result.
+	//Ideally there has to be a change in the contract and modification in row mapping logic.
+	private Long receiptDateWithTimeStamp; 
+	
 	private String referenceDesc;
 	
 	private String manualReceiptNumber;

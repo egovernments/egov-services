@@ -165,12 +165,6 @@ class UiDynamicTable extends Component {
 
 
 		          <Table id="dynamicTable" bordered responsive className="table-striped">
-
-
-
-
-
-
 		          <thead>
 		            <tr>
 		              {resultList.resultHeader && resultList.resultHeader.length && resultList.resultHeader.map((item, i) => {
@@ -189,9 +183,7 @@ class UiDynamicTable extends Component {
 		                      {
 		                      	item.map((item2, i2)=>{
 			                        return (
-			                          <td style={{"textAlign": "center"}}  key={i2}>
-
-																{renderFields(item2)}</td>
+			                          <td style={{"textAlign": "center"}}  key={i2}>{renderFields(item2)}</td>
 			                        )
 		                      })}
 		                    </tr>

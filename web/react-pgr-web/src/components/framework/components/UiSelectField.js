@@ -49,13 +49,19 @@ class UiSelectField extends Component {
 					let dropDownData=[];
 					for (var k = 0; k < keys.length; k++) {
 							let obj={};
-							obj["key"]= item.convertToString ? keys[k].toString() : keys[k];
+							obj["key"]= item.convertToString ? keys[k].toString() : (item.convertToNumber ? Number(keys[k]) : keys[k]);
 							obj["value"]= values[k];
 							if (item.hasOwnProperty("isKeyValuePair") && item.isKeyValuePair) {
 								obj["value"]=keys[k]+"-"+values[k]
 							}
 							dropDownData.push(obj);
 					}
+
+					dropDownData.sort(function(s1, s2) {
+						return (s1.value < s2.value) ? -1 : (s1.value > s2.value) ? 1 : 0;
+					});
+
+					dropDownData.unshift({key: null, value: "-- Please Select --"});
 					setDropDownData(item.jsonPath, dropDownData);
 				}
 			},function(err) {
@@ -67,35 +73,25 @@ class UiSelectField extends Component {
 		}
    }
 
-  // componentWillReceiveProps(nextProps, nextState) {
-  //  		if(!_.isEqual(nextProps, this.props)) {
-  //  			this.initData(nextProps);
-  //  		}
-  //  	}
-
 	componentDidMount() {
 		this.initData(this.props);
 	}
 
-
-
-	 renderSelect =(item) => {
+	renderSelect =(item) => {
 		let {dropDownData}=this.props;
-		// console.log(dropDownData.hasOwnProperty(item.jsonpath) && dropDownData[item.jsonpath].replace(".", "\."));
-		// console.log(dropDownData);
-		// console.log(dropDownData[item.jsonPath] );
-		// console.log(dropDownData.hasOwnProperty(item.jsonPath));
 		switch (this.props.ui) {
 			case 'google':
-				// let {dropDownData}=this.state;
 				return (
 
 						<SelectField
+							floatingLabelStyle={{"color": item.isDisabled ? "#A9A9A9" : "#696969", "fontSize": "20px", "white-space": "nowrap"}}
+							labelStyle={{"color": "#5F5C57"}}
+							floatingLabelFixed={true} 
 							dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
 							style={{"display": (item.hide ? 'none' : 'inline-block')}}
 							errorStyle={{"float":"left"}}
 							fullWidth={true}
-							floatingLabelText={item.label + (item.isRequired ? " *" : "")}
+							floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>} 
 							value={this.props.getVal(item.jsonPath)}
 							onChange={(event, key, value) =>{
 								this.props.handler({target: {value: value}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)
@@ -121,7 +117,7 @@ class UiSelectField extends Component {
 	}
 }
 
-const mapStateToProps = state => ({dropDownData:state.framework.dropDownData});
+const mapStateToProps = state => ({dropDownData:state.framework.dropDownData, formData: state.frameworkForm.form});
 
 const mapDispatchToProps = dispatch => ({
   setDropDownData:(fieldName,dropDownData)=>{

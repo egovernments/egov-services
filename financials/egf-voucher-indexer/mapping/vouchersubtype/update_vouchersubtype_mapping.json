@@ -1,0 +1,41 @@
+{
+    "_all": {
+        "enabled": true
+    },
+    "properties": {
+        "id": {
+            "type": "keyword"
+        },
+        "voucherType": {
+            "type": "keyword",
+            "index": "not_analyzed"
+        },
+        "voucherName": {
+            "type": "keyword"
+        },
+        "cutOffDate": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "exclude": {
+            "type": "boolean"
+        },
+        "createdBy": {
+            "type": "object"
+        },
+        "lastModifiedBy": {
+            "type": "object"
+        },
+        "createdDate": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "lastModifiedDate": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "tenantId": {
+            "type": "keyword"
+        }
+    }
+}

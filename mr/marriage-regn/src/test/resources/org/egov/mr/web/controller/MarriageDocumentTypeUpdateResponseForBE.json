@@ -1,19 +1,15 @@
 {
-    "responseInfo": {
-        "resMsgId": null,
-        "status": "400",
-        "apiId": null,
-        "ver": null,
-        "ts": null,
-        "key": null,
-        "tenantId": null
-    },
-    "error": {
-        "code": 400,
-        "message": "[marriageDocTypes[0].name] : Required Query Parameter Missing ",
-        "description": "Error While Binding Results",
-        "fields": [
-           
-        ]
-    }
+	"responseInfo": {
+		"resMsgId": null,
+		"status": "400",
+		"apiId": null,
+		"ver": null,
+		"ts": 987456321
+	},
+	"error": {
+		"code": 400,
+		"message": "[marriageDocTypes[0].name] : Required Query Parameter Missing ",
+		"description": "Error While Binding Results",
+		"fields": []
+	}
 }

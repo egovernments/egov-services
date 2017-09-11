@@ -49,12 +49,15 @@ import lombok.Getter;
 public class PropertyTaxResponseInfo {
 
     @JsonProperty("id")
-    private String id;
-    
+    private final String id;
+
     @JsonProperty("name")
-    private String name;
-    
+    private final String name;
+
     @JsonProperty("code")
-    private String code;
-        
+    private final String code;
+
+    @JsonProperty("service")
+    private final String service;
+
 }

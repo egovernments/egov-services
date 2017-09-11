@@ -18,6 +18,9 @@ import org.egov.enums.ApplicationEnum;
 import org.egov.models.Apartment;
 import org.egov.models.ApartmentRequest;
 import org.egov.models.ApartmentResponse;
+import org.egov.models.AppConfiguration;
+import org.egov.models.AppConfigurationRequest;
+import org.egov.models.AppConfigurationResponse;
 import org.egov.models.AuditDetails;
 import org.egov.models.Department;
 import org.egov.models.DepartmentRequest;
@@ -31,6 +34,9 @@ import org.egov.models.DocumentTypeResponse;
 import org.egov.models.FloorType;
 import org.egov.models.FloorTypeRequest;
 import org.egov.models.FloorTypeResponse;
+import org.egov.models.GuidanceValueBoundary;
+import org.egov.models.GuidanceValueBoundaryRequest;
+import org.egov.models.GuidanceValueBoundaryResponse;
 import org.egov.models.MutationMaster;
 import org.egov.models.MutationMasterRequest;
 import org.egov.models.MutationMasterResponse;
@@ -912,7 +918,8 @@ public class PropertyMasterControllerTest {
 
 			when(masterService.getUsageMaster(any(RequestInfo.class), any(String.class), any(Integer[].class),
 					any(String.class), any(String.class), any(String.class), any(Boolean.class), any(Boolean.class),
-					any(Integer.class), any(Integer.class), any(Integer.class), any(String.class))).thenReturn(usageMasterResponse);
+					any(Integer.class), any(Integer.class), any(Integer.class), any(String.class), any(String[].class)))
+							.thenReturn(usageMasterResponse);
 
 			mockMvc.perform(post("/property/usages/_search").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("usageMasterSearchRequest.json")))
@@ -1560,6 +1567,196 @@ public class PropertyMasterControllerTest {
 			e.printStackTrace();
 		}
 
+		assertTrue(Boolean.TRUE);
+	}
+
+	@Test
+	public void createGuidanceValueBoundaryTest() {
+		List<GuidanceValueBoundary> guidanceValueBoundaries = new ArrayList<>();
+		GuidanceValueBoundary guidanceValueBoundary = new GuidanceValueBoundary();
+		guidanceValueBoundary.setTenantId("default");
+		guidanceValueBoundary.setGuidanceValueBoundary1("gvb1");
+		guidanceValueBoundary.setGuidanceValueBoundary2("gvb2");
+		AuditDetails auditDetails = new AuditDetails();
+		guidanceValueBoundary.setAuditDetails(auditDetails);
+		GuidanceValueBoundaryResponse guidanceValueBoundaryResponse = new GuidanceValueBoundaryResponse();
+		guidanceValueBoundaries.add(guidanceValueBoundary);
+		guidanceValueBoundaryResponse.setResponseInfo(new ResponseInfo());
+		guidanceValueBoundaryResponse.setGuidanceValueBoundaries(guidanceValueBoundaries);
+
+		try {
+			when(masterService.createGuidanceValueBoundary(any(String.class), any(GuidanceValueBoundaryRequest.class)))
+					.thenReturn(guidanceValueBoundaryResponse);
+			mockMvc.perform(post("/property/guidanceValueBoundary/_create").param("tenantId", "default")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("createGuidanceValueBoundaryRequest.json"))).andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("createGuidanceValueBoundaryResponse.json")));
+
+		} catch (Exception e) {
+			assertTrue(Boolean.FALSE);
+		}
+		assertTrue(Boolean.TRUE);
+	}
+
+	@Test
+	public void updateGuidanceValueBoundaryTest() {
+		List<GuidanceValueBoundary> guidanceValueBoundaries = new ArrayList<>();
+		GuidanceValueBoundary guidanceValueBoundary = new GuidanceValueBoundary();
+		guidanceValueBoundary.setId(1l);
+		guidanceValueBoundary.setTenantId("default");
+		guidanceValueBoundary.setGuidanceValueBoundary1("updated-gvb1");
+		guidanceValueBoundary.setGuidanceValueBoundary2("updated-gvb2");
+		AuditDetails auditDetails = new AuditDetails();
+		guidanceValueBoundary.setAuditDetails(auditDetails);
+		GuidanceValueBoundaryResponse guidanceValueBoundaryResponse = new GuidanceValueBoundaryResponse();
+		guidanceValueBoundaries.add(guidanceValueBoundary);
+		guidanceValueBoundaryResponse.setResponseInfo(new ResponseInfo());
+		guidanceValueBoundaryResponse.setGuidanceValueBoundaries(guidanceValueBoundaries);
+
+		try {
+			when(masterService.updateGuidanceValueBoundary(any(GuidanceValueBoundaryRequest.class)))
+					.thenReturn(guidanceValueBoundaryResponse);
+			mockMvc.perform(post("/property/guidanceValueBoundary/_update").contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("updateGuidanceValueBoundaryRequest.json"))).andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("updateGuidanceValueBoundaryResponse.json")));
+
+		} catch (Exception e) {
+			assertTrue(Boolean.FALSE);
+		}
+		assertTrue(Boolean.TRUE);
+	}
+
+	@Test
+	public void searchGuidanceValueBoundaryTest() {
+		List<GuidanceValueBoundary> guidanceValueBoundaries = new ArrayList<>();
+		GuidanceValueBoundary guidanceValueBoundary = new GuidanceValueBoundary();
+		guidanceValueBoundary.setTenantId("default");
+		guidanceValueBoundary.setGuidanceValueBoundary1("updated-gvb1");
+		guidanceValueBoundary.setGuidanceValueBoundary2("updated-gvb2");
+		AuditDetails auditDetails = new AuditDetails();
+		guidanceValueBoundary.setAuditDetails(auditDetails);
+		guidanceValueBoundaries.add(guidanceValueBoundary);
+		GuidanceValueBoundaryResponse guidanceValueBoundaryResponse = new GuidanceValueBoundaryResponse();
+		guidanceValueBoundaryResponse.setResponseInfo(new ResponseInfo());
+		guidanceValueBoundaryResponse.setGuidanceValueBoundaries(guidanceValueBoundaries);
+
+		try {
+			when(masterService.getGuidanceValueBoundary(any(RequestInfo.class), any(String.class), any(String.class),
+					any(String.class), any(Integer.class), any(Integer.class)))
+							.thenReturn(guidanceValueBoundaryResponse);
+			mockMvc.perform(post("/property/guidanceValueBoundary/_search").param("tenantId", "default")
+					.param("guidanceValueBoundary1", "updated-gvb1").contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("searchGuidanceValueBoundaryRequest.json"))).andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("searchGuidanceValueBoundaryResponse.json")));
+
+		} catch (Exception e) {
+			assertTrue(Boolean.FALSE);
+			e.printStackTrace();
+		}
+		assertTrue(Boolean.TRUE);
+	}
+
+	@Test
+	public void createAppConfigurationTest() {
+		List<AppConfiguration> appConfigurations = new ArrayList<>();
+		List<String> values = new ArrayList<>();
+		values.add("appvalue1");
+		values.add("appvalue2");
+		values.add("appvalue3");
+		AppConfiguration appConfiguration = new AppConfiguration();
+		appConfiguration.setTenantId("default");
+		appConfiguration.setKeyName("AppConfig");
+		appConfiguration.setValues(values);
+		AuditDetails auditDetails = new AuditDetails();
+		appConfiguration.setAuditDetails(auditDetails);
+		AppConfigurationResponse appConfigurationResponse = new AppConfigurationResponse();
+		appConfigurations.add(appConfiguration);
+		appConfigurationResponse.setResponseInfo(new ResponseInfo());
+		appConfigurationResponse.setAppConfigurations(appConfigurations);
+
+		try {
+			when(masterService.createAppConfiguration(any(String.class), any(AppConfigurationRequest.class)))
+					.thenReturn(appConfigurationResponse);
+			mockMvc.perform(post("/property/appConfiguration/_create").param("tenantId", "default")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("createAppConfigurationRequest.json"))).andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("createAppConfigurationResponse.json")));
+
+		} catch (Exception e) {
+			assertTrue(Boolean.FALSE);
+		}
+		assertTrue(Boolean.TRUE);
+	}
+
+	@Test
+	public void updateAppConfigurationTest() {
+		List<AppConfiguration> appConfigurations = new ArrayList<>();
+		List<String> values = new ArrayList<>();
+		values.add("appvalueupdate1");
+		values.add("appvalueupdate2");
+		values.add("appvalueupdate3");
+		AppConfiguration appConfiguration = new AppConfiguration();
+		appConfiguration.setId(1l);
+		appConfiguration.setTenantId("default");
+		appConfiguration.setKeyName("AppConfigUpdated");
+		appConfiguration.setValues(values);
+		AuditDetails auditDetails = new AuditDetails();
+		appConfiguration.setAuditDetails(auditDetails);
+		AppConfigurationResponse appConfigurationResponse = new AppConfigurationResponse();
+		appConfigurations.add(appConfiguration);
+		appConfigurationResponse.setResponseInfo(new ResponseInfo());
+		appConfigurationResponse.setAppConfigurations(appConfigurations);
+
+		try {
+			when(masterService.updateAppConfiguration(any(AppConfigurationRequest.class)))
+					.thenReturn(appConfigurationResponse);
+			mockMvc.perform(post("/property/appConfiguration/_update").contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("updateAppConfigurationRequest.json"))).andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("updateAppConfigurationResponse.json")));
+
+		} catch (Exception e) {
+			assertTrue(Boolean.FALSE);
+		}
+		assertTrue(Boolean.TRUE);
+	}
+
+	@Test
+	public void searchAppConfigurationTest() {
+		List<AppConfiguration> appConfigurations = new ArrayList<>();
+		List<String> values = new ArrayList<>();
+		values.add("appvalueupdate1");
+		values.add("appvalueupdate2");
+		values.add("appvalueupdate3");
+		AppConfiguration appConfiguration = new AppConfiguration();
+		appConfiguration.setTenantId("default");
+		appConfiguration.setKeyName("AppConfigUpdated");
+		appConfiguration.setValues(values);
+		AuditDetails auditDetails = new AuditDetails();
+		appConfiguration.setAuditDetails(auditDetails);
+		appConfigurations.add(appConfiguration);
+		AppConfigurationResponse appConfigurationResponse = new AppConfigurationResponse();
+		appConfigurationResponse.setResponseInfo(new ResponseInfo());
+		appConfigurationResponse.setAppConfigurations(appConfigurations);
+
+		try {
+			when(masterService.getAppConfiguration(any(RequestInfo.class), any(String.class), any(Long[].class),
+					any(String.class), any(String.class), any(Integer.class), any(Integer.class)))
+							.thenReturn(appConfigurationResponse);
+			mockMvc.perform(post("/property/appConfiguration/_search").param("tenantId", "default")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("searchAppConfigurationRequest.json"))).andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("searchAppConfigurationResponse.json")));
+
+		} catch (Exception e) {
+			assertTrue(Boolean.FALSE);
+			e.printStackTrace();
+		}
 		assertTrue(Boolean.TRUE);
 	}
 }

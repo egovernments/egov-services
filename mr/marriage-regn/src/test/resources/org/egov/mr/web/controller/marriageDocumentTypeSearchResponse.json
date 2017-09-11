@@ -1,17 +1,13 @@
 {
-	"responseInfo": 
-	{
-		"resMsgId": null,
-		"status": "200",
+	"responseInfo": {
 		"apiId": null,
 		"ver": null,
-		"ts": null,
-		"key": null,
-		"tenantId": null
+		"ts": 987456321,
+		"resMsgId": null,
+		"msgId": null,
+		"status": "200"
 	},
-
-	"marriageDocTypes": 
-	[
+	"marriageDocTypes": [
 		{
 			"id": 1,
 			"name": "ADDRESSPROOF",
@@ -23,7 +19,6 @@
 			"isRequired": true,
 			"tenantId": "ap.kurnool"
 		},
-
 		{
 			"id": 2,
 			"name": "ADDRESSPROOF",
@@ -35,7 +30,6 @@
 			"isRequired": true,
 			"tenantId": "ap.kurnool"
 		},
-
 		{
 			"id": 3,
 			"name": "AGEPROOF",
@@ -47,7 +41,6 @@
 			"isRequired": false,
 			"tenantId": "ap.kurnool"
 		},
-
 		{
 			"id": 4,
 			"name": "AGEPROOF",
@@ -59,7 +52,6 @@
 			"isRequired": false,
 			"tenantId": "ap.kurnool"
 		},
-
 		{
 			"id": 5,
 			"name": "COMMONPROOF",
@@ -71,7 +63,6 @@
 			"isRequired": false,
 			"tenantId": "ap.kurnool"
 		},
-
 		{
 			"id": 6,
 			"name": "COMMONPROOF",

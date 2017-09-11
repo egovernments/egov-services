@@ -1,11 +1,9 @@
 package org.egov.asset.service;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
-//import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 import java.io.IOException;
@@ -16,39 +14,41 @@ import java.util.List;
 import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.RevaluationRequest;
 import org.egov.asset.contract.RevaluationResponse;
+import org.egov.asset.contract.VoucherRequest;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCategory;
-import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.AuditDetails;
 import org.egov.asset.model.ChartOfAccountDetailContract;
+import org.egov.asset.model.Department;
+import org.egov.asset.model.Function;
+import org.egov.asset.model.Fund;
 import org.egov.asset.model.Location;
 import org.egov.asset.model.Revaluation;
 import org.egov.asset.model.RevaluationCriteria;
-import org.egov.asset.model.enums.AssetCategoryType;
-import org.egov.asset.model.enums.DepreciationMethod;
+import org.egov.asset.model.Voucher;
+import org.egov.asset.model.VoucherAccountCodeDetails;
 import org.egov.asset.model.enums.ModeOfAcquisition;
+import org.egov.asset.model.enums.Sequence;
 import org.egov.asset.model.enums.Status;
 import org.egov.asset.model.enums.TypeOfChangeEnum;
-import org.egov.asset.repository.AssetRepository;
+import org.egov.asset.model.enums.VoucherType;
 import org.egov.asset.repository.RevaluationRepository;
 import org.egov.asset.util.FileUtils;
+import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(RevaluationService.class)
+@RunWith(MockitoJUnitRunner.class)
 public class RevaluationServiceTest {
 
     @Mock
@@ -70,7 +70,7 @@ public class RevaluationServiceTest {
     private RestTemplate restTemplate;
 
     @Mock
-    private AssetRepository assetRepository;
+    private AssetService assetService;
 
     @Mock
     private RevaluationRequest revaluationRequest;
@@ -87,13 +87,14 @@ public class RevaluationServiceTest {
     @Mock
     private CurrentValueService currentValueService;
 
-    @Before
-    public void setUp() throws Exception {
-    }
+    @Mock
+    private AssetConfigurationService assetConfigurationService;
 
-    @After
-    public void tearDown() throws Exception {
-    }
+    @Mock
+    private AssetCommonService assetCommonService;
+
+    @Mock
+    private ResponseInfoFactory responseInfoFactory;
 
     @Test
     public void testCreate() {
@@ -116,40 +117,35 @@ public class RevaluationServiceTest {
     }
 
     @Test
-    public void testCreateAsync() throws NumberFormatException, Exception {
+    public void testCreateAsync() throws Exception {
+        final RevaluationRequest revaluationRequest = getRevaluationRequest();
+        final HttpHeaders headers = getHttpHeaders();
+        final RevaluationResponse expectedRevaluationResponse = getRevaluationResponse();
 
-        final List<Asset> assets = new ArrayList<>();
-        assets.add(get_Asset());
-        when(assetRepository.findForCriteria(any(AssetCriteria.class))).thenReturn(assets);
-        final RevaluationService mock = PowerMockito.mock(RevaluationService.class);
-        PowerMockito.doReturn("6").when(mock, "createVoucherForRevaluation", any(RevaluationRequest.class),
-                any(HttpHeaders.class));
+        when(assetCommonService.getNextId(any(Sequence.class))).thenReturn(Long.valueOf("1"));
+        final RevaluationResponse actualRevaluationResponse = revaluationService.createAsync(revaluationRequest,
+                headers);
+        assertEquals(expectedRevaluationResponse.toString(), actualRevaluationResponse.toString());
+    }
 
-        final RevaluationRequest revaluationRequest = new RevaluationRequest();
-        revaluationRequest.setRevaluation(getRevaluationForCreateAsync());
+    @SuppressWarnings("unchecked")
+    @Test
+    public void createVoucherForRevaluationTest() throws Exception {
+        final RevaluationRequest revaluationRequest = getRevaluationRequest();
+        final HttpHeaders headers = getHttpHeaders();
+        final Asset asset = getAsset();
 
-        final List<RevaluationRequest> insertedRevaluationRequest = new ArrayList<>();
-        insertedRevaluationRequest.add(revaluationRequest);
-        RevaluationResponse revaluationResponse = null;
-        try {
-            revaluationResponse = getRevaluation("revaluation/revaluationServiceResponse.revaluation1.json");
-        } catch (final Exception e) {
-            e.printStackTrace();
-            fail();
-        }
-        when(revaluationRepository.getNextRevaluationId()).thenReturn(Integer.valueOf("15"));
-        revaluationRequest.getRevaluation().setId(Long.valueOf("15"));
+        final VoucherRequest voucherRequest = getVoucherRequest();
 
-        when(applicationProperties.getCreateAssetDisposalTopicName()).thenReturn("kafka.topics.save.disposal");
-
-        assertTrue(revaluationResponse.getRevaluations().get(0).getId().equals(Long.valueOf("15")));
-        mock.createAsync(revaluationRequest, new HttpHeaders());
-        assertEquals(revaluationResponse.getRevaluations().get(0).toString(),
-                revaluationRequest.getRevaluation().toString());
+        when(assetService.getAsset(any(String.class), any(Long.class), any(RequestInfo.class))).thenReturn(asset);
+        when(voucherService.createRevaluationVoucherRequest(any(Revaluation.class), any(List.class), any(Long.class),
+                any(Long.class), any(HttpHeaders.class))).thenReturn(voucherRequest);
+        revaluationService.createVoucherForRevaluation(revaluationRequest, headers);
     }
 
     @Test
     public void testSearch() {
+        final RevaluationCriteria revaluationCriteria = getRevaluationCriteria();
         final List<Revaluation> revaluation = new ArrayList<>();
         revaluation.add(getRevaluationForSearch());
 
@@ -157,15 +153,155 @@ public class RevaluationServiceTest {
         revaluationResponse.setRevaluations(revaluation);
 
         when(revaluationRepository.search(any(RevaluationCriteria.class))).thenReturn(revaluation);
-        final RevaluationResponse expectedRevaluationResponse = revaluationService
-                .search(any(RevaluationCriteria.class));
+        final RevaluationResponse expectedRevaluationResponse = revaluationService.search(revaluationCriteria,
+                new RequestInfo());
 
         assertEquals(revaluationResponse.toString(), expectedRevaluationResponse.toString());
+    }
+
+    private RevaluationCriteria getRevaluationCriteria() {
+        final RevaluationCriteria revaluationCriteria = new RevaluationCriteria();
+        final List<Long> ids = new ArrayList<Long>();
+        ids.add(Long.valueOf("1"));
+        revaluationCriteria.setId(ids);
+        revaluationCriteria.setStatus(Status.APPROVED.toString());
+        revaluationCriteria.setTenantId("ap.kurnool");
+        return null;
+    }
+
+    private VoucherRequest getVoucherRequest() {
+        final VoucherRequest voucherRequest = new VoucherRequest();
+        final List<Voucher> vouchers = new ArrayList<>();
+        final Voucher voucher = getVoucher();
+        vouchers.add(voucher);
+        voucherRequest.setRequestInfo(null);
+        voucherRequest.setVouchers(vouchers);
+        return voucherRequest;
+    }
+
+    private Voucher getVoucher() {
+        final Voucher voucher = new Voucher();
+        voucher.setCgvn(null);
+        voucher.setDepartment(Long.valueOf("5"));
+        voucher.setDescription("Asset Revaluation Jouranl Voucher");
+        voucher.setFiscalPeriod(null);
+        voucher.setFund(getFund());
+        voucher.setId(Long.valueOf("50"));
+        voucher.setLedgers(getLedgers());
+        voucher.setModuleId(null);
+        voucher.setName("Asset Revaluation");
+        voucher.setOriginalVhId(null);
+        voucher.setRefVhId(null);
+        voucher.setStatus(Status.CREATED.toString());
+        voucher.setType(VoucherType.JOURNALVOUCHER.toString());
+        voucher.setVoucherNumber("1/GJV/00000197/08/2017-18");
+        return null;
+    }
+
+    private List<VoucherAccountCodeDetails> getLedgers() {
+        final List<VoucherAccountCodeDetails> ledgers = new ArrayList<>();
+        final VoucherAccountCodeDetails creditAccountDetails = new VoucherAccountCodeDetails();
+        creditAccountDetails.setCreditAmount(new BigDecimal("500"));
+        creditAccountDetails.setDebitAmount(BigDecimal.ZERO);
+        creditAccountDetails.setFunction(getFunction());
+        creditAccountDetails.setGlcode("144005");
+        creditAccountDetails.setSubledgerDetails(null);
+        final VoucherAccountCodeDetails debitAccountDetails = new VoucherAccountCodeDetails();
+        debitAccountDetails.setCreditAmount(BigDecimal.ZERO);
+        debitAccountDetails.setDebitAmount(new BigDecimal("500"));
+        debitAccountDetails.setFunction(getFunction());
+        debitAccountDetails.setGlcode("122365");
+        debitAccountDetails.setSubledgerDetails(null);
+        ledgers.add(creditAccountDetails);
+        ledgers.add(debitAccountDetails);
+        return ledgers;
+    }
+
+    private Fund getFund() {
+        final Fund fund = new Fund();
+        fund.setActive(true);
+        fund.setCode("01");
+        fund.setName("Municipal Fund");
+        fund.setId(Long.valueOf("1"));
+        fund.setIdentifier(null);
+        fund.setLevel(null);
+        fund.setParentId(null);
+        return fund;
+    }
+
+    private Function getFunction() {
+        final Function function = new Function();
+        function.setId(Long.valueOf("5"));
+        function.setCode("0600");
+        function.setActive(true);
+        function.setName("Estate");
+        function.setParentId(null);
+        function.setLevel(null);
+        return function;
+    }
+
+    private Asset getAsset() {
+        final Asset asset = new Asset();
+        asset.setTenantId("ap.kurnool");
+        asset.setId(Long.valueOf("1"));
+        asset.setName("asset name");
+        asset.setStatus(Status.CREATED.toString());
+        asset.setModeOfAcquisition(ModeOfAcquisition.ACQUIRED);
+        asset.setEnableYearWiseDepreciation(true);
+
+        final Location location = new Location();
+        location.setLocality(4l);
+        location.setDoorNo("door no");
+
+        final AssetCategory assetCategory = new AssetCategory();
+        assetCategory.setId(1l);
+        assetCategory.setName("category name");
+
+        asset.setLocationDetails(location);
+        asset.setAssetCategory(assetCategory);
+
+        final Department department = new Department();
+        department.setId(Long.valueOf("5"));
+        department.setCode("ENG");
+        department.setName("ENGINEERING");
+
+        asset.setDepartment(department);
+        return asset;
+    }
+
+    private HttpHeaders getHttpHeaders() {
+        final List<MediaType> mediaTypes = new ArrayList<MediaType>();
+        mediaTypes.add(MediaType.ALL);
+        final HttpHeaders requestHeaders = new HttpHeaders();
+        requestHeaders.set(HttpHeaders.COOKIE, "SESSIONID=123");
+        requestHeaders.setPragma("no-cache");
+        requestHeaders.setConnection("keep-alive");
+        requestHeaders.setCacheControl("no-cache");
+        requestHeaders.setAccept(mediaTypes);
+        requestHeaders.setContentType(MediaType.APPLICATION_JSON);
+        return requestHeaders;
+    }
+
+    private RevaluationRequest getRevaluationRequest() {
+        final RevaluationRequest revaluationRequest = new RevaluationRequest();
+        revaluationRequest.setRequestInfo(new RequestInfo());
+        revaluationRequest.setRevaluation(getRevaluationForCreateAsync());
+        return revaluationRequest;
+    }
+
+    private RevaluationResponse getRevaluationResponse() {
+        final RevaluationResponse revaluationResponse = new RevaluationResponse();
+        final List<Revaluation> revaluations = new ArrayList<>();
+        revaluations.add(getRevaluationForCreateAsync());
+        revaluationResponse.setResposneInfo(null);
+        revaluationResponse.setRevaluations(revaluations);
+        return revaluationResponse;
     }
 
     private Revaluation getRevaluationForCreateAsync() {
 
         final Revaluation revaluation = new Revaluation();
+        revaluation.setId(Long.valueOf("1"));
         revaluation.setTenantId("ap.kurnool");
         revaluation.setAssetId(Long.valueOf("31"));
         revaluation.setCurrentCapitalizedValue(new BigDecimal("100.68"));
@@ -196,43 +332,10 @@ public class RevaluationServiceTest {
         return auditDetails;
     }
 
-    private Asset get_Asset() {
-        final Asset asset = new Asset();
-        asset.setTenantId("ap.kurnool");
-        asset.setId(Long.valueOf("31"));
-        asset.setName("asset name");
-        asset.setStatus(Status.CREATED.toString());
-        asset.setModeOfAcquisition(ModeOfAcquisition.ACQUIRED);
-
-        final Location location = new Location();
-        location.setLocality(4l);
-        location.setDoorNo("door no");
-
-        final AssetCategory assetCategory = new AssetCategory();
-        assetCategory.setTenantId("ap.kurnool");
-        assetCategory.setId(Long.valueOf("2"));
-        assetCategory.setName("asset3");
-        assetCategory.setCode(null);
-        assetCategory.setAssetCategoryType(AssetCategoryType.IMMOVABLE);
-        assetCategory.setParent(Long.valueOf("2"));
-        assetCategory.setDepreciationMethod(DepreciationMethod.STRAIGHT_LINE_METHOD);
-        assetCategory.setIsAssetAllow(true);
-        assetCategory.setAccumulatedDepreciationAccount(Long.valueOf("1"));
-        assetCategory.setDepreciationExpenseAccount(Long.valueOf("3"));
-        assetCategory.setUnitOfMeasurement(Long.valueOf("10"));
-        assetCategory.setVersion("v1");
-        assetCategory.setDepreciationRate(null);
-        assetCategory.setAssetAccount(Long.valueOf("2"));
-        assetCategory.setRevaluationReserveAccount(Long.valueOf("2"));
-
-        asset.setLocationDetails(location);
-        asset.setAssetCategory(assetCategory);
-        return asset;
-    }
-
     private Revaluation getRevaluationForSearch() {
 
         final Revaluation revaluation = new Revaluation();
+        revaluation.setId(Long.valueOf("1"));
         revaluation.setTenantId("ap.kurnool");
         revaluation.setAssetId(Long.valueOf("31"));
         revaluation.setCurrentCapitalizedValue(new BigDecimal("100.68"));
@@ -250,6 +353,7 @@ public class RevaluationServiceTest {
         revaluation.setComments("coments");
         revaluation.setStatus(Status.APPROVED.toString());
         revaluation.setAuditDetails(getAuditDetails());
+        revaluation.setVoucherReference("1/GJV/00000214/08/2017-18");
 
         return revaluation;
     }

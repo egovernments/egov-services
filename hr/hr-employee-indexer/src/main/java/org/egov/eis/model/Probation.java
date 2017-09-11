@@ -46,21 +46,15 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-
+@Data
+@Builder
 @AllArgsConstructor
-@Getter
 @NoArgsConstructor
-@Setter
-@ToString
 public class Probation {
 
 	private Long id;

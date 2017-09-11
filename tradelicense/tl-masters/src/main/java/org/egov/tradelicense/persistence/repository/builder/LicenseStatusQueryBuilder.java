@@ -8,15 +8,15 @@ public class LicenseStatusQueryBuilder {
 	private static final String licenseStatusTableName = ConstantUtility.LICENSE_STATUS_TABLE_NAME;
 
 	public static final String INSERT_LICENSE_STATUS_QUERY = "INSERT INTO " + licenseStatusTableName
-			+ " (tenantId, name, code, active, createdBy, lastModifiedBy, createdTime, lastModifiedTime)"
-			+ " VALUES(:tenantId, :name, :code, :active, :createdBy, :lastModifiedBy, :createdTime, :lastModifiedTime)";
+			+ " (tenantId, name, code, active, createdBy, moduleType, lastModifiedBy, createdTime, lastModifiedTime)"
+			+ " VALUES(:tenantId, :name, :code, :active, :createdBy, :moduleType, :lastModifiedBy, :createdTime, :lastModifiedTime)";
 
 	public static final String UPDATE_LICENSE_STATUS_QUERY = "UPDATE " + licenseStatusTableName
 			+ " SET tenantId = :tenantId, code = :code, name = :name, active = :active,"
-			+ " lastModifiedBy = :lastModifiedBy, lastModifiedTime = :lastModifiedTime"
+			+ " moduleType = :moduleType ,lastModifiedBy = :lastModifiedBy, lastModifiedTime = :lastModifiedTime"
 			+ " WHERE id = :id";
 
-	public static String buildSearchQuery(String tenantId, Integer[] ids, String name, String code, String active,
+	public static String buildSearchQuery(String tenantId, Integer[] ids, String name, String code, String moduleType ,String active,
 			Integer pageSize, Integer offSet, MapSqlParameterSource parameters) {
 
 		StringBuffer searchSql = new StringBuffer();
@@ -41,8 +41,13 @@ public class LicenseStatusQueryBuilder {
 		}
 
 		if (code != null && !code.isEmpty()) {
-			searchSql.append(" AND code = :code ");
-			parameters.addValue("code",code);
+			searchSql.append(" AND upper(code) = :code ");
+			parameters.addValue("code",code.toUpperCase());
+		}
+		
+		if (moduleType != null && !moduleType.isEmpty()) {
+			searchSql.append(" AND moduleType = :moduleType ");
+			parameters.addValue("moduleType", moduleType);
 		}
 
 		if (name != null && !name.isEmpty()) {

@@ -53,6 +53,15 @@ import org.springframework.core.env.Environment;
 public class ApplicationConstants {
 
     public static final String ERR_POSITION_NOT_VACANT = "error.position.not.vacant";
+    public static final String ERR_MOVEMENT_NOT_TENANT = "error.movement.not.tenanat";
+    public static final String ERR_MOVEMENT_TYPE_VALIDATE_PROMOTION =  "error.movement.type.validate.promotion";
+    public static final String ERR_MOVEMENT_TYPE_VALIDATE = "error.movement.type.validate";
+    public static final String ERR_MOVEMENT_EMPLOYEEACCEPTANCE_VALIDATE = "error.movement.employeeacceptance.validate";
+    public static final String ERR_MOVEMENT_EMPLOYEE_POSITION_VALIDATE = "error.movement.employee.position.validate";
+    public static final String ERR_MOVEMENT_EXISTING_EMPLOYEE_VALIDATE = "error.movement.existing.employee.validate";
+    public static final String ERR_MOVEMENT_TRANSFER_REASON_VALIDATE = "error.movement.transfer.reason.validate";
+    public static final String ERR_MOVEMENT_TRANSFER_LOCATION_VALIDATE = "error.movement.transfer.location.validate";
+    public static final String ERR_MOVEMENT_EMPLOYEE_VALIDATE = "error.movement.employee.validate";
 
     @Autowired
     private Environment environment;

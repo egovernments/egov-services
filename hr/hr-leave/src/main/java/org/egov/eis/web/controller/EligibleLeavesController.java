@@ -46,6 +46,7 @@ import org.egov.eis.model.LeaveAllotment;
 import org.egov.eis.model.LeaveApplication;
 import org.egov.eis.model.LeaveOpeningBalance;
 import org.egov.eis.model.enums.LeaveStatus;
+import org.egov.eis.repository.EmployeeRepository;
 import org.egov.eis.service.LeaveAllotmentService;
 import org.egov.eis.service.LeaveApplicationService;
 import org.egov.eis.service.LeaveOpeningBalanceService;
@@ -61,6 +62,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -85,6 +87,9 @@ public class EligibleLeavesController {
     private LeaveApplicationService leaveApplicationService;
 
     @Autowired
+    private EmployeeRepository employeeRepository;
+
+    @Autowired
     private ErrorHandler errHandler;
 
     @Autowired
@@ -93,20 +98,32 @@ public class EligibleLeavesController {
     @PostMapping("_search")
     @ResponseBody
     public ResponseEntity<?> search(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
-            final BindingResult requestBodyBindingResult, @RequestParam(name = "tenantId", required = true) final String tenantId,
-            @RequestParam(name = "leaveType", required = true) final Long leaveType,
-            @RequestParam(name = "designationId", required = false) final Long designationId,
-            @RequestParam(name = "employeeid", required = true) final Long employeeid,
-            @RequestParam(name = "asOnDate", required = true) final String asOnDate,
-            @RequestParam(name = "sort", required = false) final String sort,
-            @RequestParam(name = "pageSize", required = false) final Integer pageSize,
-            @RequestParam(name = "pageNumber", required = false) final Integer pageNumber) {
+                                    final BindingResult requestBodyBindingResult, @RequestParam(name = "tenantId", required = true) final String tenantId,
+                                    @RequestParam(name = "leaveType", required = true) final Long leaveType,
+                                    @RequestParam(name = "designationId", required = false) final Long designationId,
+                                    @RequestParam(name = "employeeid", required = true) final Long employeeid,
+                                    @RequestParam(name = "asOnDate", required = true) final String asOnDate,
+                                    @RequestParam(name = "sort", required = false) final String sort,
+                                    @RequestParam(name = "pageSize", required = false) final Integer pageSize,
+                                    @RequestParam(name = "pageNumber", required = false) final Integer pageNumber) {
         final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
         LocalDate yearStartDate = null, asondate = null;
+        LocalDate dateOfAppointment = null;
         if (asOnDate != null && !asOnDate.isEmpty()) {
             asondate = LocalDate.parse(asOnDate, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
             yearStartDate = LocalDate.parse("01/01/" + asondate.getYear(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         }
+        final List<EmployeeInfo> employees = employeeRepository.getEmployeeById(requestInfo, tenantId, employeeid);
+
+
+        if (employees.size() > 0 && employees.get(0).getDateOfAppointment() != null) {
+            dateOfAppointment = LocalDate.parse(new SimpleDateFormat("yyyy-MM-dd").format(employees.get(0).getDateOfAppointment()));
+        }
+
+
+        if (dateOfAppointment != null && dateOfAppointment.isAfter(yearStartDate))
+            yearStartDate = dateOfAppointment;
+
         Float openingBalanceValue = 0f, allotmentValue = 0f, proratedAllotmentValue = 0f, applicationValue = 0f;
 
         // validate input params
@@ -144,12 +161,13 @@ public class EligibleLeavesController {
         leaveAllotmentGetRequest.setTenantId(tenantId);
 
         List<LeaveAllotment> leaveAllotmentsList = null;
+
         try {
             leaveAllotmentsList = leaveAllotmentService.getLeaveAllotments(leaveAllotmentGetRequest);
             if (leaveAllotmentGetRequest.getDesignationId() != null
                     && !leaveAllotmentGetRequest.getDesignationId().isEmpty()
                     && (leaveAllotmentsList != null && leaveAllotmentsList.isEmpty()
-                            || leaveAllotmentsList == null)) {
+                    || leaveAllotmentsList == null)) {
                 leaveAllotmentGetRequest.setDesignationId(null);
                 leaveAllotmentsList = leaveAllotmentService.getLeaveAllotments(leaveAllotmentGetRequest);
             }
@@ -172,7 +190,7 @@ public class EligibleLeavesController {
         leaveApplicationGetRequest.setLeaveType(leaveType);
 
         leaveApplicationGetRequest.setStatus(LeaveStatus.APPROVED.toString());
-        
+
         leaveApplicationGetRequest.setTenantId(tenantId);
 
         leaveApplicationGetRequest
@@ -182,7 +200,7 @@ public class EligibleLeavesController {
 
         List<LeaveApplication> leaveApplicationsList = null;
         try {
-            leaveApplicationsList = leaveApplicationService.getLeaveApplications(leaveApplicationGetRequest,requestInfo);
+            leaveApplicationsList = leaveApplicationService.getLeaveApplications(leaveApplicationGetRequest, requestInfo);
         } catch (final Exception exception) {
             logger.error("Error while processing request " + leaveApplicationGetRequest, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
@@ -199,7 +217,10 @@ public class EligibleLeavesController {
 
         eligibleLeave.setLeaveType(leaveType);
 
-        eligibleLeave.setNoOfDays(openingBalanceValue + proratedAllotmentValue - applicationValue);
+        if (dateOfAppointment != null && dateOfAppointment.isAfter(asondate))
+            eligibleLeave.setNoOfDays(0f);
+        else
+            eligibleLeave.setNoOfDays(openingBalanceValue + proratedAllotmentValue - applicationValue);
 
         Long iPart = eligibleLeave.getNoOfDays().longValue();
         final Double fPart = (double) (eligibleLeave.getNoOfDays() - iPart);
@@ -211,9 +232,10 @@ public class EligibleLeavesController {
         return getSuccessResponse(Collections.singletonList(eligibleLeave), requestInfo);
     }
 
+
     /**
      * Populate Response object and return EligibleLeaveResponse
-     * 
+     *
      * @param eligibleLeavesList
      * @return
      */

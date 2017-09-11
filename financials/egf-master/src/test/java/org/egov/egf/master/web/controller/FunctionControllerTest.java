@@ -12,13 +12,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.utils.RequestJsonReader;
 import org.egov.egf.master.TestConfiguration;
 import org.egov.egf.master.domain.model.Function;
 import org.egov.egf.master.domain.model.FunctionSearch;
 import org.egov.egf.master.domain.service.FunctionService;
-import org.egov.egf.master.web.requests.FunctionRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -41,38 +41,35 @@ public class FunctionControllerTest {
 	private MockMvc mockMvc;
 
 	@MockBean
-	private FunctionService functionService;
+	FunctionService functionService;
+
+	@Captor
+	private ArgumentCaptor<List<Function>> captor;
 
 	private RequestJsonReader resources = new RequestJsonReader();
 
-	@Captor
-	private ArgumentCaptor<FunctionRequest> captor;
-
 	@Test
 	public void testCreate() throws IOException, Exception {
-
-		when(functionService.add(any(List.class), any(BindingResult.class))).thenReturn((getFunctions()));
-
+		when(functionService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+				.thenReturn(getFunctions());
 		mockMvc.perform(
 				post("/functions/_create").content(resources.readRequest("function/function_create_valid_request.json"))
 						.contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(status().is(201)).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(resources.readResponse("function/function_create_valid_response.json")));
 
-		verify(functionService).addToQue(captor.capture());
+		verify(functionService).create(captor.capture(), any(BindingResult.class), any(RequestInfo.class));
 
-		final FunctionRequest actualRequest = captor.getValue();
-		assertEquals("function", actualRequest.getFunctions().get(0).getName());
-		assertEquals("002", actualRequest.getFunctions().get(0).getCode());
-		assertEquals(Integer.valueOf(1), actualRequest.getFunctions().get(0).getLevel());
-		assertEquals("default", actualRequest.getFunctions().get(0).getTenantId());
+		final List<Function> actualRequest = captor.getValue();
+		assertEquals("name", actualRequest.get(0).getName());
+		assertEquals("code", actualRequest.get(0).getCode());
+		assertEquals("default", actualRequest.get(0).getTenantId());
 	}
 
 	@Test
 	public void testCreate_Error() throws IOException, Exception {
-
-		when(functionService.add(any(List.class), any(BindingResult.class))).thenReturn((getFunctions()));
-
+		when(functionService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+				.thenReturn(getFunctions());
 		mockMvc.perform(post("/functions/_create")
 				.content(resources.readRequest("function/function_create_invalid_field_value.json"))
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
@@ -80,8 +77,9 @@ public class FunctionControllerTest {
 	}
 
 	@Test
-	public void test_update() throws IOException, Exception {
-		when(functionService.update(any(List.class), any(BindingResult.class))).thenReturn((updateFunctions()));
+	public void testUpdate() throws IOException, Exception {
+		when(functionService.update(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+				.thenReturn(getUpdateFunctions());
 
 		mockMvc.perform(
 				post("/functions/_update").content(resources.readRequest("function/function_update_valid_request.json"))
@@ -89,25 +87,12 @@ public class FunctionControllerTest {
 				.andExpect(status().is(201)).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(resources.readResponse("function/function_update_valid_response.json")));
 
-		verify(functionService).addToQue(captor.capture());
+		verify(functionService).update(captor.capture(), any(BindingResult.class), any(RequestInfo.class));
 
-		final FunctionRequest actualRequest = captor.getValue();
-		assertEquals("2", actualRequest.getFunctions().get(0).getId());
-		assertEquals("functionU", actualRequest.getFunctions().get(0).getName());
-		assertEquals("003", actualRequest.getFunctions().get(0).getCode());
-		assertEquals("default", actualRequest.getFunctions().get(0).getTenantId());
-		assertEquals("1", actualRequest.getFunctions().get(0).getParentId().getId());
-	}
-
-	@Test
-	public void testUpdate_Error() throws IOException, Exception {
-
-		when(functionService.add(any(List.class), any(BindingResult.class))).thenReturn((updateFunctions()));
-
-		mockMvc.perform(post("/functions/_update")
-				.content(resources.readRequest("function/function_update_invalid_field_value.json"))
-				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
-
+		final List<Function> actualRequest = captor.getValue();
+		assertEquals("nameU", actualRequest.get(0).getName());
+		assertEquals("codeU", actualRequest.get(0).getCode());
+		assertEquals("default", actualRequest.get(0).getTenantId());
 	}
 
 	@Test
@@ -120,7 +105,7 @@ public class FunctionControllerTest {
 		page.setPagedData(getFunctions());
 		page.getPagedData().get(0).setId("1");
 
-		when(functionService.search(any(FunctionSearch.class))).thenReturn(page);
+		when(functionService.search(any(FunctionSearch.class), any(BindingResult.class))).thenReturn(page);
 
 		mockMvc.perform(post("/functions/_search").content(resources.getRequestInfo())
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(200))
@@ -131,25 +116,17 @@ public class FunctionControllerTest {
 
 	private List<Function> getFunctions() {
 		List<Function> functions = new ArrayList<Function>();
-		Function function = Function.builder().name("function").code("002").level(1).active(true)
-				.parentId(parentFunction()).build();
+		Function function = Function.builder().name("name").code("code").level(1).active(true).build();
 		function.setTenantId("default");
 		functions.add(function);
 		return functions;
 	}
 
-	private List<Function> updateFunctions() {
+	private List<Function> getUpdateFunctions() {
 		List<Function> functions = new ArrayList<Function>();
-		Function function = Function.builder().name("functionU").code("003").level(1).active(true)
-				.parentId(parentFunction()).id("2").build();
+		Function function = Function.builder().name("nameU").code("codeU").active(true).id("1").level(2).build();
 		function.setTenantId("default");
 		functions.add(function);
 		return functions;
-	}
-
-	private Function parentFunction() {
-		Function function = Function.builder().name("parent").code("001").level(0).active(true).id("1")
-				.build();
-		return function;
 	}
 }

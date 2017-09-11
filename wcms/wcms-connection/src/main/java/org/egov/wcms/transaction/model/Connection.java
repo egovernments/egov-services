@@ -80,6 +80,8 @@ public class Connection {
     private String categoryType;
 
     private String categoryId;
+    
+    private Long userid;
 
     @NotNull
     private String hscPipeSizeType;
@@ -97,8 +99,6 @@ public class Connection {
 
     private String propertyIdentifier;
 
-    private String assetIdentifier;
-
     @NotNull
     private String sourceType;
 
@@ -112,7 +112,7 @@ public class Connection {
     @NotNull
     private String subUsageType;
 
-    private String subUsageTypeId;
+    private Long subUsageTypeId;
 
     private int numberOfFamily;
 
@@ -167,6 +167,7 @@ public class Connection {
 
     @NotNull
     private String manualReceiptNumber;
+    
 
     @NotNull
     private List<DocumentOwner> documents;
@@ -212,12 +213,14 @@ public class Connection {
 
     private String plumberName;
 
-    private Long billSequenceNumber;
+    private Double billSequenceNumber;
+    
+    private String manualConsumerNumber;
 
+    private String houseNumber;
+    
     private Boolean outsideULB;
 
-    private String meterOwner;
 
-    private String meterModel;
 
 }

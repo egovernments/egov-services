@@ -71,6 +71,10 @@ public class ApplicationProperties {
     public String getSearchPageSizeMax() {
         return environment.getProperty(searchPageSizeMax);
     }
+    
+    public String getBootstrapServer() {
+        return environment.getProperty("spring.kafka.bootstrap.servers");
+    }
 
     @Value("${egov.assetcategory.async}")
     private Boolean assetCategoryAsync;
@@ -93,9 +97,9 @@ public class ApplicationProperties {
     @Value("${kafka.topics.save.disposal}")
     private String createAssetDisposalTopicName;
 
-    @Value("${egov.services.egf_service.hostname}")
-    private String egfServiceHostName;
-
+    @Value("${egov.services.egf_masters.host}")
+    private String egfMastersHost;
+    
     @Value("${egov.services.egf_service.chartofaccounts.searchpath}")
     private String egfServiceChartOfAccountsSearchPath;
 
@@ -105,9 +109,6 @@ public class ApplicationProperties {
     @Value("${egov.services.egf_service.voucher.createpath}")
     private String egfServiceVoucherCreatePath;
 
-    @Value("${egov.services.asset.batchsize}")
-    private String batchSize;
-
     @Value("${egov.services.egf_service.financialyear.searchpath}")
     private String egfFinancialYearSearchPath;
 
@@ -116,15 +117,6 @@ public class ApplicationProperties {
 
     @Value("${kafka.topics.save.currentvalue}")
     private String saveCurrentvalueTopic;
-    
-    @Value("${egov.services.asset.depreciaition.capitalizedvalue}")
-    private String depreciaitionCapitalizedValue;
-    
-    @Value("${egov.services.asset.depreciaition.minvalue}")
-    private String depreciaitionMinimumValue;
-    
-    @Value("${egov.services.asset.depreciaition.c.factor}")
-    private String depreciaitionFactorForC;
     
     @Value("${egov.services.egf_service.functions.searchpath}")
     private String egfServiceFunctionsSearchPath;

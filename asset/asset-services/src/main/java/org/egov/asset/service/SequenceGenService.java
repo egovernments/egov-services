@@ -65,7 +65,5 @@ public class SequenceGenService {
 			throw e;
 		}
 		return idList;
-		/*String demandIdQuery = DemandQueryBuilder.SEQ_EGBS_QUERY.replace("sequencename",
-		sequenceName);*/
 	}
 }

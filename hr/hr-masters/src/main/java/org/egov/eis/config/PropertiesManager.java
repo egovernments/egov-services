@@ -52,22 +52,29 @@ import org.springframework.stereotype.Component;
 @ToString
 public class PropertiesManager {
 
-	@Value("${egov.services.hr_employee_service.hostname}")
-	private String employeeServiceHostName;
+    @Value("${egov.services.hr_employee_service.hostname}")
+    private String employeeServiceHostName;
 
-	@Value("${egov.services.hr_employee_service.non_vacant_positions.basepath}")
-	private String employeeServiceNonVacantPositionsBasePath;
+    @Value("${egov.services.hr_employee_service.non_vacant_positions.basepath}")
+    private String employeeServiceNonVacantPositionsBasePath;
 
-	@Value("${egov.services.hr_employee_service.non_vacant_positions.searchpath}")
-	private String employeeServiceNonVacantPositionsSearchPath;
+    @Value("${egov.services.hr_employee_service.non_vacant_positions.searchpath}")
+    private String employeeServiceNonVacantPositionsSearchPath;
 
-	@Value("${egov.services.egov_common_masters_service.hostname}")
-	private String commonMastersServiceHost;
+    @Value("${egov.services.egov_common_masters_service.hostname}")
+    private String commonMastersServiceHost;
 
-	@Value("${egov.services.egov_common_masters_service.basepath}")
-	private String commonMastersServiceBasePath;
+    @Value("${egov.services.egov_common_masters_service.basepath}")
+    private String commonMastersServiceBasePath;
 
-	@Value("${egov.services.egov_common_masters_service.departments.searchpath}")
-	private String commonMastersServiceDepartmentsSearch;
+    @Value("${egov.services.egov_common_masters_service.departments.searchpath}")
+    private String commonMastersServiceDepartmentsSearch;
+
+    @Value("${egov.services.data_sync_position.required}")
+    private Boolean dataSyncPositionRequired;
+
+    @Value("${kafka.topics.position.sync.name}")
+    private String savePositionTopic;
+
 
 }

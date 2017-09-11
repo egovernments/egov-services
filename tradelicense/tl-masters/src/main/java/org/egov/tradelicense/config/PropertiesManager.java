@@ -28,7 +28,7 @@ public class PropertiesManager {
 
 	@Value("${invalid.category.validityYears.msg}")
 	private String invalidValidityYears;
-	
+
 	@Value("${duplicate.code}")
 	private String duplicateCode;
 
@@ -58,22 +58,25 @@ public class PropertiesManager {
 
 	@Value("${duplicate.uom.code}")
 	private String uomCustomMsg;
+	
+	@Value("${duplicate.uom.name}")
+	private String uomDuplicateNameErrorMsg;
 
 	@Value("${duplicate.category.code}")
 	private String categoryCustomMsg;
 
 	@Value("${duplicate.category.name}")
 	private String categoryNameDuplicate;
-	
+
 	@Value("${duplicate.feematrix.code}")
 	private String feeMatrixCustomMsg;
 
 	@Value("${invalid.category.id.msg}")
 	private String invalidCategoryIdMsg;
-	
+
 	@Value("${invalid.documenttype.id.msg}")
 	private String invalidDocumentTypeIdMsg;
-	
+
 	@Value("${invalid.license.status.id.msg}")
 	private String invalidLicenseStatusIdMsg;
 
@@ -84,17 +87,17 @@ public class PropertiesManager {
 	private String invalidParentIdMsg;
 
 	@Value("${invalid.sequence.range.msg}")
-	private String InvalidSequenceRangeMsg;
+	private String invalidSequenceRangeMsg;
 
 	@Value("${invalid.applicationtype.msg}")
-	private String InvalidApplicationTypeMsg;
+	private String invalidApplicationTypeMsg;
 
 	@Value("${invalid.financialyear.msg}")
-	private String InvalidFinancialYearMsg;
+	private String invalidFinancialYearMsg;
 
 	@Value("${duplicate.subcategory.code}")
 	private String subCategoryCustomMsg;
-	
+
 	@Value("${duplicate.subcategory.detail}")
 	private String duplicateSubCategoryDetail;
 
@@ -148,5 +151,39 @@ public class PropertiesManager {
 
 	@Value("${egov.tradelicense.licensestatus.update.validated}")
 	private String updateLicenseStatusValidated;
+	
+	
+	@Value("${egov.tradelicense.documenttypev2.create.validated}")
+	private String createDocumentTypeV2Validated;
+	
+	@Value("${egov.tradelicense.documenttypev2.update.validated}")
+	private String updateDocumentTypeV2Validated;
+	
+	@Value("${error.document.types.notfound}")
+	private String documentTypeNotFoundMsg;
+	
+	@Value("${error.document.types.empty}")
+	private String documentTypeEmptyMsg;
+	
+	@Value("${error.documenttype.category}")
+	private String categoryErrorMsg;
+	
+	@Value("${error.documenttype.subcategory}")
+	private String subCategoryErrorMsg;
+	
+	@Value("${document.create.success.status.message}")
+    private String documentTypeCreateSuccessMessage;
+	
+	@Value("${document.update.success.status.message}")
+    private String documentTypeUpdateSuccessMessage;
+	
+	@Value("${invalid.from.range.code}")
+	private String invalidfromRangeCode;
+	
+	@Value("${invalid.rate.application.type}")
+	private String invalidRateWithapp;
+	
+	@Value("${duplicate.penalty.rate}")
+	private String duplicatePenaltyRate;
 
 }

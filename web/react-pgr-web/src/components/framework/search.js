@@ -11,6 +11,7 @@ import UiButton from './components/UiButton';
 import UiDynamicTable from './components/UiDynamicTable';
 import {fileUpload} from './utility/utility';
 import UiTable from './components/UiTable';
+import jp from "jsonpath";
 
 var specifications={};
 
@@ -133,7 +134,11 @@ class Report extends Component {
         for(var i=0; i<values.length; i++) {
           var tmp = [i+1];
           for(var j=0; j<specsValuesList.length; j++) {
-            tmp.push(_.get(values[i], specsValuesList[j]));
+            // if ((resultList.resultHeader[j].label.search("Date")>-1 || resultList.resultHeader[j].label.search("date")>-1)  && !(specsValuesList[j].search("-")>-1)) {
+            //   tmp.push(new Date(_.get(values[i],specsValuesList[j])).getDate()+"/"+new Date(_.get(values[i],specsValuesList[j])).getMonth()+"/"+new Date(_.get(values[i],specsValuesList[j])).getFullYear());
+            // } else {
+              tmp.push(_.get(values[i], specsValuesList[j]));
+            // }
           }
           resultList.resultValues.push(tmp);
         }
@@ -156,15 +161,80 @@ class Report extends Component {
   }
 
   handleChange=(e, property, isRequired, pattern, requiredErrMsg="Required",patternErrMsg="Pattern Missmatch") => {
-      let {handleChange}=this.props;
+      let {getVal} = this;
+      let {handleChange,mockData,setDropDownData} = this.props;
+      let hashLocation = window.location.hash;
+      let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
+      // console.log(obj);
+      let depedants=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
       handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
+
+      _.forEach(depedants, function(value, key) {
+            if (value.type=="dropDown") {
+                let splitArray=value.pattern.split("?");
+                let context="";
+                let id={};
+                // id[splitArray[1].split("&")[1].split("=")[0]]=e.target.value;
+                for (var j = 0; j < splitArray[0].split("/").length; j++) {
+                  context+=splitArray[0].split("/")[j]+"/";
+                }
+
+                let queryStringObject=splitArray[1].split("|")[0].split("&");
+                for (var i = 0; i < queryStringObject.length; i++) {
+                  if (i) {
+                    if (queryStringObject[i].split("=")[1].search("{")>-1) {
+                      if (queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]==property) {
+                        id[queryStringObject[i].split("=")[0]]=e.target.value || "";
+                      } else {
+                        id[queryStringObject[i].split("=")[0]]=getVal(queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]);
+                      }
+                    } else {
+                      id[queryStringObject[i].split("=")[0]]=queryStringObject[i].split("=")[1];
+                    }
+                  }
+                }
+
+                Api.commonApiPost(context,id).then(function(response) {
+                  if(response) {
+                    let keys=jp.query(response,splitArray[1].split("|")[1]);
+                    let values=jp.query(response,splitArray[1].split("|")[2]);
+                    let dropDownData=[];
+                    for (var k = 0; k < keys.length; k++) {
+                        let obj={};
+                        obj["key"]=keys[k];
+                        obj["value"]=values[k];
+                        dropDownData.push(obj);
+                    }
+
+                    dropDownData.sort(function(s1, s2) {
+                      return (s1.value < s2.value) ? -1 : (s1.value > s2.value) ? 1 : 0;
+                    });
+                    dropDownData.unshift({key: null, value: "-- Please Select --"});
+                    setDropDownData(value.jsonPath, dropDownData);
+                  }
+                },function(err) {
+                    console.log(err);
+                });
+                // console.log(id);
+                // console.log(context);
+            }
+
+            else if (value.type=="textField") {
+              let object={
+                target:{
+                  value:eval(eval(value.pattern))
+                }
+              }
+              handleChange(object,value.jsonPath,value.isRequired,value.rg,value.requiredErrMsg,value.patternErrMsg);
+            }
+      });
   }
 
   rowClickHandler = (index) => {
     var value = this.state.values[index];
     var _url = window.location.hash.split("/").indexOf("update") > -1 ? this.props.metaData[`${this.props.moduleName}.${this.props.actionName}`].result.rowClickUrlUpdate : this.props.metaData[`${this.props.moduleName}.${this.props.actionName}`].result.rowClickUrlView;
     var key = _url.split("{")[1].split("}")[0];
-    _url = _url.replace("{" + key + "}", _.get(value, key));
+    _url = _url.replace("{" + key + "}", encodeURIComponent(_.get(value, key)));
     this.props.setRoute(_url);
   }
 
@@ -178,7 +248,7 @@ class Report extends Component {
         <form onSubmit={(e) => {
           search(e)
         }}>
-        {!_.isEmpty(mockData) && moduleName && actionName && <ShowFields groups={mockData[`${moduleName}.${actionName}`].groups} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""}/>}
+        {!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] && <ShowFields groups={mockData[`${moduleName}.${actionName}`].groups} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""}/>}
           <div style={{"textAlign": "center"}}>
             <br/>
             <UiButton item={{"label": "Search", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>
@@ -236,6 +306,10 @@ const mapDispatchToProps = dispatch => ({
   },
   setFormData: (data) => {
     dispatch({type: "SET_FORM_DATA", data});
-  }
+  },
+  setDropDownData:(fieldName,dropDownData)=>{
+    console.log(fieldName,dropDownData)
+    dispatch({type:"SET_DROPDWON_DATA",fieldName,dropDownData})
+  },
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Report);

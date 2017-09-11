@@ -1,11 +1,5 @@
 package org.egov.pgr.employee.enrichment.model;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
@@ -21,9 +15,10 @@ import org.egov.pgr.employee.enrichment.repository.contract.TaskResponse;
 import org.egov.pgr.employee.enrichment.repository.contract.WorkflowRequest;
 import org.egov.pgr.employee.enrichment.repository.contract.WorkflowResponse;
 
+import java.util.*;
+
 public class SevaRequest {
 
-	
     public final static String SERVICE_REQUEST = "serviceRequest";
     public final static String WF_TYPE_SERVICE_REQUEST = "Service Request";
     public final static String REQUEST_INFO = "RequestInfo";
@@ -97,7 +92,7 @@ public class SevaRequest {
         final String status = getDynamicSingleValue(STATUS);
         WorkflowRequest.WorkflowRequestBuilder workflowRequestBuilder = WorkflowRequest.builder()
             .positionId(getCurrentPositionId())
-            .action(WorkflowRequest.Action.forComplaintStatus(status,isCreate()))
+            .action(WorkflowRequest.Action.forComplaintStatus(status, isCreate()))
             .requestInfo(requestInfo)
             .values(valuesToSet)
             .status(status)
@@ -126,49 +121,49 @@ public class SevaRequest {
     }
 
     public ProcessInstanceRequest getProcessInstanceRequest() {
-    	ProcessInstanceRequest request = new ProcessInstanceRequest();
+        ProcessInstanceRequest request = new ProcessInstanceRequest();
         ProcessInstance processInstance = new ProcessInstance();
-        
-		processInstance.setBusinessKey(getServiceName());
-		processInstance.setType(WF_TYPE_SERVICE_REQUEST);
-		processInstance.setComments(getApprovalComments());
-		processInstance.setTenantId(getTenantId());
-		processInstance.setAssignee(new org.egov.pgr.employee.enrichment.repository.contract.Position());
-		processInstance.getAssignee().setId(getCurrentPositionId());
-		processInstance.setSenderName(getSenderName());
-		processInstance.setDetails(getExtraInfo());
-		processInstance.setStatus(getStatus());
-		processInstance.getAttributes().put(SERVICE_CATEGORY_NAME, Attribute.asStringAttr(SERVICE_CATEGORY_NAME, getServiceCategoryName()));
-		processInstance.getAttributes().put(VALUES_NATUREOFTASK, Attribute.asStringAttr(VALUES_NATUREOFTASK, getServiceName()));
-		processInstance.getAttributes().put(SERVICE_REQUEST_ID, Attribute.asStringAttr(SERVICE_REQUEST_ID, getServiceRequestId()));
-		processInstance.getAttributes().put(VALUES_COMLAINT_TYPE_CODE, Attribute.asStringAttr(VALUES_COMLAINT_TYPE_CODE, getComplaintTypeCode()));
-		processInstance.getAttributes().put(BOUNDARY_ID, Attribute.asStringAttr(BOUNDARY_ID, getLocationId()));
 
-		request.setRequestInfo(getRequestInfo());
-		request.setProcessInstance(processInstance);
-        
+        processInstance.setBusinessKey(getServiceName());
+        processInstance.setType(WF_TYPE_SERVICE_REQUEST);
+        processInstance.setComments(getApprovalComments());
+        processInstance.setTenantId(getTenantId());
+        processInstance.setAssignee(new org.egov.pgr.employee.enrichment.repository.contract.Position());
+        processInstance.getAssignee().setId(getCurrentPositionId());
+        processInstance.setSenderName(getSenderName());
+        processInstance.setDetails(getExtraInfo());
+        processInstance.setStatus(getStatus());
+        processInstance.getAttributes().put(SERVICE_CATEGORY_NAME, Attribute.asStringAttr(SERVICE_CATEGORY_NAME, getServiceCategoryName()));
+        processInstance.getAttributes().put(VALUES_NATUREOFTASK, Attribute.asStringAttr(VALUES_NATUREOFTASK, getServiceName()));
+        processInstance.getAttributes().put(SERVICE_REQUEST_ID, Attribute.asStringAttr(SERVICE_REQUEST_ID, getServiceRequestId()));
+        processInstance.getAttributes().put(VALUES_COMLAINT_TYPE_CODE, Attribute.asStringAttr(VALUES_COMLAINT_TYPE_CODE, getComplaintTypeCode()));
+        processInstance.getAttributes().put(BOUNDARY_ID, Attribute.asStringAttr(BOUNDARY_ID, getLocationId()));
+
+        request.setRequestInfo(getRequestInfo());
+        request.setProcessInstance(processInstance);
+
         return request;
     }
-    
+
     public TaskRequest getTaskRequest() {
-    	TaskRequest request = new TaskRequest();
+        TaskRequest request = new TaskRequest();
         Task task = new Task();
-        
+
         task.getAttributes().put(STATE_ID, Attribute.asStringAttr(STATE_ID, getCurrentStateId()));
-		task.setId(getCurrentStateId());
-		task.setBusinessKey(getServiceName());
-		task.setType(WF_TYPE_SERVICE_REQUEST);
-		task.setComments(getApprovalComments());
-		task.setAction(getAction());
-		task.setStatus(getStatus());
-		task.setTenantId(getTenantId());
-		task.setAssignee(new org.egov.pgr.employee.enrichment.repository.contract.Position());
-		task.getAssignee().setId(getCurrentPositionId());
-		task.getAttributes().put(SERVICE_CATEGORY_NAME, Attribute.asStringAttr(SERVICE_CATEGORY_NAME, getServiceCategoryName()));
-		
-		request.setRequestInfo(getRequestInfo());
-		request.setTask(task);
-        
+        task.setId(getCurrentStateId());
+        task.setBusinessKey(getServiceName());
+        task.setType(WF_TYPE_SERVICE_REQUEST);
+        task.setComments(getApprovalComments());
+        task.setAction(getAction());
+        task.setStatus(getStatus());
+        task.setTenantId(getTenantId());
+        task.setAssignee(new org.egov.pgr.employee.enrichment.repository.contract.Position());
+        task.getAssignee().setId(getCurrentPositionId());
+        task.getAttributes().put(SERVICE_CATEGORY_NAME, Attribute.asStringAttr(SERVICE_CATEGORY_NAME, getServiceCategoryName()));
+
+        request.setRequestInfo(getRequestInfo());
+        request.setTask(task);
+
         return request;
     }
 
@@ -181,12 +176,12 @@ public class SevaRequest {
         setAssignee(workflowResponse.getPositionId());
         setStateId(workflowResponse.getValueForKey(VALUES_STATE_ID));
     }
-    
+
     public void update(ProcessInstanceResponse processInstanceResponse) {
         setAssignee(processInstanceResponse.getProcessInstance().getOwner().getId().toString());
         setStateId(processInstanceResponse.getProcessInstance().getValueForKey(STATE_ID));
     }
-    
+
     public void update(TaskResponse taskResponse) {
         setAssignee(taskResponse.getTask().getOwner().getId().toString());
         setStateId(taskResponse.getTask().getValueForKey(STATE_ID));
@@ -204,11 +199,11 @@ public class SevaRequest {
     public String getComplaintTypeCode() {
         return (String) this.getServiceRequest().get(SERVICE_CODE);
     }
-    
+
     public String getLocationId() {
         return getDynamicSingleValue(VALUES_LOCATION_ID);
     }
-    
+
     public String getKeyword() {
         return getDynamicSingleValue(VALUES_KEYWORD);
     }
@@ -216,39 +211,39 @@ public class SevaRequest {
     public String getServiceName() {
         return (String) getServiceRequest().get(SERVICE_NAME);
     }
-    
+
     public String getServiceRequestId() {
         return (String) getServiceRequest().get(SERVICE_REQUEST_ID);
     }
-    
+
     public String getApprovalComments() {
         return getDynamicSingleValue(VALUES_APPROVAL_COMMENT);
     }
-    
+
     public String getAction() {
         return getDynamicSingleValue(VALUES_ACTION);
     }
-    
+
     public String getStatus() {
         return getDynamicSingleValue(STATUS);
     }
-    
+
     public String getSenderName() {
         return getDynamicSingleValue(VALUES_SENDER_NAME);
     }
-    
+
     public String getExtraInfo() {
         return getDynamicSingleValue(VALUES_EXTRA_INFO);
     }
-    
+
     public String getDepartmentName() {
         return getDynamicSingleValue(VALUES_DEPARTMENT_NAME);
     }
-    
+
     public String getServiceCategoryName() {
         return (String) getServiceRequest().get(SERVICE_CATEGORY_NAME);
     }
-    
+
     public String getTenantId() {
         return (String) getServiceRequest().get(TENANT_ID);
     }
@@ -270,9 +265,9 @@ public class SevaRequest {
     public boolean isCreate() {
         return POST.equalsIgnoreCase(this.getRequestInfo().getAction());
     }
-    
+
     public boolean isWorkflowCreate() {
-        return getAction() !=null && getAction().equalsIgnoreCase("create");
+        return getAction() != null && getAction().equalsIgnoreCase("create");
     }
 
     public void setDesignation(String designationId) {

@@ -3,15 +3,19 @@ package org.egov.asset.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class DepreciationCriteria {
 
     public DepreciationCriteria(final DepreciationCriteria depreciationCriteria) {
@@ -23,6 +27,7 @@ public class DepreciationCriteria {
     }
 
     @JsonProperty("tenantId")
+    @NotNull
     private String tenantId;
 
     @JsonProperty("financialYear")

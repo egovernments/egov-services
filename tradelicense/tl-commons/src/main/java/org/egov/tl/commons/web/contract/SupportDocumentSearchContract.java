@@ -10,7 +10,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -21,23 +20,26 @@ public class SupportDocumentSearchContract {
 	@JsonProperty("id")
 	private Long id;
 
-	@JsonProperty("licenseId")
-	private Long licenseId;
-
-	@NotNull(message="{error.license.documenttype}")
+	@JsonProperty("teantId")
+	private String tenantId;
+	
+	@JsonProperty("applicationId")
+	private Long applicationId;
+	
+	@NotNull(message = "{error.license.documenttype}")
 	@JsonProperty("documentTypeId")
 	private Long documentTypeId;
 
-	@NotNull(message="{error.license.filestore}")
+	@NotNull(message = "{error.license.filestore}")
 	@JsonProperty("fileStoreId")
-	private Long fileStoreId;
+	private String fileStoreId;
 
 	@JsonProperty("comments")
 	private String comments;
 
-	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails;
-	
 	@JsonProperty("documentTypeName")
-	private String documentTypeName;;
+	private String documentTypeName;
+    
+    @JsonProperty("auditDetails")
+	private AuditDetails auditDetails;
 }

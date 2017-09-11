@@ -131,7 +131,7 @@ public class WaterConnectionController {
                 Math.round(waterConnectionRequest.getConnection().getNumberOfPersons()/4+1):null);
        
         waterConnectionService.persistBeforeKafkaPush(waterConnectionRequest);
-       
+       waterConnectionRequest.getConnection().setCreatedDate(Long.toString(new java.util.Date().getTime()));
       Connection connection=waterConnectionService.createWaterConnection(
                 applicationProperties.getCreateNewConnectionTopicName(),
                 "newconnection-create", waterConnectionRequest);
@@ -240,7 +240,7 @@ public class WaterConnectionController {
         // Call service
         List<Connection> connectionList = null;
         try {
-        	connectionList =   waterConnectionService.getConnectionDetails(waterConnectionGetReq);
+        	connectionList =   waterConnectionService.getConnectionDetails(waterConnectionGetReq, requestInfo);
         } catch (final Exception exception) {
             logger.error("Error while processing request " + waterConnectionGetReq, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
@@ -267,7 +267,7 @@ public class WaterConnectionController {
         EstimationNotice estimationNotice = new EstimationNotice(); 
         try {
         	estimationNotice =   waterConnectionService.getEstimationNotice(applicationProperties.getEstimationNoticeTopicName(), 
-        			applicationProperties.getEstimationNoticeTopicKey(),waterConnectionGetReq);
+        			applicationProperties.getEstimationNoticeTopicKey(),waterConnectionGetReq, requestInfo);
         } catch (final Exception exception) {
             logger.error("Error while processing request " + waterConnectionGetReq, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
@@ -293,7 +293,7 @@ public class WaterConnectionController {
         // Call service
         WorkOrderFormat workOrder= new WorkOrderFormat(); 
         try {
-        	workOrder =   waterConnectionService.getWorkOrder(applicationProperties.getWorkOrderTopicName(), applicationProperties.getWorkOrderTopicKey(), waterConnectionGetReq);
+        	workOrder =   waterConnectionService.getWorkOrder(applicationProperties.getWorkOrderTopicName(), applicationProperties.getWorkOrderTopicKey(), waterConnectionGetReq, requestInfo);
         } catch (final Exception exception) {
             logger.error("Error while processing request " + waterConnectionGetReq, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);

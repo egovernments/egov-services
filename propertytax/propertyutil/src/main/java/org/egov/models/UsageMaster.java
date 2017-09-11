@@ -63,5 +63,9 @@ public class UsageMaster {
 	@JsonProperty("data")
 	private String data;
 
+	@JsonProperty("service")
+	@Size(min = 2, max = 64)
+	private String service = null;
+
 	private AuditDetails auditDetails;
 }

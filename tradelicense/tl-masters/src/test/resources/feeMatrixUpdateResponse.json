@@ -13,6 +13,7 @@
             "effectiveFrom":null,
             "effectiveTo":null,
             "feeMatrixDetails": [{
+            	"tenantId": null,
             	"feeMatrixId" : null,
             	"uomFrom" : null,
             	"uomTo" : null,

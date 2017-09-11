@@ -13,7 +13,9 @@ public enum Action {
 
 	RENEWAL("RENEWAL"),
 
-	OBJECTION("OBJECTION");
+	OBJECTION("OBJECTION"),
+
+	JUDGEMENT("JUDGEMENT");
 
 	private String value;
 

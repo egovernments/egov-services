@@ -41,8 +41,8 @@
 package org.egov.mr.web.contract;
 
 
-import java.time.LocalDate;
-
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -50,15 +50,16 @@ import org.springframework.stereotype.Component;
 public class ResponseInfoFactory {
 
 	public ResponseInfo getResponseInfo(RequestInfo requestInfo, HttpStatus status) {
-
-		ResponseInfo responseInfo = new ResponseInfo();
+  
+		ResponseInfo responseInfo= new ResponseInfo();
 		if (requestInfo != null) {
 			responseInfo.setApiId(requestInfo.getApiId());
 			responseInfo.setResMsgId(requestInfo.getMsgId());
 			// responseInfo.setResMsgId(requestInfo.get);
 			responseInfo.setStatus(status.toString());
 			responseInfo.setVer(requestInfo.getVer());
-			responseInfo.setTs(requestInfo.getTs());
+			
+		
 		}
 		return responseInfo;
 	}
@@ -67,7 +68,7 @@ public class ResponseInfoFactory {
 
 		String apiId = null;
 		String ver = null;
-		String ts = null;
+		Long ts = null;
 		String resMsgId = "uief87324"; // FIXME : Hard-coded
 		String msgId = null;
 		String tenantId = null;
@@ -76,11 +77,11 @@ public class ResponseInfoFactory {
 			ver = requestInfo.getVer();
 			ts = requestInfo.getTs();
 			msgId = requestInfo.getMsgId();
-			tenantId = requestInfo.getTenantId();
+			
 		}
-		String responseStatus = success ? "successful" : "failed";
+		String status = success ? "successful" : "failed";
 
-		return new ResponseInfo(apiId, ver, resMsgId, msgId, ts, responseStatus, tenantId);
+		return new ResponseInfo(apiId, ver, ts, resMsgId, msgId, status);
 	}
 
 }

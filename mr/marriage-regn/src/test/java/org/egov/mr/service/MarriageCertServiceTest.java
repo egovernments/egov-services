@@ -11,6 +11,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.mr.config.PropertiesManager;
 import org.egov.mr.model.ApprovalDetails;
 import org.egov.mr.model.AuditDetails;
@@ -27,8 +29,6 @@ import org.egov.mr.utils.FileUtils;
 import org.egov.mr.web.contract.MarriageCertCriteria;
 import org.egov.mr.web.contract.ReissueCertRequest;
 import org.egov.mr.web.contract.ReissueCertResponse;
-import org.egov.mr.web.contract.RequestInfo;
-import org.egov.mr.web.contract.ResponseInfo;
 import org.egov.mr.web.contract.ResponseInfoFactory;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.junit.Test;
@@ -80,8 +80,17 @@ public class MarriageCertServiceTest {
 				.thenReturn(getReissueCertApplFromDB());
 		when(responseInfoFactory.createResponseInfoFromRequestInfo(Matchers.any(RequestInfo.class),
 				Matchers.anyBoolean())).thenReturn(reissueCertResponse.getResponseInfo());
+		RequestInfo requestInfo = new RequestInfo();
+		requestInfo.setApiId("uief87324");
+		requestInfo.setVer("string");
+		requestInfo.setTs(Long.valueOf("987456321"));
+
 		ReissueCertResponse actualReissueCertAppl = marriageCertService.getMarriageCerts(marriageCertCriteria,
-				new RequestInfo());
+				requestInfo);
+		ResponseInfo responseInfo = actualReissueCertAppl.getResponseInfo();
+		responseInfo.setStatus("200");
+		responseInfo.setResMsgId("string");
+
 		ReissueCertResponse expectedReissueCertAppl = reissueCertResponse;
 		assertEquals(actualReissueCertAppl.toString(), expectedReissueCertAppl.toString());
 	}
@@ -90,7 +99,7 @@ public class MarriageCertServiceTest {
 	public void testForSuccessResponse() {
 
 		ResponseInfo responseInfo = ResponseInfo.builder().apiId("uief87324").resMsgId("String").status("200")
-				.key("successful").ts("string").ver("string").tenantId("ap.kurnool").build();
+				.ts(Long.valueOf("987456321")).ver("string").build();
 
 		Page page = Page.builder().totalResults(1).currentPage(null).pageSize(null).totalPages(null).offSet(null)
 				.build();
@@ -104,12 +113,13 @@ public class MarriageCertServiceTest {
 
 	@Test
 	public void testForcreateAsync() {
-		ResponseInfo responseInfo = ResponseInfo.builder().apiId("uief87324").resMsgId("String").status("200")
-				.key("successful").ts("string").ver("string").tenantId("ap.kurnool").build();
+		org.egov.common.contract.response.ResponseInfo responseInfo = org.egov.common.contract.response.ResponseInfo
+				.builder().apiId("uief87324").resMsgId("String").status("200").ts(Long.valueOf("987456321"))
+				.ver("string").build();
 
 		ReissueCertResponse reissueCertResp = ReissueCertResponse.builder()
 				.reissueApplications(getReissueCertApplFromDB()).responseInfo(null).page(null).build();
-		System.err.println("reissueCertResp"+reissueCertResp);
+		System.err.println("reissueCertResp" + reissueCertResp);
 
 		ReissueCertRequest reissueRequest = ReissueCertRequest.builder()
 				.reissueApplication(reissueCertResp.getReissueApplications().get(0)).requestInfo(new RequestInfo())
@@ -120,17 +130,16 @@ public class MarriageCertServiceTest {
 
 		when(kafkaTemplate.send(Matchers.any(String.class), Matchers.any(String.class), Matchers.any(Object.class)))
 				.thenReturn(new SendResult<>(null, null));
-		System.err.println("marriageCertService.createAsync(reissueRequest)"+marriageCertService.createAsync(reissueRequest));
+		System.err.println(
+				"marriageCertService.createAsync(reissueRequest)" + marriageCertService.createAsync(reissueRequest));
 		assertTrue(reissueCertResp.equals(marriageCertService.createAsync(reissueRequest)));
 
 	}
-	
-	public void testForCreate(){
+
+	public void testForCreate() {
 		doNothing().when(marriageCertRepository).createReissue(any(ReissueCertRequest.class));
 		doNothing().when(marriageCertRepository).createDoc(any(ReissueCertRequest.class));
-}
-	
-	
+	}
 
 	private ReissueCertResponse getMarriageCertResponse(String filePath) throws IOException {
 		String reissueCertJson = new FileUtils().getFileContents(filePath);

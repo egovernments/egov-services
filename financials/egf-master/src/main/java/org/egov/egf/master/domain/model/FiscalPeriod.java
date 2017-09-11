@@ -52,7 +52,19 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+/**
+ * 
+ * @author mani
+ *
+ */
 
+/**
+ * A financial year can have any number of fiscal periods. Each fiscal period
+ * must have a start and end date. The start date of the first period and end
+ * date of the last period will be the period of the financial year Dates cannot
+ * overlap across periods – i.e. any given date cannot be in more than on fiscal
+ * period.
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -61,6 +73,9 @@ import lombok.Setter;
 @EqualsAndHashCode(exclude = { "financialYear" }, callSuper = false)
 public class FiscalPeriod extends Auditable {
 
+	/**
+	 * id is the unique identifier. it is generated internally
+	 */
 	private String id;
 
 	@Length(min = 1, max = 25)
@@ -70,18 +85,43 @@ public class FiscalPeriod extends Auditable {
 	@NotNull
 	private FinancialYear financialYear;
 
+	/**
+	 * startingDate is the date on which period starts.
+	 */
 	@NotNull
 	private Date startingDate;
 
+	/**
+	 * endingDate is the date on which period ends.
+	 */
 	@NotNull
 	private Date endingDate;
+
+	/**
+	 * active says whether fiscal period is active or not . Over a period system
+	 * will have number of fiscal period. Reports ,searches,transactions will
+	 * need to display this.If the active value is true then fiscal period is
+	 * listed, if value is false it wont be listed
+	 */
 
 	@NotNull
 	private Boolean active;
 
+	/**
+	 * isActiveForPosting refers whether posting allowed for the fiscal period
+	 * or not . This value will be true for current year and few previous year
+	 * for which data entry will be happening. Once the account is closed this
+	 * value is set to false . All transactions will happen if and only if
+	 * isActiveForPosting is true
+	 */
 	@NotNull
 	private Boolean isActiveForPosting;
 
-	private Boolean isClosed;
+	/**
+	 * isClosed refers whether the account is closed or not . Once the account
+	 * is closed and balance is transferred this value is set to false if the
+	 * account is closed no transaction can happen on that fiscal period.
+	 */
 
+	private Boolean isClosed;
 }

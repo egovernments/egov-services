@@ -48,6 +48,7 @@ import org.egov.wcms.model.PropertyTypeUsageType;
 import org.egov.wcms.repository.builder.PropertyUsageTypeQueryBuilder;
 import org.egov.wcms.repository.rowmapper.PropertyUsageTypeRowMapper;
 import org.egov.wcms.service.RestWaterExternalMasterService;
+import org.egov.wcms.util.WcmsConstants;
 import org.egov.wcms.web.contract.PropertyTaxResponseInfo;
 import org.egov.wcms.web.contract.PropertyTypeResponse;
 import org.egov.wcms.web.contract.PropertyTypeUsageTypeGetReq;
@@ -145,12 +146,13 @@ public class PropertyUsageTypeRepository {
             usageTypeIdsList.add(Integer.valueOf(propertyTypeUsage.getUsageTypeId()));
         final Integer[] usageTypeIds = usageTypeIdsList.toArray(new Integer[usageTypeIdsList.size()]);
         final UsageTypeResponse usageResponse = restExternalMasterService.getUsageNameFromPTModule(
-                usageTypeIds, propUsageTypeGetRequest.getTenantId());
+                usageTypeIds, WcmsConstants.SERVICE, propUsageTypeGetRequest.getTenantId());
         for (final PropertyTypeUsageType propertyTypeUsageType : propUsageTypes)
             for (final PropertyTaxResponseInfo propertyResponse : usageResponse.getUsageMasters())
-                if (propertyResponse.getId().equals(propertyTypeUsageType.getUsageTypeId())){
+                if (propertyResponse.getId().equals(propertyTypeUsageType.getUsageTypeId())) {
                     propertyTypeUsageType.setUsageType(propertyResponse.getName());
                     propertyTypeUsageType.setUsageCode(propertyResponse.getCode());
+                    propertyTypeUsageType.setService(propertyResponse.getService());
                 }
         return propUsageTypes;
     }

@@ -96,14 +96,14 @@
 
 			<script id="district-option-template" type="text/x-handlebars-template">
 				 {{#each .}}
-						<option value="{{@key}}">{{@key}}</option>
+						<option value="{{@key}}" {{#if (eq @key "Raigad")}}selected="selected"{{/if}}>{{@key}}</option>
 				 {{/each}}
 			</script>
 
 			<script id="ulb-option-template" type="text/x-handlebars-template">
 				 <option value="">Select ULB</option>
 				 {{#each this}}
-						<option value="{{ulbName}}">{{ulbName}}</option>
+						<option value="{{ulbName}}" {{#if (eq ulbName "Roha Municipal Council")}}selected="selected"{{/if}}>{{ulbName}}</option>
 				 {{/each}}
 			</script>
 
@@ -349,8 +349,8 @@
 
 
 								var stateLevelReports ={
-									PT:"http://a99a3c7ac04ac11e78bfd068c35e8c77-1062737105.us-east-1.elb.amazonaws.com:5601/goto/e53af3d8070f1860e41bcb1bd7a14b9a?embed=true",
-									PGR:"http://a99a3c7ac04ac11e78bfd068c35e8c77-1062737105.us-east-1.elb.amazonaws.com:5601/goto/5e99e734cf4db5d6e1ec42aa036b5014?embed=true",
+									PT:"http://ae35855e9842111e7ac1f02bc1626de1-1479662728.ap-south-1.elb.amazonaws.com/goto/3299eeaee3f3d5f01b739f62e7f585c9?embed=true",
+									PGR:"http://ae35855e9842111e7ac1f02bc1626de1-1479662728.ap-south-1.elb.amazonaws.com/goto/df3ef48a619d3a733a8503dac4ac26c2?embed=true",
 									WC:"",
 									COLLECTION:"",
 									TL:""
@@ -383,13 +383,13 @@
 								  return (a < b) ? -1 : (a > b) ? 1 : 0;
 							  }
 
-								function openReport(reportUrl, reportTitle){
+								function openReport(reportUrl, reportTitle, ulbName){
 									if(reportUrl)
-										window.open('open-report.html?url='+encodeURIComponent(reportUrl)+"&back="+encodeURIComponent(window.location.href)+'&title='+reportTitle);
+										window.open('open-report.html?url='+encodeURIComponent(reportUrl)+"&back="+encodeURIComponent(window.location.href)+'&title='+reportTitle+'&ulbname='+ulbName);
 								}
 
 								function openStatelevelReport(elem, title){
-									openReport(stateLevelReports[$(elem).data('report-key')], title);
+									openReport(stateLevelReports[$(elem).data('report-key')], title, "");
 								}
 
 								$(document).ready(function(){
@@ -417,10 +417,10 @@
 											     'Cache-Control': 'max-age=1000'
 											},
 										  success: function(response){
-												console.log('response', response);
+												// console.log('response', response);
 												var data = arrayGroupByKey(response, 'district');
 												districtLists = data;
-												console.log('districtLists', districtLists);
+												// console.log('districtLists', districtLists);
 												updateAllUlbsTemplate(data);
 										  },
 										  cache: false
@@ -453,7 +453,7 @@
 											console.log('ulb', ulb);
 											var reportUrl = ulb[$(this).data('url-key')];
 											if(reportUrl){
-												openReport(reportUrl, $(this).data('report-title')+" - "+ulb.ulbName);
+												openReport(reportUrl, $(this).data('report-title'), ulb.ulbName);
 												//window.open('open-report.html?url='+encodeURIComponent(reportUrl)+"&back="+encodeURIComponent(window.location.href)+'&title='+$(this).data('report-title'));
 											}
 											else{

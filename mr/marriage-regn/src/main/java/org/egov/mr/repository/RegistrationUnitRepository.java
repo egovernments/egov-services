@@ -37,15 +37,20 @@ public class RegistrationUnitRepository {
 
 		Location location = registrationUnit.getAddress();
 		AuditDetails auditDetails = registrationUnit.getAuditDetails();
-		// Object created according to the registration_unit table structure
-		Object[] obj = new Object[] { registrationUnit.getId(), registrationUnit.getCode(), registrationUnit.getName(),
+		/**
+		 * @Object created according to the registration_unit table structure
+		 */
+		Object[] obj = new Object[] { registrationUnit.getId(), registrationUnit.getName(),
 				registrationUnit.getIsActive(), registrationUnit.getTenantId(), location.getLocality(),
 				location.getZone(), location.getRevenueWard(), location.getBlock(), location.getStreet(),
-				location.getElectionWard(), location.getDoorNo(), location.getPinCode(), auditDetails.getCreatedBy(),
+				location.getElectionWard(), location.getDoorNo(), location.getPinCode(),
+				registrationUnit.getIsMainRegistrationUnit(), auditDetails.getCreatedBy(),
 				auditDetails.getLastModifiedBy(), auditDetails.getCreatedTime(), auditDetails.getLastModifiedTime() };
 		try {
-			// RegistrationUnit & Location are saved into SingleTable with
-			// No address column
+			/**
+			 * @RegistrationUnit & Location are saved into SingleTable with No
+			 *                   address column
+			 */
 			jdbcTemplate.update(registrationUnitQueryBuilder.getCreateQuery(), obj);
 		} catch (DataAccessException e) {
 			jdbcTemplate.execute("ROLLBACK");
@@ -55,12 +60,12 @@ public class RegistrationUnitRepository {
 
 	public List<RegistrationUnit> search(RegistrationUnitSearchCriteria regnUnitSearchCriteria) {
 		LOGGER.info(regnUnitSearchCriteria.toString());
-		// for search method
-		List<Object> preparedStatementValues = new ArrayList<Object>();
-		String selectQuery = registrationUnitQueryBuilder.getSelectQuery(regnUnitSearchCriteria,
-				preparedStatementValues);
+		/**
+		 * @search method
+		 */
+		String selectQuery = registrationUnitQueryBuilder.getSelectQuery(regnUnitSearchCriteria);
 		List<RegistrationUnit> registrationUnitList = new ArrayList<RegistrationUnit>();
-		registrationUnitList = jdbcTemplate.query(selectQuery, preparedStatementValues.toArray(), rowMapper);
+		registrationUnitList = jdbcTemplate.query(selectQuery, rowMapper);
 		return registrationUnitList;
 	}
 
@@ -69,13 +74,15 @@ public class RegistrationUnitRepository {
 
 		Location location = registrationUnit.getAddress();
 		AuditDetails auditDetails = registrationUnit.getAuditDetails();
-		// Object created according to the registration_unit table structure
-		Object[] obj = new Object[] { registrationUnit.getCode(), registrationUnit.getName(),
-				registrationUnit.getIsActive(), location.getLocality(), location.getZone(), location.getRevenueWard(),
-				location.getBlock(), location.getStreet(), location.getElectionWard(), location.getDoorNo(),
-				location.getPinCode(), auditDetails.getCreatedBy(), auditDetails.getLastModifiedBy(),
-				auditDetails.getCreatedTime(), auditDetails.getLastModifiedTime(), registrationUnit.getId(),
-				registrationUnit.getTenantId() };
+		/**
+		 * @Object created according to the registration_unit table structure
+		 */
+		Object[] obj = new Object[] { registrationUnit.getName(), registrationUnit.getIsActive(),
+				location.getLocality(), location.getZone(), location.getRevenueWard(), location.getBlock(),
+				location.getStreet(), location.getElectionWard(), location.getDoorNo(), location.getPinCode(),
+				registrationUnit.getIsMainRegistrationUnit(), auditDetails.getCreatedBy(),
+				auditDetails.getLastModifiedBy(), auditDetails.getCreatedTime(), auditDetails.getLastModifiedTime(),
+				registrationUnit.getId(), registrationUnit.getTenantId() };
 		try {
 			jdbcTemplate.update(registrationUnitQueryBuilder.getUpdateQuery(), obj);
 		} catch (DataAccessException e) {
@@ -84,7 +91,11 @@ public class RegistrationUnitRepository {
 		}
 	}
 
-	// ***************** new Id *************************
+	/**
+	 * ****** @new_Id ******
+	 * 
+	 * @return
+	 */
 	public Long getIdNextVal() {
 		return jdbcTemplate.queryForObject(registrationUnitQueryBuilder.getIdNextValForRegnUnit(), Long.class);
 	}
@@ -95,14 +106,11 @@ public class RegistrationUnitRepository {
 		regnUnitSearchIdAndTenantId.setId(registrationUnit.getId());
 		regnUnitSearchIdAndTenantId.setTenantId(registrationUnit.getTenantId());
 
-		List<Object> preparedStatementValues = new ArrayList<Object>();
-		String query = registrationUnitQueryBuilder.getSelectQuery(regnUnitSearchIdAndTenantId,
-				preparedStatementValues);
+		String query = registrationUnitQueryBuilder.getSelectQuery(regnUnitSearchIdAndTenantId);
 
 		try {
 			@SuppressWarnings("unused")
-			RegistrationUnit regnUnit = jdbcTemplate.queryForObject(query, preparedStatementValues.toArray(),
-					rowMapper);
+			RegistrationUnit regnUnit = jdbcTemplate.queryForObject(query, rowMapper);
 		} catch (DataAccessException e) {
 			jdbcTemplate.execute("ROLLBACK");
 			return false;

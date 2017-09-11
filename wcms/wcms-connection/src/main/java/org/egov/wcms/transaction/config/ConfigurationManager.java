@@ -113,6 +113,12 @@ public class ConfigurationManager {
     @Value("${id.format}")
     private String idGenFormatServiceTopic;
     
+    @Value("${id.usernameFormat}")
+    private String userNameFormat;
+    
+    @Value("${id.userName}")
+    private String userNameService;
+    
     @Value("${id.hscName}")
     private String hscGenNameServiceTopic;
     
@@ -137,6 +143,9 @@ public class ConfigurationManager {
     @Value("${id.demandBillFormat}")
     private String demandBillGenFormatServiceTopic;
     
+    @Value("${egov.services.demandbill_servivc.searchdemanddetail}")
+    private String searchDemandDEtailExist;
+    
     @Value("${egov.services.finance_service.hostname}")
     private String financeServiceHostName; 
     
@@ -155,8 +164,14 @@ public class ConfigurationManager {
     @Value("${egov.services.demandbill_service.hostname}")
     private String billingDemandServiceHostNameTopic;
     
+    @Value("${egov.services.demandbill_servivc.updatedemanddet}")
+    private String billingUpdateDemand;
+    
     @Value("${egov.services.demandbill_service.createdemand}")
     private String createbillingDemandServiceTopic;
+    
+    @Value("${egov.services.demandbill_servivc.updatedemand}")
+    private String updateDemandServiceTopic;
     
     @Value("${egov.services.demandbill_servivc.searchdemand}")
     private String searchbillingDemandServiceTopic;
@@ -206,5 +221,17 @@ public class ConfigurationManager {
     
     @Value("${default.password}")
     private String defaultPassword;
+    
+    @Value("${egov.services.tenant.host}")
+    private String tenantServiceBasePath;
+    
+    @Value("${egov.services.tenant.searchpath}")
+    private String tenantServiceSearchPath;
+    
+    @Value("${id.hscNumberOfChar}")
+    private Integer hscNumberOfChar; 
+    
+    @Value("${egov.services.wcms_masters.waterChargesConfig.searchpath}")
+    private String waterMasterServiceWaterChargesConfigSearchPathTopic;
     
 }

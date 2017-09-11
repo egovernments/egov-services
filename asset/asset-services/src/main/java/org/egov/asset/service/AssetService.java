@@ -50,6 +50,7 @@ import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.YearWiseDepreciation;
 import org.egov.asset.model.enums.KafkaTopicName;
+import org.egov.asset.model.enums.Sequence;
 import org.egov.asset.repository.AssetRepository;
 import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
@@ -84,11 +85,6 @@ public class AssetService {
         return getAssetResponse(assets, requestInfo);
     }
 
-    public String getAssetName(final String tenantId, final String name) {
-        log.info("AssetService getAssetName");
-        return assetRepository.findAssetName(tenantId, name);
-    }
-
     public AssetResponse create(final AssetRequest assetRequest) {
         final Asset asset = assetRepository.create(assetRequest);
         final List<Asset> assets = new ArrayList<>();
@@ -98,9 +94,10 @@ public class AssetService {
 
     public AssetResponse createAsync(final AssetRequest assetRequest) {
         final Asset asset = assetRequest.getAsset();
-        asset.setCode(assetRepository.getAssetCode());
-        final Long assetId = Long.valueOf(assetRepository.getNextAssetId().longValue());
-        asset.setId(assetId);
+        
+        asset.setCode(assetCommonService.getCode("%06d", Sequence.ASSETCODESEQUENCE));
+        
+        asset.setId(assetCommonService.getNextId(Sequence.ASSETSEQUENCE));
 
         setDepriciationRateAndEnableYearWiseDepreciation(asset);
 
@@ -164,5 +161,17 @@ public class AssetService {
             log.debug("Depreciation rate for asset create :: " + depreciationRate);
             asset.setDepreciationRate(depreciationRate);
         }
+    }
+
+    public Asset getAsset(final String tenantId, final Long assetId, final RequestInfo requestInfo) {
+        final List<Long> assetIds = new ArrayList<>();
+        assetIds.add(assetId);
+        final AssetCriteria assetCriteria = AssetCriteria.builder().tenantId(tenantId).id(assetIds).build();
+        final List<Asset> assets = getAssets(assetCriteria, requestInfo).getAssets();
+        if (assets != null && !assets.isEmpty())
+            return assets.get(0);
+        else
+            throw new RuntimeException(
+                    "There is no asset exists for id ::" + assetId + " for tenant id :: " + tenantId);
     }
 }

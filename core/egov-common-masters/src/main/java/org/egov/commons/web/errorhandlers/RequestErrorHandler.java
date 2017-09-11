@@ -3,6 +3,8 @@ package org.egov.commons.web.errorhandlers;
 
 
 
+import java.util.ArrayList;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
@@ -57,6 +59,8 @@ public class RequestErrorHandler {
 				errorField.setCode("400");
 				errorField.setMessage("Missing RequestBody Fields");
 				errorField.setField(fieldError.getField());
+				if(error.getFields() ==null)
+					error.setFields(new ArrayList<>());
 				error.getFields().add(errorField);
 			}
 		}

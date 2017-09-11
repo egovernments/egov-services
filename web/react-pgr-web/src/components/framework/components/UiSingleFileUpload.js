@@ -11,6 +11,7 @@ export default class UiSingleFileUpload extends Component {
 			case 'google': 
 				return (
 					<RaisedButton
+					  floatingLabelStyle={{"color": "#696969"}}
 					  style={{"display": (item.hide ? 'none' : 'block')}}
 					  containerElement='label'
 					  fullWidth={true} 

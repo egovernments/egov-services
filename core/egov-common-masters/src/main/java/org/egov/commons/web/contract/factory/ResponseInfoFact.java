@@ -5,6 +5,9 @@ import org.egov.common.contract.request.RequestInfo;
 import org.springframework.stereotype.Component;
 
 import lombok.EqualsAndHashCode;
+
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 @Component
 @EqualsAndHashCode
 public class ResponseInfoFact {
@@ -18,7 +21,7 @@ public class ResponseInfoFact {
 		if (requestInfo != null) {
 			apiId = requestInfo.getApiId();
 			ver = requestInfo.getVer();
-			ts = requestInfo.getTs().toString();
+			ts = isEmpty(requestInfo.getTs()) ? null : requestInfo.getTs().toString();
 			msgId = requestInfo.getMsgId();
 		}
 		String responseStatus = success ? "successful" : "failed";

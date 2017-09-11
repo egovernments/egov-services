@@ -3,8 +3,8 @@ package org.egov.tradelicense.web.controller;
 import javax.validation.Valid;
 
 import org.egov.tl.commons.web.requests.PenaltyRateRequest;
-import org.egov.tl.commons.web.requests.PenaltyRateResponse;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
+import org.egov.tl.commons.web.response.PenaltyRateResponse;
 import org.egov.tradelicense.domain.services.PenaltyRateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -71,7 +71,7 @@ public class PenaltyRateController {
 	@RequestMapping(path = "/_search", method = RequestMethod.POST)
 	public PenaltyRateResponse getPenaltyRateMaster(@RequestBody RequestInfoWrapper requestInfo,
 			@RequestParam(required = true) String tenantId, @RequestParam(required = false) Integer[] ids,
-			@RequestParam(required = true) String applicationType, @RequestParam(required = false) Integer pageSize,
+			@RequestParam(required = false) String applicationType, @RequestParam(required = false) Integer pageSize,
 			@RequestParam(required = false) Integer offSet) throws Exception {
 
 		return penaltyRateService.getPenaltyRateMaster(requestInfo.getRequestInfo(), tenantId, ids, applicationType,

@@ -1,0 +1,20 @@
+{
+   "RequestInfo":{  
+      "action":"create",
+      "did":"1",
+      "msgId":"20170310130900",
+      "requesterId":"yosadhara",
+      "authToken":"f10e57c6-0216-4252-95fb-8fcb50f204e1",
+      "apiId":"1",
+      "ver":"1.0",
+      "ts":1,
+      "key":"abcdkey",
+      "tenantId":"default"
+   },
+   "documentTypes":[  
+      {  
+         "tenantId":"default",
+         "applicationType":"NEW"
+      }
+   ]
+}

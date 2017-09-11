@@ -2,8 +2,8 @@
  	[
         {
             "id": "1",
-            "name": "function",
-            "code": "002",
+            "name": "name",
+            "code": "code",
             "tenantId": "default"
         }
     ],

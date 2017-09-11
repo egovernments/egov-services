@@ -106,49 +106,16 @@ public class AssetRepository {
         final String queryStr = assetQueryBuilder.getQuery(assetCriteria, preparedStatementValues);
         List<Asset> assets = new ArrayList<Asset>();
         try {
-            log.info("queryStr::" + queryStr + "preparedStatementValues::" + preparedStatementValues.toString());
+            log.debug("queryStr::" + queryStr + "preparedStatementValues::" + preparedStatementValues.toString());
             assets = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), assetRowMapper);
-            log.info("AssetRepository::" + assets);
+            log.debug("AssetRepository::" + assets);
         } catch (final Exception ex) {
-            log.info("the exception from findforcriteria : " + ex);
+            log.debug("the exception from findforcriteria : " + ex);
         }
         return assets;
     }
 
-    public String findAssetName(final String tenantId, final String name) {
-
-        final String queryStr = AssetQueryBuilder.FINDBYNAMEQUERY;
-        log.info("queryStr::" + queryStr + "preparedStatementValues::" + name + "tenantid" + tenantId);
-        String assetName = null;
-        try {
-            assetName = jdbcTemplate.queryForObject(queryStr, new Object[] { name, tenantId }, String.class);
-            log.info("AssetRepository::" + assetName);
-        } catch (final Exception ex) {
-            log.info("the exception from findbyname method indicates no duplicate assets available : " + ex);
-        }
-        return assetName;
-    }
-
-    public String getAssetCode() {
-        final String query = "SELECT nextval('seq_egasset_assetcode')";
-        final Integer result = jdbcTemplate.queryForObject(query, Integer.class);
-        log.info("result:" + result);
-        StringBuilder code = null;
-        try {
-            code = new StringBuilder(String.format("%06d", result));
-        } catch (final Exception ex) {
-            log.info("the exception from seq number gen for code : " + ex);
-        }
-        return code.toString();
-    }
-
-    public Integer getNextAssetId() {
-        final String query = "SELECT nextval('seq_egasset_asset')";
-        final Integer result = jdbcTemplate.queryForObject(query, Integer.class);
-        return result;
-    }
-
-    private List<Asset> findAssetByCode(final String code) {
+    public List<Asset> findAssetByCode(final String code) {
         final AssetCriteria assetCriteria = new AssetCriteria();
         assetCriteria.setCode(code);
         return findForCriteria(assetCriteria);
@@ -157,7 +124,7 @@ public class AssetRepository {
     @Transactional
     public Asset create(final AssetRequest assetRequest) {
 
-        log.info("the asset request in repository create : " + assetRequest);
+        log.debug("the asset request in repository create : " + assetRequest);
         final RequestInfo requestInfo = assetRequest.getRequestInfo();
         final Asset asset = assetRequest.getAsset();
 
@@ -200,7 +167,7 @@ public class AssetRepository {
         try {
             jdbcTemplate.update(query, obj);
         } catch (final Exception ex) {
-            log.info("the exception from insert query : " + ex);
+            log.debug("the exception from insert query : " + ex);
         }
         if (asset.getEnableYearWiseDepreciation() != null && asset.getEnableYearWiseDepreciation())
             saveYearWiseDepreciation(assetRequest, asset.getYearWiseDepreciation());
@@ -219,7 +186,7 @@ public class AssetRepository {
             property = mapper.writeValueAsString(asset2);
 
         } catch (final JsonProcessingException e) {
-            log.info("exception from parsing the assetattributes : " + e);
+            log.debug("exception from parsing the assetattributes : " + e);
         }
 
         final String query = assetQueryBuilder.getUpdateQuery();
@@ -265,24 +232,27 @@ public class AssetRepository {
         return asset;
     }
 
-    private void updateDepreciationData(final AssetRequest assetRequest) {
+    public void updateDepreciationData(final AssetRequest assetRequest) {
         final Asset asset = assetRequest.getAsset();
         final List<Asset> assets = findAssetByCode(asset.getCode());
-        final Asset oldAsset = assets.get(0);
-        log.debug("Old Asset :: " + oldAsset);
-        final boolean oldAssetEnableYWD = oldAsset.getEnableYearWiseDepreciation();
-        final boolean reqAssetEnableYWD = asset.getEnableYearWiseDepreciation();
-        if (!oldAssetEnableYWD && reqAssetEnableYWD || oldAssetEnableYWD && reqAssetEnableYWD) {
-            log.info("updating enable year wise depreciation :: (false to true) or (true to true)");
-            updateYearWiseDepreciationData(assetRequest, oldAsset);
-        } else if (oldAssetEnableYWD && !reqAssetEnableYWD || !oldAssetEnableYWD && !reqAssetEnableYWD) {
-            log.info("updating enable year wise depreciation :: (true to false) or (false to false)");
-            updateAssetDepreciationRate(asset, true);
-        }
-
+        if (assets != null && !assets.isEmpty()) {
+            final Asset oldAsset = assets.get(0);
+            log.debug("Old Asset :: " + oldAsset);
+            final boolean oldAssetEnableYWD = oldAsset.getEnableYearWiseDepreciation();
+            final boolean reqAssetEnableYWD = asset.getEnableYearWiseDepreciation();
+            if (!oldAssetEnableYWD && reqAssetEnableYWD || oldAssetEnableYWD && reqAssetEnableYWD) {
+                log.info("updating enable year wise depreciation :: (false to true) or (true to true)");
+                updateYearWiseDepreciationData(assetRequest, oldAsset);
+            } else if (oldAssetEnableYWD && !reqAssetEnableYWD || !oldAssetEnableYWD && !reqAssetEnableYWD) {
+                log.info("updating enable year wise depreciation :: (true to false) or (false to false)");
+                updateAssetDepreciationRate(asset, true);
+            }
+        } else
+            throw new RuntimeException(
+                    "Asset " + asset.getName() + " is not found for tenantid :: " + asset.getTenantId());
     }
 
-    private void updateYearWiseDepreciationData(final AssetRequest assetRequest, final Asset oldAsset) {
+    public void updateYearWiseDepreciationData(final AssetRequest assetRequest, final Asset oldAsset) {
         final Asset asset = assetRequest.getAsset();
 
         final List<YearWiseDepreciation> reqYearWiseDepreciations = asset.getYearWiseDepreciation();
@@ -319,7 +289,7 @@ public class AssetRepository {
 
     }
 
-    private void removeFromDBYearWiseDepreciations(final List<YearWiseDepreciation> dbYearWiseDepreciations,
+    public void removeFromDBYearWiseDepreciations(final List<YearWiseDepreciation> dbYearWiseDepreciations,
             final YearWiseDepreciation reqYwd) {
         int i = 0;
         for (final YearWiseDepreciation ywd : dbYearWiseDepreciations)
@@ -330,7 +300,7 @@ public class AssetRepository {
         dbYearWiseDepreciations.remove(i);
     }
 
-    private List<YearWiseDepreciation> getDBYearWiseDepreciations(final Asset oldAsset) {
+    public List<YearWiseDepreciation> getDBYearWiseDepreciations(final Asset oldAsset) {
         final String queryToGetYearWiseDepreciation = AssetQueryBuilder.GETYEARWISEDEPRECIATIONQUERY;
         log.debug("Get Year Wise Depreciation Query :: " + queryToGetYearWiseDepreciation);
         final List<Object> preparedStatementValues = new ArrayList<>();
@@ -343,7 +313,7 @@ public class AssetRepository {
         return dbYearWiseDepreciations;
     }
 
-    private void updateAssetDepreciationRate(final Asset asset, final boolean changeDepRateInAsset) {
+    public void updateAssetDepreciationRate(final Asset asset, final boolean changeDepRateInAsset) {
         String depreciationRateUpdateQuery = null;
         if (changeDepRateInAsset)
             depreciationRateUpdateQuery = AssetQueryBuilder.ASSETINCLUDEDEPRECIATIONRATEUPDATEQUERY;
@@ -360,7 +330,7 @@ public class AssetRepository {
         jdbcTemplate.update(depreciationRateUpdateQuery, preparedStatementValues.toArray());
     }
 
-    private void saveYearWiseDepreciation(final AssetRequest assetRequest,
+    public void saveYearWiseDepreciation(final AssetRequest assetRequest,
             final List<YearWiseDepreciation> yearWiseDepreciations) {
         final RequestInfo requestInfo = assetRequest.getRequestInfo();
         final Asset asset = assetRequest.getAsset();
@@ -390,7 +360,7 @@ public class AssetRepository {
         });
     }
 
-    private void updateYearWiseDepreciation(final AssetRequest assetRequest,
+    public void updateYearWiseDepreciation(final AssetRequest assetRequest,
             final List<YearWiseDepreciation> yearWiseDepreciations) {
         final RequestInfo requestInfo = assetRequest.getRequestInfo();
         final Asset asset = assetRequest.getAsset();
@@ -420,7 +390,7 @@ public class AssetRepository {
         });
     }
 
-    private void removeYearWiseDepreciation(final AssetRequest assetRequest,
+    public void removeYearWiseDepreciation(final AssetRequest assetRequest,
             final List<YearWiseDepreciation> yearWiseDepreciations) {
         final Asset asset = assetRequest.getAsset();
 

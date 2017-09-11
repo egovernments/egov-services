@@ -29,30 +29,29 @@ public class FeeMatrix {
 
 	private Long id = null;
 
-
 	@JsonProperty("tenantId")
-	@Pattern(regexp = ".*[^ ].*",message="{error.tenantId.emptyspaces}")
-	@NotEmpty(message="{error.tenantId.empty}")
-	@Length(min = 4, max = 128, message="{error.tenantId.empty}")
+	@Pattern(regexp = ".*[^ ].*", message = "{error.tenantId.emptyspaces}")
+	@NotEmpty(message = "{error.tenantId.empty}")
+	@Length(min = 4, max = 128, message = "{error.tenantId.empty}")
 	private String tenantId = null;
 
-	@NotNull(message="{error.applicationType.null}")
+	@NotNull(message = "{error.applicationType.null}")
 	private ApplicationTypeEnum applicationType = null;
 
-	@NotNull(message="{error.categoryId.null}")
+	@NotNull(message = "{error.categoryId.null}")
 	private Long categoryId;
 
 	@JsonProperty("businessNature")
-	@NotNull(message="{error.businessNature.null}")
+	@NotNull(message = "{error.businessNature.null}")
 	private BusinessNatureEnum businessNature;
 
 	@JsonProperty("subCategoryId")
-	@NotNull(message="{error.subcategoryId.null}")
+	@NotNull(message = "{error.subcategoryId.null}")
 	private Long subCategoryId = null;
 
-	@Pattern(regexp = ".*[^ ].*",message="{error.financialYear.emptyspaces}")
+	@Pattern(regexp = ".*[^ ].*", message = "{error.financialYear.emptyspaces}")
 	@JsonProperty("financialYear")
-	@NotEmpty(message="{error.financialYear.empty}")
+	@NotEmpty(message = "{error.financialYear.empty}")
 	private String financialYear = null;
 
 	@JsonProperty("effectiveFrom")

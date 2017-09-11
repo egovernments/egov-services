@@ -39,16 +39,10 @@
  */
 package org.egov.workflow.web.contract;
 
-import java.util.List;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
-
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import java.util.List;
 
 @Getter
 @Setter
@@ -57,14 +51,16 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 public class RouterTypeGetReq {
-	private List<Long> id;
+    private List<Long> id;
 
     private List<Long> boundaryid;
 
     private List<Long> serviceid;
-    
+
     private Long position;
 
     @NotNull
     private String tenantId;
+
+    private String hierarchyType;
 }

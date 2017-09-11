@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Grid, Row, Col, DropdownButton} from 'react-bootstrap';
+import {List, ListItem} from 'material-ui/List';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
 import DatePicker from 'material-ui/DatePicker';
@@ -11,25 +12,13 @@ import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../../api/api';
+import styles from '../../../../../styles/material-ui';
 import {translate} from '../../../../common/common';
 
 var _this;
 let searchTextCom = "",
     searchTextBoun = "",
     searchTextPos = "";
-
-const styles = {
-  headerStyle : {
-    fontSize : 19
-  },
-  addBorderBottom:{
-    borderBottom: '1px solid #eee',
-    padding: '10px'
-  },
-  marginStyle:{
-    margin: '15px'
-  }
-};
 
 const getNameById = function(object, id, property = "") {
   if (id == "" || id == null) {
@@ -391,34 +380,34 @@ class createRouter extends Component {
                  {(match.params && match.params.type == "view" ? translate("pgr.lbl.view.router") : match.params && match.params.type == "edit" ? translate("pgr.lbl.edit.router") : translate("pgr.lbl.create.router"))}
                < /div>}/>
                <CardText style={{padding:'8px 16px 0'}}>
-                 <Row style={styles.addBorderBottom}>
-                   <Col xs={6} md={3}>
-                    {translate("pgr.lbl.grievance.type")}
-                   </Col>
-                   <Col xs={6} md={3}>
-                    {this.getComplaintTypeName(routerCreateSet.complaintType)}
-                   </Col>
-                   <Col xs={6} md={3}>
-                     {translate("pgr.lbl.boundarytype")}
-                   </Col>
-                   <Col xs={6} md={3}>
-                    {this.getBoundaryTypeName(routerCreateSet.boundaryType)}
-                   </Col>
-                 </Row>
-                 <Row style={styles.addBorderBottom}>
-                   <Col xs={6} md={3}>
-                    {translate("pgr.lbl.boundary")}
-                   </Col>
-                   <Col xs={6} md={3}>
-                    {this.getBoundaryName(routerCreateSet.boundary)}
-                   </Col>
-                   <Col xs={6} md={3}>
-                    {translate("pgr.lbl.position")}
-                   </Col>
-                   <Col xs={6} md={3}>
-                    {this.getPositionName(routerCreateSet.position)}
-                   </Col>
-                 </Row>
+                 <List>
+                   <Row>
+                     <Col xs={12} sm={6} md={4} lg={3}>
+                       <ListItem
+                         primaryText={translate("pgr.lbl.grievance.type")}
+                         secondaryText={<p style={styles.customColumnStyle}>{this.getComplaintTypeName(routerCreateSet.complaintType)}</p>}
+                       />
+                     </Col>
+                     <Col xs={12} sm={6} md={4} lg={3}>
+                       <ListItem
+                         primaryText={translate("pgr.lbl.boundarytype")}
+                         secondaryText={<p style={styles.customColumnStyle}>{this.getBoundaryTypeName(routerCreateSet.boundaryType)}</p>}
+                       />
+                     </Col>
+                     <Col xs={12} sm={6} md={4} lg={3}>
+                       <ListItem
+                         primaryText={translate("pgr.lbl.boundary")}
+                         secondaryText={<p style={styles.customColumnStyle}>{this.getBoundaryName(routerCreateSet.boundary)}</p>}
+                       />
+                     </Col>
+                     <Col xs={12} sm={6} md={4} lg={3}>
+                       <ListItem
+                         primaryText={translate("pgr.lbl.position")}
+                         secondaryText={<p style={styles.customColumnStyle}>{this.getPositionName(routerCreateSet.position)}</p>}
+                       />
+                     </Col>
+                   </Row>
+                 </List>
                </CardText>
             </Card>
           </Grid>
@@ -436,6 +425,7 @@ class createRouter extends Component {
                      <Col xs={12} sm={6} md={6} lg={6}>
                       <AutoComplete
                           fullWidth={true}
+                          floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                           floatingLabelText={translate("pgr.lbl.grievance.type") + " *"}
                           filter={AutoComplete.caseInsensitiveFilter}
                           dataSource={this.state.complaintSource}
@@ -464,6 +454,7 @@ class createRouter extends Component {
                      <Col xs={12} sm={6} md={6} lg={6}>
                       <SelectField
                         fullWidth={true}
+                        floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                         floatingLabelText={translate("pgr.lbl.boundarytype") + " *"}
                         errorText={fieldErrors.boundaryType || ""}
                         value={(routerCreateSet.boundaryType + "") || ""}
@@ -472,6 +463,7 @@ class createRouter extends Component {
                               loadBoundaries(val);
                               searchTextBoun = "";
                               handleChange(e, "boundaryType", true, "")}}>
+                              <MenuItem value="" primaryText="Select" />
                               {boundaryTypeList.map((item, index) => (
                                         <MenuItem value={item.id} key={index} primaryText={item.name} />
                                     ))}
@@ -480,6 +472,7 @@ class createRouter extends Component {
                      <Col xs={12} sm={6} md={6} lg={6}>
                       <AutoComplete
                           hintText=""
+                          floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                           floatingLabelText={translate("pgr.lbl.boundary") + " *"}
                           fullWidth={true}
                           filter={AutoComplete.caseInsensitiveFilter}
@@ -509,6 +502,7 @@ class createRouter extends Component {
                      <Col xs={12} sm={6} md={6} lg={6}>
                       <AutoComplete
                           fullWidth={true}
+                          floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                           floatingLabelText={translate("pgr.lbl.position") + " *"}
                           filter={AutoComplete.caseInsensitiveFilter}
                           dataSource={this.state.positionSource}

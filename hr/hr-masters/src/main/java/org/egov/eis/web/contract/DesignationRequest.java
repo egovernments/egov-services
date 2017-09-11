@@ -45,6 +45,7 @@ import lombok.*;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.eis.model.Designation;
 
+@Builder
 @AllArgsConstructor
 @EqualsAndHashCode
 @Getter

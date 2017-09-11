@@ -362,6 +362,11 @@ class NewTradeLicense extends Component {
 
     var licenseObj = {}, licenseArray = [];
     licenseObj = {...form};
+
+    //adding optional fields value as undefined
+    licenseObj['adhaarNumber'] = licenseObj['adhaarNumber'] || undefined;
+    licenseObj['propertyAssesmentNo'] = licenseObj['propertyAssesmentNo'] || undefined;
+
     licenseObj['tenantId'] = localStorage.getItem('tenantId');
     licenseObj['applicationType'] = 'NEW';
     licenseObj['tradeCommencementDate'] = dateToEpoch(licenseObj.tradeCommencementDate);
@@ -453,6 +458,7 @@ class NewTradeLicense extends Component {
       //response.responseInfo.status
     }, function(err) {
         setLoadingStatus('hide');
+        console.log('Error Message', err.message);
         _this.handleError(err.message);
     });
   }
@@ -561,7 +567,7 @@ class CustomCard extends Component {
            autocompleteDataSourceConfig = {this.props.autocompleteDataSource[field.code+"Config"]}
            autocompleteKeyUp = {this.props.autoCompleteKeyUp}
            value={this.props.form[field.code] || ""} handleChange={this.props.handleChange}></CustomField>
-      if(field.type === "dropdown")
+      else if(field.type === "dropdown")
          return <CustomField key={index} field={field} error={this.props.fieldErrors[field.code] || ""}
                 dropdownDataSource = {this.props.dropdownDataSource[field.code] || []}
                 nameValue = {field.codeName ? this.props.form[field.codeName] || "" : ""}

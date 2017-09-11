@@ -35,6 +35,15 @@ var requestInfo = {
 
 var tenantId = localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default';
 
+function extractErrorMsg(errorObj, localeCode, descriptionCode){
+   var translatedErrorMsg = common.translate(errorObj[localeCode]);
+   if(errorObj[localeCode] === translatedErrorMsg)
+      return errorObj[descriptionCode] || translatedErrorMsg;
+   else
+     return translatedErrorMsg;
+}
+
+
 module.exports = {
     commonApiPost: (context, queryObject = {}, body = {}, doNotOverride = false, isTimeLong = false, noPageSize = false, authToken="", userInfo = "") => {
         var url = context;
@@ -86,10 +95,10 @@ module.exports = {
                 }else if(response && response.response && response.response.data && response.response.data.error){
                   // let _err = common.translate(response.response.data.error.fields[0].code);
                   let _err = "";
-                  _err=response.response.data.error.message?"a)."+response.response.data.error.message+".":"";
+                  _err=response.response.data.error.message?"a) "+extractErrorMsg(response.response.data.error, "message", "description")+" : ":"";
                   let fields=response.response.data.error.fields;
                   for (var i = 0; i < fields.length; i++) {
-                    _err+=(i+1)+")." +common.translate(fields[i].code) +".";
+                    _err+=(i+1)+") " + extractErrorMsg(fields[i], "code", "message") +".";
                   }
                   throw new Error(_err);
                 }else if(response && response.response && !response.response.data && response.response.status === 400) {

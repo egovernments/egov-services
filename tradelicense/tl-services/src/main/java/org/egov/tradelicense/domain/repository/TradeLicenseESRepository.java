@@ -13,6 +13,7 @@ import org.egov.tl.commons.web.requests.TradeLicenseIndexerRequest;
 import org.egov.tl.commons.web.requests.TradeLicenseRequest;
 import org.egov.tl.commons.web.response.TradeLicenseSearchResponse;
 import org.egov.tradelicense.common.config.PropertiesManager;
+import org.egov.tradelicense.domain.model.LicenseSearch;
 import org.egov.tradelicense.persistence.entity.TradeLicenseSearchEntity;
 import org.egov.tradelicense.persistence.repository.TradeLicenseJdbcRepository;
 import org.egov.tradelicense.web.repository.TenantContractRepository;
@@ -160,9 +161,25 @@ public class TradeLicenseESRepository {
 
 		for (TradeLicenseContract tradeLicenseContract : request.getLicenses()) {
 
-			TradeLicenseSearchEntity tradeLicenseSearchEntity = tradeLicenseJdbcRepository
-					.searchById(request.getRequestInfo(), tradeLicenseContract.getId().longValue());
-
+			
+			/*List<TradeLicenseSearchEntity> tradeLicenseSearchEntity = tradeLicenseJdbcRepository
+					.searchById(request.getRequestInfo(), tradeLicenseContract.getId().longValue());*/
+			
+			LicenseSearch domain = new LicenseSearch();
+			domain.setTenantId(tradeLicenseContract.getTenantId());
+			
+			if(tradeLicenseContract.getId() != null){
+				
+				Integer [] ids = {Integer.valueOf(tradeLicenseContract.getId().toString())};
+				domain.setIds(ids);
+			}
+			
+			List<TradeLicenseSearchEntity> liceseEntities = tradeLicenseJdbcRepository.search(request.getRequestInfo(), domain);
+			TradeLicenseSearchEntity tradeLicenseSearchEntity = new TradeLicenseSearchEntity();
+			
+			if(liceseEntities != null && !liceseEntities.isEmpty() && liceseEntities.size() > 0){
+				tradeLicenseSearchEntity = liceseEntities.get(0);
+			}
 			ModelMapper mapper = new ModelMapper();
 			mapper.getConfiguration().setAmbiguityIgnored(true);
 			TradeLicenseIndexerContract tradeLicense = mapper.map(tradeLicenseSearchEntity.toDomain(),

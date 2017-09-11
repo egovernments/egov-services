@@ -38,7 +38,6 @@ import org.egov.tradelicense.common.domain.exception.PropertyAssesmentNotFoundEx
 import org.egov.tradelicense.domain.model.LicenseFeeDetail;
 import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
-import org.egov.tradelicense.domain.model.TradeLicenseSearch;
 import org.egov.tradelicense.domain.repository.TradeLicenseRepository;
 import org.egov.tradelicense.web.contract.FinancialYearContract;
 import org.egov.tradelicense.web.repository.BoundaryContractRepository;
@@ -132,7 +131,7 @@ public class TradeLicenseServiceValidator {
 
 		for (TradeLicense tradeLicense : tradeLicenses) {
 
-			// checking the valid from date existance
+			// checking the valid from date existence
 			if (tradeLicense.getIsLegacy()) {
 				validateTradeValidFromDate(tradeLicense, requestInfo);
 			}
@@ -780,15 +779,18 @@ public class TradeLicenseServiceValidator {
 			validateTradeUpdateFeeDetails(tradeLicense, requestInfo);
 		}
 
-		TradeLicenseSearch tradeLicenseSearch = tradeLicenseRepository.getByLicenseId(tradeLicense, requestInfo);
+		TradeLicense license = tradeLicenseRepository.findByLicenseId(tradeLicense, requestInfo);
 
-		if (tradeLicenseSearch != null) {
+		if (license != null) {
 
-			tradeLicense.setLicenseNumber(tradeLicenseSearch.getLicenseNumber());
-			tradeLicense.setApplicationType(tradeLicenseSearch.getApplicationType());
-			tradeLicense.setApplicationNumber(tradeLicenseSearch.getApplicationNumber());
-			tradeLicense.setTenantId(tradeLicenseSearch.getTenantId());
-			tradeLicense.setApplicationDate(tradeLicenseSearch.getApplicationDate());
+			if(license.getIsLegacy()){
+				tradeLicense.setLicenseNumber(license.getLicenseNumber());
+				tradeLicense.getApplication().setId(license.getApplication().getId());
+			}
+			tradeLicense.setApplicationType(license.getApplicationType());
+			tradeLicense.setApplicationNumber(license.getApplicationNumber());
+			tradeLicense.setTenantId(license.getTenantId());
+			tradeLicense.setApplicationDate(license.getApplicationDate());
 		}
 	}
 

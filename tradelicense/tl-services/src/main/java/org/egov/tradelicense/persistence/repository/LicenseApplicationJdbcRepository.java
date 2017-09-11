@@ -1,9 +1,12 @@
 package org.egov.tradelicense.persistence.repository;
 
+import java.util.List;
+
 import org.egov.tradelicense.common.persistense.repository.JdbcRepository;
 import org.egov.tradelicense.persistence.entity.LicenseApplicationEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +32,26 @@ public class LicenseApplicationJdbcRepository extends JdbcRepository {
 		super.update(entity);
 
 		return entity;
+	}
+
+	public LicenseApplicationEntity findByLicenseId(Long licenseId) {
+
+		MapSqlParameterSource parameter = new MapSqlParameterSource();
+		StringBuffer searchQuery = new StringBuffer();
+		searchQuery.append("select * from egtl_license_application where ");
+		searchQuery.append(" licenseid = :licenseid ");
+		parameter.addValue("licenseid", licenseId.intValue());
+		List<LicenseApplicationEntity> tradeLicenseApplications = namedParameterJdbcTemplate
+				.query(searchQuery.toString(), parameter, new BeanPropertyRowMapper(LicenseApplicationEntity.class));
+
+		if (tradeLicenseApplications.isEmpty()) {
+
+			return null;
+
+		} else {
+
+			return tradeLicenseApplications.get(0);
+		}
 	}
 
 	public String getSequence(String seqName) {

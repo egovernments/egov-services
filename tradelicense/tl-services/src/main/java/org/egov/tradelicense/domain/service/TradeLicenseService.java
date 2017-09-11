@@ -408,6 +408,7 @@ public class TradeLicenseService {
 		LicenseStatusResponse currentStatus = null;
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
+		if(null != tradeLicense.getApplication().getStatus())
 		System.out.println("TenantId: " + tradeLicense.getTenantId() + "Status: "
 				+ tradeLicense.getApplication().getStatus().toString());
 		if (null != tradeLicense.getApplication().getStatus())
@@ -424,13 +425,13 @@ public class TradeLicenseService {
                         } catch (ParseException e) {
                             log.error("Error while generating demand");
                         }
-			TradeLicenseSearch tradeLicenseSearch = tradeLicenseRepository.getByLicenseId(tradeLicense, requestInfo);
-			System.out.println("Trade License Search: " + tradeLicenseSearch);
-			if (tradeLicenseSearch != null) {
-				final Object[] objValue = new Object[] { tradeLicenseSearch.getApplications().get(0).getId(),
-						demandResponse.getDemands().get(0).getId(), tradeLicenseSearch.getTenantId(),
-						Long.valueOf(tradeLicenseSearch.getAuditDetails().getCreatedBy()), new Date().getTime(),
-						Long.valueOf(tradeLicenseSearch.getAuditDetails().getLastModifiedBy()), new Date().getTime() };
+			TradeLicense license = tradeLicenseRepository.findByLicenseId(tradeLicense, requestInfo);
+			System.out.println("Trade License Search: " + license);
+			if (license != null) {
+				final Object[] objValue = new Object[] { license.getApplication().getId(),
+						demandResponse.getDemands().get(0).getId(), license.getTenantId(),
+						Long.valueOf(license.getAuditDetails().getCreatedBy()), new Date().getTime(),
+						Long.valueOf(license.getAuditDetails().getLastModifiedBy()), new Date().getTime() };
 				tradeLicenseRepository.createLicenseBill(LicenseBillQueryBuilder.insertLicenseBill(), objValue);
 			}
 		}

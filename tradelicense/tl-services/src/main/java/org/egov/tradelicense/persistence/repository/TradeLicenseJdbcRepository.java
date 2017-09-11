@@ -43,6 +43,7 @@ import org.egov.tradelicense.web.response.BoundaryResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -92,21 +93,41 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 		return entity;
 	}
 
-	public TradeLicenseSearchEntity searchById(RequestInfo requestInfo, Long licenseId) {
+	public TradeLicenseEntity findById(RequestInfo requestInfo, Long licenseId) {
 
 		MapSqlParameterSource parameter = new MapSqlParameterSource();
-		StringBuffer searchSql = new StringBuffer();
-		searchSql.append("select * from " + "egtl_license" + " where ");
-		searchSql.append(" id = :id ");
+		StringBuffer searchQuery = new StringBuffer();
+		searchQuery.append("select * from " + "egtl_license" + " where ");
+		searchQuery.append(" id = :id ");
 		parameter.addValue("id", licenseId);
-		List<TradeLicenseSearchEntity> searchEntities = executeSearchQuery(requestInfo, searchSql.toString(),
-				parameter);
-		TradeLicenseSearchEntity tradeLicenseSearchEntity = null;
-		if (searchEntities != null && searchEntities.size() > 0) {
-			tradeLicenseSearchEntity = searchEntities.get(0);
+		List<TradeLicenseEntity> tradeLicenses = namedParameterJdbcTemplate.query(searchQuery.toString(), parameter,
+				new BeanPropertyRowMapper(TradeLicenseEntity.class));
+
+		if (tradeLicenses.isEmpty()) {
+
+			return null;
+
+		} else {
+
+			return tradeLicenses.get(0);
 		}
-		return tradeLicenseSearchEntity;
 	}
+
+//	public TradeLicenseSearchEntity searchById(RequestInfo requestInfo, Long licenseId) {
+//
+//		MapSqlParameterSource parameter = new MapSqlParameterSource();
+//		StringBuffer searchSql = new StringBuffer();
+//		searchSql.append("select * from " + "egtl_license" + " where ");
+//		searchSql.append(" id = :id ");
+//		parameter.addValue("id", licenseId);
+//		List<TradeLicenseSearchEntity> searchEntities = executeSearchQuery(requestInfo, searchSql.toString(),
+//				parameter);
+//		TradeLicenseSearchEntity tradeLicenseSearchEntity = null;
+//		if (searchEntities != null && searchEntities.size() > 0) {
+//			tradeLicenseSearchEntity = searchEntities.get(0);
+//		}
+//		return tradeLicenseSearchEntity;
+//	}
 
 	public List<TradeLicenseSearchEntity> search(RequestInfo requestInfo, LicenseSearch domain) {
 

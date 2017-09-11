@@ -170,7 +170,7 @@ class NewTradeLicense extends Component {
         },
         {
           id:"CENTRAL_GOVERNMENT",
-          name:"CENTER GOVERNMENT"
+          name:"CENTERAL GOVERNMENT"
         },
         {
           id:"ULB",

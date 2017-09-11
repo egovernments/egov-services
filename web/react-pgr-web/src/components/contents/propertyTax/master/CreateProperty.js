@@ -453,7 +453,6 @@ createPropertyTax = () => {
 					}
 				},
 				"vacantLand": vacantLand,
-
 				"gisRefNo": null,
 				"isAuthorised": null,
 				"boundary": {

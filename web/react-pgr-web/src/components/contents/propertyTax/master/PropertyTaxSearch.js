@@ -411,6 +411,12 @@ class PropertyTaxSearch extends Component {
                           : ""} floatingLabelFixed={true}                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
  maxLength={12} value={propertyTaxSearch.aadhaarNumber?propertyTaxSearch.aadhaarNumber:""} onChange={(e) => handleChange(e, "aadhaarNumber", false, /^\d{12}$/g)} hintText={translate('pt.create.groups.ownerDetails.fields.aadhaarNumber')} floatingLabelText={translate('pt.create.groups.ownerDetails.fields.aadhaarNumber')}  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}/>
                       </Col>
+                       <Col xs={12} md={6}>
+                        <TextField errorText={fieldErrors.oldUpicNo
+                          ? fieldErrors.oldUpicNo
+                          : ""} floatingLabelFixed={true}                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+ maxLength={15} value={propertyTaxSearch.oldUpicNo?propertyTaxSearch.oldUpicNo:""} onChange={(e) => handleChange(e, "oldUpicNo", false, /^[a-zA-Z0-9,/<>!@#\$%\^\&*\)\(+=._-]+$/g)} hintText={translate('pt.create.groups.propertyDetails.oldAssessmentNumber')} floatingLabelText={translate('pt.create.groups.propertyDetails.oldAssessmentNumber')}  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}/>
+                      </Col>
                     </Row>
                   </Grid>
                 </CardText>
@@ -427,12 +433,7 @@ class PropertyTaxSearch extends Component {
  value={propertyTaxSearch.ownerName?propertyTaxSearch.ownerName:""} onChange={(e) => handleChange(e, "ownerName", false, "")} hintText={translate('pt.create.groups.ownerDetails.fields.ownerName')} floatingLabelText={translate('pt.create.groups.ownerDetails.fields.ownerName')}   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}/>
                       </Col>
 
-                      <Col xs={12} md={6}>
-                        <TextField errorText={fieldErrors.oldUpicNo
-                          ? fieldErrors.oldUpicNo
-                          : ""} floatingLabelFixed={true}                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
- maxLength={15} value={propertyTaxSearch.oldUpicNo?propertyTaxSearch.oldUpicNo:""} onChange={(e) => handleChange(e, "oldUpicNo", false, /^[a-zA-Z0-9,/<>!@#\$%\^\&*\)\(+=._-]+$/g)} hintText={translate('pt.create.groups.propertyDetails.oldAssessmentNumber')} floatingLabelText={translate('pt.create.groups.propertyDetails.oldAssessmentNumber')}  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}/>
-                      </Col>
+                     
 					  <Col xs={12} md={6}>
 							<SelectField errorText={fieldErrors.usage
 							  ? fieldErrors.usage
@@ -509,23 +510,6 @@ class PropertyTaxSearch extends Component {
                                     };
                                     handleChange(e, "locality", false, "")}} floatingLabelText={translate('pt.search.searchProperty.fields.location')}>
 									{renderOption(this.state.location)}
-                                </SelectField>
-                              </Col>
-							  <Col xs={12} md={6}>
-                                <SelectField errorText={fieldErrors.revenueCircle
-                                  ? fieldErrors.revenueCircle
-                                  : ""}
-								  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
-								  floatingLabelFixed={true}  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-								  value={propertyTaxSearch.revenueCircle?propertyTaxSearch.revenueCircle:""} onChange={(event, index, value) => {
-                                    var e = {
-                                      target: {
-                                        value: value
-                                      }
-                                    };
-                                    handleChange(e, "revenueCircle", false, "")}}                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
- floatingLabelText={translate('pt.create.groups.propertyAddress.fields.revenueCircle')} >
-									{renderOption(this.state.revenueCircle)}
                                 </SelectField>
                               </Col>
                             </Row>

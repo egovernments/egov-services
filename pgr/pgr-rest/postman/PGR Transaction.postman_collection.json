@@ -422,6 +422,54 @@
 				"description": ""
 			},
 			"response": []
+		},
+		{
+			"name": "Service Definition Search",
+			"request": {
+				"url": {
+					"raw": "egov-micro-dev.egovernments.org/pgr/servicedefinition/v1/_search?serviceCode=DOSA&tenantId=default",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"pgr",
+						"servicedefinition",
+						"v1",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "serviceCode",
+							"value": "DOSA",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"RequestInfo\":{\n\t\t\"authToken\":\"765937cd-72b8-49c9-bb6f-a183f1799b60\"\n\t}\n}"
+				},
+				"description": ""
+			},
+			"response": []
 		}
 	]
 }

@@ -537,7 +537,7 @@ var dat = {
                     },
                     {
                         "name": "revenueWardId",
-                        "jsonPath": "licenses[0].revenueWardName",
+                        "jsonPath": "licenses[0].revenueWardId",
                         "label": "tl.licenses.view.groups.revenueWardId",
                         "pattern": "",
                         "type": "singleValueList",

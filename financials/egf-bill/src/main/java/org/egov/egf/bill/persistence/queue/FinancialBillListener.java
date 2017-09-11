@@ -2,12 +2,20 @@ package org.egov.egf.bill.persistence.queue;
 
 import java.util.HashMap;
 
+import org.egov.egf.bill.domain.model.BillDetail;
+import org.egov.egf.bill.domain.model.BillPayeeDetail;
 import org.egov.egf.bill.domain.model.BillRegister;
 import org.egov.egf.bill.domain.model.Checklist;
+import org.egov.egf.bill.domain.service.BillDetailService;
+import org.egov.egf.bill.domain.service.BillPayeeDetailService;
 import org.egov.egf.bill.domain.service.BillRegisterService;
 import org.egov.egf.bill.domain.service.ChecklistService;
+import org.egov.egf.bill.web.contract.BillDetailContract;
+import org.egov.egf.bill.web.contract.BillPayeeDetailContract;
 import org.egov.egf.bill.web.contract.BillRegisterContract;
 import org.egov.egf.bill.web.contract.ChecklistContract;
+import org.egov.egf.bill.web.requests.BillDetailRequest;
+import org.egov.egf.bill.web.requests.BillPayeeDetailRequest;
 import org.egov.egf.bill.web.requests.BillRegisterRequest;
 import org.egov.egf.bill.web.requests.ChecklistRequest;
 import org.modelmapper.ModelMapper;
@@ -33,6 +41,12 @@ public class FinancialBillListener {
 	@Value("${kafka.topics.egf.bill.bill.checklist.completed.key}")
 	private String checklistCompletedKey;
 	
+	@Value("${kafka.topics.egf.bill.bill.checklist.completed.key}")
+	private String billDetailCompletedKey;
+
+	@Value("${kafka.topics.egf.bill.bill.payeedetail.validated.key}")
+	private String billPayeeDetailCompletedKey;
+	
 	@Autowired
 	private ObjectMapper objectMapper;
 	
@@ -43,6 +57,12 @@ public class FinancialBillListener {
 	
 	@Autowired
 	BillRegisterService billRegisterService;
+	
+	@Autowired
+	BillDetailService billDetailService;
+	
+	@Autowired
+	BillPayeeDetailService billPayeeDetailService;
 	
 	@Autowired
 	ChecklistService checklistService;
@@ -113,6 +133,68 @@ public class FinancialBillListener {
 			mastersMap.clear();
 			mastersMap.put("checklist_persisted", request);
 			financialBillRegisterProducer.sendMessage(completedTopic, checklistCompletedKey, mastersMap);
+		}
+		
+		if (mastersMap.get("billdetail_create") != null) {
+
+			final BillDetailRequest request = objectMapperFactory.create().convertValue(mastersMap.get("billdetail_create"),
+					BillDetailRequest.class);
+
+			for (BillDetailContract billDetailContract : request.getBillDetails()) {
+				final BillDetail domain = mapper.map(billDetailContract, BillDetail.class);
+				BillDetail billDetail = billDetailService.save(domain);
+				billDetailContract = mapper.map(billDetail, BillDetailContract.class);
+			}
+
+			mastersMap.clear();
+			mastersMap.put("billdetail_persisted", request);
+			financialBillRegisterProducer.sendMessage(completedTopic, billDetailCompletedKey, mastersMap);
+		}
+		
+		if (mastersMap.get("billdetail_update") != null) {
+
+			final BillDetailRequest request = objectMapperFactory.create().convertValue(mastersMap.get("billdetail_update"),
+					BillDetailRequest.class);
+
+			for (final BillDetailContract billDetailContract : request.getBillDetails()) {
+				final BillDetail domain = mapper.map(billDetailContract, BillDetail.class);
+				billDetailService.update(domain);
+			}
+
+			mastersMap.clear();
+			mastersMap.put("billDetail_persisted", request);
+			financialBillRegisterProducer.sendMessage(completedTopic, billDetailCompletedKey, mastersMap);
+		}
+		
+		if (mastersMap.get("billpayeedetail_create") != null) {
+
+			final BillPayeeDetailRequest request = objectMapperFactory.create().convertValue(mastersMap.get("billpayeedetail_create"),
+					BillPayeeDetailRequest.class);
+
+			for (BillPayeeDetailContract billPayeeDetailContract : request.getBillPayeeDetails()) {
+				final BillPayeeDetail domain = mapper.map(billPayeeDetailContract, BillPayeeDetail.class);
+				BillPayeeDetail billPayeeDetail = billPayeeDetailService.save(domain);
+				billPayeeDetailContract = mapper.map(billPayeeDetail, BillPayeeDetailContract.class);
+			}
+
+			mastersMap.clear();
+			mastersMap.put("billpayeedetail_persisted", request);
+			financialBillRegisterProducer.sendMessage(completedTopic, billPayeeDetailCompletedKey, mastersMap);
+		}
+		
+		if (mastersMap.get("billpayeedetail_update") != null) {
+
+			final BillPayeeDetailRequest request = objectMapperFactory.create().convertValue(mastersMap.get("billpayeedetail_update"),
+					BillPayeeDetailRequest.class);
+
+			for (final BillPayeeDetailContract billPayeeDetailContract : request.getBillPayeeDetails()) {
+				final BillPayeeDetail domain = mapper.map(billPayeeDetailContract, BillPayeeDetail.class);
+				billPayeeDetailService.update(domain);
+			}
+
+			mastersMap.clear();
+			mastersMap.put("billPayeeDetail_persisted", request);
+			financialBillRegisterProducer.sendMessage(completedTopic, billPayeeDetailCompletedKey, mastersMap);
 		}
 	}
 }

@@ -1487,7 +1487,7 @@ if(property == "licenses[0].categoryId"){
 
                                           </td>
                                           <td colSpan={8}>
-                                            Application for Fire NOC
+                                            Application for New Trade License
                                           </td>
 
                                       </tr>

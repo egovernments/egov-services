@@ -690,7 +690,7 @@ class ViewProperty extends Component {
 										
 											<Row>
 											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyFactors.fields.totalFactor')}</div>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyFactors.fields.toiletFactor')}</div>
 													{item.propertyDetail.hasOwnProperty('factors') ? (item.propertyDetail.factors !=null && item.propertyDetail.factors.length !=0 ? (item.propertyDetail.factors[0].value ||  translate('pt.search.searchProperty.fields.na') ) : translate('pt.search.searchProperty.fields.na') ) : translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>

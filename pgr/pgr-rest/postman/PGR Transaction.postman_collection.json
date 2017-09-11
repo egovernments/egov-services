@@ -402,6 +402,26 @@
 				"description": ""
 			},
 			"response": []
+		},
+		{
+			"name": "Complaint OTP",
+			"request": {
+				"url": "egov-micro-dev.egovernments.org/pgr/v1/otp/_send",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"RequestInfo\":{\n\t\t\"authToken\":\"765937cd-72b8-49c9-bb6f-a183f1799b60\"\n\t},\n\t\"mobileNumber\":\"9036623763\",\n\t\"tenantId\":\"default\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
 		}
 	]
 }

@@ -1442,7 +1442,7 @@ if(property == "licenses[0].categoryId"){
                                           </td>
                                           <td style={{textAlign:"center"}}>
                                               <b>Roha Municipal Council</b><br/>
-                                              Building Plan Department
+                                              Trade License Department
                                           </td>
                                           <td style={{textAlign:"right"}}>
                                             <img src="./temp/images/AS.png" height="60" width="60"/>

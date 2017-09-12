@@ -275,18 +275,14 @@ public class RestConnectionService {
         return propResp;
     }
 
-    public List<Long> getPropertyDetailsByParams(RequestInfoWrapper wrapper, String urlToInvoke) {
+	public List<PropertyInfo> getPropertyDetailsByParams(RequestInfoWrapper wrapper, String urlToInvoke) {
 		logger.info("URL to invoke for PropertyDetails : " + urlToInvoke);
-		List<Long> propertyIdentifierList = new ArrayList<>();
 		PropertyResponse propResp = invokePropertyAPI(urlToInvoke, wrapper);
 		if (propResp != null && !propResp.getProperties().isEmpty()) {
 			logger.info("Response obtained from Property Module : " + propResp);
-			for (PropertyInfo pInfo : propResp.getProperties()) {
-				logger.info("Retrieved UPIC Number : " + pInfo.getUpicNumber() + " from Property Module ");
-				propertyIdentifierList.add(Long.valueOf(pInfo.getUpicNumber()));
-			}
+			return propResp.getProperties();
 		}
-		return propertyIdentifierList;
+		return null;
 	}
     	    
 	private PropertyResponse invokePropertyAPI(String url, RequestInfoWrapper wrapper) {

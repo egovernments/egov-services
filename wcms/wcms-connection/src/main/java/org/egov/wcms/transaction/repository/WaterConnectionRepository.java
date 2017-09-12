@@ -49,6 +49,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.wcms.transaction.model.Connection;
 import org.egov.wcms.transaction.model.DocumentOwner;
@@ -57,6 +58,7 @@ import org.egov.wcms.transaction.model.EstimationNotice;
 import org.egov.wcms.transaction.model.Material;
 import org.egov.wcms.transaction.model.Meter;
 import org.egov.wcms.transaction.model.MeterReading;
+import org.egov.wcms.transaction.model.Property;
 import org.egov.wcms.transaction.model.WorkOrderFormat;
 import org.egov.wcms.transaction.model.enums.NewConnectionStatus;
 import org.egov.wcms.transaction.repository.builder.WaterConnectionQueryBuilder;
@@ -65,6 +67,8 @@ import org.egov.wcms.transaction.repository.rowmapper.UpdateWaterConnectionRowMa
 import org.egov.wcms.transaction.repository.rowmapper.WaterConnectionRowMapper;
 import org.egov.wcms.transaction.repository.rowmapper.WaterConnectionRowMapper.ConnectionMeterRowMapper;
 import org.egov.wcms.transaction.util.ConnectionMasterAdapter;
+import org.egov.wcms.transaction.web.contract.PropertyInfo;
+import org.egov.wcms.transaction.web.contract.PropertyOwnerInfo;
 import org.egov.wcms.transaction.web.contract.WaterConnectionGetReq;
 import org.egov.wcms.transaction.web.contract.WaterConnectionReq;
 import org.slf4j.Logger;
@@ -521,7 +525,7 @@ public class WaterConnectionRepository {
     }
 
 
-	public List<Connection> getConnectionDetails(final WaterConnectionGetReq waterConnectionGetReq, RequestInfo requestInfo) {
+	public List<Connection> getConnectionDetails(final WaterConnectionGetReq waterConnectionGetReq, RequestInfo requestInfo, List<PropertyInfo> propertyInfoList) {
 		final List<Object> preparedStatementValues = new ArrayList<>();
 		final String fetchQuery = waterConnectionQueryBuilder.getQuery(waterConnectionGetReq, preparedStatementValues);
 		LOGGER.info("Get Connection Details Query : " + fetchQuery);
@@ -545,6 +549,7 @@ public class WaterConnectionRepository {
 			LOGGER.error("Exception encountered while fetching the Connection list without Property : " + ex);
 		}
 		resolveMasterDetails(connectionList, requestInfo);
+		addPropertyDetails(propertyInfoList, connectionList); 
 		// This condition is added to fetch the Meter Details only in single view case. Not in fetch all case 
 		if(connectionList.size() == 1) { 
 			getConnectionMeterDetails(connectionList);
@@ -553,6 +558,7 @@ public class WaterConnectionRepository {
 	}
 	
 	private void resolveMasterDetails(List<Connection> connectionList, RequestInfo requestInfo) {
+		LOGGER.info("Resolving the names for the IDs");
 		for(Connection conn : connectionList) { 
 			conn.setHscPipeSizeType(ConnectionMasterAdapter.getPipeSizeById(conn.getPipesizeId(), conn.getTenantId(), requestInfo));
 			conn.setSupplyType(ConnectionMasterAdapter.getSupplyTypeById(conn.getSupplyTypeId(), conn.getTenantId(), requestInfo));
@@ -561,6 +567,28 @@ public class WaterConnectionRepository {
 			conn.setStorageReservoir(ConnectionMasterAdapter.getStorageReservoiById(conn.getStorageReservoirId(), conn.getTenantId(), requestInfo));
 			conn.setUsageType(ConnectionMasterAdapter.getUsageTypeById(conn.getUsageTypeId(), conn.getTenantId(), requestInfo));
 			conn.setSubUsageType(ConnectionMasterAdapter.getSubUsageTypeById(conn.getSubUsageTypeId(), conn.getTenantId(), requestInfo));
+		}
+	}
+	
+	private void addPropertyDetails(List<PropertyInfo> propertyInfoList, List<Connection> connectionWithProperty) {
+		LOGGER.info("Adding Property Details Connection List");
+		for(Connection conn : connectionWithProperty) { 
+			for(PropertyInfo pInfo : propertyInfoList) { 
+				if(StringUtils.isNotBlank(conn.getPropertyIdentifier()) && StringUtils.isNotBlank(pInfo.getUpicNumber()) && 
+						conn.getPropertyIdentifier().equals(pInfo.getUpicNumber())) {
+					Property prop = new Property(); 
+					prop.setPropertyidentifier(pInfo.getUpicNumber()); 
+					for(PropertyOwnerInfo owner : pInfo.getOwners()) { 
+						prop.setNameOfApplicant(owner.getName());
+						prop.setAddress(owner.getPermanentAddress());
+						prop.setAdharNumber(owner.getAadhaarNumber());
+						prop.setEmail(owner.getEmailId());
+						prop.setMobileNumber(owner.getMobileNumber());
+						prop.setLocality(owner.getLocale());
+					}
+					conn.setProperty(prop);
+				}
+			}
 		}
 	}
 	

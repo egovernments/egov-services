@@ -65,6 +65,7 @@ import org.egov.wcms.transaction.validator.ConnectionValidator;
 import org.egov.wcms.transaction.validator.RestConnectionService;
 import org.egov.wcms.transaction.web.contract.BoundaryResponse;
 import org.egov.wcms.transaction.web.contract.ProcessInstance;
+import org.egov.wcms.transaction.web.contract.PropertyInfo;
 import org.egov.wcms.transaction.web.contract.PropertyOwnerInfo;
 import org.egov.wcms.transaction.web.contract.PropertyResponse;
 import org.egov.wcms.transaction.web.contract.RequestInfoWrapper;
@@ -464,23 +465,23 @@ public class WaterConnectionService {
 
 	public List<Connection> getConnectionDetails(final WaterConnectionGetReq waterConnectionGetReq, RequestInfo requestInfo) {
 		RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(RequestInfo.builder().ts(111111111L).build()).build();
-		List<Long> propertyIdentifierList = new ArrayList<>();
 		String urlToInvoke = buildUrlToInvoke(waterConnectionGetReq);
+		List<PropertyInfo> propertyInfoList  = new ArrayList<>();
 		if((null != waterConnectionGetReq.getName() && !waterConnectionGetReq.getName().isEmpty()) 
 				||  (null != waterConnectionGetReq.getMobileNumber() && !waterConnectionGetReq.getMobileNumber().isEmpty()) 
 				||  (null != waterConnectionGetReq.getLocality() && !waterConnectionGetReq.getLocality().isEmpty())
 				||  (null != waterConnectionGetReq.getDoorNumber() && !waterConnectionGetReq.getDoorNumber().isEmpty()) 
 				||  (null != waterConnectionGetReq.getRevenueWard() && !waterConnectionGetReq.getRevenueWard().isEmpty())) {
 			try {
-				propertyIdentifierList = restConnectionService.getPropertyDetailsByParams(wrapper, urlToInvoke); 
+				propertyInfoList = restConnectionService.getPropertyDetailsByParams(wrapper, urlToInvoke); 
 			} catch (Exception e) {
 				logger.error("Encountered an Exception while getting the property identifier from Property Module :" + e.getMessage());
 			}
 		}
-		if(null != propertyIdentifierList) { 
-			waterConnectionGetReq.setPropertyIdentifierList(propertyIdentifierList);
+		if(null != propertyInfoList && propertyInfoList.size() > 0) { 
+			waterConnectionGetReq.setPropertyIdentifierList(propertyIdentifierListPreparator(waterConnectionGetReq, propertyInfoList)); 
 		}
-		List<Connection> connectionList = waterConnectionRepository.getConnectionDetails(waterConnectionGetReq, requestInfo);
+		List<Connection> connectionList = waterConnectionRepository.getConnectionDetails(waterConnectionGetReq, requestInfo, propertyInfoList);
 		if(connectionList.size() == 1) { 
 			for(Connection conn : connectionList){ 
 				List<DocumentOwner> documentList = getDocumentForConnection(conn);
@@ -490,16 +491,20 @@ public class WaterConnectionService {
 		return connectionList; 
 	}
 
-    public void propertyIdentifierListPreparator(WaterConnectionGetReq waterConnectionGetReq, List<Long> propertyIdentifierList) {
-        if (null != waterConnectionGetReq.getPropertyIdentifier() && !waterConnectionGetReq.getPropertyIdentifier().isEmpty()) {
-            Long propId = Long.parseLong(waterConnectionGetReq.getPropertyIdentifier());
-            propertyIdentifierList.add(propId);
-        }
+    public List<Long> propertyIdentifierListPreparator(WaterConnectionGetReq waterConnectionGetReq, List<PropertyInfo> propertyInfoList) {
+    	List<Long> propertyIdentifierList = new ArrayList<>(); 
+    	if(null != propertyInfoList && propertyInfoList.size() > 0) { 
+    		for(PropertyInfo pInfo : propertyInfoList) { 
+    			propertyIdentifierList.add(pInfo.getId()); 
+    		}
+    	}
+    	return propertyIdentifierList;
     }
     
     @SuppressWarnings("static-access")
 	public EstimationNotice getEstimationNotice(String topic, String key, WaterConnectionGetReq waterConnectionGetReq, RequestInfo requestInfo) {
-		List<Connection> connectionList = waterConnectionRepository.getConnectionDetails(waterConnectionGetReq, requestInfo);
+    	List<PropertyInfo> propertyInfoList = new ArrayList<>();
+		List<Connection> connectionList = waterConnectionRepository.getConnectionDetails(waterConnectionGetReq, requestInfo, propertyInfoList);
 		EstimationNotice estimationNotice = null;
 		Connection connection = null;
 		for (int i = 0; i < connectionList.size(); i++) {
@@ -548,7 +553,8 @@ public class WaterConnectionService {
     
     public WorkOrderFormat getWorkOrder(String topic, String key, WaterConnectionGetReq waterConnectionGetReq, RequestInfo requestInfo) {
     	// Fetch Connection Details using the Ack Number 
-		List<Connection> connectionList = waterConnectionRepository.getConnectionDetails(waterConnectionGetReq, requestInfo);
+    	List<PropertyInfo> propertyInfoList = new ArrayList<>();
+		List<Connection> connectionList = waterConnectionRepository.getConnectionDetails(waterConnectionGetReq, requestInfo, propertyInfoList);
 		logger.info("Fetched the List of Connection Objects for the Ack Number : " + connectionList.size());
 		WorkOrderFormat workOrder = null;
 		Connection connection = null;

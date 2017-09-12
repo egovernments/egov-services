@@ -19,8 +19,10 @@ import static org.mockito.Mockito.verify;
 @RunWith(MockitoJUnitRunner.class)
 public class AgreementMessageQueueRepositoryTest {
 
-    public static final String UPDATE = "update";
-    public static final String CREATE = "create";
+	public static final String START_WORKFLOW = "START_WORKFLOW";
+	public static final String UPDATE_WORKFLOW = "UPDATE_WORKFLOW";
+	public static final String SAVE = "SAVE";
+	public static final String UPDATE = "UPDATE";
 
     @Mock
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
@@ -29,7 +31,8 @@ public class AgreementMessageQueueRepositoryTest {
 
     @Before
     public void before(){
-        agreementMessageQueueRepository = new AgreementMessageQueueRepository(kafkaTemplate, CREATE, UPDATE);
+		agreementMessageQueueRepository = new AgreementMessageQueueRepository(kafkaTemplate, START_WORKFLOW,
+				UPDATE_WORKFLOW, SAVE, UPDATE);
     }
 
     @Test

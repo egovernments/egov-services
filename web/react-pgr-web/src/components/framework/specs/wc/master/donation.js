@@ -299,7 +299,7 @@ var dat = {
 	"wc.update": {
 		"numCols": 12/3,
 		"searchUrl": "/wcms/masters/donation/_search?id={id}",
-		"url":"/wcms/masters/donation/{Donation.id}/_update",
+		"url":"/wcms/masters/donation/_update",
 		"isResponseArray":true,
 		"tenantIdRequired": true,
 		"useTimestamp": true,
@@ -322,16 +322,16 @@ var dat = {
 						"patternErrMsg": ""
 					},
 					{
-								"name": "CategoryType",
-								"jsonPath": "Donations[0].category",
-								"label": "wc.create.groups.connectionDetails.categoryType",
-								"pattern": "",
-								"type": "singleValueList",
-								"isRequired": false,
-								"isDisabled": false,
-								"url": "/wcms/masters/categorytype/_search?&active=true|$..name|$..name",
-								"requiredErrMsg": "",
-								"patternErrMsg": ""
+						"name": "CategoryType",
+						"jsonPath": "Donations[0].category",
+						"label": "wc.create.groups.connectionDetails.categoryType",
+						"pattern": "",
+						"type": "singleValueList",
+						"isRequired": false,
+						"isDisabled": false,
+						"url": "/wcms/masters/categorytype/_search?&active=true|$..name|$..name",
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
 					},
 					{
 						"name": "UsageType",

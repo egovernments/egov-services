@@ -143,10 +143,10 @@ var dat = {
 	"wc.update": {
 		"numCols": 12/3,
 		"searchUrl": "/wcms/masters/supplytype/_search?id={id}",
-		"url":"/wcms/masters/supplytype/{SupplyTypes.id}/_update",
+		"url":"/wcms/masters/supplytype/_update",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "SupplyTypes",
+		"objectName": "SupplyType",
 		"groups": [
 			{
 				"label": "wc.update.supplyType.title",

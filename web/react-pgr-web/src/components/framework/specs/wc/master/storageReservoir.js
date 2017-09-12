@@ -292,7 +292,7 @@ var dat = {
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"isResponseArray" : true,
-		"objectName": "StorageReservoir[0]",
+		"objectName": "StorageReservoir",
 		"groups": [
 			{
 				"label": "wc.update.storageReservoir.title",

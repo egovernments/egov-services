@@ -144,14 +144,14 @@ var dat = {
 	"wc.update": {
 		"numCols": 12/3,
 		"searchUrl": "/wcms/masters/documenttype/_search?id={id}",
-		"url":"/wcms/masters/documenttype/{DocumentType.code}/_update",
+		"url":"/wcms/masters/documenttype/_update",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "DocumentTypes",
+		"objectName": "DocumentType",
 		"groups": [
 			{
 				"label": "wc.update.DocumentTypes.title",
-				"name": "DocumentTypes",
+				"name": "UpdateDocumentTypes",
 				"fields": [
 						{
 							"name": "name",

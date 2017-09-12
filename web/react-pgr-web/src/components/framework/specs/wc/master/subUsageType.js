@@ -209,7 +209,7 @@ var dat = {
 				"fields": [
 						{
 							"name": "UsageType",
-							"jsonPath": "UsageTypes[0].parent",
+							"jsonPath": "UsageType[0].parent",
 							"label": "wc.create.UsageType",
 							"pattern": "",
 							"type": "singleValueList",
@@ -222,7 +222,7 @@ var dat = {
 						},
 						{
 							"name": "name",
-							"jsonPath": "UsageTypes[0].name",
+							"jsonPath": "UsageType[0].name",
 							"label": "wc.create.UsageType",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
@@ -233,7 +233,7 @@ var dat = {
 						},
 						{
 							"name": "description",
-							"jsonPath": "UsageTypes[0].description",
+							"jsonPath": "UsageType[0].description",
 							"label": "wc.create.description",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
 							"type": "text",
@@ -244,7 +244,7 @@ var dat = {
 						},
 						{
 							"name": "Active",
-							"jsonPath": "UsageTypes[0].active",
+							"jsonPath": "UsageType[0].active",
 							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",

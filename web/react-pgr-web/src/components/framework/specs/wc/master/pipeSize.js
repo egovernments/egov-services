@@ -185,7 +185,7 @@ var dat = {
 	"wc.update": {
 		"numCols": 12/3,
 		"searchUrl": "/wcms/masters/pipesize/_search?id={id}",
-		"url":"/wcms/masters/pipesize/{PipeSize.code}/_update",
+		"url":"/wcms/masters/pipesize/_update",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "PipeSize",

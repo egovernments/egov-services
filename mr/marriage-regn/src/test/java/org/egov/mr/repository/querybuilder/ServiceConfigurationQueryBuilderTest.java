@@ -63,11 +63,10 @@ public class ServiceConfigurationQueryBuilderTest {
 	public void testSelectQueryWithName() {
 		String expectedQuery = "SELECT ck.keyName as keyName, cv.value as value FROM egmr_serviceconfiguration ck JOIN egmr_serviceconfigurationvalues cv ON ck.id = cv.keyId WHERE ck.tenantId=? AND keyName IN ('serviceConfigValues') ORDER BY ck.keyName ASC,cv.effectivefrom DESC;";
 
-		List<String> namesList = new ArrayList<>();
-		namesList.add("serviceConfigValues");
+	
 
 		serviceConfigurationSearchCriteria = ServiceConfigurationSearchCriteria.builder().tenantId("ap.kurnool")
-				.names(namesList).build();
+				.name("serviceConfigValues").build();
 		List<Object> preparedStatementValues = new ArrayList<>();
 		String actualQuery = serviceConfigurationQueryBuilder.getSelectQuery(serviceConfigurationSearchCriteria,
 				preparedStatementValues);
@@ -85,7 +84,7 @@ public class ServiceConfigurationQueryBuilderTest {
 		List<String> namesList = new ArrayList<>();
 		namesList.add("serviceConfigValues");
 		serviceConfigurationSearchCriteria = ServiceConfigurationSearchCriteria.builder().tenantId("ap.kurnool")
-				.names(namesList).build();
+				.name("serviceConfigValues").build();
 		List<Object> preparedStatementValues = new ArrayList<>();
 		String actualQuery = serviceConfigurationQueryBuilder.getSelectQuery(serviceConfigurationSearchCriteria,
 				preparedStatementValues);
@@ -157,7 +156,7 @@ public class ServiceConfigurationQueryBuilderTest {
 		List<String> namesList = new ArrayList<>();
 		namesList.add("serviceConfigValues");
 		serviceConfigurationSearchCriteria = ServiceConfigurationSearchCriteria.builder().ids(idsList)
-				.tenantId("ap.kurnool").effectiveFrom(Long.valueOf("247862546564")).names(namesList).build();
+				.tenantId("ap.kurnool").effectiveFrom(Long.valueOf("247862546564")).name("serviceConfigValues").build();
 		List<Object> preparedStatementValues = new ArrayList<>();
 		String actualQuery = serviceConfigurationQueryBuilder.getSelectQuery(serviceConfigurationSearchCriteria,
 				preparedStatementValues);

@@ -34,7 +34,8 @@ class CertificateView extends Component {
 			open: false,
 			ServiceRequest: {},
 			statuses: ["APPROVED", "SANCTIONED"],
-			serviceCodes: ["TL_NEWCONN", "WATER_NEWCONN", "BPA_FIRE_NOC"]
+			serviceCodes: ["TL_NEWCONN", "WATER_NEWCONN", "BPA_FIRE_NOC"],
+			documents: []
 		};
 	}
 
@@ -46,7 +47,8 @@ class CertificateView extends Component {
 			self.props.setLoadingStatus('hide');
 			if(res && res.serviceReq && res.serviceReq.length && self.state.serviceCodes.indexOf(res.serviceReq[0].serviceCode) > -1) {
 				self.setState({
-					ServiceRequest: res.serviceReq[0]
+					ServiceRequest: res.serviceReq[0],
+					documents: res.documents || []
 				})
 			} else {
 				self.setState({
@@ -67,7 +69,7 @@ class CertificateView extends Component {
 
 	render () {
 		let self = this;
-		let { open, ServiceRequest } = this.state;
+		let { open, ServiceRequest, documents } = this.state;
 		let { handleClose } = this;
 
 		return (
@@ -122,10 +124,9 @@ class CertificateView extends Component {
 	                          </thead>
 	                          <tbody>
 	                            {
-	                              ServiceRequest && 
-	                              ServiceRequest.documents && 
-	                              ServiceRequest.documents.length ? 
-	                              ServiceRequest.documents.map(function(v, i) {
+	                              documents && 
+	                              documents.length ? 
+	                              documents.map(function(v, i) {
 	                              	return (
 		                                  <tr key={i}>
 		                                    <td>{v.from}</td>
@@ -134,7 +135,7 @@ class CertificateView extends Component {
 		                                    <td><a target="_blank" href={"/filestore/v1/files/id?tenantId=" + localStorage.getItem("tenantId") + "&fileStoreId=" + v.filePath}>Download</a></td>
 		                                  </tr>
 		                                )
-	                              }) : <tr><td style={{"textAlign": "center"}} colSpan={self.props.showRemarks ? 5 : 4}>No documents uploaded!</td></tr>
+	                              }) : <tr><td style={{"textAlign": "center"}} colSpan={4}>No documents uploaded!</td></tr>
 	                            }
 	                          </tbody>
 	                      </Table>

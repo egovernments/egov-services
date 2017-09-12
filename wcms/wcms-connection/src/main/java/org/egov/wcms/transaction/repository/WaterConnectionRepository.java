@@ -347,7 +347,7 @@ public class WaterConnectionRepository {
 					PreparedStatement statement = connection.prepareStatement(persistConnectionLocationQuery,
 							returnValColumn);
 					statement.setLong(1, conn.getConnectionLocation().getRevenueBoundary().getId());
-					statement.setLong(2, (conn.getConnectionLocation().getLocationBoundary()!=null
+					statement.setLong(2, (conn.getConnectionLocation().getLocationBoundary()!=null && null != conn.getConnectionLocation().getLocationBoundary().getId()
 					        ?conn.getConnectionLocation().getLocationBoundary().getId():0l)); 
 					statement.setLong(3, (conn.getConnectionLocation().getAdminBoundary()!=null ?
 					        conn.getConnectionLocation().getAdminBoundary().getId():0l));

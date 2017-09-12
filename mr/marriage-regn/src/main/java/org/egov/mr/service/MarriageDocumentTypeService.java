@@ -62,6 +62,12 @@ public class MarriageDocumentTypeService {
 		for (int index = 0; index < size; index++) {
 			marriageDocumentTypes.get(index).setId(ids.get(index));
 		}
+
+		List<Long> codes = sequenceIdGenService.codeSeqGen(size, "seq_marriage_document_type_code");
+		for (int index = 0; index < size; index++) {
+			marriageDocumentTypes.get(index).setCode(codes.get(index).toString());
+		}
+
 		log.info("Service after IDs set:: MarriageDocTypeRequest: " + marriageDocTypeRequest);
 		kafkaTemplate.send(propertiesManager.getCreateMarriageDocumentTypeTopicName(), marriageDocTypeRequest);
 		return getSuccessResponse(marriageDocTypeRequest.getMarriageDocTypes(), requestInfo);
@@ -95,6 +101,7 @@ public class MarriageDocumentTypeService {
 			createAsync(mdtReq);
 		}
 		log.info("Service after IDs set:: MarriageDocTypeRequest: " + marriageDocTypeRequest);
+		System.err.println("marriageDocumentTypeSERVICE ENTERing KAFKA: ");
 		kafkaTemplate.send(propertiesManager.getUpdateMarriageDocumentTypeTopicName(), marriageDocTypeRequest);
 		return getSuccessResponse(marriageDocTypeRequest.getMarriageDocTypes(), requestInfo);
 	}
@@ -104,6 +111,7 @@ public class MarriageDocumentTypeService {
 	 * @param marriageDocTypeRequest
 	 */
 	public void create(MarriageDocTypeRequest marriageDocTypeRequest) {
+		System.err.println("inside marriageDocumentTypeSERVICE: ");
 		marriageDocumentTypeRepository.create(marriageDocTypeRequest.getMarriageDocTypes());
 	}
 
@@ -124,10 +132,10 @@ public class MarriageDocumentTypeService {
 		 */
 		ResponseInfo responseInfo = new ResponseInfo();
 		responseInfo.setApiId(requestInfo.getApiId());
-		//responseInfo.setKey(requestInfo.getKey());
+		// responseInfo.setKey(requestInfo.getKey());
 		responseInfo.setResMsgId(requestInfo.getMsgId());
 		responseInfo.setStatus(HttpStatus.OK.toString());
-		//responseInfo.setTenantId(requestInfo.getTenantId());
+		// responseInfo.setTenantId(requestInfo.getTenantId());
 		responseInfo.setTs(requestInfo.getTs());
 		responseInfo.setVer(requestInfo.getVer());
 

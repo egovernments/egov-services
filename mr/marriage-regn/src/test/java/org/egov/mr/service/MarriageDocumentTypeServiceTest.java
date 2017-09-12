@@ -88,6 +88,7 @@ public class MarriageDocumentTypeServiceTest {
 		marriageDocTypeRequest.setRequestInfo(requestInfo);
 
 		when(genService.idSeqGen(Matchers.anyInt(), Matchers.anyString())).thenReturn(getIds());
+		when(genService.codeSeqGen(Matchers.anyInt(), Matchers.anyString())).thenReturn(getCodes());
 		when(prosManager.getCreateMarriageDocumentTypeTopicName())
 				.thenReturn("kafka.topics.create.marriagedocumenttype");
 		when(_kafkaTemplate.send(Matchers.anyString(), Matchers.anyObject())).thenReturn(new SendResult<>(null, null));
@@ -95,6 +96,8 @@ public class MarriageDocumentTypeServiceTest {
 		// resEntity.getBody()
 		ResponseEntity<?> resEntity = marriageDocumentTypeService.createAsync(marriageDocTypeRequest);
 		assertEquals(Long.valueOf("200").toString(), resEntity.getStatusCode().toString());
+		System.err.println(mdtResponse);
+		System.err.println(resEntity.getBody());
 		assertEquals(mdtResponse, resEntity.getBody());
 
 	}
@@ -153,6 +156,7 @@ public class MarriageDocumentTypeServiceTest {
 
 		/* createAsync */
 		when(genService.idSeqGen(Matchers.anyInt(), Matchers.anyString())).thenReturn(getIds());
+		when(genService.codeSeqGen(Matchers.anyInt(), Matchers.anyString())).thenReturn(getCodes());
 		when(prosManager.getCreateMarriageDocumentTypeTopicName())
 				.thenReturn("kafka.topics.create.marriagedocumenttype");
 		when(_kafkaTemplate.send(Matchers.anyString(), Matchers.anyObject())).thenReturn(new SendResult<>(null, null));
@@ -202,10 +206,10 @@ public class MarriageDocumentTypeServiceTest {
 		List<MarriageDocumentType> mdts = new ArrayList<>();
 		mdts.add(MarriageDocumentType.builder().name("ADDRESSPROOF").tenantId("ap.kurnool")
 				.applicationType(ApplicationType.REGISTRATION).isActive(true).isIndividual(true).isRequired(true)
-				.code("00015").proof(DocumentProof.ADDRESS_PROOF).build());
+				.code("1").proof(DocumentProof.ADDRESS_PROOF).build());
 		mdts.add(MarriageDocumentType.builder().name("ADDRESSPROOF").tenantId("ap.kurnool")
 				.applicationType(ApplicationType.REISSUE).isActive(true).isIndividual(true).isRequired(true)
-				.code("00015").proof(DocumentProof.ADDRESS_PROOF).build());
+				.code("2").proof(DocumentProof.ADDRESS_PROOF).build());
 		return mdts;
 	}
 
@@ -228,6 +232,17 @@ public class MarriageDocumentTypeServiceTest {
 	}
 
 	private List<Long> getIds() {
+
+		List<Long> ids = new ArrayList<>();
+
+		ids.add(Long.valueOf("1"));
+		ids.add(Long.valueOf("2"));
+		ids.add(Long.valueOf("73"));
+
+		return ids;
+	}
+
+	private List<Long> getCodes() {
 
 		List<Long> ids = new ArrayList<>();
 

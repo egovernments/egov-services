@@ -36,6 +36,8 @@ public class EmployeeSearchURLHelper {
         if (compensatoryLeaveSearchRequest.getEmployeeType() != null)
             searchURL.append("&type=" + compensatoryLeaveSearchRequest.getEmployeeType());
 
+        searchURL.append("&pageSize=" + applicationProperties.hrLeaveSearchPageSizeMax());
+
         return searchURL.toString();
     }
 

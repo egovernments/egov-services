@@ -10,7 +10,7 @@
 		{
 			"id": 1,
 			"name": "ADDRESSPROOF",
-			"code": "00015",
+			"code": 1,
 			"proof": "ADDRESS_PROOF",
 			"applicationType": "REGISTRATION",
 			"isActive": true,
@@ -21,7 +21,7 @@
 		{
 			"id": 2,
 			"name": "ADDRESSPROOF",
-			"code": "00015",
+			"code": 2,
 			"proof": "ADDRESS_PROOF",
 			"applicationType": "REISSUE",
 			"isActive": true,

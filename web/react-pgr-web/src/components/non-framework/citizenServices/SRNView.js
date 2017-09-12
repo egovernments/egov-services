@@ -117,7 +117,6 @@ class CertificateView extends Component {
 	                              <th>By</th>
 	                              <th>Date</th>
 	                              <th>File Name</th>
-	                              <th>Remarks</th>
 	                              <th>Action</th>
 	                            </tr>
 	                          </thead>
@@ -132,7 +131,6 @@ class CertificateView extends Component {
 		                                    <td>{v.from}</td>
 		                                    <td>{getFullDate(v.timeStamp)}</td>
 		                                    <td>{v.name}</td>
-		                                    <td>{v.remarks}</td>
 		                                    <td><a target="_blank" href={"/filestore/v1/files/id?tenantId=" + localStorage.getItem("tenantId") + "&fileStoreId=" + v.filePath}>Download</a></td>
 		                                  </tr>
 		                                )

@@ -117,22 +117,22 @@ class CertificateView extends Component {
 	                              <th>By</th>
 	                              <th>Date</th>
 	                              <th>File Name</th>
-	                              {self.props.showRemarks ? <th>Remarks</th> : ""}
+	                              <th>Remarks</th>
 	                              <th>Action</th>
 	                            </tr>
 	                          </thead>
 	                          <tbody>
 	                            {
-	                              self.props.ServiceRequest && 
-	                              self.props.ServiceRequest.documents && 
-	                              self.props.ServiceRequest.documents.length ? 
-	                              self.props.ServiceRequest.documents.map(function(v, i) {
+	                              ServiceRequest && 
+	                              ServiceRequest.documents && 
+	                              ServiceRequest.documents.length ? 
+	                              ServiceRequest.documents.map(function(v, i) {
 	                              	return (
 		                                  <tr key={i}>
 		                                    <td>{v.from + (v.from == JSON.parse(localStorage.userRequest).userName ? " (You)" : "")}</td>
-		                                    <td>{self.props.getFullDate(v.timeStamp)}</td>
+		                                    <td>{getFullDate(v.timeStamp)}</td>
 		                                    <td>{v.name}</td>
-		                                    {self.props.showRemarks ? <td>{v.remarks}</td> : ""}
+		                                    <td>{v.remarks}</td>
 		                                    <td><a target="_blank" href={"/filestore/v1/files/id?tenantId=" + localStorage.getItem("tenantId") + "&fileStoreId=" + v.filePath}>Download</a></td>
 		                                  </tr>
 		                                )

@@ -38,7 +38,7 @@ class LegacyLicenseCreate extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      validityYear: "",
+      validityYear: ""
     }
 
     this.handleOpen = () => {
@@ -693,6 +693,7 @@ this.setState({openLicense: false});
 //***Start Fee Details Calculations***
 calculateFeeDetails = (licenseValidFromDate, validityYear) => {
   var getStartYear = new Date(Number(licenseValidFromDate)).getFullYear();
+  var getStartMonth = new Date(Number(licenseValidFromDate)).getMonth();
   var curDate = new Date();
   var currentDate = curDate.getFullYear();
   var fixedDate = curDate.getFullYear();
@@ -712,7 +713,9 @@ calculateFeeDetails = (licenseValidFromDate, validityYear) => {
           {
 
              if (i > (fixedDate - 6) ) {
+               console.log(getStartMonth);
              let feeDetails = {"financialYear": i + "-" + (i+1).toString().slice(-2), "amount": "", "paid": false};
+
              FeeDetails.push(feeDetails)
              console.log(i);
            }
@@ -729,6 +732,9 @@ calculateFeeDetails = (licenseValidFromDate, validityYear) => {
          console.log(i);
         }
       }
+     }
+     if (FeeDetails.length==1) {
+       FeeDetails[0].paid=true;
      }
      self.handleChange({target:{value:FeeDetails}},"licenses[0].feeDetails");
 }
@@ -1204,7 +1210,7 @@ if(property == "licenses[0].categoryId"){
                     <tr key={index}>
                       <td>{item.financialYear}</td>
                       <td><TextField inputStyle={{"textAlign": "right"}} value={getVal("licenses[0].feeDetails["+index+"].amount")} errorText={fieldErrors["licenses[0].feeDetails["+index+"].amount"]} onChange= {(e) => handleChange (e, "licenses[0].feeDetails["+index+"].amount", true, "^[0-9]{1,10}(\\.[0-9]{0,2})?$","","Number max 10 degits with 2 decimal")}/></td>
-                      <td><Checkbox checked={getVal("licenses[0].feeDetails["+index+"].paid")}   onCheck = {(obj, bol) => handleChange ({target:{value:bol}}, "licenses[0].feeDetails["+index+"].paid", true, "") }/></td>
+                      <td><Checkbox disabled={formData.licenses[0].feeDetails.length==1} checked={getVal("licenses[0].feeDetails["+index+"].paid")}  onCheck = {(obj, bol) => handleChange ({target:{value:bol}}, "licenses[0].feeDetails["+index+"].paid", true, "") }/></td>
                     </tr>
                   )
                 })}
@@ -1256,6 +1262,7 @@ if(property == "licenses[0].categoryId"){
     );
   }
 }
+
 
 const mapStateToProps = state => ({
   metaData:state.framework.metaData,

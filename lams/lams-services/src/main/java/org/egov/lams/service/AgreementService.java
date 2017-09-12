@@ -23,6 +23,7 @@ import org.egov.lams.model.WorkflowDetails;
 import org.egov.lams.model.enums.Action;
 import org.egov.lams.model.enums.Source;
 import org.egov.lams.model.enums.Status;
+import org.egov.lams.repository.AgreementMessageQueueRepository;
 import org.egov.lams.repository.AgreementRepository;
 import org.egov.lams.repository.AllotteeRepository;
 import org.egov.lams.repository.DemandRepository;
@@ -50,6 +51,7 @@ public class AgreementService {
 	public static final String WF_ACTION_APPROVE = "Approve";
 	public static final String WF_ACTION_REJECT = "Reject";
 	public static final String WF_ACTION_CANCEL = "Cancel";
+	public static final String CREATE = "CREATE";
 
 	@Autowired
 	private AgreementRepository agreementRepository;
@@ -77,6 +79,9 @@ public class AgreementService {
 
 	@Autowired
 	private AllotteeRepository allotteeRepository;
+
+	@Autowired
+	private AgreementMessageQueueRepository agreementMessageQueueRepository;
 
 	/**
 	 * service call to single agreement based on acknowledgementNumber
@@ -156,14 +161,12 @@ public class AgreementService {
 		Agreement agreement = agreementRequest.getAgreement();
 		logger.info("create Eviction of agreement::" + agreement);
 		setAuditDetails(agreement, agreementRequest.getRequestInfo());
-
-		String kafkaTopic = propertiesManager.getStartWorkflowTopic();
 		agreement.setStatus(Status.WORKFLOW);
 		setInitiatorPosition(agreementRequest);
 		agreement.setAcknowledgementNumber(acknowledgementNumberService.generateAcknowledgeNumber());
 		agreement.setId(agreementRepository.getAgreementID());
+		agreementMessageQueueRepository.save(agreementRequest, CREATE);
 
-		sendAgreementToKafka(kafkaTopic, agreementRequest);
 		return agreement;
 	}
 

@@ -1028,7 +1028,7 @@ class Report extends Component {
        "email": "email",
        "deviceId": "deviceId",
        "accountId": "accountId",
-       "firstName": "",
+       "firstName": JSON.parse(localStorage.userRequest).name || "",
        "lastName": "firstName",
        "phone": "phone",
        "description": "",
@@ -1073,7 +1073,8 @@ class Report extends Component {
               from: JSON.parse(localStorage.userRequest).userName,
               timeStamp: new Date().getTime(),
               filePath: res.files[0].fileStoreId,
-              name: documents[i].name
+              name: documents[i].name,
+              uploadedbyrole: "CITIZEN"
             })
             counter--;
             if(counter == 0 && breakOut == 0) {

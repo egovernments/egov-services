@@ -159,8 +159,6 @@ public class LeaveOpeningBalanceService {
                 errorMsg = "CalendarYear " + leaveOpeningBalance.getCalendarYear() + " does not exist in the system";
             }
             if (employeeMap.get(leaveOpeningBalance.getEmployee()) == null) {
-                LOGGER.info("EMPLOYEE ID:", leaveOpeningBalance.getEmployee());
-                LOGGER.info("EMPLOYEE MAP:", employeeMap);
                 errorMsg = errorMsg + " Employee with id " + leaveOpeningBalance.getEmployee()
                         + " does not exist in the system";
             } else {

@@ -300,6 +300,14 @@ class NewTradeLicense extends Component {
 
     }
     else{
+
+      //date field slash append functionality
+      if(field.type == 'date'){
+        var oldValue = this.props.form[field.code] || "";
+        if((value.length === 2 || value.length === 5) && value.length > oldValue.length)
+          value=value+"/";
+      }
+
       this.props.handleChange(value, field.code, field.isMandatory || false, field.pattern || "", field.errorMsg || "");
       if(field.code === 'isPropertyOwner'){
         this.setState({isPropertyOwner:!value});
@@ -400,7 +408,7 @@ class NewTradeLicense extends Component {
 
     var supportDocuments = [];
 
-    if(files.length > 0){
+    if(files && files.length > 0){
       files.map((field, index) => {
         let docs = {};
         let formData = new FormData();

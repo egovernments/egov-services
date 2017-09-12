@@ -571,7 +571,8 @@ class Report extends Component {
         from: JSON.parse(localStorage.userRequest).userName,
         to: "",
         text: this.state.comments,
-        timeStamp: new Date().getTime()
+        timeStamp: new Date().getTime(),
+        uploadedbyrole: localStorage.type
       })
     }
 

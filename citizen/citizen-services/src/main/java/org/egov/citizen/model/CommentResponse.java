@@ -19,6 +19,7 @@ public class CommentResponse {
 	private Long docTimeStamp;
 	private String filePath;
 	private Long documentcd;
+	private String uploadedbyrole;
 
 	
 

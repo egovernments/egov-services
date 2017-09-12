@@ -373,13 +373,13 @@ class Login extends Component {
     }
    }
 
-   searchGrievance = (e) => {
-     /*let {setRoute, setHome} = this.props;
+   searchSRN = (e) => {
+     let {setRoute, setHome} = this.props;
      if((this.state.srn).trim()) {
-        setRoute("/pgr/viewGrievance/"+(this.state.srn).trim());
+        setRoute("/service/request/view/"+ encodeURIComponent((this.state.srn).trim()));
         setHome(true);
-     }*/
-     this.props.toggleSnackbarAndSetText(true, "Feature Coming Soon. . .");
+     }
+     //this.props.toggleSnackbarAndSetText(true, "Feature Coming Soon. . .");
    }
 
    validateOTP() {
@@ -597,7 +597,7 @@ class Login extends Component {
         handleClose,
         handleStateChange,
         sendRecovery,
-        searchGrievance,
+        searchSRN,
         validateOTP,
         generatePassword,
         handleSignUpModalOpen,
@@ -767,7 +767,7 @@ class Login extends Component {
                             value={srn}
                             onChange={(e) => {handleStateChange(e, "srn")}}
                           />
-                          <RaisedButton label={translate('core.lbl.search')} onClick={(e)=>{searchGrievance(e)}} secondary={true} className="searchButton"/>
+                          <RaisedButton label={translate('core.lbl.search')} onClick={(e)=>{searchSRN(e)}} secondary={true} className="searchButton"/>
                         </div>
                       </Col>
                       {/*<Col xs={12} md={12} style={styles.buttonTopMargin}>

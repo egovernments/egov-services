@@ -279,6 +279,7 @@ class Report extends Component {
 
       for(var i=0; i<documents.length; i++) {
         documents[i].from = JSON.parse(localStorage.userRequest).userName;
+        documents[i].uploadedbyrole = "CITIZEN";
       }
   }
 
@@ -1122,7 +1123,7 @@ class Report extends Component {
        "email": "email",
        "deviceId": "deviceId",
        "accountId": "accountId",
-       "firstName": "",
+       "firstName": JSON.parse(localStorage.userRequest).name || "",
        "lastName": "firstName",
        "phone": "phone",
        "description": "",

@@ -262,6 +262,7 @@ this.setState({openLicense: false});
 
       for(var i=0; i<documents.length; i++) {
         documents[i].from = JSON.parse(localStorage.userRequest).userName;
+        documents[i].uploadedbyrole = "CITIZEN";
       }
   }
 
@@ -339,7 +340,6 @@ this.setState({openLicense: false});
       var _date = _val.split("-");
       return new Date(_date[0], (Number(_date[1])-1), _date[2]);
     }
-
     return typeof _val != "undefined" ? _val : "";
   }
 
@@ -1163,7 +1163,7 @@ if(property == "licenses[0].categoryId"){
        "email": "email",
        "deviceId": "deviceId",
        "accountId": "accountId",
-       "firstName": "",
+       "firstName": JSON.parse(localStorage.userRequest).name || "",
        "lastName": "firstName",
        "phone": "phone",
        "description": "",
@@ -1539,6 +1539,7 @@ if(property == "licenses[0].categoryId"){
                                       </tr>
                                   </tbody>
                               </Table>
+                              <span style={{textAlign:"right"}}>{ translate("This is computer generated receipt no authorised signature required") }</span>
                         </CardText>
                       </Card> : ""}
                       <br/>

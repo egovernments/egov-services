@@ -427,6 +427,22 @@ var dat = {
         "label": "tl.view.groups.title",
         "groups": [
             {
+                "label": "Service Details",
+                "name": "srndetails",
+                "fields": [{
+                        "name": "serviceRequestId",
+                        "jsonPath": "licenses[0].serviceRequestId",
+                        "label": "Service Request Number",
+                        "pattern": "",
+                        "type": "text",
+                        "isRequired": false,
+                        "isDisabled": false,
+                        "requiredErrMsg": "",
+                        "patternErrMsg": "Aadhar Number must be of 12 digits"
+                    }
+                ]
+            },
+            {
                 "label": "tl.view.groups.tradeOwnerDetails",
                 "name": "viewCategoryType",
                 "fields": [{
@@ -704,7 +720,8 @@ var dat = {
                         "isDisabled": false,
                         "requiredErrMsg": "",
                         "patternErrMsg": "Enter in dd/mm/yyyy Format",
-                        "maxLength": "10"
+                        "maxLength": "10",
+                        "isHidden": true
                     }
                 ]
             }

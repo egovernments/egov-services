@@ -179,8 +179,7 @@ public class WorkFlowMatrixService {
 			final Criteria wfMatrixCriteria) {
 		final List<WorkFlowMatrix> objectTypeList = wfMatrixCriteria.list();
 
-		if(objectTypeList.isEmpty())
-		    throw new  RuntimeException("Workflow not configured  ");
+		
 		if (objectTypeList.isEmpty()) {
 			final Criteria defaulfWfMatrixCriteria = commonWorkFlowMatrixCriteria(type, additionalRule, currentState,
 					pendingActions);
@@ -189,7 +188,10 @@ public class WorkFlowMatrixService {
 				defaulfWfMatrixCriteria.add(Restrictions.ilike("currentDesignation", designation));
 			final List<WorkFlowMatrix> defaultObjectTypeList = defaulfWfMatrixCriteria.list();
 			if (defaultObjectTypeList.isEmpty())
-				return null;
+			{
+			Log.error("Workflow not configured  ");
+			return null;
+			}
 			else
 				return defaultObjectTypeList.get(0);
 		} else {
@@ -205,11 +207,16 @@ public class WorkFlowMatrixService {
 			final String pendingActions, String tenantId) {
 		final Criteria wfMatrixCriteria = commonWorkFlowMatrixCriteria(type, additionalRule, currentState,
 				pendingActions);
+		
 		if (department != null && !"".equals(department.trim()))
 			wfMatrixCriteria.add(Restrictions.eq("department", department));
 
+		
 		if (tenantId != null) {
 			wfMatrixCriteria.add(Restrictions.eq("tenantId", tenantId));
+		}else
+		{
+		    Log.warn("tenantId is not passed. Result may not be correct");
 		}
 
 		// Added restriction for amount rule

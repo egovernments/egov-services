@@ -158,7 +158,7 @@ public class TradeLicenseContract {
 	@JsonProperty("tradeCommencementDate")
 	private Long tradeCommencementDate;
 
-	@NotNull(message = "{error.license.licensevalidfrom}")
+	
 	@JsonProperty("licenseValidFromDate")
 	private Long licenseValidFromDate;
 	

@@ -127,6 +127,7 @@ import Payment from './components/non-framework/citizenServices/payment';
 import ReceiptDownload from './components/non-framework/citizenServices/ReceiptDownload.js';
 import CS_TradeLicense from './components/non-framework/citizenServices/tl/create.js';
 import CS_VIEW_TradeLicense from './components/non-framework/citizenServices/tl/view.js';
+import CertificateView from './components/non-framework/citizenServices/SRNView.js';
 
 const base = "";
 
@@ -258,20 +259,21 @@ const Main = () => {
       <Route exact path= {base + '/non-framework-cs/citizenServices/:moduleName/:status/:id/:paymentGateWayRes?'} component={NoDues}/>
 
 
-      <Route exact path={base + '/empsearch/:actionName'} component={EmployeeSearch}/>
-      <Route exact path={base+'/legacy/view/:id'} component={ViewLegacy}/>
-      <Route exact path={base+'/wc/addDemand/:upicNumber'} component={EditDemands}/>
-      <Route exact path={base+'/searchconnection/wc'} component={SearchLegacyWc}/>
-      <Route exact path={base+'/wc/application/update/:stateId'} component={updateConnection}/>
-	  <Route exact path={base+'/waterConnection/view/:id'} component={ViewWc}/>
-      <Route exact path={base + '/non-framework/citizenServices/create/:status/:id/:paymentGateWayRes?'} component={CS_WaterConnection}/>
-      <Route exact path={base + '/non-framework/citizenServices/view/:status/:id/:ackNo/:paymentGateWayRes?'} component={CS_VIEW_WaterConnection}/>
-      <Route exact path={base + '/non-framework/citizenServices/fireNoc/:status/:id/:paymentGateWayRes?'} component={CS_FireNoc}/>
-      <Route exact path={base + '/non-framework/citizenServices/fireNoc/:status/:id/:ackNo/:paymentGateWayRes?'} component={CS_VIEW_FireNoc}/>
+      <Route exact path= {base + '/empsearch/:actionName'} component={EmployeeSearch}/>
+      <Route exact path= {base+'/legacy/view/:id'} component={ViewLegacy}/>
+      <Route exact path= {base+'/wc/addDemand/:upicNumber'} component={EditDemands}/>
+      <Route exact path= {base+'/searchconnection/wc'} component={SearchLegacyWc}/>
+      <Route exact path= {base+'/wc/application/update/:stateId'} component={updateConnection}/>
+	  <Route exact path= {base+'/waterConnection/view/:id'} component={ViewWc}/>
+      <Route exact path= {base + '/non-framework/citizenServices/create/:status/:id/:paymentGateWayRes?'} component={CS_WaterConnection}/>
+      <Route exact path= {base + '/non-framework/citizenServices/view/:status/:id/:ackNo/:paymentGateWayRes?'} component={CS_VIEW_WaterConnection}/>
+      <Route exact path= {base + '/non-framework/citizenServices/fireNoc/:status/:id/:paymentGateWayRes?'} component={CS_FireNoc}/>
+      <Route exact path= {base + '/non-framework/citizenServices/fireNoc/:status/:id/:ackNo/:paymentGateWayRes?'} component={CS_VIEW_FireNoc}/>
       <Route exact path= {base + '/payment/response/redirect/:msg'} component={Payment}/>
       <Route exact path= {base + '/receipt/:page/:type/:cc/:sid'} component={ReceiptDownload}/>
-      <Route exact path={base + '/non-framework/citizenServices/tl/:status/:id/:paymentGateWayRes?'} component={CS_TradeLicense}/>
-      <Route exact path={base + '/non-framework/citizenServices/tl/:status/:id/:ackNo/:paymentGateWayRes?'} component={CS_VIEW_TradeLicense}/>
+      <Route exact path= {base + '/non-framework/citizenServices/tl/:status/:id/:paymentGateWayRes?'} component={CS_TradeLicense}/>
+      <Route exact path= {base + '/non-framework/citizenServices/tl/:status/:id/:ackNo/:paymentGateWayRes?'} component={CS_VIEW_TradeLicense}/>
+      <Route exact path= {base + '/service/request/view/:srn'} component={CertificateView}/>
     </Switch>
   </main>
 )}

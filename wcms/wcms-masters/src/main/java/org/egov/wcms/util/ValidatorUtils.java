@@ -149,7 +149,6 @@ public class ValidatorUtils {
     }
 
     private Error getError(final PipeSizeRequest pipeSizeRequest, final Boolean isUpdate) {
-        pipeSizeRequest.getPipeSize();
         final List<ErrorField> errorFields = getErrorFields(pipeSizeRequest, isUpdate);
         return Error.builder().code(HttpStatus.BAD_REQUEST.value())
                 .message(WcmsConstants.INVALID_PIPESIZE_REQUEST_MESSAGE).errorFields(errorFields).build();
@@ -157,7 +156,7 @@ public class ValidatorUtils {
 
     private List<ErrorField> getErrorFields(final PipeSizeRequest pipeSizeRequest, final Boolean isUpdate) {
         final List<ErrorField> errorFields = new ArrayList<>();
-        for (final PipeSize pipeSize : pipeSizeRequest.getPipeSize()) {
+        for (final PipeSize pipeSize : pipeSizeRequest.getPipeSizes()) {
             addPipeSizeInmmValidationErrors(pipeSize, errorFields, isUpdate);
             addTenantIdValidationErrors(pipeSize.getTenantId(), errorFields);
             addActiveValidationErrors(pipeSize.getActive(), errorFields);
@@ -168,7 +167,7 @@ public class ValidatorUtils {
     private void addPipeSizeInmmValidationErrors(final PipeSize pipeSize,
             final List<ErrorField> errorFields, final Boolean isUpdate) {
         if (isUpdate)
-            if (pipeSize.getCode() == null || pipeSize.getCode().isEmpty()) {
+            if (StringUtils.isBlank(pipeSize.getCode())) {
                 final ErrorField errorField = ErrorField.builder().code(WcmsConstants.CODE_MANDATORY_CODE)
                         .message(WcmsConstants.CODE_MANDATORY_ERROR_MESSAGE)
                         .field(WcmsConstants.CODE_MANDATORY_FIELD_NAME).build();
@@ -244,7 +243,7 @@ public class ValidatorUtils {
 
     private List<ErrorField> getErrorFields(final DocumentTypeApplicationTypeReq documentApplicationReq, final Boolean isUpdate) {
         final List<ErrorField> errorFields = new ArrayList<>();
-        for (final DocumentTypeApplicationType docTypeAppType : documentApplicationReq.getDocumentTypeApplicationType()) {
+        for (final DocumentTypeApplicationType docTypeAppType : documentApplicationReq.getDocumentTypeApplicationTypes()) {
             addDocumentTypeValidationErrors(docTypeAppType, errorFields, isUpdate);
             addTenantIdValidationErrors(docTypeAppType.getTenantId(), errorFields);
             addActiveValidationErrors(docTypeAppType.getActive(), errorFields);
@@ -256,13 +255,13 @@ public class ValidatorUtils {
     private void addDocumentTypeValidationErrors(final DocumentTypeApplicationType docTypeAppType,
             final List<ErrorField> errorFields, final Boolean isUpdate) {
         if (isUpdate)
-            if (docTypeAppType.getCode() == null || docTypeAppType.getCode().isEmpty()) {
+            if (StringUtils.isBlank(docTypeAppType.getCode())) {
                 final ErrorField errorField = ErrorField.builder().code(WcmsConstants.CODE_MANDATORY_CODE)
                         .message(WcmsConstants.CODE_MANDATORY_ERROR_MESSAGE)
                         .field(WcmsConstants.CODE_MANDATORY_FIELD_NAME).build();
                 errorFields.add(errorField);
             }
-        if (docTypeAppType.getDocumentType() == null && docTypeAppType.getDocumentType().isEmpty()) {
+        if (StringUtils.isBlank(docTypeAppType.getDocumentType())) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.DOCTYPE_MANDATORY_CODE)
                     .message(WcmsConstants.DOCTYPE_MANADATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.DOCTYPE_MANADATORY_FIELD_NAME).build();
@@ -289,7 +288,7 @@ public class ValidatorUtils {
 
     private void addApplicationTypeValidationErrors(final DocumentTypeApplicationType docTypeAppType,
             final List<ErrorField> errorFields) {
-        if (docTypeAppType.getApplicationType() == null || docTypeAppType.getApplicationType().isEmpty()) {
+        if (StringUtils.isBlank(docTypeAppType.getApplicationType())) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.APPLICATION_TYPE_MANDATORY_CODE)
                     .message(WcmsConstants.APPLICATION_TYPE_ERROR_MESSAGE)
                     .field(WcmsConstants.APPLICATION_TYPE_MANADATORY_FIELD_NAME).build();
@@ -325,7 +324,7 @@ public class ValidatorUtils {
 
     private List<ErrorField> getErrorFields(final DocumentTypeReq documentTypeReq, final Boolean isUpdate) {
         final List<ErrorField> errorFields = new ArrayList<>();
-        for (final DocumentType documentType : documentTypeReq.getDocumentType()) {
+        for (final DocumentType documentType : documentTypeReq.getDocumentTypes()) {
             addDocumentTypeNameValidationErrors(documentType, errorFields, isUpdate);
             addTenantIdValidationErrors(documentType.getTenantId(), errorFields);
             addActiveValidationErrors(documentType.getActive(), errorFields);
@@ -336,13 +335,13 @@ public class ValidatorUtils {
     private void addDocumentTypeNameValidationErrors(final DocumentType documentType,
             final List<ErrorField> errorFields, final Boolean isUpdate) {
         if (isUpdate)
-            if (documentType.getCode() == null || documentType.getCode().isEmpty()) {
+            if (StringUtils.isBlank(documentType.getCode())) {
                 final ErrorField errorField = ErrorField.builder().code(WcmsConstants.CODE_MANDATORY_CODE)
                         .message(WcmsConstants.CODE_MANDATORY_ERROR_MESSAGE)
                         .field(WcmsConstants.CODE_MANDATORY_FIELD_NAME).build();
                 errorFields.add(errorField);
             }
-        if (documentType.getName() == null || documentType.getName().isEmpty()) {
+        if (StringUtils.isBlank(documentType.getName())) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.DOCUMENTTYPE_NAME_MANDATORY_CODE)
                     .message(WcmsConstants.DOCUMENTTYPE_NAME_MANADATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.DOCUMENTTYPE_NAME_MANADATORY_FIELD_NAME).build();
@@ -375,7 +374,7 @@ public class ValidatorUtils {
 
     private List<ErrorField> getErrorFields(final DonationRequest donationRequest, final Boolean isUpdate) {
         final List<ErrorField> errorFields = new ArrayList<>();
-        for (final Donation donation : donationRequest.getDonation()) {
+        for (final Donation donation : donationRequest.getDonations()) {
             checkDonationCode(errorFields, donation, isUpdate);
             checkUsageTypeValue(errorFields, donation);
             checkPipeSizeValues(errorFields, donation);
@@ -392,7 +391,7 @@ public class ValidatorUtils {
 
     private void checkDonationCode(final List<ErrorField> errorFields, final Donation donation, final Boolean isUpdate) {
         if (isUpdate)
-            if (donation.getCode() == null || donation.getCode().isEmpty()) {
+            if (StringUtils.isBlank(donation.getCode())) {
                 final ErrorField errorField = ErrorField.builder().code(WcmsConstants.CODE_MANDATORY_CODE)
                         .message(WcmsConstants.CODE_MANDATORY_ERROR_MESSAGE)
                         .field(WcmsConstants.CODE_MANDATORY_FIELD_NAME).build();
@@ -402,8 +401,7 @@ public class ValidatorUtils {
     }
 
     private void checkUsageTypeValue(final List<ErrorField> errorFields, final Donation donation) {
-        if (donation.getUsageType() == null
-                || donation.getUsageType().isEmpty()) {
+        if (StringUtils.isBlank(donation.getUsageType())) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.USAGETYPE_NAME_MANDATORY_CODE)
                     .message(WcmsConstants.USAGETYPE_NAME_MANADATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.USAGETYPE_NAME_MANADATORY_FIELD_NAME).build();
@@ -530,7 +528,7 @@ public class ValidatorUtils {
     private void addMeterStatusValidationErrors(final MeterStatus meterStatus, final List<ErrorField> errorFields,
             final Boolean isUpdate) {
         if (isUpdate)
-            if (meterStatus.getCode() == null || meterStatus.getCode().isEmpty()) {
+            if (StringUtils.isBlank(meterStatus.getCode())) {
                 final ErrorField errorField = ErrorField.builder().code(WcmsConstants.CODE_MANDATORY_CODE)
                         .message(WcmsConstants.CODE_MANDATORY_ERROR_MESSAGE)
                         .field(WcmsConstants.CODE_MANDATORY_FIELD_NAME).build();
@@ -577,7 +575,7 @@ public class ValidatorUtils {
     private void addMeterCostValidationErrors(final MeterCost meterCost, final List<ErrorField> errorFields,
             final Boolean isUpdate) {
         if (isUpdate)
-            if (meterCost.getCode() == null || meterCost.getCode().isEmpty()) {
+            if (StringUtils.isBlank(meterCost.getCode() )) {
                 final ErrorField errorField = ErrorField.builder().code(WcmsConstants.CODE_MANDATORY_CODE)
                         .message(WcmsConstants.CODE_MANDATORY_ERROR_MESSAGE)
                         .field(WcmsConstants.CODE_MANDATORY_FIELD_NAME).build();
@@ -638,25 +636,25 @@ public class ValidatorUtils {
 
     private List<ErrorField> getErrorFields(final SourceTypeRequest waterSourceTypeRequest, final Boolean isUpdate) {
         final List<ErrorField> errorFields = new ArrayList<>();
-        for (final SourceType sourcetype : waterSourceTypeRequest.getSourceType()) {
-            addSupplyTYpeNameValidationErrors(sourcetype, errorFields, isUpdate);
+        for (final SourceType sourcetype : waterSourceTypeRequest.getSourceTypes()) {
+            addSupplyTypeNameValidationErrors(sourcetype, errorFields, isUpdate);
             addTenantIdValidationErrors(sourcetype.getTenantId(), errorFields);
             addActiveValidationErrors(sourcetype.getActive(), errorFields);
         }
         return errorFields;
     }
 
-    private void addSupplyTYpeNameValidationErrors(final SourceType sourceType,
+    private void addSupplyTypeNameValidationErrors(final SourceType sourceType,
             final List<ErrorField> errorFields, final Boolean isUpdate) {
         if (isUpdate)
-            if (sourceType.getCode() == null || sourceType.getCode().isEmpty()) {
+            if (StringUtils.isBlank(sourceType.getCode())) {
                 final ErrorField errorField = ErrorField.builder().code(WcmsConstants.CODE_MANDATORY_CODE)
                         .message(WcmsConstants.CODE_MANDATORY_ERROR_MESSAGE)
                         .field(WcmsConstants.CODE_MANDATORY_FIELD_NAME).build();
                 errorFields.add(errorField);
             }
 
-        if (sourceType.getName() == null || sourceType.getName().isEmpty()) {
+        if (StringUtils.isBlank(sourceType.getName())) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.WATERSOURCETYPE_NAME_MANDATORY_CODE)
                     .message(WcmsConstants.WATERSOURCETYPE_NAME_MANADATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.WATERSOURCETYPE_NAME_MANADATORY_FIELD_NAME).build();
@@ -690,7 +688,7 @@ public class ValidatorUtils {
 
     private List<ErrorField> getErrorFields(final SupplyTypeRequest supplyTypeRequest, final Boolean isUpdate) {
         final List<ErrorField> errorFields = new ArrayList<>();
-        for (final SupplyType supplyType : supplyTypeRequest.getSupplyType()) {
+        for (final SupplyType supplyType : supplyTypeRequest.getSupplyTypes()) {
             addSupplyNameValidationErrors(supplyType, errorFields, isUpdate);
             addTenantIdValidationErrors(supplyType.getTenantId(), errorFields);
         }
@@ -700,13 +698,13 @@ public class ValidatorUtils {
     private void addSupplyNameValidationErrors(final SupplyType supplyType,
             final List<ErrorField> errorFields, final Boolean isUpdate) {
         if (isUpdate)
-            if (supplyType.getCode() == null || supplyType.getCode().isEmpty()) {
+            if (StringUtils.isBlank(supplyType.getCode())) {
                 final ErrorField errorField = ErrorField.builder().code(WcmsConstants.CODE_MANDATORY_CODE)
                         .message(WcmsConstants.CODE_MANDATORY_ERROR_MESSAGE)
                         .field(WcmsConstants.CODE_MANDATORY_FIELD_NAME).build();
                 errorFields.add(errorField);
             }
-        if (supplyType.getName() == null || supplyType.getName().isEmpty()) {
+        if (StringUtils.isBlank(supplyType.getName())) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.SUPPLYTYPE_NAME_MANDATORY_CODE)
                     .message(WcmsConstants.SUPPLYTYPE_NAME_MANADATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.SUPPLYTYPE_NAME_MANADATORY_FIELD_NAME).build();
@@ -741,7 +739,7 @@ public class ValidatorUtils {
 
     private List<ErrorField> getErrorFields(final StorageReservoirRequest storageReservoirRequest, final Boolean isUpdate) {
         final List<ErrorField> errorFields = new ArrayList<>();
-        for (final StorageReservoir storageReservoir : storageReservoirRequest.getStorageReservoir()) {
+        for (final StorageReservoir storageReservoir : storageReservoirRequest.getStorageReservoirs()) {
             addStorageReservoirValidationErrors(storageReservoir, errorFields, isUpdate);
             addTenantIdValidationErrors(storageReservoir.getTenantId(), errorFields);
         }
@@ -920,20 +918,19 @@ public class ValidatorUtils {
     private void addMeterWaterRatesValidationErrors(final MeterWaterRates meterWaterRates,
             final List<ErrorField> errorFields, final Boolean isUpdate) {
         if (isUpdate)
-            if (meterWaterRates.getCode() == null || meterWaterRates.getCode().isEmpty()) {
+            if (StringUtils.isBlank(meterWaterRates.getCode())) {
                 final ErrorField errorField = ErrorField.builder().code(WcmsConstants.CODE_MANDATORY_CODE)
                         .message(WcmsConstants.CODE_MANDATORY_ERROR_MESSAGE)
                         .field(WcmsConstants.CODE_MANDATORY_FIELD_NAME).build();
                 errorFields.add(errorField);
             }
-        if (meterWaterRates.getUsageTypeName() == null
-                || meterWaterRates.getUsageTypeName().isEmpty()) {
+        if (StringUtils.isBlank(meterWaterRates.getUsageTypeName())) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.USAGETYPE_NAME_MANDATORY_CODE)
                     .message(WcmsConstants.USAGETYPE_NAME_MANADATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.USAGETYPE_NAME_MANADATORY_FIELD_NAME).build();
             errorFields.add(errorField);
 
-        } else if (meterWaterRates.getSourceTypeName() == null || meterWaterRates.getSourceTypeName().isEmpty()) {
+        } else if (StringUtils.isBlank(meterWaterRates.getSourceTypeName())) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.SOURCETYPE_NAME_MANDATORY_CODE)
                     .message(WcmsConstants.SOURCETYPE_NAME_MANADATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.SOURCETYPE_NAME_MANADATORY_FIELD_NAME).build();
@@ -1004,13 +1001,13 @@ public class ValidatorUtils {
     private void addNonMeterWaterRatesValidationErrors(final NonMeterWaterRates nonMeterWaterRates,
             final List<ErrorField> errorFields, final Boolean isUpdate) {
         if (isUpdate)
-            if (nonMeterWaterRates.getCode() == null || nonMeterWaterRates.getCode().isEmpty()) {
+            if (StringUtils.isBlank(nonMeterWaterRates.getCode())) {
                 final ErrorField errorField = ErrorField.builder().code(WcmsConstants.CODE_MANDATORY_CODE)
                         .message(WcmsConstants.CODE_MANDATORY_ERROR_MESSAGE)
                         .field(WcmsConstants.CODE_MANDATORY_FIELD_NAME).build();
                 errorFields.add(errorField);
             }
-        if (nonMeterWaterRates.getConnectionType() == null || nonMeterWaterRates.getConnectionType().isEmpty()) {
+        if (StringUtils.isBlank(nonMeterWaterRates.getConnectionType())) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.CONNECTION_TYPE_MANDATORY_CODE)
                     .message(WcmsConstants.CONNECTION_TYPE_MANADATORY_ERROR_MESSAGE)
@@ -1022,8 +1019,7 @@ public class ValidatorUtils {
                     .field(WcmsConstants.CONNECTION_TYPE_INVALID_FIELD_NAME).build();
             errorFields.add(errorField);
         }
-        if (nonMeterWaterRates.getUsageTypeName() == null
-                || nonMeterWaterRates.getUsageTypeName().isEmpty()) {
+        if (StringUtils.isBlank(nonMeterWaterRates.getUsageTypeName())) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.USAGETYPE_NAME_MANDATORY_CODE)
                     .message(WcmsConstants.USAGETYPE_NAME_MANADATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.USAGETYPE_NAME_MANADATORY_FIELD_NAME).build();

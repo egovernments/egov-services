@@ -121,7 +121,7 @@ public class DocumentTypeRepositoryTest {
         newUser.setId(2L);
         requestInfo.setUserInfo(newUser);
         docTypeRequest.setRequestInfo(requestInfo);
-        docTypeRequest.setDocumentType(docTypeList);
+        docTypeRequest.setDocumentTypes(docTypeList);
         return docTypeRequest;
     }
 
@@ -147,7 +147,7 @@ public class DocumentTypeRepositoryTest {
         final List<DocumentType> docTypeList = new ArrayList<>();
         docTypeList.add(getDocumentType());
         docTypeRequest.setRequestInfo(requestInfo);
-        docTypeRequest.setDocumentType(docTypeList);
+        docTypeRequest.setDocumentTypes(docTypeList);
 
         assertNotNull(docTypeRepository.persistModifyDocumentType(docTypeRequest));
 
@@ -160,7 +160,7 @@ public class DocumentTypeRepositoryTest {
         final List<DocumentType> docTypeList = new ArrayList<>();
         docTypeList.add(getDocumentType());
         docTypeRequest.setRequestInfo(requestInfo);
-        docTypeRequest.setDocumentType(docTypeList);
+        docTypeRequest.setDocumentTypes(docTypeList);
 
         assertNotNull(docTypeRepository.persistModifyDocumentType(docTypeRequest));
 

@@ -78,7 +78,7 @@ public class DonationRepository {
         log.info("Donation Request::" + donationRequest);
 
         final String donationInsert = DonationQueryBuilder.donationInsertQuery();
-        final List<Donation> donationList = donationRequest.getDonation();
+        final List<Donation> donationList = donationRequest.getDonations();
         final List<Map<String, Object>> batchValues = new ArrayList<>(donationList.size());
         for (final Donation donation : donationList) {
             final String pipesizeQuery = DonationQueryBuilder.getPipeSizeIdQuery();
@@ -144,7 +144,7 @@ public class DonationRepository {
     public DonationRequest persistModifyDonationDetails(final DonationRequest donationRequest) {
         log.info("Donation update Request::" + donationRequest);
         final String donationUpdate = DonationQueryBuilder.donationUpdateQuery();
-        final List<Donation> donationList = donationRequest.getDonation();
+        final List<Donation> donationList = donationRequest.getDonations();
         final List<Map<String, Object>> batchValues = new ArrayList<>(donationList.size());
         for (final Donation donation : donationList) {
             final String pipesizeQuery = DonationQueryBuilder.getPipeSizeIdQuery();

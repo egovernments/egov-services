@@ -80,7 +80,7 @@ public class DocumentTypeApplicationTypeRepository {
 
         log.info("DocumentTypeApplicationTypeRequest::" + docTypeAppliTypeRequest);
         final String docNameInsert = DocumentTypeApplicationTypeQueryBuilder.insertDocumentApplicationQuery();
-        final List<DocumentTypeApplicationType> docApplicationList = docTypeAppliTypeRequest.getDocumentTypeApplicationType();
+        final List<DocumentTypeApplicationType> docApplicationList = docTypeAppliTypeRequest.getDocumentTypeApplicationTypes();
         final List<Map<String, Object>> batchValues = new ArrayList<>(docApplicationList.size());
         for (final DocumentTypeApplicationType docApplication : docApplicationList) {
 
@@ -116,7 +116,7 @@ public class DocumentTypeApplicationTypeRepository {
         log.info("DocumentTypeApplicationTypeRequest::" + docTypeAppliTypeRequest);
         final String documentTypeApplicationTypeUpdate = DocumentTypeApplicationTypeQueryBuilder
                 .updateDocumentTypeApplicationTypeQuery();
-        final List<DocumentTypeApplicationType> docApplicationList = docTypeAppliTypeRequest.getDocumentTypeApplicationType();
+        final List<DocumentTypeApplicationType> docApplicationList = docTypeAppliTypeRequest.getDocumentTypeApplicationTypes();
         final List<Map<String, Object>> batchValues = new ArrayList<>(docApplicationList.size());
         for (final DocumentTypeApplicationType docApplication : docApplicationList) {
             final String documentQuery = DocumentTypeApplicationTypeQueryBuilder.getDocumentTypeIdQuery();

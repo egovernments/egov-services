@@ -85,7 +85,7 @@ public class DonationServiceTest {
         final List<Donation> donationList = new ArrayList<>();
         donationList.add(getDonation());
         final DonationRequest donationReq = new DonationRequest();
-        donationReq.setDonation(donationList);
+        donationReq.setDonations(donationList);
         final DonationResponse donationResponse = new DonationResponse();
         donationResponse.setResponseInfo(null);
         donationResponse.setDonations(donationList);
@@ -149,7 +149,7 @@ public class DonationServiceTest {
         final List<Donation> donationList = new ArrayList<>();
         donationList.add(getDonation());
         final DonationRequest donationRequest = new DonationRequest();
-        donationRequest.setDonation(donationList);
+        donationRequest.setDonations(donationList);
         assertTrue(donationList.equals(donationService.createDonation("", "", donationRequest)));
     }
 

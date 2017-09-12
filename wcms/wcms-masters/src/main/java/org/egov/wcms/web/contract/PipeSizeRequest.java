@@ -67,7 +67,7 @@ public class PipeSizeRequest {
     @NotNull
     @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
-    @JsonProperty("PipeSize")
-    private List<PipeSize> pipeSize = new ArrayList<>();
+    @JsonProperty("PipeSizes")
+    private List<PipeSize> pipeSizes = new ArrayList<>();
 
 }

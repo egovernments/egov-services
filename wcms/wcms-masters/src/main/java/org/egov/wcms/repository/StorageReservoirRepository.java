@@ -74,8 +74,8 @@ public class StorageReservoirRepository {
             final StorageReservoirRequest storageReservoirRequest) {
         log.info("storageReservoirRequest::" + storageReservoirRequest);
         final String storageReservoirInsert = StorageReservoirQueryBuilder.insertStorageReserviorQuery();
-        final List<Map<String, Object>> batchValues = new ArrayList<>(storageReservoirRequest.getStorageReservoir().size());
-        for (final StorageReservoir storageReservoir : storageReservoirRequest.getStorageReservoir())
+        final List<Map<String, Object>> batchValues = new ArrayList<>(storageReservoirRequest.getStorageReservoirs().size());
+        for (final StorageReservoir storageReservoir : storageReservoirRequest.getStorageReservoirs())
             batchValues.add(new MapSqlParameterSource("id", Long.valueOf(storageReservoir.getCode()))
                     .addValue("code", storageReservoir.getCode()).addValue("name", storageReservoir.getName())
                     .addValue("reservoirtype", storageReservoir.getReservoirType())
@@ -92,7 +92,7 @@ public class StorageReservoirRepository {
                     .addValue("tenantid", storageReservoir.getTenantId()).getValues());
 
         namedParameterJdbcTemplate.batchUpdate(storageReservoirInsert,
-                batchValues.toArray(new Map[storageReservoirRequest.getStorageReservoir().size()]));
+                batchValues.toArray(new Map[storageReservoirRequest.getStorageReservoirs().size()]));
         return storageReservoirRequest;
     }
 
@@ -100,8 +100,8 @@ public class StorageReservoirRepository {
             final StorageReservoirRequest storageReservoirRequest) {
         log.info("StorageReservoir Request::" + storageReservoirRequest);
         final String storageReservoirUpdate = StorageReservoirQueryBuilder.updateStorageReserviorQuery();
-        final List<Map<String, Object>> batchValues = new ArrayList<>(storageReservoirRequest.getStorageReservoir().size());
-        for (final StorageReservoir storageReservoir : storageReservoirRequest.getStorageReservoir())
+        final List<Map<String, Object>> batchValues = new ArrayList<>(storageReservoirRequest.getStorageReservoirs().size());
+        for (final StorageReservoir storageReservoir : storageReservoirRequest.getStorageReservoirs())
             batchValues.add(new MapSqlParameterSource("name", storageReservoir.getName())
                     .addValue("reservoirtype", storageReservoir.getReservoirType())
                     .addValue("location", storageReservoir.getLocation())
@@ -116,7 +116,7 @@ public class StorageReservoirRepository {
                     .getValues());
 
         namedParameterJdbcTemplate.batchUpdate(storageReservoirUpdate,
-                batchValues.toArray(new Map[storageReservoirRequest.getStorageReservoir().size()]));
+                batchValues.toArray(new Map[storageReservoirRequest.getStorageReservoirs().size()]));
 
         return storageReservoirRequest;
     }

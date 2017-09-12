@@ -74,14 +74,14 @@ public class StorageReservoirService {
 
     public List<StorageReservoir> createStorageReservoir(final String topic, final String key,
             final StorageReservoirRequest storageReservoirRequest) {
-        for (final StorageReservoir storageReservoir : storageReservoirRequest.getStorageReservoir())
+        for (final StorageReservoir storageReservoir : storageReservoirRequest.getStorageReservoirs())
             storageReservoir.setCode(codeGeneratorService.generate(StorageReservoir.SEQ_STORAGE_RESERVOIR));
         try {
             kafkaTemplate.send(topic, key, storageReservoirRequest);
         } catch (final Exception ex) {
             log.error("Exception Encountered : " + ex);
         }
-        return storageReservoirRequest.getStorageReservoir();
+        return storageReservoirRequest.getStorageReservoirs();
     }
 
     public List<StorageReservoir> updateStorageReservoir(final String topic, final String key,
@@ -91,7 +91,7 @@ public class StorageReservoirService {
         } catch (final Exception ex) {
             log.error("Exception Encountered : " + ex);
         }
-        return storageReservoirRequest.getStorageReservoir();
+        return storageReservoirRequest.getStorageReservoirs();
     }
 
     public List<StorageReservoir> getStorageReservoir(final StorageReservoirGetRequest storageReservoirGetRequest) {

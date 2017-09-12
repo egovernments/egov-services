@@ -34,7 +34,7 @@
     /pipesize/_create:
       post:
         summary: Create new pipe size.
-        description: API to bulk create new pipe size.
+        description: API supports bulk creation new pipe size.
         tags:
           - Pipe Size
         parameters:
@@ -57,7 +57,7 @@
     /pipesize/_update:
       post:
         summary: while updating in request body code is required and updates existing values based on code
-        description: bulk updates existing values
+        description: API supports bulk updates existing values
         tags:
           - Pipe Size
         parameters:
@@ -102,7 +102,7 @@
     /documenttype/_create:
       post:
         summary: creates different types of allowed document type
-        description: API to bulk create new document type.
+        description: API supports bulk create new document type.
         tags:
           - DocumentType
         parameters:
@@ -114,7 +114,7 @@
               $ref: '#/definitions/DocumentTypeReq'
         responses:
           '201':
-            description: Document Type created sucessfully.
+            description: Document Type(s) created sucessfully.
             schema:
               $ref: "#/definitions/DocumentTypesRes"
           '400':
@@ -125,7 +125,7 @@
     /documenttype/_update:
       post:
         summary: while updating in request body code is required and updates existing values based on code
-        description: bulk updates existing values
+        description: API supports bulk updates existing values
         tags:
           - DocumentType
         parameters:
@@ -137,7 +137,7 @@
               $ref: '#/definitions/DocumentTypeReq'
         responses:
           '200':
-            description: Document Type updated sucessfully.
+            description: Document Type(s) updated sucessfully.
             schema:
               $ref: "#/definitions/DocumentTypesRes"
           '400':
@@ -191,7 +191,7 @@
     /sourcetype/_create:
       post:
         summary: creates different types of allowed Source Type
-        description: allowed bulk a create water source type
+        description: API supports bulk creation water source type
         tags:
           - SourceType
         parameters:
@@ -203,7 +203,7 @@
               $ref: '#/definitions/SourceTypeReq'
         responses:
           '201':
-            description: Source Type created sucessfully.
+            description: Source Type(s) created sucessfully.
             schema:
               $ref: "#/definitions/SourceTypesRes"
           '400':
@@ -214,7 +214,7 @@
     /sourcetype/_update:
       post:
         summary: while updating in request body code is required and updates existing values based on code
-        description: bulk updates existing values
+        description: API supports bulk updates existing values
         tags:
           - SourceType
         parameters:
@@ -226,7 +226,7 @@
               $ref: '#/definitions/SourceTypeReq'
         responses:
           '200':
-            description: Source Type Updated sucessfully.
+            description: Source Type(s) Updated sucessfully.
             schema:
               $ref: "#/definitions/SourceTypesRes"
           '400':
@@ -259,7 +259,7 @@
     /supplytype/_create:
       post:
         summary: creates different types of allowed supply Type
-        description: allowed bulk create a water supply type
+        description: API supports bulk create water supply type
         tags:
           - SupplyType
         parameters:
@@ -282,7 +282,7 @@
     /supplytype/_update:
       post:
         summary: while updating in request body code is required and updates existing values based on code
-        description: bulk updates existing values
+        description: API supports bulk updates existing values
         tags:
           - SupplyType
         parameters:
@@ -294,7 +294,7 @@
               $ref: '#/definitions/SupplyTypeReq'
         responses:
           '200':
-            description: Supply Type updated sucessfully.
+            description: Supply Type (s) updated sucessfully.
             schema:
               $ref: "#/definitions/SupplyTypesRes"
           '400':
@@ -361,7 +361,7 @@
     /donation/_create:
       post:
         summary: Create new donation .
-        description: API to bulk create new donation.
+        description: API supports bulk create new donation.
         tags:
           - Donation
         parameters:
@@ -373,7 +373,7 @@
               $ref: '#/definitions/DonationReq'
         responses:
           '201':
-            description: Donation created sucessfully.
+            description: Donation(s) created sucessfully.
             schema:
               $ref: "#/definitions/DonationRes"
           '400':
@@ -384,7 +384,7 @@
     /donation/_update:
       post:
         summary: while updating in request body code is required and updates existing values based on code.
-        description: bulk updates existing values
+        description: API supports bulk updates existing values
         tags:
           - Donation
         parameters:
@@ -396,7 +396,7 @@
               $ref: '#/definitions/DonationRes'
         responses:
           '200':
-            description: Donation updated successfully.
+            description: Donation(s) updated successfully.
             schema:
               $ref: "#/definitions/DonationRes"
           '400':
@@ -430,7 +430,7 @@
     /storagereservoir/_create:
       post:
         summary: Create new storage reservoir.
-        description: API to bulk create storage reservoir.
+        description: API supports bulk create storage reservoir.
         tags:
           - Storage Reservoir
         parameters:
@@ -442,7 +442,7 @@
               $ref: '#/definitions/StorageReservoirReq'
         responses:
           '201':
-            description: Storage reservoir created sucessfully.
+            description: Storage reservoir(s) created sucessfully.
             schema:
               $ref: "#/definitions/StorageReservoirRes"
           '400':
@@ -453,7 +453,7 @@
     /storagereservoir/_update:
       post:
         summary: while updating in request body code is required and updates existing values based on code.
-        description: bulk updates existing values
+        description: API supports bulk updates existing values
         tags:
           - Storage Reservoir
         parameters:
@@ -465,7 +465,7 @@
               $ref: '#/definitions/StorageReservoirReq'
         responses:
           '200':
-            description: Storage reservoir updated successfully.
+            description: Storage reservoir (s)updated successfully.
             schema:
               $ref: "#/definitions/StorageReservoirRes"
           '400':
@@ -498,7 +498,7 @@
     /treatmentplant/_create:
       post:
         summary: Create new Water treatment plant.
-        description: API to bulk create Water treatment plant.
+        description: API supports bulk create Water treatment plant.
         tags:
           - Treatment Plant
         parameters:
@@ -510,7 +510,7 @@
               $ref: '#/definitions/TreatmentPlantReq'
         responses:
           '201':
-            description: Treatment Plant created sucessfully.
+            description: Treatment Plant(s) created sucessfully.
             schema:
               $ref: "#/definitions/TreatmentPlantRes"
           '400':
@@ -521,7 +521,7 @@
     /treatmentplant/_update:
       post:
         summary: while updating in request body code is required and updates existing values based on code
-        description: API to bulk updates existing values
+        description: API supports bulk updates existing values
         tags:
           - Treatment Plant
         parameters:
@@ -533,7 +533,7 @@
               $ref: '#/definitions/TreatmentPlantReq'
         responses:
           '200':
-            description: Treatment Plant updated successfully.
+            description: Treatment Plant(s) updated successfully.
             schema:
               $ref: "#/definitions/TreatmentPlantRes"
           '400':
@@ -568,7 +568,7 @@
     /documenttype-applicationtype/_create:
       post:
         summary: creates mapping between document type and application type
-        description: API to bulk create a Application Type and required document mapping.
+        description: API supports bulk create Application Type and required document mapping.
         tags:
           - DocumentTypeApplicationType
         parameters:
@@ -580,7 +580,7 @@
               $ref: '#/definitions/DocumentTypeApplicationTypeReq'
         responses:
           '201':
-            description: Document Application created sucessfully.
+            description: Document Application(s) created sucessfully.
             schema:
               $ref: "#/definitions/DocumentTypeApplicationTypesRes"
           '400':
@@ -591,7 +591,7 @@
     /documenttype-applicationtype/_update:
       post:
         summary: while updating in request body code is required and updates existing values based on code
-        description: bulk updates existing values
+        description: API supports bulk updates existing values
         tags:
           - DocumentTypeApplicationType
         parameters:
@@ -603,7 +603,7 @@
               $ref: '#/definitions/DocumentTypeApplicationTypeReq'
         responses:
           '200':
-            description: Document Application updated sucessfully.
+            description: Document Application(s) updated sucessfully.
             schema:
               $ref: "#/definitions/DocumentTypeApplicationTypesRes"
           '400':
@@ -636,7 +636,7 @@
     /meterwaterrates/_create:
       post:
         summary: Create new meter water rates.
-        description: API to bulk create new meter water rates.
+        description: API supports bulk create new meter water rates.
         tags:
           - Meter Water Rates
         parameters:
@@ -659,7 +659,7 @@
     /meterwaterrates/_update:
       post:
         summary: while updating in request body code is required and updates existing values based on code.
-        description: bulk updates existing values
+        description: API supports bulk updates existing values
         tags:
           - Meter Water Rates
         parameters:
@@ -705,7 +705,7 @@
     /nonmeterwaterrates/_create:
       post:
         summary: Create new non meter water rates.
-        description: API to supports bulk create non meter water rates.
+        description: API supports bulk create non meter water rates.
         tags:
           - Non Meter Water Rates
         parameters:
@@ -728,7 +728,7 @@
     /nonmeterwaterrates/_update:
       post:
         summary: while updating in request body code is required and updates existing values based on code.
-        description: bulk updates existing values
+        description: API supports bulk updates existing values
         tags:
           - Non Meter Water Rates
         parameters:
@@ -774,7 +774,7 @@
     /metercosts/_create:
       post:
         summary: creates new meter cost.
-        description: API to create meter cost.
+        description: API supports bulk create meter cost.
         tags:
           - Meter Costs
         parameters:
@@ -800,7 +800,7 @@
         summary: >-
           while updating in request body code is required and updates existing
           values based on code.
-        description: updates existing values
+        description: API supports bulk updates existing values
         tags:
         - Meter Costs
         parameters:
@@ -851,7 +851,7 @@
     /meterstatus/_create:
       post:
         summary: creates new meter status.
-        description: API to create meter status.
+        description: API supports bulk create meter status.
         tags:
           - Meter Status
         parameters:
@@ -877,7 +877,7 @@
         summary: >-
           while updating in request body code is required and updates existing
           values based on code.
-        description: updates existing values
+        description: API supports bulk updates existing values
         tags:
           - Meter Status
         parameters:
@@ -926,7 +926,7 @@
     /serviceCharges/_create:
       post:
         summary: Create new service charge.
-        description: API to bulk create new service charge
+        description: API supports bulk create new service charge
         tags:
           - Service Charge
         parameters:
@@ -949,7 +949,7 @@
     /serviceCharges/_update:
       post:
         summary:  while updating in request body code is required and updates existing values based on code
-        description: bulk updates existing values
+        description: API supports bulk updates existing values
         tags:
           - Service Charge
         parameters:
@@ -995,7 +995,7 @@
     /gapcode/_create:
       post:
         summary: Create new Gapcode.
-        description: API to Create new Gapcode
+        description: API supports bulk Create new Gapcode
         tags:
           - Gapcode
         parameters:
@@ -1018,7 +1018,7 @@
     /gapcode/_update:
       post:
         summary:  while updating in request body code is required and updates existing values based on code
-        description: bulk updates existing values
+        description: API supports bulk updates existing values
         tags:
           - Gapcode
         parameters:
@@ -1199,11 +1199,13 @@
       properties:
         RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        DocumentTypeApplicationType:
-          $ref: '#/definitions/DocumentTypeApplicationType'
+        DocumentTypeApplicationTypes:
+          type: array
+          items:
+           $ref: '#/definitions/DocumentTypeApplicationType'
       required:
         - RequestInfo
-        - DocumentTypeApplicationType
+        - DocumentTypeApplicationTypes
     
     DocumentTypeApplicationTypesRes:
       type: object
@@ -1378,11 +1380,13 @@
       properties:
         RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        SourceType:
-          $ref: '#/definitions/SourceType'
+        SourceTypes:
+          type: array
+          items:
+           $ref: '#/definitions/SourceType'
       required:
         - RequestInfo
-        - SourceType
+        - SourceTypes
     
     SourceType:
       type: object
@@ -1442,11 +1446,13 @@
       properties:
         RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        SupplyType:
-          $ref: '#/definitions/SupplyType'
+        SupplyTypes:
+          type: array
+          items:
+           $ref: '#/definitions/SupplyType'
       required:
         - RequestInfo
-        - SupplyType
+        - SupplyTypes
     
     SupplyType:
       type: object
@@ -1489,11 +1495,13 @@
       properties:
         RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        DocumentType:
-          $ref: '#/definitions/DocumentType'
+        DocumentTypes:
+          type: array
+          items:
+           $ref: '#/definitions/DocumentType'
       required:
         - RequestInfo
-        - DocumentType
+        - DocumentTypes
     
     DocumentTypesRes:
       type: object
@@ -1547,11 +1555,13 @@
       properties:
         RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        PipeSize:
-          $ref: '#/definitions/PipeSize'
+        PipeSizes:
+          type: array
+          items:
+            $ref: '#/definitions/PipeSize'
       required:
         - RequestInfo
-        - PipeSize
+        - PipeSizes
 
     PipeSizeRes:
       type: object
@@ -1609,7 +1619,7 @@
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
         Donations:
           type: array
-          maximum: 10
+          maximum: 20
           items:
             $ref: '#/definitions/Donation'
             
@@ -1619,7 +1629,10 @@
         RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         Donations:
-          $ref: '#/definitions/Donation'
+          type: array
+          maximum: 100
+          items:
+           $ref: '#/definitions/Donation'
       required:
         - RequestInfo
         - Donations
@@ -1699,7 +1712,9 @@
         RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         TreatmentPlants:
-          $ref: '#/definitions/TreatmentPlant'
+          type: array
+          items:
+           $ref: '#/definitions/TreatmentPlant'
       required:
         - RequestInfo
         - TreatmentPlants
@@ -1769,11 +1784,13 @@
       properties:
         RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        StorageReservoir:
-          $ref: '#/definitions/StorageReservoir'
+        StorageReservoirs:
+          type: array
+          items:
+           $ref: '#/definitions/StorageReservoir'
       required:
         - RequestInfo
-        - StorageReservoir
+        - StorageReservoirs
     
     StorageReservoirRes:
       type: object
@@ -1782,7 +1799,6 @@
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
         StorageReservoirs:
           type: array
-          maximum: 20
           items:
             $ref: '#/definitions/StorageReservoir'
             
@@ -1847,7 +1863,9 @@
         RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         MeterWaterRates:
-          $ref: '#/definitions/MeterWaterRates'
+          type: array
+          items:
+           $ref: '#/definitions/MeterWaterRates'
       required:
         - RequestInfo
         - MeterWaterRates
@@ -1954,7 +1972,9 @@
           $ref: >-
             https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
         MeterCost:
-          $ref: '#/definitions/MeterCost'
+          type: array
+          items:
+           $ref: '#/definitions/MeterCost'
       required:
         - RequestInfo
         - MeterCost
@@ -2019,7 +2039,9 @@
           $ref: >-
             https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
         MeterStatus:
-          $ref: '#/definitions/MeterStatus'
+          type: array
+          items:
+           $ref: '#/definitions/MeterStatus'
       required:
         - RequestInfo
         - MeterStatus 
@@ -2074,7 +2096,9 @@
         RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         NonMeterWaterRates:
-          $ref: '#/definitions/NonMeterWaterRates'
+          type: array
+          items:
+           $ref: '#/definitions/NonMeterWaterRates'
       required:
         - RequestInfo
         - NonMeterWaterRates
@@ -2086,7 +2110,6 @@
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
         NonMeterWaterRates:
           type: array
-          maximum: 20
           items:
             $ref: '#/definitions/NonMeterWaterRates'
 
@@ -2155,7 +2178,9 @@
         RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
         ServiceCharges:
-          $ref: '#/definitions/ServiceCharge'
+          type: array
+          items:
+           $ref: '#/definitions/ServiceCharge'
       required:
         - RequestInfo
         - ServiceCharges
@@ -2348,4 +2373,3 @@
         - noOfLastMonths
         - tenantId
         
-    

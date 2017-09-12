@@ -75,7 +75,7 @@ public class DocumentTypeApplicationTypeService {
 
     public List<DocumentTypeApplicationType> createDocumentApplication(final String topic, final String key,
             final DocumentTypeApplicationTypeReq docmentApplicationRequest) {
-        for (final DocumentTypeApplicationType documentApplication : docmentApplicationRequest.getDocumentTypeApplicationType())
+        for (final DocumentTypeApplicationType documentApplication : docmentApplicationRequest.getDocumentTypeApplicationTypes())
             documentApplication
                     .setCode(codeGeneratorService.generate(DocumentTypeApplicationType.SEQ_DOCUMENT_TYPE_APPLICATION_TYPE));
         
@@ -84,7 +84,7 @@ public class DocumentTypeApplicationTypeService {
         } catch (final Exception ex) {
             log.error("Exception Encountered : " + ex);
         }
-        return docmentApplicationRequest.getDocumentTypeApplicationType();
+        return docmentApplicationRequest.getDocumentTypeApplicationTypes();
     }
 
     public List<DocumentTypeApplicationType> updateDocumentApplication(final String topic, final String key,
@@ -94,7 +94,7 @@ public class DocumentTypeApplicationTypeService {
         } catch (final Exception ex) {
             log.error("Exception Encountered : " + ex);
         }
-        return docmentApplicationRequest.getDocumentTypeApplicationType();
+        return docmentApplicationRequest.getDocumentTypeApplicationTypes();
     }
 
     public List<DocumentTypeApplicationType> getDocumentAndApplicationTypes(

@@ -73,14 +73,14 @@ public class DonationService {
     }
 
     public List<Donation> createDonation(final String topic, final String key, final DonationRequest donationRequest) {
-        for (final Donation donation : donationRequest.getDonation())
+        for (final Donation donation : donationRequest.getDonations())
             donation.setCode(codeGeneratorService.generate(Donation.SEQ_DONATION));
         try {
             kafkaTemplate.send(topic, key, donationRequest);
         } catch (final Exception ex) {
             log.error("Exception Encountered : " + ex);
         }
-        return donationRequest.getDonation();
+        return donationRequest.getDonations();
     }
 
     public List<Donation> updateDonation(final String topic, final String key, final DonationRequest donationRequest) {
@@ -89,7 +89,7 @@ public class DonationService {
         } catch (final Exception ex) {
             log.error("Exception Encountered : " + ex);
         }
-        return donationRequest.getDonation();
+        return donationRequest.getDonations();
     }
 
     public List<Donation> getDonationList(final DonationGetRequest donationGetRequest) {

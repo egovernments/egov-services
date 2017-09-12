@@ -76,7 +76,7 @@ public class SourceTypeRepository {
     public SourceTypeRequest persistCreateWaterSourceType(final SourceTypeRequest sourceTypeRequest) {
         log.info("SourceTypeRequest::" + sourceTypeRequest);
         final String waterSourceInsert = SourceTypeQueryBuilder.insertWaterSourceTypeQuery();
-        final List<SourceType> waterSourceList = sourceTypeRequest.getSourceType();
+        final List<SourceType> waterSourceList = sourceTypeRequest.getSourceTypes();
         final List<Map<String, Object>> batchValues = new ArrayList<>(waterSourceList.size());
         for (final SourceType waterSource : waterSourceList){
             batchValues.add(
@@ -99,7 +99,7 @@ public class SourceTypeRepository {
     public SourceTypeRequest persistModifyWaterSourceType(final SourceTypeRequest sourceTypeRequest) {
         log.info("SourceTypeRequest::" + sourceTypeRequest);
         final String waterSourceUpdate = SourceTypeQueryBuilder.updateWaterSourceTypeQuery();
-        final List<SourceType> waterSourceList = sourceTypeRequest.getSourceType();
+        final List<SourceType> waterSourceList = sourceTypeRequest.getSourceTypes();
         final List<Map<String, Object>> batchValues = new ArrayList<>(waterSourceList.size());
         for (final SourceType waterSource : waterSourceList)
             batchValues.add(

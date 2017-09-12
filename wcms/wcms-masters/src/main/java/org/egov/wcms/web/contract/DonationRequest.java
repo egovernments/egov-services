@@ -68,6 +68,6 @@ public class DonationRequest {
     @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
 
-    @JsonProperty("Donation")
-    private List<Donation> donation=new ArrayList<>();
+    @JsonProperty("Donations")
+    private List<Donation> donations=new ArrayList<>();
 }

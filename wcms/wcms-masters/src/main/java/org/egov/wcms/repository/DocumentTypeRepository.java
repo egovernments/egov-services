@@ -77,7 +77,7 @@ public class DocumentTypeRepository {
     public DocumentTypeReq persistCreateDocumentType(final DocumentTypeReq documentTypeReq) {
         log.info("DocumentTypeRequest::" + documentTypeReq);
         final String documentTypeInsert = DocumentTypeQueryBuilder.insertDocumentTypeQuery();
-        final List<DocumentType> documentTypeList = documentTypeReq.getDocumentType();
+        final List<DocumentType> documentTypeList = documentTypeReq.getDocumentTypes();
         final List<Map<String, Object>> batchValues = new ArrayList<>(documentTypeList.size());
         for (final DocumentType documentType : documentTypeList)
             batchValues.add(
@@ -97,7 +97,7 @@ public class DocumentTypeRepository {
     public DocumentTypeReq persistModifyDocumentType(final DocumentTypeReq documentTypeReq) {
         log.info("DocumentTypeRequest::" + documentTypeReq);
         final String documentTypeUpdate = DocumentTypeQueryBuilder.updateDocumentTypeQuery();
-        final List<DocumentType> documentTypeList = documentTypeReq.getDocumentType();
+        final List<DocumentType> documentTypeList = documentTypeReq.getDocumentTypes();
         final List<Map<String, Object>> batchValues = new ArrayList<>(documentTypeList.size());
         for (final DocumentType documentType : documentTypeList)
             batchValues.add(new MapSqlParameterSource("name", documentType.getName())

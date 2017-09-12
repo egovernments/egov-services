@@ -94,7 +94,7 @@ public class DocumentTypeServiceTest {
         final List<DocumentType> docTypes = new ArrayList<>();
         docTypes.add(getDocumentType());
         final DocumentTypeReq docTypeReq = new DocumentTypeReq();
-        docTypeReq.setDocumentType(docTypes);
+        docTypeReq.setDocumentTypes(docTypes);
         final DocumentTypeRes propUsageTypeResponse = new DocumentTypeRes();
         propUsageTypeResponse.setResponseInfo(null);
         propUsageTypeResponse.setDocumentTypes(docTypes);
@@ -148,7 +148,7 @@ public class DocumentTypeServiceTest {
         docTypeList.add(getDocumentType());
 
         docTypeRequest.setRequestInfo(requestInfo);
-        docTypeRequest.setDocumentType(docTypeList);
+        docTypeRequest.setDocumentTypes(docTypeList);
 
         final List<DocumentType> docTypeResult = docTypeService.createDocumentType("topic", "key", docTypeRequest);
 
@@ -160,7 +160,7 @@ public class DocumentTypeServiceTest {
         final List<DocumentType> docTypesList = new ArrayList<>();
         docTypesList.add(getDocumentType());
         final DocumentTypeReq docTypeRequest = new DocumentTypeReq();
-        docTypeRequest.setDocumentType(docTypesList);
+        docTypeRequest.setDocumentTypes(docTypesList);
         final DocumentTypeRes docTypeResponse = new DocumentTypeRes();
         docTypeResponse.setResponseInfo(null);
         docTypeResponse.setDocumentTypes(docTypesList);

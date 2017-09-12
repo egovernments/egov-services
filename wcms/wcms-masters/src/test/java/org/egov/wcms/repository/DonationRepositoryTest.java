@@ -97,7 +97,7 @@ public class DonationRepositoryTest {
     @Test
     public void test_Should_Create_Donation_Invalid() {
         final DonationRequest donationRequest = getDonationRequest();
-        final List<Donation> donation = donationRequest.getDonation();
+        final List<Donation> donation = donationRequest.getDonations();
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
         assertTrue(!donation.equals(donationRepository.persistDonationDetails(donationRequest)));
     }
@@ -139,7 +139,7 @@ public class DonationRepositoryTest {
         newUser.setId(2L);
         requestInfo.setUserInfo(newUser);
         donationReq.setRequestInfo(requestInfo);
-        donationReq.setDonation(donationList);
+        donationReq.setDonations(donationList);
         return donationReq;
     }
 
@@ -154,7 +154,7 @@ public class DonationRepositoryTest {
         final List<Donation> donationList =new ArrayList<>();
         donationList.add(getDonation());
         donationRequest.setRequestInfo(requestInfo);
-        donationRequest.setDonation(donationList);
+        donationRequest.setDonations(donationList);
 
         assertNotNull(donationRepository.persistModifyDonationDetails(donationRequest));
 
@@ -167,7 +167,7 @@ public class DonationRepositoryTest {
         final List<Donation> donationList = new ArrayList<>();
         donationList.add(getDonation());
         donationRequest.setRequestInfo(requestInfo);
-        donationRequest.setDonation(donationList);
+        donationRequest.setDonations(donationList);
 
         assertNotNull(donationRepository.persistModifyDonationDetails(donationRequest));
 
@@ -183,6 +183,7 @@ public class DonationRepositoryTest {
         donation.setCode("2");
         donation.getAuditDetails().setCreatedBy(1L);
         donation.setUsageTypeId(2l);
+        donation.setSubUsageTypeId(3l);
         donation.setFromDate(new Date().getTime());
         donation.setToDate(new Date().getTime());
         donation.setMaxPipeSizeId(2L);

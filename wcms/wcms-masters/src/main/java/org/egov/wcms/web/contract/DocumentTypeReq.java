@@ -68,6 +68,6 @@ public class DocumentTypeReq {
     @JsonProperty("RequestInfo")
     public RequestInfo requestInfo;
 
-    @JsonProperty("DocumentType")
-    public List<DocumentType> documentType = new ArrayList<>();
+    @JsonProperty("DocumentTypes")
+    public List<DocumentType> documentTypes = new ArrayList<>();
 }

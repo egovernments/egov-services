@@ -6,7 +6,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum LicenseStatus {
-	APPROVED("Approved");
+	INFORCE("Inforce"),
+	EXPIRED("Expired");
 
 	private final String name;
 }

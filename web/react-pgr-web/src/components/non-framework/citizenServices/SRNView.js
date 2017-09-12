@@ -129,7 +129,7 @@ class CertificateView extends Component {
 	                              ServiceRequest.documents.map(function(v, i) {
 	                              	return (
 		                                  <tr key={i}>
-		                                    <td>{v.from + (v.from == JSON.parse(localStorage.userRequest).userName ? " (You)" : "")}</td>
+		                                    <td>{v.from}</td>
 		                                    <td>{getFullDate(v.timeStamp)}</td>
 		                                    <td>{v.name}</td>
 		                                    <td>{v.remarks}</td>

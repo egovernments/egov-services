@@ -5,7 +5,6 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
-import org.egov.citizen.config.ApplicationProperties;
 import org.egov.citizen.config.CitizenServiceConstants;
 import org.egov.citizen.model.RequestInfoWrapper;
 import org.egov.citizen.model.ServiceCollection;
@@ -76,6 +75,16 @@ public class ServiceController {
 
 	@PostMapping(value = "/requests/_search")
 	public ResponseEntity<?> getServiceReq(@RequestBody @Valid RequestInfoWrapper requestInfo,
+											@ModelAttribute ServiceRequestSearchCriteria serviceRequestSearchCriteria){
+		LOGGER.info("serviceRequestSearchCriteria:"+serviceRequestSearchCriteria);
+		Map<String, Object> maps = citizenPersistService.search(serviceRequestSearchCriteria, requestInfo.getRequestInfo());
+		
+		return new ResponseEntity<>(maps ,HttpStatus.OK);
+		
+	}
+	
+	@PostMapping(value = "/requests/anonymous/_search")
+	public ResponseEntity<?> getServiceReqForAnonymous(@RequestBody @Valid RequestInfoWrapper requestInfo,
 											@ModelAttribute ServiceRequestSearchCriteria serviceRequestSearchCriteria){
 		LOGGER.info("serviceRequestSearchCriteria:"+serviceRequestSearchCriteria);
 		Map<String, Object> maps = citizenPersistService.search(serviceRequestSearchCriteria, requestInfo.getRequestInfo());

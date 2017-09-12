@@ -23,7 +23,7 @@ public class ServiceReqQueryBuilder {
 	private JdbcTemplate jdbcTemplate;
 	
 	private static final String BASE_QUERY = "SELECT jsonvalue as serviceReq, tenantid, id FROM egov_citizen_service_req";
-	private static final String SEARCH_DETAILS_BASE_QUERY = "SELECT ec.srn as srn, comment, commentfrom, commentdate, uploadedby, uploaddate, filestoreid "
+	private static final String SEARCH_DETAILS_BASE_QUERY = "SELECT ec.srn as srn, comment, commentfrom, commentdate, uploadedby, uploaddate, filestoreid, uploadedbyrole "
 			+ "FROM egov_citizen_service_req_comments ec JOIN egov_citizen_service_req_documents ed ON ec.srn = ed.srn ";
 
 
@@ -44,6 +44,14 @@ public class ServiceReqQueryBuilder {
 	public String getDetailsQuery(ServiceRequestSearchCriteria serviceRequestSearchCriteria, List preparedStatementValuesForDetailsSearch) {
 		StringBuilder selectQuery = new StringBuilder(SEARCH_DETAILS_BASE_QUERY);
 		addWhereClauseForDetailsSearch(selectQuery, preparedStatementValuesForDetailsSearch, serviceRequestSearchCriteria);
+		log.info("Query : " + selectQuery);
+		return selectQuery.toString();
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public String getDetailsQueryForAnonymous(ServiceRequestSearchCriteria serviceRequestSearchCriteria, List preparedStatementValuesForDetailsSearch) {
+		StringBuilder selectQuery = new StringBuilder(SEARCH_DETAILS_BASE_QUERY);
+		addWhereClauseForAnonymous(selectQuery, preparedStatementValuesForDetailsSearch, serviceRequestSearchCriteria);
 		log.info("Query : " + selectQuery);
 		return selectQuery.toString();
 	}
@@ -157,6 +165,36 @@ public class ServiceReqQueryBuilder {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" ec.srn = 'invalidSrn' ");
 		}
+	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private void addWhereClauseForAnonymous(StringBuilder selectQuery, List preparedStatementValues,
+			ServiceRequestSearchCriteria serviceRequestSearchCriteria) {
+
+		if (serviceRequestSearchCriteria.getTenantId() == null){
+			LOGGER.info("NO tenant found");
+			return;
+		}
+
+		selectQuery.append(" WHERE");
+		boolean isAppendAndClause = false;
+
+		if (serviceRequestSearchCriteria.getTenantId() != null) {
+			isAppendAndClause = true;			
+			selectQuery.append(" ec.tenantid = ?");
+			preparedStatementValues.add(serviceRequestSearchCriteria.getTenantId());
+
+		}
+
+		if (serviceRequestSearchCriteria.getServiceRequestId() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" ec.srn = ?");
+			preparedStatementValues.add(serviceRequestSearchCriteria.getServiceRequestId());
+		}
+		isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+		selectQuery.append(" ed.uploadedbyrole != ?");
+		preparedStatementValues.add("CITIZEN");
+
 	}
 
 	/*private void addOrderByClause(StringBuilder selectQuery, ServiceRequestSearchCriteria serviceRequestSearchCriteria) {

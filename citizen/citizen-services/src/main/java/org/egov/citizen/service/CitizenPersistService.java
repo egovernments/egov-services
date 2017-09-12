@@ -161,7 +161,7 @@ public class CitizenPersistService {
 
 	public String getServiceReqId() {
 
-		String req = "{\"RequestInfo\":{\"apiId\":\"org.egov.ptis\",\"ver\":\"1.0\",\"ts\":\"20934234234234\",\"action\":\"asd\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\":\"3c9bdf8c-6936-4f5c-a577-5752552f2257\"},\"idRequests\":[{\"idName\":\"CS.ServiceRequest\",\"tenantId\":\"default\",\"format\":\"SRN-[cy:MM]-[fy:yyyy-yy]-[d{4}]\"}]}";
+		String req = "{\"RequestInfo\":{\"apiId\":\"org.egov.ptis\",\"ver\":\"1.0\",\"ts\":\"20934234234234\",\"action\":\"asd\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\":\"349fb813-8644-416d-8aa0-6014993c4551\"},\"idRequests\":[{\"idName\":\"CS.ServiceRequest\",\"tenantId\":\"default\",\"format\":\"SRN-[cy:MM]-[fy:yyyy-yy]-[d{4}]\"}]}";
 
 		String url = idGenHost+idGenGetIdUrl;
 		log.info("url:"+url);
@@ -308,6 +308,7 @@ public class CitizenPersistService {
 		          .append(receiptRequest.getBillNumber()).append(delimiter)
 		          .append(receiptRequest.getBiller()).append(delimiter)
 		          .append(receiptRequest.getBillService());
+		
 		String hashKey = applicationProperties.getHashKey();
 		String requestHash = getHashedValue(msgForHash.toString(), hashKey);
 		LOGGER.info("Request hash obtained: "+requestHash);

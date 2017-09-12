@@ -15,4 +15,5 @@ public class Document {
 	private String filePath;
 	private String name;
 	private String remarks;
+	private String uploadedbyrole;
 }

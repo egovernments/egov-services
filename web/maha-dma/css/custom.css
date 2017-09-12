@@ -3,9 +3,7 @@ body{
 	font-family: 'Lato', sans-serif;
 }
 
-.container{
-		width:100%;
-}
+
 
 .header-section{
 	padding-top: 15px;
@@ -99,9 +97,9 @@ body{
     font-weight: 700;
 }
 .docs-section {
-    border-color: #31708f;
+    margin-bottom: 15px;
+    border: 1px solid #bce8f1;
     padding: 10px;
-		overflow: auto;
 }
 
 .modal-title{
@@ -304,7 +302,7 @@ button{
     z-index: 1;
     height: 36px;
     line-height: 36px;
-    width: 100%;
+    width: auto;
     border-radius: 2px;
     transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
     background-color: rgb(0, 188, 212);
@@ -398,3 +396,44 @@ hr{
 ul.minimum li{
 	display:inline;
 }
+
+
+
+/*css added by Kedar*/
+
+.docs-section ol li {
+    margin-left: -20px;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.docs-section ul li {
+    margin-left: -20px;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.link-text {
+  font-size: 17px;
+  /*color: rgb(40, 65, 110);*/
+}
+
+.modal-body{
+    overflow-y: scroll;
+    height: 500px;
+}
+
+.doc-head a{
+  color:#f38e00;
+}
+
+.doc-head a:hover{
+  color:#fd580a;
+  font-size: 19px;
+}
+
+.dropdown li a:hover{
+  background: #286090;
+  color: #fff;
+}
+

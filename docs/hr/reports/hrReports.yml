@@ -431,6 +431,9 @@ ReportDefinitions:
     label: reports.hr.assign_url         
     type: string
     source: hr
+    linkedReport:
+      reportName: employeeAssign
+      linkedColumn: _url?/empsearch/update:code
     
   searchParams:
   - name: date

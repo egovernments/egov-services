@@ -19,6 +19,7 @@
         - Create, Update and Search for Meter Water Rates Master
         - Create, Update and Search for Non Meter Water Rates Master
         - Create, Update and Search for GapCode Master
+        - Create, Update and Search for UsageType Master
         - Create, Update and Search for Service Charges Master 
         
     contact:
@@ -1057,6 +1058,84 @@
             description: Invalid input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+  # UsageType API  
+    /usagetype/_create:
+      post:
+        summary: Create new UsageType.
+        description: API to Create new UsageType
+        tags:
+          - UsageType
+        parameters:
+          - name: UsageTypeReq
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/UsageTypeReq'
+        responses:
+          '201':
+            description: UsageType created successfully.
+            schema:
+              $ref: '#/definitions/UsageTypeRes'
+          '400':
+            description: UsageType creation failed.
+            schema:
+              $ref: >-
+                https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+    /usagetype/_update:
+      post:
+        summary: >-
+          while updating in request body code is required and updates existing
+          values based on code
+        description: bulk updates existing values
+        tags:
+          - UsageType
+        parameters:
+          - name: UsageType
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/UsageTypeReq'
+        responses:
+          '200':
+            description: UsageType updated successfully.
+            schema:
+              $ref: '#/definitions/UsageTypeRes'
+          '400':
+            description: Request failed
+            schema:
+              $ref: >-
+                https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+    /usagetype/_search:
+      post:
+        summary: searches existing values
+        tags:
+          - UsageType
+        parameters:
+          - $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo
+          - $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
+          - $ref: '#/parameters/ids'
+          - $ref: '#/parameters/code'
+          - $ref: '#/parameters/name'
+          - $ref: '#/parameters/parent'
+          - $ref: '#/parameters/isSubUsageType'
+        responses:
+          '200':
+            description: Successful response
+            schema:
+              $ref: '#/definitions/UsageTypeRes'
+          '400':
+            description: Invalid input
+            schema:
+              $ref: >-
+                https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+
+
+
 
   parameters:
     id:
@@ -1190,7 +1269,21 @@
       description: outsideUlb
       required: false
       type: boolean
+      
+    isSubUsageType:
+      name: isSubUsageType
+      in: query
+      description: harcoded as false for usage type and pass true for subusagetype
+      required: false
+      type: boolean
               
+    parent:
+      name: parent
+      in: query
+      description: parent of subUsageType
+      required: false
+      type: string 
+      
   definitions:
 
   # Document Type and Application Type mapping definition
@@ -2271,6 +2364,10 @@
     ServiceChargeDetails:
       type: object
       properties:
+        id:
+          type: integer
+          format: int64
+          description : id is servicechargedetailsid and Unique identifier, typically defined by system and readonly.
         code:
           type: string
           description: unique code this should be defined by system and readonly.
@@ -2373,3 +2470,70 @@
         - noOfLastMonths
         - tenantId
         
+    UsageTypeReq:
+      type: object
+      properties:
+        RequestInfo:
+          $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+        UsageTypes:
+          type: array
+          maximum: 20
+          items:
+            $ref: '#/definitions/UsageType'
+      required:
+        - RequestInfo
+        - UsageTypes
+    UsageTypeRes:
+      type: object
+      properties:
+        ResponseInfo:
+          $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+        UsageTypes:
+          type: array
+          maximum: 20
+          items:
+            $ref: '#/definitions/UsageType'
+    UsageType:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: >-
+            id is usagetypeid and Unique identifier, typically defined by system and
+            readonly.
+        code:
+          type: string
+          description: unique code this should be defined by system and readonly.
+          maxLength: 100
+        name:
+          type: string
+          description: name of UsageType.
+          maxLength: 100
+        active:
+          type: boolean
+          format: varchar
+          description: TRUE for active and FALSE for inactive.
+        parent:
+          type: string
+          description: null for usageType,have parent value for subusageType.
+          maximum: 100
+        description:
+          type: string
+          description: human readable description should be assigned by user.
+          maximum: 250
+        tenantId:
+          type: string
+          description: Unique Identifier of the tenant
+          minLength: 4
+          maxLength: 128
+      required:
+        - name
+        - code
+        - tenantId      
+
+      
+
+

@@ -77,7 +77,7 @@ class viewLicense extends Component{
              <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                <TableRow>
                  <TableHeaderColumn>Financial Year</TableHeaderColumn>
-                 <TableHeaderColumn>Amount</TableHeaderColumn>
+                 <TableHeaderColumn>Amount(Rs)</TableHeaderColumn>
                  <TableHeaderColumn>Paid</TableHeaderColumn>
                </TableRow>
              </TableHeader>

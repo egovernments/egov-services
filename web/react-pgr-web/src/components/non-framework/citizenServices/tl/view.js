@@ -274,6 +274,11 @@ class Report extends Component {
               }
             }
 
+            if(res2 && res2.serviceReq && res2.serviceReq[0] && res2.serviceReq[0] && res2.serviceReq[0].moduleObject) {
+              res2.serviceReq[0].moduleObject.licenses[0].validityYears = res2.serviceReq[0].moduleObject.licenses[0].validityYears + (res2.serviceReq[0].moduleObject.licenses[0].validityYears == 1 ? " Year" : " Years");
+              res2.serviceReq[0].moduleObject.licenses[0].serviceRequestId = decodeURIComponent(self.props.match.params.ackNo);
+            }
+
             self.setState({
               ServiceRequest: res2 && res2.serviceReq && res2.serviceReq[0] ? res2.serviceReq[0] : {},
               status: res2 && res2.serviceReq && res2.serviceReq[0] ? res2.serviceReq[0].status : ""
@@ -281,6 +286,12 @@ class Report extends Component {
             self.props.setFormData(res2 && res2.serviceReq && res2.serviceReq[0] ? res2.serviceReq[0].moduleObject : {});
             self.setInitialUpdateData((res2 && res2.serviceReq && res2.serviceReq[0] ? res2.serviceReq[0].moduleObject : {}), JSON.parse(JSON.stringify(specifications)), "tl", "view", "licenses");
           }, function(err) {
+
+            if(res2 && res2.serviceReq && res2.serviceReq[0] && res2.serviceReq[0] && res2.serviceReq[0].moduleObject) {
+              res2.serviceReq[0].moduleObject.licenses[0].validityYears = res2.serviceReq[0].moduleObject.licenses[0].validityYears + (res2.serviceReq[0].moduleObject.licenses[0].validityYears == 1 ? " Year" : " Years");
+              res2.serviceReq[0].moduleObject.licenses[0].serviceRequestId = decodeURIComponent(self.props.match.params.ackNo);
+            }
+
             self.setState({
               ServiceRequest: res2 && res2.serviceReq && res2.serviceReq[0] ? res2.serviceReq[0] : {},
               status: res2 && res2.serviceReq && res2.serviceReq[0] ? res2.serviceReq[0].status : ""
@@ -536,7 +547,8 @@ class Report extends Component {
         from: JSON.parse(localStorage.userRequest).userName,
         to: "",
         text: this.state.comments,
-        timeStamp: new Date().getTime()
+        timeStamp: new Date().getTime(),
+        uploadedbyrole: localStorage.type
       })
     }
 
@@ -810,6 +822,7 @@ class Report extends Component {
                                       </tr>
                                   </tbody>
                               </Table>
+                              <span style={{textAlign:"right"}}>{translate("This is computer generated receipt no authorised signature required")}</span>
                         </CardText>
                       </Card>
                       <br/>

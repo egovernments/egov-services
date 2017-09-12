@@ -262,6 +262,7 @@ this.setState({openLicense: false});
 
       for(var i=0; i<documents.length; i++) {
         documents[i].from = JSON.parse(localStorage.userRequest).userName;
+        documents[i].uploadedbyrole = "CITIZEN";
       }
   }
 
@@ -1163,7 +1164,7 @@ if(property == "licenses[0].categoryId"){
        "email": "email",
        "deviceId": "deviceId",
        "accountId": "accountId",
-       "firstName": "",
+       "firstName": JSON.parse(localStorage.userRequest).name || "",
        "lastName": "firstName",
        "phone": "phone",
        "description": "",

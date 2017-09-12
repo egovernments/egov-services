@@ -144,6 +144,19 @@ paths:
           maxLength: 64
           exclusiveMinimum: true
           exclusiveMaximum: false
+        - name: usageType
+          in: query
+          required: false
+          description: Usage under the property details.
+          type: string
+          minLength: 1
+          maxLength: 64
+        - name: adminBoundary
+          in: query
+          required: false
+          description: Admin boundary where the property is located.
+          type: integer
+          format: int64
       responses:
         200:
           description: Successful response

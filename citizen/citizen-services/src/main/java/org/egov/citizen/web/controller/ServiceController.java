@@ -87,6 +87,7 @@ public class ServiceController {
 	public ResponseEntity<?> getServiceReqForAnonymous(@RequestBody @Valid RequestInfoWrapper requestInfo,
 											@ModelAttribute ServiceRequestSearchCriteria serviceRequestSearchCriteria){
 		LOGGER.info("serviceRequestSearchCriteria:"+serviceRequestSearchCriteria);
+		serviceRequestSearchCriteria.setAnonymous(true);
 		Map<String, Object> maps = citizenPersistService.search(serviceRequestSearchCriteria, requestInfo.getRequestInfo());
 		
 		return new ResponseEntity<>(maps ,HttpStatus.OK);

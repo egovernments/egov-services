@@ -385,6 +385,7 @@ paths:
            and if not found for applicaiton type, get based on the tenantId 
           4. Search criteria is  tenantId and
            and if not found for tenantId, return empty response
+          5. search criteria name will be case insensitive and will be like search 
 
           Maximum result size is restricted based on the maxlength of DocumentType(s) as defined in DocumentTypeResponse model.
           

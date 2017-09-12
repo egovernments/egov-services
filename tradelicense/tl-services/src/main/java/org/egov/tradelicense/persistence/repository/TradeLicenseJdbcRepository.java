@@ -518,6 +518,7 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 		MapSqlParameterSource parameter = new MapSqlParameterSource();
 		List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(builder.toString(), parameter);
 		List<LicenseApplicationSearchEntity> licenseApplications = new ArrayList<LicenseApplicationSearchEntity>();
+		String statusId = "";
 		for (Map<String, Object> row : rows) {
 
 			LicenseApplicationSearchEntity licenseApplication = new LicenseApplicationSearchEntity();
@@ -525,9 +526,14 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			licenseApplication.setTenantId(getString(row.get("tenantId")));
 			licenseApplication.setLicenseId(getLong(row.get("licenseId")));
 			licenseApplication.setState_id(getString(row.get("state_id")));
-			licenseApplication.setStatus(getString(row.get("status")));
-			licenseApplication.setStatusName(getApplicationStatusName(getString(row.get("tenantId")),
-					getString(row.get("status")), requestInfo));
+			statusId = getString(row.get("status"));
+			
+			if( statusId != null && !statusId.isEmpty()){
+				licenseApplication.setStatus(statusId);
+				licenseApplication.setStatusName(getApplicationStatusName(getString(row.get("tenantId")),
+						statusId, requestInfo));
+			}
+			
 			licenseApplication.setApplicationDate(((Timestamp) row.get("applicationDate")));
 			licenseApplication.setApplicationNumber(getString(row.get("applicationNumber")));
 			licenseApplication.setApplicationType(getString(row.get("applicationType")));
@@ -902,9 +908,7 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 		if (licenseStatusResponse != null && licenseStatusResponse.getLicenseStatuses() != null
 				&& licenseStatusResponse.getLicenseStatuses().size() > 0) {
 
-			for (LicenseStatus licenseStatus : licenseStatusResponse.getLicenseStatuses()) {
-				appStatus = licenseStatus.getName();
-			}
+				appStatus = licenseStatusResponse.getLicenseStatuses().get(0).getName();
 
 		}
 

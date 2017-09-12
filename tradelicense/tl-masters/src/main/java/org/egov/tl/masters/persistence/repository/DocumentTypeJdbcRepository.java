@@ -293,8 +293,8 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 
 		if (name != null && !name.isEmpty()) {
 
-			sql.append(" AND name= :name");
-			parameters.addValue("name", name);
+			sql.append(" AND upper(name) like :name");
+			parameters.addValue("name", "%" + name.toUpperCase() +"%");
 		}
 
 		if (ids != null && ids.length > 0) {

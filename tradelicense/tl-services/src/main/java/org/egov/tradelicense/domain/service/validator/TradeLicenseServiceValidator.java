@@ -84,9 +84,9 @@ public class TradeLicenseServiceValidator {
 
 		for (TradeLicense tradeLicense : tradeLicenses) {
 			// checking the valid from date existance
-			if (tradeLicense.getIsLegacy()) {
-				validateTradeValidFromDate(tradeLicense, requestInfo);
-			}
+			
+			validateTradeValidFromDate(tradeLicense, requestInfo);
+			
 			// checking the existance and uniqueness of licensenumber
 			validateLicenseNumber(tradeLicense, isNewRecord, requestInfo);
 			// checking the agreement details
@@ -116,9 +116,6 @@ public class TradeLicenseServiceValidator {
 				// validate trade commencement date
 				setTradeExpiryDateByValidatingCommencementDate(tradeLicense, requestInfo);
 
-				// capturing the license valid from date from commencement date
-				setTradeValidFromDate(tradeLicense, requestInfo);
-
 			}
 		}
 	}
@@ -131,10 +128,10 @@ public class TradeLicenseServiceValidator {
 
 		for (TradeLicense tradeLicense : tradeLicenses) {
 
-			// checking the valid from date existence
-			if (tradeLicense.getIsLegacy()) {
-				validateTradeValidFromDate(tradeLicense, requestInfo);
-			}
+
+			// checking the valid from date existance
+			validateTradeValidFromDate(tradeLicense, requestInfo);
+			
 			// checking the id existance of tradelicense in database
 			validateTradeLicenseIdExistance(tradeLicense, requestInfo);
 			// checking the eistance and uniqueness of licensenumber
@@ -168,22 +165,23 @@ public class TradeLicenseServiceValidator {
 		}
 	}
 
-	// validating trade valid from date
+	/**
+	 * 	validate trade valid from date, for legacy throw error if licenseValid from Date is null,
+	 * set TradeCommencementDate to the validlicenseFromDate when validlicenseFromDate is null and license is not legacy
+	 * @param tradeLicense
+	 * @param requestInfo
+	 */
 	private void validateTradeValidFromDate(TradeLicense tradeLicense, RequestInfo requestInfo) {
 
 		if (tradeLicense.getLicenseValidFromDate() == null) {
 
-			throw new CustomInvalidInputException(propertiesManager.getLicenseValidFromDateNotNullCode(),
-					propertiesManager.getLicenseValidFromDateNotNullMsg(), requestInfo);
-		}
-	}
-
-	// setting the trade commencement date as license valid from date
-	private void setTradeValidFromDate(TradeLicense tradeLicense, RequestInfo requestInfo) {
-
-		if (tradeLicense.getTradeCommencementDate() != null) {
-
-			tradeLicense.setLicenseValidFromDate(tradeLicense.getTradeCommencementDate());
+			if( tradeLicense.getIsLegacy() ){
+				throw new CustomInvalidInputException(propertiesManager.getLicenseValidFromDateNotNullCode(),
+						propertiesManager.getLicenseValidFromDateNotNullMsg(), requestInfo);
+			}else{
+				tradeLicense.setLicenseValidFromDate( tradeLicense.getTradeCommencementDate());
+			}
+			
 		}
 	}
 

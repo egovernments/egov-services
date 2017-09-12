@@ -127,14 +127,14 @@ paths:
           in: query
           description: Property tax from amount. Properties can be searched between the tax amounts. This is the from amount.
           required: false
-          type: integer
-          format: int64
+          type: number
+          format: double
         - name: demandTo
           in: query
           description: Property tax to amount. Properties can be searched between the tax amounts. This is the to amount.
           required: false
-          type: integer
-          format: int64
+          type: number
+          format: double
         - name: applicationNo
           in: query
           required: false

@@ -20,17 +20,20 @@ public class AgreementQueryBuilderTest {
 	public void no_input_test(){
 		
 		AgreementCriteria agreementsModel = new AgreementCriteria();
-		
+        Map params = new HashMap();
 		assertEquals("SELECT *,agreement.id as lamsagreementid FROM eglams_agreement agreement LEFT OUTER JOIN eglams_demand demand "
-				+ "ON agreement.id=demand.agreementid "
-				+ "LEFT OUTER JOIN eglams_rentincrementtype rent ON agreement.rent_increment_method=rent.id "
-				+ "ORDER BY AGREEMENT.ID LIMIT ? OFFSET ?", AgreementQueryBuilder.getAgreementSearchQuery(agreementsModel, new ArrayList<>()));
+				+ "ON agreement.id = demand.agreementid "
+				+ "LEFT OUTER JOIN eglams_rentincrementtype rent ON agreement.rent_increment_method = rent.id WHERE agreement.id is not null"
+                + " and AGREEMENT.STATUS IN ('ACTIVE','WORKFLOW','RENEWED','REJECTED') "
+				+ "ORDER BY AGREEMENT.ID LIMIT :pageSize OFFSET :pageNumber", AgreementQueryBuilder.getAgreementSearchQuery(agreementsModel, params));
+        assertEquals(0, params.size() - 2);
 	}
 	
 	@Test
 	public void all_input_test(){
 		
 		AgreementCriteria agreementsModel = new AgreementCriteria();
+        Map params = new HashMap();
 		agreementsModel.setTenantId("ap.kurnool");
 		agreementsModel.setAcknowledgementNumber("ack");
 		Set<Long> idList = new HashSet<>();
@@ -51,22 +54,23 @@ public class AgreementQueryBuilderTest {
 		agreementsModel.setTradelicenseNumber("ack");
 		
 		assertEquals("SELECT *,agreement.id as lamsagreementid FROM eglams_agreement agreement LEFT OUTER JOIN eglams_demand demand "
-						+ "ON agreement.id=demand.agreementid"
-				        + " LEFT OUTER JOIN eglams_rentincrementtype rent ON agreement.rent_increment_method=rent.id"
-						+ " WHERE AGREEMENT.ID IN (1,2) AND AGREEMENT.AGREEMENT_NO=? AND AGREEMENT.STATUS=?"
-						+ " AND AGREEMENT.TENANT_ID=? AND AGREEMENT.TENDER_NUMBER=? AND AGREEMENT.TIN_NUMBER=?"
-						+ " AND AGREEMENT.TRADE_LICENSE_NUMBER=? AND AGREEMENT.acknowledgementnumber=?"
-						+ " AND AGREEMENT.stateid=? AND AGREEMENT.ASSET IN (1,2) AND AGREEMENT.ALLOTTEE IN (1,2)"
-						+ " AND AGREEMENT.CREATED_DATE>=? AND AGREEMENT.CREATED_DATE<=?"
-						+ " ORDER BY AGREEMENT.ID LIMIT ? OFFSET ?",
-						AgreementQueryBuilder.getAgreementSearchQuery(agreementsModel, new ArrayList<>()));
-		
+						+ "ON agreement.id = demand.agreementid"
+				        + " LEFT OUTER JOIN eglams_rentincrementtype rent ON agreement.rent_increment_method = rent.id"
+						+ " WHERE agreement.id is not null and AGREEMENT.ID IN (:agreementId) and AGREEMENT.AGREEMENT_NO = :agreementNumber and AGREEMENT.STATUS = :status"
+						+ " and AGREEMENT.TENANT_ID = :tenantId and AGREEMENT.TENDER_NUMBER = :tenderNumber and AGREEMENT.TIN_NUMBER = :tinNumber"
+						+ " and AGREEMENT.TRADE_LICENSE_NUMBER = :tradeLicenseNumber and AGREEMENT.acknowledgementnumber = :acknowledgementnumber"
+						+ " and AGREEMENT.stateid = :stateId and AGREEMENT.ASSET IN (:assetId) and AGREEMENT.ALLOTTEE IN (:allottee)"
+						+ " and AGREEMENT.CREATED_DATE >= :fromDate and AGREEMENT.CREATED_DATE <= :toDate"
+						+ " ORDER BY AGREEMENT.ID LIMIT :pageSize OFFSET :pageNumber",
+						AgreementQueryBuilder.getAgreementSearchQuery(agreementsModel, params));
+		assertEquals(15, params.size());
 	}
 	
 	@Test
 	public void date_test(){
 		
 		AgreementCriteria agreementsModel = new AgreementCriteria();
+        Map params = new HashMap();
 		agreementsModel.setTenantId("ap.kurnool");
 		
 		Calendar calendar = Calendar.getInstance();
@@ -75,20 +79,21 @@ public class AgreementQueryBuilderTest {
 		agreementsModel.setToDate(calendar.getTime());
 		
 		assertEquals("SELECT *,agreement.id as lamsagreementid FROM eglams_agreement agreement LEFT OUTER JOIN eglams_demand demand "
-						+ "ON agreement.id=demand.agreementid "
-						+ "LEFT OUTER JOIN eglams_rentincrementtype rent ON agreement.rent_increment_method=rent.id "
-						+ "WHERE AGREEMENT.STATUS IN ('ACTIVE','WORKFLOW','RENEWED','REJECTED') AND"
-						+ " AGREEMENT.TENANT_ID=?"
-						+ " AND AGREEMENT.CREATED_DATE>=? AND AGREEMENT.CREATED_DATE<=?"
-						+ " ORDER BY AGREEMENT.ID LIMIT ? OFFSET ?",
-						AgreementQueryBuilder.getAgreementSearchQuery(agreementsModel, new ArrayList<>()));
-		
+						+ "ON agreement.id = demand.agreementid "
+						+ "LEFT OUTER JOIN eglams_rentincrementtype rent ON agreement.rent_increment_method = rent.id "
+						+ "WHERE agreement.id is not null and AGREEMENT.STATUS IN ('ACTIVE','WORKFLOW','RENEWED','REJECTED') and"
+						+ " AGREEMENT.TENANT_ID = :tenantId"
+						+ " and AGREEMENT.CREATED_DATE >= :fromDate and AGREEMENT.CREATED_DATE <= :toDate"
+						+ " ORDER BY AGREEMENT.ID LIMIT :pageSize OFFSET :pageNumber",
+						AgreementQueryBuilder.getAgreementSearchQuery(agreementsModel, params));
+		assertEquals(3, params.size() - 2);
 	}
 	
 	@Test
 	public void date_failure_test(){
 		
 		AgreementCriteria agreementsModel = new AgreementCriteria();
+        Map params = new HashMap();
 		agreementsModel.setTenantId("ap.kurnool");
 		
 		Calendar calendar = Calendar.getInstance();
@@ -98,18 +103,11 @@ public class AgreementQueryBuilderTest {
 		
 		RuntimeException runtimeException = new RuntimeException("ToDate cannot be lesser than fromdate");
 		try{
-			AgreementQueryBuilder.getAgreementSearchQuery(agreementsModel, new ArrayList<>());
+			AgreementQueryBuilder.getAgreementSearchQuery(agreementsModel, params);
 		}catch (Exception e) {
 			assertThat(runtimeException.equals(e));
 		}
-	}
-
-	@Test
-	public void test_should_throw_exception_dates_null() {
-		expectedException.reportMissingExceptionWithMessage("Invalid date Range, please enter Both fromDate and toDate");
-		expectedException.expect(RuntimeException.class);
-		AgreementCriteria criteria = new AgreementCriteria();
-		AgreementQueryBuilder.getAgreementSearchQuery(criteria, Collections.emptyList());
+        assertEquals(1, params.size());
 	}
 
 	@Test
@@ -117,8 +115,10 @@ public class AgreementQueryBuilderTest {
 		expectedException.reportMissingExceptionWithMessage("Invalid date Range, please enter Both fromDate and toDate");
 		expectedException.expect(RuntimeException.class);
 		AgreementCriteria criteria = new AgreementCriteria();
+        Map params = new HashMap();
 		criteria.setToDate(new Date());
-		AgreementQueryBuilder.getAgreementSearchQuery(criteria, Collections.emptyList());
+		AgreementQueryBuilder.getAgreementSearchQuery(criteria, params);
+        assertEquals(0, params.size());
 	}
 
 	@Test
@@ -126,7 +126,9 @@ public class AgreementQueryBuilderTest {
 		expectedException.reportMissingExceptionWithMessage("Invalid date Range, please enter Both fromDate and toDate");
 		expectedException.expect(RuntimeException.class);
 		AgreementCriteria criteria = new AgreementCriteria();
+        Map params = new HashMap();
 		criteria.setFromDate(new Date());
-		AgreementQueryBuilder.getAgreementSearchQuery(criteria, Collections.emptyList());
+		AgreementQueryBuilder.getAgreementSearchQuery(criteria, params);
+        assertEquals(0, params.size());
 	}
 }
